@@ -194,6 +194,16 @@ class MailTemplate(models.Model):
             self.sub_model_object_field = False
             self.null_value = False
 
+    @api.model
+    def create(self, values):
+        result = super().create(values)
+
+        # fix attachment ownership
+        if result.attachment_ids:
+            result.attachment_ids.write({'res_model': self._name, 'res_id': result.id})
+
+        return result
+
     def unlink(self):
         self.unlink_action()
         return super(MailTemplate, self).unlink()

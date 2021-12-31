@@ -233,7 +233,13 @@ class MassMailing(models.Model):
             values['body_html'] = self._convert_inline_images_to_urls(values['body_html'])
         if 'medium_id' not in values and values.get('mailing_type', 'mail') == 'mail':
             values['medium_id'] = self.env.ref('utm.utm_medium_email').id
-        return super(MassMailing, self).create(values)
+        result = super().create(values)
+
+        # fix attachment ownership
+        if result.attachment_ids:
+            result.attachment_ids.write({'res_model': self._name, 'res_id': result.id})
+
+        return result
 
     def write(self, values):
         if values.get('body_html'):
