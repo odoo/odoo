@@ -142,7 +142,7 @@ class Meeting(models.Model):
                 # Create new attendees
                 if attendee[2].get('self'):
                     partner = self.env.user.partner_id
-                else:
+                elif attendee[1].id:
                     partner = attendee[1]
                 attendee_commands += [(0, 0, {'state': attendee[2].get('responseStatus'), 'partner_id': partner.id})]
                 partner_commands += [(4, partner.id)]
