@@ -14,4 +14,51 @@
             </div>
         </div>
     </t>
+    <!-- Modal for the link command -->
+    <t t-extend="wysiwyg.widgets.link">
+        <t t-jquery="[t-attf-class*='o_url_input']" t-operation="replace">
+            <ul class="nav nav-pills mb-3" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">
+                        Custom URL
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">
+                        Article Selection
+                    </a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                    <div t-attf-class="form-group row o_url_input#{widget.isButton ? ' d-none' : ''}">
+                        <label class="col-form-label col-md-3" for="o_link_dialog_url_input">URL or Email</label>
+                        <div class="col-md-9">
+                            <input type="text" name="url" class="form-control" id="o_link_dialog_url_input" required="required"/>
+                            <div class="form-check o_strip_domain d-none">
+                                <input type="checkbox" id="o_link_dialog_url_strip_domain" checked="checked" class="form-check-input"/>
+                                <label for="o_link_dialog_url_strip_domain" class="form-check-label font-weight-normal">
+                                    Autoconvert to relative link
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+                    <div class="form-group row">
+                        <label for="article" class="col-form-label col-md-3">
+                            Select an article
+                        </label>
+                        <div class="col-md-9">
+                            <select class="form-control form-control">
+                                <option>Small select</option>
+                                <option>Medium select</option>
+                                <option>Large select</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </t>
 </templates>

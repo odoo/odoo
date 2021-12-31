@@ -6,6 +6,8 @@ const QWeb = core.qweb;
 
 const { DocumentWidget } = require('wysiwyg.widgets.media');
 const MediaDialog = require('wysiwyg.widgets.MediaDialog');
+const Link = require('wysiwyg.widgets.Link');
+const weWidgets = require('web_editor.widget');
 const Wysiwyg = require('web_editor.wysiwyg');
 
 const CustomDocumentWidget = DocumentWidget.extend({
@@ -40,8 +42,8 @@ const CustomDocumentWidget = DocumentWidget.extend({
 
 MediaDialog.include({
     /**
-     * @param {Object} media 
-     * @param {Object} options 
+     * @param {Object} media
+     * @param {Object} options
      * @returns
      */
     getDocumentWidget: function (media, options) {
@@ -70,6 +72,23 @@ Wysiwyg.include({
             }
         });
         return commands;
+    }
+});
+
+const CustomLinkWidget = Link.extend({
+    template: 'wysiwyg.widgets.link',
+    _getLinkOptions: function () {
+        return []
+    },
+});
+
+weWidgets.LinkDialog.include({
+    /**
+     * @param {...any} args
+     * @returns
+     */
+    getLinkWidget: function (...args) {
+        return new CustomLinkWidget(this, ...args);
     }
 });
 });
