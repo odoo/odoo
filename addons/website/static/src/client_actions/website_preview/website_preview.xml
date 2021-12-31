@@ -2,7 +2,10 @@
 <templates xml:space="preserve">
 <t t-name="website.WebsitePreview" owl="1">
     <div class="o_website_preview">
-        <iframe t-att-src="initialUrl" class="o_iframe" t-ref="iframe"/>
+        <iframe t-att-src="initialUrl"
+            class="o_iframe"
+            t-ref="iframe"
+            t-on-load="_onPageLoaded"/>
     </div>
 </t>
 </templates>
