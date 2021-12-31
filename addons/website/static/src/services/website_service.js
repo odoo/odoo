@@ -3,11 +3,21 @@
 import { registry } from '@web/core/registry';
 import core from 'web.core';
 
+const websiteSystrayRegistry = registry.category('website_systray');
+
 export const websiteService = {
     dependencies: ['rpc', 'http'],
     async start(env, { rpc, http }) {
         let websites = [];
+        let currentWebsiteId;
         return {
+            set currentWebsiteId(id) {
+                currentWebsiteId = id;
+                websiteSystrayRegistry.trigger('EDIT-WEBSITE');
+            },
+            get currentWebsite() {
+                return websites.find(website => website.id === currentWebsiteId);
+            },
             get websites() {
                 return websites;
             },

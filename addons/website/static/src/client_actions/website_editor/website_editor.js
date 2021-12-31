@@ -21,6 +21,11 @@ export class WebsiteEditorClientAction extends Component {
         });
 
         useEffect(() => {
+            this.websiteService.currentWebsiteId = this.websiteId;
+            return () => this.websiteService.currentWebsiteId = null;
+        }, () => [this.props.action.context.params]);
+
+        useEffect(() => {
             this.iframe.el.addEventListener('load', () => {
                 this.currentUrl = this.iframe.el.contentDocument.location.href;
                 history.pushState({}, this.props.action.display_name, this.currentUrl);
@@ -35,6 +40,9 @@ export class WebsiteEditorClientAction extends Component {
 
     get websiteId() {
         let websiteId = this.props.action.context.params && this.props.action.context.params.website_id;
+        if (!websiteId) {
+            websiteId = this.websiteService.currentWebsite && this.websiteService.currentWebsite.id;
+        }
         if (!websiteId) {
             websiteId = this.websiteService.websites[0].id;
         }
