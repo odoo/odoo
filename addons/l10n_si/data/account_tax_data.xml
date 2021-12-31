@@ -1,390 +1,1719 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- Sales -->
+        <record id="l10n_si_vat_22_sale" model="account.tax.template">
+            <field name="name">22% VAT</field>
+            <field name="description">VAT charged at a rate of 22%</field>
+            <field name="amount">22</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">sale</field>
+            <field name="chart_template_id" ref="gd_chart"/>
+            <field name="tax_group_id" ref="tax_group_22"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_11')],
+                }),
 
-    <record id="gd_taxr_1" model="account.tax.template">
-        <field name="chart_template_id" ref="gd_chart"/>
-        <field name="name">Izstopni DDV 0%</field>
-        <field name="description">DDV-I-0</field>
-        <field name="amount_type">percent</field>
-        <field name="amount">0</field>
-        <field name="type_tax_use">sale</field>
-        <field name="price_include" eval="1"/>
-        <field name="tax_group_id" ref="tax_group_0"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_zo_dvd_odb_izstopni_opr')],
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
-        ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_zo_dvd_odb_izstopni_opr')],
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
-        ]"/>
-    </record>
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_260000'),
+                    'plus_report_line_ids': [ref('tax_report_21')],
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('tax_report_11')],
+                }),
 
-    <record id="gd_taxr_2" model="account.tax.template">
-        <field name="chart_template_id" ref="gd_chart"/>
-        <field name="name">Izstopni DDV 9.5%</field>
-        <field name="description">DDV-I-9.5</field>
-        <field name="amount_type">percent</field>
-        <field name="amount">9.5</field>
-        <field name="type_tax_use">sale</field>
-        <field name="price_include" eval="1"/>
-        <field name="tax_group_id" ref="tax_group_95"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_zo_dvd_odb_izstopni_zni')],
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'account_id': ref('gd_acc_260001'),
-                'repartition_type': 'tax',
-                'plus_report_line_ids': [ref('tax_report_zn_dvd_odb_izstopni_zni')],
-            }),
-        ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_zo_dvd_odb_izstopni_zni')],
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'account_id': ref('gd_acc_260001'),
-                'repartition_type': 'tax',
-                'minus_report_line_ids': [ref('tax_report_zn_dvd_odb_izstopni_zni')],
-            }),
-        ]"/>
-    </record>
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_260000'),
+                    'minus_report_line_ids': [ref('tax_report_21')],
+                }),
+            ]"/>
+        </record>
 
-    <record id="gd_taxr_3" model="account.tax.template">
-        <field name="chart_template_id" ref="gd_chart"/>
-        <field name="name">Izstopni DDV 22%</field>
-        <field name="description">DDV-I-22</field>
-        <field name="amount_type">percent</field>
-        <field name="amount">22</field>
-        <field name="type_tax_use">sale</field>
-        <field name="price_include" eval="1"/>
-        <field name="tax_group_id" ref="tax_group_22"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_zo_dvd_odb_izstopni_osn')],
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-                'account_id': ref('gd_acc_260002'),
-                'plus_report_line_ids': [ref('tax_report_zn_dvd_odb_izstopni_osn')],
-            }),
-        ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_zo_dvd_odb_izstopni_osn')],
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-                'account_id': ref('gd_acc_260002'),
-                'minus_report_line_ids': [ref('tax_report_zn_dvd_odb_izstopni_osn')],
-            }),
-        ]"/>
-    </record>
+        <record id="l10n_si_vat_9_sale" model="account.tax.template">
+            <field name="name">9,5% VAT</field>
+            <field name="description">VAT charged at a rate of 9,5%</field>
+            <field name="amount">9.5</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">sale</field>
+            <field name="chart_template_id" ref="gd_chart"/>
+            <field name="tax_group_id" ref="tax_group_95"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_11')],
+                }),
 
-    <record id="gd_taxp_1" model="account.tax.template">
-        <field name="chart_template_id" ref="gd_chart"/>
-        <field name="name">Vstopni DDV 0%</field>
-        <field name="description">DDV-V-0</field>
-        <field name="amount_type">percent</field>
-        <field name="amount">0</field>
-        <field name="type_tax_use">purchase</field>
-        <field name="price_include" eval="1"/>
-        <field name="tax_group_id" ref="tax_group_0"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_zo_dvd_odb_vstopni_opr')],
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
-        ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_zo_dvd_odb_vstopni_opr')],
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
-        ]"/>
-    </record>
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_260000'),
+                    'plus_report_line_ids': [ref('tax_report_22')],
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('tax_report_11')],
+                }),
 
-    <record id="gd_taxp_2" model="account.tax.template">
-        <field name="chart_template_id" ref="gd_chart"/>
-        <field name="name">Vstopni DDV 9.5%</field>
-        <field name="description">DDV-V-9.5</field>
-        <field name="amount_type">percent</field>
-        <field name="amount">9.5</field>
-        <field name="type_tax_use">purchase</field>
-        <field name="price_include" eval="1"/>
-        <field name="tax_group_id" ref="tax_group_95"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_zo_dvd_odb_vstopni_zni')],
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-                'account_id': ref('gd_acc_160002'),
-                'plus_report_line_ids': [ref('tax_report_zn_dvd_odb_vstopni_zni')],
-            }),
-        ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_zo_dvd_odb_vstopni_zni')],
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-                'account_id': ref('gd_acc_160002'),
-                'minus_report_line_ids': [ref('tax_report_zn_dvd_odb_vstopni_zni')],
-            }),
-        ]"/>
-    </record>
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_260000'),
+                    'minus_report_line_ids': [ref('tax_report_22')],
+                }),
+            ]"/>
+        </record>
 
-    <record id="gd_taxp_3" model="account.tax.template">
-        <field name="chart_template_id" ref="gd_chart"/>
-        <field name="name">Vstopni DDV 22%</field>
-        <field name="description">DDV-V-22</field>
-        <field name="amount_type">percent</field>
-        <field name="amount">22</field>
-        <field name="type_tax_use">purchase</field>
-        <field name="price_include" eval="1"/>
-        <field name="tax_group_id" ref="tax_group_22"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_zo_dvd_odb_vstopni_osn')],
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-                'account_id': ref('gd_acc_160003'),
-                'plus_report_line_ids': [ref('tax_report_zn_dvd_odb_vstopni_osn')],
-            }),
-        ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_zo_dvd_odb_vstopni_osn')],
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-                'account_id': ref('gd_acc_160003'),
-                'minus_report_line_ids': [ref('tax_report_zn_dvd_odb_vstopni_osn')],
-            }),
-        ]"/>
-    </record>
+        <record id="l10n_si_vat_5_sale" model="account.tax.template">
+            <field name="name">5% VAT</field>
+            <field name="description">VAT charged at a rate of 5%</field>
+            <field name="amount">5</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">sale</field>
+            <field name="chart_template_id" ref="gd_chart"/>
+            <field name="tax_group_id" ref="tax_group_5"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_11')],
+                }),
 
-    <record id="gd_taxp_nr_1" model="account.tax.template">
-        <field name="chart_template_id" ref="gd_chart"/>
-        <field name="name">Vstopni DDV 9.5% - neodbitni</field>
-        <field name="description">DDV-V-9.5-NE</field>
-        <field name="amount_type">percent</field>
-        <field name="amount">9.5</field>
-        <field name="type_tax_use">purchase</field>
-        <field name="price_include" eval="1"/>
-        <field name="tax_group_id" ref="tax_group_95"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_zo_dvd_neo_sdtopni_zni')],
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-                'account_id': ref('gd_acc_160001'),
-                'plus_report_line_ids': [ref('tax_report_zn_dvd_neo_vstopni_zni')],
-            }),
-        ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_zo_dvd_neo_sdtopni_zni')],
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-                'account_id': ref('gd_acc_160001'),
-                'minus_report_line_ids': [ref('tax_report_zn_dvd_neo_vstopni_zni')],
-            }),
-        ]"/>
-    </record>
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_260000'),
+                    'plus_report_line_ids': [ref('tax_report_22a')],
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('tax_report_11')],
+                }),
 
-    <record id="gd_taxp_nr_2" model="account.tax.template">
-        <field name="chart_template_id" ref="gd_chart"/>
-        <field name="name">Vstopni DDV 22% - neodbitni</field>
-        <field name="description">DDV-V-22-NE</field>
-        <field name="amount_type">percent</field>
-        <field name="amount">22</field>
-        <field name="type_tax_use">purchase</field>
-        <field name="price_include" eval="1"/>
-        <field name="tax_group_id" ref="tax_group_22"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_zo_dvd_neo_sdtopni_osno')],
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-                'account_id': ref('gd_acc_160001'),
-                'plus_report_line_ids': [ref('tax_report_zn_dvd_neo_vstopni_osnnovna')],
-            }),
-        ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_zo_dvd_neo_sdtopni_osno')],
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-                'account_id': ref('gd_acc_160001'),
-                'minus_report_line_ids': [ref('tax_report_zn_dvd_neo_vstopni_osnnovna')],
-            }),
-        ]"/>
-    </record>
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_260000'),
+                    'minus_report_line_ids': [ref('tax_report_22a')],
+                }),
+            ]"/>
+        </record>
 
-    <record id="gd_taxp_st_1" model="account.tax.template">
-        <field name="chart_template_id" ref="gd_chart"/>
-        <field name="name">Vstopni DDV 9.5% - samoobdavčitev</field>
-        <field name="description">DDV-V-9.5-SO</field>
-        <field name="amount_type">percent</field>
-        <field name="amount">9.5</field>
-        <field name="type_tax_use">purchase</field>
-        <field name="price_include" eval="0"/>
-        <field name="tax_group_id" ref="tax_group_0"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_zo_dvd_odb_vstopni_zni')],
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-                'account_id': ref('gd_acc_160002'),
-                'plus_report_line_ids': [ref('tax_report_zn_dvd_odb_vstopni_zni')],
-            }),
-            (0,0, {
-                'factor_percent': -100,
-                'repartition_type': 'tax',
-                'account_id': ref('gd_acc_260001'),
-                'plus_report_line_ids': [ref('tax_report_zn_dvd_odb_izstopni_zni')],
-            }),
-        ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_zo_dvd_odb_vstopni_zni')],
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-                'account_id': ref('gd_acc_160002'),
-                'minus_report_line_ids': [ref('tax_report_zn_dvd_odb_vstopni_zni')],
-            }),
-            (0,0, {
-                'factor_percent': -100,
-                'repartition_type': 'tax',
-                'account_id': ref('gd_acc_260001'),
-                'minus_report_line_ids': [ref('tax_report_zn_dvd_odb_izstopni_zni')],
-            }),
-        ]"/>
-    </record>
+        <record id="l10n_si_vat_recipient_22_sale" model="account.tax.template">
+            <field name="name">22% VAT recipient</field>
+            <field name="description">VAT charged by the recipient at a rate of 22%</field>
+            <field name="amount">22</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">sale</field>
+            <field name="active" eval="False"/>
+            <field name="chart_template_id" ref="gd_chart"/>
+            <field name="tax_group_id" ref="tax_group_22"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_11a')],
+                }),
 
-    <record id="gd_taxp_st_2" model="account.tax.template">
-        <field name="chart_template_id" ref="gd_chart"/>
-        <field name="name">Vstopni DDV 22% - samoobdavčitev</field>
-        <field name="description">DDV-V-22-SO</field>
-        <field name="amount_type">percent</field>
-        <field name="amount">22</field>
-        <field name="type_tax_use">purchase</field>
-        <field name="price_include" eval="0"/>
-        <field name="tax_group_id" ref="tax_group_0"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_zo_dvd_odb_vstopni_osn')],
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-                'account_id': ref('gd_acc_160003'),
-                'plus_report_line_ids': [ref('tax_report_zn_dvd_odb_vstopni_osn')],
-            }),
-            (0,0, {
-                'factor_percent': -100,
-                'repartition_type': 'tax',
-                'account_id': ref('gd_acc_260002'),
-                'plus_report_line_ids': [ref('tax_report_zn_dvd_odb_izstopni_osn')],
-            }),
-        ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_zo_dvd_odb_vstopni_osn')],
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-                'account_id': ref('gd_acc_160003'),
-                'minus_report_line_ids': [ref('tax_report_zn_dvd_odb_vstopni_osn')],
-            }),
-            (0,0, {
-                'factor_percent': -100,
-                'repartition_type': 'tax',
-                'account_id': ref('gd_acc_260002'),
-                'minus_report_line_ids': [ref('tax_report_zn_dvd_odb_izstopni_osn')],
-            }),
-        ]"/>
-    </record>
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('tax_report_11a')],
+                }),
 
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+            ]"/>
+        </record>
+
+        <record id="l10n_si_vat_recipient_9_sale" model="account.tax.template">
+            <field name="name">9,5% VAT recipient</field>
+            <field name="description">VAT charged by the recipient at a rate of 9,5%</field>
+            <field name="amount">9.5</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">sale</field>
+            <field name="active" eval="False"/>
+            <field name="chart_template_id" ref="gd_chart"/>
+            <field name="tax_group_id" ref="tax_group_95"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_11a')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('tax_report_11a')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+            ]"/>
+        </record>
+
+        <record id="l10n_si_vat_recipient_5_sale" model="account.tax.template">
+            <field name="name">5% VAT recipient</field>
+            <field name="description">VAT charged by the recipient at a rate of 5%</field>
+            <field name="amount">5</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">sale</field>
+            <field name="active" eval="False"/>
+            <field name="chart_template_id" ref="gd_chart"/>
+            <field name="tax_group_id" ref="tax_group_5"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_11a')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('tax_report_11a')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+            ]"/>
+        </record>
+
+        <record id="l10n_si_vat_0_sale_eu" model="account.tax.template">
+            <field name="name">0% VAT EU</field>
+            <field name="description">VAT charged from acquisitions of goods and services from other EU Member States at a rate of 0%</field>
+            <field name="amount">0</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">sale</field>
+            <field name="chart_template_id" ref="gd_chart"/>
+            <field name="tax_group_id" ref="tax_group_0"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_12')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('tax_report_12')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+            ]"/>
+        </record>
+
+        <record id="l10n_si_vat_22_sale_distance" model="account.tax.template">
+            <field name="name">22% VAT distance</field>
+            <field name="description">Distance selling goods at a rate of 22%</field>
+            <field name="amount">22</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">sale</field>
+            <field name="active" eval="False"/>
+            <field name="chart_template_id" ref="gd_chart"/>
+            <field name="tax_group_id" ref="tax_group_22"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_13')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_260000'),
+                    'plus_report_line_ids': [ref('tax_report_23')],
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('tax_report_13')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_260000'),
+                    'minus_report_line_ids': [ref('tax_report_23')],
+                }),
+            ]"/>
+        </record>
+
+        <record id="l10n_si_vat_9_sale_distance" model="account.tax.template">
+            <field name="name">9,5% VAT distance</field>
+            <field name="description">Distance selling goods at a rate of 9,5%</field>
+            <field name="amount">9.5</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">sale</field>
+            <field name="active" eval="False"/>
+            <field name="chart_template_id" ref="gd_chart"/>
+            <field name="tax_group_id" ref="tax_group_95"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_13')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_260000'),
+                    'plus_report_line_ids': [ref('tax_report_24')],
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('tax_report_13')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_260000'),
+                    'minus_report_line_ids': [ref('tax_report_24')],
+                }),
+            ]"/>
+        </record>
+
+        <record id="l10n_si_vat_5_sale_distance" model="account.tax.template">
+            <field name="name">5% VAT distance</field>
+            <field name="description">Distance selling goods at a rate of 5%</field>
+            <field name="amount">5</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">sale</field>
+            <field name="active" eval="False"/>
+            <field name="chart_template_id" ref="gd_chart"/>
+            <field name="tax_group_id" ref="tax_group_5"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_13')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_260000'),
+                    'plus_report_line_ids': [ref('tax_report_24b')],
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('tax_report_13')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_260000'),
+                    'minus_report_line_ids': [ref('tax_report_24b')],
+                }),
+            ]"/>
+        </record>
+
+        <record id="l10n_si_vat_22_sale_installation_eu" model="account.tax.template">
+            <field name="name">22% VAT EU installation</field>
+            <field name="description">VAT charged from assembly and installation of goods in other EU Member States at a rate of 22%</field>
+            <field name="amount">22</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">sale</field>
+            <field name="active" eval="False"/>
+            <field name="chart_template_id" ref="gd_chart"/>
+            <field name="tax_group_id" ref="tax_group_22"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_14')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_260000'),
+                    'plus_report_line_ids': [ref('tax_report_23')],
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('tax_report_14')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_260000'),
+                    'minus_report_line_ids': [ref('tax_report_23')],
+                }),
+            ]"/>
+        </record>
+
+        <record id="l10n_si_vat_9_sale_installation_eu" model="account.tax.template">
+            <field name="name">9,5% VAT EU installation</field>
+            <field name="description">VAT charged from assembly and installation of goods in other EU Member States at a rate of 9,5%</field>
+            <field name="amount">9.5</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">sale</field>
+            <field name="active" eval="False"/>
+            <field name="chart_template_id" ref="gd_chart"/>
+            <field name="tax_group_id" ref="tax_group_95"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_14')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_260000'),
+                    'plus_report_line_ids': [ref('tax_report_24')],
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('tax_report_14')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_260000'),
+                    'minus_report_line_ids': [ref('tax_report_24')],
+                }),
+            ]"/>
+        </record>
+
+        <record id="l10n_si_vat_5_sale_installation_eu" model="account.tax.template">
+            <field name="name">5% VAT EU installation</field>
+            <field name="description">VAT charged from assembly and installation of goods in other EU Member States at a rate of 5%</field>
+            <field name="amount">5</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">sale</field>
+            <field name="active" eval="False"/>
+            <field name="chart_template_id" ref="gd_chart"/>
+            <field name="tax_group_id" ref="tax_group_5"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_14')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_260000'),
+                    'plus_report_line_ids': [ref('tax_report_24b')],
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('tax_report_14')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_260000'),
+                    'minus_report_line_ids': [ref('tax_report_24b')],
+                }),
+            ]"/>
+        </record>
+
+        <record id="l10n_si_vat_0_sale_no_deduction" model="account.tax.template">
+            <field name="name">0% VAT without deduction</field>
+            <field name="description">VAT charged at a rate of 0% without deduction</field>
+            <field name="amount">0</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">sale</field>
+            <field name="active" eval="False"/>
+            <field name="chart_template_id" ref="gd_chart"/>
+            <field name="tax_group_id" ref="tax_group_0"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_15')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('tax_report_15')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+            ]"/>
+        </record>
+
+        <record id="l10n_si_vat_self_22_sale" model="account.tax.template">
+            <field name="name">22% VAT self-assessment</field>
+            <field name="description">VAT charged on the basis of self-assessment as a recipient of goods and services at a rate of 22%</field>
+            <field name="amount">22</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">sale</field>
+            <field name="active" eval="False"/>
+            <field name="chart_template_id" ref="gd_chart"/>
+            <field name="tax_group_id" ref="tax_group_22"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_31')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_260000'),
+                    'plus_report_line_ids': [ref('tax_report_25')],
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('tax_report_31')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_260000'),
+                    'minus_report_line_ids': [ref('tax_report_25')],
+                }),
+            ]"/>
+        </record>
+
+        <record id="l10n_si_vat_self_9_sale" model="account.tax.template">
+            <field name="name">9,5% VAT self-assessment</field>
+            <field name="description">VAT charged on the basis of self-assessment as a recipient of goods and services at a rate of 9,5%</field>
+            <field name="amount">9.5</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">sale</field>
+            <field name="active" eval="False"/>
+            <field name="chart_template_id" ref="gd_chart"/>
+            <field name="tax_group_id" ref="tax_group_95"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_31')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_260000'),
+                    'plus_report_line_ids': [ref('tax_report_25a')],
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('tax_report_31')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_260000'),
+                    'minus_report_line_ids': [ref('tax_report_25a')],
+                }),
+            ]"/>
+        </record>
+
+        <record id="l10n_si_vat_self_5_sale" model="account.tax.template">
+            <field name="name">5% VAT self-assessment</field>
+            <field name="description">VAT charged on the basis of self-assessment as a recipient of goods and services at a rate of 5%</field>
+            <field name="amount">5</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">sale</field>
+            <field name="active" eval="False"/>
+            <field name="chart_template_id" ref="gd_chart"/>
+            <field name="tax_group_id" ref="tax_group_5"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_31')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_260000'),
+                    'plus_report_line_ids': [ref('tax_report_25b')],
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('tax_report_31')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_260000'),
+                    'minus_report_line_ids': [ref('tax_report_25b')],
+                }),
+            ]"/>
+        </record>
+
+        <record id="l10n_si_vat_self_22_sale_76a" model="account.tax.template">
+            <field name="name">22% VAT 76.a</field>
+            <field name="description">VAT charged on the basis of self-assessment as a recipient of goods and services specified in Article 76.a at a rate of 22%</field>
+            <field name="amount">22</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">sale</field>
+            <field name="active" eval="False"/>
+            <field name="chart_template_id" ref="gd_chart"/>
+            <field name="tax_group_id" ref="tax_group_22"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_31a')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_260000'),
+                    'plus_report_line_ids': [ref('tax_report_25')],
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('tax_report_31a')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_260000'),
+                    'minus_report_line_ids': [ref('tax_report_25')],
+                }),
+            ]"/>
+        </record>
+
+        <record id="l10n_si_vat_self_9_sale_76a" model="account.tax.template">
+            <field name="name">9,5% VAT 76.a</field>
+            <field name="description">VAT charged on the basis of self-assessment as a recipient of goods and services specified in Article 76.a at a rate of 9,5%</field>
+            <field name="amount">9.5</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">sale</field>
+            <field name="active" eval="False"/>
+            <field name="chart_template_id" ref="gd_chart"/>
+            <field name="tax_group_id" ref="tax_group_95"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_31a')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_260000'),
+                    'plus_report_line_ids': [ref('tax_report_25a')],
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('tax_report_31a')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_260000'),
+                    'minus_report_line_ids': [ref('tax_report_25a')],
+                }),
+            ]"/>
+        </record>
+
+        <record id="l10n_si_vat_self_22_sale_imports" model="account.tax.template">
+            <field name="name">22% VAT imports self-assessment</field>
+            <field name="description">VAT charged on the basis of self-assessment of imports at a rate of 22%</field>
+            <field name="amount">22</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">sale</field>
+            <field name="active" eval="False"/>
+            <field name="chart_template_id" ref="gd_chart"/>
+            <field name="tax_group_id" ref="tax_group_22"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_31')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_260000'),
+                    'plus_report_line_ids': [ref('tax_report_26')],
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('tax_report_31')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_260000'),
+                    'minus_report_line_ids': [ref('tax_report_26')],
+                }),
+            ]"/>
+        </record>
+
+        <record id="l10n_si_vat_self_9_sale_imports" model="account.tax.template">
+            <field name="name">9,5% VAT imports self-assessment</field>
+            <field name="description">VAT charged on the basis of self-assessment of imports at a rate of 9,5%</field>
+            <field name="amount">9.5</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">sale</field>
+            <field name="active" eval="False"/>
+            <field name="chart_template_id" ref="gd_chart"/>
+            <field name="tax_group_id" ref="tax_group_95"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_31')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_260000'),
+                    'plus_report_line_ids': [ref('tax_report_26')],
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('tax_report_31')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_260000'),
+                    'minus_report_line_ids': [ref('tax_report_26')],
+                }),
+            ]"/>
+        </record>
+
+        <record id="l10n_si_vat_self_5_sale_imports" model="account.tax.template">
+            <field name="name">5% VAT imports self-assessment</field>
+            <field name="description">VAT charged on the basis of self-assessment of imports at a rate of 5%</field>
+            <field name="amount">5</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">sale</field>
+            <field name="active" eval="False"/>
+            <field name="chart_template_id" ref="gd_chart"/>
+            <field name="tax_group_id" ref="tax_group_5"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_31')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_260000'),
+                    'plus_report_line_ids': [ref('tax_report_26')],
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('tax_report_31')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_260000'),
+                    'minus_report_line_ids': [ref('tax_report_26')],
+                }),
+            ]"/>
+        </record>
+    <!-- Sales [END] -->
+
+    <!-- Purchases -->
+        <record id="l10n_si_vat_22_purchase" model="account.tax.template">
+            <field name="name">22% VAT</field>
+            <field name="description">VAT deduction at a rate of 22%</field>
+            <field name="amount">22</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="chart_template_id" ref="gd_chart"/>
+            <field name="tax_group_id" ref="tax_group_22"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_31')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_160000'),
+                    'plus_report_line_ids': [ref('tax_report_41')],
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('tax_report_31')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_160000'),
+                    'minus_report_line_ids': [ref('tax_report_41')],
+                }),
+            ]"/>
+        </record>
+
+        <record id="l10n_si_vat_9_purchase" model="account.tax.template">
+            <field name="name">9,5% VAT</field>
+            <field name="description">VAT deduction at a rate of 9,5%</field>
+            <field name="amount">9.5</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="chart_template_id" ref="gd_chart"/>
+            <field name="tax_group_id" ref="tax_group_95"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_31')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_160000'),
+                    'plus_report_line_ids': [ref('tax_report_42')],
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('tax_report_31')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_160000'),
+                    'minus_report_line_ids': [ref('tax_report_42')],
+                }),
+            ]"/>
+        </record>
+
+        <record id="l10n_si_vat_5_purchase" model="account.tax.template">
+            <field name="name">5% VAT</field>
+            <field name="description">VAT deduction at a rate of 5%</field>
+            <field name="amount">5</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="chart_template_id" ref="gd_chart"/>
+            <field name="tax_group_id" ref="tax_group_5"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_31')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_160000'),
+                    'plus_report_line_ids': [ref('tax_report_42a')],
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('tax_report_31')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_160000'),
+                    'minus_report_line_ids': [ref('tax_report_42a')],
+                }),
+            ]"/>
+        </record>
+
+        <record id="l10n_si_vat_22_purchase_goods_eu" model="account.tax.template">
+            <field name="name">22% VAT EU goods</field>
+            <field name="description">VAT deduction on acquisitions of goods from other EU Member States at the rate of 22%</field>
+            <field name="amount">22</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="chart_template_id" ref="gd_chart"/>
+            <field name="tax_group_id" ref="tax_group_22"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_32')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_160000'),
+                    'plus_report_line_ids': [ref('tax_report_23'), ref('tax_report_41')],
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('tax_report_32')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_160000'),
+                    'minus_report_line_ids': [ref('tax_report_23'), ref('tax_report_41')],
+                }),
+            ]"/>
+        </record>
+
+        <record id="l10n_si_vat_9_purchase_goods_eu" model="account.tax.template">
+            <field name="name">9,5% VAT EU goods</field>
+            <field name="description">VAT deduction on acquisitions of goods from other EU Member States at the rate of 9,5%</field>
+            <field name="amount">9.5</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="chart_template_id" ref="gd_chart"/>
+            <field name="tax_group_id" ref="tax_group_95"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_32')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_160000'),
+                    'plus_report_line_ids': [ref('tax_report_24'), ref('tax_report_42')],
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('tax_report_32')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_160000'),
+                    'minus_report_line_ids': [ref('tax_report_24'), ref('tax_report_42')],
+                }),
+            ]"/>
+        </record>
+
+        <record id="l10n_si_vat_5_purchase_goods_eu" model="account.tax.template">
+            <field name="name">5% VAT EU goods</field>
+            <field name="description">VAT deduction on acquisitions of goods from other EU Member States at the rate of 5%</field>
+            <field name="amount">5</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="chart_template_id" ref="gd_chart"/>
+            <field name="tax_group_id" ref="tax_group_5"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_32')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_160000'),
+                    'plus_report_line_ids': [ref('tax_report_24b'), ref('tax_report_42a')],
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('tax_report_32')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_160000'),
+                    'minus_report_line_ids': [ref('tax_report_24b'), ref('tax_report_42a')],
+                }),
+            ]"/>
+        </record>
+
+        <record id="l10n_si_vat_22_purchase_services_eu" model="account.tax.template">
+            <field name="name">22% VAT EU services</field>
+            <field name="description">VAT deduction on acquisitions of services from other EU Member States at the rate of 22%</field>
+            <field name="amount">22</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="chart_template_id" ref="gd_chart"/>
+            <field name="tax_group_id" ref="tax_group_22"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_32a')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_160000'),
+                    'plus_report_line_ids': [ref('tax_report_23a'), ref('tax_report_41')],
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('tax_report_32a')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_160000'),
+                    'minus_report_line_ids': [ref('tax_report_23a'), ref('tax_report_41')],
+                }),
+            ]"/>
+        </record>
+
+        <record id="l10n_si_vat_9_purchase_services_eu" model="account.tax.template">
+            <field name="name">9,5% VAT EU services</field>
+            <field name="description">VAT deduction on acquisitions of services from other EU Member States at the rate of 9,5%</field>
+            <field name="amount">9.5</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="chart_template_id" ref="gd_chart"/>
+            <field name="tax_group_id" ref="tax_group_95"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_32a')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_160000'),
+                    'plus_report_line_ids': [ref('tax_report_24a'), ref('tax_report_42')],
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('tax_report_32a')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_160000'),
+                    'minus_report_line_ids': [ref('tax_report_24a'), ref('tax_report_42')],
+                }),
+            ]"/>
+        </record>
+
+        <record id="l10n_si_vat_5_purchase_services_eu" model="account.tax.template">
+            <field name="name">5% VAT EU services</field>
+            <field name="description">VAT deduction on acquisitions of services from other EU Member States at the rate of 5%</field>
+            <field name="amount">5</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="chart_template_id" ref="gd_chart"/>
+            <field name="tax_group_id" ref="tax_group_5"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_32a')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_160000'),
+                    'plus_report_line_ids': [ref('tax_report_24c'), ref('tax_report_42a')],
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('tax_report_32a')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_160000'),
+                    'minus_report_line_ids': [ref('tax_report_24c'), ref('tax_report_42a')],
+                }),
+            ]"/>
+        </record>
+
+        <record id="l10n_si_vat_0_purchase" model="account.tax.template">
+            <field name="name">0% VAT</field>
+            <field name="description">VAT deduction from purchases of goods and services, acquisition of goods and services received from other EU Member States and from imports at a rate of 0%</field>
+            <field name="amount">0</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="chart_template_id" ref="gd_chart"/>
+            <field name="tax_group_id" ref="tax_group_0"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_33')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('tax_report_33')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+            ]"/>
+        </record>
+
+        <record id="l10n_si_vat_22_purchase_estate" model="account.tax.template">
+            <field name="name">22% VAT real estate</field>
+            <field name="description">VAT deduction from the purchase of real estate at the rate of 22%</field>
+            <field name="amount">22</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="active" eval="False"/>
+            <field name="chart_template_id" ref="gd_chart"/>
+            <field name="tax_group_id" ref="tax_group_22"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_31'), ref('tax_report_34')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_160000'),
+                    'plus_report_line_ids': [ref('tax_report_41')],
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('tax_report_31'), ref('tax_report_34')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_160000'),
+                    'minus_report_line_ids': [ref('tax_report_41')],
+                }),
+            ]"/>
+        </record>
+
+        <record id="l10n_si_vat_9_purchase_estate" model="account.tax.template">
+            <field name="name">9,5% VAT real estate</field>
+            <field name="description">VAT deduction from the purchase of real estate at the rate of 9,5%</field>
+            <field name="amount">9.5</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="active" eval="False"/>
+            <field name="chart_template_id" ref="gd_chart"/>
+            <field name="tax_group_id" ref="tax_group_95"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_31'), ref('tax_report_34')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_160000'),
+                    'plus_report_line_ids': [ref('tax_report_42')],
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('tax_report_31'), ref('tax_report_34')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_160000'),
+                    'minus_report_line_ids': [ref('tax_report_42')],
+                }),
+            ]"/>
+        </record>
+
+        <record id="l10n_si_vat_5_purchase_estate" model="account.tax.template">
+            <field name="name">5% VAT real estate</field>
+            <field name="description">VAT deduction from the purchase of real estate at the rate of 5%</field>
+            <field name="amount">5</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="active" eval="False"/>
+            <field name="chart_template_id" ref="gd_chart"/>
+            <field name="tax_group_id" ref="tax_group_5"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_31'), ref('tax_report_34')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_160000'),
+                    'plus_report_line_ids': [ref('tax_report_42a')],
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('tax_report_31'), ref('tax_report_34')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_160000'),
+                    'minus_report_line_ids': [ref('tax_report_42a')],
+                }),
+            ]"/>
+        </record>
+
+        <record id="l10n_si_vat_22_purchase_estate_76a" model="account.tax.template">
+            <field name="name">22% VAT 76.a</field>
+            <field name="description">VAT deduction from the purchase of real estate specified in Article 76.a at a rate of 22%</field>
+            <field name="amount">22</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="active" eval="False"/>
+            <field name="chart_template_id" ref="gd_chart"/>
+            <field name="tax_group_id" ref="tax_group_22"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_31a'), ref('tax_report_34')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_160000'),
+                    'plus_report_line_ids': [ref('tax_report_41')],
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('tax_report_31a'), ref('tax_report_34')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_160000'),
+                    'minus_report_line_ids': [ref('tax_report_41')],
+                }),
+            ]"/>
+        </record>
+
+        <record id="l10n_si_vat_9_purchase_estate_76a" model="account.tax.template">
+            <field name="name">9,5% VAT 76.a</field>
+            <field name="description">VAT deduction from the purchase of real estate specified in Article 76.a at a rate of 9,5%</field>
+            <field name="amount">9.5</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="active" eval="False"/>
+            <field name="chart_template_id" ref="gd_chart"/>
+            <field name="tax_group_id" ref="tax_group_95"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_31a'), ref('tax_report_34')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_160000'),
+                    'plus_report_line_ids': [ref('tax_report_42')],
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('tax_report_31a'), ref('tax_report_34')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_160000'),
+                    'minus_report_line_ids': [ref('tax_report_42')],
+                }),
+            ]"/>
+        </record>
+
+        <record id="l10n_si_vat_5_purchase_estate_76a" model="account.tax.template">
+            <field name="name">5% VAT 76.a</field>
+            <field name="description">VAT deduction from the purchase of real estate specified in Article 76.a at a rate of 5%</field>
+            <field name="amount">5</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="active" eval="False"/>
+            <field name="chart_template_id" ref="gd_chart"/>
+            <field name="tax_group_id" ref="tax_group_5"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_31a'), ref('tax_report_34')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_160000'),
+                    'plus_report_line_ids': [ref('tax_report_42a')],
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('tax_report_31a'), ref('tax_report_34')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_160000'),
+                    'minus_report_line_ids': [ref('tax_report_42a')],
+                }),
+            ]"/>
+        </record>
+
+        <record id="l10n_si_vat_22_purchase_fixed" model="account.tax.template">
+            <field name="name">22% VAT fixed assets</field>
+            <field name="description">VAT deduction from the purchase of other fixed assets at the rate of 22%</field>
+            <field name="amount">22</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="active" eval="False"/>
+            <field name="chart_template_id" ref="gd_chart"/>
+            <field name="tax_group_id" ref="tax_group_22"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_31'), ref('tax_report_35')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_160000'),
+                    'plus_report_line_ids': [ref('tax_report_41')],
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('tax_report_31'), ref('tax_report_35')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_160000'),
+                    'minus_report_line_ids': [ref('tax_report_41')],
+                }),
+            ]"/>
+        </record>
+
+        <record id="l10n_si_vat_9_purchase_fixed" model="account.tax.template">
+            <field name="name">9,5% VAT fixed assets</field>
+            <field name="description">VAT deduction from the purchase of other fixed assets at the rate of 9,5%</field>
+            <field name="amount">9.5</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="active" eval="False"/>
+            <field name="chart_template_id" ref="gd_chart"/>
+            <field name="tax_group_id" ref="tax_group_95"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_31'), ref('tax_report_35')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_160000'),
+                    'plus_report_line_ids': [ref('tax_report_42')],
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('tax_report_31'), ref('tax_report_35')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_160000'),
+                    'minus_report_line_ids': [ref('tax_report_42')],
+                }),
+            ]"/>
+        </record>
+
+        <record id="l10n_si_vat_5_purchase_fixed" model="account.tax.template">
+            <field name="name">5% VAT fixed assets</field>
+            <field name="description">VAT deduction from the purchase of other fixed assets at the rate of 5%</field>
+            <field name="amount">5</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="active" eval="False"/>
+            <field name="chart_template_id" ref="gd_chart"/>
+            <field name="tax_group_id" ref="tax_group_5"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_31'), ref('tax_report_35')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_160000'),
+                    'plus_report_line_ids': [ref('tax_report_42a')],
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('tax_report_31'), ref('tax_report_35')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_160000'),
+                    'minus_report_line_ids': [ref('tax_report_42a')],
+                }),
+            ]"/>
+        </record>
+
+        <record id="l10n_si_vat_0_purchase_fixed" model="account.tax.template">
+            <field name="name">0% VAT fixed assets</field>
+            <field name="description">VAT deduction from the purchase of other fixed assets at the rate of 0%</field>
+            <field name="amount">0</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="active" eval="False"/>
+            <field name="chart_template_id" ref="gd_chart"/>
+            <field name="tax_group_id" ref="tax_group_0"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_33'), ref('tax_report_35')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('tax_report_33'), ref('tax_report_35')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+            ]"/>
+        </record>
+
+        <record id="l10n_si_vat_22_purchase_fixed_eu" model="account.tax.template">
+            <field name="name">22% VAT EU fixed assets</field>
+            <field name="description">VAT deduction from the purchase of other fixed assets from other EU Member States at the rate of 22%</field>
+            <field name="amount">22</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="active" eval="False"/>
+            <field name="chart_template_id" ref="gd_chart"/>
+            <field name="tax_group_id" ref="tax_group_22"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_32'), ref('tax_report_35')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_160000'),
+                    'plus_report_line_ids': [ref('tax_report_41')],
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('tax_report_32'), ref('tax_report_35')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_160000'),
+                    'minus_report_line_ids': [ref('tax_report_41')],
+                }),
+            ]"/>
+        </record>
+
+        <record id="l10n_si_vat_9_purchase_fixed_eu" model="account.tax.template">
+            <field name="name">9,5% VAT EU fixed assets</field>
+            <field name="description">VAT deduction from the purchase of other fixed assets from other EU Member States at the rate of 9,5%</field>
+            <field name="amount">9.5</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="active" eval="False"/>
+            <field name="chart_template_id" ref="gd_chart"/>
+            <field name="tax_group_id" ref="tax_group_95"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_32'), ref('tax_report_35')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_160000'),
+                    'plus_report_line_ids': [ref('tax_report_42')],
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('tax_report_32'), ref('tax_report_35')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_160000'),
+                    'minus_report_line_ids': [ref('tax_report_42')],
+                }),
+            ]"/>
+        </record>
+
+        <record id="l10n_si_vat_5_purchase_fixed_eu" model="account.tax.template">
+            <field name="name">5% VAT EU fixed assets</field>
+            <field name="description">VAT deduction from the purchase of other fixed assets from other EU Member States at the rate of 5%</field>
+            <field name="amount">5</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="active" eval="False"/>
+            <field name="chart_template_id" ref="gd_chart"/>
+            <field name="tax_group_id" ref="tax_group_5"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_32'), ref('tax_report_35')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_160000'),
+                    'plus_report_line_ids': [ref('tax_report_42a')],
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'minus_report_line_ids': [ref('tax_report_32'), ref('tax_report_35')],
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('gd_acc_160000'),
+                    'minus_report_line_ids': [ref('tax_report_42a')],
+                }),
+            ]"/>
+        </record>
+    <!-- Purchases [END] -->
 </odoo>
