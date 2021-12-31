@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="knowledge.file_block">
+        <div class="d-flex bg-light border p-1 my-3" contenteditable="false">
+            <img t-att-src="src" class="o_image mr-3" t-att-data-mimetype="img.mimetype"/>
+            <div>
+                <div t-esc="img.name"/>
+                <div t-esc="img.mimetype"/>
+                <div>
+                    <a href="#"><i class="fa fa-fw fa-envelope"/></a>
+                    <a href="#"><i class="fa fa-fw fa-paperclip"/></a>
+                    <a href="#"><i class="fa fa-fw fa-download"/></a>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

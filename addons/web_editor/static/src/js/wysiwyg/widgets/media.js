@@ -436,7 +436,13 @@ var FileWidget = SearchableMediaWidget.extend({
                 img.access_token = access_token[0];
             });
         }
-
+        return this._renderMedia(img);
+    },
+    /**
+     * @param {Object} img
+     * @returns
+     */
+    _renderMedia: function (img) {
         if (img.image_src) {
             var src = img.image_src;
             if (!img.public && img.access_token) {

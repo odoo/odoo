@@ -171,7 +171,7 @@ const KnowledgeFormRenderer = FormRenderer.extend({
 
     /**
      * Refresh the icons
-     * @param {HTMLElement} $tree
+     * @param {jQuery} $tree
      */
     _refreshIcons: function ($tree) {
         this._traverse($tree, $li => {
@@ -185,6 +185,7 @@ const KnowledgeFormRenderer = FormRenderer.extend({
 
     /**
      * Helper function to traverses the nested list (dfs)
+     * @param {jQuery} $tree
      * @param {Function} callback
      */
     _traverse: function ($tree, callback) {
