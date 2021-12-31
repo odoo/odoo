@@ -417,6 +417,12 @@ class MassMailing(models.Model):
             if mailing.ab_testing_enabled and not mailing.campaign_id
         ]
         self.env['utm.campaign'].create(campaign_vals)
+
+        # fix attachment ownership
+        for mailing in mailings:
+            if mailing.attachment_ids:
+                mailing.attachment_ids.write({'res_model': self._name, 'res_id': mailing.id})
+
         return mailings
 
     def write(self, values):
