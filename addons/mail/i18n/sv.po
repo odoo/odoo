@@ -19,10 +19,10 @@
 # Jakob Krabbe <jakob.krabbe@vertel.se>, 2020
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2021
 # STefan Rundgren <stefanrundgren@cellglas.com>, 2021
-# Chrille Hedberg <hedberg.chrille@gmail.com>, 2021
 # Kim Asplund <kim.asplund@gmail.com>, 2021
 # Victor Ekström, 2021
 # Simon S, 2021
+# Chrille Hedberg <hedberg.chrille@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -30,7 +30,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:11+0000\n"
-"Last-Translator: Simon S, 2021\n"
+"Last-Translator: Chrille Hedberg <hedberg.chrille@gmail.com>, 2021\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1052,7 +1052,7 @@ msgstr "Vänliga hälsningar,"
 #: model:ir.model.fields,field_description:mail.field_res_partner__is_blacklisted
 #: model:ir.model.fields,field_description:mail.field_res_users__is_blacklisted
 msgid "Blacklist"
-msgstr ""
+msgstr "Svartlista"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_tree
@@ -1172,7 +1172,7 @@ msgstr "Kopia"
 #: model:ir.model.fields,help:mail.field_mail_activity__activity_decoration
 #: model:ir.model.fields,help:mail.field_mail_activity_type__decoration_type
 msgid "Change the background color of the related activities of this type."
-msgstr ""
+msgstr "Ändra bakgrundsfärgen för relaterade aktiviteter av den här typen."
 
 #. module: mail
 #. openerp-web
@@ -1435,7 +1435,7 @@ msgstr "Konversationer"
 #: model:ir.model.fields,help:mail.field_res_partner__message_bounce
 #: model:ir.model.fields,help:mail.field_res_users__message_bounce
 msgid "Counter of the number of bounced emails for this contact"
-msgstr ""
+msgstr "Antal studsade e-post för denna kontakt"
 
 #. module: mail
 #. openerp-web
@@ -1614,22 +1614,22 @@ msgstr "Standard"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__default_description
 msgid "Default Description"
-msgstr ""
+msgstr "Standardbeskrivning"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__default_next_type_id
 msgid "Default Next Activity"
-msgstr ""
+msgstr "Standard nästa aktivitet"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__summary
 msgid "Default Summary"
-msgstr ""
+msgstr "Standardsammanfattning"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__default_user_id
 msgid "Default User"
-msgstr ""
+msgstr "Standardanvändare"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview__null_value
@@ -2617,6 +2617,8 @@ msgid ""
 "ID of the parent record holding the alias (example: project holding the task"
 " creation alias)"
 msgstr ""
+"ID på överliggande post med aliaset (exempel: projekt som har alias för "
+"skapa uppgift)"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__icon
@@ -2724,6 +2726,8 @@ msgid ""
 "If the email address is on the blacklist, the contact won't receive mass "
 "mailing anymore, from any list"
 msgstr ""
+"Om e-postadressen finns med på listan över svartlistade kommer kontakten "
+"inte få massutskick alls, från någon lista"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__alias_domain
@@ -3103,7 +3107,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_thread_cc__email_cc
 msgid "List of cc from incoming emails."
-msgstr ""
+msgstr "Lista på CC från inkommande e-post"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_wizard_invite__channel_ids
@@ -4502,7 +4506,7 @@ msgstr "Planerade aktiviteter"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_tree
 msgid "Planned in"
-msgstr ""
+msgstr "Planerad om"
 
 #. module: mail
 #. openerp-web
@@ -4750,7 +4754,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__next_type_ids
 msgid "Recommended Next Activities"
-msgstr ""
+msgstr "Rekommenderade nästa aktiviteter"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_force_thread_id
@@ -5023,7 +5027,7 @@ msgstr "Planera"
 #: code:addons/mail/static/src/js/activity.js:0
 #, python-format
 msgid "Schedule Activity"
-msgstr ""
+msgstr "Planera aktivitet"
 
 #. module: mail
 #. openerp-web
@@ -5517,7 +5521,7 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_res_partner__user_id
 #: model:ir.model.fields,help:mail.field_res_users__user_id
 msgid "The internal user in charge of this contact."
-msgstr ""
+msgstr "Den interna användaren som ansvarar för denna kontakt."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_model_id
@@ -5736,7 +5740,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_activity__force_next
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__force_next
 msgid "Trigger Next Activity"
-msgstr ""
+msgstr "Utlös nästa aktivitet"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__message_type
@@ -6677,7 +6681,7 @@ msgstr ""
 #. module: mail
 #: model:mail.channel,name:mail.channel_1
 msgid "sales"
-msgstr ""
+msgstr "försäljning"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0
