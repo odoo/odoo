@@ -74,6 +74,12 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"                <p>Hallo <t t-out=\"object.partner_id.name or ''\"/>,</p>\n"
+"                <p>Unten finden Sie die Guidelines der {{ object.mail_group_id.name }} Mailing-Liste.</p>\n"
+"                <p><t t-out=\"object.mail_group_id.moderation_guidelines_msg or ''\"/></p>\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_message

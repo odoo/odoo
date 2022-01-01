@@ -2,12 +2,17 @@
 # This file contains the translation of the following modules:
 # 	* mail
 # 
+# Translators:
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2021
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:23+0000\n"
+"Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2021\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,7 +44,7 @@ msgstr ""
 #: code:addons/mail/models/mail_activity.py:0
 #, python-format
 msgid "%(activity_name)s: %(summary)s assigned to you"
-msgstr ""
+msgstr "%(activity_name)s: %(summary)s vám pridelené"
 
 #. module: mail
 #: code:addons/mail/wizard/mail_wizard_invite.py:0
@@ -418,6 +423,12 @@ msgid ""
 "                                The email will be sent for all the records selected in the list.<br/>\n"
 "                                Confirming this wizard will probably take a few minutes blocking your browser."
 msgstr ""
+"<strong>\n"
+"                                    Všetkým záznamom vyhovujúcim aktuálnym výberovým kritériám bude zaslaný mail,\n"
+"                                    nielen tým zo zoznamu.\n"
+"                                </strong><br/>\n"
+"                                Email bude zaslaný na všetky vybrané záznamy.<br/>\n"
+"                                Potvrdenie tohto pomocníka pravdepdobne na niekoľko minú zablokuje browser."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_notification_email
@@ -441,6 +452,11 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 msgid "<strong>Recommended Activities</strong>"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+msgid "A channel of type 'chat' cannot have more than two users."
 msgstr ""
 
 #. module: mail
@@ -1454,6 +1470,13 @@ msgstr ""
 #: code:addons/mail/static/src/js/tours/mail.js:0
 #, python-format
 msgid "Click on your message"
+msgstr ""
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/message_in_reply_to_view/message_in_reply_to_view.xml:0
+#, python-format
+msgid "Click to see the attachments"
 msgstr ""
 
 #. module: mail
@@ -2543,7 +2566,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:mail.selection__mail_alias__alias_contact__everyone
 #: model:ir.model.fields.selection,name:mail.selection__mail_channel__public__public
 msgid "Everyone"
-msgstr ""
+msgstr "Každý"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__notification_status__exception
@@ -2972,7 +2995,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
 msgid "Hello"
-msgstr ""
+msgstr "Dobrý deň, "
 
 #. module: mail
 #: code:addons/mail/wizard/mail_wizard_invite.py:0
@@ -4717,7 +4740,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/attachment_delete_confirm_dialog/attachment_delete_confirm_dialog.xml:0
 #, python-format
 msgid "Ok"
-msgstr ""
+msgstr "Ok"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__old_value_char
@@ -4800,6 +4823,12 @@ msgstr ""
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
 msgid "Only logged notes can have their content updated on model '%s'"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_thread.py:0
+#, python-format
+msgid "Only messages type comment can have their content updated"
 msgstr ""
 
 #. module: mail
@@ -5117,7 +5146,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
 msgid "Please contact us instead using"
-msgstr ""
+msgstr "Kontaktujte nás, prosím, odoslaním správy na adresu: "
 
 #. module: mail
 #. openerp-web
@@ -5431,7 +5460,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/message_seen_indicator/message_seen_indicator.js:0
 #, python-format
 msgid "Received by Everyone"
-msgstr ""
+msgstr "Každý je prijímateľom"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner__partner_id
@@ -5887,7 +5916,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/message_seen_indicator/message_seen_indicator.js:0
 #, python-format
 msgid "Seen by Everyone"
-msgstr ""
+msgstr "Videli všetci"
 
 #. module: mail
 #. openerp-web
@@ -6529,7 +6558,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
 msgid "The email sent to"
-msgstr ""
+msgstr "Mail odoslaný na adresu"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode__substitution
@@ -7291,7 +7320,7 @@ msgstr ""
 #: code:addons/mail/static/src/js/activity.js:0
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Varovanie"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__activity_date_deadline_range_type__weeks
@@ -7671,6 +7700,8 @@ msgid ""
 "cannot be processed. This address\n"
 "    is used to collect replies and should not be used to directly contact"
 msgstr ""
+"nie je možné spracovať. Táto adresa\n"
+"    sa používa na zber odpovedí a nemá sa používať na priame kontaktovanie spoločnosti."
 
 #. module: mail
 #: code:addons/mail/models/mail_alias.py:0

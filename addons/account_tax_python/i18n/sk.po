@@ -2,12 +2,16 @@
 # This file contains the translation of the following modules:
 # 	* account_tax_python
 # 
+# Translators:
+# Martin Ondrejka <martin.ondrejka@anuva.eu>, 2021
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2021-09-14 12:20+0000\n"
+"Last-Translator: Martin Ondrejka <martin.ondrejka@anuva.eu>, 2021\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,6 +33,16 @@ msgid ""
 "        e.g 200 * (1 - 10%) = 180 (price included)\n"
 "        "
 msgstr ""
+"\n"
+"    - Skupina daní: Daň je skupinou čiastkových daní.\n"
+"    - Fixná: výška dane zostáva rovnaká bez ohľadu na cenu.\n"
+"    - Percento z ceny: Výška dane je % z ceny:\n"
+"        napr. 100 * (1 + 10%) = 110 (nie je zahrnuté v cene)\n"
+"        napr. 110 / (1 + 10%) = 100 (zahrnuté v cene)\n"
+"    - Percento z ceny vrátane dane: Výška dane je podielom z ceny:\n"
+"        napr. 180 / (1 - 10%) = 200 (nie je zahrnuté v cene)\n"
+"        napr. 200 * (1 - 10%) = 180 (zahrnuté v cene)\n"
+"        "
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_applicable
