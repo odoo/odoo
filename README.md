@@ -29,4 +29,6 @@ Getting started with Odoo
 For a standard installation please follow the <a href="https://www.odoo.com/documentation/15.0/administration/install.html">Setup instructions</a>
 from the documentation.
 
+Or Run without installation [![TeamCode try-it-now](https://static01.teamcode.com/badge/teamcode-badge-run-in-cloud-en.svg)](https://www.teamcode.com/tin/clone?applicationId=275682948625801216)
+
 To learn the software, we recommend the <a href="https://www.odoo.com/slides">Odoo eLearning</a>, or <a href="https://www.odoo.com/page/scale-up-business-game">Scale-up</a>, the <a href="https://www.odoo.com/page/scale-up-business-game">business game</a>. Developers can start with <a href="https://www.odoo.com/documentation/15.0/developer/howtos.html">the developer tutorials</a>
