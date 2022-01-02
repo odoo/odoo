@@ -866,7 +866,7 @@ msgstr "Tài khoản được dùng để ghi nhận đặt cọc"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_accrued_revenue_entry
 msgid "Accrued Revenue Entry"
-msgstr ""
+msgstr "Mục nhập doanh thu tích lũy"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_needaction
@@ -1810,7 +1810,7 @@ msgstr "Extra Values"
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "Extra line with %s"
-msgstr ""
+msgstr "Dòng thêm với %s"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_fedex
@@ -2811,7 +2811,7 @@ msgstr "Đóng gói"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_packaging_qty
 msgid "Packaging Quantity"
-msgstr ""
+msgstr "Số lượng đóng gói"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales__partner_id
@@ -3857,12 +3857,12 @@ msgstr "Thành tiền"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_report_view_tree
 msgid "Sum of Total"
-msgstr ""
+msgstr "Tổng cộng"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_report_view_tree
 msgid "Sum of Untaxed Total"
-msgstr ""
+msgstr "Tổng cộng tổng chưa thuế"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tag_ids
@@ -3873,7 +3873,7 @@ msgstr "Tag"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tax_country_id
 msgid "Tax Country"
-msgstr ""
+msgstr "Quốc gia tính thuế"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_tree
@@ -3884,7 +3884,7 @@ msgstr "Tổng thuế"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tax_totals_json
 msgid "Tax Totals Json"
-msgstr ""
+msgstr "Tổng số thuế Json"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_tax
@@ -3905,6 +3905,8 @@ msgid ""
 "Team %(team_name)s has %(sale_order_count)s active sale orders. Consider "
 "canceling them or archiving the team instead."
 msgstr ""
+"Đội %(team_name)s có %(sale_order_count)s đơn bán hàng đang hoạt động. Cân "
+"nhắc hủy hoặc lưu trữ đội. "
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__show_update_pricelist
@@ -3941,7 +3943,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__terms_type
 msgid "Terms & Conditions format"
-msgstr ""
+msgstr "Định dạng Điều khoản & Điều kiện"
 
 #. module: sale
 #: code:addons/sale/models/sale_order.py:0
@@ -4149,6 +4151,11 @@ msgid ""
 "- You should deliver your products before invoicing them: Click on the \"truck\" icon (top-right of your screen) and follow instructions.\n"
 "- You should modify the invoicing policy of your product: Open the product, go to the \"Sales\" tab and modify invoicing policy from \"delivered quantities\" to \"ordered quantities\". For Services, you should modify the Service Invoicing Policy to 'Prepaid'."
 msgstr ""
+"Không có gì để xuất hóa đơn!\n"
+"\n"
+"(Các) lý do của hành vi này có thể là:\n"
+"- Bạn nên giao sản phẩm trước khi xuất hóa đơn:            Nhấp vào biểu tượng \"xe tải\" (trên cùng bên phải màn hình) và làm theo hướng dẫn.\n"
+"- Bạn nên sửa đổi chính sách xuất hóa đơn cho sản phẩm: Mở sản phẩm, đi tới tab \"Bán hàng\" và sửa đổi chính sách lập hóa đơn từ \"số lượng đã giao\" thành \"số lượng đặt hàng\". Đối với dịch vụ, bạn nên sửa đổi chính sách xuất hóa đơn dịch vụ thành 'Trả trước'."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4465,7 +4472,7 @@ msgstr "Update Prices"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Upsell %(order)s for customer %(customer)s"
-msgstr ""
+msgstr "Bán gia tăng %(order)s cho khách hàng %(customer)s"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__invoice_status__upselling
@@ -4671,7 +4678,7 @@ msgstr "đơn hàng"
 #: model:mail.template,report_name:sale.email_template_edi_sale
 #: model:mail.template,report_name:sale.mail_template_sale_confirmation
 msgid "{{ (object.name or '').replace('/','_') }}"
-msgstr ""
+msgstr "{{ (object.name or '').replace('/','_') }}"
 
 #. module: sale
 #: model:mail.template,subject:sale.mail_template_sale_confirmation

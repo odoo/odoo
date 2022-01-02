@@ -454,6 +454,11 @@ msgid "<strong>Recommended Activities</strong>"
 msgstr "<strong>Aanbevolen activiteiten:</strong>"
 
 #. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+msgid "A channel of type 'chat' cannot have more than two users."
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_defaults
 #: model:ir.model.fields,help:mail.field_mail_channel__alias_defaults
 msgid ""
@@ -1510,6 +1515,13 @@ msgstr "Klik hier om opnieuw te proberen"
 #, python-format
 msgid "Click on your message"
 msgstr "Klik op je bericht"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/message_in_reply_to_view/message_in_reply_to_view.xml:0
+#, python-format
+msgid "Click to see the attachments"
+msgstr ""
 
 #. module: mail
 #. openerp-web
@@ -4981,6 +4993,12 @@ msgstr ""
 #, python-format
 msgid "Only logged notes can have their content updated on model '%s'"
 msgstr "Alleen gelogde notities kunnen worden bijgewerkt op model '%s'"
+
+#. module: mail
+#: code:addons/mail/models/mail_thread.py:0
+#, python-format
+msgid "Only messages type comment can have their content updated"
+msgstr ""
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0

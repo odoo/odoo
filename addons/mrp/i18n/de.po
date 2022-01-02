@@ -49,8 +49,8 @@
 # Ahmed Aly <ahmed.aly@datenpol.at>, 2021
 # Raymond Vetter, 2021
 # Martin Trigaux, 2021
-# Friederike Fasterling-Nesselbosch, 2021
 # Robert Förster <hello@suppliot.eu>, 2021
+# Friederike Fasterling-Nesselbosch, 2021
 # 
 msgid ""
 msgstr ""
@@ -58,7 +58,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-07 10:46+0000\n"
 "PO-Revision-Date: 2016-08-05 13:06+0000\n"
-"Last-Translator: Robert Förster <hello@suppliot.eu>, 2021\n"
+"Last-Translator: Friederike Fasterling-Nesselbosch, 2021\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -143,7 +143,7 @@ msgstr "%s (Kopie)"
 #: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid "%s (new) %s"
-msgstr ""
+msgstr "%s (neu) %s"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -160,7 +160,7 @@ msgstr "%s kann nicht gelöscht werden. Versuchen Sie, sie vorher abzubrechen."
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 msgid "&amp; Cost"
-msgstr ""
+msgstr "&amp; Kosten"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_immediate_production
@@ -1523,6 +1523,8 @@ msgid ""
 "Define the components and finished products you wish to use in\n"
 "                bill of materials and manufacturing orders."
 msgstr ""
+"Definieren Sie die Komponenten und fertige Produkte, die Sie in\n"
+"Stücklisten und Produktionsaufträgen verwenden möchten."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__resource_calendar_id
@@ -1687,7 +1689,7 @@ msgstr "Dropdown-Menü"
 #: code:addons/mrp/wizard/stock_assign_serial_numbers.py:0
 #, python-format
 msgid "Duplicate Serial Numbers (%s)"
-msgstr ""
+msgstr "Seriennummern duplizieren (%s)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_cycle
@@ -1797,7 +1799,7 @@ msgstr "Geschätzte Dauer"
 #: model_terms:ir.ui.view,arch_db:mrp.view_work_center_load_graph
 #: model_terms:ir.ui.view,arch_db:mrp.view_workcenter_load_pivot
 msgid "Expected Duration (minutes)"
-msgstr ""
+msgstr "Erwartete Dauer (Minuten)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_assign_serial__expected_qty
@@ -3643,7 +3645,7 @@ msgstr "Produktive Zeit"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__productive_time
 msgid "Productive hours over the last month"
-msgstr ""
+msgstr "Produktive Stunden im letzten Monat"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
@@ -4504,11 +4506,13 @@ msgid ""
 "The serial number %(number)s used for component %(component)s has already "
 "been consumed"
 msgstr ""
+"Die für die Komponente %(component)s verwendete Seriennummer%(number)s wurde"
+" bereits verbraucht."
 
 #. module: mrp
 #: model:ir.model.constraint,message:mrp.constraint_mrp_workcenter_tag_tag_name_unique
 msgid "The tag name must be unique."
-msgstr ""
+msgstr "Der Tag-Name muss eindeutig sein."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
@@ -4528,7 +4532,7 @@ msgstr ""
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid "The work order should have already been processed."
-msgstr ""
+msgstr "Der Arbeitsauftrag sollte bereits bearbeitet worden sein."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__theme_template_id
@@ -4546,6 +4550,8 @@ msgstr ""
 msgid ""
 "There are no components to consume. Are you still sure you want to continue?"
 msgstr ""
+"Es gibt keine Komponenten zu verbrauchen. Sind Sie immer noch sicher, dass "
+"Sie fortfahren wollen?"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_unbuild_moves
@@ -5044,7 +5050,7 @@ msgstr "Wartet auf einen anderen Fertigungsauftrag"
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_workorder__state__waiting
 msgid "Waiting for components"
-msgstr ""
+msgstr "Warten auf Komponenten"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:0
@@ -5414,6 +5420,8 @@ msgid ""
 "You cannot change the workcenter of a work order that is in progress or "
 "done."
 msgstr ""
+"Sie können den Arbeitsplatz eines laufenden oder erledigten Arbeitsauftrags "
+"nicht ändern."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
@@ -5446,6 +5454,8 @@ msgstr ""
 #, python-format
 msgid "You cannot move a manufacturing order once it is cancelled or done."
 msgstr ""
+"Sie können einen stornierten oder erledigten Produktionsauftrag nicht mehr "
+"verschieben."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:0

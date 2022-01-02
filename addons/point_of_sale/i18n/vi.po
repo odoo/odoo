@@ -56,21 +56,21 @@ msgstr ""
 #, python-format
 msgid ""
 "%s has a total amount of %s, are you sure you want to delete this order ?"
-msgstr ""
+msgstr "%s có tổng tiền là %s, bạn có chắc muốn xóa đơn hàng này? "
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Screens/ReceiptScreen/ReceiptScreen.xml:0
 #, python-format
 msgid "& invoice"
-msgstr ""
+msgstr "& hóa đơn"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Screens/ReceiptScreen/ReceiptScreen.xml:0
 #, python-format
 msgid "(Both will be sent by email)"
-msgstr ""
+msgstr "(Cả hai sẽ được gửi qua email)"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:0
@@ -83,7 +83,7 @@ msgstr "(CỨU NẠN CHO PHIÊN %(session)s)"
 #: code:addons/point_of_sale/static/src/xml/Popups/ProductInfoPopup.xml:0
 #, python-format
 msgid "(as of opening)"
-msgstr ""
+msgstr "(khi mở)"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -95,7 +95,7 @@ msgstr "(cập nhật)"
 #: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
 #, python-format
 msgid ". Please contact your manager to accept the closing difference."
-msgstr ""
+msgstr ". Vui lòng liên hệ quản lý để chấp nhận chênh lệch khi đóng. "
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -189,7 +189,7 @@ msgstr "<span class=\"oe_inline\"><b>Bỏ qua Màn hình Xem trước</b></span>
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "<span>Last Closing Cash Balance</span>"
-msgstr ""
+msgstr "<span>Số dư tiền mặt lần đóng cuối</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -212,6 +212,8 @@ msgid ""
 "<strong> &gt; Payment Terminals</strong>\n"
 "                                    in order to install a Payment Terminal and make a fully integrated payment method."
 msgstr ""
+"<strong> &gt; Thiết bị thanh toán</strong>\n"
+"                                    để cài đặt thiết bị thanh toán và định phương thức thanh toán hoàn toàn tích hợp.  "
 
 #. module: point_of_sale
 #. openerp-web
@@ -299,7 +301,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
 #, python-format
 msgid "Accept payments difference and post a profit/loss journal entry"
-msgstr ""
+msgstr "Chấp nhận chênh lệch thanh toán và vào sổ bút toán lãi/lỗ"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -404,7 +406,7 @@ msgstr "Thêm"
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ControlButtons/OrderlineCustomerNoteButton.js:0
 #, python-format
 msgid "Add Customer Note"
-msgstr ""
+msgstr "Thêm ghi chú khách hàng"
 
 #. module: point_of_sale
 #. openerp-web
@@ -434,7 +436,7 @@ msgstr "Chọn phương thức thanh toán"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Add notes on order lines to be printed on receipt and invoice"
-msgstr ""
+msgstr "Thêm ghi chú cho dòng đơn hàng để in trong biên lai và hóa đơn"
 
 #. module: point_of_sale
 #. openerp-web
@@ -473,7 +475,7 @@ msgstr "Trạm thanh toán Adyen"
 #: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
 #, python-format
 msgid "All active orders"
-msgstr ""
+msgstr "Tất cả đơn hàng đang hoạt động"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
@@ -515,12 +517,12 @@ msgstr "Cho phép Chiết khấu toàn cục trên đơn bán"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_coupon
 msgid "Allow the use of coupon and promotion programs in PoS."
-msgstr ""
+msgstr "Cho phép dùng phiếu giảm giá và chương trình khuyến mãi trong PoS. "
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_gift_card
 msgid "Allow the use of gift card"
-msgstr ""
+msgstr "Cho phép dùng thẻ quà tặng"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_orderline_customer_notes
@@ -528,6 +530,8 @@ msgid ""
 "Allow to write notes for customer on Orderlines. This will be shown in the "
 "receipt."
 msgstr ""
+"Cho phép ghi chú cho khách hàng trong dòng đơn hàng. Ghi chú sẽ được in "
+"trong biên lai. "
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__allowed_pricelist_ids
@@ -544,7 +548,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order_line__is_total_cost_computed
 msgid "Allows to know if the total cost has already been computed or not"
-msgstr ""
+msgstr "Cho phép biết nếu tổng chi phí đã được tính hay chưa"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment__amount
@@ -575,6 +579,8 @@ msgid ""
 "An error has occurred when trying to close the session.\n"
 "You will be redirected to the back-end to manually close the session."
 msgstr ""
+"Đã xảy ra lỗi khi cố đóng phiên.\n"
+"Bạn sẽ được điều hướng tới back-end để đóng phiên thủ công. "
 
 #. module: point_of_sale
 #. openerp-web
@@ -621,7 +627,7 @@ msgstr "Càng sớm càng tốt"
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__res_company__point_of_sale_update_stock_quantities__closing
 msgid "At the session closing (recommended)"
-msgstr ""
+msgstr "Khi đóng phiên (khuyên dùng)"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_company__point_of_sale_update_stock_quantities
@@ -722,7 +728,7 @@ msgstr "Ngân hàng"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__bank_payment_ids
 msgid "Bank Payments"
-msgstr ""
+msgstr "Thanh toán ngân hàng"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_bank_statement
@@ -794,6 +800,9 @@ msgid ""
 "When the session is open, we keep on loading all remaining partners in the background.\n"
 "In the meantime, you can use the 'Load Customers' button to load partners from database."
 msgstr ""
+"Theo mặc định, 100 đối tác được tải.\n"
+"Khi phiên mở, chúng tôi tiếp tục tải tất cả đối tác còn lại trong nền.\n"
+"Trong khi đó, bạn có thể sử dụng nút 'Tải khách hàng' để tải đối tác từ cơ sở dữ liệu. "
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_print_via_proxy
@@ -805,7 +814,7 @@ msgstr "Bỏ qua việc in ra trình duyệt và in thông qua proxy phần cứ
 #: code:addons/point_of_sale/static/src/xml/Popups/CashMoveReceipt.xml:0
 #, python-format
 msgid "CASH"
-msgstr ""
+msgstr "TIỀN MẶT"
 
 #. module: point_of_sale
 #. openerp-web
@@ -826,7 +835,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
 #, python-format
 msgid "Can't change customer"
-msgstr ""
+msgstr "Không thể thay đổi khách hàng"
 
 #. module: point_of_sale
 #. openerp-web
@@ -870,21 +879,21 @@ msgstr "Đã hủy"
 #: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/ControlButtons/InvoiceButton.js:0
 #, python-format
 msgid "Cannot Invoice"
-msgstr ""
+msgstr "Không thể xuất hóa đơn"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/Popups/ProductInfoPopup.js:0
 #, python-format
 msgid "Cannot access product information screen if offline."
-msgstr ""
+msgstr "Không thể truy cập màn hình thông tin sản phẩm nếu ngoại tuyến. "
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/Popups/ClosePosPopup.js:0
 #, python-format
 msgid "Cannot close the session when offline."
-msgstr ""
+msgstr "Không thể đóng phiên khi ngoại tuyến. "
 
 #. module: point_of_sale
 #. openerp-web
@@ -1097,7 +1106,7 @@ msgstr "Kiểm tra số tiền của hộp tiền mặt khi mở và đóng."
 #: code:addons/point_of_sale/static/src/js/Chrome.js:0
 #, python-format
 msgid "Check the internet connection then try again."
-msgstr ""
+msgstr "Kiểm tra kết nối internet và thử lại. "
 
 #. module: point_of_sale
 #. openerp-web
@@ -1143,7 +1152,7 @@ msgstr "Thành phố"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Click here to close the session"
-msgstr ""
+msgstr "Bấm vào đây để đóng phiên"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__barcode_rule__type__client
@@ -1196,7 +1205,7 @@ msgstr "Đóng"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_form_pos_close_session_wizard
 #, python-format
 msgid "Close Session"
-msgstr ""
+msgstr "Đóng phiên"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
@@ -1243,7 +1252,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Popups/ClosePosPopup.js:0
 #, python-format
 msgid "Closing session error"
-msgstr ""
+msgstr "Lỗi đóng phiên"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__value
@@ -1260,7 +1269,7 @@ msgstr "Giá trị của đồng tiền"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #, python-format
 msgid "Coins/Bills"
-msgstr ""
+msgstr "Tiền xu/tiền giấy"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
@@ -1307,7 +1316,7 @@ msgstr "Cấu hình cho các bút toán sổ nhật ký của đơn bán lẻ"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
 msgid "Configurations &gt; Settings"
-msgstr ""
+msgstr "Cấu hình &gt; Cài đặt"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_config_kanban
@@ -1329,7 +1338,7 @@ msgstr "Xác nhận"
 #: code:addons/point_of_sale/static/src/js/Popups/NumberPopup.js:0
 #, python-format
 msgid "Confirm ?"
-msgstr ""
+msgstr "Xác nhận? "
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -1378,7 +1387,7 @@ msgstr "Kết nối đến IoT Box"
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "Connection Error"
-msgstr ""
+msgstr "Lỗi kết nối"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1399,7 +1408,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Chrome.js:0
 #, python-format
 msgid "Connection is lost"
-msgstr ""
+msgstr "Mất kết nối"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1433,7 +1442,7 @@ msgstr "Tiếp tục Bán"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "Continue selling"
-msgstr ""
+msgstr "Tiếp tục bán"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__currency_rate
@@ -1452,7 +1461,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/Popups/ProductInfoPopup.xml:0
 #, python-format
 msgid "Cost:"
-msgstr ""
+msgstr "Chi phí: "
 
 #. module: point_of_sale
 #. openerp-web
@@ -1471,7 +1480,7 @@ msgstr "Quốc gia"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_coupon
 msgid "Coupon and Promotion Programs"
-msgstr ""
+msgstr "Chương trình phiếu giảm giá và khuyến mãi"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -1618,26 +1627,26 @@ msgstr "Công nợ khách hàng"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__customer_note
 #, python-format
 msgid "Customer Note"
-msgstr ""
+msgstr "Ghi chú khách hàng"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_orderline_customer_notes
 msgid "Customer Notes"
-msgstr ""
+msgstr "Ghi chú khách hàng"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "Customer Required"
-msgstr ""
+msgstr "Khách hàng yêu cầu"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "Customer is required for %s payment method."
-msgstr ""
+msgstr "Yêu cầu khách hàng cho phương thức thanh toán %s.  "
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_of_sale_customer
@@ -1742,6 +1751,8 @@ msgid ""
 "Defines the name of the payment method that will be displayed in the Point "
 "of Sale when the payments are selected."
 msgstr ""
+"Xác định tên của phương thức thanh toán sẽ hiển thị trong Điểm bán hàng khi "
+"thanh toán được chọn. "
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__barcode_nomenclature_id
@@ -1825,7 +1836,7 @@ msgstr "Chênh lệch"
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "Difference at closing PoS session"
-msgstr ""
+msgstr "Chênh lệch khi đóng phiên PoS"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__cash_register_difference
@@ -1960,7 +1971,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/ControlButtons/InvoiceButton.js:0
 #, python-format
 msgid "Do you want to open the customer list to select customer?"
-msgstr ""
+msgstr "Bạn có muốn mở danh sách khách hàng để chọn khách hàng không? "
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -2016,6 +2027,7 @@ msgstr "EDIT"
 #, python-format
 msgid "Either the server is inaccessible or browser is not connected online."
 msgstr ""
+"Không truy cập được máy chủ hoặc trình duyệt không kết nối trực tuyến. "
 
 #. module: point_of_sale
 #. openerp-web
@@ -2046,7 +2058,7 @@ msgstr "Email biên nhận"
 #: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
 #, python-format
 msgid "Email sent."
-msgstr ""
+msgstr "Email được gửi. "
 
 #. module: point_of_sale
 #. openerp-web
@@ -2131,14 +2143,14 @@ msgstr "Lỗi! Bạn không thể tạo nhóm với cấu trúc lặp đi lặp 
 #: code:addons/point_of_sale/static/src/js/Popups/ErrorTracebackPopup.js:0
 #, python-format
 msgid "Error with Traceback"
-msgstr ""
+msgstr "Lỗi truy xuất"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "Error: no internet connection."
-msgstr ""
+msgstr "Lỗi: không có kết nối internet. "
 
 #. module: point_of_sale
 #. openerp-web
@@ -2152,7 +2164,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Popups/ErrorTracebackPopup.js:0
 #, python-format
 msgid "Exit Pos"
-msgstr ""
+msgstr "Thoát PoS"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2307,7 +2319,7 @@ msgstr "Thẻ quà tặng"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Gift card"
-msgstr ""
+msgstr "Thẻ quà tặng"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -2420,7 +2432,7 @@ msgstr "Trang chủ"
 #: code:addons/point_of_sale/static/src/xml/Screens/ReceiptScreen/ReceiptScreen.xml:0
 #, python-format
 msgid "How would you like to receive your receipt"
-msgstr ""
+msgstr "Bạn muốn nhận biên lai theo cách nào"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__id
@@ -2464,7 +2476,7 @@ msgstr "Biểu tượng để chỉ ra một hoạt động ngoại lệ."
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__split_transactions
 msgid "Identify Customer"
-msgstr ""
+msgstr "Xác nhận khách hàng"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__message_needaction
@@ -2542,7 +2554,7 @@ msgstr "Theo thời gian thực"
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "Incorrect address for shipping"
-msgstr ""
+msgstr "Địa chỉ giao hàng không chính xác"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2622,7 +2634,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
 #, python-format
 msgid "Invalid email."
-msgstr ""
+msgstr "Email không hợp lệ. "
 
 #. module: point_of_sale
 #. openerp-web
@@ -2667,7 +2679,7 @@ msgstr "Sổ nhật ký hoá đơn"
 #: code:addons/point_of_sale/models/pos_payment.py:0
 #, python-format
 msgid "Invoice payment for %s (%s) using %s"
-msgstr ""
+msgstr "Thanh toán hóa đơn cho %s (%s) sử dụng %s"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__invoiced
@@ -2787,7 +2799,7 @@ msgstr "Bút toán phát sinh"
 #: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
 #, python-format
 msgid "Keep Session Open"
-msgstr ""
+msgstr "Tiếp tục mở phiên"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_digest_digest__kpi_pos_total_value
@@ -2873,7 +2885,7 @@ msgstr "Cập nhật gần đây vào"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
 msgid "Leave empty to use the default account from the company setting"
-msgstr ""
+msgstr "Để trống để sử dụng tài khoản mặc định từ cài đặt công ty"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__outstanding_account_id
@@ -2881,6 +2893,8 @@ msgid ""
 "Leave empty to use the default account from the company setting.\n"
 "Account used as outstanding account when creating accounting payment records for bank payments."
 msgstr ""
+"Để trống để sử dụng tài khoản mặc định từ cài đặt công ty.\n"
+"Tài khoản được sử dụng làm tài khoản chưa thanh toán khi lập hồ sơ thanh toán kế toán cho các khoản thanh toán qua ngân hàng."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__receivable_account_id
@@ -2946,17 +2960,17 @@ msgstr "Danh mục trả tiền mặt"
 #: code:addons/point_of_sale/static/src/xml/Screens/ClientListScreen/ClientListScreen.xml:0
 #, python-format
 msgid "Load Customers"
-msgstr ""
+msgstr "Tải khách hàng"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Load all remaining partners in the background"
-msgstr ""
+msgstr "Tải tất cả đối tác còn lại trong nền"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Load all remaining products in the background"
-msgstr ""
+msgstr "Tải tất cả sản phẩm còn lại trong nền"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3057,12 +3071,12 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Manage gift card"
-msgstr ""
+msgstr "Quản lý thẻ quà tặng"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Manage gift card."
-msgstr ""
+msgstr "Quản lý thẻ quà tặng. "
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -3072,7 +3086,7 @@ msgstr "Quản lý chương trình khuyến mại &amp; phiếu giảm giá"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Manage promotion and coupon programs."
-msgstr ""
+msgstr "Quản lý chương trình khuyến mãi và phiếu giảm giá. "
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__manual_discount
@@ -3097,14 +3111,14 @@ msgstr "Margin (%)"
 #: code:addons/point_of_sale/static/src/xml/Popups/ProductInfoPopup.xml:0
 #, python-format
 msgid "Margin:"
-msgstr ""
+msgstr "Biên lợi nhuận: "
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
 #, python-format
 msgid "Maximum Exceeded"
-msgstr ""
+msgstr "Đã vượt quá mức tối đa"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_has_error
@@ -3131,7 +3145,7 @@ msgstr "Ứng dụng POS-HR"
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ProductScreen.xml:0
 #, python-format
 msgid "More..."
-msgstr ""
+msgstr "Thêm..."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__my_activity_date_deadline
@@ -3158,21 +3172,21 @@ msgstr "Tên"
 #: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/ControlButtons/InvoiceButton.js:0
 #, python-format
 msgid "Need customer to invoice"
-msgstr ""
+msgstr "Cần khách hàng để xuất hóa đơn"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid ""
 "Need loss account for the following journals to post the lost amount: %s\n"
-msgstr ""
+msgstr "Cần tải khoản lỗ cho sổ kế toán sau để vào sổ khoản bị lỗ: %s\n"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid ""
 "Need profit account for the following journals to post the gained amount: %s"
-msgstr ""
+msgstr "Cần tải khoản lãi cho sổ kế toán sau để vào sổ khoản lãi: %s"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3261,7 +3275,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Screens/ClientListScreen/ClientListScreen.js:0
 #, python-format
 msgid "No customer found"
-msgstr ""
+msgstr "Không tìm thấy khách hàng "
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_sale_graph
@@ -3341,12 +3355,12 @@ msgstr "Số lượng hành động"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__number_of_opened_session
 msgid "Number of Opened Session"
-msgstr ""
+msgstr "Số phiên đã mở"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Number of Partners Loaded"
-msgstr ""
+msgstr "Số đối tác đã tải"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__nb_print
@@ -3356,12 +3370,12 @@ msgstr "Số lượng in"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Number of Products Loaded"
-msgstr ""
+msgstr "Số sản phẩm đã tải"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__refund_orders_count
 msgid "Number of Refund Orders"
-msgstr ""
+msgstr "Số đơn hàng hoàn tiền"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_has_error_counter
@@ -3371,7 +3385,7 @@ msgstr "Số lỗi"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order_line__refunded_qty
 msgid "Number of items refunded in this orderline."
-msgstr ""
+msgstr "Số mặt hàng hoàn tiền cho dòng đơn hàng này"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__message_needaction_counter
@@ -3408,7 +3422,7 @@ msgstr "Ngoại tuyến"
 #: code:addons/point_of_sale/static/src/js/Popups/OfflineErrorPopup.js:0
 #, python-format
 msgid "Offline Error"
-msgstr ""
+msgstr "Lỗi ngoại tuyến"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3451,6 +3465,8 @@ msgid ""
 "Only a negative quantity is allowed for this refund line. Click on +/- to "
 "modify the quantity to be refunded."
 msgstr ""
+"Chỉ cho phép số lượng âm cho dòng hoàn tiền này. Bấm vào +/- để chỉnh sửa số"
+" lượng sẽ hoàn tiền. "
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__only_round_cash_method
@@ -3460,17 +3476,17 @@ msgstr "Chỉ áp dụng Làm tròn tiền mặt"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Only load a limited number of customers at the opening of the PoS."
-msgstr ""
+msgstr "Chỉ tải số lượng khách hàng hạn chế khi mở PoS. "
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Only load most common products at the opening of the PoS."
-msgstr ""
+msgstr "Chỉ tải các sản phẩm phổ biến nhất khi mở PoS. "
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Only on cash methods"
-msgstr ""
+msgstr "Chỉ cho phương thức tiền mặt"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__restrict_price_control
@@ -3517,7 +3533,7 @@ msgstr "Mở Phiên"
 #: code:addons/point_of_sale/static/src/xml/Popups/CashOpeningPopup.xml:0
 #, python-format
 msgid "Open session"
-msgstr ""
+msgstr "Mở phiên"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3537,7 +3553,7 @@ msgstr "Được mở bởi"
 #: code:addons/point_of_sale/models/pos_config.py:0
 #, python-format
 msgid "Opened Sessions"
-msgstr ""
+msgstr "Phiên đã mở"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -3549,7 +3565,7 @@ msgstr "Được mở bởi"
 #: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
 #, python-format
 msgid "Opening"
-msgstr ""
+msgstr "Đang mở"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_session__state__opening_control
@@ -3677,7 +3693,7 @@ msgstr "Đơn hàng trống"
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "Order is not synced. Check your internet connection"
-msgstr ""
+msgstr "Đơn hàng chưa đồng bộ. Hãy kiểm tra kết nối internet"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -3769,14 +3785,14 @@ msgstr "Chi tiết đơn báng lẻ"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_payment__pos_payment_method_id
 msgid "POS Payment Method"
-msgstr ""
+msgstr "Phương thức thanh toán POS"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_product_tree_view
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_template_search_view_pos
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_template_tree_view
 msgid "POS Product Category"
-msgstr ""
+msgstr "Danh mục sản phẩm POS"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_digest_digest__kpi_pos_total
@@ -4057,7 +4073,7 @@ msgstr "Vui lòng kiểm tra xem máy in của bạn có còn kết nối không
 #: code:addons/point_of_sale/static/src/js/Popups/ClosePosPopup.js:0
 #, python-format
 msgid "Please check your internet connection and try again."
-msgstr ""
+msgstr "Vui lòng kiểm tra kết nối internet và thử lại. "
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/res_company.py:0
@@ -4403,7 +4419,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/Popups/ProductInfoPopup.xml:0
 #, python-format
 msgid "Price excl. VAT:"
-msgstr ""
+msgstr "Giá chưa gồm thuế VAT: "
 
 #. module: point_of_sale
 #. openerp-web
@@ -4537,7 +4553,7 @@ msgstr "Cấu hình sản phẩm"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__product_load_background
 msgid "Product Load Background"
-msgstr ""
+msgstr "Tải sản phẩm trong nền"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -4586,7 +4602,7 @@ msgstr "Biến thể sản phẩm"
 #: code:addons/point_of_sale/static/src/xml/Popups/ProductInfoPopup.xml:0
 #, python-format
 msgid "Product information"
-msgstr ""
+msgstr "Thông tin sản phẩm"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4597,6 +4613,8 @@ msgid ""
 "Product is not loaded. Tried loading the product from the server but there "
 "is a network error."
 msgstr ""
+"Sản phẩm không được tải. Đã thử tải sản phẩm từ máy chủ nhưng gặp lỗi kết "
+"nối mạng. "
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -4663,7 +4681,7 @@ msgstr "Số lượng"
 #: code:addons/point_of_sale/static/src/xml/Popups/CashMoveReceipt.xml:0
 #, python-format
 msgid "REASON"
-msgstr ""
+msgstr "LÝ DO"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4954,7 +4972,7 @@ msgstr "Phương pháp làm tròn"
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "Rounding error in payment lines"
-msgstr ""
+msgstr "Lỗi làm tròn trong dòng thanh toán "
 
 #. module: point_of_sale
 #. openerp-web
@@ -5060,7 +5078,7 @@ msgstr "Tìm khách hàng"
 #: code:addons/point_of_sale/static/src/xml/Screens/TicketScreen/TicketScreen.xml:0
 #, python-format
 msgid "Search Orders..."
-msgstr ""
+msgstr "Tìm kiếm đơn hàng..."
 
 #. module: point_of_sale
 #. openerp-web
@@ -5100,7 +5118,7 @@ msgstr "Chọn đơn"
 #: code:addons/point_of_sale/static/src/js/Popups/CashMovePopup.js:0
 #, python-format
 msgid "Select either Cash In or Cash Out before confirming."
-msgstr ""
+msgstr "Chọn Tiền thu hoặc Tiền chi trước khi xác nhận. "
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -5119,7 +5137,7 @@ msgstr "Chọn bảng giá"
 #: code:addons/point_of_sale/static/src/xml/Screens/TicketScreen/OrderDetails.xml:0
 #, python-format
 msgid "Select the product(s) to refund and set the quantity"
-msgstr ""
+msgstr "Chọn sản phẩm sẽ hoàn tiền và đặt số lượng"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__selectable_categ_ids
@@ -5129,7 +5147,7 @@ msgstr "Danh mục có thể chọn"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Sell products and deliver them later."
-msgstr ""
+msgstr "Bán sản phẩm và giao hàng sau. "
 
 #. module: point_of_sale
 #. openerp-web
@@ -5159,7 +5177,7 @@ msgstr "Gửi qua email"
 #: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
 #, python-format
 msgid "Sending email failed. Please try again."
-msgstr ""
+msgstr "Không thể gửi email. Hãy thử lại. "
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__sequence
@@ -5253,7 +5271,7 @@ msgstr "Chọn chách hàng"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__set_maximum_difference
 msgid "Set Maximum Difference"
-msgstr ""
+msgstr "Đặt chênh lệch tối đa "
 
 #. module: point_of_sale
 #. openerp-web
@@ -5268,6 +5286,8 @@ msgid ""
 "Set a maximum difference allowed between the expected and counted money "
 "during the closing of the session"
 msgstr ""
+"Đặt số chênh lệch tối đa được phép giữa số tiền dự tính và thu được trong "
+"khi đóng phiên "
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__set_maximum_difference
@@ -5275,6 +5295,8 @@ msgid ""
 "Set a maximum difference allowed between the expected and counted money "
 "during the closing of the session."
 msgstr ""
+"Đặt số chênh lệch tối đa được phép giữa số tiền dự tính và thu được trong "
+"khi đóng phiên. "
 
 #. module: point_of_sale
 #. openerp-web
@@ -5293,6 +5315,7 @@ msgstr "Thiết lập nhiều giá bán cho một sản phẩm, tự động chi
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Set of coins/bills that will be used in opening and closing control"
 msgstr ""
+"Đặt tiền xu/tiền giấy sẽ được sử dụng trong kiểm soát đóng và mở phiên"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -5320,7 +5343,7 @@ msgstr "Thiết lập"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #, python-format
 msgid "Ship Later"
-msgstr ""
+msgstr "Giao hàng sau"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__picking_policy
@@ -5354,7 +5377,7 @@ msgstr "Hiển thị thanh toán cho khách hàng bằng màn hình được k�
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_customer_facing_display_local
 msgid "Show checkout to customers."
-msgstr ""
+msgstr "Hiện thanh toán cho khách hàng. "
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__module_pos_hr
@@ -5434,7 +5457,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Specific route"
-msgstr ""
+msgstr "Tuyến cụ thể"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_pack_operation_lot
@@ -5444,7 +5467,7 @@ msgstr "Hãy chỉ ra số lô/sê-ri sản phẩm trong dòng đơn hàng PoS"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__route_id
 msgid "Spefic route for products delivered later."
-msgstr ""
+msgstr "Tuyến cụ thể cho sản phẩm giao sau. "
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__start_category
@@ -5701,6 +5724,8 @@ msgid ""
 "The Point of Sale could not find any product, client, employee or action "
 "associated with the scanned barcode."
 msgstr ""
+"Điểm bán hàng không thể tìm thấy sản phẩm, khách hàng, nhân viên hay tác vụ "
+"liên kết với mã vạch đã quét. "
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_rounding_form_view_inherited
@@ -5719,6 +5744,7 @@ msgid ""
 "The amount of your payment lines must be rounded to validate the "
 "transaction."
 msgstr ""
+"Số tiền trong dòng thanh toán phải được làm tròn để xác nhận giao dịch. "
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
@@ -5740,6 +5766,8 @@ msgid ""
 "The default pricelist must belong to no company or the company of the point "
 "of sale."
 msgstr ""
+"Bảng giá mặc định không được thuộc về công ty nào hoặc thuộc về công ty của "
+"điểm bán hàng. "
 
 #. module: point_of_sale
 #. openerp-web
@@ -5780,7 +5808,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
 #, python-format
 msgid "The maximum difference allowed is"
-msgstr ""
+msgstr "Chênh lệch tối đa được phép là"
 
 #. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_session_uniq_name
@@ -5816,6 +5844,8 @@ msgstr ""
 msgid ""
 "The payment method selected is not allowed in the config of the POS session."
 msgstr ""
+"Phương thức thanh toán được chọn không được phép trong cấu hình của phiên "
+"POS. "
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
@@ -5823,6 +5853,8 @@ msgstr ""
 msgid ""
 "The payment methods for the point of sale %s must belong to its company."
 msgstr ""
+"Phương thức thanh toán của điểm bán hàng %s phải thuộc về công ty của điểm "
+"đó. "
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__config_id
@@ -5890,6 +5922,8 @@ msgid ""
 "The requested quantity to be refunded is higher than the ordered quantity. "
 "%s is requested while only %s can be refunded."
 msgstr ""
+"Số lượng yêu cầu được hoàn tiền lớn hơn số lượng đã đặt hàng. %s được yêu "
+"cầu trong khi chỉ %s có thể được hoàn tiền. "
 
 #. module: point_of_sale
 #. openerp-web
@@ -5898,20 +5932,21 @@ msgstr ""
 msgid ""
 "The requested quantity to be refunded is higher than the refundable quantity"
 " of %s."
-msgstr ""
+msgstr "Số lượng yêu cầu hoàn tiền lớn hơn số lượng có thể hoàn tiền là %s. "
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
 #, python-format
 msgid "The sales journal of the point of sale %s must belong to its company."
 msgstr ""
+"Sổ bán hàng của điểm bán hàng %s phải thuộc về công ty của điểm bán hàng. "
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "The selected customer needs an address."
-msgstr ""
+msgstr "Khách hàng được chọn cần cung cấp địa chỉ. "
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
@@ -6010,6 +6045,8 @@ msgid ""
 "There is a difference between the amounts to post and the amounts of the "
 "orders, it is probably caused by taxes or accounting configurations changes."
 msgstr ""
+"Có chênh lệch giữa số tiền đã vào sổ và số tiền của đơn hàng, đây có thể do "
+"thuế hoặc thay đổi trong cấu hình kế toán. "
 
 #. module: point_of_sale
 #. openerp-web
@@ -6050,7 +6087,7 @@ msgstr "Không có đăng ký tiền mặt cho phiên PoS này"
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "There is no cash register in this session."
-msgstr ""
+msgstr "Không có ghi nhận tiền mặt cho phiên này. "
 
 #. module: point_of_sale
 #. openerp-web
@@ -6060,6 +6097,8 @@ msgid ""
 "There must be at least one product in your order before it can be validated "
 "and invoiced."
 msgstr ""
+"Phải có ít nhất một sản phẩm trong đơn hàng trước khi đơn hàng được xác nhận"
+" và xuất hóa đơn. "
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -6067,6 +6106,8 @@ msgid ""
 "This account is used as intermediary account when nothing is set in a "
 "payment method."
 msgstr ""
+"Tài khoản này được sử dụng làm tài khoản trung gian khi không có phương thức"
+" thanh toán được thiết lập. "
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__amount_authorized_diff
@@ -6113,7 +6154,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order_line__customer_note
 msgid "This is a note destined to the customer"
-msgstr ""
+msgstr "Đây là ghi chú dành cho khách hàng"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__allowed_pricelist_ids
@@ -6162,6 +6203,8 @@ msgid ""
 "This order already has refund lines for %s. We can't change the customer "
 "associated to it. Create a new order for the new customer."
 msgstr ""
+"Đơn hàng này đã có dòng hoàn tiền cho %s. Chúng tôi không thể thay đổi khách"
+" hàng liên kết với đơn hàng. Tạo đơn  hàng mới cho khách hàng mới. "
 
 #. module: point_of_sale
 #. openerp-web
@@ -6200,7 +6243,7 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "This session is already closed."
-msgstr ""
+msgstr "Phiên đã được đóng. "
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -6255,7 +6298,7 @@ msgstr "Cần trả"
 #: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/OrderlineDetails.js:0
 #, python-format
 msgid "To Refund: %s"
-msgstr ""
+msgstr "Cần hoàn tiền: %s"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_product_product__to_weight
@@ -6283,7 +6326,7 @@ msgstr "Để trả sản phẩm, bạn cần mở 1 phiên trong POS %s"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__to_ship
 msgid "To ship"
-msgstr ""
+msgstr "Để giao hàng"
 
 #. module: point_of_sale
 #. openerp-web
@@ -6307,7 +6350,7 @@ msgstr "Tổng giao dịch tiền mặt"
 #: code:addons/point_of_sale/static/src/xml/Popups/ProductInfoPopup.xml:0
 #, python-format
 msgid "Total Cost:"
-msgstr ""
+msgstr "Tổng chi phí: "
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__total_discount
@@ -6326,7 +6369,7 @@ msgstr "Tổng tới hạn"
 #: code:addons/point_of_sale/static/src/xml/Popups/ProductInfoPopup.xml:0
 #, python-format
 msgid "Total Margin:"
-msgstr ""
+msgstr "Tổng biên lợi nhuận"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -6348,7 +6391,7 @@ msgstr "Giá tổng"
 #: code:addons/point_of_sale/static/src/xml/Popups/ProductInfoPopup.xml:0
 #, python-format
 msgid "Total Price excl. VAT:"
-msgstr ""
+msgstr "Giá tổng chưa VAT: "
 
 #. module: point_of_sale
 #. openerp-web
@@ -6365,7 +6408,7 @@ msgstr "Tổng số tiền của thanh toán."
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__total_cost
 msgid "Total cost"
-msgstr ""
+msgstr "Tổng chi phí"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__cash_register_total_entry_encoding
@@ -6478,7 +6521,7 @@ msgstr "Không thể lưu các thay đổi."
 #: code:addons/point_of_sale/static/src/js/Chrome.js:0
 #, python-format
 msgid "Unable to show information about this error."
-msgstr ""
+msgstr "Không thể hiện thông tin về lỗi này. "
 
 #. module: point_of_sale
 #. openerp-web
@@ -6730,13 +6773,15 @@ msgid ""
 "You cannot close the POS when invoices are not posted.\n"
 "Invoices: %s"
 msgstr ""
+"Bạn không thể đóng POS khi hoá đơn không được đăng.\n"
+"Hoá đơn: %s"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "You cannot close the POS when orders are still in draft"
-msgstr ""
+msgstr "Bạn không thể đóng POS khi đơn hàng vẫn ở trạng thái nháp"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
@@ -6842,6 +6887,8 @@ msgstr ""
 msgid ""
 "You must have at least one payment method configured to launch a session."
 msgstr ""
+"Bạn phải có ít nhất một phương thức thanh toán được định cấu hình để khởi "
+"động một phiên. "
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
@@ -6856,6 +6903,8 @@ msgstr "You need a loss and profit account on your cash journal."
 msgid ""
 "You need to select the customer before you can invoice or ship an order."
 msgstr ""
+"Bạn cần chọn khách hàng trước khi bạn có thể xuất hoá đơn hoặc giao đơn "
+"hàng. "
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
@@ -6912,7 +6961,7 @@ msgstr "chiết khấu"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
 msgid "e.g. Cash"
-msgstr ""
+msgstr "VD: Tiền mặt"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -6922,7 +6971,7 @@ msgstr "vd: Địa chỉ Công ty, Website"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "e.g. NYC Shop"
-msgstr ""
+msgstr "VD. Cửa hàng NYC"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -6946,7 +6995,7 @@ msgstr "cho một đơn hàng của"
 #: code:addons/point_of_sale/static/src/xml/Popups/ProductInfoPopup.xml:0
 #, python-format
 msgid "forecasted"
-msgstr ""
+msgstr "dự báo"
 
 #. module: point_of_sale
 #. openerp-web
@@ -6970,7 +7019,7 @@ msgstr "ghi chú"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "open sessions"
-msgstr ""
+msgstr "mở phiên"
 
 #. module: point_of_sale
 #. openerp-web
