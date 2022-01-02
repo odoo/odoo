@@ -1424,7 +1424,7 @@ msgstr "Ausweichkonto"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_automatic_entry_wizard__destination_account_id
 msgid "Account to transfer to."
-msgstr ""
+msgstr "Zielkonto."
 
 #. module: account
 #: model:ir.model,name:account.model_account_tour_upload_bill
@@ -2970,7 +2970,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__can_group_payments
 msgid "Can Group Payments"
-msgstr ""
+msgstr "Kann Zahlungen gruppieren"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__visible
@@ -3211,7 +3211,7 @@ msgstr "Kategorie des Erlöskontos"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_automatic_entry_wizard__action__change_account
 msgid "Change Account"
-msgstr ""
+msgstr "Konto wechseln"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_automatic_entry_wizard__action__change_period
@@ -4216,6 +4216,8 @@ msgstr ""
 #, python-format
 msgid "Currency must always be provided in order to generate a QR-code"
 msgstr ""
+"Die Währung muss immer angegeben werden, um einen QR-Code generieren zu "
+"können."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__credit_currency_id
@@ -4358,7 +4360,7 @@ msgstr ""
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Customize your layout."
-msgstr ""
+msgstr "Passen Sie Ihr Layout an."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -7090,7 +7092,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_automatic_entry_wizard__journal_id
 msgid "Journal where to create the entry."
-msgstr ""
+msgstr "Journal, indem der Eintrag erstellt werden soll."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_journal_form
@@ -8034,7 +8036,7 @@ msgstr "Neuer Journalname"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__new_move_ids
 msgid "New Move"
-msgstr ""
+msgstr "Neue Bewegung"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -8050,7 +8052,7 @@ msgstr "Neue Werte"
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__matching_order__new_first
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_template__matching_order__new_first
 msgid "Newest first"
-msgstr ""
+msgstr "Neueste zuerst"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_date_deadline
@@ -8753,7 +8755,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__payment_credit_account_id
 msgid "Outstanding Payments Account"
-msgstr ""
+msgstr "Konto für ausstehende Zahlungen"
 
 #. module: account
 #: code:addons/account/models/account_journal.py:0
@@ -10585,7 +10587,7 @@ msgstr "Auswahl einer alten Lieferantenrechnung"
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Select first partner"
-msgstr ""
+msgstr "Ersten Partner auswählen"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_line__value
@@ -12097,6 +12099,8 @@ msgstr ""
 #, python-format
 msgid "The Bill/Refund date is required to validate this document."
 msgstr ""
+"Das Datum der Rechnung/Erstattung ist erforderlich, um dieses Dokument zu "
+"validieren."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__country_code
@@ -12280,7 +12284,7 @@ msgstr "Die Kontenplanvorlage des Unternehmen (wenn verwendet)"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "The chosen QR-code type is not eligible for this invoice."
-msgstr ""
+msgstr "Der gewählte QR-Code-Typ ist für diese Rechnung nicht geeignet."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_bnk_stmt_check
@@ -12355,7 +12359,7 @@ msgstr "Währung bei Erfassung des Kontoauszugs"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "The current highest number is"
-msgstr ""
+msgstr "Die höchste Zahl ist aktuell "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__state
@@ -13777,7 +13781,7 @@ msgstr "Hochladen"
 #: code:addons/account/wizard/account_tour_upload_bill.py:0
 #, python-format
 msgid "Upload your own bill"
-msgstr ""
+msgstr "Laden Sie Ihre eigene Rechnung hoch"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__use_anglo_saxon
@@ -14200,6 +14204,8 @@ msgstr ""
 #, python-format
 msgid "Write here <b>your own email address</b> to test the flow."
 msgstr ""
+"Geben Sie hier <b>Ihre eigene E-Mail-Adresse</b> ein, um den Ablauf zu "
+"testen."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_move_line_check_credit_debit
@@ -14385,6 +14391,8 @@ msgid ""
 "You can't create a new statement line without a suspense account set on the "
 "%s journal."
 msgstr ""
+"Sie können keine neue Auszugszeile erstellen, ohne dass ein Zwischenkonto im"
+" %s Journal eingerichtet ist."
 
 #. module: account
 #: code:addons/account/wizard/account_payment_register.py:0
@@ -14912,7 +14920,7 @@ msgstr "e.g. GAAP, IFRS, ..."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "e.g. Give a phone call, check with others , ..."
-msgstr ""
+msgstr "z.B. ein Telefonat führen, mit anderen abstimmen, ..."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form

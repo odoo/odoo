@@ -1966,7 +1966,7 @@ msgstr "Conti autorizzati"
 msgid "Allows to tag analytic entries and to manage analytic distributions"
 msgstr ""
 "Consente di impostare etichette su registrazioni analitiche e gestirne le "
-"distribuzioni"
+"ripartizioni"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -2243,7 +2243,7 @@ msgstr "Regole analitiche predefinite"
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_default
 msgid "Analytic Distribution"
-msgstr "Distribuzione analitica"
+msgstr "Ripartizione analitica"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_analytic_lines_tree
@@ -4925,28 +4925,28 @@ msgstr "Visualizza sulle fatture"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
 msgid "Distribution for Credit Notes"
-msgstr "Distribuzione per note di credito"
+msgstr "Ripartizione per note di credito"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__invoice_repartition_line_ids
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
 msgid "Distribution for Invoices"
-msgstr "Distribuzione per fatture"
+msgstr "Ripartizione per fatture"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__refund_repartition_line_ids
 msgid "Distribution for Refund Invoices"
-msgstr "Distribuzione per fatture di rimborso"
+msgstr "Ripartizione per fatture di rimborso"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__refund_repartition_line_ids
 msgid "Distribution when the tax is used on a refund"
-msgstr "Distribuzione quando l'imposta è usata in un rimborso"
+msgstr "Ripartizione quando l'imposta è usata in un rimborso"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__invoice_repartition_line_ids
 msgid "Distribution when the tax is used on an invoice"
-msgstr "Distribuzione quando l'imposta è usata in una fattura"
+msgstr "Ripartizione quando l'imposta è usata in una fattura"
 
 #. module: account
 #: code:addons/account/models/digest.py:0
@@ -5806,7 +5806,7 @@ msgstr ""
 msgid ""
 "Gives the sequence order when displaying a list of analytic distribution"
 msgstr ""
-"Stabilisce l'ordine con cui visualizzare un elenco di distribuzioni "
+"Stabilisce l'ordine con cui visualizzare un elenco di ripartizioni "
 "analitiche."
 
 #. module: account
@@ -6670,6 +6670,8 @@ msgid ""
 "Invoice and credit note distribution should each contain exactly one line "
 "for the base."
 msgstr ""
+"La ripartizione di fatture e note di credito deve contenere esattamente una "
+"riga ciascuna per l'imponibile."
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
@@ -6677,8 +6679,8 @@ msgstr ""
 msgid ""
 "Invoice and credit note distribution should have the same number of lines."
 msgstr ""
-"La distribuzione di fatture e note di credito deve avere lo stesso numero di"
-" righe."
+"La ripartizione di fatture e note di credito deve avere lo stesso numero di "
+"righe."
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
@@ -6687,7 +6689,7 @@ msgid ""
 "Invoice and credit note distribution should match (same percentages, in the "
 "same order)."
 msgstr ""
-"La distribuzione di fatture e note di credito deve corrispondere (stesse "
+"La ripartizione di fatture e note di credito deve corrispondere (stesse "
 "percentuali, nel medesimo ordine)."
 
 #. module: account
@@ -8703,7 +8705,7 @@ msgstr "Creata dall'imposta"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_repartition_line_id
 msgid "Originator Tax Distribution Line"
-msgstr ""
+msgstr "Creata dalla riga di ripartizione imposta"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_group_id
@@ -12730,6 +12732,10 @@ msgid ""
 " to work properly, invoice distribution lines should be arranged in the same"
 " order as the credit note distribution lines they correspond to."
 msgstr ""
+"Ordine nel quale vengono visualizzate e abbinate le righe di ripartizione. "
+"Per far funzionare correttamente i rimborsi, le righe di ripartizione "
+"fattura devono essere ordinate come le righe di ripartizione nota di credito"
+" alle quali corrispondono."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_report_line__report_id
@@ -13062,7 +13068,7 @@ msgid ""
 "The tax set to apply this distribution on invoices. Mutually exclusive with "
 "refund_tax_id"
 msgstr ""
-"Imposta definita per applicare la distribuzione alle fatture. Mutualmente "
+"Imposta definita per applicare la ripartizione alle fatture. Mutualmente "
 "esclusiva con refund_tax_id"
 
 #. module: account
@@ -13072,7 +13078,7 @@ msgid ""
 "The tax set to apply this distribution on refund invoices. Mutually "
 "exclusive with invoice_tax_id"
 msgstr ""
-"Imposta definita per applicare la distribuzione alle fatture di rimborso. "
+"Imposta definita per applicare la ripartizione alle fatture di rimborso. "
 "Mutualmente esclusiva con invoice_tax_id"
 
 #. module: account
