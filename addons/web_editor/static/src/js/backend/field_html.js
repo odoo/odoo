@@ -7,6 +7,7 @@ import core from 'web.core';
 import wysiwygLoader from 'web_editor.loader';
 import field_registry from 'web.field_registry';
 import {QWebPlugin} from '@web_editor/js/backend/QWebPlugin';
+import {getAdjacentPreviousSiblings, getAdjacentNextSiblings} from '../../../lib/odoo-editor/src/utils/utils';
 // must wait for web/ to add the default html widget, otherwise it would override the web_editor one
 import 'web._field_registry';
 
@@ -386,6 +387,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
 
         def.then(function () {
             self.$content.on('click', 'ul.o_checklist > li', self._onReadonlyClickChecklist.bind(self));
+            self.$content.on('click', '.o_stars .fa-star, .o_stars .fa-star-o', self._onReadonlyClickStar.bind(self));
             if (self.$iframe) {
                 // Iframe is hidden until fully loaded to avoid glitches.
                 self.$iframe.removeClass('d-none');
@@ -496,6 +498,38 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
         }).then(function (value) {
             self._setValue(value);
         });
+    },
+    /**
+     * Check stars on click event in readonly.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onReadonlyClickStar: function (ev) {
+        ev.stopPropagation();
+        ev.preventDefault();
+
+        const node = ev.target;
+        const previousStars = getAdjacentPreviousSiblings(node, sib => (
+            sib.nodeType === Node.ELEMENT_NODE && sib.className.includes('fa-star')
+        ));
+        const nextStars = getAdjacentNextSiblings(node, sib => (
+            sib.nodeType === Node.ELEMENT_NODE && sib.classList.contains('fa-star')
+        ));
+        const shouldToggleOff = node.classList.contains('fa-star') && !nextStars.length;
+        const rating = shouldToggleOff ? 0 : previousStars.length + 1
+
+        const starsId = parseInt($(node).parent().attr('id') || '0');
+        this._rpc({
+            route: '/web_editor/stars',
+            params: {
+                res_model: this.model,
+                res_id: this.res_id,
+                filename: this.name,
+                starsId,
+                rating,
+            },
+        }).then(value => this._setValue(value));
     },
     /**
      * Method called when the wysiwyg instance is loaded.
