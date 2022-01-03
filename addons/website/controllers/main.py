@@ -67,6 +67,17 @@ class QueryURL(object):
 
 
 class Website(Home):
+    @http.route('/slow', type='http', auth="public", website=True, sitemap=False)
+    def slow_test(self, **kw):
+        import time
+        t = datetime.datetime.now()
+        print('step 4', datetime.datetime.now() - t)
+        values = {
+            'slow': time.sleep
+        }
+        return request.render('website.slow', values)
+
+
 
     @http.route('/', type='http', auth="public", website=True, sitemap=True)
     def index(self, **kw):
