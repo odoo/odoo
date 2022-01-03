@@ -461,7 +461,7 @@ class MonetaryConverter(models.AbstractModel):
         else:
             post = '\N{NO-BREAK SPACE}{symbol}'.format(symbol=display_currency.symbol or '')
 
-        if options.get('label_price'):
+        if options.get('label_price') and lang.decimal_point in formatted_amount:
             sep = lang.decimal_point
             integer_part, decimal_part = formatted_amount.split(sep)
             integer_part += sep
