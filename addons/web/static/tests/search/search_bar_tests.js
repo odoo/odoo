@@ -659,6 +659,38 @@ QUnit.module("Search", (hooks) => {
         assert.deepEqual(getDomain(controlPanel), [["bool", "=", false]]);
     });
 
+    QUnit.test("the search value is trimmed to remove unnecessary spaces", async function (assert) {
+        const controlPanel = await makeWithSearch({
+            serverData,
+            resModel: "partner",
+            Component: ControlPanel,
+            searchMenuTypes: [],
+            searchViewId: false,
+            searchViewArch: `
+                        <search>
+                            <field name="foo" filter_domain="[('foo', 'ilike', self)]"/>
+                        </search>
+                    `,
+        });
+        await editSearch(controlPanel, "bar");
+        await validateSearch(controlPanel);
+
+        assert.deepEqual(getDomain(controlPanel), [["foo", "ilike", "bar"]]);
+
+        await removeFacet(controlPanel);
+
+        assert.deepEqual(getDomain(controlPanel), []);
+
+        await editSearch(controlPanel, "   bar ");
+        await validateSearch(controlPanel);
+
+        assert.deepEqual(
+            getDomain(controlPanel),
+            [["foo", "ilike", "bar"]],
+            "the value has been trimmed"
+        );
+    });
+
     QUnit.test("reference fields are supported in search view", async function (assert) {
         assert.expect(4);
 

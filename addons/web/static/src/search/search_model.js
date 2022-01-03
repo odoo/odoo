@@ -1517,7 +1517,10 @@ export class SearchModel extends EventBus {
         const domains = autocompleteValues.map(({ label, value, operator }) => {
             let domain;
             if (field.filterDomain) {
-                domain = new Domain(field.filterDomain).toList({ self: label, raw_value: value });
+                domain = new Domain(field.filterDomain).toList({
+                    self: label.trim(),
+                    raw_value: value,
+                });
             } else {
                 domain = [[field.fieldName, operator, value]];
             }
