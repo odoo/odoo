@@ -129,6 +129,11 @@ const Wysiwyg = Widget.extend({
             plugins: options.editorPlugins,
         }, editorCollaborationOptions));
 
+        this.odooEditor.addEventListener('contentChanged', function () {
+            self.$editable.trigger('content_changed');
+            self.trigger_up('wysiwyg_change');
+        });
+
         const $wrapwrap = $('#wrapwrap');
         if ($wrapwrap.length) {
             $wrapwrap[0].addEventListener('scroll', this.odooEditor.multiselectionRefresh, { passive: true });
@@ -1510,22 +1515,7 @@ const Wysiwyg = Widget.extend({
         }
     },
     _editorOptions: function () {
-        var self = this;
-        var options = Object.assign({}, this.defaultOptions, this.options);
-        options.onChange = function (html, $editable) {
-            $editable.trigger('content_changed');
-            self.trigger_up('wysiwyg_change');
-        };
-        options.onUpload = function (attachments) {
-            self.trigger_up('wysiwyg_attachment', attachments);
-        };
-        options.onFocus = function () {
-            self.trigger_up('wysiwyg_focus');
-        };
-        options.onBlur = function () {
-            self.trigger_up('wysiwyg_blur');
-        };
-        return options;
+        return Object.assign({}, this.defaultOptions, this.options);
     },
     _insertSnippetMenu: function () {
         return this.snippetsMenu.insertBefore(this.$el);
