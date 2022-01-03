@@ -1839,8 +1839,8 @@ class MailThread(models.AbstractModel):
         parent_id = self._message_compute_parent_id(parent_id)
 
         msg_values = dict(msg_kwargs)
-        if 'add_sign' not in msg_values:
-            msg_values['add_sign'] = True
+        if 'email_add_signature' not in msg_values:
+            msg_values['email_add_signature'] = True
         if not msg_values.get('record_name'):
             msg_values['record_name'] = self.display_name
         msg_values.update({
@@ -1996,8 +1996,8 @@ class MailThread(models.AbstractModel):
             'message_id': tools.generate_tracking_message_id('message-notify'),
         }
         msg_values.update(msg_kwargs)
-        if 'add_sign' not in msg_values:
-            msg_values['add_sign'] = True
+        if 'email_add_signature' not in msg_values:
+            msg_values['email_add_signature'] = True
 
         new_message = MailThread._message_create(msg_values)
         MailThread._notify_thread(new_message, msg_values, **notif_kwargs)
@@ -2030,7 +2030,7 @@ class MailThread(models.AbstractModel):
             'record_name': False,
             'reply_to': self.env['mail.thread']._notify_get_reply_to(default=email_from)[False],
             'message_id': tools.generate_tracking_message_id('message-notify'),  # why? this is all but a notify
-            'add_sign': False,  # False as no notification -> no need to compute signature
+            'email_add_signature': False,  # False as no notification -> no need to compute signature
         }
         msg_values.update(kwargs)
         return self.sudo()._message_create(msg_values)
@@ -2054,7 +2054,7 @@ class MailThread(models.AbstractModel):
             'record_name': False,
             'reply_to': self.env['mail.thread']._notify_get_reply_to(default=email_from)[False],
             'message_id': tools.generate_tracking_message_id('message-notify'),  # why? this is all but a notify
-            'add_sign': False,
+            'email_add_signature': False,
         }
         values_list = [dict(base_message_values,
                             res_id=record.id,
@@ -2386,8 +2386,8 @@ class MailThread(models.AbstractModel):
         # compute send user and its related signature; try to use self.env.user instead of browsing
         # user_ids if he is the author will give a sudo user, improving access performances and cache usage.
         signature = ''
-        add_sign = msg_vals.get('add_sign') if 'add_sign' in msg_vals else message.add_sign
-        if add_sign:
+        email_add_signature = msg_vals.get('email_add_signature') if msg_vals and 'email_add_signature' in msg_vals else message.email_add_signature
+        if email_add_signature:
             author = message.env['res.partner'].browse(msg_vals.get('author_id')) if 'author_id' in msg_vals else message.author_id
             author_user = self.env.user if self.env.user.partner_id == author else author.user_ids[0] if author and author.user_ids else False
             if author_user:
@@ -2447,8 +2447,8 @@ class MailThread(models.AbstractModel):
             'record': self,
             'record_name': record_name,
             # user / environment
-            'add_sign': add_sign,
             'company': company,
+            'email_add_signature': email_add_signature,
             'lang': lang,
             'signature': signature,
             'website_url': website_url,

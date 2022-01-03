@@ -166,7 +166,7 @@ class Message(models.Model):
     mail_server_id = fields.Many2one('ir.mail_server', 'Outgoing mail server')
     # keep notification layout informations to be able to generate mail again
     email_layout_xmlid = fields.Char('Layout', copy=False)  # xml id of layout
-    add_sign = fields.Boolean(default=True)
+    email_add_signature = fields.Boolean(default=True)
     # `test_adv_activity`, `test_adv_activity_full`, `test_message_assignation_inbox`,...
     # By setting an inverse for mail.mail_message_id, the number of SQL queries done by `modified` is reduced.
     # 'mail.mail' inherits from `mail.message`: `_inherits = {'mail.message': 'mail_message_id'}`

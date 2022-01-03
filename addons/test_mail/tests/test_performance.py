@@ -1018,7 +1018,7 @@ class TestMailHeavyPerformancePost(BaseMailPerformance):
                 parent_id=False,
                 attachments=attachements,
                 attachment_ids=attachement_ids,
-                add_sign=True,
+                email_add_signature=True,
                 model_description=False,
                 mail_auto_delete=True
             )
