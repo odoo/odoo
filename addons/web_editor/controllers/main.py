@@ -138,6 +138,43 @@ class Web_Editor(http.Controller):
 
         return value
 
+    #------------------------------------------------------
+    # Update a stars rating in the editor on check/uncheck
+    #------------------------------------------------------
+    @http.route('/web_editor/stars', type='json', auth='user')
+    def update_stars(self, res_model, res_id, filename, starsId, rating):
+        record = request.env[res_model].browse(res_id)
+        value = getattr(record, filename, False)
+        htmlelem = etree.fromstring("<div>%s</div>" % value, etree.HTMLParser())
+
+        stars_widget = htmlelem.find(".//span[@id='%s']" % starsId)
+
+        if stars_widget is None:
+            return value
+
+        # Check the `rating` first stars and uncheck the others if any.
+        stars = []
+        for star in stars_widget.getchildren():
+            if 'fa-star' in star.get('class', ''):
+                stars.append(star)
+        star_index = 0
+        for star in stars:
+            classname = star.get('class', '')
+            if star_index < rating and (not 'fa-star' in classname or 'fa-star-o' in classname):
+                classname = re.sub(r"\s?fa-star-o\s?", '', classname)
+                classname = '%s fa-star' % classname
+                star.set('class', classname)
+            elif star_index >= rating and not 'fa-star-o' in classname:
+                classname = re.sub(r"\s?fa-star\s?", '', classname)
+                classname = '%s fa-star-o' % classname
+                star.set('class', classname)
+            star_index += 1
+
+        value = etree.tostring(htmlelem[0][0], encoding='utf-8', method='html')[5:-6]
+        record.write({filename: value})
+
+        return value
+
     @http.route('/web_editor/video_url/data', type='json', auth='user', website=True)
     def video_url_data(self, video_url, autoplay=False, loop=False,
                        hide_controls=False, hide_fullscreen=False, hide_yt_logo=False,
