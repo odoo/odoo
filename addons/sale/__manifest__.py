@@ -24,7 +24,6 @@ This module contains all the common features of Sales Management and eCommerce.
         'data/ir_sequence_data.xml',
         'data/mail_data_various.xml',
         'data/mail_template_data.xml',
-        'data/mail_templates.xml',
         'data/sale_data.xml',
 
         'wizard/account_accrued_orders_wizard_views.xml',
