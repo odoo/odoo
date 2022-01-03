@@ -201,54 +201,6 @@ export function createDOMPathGenerator(
     };
 }
 
-export function createDOMPathGeneratorBak(direction, deepOnly, inline, inScope = false) {
-    const nextDeepest =
-        direction === DIRECTIONS.LEFT
-            ? node => lastLeaf(node.previousSibling, inline ? isBlock : undefined)
-            : node => firstLeaf(node.nextSibling, inline ? isBlock : undefined);
-
-    const firstNode =
-        direction === DIRECTIONS.LEFT
-            ? (node, offset) => lastLeaf(node.childNodes[offset - 1], inline ? isBlock : undefined)
-            : (node, offset) => firstLeaf(node.childNodes[offset], inline ? isBlock : undefined);
-
-    // Note "reasons" is a way for the caller to be able to know why the
-    // generator ended yielding values.
-    return function* (node, offset, reasons = []) {
-        let movedUp = false;
-
-        let currentNode = firstNode(node, offset);
-        if (!currentNode) {
-            movedUp = true;
-            currentNode = node;
-        }
-
-        while (currentNode) {
-            if (inline && isBlock(currentNode)) {
-                reasons.push(movedUp ? PATH_END_REASONS.BLOCK_OUT : PATH_END_REASONS.BLOCK_HIT);
-                break;
-            }
-            if (inScope && currentNode === node) {
-                reasons.push(PATH_END_REASONS.OUT_OF_SCOPE);
-                break;
-            }
-            if (!deepOnly || !movedUp) {
-                yield currentNode;
-            }
-
-            movedUp = false;
-            let nextNode = nextDeepest(currentNode);
-            if (!nextNode) {
-                movedUp = true;
-                nextNode = currentNode.parentNode;
-            }
-            currentNode = nextNode;
-        }
-
-        reasons.push(PATH_END_REASONS.NO_NODE);
-    };
-}
-
 /**
  * Find a node.
  * @param {findCallback} findCallback - This callback check if this function
