@@ -3,9 +3,18 @@ odoo.define('website_sale.google_analytics', function (require) {
 
 const tour = require("web_tour.tour");
 const websiteSaleTracking = require('website_sale.tracking');
-const WebsiteSale = require('website_sale.website_sale').WebsiteSale;
 
 let itemId;
+
+websiteSaleTracking.include({
+    // Purposely don't call super to avoid call to third party (GA) during tests
+    _onViewItem(event, data) {
+        $('body').attr('view-event-id', data.item_id);
+    },
+    _onAddToCart(event, data) {
+        $('body').attr('cart-event-id', data.item_id);
+    },
+});
 
 tour.register('google_analytics_view_item', {
     test: true,
@@ -17,54 +26,24 @@ tour.register('google_analytics_view_item', {
         trigger: '.oe_product_cart a:contains("Customizable Desk")',
     },
     {
-        content: "check view_item events",
-        trigger: '#product_detail',
+        content: "wait until `_getCombinationInfo()` rpc is done",
+        trigger: 'body[view-event-id]',
         run: () => {
-            // If we don't explicitly wait for the getCombinationInfo ajax
-            // call, the tour fails when running in phantomjs. The actual
-            // test is executed in a separate tour stage, triggered when
-            // the ajax call is ready.
-            WebsiteSale.getCombinationInfoPromise().then(() => {
-                $('body').addClass('combination_info_ready');
-            });
-        }
-    },
-    {
-        trigger: 'body.combination_info_ready',
-        run: () => {
-            const events = websiteSaleTracking.getEvents('view_item');
-            $('body').removeClass('combination_info_ready');
-            if (events.length !== 1) {
-                console.error('No view item was generated');
-            } else {
-                itemId = events[0]['item_id'];
-            }
+            const $body = $('body');
+            itemId = $body.attr('view-event-id');
+            $body.removeAttr('view-event-id');
         }
     },
     {
         content: 'select another variant',
+        extra_trigger: 'body:not([view-event-id])',
         trigger: 'ul.js_add_cart_variants ul.list-inline li:has(label.active) + li:has(label) input',
     },
     {
-        content: "check view_item events",
-        trigger: '#product_detail',
-        run: () => {
-            WebsiteSale.getCombinationInfoPromise().then(() => {
-                $('body').addClass('combination_info_ready');
-            });
-        }
-    },
-    {
-        trigger: 'body.combination_info_ready',
-        run: () => {
-            const events = websiteSaleTracking.getEvents('view_item');
-            $('body').removeClass('combination_info_ready');
-            if (events.length !== 2) {
-                console.error('No second view event was generated');
-            } else if (itemId === events[1]['item_id']) {
-                console.error('The second variant has the same id as the first one');
-            }
-        }
+        content: 'wait until `_getCombinationInfo()` rpc is done (2)',
+        // a new view event should have been generated, for another variant
+        trigger: `body[view-event-id][view-event-id!=${itemId}]`,
+        run: () => {}, // it's a check
     },
 ]);
 
@@ -83,13 +62,9 @@ tour.register('google_analytics_add_to_cart', {
     },
     {
         content: 'check add to cart event',
+        extra_trigger: 'body[cart-event-id]',
         trigger: 'a:has(.my_cart_quantity:containsExact(1))',
-        run: () => {
-            const events = websiteSaleTracking.getEvents('add_to_cart');
-            if (events.length !== 1) {
-                console.error('No add to cart event was generated');
-            }
-        },
+        run: () => {}, // it's a check
     },
 ]);
 
