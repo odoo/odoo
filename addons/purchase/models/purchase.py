@@ -351,6 +351,27 @@ class PurchaseOrder(models.Model):
             self.filtered(lambda o: o.state == 'draft').write({'state': 'sent'})
         return super(PurchaseOrder, self.with_context(mail_post_autofollow=self.env.context.get('mail_post_autofollow', True))).message_post(**kwargs)
 
+    def _notify_get_recipients_groups(self, msg_vals=None):
+        """ Tweak 'view document' button for portal customers, calling directly
+        routes for confirm specific to PO model. """
+        groups = super(PurchaseOrder, self)._notify_get_recipients_groups(msg_vals=msg_vals)
+
+        customer_portal_group = next(group for group in groups if group[0] == 'portal_customer')
+        if customer_portal_group:
+            access_opt = customer_portal_group[2].setdefault('button_access', {})
+            if self.env.context.get('is_reminder'):
+                access_opt['title'] = _('View')
+                actions = customer_portal_group[2].setdefault('actions', list())
+                actions.extend([
+                    {'url': self.get_confirm_url(confirm_type='reminder'), 'title': _('Accept')},
+                    {'url': self.get_update_url(), 'title': _('Update Dates')},
+                ])
+            else:
+                access_opt['title'] = _('Confirm')
+                access_opt['url'] = self.get_confirm_url(confirm_type='reception')
+
+        return groups
+
     def _track_subtype(self, init_values):
         self.ensure_one()
         if 'state' in init_values and self.state == 'purchase':

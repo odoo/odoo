@@ -1069,6 +1069,32 @@ class SaleOrder(models.Model):
         transaction = self.get_portal_last_transaction()
         return (self.state == 'sent' or (self.state == 'draft' and include_draft)) and not self.is_expired and self.require_payment and transaction.state != 'done' and self.amount_total
 
+    def _notify_get_recipients_groups(self, msg_vals=None):
+        """ Give access button to users and portal customer as portal is integrated
+        in sale. Customer and portal group have probably no right to see
+        the document so they don't have the access button. """
+        groups = super(SaleOrder, self)._notify_get_recipients_groups(msg_vals=msg_vals)
+        if self._context.get('proforma'):
+            for group in [g for g in groups if g[0] in ('portal_customer', 'customer')]:
+                group[2]['has_button_access'] = False
+            return groups
+
+        customer_portal_group = next(group for group in groups if group[0] == 'portal_customer')
+        if customer_portal_group:
+            access_opt = customer_portal_group[2].setdefault('button_access', {})
+            is_tx_pending = self.get_portal_last_transaction().state == 'pending'
+            if self.has_to_be_signed(include_draft=True):
+                if self.has_to_be_paid():
+                    access_opt['title'] = _('View Quotation') if is_tx_pending else _('Review, Sign & Pay Quotation')
+                else:
+                    access_opt['title'] = _('Review, Accept & Sign Quotation')
+            elif self.has_to_be_paid(include_draft=True) and not is_tx_pending:
+                access_opt['title'] = _('Review, Accept & Pay Quotation')
+            elif self.state in ('draft', 'sent'):
+                access_opt['title'] = _('View Quotation')
+
+        return groups
+
     def preview_sale_order(self):
         self.ensure_one()
         return {
