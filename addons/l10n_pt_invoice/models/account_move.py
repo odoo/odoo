@@ -22,11 +22,5 @@ class AccountMove(models.Model):
 
         for record in self:
             qr_code_str = ''
-            if record.company_id.vat:
-                # seller_name_enc = get_qr_encoding(1, record.company_id.display_name)
-                # company_vat_enc = get_qr_encoding(2, record.company_id.vat)
-                # invoice_total_enc = get_qr_encoding(4, str(record.amount_total))
-                # total_vat_enc = get_qr_encoding(5, str(record.currency_id.round(record.amount_total - record.amount_untaxed)))
-
-                qr_code_str = "RIIIIIIIIIIIIIIIIIIIICARDO"
-            record.l10n_pt_qr_code_str = qr_code_str
+            # Check needed values are filled
+            record.l10n_pt_qr_code_str = "RIIIIIIIIIIIIIIIIIIIICARDO"
