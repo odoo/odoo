@@ -6,8 +6,8 @@ import core from 'web.core';
 const websiteSystrayRegistry = registry.category('website_systray');
 
 export const websiteService = {
-    dependencies: ['rpc', 'http'],
-    async start(env, { rpc, http }) {
+    dependencies: ['rpc', 'http', 'action'],
+    async start(env, { rpc, http, action }) {
         let websites = [];
         let currentWebsiteId;
         return {
@@ -20,6 +20,17 @@ export const websiteService = {
             },
             get websites() {
                 return websites;
+            },
+            goToWebsite({ websiteId = currentWebsiteId || websites[0].id, path = '/' }) {
+                action.doAction('website.website_editor', {
+                    clearBreadcrumbs: true,
+                    additionalContext: {
+                        params: {
+                            website_id: websiteId,
+                            path,
+                        },
+                    },
+                });
             },
             async fetchWebsites() {
                 websites = await rpc('/website/get_websites');
