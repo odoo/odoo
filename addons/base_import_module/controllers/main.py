@@ -1,9 +1,38 @@
 # -*- coding: utf-8 -*-
 import functools
 
-from odoo import _
+from odoo import _, http
 from odoo.exceptions import AccessError
 from odoo.http import Controller, route, request, Response
+from odoo.addons.web.controllers import main
+import odoo.modules.registry
+
+class HomeStaticTemplateHelpers(main.HomeStaticTemplateHelpers):
+    def _get_qweb_files_list(self):
+        files = super(HomeStaticTemplateHelpers, self)._get_qweb_files_list()
+        registry = odoo.modules.registry.Registry(request.db)
+        with registry.cursor() as cr:
+            cr.execute("""SELECT irmodule.name, attachment.url
+                          FROM ir_module_module irmodule CROSS JOIN ir_attachment attachment
+                          WHERE attachment.url like concat('%',irmodule.name,'/static/%') AND
+                          attachment.mimetype = 'application/xml' """)
+            import pudb
+            pudb.set_trace()
+            for row in cr.fetchall():
+                files[row[0]].append(row[1])
+        return files
+
+class WebClient(main.WebClient):
+
+    @http.route('/web/webclient/qweb/<string:unique>', type='http', auth="none", cors="*")
+    def qweb(self, unique, mods=None, db=None):
+        content = HomeStaticTemplateHelpers.get_qweb_templates(mods, db, debug=request.session.debug)
+
+        return request.make_response(content, [
+                ('Content-Type', 'text/xml'),
+                ('Cache-Control','public, max-age=' + str(main.CONTENT_MAXAGE))
+            ])
+
 
 def webservice(f):
     @functools.wraps(f)

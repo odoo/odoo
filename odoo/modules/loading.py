@@ -449,6 +449,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         #              changed, and modules that depend on an uninstalled module
         #              will not be processed on the first pass.
         #              It's especially useful for migrations.
+
         previously_processed = -1
         while previously_processed < len(processed_modules):
             previously_processed = len(processed_modules)

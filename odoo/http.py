@@ -1310,6 +1310,7 @@ class Root(object):
         """ Load all addons from addons path containing static files and
         controllers and configure them.  """
         # TODO should we move this to ir.http so that only configured modules are served ?
+        
         statics = {}
         for addons_path in odoo.addons.__path__:
             for module in sorted(os.listdir(str(addons_path))):
