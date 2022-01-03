@@ -454,27 +454,6 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      */
     _onChange: function (ev) {
         this._doDebouncedAction.apply(this, arguments);
-
-        var $lis = this.$content.find('.note-editable ul.o_checklist > li:not(:has(> ul.o_checklist))');
-        if (!$lis.length) {
-            return;
-        }
-        var max = 0;
-        var ids = [];
-        $lis.map(function () {
-            var checklistId = parseInt(($(this).attr('id') || '0').replace(/^checklist-id-/, ''));
-            if (ids.indexOf(checklistId) === -1) {
-                if (checklistId > max) {
-                    max = checklistId;
-                }
-                ids.push(checklistId);
-            } else {
-                $(this).removeAttr('id');
-            }
-        });
-        $lis.not('[id]').each(function () {
-            $(this).attr('id', 'checklist-id-' + (++max));
-        });
     },
     /**
      * Allows Enter keypress in a textarea (source mode)
@@ -503,7 +482,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
         ev.stopPropagation();
         ev.preventDefault();
         var checked = $(ev.target).hasClass('o_checked');
-        var checklistId = parseInt(($(ev.target).attr('id') || '0').replace(/^checklist-id-/, ''));
+        var checklistId = parseInt($(ev.target).attr('id') || '0');
 
         this._rpc({
             route: '/web_editor/checklist',
