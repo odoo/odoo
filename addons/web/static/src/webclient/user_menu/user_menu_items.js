@@ -6,6 +6,31 @@ import { registry } from "../../core/registry";
 import { _lt } from "../../core/l10n/translation";
 import { session } from "@web/session";
 
+
+
+export function separator(seq) {
+    return function () {
+        return {
+            type: "separator",
+            sequence: seq,
+        };
+    };
+}
+
+export function preferencesItem(env) {
+    return {
+        type: "item",
+        id: "settings",
+        description: env._t("Preferences"),
+        callback: async function () {
+            const actionDescription = await env.services.orm.call("res.users", "action_get");
+            actionDescription.res_id = env.services.user.userId;
+            env.services.action.doAction(actionDescription);
+        },
+        sequence: 5,
+    };
+}
+
 function documentationItem(env) {
     const documentationURL = "https://www.odoo.com/documentation/15.0";
     return {
@@ -16,7 +41,7 @@ function documentationItem(env) {
         callback: () => {
             browser.open(documentationURL, "_blank");
         },
-        sequence: 10,
+        sequence: 15,
     };
 }
 
@@ -51,32 +76,11 @@ function shortCutsItem(env) {
     };
 }
 
-function separator() {
-    return {
-        type: "separator",
-        sequence: 40,
-    };
-}
-
-export function preferencesItem(env) {
-    return {
-        type: "item",
-        id: "settings",
-        description: env._t("Preferences"),
-        callback: async function () {
-            const actionDescription = await env.services.orm.call("res.users", "action_get");
-            actionDescription.res_id = env.services.user.userId;
-            env.services.action.doAction(actionDescription);
-        },
-        sequence: 50,
-    };
-}
-
-function odooAccountItem(env) {
+export function odooAccountItem(env) {
     return {
         type: "item",
         id: "account",
-        description: env._t("My Odoo.com.account"),
+        description: env._t("My Subscription"),
         callback: () => {
             env.services
                 .rpc("/web/session/account")
@@ -107,10 +111,11 @@ function logOutItem(env) {
 
 registry
     .category("user_menuitems")
+    .add("profile", preferencesItem)
+    .add("separator1", separator(15))
     .add("documentation", documentationItem)
     .add("support", supportItem)
     .add("shortcuts", shortCutsItem)
-    .add("separator", separator)
-    .add("profile", preferencesItem)
+    .add("separator2", separator(40))
     .add("odoo_account", odooAccountItem)
     .add("log_out", logOutItem);
