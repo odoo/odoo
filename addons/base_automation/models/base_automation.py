@@ -256,7 +256,8 @@ class BaseAutomation(models.Model):
             records.write(values)
 
         # execute server actions
-        if self.action_server_id:
+        action_server = self.action_server_id
+        if action_server:
             for record in records:
                 # we process the action if any watched field has been modified
                 if self._check_trigger_fields(record):
@@ -267,7 +268,7 @@ class BaseAutomation(models.Model):
                         'domain_post': domain_post,
                     }
                     try:
-                        self.action_server_id.sudo().with_context(**ctx).run()
+                        action_server.sudo().with_context(**ctx).run()
                     except Exception as e:
                         self._add_postmortem_action(e)
                         raise e
