@@ -1,6 +1,7 @@
 /** @odoo-module **/
 import {
     ancestors,
+    descendants,
     childNodeIndex,
     closestBlock,
     closestElement,
@@ -29,6 +30,7 @@ import {
     setSelection,
     setCursorStart,
     setTagName,
+    splitAroundUntil,
     splitElement,
     splitTextNode,
     startPos,
@@ -505,15 +507,15 @@ export const editorCommands = {
         const selectedNodes = getSelectedNodes(editor.editable);
         const fonts = selectedNodes.flatMap(node => {
             let font = closestElement(node, 'font');
-            const children = font && [...font.childNodes];
+            const children = font && descendants(font);
             if (font && font.nodeName === 'FONT') {
                 // Partially selected <font>: split it.
                 const selectedChildren = children.filter(child => selectedNodes.includes(child));
                 if (selectedChildren.length) {
-                    const after = selectedChildren[selectedChildren.length - 1].nextSibling;
-                    font = after ? splitElement(font, childNodeIndex(after))[0] : font;
-                    const before = selectedChildren[0].previousSibling;
-                    font = before ? splitElement(font, childNodeIndex(before) + 1)[1] : font;
+                    const splitResult = splitAroundUntil(selectedChildren, font);
+                    font = splitResult[0] || splitResult[1] || font;
+                } else {
+                    font = [];
                 }
             } else if (node.nodeType === Node.TEXT_NODE && isVisibleStr(node)) {
                 // Node is a visible text node: wrap it in a <font>.

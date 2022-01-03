@@ -3117,4 +3117,16 @@ X[]
             });
         });
     });
+
+    describe('applyColor', () => {
+        it('should apply a color to a slice of text in a span in a font', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>a<font>b<span>c[def]g</span>h</font>i</p>',
+                stepFunction: editor => editor.execCommand('applyColor', 'rgb(255, 0, 0)', 'color'),
+                contentAfter: '<p>a<font>b<span>c</span></font>' +
+                    '<font style="color: rgb(255, 0, 0);"><span>[def]</span></font>' +
+                    '<font><span>g</span>h</font>i</p>',
+            });
+        });
+    });
 });
