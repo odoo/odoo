@@ -20,7 +20,7 @@ registerModel({
                 return replace(this.attachmentBoxView.chatter.thread);
             }
             if (this.composerView) {
-                return replace(this.composerView.composer.thread);
+                return replace(this.composerView.composer.activeThread);
             }
             return clear();
         },
