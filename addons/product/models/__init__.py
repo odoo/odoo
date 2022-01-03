@@ -3,9 +3,7 @@
 
 # flake8: noqa: F401
 
-from . import res_config_settings
 from . import decimal_precision
-from . import uom_uom
 
 # don't try to be a good boy and sort imports alphabetically.
 # `product.template` should be initialised before `product.product`
@@ -14,7 +12,11 @@ from . import product
 
 from . import product_attribute
 from . import product_pricelist
+from . import product_pricelist_item
 from . import product_tag
 from . import res_company
+from . import res_config_settings
+from . import res_country_group
 from . import res_currency
 from . import res_partner
+from . import uom_uom
