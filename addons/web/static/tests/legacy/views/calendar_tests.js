@@ -4176,14 +4176,15 @@ QUnit.module('Views', {
             viewOptions: {
                 initialDate: initialDate,
             },
-        });
+        }, { positionalClicks: true });
 
         assert.equal(calendar.$('.fc-dayGridMonth-view').length, 12, "should display in year mode");
 
-        await testUtils.dom.dragAndDrop(
-            calendar.$('.fc-day-top[data-date="2016-11-13"]'),
-            calendar.$('.fc-day-top[data-date="2016-11-19"]'),
-        );
+        calendar.el.querySelector('.fc-day-top[data-date="2016-11-13"]').scrollIntoView();
+        // scroll to event as the calendar could be too small
+        await testUtils.dom.triggerMouseEvent(calendar.$('.fc-day-top[data-date="2016-11-13"]'), "mousedown");
+        await testUtils.dom.triggerMouseEvent(calendar.$('.fc-day-top[data-date="2016-11-19"]'), "mousemove");
+        await testUtils.dom.triggerMouseEvent(calendar.$('.fc-day-top[data-date="2016-11-19"]'), "mouseup");
 
         assert.ok($('.modal-body').length, "should open the form view in dialog when select multiple days");
         assert.hasAttrValue($('.fc-highlight'), 'colspan', "7", "should highlight 7 days");
