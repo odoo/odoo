@@ -1,14 +1,14 @@
-odoo.define('web_editor.field.html', function (require) {
+/** @odoo-module alias=web_editor.field.html */
 'use strict';
 
-var ajax = require('web.ajax');
-var basic_fields = require('web.basic_fields');
-var core = require('web.core');
-var wysiwygLoader = require('web_editor.loader');
-var field_registry = require('web.field_registry');
-const {QWebPlugin} = require('@web_editor/js/backend/QWebPlugin');
+import ajax from 'web.ajax';
+import basic_fields from 'web.basic_fields';
+import core from 'web.core';
+import wysiwygLoader from 'web_editor.loader';
+import field_registry from 'web.field_registry';
+import {QWebPlugin} from '@web_editor/js/backend/QWebPlugin';
 // must wait for web/ to add the default html widget, otherwise it would override the web_editor one
-require('web._field_registry');
+import 'web._field_registry';
 
 var _lt = core._lt;
 var TranslatableFieldMixin = basic_fields.TranslatableFieldMixin;
@@ -552,5 +552,4 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
 field_registry.add('html', FieldHtml);
 
 
-return FieldHtml;
-});
+export default FieldHtml;
