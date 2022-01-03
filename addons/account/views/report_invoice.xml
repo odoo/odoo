@@ -11,7 +11,7 @@
                         <t t-else="">Tax ID</t>: <span t-field="o.partner_id.vat"/></div>
                 </t>
                 <div class="page">
-                    <h2>
+                    <h2 id="title">
                         <span t-if="o.type == 'out_invoice' and o.state == 'posted'">Invoice</span>
                         <span t-if="o.type == 'out_invoice' and o.state == 'draft'">Draft Invoice</span>
                         <span t-if="o.type == 'out_invoice' and o.state == 'cancel'">Cancelled Invoice</span>
