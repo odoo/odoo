@@ -5,6 +5,7 @@ import {
     childNodeIndex,
     closestBlock,
     closestElement,
+    descendants,
     endPos,
     firstLeaf,
     getAdjacentPreviousSiblings,
@@ -26,6 +27,8 @@ import {
     setSelection,
     setCursorStart,
     setCursorEnd,
+    splitAroundUntil,
+    splitTextNode,
     getCursorDirection,
     DIRECTIONS,
     isBlock,
@@ -349,6 +352,22 @@ describe('Utils', () => {
             const editable = p.parentElement;
             const result = ancestors(p, editable);
             window.chai.expect(result).to.eql([editable]);
+        });
+    });
+    describe('descendants', () => {
+        it('should find all the descendants of a div in depth-first order', () => {
+            const [div] = insertTestHtml(
+                '<div><div><div><p>abc</p><div><p>def</p></div></div></div></div>',
+            );
+            window.chai.expect(descendants(div)).to.eql([
+                div.firstChild, // <div><div>...
+                div.firstChild.firstChild, // <div><div><div>...
+                div.firstChild.firstChild.firstChild, // <p>abc</p>
+                div.firstChild.firstChild.firstChild.firstChild, // "abc"
+                div.firstChild.firstChild.childNodes[1], // <div><p>def</p></div>
+                div.firstChild.firstChild.childNodes[1].firstChild, // <p>def</p>
+                div.firstChild.firstChild.childNodes[1].firstChild.firstChild, // "def"
+            ]);
         });
     });
     describe('closestBlock', () => {
@@ -1391,6 +1410,58 @@ describe('Utils', () => {
 
                 window.chai.expect(result).to.be.ok;
             });
+        });
+    });
+
+    //--------------------------------------------------------------------------
+    // DOM Modification
+    //--------------------------------------------------------------------------
+
+    describe('splitAroundUntil', () => {
+        it('should split a slice of text from its inline ancestry', () => {
+            const [p] = insertTestHtml('<p>a<font>b<span>cde</span>f</font>g</p>');
+            const cde = p.childNodes[1].childNodes[1].firstChild;
+            // We want to test with "cde" being three separate text nodes.
+            splitTextNode(cde, 2);
+            const cd = cde.previousSibling;
+            splitTextNode(cd, 1);
+            const d = cd;
+            const result = splitAroundUntil(d, p.childNodes[1]);
+            window.chai.expect(result.every(node => node.tagName === 'FONT')).to.be.ok;
+            window.chai.expect(p.outerHTML).to.eql(
+                '<p>a<font>b<span>c</span></font><font><span>d</span></font><font><span>e</span>f</font>g</p>'
+            );
+            window.chai.expect(result[0]).to.eql(p.childNodes[2]);
+            // "before" split happened so "after" split is not in the DOM anymore:
+            window.chai.expect(result[1].parentElement).to.eql(null);
+        });
+        it('should split a slice of text from its inline ancestry', () => {
+            const [p] = insertTestHtml('<p>a<font>b<span>cdefg</span>h</font>i</p>');
+            const cdefg = p.childNodes[1].childNodes[1].firstChild;
+            // We want to test with "cdefg" being five separate text nodes.
+            splitTextNode(cdefg, 4);
+            const cdef = cdefg.previousSibling;
+            splitTextNode(cdef, 3);
+            const cde = cdef.previousSibling;
+            splitTextNode(cde, 2);
+            const cd = cde.previousSibling;
+            splitTextNode(cd, 1);
+            const d = cd;
+            const result = splitAroundUntil([d, d.nextSibling.nextSibling], p.childNodes[1]);
+            window.chai.expect(result.every(node => node.tagName === 'FONT')).to.be.ok;
+            window.chai.expect(p.outerHTML).to.eql(
+                '<p>a<font>b<span>c</span></font><font><span>def</span></font><font><span>g</span>h</font>i</p>'
+            );
+            window.chai.expect(result[0]).to.eql(p.childNodes[2]);
+            // "before" split happened so "after" split is not in the DOM anymore:
+            window.chai.expect(result[1].parentElement).to.eql(null);
+        });
+        it('should not do anything (nothing to split)', () => {
+            const [p] = insertTestHtml('<p>a<font>b<span>cde</span>f</font>g</p>');
+            const cde = p.childNodes[1].childNodes[1].firstChild;
+            const result = splitAroundUntil(cde, p.childNodes[1]);
+            window.chai.expect(result.every(node => node === undefined)).to.be.ok;
+            window.chai.expect(p.outerHTML).to.eql('<p>a<font>b<span>cde</span>f</font>g</p>');
         });
     });
 });
