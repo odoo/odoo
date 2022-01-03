@@ -18,20 +18,16 @@ class ResPartner(models.Model):
         ], string="GST Treatment")
 
     @api.onchange('company_type')
-    def onchange_company_type(self):
-        res = super().onchange_company_type()
+    def _l10n_in_onchange_company_type(self):
         if self.country_id and self.country_id.code == 'IN':
             self.l10n_in_gst_treatment = (self.company_type == 'company') and 'regular' or 'consumer'
-        return res
 
     @api.onchange('country_id')
-    def _onchange_country_id(self):
-        res = super()._onchange_country_id()
+    def _l10n_in_onchange_country_id(self):
         if self.country_id and self.country_id.code != 'IN':
             self.l10n_in_gst_treatment = 'overseas'
         elif self.country_id and self.country_id.code == 'IN':
             self.l10n_in_gst_treatment = (self.company_type == 'company') and 'regular' or 'consumer'
-        return res
 
     @api.onchange('vat')
     def onchange_vat(self):
