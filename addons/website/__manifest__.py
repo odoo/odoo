@@ -177,6 +177,8 @@
             'website/static/src/client_actions/*/*.scss',
             'website/static/src/services/website_service.js',
             'website/static/src/components/navbar/navbar.js',
+            'website/static/src/systray_items/*.js',
+            'website/static/src/systray_items/*.scss',
         ],
         'web.qunit_suite_tests': [
             'website/static/tests/dashboard_tests.js',
@@ -249,6 +251,7 @@
             'website/static/src/xml/theme_preview.xml',
             'website/static/src/components/configurator/configurator.xml',
             'website/static/src/client_actions/*/*.xml',
+            'website/static/src/systray_items/*.xml',
         ],
         'website.test_bundle': [
             '/web/static/lib/qweb/qweb2.js',
