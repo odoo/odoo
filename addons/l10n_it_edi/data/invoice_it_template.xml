@@ -116,6 +116,7 @@
                                 <IdCodice t-esc="'OO99999999999'"/>
                             </IdFiscaleIVA>
                             <IdFiscaleIVA t-if="not record.commercial_partner_id.vat and record.commercial_partner_id.country_id.code != 'IT'">
+                                <IdPaese t-esc="record.commercial_partner_id.country_id.code"/>
                                 <IdCodice t-esc="'0000000'"/>
                             </IdFiscaleIVA>
                             <CodiceFiscale t-if="not record.commercial_partner_id.vat" t-esc="record.commercial_partner_id.l10n_it_codice_fiscale"/>
