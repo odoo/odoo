@@ -277,7 +277,7 @@
       <field name="sequence">1</field>
       <field name="parent_id" ref="account_tax_report_line_1_assessment_taxable_turnover"/>
       <field name="country_id" ref="base.lu"/>
-      <field name="formula">LUTAX_471 + LUTAX_021 + LUTAX_037 + LUTAX_455 + LUTAX_456</field>
+      <field name="formula">LUTAX_471 + LUTAX_021 + LUTAX_037 + LUTAX_455</field>
     </record>
 
     <record id="account_tax_report_line_1a_vat_acc_scheme" model="account.tax.report.line">
@@ -292,7 +292,7 @@
         <field name="sequence" eval="2"/>
         <field name="parent_id" ref="account_tax_report_line_1a_overall_turnover"/>
         <field name="country_id" ref="base.lu"/>
-        <field name="formula">LUTAX_471 + LUTAX_021 + LUTAX_037</field>
+        <field name="formula">LUTAX_471 + LUTAX_021 + LUTAX_037 - LUTAX_456</field>
     </record>
 
     <!-- 471 not managed, only 472 is filled in -->
