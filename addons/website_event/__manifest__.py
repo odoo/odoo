@@ -66,6 +66,9 @@
         'website.assets_wysiwyg': [
             '/website_event/static/src/snippets/s_events/options.js',
         ],
+        'web.assets_backend': [
+            'website_event/static/src/js/systray_items/new_content.js',
+        ],
     },
     'license': 'LGPL-3',
 }

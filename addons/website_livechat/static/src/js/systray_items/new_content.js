@@ -1,46 +1,16 @@
 /** @odoo-module **/
 
-import { _t } from 'web.core';
-import wUtils from 'website.utils';
-import WebsiteNewMenu from 'website.newMenu';
+import { NewContentModal, MODULE_STATUS } from '@website/systray_items/new_content';
+import { patch } from 'web.utils';
 
-WebsiteNewMenu.include({
-    actions: _.extend({}, WebsiteNewMenu.prototype.actions || {}, {
-        new_channel: '_createNewChannel',
-    }),
+patch(NewContentModal.prototype, 'website_livechat_new_content', {
+    setup() {
+        this._super();
 
-    //--------------------------------------------------------------------------
-    // Actions
-    //--------------------------------------------------------------------------
-
-    /**
-     * Asks the user information about a new channel to create, then creates it
-     * and redirects the user to this new channel.
-     *
-     * @private
-     * @returns {Promise} Unresolved if there is a redirection
-     */
-    _createNewChannel: function () {
-        var self = this;
-        return wUtils.prompt({
-            window_title: _t("New Channel"),
-            input: _t("Name"),
-        }).then(function (result) {
-            var name = result.val;
-            if (!name) {
-                return;
-            }
-            return self._rpc({
-                model: 'im_livechat.channel',
-                method: 'create_and_get_website_url',
-                args: [[]],
-                kwargs: {
-                    name: name,
-                },
-            }).then(function (url) {
-                window.location.href = url;
-                return new Promise(function () {});
-            });
-        });
+        const newChannelElement = this.state.newContentElements.find(element => element.moduleXmlId === 'base.module_website_livechat');
+        newChannelElement.createNewContent = () => this.createNewChannel();
+        newChannelElement.status = MODULE_STATUS.INSTALLED;
     },
+
+    createNewChannel() {}
 });

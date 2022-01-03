@@ -303,6 +303,16 @@ class Website(Home):
             ]
         }
 
+    @http.route('/website/get_modules_info', type='json', auth="user")
+    def get_modules_info(self, xml_ids):
+        def get_module_info(xml_id):
+            module_info = request.env.ref(xml_id)
+            return {'id': module_info.id, 'name': module_info.shortdesc}
+        modules_info = {}
+        for xml_id in xml_ids:
+            modules_info[xml_id] = get_module_info(xml_id)
+        return modules_info
+
     @http.route('/website/snippet/filters', type='json', auth='public', website=True)
     def get_dynamic_filter(self, filter_id, template_key, limit=None, search_domain=None, with_sample=False):
         dynamic_filter = request.env['website.snippet.filter'].sudo().search(

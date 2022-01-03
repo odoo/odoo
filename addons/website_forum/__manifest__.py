@@ -52,6 +52,9 @@ Ask questions, get answers, no distractions
             'website_forum/static/src/js/website_forum.js',
             'website_forum/static/src/js/website_forum.share.js',
         ],
+        'web.assets_backend': [
+            'website_forum/static/src/js/systray_items/new_content.js',
+        ],
         'web.assets_qweb': [
             'website_forum/static/src/xml/*.xml',
         ],

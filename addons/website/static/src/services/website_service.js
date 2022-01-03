@@ -2,6 +2,8 @@
 
 import { registry } from '@web/core/registry';
 
+const { reactive } = owl;
+
 const websiteSystrayRegistry = registry.category('website_systray');
 
 const unslugHtmlDataObject = (repr) => {
@@ -20,6 +22,10 @@ export const websiteService = {
     async start(env, { orm, action }) {
         let websites = [];
         let currentWebsiteId;
+        let currentMetadata = {};
+        const context = reactive({
+            showNewContentModal: false,
+        });
 
         const setCurrentWebsiteId = id => {
             currentWebsiteId = id;
@@ -29,11 +35,21 @@ export const websiteService = {
             set currentWebsiteId(id) {
                 setCurrentWebsiteId(id);
             },
+            set currentMetadata(metadata) {
+                currentMetadata = metadata;
+            },
             get currentWebsite() {
-                return websites.find(website => website.id === currentWebsiteId);
+                const currentWebsite = websites.find(w => w.id === currentWebsiteId);
+                if (currentWebsite) {
+                    currentWebsite.metadata = currentMetadata;
+                }
+                return currentWebsite;
             },
             get websites() {
                 return websites;
+            },
+            get context() {
+                return context;
             },
             goToWebsite({ websiteId = currentWebsiteId || websites[0].id, path = '/' }) {
                 action.doAction('website.website_preview', {

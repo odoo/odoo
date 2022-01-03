@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+<t t-name="website.NewContentElement" owl="1">
+    <div class="o_new_content_element col-md-4 mb8" t-att-name="props.name">
+        <a href="#"
+                t-on-click="onClick"
+                t-att-class="props.status === MODULE_STATUS.NOT_INSTALLED ? 'o_uninstalled_module' : ''"
+                t-att-title="props.title"
+                t-att-aria-label="props.title">
+            <t t-slot="default"/>
+        </a>
+    </div>
+</t>
+
+<t t-name="website.NewContentModal" owl="1">
+    <div id="o_new_content_menu_choices">
+        <div class="container pt32 pb32">
+            <div class="row">
+                <NewContentElement t-if="isDesigner"
+                        name="'New Page'"
+                        onClick="() => createNewPage()"
+                        title="'New Page'">
+                    <i class="fa fa-file-o"/>
+                    <p>Page</p>
+                </NewContentElement>
+
+                <t t-foreach="sortedNewContentElements" t-as="element" t-key="element.moduleXmlId" t-if="'isDisplayed' in element ? element.isDisplayed : isSystem ">
+                    <NewContentElement onClick="() => this.onClickNewContent(element)" status="element.status" title="element.title">
+                        <t t-call="{{ element.icon }}"/>
+                        <p><t t-esc="element.title"/></p>
+                    </NewContentElement>
+                </t>
+            </div>
+        </div>
+    </div>
+</t>
+
+<t t-name="website.NewContentSystray" owl="1">
+    <div class="o_menu_systray_item o_new_content_container" t-on-click="onClick">
+        <a href="#" accesskey="c"><span class="fa fa-plus mr-2"/>New</a>
+        <NewContentModal t-if="websiteContext.showNewContentModal"/>
+    </div>
+</t>
+</templates>
