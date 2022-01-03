@@ -481,8 +481,14 @@ class InventoryLine(models.Model):
         return res
 
     def _check_no_duplicate_line(self):
-        # Performance: restrict domain on 'not null' fields of stock_inventory_line.
-        domain = [('product_id', 'in', self.product_id.ids), ('location_id', 'in', self.location_id.ids)]
+        domain = [
+            ('product_id', 'in', self.product_id.ids),
+            ('location_id', 'in', self.location_id.ids),
+            '|', ('partner_id', 'in', self.partner_id.ids), ('partner_id', '=', None),
+            '|', ('package_id', 'in', self.package_id.ids), ('package_id', '=', None),
+            '|', ('prod_lot_id', 'in', self.prod_lot_id.ids), ('prod_lot_id', '=', None),
+            '|', ('inventory_id', 'in', self.inventory_id.ids), ('inventory_id', '=', None),
+        ]
         groupby_fields = ['product_id', 'location_id', 'partner_id', 'package_id', 'prod_lot_id', 'inventory_id']
         lines_count = {}
         for group in self.read_group(domain, ['product_id'], groupby_fields, lazy=False):
