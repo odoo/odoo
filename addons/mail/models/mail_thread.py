@@ -26,7 +26,7 @@ from xmlrpc import client as xmlrpclib
 from odoo import _, api, exceptions, fields, models, tools, registry, SUPERUSER_ID, Command
 from odoo.exceptions import MissingError
 from odoo.osv import expression
-
+from odoo.tools import is_html_empty
 from odoo.tools.misc import clean_context, split_every
 
 _logger = logging.getLogger(__name__)
@@ -1644,12 +1644,22 @@ class MailThread(models.AbstractModel):
 
     def _message_post_process_attachments(self, attachments, attachment_ids, message_values):
         """ Preprocess attachments for mail_thread.message_post() or mail_mail.create().
+        Purpose is to
 
-        :param list attachments: list of attachment tuples in the form ``(name,content)``, #todo xdo update that
-                                 where content is NOT base64 encoded
-        :param list attachment_ids: a list of attachment ids, not in tomany command form
-        :param dict message_data: model: the model of the attachments parent record,
-          res_id: the id of the attachments parent record
+          * transfer attachments given by ``attachment_ids`` from the composer to
+            the record (if any);
+          * limit attachments manipulation when being a shared user;
+          * create attachments from ``attachments``. If those are linked to the
+            content (body) through CIDs body is updated accordingly;
+
+        :param list(tuple(str,str), tuple(str,str, dict)) attachments : list of attachment
+            tuples in the form ``(name,content)`` or ``(name,content, info)`` where content
+            is NOT base64 encoded;
+        :param list attachment_ids: list of existing attachments to link to this message;
+        :param message_values: dictionary of values that will be used to create the
+          message. It is used to find back record- or content- context;
+
+        :return dict: new values for message: 'attachment_ids' and optionally 'body'
         """
         return_values = {}
         body = message_values.get('body')
@@ -1703,7 +1713,7 @@ class MailThread(models.AbstractModel):
                     content = content.as_bytes()
                 elif content is None:
                     continue
-                attachement_values= {
+                attachement_values = {
                     'name': name,
                     'datas': base64.b64encode(content),
                     'type': 'binary',
@@ -1753,29 +1763,37 @@ class MailThread(models.AbstractModel):
                      email_from=None, author_id=None, parent_id=False,
                      subtype_xmlid=None, subtype_id=False, partner_ids=None,
                      attachments=None, attachment_ids=None,
-                     add_sign=True, record_name=False,
                      **kwargs):
-        """ Post a new message in an existing thread, returning the new
-            mail.message ID.
-            :param str body: body of the message, usually raw HTML that will
-                be sanitized
-            :param str subject: subject of the message
-            :param str message_type: see mail_message.message_type field. Can be anything but
-                user_notification, reserved for message_notify
-            :param int parent_id: handle thread formation
-            :param int subtype_id: subtype_id of the message, used mainly use for
-                followers notification mechanism;
-            :param list(int) partner_ids: partner_ids to notify in addition to partners
-                computed based on subtype / followers matching;
-            :param list(tuple(str,str), tuple(str,str, dict) or int) attachments : list of attachment tuples in the form
-                ``(name,content)`` or ``(name,content, info)``, where content is NOT base64 encoded
-            :param list id attachment_ids: list of existing attachement to link to this message
-                -Should only be setted by chatter
-                -Attachement object attached to mail.compose.message(0) will be attached
-                    to the related document.
-            Extra keyword arguments will be used as default column values for the
-            new mail.message record.
-            :return int: ID of newly created mail.message
+        """ Post a new message in an existing thread, returning the new mail.message.
+
+        :param str body: body of the message, usually raw HTML that will
+            be sanitized
+        :param str subject: subject of the message
+        :param str message_type: see mail_message.message_type field. Can be anything but
+            user_notification, reserved for message_notify
+        :param str email_from: from address of the author. See ``_message_compute_author``
+            that uses it to make email_from / author_id coherent;
+        :param int author_id: optional ID of partner record being the author. See
+            ``_message_compute_author`` that uses it to make email_from / author_id coherent;
+        :param int parent_id: handle thread formation
+        :param int subtype_id: subtype_id of the message, used mainly for followers
+            notification mechanism;
+        :param list(int) partner_ids: partner_ids to notify in addition to partners
+            computed based on subtype / followers matching;
+        :param list(tuple(str,str), tuple(str,str, dict)) attachments : list of attachment
+            tuples in the form ``(name,content)`` or ``(name,content, info)`` where content
+            is NOT base64 encoded;
+        :param list attachment_ids: list of existing attachments to link to this message
+            -Should only be set by chatter
+            -Attachment object attached to mail.compose.message(0) will be attached
+                to the related document.
+
+        Extra keyword arguments will be used either
+          * as default column values for the new mail.message record if they match
+            mail.message fields;
+          * propagated to notification methods;
+
+        :return record: newly create mail.message
         """
         self.ensure_one()  # should always be posted on a record, use message_notify if no record
         # split message additional values from notify additional values
@@ -1795,12 +1813,11 @@ class MailThread(models.AbstractModel):
         if any(not isinstance(pc_id, int) for pc_id in partner_ids):
             raise ValueError(_('message_post partner_ids and must be integer list, not commands.'))
 
-        self = self._fallback_lang() # add lang to context imediatly since it will be usefull in various flows latter.
+        self = self._fallback_lang() # add lang to context immediately since it will be useful in various flows latter.
 
         # Explicit access rights check, because display_name is computed as sudo.
         self.check_access_rights('read')
         self.check_access_rule('read')
-        record_name = record_name or self.display_name
 
         # Find the message's author
         if self.env.user._is_public() and 'guest' in self.env.context:
@@ -1821,38 +1838,43 @@ class MailThread(models.AbstractModel):
 
         parent_id = self._message_compute_parent_id(parent_id)
 
-        values = dict(msg_kwargs)
-        values.update({
+        msg_values = dict(msg_kwargs)
+        if 'add_sign' not in msg_values:
+            msg_values['add_sign'] = True
+        if not msg_values.get('record_name'):
+            msg_values['record_name'] = self.display_name
+        msg_values.update({
             'author_id': author_id,
             'author_guest_id': author_guest_id,
             'email_from': email_from,
             'model': self._name,
             'res_id': self.id,
+            # content
             'body': body,
             'subject': subject or False,
             'message_type': message_type,
             'parent_id': parent_id,
             'subtype_id': subtype_id,
+            # recipients
             'partner_ids': partner_ids,
-            'add_sign': add_sign,
-            'record_name': record_name,
         })
+
         attachments = attachments or []
         attachment_ids = attachment_ids or []
-        attachement_values = self._message_post_process_attachments(attachments, attachment_ids, values)
-        values.update(attachement_values)  # attachement_ids, [body]
+        attachement_values = self._message_post_process_attachments(attachments, attachment_ids, msg_values)
+        msg_values.update(attachement_values)  # attachement_ids, [body]
 
-        new_message = self._message_create(values)
+        new_message = self._message_create(msg_values)
 
         # Set main attachment field if necessary
-        self._message_set_main_attachment_id(values['attachment_ids'])
+        self._message_set_main_attachment_id(msg_values['attachment_ids'])
 
-        if values['author_id'] and values['message_type'] != 'notification' and not self._context.get('mail_create_nosubscribe'):
-            if self.env['res.partner'].browse(values['author_id']).active:  # we dont want to add odoobot/inactive as a follower
-                self._message_subscribe(partner_ids=[values['author_id']])
+        if msg_values['author_id'] and msg_values['message_type'] != 'notification' and not self._context.get('mail_create_nosubscribe'):
+            if self.env['res.partner'].browse(msg_values['author_id']).active:  # we dont want to add odoobot/inactive as a follower
+                self._message_subscribe(partner_ids=[msg_values['author_id']])
 
-        self._message_post_after_hook(new_message, values)
-        self._notify_thread(new_message, values, **notif_kwargs)
+        self._message_post_after_hook(new_message, msg_values)
+        self._notify_thread(new_message, msg_values, **notif_kwargs)
         return new_message
 
     def _message_set_main_attachment_id(self, attachment_ids):  # todo move this out of mail.thread
@@ -1957,7 +1979,7 @@ class MailThread(models.AbstractModel):
             res_id = False
 
         MailThread = self.env['mail.thread']
-        values = {
+        msg_values = {
             'parent_id': parent_id,
             'model': self._name if self else model,
             'res_id': self.id if self else res_id,
@@ -1973,9 +1995,12 @@ class MailThread(models.AbstractModel):
             'reply_to': MailThread._notify_get_reply_to(default=email_from)[False],
             'message_id': tools.generate_tracking_message_id('message-notify'),
         }
-        values.update(msg_kwargs)
-        new_message = MailThread._message_create(values)
-        MailThread._notify_thread(new_message, values, **notif_kwargs)
+        msg_values.update(msg_kwargs)
+        if 'add_sign' not in msg_values:
+            msg_values['add_sign'] = True
+
+        new_message = MailThread._message_create(msg_values)
+        MailThread._notify_thread(new_message, msg_values, **notif_kwargs)
         return new_message
 
     def _message_log_with_view(self, views_or_xmlid, **kwargs):
@@ -1992,7 +2017,7 @@ class MailThread(models.AbstractModel):
         self.ensure_one()
         author_id, email_from = self._message_compute_author(author_id, email_from, raise_exception=False)
 
-        message_values = {
+        msg_values = {
             'subject': subject,
             'body': body,
             'author_id': author_id,
@@ -2005,9 +2030,10 @@ class MailThread(models.AbstractModel):
             'record_name': False,
             'reply_to': self.env['mail.thread']._notify_get_reply_to(default=email_from)[False],
             'message_id': tools.generate_tracking_message_id('message-notify'),  # why? this is all but a notify
+            'add_sign': False,  # False as no notification -> no need to compute signature
         }
-        message_values.update(kwargs)
-        return self.sudo()._message_create(message_values)
+        msg_values.update(kwargs)
+        return self.sudo()._message_create(msg_values)
 
     def _message_log_batch(self, bodies, author_id=None, email_from=None, subject=False, message_type='notification'):
         """ Shortcut allowing to post notes on a batch of documents. It achieve the
@@ -2028,6 +2054,7 @@ class MailThread(models.AbstractModel):
             'record_name': False,
             'reply_to': self.env['mail.thread']._notify_get_reply_to(default=email_from)[False],
             'message_id': tools.generate_tracking_message_id('message-notify'),  # why? this is all but a notify
+            'add_sign': False,
         }
         values_list = [dict(base_message_values,
                             res_id=record.id,
@@ -2121,6 +2148,9 @@ class MailThread(models.AbstractModel):
 
         :return: recipients data (see ``MailThread._notify_get_recipients()``)
         """
+        # add lang to context immediately since it will be useful in various rendering later
+        self = self._fallback_lang()
+
         msg_vals = msg_vals if msg_vals else {}
         recipients_data = self._notify_get_recipients(message, msg_vals)
         if not recipients_data:
@@ -2170,8 +2200,8 @@ class MailThread(models.AbstractModel):
         self.env['bus.bus'].sudo()._sendmany(bus_notifications)
 
     def _notify_thread_by_email(self, message, recipients_data, msg_vals=False,
-                                mail_auto_delete=True,  # mail.mail
-                                model_description=False,  # rendering
+                                mail_auto_delete=True, # mail.mail
+                                model_description=False, force_email_company=False, force_email_lang=False,  # rendering
                                 check_existing=False, force_send=True, send_after_commit=True,  # email send
                                 **kwargs):
         """ Method to send email linked to notified messages.
@@ -2196,10 +2226,11 @@ class MailThread(models.AbstractModel):
 
         :param model_description: model description used in email notification process
           (computed if not given);
+        :param force_email_company: see ``_notify_by_email_prepare_rendering_context``;
+        :param force_email_lang: see ``_notify_by_email_prepare_rendering_context``;
 
         :param check_existing: check for existing notifications to update based on
           mailed recipient, otherwise create new notifications;
-
         :param force_send: send emails directly instead of using queue;
         :param send_after_commit: if force_send, tells whether to send emails after
           the transaction has been committed using a post-commit hook;
@@ -2209,14 +2240,18 @@ class MailThread(models.AbstractModel):
             return True
 
         model = msg_vals.get('model') if msg_vals else message.model
-        model_name = model_description or (self._fallback_lang().env['ir.model']._get(model).display_name if model else False) # one query for display name
+        model_name = model_description or (self.env['ir.model']._get(model).display_name if model else False) # one query for display name
         recipients_groups_data = self._notify_get_recipients_classify(partners_data, model_name, msg_vals=msg_vals)
 
         if not recipients_groups_data:
             return True
         force_send = self.env.context.get('mail_notify_force_send', force_send)
 
-        template_values = self._notify_by_email_prepare_rendering_context(message, msg_vals, model_description=model_description) # 10 queries
+        template_values = self._notify_by_email_prepare_rendering_context(
+            message, msg_vals=msg_vals, model_description=model_description,
+            force_email_company=force_email_company,
+            force_email_lang=force_email_lang,
+        ) # 10 queries
 
         email_layout_xmlid = msg_vals.get('email_layout_xmlid') if msg_vals else message.email_layout_xmlid
         template_xmlid = email_layout_xmlid if email_layout_xmlid else 'mail.message_notification_email'
@@ -2316,7 +2351,8 @@ class MailThread(models.AbstractModel):
         return True
 
     @api.model
-    def _notify_by_email_prepare_rendering_context(self, message, msg_vals, model_description=False):
+    def _notify_by_email_prepare_rendering_context(self, message, msg_vals=False, model_description=False,
+                                                   force_email_company=False, force_email_lang=False):
         """ Prepare rendering context for notification email.
 
         Signature: if asked a default signature is computed based on author. Either
@@ -2324,75 +2360,101 @@ class MailThread(models.AbstractModel):
         user and we compute a default one based on the author's name.
 
         Company: either there is one defined on the record (company_id field set
-        with a value), either we use env.company.
+        with a value), either we use env.company. A new parameter allows to force
+        its value.
 
         Lang: when calling this method, ``_fallback_lang`` should already been
         called, or a lang set in context with another way. A wild guess is done
         based on templates to try to retrieve the recipient's language when a flow
         like "send by email" is performed. Lang is used to try to have the
-        notification layout in the same language as the email content.
+        notification layout in the same language as the email content. A new
+        parameter allows to force its value.
 
+        :param msg_vals: dictionary of values used to create the message. If given it
+          may be used to access values related to ``message`` without accessing it
+          directly. It lessens query count in some optimized use cases by avoiding
+          access message content in db;
         :param model_description: model description used in email notification process
           (computed if not given);
+        :param force_email_company: res.company record used when rendering notification
+          layout. Otherwise computed based on current record;
+        :param force_email_lang: lang used when rendering content, used notably to
+          compute model name;
         """
+        if msg_vals is False:
+            msg_vals = {}
+
+        # compute send user and its related signature; try to use self.env.user instead of browsing
+        # user_ids if he is the author will give a sudo user, improving access performances and cache usage.
         signature = ''
-        user = self.env.user
-        author = message.env['res.partner'].browse(msg_vals.get('author_id')) if msg_vals else message.author_id
-        model = msg_vals.get('model') if msg_vals else message.model
-        add_sign = msg_vals.get('add_sign') if msg_vals else message.add_sign
-        subtype_id = msg_vals.get('subtype_id') if msg_vals else message.subtype_id.id
-        message_id = message.id
-        record_name = msg_vals.get('record_name') if msg_vals else message.record_name
-        author_user = user if user.partner_id == author else author.user_ids[0] if author and author.user_ids else False
-        # trying to use user (self.env.user) instead of browing user_ids if he is the author will give a sudo user,
-        # improving access performances and cache usage.
-        if author_user:
-            user = author_user
-            if add_sign:
-                signature = user.signature
-        else:
-            if add_sign:
+        add_sign = msg_vals.get('add_sign') if 'add_sign' in msg_vals else message.add_sign
+        if add_sign:
+            author = message.env['res.partner'].browse(msg_vals.get('author_id')) if 'author_id' in msg_vals else message.author_id
+            author_user = self.env.user if self.env.user.partner_id == author else author.user_ids[0] if author and author.user_ids else False
+            if author_user:
+                signature = author_user.signature
+            else:
                 signature = "<p>-- <br/>%s</p>" % author.name
 
-        company = self.company_id.sudo() if self and 'company_id' in self and self.company_id else self.env.company
+        if force_email_company:
+            company = force_email_company
+        else:
+            company = self.company_id.sudo() if self and 'company_id' in self and self.company_id else self.env.company
         if company.website:
             website_url = 'http://%s' % company.website if not company.website.lower().startswith(('http:', 'https:')) else company.website
         else:
             website_url = False
 
-        # TDE FIXME: this whole brol should be cleaned !
-        lang = self.env.context.get('lang')
-        if {'default_template_id', 'default_model', 'default_res_id'} <= self.env.context.keys():
+        # compute lang in which content was rendered or typed
+        lang = False
+        if force_email_lang:
+            lang = force_email_lang
+        elif {'default_template_id', 'default_model', 'default_res_id'} <= self.env.context.keys():
+            # TDE FIXME: this whole brol should be cleaned !
             template = self.env['mail.template'].browse(self.env.context['default_template_id'])
             if template and template.lang:
                 lang = template._render_lang([self.env.context['default_res_id']])[self.env.context['default_res_id']]
+        if not lang:
+            lang = self.env.context.get('lang')
 
-        if not model_description and model:
-            model_description = self.env['ir.model'].with_context(lang=lang)._get(model).display_name
+        # record, model
+        if not model_description:
+            model = msg_vals.get('model') if 'model' in msg_vals else message.model
+            if model:
+                model_description = self.env['ir.model'].with_context(lang=lang)._get(model).display_name
+        record_name = msg_vals.get('record_name') if 'record_name' in msg_vals else message.record_name
 
+        # tracking
         tracking = []
         if msg_vals.get('tracking_value_ids', True) if msg_vals else bool(self): # could be tracking
             for tracking_value in self.env['mail.tracking.value'].sudo().search([('mail_message_id', '=', message.id)]):
                 groups = tracking_value.field_groups
                 if not groups or self.env.is_superuser() or self.user_has_groups(groups):
                     tracking.append((tracking_value.field_desc,
-                                    tracking_value.get_old_display_value()[0],
-                                    tracking_value.get_new_display_value()[0]))
+                                     tracking_value.get_old_display_value()[0],
+                                     tracking_value.get_new_display_value()[0]))
 
+        subtype_id = msg_vals.get('subtype_id') if msg_vals and 'subtype_id' in msg_vals else message.subtype_id.id
         is_discussion = subtype_id == self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
 
         return {
+            # message
+            'is_discussion': is_discussion,
             'message': message,
-            'signature': signature,
-            'website_url': website_url,
-            'company': company,
+            'subtype': message.subtype_id,
+            'tracking_values': tracking,
+            # record
             'model_description': model_description,
             'record': self,
             'record_name': record_name,
-            'tracking_values': tracking,
-            'is_discussion': is_discussion,
-            'subtype': message.subtype_id,
+            # user / environment
+            'add_sign': add_sign,
+            'company': company,
             'lang': lang,
+            'signature': signature,
+            'website_url': website_url,
+            # tools
+            'is_html_empty': is_html_empty,
         }
 
     def _notify_by_email_get_base_mail_values(self, message, additional_values=None):
