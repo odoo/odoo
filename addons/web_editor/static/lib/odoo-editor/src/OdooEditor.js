@@ -1390,7 +1390,7 @@ export class OdooEditor extends EventTarget {
                 if (hasGradient && hasTextGradientClass) {
                     foreColor = backgroundImage;
                 } else {
-                    foreColor = document.queryCommandValue('foreColor');
+                    foreColor = this.document.queryCommandValue('foreColor');
                 }
             }
             if (!hiliteColor) {
