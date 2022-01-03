@@ -66,6 +66,7 @@
             'website_sale/static/src/scss/website_sale_dashboard.scss',
             'website_sale/static/src/scss/website_sale_backend.scss',
             'website_sale/static/src/js/tours/website_sale_shop_backend.js',
+            'website_sale/static/src/js/systray_items/new_content.js',
         ],
         'website.assets_wysiwyg': [
             'website_sale/static/src/scss/website_sale.editor.scss',

@@ -1,57 +1,16 @@
-odoo.define('website_blog.new_blog_post', function (require) {
-'use strict';
+/** @odoo-module **/
 
-var core = require('web.core');
-var wUtils = require('website.utils');
-var WebsiteNewMenu = require('website.newMenu');
+import { NewContentModal, MODULE_STATUS } from '@website/systray_items/new_content';
+import { patch } from 'web.utils';
 
-var _t = core._t;
+patch(NewContentModal.prototype, 'website_blog_new_content', {
+    setup() {
+        this._super();
 
-WebsiteNewMenu.include({
-    actions: _.extend({}, WebsiteNewMenu.prototype.actions || {}, {
-        new_blog_post: '_createNewBlogPost',
-    }),
-
-    //--------------------------------------------------------------------------
-    // Actions
-    //--------------------------------------------------------------------------
-
-    /**
-     * Asks the user information about a new blog post to create, then creates
-     * it and redirects the user to this new post.
-     *
-     * @private
-     * @returns {Promise} Unresolved if there is a redirection
-     */
-    _createNewBlogPost: function () {
-        return this._rpc({
-            model: 'blog.blog',
-            method: 'search_read',
-            args: [wUtils.websiteDomain(this), ['name']],
-        }).then(function (blogs) {
-            if (blogs.length === 1) {
-                document.location = '/blog/' + blogs[0]['id'] + '/post/new';
-                return new Promise(function () {});
-            } else if (blogs.length > 1) {
-                return wUtils.prompt({
-                    id: 'editor_new_blog',
-                    window_title: _t("New Blog Post"),
-                    select: _t("Select Blog"),
-                    init: function (field) {
-                        return _.map(blogs, function (blog) {
-                            return [blog['id'], blog['name']];
-                        });
-                    },
-                }).then(function (result) {
-                    var blog_id = result.val;
-                    if (!blog_id) {
-                        return;
-                    }
-                    document.location = '/blog/' + blog_id + '/post/new';
-                    return new Promise(function () {});
-                });
-            }
-        });
+        const newBlogElement = this.state.newContentElements.find(element => element.moduleXmlId === 'base.module_website_blog');
+        newBlogElement.createNewContent = () => this.createNewBlogPost();
+        newBlogElement.status = MODULE_STATUS.INSTALLED;
     },
-});
+
+    createNewBlogPost() {}
 });

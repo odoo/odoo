@@ -235,7 +235,6 @@
             'website/static/src/js/menu/debug_menu.js',
             'website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js',
             'website/static/src/systray_items/mobile_preview.js',
-            'website/static/src/systray_items/new_content.js',
             'website/static/src/components/dialog/seo.js',
             'website/static/src/systray_items/translate_website.js',
             'website/static/src/js/set_view_track.js',
