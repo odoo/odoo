@@ -283,9 +283,8 @@
                             </page>
                             <page string="Settings" name="settings">
                                 <group>
-                                    <group string="Email Content">
+                                    <group string="Email Content" attrs="{'invisible': [('mailing_type', '!=', 'mail')]}">
                                         <field class="o_text_overflow" name="preview" string="Preview Text" attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}" widget="char_emojis" placeholder="e.g. Check it out before it's too late!"/>
-                                        <field name="user_id" widget="many2one_avatar_user" domain="[('share', '=', False)]"/>
                                         <field name="email_from" attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
                                         <label for="reply_to"/>
                                         <div name="reply_to_details">
@@ -314,7 +313,7 @@
                                                 attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
                                         </div>
                                     </group>
-                                    <group string="Tracking" groups="base.group_no_one,mass_mailing.group_mass_mailing_campaign">
+                                    <group string="Tracking">
                                         <field name="campaign_id"
                                             string="Campaign"
                                             groups="mass_mailing.group_mass_mailing_campaign"
@@ -331,6 +330,7 @@
                                             class="o_text_overflow"
                                             groups="base.group_no_one"
                                             attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
+                                        <field name="user_id" widget="many2one_avatar_user" domain="[('share', '=', False)]"/>
                                     </group>
                                     <group string="Advanced" groups="base.group_no_one">
                                         <field name="mail_server_available" invisible="1"/>

@@ -117,8 +117,10 @@
                         options='{"enable_emojis": True}'/>
                 </page>
             </xpath>
-            <xpath expr="//field[@name='user_id']" position="after">
-                <field name="sms_allow_unsubscribe" attrs="{'invisible': [('mailing_type', '!=', 'sms')], 'readonly': [('state', 'in', ('sending', 'done'))]}"/>
+            <xpath expr="//page[@name='settings']/group/group[1]" position="after">
+                <group string="Options" attrs="{'invisible': [('mailing_type', '!=', 'sms')]}">
+                    <field name="sms_allow_unsubscribe" attrs="{'invisible': [('mailing_type', '!=', 'sms')], 'readonly': [('state', 'in', ('sending', 'done'))]}"/>
+                </group>
             </xpath>
 
             <xpath expr="//field[@name='contact_list_ids']" position="attributes">
