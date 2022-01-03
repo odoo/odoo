@@ -84,28 +84,6 @@
                     <div class="o_mobile_preview o_menu_systray_item" id="mobile-menu">
                         <a data-action="show-mobile-preview" href="#" accesskey="v"><span title="Mobile preview" role="img" aria-label="Mobile preview" class="fa fa-lg fa-mobile"/></a>
                     </div>
-                    <div groups="website.group_multi_website" t-if="multi_website_websites" id="website_switcher" class="o_menu_systray_item">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#" accesskey="w">
-                            <i class="fa fa-globe d-lg-none"/>
-                            <span class="d-none d-lg-inline-block">
-                                <t t-esc="multi_website_websites_current"/>
-                            </span>
-                        </a>
-                        <div class="dropdown-menu" role="menu">
-                            <div class="d-lg-none dropdown-item active">
-                                <span t-esc="multi_website_websites_current"/>
-                            </div>
-                            <t t-foreach="multi_website_websites" t-as="multi_website_website">
-                                <a role="menuitem" href="#"
-                                    t-att-domain="multi_website_website['domain']"
-                                    class="dropdown-item oe_menu_text js_multi_website_switch"
-                                    t-att-website-id="str(multi_website_website['website_id'])"
-                                >
-                                    <span t-esc="multi_website_website['name']" />
-                                </a>
-                            </t>
-                        </div>
-                    </div>
 
                     <!-- Page Edition -->
                     <div class="o_new_content_menu o_menu_systray_item" id="new-content-menu">

@@ -16,8 +16,8 @@ const unslugHtmlDataObject = (repr) => {
 };
 
 export const websiteService = {
-    dependencies: ['orm'],
-    async start(env, { orm }) {
+    dependencies: ['orm', 'action'],
+    async start(env, { orm, action }) {
         let websites = [];
         let currentWebsiteId;
 
@@ -34,6 +34,17 @@ export const websiteService = {
             },
             get websites() {
                 return websites;
+            },
+            goToWebsite({ websiteId = currentWebsiteId || websites[0].id, path = '/' }) {
+                action.doAction('website.website_preview', {
+                    clearBreadcrumbs: true,
+                    additionalContext: {
+                        params: {
+                            website_id: websiteId,
+                            path,
+                        },
+                    },
+                });
             },
             async fetchWebsites() {
                 const [currentWebsiteRepr, allWebsites] = await Promise.all([
