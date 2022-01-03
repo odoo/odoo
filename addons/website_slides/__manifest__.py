@@ -70,6 +70,7 @@ Featuring
             'website_slides/static/src/js/slide_category_one2many.js',
             'website_slides/static/src/js/rating_field_backend.js',
             'website_slides/static/src/models/*.js',
+            'website_slides/static/src/js/systray_items/new_content.js',
         ],
         'web.assets_frontend': [
             'website_slides/static/src/scss/website_slides.scss',
