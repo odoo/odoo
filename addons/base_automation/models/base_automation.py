@@ -230,7 +230,7 @@ class BaseAutomation(models.Model):
             e.context['exception_class'] = 'base_automation'
             e.context['base_automation'] = {
                 'id': self.id,
-                'name': self.name,
+                'name': self.sudo().name,
             }
 
     def _process(self, records, domain_post=None):
