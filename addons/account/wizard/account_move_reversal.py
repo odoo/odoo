@@ -75,6 +75,13 @@ class AccountMoveReversal(models.TransientModel):
         # DEPRECATED: TO REMOVE IN MASTER
         return
 
+    def _prepare_new_move_values(self, move):
+        # Prepares the data needed for a new move based on the old move
+        new_move_values = move.copy_data({
+            'date': self.date if self.date_mode == 'custom' else move.date
+        })[0]
+        return new_move_values
+
     def reverse_moves(self):
         self.ensure_one()
         moves = self.move_ids
@@ -103,7 +110,7 @@ class AccountMoveReversal(models.TransientModel):
             if self.refund_method == 'modify':
                 moves_vals_list = []
                 for move in moves.with_context(include_business_fields=True):
-                    moves_vals_list.append(move.copy_data({'date': self.date if self.date_mode == 'custom' else move.date})[0])
+                    moves_vals_list.append(self._prepare_new_move_values(move))
                 new_moves = self.env['account.move'].create(moves_vals_list)
 
             moves_to_redirect |= new_moves
