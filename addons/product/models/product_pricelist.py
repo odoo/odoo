@@ -11,25 +11,44 @@ class Pricelist(models.Model):
     _description = "Pricelist"
     _order = "sequence asc, id desc"
 
-    def _get_default_currency_id(self):
+    def _default_currency_id(self):
         return self.env.company.currency_id.id
 
-    name = fields.Char('Pricelist Name', required=True, translate=True)
-    active = fields.Boolean('Active', default=True, help="If unchecked, it will allow you to hide the pricelist without removing it.")
-    item_ids = fields.One2many(
-        'product.pricelist.item', 'pricelist_id', 'Pricelist Rules',
-        copy=True)
-    currency_id = fields.Many2one('res.currency', 'Currency', default=_get_default_currency_id, required=True)
-    company_id = fields.Many2one('res.company', 'Company')
+    name = fields.Char(string="Pricelist Name", required=True, translate=True)
 
+    active = fields.Boolean(
+        string="Active",
+        default=True,
+        help="If unchecked, it will allow you to hide the pricelist without removing it.")
     sequence = fields.Integer(default=16)
-    country_group_ids = fields.Many2many('res.country.group', 'res_country_group_pricelist_rel',
-                                         'pricelist_id', 'res_country_group_id', string='Country Groups')
 
-    discount_policy = fields.Selection([
-        ('with_discount', 'Discount included in the price'),
-        ('without_discount', 'Show public price & discount to the customer')],
-        default='with_discount', required=True)
+    currency_id = fields.Many2one(
+        comodel_name='res.currency',
+        default=_default_currency_id,
+        required=True)
+
+    company_id = fields.Many2one(
+        comodel_name='res.company')
+    country_group_ids = fields.Many2many(
+        comodel_name='res.country.group',
+        relation='res_country_group_pricelist_rel',
+        column1='pricelist_id',
+        column2='res_country_group_id',
+        string="Country Groups")
+
+    discount_policy = fields.Selection(
+        selection=[
+            ('with_discount', "Discount included in the price"),
+            ('without_discount', "Show public price & discount to the customer"),
+        ],
+        default='with_discount',
+        required=True)
+
+    item_ids = fields.One2many(
+        comodel_name='product.pricelist.item',
+        inverse_name='pricelist_id',
+        string="Pricelist Rules",
+        copy=True)
 
     def name_get(self):
         return [(pricelist.id, '%s (%s)' % (pricelist.name, pricelist.currency_id.name)) for pricelist in self]
