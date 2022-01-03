@@ -84,13 +84,25 @@ class TestMessagePost(TestMailCommon, TestRecipients):
         self.assertIn("record.user_id.sudo().signature", template.arch)
 
         with self.mock_mail_gateway():
-            self.test_track.message_post(body="Test body", mail_auto_delete=False, add_sign=True, partner_ids=[self.partner_1.id, self.partner_2.id], email_layout_xmlid="mail.mail_notification_paynow")
+            self.test_track.message_post(
+                body="Test body",
+                email_add_signature=True,
+                email_layout_xmlid="mail.mail_notification_paynow",
+                mail_auto_delete=False,
+                partner_ids=[self.partner_1.id, self.partner_2.id],
+            )
         found_mail = self._new_mails
         self.assertIn(signature, found_mail.body_html)
         self.assertEqual(found_mail.body_html.count(signature), 1)
 
         with self.mock_mail_gateway():
-            self.test_track.message_post(body="Test body", mail_auto_delete=False, add_sign=False, partner_ids=[self.partner_1.id, self.partner_2.id], email_layout_xmlid="mail.mail_notification_paynow")
+            self.test_track.message_post(
+                body="Test body",
+                email_add_signature=False,
+                email_layout_xmlid="mail.mail_notification_paynow",
+                mail_auto_delete=False,
+                partner_ids=[self.partner_1.id, self.partner_2.id]
+            )
         found_mail = self._new_mails
         self.assertNotIn(signature, found_mail.body_html)
         self.assertEqual(found_mail.body_html.count(signature), 0)

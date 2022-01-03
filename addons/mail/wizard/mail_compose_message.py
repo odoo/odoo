@@ -101,7 +101,7 @@ class MailComposer(models.TransientModel):
         'wizard_id', 'attachment_id', 'Attachments')
     email_layout_xmlid = fields.Char('Email Notification Layout', copy=False)
     layout = fields.Char('Layout', copy=False)  # xml id of layout
-    add_sign = fields.Boolean(default=True)
+    email_add_signature = fields.Boolean(default=True)
     # origin
     email_from = fields.Char('From', help="Email address of the sender. This field is set when no matching partner is found and replaces the author_id field in the chatter.")
     author_id = fields.Many2one(
@@ -311,7 +311,7 @@ class MailComposer(models.TransientModel):
                             message_type=wizard.message_type,
                             subtype_id=subtype_id,
                             email_layout_xmlid=wizard.email_layout_xmlid,
-                            add_sign=not bool(wizard.template_id),
+                            email_add_signature=not bool(wizard.template_id) and wizard.email_add_signature,
                             mail_auto_delete=wizard.template_id.auto_delete if wizard.template_id else self._context.get('mail_auto_delete', True),
                             model_description=model_description)
                         post_params.update(mail_values)
