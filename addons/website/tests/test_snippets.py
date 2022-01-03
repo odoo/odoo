@@ -24,9 +24,9 @@ class TestSnippets(odoo.tests.HttpCase):
         data_snippet_els = html_template.xpath("//*[@class='o_panel' and not(contains(@class, 'd-none'))]//*[@data-snippet]")
         blacklist = [
             's_facebook_page',  # avoid call to external services (facebook.com)
-            's_map', # avoid call to maps.google.com
+            's_map',  # avoid call to maps.google.com
         ]
-        snippets_names = ','.join([el.attrib['data-snippet'] for el in data_snippet_els if el.attrib['data-snippet'] not in blacklist])
+        snippets_names = ','.join(set(el.attrib['data-snippet'] for el in data_snippet_els if el.attrib['data-snippet'] not in blacklist))
         self.start_tour("/?enable_editor=1&snippets_names=%s" % snippets_names, "snippets_all_drag_and_drop", login='admin', timeout=300)
 
     def test_04_countdown_preview(self):
