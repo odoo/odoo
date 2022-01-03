@@ -11,123 +11,137 @@ class PricelistItem(models.Model):
     _description = "Pricelist Rule"
     _order = "applied_on, min_quantity desc, categ_id desc, id desc"
     _check_company_auto = True
-    # NOTE: if you change _order on this model, make sure it matches the SQL
-    # query built in _compute_price_rule() above in this file to avoid
-    # inconstencies and undeterministic issues.
 
     def _default_pricelist_id(self):
         return self.env['product.pricelist'].search([
             '|', ('company_id', '=', False),
             ('company_id', '=', self.env.company.id)], limit=1)
 
-    product_tmpl_id = fields.Many2one(
-        'product.template', 'Product', ondelete='cascade', check_company=True,
-        help="Specify a template if this rule only applies to one product template. Keep empty otherwise.")
-    product_id = fields.Many2one(
-        'product.product', 'Product Variant', ondelete='cascade', check_company=True,
-        help="Specify a product if this rule only applies to one product. Keep empty otherwise.")
-    categ_id = fields.Many2one(
-        'product.category', 'Product Category', ondelete='cascade',
-        help="Specify a product category if this rule only applies to products belonging to this category or its children categories. Keep empty otherwise.")
+    pricelist_id = fields.Many2one(
+        comodel_name='product.pricelist',
+        string="Pricelist",
+        index=True, ondelete='cascade',
+        required=True,
+        default=_default_pricelist_id)
+
+    active = fields.Boolean(related='pricelist_id.active', store=True)
+    company_id = fields.Many2one(related='pricelist_id.company_id', store=True)
+    currency_id = fields.Many2one(related='pricelist_id.currency_id', store=True)
+
+    date_start = fields.Datetime(
+        string="Start Date",
+        help="Starting datetime for the pricelist item validation\n"
+            "The displayed value depends on the timezone set in your preferences.")
+    date_end = fields.Datetime(
+        string="End Date",
+        help="Ending datetime for the pricelist item validation\n"
+            "The displayed value depends on the timezone set in your preferences.")
+
     min_quantity = fields.Float(
-        'Min. Quantity', default=0, digits="Product Unit Of Measure",
+        string="Min. Quantity",
+        default=0,
+        digits='Product Unit Of Measure',
         help="For the rule to apply, bought/sold quantity must be greater "
              "than or equal to the minimum quantity specified in this field.\n"
              "Expressed in the default unit of measure of the product.")
-    applied_on = fields.Selection([
-        ('3_global', 'All Products'),
-        ('2_product_category', 'Product Category'),
-        ('1_product', 'Product'),
-        ('0_product_variant', 'Product Variant')], "Apply On",
-        default='3_global', required=True,
-        help='Pricelist Item applicable on selected option')
-    base = fields.Selection([
-        ('list_price', 'Sales Price'),
-        ('standard_price', 'Cost'),
-        ('pricelist', 'Other Pricelist')], "Based on",
-        default='list_price', required=True,
-        help='Base price for computation.\n'
-             'Sales Price: The base price will be the Sales Price.\n'
-             'Cost Price : The base price will be the cost price.\n'
-             'Other Pricelist : Computation of the base price based on another Pricelist.')
+
+    applied_on = fields.Selection(
+        selection=[
+            ('3_global', "All Products"),
+            ('2_product_category', "Product Category"),
+            ('1_product', "Product"),
+            ('0_product_variant', "Product Variant"),
+        ],
+        string="Apply On",
+        default='3_global',
+        required=True,
+        help="Pricelist Item applicable on selected option")
+
+    categ_id = fields.Many2one(
+        comodel_name='product.category',
+        string="Product Category",
+        ondelete='cascade',
+        help="Specify a product category if this rule only applies to products belonging to this category or its children categories. Keep empty otherwise.")
+    product_tmpl_id = fields.Many2one(
+        comodel_name='product.template',
+        string="Product",
+        ondelete='cascade', check_company=True,
+        help="Specify a template if this rule only applies to one product template. Keep empty otherwise.")
+    product_id = fields.Many2one(
+        comodel_name='product.product',
+        string="Product Variant",
+        ondelete='cascade', check_company=True,
+        help="Specify a product if this rule only applies to one product. Keep empty otherwise.")
+
+    base = fields.Selection(
+        selection=[
+            ('list_price', 'Sales Price'),
+            ('standard_price', 'Cost'),
+            ('pricelist', 'Other Pricelist'),
+        ],
+        string="Based on",
+        default='list_price',
+        required=True,
+        help="Base price for computation.\n"
+             "Sales Price: The base price will be the Sales Price.\n"
+             "Cost Price : The base price will be the cost price.\n"
+             "Other Pricelist : Computation of the base price based on another Pricelist.")
     base_pricelist_id = fields.Many2one('product.pricelist', 'Other Pricelist', check_company=True)
-    pricelist_id = fields.Many2one('product.pricelist', 'Pricelist', index=True, ondelete='cascade', required=True, default=_default_pricelist_id)
-    price_surcharge = fields.Float(
-        'Price Surcharge', digits='Product Price',
-        help='Specify the fixed amount to add or substract(if negative) to the amount calculated with the discount.')
+
+    compute_price = fields.Selection(
+        selection=[
+            ('fixed', "Fixed Price"),
+            ('percentage', "Discount"),
+            ('formula', "Formula"),
+        ],
+        index=True, default='fixed', required=True)
+
+    fixed_price = fields.Float(string="Fixed Price", digits='Product Price')
+    percent_price = fields.Float(
+        string="Percentage Price",
+        help="You can apply a mark-up by setting a negative discount.")
+
     price_discount = fields.Float(
-        'Price Discount', default=0, digits=(16, 2),
+        string="Price Discount",
+        default=0,
+        digits=(16, 2),
         help="You can apply a mark-up by setting a negative discount.")
     price_round = fields.Float(
-        'Price Rounding', digits='Product Price',
+        string="Price Rounding",
+        digits='Product Price',
         help="Sets the price so that it is a multiple of this value.\n"
              "Rounding is applied after the discount and before the surcharge.\n"
              "To have prices that end in 9.99, set rounding 10, surcharge -0.01")
+    price_surcharge = fields.Float(
+        string="Price Surcharge",
+        digits='Product Price',
+        help="Specify the fixed amount to add or substract(if negative) to the amount calculated with the discount.")
+
     price_min_margin = fields.Float(
-        'Min. Price Margin', digits='Product Price',
-        help='Specify the minimum amount of margin over the base price.')
+        string="Min. Price Margin",
+        digits='Product Price',
+        help="Specify the minimum amount of margin over the base price.")
     price_max_margin = fields.Float(
-        'Max. Price Margin', digits='Product Price',
-        help='Specify the maximum amount of margin over the base price.')
-    company_id = fields.Many2one(
-        'res.company', 'Company',
-        readonly=True, related='pricelist_id.company_id', store=True)
-    currency_id = fields.Many2one(
-        'res.currency', 'Currency',
-        readonly=True, related='pricelist_id.currency_id', store=True)
-    active = fields.Boolean(
-        readonly=True, related="pricelist_id.active", store=True)
-    date_start = fields.Datetime('Start Date', help="Starting datetime for the pricelist item validation\n"
-                                                "The displayed value depends on the timezone set in your preferences.")
-    date_end = fields.Datetime('End Date', help="Ending datetime for the pricelist item validation\n"
-                                                "The displayed value depends on the timezone set in your preferences.")
-    compute_price = fields.Selection([
-        ('fixed', 'Fixed Price'),
-        ('percentage', 'Discount'),
-        ('formula', 'Formula')], index=True, default='fixed', required=True)
-    fixed_price = fields.Float('Fixed Price', digits='Product Price')
-    percent_price = fields.Float(
-        'Percentage Price',
-        help="You can apply a mark-up by setting a negative discount.")
+        string="Max. Price Margin",
+        digits='Product Price',
+        help="Specify the maximum amount of margin over the base price.")
+
     # functional fields used for usability purposes
     name = fields.Char(
-        'Name', compute='_get_pricelist_item_name_price',
+        string="Name",
+        compute='_compute_name_and_price',
         help="Explicit rule name for this pricelist line.")
     price = fields.Char(
-        'Price', compute='_get_pricelist_item_name_price',
+        string="Price",
+        compute='_compute_name_and_price',
         help="Explicit rule name for this pricelist line.")
     rule_tip = fields.Char(compute='_compute_rule_tip')
 
-    @api.constrains('base_pricelist_id', 'pricelist_id', 'base')
-    def _check_recursion(self):
-        if any(item.base == 'pricelist' and item.pricelist_id and item.pricelist_id == item.base_pricelist_id for item in self):
-            raise ValidationError(_('You cannot assign the Main Pricelist as Other Pricelist in PriceList Item'))
-
-    @api.constrains('date_start', 'date_end')
-    def _check_date_range(self):
-        for item in self:
-            if item.date_start and item.date_end and item.date_start >= item.date_end:
-                raise ValidationError(_('%s : end date (%s) should be greater than start date (%s)', item.display_name, format_datetime(self.env, item.date_end), format_datetime(self.env, item.date_start)))
-        return True
-
-    @api.constrains('price_min_margin', 'price_max_margin')
-    def _check_margin(self):
-        if any(item.price_min_margin > item.price_max_margin for item in self):
-            raise ValidationError(_('The minimum margin should be lower than the maximum margin.'))
-
-    @api.constrains('product_id', 'product_tmpl_id', 'categ_id')
-    def _check_product_consistency(self):
-        for item in self:
-            if item.applied_on == "2_product_category" and not item.categ_id:
-                raise ValidationError(_("Please specify the category for which this rule should be applied"))
-            elif item.applied_on == "1_product" and not item.product_tmpl_id:
-                raise ValidationError(_("Please specify the product for which this rule should be applied"))
-            elif item.applied_on == "0_product_variant" and not item.product_id:
-                raise ValidationError(_("Please specify the product variant for which this rule should be applied"))
+    #=== COMPUTE METHODS ===#
 
     @api.depends('applied_on', 'categ_id', 'product_tmpl_id', 'product_id', 'compute_price', 'fixed_price', \
         'pricelist_id', 'percent_price', 'price_discount', 'price_surcharge')
-    def _get_pricelist_item_name_price(self):
+    def _compute_name_and_price(self):
         for item in self:
             if item.categ_id and item.applied_on == '2_product_category':
                 item.name = _("Category: %s") % (item.categ_id.display_name)
@@ -173,6 +187,37 @@ class PricelistItem(models.Model):
                     item.env, discounted_price + item.price_surcharge, item.currency_id),
             )
 
+    #=== CONSTRAINT METHODS ===#
+
+    @api.constrains('base_pricelist_id', 'pricelist_id', 'base')
+    def _check_recursion(self):
+        if any(item.base == 'pricelist' and item.pricelist_id and item.pricelist_id == item.base_pricelist_id for item in self):
+            raise ValidationError(_('You cannot assign the Main Pricelist as Other Pricelist in PriceList Item'))
+
+    @api.constrains('date_start', 'date_end')
+    def _check_date_range(self):
+        for item in self:
+            if item.date_start and item.date_end and item.date_start >= item.date_end:
+                raise ValidationError(_('%s : end date (%s) should be greater than start date (%s)', item.display_name, format_datetime(self.env, item.date_end), format_datetime(self.env, item.date_start)))
+        return True
+
+    @api.constrains('price_min_margin', 'price_max_margin')
+    def _check_margin(self):
+        if any(item.price_min_margin > item.price_max_margin for item in self):
+            raise ValidationError(_('The minimum margin should be lower than the maximum margin.'))
+
+    @api.constrains('product_id', 'product_tmpl_id', 'categ_id')
+    def _check_product_consistency(self):
+        for item in self:
+            if item.applied_on == "2_product_category" and not item.categ_id:
+                raise ValidationError(_("Please specify the category for which this rule should be applied"))
+            elif item.applied_on == "1_product" and not item.product_tmpl_id:
+                raise ValidationError(_("Please specify the product for which this rule should be applied"))
+            elif item.applied_on == "0_product_variant" and not item.product_id:
+                raise ValidationError(_("Please specify the product variant for which this rule should be applied"))
+
+    #=== ONCHANGE METHODS ===#
+
     @api.onchange('compute_price')
     def _onchange_compute_price(self):
         if self.compute_price != 'fixed':
@@ -208,7 +253,7 @@ class PricelistItem(models.Model):
                 item.product_id = None
 
     @api.onchange('product_id', 'product_tmpl_id', 'categ_id')
-    def _onchane_rule_content(self):
+    def _onchange_rule_content(self):
         if not self.user_has_groups('product.group_sale_pricelist') and not self.env.context.get('default_applied_on', False):
             # If advanced pricelists are disabled (applied_on field is not visible)
             # AND we aren't coming from a specific product template/variant.
@@ -217,6 +262,8 @@ class PricelistItem(models.Model):
             variants_rules.update({'applied_on': '0_product_variant'})
             template_rules.update({'applied_on': '1_product'})
             (self-variants_rules-template_rules).update({'applied_on': '3_global'})
+
+    #=== CRUD METHODS ===#
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -232,7 +279,7 @@ class PricelistItem(models.Model):
                     values.update(dict(product_id=None, categ_id=None))
                 elif applied_on == '0_product_variant':
                     values.update(dict(categ_id=None))
-        return super(PricelistItem, self).create(vals_list)
+        return super().create(vals_list)
 
     def write(self, values):
         if values.get('applied_on', False):
@@ -246,7 +293,9 @@ class PricelistItem(models.Model):
                 values.update(dict(product_id=None, categ_id=None))
             elif applied_on == '0_product_variant':
                 values.update(dict(categ_id=None))
-        return super(PricelistItem, self).write(values)
+        return super().write(values)
+
+    #=== BUSINESS METHODS ===#
 
     def _is_applicable_for(self, product, qty_in_product_uom):
         """Check whether the current rule is valid for the given product & qty.
