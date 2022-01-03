@@ -3,6 +3,9 @@
 <data>
 <template id="report_package_barcode">
     <t t-call="web.basic_layout">
+        <!-- quantity patterns are always 3 digit codes + 1 digit for number of digits (excluding units) -->
+        <t t-set="uom_unit_id" t-value="env.ref('uom.product_uom_unit').id"/>
+        <t t-set="gs1_uom_patterns" t-value="{rule.associated_uom_id.id: rule.pattern[1:4] + str(len(str(rule.associated_uom_id.rounding).split('.')[1])) for rule in env['barcode.rule'].search([('associated_uom_id', '!=', False), ('associated_uom_id.id', '!=', uom_unit_id), ('is_gs1_nomenclature', '=', True)])}"/>
         <t t-foreach="docs" t-as="o">
             <t>
                 <div class="page">
@@ -66,6 +69,18 @@
                                 <td class="text-right" t-if="has_ean_barcode">
                                     <t t-if="l.product_id.valid_ean">
                                         <t t-set="product_barcode" t-value="'01' + '0' * (14 - len(l.product_id.barcode)) + l.product_id.barcode"/>
+                                        <t t-set="gs1_pattern" t-value="gs1_uom_patterns.get(l.product_uom_id.id, False)"/>
+                                        <t t-if="(gs1_pattern or l.product_uom_id.id == uom_unit_id) and l.quantity &gt;= 0">
+                                            <t t-if="gs1_pattern">
+                                                <t t-set="qty_str" t-value="str(int(l.quantity/l.product_uom_id.rounding))"/>
+                                                <t t-if="len(qty_str) &lt;= 6" t-set="product_barcode" t-value="product_barcode + gs1_pattern +  '0' * (6 - len(qty_str)) + qty_str"/>
+                                            </t>
+                                            <t t-else="">
+                                                <!-- GS1 have no decimal indicator for unit uom => round for now.. -->
+                                                <t t-set="qty_str" t-value="str(int(round(l.quantity)))"/>
+                                                <t t-if="len(qty_str) &lt;=8" t-set="product_barcode" t-value="product_barcode + '30' +  '0' * (8 - len(qty_str)) + qty_str"/>
+                                            </t>
+                                        </t>
                                         <!-- TODO: lot/sn ALWAYS has to be last part of barcode since left padding '0's = different sn/lot name match when scanning => fix when FNC1 can be used,  -->
                                         <t name="product_barcode_lot_datamatrix" t-if="l.product_id.tracking == 'lot' and l.lot_id" t-set="product_barcode" t-value="product_barcode + '10' + l.lot_id.name"/>
                                         <t t-elif="l.product_id.tracking == 'serial' and l.lot_id" t-set="product_barcode" t-value="product_barcode + '21' +  l.lot_id.name"/>
