@@ -26,11 +26,12 @@ QUnit.module('activity_mark_done_popover_tests.js', {
         };
 
         this.start = async params => {
-            const { env, widget } = await start(Object.assign({}, params, {
-                data: this.data,
-            }));
+            const res = await start({ ...params, data: this.data });
+            const { components, env, widget } = res;
+            this.components = components;
             this.env = env;
             this.widget = widget;
+            return res;
         };
     },
     afterEach() {
@@ -41,14 +42,23 @@ QUnit.module('activity_mark_done_popover_tests.js', {
 QUnit.test('activity mark done popover simplest layout', async function (assert) {
     assert.expect(6);
 
-    await this.start();
-    const activity = this.messaging.models['Activity'].create({
-        canWrite: true,
-        category: 'not_upload_file',
-        id: 12,
-        thread: insert({ id: 42, model: 'res.partner' }),
+    this.data['res.partner'].records.push({
+        activity_ids: [12],
+        id: 100,
     });
-    await this.createActivityMarkDonePopoverComponent(activity);
+    this.data['mail.activity'].records.push({
+        activity_category: 'not_upload_file',
+        can_write: true,
+        id: 12,
+        res_id: 100,
+        res_model: 'res.partner',
+    });
+    const { click, createChatterContainerComponent } = await this.start();
+    await createChatterContainerComponent({
+        threadId: 100,
+        threadModel: 'res.partner',
+    });
+    await click('.o_Activity_markDoneButton');
 
     assert.containsOnce(
         document.body,
@@ -85,15 +95,24 @@ QUnit.test('activity mark done popover simplest layout', async function (assert)
 QUnit.test('activity with force next mark done popover simplest layout', async function (assert) {
     assert.expect(6);
 
-    await this.start();
-    const activity = this.messaging.models['Activity'].create({
-        canWrite: true,
-        category: 'not_upload_file',
+    this.data['res.partner'].records.push({
+        activity_ids: [12],
+        id: 100,
+    });
+    this.data['mail.activity'].records.push({
+        activity_category: 'not_upload_file',
+        can_write: true,
         chaining_type: 'trigger',
         id: 12,
-        thread: insert({ id: 42, model: 'res.partner' }),
+        res_id: 100,
+        res_model: 'res.partner',
     });
-    await this.createActivityMarkDonePopoverComponent(activity);
+    const { click, createChatterContainerComponent } = await this.start();
+    await createChatterContainerComponent({
+        threadId: 100,
+        threadModel: 'res.partner',
+    });
+    await click('.o_Activity_markDoneButton');
 
     assert.containsOnce(
         document.body,
@@ -130,7 +149,18 @@ QUnit.test('activity with force next mark done popover simplest layout', async f
 QUnit.test('activity mark done popover mark done without feedback', async function (assert) {
     assert.expect(7);
 
-    await this.start({
+    this.data['res.partner'].records.push({
+        activity_ids: [12],
+        id: 100,
+    });
+    this.data['mail.activity'].records.push({
+        activity_category: 'not_upload_file',
+        can_write: true,
+        id: 12,
+        res_id: 100,
+        res_model: 'res.partner',
+    });
+    const { click, createChatterContainerComponent } = await this.start({
         async mockRPC(route, args) {
             if (route === '/web/dataset/call_kw/mail.activity/action_feedback') {
                 assert.step('action_feedback');
@@ -148,15 +178,12 @@ QUnit.test('activity mark done popover mark done without feedback', async functi
             return this._super(...arguments);
         },
     });
-    const activity = this.messaging.models['Activity'].create({
-        canWrite: true,
-        category: 'not_upload_file',
-        id: 12,
-        thread: insert({ id: 42, model: 'res.partner' }),
+    await createChatterContainerComponent({
+        threadId: 100,
+        threadModel: 'res.partner',
     });
-    await this.createActivityMarkDonePopoverComponent(activity);
-
-    document.querySelector('.o_ActivityMarkDonePopover_doneButton').click();
+    await click('.o_Activity_markDoneButton');
+    await click('.o_ActivityMarkDonePopover_doneButton');
     assert.verifySteps(
         ['action_feedback'],
         "Mark done and schedule next button should call the right rpc"
@@ -166,7 +193,18 @@ QUnit.test('activity mark done popover mark done without feedback', async functi
 QUnit.test('activity mark done popover mark done with feedback', async function (assert) {
     assert.expect(7);
 
-    await this.start({
+    this.data['res.partner'].records.push({
+        activity_ids: [12],
+        id: 100,
+    });
+    this.data['mail.activity'].records.push({
+        activity_category: 'not_upload_file',
+        can_write: true,
+        id: 12,
+        res_id: 100,
+        res_model: 'res.partner',
+    });
+    const { click, createChatterContainerComponent } = await this.start({
         async mockRPC(route, args) {
             if (route === '/web/dataset/call_kw/mail.activity/action_feedback') {
                 assert.step('action_feedback');
@@ -184,13 +222,11 @@ QUnit.test('activity mark done popover mark done with feedback', async function 
             return this._super(...arguments);
         },
     });
-    const activity = this.messaging.models['Activity'].create({
-        canWrite: true,
-        category: 'not_upload_file',
-        id: 12,
-        thread: insert({ id: 42, model: 'res.partner' }),
+    await createChatterContainerComponent({
+        threadId: 100,
+        threadModel: 'res.partner',
     });
-    await this.createActivityMarkDonePopoverComponent(activity);
+    await click('.o_Activity_markDoneButton');
 
     let feedbackTextarea = document.querySelector('.o_ActivityMarkDonePopover_feedback');
     feedbackTextarea.focus();
@@ -210,7 +246,18 @@ QUnit.test('activity mark done popover mark done and schedule next', async funct
         assert.step('activity_action');
         throw new Error("The do-action event should not be triggered when the route doesn't return an action");
     });
-    await this.start({
+    this.data['res.partner'].records.push({
+        activity_ids: [12],
+        id: 100,
+    });
+    this.data['mail.activity'].records.push({
+        activity_category: 'not_upload_file',
+        can_write: true,
+        id: 12,
+        res_id: 100,
+        res_model: 'res.partner',
+    });
+    const { click, createChatterContainerComponent } = await this.start({
         async mockRPC(route, args) {
             if (route === '/web/dataset/call_kw/mail.activity/action_feedback_schedule_next') {
                 assert.step('action_feedback_schedule_next');
@@ -228,20 +275,16 @@ QUnit.test('activity mark done popover mark done and schedule next', async funct
         },
         env: { bus },
     });
-    const activity = this.messaging.models['Activity'].create({
-        canWrite: true,
-        category: 'not_upload_file',
-        id: 12,
-        thread: insert({ id: 42, model: 'res.partner' }),
+    await createChatterContainerComponent({
+        threadId: 100,
+        threadModel: 'res.partner',
     });
-    await this.createActivityMarkDonePopoverComponent(activity);
+    await click('.o_Activity_markDoneButton');
 
     let feedbackTextarea = document.querySelector('.o_ActivityMarkDonePopover_feedback');
     feedbackTextarea.focus();
     document.execCommand('insertText', false, 'This task is done');
-    await afterNextRender(() => {
-        document.querySelector('.o_ActivityMarkDonePopover_doneScheduleNextButton').click();
-    });
+    await click('.o_ActivityMarkDonePopover_doneScheduleNextButton');
     assert.verifySteps(
         ['action_feedback_schedule_next'],
         "Mark done and schedule next button should call the right rpc and not trigger an action"
@@ -260,26 +303,33 @@ QUnit.test('[technical] activity mark done & schedule next with new action', asy
             "The content of the action should be correct"
         );
     });
-    await this.start({
+    this.data['res.partner'].records.push({
+        activity_ids: [12],
+        id: 100,
+    });
+    this.data['mail.activity'].records.push({
+        activity_category: 'not_upload_file',
+        can_write: true,
+        id: 12,
+        res_id: 100,
+        res_model: 'res.partner',
+    });
+    const { click, createChatterContainerComponent } = await this.start({
+        env: { bus },
         async mockRPC(route, args) {
             if (route === '/web/dataset/call_kw/mail.activity/action_feedback_schedule_next') {
                 return { type: 'ir.actions.act_window' };
             }
             return this._super(...arguments);
         },
-        env: { bus },
     });
-    const activity = this.messaging.models['Activity'].create({
-        canWrite: true,
-        category: 'not_upload_file',
-        id: 12,
-        thread: insert({ id: 42, model: 'res.partner' }),
+    await createChatterContainerComponent({
+        threadId: 100,
+        threadModel: 'res.partner',
     });
-    await this.createActivityMarkDonePopoverComponent(activity);
+    await click('.o_Activity_markDoneButton');
 
-    await afterNextRender(() => {
-        document.querySelector('.o_ActivityMarkDonePopover_doneScheduleNextButton').click();
-    });
+    await click('.o_ActivityMarkDonePopover_doneScheduleNextButton');
     assert.verifySteps(
         ['activity_action'],
         "The action returned by the route should be executed"

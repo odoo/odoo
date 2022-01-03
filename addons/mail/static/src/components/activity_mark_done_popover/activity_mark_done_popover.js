@@ -60,6 +60,9 @@ export class ActivityMarkDonePopover extends Component {
      * @private
      */
     _onBlur() {
+        if (!this.activity) {
+            return;
+        }
         this.activity.update({
             feedbackBackup: this._feedbackTextareaRef.el.value,
         });
