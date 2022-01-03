@@ -83,7 +83,7 @@ class Project(models.Model):
         }
         if len(all_sale_orders) == 1:
             action_window.update({
-                "res_id": self.sale_order_id.id,
+                "res_id": all_sale_orders.id,
                 "views": [[False, "form"]],
             })
         else:
