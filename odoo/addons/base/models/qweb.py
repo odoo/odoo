@@ -130,10 +130,7 @@ class QWeb(object):
             raise ValueError('values[0] should be unset when call the _render method and only set into the template.')
 
         render_template = self._compile(template, options)
-        rendering = render_template(self, values or {})
-        result = ''.join(rendering)
-
-        return Markup(result)
+        return render_template(self, values or {})
 
     def _compile(self, template, options):
         """ Compile the given template into a rendering function (generator)::

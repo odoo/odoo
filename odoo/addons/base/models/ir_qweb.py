@@ -49,7 +49,6 @@ class IrQWeb(models.AbstractModel, QWeb):
     _description = 'Qweb'
 
     _available_objects = dict(_BUILTINS)
-    _empty_lines = re.compile(r'\n\s*\n')
 
     @QwebTracker.wrap_render
     @api.model
@@ -71,41 +70,7 @@ class IrQWeb(models.AbstractModel, QWeb):
         compile_options = dict(self.env.context, dev_mode='qweb' in tools.config['dev_mode'])
         compile_options.update(options)
 
-        result = super()._render(template, values=values, **compile_options)
-
-        if not values or not values.get('__keep_empty_lines'):
-            result = markupsafe.Markup(IrQWeb._empty_lines.sub('\n', result.strip()))
-
-        if 'data-pagebreak=' not in result:
-            return result
-
-        fragments = html.fragments_fromstring(result)
-
-        for fragment in fragments:
-            for row in fragment.iterfind('.//tr[@data-pagebreak]'):
-                table = next(row.iterancestors('table'))
-                newtable = html.Element('table', attrib=dict(table.attrib))
-                thead = table.find('thead')
-                if thead:
-                    newtable.append(copy.deepcopy(thead))
-                # TODO: copy caption & tfoot as well?
-                # TODO: move rows in a tbody if row.getparent() is one?
-
-                pos = row.get('data-pagebreak')
-                assert pos in ('before', 'after')
-                for sibling in row.getparent().iterchildren('tr'):
-                    if sibling is row:
-                        if pos == 'after':
-                            newtable.append(sibling)
-                        break
-                    newtable.append(sibling)
-
-                table.addprevious(newtable)
-                table.addprevious(html.Element('div', attrib={
-                    'style': 'page-break-after: always'
-                }))
-
-        return markupsafe.Markup(''.join(html.tostring(f).decode() for f in fragments))
+        return super()._render(template, values=values, **compile_options)
 
     # assume cache will be invalidated by third party on write to ir.ui.view
     def _get_template_cache_keys(self):

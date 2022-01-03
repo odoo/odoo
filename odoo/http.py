@@ -349,7 +349,7 @@ class WebRequest(object):
             result = self.endpoint(*a, **kw)
             if isinstance(result, Response) and result.is_qweb:
                 # Early rendering of lazy responses to benefit from @service_model.check protection
-                result.flatten()
+                result.render()
             if self._cr is not None:
                 # flush here to avoid triggering a serialization error outside
                 # of this context, which would not retry the call
@@ -1243,15 +1243,8 @@ class Response(werkzeug.wrappers.Response):
         """
         env = request.env(user=self.uid or request.uid or odoo.SUPERUSER_ID)
         self.qcontext['request'] = request
-        return env["ir.ui.view"]._render_template(self.template, self.qcontext)
-
-    def flatten(self):
-        """ Forces the rendering of the response's template, sets the result
-        as response body and unsets :attr:`.template`
-        """
-        if self.template:
-            self.response.append(self.render())
-            self.template = None
+        self.response = env["ir.ui.view"]._render_template(self.template, self.qcontext)
+        self.template = None
 
 class DisableCacheMiddleware(object):
     def __init__(self, app):
@@ -1383,7 +1376,7 @@ class Root(object):
     def get_response(self, httprequest, result, explicit_session):
         if isinstance(result, Response) and result.is_qweb:
             try:
-                result.flatten()
+                result.render()
             except Exception as e:
                 if request.db:
                     result = request.registry['ir.http']._handle_exception(e)
