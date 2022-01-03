@@ -14,7 +14,6 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend(KeyboardNavigationMi
     events: _.extend({}, KeyboardNavigationMixin.events, publicRootData.PublicRoot.prototype.events || {}, {
         'click .js_change_lang': '_onLangChangeClick',
         'click .js_publish_management .js_publish_btn': '_onPublishBtnClick',
-        'click .js_multi_website_switch': '_onWebsiteSwitch',
         'shown.bs.modal': '_onModalShown',
     }),
     custom_events: _.extend({}, publicRootData.PublicRoot.prototype.custom_events || {}, {
@@ -310,20 +309,6 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend(KeyboardNavigationMi
             $data.find('input').prop("checked", result);
             $data.parents("[data-publish]").attr("data-publish", +result ? 'on' : 'off');
         });
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onWebsiteSwitch: function (ev) {
-        var websiteId = ev.currentTarget.getAttribute('website-id');
-        var websiteDomain = ev.currentTarget.getAttribute('domain');
-        let url = `/website/force/${websiteId}`;
-        if (websiteDomain && window.location.hostname !== websiteDomain) {
-            url = websiteDomain + url;
-        }
-        const path = window.location.pathname + window.location.search + window.location.hash;
-        window.location.href = $.param.querystring(url, {'path': path});
     },
     /**
      * @private
