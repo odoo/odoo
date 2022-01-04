@@ -4206,13 +4206,13 @@ registry.sizing = SnippetOptionWidget.extend({
                 var prev = current ? (current - 1) : 0;
 
                 var change = false;
-                if (dd > (2 * resize[1][next] + resize[1][current]) / 3) {
+                if (3 * dd / (2 * resize[1][next] + resize[1][current]) > 1) {
                     self.$target.attr('class', (self.$target.attr('class') || '').replace(regClass, ''));
                     self.$target.addClass(resize[0][next]);
                     current = next;
                     change = true;
                 }
-                if (prev !== current && dd < (2 * resize[1][prev] + resize[1][current]) / 3) {
+                if (prev !== current && 3 * dd / (2 * resize[1][prev] + resize[1][current]) < 1) {
                     self.$target.attr('class', (self.$target.attr('class') || '').replace(regClass, ''));
                     self.$target.addClass(resize[0][prev]);
                     current = prev;
@@ -4278,6 +4278,17 @@ registry.sizing = SnippetOptionWidget.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Returns the scale of the dragging distance in respect to the step sizes
+     * of the resize values.
+     *
+     * @private
+     * @param {string} [compass] - resize direction ('n', 's', 'e' or 'w')
+     * @returns {number}
+     */
+     _getScale: function (compass) {
+        return 1;
+    },
+    /**
      * Returns an object mapping one or several cardinal direction (n, e, s, w)
      * to an Array containing:
      * 1) A list of classes to toggle when using this cardinal direction
@@ -4291,6 +4302,17 @@ registry.sizing = SnippetOptionWidget.extend({
      * @returns {Object}
      */
     _getSize: function () {},
+    /**
+     * Returns true if the handle in the given direction should highlight the
+     * padded area.
+     *
+     * @private
+     * @param {string} [compass] - resize direction ('n', 's', 'e' or 'w')
+     * @returns {boolean}
+     */
+     _isHighlightEnabled: function (compass) {
+        return compass === 'w';
+    },
     /**
      * Called when the snippet is being resized and its classes changes.
      *
@@ -4322,24 +4344,10 @@ registry.sizing = SnippetOptionWidget.extend({
                 }
             });
 
-            $handle.toggleClass('o_handle_start', current === 0);
-            $handle.toggleClass('o_handle_end', current === classes.length - 1);
+            $handle.toggleClass('o_handle_start', (self._getScale(direction) < 0 ? classes.length - 1 : 0) === current);
+            $handle.toggleClass('o_handle_end', (self._getScale(direction) > 0 ? classes.length - 1 : 0) === current);
         });
 
-        // Adapt the handles to fit the left, top and bottom sizes
-        var ml = this.$target.css('margin-left');
-        this.$overlay.find('.o_handle.w').css({
-            width: ml,
-            left: '-' + ml,
-        });
-        this.$overlay.find('.o_handle.e').css({
-            width: 0,
-        });
-        _.each(this.$overlay.find(".o_handle.n, .o_handle.s"), function (handle) {
-            var $handle = $(handle);
-            var direction = $handle.hasClass('n') ? 'top' : 'bottom';
-            $handle.height(self.$target.css('padding-' + direction));
-        });
         this.$target.trigger('content_changed');
     },
 });
@@ -4354,19 +4362,20 @@ registry['sizing_y'] = registry.sizing.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * @private
+     */
+    _getResizeType: function () {
+        return this.$target.is('hr') ? 'margin' : 'padding';
+    },
+    /**
      * @override
      */
     _getSize: function () {
-        var nClass = 'pt';
-        var nProp = 'padding-top';
-        var sClass = 'pb';
-        var sProp = 'padding-bottom';
-        if (this.$target.is('hr')) {
-            nClass = 'mt';
-            nProp = 'margin-top';
-            sClass = 'mb';
-            sProp = 'margin-bottom';
-        }
+        const type = this._getResizeType();
+        const nClass = `${type[0]}t`;
+        const nProp = `${type}-top`;
+        const sClass = `${type[0]}b`;
+        const sProp = `${type}-bottom`;
 
         var grid = [];
         for (var i = 0; i <= (256 / 8); i++) {
@@ -4374,10 +4383,22 @@ registry['sizing_y'] = registry.sizing.extend({
         }
         grid.splice(1, 0, 4);
         this.grid = {
-            n: [grid.map(v => nClass + v), grid, nProp],
-            s: [grid.map(v => sClass + v), grid, sProp],
+            n: [grid.map(v => nClass + v), grid.map(v => v * this._getScale('n')), nProp],
+            s: [grid.map(v => sClass + v), grid.map(v => v * this._getScale('s')), sProp],
         };
         return this.grid;
+    },
+    /**
+     * @override
+     */
+    _onResize: function (compass, beginClass, current) {
+        const self = this;
+
+        this._super.apply(this, arguments);
+        _.each(this.$overlay.find(".o_handle.n, .o_handle.s"), function (handle) {
+            const direction = handle.classList.contains('n') ? 'top' : 'bottom';
+            handle.style.height = self.$target.css('padding-' + direction);
+        });
     },
 });
 registry['sizing_x'] = registry.sizing.extend({
@@ -4401,13 +4422,17 @@ registry['sizing_x'] = registry.sizing.extend({
     /**
      * @override
      */
+    _getScale: function () {
+        return this.$target.closest('.row').width() / 12;
+    },
+    /**
+     * @override
+     */
     _getSize: function () {
-        var width = this.$target.closest('.row').width();
-        var gridE = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-        var gridW = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+        const grid = new Array(12).fill(0).map((v, i) => i);
         this.grid = {
-            e: [_.map(gridE, v => ('col-lg-' + v)), _.map(gridE, v => width / 12 * v), 'width'],
-            w: [_.map(gridW, v => ('offset-lg-' + v)), _.map(gridW, v => width / 12 * v), 'margin-left'],
+            e: [_.map(grid, v => 'col-lg-' + (v + 1)), _.map(grid, v => this._getScale('e') * (v + 1)), 'width'],
+            w: [_.map(grid, v => 'offset-lg-' + v), _.map(grid, v => this._getScale('w') * v), 'margin-left'],
         };
         return this.grid;
     },
@@ -4439,7 +4464,19 @@ registry['sizing_x'] = registry.sizing.extend({
             optionName: 'StepsConnector',
             name: 'change_column_size',
         });
+
         this._super.apply(this, arguments);
+        // Adapt the handles to fit the left and right sizes
+        const ml = this._isHighlightEnabled('w') ? this.$target.css('margin-left') : 0;
+        const mr = this._isHighlightEnabled('e') ? this.$target.css('margin-right') : 0;
+        this.$overlay.find('.o_handle.w').css({
+            width: ml,
+            left: '-' + ml,
+        });
+        this.$overlay.find('.o_handle.e').css({
+            width: mr,
+            right: '-' + mr,
+        });
     },
 });
 

@@ -565,13 +565,16 @@
     </div>
 
     <div data-js="sizing_y"
-        data-selector="section, .row > div, .parallax, .s_hr, .carousel-item, .s_rating"
+        data-selector="section, .row > div, .parallax, .s_hr, .carousel-item, .s_rating, .s_hoverable > div"
         data-exclude="section:has(> .carousel), .s_image_gallery .carousel-item, .s_col_no_resize.row > div, .s_col_no_resize"/>
 
     <div data-js="sizing_x"
         data-selector=".row > div"
-        data-drop-near=".row:not(.s_col_no_resize) > div"
         data-exclude=".s_col_no_resize.row > div, .s_col_no_resize"/>
+
+    <div data-selector=".row > div"
+        data-exclude=".s_col_no_resize.row > div, .s_col_no_resize, .s_hoverable > div"
+        data-drop-near=".row:not(.s_col_no_resize) > div"/>
 
     <t t-set="so_snippet_addition_selector" t-translation="off">section, .parallax</t>
     <div id="so_snippet_addition"

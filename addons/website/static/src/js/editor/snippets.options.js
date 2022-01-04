@@ -2106,6 +2106,86 @@ const VisibilityPageOptionUpdate = options.Class.extend({
     },
 });
 
+options.registry['sizing_y'].include({
+    /**
+     * @override
+     */
+    _getResizeType: function () {
+        const isHoverable = this.$target[0].parentElement.classList.contains('s_hoverable');
+        return isHoverable ? 'margin' : this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    _getScale: function (compass) {
+        const revert = compass === 's' && this.$target.parent().hasClass('s_hoverable');
+        return (revert ? -1 : 1) * this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    _getSize: function () {
+        let result = this._super(...arguments);
+        const $parent = this.$target.parent();
+
+        if ($parent.hasClass('s_hoverable')) {
+            const style = window.getComputedStyle(this.$target[0]);
+            const boundingBox = $parent[0].getBoundingClientRect();
+            const pt = parseFloat(style.getPropertyValue('padding-top'));
+            const pb = parseFloat(style.getPropertyValue('padding-bottom'));
+            const mt = parseFloat(style.getPropertyValue('margin-top'));
+            const mb = parseFloat(style.getPropertyValue('margin-bottom'));
+
+            ['n', 's'].forEach(compass => {
+                const index = result[compass][1].findIndex(value => {
+                    const minimum = compass === 'n' ? mt : mb;
+                    const maximum = boundingBox.height - pt - pb - (compass === 'n' ? mb : mt);
+                    return Math.max(minimum, maximum) < Math.abs(value);
+                });
+                result[compass][0].length = index > 0 ? index : result[compass][0].length;
+                result[compass][1].length = index > 0 ? index : result[compass][1].length;
+            });
+        }
+
+        return result;
+    },
+});
+
+options.registry['sizing_x'].include({
+    /**
+     * @override
+     */
+    _getScale: function (compass) {
+        const isHoverable = this.$target[0].parentElement.classList.contains('s_hoverable');
+        return isHoverable ? this.$target[0].parentElement.getBoundingClientRect().width / 12 : this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    _getSize: function () {
+        let result = this._super(...arguments);
+        const $parent = this.$target.parent();
+
+        if ($parent.hasClass('s_hoverable')) {
+            const current = this.$target[0].getBoundingClientRect();
+            const maximum = $parent[0].getBoundingClientRect();
+
+            const index = result.e[1].findIndex(value => maximum.right - current.left < value);
+            result.e[0].length = index > 0 ? index : result.e[0].length;
+            result.e[1].length = index > 0 ? index : result.e[1].length;
+        }
+
+        return result;
+    },
+    /**
+     * @override
+     */
+    _isHighlightEnabled: function (compass) {
+        const disabled = compass === 'w' && this.$target.parent().hasClass('s_hoverable');
+        return !disabled && this._super(...arguments);
+    },
+});
+
 options.registry.TopMenuVisibility = VisibilityPageOptionUpdate.extend({
     pageOptionName: 'header_visible',
     showOptionWidgetName: 'regular_header_visibility_opt',
