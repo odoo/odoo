@@ -4536,22 +4536,17 @@ registry.Box = SnippetOptionWidget.extend({
      * @returns {string}
      */
     _getDefaultShadow(type, shadowClass) {
+        if (!type) {
+            return 'none';
+        }
+
         const el = document.createElement('div');
-        if (type) {
-            el.classList.add(shadowClass);
-        }
+        el.classList.add(shadowClass);
         document.body.appendChild(el);
-        switch (type) {
-            case 'outset': {
-                return $(el).css('box-shadow');
-            }
-            case 'inset': {
-                return $(el).css('box-shadow') + ' inset';
-            }
-        }
+        const shadow = `${$(el).css('box-shadow')}${type === 'inset' ? ' inset' : ''}`;
         el.remove();
-        return 'none';
-    }
+        return shadow;
+    },
 });
 
 
