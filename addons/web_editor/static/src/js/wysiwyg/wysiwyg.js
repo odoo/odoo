@@ -90,9 +90,9 @@ const Wysiwyg = Widget.extend({
             editorCollaborationOptions = this.setupCollaboration(options.collaborationChannel);
         }
 
-        const getYoutubeVideoElement = (url) => {
+        const getYoutubeVideoElement = async (url) => {
             const videoWidget = new weWidgets.VideoWidget(this, undefined, {});
-            const src = videoWidget._createVideoNode(url).$video.attr('src');
+            const src = (await videoWidget.createVideoNode(url)).$video.attr('src');
             return videoWidget.getWrappedIframe(src)[0];
         };
 

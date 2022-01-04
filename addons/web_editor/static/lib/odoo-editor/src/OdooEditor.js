@@ -2726,27 +2726,29 @@ export class OdooEditor extends EventTarget {
                                     description: 'Embed the youtube video in the document.',
                                     fontawesome: 'fa-youtube-play',
                                     shouldPreValidate: () => false,
-                                    callback: () => {
+                                    callback: async () => {
+                                        let videoElement;
+                                        if (this.options.getYoutubeVideoElement) {
+                                            videoElement = await this.options.getYoutubeVideoElement(youtubeUrl[0]);
+                                        } else {
+                                            videoElement = document.createElement('iframe');
+                                            videoElement.setAttribute('width', '560');
+                                            videoElement.setAttribute('height', '315');
+                                            videoElement.setAttribute(
+                                                'src',
+                                                `https://www.youtube.com/embed/${youtubeUrl[1]}`,
+                                            );
+                                            videoElement.setAttribute('title', 'YouTube video player');
+                                            videoElement.setAttribute('frameborder', '0');
+                                            videoElement.setAttribute(
+                                                'allow',
+                                                'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture',
+                                            );
+                                            videoElement.setAttribute('allowfullscreen', '1');
+                                        }
+
                                         execCommandAtStepIndex(stepIndexBeforeInsert, () => {
-                                            let videoElement;
-                                            if (this.options.getYoutubeVideoElement) {
-                                                videoElement = this.options.getYoutubeVideoElement(youtubeUrl[0]);
-                                            } else {
-                                                videoElement = document.createElement('iframe');
-                                                videoElement.setAttribute('width', '560');
-                                                videoElement.setAttribute('height', '315');
-                                                videoElement.setAttribute(
-                                                    'src',
-                                                    `https://www.youtube.com/embed/${youtubeUrl[1]}`,
-                                                );
-                                                videoElement.setAttribute('title', 'YouTube video player');
-                                                videoElement.setAttribute('frameborder', '0');
-                                                videoElement.setAttribute(
-                                                    'allow',
-                                                    'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture',
-                                                );
-                                                videoElement.setAttribute('allowfullscreen', '1');
-                                            }
+
                                             const sel = this.document.getSelection();
                                             if (sel.rangeCount) {
                                                 sel.getRangeAt(0).insertNode(videoElement);

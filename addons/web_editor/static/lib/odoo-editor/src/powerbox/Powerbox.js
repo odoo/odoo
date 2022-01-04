@@ -254,7 +254,7 @@ export class Powerbox {
 
             this.options.onStop && this.options.onStop();
         };
-        this._currentValidate = () => {
+        this._currentValidate = async () => {
             const command = this._currentFilteredCommands.find(
                 c => c === this._currentSelectedCommand,
             );
@@ -262,11 +262,11 @@ export class Powerbox {
                 !command.isIntermediateStep &&
                     (!command.shouldPreValidate || command.shouldPreValidate()) &&
                     this.options.preValidate &&
-                    this.options.preValidate();
-                command.callback();
+                    await this.options.preValidate();
+                await command.callback();
                 !command.isIntermediateStep &&
                     this.options.postValidate &&
-                    this.options.postValidate();
+                    await this.options.postValidate();
             }
             if (!command || !command.isIntermediateStep) {
                 this._stop();
