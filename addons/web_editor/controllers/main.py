@@ -34,12 +34,15 @@ class Web_Editor(http.Controller):
         '/web_editor/font_to_img/<icon>',
         '/web_editor/font_to_img/<icon>/<color>',
         '/web_editor/font_to_img/<icon>/<color>/<int:size>',
+        '/web_editor/font_to_img/<icon>/<color>/<int:width>x<int:height>',
         '/web_editor/font_to_img/<icon>/<color>/<int:size>/<int:alpha>',
+        '/web_editor/font_to_img/<icon>/<color>/<int:width>x<int:height>/<int:alpha>',
         '/web_editor/font_to_img/<icon>/<color>/<bg>',
         '/web_editor/font_to_img/<icon>/<color>/<bg>/<int:size>',
-        '/web_editor/font_to_img/<icon>/<color>/<bg>/<int:size>/<int:alpha>',
+        '/web_editor/font_to_img/<icon>/<color>/<bg>/<int:width>x<int:height>',
+        '/web_editor/font_to_img/<icon>/<color>/<bg>/<int:width>x<int:height>/<int:alpha>',
         ], type='http', auth="none")
-    def export_icon_to_png(self, icon, color='#000', bg=None, size=100, alpha=255, font='/web/static/lib/fontawesome/fonts/fontawesome-webfont.ttf'):
+    def export_icon_to_png(self, icon, color='#000', bg=None, size=100, alpha=255, font='/web/static/lib/fontawesome/fonts/fontawesome-webfont.ttf', width=None, height=None):
         """ This method converts an unicode character to an image (using Font
             Awesome font by default) and is used only for mass mailing because
             custom fonts are not supported in mail.
@@ -49,14 +52,19 @@ class Web_Editor(http.Controller):
             :param size : Pixels in integer
             :param alpha : transparency of the image from 0 to 255
             :param font : font path
+            :param width : Pixels in integer
+            :param height : Pixels in integer
 
             :returns PNG image converted from given font
         """
+        width = width or size
+        height = height or size
         # Make sure we have at least size=1
-        size = max(1, min(size, 512))
+        width = max(1, min(width, 512))
+        height = max(1, min(height, 512))
         # Initialize font
         addons_path = http.addons_manifest['web']['addons_path']
-        font_obj = ImageFont.truetype(addons_path + font, size)
+        font_obj = ImageFont.truetype(addons_path + font, height)
 
         # if received character is not a number, keep old behaviour (icon is character)
         icon = chr(int(icon)) if icon.isdigit() else icon
@@ -67,7 +75,7 @@ class Web_Editor(http.Controller):
             bg = ','.join(bg.split(',')[:-1])+')'
 
         # Determine the dimensions of the icon
-        image = Image.new("RGBA", (size, size), color=(0, 0, 0, 0))
+        image = Image.new("RGBA", (width, height), color=(0, 0, 0, 0))
         draw = ImageDraw.Draw(image)
 
         boxw, boxh = draw.textsize(icon, font=font_obj)
@@ -77,7 +85,7 @@ class Web_Editor(http.Controller):
         # Create an alpha mask
         imagemask = Image.new("L", (boxw, boxh), 0)
         drawmask = ImageDraw.Draw(imagemask)
-        drawmask.text((-left, -top), icon, font=font_obj, fill=alpha)
+        drawmask.text((-left, -top), icon, font=font_obj, fill=255)
 
         # Create a solid color image and apply the mask
         if color.startswith('rgba'):
@@ -87,7 +95,7 @@ class Web_Editor(http.Controller):
         iconimage.putalpha(imagemask)
 
         # Create output image
-        outimage = Image.new("RGBA", (boxw, size), bg or (0, 0, 0, 0))
+        outimage = Image.new("RGBA", (boxw, height), bg or (0, 0, 0, 0))
         outimage.paste(iconimage, (left, top), iconimage)
 
         # output image

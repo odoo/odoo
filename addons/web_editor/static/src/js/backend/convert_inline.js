@@ -371,11 +371,11 @@ function toInline($editable, cssRules) {
  *                           converted to images
  */
 function fontToImg($editable) {
-    var fonts = odoo.__DEBUG__.services["wysiwyg.fonts"];
+    const fonts = odoo.__DEBUG__.services["wysiwyg.fonts"];
 
     $editable.find('.fa').each(function () {
-        var $font = $(this);
-        var icon, content;
+        const $font = $(this);
+        let icon, content;
         _.find(fonts.fontIcons, function (font) {
             return _.find(fonts.getCssSelectors(font.parser), function (data) {
                 if ($font.is(data.selector.replace(/::?before/g, ''))) {
@@ -386,7 +386,7 @@ function fontToImg($editable) {
             });
         });
         if (content) {
-            var color = $font.css('color').replace(/\s/g, '');
+            const color = $font.css('color').replace(/\s/g, '');
             let $backgroundColoredElement = $font;
             let bg, isTransparent;
             do {
@@ -406,8 +406,10 @@ function fontToImg($editable) {
             // Compute the padding.
             // First get the dimensions of the icon itself (::before)
             $font.css({height: 'fit-content', width: 'fit-content', 'line-height': 'normal'});
-            const hPadding = width && (width - $font.width()) / 2;
-            const vPadding = height && (height - $font.height()) / 2;
+            const intrinsicWidth = $font.width();
+            const intrinsicHeight = $font.height();
+            const hPadding = width && (width - intrinsicWidth) / 2;
+            const vPadding = height && (height - intrinsicHeight) / 2;
             let padding = '';
             if (hPadding || vPadding) {
                 padding = vPadding ? vPadding + 'px ' : '0 ';
@@ -415,17 +417,29 @@ function fontToImg($editable) {
             }
             const $img = $('<img/>').attr({
                 width, height,
-                src: `/web_editor/font_to_img/${content.charCodeAt(0)}/${window.encodeURI(color)}/${window.encodeURI(bg)}/${Math.max(1, $font.height())}`,
+                src: `/web_editor/font_to_img/${content.charCodeAt(0)}/${window.encodeURI(color)}/${window.encodeURI(bg)}/${Math.max(1, Math.round(intrinsicWidth))}x${Math.max(1, Math.round(intrinsicHeight))}`,
                 'data-class': $font.attr('class'),
                 'data-style': style,
-                class: $font.attr('class').replace(new RegExp('(^|\\s+)' + icon + '(-[^\\s]+)?', 'gi'), ''), // remove inline font-awsome style
                 style,
             }).css({
                 'box-sizing': 'border-box', // keep the fontawesome's dimensions
                 'line-height': lineHeight,
-                padding, width: width + 'px', height: height + 'px',
+                width: intrinsicWidth, height: intrinsicHeight,
             });
-            $font.replaceWith($img);
+            if (!padding) {
+                $img.css('margin', $font.css('margin'));
+            }
+            // For rounded images, apply the rounded border to a wrapper, make
+            // sure it doesn't get applied to the image itself so the image
+            // doesn't get cropped in the process.
+            const $wrapper = $('<span style="display: inline-block;"/>');
+            $wrapper.append($img);
+            $font.replaceWith($wrapper);
+            $wrapper.css({
+                padding, width: width + 'px', height: height + 'px',
+                'vertical-align': 'middle',
+                'background-color': $img[0].style.backgroundColor,
+            }).attr('class', $font.attr('class').replace(new RegExp('(^|\\s+)' + icon + '(-[^\\s]+)?', 'gi'), '')) // remove inline font-awsome style);
         } else {
             $font.remove();
         }
