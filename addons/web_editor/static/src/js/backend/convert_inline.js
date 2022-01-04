@@ -728,7 +728,8 @@ function normalizeRem($editable) {
  */
 function _applyColspan($element, colspan) {
     $element.attr('colspan', colspan);
-    const width = Math.round(+$element.attr('colspan') * 100 / 12) + '%';
+    // Round to 2 decimal places.
+    const width = (Math.round(+$element.attr('colspan') * 10000 / 12) / 100) + '%';
     $element.attr('width', width);
     $element.css('width', width);
 }
