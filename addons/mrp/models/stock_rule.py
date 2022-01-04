@@ -53,6 +53,11 @@ class StockRule(models.Model):
                                               subtype_id=self.env.ref('mail.mt_note').id)
         return True
 
+    def _get_custom_move_fields(self):
+        fields = super(StockRule, self)._get_custom_move_fields()
+        fields += ['bom_line_id']
+        return fields
+
     @api.multi
     def _get_matching_bom(self, product_id, values):
         if values.get('bom_id', False):
