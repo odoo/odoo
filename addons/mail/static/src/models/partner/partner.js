@@ -37,9 +37,6 @@ registerModel({
             if ('id' in data) {
                 data2.id = data.id;
             }
-            if ('is_muted' in data) {
-                data2.isMuted = data.is_muted;
-            }
             if ('im_status' in data) {
                 data2.im_status = data.im_status;
             }
@@ -441,9 +438,6 @@ registerModel({
          */
         isOnline: attr({
             compute: '_computeIsOnline',
-        }),
-        isMuted: attr({
-            default: false,
         }),
         memberThreads: many2many('Thread', {
             inverse: 'members',
