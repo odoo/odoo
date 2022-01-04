@@ -35,6 +35,7 @@ class SendSMS(models.TransientModel):
         ('mass', 'Send SMS in batch')], string='Composition Mode',
         compute='_compute_composition_mode', precompute=True, readonly=False, required=True, store=True)
     res_model = fields.Char('Document Model Name')
+    res_model_description = fields.Char('Document Model Description', compute='_compute_res_model_description')
     res_id = fields.Integer('Document ID')
     res_ids = fields.Char('Document IDs')
     res_ids_count = fields.Integer(
@@ -75,6 +76,12 @@ class SendSMS(models.TransientModel):
                     composer.composition_mode = 'mass'
                 else:
                     composer.composition_mode = 'comment'
+
+    @api.depends('res_model')
+    def _compute_res_model_description(self):
+        self.res_model_description = False
+        for composer in self.filtered('res_model'):
+            composer.res_model_description = self.env['ir.model']._get(composer.res_model).display_name
 
     @api.depends('res_model', 'res_id', 'res_ids')
     def _compute_res_ids_count(self):
