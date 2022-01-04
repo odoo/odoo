@@ -901,3 +901,62 @@ class TestStockValuationChangeValuation(TestStockValuationCommon):
         # An accounting entry should only be created for the emptying now that the category is manual.
         self.assertEqual(len(self.product1.stock_valuation_layer_ids.mapped('account_move_id')), 2)
         self.assertEqual(len(self.product1.stock_valuation_layer_ids), 3)
+
+@tagged('post_install', '-at_install')
+class TestAngloSaxonAccounting(TestStockValuationCommon):
+    @classmethod
+    def setUpClass(cls):
+        super(TestAngloSaxonAccounting, cls).setUpClass()
+        cls.env.company.anglo_saxon_accounting = True
+        cls.stock_input_account, cls.stock_output_account, cls.stock_valuation_account, cls.expense_account, cls.stock_journal = _create_accounting_data(cls.env)
+        cls.product1.write({
+            'property_account_expense_id': cls.expense_account.id,
+        })
+        cls.product1.categ_id.write({
+            'property_valuation': 'real_time',
+            'property_stock_account_input_categ_id': cls.stock_input_account.id,
+            'property_stock_account_output_categ_id': cls.stock_output_account.id,
+            'property_stock_valuation_account_id': cls.stock_valuation_account.id,
+            'property_stock_journal': cls.stock_journal.id,
+        })
+        cls.default_journal_purchase = cls.env['account.journal'].search([
+            ('company_id', '=', cls.env.company.id),
+            ('type', '=', 'purchase')
+        ], limit=1)
+
+    def test_avco_and_credit_note(self):
+        """
+        When reversing an invoice that contains some anglo-saxo AML, the new anglo-saxo AML should have the same value
+        """
+        self.product1.categ_id.property_cost_method = 'average'
+
+        self._make_in_move(self.product1, 2, unit_cost=10)
+
+        invoice_form = Form(self.env['account.move'].with_context(default_move_type='out_invoice'))
+        invoice_form.partner_id = self.env['res.partner'].create({'name': 'Super Client'})
+        with invoice_form.invoice_line_ids.new() as invoice_line_form:
+            invoice_line_form.product_id = self.product1
+            invoice_line_form.quantity = 2
+            invoice_line_form.price_unit = 25
+            invoice_line_form.account_id = self.default_journal_purchase.default_account_id
+        invoice = invoice_form.save()
+        invoice.action_post()
+
+        self._make_in_move(self.product1, 2, unit_cost=20)
+        self.assertEqual(self.product1.standard_price, 15)
+
+        refund_wizard = self.env['account.move.reversal'].with_context(active_model="account.move", active_ids=invoice.ids).create({
+            'refund_method': 'refund',
+            'journal_id': invoice.journal_id.id,
+        })
+        action = refund_wizard.reverse_moves()
+        reverse_invoice = self.env['account.move'].browse(action['res_id'])
+        with Form(reverse_invoice) as reverse_invoice_form:
+            with reverse_invoice_form.invoice_line_ids.edit(0) as line:
+                line.quantity = 1
+        reverse_invoice.action_post()
+
+        anglo_lines = reverse_invoice.line_ids.filtered(lambda l: l.is_anglo_saxon_line)
+        self.assertEqual(len(anglo_lines), 2)
+        self.assertEqual(abs(anglo_lines[0].balance), 10)
+        self.assertEqual(abs(anglo_lines[1].balance), 10)
