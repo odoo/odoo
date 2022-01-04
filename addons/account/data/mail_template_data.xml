@@ -46,7 +46,7 @@
         </t>
         <br /><br />
         Do not hesitate to contact us if you have any questions.
-        <t t-if="object.invoice_user_id.signature">
+        <t t-if="not is_html_empty(object.invoice_user_id.signature)">
             <br />
             <t t-out="object.invoice_user_id.signature or ''">--<br/>Mitchell Admin</t>
         </t>
@@ -75,7 +75,7 @@
         Do not hesitate to contact us if you have any questions.
         <br/><br/>
         Best regards,
-        <t t-if="user.signature">
+        <t t-if="not is_html_empty(user.signature)">
             <br/>
             <t t-out="user.signature or ''">--<br/>Mitchell Admin</t>
         </t>
@@ -119,7 +119,7 @@
         from <t t-out="object.company_id.name or ''">YourCompany</t>.
         <br /><br />
         Do not hesitate to contact us if you have any questions.
-        <t t-if="object.invoice_user_id.signature">
+        <t t-if="not is_html_empty(object.invoice_user_id.signature)">
             <br />
             <t t-out="object.invoice_user_id.signature or ''">--<br/>Mitchell Admin</t>
         </t>
