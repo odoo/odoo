@@ -320,7 +320,7 @@ QUnit.module('convert_inline', {}, function () {
         assert.strictEqual($editable.html(),
             `<div style="font-size: 24px;">` +
                 `<div class="a" style="color: #000000; padding: 30px" width="100%">` +
-                    `<p style="border: 14.4px #aaaaaa solid; margin: 45.5px;">Test</p>` +
+                    `<p style="border: 14.4px #aaaaaa solid; margin: 45.48px;">Test</p>` +
                 `</div>` +
             `</div>`,
             "should have converted several rem sizes to px using the default rem size"
