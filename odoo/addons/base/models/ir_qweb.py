@@ -49,7 +49,6 @@ class IrQWeb(models.AbstractModel, QWeb):
     _description = 'Qweb'
 
     _available_objects = dict(_BUILTINS)
-    _empty_lines = re.compile(r'\n\s*\n')
 
     @QwebTracker.wrap_render
     @api.model
@@ -72,40 +71,7 @@ class IrQWeb(models.AbstractModel, QWeb):
         compile_options.update(options)
 
         result = super()._render(template, values=values, **compile_options)
-
-        if not values or not values.get('__keep_empty_lines'):
-            result = markupsafe.Markup(IrQWeb._empty_lines.sub('\n', result.strip()))
-
-        if 'data-pagebreak=' not in result:
-            return result
-
-        fragments = html.fragments_fromstring(result)
-
-        for fragment in fragments:
-            for row in fragment.iterfind('.//tr[@data-pagebreak]'):
-                table = next(row.iterancestors('table'))
-                newtable = html.Element('table', attrib=dict(table.attrib))
-                thead = table.find('thead')
-                if thead:
-                    newtable.append(copy.deepcopy(thead))
-                # TODO: copy caption & tfoot as well?
-                # TODO: move rows in a tbody if row.getparent() is one?
-
-                pos = row.get('data-pagebreak')
-                assert pos in ('before', 'after')
-                for sibling in row.getparent().iterchildren('tr'):
-                    if sibling is row:
-                        if pos == 'after':
-                            newtable.append(sibling)
-                        break
-                    newtable.append(sibling)
-
-                table.addprevious(newtable)
-                table.addprevious(html.Element('div', attrib={
-                    'style': 'page-break-after: always'
-                }))
-
-        return markupsafe.Markup(''.join(html.tostring(f).decode() for f in fragments))
+        return result
 
     # assume cache will be invalidated by third party on write to ir.ui.view
     def _get_template_cache_keys(self):
@@ -182,9 +148,9 @@ class IrQWeb(models.AbstractModel, QWeb):
         part that wrap the rest of the compiled code of this element.
         """
         groups = el.attrib.pop('t-groups')
-        code = self._flushText(options, indent)
+        code = self._flushText(options, indent, True)
         code.append(self._indent(f"if self.user_has_groups({repr(groups)}):", indent))
-        code.extend(self._compile_directives(el, options, indent + 1) + self._flushText(options, indent + 1) or [self._indent('pass', indent + 1)])
+        code.extend(self._compile_directives(el, options, indent + 1) + self._flushText(options, indent + 1, True) or [self._indent('pass', indent + 1)])
         return code
 
     def _compile_directive_lang(self, el, options, indent):
