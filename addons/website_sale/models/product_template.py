@@ -366,7 +366,7 @@ class ProductTemplate(models.Model):
         fetch_fields = ['id', 'name', 'website_url']
         mapping = {
             'name': {'name': 'name', 'type': 'text', 'match': True},
-            'website_url': {'name': 'website_url', 'type': 'text'},
+            'website_url': {'name': 'website_url', 'type': 'text', 'truncate': False},
         }
         if with_image:
             mapping['image_url'] = {'name': 'image_url', 'type': 'html'}
