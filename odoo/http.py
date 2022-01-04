@@ -42,6 +42,7 @@ try:
     from werkzeug.middleware.shared_data import SharedDataMiddleware
 except ImportError:
     from werkzeug.wsgi import SharedDataMiddleware
+from werkzeug.wsgi import ClosingIterator
 
 try:
     import psutil
@@ -252,26 +253,35 @@ class WebRequest(object):
         """
         return self.httprequest.session
 
-    def __enter__(self):
+    def _enterable(self):
         _request_stack.push(self)
         return self
 
-    def __exit__(self, exc_type, exc_value, traceback):
+    def _exitable(self, exc_type=None, **args):
+        print('_exitable start')
         _request_stack.pop()
 
         if self._cr:
             try:
-                if exc_type is None and not self._failed:
+                print('step 1')
+                if True:
+                # if exc_type is None and not self._failed:
+                    print('step 2')
                     self._cr.commit()
                     if self.registry:
+                        print('step 3')
                         self.registry.signal_changes()
+                        print('step 4')
                 elif self.registry:
+                    print('step 5')
                     self.registry.reset_changes()
             finally:
                 self._cr.close()
         # just to be sure no one tries to re-use the request
+        print('step 6')
         self.disable_db = True
         self.uid = None
+        print('step 7')
 
     def set_handler(self, endpoint, arguments, auth):
         # is this needed ?
@@ -1243,7 +1253,17 @@ class Response(werkzeug.wrappers.Response):
         """
         env = request.env(user=self.uid or request.uid or odoo.SUPERUSER_ID)
         self.qcontext['request'] = request
-        self.response = env["ir.ui.view"]._render_template(self.template, self.qcontext)
+        # self.response = env["ir.ui.view"]._render_template(self.template, self.qcontext)
+        # FP: Start of changes
+
+
+        view = env["ir.ui.view"].browse(env["ir.ui.view"].get_view_id(self.template))
+        qcontext = view._prepare_qcontext()
+        qcontext.update(self.qcontext)
+
+        self.response = env["ir.qweb"]._render_stream(view.id, qcontext)
+
+        # FP: end of changes
         self.template = None
 
 class DisableCacheMiddleware(object):
@@ -1466,34 +1486,42 @@ class Root(object):
             if request.session.profile_session:
                 request_manager = self.get_profiler_context_manager(request)
 
-            with request_manager:
-                db = request.session.db
-                if db:
-                    try:
-                        odoo.registry(db).check_signaling()
-                        with odoo.tools.mute_logger('odoo.sql_db'):
-                            ir_http = request.registry['ir.http']
-                    except (AttributeError, psycopg2.OperationalError, psycopg2.ProgrammingError):
-                        # psycopg2 error or attribute error while constructing
-                        # the registry. That means either
-                        # - the database probably does not exists anymore
-                        # - the database is corrupted
-                        # - the database version doesn't match the server version
-                        # Log the user out and fall back to nodb
-                        request.session.logout()
-                        if request.httprequest.path == '/web':
-                            # Internal Server Error
-                            raise
-                        else:
-                            # If requesting /web this will loop
-                            result = _dispatch_nodb()
-                    else:
-                        result = ir_http._dispatch()
-                else:
-                    result = _dispatch_nodb()
+            request_manager._enterable()
 
-                response = self.get_response(httprequest, result, explicit_session)
-            return response(environ, start_response)
+            db = request.session.db
+            if db:
+                try:
+                    odoo.registry(db).check_signaling()
+                    with odoo.tools.mute_logger('odoo.sql_db'):
+                        ir_http = request.registry['ir.http']
+                except (AttributeError, psycopg2.OperationalError, psycopg2.ProgrammingError):
+                    # psycopg2 error or attribute error while constructing
+                    # the registry. That means either
+                    # - the database probably does not exists anymore
+                    # - the database is corrupted
+                    # - the database version doesn't match the server version
+                    # Log the user out and fall back to nodb
+                    request.session.logout()
+                    if request.httprequest.path == '/web':
+                        # Internal Server Error
+                        raise
+                    else:
+                        # If requesting /web this will loop
+                        result = _dispatch_nodb()
+                else:
+                    result = ir_http._dispatch()
+            else:
+                result = _dispatch_nodb()
+
+            response = self.get_response(httprequest, result, explicit_session)
+
+            # FP: test
+            response = ClosingIterator(response(environ, start_response), [request_manager._exitable])
+
+            return response
+
+            # FP: change
+            # return response(environ, start_response)
 
         except werkzeug.exceptions.HTTPException as e:
             return e(environ, start_response)

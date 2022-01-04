@@ -126,6 +126,10 @@ class QWeb(object):
         :returns: str as Markup
         :rtype: markupsafe.Markup
         """
+        result = ''.join(self._render_stream(template, values, **options))
+        return Markup(result)
+
+    def _render_stream(self, template, values=None, **options):
         if values and 0 in values:
             raise ValueError('values[0] should be unset when call the _render method and only set into the template.')
 

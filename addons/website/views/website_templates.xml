@@ -37,7 +37,9 @@
 <template id="slow" name="slow">
     <h1>Head</h1>
     <t t-esc="slow(1)"/>
-    <h2>Body</h2>
+    <h2>Country: <t t-esc="country.name"/></h2>
+    <h3>Session: <t t-esc="request"/></h3>
+    <p>if request.session: segfault - to investigate</p>
 </template>
 
 <template id="layout" name="Main layout" inherit_id="portal.frontend_layout">

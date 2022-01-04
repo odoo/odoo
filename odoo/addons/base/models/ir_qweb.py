@@ -69,8 +69,14 @@ class IrQWeb(models.AbstractModel, QWeb):
         """
         compile_options = dict(self.env.context, dev_mode='qweb' in tools.config['dev_mode'])
         compile_options.update(options)
-
         return super()._render(template, values=values, **compile_options)
+
+    @QwebTracker.wrap_render
+    @api.model
+    def _render_stream(self, template, values=None, **options):
+        compile_options = dict(self.env.context, dev_mode='qweb' in tools.config['dev_mode'])
+        compile_options.update(options)
+        return super()._render_stream(template, values=values, **compile_options)
 
     # assume cache will be invalidated by third party on write to ir.ui.view
     def _get_template_cache_keys(self):
