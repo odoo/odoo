@@ -6,19 +6,19 @@
             <t t-if="rtcController and messaging">
                 <div class="o_RtcController_buttons">
                     <t t-if="rtcController.callViewer.threadView.thread.rtc and messaging.rtc.currentRtcSession">
-                        <t t-if="messaging.rtc.currentRtcSession.isSelfMuted"><t t-set="microphoneTitle">Unmute</t></t>
+                        <t t-if="messaging.rtc.currentRtcSession.isMute"><t t-set="microphoneTitle">Unmute</t></t>
                         <t t-else=""><t t-set="microphoneTitle">Mute</t></t>
                         <button class="o_RtcController_button"
-                            t-att-class="{ 'o-isActive': !messaging.rtc.currentRtcSession.isSelfMuted, 'o-isSmall': rtcController.isSmall }"
+                            t-att-class="{ 'o-isActive': !messaging.rtc.currentRtcSession.isMute, 'o-isSmall': rtcController.isSmall }"
                             t-att-aria-label="microphoneTitle"
                             t-att-title="microphoneTitle"
                             t-on-click="rtcController.onClickMicrophone">
                             <div class="o_RtcController_buttonIconWrapper" t-att-class="{ 'o-isSmall': rtcController.isSmall }">
                                 <i class="fa" t-att-class="{
                                     'fa-lg': !rtcController.isSmall,
-                                    'fa-microphone': !messaging.rtc.currentRtcSession.isSelfMuted,
-                                    'fa-microphone-slash': messaging.rtc.currentRtcSession.isSelfMuted,
-                                    'text-danger': messaging.rtc.currentRtcSession.isSelfMuted,
+                                    'fa-microphone': !messaging.rtc.currentRtcSession.isMute,
+                                    'fa-microphone-slash': messaging.rtc.currentRtcSession.isMute,
+                                    'text-danger': messaging.rtc.currentRtcSession.isMute,
                                 }"/>
                             </div>
                         </button>

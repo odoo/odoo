@@ -98,6 +98,9 @@ registerModel({
         },
     },
     recordMethods: {
+        async deafen() {
+            await this._setDeafState(true);
+        },
         /**
          * Removes and disconnects all the peerConnections that are not current members of the call.
          *
@@ -198,6 +201,9 @@ registerModel({
                 await this._toggleVideoBroadcast({ type: videoType });
             }
         },
+        async mute() {
+            await this._setMuteState(true);
+        },
         /**
          * Resets the state of the model and cleanly ends all connections and
          * streams.
@@ -234,18 +240,13 @@ registerModel({
         /**
          * Mutes and unmutes the microphone, will not unmute if deaf.
          *
-         * @param {Object} [param0]
-         * @param {string} [param0.requestAudioDevice] true if requesting the audio input device
-         *                 from the user
          */
-        async toggleMicrophone({ requestAudioDevice = true } = {}) {
-            const shouldMute = this.currentRtcSession.isDeaf || !this.currentRtcSession.isSelfMuted;
-            this.currentRtcSession.updateAndBroadcast({ isSelfMuted: shouldMute || !this.audioTrack });
-            if (!this.audioTrack && !shouldMute && requestAudioDevice) {
-                // if we don't have an audioTrack, we try to request it again
-                await this.updateLocalAudioTrack(true);
+        async toggleMicrophone() {
+            if (this.currentRtcSession.isMute) {
+                await this.unmute();
+            } else {
+                await this.mute();
             }
-            await this.async(() => this._updateLocalAudioTrackEnabledState());
         },
         /**
          * toggles screen broadcasting to peers.
@@ -258,6 +259,17 @@ registerModel({
          */
         async toggleUserVideo() {
             this._toggleVideoBroadcast({ type: 'user-video' });
+        },
+        async undeafen() {
+            await this._setDeafState(false);
+        },
+        async unmute() {
+            if (this.audioTrack) {
+                await this._setMuteState(false);
+            } else {
+                // if we don't have an audioTrack, we try to request it again
+                await this.updateLocalAudioTrack(true);
+            }
         },
         /**
          * @param {Boolean} audio
@@ -301,7 +313,7 @@ registerModel({
                     await this.async(() => this._updateLocalAudioTrackEnabledState());
                 });
                 this.currentRtcSession.updateAndBroadcast({ isSelfMuted: false });
-                audioTrack.enabled = !this.currentRtcSession.isSelfMuted && this.currentRtcSession.isTalking;
+                audioTrack.enabled = !this.currentRtcSession.isMute && this.currentRtcSession.isTalking;
                 this.update({ audioTrack });
                 await this.async(() => this.updateVoiceActivation());
                 for (const [token, peerConnection] of Object.entries(this._peerConnections)) {
@@ -485,7 +497,10 @@ registerModel({
                         type: 'peerToPeer',
                         payload: {
                             type: 'audio',
-                            state: { isTalking: this.currentRtcSession.isTalking, isSelfMuted: this.currentRtcSession.isSelfMuted },
+                            state: {
+                                isTalking: this.audioTrack && this.audioTrack.enabled,
+                                isSelfMuted: this.currentRtcSession.isSelfMuted,
+                            },
                         },
                     });
                 } catch (e) {
@@ -837,6 +852,26 @@ registerModel({
             return JSON.stringify(Object.fromEntries(toLog.map(p => [p, dataChannel[p]])));
         },
         /**
+         * @param {Boolean} isDeaf
+         */
+        async _setDeafState(isDeaf) {
+            this.currentRtcSession.updateAndBroadcast({ isDeaf });
+            for (const session of this.messaging.models['RtcSession'].all()) {
+                if (!session.audioElement) {
+                    continue;
+                }
+                session.audioElement.muted = isDeaf;
+            }
+            await this._updateLocalAudioTrackEnabledState();
+        },
+        /**
+         * @param {Boolean} isSelfMuted
+         */
+        async _setMuteState(isSelfMuted) {
+            this.currentRtcSession.updateAndBroadcast({ isSelfMuted });
+            await this._updateLocalAudioTrackEnabledState();
+        },
+        /**
          * Updates the "isTalking" state of the current user and sets the
          * enabled state of its audio track accordingly.
          *
@@ -851,7 +886,7 @@ registerModel({
                 return;
             }
             this.currentRtcSession.update({ isTalking });
-            if (!this.currentRtcSession.isSelfMuted) {
+            if (!this.currentRtcSession.isMute) {
                 await this._updateLocalAudioTrackEnabledState();
             }
         },
@@ -928,8 +963,8 @@ registerModel({
             }
         },
         /**
-         * Sets the enabled property of the local audio track based on the
-         * current session state. And notifies peers of the new audio state.
+         * Sets the enabled property of the local audio track and notifies
+         * peers of the new state.
          *
          * @private
          */
@@ -937,14 +972,14 @@ registerModel({
             if (!this.audioTrack) {
                 return;
             }
-            this.audioTrack.enabled = !this.currentRtcSession.isSelfMuted && this.currentRtcSession.isTalking;
+            this.audioTrack.enabled = !this.currentRtcSession.isMute && this.currentRtcSession.isTalking;
             await this._notifyPeers(Object.keys(this._peerConnections), {
                 event: 'trackChange',
                 type: 'peerToPeer',
                 payload: {
                     type: 'audio',
                     state: {
-                        isTalking: this.currentRtcSession.isTalking && !this.currentRtcSession.isSelfMuted,
+                        isTalking: this.audioTrack.enabled,
                         isSelfMuted: this.currentRtcSession.isSelfMuted,
                         isDeaf: this.currentRtcSession.isDeaf,
                     },
@@ -1119,19 +1154,22 @@ registerModel({
             if (!this.channel) {
                 return;
             }
-            if (this.messaging.userSetting.rtcConfigurationMenu.isRegisteringKey) {
+            if (!this.messaging.userSetting.usePushToTalk || !this.messaging.userSetting.isPushToTalkKey(ev)) {
                 return;
             }
-            if (!this.messaging.userSetting.usePushToTalk || !this.messaging.userSetting.isPushToTalkKey(ev)) {
+            if (this.currentRtcSession.isMute) {
+                return;
+            }
+            if (this.messaging.userSetting.rtcConfigurationMenu.isRegisteringKey) {
                 return;
             }
             if (this._pushToTalkTimeoutId) {
                 browser.clearTimeout(this._pushToTalkTimeoutId);
             }
-            if (!this.currentRtcSession.isTalking && !this.currentRtcSession.isSelfMuted) {
+            if (!this.currentRtcSession.isTalking) {
                 this.messaging.soundEffects.pushToTalk.play({ volume: 0.3 });
+                this._setSoundBroadcast(true);
             }
-            this._setSoundBroadcast(true);
         },
         /**
          * @private
@@ -1147,7 +1185,7 @@ registerModel({
             if (!this.currentRtcSession.isTalking) {
                 return;
             }
-            if (!this.currentRtcSession.isSelfMuted) {
+            if (!this.currentRtcSession.isMute) {
                 this.messaging.soundEffects.pushToTalk.play({ volume: 0.3 });
             }
             this._pushToTalkTimeoutId = browser.setTimeout(
