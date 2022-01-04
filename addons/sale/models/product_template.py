@@ -234,7 +234,7 @@ class ProductTemplate(models.Model):
                 price = pricelist._get_product_price(product, quantity)
             else:
                 price = list_price
-            display_image = bool(product.image_1920)
+            display_image = bool(product.image_128)
             display_name = product.display_name
             price_extra = (product.price_extra or 0.0) + (sum(no_variant_attributes_price_extra) or 0.0)
         else:
@@ -246,7 +246,7 @@ class ProductTemplate(models.Model):
                 price = pricelist._get_product_price(product_template, quantity)
             else:
                 price = list_price
-            display_image = bool(product_template.image_1920)
+            display_image = bool(product_template.image_128)
 
             combination_name = combination._get_combination_name()
             if combination_name:
