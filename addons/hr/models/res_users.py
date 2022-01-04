@@ -17,6 +17,7 @@ HR_READABLE_FIELDS = [
     'last_activity_time',
     'can_edit',
     'is_system',
+    'employee_resource_calendar_id',
 ]
 
 HR_WRITABLE_FIELDS = [
@@ -136,6 +137,7 @@ class User(models.Model):
     last_activity = fields.Date(related='employee_id.last_activity')
     last_activity_time = fields.Char(related='employee_id.last_activity_time')
     employee_type = fields.Selection(related='employee_id.employee_type', readonly=False, related_sudo=False)
+    employee_resource_calendar_id = fields.Many2one(related='employee_id.resource_calendar_id', string="Employee's Working Hours", readonly=True)
 
     can_edit = fields.Boolean(compute='_compute_can_edit')
     is_system = fields.Boolean(compute="_compute_is_system")
