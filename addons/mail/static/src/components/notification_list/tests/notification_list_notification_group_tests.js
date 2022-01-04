@@ -1,12 +1,6 @@
 /** @odoo-module **/
 
-import {
-    afterEach,
-    afterNextRender,
-    beforeEach,
-    createRootMessagingComponent,
-    start,
-} from '@mail/utils/test_utils';
+import { afterEach, afterNextRender, beforeEach, start, } from '@mail/utils/test_utils';
 
 import Bus from 'web.Bus';
 
@@ -17,23 +11,14 @@ QUnit.module('notification_list_notification_group_tests.js', {
     beforeEach() {
         beforeEach(this);
 
-        /**
-         * @param {Object} param0
-         * @param {string} [param0.filter='all']
-         */
-        this.createNotificationListComponent = async ({ filter = 'all' } = {}) => {
-            await createRootMessagingComponent(this, "NotificationList", {
-                props: { filter },
-                target: this.widget.el,
-            });
-        };
-
         this.start = async params => {
-            const { env, widget } = await start(Object.assign({}, params, {
+            const res = await start(Object.assign({}, params, {
                 data: this.data,
             }));
+            const { env, widget } = res;
             this.env = env;
             this.widget = widget;
+            return res;
         };
     },
     afterEach() {
@@ -58,8 +43,8 @@ QUnit.test('notification group basic layout', async function (assert) {
         notification_status: 'exception', // necessary value to have a failure
         notification_type: 'email', // expected failure type for email message
     });
-    await this.start();
-    await this.createNotificationListComponent();
+    const { createNotificationListComponent } = await this.start();
+    await createNotificationListComponent();
     assert.containsOnce(
         document.body,
         '.o_NotificationGroup',
@@ -148,8 +133,8 @@ QUnit.test('mark as read', async function (assert) {
             "action should have the group notification length as unread_counter"
         );
     });
-    await this.start({ env: { bus } });
-    await this.createNotificationListComponent();
+    const { createNotificationListComponent } = await this.start({ env: { bus } });
+    await createNotificationListComponent();
     assert.containsOnce(
         document.body,
         '.o_NotificationGroup_markAsRead',
@@ -200,8 +185,8 @@ QUnit.test('grouped notifications by document', async function (assert) {
             notification_type: 'email', // expected failure type for email message
         }
     );
-    await this.start({ hasChatWindow: true });
-    await this.createNotificationListComponent();
+    const { createNotificationListComponent } = await this.start({ hasChatWindow: true });
+    await createNotificationListComponent();
 
     assert.containsOnce(
         document.body,
@@ -312,8 +297,8 @@ QUnit.test('grouped notifications by document model', async function (assert) {
         );
     });
 
-    await this.start({ env: { bus } });
-    await this.createNotificationListComponent();
+    const { createNotificationListComponent } = await this.start({ env: { bus } });
+    await createNotificationListComponent();
 
     assert.containsOnce(
         document.body,
@@ -376,10 +361,10 @@ QUnit.test('different mail.channel are not grouped', async function (assert) {
             notification_type: 'email', // expected failure type for email message
         }
     );
-    await this.start({
+    const { createNotificationListComponent } = await this.start({
         hasChatWindow: true, // needed to assert thread.open
     });
-    await this.createNotificationListComponent();
+    await createNotificationListComponent();
     assert.containsN(
         document.body,
         '.o_NotificationGroup',
@@ -451,8 +436,8 @@ QUnit.test('multiple grouped notifications by document model, sorted by the most
             notification_type: 'email', // expected failure type for email message
         }
     );
-    await this.start();
-    await this.createNotificationListComponent();
+    const { createNotificationListComponent } = await this.start();
+    await createNotificationListComponent();
     assert.containsN(
         document.body,
         '.o_NotificationGroup',
@@ -522,8 +507,8 @@ QUnit.test('non-failure notifications are ignored', async function (assert) {
             notification_type: 'email', // expected notification type for email message
         },
     );
-    await this.start();
-    await this.createNotificationListComponent();
+    const { createNotificationListComponent } = await this.start();
+    await createNotificationListComponent();
     assert.containsNone(
         document.body,
         '.o_NotificationGroup',

@@ -31,10 +31,10 @@ export class ThreadPreview extends Component {
      * @returns {string}
      */
     image() {
-        if (this.thread.correspondent) {
-            return this.thread.correspondent.avatarUrl;
+        if (this.threadPreviewView.thread.correspondent) {
+            return this.threadPreviewView.thread.correspondent.avatarUrl;
         }
-        return `/web/image/mail.channel/${this.thread.id}/avatar_128?unique=${this.thread.avatarCacheKey}`;
+        return `/web/image/mail.channel/${this.threadPreviewView.thread.id}/avatar_128?unique=${this.threadPreviewView.thread.avatarCacheKey}`;
     }
 
     /**
@@ -43,17 +43,17 @@ export class ThreadPreview extends Component {
      * @returns {string}
      */
     get inlineLastMessageBody() {
-        if (!this.thread.lastMessage) {
+        if (!this.threadPreviewView.thread.lastMessage) {
             return '';
         }
-        return mailUtils.htmlToTextContentInline(this.thread.lastMessage.prettyBody);
+        return mailUtils.htmlToTextContentInline(this.threadPreviewView.thread.lastMessage.prettyBody);
     }
 
     /**
-     * @returns {Thread}
+     * @returns {ThreadPreviewView}
      */
-    get thread() {
-        return this.messaging && this.messaging.models['Thread'].get(this.props.threadLocalId);
+    get threadPreviewView() {
+        return this.messaging && this.messaging.models['ThreadPreviewView'].get(this.props.localId);
     }
 
     //--------------------------------------------------------------------------
@@ -70,7 +70,7 @@ export class ThreadPreview extends Component {
             // handled in `_onClickMarkAsRead`
             return;
         }
-        this.thread.open();
+        this.threadPreviewView.thread.open();
         if (!this.messaging.device.isMobile) {
             this.messaging.messagingMenu.close();
         }
@@ -81,17 +81,15 @@ export class ThreadPreview extends Component {
      * @param {MouseEvent} ev
      */
     _onClickMarkAsRead(ev) {
-        if (this.thread.lastNonTransientMessage) {
-            this.thread.markAsSeen(this.thread.lastNonTransientMessage);
+        if (this.threadPreviewView.thread.lastNonTransientMessage) {
+            this.threadPreviewView.thread.markAsSeen(this.threadPreviewView.thread.lastNonTransientMessage);
         }
     }
 
 }
 
 Object.assign(ThreadPreview, {
-    props: {
-        threadLocalId: String,
-    },
+    props: { localId: String },
     template: 'mail.ThreadPreview',
 });
 

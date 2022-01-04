@@ -51,13 +51,19 @@ registerModel({
         },
         /**
          * @private
-         * @returns {MobileMessagingNavbarView|FieldCommand}
+         * @returns {FieldCommand}
          */
          _computeMobileMessagingNavbarView() {
             if (this.messaging.device && this.messaging.device.isMobile) {
                 return insertAndReplace();
             }
             return clear();
+        },
+        /**
+         * @returns {FieldCommand}
+         */
+        _computeNotificationListView() {
+            return this.isOpen ? insertAndReplace() : clear();
         },
     },
     fields: {
@@ -87,6 +93,11 @@ registerModel({
          */
         isOpen: attr({
             default: false,
+        }),
+        notificationListView: one2one('NotificationListView', {
+            compute: '_computeNotificationListView',
+            inverse: 'messagingMenuOwner',
+            isCausal: true,
         }),
         /**
          * The navbar view on the messaging menu when in mobile.
