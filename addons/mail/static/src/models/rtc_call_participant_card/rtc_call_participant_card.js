@@ -94,7 +94,7 @@ registerModel({
          * @returns {boolean}
          */
         _computeIsTalking() {
-            return Boolean(this.rtcSession && this.rtcSession.isTalking && !this.rtcSession.isSelfMuted);
+            return Boolean(this.rtcSession && this.rtcSession.isTalking && !this.rtcSession.isMute);
         },
         /**
          * @private
