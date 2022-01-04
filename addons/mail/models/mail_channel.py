@@ -307,6 +307,7 @@ class Channel(models.Model):
         self.check_access_rule('write')
         partners = self.env['res.partner'].browse(partner_ids or []).exists()
         guests = self.env['mail.guest'].browse(guest_ids or []).exists()
+        notifications = []
         for channel in self:
             members_to_create = []
             if channel.public == 'groups':
@@ -335,10 +336,10 @@ class Channel(models.Model):
                 user = channel_partner.partner_id.user_ids[0] if channel_partner.partner_id.user_ids else self.env['res.users']
                 # notify invited members through the bus
                 if user:
-                    self.env['bus.bus']._sendone(channel_partner.partner_id, 'mail.channel/joined', {
+                    notifications.append((channel_partner.partner_id, 'mail.channel/joined', {
                         'channel': channel_partner.channel_id.with_user(user).with_context(allowed_company_ids=user.company_ids.ids).sudo().channel_info()[0],
                         'invited_by_user_id': self.env.user.id,
-                    })
+                    }))
                 # notify existing members with a new message in the channel
                 if channel_partner.partner_id == self.env.user.partner_id:
                     notification = _('<div class="o_mail_notification">joined the channel</div>')
@@ -362,15 +363,15 @@ class Channel(models.Model):
                 })
                 guest = channel_partner.guest_id
                 if guest:
-                    self.env['bus.bus']._sendone(guest, 'mail.channel/joined', {
+                    notifications.append((guest, 'mail.channel/joined', {
                         'channel': channel_partner.channel_id.sudo().channel_info()[0],
-                    })
-            self.env['bus.bus']._sendone(channel, 'mail.channel/insert', {
+                    }))
+            notifications.append((channel, 'mail.channel/insert', {
                 'id': channel.id,
                 'guestMembers': [('insert', guest_members_data)],
                 'memberCount': channel.member_count,
                 'members': [('insert', members_data)],
-            })
+            }))
         if invite_to_rtc_call:
             if self.env.user._is_public() and 'guest' in self.env.context:
                 guest = self.env.context.get('guest')
@@ -382,6 +383,7 @@ class Channel(models.Model):
                 current_channel_partner = self.env['mail.channel.partner'].sudo().search([('channel_id', '=', channel.id), ('partner_id', '=', partner.id), ('guest_id', '=', guest.id)])
                 if current_channel_partner and current_channel_partner.rtc_session_ids:
                     current_channel_partner._rtc_invite_members(partner_ids=partners.ids, guest_ids=guests.ids)
+        self.env['bus.bus']._sendmany(notifications)
 
     def _action_remove_members(self, partners):
         """ Private implementation to remove members from channels. Done as sudo
