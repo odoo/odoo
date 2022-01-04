@@ -60,6 +60,7 @@ const Wysiwyg = Widget.extend({
         colors: customColors,
         recordInfo: {context: {}},
         document: document,
+        allowCommandVideo: true,
     },
     init: function (parent, options) {
         this._super.apply(this, arguments);
@@ -132,6 +133,7 @@ const Wysiwyg = Widget.extend({
             controlHistoryFromDocument: this.options.controlHistoryFromDocument,
             getContentEditableAreas: this.options.getContentEditableAreas,
             defaultLinkAttributes: this.options.userGeneratedContent ? {rel: 'ugc' } : {},
+            allowCommandVideo: this.options.allowCommandVideo,
             getYoutubeVideoElement: getYoutubeVideoElement,
             getContextFromParentRect: options.getContextFromParentRect,
             getPowerboxElement: () => {
@@ -1775,7 +1777,9 @@ const Wysiwyg = Widget.extend({
                     this.openMediaDialog();
                 },
             },
-            {
+        ];
+        if (options.allowCommandVideo) {
+            commands.push({
                 groupName: 'Medias',
                 title: 'Video',
                 description: 'Insert a video.',
@@ -1783,8 +1787,8 @@ const Wysiwyg = Widget.extend({
                 callback: () => {
                     this.openMediaDialog({noVideos: false, noImages: true, noIcons: true, noDocuments: true});
                 },
-            },
-        ];
+            });
+        }
         if (options.powerboxCommands) {
             commands.push(...options.powerboxCommands);
         }
