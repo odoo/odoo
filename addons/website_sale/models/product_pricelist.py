@@ -58,17 +58,17 @@ class ProductPricelist(models.Model):
         return res
 
     def _get_partner_pricelist_multi_search_domain_hook(self, company_id):
-        domain = super(ProductPricelist, self)._get_partner_pricelist_multi_search_domain_hook(company_id)
+        domain = super()._get_partner_pricelist_multi_search_domain_hook(company_id)
         website = ir_http.get_request_website()
         if website:
-            domain += self._get_website_pricelists_domain(website.id)
+            domain += self._get_website_pricelists_domain(website)
         return domain
 
     def _get_partner_pricelist_multi_filter_hook(self):
-        res = super(ProductPricelist, self)._get_partner_pricelist_multi_filter_hook()
+        res = super()._get_partner_pricelist_multi_filter_hook()
         website = ir_http.get_request_website()
         if website:
-            res = res.filtered(lambda pl: pl._is_available_on_website(website.id))
+            res = res.filtered(lambda pl: pl._is_available_on_website(website))
         return res
 
     def _check_website_pricelist(self):
@@ -76,7 +76,7 @@ class ProductPricelist(models.Model):
             if not website.pricelist_ids:
                 raise UserError(_("With this action, '%s' website would not have any pricelist available.") % (website.name))
 
-    def _is_available_on_website(self, website_id):
+    def _is_available_on_website(self, website):
         """ To be able to be used on a website, a pricelist should either:
         - Have its `website_id` set to current website (specific pricelist).
         - Have no `website_id` set and should be `selectable` (generic pricelist)
@@ -89,32 +89,21 @@ class ProductPricelist(models.Model):
         Change in this method should be reflected in `_get_website_pricelists_domain`.
         """
         self.ensure_one()
-        if self.company_id and self.company_id != self.env["website"].browse(website_id).company_id:
+        if self.company_id and self.company_id != website.company_id:
             return False
-        return self.website_id.id == website_id or (not self.website_id and (self.selectable or self.sudo().code))
+        return self.website_id.id == website.id or (not self.website_id and (self.selectable or self.sudo().code))
 
-    def _get_website_pricelists_domain(self, website_id):
+    def _get_website_pricelists_domain(self, website):
         ''' Check above `_is_available_on_website` for explanation.
         Change in this method should be reflected in `_is_available_on_website`.
         '''
-        company_id = self.env["website"].browse(website_id).company_id.id
         return [
-            '&', ('company_id', 'in', [False, company_id]),
-            '|', ('website_id', '=', website_id),
+            ('active', '=', True),
+            ('company_id', 'in', [False, website.company_id.id]),
+            '|', ('website_id', '=', website.id),
             '&', ('website_id', '=', False),
             '|', ('selectable', '=', True), ('code', '!=', False),
         ]
-
-    def _get_partner_pricelist_multi(self, partner_ids, company_id=None):
-        ''' If `property_product_pricelist` is read from website, we should use
-            the website's company and not the user's one.
-            Passing a `company_id` to super will avoid using the current user's
-            company.
-        '''
-        website = ir_http.get_request_website()
-        if not company_id and website:
-            company_id = website.company_id.id
-        return super(ProductPricelist, self)._get_partner_pricelist_multi(partner_ids, company_id)
 
     @api.constrains('company_id', 'website_id')
     def _check_websites_in_company(self):

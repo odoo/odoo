@@ -78,15 +78,16 @@ class Website(models.Model):
 
     @api.depends('all_pricelist_ids')
     def _compute_pricelist_ids(self):
-        Pricelist = self.env['product.pricelist']
         for website in self:
-            website.pricelist_ids = Pricelist.search(
-                Pricelist._get_website_pricelists_domain(website.id)
+            website = website.with_company(website.company_id)
+            ProductPricelist = website.env['product.pricelist']  # with correct company in env
+            website.pricelist_ids = ProductPricelist.sudo().search(
+                ProductPricelist._get_website_pricelists_domain(website)
             )
 
     def _compute_pricelist_id(self):
         for website in self:
-            website.pricelist_id = website.with_context(website_id=website.id).get_current_pricelist()
+            website.pricelist_id = website.get_current_pricelist()
 
     # This method is cached, must not return records! See also #8795
     @tools.ormcache('self.env.uid', 'country_code', 'show_visible', 'website_pl', 'current_pl', 'all_pl', 'partner_pl', 'order_pl')
@@ -125,7 +126,7 @@ class Website(models.Model):
         if country_code:
             for cgroup in self.env['res.country.group'].search([('country_ids.code', '=', country_code)]):
                 pricelists |= cgroup.pricelist_ids.filtered(
-                    lambda pl: pl._is_available_on_website(self.id) and _check_show_visible(pl)
+                    lambda pl: pl._is_available_on_website(self) and _check_show_visible(pl)
                 )
 
         # no GeoIP or no pricelist for this country
@@ -136,7 +137,8 @@ class Website(models.Model):
         is_public = self.user_id.id == self.env.user.id
         if not is_public:
             # keep partner_pl only if website compliant
-            partner_pl = pricelists.browse(partner_pl).filtered(lambda pl: pl._is_available_on_website(self.id) and _check_show_visible(pl))
+            partner_pl = pricelists.browse(partner_pl).filtered(
+                lambda pl: pl._is_available_on_website(self) and _check_show_visible(pl))
             if country_code:
                 # keep partner_pl only if GeoIP compliant in case of GeoIP enabled
                 partner_pl = partner_pl.filtered(
@@ -161,16 +163,27 @@ class Website(models.Model):
                 # In the weird case we are coming from the backend (https://github.com/odoo/odoo/issues/20245)
                 website = len(self) == 1 and self or self.search([], limit=1)
         isocountry = req and req.session.geoip and req.session.geoip.get('country_code') or False
-        partner = self.env.user.partner_id
-        last_order_pl = partner.last_website_so_id.pricelist_id
-        partner_pl = partner.property_product_pricelist
-        pricelists = website._get_pl_partner_order(isocountry, show_visible,
-                                                   website.user_id.sudo().partner_id.property_product_pricelist.id,
-                                                   req and req.session.get('website_sale_current_pl') or None,
-                                                   website.pricelist_ids,
-                                                   partner_pl=partner_pl and partner_pl.id or None,
-                                                   order_pl=last_order_pl and last_order_pl.id or None)
-        return self.env['product.pricelist'].browse(pricelists)
+
+        website = website.with_company(website.company_id)
+
+        partner_sudo = website.env.user.partner_id
+        last_order_pricelist = partner_sudo.last_website_so_id.pricelist_id
+        partner_pricelist = partner_sudo.property_product_pricelist
+        website_pricelist = website.sudo().partner_id.property_product_pricelist
+        website_pricelists = website.sudo().pricelist_ids
+
+        current_pricelist_id = req and req.session.get('website_sale_current_pl') or None
+
+        pricelist_ids = website._get_pl_partner_order(
+            isocountry,
+            show_visible,
+            website_pricelist.id,
+            current_pricelist_id,
+            website_pricelists,  # TODO give as ids for better cache ?
+            partner_pl=partner_pricelist.id,
+            order_pl=last_order_pricelist.id)
+
+        return self.env['product.pricelist'].browse(pricelist_ids)
 
     def get_pricelist_available(self, show_visible=False):
         return self._get_pricelist_available(request, show_visible)
@@ -187,6 +200,8 @@ class Website(models.Model):
         """
         :returns: The current pricelist record
         """
+        self = self.with_company(self.company_id)
+
         # The list of available pricelists for this user.
         # If the user is signed in, and has a pricelist set different than the public user pricelist
         # then this pricelist will always be considered as available
@@ -271,11 +286,16 @@ class Website(models.Model):
         :returns: browse record for the current sales order
         """
         self.ensure_one()
-        partner = self.env.user.partner_id
+
+        self = self.with_company(self.company_id)
+        partner_sudo = self.env.user.partner_id
+
+        SaleOrder = self.env['sale.order'].sudo()
+
         sale_order_id = request.session.get('sale_order_id')
         check_fpos = False
         if not sale_order_id and not self.env.user._is_public():
-            last_order = partner.last_website_so_id
+            last_order = partner_sudo.last_website_so_id
             if last_order:
                 available_pricelists = self.get_pricelist_available()
                 # Do not reload the cart of this user last visit if the cart uses a pricelist no longer available.
@@ -283,7 +303,7 @@ class Website(models.Model):
                 check_fpos = True
 
         # Test validity of the sale_order_id
-        sale_order = self.env['sale.order'].with_company(request.website.company_id.id).sudo().browse(sale_order_id).exists() if sale_order_id else None
+        sale_order = SaleOrder.browse(sale_order_id).exists() if sale_order_id else None
 
         # Do not reload the cart of this user last visit if the Fiscal Position has changed.
         if check_fpos and sale_order:
@@ -314,11 +334,11 @@ class Website(models.Model):
         if not sale_order:
             # TODO cache partner_id session
             pricelist = self.env['product.pricelist'].browse(pricelist_id).sudo()
-            so_data = self._prepare_sale_order_values(partner, pricelist)
-            sale_order = self.env['sale.order'].with_company(request.website.company_id.id).with_user(SUPERUSER_ID).create(so_data)
+            so_data = self._prepare_sale_order_values(partner_sudo, pricelist)
+            sale_order = SaleOrder.with_user(SUPERUSER_ID).create(so_data)
 
             # set fiscal position
-            if request.website.partner_id.id == partner.id: # For public user, fiscal position based on geolocation
+            if request.website.partner_id.id == partner_sudo.id: # For public user, fiscal position based on geolocation
                 country_code = request.session['geoip'].get('country_code')
                 if country_code:
                     country_id = request.env['res.country'].search([('code', '=', country_code)], limit=1).id
@@ -331,10 +351,10 @@ class Website(models.Model):
             request.session['sale_order_id'] = sale_order.id
 
         # check for change of pricelist with a coupon
-        pricelist_id = pricelist_id or partner.property_product_pricelist.id
+        pricelist_id = pricelist_id or partner_sudo.property_product_pricelist.id
 
         # check for change of partner_id ie after signup
-        if sale_order.partner_id.id != partner.id and request.website.partner_id.id != partner.id:
+        if sale_order.partner_id.id != partner_sudo.id and request.website.partner_id.id != partner_sudo.id:
             flag_pricelist = False
             if pricelist_id != sale_order.pricelist_id.id:
                 flag_pricelist = True
@@ -342,9 +362,9 @@ class Website(models.Model):
 
             # change the partner, and trigger the onchange
             sale_order.write({
-                'partner_id': partner.id,
-                'partner_invoice_id': partner.id,
-                'payment_term_id': self.sale_get_payment_term(partner),
+                'partner_id': partner_sudo.id,
+                'partner_invoice_id': partner_sudo.id,
+                'payment_term_id': self.sale_get_payment_term(partner_sudo),
             })
 
             # check the pricelist : update it if the pricelist is not the 'forced' one
@@ -375,7 +395,7 @@ class Website(models.Model):
                 update_pricelist = True
         elif code is not None and sale_order.pricelist_id.code and code != sale_order.pricelist_id.code:
             # code is not None when user removes code and click on "Apply"
-            pricelist_id = partner.property_product_pricelist.id
+            pricelist_id = partner_sudo.property_product_pricelist.id
             update_pricelist = True
 
         # update the pricelist
