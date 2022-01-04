@@ -449,6 +449,27 @@ QUnit.module('convert_inline', {}, function () {
             "should have changed the height of the grandparent of a 100% height element"
         );
     });
+    QUnit.test('express align-self with vertical-align on table cells', async function (assert) {
+        assert.expect(3);
+
+        $editable = $(`<div><table><tbody><tr><td style="align-self: start;">yup</td></tr></tbody></table></div>`);
+        convertInline.formatTables($editable);
+        assert.strictEqual($editable.html(), `<table><tbody><tr><td style="align-self: start; vertical-align: top;">yup</td></tr></tbody></table>`,
+            "should have added a top vertical alignment"
+        );
+
+        $editable = $(`<div><table><tbody><tr><td style="align-self: center;">yup</td></tr></tbody></table></div>`);
+        convertInline.formatTables($editable);
+        assert.strictEqual($editable.html(), `<table><tbody><tr><td style="align-self: center; vertical-align: middle;">yup</td></tr></tbody></table>`,
+            "should have added a middle vertical alignment"
+        );
+
+        $editable = $(`<div><table><tbody><tr><td style="align-self: end;">yup</td></tr></tbody></table></div>`);
+        convertInline.formatTables($editable);
+        assert.strictEqual($editable.html(), `<table><tbody><tr><td style="align-self: end; vertical-align: bottom;">yup</td></tr></tbody></table>`,
+            "should have added a bottom vertical alignment"
+        );
+    });
 
     QUnit.module('Convert snippets and mailing bodies to tables');
     // Test addTables
