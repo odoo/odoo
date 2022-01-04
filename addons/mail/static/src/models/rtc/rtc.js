@@ -239,8 +239,8 @@ registerModel({
          *                 from the user
          */
         async toggleMicrophone({ requestAudioDevice = true } = {}) {
-            const shouldMute = this.currentRtcSession.isDeaf || !this.currentRtcSession.isMuted;
-            this.currentRtcSession.updateAndBroadcast({ isMuted: shouldMute || !this.audioTrack });
+            const shouldMute = this.currentRtcSession.isDeaf || !this.currentRtcSession.isSelfMuted;
+            this.currentRtcSession.updateAndBroadcast({ isSelfMuted: shouldMute || !this.audioTrack });
             if (!this.audioTrack && !shouldMute && requestAudioDevice) {
                 // if we don't have an audioTrack, we try to request it again
                 await this.updateLocalAudioTrack(true);
@@ -284,7 +284,7 @@ registerModel({
                         type: 'warning',
                     });
                     if (this.currentRtcSession) {
-                        this.currentRtcSession.updateAndBroadcast({ isMuted: true });
+                        this.currentRtcSession.updateAndBroadcast({ isSelfMuted: true });
                     }
                     return;
                 }
@@ -297,11 +297,11 @@ registerModel({
                 audioTrack.addEventListener('ended', async () => {
                     // this mostly happens when the user retracts microphone permission.
                     await this.async(() => this.updateLocalAudioTrack(false));
-                    this.currentRtcSession.updateAndBroadcast({ isMuted: true });
+                    this.currentRtcSession.updateAndBroadcast({ isSelfMuted: true });
                     await this.async(() => this._updateLocalAudioTrackEnabledState());
                 });
-                this.currentRtcSession.updateAndBroadcast({ isMuted: false });
-                audioTrack.enabled = !this.currentRtcSession.isMuted && this.currentRtcSession.isTalking;
+                this.currentRtcSession.updateAndBroadcast({ isSelfMuted: false });
+                audioTrack.enabled = !this.currentRtcSession.isSelfMuted && this.currentRtcSession.isTalking;
                 this.update({ audioTrack });
                 await this.async(() => this.updateVoiceActivation());
                 for (const [token, peerConnection] of Object.entries(this._peerConnections)) {
@@ -483,7 +483,7 @@ registerModel({
                         type: 'peerToPeer',
                         payload: {
                             type: 'audio',
-                            state: { isTalking: this.currentRtcSession.isTalking, isMuted: this.currentRtcSession.isMuted },
+                            state: { isTalking: this.currentRtcSession.isTalking, isSelfMuted: this.currentRtcSession.isSelfMuted },
                         },
                     });
                 } catch (e) {
@@ -604,13 +604,13 @@ registerModel({
          * @param {Object} param1.state
          */
         _handleTrackChange(rtcSession, { type, state }) {
-            const { isMuted, isTalking, isSendingVideo, isDeaf } = state;
+            const { isSelfMuted, isTalking, isSendingVideo, isDeaf } = state;
             if (type === 'audio') {
                 if (!rtcSession.audioStream) {
                     return;
                 }
                 rtcSession.update({
-                    isMuted,
+                    isSelfMuted,
                     isTalking,
                     isDeaf,
                 });
@@ -849,7 +849,7 @@ registerModel({
                 return;
             }
             this.currentRtcSession.update({ isTalking });
-            if (!this.currentRtcSession.isMuted) {
+            if (!this.currentRtcSession.isSelfMuted) {
                 await this._updateLocalAudioTrackEnabledState();
             }
         },
@@ -915,7 +915,7 @@ registerModel({
             if (track.kind === 'audio') {
                 rtcSession.setAudio({
                     audioStream: stream,
-                    isMuted: false,
+                    isSelfMuted: false,
                     isTalking: false,
                 });
             }
@@ -935,15 +935,15 @@ registerModel({
             if (!this.audioTrack) {
                 return;
             }
-            this.audioTrack.enabled = !this.currentRtcSession.isMuted && this.currentRtcSession.isTalking;
+            this.audioTrack.enabled = !this.currentRtcSession.isSelfMuted && this.currentRtcSession.isTalking;
             await this._notifyPeers(Object.keys(this._peerConnections), {
                 event: 'trackChange',
                 type: 'peerToPeer',
                 payload: {
                     type: 'audio',
                     state: {
-                        isTalking: this.currentRtcSession.isTalking && !this.currentRtcSession.isMuted,
-                        isMuted: this.currentRtcSession.isMuted,
+                        isTalking: this.currentRtcSession.isTalking && !this.currentRtcSession.isSelfMuted,
+                        isSelfMuted: this.currentRtcSession.isSelfMuted,
                         isDeaf: this.currentRtcSession.isDeaf,
                     },
                 },
@@ -1126,7 +1126,7 @@ registerModel({
             if (this._pushToTalkTimeoutId) {
                 browser.clearTimeout(this._pushToTalkTimeoutId);
             }
-            if (!this.currentRtcSession.isTalking && !this.currentRtcSession.isMuted) {
+            if (!this.currentRtcSession.isTalking && !this.currentRtcSession.isSelfMuted) {
                 this.messaging.soundEffects.pushToTalk.play({ volume: 0.3 });
             }
             this._setSoundBroadcast(true);
@@ -1145,7 +1145,7 @@ registerModel({
             if (!this.currentRtcSession.isTalking) {
                 return;
             }
-            if (!this.currentRtcSession.isMuted) {
+            if (!this.currentRtcSession.isSelfMuted) {
                 this.messaging.soundEffects.pushToTalk.play({ volume: 0.3 });
             }
             this._pushToTalkTimeoutId = browser.setTimeout(
