@@ -264,7 +264,7 @@ class Pricelist(models.Model):
 
     # res.partner.property_product_pricelist field computation
     @api.model
-    def _get_partner_pricelist_multi(self, partner_ids, company_id=None):
+    def _get_partner_pricelist_multi(self, partner_ids):
         """ Retrieve the applicable pricelist for given partners in a given company.
 
         It will return the first found pricelist in this order:
@@ -282,7 +282,7 @@ class Pricelist(models.Model):
         # `partner_ids` might be ID from inactive users. We should use active_test
         # as we will do a search() later (real case for website public user).
         Partner = self.env['res.partner'].with_context(active_test=False)
-        company_id = company_id or self.env.company.id
+        company_id = self.env.company.id
 
         Property = self.env['ir.property'].with_company(company_id)
         Pricelist = self.env['product.pricelist']
