@@ -295,7 +295,9 @@ class TestCompanyLeave(SavepointCase):
             'employee_id': employee.id,
             'holiday_status_id': self.paid_time_off.id,
             'request_date_from': date(2020, 3, 29),
+            'date_from': datetime(2020, 3, 29, 7, 0, 0),
             'request_date_to': date(2020, 4, 1),
+            'date_to': datetime(2020, 4, 1, 19, 0, 0),
             'number_of_days': 3,
         } for employee in employees[0:15]])
         leaves._compute_date_from_to()
