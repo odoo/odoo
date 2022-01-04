@@ -3741,7 +3741,8 @@ class AccountMoveLine(models.Model):
             if line.currency_id == line.move_id.company_id.currency_id:
                 line.amount_currency = line.balance
             else:
-                continue
+                company = line.move_id.company_id
+                line.amount_currency = line.company_currency_id._convert(line.balance, line.currency_id, company, line.move_id.date or fields.Date.context_today(line))
             if not line.move_id.is_invoice(include_receipts=True):
                 continue
             line.update(line._get_fields_onchange_balance())
