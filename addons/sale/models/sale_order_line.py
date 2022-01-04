@@ -629,6 +629,8 @@ class SaleOrderLine(models.Model):
             if not line.product_id:
                 line.product_custom_attribute_value_ids = False
                 continue
+            if not line.product_custom_attribute_value_ids:
+                continue
             valid_values = line.product_id.product_tmpl_id.valid_product_template_attribute_line_ids.product_template_value_ids
             # remove the is_custom values that don't belong to this template
             for pacv in line.product_custom_attribute_value_ids:
@@ -640,6 +642,8 @@ class SaleOrderLine(models.Model):
         for line in self:
             if not line.product_id:
                 line.product_no_variant_attribute_value_ids = False
+                continue
+            if not line.product_no_variant_attribute_value_ids:
                 continue
             valid_values = line.product_id.product_tmpl_id.valid_product_template_attribute_line_ids.product_template_value_ids
             # remove the no_variant attributes that don't belong to this template
