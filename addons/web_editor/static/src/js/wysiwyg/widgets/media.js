@@ -1302,6 +1302,34 @@ var VideoWidget = MediaWidget.extend({
             '</div>'
         );
     },
+    /**
+     * Creates a video node according to the given URL and options. If not
+     * possible, returns an error code.
+     *
+     * @param {string} url
+     * @param {Object} options
+     * @returns {Object}
+     *          $video -> the created video jQuery node
+     *          type -> the type of the created video
+     *          errorCode -> if defined, either '0' for invalid URL or '1' for
+     *              unsupported video provider
+     */
+    createVideoNode: async function (url, options) {
+        options = options || {};
+        const videoData = await this._getVideoURLData(url, options);
+        if (videoData.error) {
+            return {errorCode: 0};
+        }
+        if (!videoData.platform) {
+            return {errorCode: 1};
+        }
+        const $video = $('<iframe>').width(1280).height(720)
+            .attr('frameborder', 0)
+            .attr('src', videoData.embed_url)
+            .addClass('o_video_dialog_iframe');
+
+        return {$video: $video, platform: videoData.platform};
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -1324,35 +1352,6 @@ var VideoWidget = MediaWidget.extend({
             this.media.className = this.media.className.replace(allVideoClasses, ' ');
             this.media.innerHTML = '';
         }
-    },
-    /**
-     * Creates a video node according to the given URL and options. If not
-     * possible, returns an error code.
-     *
-     * @private
-     * @param {string} url
-     * @param {Object} options
-     * @returns {Object}
-     *          $video -> the created video jQuery node
-     *          type -> the type of the created video
-     *          errorCode -> if defined, either '0' for invalid URL or '1' for
-     *              unsupported video provider
-     */
-    _createVideoNode: async function (url, options) {
-        options = options || {};
-        const videoData = await this._getVideoURLData(url, options);
-        if (videoData.error) {
-            return {errorCode: 0};
-        }
-        if (!videoData.platform) {
-            return {errorCode: 1};
-        }
-        const $video = $('<iframe>').width(1280).height(720)
-            .attr('frameborder', 0)
-            .attr('src', videoData.embed_url)
-            .addClass('o_video_dialog_iframe');
-
-        return {$video: $video, platform: videoData.platform};
     },
     /**
      * Updates the video preview according to video code and enabled options.
@@ -1379,7 +1378,7 @@ var VideoWidget = MediaWidget.extend({
         }
         var url = embedMatch ? embedMatch[1] : code;
 
-        const query = await this._createVideoNode(url, {
+        const query = await this.createVideoNode(url, {
             'autoplay': this.isForBgVideo || this.$('input#o_video_autoplay').is(':checked'),
             'hide_controls': this.isForBgVideo || this.$('input#o_video_hide_controls').is(':checked'),
             'loop': this.isForBgVideo || this.$('input#o_video_loop').is(':checked'),
