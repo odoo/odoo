@@ -31,6 +31,11 @@ class SaleOrder(models.Model):
     @api.depends('company_id')
     def _compute_sale_order_template_id(self):
         for order in self:
+            if order.state != 'draft':
+                # Do NOT update existing SO's template and dependent fields
+                # Especially when installing sale_management in a db
+                # already containing SO records
+                continue
             order.sale_order_template_id = order.company_id.sale_order_template_id.id
 
     @api.depends('partner_id', 'sale_order_template_id')

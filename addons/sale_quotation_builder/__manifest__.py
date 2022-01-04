@@ -18,4 +18,5 @@
     ],
     'installable': True,
     'license': 'LGPL-3',
+    'pre_init_hook': '_pre_init_sale_quotation_builder',
 }
