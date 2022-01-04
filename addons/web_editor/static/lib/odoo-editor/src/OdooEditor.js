@@ -199,6 +199,7 @@ export class OdooEditor extends EventTarget {
                 isHintBlacklisted: () => false,
                 filterMutationRecords: (records) => records,
                 _t: string => string,
+                allowCommandVideo: true,
             },
             options,
         );
@@ -3036,7 +3037,7 @@ export class OdooEditor extends EventTarget {
                                 },
                             ].concat(baseEmbedCommand),
                         });
-                    } else if (youtubeUrl) {
+                    } else if (this.options.allowCommandVideo && youtubeUrl) {
                         const stepIndexBeforeInsert = this._historySteps.length - 1;
                         this.execCommand('insertText', splitAroundUrl[i]);
                         this.commandBar.open({
