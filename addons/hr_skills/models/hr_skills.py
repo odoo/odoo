@@ -14,6 +14,11 @@ class Skill(models.Model):
     sequence = fields.Integer(default=10)
     skill_type_id = fields.Many2one('hr.skill.type', ondelete='cascade')
 
+    def name_get(self):
+        if not self._context.get('from_skill_dropdown'):
+            return super().name_get()
+        return [(record.id, f"{record.name} ({record.skill_type_id.name})") for record in self]
+
 
 class EmployeeSkill(models.Model):
     _name = 'hr.employee.skill'
@@ -68,6 +73,11 @@ class SkillLevel(models.Model):
     name = fields.Char(required=True)
     level_progress = fields.Integer(string="Progress", help="Progress from zero knowledge (0%) to fully mastered (100%).")
     default_level = fields.Boolean(help="If checked, this level will be the default one selected when choosing this skill.")
+
+    def name_get(self):
+        if not self._context.get('from_skill_level_dropdown'):
+            return super().name_get()
+        return [(record.id, f"{record.name} ({record.level_progress}%)") for record in self]
 
     def create(self, vals_list):
         levels = super().create(vals_list)
