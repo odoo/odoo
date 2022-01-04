@@ -34,6 +34,7 @@ class AccountMove(models.Model):
         for record in self:  # record is of type account.move
             # Check needed values are filled
             record.company_id.vat
+            "PT" in record.company_id.country_id.code
             record.partner_id.country_id
             record.type in {'out_invoice', 'out_refund', 'out_receipt'}
 
@@ -52,27 +53,25 @@ class AccountMove(models.Model):
             qr_code_str += f"G:{(record.type + ' ' + record.display_name)[:60]}*"
             qr_code_str += f"H:0*"
             qr_code_str += f"I1:{record.company_id.country_id.code}*"
-            if "PT" in record.company_id.country_id.code:
-                base_vat_exempt = get_base_and_vat(record.amount_by_group, 'IVA 0%', record.currency_id)
-                base_vat_reduced = get_base_and_vat(record.amount_by_group, 'IVA 6%', record.currency_id)
-                base_vat_intermediate = get_base_and_vat(record.amount_by_group, 'IVA 13%', record.currency_id)
-                base_vat_normal = get_base_and_vat(record.amount_by_group, 'IVA 23%', record.currency_id)
-                if base_vat_exempt:
-                    qr_code_str += f"I2:{base_vat_exempt['base']}*"
-                if base_vat_reduced:
-                    qr_code_str += f"I3:{base_vat_reduced['base']}*"
-                    qr_code_str += f"I4:{base_vat_reduced['vat']}*"
-                if base_vat_intermediate:
-                    qr_code_str += f"I5:{base_vat_intermediate['base']}*"
-                    qr_code_str += f"I6:{base_vat_intermediate['vat']}*"
-                if base_vat_normal:
-                    qr_code_str += f"I7:{base_vat_normal['base']}*"
-                    qr_code_str += f"I8:{base_vat_normal['vat']}*"
-
-
-            # E.g.: A:509445535*B:123456823*C:BE*D:FT*E:N*F:20220103*G:FT 01P2022/1*H:0*I1:PT*I7:325.20*I8:74.80*N:74.80*O:400.00*P:0.00*Q:P0FE*R:2230
-            # E.g.: A:509445535*B:999999990*C:PT*D:FT*E:N*F:20220103*G:FT 01P2022/2*H:0*I1:PT*I7:2.03*I8:0.47*N:0.47*O:2.50*P:0.00*Q:ZYpH*R:2230
-            #A:False*B:999999990*C:US*D:FT*E:N*F:20220104*G:out_invoice INV/2022/0020*H:0*I1:PT
+            base_vat_exempt = get_base_and_vat(record.amount_by_group, 'IVA 0%', record.currency_id)
+            base_vat_reduced = get_base_and_vat(record.amount_by_group, 'IVA 6%', record.currency_id)
+            base_vat_intermediate = get_base_and_vat(record.amount_by_group, 'IVA 13%', record.currency_id)
+            base_vat_normal = get_base_and_vat(record.amount_by_group, 'IVA 23%', record.currency_id)
+            if base_vat_exempt:
+                qr_code_str += f"I2:{base_vat_exempt['base']}*"
+            if base_vat_reduced:
+                qr_code_str += f"I3:{base_vat_reduced['base']}*"
+                qr_code_str += f"I4:{base_vat_reduced['vat']}*"
+            if base_vat_intermediate:
+                qr_code_str += f"I5:{base_vat_intermediate['base']}*"
+                qr_code_str += f"I6:{base_vat_intermediate['vat']}*"
+            if base_vat_normal:
+                qr_code_str += f"I7:{base_vat_normal['base']}*"
+                qr_code_str += f"I8:{base_vat_normal['vat']}*"
+            qr_code_str += f"N:{record.amount_tax}*"
+            qr_code_str += f"O:{record.amount_total}*"
+            qr_code_str += f"Q:TODO*"
+            qr_code_str += f"R:TODO*"
 
             if qr_code_str[-1] == "*":
                 qr_code_str = qr_code_str[:-1]
