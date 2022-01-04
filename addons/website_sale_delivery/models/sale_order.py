@@ -77,7 +77,7 @@ class SaleOrder(models.Model):
         # searching on website_published will also search for available website (_search method on computed field)
         return self.env['delivery.carrier'].sudo().search([('website_published', '=', True)]).available_carriers(address)
 
-    def _cart_update(self, product_id=None, line_id=None, add_qty=0, set_qty=0, **kwargs):
+    def _cart_update(self, *args, **kwargs):
         """ Override to update carrier quotation if quantity changed """
 
         self._remove_delivery_line()
@@ -88,6 +88,4 @@ class SaleOrder(models.Model):
         #    then update your cart (the cart becomes uneditable)
         self.write({'carrier_id': False})
 
-        values = super(SaleOrder, self)._cart_update(product_id, line_id, add_qty, set_qty, **kwargs)
-
-        return values
+        return super(SaleOrder, self)._cart_update(*args, **kwargs)
