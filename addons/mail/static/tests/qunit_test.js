@@ -18,6 +18,10 @@ registerModel({
             inverse: 'qunitTest',
             isCausal: true,
         }),
+        notificationListView: one2one('NotificationListView', {
+            inverse: 'qunitTestOwner',
+            isCausal: true,
+        }),
         threadViewer: one2one('ThreadViewer', {
             inverse: 'qunitTest',
             isCausal: true,

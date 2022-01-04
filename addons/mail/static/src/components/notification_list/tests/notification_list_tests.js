@@ -1,12 +1,6 @@
 /** @odoo-module **/
 
-import {
-    afterEach,
-    afterNextRender,
-    beforeEach,
-    createRootMessagingComponent,
-    start,
-} from '@mail/utils/test_utils';
+import { afterEach, afterNextRender, beforeEach, start } from '@mail/utils/test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -15,23 +9,14 @@ QUnit.module('notification_list_tests.js', {
     beforeEach() {
         beforeEach(this);
 
-        /**
-         * @param {Object} param0
-         * @param {string} [param0.filter='all']
-         */
-        this.createNotificationListComponent = async ({ filter = 'all' }) => {
-            await createRootMessagingComponent(this, "NotificationList", {
-                props: { filter },
-                target: this.widget.el,
-            });
-        };
-
         this.start = async params => {
-            const { env, widget } = await start(Object.assign({}, params, {
+            const res = await start(Object.assign({}, params, {
                 data: this.data,
             }));
+            const { env, widget } = res;
             this.env = env;
             this.widget = widget;
+            return res;
         };
     },
     afterEach() {
@@ -60,8 +45,8 @@ QUnit.test('marked as read thread notifications are ordered by last message date
             res_id: 200,
         }
     );
-    await this.start();
-    await this.createNotificationListComponent({ filter: 'all' });
+    const { createNotificationListComponent } = await this.start();
+    await createNotificationListComponent({ filter: 'all' });
     assert.containsN(
         document.body,
         '.o_ThreadPreview',
@@ -102,8 +87,8 @@ QUnit.test('thread notifications are re-ordered on receiving a new message', asy
             res_id: 200,
         }
     );
-    await this.start();
-    await this.createNotificationListComponent({ filter: 'all' });
+    const { createNotificationListComponent } = await this.start();
+    await createNotificationListComponent({ filter: 'all' });
     assert.containsN(
         document.body,
         '.o_ThreadPreview',
