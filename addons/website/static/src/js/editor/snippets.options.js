@@ -2260,17 +2260,21 @@ options.registry.Box = options.Class.extend({
         if (type) {
             el.classList.add(shadowClass);
         }
+
+        let shadow = ''; // TODO in master this should be changed to 'none'
         document.body.appendChild(el);
         switch (type) {
             case 'outset': {
-                return $(el).css('box-shadow');
+                shadow = $(el).css('box-shadow');
+                break;
             }
             case 'inset': {
-                return $(el).css('box-shadow') + ' inset';
+                shadow = $(el).css('box-shadow') + ' inset';
+                break;
             }
         }
         el.remove();
-        return ''; // TODO in master this should be changed to 'none'
+        return shadow;
     }
 });
 
