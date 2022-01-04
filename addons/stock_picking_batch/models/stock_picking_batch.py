@@ -83,7 +83,7 @@ class StockPickingBatch(models.Model):
                 picking_to_backorder |= picking
             else:
                 picking.action_done()
-        if len(picking_without_qty_done) == len(pickings):
+        if pickings and len(picking_without_qty_done) == len(pickings):
             view = self.env.ref('stock.view_immediate_transfer')
             wiz = self.env['stock.immediate.transfer'].create({
                 'pick_ids': [(4, p.id) for p in picking_without_qty_done],
