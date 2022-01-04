@@ -46,10 +46,10 @@ registerModel({
         /**
          * @param {Object} param0
          * @param {MediaStream} param0.audioStream
-         * @param {boolean} param0.isMuted
+         * @param {boolean} param0.isSelfMuted
          * @param {boolean} param0.isTalking
          */
-        async setAudio({ audioStream, isMuted, isTalking }) {
+        async setAudio({ audioStream, isSelfMuted, isTalking }) {
             const audioElement = this.audioElement || new window.Audio();
             try {
                 audioElement.srcObject = audioStream;
@@ -72,7 +72,7 @@ registerModel({
             this.update({
                 audioElement,
                 audioStream,
-                isMuted,
+                isSelfMuted,
                 isTalking,
             });
             try {
@@ -173,7 +173,7 @@ registerModel({
                                 values: {
                                     is_camera_on: this.isCameraOn,
                                     is_deaf: this.isDeaf,
-                                    is_muted: this.isMuted,
+                                    is_muted: this.isSelfMuted,
                                     is_screen_sharing_on: this.isScreenSharingOn,
                                 },
                             },
@@ -351,7 +351,7 @@ registerModel({
          * means that they cannot send sound regardless of the push to talk or
          * voice activation (isTalking) state.
          */
-        isMuted: attr({
+        isSelfMuted: attr({
             default: false,
         }),
         /**

@@ -49,7 +49,7 @@
                             </t>
                         </span>
                         <div class="o_RtcCallParticipantCard_overlayTop">
-                            <t t-if="callParticipantCard.rtcSession.isMuted">
+                            <t t-if="callParticipantCard.rtcSession.isSelfMuted">
                                 <span class="o_RtcCallParticipantCard_overlayTopElement" t-att-class="{'o-isMinimized': callParticipantCard.isMinimized }" title="muted" aria-label="muted">
                                     <i class="fa fa-microphone-slash"/>
                                 </span>
