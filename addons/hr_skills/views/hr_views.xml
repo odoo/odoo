@@ -265,11 +265,15 @@
                             <field name="skill_id" options="{'no_open': True, 'no_create_edit': True}"
                                     context="{'default_skill_type_id': skill_type_id}"
                                     domain="[('skill_type_id', '=', skill_type_id)]"
-                                    attrs="{'readonly': [('skill_type_id', '=', False)]}"/>
-                            <label for="skill_level_id" />
-                            <div class="o_row">
+                                    attrs="{'invisible': [('skill_type_id', '=', False)]}"/>
+                            <label for="skill_level_id"
+                                    attrs="{'invisible': ['|', ('skill_id', '=', False), ('skill_type_id', '=', False)]}"/>
+                            <div class="o_row"
+                                    attrs="{'invisible': ['|', ('skill_id', '=', False), ('skill_type_id', '=', False)]}">
                                 <span class="col-4 pl-0">
-                                    <field name="skill_level_id" attrs="{'readonly': [('skill_id', '=', False)]}" />
+                                    <field name="skill_level_id"
+                                            attrs="{'readonly': [('skill_id', '=', False)]}"
+                                            context="{'from_skill_level_dropdown': True}" />
                                 </span>
                                 <span class="col-8">
                                     <field name="level_progress" widget="progressbar" class="o_hr_skills_progress" attrs="{'invisible': [('skill_level_id', '=', False)]}" />
