@@ -408,7 +408,7 @@ class Website(Home):
 
         def get_mapping_value(field_type, value, field_meta):
             if field_type == 'text':
-                if value:
+                if value and field_meta.get('truncate', True):
                     value = shorten(value, max_nb_chars, placeholder='...')
                 if field_meta.get('match') and value and term:
                     pattern = '|'.join(map(re.escape, term.split()))
