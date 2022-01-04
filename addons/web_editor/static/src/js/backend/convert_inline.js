@@ -495,6 +495,29 @@ function formatTables($editable) {
             parent.style.setProperty('height', '0');
         }
     }
+    // Align self and justify content don't work on table cells.
+    for (const cell of $editable.find('td')) {
+        const alignSelf = cell.style.alignSelf;
+        const justifyContent = cell.style.justifyContent;
+        if (alignSelf === 'start' || justifyContent === 'start' || justifyContent === 'flex-start') {
+            cell.style.verticalAlign = 'top';
+        } else if (alignSelf === 'center' || justifyContent === 'center') {
+            cell.style.verticalAlign = 'middle';
+        } else if (alignSelf === 'end' || justifyContent === 'end' || justifyContent === 'flex-end') {
+            cell.style.verticalAlign = 'bottom';
+        }
+    }
+    // Align items doesn't work on table rows.
+    for (const cell of $editable.find('tr')) {
+        const alignItems = cell.style.alignItems;
+        if (alignItems === 'flex-start') {
+            cell.style.verticalAlign = 'top';
+        } else if (alignItems === 'center') {
+            cell.style.verticalAlign = 'middle';
+        } else if (alignItems === 'flex-end' || alignItems === 'baseline') {
+            cell.style.verticalAlign = 'bottom';
+        }
+    }
 }
 /**
  * Parse through the given document's stylesheets, preprocess(*) them and return
