@@ -49,7 +49,7 @@
         <li><t t-esc="tracking[0]"/>: <t t-esc="tracking[1]"/> -&gt; <t t-esc="tracking[2]"/></li>
     </t>
 </ul>
-<div t-if="signature" t-out="signature" style="font-size: 13px;"/>
+<div t-if="email_add_signature and not is_html_empty(signature)" t-out="signature" style="font-size: 13px;"/>
 <p style="color: #555555; margin-top:32px;">
     Sent
     <span t-if="company.name">
@@ -177,12 +177,12 @@
                     <t t-esc="access_name"/>
                 </a>
             </div>
-            <t t-if="'user_id' in record and record.user_id and not record.env.user._is_superuser() and signature != ''">
+            <t t-if="email_add_signature and 'user_id' in record and record.user_id and not record.env.user._is_superuser() and not is_html_empty(record.user_id.sudo().signature)">
                 <div style="margin: 0px; padding: 0px; font-size:13px;">
                     Best regards,
                 </div>
                 <div>&amp;nbsp;</div>
-                <div t-if="record.user_id.sudo().signature" style="font-size: 13px;">
+                <div style="font-size: 13px;">
                     <div t-out="record.user_id.sudo().signature"/>
                 </div>
             </t>
