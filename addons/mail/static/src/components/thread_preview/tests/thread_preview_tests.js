@@ -1,12 +1,6 @@
 /** @odoo-module **/
 
-import {
-    afterEach,
-    afterNextRender,
-    beforeEach,
-    createRootMessagingComponent,
-    start,
-} from '@mail/utils/test_utils';
+import { afterEach, afterNextRender, beforeEach, start } from '@mail/utils/test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -15,19 +9,14 @@ QUnit.module('thread_preview_tests.js', {
     beforeEach() {
         beforeEach(this);
 
-        this.createThreadPreviewComponent = async props => {
-            await createRootMessagingComponent(this, "ThreadPreview", {
-                props,
-                target: this.widget.el,
-            });
-        };
-
         this.start = async params => {
-            const { env, widget } = await start(Object.assign({}, params, {
+            const res = await start(Object.assign({}, params, {
                 data: this.data,
             }));
+            const { env, widget } = res;
             this.env = env;
             this.widget = widget;
+            return res;
         };
     },
     afterEach() {
@@ -40,6 +29,7 @@ QUnit.test('mark as read', async function (assert) {
     this.data['mail.channel'].records.push({
         id: 11,
         message_unread_counter: 1,
+        seen_message_id: 99,
     });
     this.data['mail.message'].records.push({
         id: 100,
@@ -47,7 +37,7 @@ QUnit.test('mark as read', async function (assert) {
         res_id: 11,
     });
 
-    await this.start({
+    const { createMessagingMenuComponent } = await this.start({
         hasChatWindow: true,
         async mockRPC(route, args) {
             if (route.includes('set_last_seen_message')) {
@@ -56,11 +46,8 @@ QUnit.test('mark as read', async function (assert) {
             return this._super(...arguments);
         },
     });
-    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
-        id: 11,
-        model: 'mail.channel',
-    });
-    await this.createThreadPreviewComponent({ threadLocalId: thread.localId });
+    await createMessagingMenuComponent();
+    await afterNextRender(() => document.querySelector('.o_MessagingMenu_toggler').click());
     assert.containsOnce(
         document.body,
         '.o_ThreadPreview_markAsRead',

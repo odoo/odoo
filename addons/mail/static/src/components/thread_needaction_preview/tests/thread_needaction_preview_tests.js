@@ -1,12 +1,6 @@
 /** @odoo-module **/
 
-import {
-    afterEach,
-    afterNextRender,
-    beforeEach,
-    createRootMessagingComponent,
-    start,
-} from '@mail/utils/test_utils';
+import { afterEach, afterNextRender, beforeEach, start } from '@mail/utils/test_utils';
 
 import Bus from 'web.Bus';
 
@@ -16,13 +10,6 @@ QUnit.module('thread_needaction_preview', {}, function () {
 QUnit.module('thread_needaction_preview_tests.js', {
     beforeEach() {
         beforeEach(this);
-
-        this.createThreadNeedactionPreviewComponent = async props => {
-            await createRootMessagingComponent(this, "ThreadNeedactionPreview", {
-                props,
-                target: this.widget.el
-            });
-        };
 
         this.start = async params => {
             const res = await start(Object.assign({}, params, {

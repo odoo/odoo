@@ -24,17 +24,17 @@ export class NotificationGroup extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * @returns {mail.notification_group}
+     * @returns {mail.notification_group_view}
      */
-    get group() {
-        return this.messaging && this.messaging.models['mail.notification_group'].get(this.props.notificationGroupLocalId);
+    get notificationGroupView() {
+        return this.messaging && this.messaging.models['mail.notification_group_view'].get(this.props.localId);
     }
 
     /**
      * @returns {string|undefined}
      */
     image() {
-        if (this.group.notification_type === 'email') {
+        if (this.notificationGroupView.notificationGroup.notification_type === 'email') {
             return '/mail/static/src/img/smiley/mailfailure.jpg';
         }
     }
@@ -53,7 +53,7 @@ export class NotificationGroup extends Component {
             // handled in `_onClickMarkAsRead`
             return;
         }
-        this.group.openDocuments();
+        this.notificationGroupView.notificationGroup.openDocuments();
         if (!this.messaging.device.isMobile) {
             this.messaging.messagingMenu.close();
         }
@@ -64,7 +64,7 @@ export class NotificationGroup extends Component {
      * @param {MouseEvent} ev
      */
     _onClickMarkAsRead(ev) {
-        this.group.openCancelAction();
+        this.notificationGroupView.notificationGroup.openCancelAction();
         if (!this.messaging.device.isMobile) {
             this.messaging.messagingMenu.close();
         }
@@ -74,7 +74,7 @@ export class NotificationGroup extends Component {
 
 Object.assign(NotificationGroup, {
     props: {
-        notificationGroupLocalId: String,
+        localId: String,
     },
     template: 'mail.NotificationGroup',
 });

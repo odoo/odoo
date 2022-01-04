@@ -18,6 +18,10 @@ registerModel({
             inverse: 'qunitTest',
             isCausal: true,
         }),
+        notificationListView: one2one('mail.notification_list_view', {
+            inverse: 'qunitTestOwner',
+            isCausal: true,
+        }),
         threadViewer: one2one('mail.thread_viewer', {
             inverse: 'qunitTest',
             isCausal: true,
