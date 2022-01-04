@@ -23,6 +23,10 @@
         If you have any questions, please do not hesitate to contact us.
         <br/><br/>
         Best regards,
+        <t t-if="not is_html_empty(object.user_id.signature)">
+            <br />
+            <t t-out="object.user_id.signature or ''">--<br/>Mitchell Admin</t>
+        </t>
     </p>
 </div></field>
             <field name="report_template" ref="report_purchase_quotation"/>
@@ -56,6 +60,11 @@
             <br/><br/>
             Could you please acknowledge the receipt of this order?
         </t>
+        <t t-if="not is_html_empty(object.user_id.signature)">
+            <br />
+            <t t-out="object.user_id.signature or ''">--<br/>Mitchell Admin</t>
+        </t>
+        <br/><br/>
     </p>
 </div></field>
             <field name="report_template" ref="action_report_purchase_order"/>
@@ -90,6 +99,11 @@
             <strong>undefined</strong>.
         </t>
         Could you please confirm it will be delivered on time?
+        <t t-if="not is_html_empty(object.user_id.signature)">
+            <br />
+            <t t-out="object.user_id.signature or ''">--<br/>Mitchell Admin</t>
+        </t>
+        <br/><br/>
     </p>
 </div></field>
             <field name="report_template" ref="action_report_purchase_order"/>
