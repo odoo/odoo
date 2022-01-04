@@ -200,6 +200,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
             iframeCssAssets: this.nodeOptions.cssEdit,
             snippets: this.nodeOptions.snippets,
             value: this.value,
+            allowCommandVideo: Boolean(this.nodeOptions.allowCommandVideo) && (!this.field.sanitize || !this.field.sanitize_tags),
             mediaModalParams: {
                 noVideos: 'noVideos' in this.nodeOptions ? this.nodeOptions.noVideos : true,
             },
