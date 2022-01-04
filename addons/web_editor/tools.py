@@ -18,9 +18,9 @@ valid_url_regex = r'^(http://|https://|//)[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{
 player_regexes = {
     'youtube': r'^(?:(?:https?:)?//)?(?:www\.)?(?:youtu\.be/|youtube(-nocookie)?\.com/(?:embed/|v/|watch\?v=|watch\?.+&v=))((?:\w|-){11})\S*$',
     'vimeo': r'//(player.)?vimeo.com/([a-z]*/)*([0-9]{6,11})[?]?.*',
-    'dailymotion': r'(?:.+dailymotion.com/(video|hub|embed/video|embed)|dai\.ly)/([^_?]+)[^#]*(#video=([^_&]+))?',
+    'dailymotion': r'(https?:\/\/)(www\.)?(dailymotion\.com\/(embed\/video\/|embed\/|video\/|hub\/.*#video=)|dai\.ly\/)(?P<id>[A-Za-z0-9]{6,7})',
     'instagram': r'(?:(.*)instagram.com|instagr\.am)/p/(.[a-zA-Z0-9-_\.]*)',
-    'youku': r'(.*).youku\.com/(v_show/id_|embed/)(.+)',
+    'youku': r'(?:(https?:\/\/)?(v\.youku\.com/v_show/id_|player\.youku\.com/player\.php/sid/|player\.youku\.com/embed/|cloud\.youku\.com/services/sharev\?vid=|video\.tudou\.com/v/)|youku:)(?P<id>[A-Za-z0-9]+)(?:\.html|/v\.swf|)',
 }
 
 
@@ -40,16 +40,13 @@ def get_video_source_data(video_url):
             return ('vimeo', vimeo_match[3], vimeo_match)
         dailymotion_match = re.search(player_regexes['dailymotion'], video_url)
         if dailymotion_match:
-            return ('dailymotion', dailymotion_match[2], dailymotion_match)
+            return ('dailymotion', dailymotion_match.group("id"), dailymotion_match)
         instagram_match = re.search(player_regexes['instagram'], video_url)
         if instagram_match:
             return ('instagram', instagram_match[2], instagram_match)
         youku_match = re.search(player_regexes['youku'], video_url)
         if youku_match:
-            youku_link = youku_match[3]
-            if '.html?' in youku_link:
-                youku_link = youku_link.split('.html?')[0]
-            return ('youku', youku_link, youku_match)
+            return ('youku', youku_match.group("id"), youku_match)
     return None
 
 
