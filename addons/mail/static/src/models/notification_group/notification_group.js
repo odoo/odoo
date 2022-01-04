@@ -127,6 +127,10 @@ registerModel({
         notifications: one2many('Notification', {
             inverse: 'notificationGroup',
         }),
+        notificationGroupViews: one2many('NotificationGroupView', {
+            inverse: 'notificationGroup',
+            isCausal: true,
+        }),
         res_id: attr({
             readonly: true,
         }),

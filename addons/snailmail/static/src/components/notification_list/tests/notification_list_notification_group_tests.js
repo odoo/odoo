@@ -1,11 +1,6 @@
 /** @odoo-module **/
 
-import {
-    afterEach,
-    beforeEach,
-    createRootMessagingComponent,
-    start,
-} from '@mail/utils/test_utils';
+import { afterEach, beforeEach, start } from '@mail/utils/test_utils';
 
 import Bus from 'web.Bus';
 
@@ -16,23 +11,14 @@ QUnit.module('notification_list_notification_group_tests.js', {
     beforeEach() {
         beforeEach(this);
 
-        /**
-         * @param {Object} param0
-         * @param {string} [param0.filter='all']
-         */
-        this.createNotificationListComponent = async ({ filter = 'all' } = {}) => {
-            await createRootMessagingComponent(this, "NotificationList", {
-                props: { filter },
-                target: this.widget.el,
-            });
-        };
-
         this.start = async params => {
-            const { env, widget } = await start(Object.assign({}, params, {
+            const res = await start(Object.assign({}, params, {
                 data: this.data,
             }));
+            const { env, widget } = res;
             this.env = env;
             this.widget = widget;
+            return res;
         };
     },
     afterEach() {
@@ -75,8 +61,8 @@ QUnit.test('mark as read', async function (assert) {
             "action should have the group notification length as unread_counter"
         );
     });
-    await this.start({ env: { bus } });
-    await this.createNotificationListComponent();
+    const { createNotificationListComponent } = await this.start({ env: { bus } });
+    await createNotificationListComponent();
 
     assert.containsOnce(
         document.body,
@@ -126,8 +112,8 @@ QUnit.test('notifications grouped by notification_type', async function (assert)
             notification_type: 'email', // different type from first failure
         }
     );
-    await this.start();
-    await this.createNotificationListComponent();
+    const { createNotificationListComponent } = await this.start();
+    await createNotificationListComponent();
 
     assert.containsN(
         document.body,
@@ -266,8 +252,8 @@ QUnit.test('grouped notifications by document model', async function (assert) {
         );
     });
 
-    await this.start({ env: { bus } });
-    await this.createNotificationListComponent();
+    const { createNotificationListComponent } = await this.start({ env: { bus } });
+    await createNotificationListComponent();
 
     assert.containsOnce(
         document.body,

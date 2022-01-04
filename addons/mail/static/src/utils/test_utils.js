@@ -472,6 +472,19 @@ function getCreateMessagingMenuComponent({ components, env, widget }) {
     };
 }
 
+function getCreateNotificationListComponent({ components, env, modelManager, widget }) {
+    return async function createNotificationListComponent({ filter = 'all' } = {}) {
+        const notificationListView = modelManager.messaging.models['NotificationListView'].create({
+            filter,
+            qunitTestOwner: insertAndReplace(),
+        });
+        await createRootMessagingComponent({ components, env }, "NotificationList", {
+            props: { localId: notificationListView.localId },
+            target: widget.el,
+        });
+    };
+}
+
 function getCreateThreadViewComponent({ afterEvent, components, env, widget }) {
     return async function createThreadViewComponent(threadView, otherProps = {}, { isFixedSize = false, waitUntilMessagesLoaded = true } = {}) {
         let target;
@@ -830,6 +843,7 @@ async function start(param0 = {}) {
         createComposerSuggestionComponent: getCreateComposerSuggestionComponent({ components, env: testEnv, modelManager, widget }),
         createMessageComponent: getCreateMessageComponent({ components, env: testEnv, modelManager, widget }),
         createMessagingMenuComponent: getCreateMessagingMenuComponent({ components, env: testEnv, widget }),
+        createNotificationListComponent: getCreateNotificationListComponent({ components, env: testEnv, modelManager, widget }),
         createThreadViewComponent: getCreateThreadViewComponent({ afterEvent, components, env: testEnv, widget }),
         openDiscuss,
     };

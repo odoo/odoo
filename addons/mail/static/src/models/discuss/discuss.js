@@ -300,6 +300,13 @@ registerModel({
             return clear();
         },
         /**
+         * @private
+         * @returns {FieldCommand}
+         */
+        _computeNotificationListView() {
+            return (this.messaging.device.isMobile && this.activeMobileNavbarTabId !== 'mailbox') ? insertAndReplace() : clear();
+        },
+        /**
          * Only pinned threads are allowed in discuss.
          *
          * @private
@@ -400,6 +407,11 @@ registerModel({
          */
         menu_id: attr({
             default: null,
+        }),
+        notificationListView: one2one('NotificationListView', {
+            compute: '_computeNotificationListView',
+            inverse: 'discussOwner',
+            isCausal: true,
         }),
         /**
          * The navbar view on the discuss app when in mobile and when not

@@ -62,7 +62,7 @@ export class NotificationRequest extends Component {
 }
 
 Object.assign(NotificationRequest, {
-    props: {},
+    props: { localId: String },
     template: 'mail.NotificationRequest',
 });
 

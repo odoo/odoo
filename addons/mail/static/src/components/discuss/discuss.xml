@@ -71,10 +71,9 @@
                     New Channel
                 </button>
             </t>
-            <NotificationList
-                className="'o_Discuss_notificationList'"
-                filter="discuss.activeMobileNavbarTabId"
-            />
+        </t>
+        <t t-if="discuss.notificationListView">
+            <NotificationList className="'o_Discuss_notificationList'" localId="discuss.notificationListView.localId"/>
         </t>
         <t t-if="discuss.mobileMessagingNavbarView">
             <MobileMessagingNavbar

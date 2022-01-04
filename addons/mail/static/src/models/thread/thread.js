@@ -2421,6 +2421,14 @@ registerModel({
         todayActivities: one2many('Activity', {
             compute: '_computeTodayActivities',
         }),
+        threadNeedactionPreviewViews: one2many('ThreadNeedactionPreviewView', {
+            inverse: 'thread',
+            isCausal: true,
+        }),
+        threadPreviewViews: one2many('ThreadPreviewView', {
+            inverse: 'thread',
+            isCausal: true,
+        }),
         /**
          * Members that are currently typing something in the composer of this
          * thread, including current partner.
