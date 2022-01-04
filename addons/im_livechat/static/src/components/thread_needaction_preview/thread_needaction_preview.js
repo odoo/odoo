@@ -16,7 +16,7 @@ patch(components.ThreadNeedactionPreview.prototype, 'thread_needaction_preview',
      * @override
      */
     image(...args) {
-        if (this.thread.channel_type === 'livechat') {
+        if (this.threadNeedactionPreviewView.thread.channel_type === 'livechat') {
             return '/mail/static/src/img/smiley/avatar.jpg';
         }
         return this._super(...args);

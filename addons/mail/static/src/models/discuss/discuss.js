@@ -286,6 +286,13 @@ registerModel({
             return this.isAddingChat;
         },
         /**
+         * @private
+         * @returns {FieldCommand}
+         */
+        _computeNotificationListView() {
+            return (this.messaging.device.isMobile && this.activeMobileNavbarTabId !== 'mailbox') ? insertAndReplace() : clear();
+        },
+        /**
          * Only pinned threads are allowed in discuss.
          *
          * @private
@@ -386,6 +393,11 @@ registerModel({
          */
         menu_id: attr({
             default: null,
+        }),
+        notificationListView: one2one('mail.notification_list_view', {
+            compute: '_computeNotificationListView',
+            inverse: 'discussOwner',
+            isCausal: true,
         }),
         /**
          * Quick search input value in the discuss sidebar (desktop). Useful

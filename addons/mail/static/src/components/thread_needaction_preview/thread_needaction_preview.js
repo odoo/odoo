@@ -31,14 +31,14 @@ export class ThreadNeedactionPreview extends Component {
      * @returns {string}
      */
     image() {
-        if (this.thread.moduleIcon) {
-            return this.thread.moduleIcon;
+        if (this.threadNeedactionPreviewView.thread.moduleIcon) {
+            return this.threadNeedactionPreviewView.thread.moduleIcon;
         }
-        if (this.thread.correspondent) {
-            return this.thread.correspondent.avatarUrl;
+        if (this.threadNeedactionPreviewView.thread.correspondent) {
+            return this.threadNeedactionPreviewView.thread.correspondent.avatarUrl;
         }
-        if (this.thread.model === 'mail.channel') {
-            return `/web/image/mail.channel/${this.thread.id}/avatar_128?unique=${this.thread.avatarCacheKey}`;
+        if (this.threadNeedactionPreviewView.thread.model === 'mail.channel') {
+            return `/web/image/mail.channel/${this.threadNeedactionPreviewView.thread.id}/avatar_128?unique=${this.threadNeedactionPreviewView.thread.avatarCacheKey}`;
         }
         return '/mail/static/src/img/smiley/avatar.jpg';
     }
@@ -49,17 +49,17 @@ export class ThreadNeedactionPreview extends Component {
      * @returns {string}
      */
     get inlineLastNeedactionMessageAsOriginThreadBody() {
-        if (!this.thread.lastNeedactionMessageAsOriginThread) {
+        if (!this.threadNeedactionPreviewView.thread.lastNeedactionMessageAsOriginThread) {
             return '';
         }
-        return mailUtils.htmlToTextContentInline(this.thread.lastNeedactionMessageAsOriginThread.prettyBody);
+        return mailUtils.htmlToTextContentInline(this.threadNeedactionPreviewView.thread.lastNeedactionMessageAsOriginThread.prettyBody);
     }
 
     /**
-     * @returns {mail.thread}
+     * @returns {mail.thread_needaction_preview_view}
      */
-    get thread() {
-        return this.messaging && this.messaging.models['mail.thread'].get(this.props.threadLocalId);
+    get threadNeedactionPreviewView() {
+        return this.messaging && this.messaging.models['mail.thread_needaction_preview_view'].get(this.props.localId);
     }
 
     //--------------------------------------------------------------------------
@@ -76,7 +76,7 @@ export class ThreadNeedactionPreview extends Component {
             // handled in `_onClickMarkAsRead`
             return;
         }
-        this.thread.open();
+        this.threadNeedactionPreviewView.thread.open();
         if (!this.messaging.device.isMobile) {
             this.messaging.messagingMenu.close();
         }
@@ -88,17 +88,15 @@ export class ThreadNeedactionPreview extends Component {
      */
     _onClickMarkAsRead(ev) {
         this.messaging.models['mail.message'].markAllAsRead([
-            ['model', '=', this.thread.model],
-            ['res_id', '=', this.thread.id],
+            ['model', '=', this.threadNeedactionPreviewView.thread.model],
+            ['res_id', '=', this.threadNeedactionPreviewView.thread.id],
         ]);
     }
 
 }
 
 Object.assign(ThreadNeedactionPreview, {
-    props: {
-        threadLocalId: String,
-    },
+    props: { localId: String },
     template: 'mail.ThreadNeedactionPreview',
 });
 

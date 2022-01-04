@@ -1,7 +1,8 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, one2many } from '@mail/model/model_field';
+import { attr, one2many, one2one } from '@mail/model/model_field';
+import { clear, insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'mail.messaging_menu',
@@ -48,6 +49,13 @@ registerModel({
             const notificationPemissionCounter = this.messaging.isNotificationPermissionDefault ? 1 : 0;
             return inboxCounter + unreadChannelsCounter + notificationGroupsCounter + notificationPemissionCounter;
         },
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
+        _computeNotificationListView() {
+            return this.isOpen ? insertAndReplace() : clear();
+        },
     },
     fields: {
         /**
@@ -77,10 +85,15 @@ registerModel({
         isOpen: attr({
             default: false,
         }),
+        notificationListView: one2one('mail.notification_list_view', {
+            compute: '_computeNotificationListView',
+            inverse: 'messagingMenuOwner',
+            isCausal: true,
+        }),
         /**
          * States all the pinned channels that have unread messages.
          */
-         pinnedAndUnreadChannels: one2many('mail.thread', {
+        pinnedAndUnreadChannels: one2many('mail.thread', {
             inverse: 'messagingMenuAsPinnedAndUnreadChannel',
             readonly: true,
         }),

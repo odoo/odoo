@@ -3,7 +3,7 @@
 
     <t t-name="mail.NotificationGroup" owl="1">
         <div class="o_NotificationGroup" t-attf-class="{{ className }}" t-on-click="_onClick" t-ref="root">
-            <t t-if="group">
+            <t t-if="notificationGroupView">
                 <div class="o_NotificationGroup_sidebar">
                     <div class="o_NotificationGroup_imageContainer o_NotificationGroup_sidebarItem">
                         <img class="o_NotificationGroup_image rounded-circle" t-att-src="image()" alt="Message delivery failure image"/>
@@ -12,21 +12,21 @@
                 <div class="o_NotificationGroup_content">
                     <div class="o_NotificationGroup_header">
                         <span class="o_NotificationGroup_name text-truncate">
-                            <t t-esc="group.res_model_name"/>
+                            <t t-esc="notificationGroupView.notificationGroup.res_model_name"/>
                         </span>
                         <span class="o_NotificationGroup_counter">
-                            (<t t-esc="group.notifications.length"/>)
+                            (<t t-esc="notificationGroupView.notificationGroup.notifications.length"/>)
                         </span>
                         <span class="o-autogrow"/>
-                        <t t-if="group.date">
+                        <t t-if="notificationGroupView.notificationGroup.date">
                             <span class="o_NotificationGroup_date">
-                                <t t-esc="group.date.fromNow()"/>
+                                <t t-esc="notificationGroupView.notificationGroup.date.fromNow()"/>
                             </span>
                         </t>
                     </div>
                     <div class="o_NotificationGroup_core">
                         <span class="o_NotificationGroup_coreItem o_NotificationGroup_inlineText text-truncate">
-                            <t t-if="group.notification_type === 'email'">
+                            <t t-if="notificationGroupView.notificationGroup.notification_type === 'email'">
                                 An error occurred when sending an email.
                             </t>
                         </span>

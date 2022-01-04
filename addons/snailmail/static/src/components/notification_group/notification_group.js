@@ -14,7 +14,7 @@ patch(NotificationGroup.prototype, 'snailmail/static/src/components/notification
      * @override
      */
     image() {
-        if (this.group.notification_type === 'snail') {
+        if (this.notificationGroupView.notificationGroup.notification_type === 'snail') {
             return '/snailmail/static/img/snailmail_failure.png';
         }
         return this._super(...arguments);

@@ -6,18 +6,18 @@
             The preview template is used by the discuss in mobile, and by the systray
             menu in order to show preview of threads.
         -->
-        <div class="o_ThreadNeedactionPreview" t-attf-class="{{ className }}" t-on-click="_onClick" t-att-data-thread-local-id="thread ? thread.localId : undefined" t-ref="root">
-            <t t-if="thread">
+        <div class="o_ThreadNeedactionPreview" t-attf-class="{{ className }}" t-on-click="_onClick" t-att-data-thread-local-id="threadNeedactionPreviewView ? threadNeedactionPreviewView.thread.localId : undefined" t-ref="root">
+            <t t-if="threadNeedactionPreviewView">
                 <div class="o_ThreadNeedactionPreview_sidebar">
                     <div class="o_ThreadNeedactionPreview_imageContainer o_ThreadNeedactionPreview_sidebarItem">
                         <img class="o_ThreadNeedactionPreview_image" t-att-src="image()" alt="Thread Image"/>
-                        <t t-if="thread.correspondent and thread.correspondent.im_status">
+                        <t t-if="threadNeedactionPreviewView.thread.correspondent and threadNeedactionPreviewView.thread.correspondent.im_status">
                             <PartnerImStatusIcon
                                 className="'o_ThreadNeedactionPreview_partnerImStatusIcon'"
                                 classNameObj="{
                                     'o-mobile': messaging.device.isMobile,
                                 }"
-                                partnerLocalId="thread.correspondent.localId"
+                                partnerLocalId="threadNeedactionPreviewView.thread.correspondent.localId"
                             />
                         </t>
                     </div>
@@ -25,24 +25,24 @@
                 <div class="o_ThreadNeedactionPreview_content">
                     <div class="o_ThreadNeedactionPreview_header">
                         <span class="o_ThreadNeedactionPreview_name text-truncate" t-att-class="{ 'o-mobile': messaging.device.isMobile }">
-                            <t t-esc="thread.displayName"/>
+                            <t t-esc="threadNeedactionPreviewView.thread.displayName"/>
                         </span>
                         <span class="o_ThreadNeedactionPreview_counter">
-                            (<t t-esc="thread.needactionMessagesAsOriginThread.length"/>)
+                            (<t t-esc="threadNeedactionPreviewView.thread.needactionMessagesAsOriginThread.length"/>)
                         </span>
                         <span class="o-autogrow"/>
-                        <t t-if="thread.lastNeedactionMessageAsOriginThread and thread.lastNeedactionMessageAsOriginThread.date">
+                        <t t-if="threadNeedactionPreviewView.thread.lastNeedactionMessageAsOriginThread and threadNeedactionPreviewView.thread.lastNeedactionMessageAsOriginThread.date">
                             <span class="o_ThreadNeedactionPreview_date">
-                                <t t-esc="thread.lastNeedactionMessageAsOriginThread.date.fromNow()"/>
+                                <t t-esc="threadNeedactionPreviewView.thread.lastNeedactionMessageAsOriginThread.date.fromNow()"/>
                             </span>
                         </t>
                     </div>
                     <div class="o_ThreadNeedactionPreview_core">
                         <span class="o_ThreadNeedactionPreview_coreItem o_ThreadNeedactionPreview_inlineText text-truncate" t-att-class="{ 'o-empty': inlineLastNeedactionMessageAsOriginThreadBody.length === 0 }">
-                            <t t-if="thread.lastNeedactionMessageAsOriginThread and thread.lastNeedactionMessageAsOriginThread.author">
+                            <t t-if="threadNeedactionPreviewView.thread.lastNeedactionMessageAsOriginThread and threadNeedactionPreviewView.thread.lastNeedactionMessageAsOriginThread.author">
                                 <MessageAuthorPrefix
-                                    messageLocalId="thread.lastNeedactionMessageAsOriginThread.localId"
-                                    threadLocalId="thread.localId"
+                                    messageLocalId="threadNeedactionPreviewView.thread.lastNeedactionMessageAsOriginThread.localId"
+                                    threadLocalId="threadNeedactionPreviewView.thread.localId"
                                 />
                             </t>
                             <t t-esc="inlineLastNeedactionMessageAsOriginThreadBody"/>
