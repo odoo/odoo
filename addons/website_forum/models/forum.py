@@ -275,7 +275,7 @@ class Forum(models.Model):
         fetch_fields = ['id', 'name']
         mapping = {
             'name': {'name': 'name', 'type': 'text', 'match': True},
-            'website_url': {'name': 'website_url', 'type': 'text'},
+            'website_url': {'name': 'website_url', 'type': 'text', 'truncate': False},
         }
         if with_description:
             search_fields.append('description')
@@ -982,7 +982,7 @@ class Post(models.Model):
         fetch_fields = ['id', 'name']
         mapping = {
             'name': {'name': 'name', 'type': 'text', 'match': True},
-            'website_url': {'name': 'website_url', 'type': 'text'},
+            'website_url': {'name': 'website_url', 'type': 'text', 'truncate': False},
         }
 
         domain = website.website_domain()
