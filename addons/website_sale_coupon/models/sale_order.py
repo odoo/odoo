@@ -85,8 +85,8 @@ class SaleOrder(models.Model):
             request.session.pop('error_promo_code')
         return error
 
-    def _cart_update(self, product_id=None, line_id=None, add_qty=0, set_qty=0, **kwargs):
-        res = super(SaleOrder, self)._cart_update(product_id=product_id, line_id=line_id, add_qty=add_qty, set_qty=set_qty, **kwargs)
+    def _cart_update(self, *args, **kwargs):
+        res = super()._cart_update(*args, **kwargs)
         self.recompute_coupon_lines()
         return res
 
