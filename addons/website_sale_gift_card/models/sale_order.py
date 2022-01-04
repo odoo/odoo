@@ -18,8 +18,8 @@ class SaleOrder(models.Model):
             gift_card_payment_lines = order.website_order_line.filtered('gift_card_id')
             order.cart_quantity -= int(sum(gift_card_payment_lines.mapped('product_uom_qty')))
 
-    def _cart_update(self, product_id=None, line_id=None, add_qty=0, set_qty=0, **kwargs):
-        res = super()._cart_update(product_id=product_id, line_id=line_id, add_qty=add_qty, set_qty=set_qty, **kwargs)
+    def _cart_update(self, *args, **kwargs):
+        res = super()._cart_update(*args, **kwargs)
         self._recompute_gift_card_lines()
         return res
 
