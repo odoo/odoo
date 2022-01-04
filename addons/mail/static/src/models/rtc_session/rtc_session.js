@@ -131,23 +131,10 @@ registerModel({
             if (!this.rtc) {
                 return;
             }
-            this.updateAndBroadcast({
-                isDeaf: !this.isDeaf,
-            });
-            for (const session of this.messaging.models['RtcSession'].all()) {
-                if (!session.audioElement) {
-                    continue;
-                }
-                session.audioElement.muted = this.isDeaf;
-            }
-            if (this.channel.rtc) {
-                /**
-                 * Ensures that the state of the microphone matches the deaf state
-                 * and notifies peers.
-                 */
-                await this.async(() => this.channel.rtc.toggleMicrophone({
-                    requestAudioDevice: false,
-                }));
+            if (this.rtc.currentRtcSession.isDeaf) {
+                await this.rtc.undeafen();
+            } else {
+                await this.rtc.deafen();
             }
         },
         /**
@@ -197,6 +184,13 @@ registerModel({
             if (this.guest) {
                 return `/mail/channel/${this.channel.id}/guest/${this.guest.id}/avatar_128?unique=${this.guest.name}`;
             }
+        },
+        /**
+         * @private
+         * @returns {boolean}
+         */
+        _computeIsMute() {
+            return this.isSelfMuted || this.isDeaf;
         },
         /**
          * @private
@@ -352,6 +346,13 @@ registerModel({
          * voice activation (isTalking) state.
          */
         isSelfMuted: attr({
+            default: false,
+        }),
+        /**
+         * Determine whether current session is unable to speak.
+         */
+        isMute: attr({
+            compute: '_computeIsMute',
             default: false,
         }),
         /**
