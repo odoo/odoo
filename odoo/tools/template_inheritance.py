@@ -17,10 +17,10 @@ def add_text_before(node, text):
         return
     prev = node.getprevious()
     if prev is not None:
-        prev.tail = (prev.tail or "") + text
+        prev.tail = (prev.tail or "").rstrip() + text
     else:
         parent = node.getparent()
-        parent.text = (parent.text or "") + text
+        parent.text = (parent.text or "").rstrip() + text
 
 
 def add_text_inside(node, text):
@@ -28,7 +28,7 @@ def add_text_inside(node, text):
     if text is None:
         return
     if len(node):
-        node[-1].tail = (node[-1].tail or "") + text
+        node[-1].tail = (node[-1].tail or "").rstrip() + text
     else:
         node.text = (node.text or "") + text
 

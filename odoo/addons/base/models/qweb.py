@@ -24,6 +24,9 @@ SUPPORTED_DEBUGGERS = ['pdb', 'ipdb', 'pudb', 'wdb']
 token.QWEB = token.NT_OFFSET - 1
 token.tok_name[token.QWEB] = 'QWEB'
 
+RE_RSTRIP = re.compile(r'\n[ \t]*$')
+
+
 ####################################
 ###          qweb tools          ###
 ####################################
@@ -308,11 +311,22 @@ class QWeb(object):
             yield containing all the parts."""
         options['_text_concat'].append(self._compile_to_str(text))
 
-    def _flushText(self, options, indent):
+    def _stripText(self, options):
+        text_concat = options['_text_concat']
+        if not text_concat:
+            return ''
+        result = RE_RSTRIP.search(text_concat[-1])
+        if not result:
+            return ''
+        return result.group(0)
+
+    def _flushText(self, options, indent, rstrip=False):
         """Concatenate all the textual chunks added by the `_appendText`
             method into a single yield."""
         text_concat = options['_text_concat']
         if text_concat:
+            if rstrip:
+                text_concat[-1] = RE_RSTRIP.sub('', text_concat[-1])
             text = ''.join(text_concat)
             text_concat.clear()
             return [f"{'    ' * indent}yield {repr(text)}"]
@@ -912,7 +926,7 @@ class QWeb(object):
         The code will contain the assignment of the dynamically generated value.
         """
         varname = el.attrib.pop('t-set')
-        code = self._flushText(options, indent)
+        code = self._flushText(options, indent, True)
 
         if 't-value' in el.attrib:
             if varname == '0':
@@ -927,7 +941,7 @@ class QWeb(object):
         else:
             # set the content as value
             def_name = f"qweb_t_set_{re.sub(_VARNAME_REGEX, '_', options['last_path_node'])}"
-            content = self._compile_directive_content(el, options, indent + 1) + self._flushText(options, indent + 1)
+            content = self._compile_directive_content(el, options, indent + 1) + self._flushText(options, indent + 1, True)
             if content:
                 code.append(self._indent(f"def {def_name}():", indent))
                 code.extend(content)
@@ -1004,8 +1018,12 @@ class QWeb(object):
         else:
             expr = el.attrib.pop('t-if')
 
-        code = self._flushText(options, indent)
-        content_if = self._compile_directives(el, options, indent + 1) + self._flushText(options, indent + 1)
+        strip = self._stripText(options)
+
+        code = self._flushText(options, indent, True)
+        if el.tag.lower() != 't':
+            self._appendText(strip, options)
+        content_if = self._compile_directives(el, options, indent + 1) + self._flushText(options, indent + 1, True)
 
         orelse = []
         next_el = el.getnext()
@@ -1020,7 +1038,9 @@ class QWeb(object):
             if el.tail and not el.tail.isspace():
                 raise ValueError("Unexpected non-whitespace characters between t-if and t-else directives")
             el.tail = None
-            orelse = self._compile_node(next_el, dict(options, t_if=True), indent + 1) + self._flushText(options, indent + 1)
+            if next_el.tag.lower() != 't':
+                self._appendText(strip, options)
+            orelse = self._compile_node(next_el, dict(options, t_if=True), indent + 1) + self._flushText(options, indent + 1, True)
 
         code.append(self._indent(f"if {self._compile_expr(expr)}:", indent))
         code.extend(content_if or [self._indent('pass', indent + 1)])
@@ -1045,8 +1065,12 @@ class QWeb(object):
         expr_foreach = el.attrib.pop('t-foreach')
         expr_as = el.attrib.pop('t-as')
 
-        code = self._flushText(options, indent)
-        content_foreach = self._compile_directives(el, options, indent + 1) + self._flushText(options, indent + 1)
+        strip = self._stripText(options)
+        if el.tag.lower() != 't':
+            el.text = strip+(el.text or '')
+
+        code = self._flushText(options, indent, True)
+        content_foreach = self._compile_directives(el, options, indent + 1) + self._flushText(options, indent + 1, True)
 
         t_foreach = self._make_name('t_foreach')
         size = self._make_name('size')
@@ -1262,7 +1286,7 @@ class QWeb(object):
 
         nsmap = options.get('nsmap')
 
-        code = self._flushText(options, indent)
+        code = self._flushText(options, indent, True)
         options['t_options_varname'] = 't_call_t_options'
         code_options = self._compile_directive(el, options, 'options', indent) or [self._indent("t_call_t_options = {}", indent)]
         code.extend(code_options)
