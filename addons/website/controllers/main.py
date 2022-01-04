@@ -417,7 +417,7 @@ class Website(Home):
                     continue
                 field_type = field_meta.get('type')
                 if field_type == 'text':
-                    if value:
+                    if value and field_meta.get('truncate', True):
                         value = shorten(value, max_nb_chars, placeholder='...')
                     if field_meta.get('match') and value and term:
                         pattern = '|'.join(map(re.escape, term.split()))

@@ -522,7 +522,7 @@ class Event(models.Model):
         fetch_fields = ['name', 'website_url']
         mapping = {
             'name': {'name': 'name', 'type': 'text', 'match': True},
-            'website_url': {'name': 'website_url', 'type': 'text'},
+            'website_url': {'name': 'website_url', 'type': 'text', 'truncate': False},
         }
         if with_description:
             search_fields.append('subtitle')
