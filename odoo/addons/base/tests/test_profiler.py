@@ -464,8 +464,7 @@ class TestProfiling(TransactionCase):
             'arch_db': '''<t t-name="root">
                 <t t-foreach="{'a': 3, 'b': 2, 'c': 1}" t-as="item">
                     [<t t-esc="item_index"/>: <t t-call="base.dummy"/> <t t-esc="item_value"/>]
-                    <b t-esc="add_one_query()"/>
-                </t>
+                    <b t-esc="add_one_query()"/></t>
             </t>'''
         })
         child_template = self.env['ir.ui.view'].create({
