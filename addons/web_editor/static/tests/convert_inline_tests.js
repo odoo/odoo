@@ -28,13 +28,13 @@ QUnit.module('convert_inline', {}, function () {
         // 1x3
         $editable = $(`<div>${getRegularGridHtml(1, 3)}</div>`);
         convertInline.bootstrapToTable($editable);
-        assert.strictEqual($editable.html(), getRegularTableHtml(1, 3, 4, 33),
+        assert.strictEqual($editable.html(), getRegularTableHtml(1, 3, 4, 33.33),
             "should have converted a 1x3 grid to an equivalent table");
 
         // 1x12
         $editable = $(`<div>${getRegularGridHtml(1, 12)}</div>`);
         convertInline.bootstrapToTable($editable);
-        assert.strictEqual($editable.html(), getRegularTableHtml(1, 12, 1, 8),
+        assert.strictEqual($editable.html(), getRegularTableHtml(1, 12, 1, 8.33),
             "should have converted a 1x12 grid to an equivalent table");
     });
     QUnit.test('convert a single-row regular overflowing grid', async function (assert) {
@@ -44,7 +44,7 @@ QUnit.module('convert_inline', {}, function () {
         $editable = $(`<div>${getRegularGridHtml(1, 13)}</div>`);
         convertInline.bootstrapToTable($editable);
         assert.strictEqual($editable.html(),
-            getRegularTableHtml(1, 12, 1, 8).slice(0, -8) +
+            getRegularTableHtml(1, 12, 1, 8.33).slice(0, -8) +
                 `<tr><td colspan="12" width="100%" style="width: 100%;">(0, 12)</td></tr></table>`,
             "should have converted a 1x13 grid to an equivalent table (overflowing)");
 
@@ -52,17 +52,17 @@ QUnit.module('convert_inline', {}, function () {
         $editable = $(`<div>${getRegularGridHtml(1, 14)}</div>`);
         convertInline.bootstrapToTable($editable);
         assert.strictEqual($editable.html(),
-            getRegularTableHtml(1, 12, 1, 8).slice(0, -8) +
-                `<tr><td colspan="1" width="8%" style="width: 8%;">(0, 12)</td>` +
-                `<td colspan="11" width="92%" style="width: 92%;">(0, 13)</td></tr></table>`,
+            getRegularTableHtml(1, 12, 1, 8.33).slice(0, -8) +
+                `<tr><td colspan="1" width="8.33%" style="width: 8.33%;">(0, 12)</td>` +
+                `<td colspan="11" width="91.67%" style="width: 91.67%;">(0, 13)</td></tr></table>`,
             "should have converted a 1x14 grid to an equivalent table (overflowing)");
 
         // 1x25
         $editable = $(`<div>${getRegularGridHtml(1, 25)}</div>`);
         convertInline.bootstrapToTable($editable);
         assert.strictEqual($editable.html(),
-            getRegularTableHtml(1, 12, 1, 8).slice(0, -8) +
-            getRegularTableHtml(1, 12, 1, 8).replace(/\(0, (\d+)\)/g, (s, c) => `(0, ${+c + 12})`)
+            getRegularTableHtml(1, 12, 1, 8.33).slice(0, -8) +
+            getRegularTableHtml(1, 12, 1, 8.33).replace(/\(0, (\d+)\)/g, (s, c) => `(0, ${+c + 12})`)
                 .replace(/^<table[^<]*>/, '').slice(0, -8) +
                 `<tr><td colspan="12" width="100%" style="width: 100%;">(0, 24)</td></tr></table>`,
             "should have converted a 1x25 grid to an equivalent table (overflowing)");
@@ -71,11 +71,11 @@ QUnit.module('convert_inline', {}, function () {
         $editable = $(`<div>${getRegularGridHtml(1, 26)}</div>`);
         convertInline.bootstrapToTable($editable);
         assert.strictEqual($editable.html(),
-            getRegularTableHtml(1, 12, 1, 8).slice(0, -8) +
-            getRegularTableHtml(1, 12, 1, 8).replace(/\(0, (\d+)\)/g, (s, c) => `(0, ${+c + 12})`)
+            getRegularTableHtml(1, 12, 1, 8.33).slice(0, -8) +
+            getRegularTableHtml(1, 12, 1, 8.33).replace(/\(0, (\d+)\)/g, (s, c) => `(0, ${+c + 12})`)
                 .replace(/^<table[^<]*>/, '').slice(0, -8) +
-                `<tr><td colspan="1" width="8%" style="width: 8%;">(0, 24)</td>` +
-                `<td colspan="11" width="92%" style="width: 92%;">(0, 25)</td></tr></table>`,
+                `<tr><td colspan="1" width="8.33%" style="width: 8.33%;">(0, 24)</td>` +
+                `<td colspan="11" width="91.67%" style="width: 91.67%;">(0, 25)</td></tr></table>`,
             "should have converted a 1x26 grid to an equivalent table (overflowing)");
     });
     QUnit.test('convert a multi-row regular grid', async function (assert) {
@@ -96,13 +96,13 @@ QUnit.module('convert_inline', {}, function () {
         // 3x3
         $editable = $(`<div>${getRegularGridHtml(3, 3)}</div>`);
         convertInline.bootstrapToTable($editable);
-        assert.strictEqual($editable.html(), getRegularTableHtml(3, 3, 4, 33),
+        assert.strictEqual($editable.html(), getRegularTableHtml(3, 3, 4, 33.33),
             "should have converted a 3x3 grid to an equivalent table");
 
         // 3x[3,2,1]
         $editable = $(`<div>${getRegularGridHtml(3, [3,2,1])}</div>`);
         convertInline.bootstrapToTable($editable);
-        assert.strictEqual($editable.html(), getRegularTableHtml(3, [3, 2, 1], [4, 6, 12], [33, 50, 100]),
+        assert.strictEqual($editable.html(), getRegularTableHtml(3, [3, 2, 1], [4, 6, 12], [33.33, 50, 100]),
             "should have converted a 3x[3,2,1] grid to an equivalent table");
     });
     QUnit.test('convert a multi-row regular overflowing grid', async function (assert) {
@@ -112,7 +112,7 @@ QUnit.module('convert_inline', {}, function () {
         $editable = $(`<div>${getRegularGridHtml(2, [13, 1])}</div>`);
         convertInline.bootstrapToTable($editable);
         assert.strictEqual($editable.html(),
-            getRegularTableHtml(1, 12, 1, 8).slice(0, -8) +
+            getRegularTableHtml(1, 12, 1, 8.33).slice(0, -8) +
                 `<tr><td colspan="12" width="100%" style="width: 100%;">(0, 12)</td></tr>` +
                 `<tr><td colspan="12" width="100%" style="width: 100%;">(1, 0)</td></tr></table>`,
             "should have converted a 2x[13,1] grid to an equivalent table (overflowing)");
@@ -121,7 +121,7 @@ QUnit.module('convert_inline', {}, function () {
         $editable = $(`<div>${getRegularGridHtml(2, [1, 13])}</div>`);
         convertInline.bootstrapToTable($editable);
         assert.strictEqual($editable.html(),
-            getRegularTableHtml(2, [1, 12], [12, 1], [100, 8]).slice(0, -8) +
+            getRegularTableHtml(2, [1, 12], [12, 1], [100, 8.33]).slice(0, -8) +
                 `<tr><td colspan="12" width="100%" style="width: 100%;">(1, 12)</td></tr></table>`,
             "should have converted a 2x[1,13] grid to an equivalent table (overflowing)");
 
@@ -129,16 +129,16 @@ QUnit.module('convert_inline', {}, function () {
         $editable = $(`<div>${getRegularGridHtml(3, [1, 13, 6])}</div>`);
         convertInline.bootstrapToTable($editable);
         assert.strictEqual($editable.html(),
-            getRegularTableHtml(2, [1, 12], [12, 1], [100, 8]).slice(0, -8) +
+            getRegularTableHtml(2, [1, 12], [12, 1], [100, 8.33]).slice(0, -8) +
                 `<tr><td colspan="12" width="100%" style="width: 100%;">(1, 12)</td></tr>` +
-                getRegularTableHtml(1, 6, 2, 17).replace(/\(0,/g, `(2,`).replace(/^<table[^<]*>/, ''),
+                getRegularTableHtml(1, 6, 2, 16.67).replace(/\(0,/g, `(2,`).replace(/^<table[^<]*>/, ''),
             "should have converted a 3x[1,13,6] grid to an equivalent table (overflowing)");
 
         // 3x[1,6,13]
         $editable = $(`<div>${getRegularGridHtml(3, [1, 6, 13])}</div>`);
         convertInline.bootstrapToTable($editable);
         assert.strictEqual($editable.html(),
-            getRegularTableHtml(3, [1, 6, 12], [12, 2, 1], [100, 17, 8]).slice(0, -8) +
+            getRegularTableHtml(3, [1, 6, 12], [12, 2, 1], [100, 16.67, 8.33]).slice(0, -8) +
                 `<tr><td colspan="12" width="100%" style="width: 100%;">(2, 12)</td></tr></table>`,
             "should have converted a 3x[1,6,13] grid to an equivalent table (overflowing)");
     });
@@ -148,13 +148,13 @@ QUnit.module('convert_inline', {}, function () {
         // 1x2
         $editable = $(`<div>${getGridHtml([[8, 4]])}</div>`);
         convertInline.bootstrapToTable($editable);
-        assert.strictEqual($editable.html(), getTableHtml([[[8, 67], [4, 33]]]),
+        assert.strictEqual($editable.html(), getTableHtml([[[8, 66.67], [4, 33.33]]]),
             "should have converted a 1x2 irregular grid to an equivalent table");
 
         // 1x3
         $editable = $(`<div>${getGridHtml([[2, 3, 7]])}</div>`);
         convertInline.bootstrapToTable($editable);
-        assert.strictEqual($editable.html(), getTableHtml([[[2, 17], [3, 25], [7, 58]]]),
+        assert.strictEqual($editable.html(), getTableHtml([[[2, 16.67], [3, 25], [7, 58.33]]]),
             "should have converted a 1x3 grid to an equivalent table");
     });
     QUnit.test('convert a single-row irregular overflowing grid', async function (assert) {assert.expect(4);
@@ -164,8 +164,8 @@ QUnit.module('convert_inline', {}, function () {
         $editable = $(`<div>${getGridHtml([[8, 5]])}</div>`);
         convertInline.bootstrapToTable($editable);
         assert.strictEqual($editable.html(), getTableHtml([
-                [[8, 67], [4, 33, '']],
-                [[5, 42, '(0, 1)'], [7, 58, '']],
+                [[8, 66.67], [4, 33.33, '']],
+                [[5, 41.67, '(0, 1)'], [7, 58.33, '']],
             ]),
             "should have converted a 1x2 irregular overflowing grid to an equivalent table");
 
@@ -173,7 +173,7 @@ QUnit.module('convert_inline', {}, function () {
         $editable = $(`<div>${getGridHtml([[7, 6, 9]])}</div>`);
         convertInline.bootstrapToTable($editable);
         assert.strictEqual($editable.html(), getTableHtml([
-                [[7, 58], [5, 42, '']],
+                [[7, 58.33], [5, 41.67, '']],
                 [[6, 50, '(0, 1)'], [6, 50, '']],
                 [[9, 75, '(0, 2)'], [3, 25, '']],
             ]),
@@ -185,13 +185,13 @@ QUnit.module('convert_inline', {}, function () {
         // 2x2
         $editable = $(`<div>${getGridHtml([[1, 11], [2, 10]])}</div>`);
         convertInline.bootstrapToTable($editable);
-        assert.strictEqual($editable.html(), getTableHtml([[[1, 8], [11, 92]], [[2, 17], [10, 83]]]),
+        assert.strictEqual($editable.html(), getTableHtml([[[1, 8.33], [11, 91.67]], [[2, 16.67], [10, 83.33]]]),
             "should have converted a 2x2 irregular grid to an equivalent table");
 
         // 2x[2,3]
         $editable = $(`<div>${getGridHtml([[3, 9], [4, 6, 2]])}</div>`);
         convertInline.bootstrapToTable($editable);
-        assert.strictEqual($editable.html(), getTableHtml([[[3, 25], [9, 75]], [[4, 33], [6, 50], [2, 17]]]),
+        assert.strictEqual($editable.html(), getTableHtml([[[3, 25], [9, 75]], [[4, 33.33], [6, 50], [2, 16.67]]]),
             "should have converted a 2x[2,3] irregular grid to an equivalent table");
     });
     QUnit.test('convert a multi-row irregular overflowing grid', async function (assert) {
@@ -203,8 +203,8 @@ QUnit.module('convert_inline', {}, function () {
         assert.strictEqual($editable.html(),
             getTableHtml([
                 [[6, 50], [6, 50, '']],
-                [[8, 67, '(0, 1)'], [4, 33, '']],
-                [[7, 58, '(1, 0)'], [5, 42, '']],
+                [[8, 66.67, '(0, 1)'], [4, 33.33, '']],
+                [[7, 58.33, '(1, 0)'], [5, 41.67, '']],
                 [[9, 75, '(1, 1)'], [3, 25, '']],
             ]),
             "should have converted a 2x[1,13] irregular grid to an equivalent table (both rows overflowing)");
@@ -214,9 +214,9 @@ QUnit.module('convert_inline', {}, function () {
         convertInline.bootstrapToTable($editable);
         assert.strictEqual($editable.html(),
             getTableHtml([
-                [[5, 42], [7, 58, '']],
-                [[8, 67, '(0, 1)'], [4, 33, '']],
-                [[4, 33, '(1, 0)'], [2, 17, '(1, 1)'], [6, 50, '(1, 2)']],
+                [[5, 41.67], [7, 58.33, '']],
+                [[8, 66.67, '(0, 1)'], [4, 33.33, '']],
+                [[4, 33.33, '(1, 0)'], [2, 16.67, '(1, 1)'], [6, 50, '(1, 2)']],
             ]),
             "should have converted a 2x[2,3] irregular grid to an equivalent table (first row overflowing)");
 
@@ -225,9 +225,9 @@ QUnit.module('convert_inline', {}, function () {
         convertInline.bootstrapToTable($editable);
         assert.strictEqual($editable.html(),
             getTableHtml([
-                [[4, 33], [2, 17], [6, 50]],
-                [[5, 42], [7, 58, '']],
-                [[8, 67, '(1, 1)'], [4, 33, '']],
+                [[4, 33.33], [2, 16.67], [6, 50]],
+                [[5, 41.67], [7, 58.33, '']],
+                [[8, 66.67, '(1, 1)'], [4, 33.33, '']],
             ]),
             "should have converted a 2x[3,2] irregular grid to an equivalent table (second row overflowing)");
     });
