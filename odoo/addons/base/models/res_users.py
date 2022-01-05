@@ -660,6 +660,8 @@ class Users(models.Model):
         try:
             self = api.Environment(cr, uid, {})[cls._name]
             with self._assert_can_auth():
+                if not self.env.user.active:
+                    raise AccessDenied()
                 self._check_credentials(passwd)
                 cls.__uid_cache[db][uid] = passwd
         finally:
