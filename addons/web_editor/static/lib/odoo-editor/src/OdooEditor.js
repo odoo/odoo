@@ -1788,6 +1788,12 @@ export class OdooEditor extends EventTarget {
     // TOOLBAR
     // =======
 
+    toolbarHide() {
+        this._updateToolbar(false);
+    }
+    toolbarShow() {
+        this._updateToolbar(true);
+    }
     /**
      * @private
      * @param {boolean} [show]
