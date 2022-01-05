@@ -739,11 +739,11 @@ class Project(models.Model):
         if self.user_has_groups('project.group_project_rating'):
             buttons.append({
                 'icon': 'smile-o',
-                'text': _('Customer Satisfaction'),
-                'number': '%s %%' % (self.rating_percentage_satisfaction),
+                'text': _('Satisfaction'),
+                'number': f'{self.rating_avg_percentage} %',
                 'action_type': 'object',
                 'action': 'action_view_all_rating',
-                'show': self.rating_active and self.rating_percentage_satisfaction > -1,
+                'show': self.rating_active and self.rating_count > 0,
                 'sequence': 15,
             })
         if self.user_has_groups('project.group_project_manager'):
