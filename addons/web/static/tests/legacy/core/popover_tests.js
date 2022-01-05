@@ -4,6 +4,7 @@ odoo.define('web.popover_tests', function (require) {
     const makeTestEnvironment = require('web.test_env');
     const Popover = require('web.Popover');
     const testUtils = require('web.test_utils');
+    const { useEffect } = require("@web/core/utils/hooks");
 
     const { Component, tags, hooks } = owl;
     const { useRef, useState } = hooks;
@@ -19,29 +20,31 @@ odoo.define('web.popover_tests', function (require) {
             SubComponent.template = xml`
                 <div class="o_subcomponent" style="width: 280px;" t-esc="props.text"/>
             `;
+            let popoverElement;
 
             class Parent extends Component {
-                constructor() {
-                    super(...arguments);
+                setup() {
                     this.state = useState({
                         position: 'right',
                         title: '👋',
                         textContent: 'sup',
                     });
-                    this.popoverRef = useRef('popoverRef');
+                    const root = useRef("root");
+                    useEffect(() => {
+                        popoverElement = root.el.children[1];
+                    });
                 }
             }
             // Popover should be included as a globally available Component
             Parent.components = { SubComponent };
             Parent.env = makeTestEnvironment();
             Parent.template = xml`
-                <div>
+                <div t-ref="root">
                     <button id="passiveTarget">🚫</button>
-                    <Popover t-ref="popoverRef"
-                        position="state.position"
+                    <Popover position="state.position"
                         title="state.title"
                         >
-                        <t t-set="opened">
+                        <t t-set-slot="opened">
                             <SubComponent text="state.textContent"/>
                         </t>
                         <button id="target">
@@ -107,11 +110,10 @@ odoo.define('web.popover_tests', function (require) {
                 'The title of the popover should have changed.'
             );
             // Position and target reactivity
-            const element = parent.popoverRef.el;
             assert.ok(
                 pointsTo(
                     document.querySelector('.o_popover'),
-                    element,
+                    popoverElement,
                     parent.state.position
                 ),
                 'Popover should be visually aligned with its target'
@@ -120,7 +122,7 @@ odoo.define('web.popover_tests', function (require) {
             assert.ok(
                 pointsTo(
                     document.querySelector('.o_popover'),
-                    element,
+                    popoverElement,
                     parent.state.position
                 ),
                 'Popover should be bottomed positioned'
@@ -137,7 +139,7 @@ odoo.define('web.popover_tests', function (require) {
             await changeProps('position', 'left');
             await testUtils.dom.click('#target');
             assert.ok(
-                pointsTo(document.querySelector('.o_popover'), element, 'right'),
+                pointsTo(document.querySelector('.o_popover'), popoverElement, 'right'),
                 "Popover should be right-positioned because it doesn't fit left"
             );
             await testUtils.dom.click('#passiveTarget');
