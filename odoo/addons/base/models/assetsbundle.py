@@ -13,11 +13,13 @@ except ImportError:
     # If the `sass` python library isn't found, we fallback on the
     # `sassc` executable in the path.
     libsass = None
+from contextlib import closing
 from datetime import datetime
 from subprocess import Popen, PIPE
 from collections import OrderedDict
 from odoo import fields, tools, SUPERUSER_ID
 from odoo.tools.pycompat import string_types, to_text
+from odoo.tools.misc import file_open
 from odoo.http import request
 from odoo.modules.module import get_resource_path
 from .qweb import escape
@@ -27,6 +29,7 @@ from odoo.tools import func, misc
 import logging
 _logger = logging.getLogger(__name__)
 
+EXTENSIONS = (".js", ".css", ".scss", ".sass", ".less")
 MAX_CSS_RULES = 4095
 
 
@@ -671,7 +674,7 @@ class WebAsset(object):
         try:
             self.stat()
             if self._filename:
-                with open(self._filename, 'rb') as fp:
+                with closing(file_open(self._filename, 'rb', filter_ext=EXTENSIONS)) as fp:
                     return fp.read().decode('utf-8')
             else:
                 return base64.b64decode(self._ir_attach['datas']).decode('utf-8')
