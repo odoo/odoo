@@ -1734,9 +1734,6 @@ export class OdooEditor extends EventTarget {
             onActivate: () => {
                 this._beforeCommandbarStepIndex = this._historySteps.length - 1;
                 this.observerUnactive();
-                for (const element of document.querySelectorAll(this.options.noScrollSelector)) {
-                    element.classList.add('oe-noscroll');
-                }
                 for (const element of this.document.querySelectorAll(
                     this.options.noScrollSelector,
                 )) {
