@@ -33,7 +33,10 @@
                     <separator/>
                     <filter string="Open Tasks" name="open_tasks" domain="[('is_closed', '=', False)]"/>
                     <separator/>
-                    <filter string="Rated Tasks" name="rating_task" domain="[('rating_last_value', '!=', 0.0)]" groups="project.group_project_rating"/>
+                    <filter name="rating_satisfied" string="Satisfied" domain="[('rating_avg', '&gt;=', 3.66)]" groups="project.group_project_rating"/>
+                    <filter name="rating_okay" string="Okay" domain="[('rating_avg', '&lt;', 3.66), ('rating_avg', '&gt;=', 2.33)]" groups="project.group_project_rating"/>
+                    <filter name="dissatisfied" string="Dissatisfied" domain="[('rating_avg', '&lt;', 2.33), ('rating_last_value', '!=', 0)]" groups="project.group_project_rating"/>
+                    <filter name="no_rating" string="No Rating" domain="[('rating_last_value', '=', 0)]" groups="project.group_project_rating"/>
                     <separator/>
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]"/>
                     <separator/>
@@ -316,33 +319,14 @@
                                 </span>
                             </div>
                         </button>
-                        <button name="action_view_all_rating" type="object" attrs="{'invisible': ['|', ('rating_active', '=', False), ('rating_percentage_satisfaction', '&lt;', 66.6)]}" class="oe_stat_button oe_read_only" icon="fa-smile-o text-success" groups="project.group_project_rating">
+                        <field name="rating_avg" invisible="1"/>
+                        <button name="action_view_all_rating" type="object" attrs="{'invisible': [('rating_active', '=', False)]}" class="oe_stat_button" groups="project.group_project_rating">
+                            <i class="fa fa-fw o_button_icon fa-smile-o text-success" attrs="{'invisible': [('rating_avg', '&lt;', 3.66)]}" title="Satisfied"/>
+                            <i class="fa fa-fw o_button_icon fa-meh-o text-warning" attrs="{'invisible': ['|', ('rating_avg', '&lt;', 2.33), ('rating_avg', '&gt;=', 3.66)]}" title="Okay"/>
+                            <i class="fa fa-fw o_button_icon fa-frown-o text-danger" attrs="{'invisible': [('rating_avg', '&gt;=', 2.33)]}" title="Dissatisfied"/>
                             <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_value">
-                                    <field name="rating_percentage_satisfaction" nolabel="1"/>
-                                    %
-                                </span>
-                                <span class="o_stat_text">
-                                    Satisfaction
-                                </span>
-                            </div>
-                        </button>
-                        <button name="action_view_all_rating" type="object" attrs="{'invisible': ['|', '|', ('rating_active', '=', False), ('rating_percentage_satisfaction', '&gt;=', 66.6), ('rating_percentage_satisfaction', '&lt;', 33.3)]}" class="oe_stat_button oe_read_only" icon="fa-meh-o text-warning" groups="project.group_project_rating">
-                            <div class="o_field_widget o_stat_info">
-                                <span class="o_stat_value">
-                                    <field name="rating_percentage_satisfaction" nolabel="1"/>
-                                    %
-                                </span>
-                                <span class="o_stat_text">
-                                    Satisfaction
-                                </span>
-                            </div>
-                        </button>
-                        <button name="action_view_all_rating" type="object" attrs="{'invisible': ['|', ('rating_active', '=', False), '|', ('rating_percentage_satisfaction', '&gt;=', 33.3),  ('rating_percentage_satisfaction', '&lt;', 0)]}" class="oe_stat_button oe_read_only" icon="fa-frown-o text-danger" groups="project.group_project_rating">
-                            <div class="o_field_widget o_stat_info">
-                                <span class="o_stat_value">
-                                    <field name="rating_percentage_satisfaction" nolabel="1"/>
-                                    %
+                                    <field name="rating_avg_percentage" nolabel="1" widget="percentage"/>
                                 </span>
                                 <span class="o_stat_text">
                                     Satisfaction
@@ -532,6 +516,11 @@
                     <filter string="Start Date" name="start_date" date="date_start"/>
                     <filter string="End Date" name="end_date" date="date"/>
                     <separator/>
+                    <filter name="rating_satisfied" string="Satisfied" domain="[('rating_active', '=', True), ('rating_avg', '&gt;=', 3.66)]" groups="project.group_project_rating"/>
+                    <filter name="rating_okay" string="Okay" domain="[('rating_active', '=', True), ('rating_avg', '&lt;', 3.66), ('rating_avg', '&gt;=', 2.33)]" groups="project.group_project_rating"/>
+                    <filter name="dissatisfied" string="Dissatisfied" domain="[('rating_active', '=', True), ('rating_avg', '&lt;', 2.33), ('rating_last_value', '!=', 0)]" groups="project.group_project_rating"/>
+                    <filter name="no_rating" string="No Rating" domain="['|', ('rating_active', '=', False), ('rating_avg', '=', 0)]" groups="project.group_project_rating"/>
+                    <separator/>
                     <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Project Manager" name="Manager" context="{'group_by': 'user_id'}"/>
@@ -658,7 +647,8 @@
                     <field name="alias_name"/>
                     <field name="alias_domain"/>
                     <field name="is_favorite"/>
-                    <field name="rating_percentage_satisfaction"/>
+                    <field name="rating_count" />
+                    <field name="rating_avg"/>
                     <field name="rating_status"/>
                     <field name="rating_active" />
                     <field name="analytic_account_id"/>
@@ -689,12 +679,13 @@
                                                 <div t-if="record.alias_name.value and record.alias_domain.value" class="text-muted">
                                                     <span class="fa fa-envelope-o mr-2" aria-label="Domain Alias" title="Domain Alias"></span><t t-esc="record.alias_id.value"/>
                                                 </div>
-                                                <div t-if="record.rating_active.raw_value" class="text-muted" groups="project.group_project_rating">
-                                                    <b>
-                                                        <t t-if="record.rating_percentage_satisfaction.value != -1">
-                                                            <i class="fa fa-smile-o" role="img" aria-label="Average satisfaction rate for the last 30 days." title="Average satisfaction rate for the last 30 days."/> <t t-esc="record.rating_percentage_satisfaction.value"/>%
-                                                        </t>
+                                                <div t-if="record.rating_active.raw_value and record.rating_count.raw_value &gt; 0" class="text-muted" groups="project.group_project_rating">
+                                                    <b class="mr-1">
+                                                        <span style="font-weight:bold;" class="fa mt4 fa-smile-o text-success" t-if="record.rating_avg.raw_value &gt;= 3.66" title="Average Rating: Satisfied" role="img" aria-label="Happy face"/>
+                                                        <span style="font-weight:bold;" class="fa mt4 fa-meh-o text-warning" t-elif="record.rating_avg.raw_value &gt;= 2.33" title="Average Rating: Okay" role="img" aria-label="Neutral face"/>
+                                                        <span style="font-weight:bold;" class="fa mt4 fa-frown-o text-danger" t-else="" title="Average Rating: Dissatisfied" role="img" aria-label="Sad face"/>
                                                     </b>
+                                                    <field name="rating_avg_percentage" widget="percentage"/>
                                                 </div>
                                                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                             </div>
@@ -858,22 +849,14 @@
                         <span id="button_worksheet" invisible="1"/>
                         <!-- Dummy tag used to organize buttons, englobing the 3 buttons modifies the width of the button -->
                         <span id="start_rating_buttons" invisible="1"/>
-                        <button name="action_open_ratings" type="object" attrs="{'invisible': ['|', ('rating_count', '=', 0), ('rating_percentage_satisfaction', '&lt;', 66.6)]}" class="oe_stat_button" icon="fa-smile-o text-success" groups="project.group_project_rating">
+                        <field name="rating_avg" invisible="1"/>
+                        <button name="action_open_ratings" type="object" attrs="{'invisible': [('rating_count', '=', 0)]}" class="oe_stat_button" groups="project.group_project_rating">
+                            <i class="fa fa-fw o_button_icon fa-smile-o text-success" attrs="{'invisible': [('rating_avg', '&lt;', 3.66)]}" title="Satisfied"/>
+                            <i class="fa fa-fw o_button_icon fa-meh-o text-warning" attrs="{'invisible': ['|', ('rating_avg', '&lt;', 2.33), ('rating_avg', '&gt;=', 3.66)]}" title="Okay"/>
+                            <i class="fa fa-fw o_button_icon fa-frown-o text-danger" attrs="{'invisible': [('rating_avg', '&gt;=', 2.33)]}" title="Dissatisfied"/>
                             <div class="o_field_widget o_stat_info">
-                                <span class="o_stat_value"><field name="rating_percentage_satisfaction" widget="integer"/>%</span>
-                                <span class="o_stat_text">Satisfaction</span>
-                            </div>
-                        </button>
-                        <button name="action_open_ratings" type="object" attrs="{'invisible': ['|', '|', ('rating_count', '=', 0), ('rating_percentage_satisfaction', '&gt;=', 66.6), ('rating_percentage_satisfaction', '&lt;', 33.3)]}" class="oe_stat_button" icon="fa-meh-o text-warning" groups="project.group_project_rating">
-                            <div class="o_field_widget o_stat_info">
-                                <span class="o_stat_value"><field name="rating_percentage_satisfaction" widget="integer"/>%</span>
-                                <span class="o_stat_text">Satisfaction</span>
-                            </div>
-                        </button>
-                        <button name="action_open_ratings" type="object" attrs="{'invisible': ['|', '|', ('rating_count', '=', 0), ('rating_percentage_satisfaction', '&gt;=', 33.3),  ('rating_percentage_satisfaction', '&lt;', 0)]}" class="oe_stat_button" icon="fa-frown-o text-danger" groups="project.group_project_rating">
-                            <div class="o_field_widget o_stat_info">
-                                <span class="o_stat_value"><field name="rating_percentage_satisfaction" widget="integer"/>%</span>
-                                <span class="o_stat_text">Satisfaction</span>
+                                <span class="o_stat_value"><field name="rating_avg_text" nolabel="1"/></span>
+                                <span class="o_stat_text">Rating</span>
                             </div>
                         </button>
                         <!-- Dummy tag used to organize buttons -->
@@ -1121,8 +1104,8 @@
                     <field name="legend_done"/>
                     <field name="activity_ids"/>
                     <field name="activity_state"/>
-                    <field name="rating_last_value"/>
-                    <field name="rating_ids"/>
+                    <field name="rating_count"/>
+                    <field name="rating_avg"/>
                     <field name="allow_subtasks"/>
                     <field name="child_text"/>
                     <field name="is_private"/>
@@ -1181,10 +1164,10 @@
                                     <div class="oe_kanban_bottom_left">
                                         <field name="priority" widget="priority"/>
                                         <field name="activity_ids" widget="kanban_activity"/>
-                                        <b t-if="record.rating_ids.raw_value.length">
-                                            <span style="font-weight:bold;" class="fa fa-fw mt4 fa-smile-o text-success" t-if="record.rating_last_value.value == 5" title="Latest Rating: Satisfied" role="img" aria-label="Happy face"/>
-                                            <span style="font-weight:bold;" class="fa fa-fw mt4 fa-meh-o text-warning" t-if="record.rating_last_value.value == 3" title="Latest Rating: Okay" role="img" aria-label="Neutral face"/>
-                                            <span style="font-weight:bold;" class="fa fa-fw mt4 fa-frown-o text-danger" t-if="record.rating_last_value.value == 1" title="Latest Rating: Dissatisfied" role="img" aria-label="Sad face"/>
+                                        <b t-if="record.rating_count.raw_value &gt; 0" groups="project.group_project_rating">
+                                            <span style="font-weight:bold;" class="fa fa-fw mt4 fa-smile-o text-success" t-if="record.rating_avg.raw_value &gt;= 3.66" title="Average Rating: Satisfied" role="img" aria-label="Happy face"/>
+                                            <span style="font-weight:bold;" class="fa fa-fw mt4 fa-meh-o text-warning" t-elif="record.rating_avg.raw_value &gt;= 2.33" title="Average Rating: Okay" role="img" aria-label="Neutral face"/>
+                                            <span style="font-weight:bold;" class="fa fa-fw mt4 fa-frown-o text-danger" t-else="" title="Average Rating: Dissatisfied" role="img" aria-label="Sad face"/>
                                         </b>
                                     </div>
                                     <div class="oe_kanban_bottom_right" t-if="!selection_mode">
