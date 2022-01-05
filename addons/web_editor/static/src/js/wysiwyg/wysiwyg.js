@@ -138,6 +138,7 @@ const Wysiwyg = Widget.extend({
             isRootEditable: this.options.isRootEditable,
             placeholder: this.options.placeholder,
             powerboxFilters: this.options.powerboxFilters || [],
+            showEmptyElementHint: this.options.showEmptyElementHint,
             controlHistoryFromDocument: this.options.controlHistoryFromDocument,
             getContentEditableAreas: this.options.getContentEditableAreas,
             defaultLinkAttributes: this.options.userGeneratedContent ? {rel: 'ugc' } : {},
