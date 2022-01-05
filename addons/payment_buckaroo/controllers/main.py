@@ -3,7 +3,7 @@
 import logging
 import pprint
 
-from odoo import http
+from odoo import http, SUPERUSER_ID
 from odoo.http import request
 
 _logger = logging.getLogger(__name__)
@@ -19,5 +19,5 @@ class BuckarooController(http.Controller):
         :param dict data: The feedback data
         """
         _logger.info("received notification data:\n%s", pprint.pformat(data))
-        request.env['payment.transaction'].sudo()._handle_feedback_data('buckaroo', data)
+        request.env['payment.transaction'].with_user(SUPERUSER_ID)._handle_feedback_data('buckaroo', data)
         return request.redirect('/payment/status')

@@ -9,7 +9,7 @@ from datetime import datetime
 
 import werkzeug
 
-from odoo import http
+from odoo import http, SUPERUSER_ID
 from odoo.exceptions import ValidationError
 from odoo.http import request
 from odoo.tools import consteq
@@ -42,7 +42,7 @@ class StripeController(http.Controller):
         self._include_payment_intent_in_feedback_data(payment_intent, data)
 
         # Handle the feedback data crafted with Stripe API objects
-        request.env['payment.transaction'].sudo()._handle_feedback_data('stripe', data)
+        request.env['payment.transaction'].with_user(SUPERUSER_ID)._handle_feedback_data('stripe', data)
 
         # Redirect the user to the status page
         return request.redirect('/payment/status')
@@ -68,7 +68,7 @@ class StripeController(http.Controller):
         self._include_setup_intent_in_feedback_data(checkout_session.get('setup_intent', {}), data)
 
         # Handle the feedback data crafted with Stripe API objects
-        request.env['payment.transaction'].sudo()._handle_feedback_data('stripe', data)
+        request.env['payment.transaction'].with_user(SUPERUSER_ID)._handle_feedback_data('stripe', data)
 
         # Redirect the user to the status page
         return request.redirect('/payment/status')
@@ -113,7 +113,7 @@ class StripeController(http.Controller):
                         )
                         self._include_setup_intent_in_feedback_data(setup_intent, data)
                     # Handle the feedback data crafted with Stripe API objects as a regular feedback
-                    request.env['payment.transaction'].sudo()._handle_feedback_data('stripe', data)
+                    request.env['payment.transaction'].with_user(SUPERUSER_ID)._handle_feedback_data('stripe', data)
         except ValidationError:  # Acknowledge the notification to avoid getting spammed
             _logger.exception("unable to handle the event data; skipping to acknowledge")
         return ''

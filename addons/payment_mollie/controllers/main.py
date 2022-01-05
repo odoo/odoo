@@ -4,7 +4,7 @@
 import logging
 import pprint
 
-from odoo import http
+from odoo import http, SUPERUSER_ID
 from odoo.exceptions import ValidationError
 from odoo.http import request
 
@@ -34,7 +34,7 @@ class MollieController(http.Controller):
                           embedded in the return URL
         """
         _logger.info("Received Mollie return data:\n%s", pprint.pformat(data))
-        request.env['payment.transaction'].sudo()._handle_feedback_data('mollie', data)
+        request.env['payment.transaction'].with_user(SUPERUSER_ID)._handle_feedback_data('mollie', data)
         return request.redirect('/payment/status')
 
     @http.route(_notify_url, type='http', auth='public', methods=['POST'], csrf=False)
@@ -48,7 +48,7 @@ class MollieController(http.Controller):
         """
         _logger.info("Received Mollie notify data:\n%s", pprint.pformat(data))
         try:
-            request.env['payment.transaction'].sudo()._handle_feedback_data('mollie', data)
+            request.env['payment.transaction'].with_user(SUPERUSER_ID)._handle_feedback_data('mollie', data)
         except ValidationError:  # Acknowledge the notification to avoid getting spammed
             _logger.exception("unable to handle the notification data; skipping to acknowledge")
         return ''  # Acknowledge the notification with an HTTP 200 response

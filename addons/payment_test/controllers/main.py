@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import http
+from odoo import http, SUPERUSER_ID
 from odoo.http import request
 
 
@@ -18,4 +18,4 @@ class PaymentTestController(http.Controller):
             'reference': reference,
             'cc_summary': customer_input[-4:],
         }
-        request.env['payment.transaction'].sudo()._handle_feedback_data('test', fake_api_response)
+        request.env['payment.transaction'].with_user(SUPERUSER_ID)._handle_feedback_data('test', fake_api_response)

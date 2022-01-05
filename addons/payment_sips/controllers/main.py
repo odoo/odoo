@@ -4,7 +4,7 @@
 import logging
 import pprint
 
-from odoo import http
+from odoo import http, SUPERUSER_ID
 from odoo.exceptions import ValidationError
 from odoo.http import request
 
@@ -34,7 +34,7 @@ class SipsController(http.Controller):
         _logger.info("beginning Sips DPN _handle_feedback_data with data %s", pprint.pformat(post))
         try:
             if self._sips_validate_data(post):
-                request.env['payment.transaction'].sudo()._handle_feedback_data('sips', post)
+                request.env['payment.transaction'].with_user(SUPERUSER_ID)._handle_feedback_data('sips', post)
         except ValidationError:
             pass
         return request.redirect('/payment/status')
@@ -51,7 +51,7 @@ class SipsController(http.Controller):
         else:
             try:
                 if self._sips_validate_data(post):
-                    request.env['payment.transaction'].sudo()._handle_feedback_data('sips', post)
+                    request.env['payment.transaction'].with_user(SUPERUSER_ID)._handle_feedback_data('sips', post)
             except ValidationError:
                 pass  # Acknowledge the notification to avoid getting spammed
         return ''

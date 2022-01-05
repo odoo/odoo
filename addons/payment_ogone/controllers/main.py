@@ -6,7 +6,7 @@ import re
 
 import werkzeug
 
-from odoo import _, http
+from odoo import _, http, SUPERUSER_ID
 from odoo.exceptions import ValidationError
 from odoo.http import request
 
@@ -43,7 +43,7 @@ class OgoneController(http.Controller):
 
         # Handle the feedback data
         _logger.info("entering _handle_feedback_data with data:\n%s", pprint.pformat(data))
-        request.env['payment.transaction'].sudo()._handle_feedback_data('ogone', data)
+        request.env['payment.transaction'].with_user(SUPERUSER_ID)._handle_feedback_data('ogone', data)
         return request.redirect('/payment/status')
 
     def _homogenize_data(self, data):

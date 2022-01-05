@@ -5,7 +5,7 @@ import pprint
 
 import requests
 
-from odoo import _, http
+from odoo import _, http, SUPERUSER_ID
 from odoo.exceptions import ValidationError
 from odoo.http import request
 
@@ -30,7 +30,7 @@ class PaypalController(http.Controller):
             pass  # The transaction has been moved to state 'error'. Redirect to /payment/status.
         else:
             if data:
-                request.env['payment.transaction'].sudo()._handle_feedback_data('paypal', data)
+                request.env['payment.transaction'].with_user(SUPERUSER_ID)._handle_feedback_data('paypal', data)
             else:
                 pass  # The customer has cancelled the payment, don't do anything
         return request.redirect('/payment/status')
@@ -41,7 +41,7 @@ class PaypalController(http.Controller):
         _logger.info("beginning IPN with post data:\n%s", pprint.pformat(data))
         try:
             self._validate_data_authenticity(**data)
-            request.env['payment.transaction'].sudo()._handle_feedback_data('paypal', data)
+            request.env['payment.transaction'].with_user(SUPERUSER_ID)._handle_feedback_data('paypal', data)
         except ValidationError:  # Acknowledge the notification to avoid getting spammed
             _logger.exception("unable to handle the IPN data; skipping to acknowledge the notif")
         return ''

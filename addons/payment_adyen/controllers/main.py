@@ -11,7 +11,7 @@ import pprint
 import werkzeug
 from werkzeug import urls
 
-from odoo import _, http
+from odoo import _, http, SUPERUSER_ID
 from odoo.exceptions import ValidationError
 from odoo.http import request
 from odoo.tools.pycompat import to_text
@@ -144,7 +144,7 @@ class AdyenController(http.Controller):
 
         # Handle the payment request response
         _logger.info("payment request response:\n%s", pprint.pformat(response_content))
-        request.env['payment.transaction'].sudo()._handle_feedback_data(
+        request.env['payment.transaction'].with_user(SUPERUSER_ID)._handle_feedback_data(
             'adyen', dict(response_content, merchantReference=reference),  # Match the transaction
         )
         return response_content
@@ -173,7 +173,7 @@ class AdyenController(http.Controller):
 
         # Handle the payment details request response
         _logger.info("payment details request response:\n%s", pprint.pformat(response_content))
-        request.env['payment.transaction'].sudo()._handle_feedback_data(
+        request.env['payment.transaction'].with_user(SUPERUSER_ID)._handle_feedback_data(
             'adyen', dict(response_content, merchantReference=reference),  # Match the transaction
         )
 
@@ -261,7 +261,7 @@ class AdyenController(http.Controller):
                     continue  # Don't handle unsupported event codes and failed events
 
                 # Handle the notification data as a regular feedback
-                PaymentTransaction.sudo()._handle_feedback_data('adyen', notification_data)
+                PaymentTransaction.with_user(SUPERUSER_ID)._handle_feedback_data('adyen', notification_data)
             except ValidationError:  # Acknowledge the notification to avoid getting spammed
                 _logger.exception("unable to handle the notification data; skipping to acknowledge")
 
