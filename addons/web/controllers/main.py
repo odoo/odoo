@@ -432,6 +432,11 @@ def db_info():
         'server_version_info': version_info.get('server_version_info'),
     }
 
+# Shared parameters for all login/signup flows
+SIGN_UP_REQUEST_PARAMS = {'db', 'login', 'debug', 'token', 'message', 'error', 'scope', 'mode',
+                          'redirect', 'redirect_hostname', 'email', 'name', 'partner_id',
+                          'password', 'confirm_password', 'city', 'country_id', 'lang'}
+
 #----------------------------------------------------------
 # OpenERP Web web Controllers
 #----------------------------------------------------------
@@ -469,7 +474,7 @@ class Home(http.Controller):
         if not request.uid:
             request.uid = openerp.SUPERUSER_ID
 
-        values = request.params.copy()
+        values = {k: v for k, v in request.params.items() if k in SIGN_UP_REQUEST_PARAMS}
         values['mono_db'] = len(http.db_list(True, request.httprequest)) == 1
         try:
             values['databases'] = http.db_list()
