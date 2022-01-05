@@ -18,7 +18,6 @@
           href="getMenuItemHref(currentApp)"
           t-esc="currentApp.name"
           class="o_menu_brand"
-          t-ref="menuBrand"
           dataset="{ menuXmlid: currentApp.xmlid, section: currentApp.id }"
           onSelected="() => this.onNavBarDropdownItemSelection(currentApp)"
         />
