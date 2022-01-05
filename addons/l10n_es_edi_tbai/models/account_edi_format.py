@@ -3,18 +3,21 @@
 
 import io
 import math
+import zipfile
 from base64 import b64encode
 from collections import defaultdict
 from datetime import datetime
 from re import sub as regex_sub
 from uuid import uuid4
 
-from cryptography.hazmat.primitives import hashes, serialization
+from cryptography.hazmat.primitives import serialization
 from lxml import etree
 from odoo import _, models
-from odoo.exceptions import UserError
+from odoo.tools import get_lang
 from pytz import timezone
 
+from .utils import (L10N_ES_TBAI_NS_MAP, l10n_es_tbai_base64_print, l10n_es_tbai_fill_signature,
+                    l10n_es_tbai_long_to_bytes, post, l10n_es_tbai_reference_digests)
 from .res_company import L10N_ES_EDI_TBAI_VERSION
 
 
@@ -44,9 +47,11 @@ class AccountEdiFormat(models.Model):
         return journal.country_code == 'ES'
 
     def _get_invoice_edi_content(self, invoice):
-        pass  # TODO ?
+        pass  # TODO
 
     def _post_invoice_edi(self, invoice):
+        self.ensure_one()  # No batching (chaining)
+
         # OVERRIDE
         if self.code != 'es_tbai':
             return super()._post_invoice_edi(invoice)
@@ -65,78 +70,63 @@ class AccountEdiFormat(models.Model):
             return {inv: {
                 'error': _("Please specify a tax agency on your company for TicketBAI."),
                 'blocking_level': 'error',
-                'success': False
             } for inv in invoice}
 
         # Generate the XML values.
         inv_xml = self._l10n_es_tbai_get_invoice_xml(invoice)
 
-        # Optional check using the XSD
-        xsd_id = f'l10n_es_edi_tbai.{invoice.company_id.l10n_es_tbai_tax_agency}_ticketBaiV1-2.xsd'
-        res = {invoice: self._l10n_es_tbai_verify_xml(inv_xml, xsd_id)}
-        if 'error' in res[invoice]:
-            return res
-
         # Call the web service and get response
-        res.update(self._l10n_es_tbai_post_to_web_service(invoice, inv_xml))
+        res = self._l10n_es_tbai_post_to_web_service(invoice, inv_xml)
 
         # Get TicketBai response
         res_xml = res[invoice]['response']
-        message, tbai_id = self.env['l10n_es.edi.tbai.util'].get_response_values(res_xml)
+        message, tbai_id = self.get_response_values(res_xml)
 
         # SUCCESS
         if res.get(invoice, {}).get('success'):
 
-            # Track head of chain (last posted invoice)
+            # Track head of chain (last posted invoice) # TODO replace by _compute from unzipped attachment
             invoice.company_id.write({'l10n_es_tbai_last_posted_id': invoice})
 
             # Zip together invoice & response
             with io.BytesIO() as stream:
                 raw1 = etree.tostring(inv_xml, pretty_print=True, xml_declaration=True, encoding='UTF-8')
                 raw2 = etree.tostring(res_xml, pretty_print=True, xml_declaration=True, encoding='UTF-8')
-                stream = self.env['l10n_es.edi.tbai.util'].zip_files(
-                    [raw1, raw2],
-                    [invoice.name + ".xml", invoice.name + "_response.xml"],
-                    stream
-                )
+                stream = self.zip_files([raw1, raw2], [invoice.name + ".xml", invoice.name + "_response.xml"], stream)
 
                 # Create attachment & post to chatter
                 attachment = self.env['ir.attachment'].create({
                     'type': 'binary',
                     'name': invoice.name + ".zip",
                     'raw': stream.getvalue(),
-                    'mimetype': 'application/zip',
-                    'res_id': invoice.id,
-                    'res_model': 'account.move',
+                    'mimetype': 'application/zip'
                 })
                 invoice.with_context(no_new_invoice=True).message_post(
-                    body="<pre>TicketBAI: submitted XML and response\n" + message + "</pre>",
+                    body="TicketBAI: submitted XML and response",
                     attachment_ids=attachment.ids)
                 res[invoice]['attachment'] = attachment  # save zip as EDI document
 
-        # ERROR (TODO remove -> but any error means we lose the exchange -> log ?)
-        else:
-            # Put sent XML in chatter
-            attachment = self.env['ir.attachment'].create({
-                'type': 'binary',
-                'name': invoice.name + '.xml',
-                'raw': etree.tostring(inv_xml, pretty_print=True, xml_declaration=True, encoding='UTF-8'),
-                'mimetype': 'application/xml',
-            })
-            invoice.with_context(no_new_invoice=True).message_post(
-                body="TicketBAI: invoice XML (TODO remove)",
-                attachment_ids=attachment.ids)
+        # Put sent XML in chatter (TODO remove)
+        attachment = self.env['ir.attachment'].create({
+            'type': 'binary',
+            'name': invoice.name + '.xml',
+            'raw': etree.tostring(inv_xml, pretty_print=True, xml_declaration=True, encoding='UTF-8'),
+            'mimetype': 'application/xml',
+        })
+        invoice.with_context(no_new_invoice=True).message_post(
+            body="TicketBAI: invoice XML (TODO remove)",
+            attachment_ids=attachment.ids)
 
-            # Put response + any warning/error in chatter (TODO remove)
-            attachment = self.env['ir.attachment'].create({
-                'type': 'binary',
-                'name': invoice.name + '_response.xml',
-                'raw': etree.tostring(res_xml, pretty_print=True, xml_declaration=True, encoding='UTF-8'),
-                'mimetype': 'application/xml',
-            })
-            invoice.with_context(no_new_invoice=True).message_post(
-                body="<pre>TicketBAI: response\n" + message + '</pre>',
-                attachment_ids=attachment.ids)
+        # Put response + any warning/error in chatter (TODO remove)
+        attachment = self.env['ir.attachment'].create({
+            'type': 'binary',
+            'name': invoice.name + '_response.xml',
+            'raw': etree.tostring(res_xml, pretty_print=True, xml_declaration=True, encoding='UTF-8'),
+            'mimetype': 'application/xml',
+        })
+        invoice.with_context(no_new_invoice=True).message_post(
+            body="<pre>TicketBAI: response\n" + message + '</pre>',
+            attachment_ids=attachment.ids)
 
         return res
 
@@ -163,32 +153,26 @@ class AccountEdiFormat(models.Model):
 
         # Generate the XML values.
         cancel_xml = self._l10n_es_tbai_get_invoice_xml(invoice, cancel=True)
-
-        # Optional check using the XSD
-        xsd_id = f'l10n_es_edi_tbai.{invoice.company_id.l10n_es_tbai_tax_agency}_Anula_ticketBaiV1-2.xsd'
-        res = {invoice: self._l10n_es_tbai_verify_xml(cancel_xml, xsd_id)}
-        if 'error' in res[invoice]:
-            return res
+        print("CANCEL XML:")
+        print(etree.tostring(cancel_xml))
 
         # Call the web service and get response
-        res.update(self._l10n_es_tbai_post_to_web_service(invoice, cancel_xml, cancel=True))
+        res = self._l10n_es_tbai_post_to_web_service(invoice, cancel_xml, cancel=True)
 
         # Get TicketBai response
         res_xml = res[invoice]['response']
-        message, tbai_id = self.env['l10n_es.edi.tbai.util'].get_response_values(res_xml)
+        print("CANCEL RESPONSE:")
+        print(etree.tostring(res_xml))
+        message, tbai_id = self.get_response_values(res_xml)
 
         # SUCCESS
-        # if res.get(invoice, {}).get('success'): # TODO uncomment (but any error means we lose the exchange -> log ?)
+        # if res.get(invoice, {}).get('success'): # TODO uncomment
 
-        # Zip together invoice & response
+        # Zip together invoice & response (TODO access previous zip EDI document)
         with io.BytesIO() as stream:
             raw1 = etree.tostring(cancel_xml, pretty_print=True, xml_declaration=True, encoding='UTF-8')
             raw2 = etree.tostring(res_xml, pretty_print=True, xml_declaration=True, encoding='UTF-8')
-            stream = self.env['l10n_es.edi.tbai.util'].zip_files(
-                [raw1, raw2],
-                [invoice.name + "_cancel.xml", invoice.name + "_cancel_response.xml"],
-                stream
-            )
+            stream = self.zip_files([raw1, raw2], [invoice.name + "_cancel.xml", invoice.name + "_cancel_response.xml"], stream)
 
             # Create attachment & post to chatter
             attachment = self.env['ir.attachment'].create({
@@ -203,22 +187,18 @@ class AccountEdiFormat(models.Model):
 
         return res
 
-    # -------------------------------------------------------------------------
-    # TBAI XML VERIFY
-    # -------------------------------------------------------------------------
+    def zip_files(self, files, fnames, stream):
+        """
+        : param fnct_sort : Function to be passed to "key" parameter of built-in
+                            python sorted() to provide flexibility of sorting files
+                            inside ZIP archive according to specific requirements.
+        """
 
-    def _l10n_es_tbai_verify_xml(self, xml, xsd_id):
-        xsd_attachment = self.env.ref(xsd_id, False)
-        if xsd_attachment:
-            try:
-                self.env['l10n_es.edi.tbai.util'].validate_format_xsd(xml, xsd_id)
-            except UserError as e:
-                return {
-                    'error': str(e).split('\\n'),
-                    'blocking_level': 'error',
-                    'success': False,
-                }
-        return {}
+        with zipfile.ZipFile(stream, 'w', compression=zipfile.ZIP_DEFLATED) as zipf:
+            for file, fname in zip(files, fnames):
+                fname = regex_sub("/", "-", fname)  # slashes create directory structure
+                zipf.writestr(fname, file)
+        return stream
 
     # -------------------------------------------------------------------------
     # TBAI XML BUILD
@@ -233,7 +213,7 @@ class AccountEdiFormat(models.Model):
         values.update(self._l10n_es_tbai_get_invoice_values(invoice, cancel))
         values.update(self._l10n_es_tbai_get_trail_values(invoice, cancel))
         xml_str = self.env.ref('l10n_es_edi_tbai.template_invoice_main')._render(values)
-        xml_doc = self.env['l10n_es.edi.tbai.util'].cleanup_xml_content(xml_str, is_string=True)
+        xml_doc = etree.fromstring(xml_str, etree.XMLParser(compact=True, remove_blank_text=True, remove_comments=True))
         self._l10n_es_tbai_sign_invoice(invoice, xml_doc)
 
         return xml_doc
@@ -291,8 +271,8 @@ class AccountEdiFormat(models.Model):
 
         values.update({
             'Destinatarios': xml_recipients,
-            'VariosDestinatarios': "N",  # Odoo supports only one recipient
-            'TerceroODestinatario': "D",  # TODO for Bizkaia this might be "T" (if "in" invoice)
+            'VariosDestinatarios': "N",  # TODO
+            'TerceroODestinatario': "D",  # TODO
         })
         return values
 
@@ -306,24 +286,14 @@ class AccountEdiFormat(models.Model):
         # === CABECERA===
         values['SerieFactura'] = invoice.l10n_es_tbai_sequence
         values['NumFactura'] = invoice.l10n_es_tbai_number
+        values['FechaExpedicionFactura'] = datetime.strftime(datetime.now(tz=timezone('Europe/Madrid')), '%d-%m-%Y')
+
         if cancel:
-            values['FechaExpedicionFactura'] = datetime.strftime(invoice.l10n_es_tbai_registration_date, '%d-%m-%Y')
             return values
 
-        values['FechaExpedicionFactura'] = datetime.strftime(datetime.now(tz=timezone('Europe/Madrid')), '%d-%m-%Y')
         values['HoraExpedicionFactura'] = datetime.strftime(datetime.now(tz=timezone('Europe/Madrid')), '%H:%M:%S')
 
-        # === RECTIFICATIVA ===
-        refund = invoice.move_type == 'out_refund'
-        if refund:
-            values['CodigoRectificativa'] = invoice.l10n_es_tbai_refund_reason or 'R1'
-            values['FacturasRectificadasSustituidas'] = [{
-                'SerieFactura': invoice.reversed_entry_id.l10n_es_tbai_sequence,
-                'NumFactura': invoice.reversed_entry_id.l10n_es_tbai_number,
-                'FechaExpedicionFactura': datetime.strftime(invoice.reversed_entry_id.l10n_es_tbai_registration_date, '%d-%m-%Y')
-            }]
-
-        # TODO simplified & rectified invoices (if simplified => refund code always R5)
+        # TODO simplified & rectified invoices
         # is_simplified = invoice.partner_id == simplified_partner
         # if invoice.move_type == 'out_invoice':
         #     invoice_node['TipoFactura'] = 'F2' if is_simplified else 'F1'
@@ -340,13 +310,13 @@ class AccountEdiFormat(models.Model):
             detalles.append({
                 "DescripcionDetalle": regex_sub(r"[^0-9a-zA-Z ]", "", line.name)[:250],
                 "Cantidad": line.quantity,
-                "ImporteUnitario": line.price_unit * (-1 if refund else 1),
+                "ImporteUnitario": line.price_unit,
                 "Descuento": line.discount or "0.00",
-                "ImporteTotal": line.price_total * (-1 if refund else 1),
+                "ImporteTotal": line.price_total,
             })
         values['DetallesFactura'] = detalles
 
-        # Claves: TODO there's 15 more codes to implement, also there can be up to 3 in total
+        # Claves: TODO there's 15 more codes to implement, there can be up to 3
         com_partner = invoice.commercial_partner_id
         if not com_partner.country_id or com_partner.country_id.code in eu_country_codes:
             values['ClaveRegimenIvaOpTrascendencia'] = '01'
@@ -507,6 +477,7 @@ class AccountEdiFormat(models.Model):
 
     def _l10n_es_tbai_get_trail_values(self, invoice, cancel):
         prev_invoice = invoice.company_id.l10n_es_tbai_last_posted_id
+        print("PREV INVOICE:", prev_invoice, "is {!s}".format('True' if prev_invoice else 'False'))
         if prev_invoice and not cancel:
             return {
                 'EncadenamientoFacturaAnterior': True,
@@ -521,9 +492,9 @@ class AccountEdiFormat(models.Model):
             }
 
     def _l10n_es_tbai_sign_invoice(self, invoice, xml_root):
-        util = self.env['l10n_es.edi.tbai.util']
+        self.ensure_one()
         company = invoice.company_id
-        cert_private, cert_public = company.l10n_es_tbai_certificate_id._get_key_pair()
+        cert_private, cert_public = company.l10n_es_tbai_certificate_id.get_key_pair()
         public_key = cert_public.public_key()
 
         # Identifiers
@@ -536,32 +507,26 @@ class AccountEdiFormat(models.Model):
         values = {
             'dsig': {
                 'document-id': doc_id,
-                'x509-certificate': util.base64_print(b64encode(cert_public.public_bytes(encoding=serialization.Encoding.DER))),
-                'public-modulus': util.base64_print(b64encode(util.long_to_bytes(public_key.public_numbers().n))),
-                'public-exponent': util.base64_print(b64encode(util.long_to_bytes(public_key.public_numbers().e))),
+                'x509-certificate': l10n_es_tbai_base64_print(b64encode(cert_public.public_bytes(encoding=serialization.Encoding.DER))),
+                'public-modulus': l10n_es_tbai_base64_print(b64encode(l10n_es_tbai_long_to_bytes(public_key.public_numbers().n))),
+                'public-exponent': l10n_es_tbai_base64_print(b64encode(l10n_es_tbai_long_to_bytes(public_key.public_numbers().e))),
                 'iso-now': datetime.now().isoformat(),
                 'keyinfo-id': kinfo_id,
                 'signature-id': signature_id,
                 'sigpolicy-id': sp_id,
-                'sigpolicy-description': "Política de Firma TicketBAI 1.0",  # í = &#237;
-                'sigpolicy-url': company.get_l10n_es_tbai_url_sigpolicy(),
-                'sigpolicy-digest': company.get_l10n_es_tbai_url_sigpolicy(get_hash=True),
-                'sigcertif-digest': b64encode(cert_public.fingerprint(hashes.SHA256())).decode(),
+                'sigpolicy-url': 'http://ticketbai.eus/politicafirma',  # TODO use specific links for each agency (from res_company)
+                'sigpolicy-digest': 'lX1xDvBVAsPXkkJ7R07WCVbAm9e0H33I1sCpDtQNkbc=',  # TODO figure out how digests are computed (SHA1/256 ?)
             }
         }
-        xml_sig_str = self.env.ref('l10n_es_edi_tbai.template_digital_signature')._render(values)
-        xml_sig = util.cleanup_xml_content(xml_sig_str, is_string=True, indent_level=1)
-
-        # Complete document with signature template
-        xml_root[-1].tail = "\n  "
+        xml_sig = etree.fromstring(self.env.ref('l10n_es_edi_tbai.template_digital_signature')._render(values))
         xml_root.append(xml_sig)
 
-        # Compute digest values for references
-        util.reference_digests(xml_sig.find("ds:SignedInfo", namespaces=util.NS_MAP))
+        # Compute digest values for references (may be optional)
+        l10n_es_tbai_reference_digests(xml_sig.find("ds:SignedInfo", namespaces=L10N_ES_TBAI_NS_MAP))
 
         # Sign (writes into SignatureValue)
-        util.fill_signature(xml_sig, cert_private)
-        signature_value = xml_sig.find("ds:SignatureValue", namespaces=util.NS_MAP).text
+        l10n_es_tbai_fill_signature(xml_sig, cert_private)
+        signature_value = xml_sig.find("ds:SignatureValue", namespaces=L10N_ES_TBAI_NS_MAP).text
 
         # RFC2045 - Base64 Content-Transfer-Encoding (page 25)
         # Any characters outside of the base64 alphabet are to be ignored in
@@ -573,24 +538,23 @@ class AccountEdiFormat(models.Model):
     # -------------------------------------------------------------------------
 
     def _l10n_es_tbai_post_to_web_service(self, invoices, invoice_xml, cancel=False):
-        util = self.env['l10n_es.edi.tbai.util']
         company = invoices.company_id
         xml_str = etree.tostring(invoice_xml, encoding='UTF-8')
 
         # === Call the web service ===
 
         # Get connection data
-        url = company.get_l10n_es_tbai_url_cancel() if cancel else company.get_l10n_es_tbai_url_invoice()
+        url = company.l10n_es_tbai_url_cancel if cancel else company.l10n_es_tbai_url_invoice
         header = {"Content-Type": "application/xml; charset=UTF-8"}
         cert_file = company.l10n_es_tbai_certificate_id
 
         # Post and retrieve response
-        response = util.post(url=url, data=xml_str, headers=header, pkcs12_data=cert_file, timeout=30)
+        response = post(url=url, data=xml_str, headers=header, pkcs12_data=cert_file, timeout=30)
         data = response.content.decode(response.encoding)
 
         # Error management
         response_xml = etree.fromstring(bytes(data, 'utf-8'))
-        message, tbai_id = self.env['l10n_es.edi.tbai.util'].get_response_values(response_xml)
+        message, tbai_id = self.get_response_values(response_xml)
         state = int(response_xml.find(r'.//Estado').text)
         if state == 0:
             # SUCCESS
@@ -600,3 +564,12 @@ class AccountEdiFormat(models.Model):
             return {invoices: {
                 'success': False, 'error': _(message), 'blocking_level': 'error',
                 'response': response_xml}}
+
+    def get_response_values(self, xml_res):
+        tbai_id_node = xml_res.find(r'.//IdentificadorTBAI')
+        tbai_id = '' if tbai_id_node is None else tbai_id_node.text
+        messages = ''
+        node_name = 'Azalpena' if get_lang(self.env).code == 'eu_ES' else 'Descripcion'
+        for xml_res_node in xml_res.findall(r'.//ResultadosValidacion'):
+            messages += xml_res_node.find('Codigo').text + ": " + xml_res_node.find(node_name).text + "\n"
+        return messages, tbai_id

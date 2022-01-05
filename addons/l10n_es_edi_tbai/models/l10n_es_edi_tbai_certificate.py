@@ -59,19 +59,25 @@ class Certificate(models.Model):
         )
         return pem_certificate, pem_private_key, certificate
 
-    def _get_key_pair(self):
+    def get_key_pair(self):
         self.ensure_one()
 
         if not self.password:
             return None, None
 
         private_key, certificate, dummy = pkcs12.load_key_and_certificates(
-            b64decode(self.with_context(bin_size=False).content),  # Without bin_size=False, size is returned instead of content
+            b64decode(self.with_context(bin_size=False).content),  # TODO investigate with_context(bin_size)
             self.password.encode(),
             backend=default_backend(),
         )
 
         return private_key, certificate
+
+    def get_file(self):
+        return b64decode(self.content)
+
+    def get_password(self):
+        return self.password
 
     # -------------------------------------------------------------------------
     # LOW-LEVEL METHODS

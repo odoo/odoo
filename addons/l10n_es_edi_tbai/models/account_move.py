@@ -11,6 +11,8 @@ from odoo import api, fields, models
 from pytz import timezone
 from werkzeug.urls import url_quote
 
+from .utils import l10n_es_tbai_crc8
+
 
 class AccountMove(models.Model):
     _inherit = 'account.move'
@@ -18,7 +20,8 @@ class AccountMove(models.Model):
     # Stored fields
     l10n_es_tbai_is_required = fields.Boolean(
         string="Is the Bask EDI (TicketBAI) needed",
-        compute='_compute_l10n_es_tbai_is_required'
+        compute='_compute_l10n_es_tbai_is_required',
+        store=True
     )
 
     # Non-stored fields
@@ -26,7 +29,7 @@ class AccountMove(models.Model):
     l10n_es_tbai_number = fields.Char(string="TicketBAI number", compute="_compute_l10n_es_tbai_number")
     l10n_es_tbai_id = fields.Char(string="TicketBAI ID", compute="_compute_l10n_es_tbai_id")
     l10n_es_tbai_signature = fields.Char(string="Signature value of XML", compute="_compute_l10n_es_tbai_values")
-    l10n_es_tbai_registration_date = fields.Date(  # TODO replace with record.invoice_date ?
+    l10n_es_tbai_registration_date = fields.Date(  # TODO replace with record.invoice_date
         string="Registration Date",
         help="Technical field to keep the date the invoice was sent the first time as the date the invoice was "
              "registered into the system.",
@@ -34,19 +37,6 @@ class AccountMove(models.Model):
     )
     l10n_es_tbai_qr = fields.Char(string="QR code to verify posted invoice", compute="_compute_l10n_es_tbai_qr")
     l10n_es_tbai_qr_escaped = fields.Char(string="QR code, escaped", compute="_compute_l10n_es_tbai_qr_escaped")
-
-    # Optional fields
-    l10n_es_tbai_refund_reason = fields.Selection([
-        ('R1', "R1: Art. 80.1, 80.2, 80.6 and rights founded error"),
-        ('R2', "R2: Art. 80.3"),
-        ('R3', "R3: Art. 80.4"),
-        ('R4', "R4: Art. 80 - other"),
-        ('R5', "R5: Factura rectificativa en facturas simplificadas")
-    ],
-        string="Invoice Refund Reason Code",
-        help="BOE-A-1992-28740. Ley 37/1992, de 28 de diciembre, del Impuesto sobre el "
-        "Valor Añadido. Artículo 80. Modificación de la base imponible.",
-    )
 
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
@@ -72,11 +62,11 @@ class AccountMove(models.Model):
                     tbai_id_no_crc = '-'.join([
                         'TBAI',
                         str(company.vat[2:] if company.vat.startswith('ES') else company.vat),
-                        datetime.strftime(record.l10n_es_tbai_registration_date, '%d%m%y'),  # TODO use record.invoice_date ? (also in XMLs)
+                        datetime.strftime(record.l10n_es_tbai_registration_date, '%d%m%y'),  # TODO use record.invoice_date (also in XMLs)
                         record.l10n_es_tbai_signature[:13],
                         ''  # CRC
                     ])
-                    record.l10n_es_tbai_id = tbai_id_no_crc + self.env['l10n_es.edi.tbai.util'].crc8(tbai_id_no_crc)
+                    record.l10n_es_tbai_id = tbai_id_no_crc + l10n_es_tbai_crc8(tbai_id_no_crc)
             else:
                 record.l10n_es_tbai_id = ''  # record
 
@@ -85,13 +75,13 @@ class AccountMove(models.Model):
         for record in self:
             if record.l10n_es_tbai_is_required and record.edi_state != 'to_send':
                 company = record.company_id
-                tbai_qr_no_crc = company.get_l10n_es_tbai_url_qr() + '?' + '&'.join([
+                tbai_qr_no_crc = company.l10n_es_tbai_url_qr + '?' + '&'.join([
                     'id=' + record.l10n_es_tbai_id,
                     's=' + record.l10n_es_tbai_sequence,
                     'nf=' + record.l10n_es_tbai_number,
                     'i=' + record._get_l10n_es_tbai_values_from_zip({'importe': r'.//ImporteTotalFactura'})['importe']
                 ])
-                record.l10n_es_tbai_qr = tbai_qr_no_crc + '&cr=' + self.env['l10n_es.edi.tbai.util'].crc8(tbai_qr_no_crc)
+                record.l10n_es_tbai_qr = tbai_qr_no_crc + '&cr=' + l10n_es_tbai_crc8(tbai_qr_no_crc)
             else:
                 record.l10n_es_tbai_qr = ''
 
@@ -102,11 +92,11 @@ class AccountMove(models.Model):
 
     def _get_l10n_es_tbai_values_from_zip(self, xpaths, response=False):
         res = {key: '' for key in xpaths.keys()}
-        for doc in self.env['ir.attachment'].search([
-            ('res_model', '=', 'account.move'),
-            ('res_id', '=', self.id)
-        ]):
-            zip = io.BytesIO(doc.with_context(bin_size=False).raw)  # Without bin_size=False, size is returned instead of content
+        for doc in self.edi_document_ids.filtered(lambda d: d.edi_format_id.code == 'es_tbai'):
+            if not doc.attachment_id:
+                print("ZIP: NO ATTACHMENT")
+                return res
+            zip = io.BytesIO(doc.attachment_id.with_context(bin_size=False).raw)  # TODO investigate with_context(bin_size)
             try:
                 with zipfile.ZipFile(zip, 'r', compression=zipfile.ZIP_DEFLATED) as zipf:
                     for file in zipf.infolist():
@@ -145,10 +135,11 @@ class AccountMove(models.Model):
             sequence = regex_sub(r"[^0-9A-Za-z.\_\-\/]", "", sequence)  # remove forbidden characters
             sequence = regex_sub(r"[\s]+", " ", sequence)  # no more than once consecutive whitespace allowed
             # TODO (optional) issue warning if sequence uses chars out of ([0123456789ABCDEFGHJKLMNPQRSTUVXYZ.\_\-\/ ])
-            self.l10n_es_tbai_sequence = sequence + ("TEST" if record.company_id.l10n_es_tbai_test_env else "")
+            record.write({'l10n_es_tbai_sequence': sequence + ("TEST" if record.company_id.l10n_es_tbai_test_env else "")})
 
-    @ api.depends('name')
+    @api.depends('name')
     def _compute_l10n_es_tbai_number(self):
         for record in self:
             _, number = record.name.rsplit('/', 1)
-            self.l10n_es_tbai_number = regex_sub(r"[^0-9]", "", number)  # remove non-decimal characters
+            number = regex_sub(r"[^0-9]", "", number)  # remove non-decimal characters
+            record.write({'l10n_es_tbai_number': number})
