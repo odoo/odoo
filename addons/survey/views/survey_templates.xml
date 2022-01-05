@@ -440,9 +440,10 @@
                             <t t-set="selection_key_class" t-value="'position-relative o_survey_radio_btn float-left d-flex'"/>
                         </t>
                         <span class="ml-2" t-field='label.value'/>
-                        <input t-att-id="str(question.id) + '_' + str(label.id)" type="radio" t-att-value='label.id' class="o_survey_form_choice_item invisible position-absolute"
+                        <input t-att-id="str(question.id) + '_' + str(label.id)" type="radio" t-att-value='label.id'
+                               t-attf-class="o_survey_form_choice_item invisible position-absolute #{'o_survey_form_choice_item_selected' if answer_selected else ''}"
                                t-att-name='question.id'
-                               t-att-checked="answer_line and answer_line.suggested_answer_id.id == label.id and 'checked' or None"
+                               t-att-checked="'checked' if answer_selected else None"
                                t-att-data-selection-key="letters[item_idx] if useKeySelection else ''"/>
                         <i class="fa fa-check-circle float-right mt-1 position-relative"></i>
                         <i class="fa fa-circle-thin float-right mt-1 position-relative"></i>

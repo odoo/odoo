@@ -19,6 +19,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
     events: {
         'change .o_survey_form_choice_item': '_onChangeChoiceItem',
         'click .o_survey_matrix_btn': '_onMatrixBtnClick',
+        'click input[type="radio"]': '_onRadioChoiceClick',
         'click button[type="submit"]': '_onSubmit',
         'focusin .form-control': '_updateEnterButtonText',
         'focusout .form-control': '_updateEnterButtonText'
@@ -165,7 +166,9 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
             var isQuestionComplete = false;
             if ($matrixBtn.length > 0) {
                 $matrixBtn.closest('tr').find('td').removeClass('o_survey_selected');
-                $matrixBtn.addClass('o_survey_selected');
+                if ($target.is(':checked')) {
+                    $matrixBtn.addClass('o_survey_selected');
+                }
                 if (this.options.questionsLayout === 'page_per_question') {
                     var subQuestionsIds = $matrixBtn.closest('table').data('subQuestions');
                     var completedQuestions = [];
@@ -251,6 +254,13 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
         }
     },
 
+    /**
+     * Invert the related input's "checked" property.
+     * This will tick or untick the option (based on the previous state).
+     *
+     * @param {MouseEvent} event
+     * @returns
+     */
     _onMatrixBtnClick: function (event) {
         if (this.readonly) {
             return;
@@ -258,10 +268,36 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
 
         var $target = $(event.currentTarget);
         var $input = $target.find('input');
-        if ($input.attr('type') === 'radio') {
-            $input.prop("checked", true).trigger('change');
+        $input.prop("checked", !$input.prop("checked")).trigger('change');
+    },
+
+    /**
+     * Base browser behavior when clicking on a radio input is to leave the radio checked if it was
+     * already checked before.
+     * Here for survey we want to be able to un-tick the choice.
+     *
+     * e.g: You select an option but on second thoughts you're unsure it's the right answer, you
+     * want to be able to remove your answer.
+     *
+     * To do so, we use an alternate class "o_survey_form_choice_item_selected" that is added when
+     * the option is ticked and removed when the option is unticked.
+     *
+     * - When it's ticked, we simply add the class (the browser will set the "checked" property
+     *   to true).
+     * - When it's unticked, we manually set the "checked" property of the element to "false".
+     *   We also trigger the 'change' event to go into '_onChangeChoiceItem'.
+     *
+     * @param {MouseEvent} event
+     */
+    _onRadioChoiceClick: function (event) {
+        var $target = $(event.currentTarget);
+        if ($target.hasClass("o_survey_form_choice_item_selected")) {
+            $target.prop("checked", false).removeClass("o_survey_form_choice_item_selected");
+            $target.trigger('change');
         } else {
-            $input.prop("checked", !$input.prop("checked")).trigger('change');
+            this.$(`input:radio[name="${$target.prop("name")}"].o_survey_form_choice_item_selected`)
+                .removeClass("o_survey_form_choice_item_selected");
+            $target.addClass("o_survey_form_choice_item_selected");
         }
     },
 
