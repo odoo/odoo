@@ -13,7 +13,7 @@ except ImportError:
     slugify_lib = None
 
 import odoo
-from odoo import api, models
+from odoo import api, models, http
 from odoo.addons.base.models.ir_http import RequestUID, ModelConverter
 from odoo.http import request
 from odoo.tools import config, ustr, pycompat
@@ -166,7 +166,7 @@ def is_multilang_url(local_url, langs=None):
     url = local_url.partition('#')[0].split('?')
     path = url[0]
     query_string = url[1] if len(url) > 1 else None
-    router = request.httprequest.app.get_db_router(request.db).bind('')
+    router = http.root.get_db_router(request.db).bind('')
 
     def is_multilang_func(func):
         return (func and func.routing.get('website', False) and
