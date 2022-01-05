@@ -25,6 +25,16 @@ const getContextGroubBy = (context) => {
     }
 };
 
+function reduceType(type) {
+    if (type === "dateFilter") {
+        return "filter";
+    }
+    if (type === "dateGroupBy") {
+        return "groupBy";
+    }
+    return type;
+}
+
 export class SearchArchParser extends XMLParser {
     constructor(searchViewDescription, searchDefaults = {}, searchPanelDefaults = {}) {
         super();
@@ -86,7 +96,7 @@ export class SearchArchParser extends XMLParser {
 
     pushGroup(tag = null) {
         if (this.currentGroup.length) {
-            if (this.currentTag && ["groupBy", "dateGroupBy"].includes(this.currentTag)) {
+            if (this.currentTag === "groupBy") {
                 this.pregroupOfGroupBys.push(...this.currentGroup);
             } else {
                 this.preSearchItems.push(this.currentGroup);
@@ -189,8 +199,8 @@ export class SearchArchParser extends XMLParser {
                 preSearchItem.context = context;
             }
         }
-        if (preSearchItem.type !== this.currentTag) {
-            this.pushGroup(preSearchItem.type);
+        if (reduceType(preSearchItem.type) !== this.currentTag) {
+            this.pushGroup(reduceType(preSearchItem.type));
         }
         if (preSearchItem.type === "filter") {
             if (node.hasAttribute("date")) {
