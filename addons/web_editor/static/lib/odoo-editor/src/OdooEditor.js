@@ -195,6 +195,7 @@ export class OdooEditor extends EventTarget {
                 toSanitize: true,
                 isRootEditable: true,
                 placeholder: false,
+                showEmptyElementHint: true,
                 defaultLinkAttributes: {},
                 plugins: [],
                 getContentEditableAreas: () => [],
@@ -2631,10 +2632,12 @@ export class OdooEditor extends EventTarget {
             }
         }
 
-        for (const [selector, text] of Object.entries(selectors)) {
-            for (const el of this.editable.querySelectorAll(selector)) {
-                if (!this.options.isHintBlacklisted(el)) {
-                    this._makeHint(el, text);
+        if (this.options.showEmptyElementHint) {
+            for (const [selector, text] of Object.entries(selectors)) {
+                for (const el of this.editable.querySelectorAll(selector)) {
+                    if (!this.options.isHintBlacklisted(el)) {
+                        this._makeHint(el, text);
+                    }
                 }
             }
         }
