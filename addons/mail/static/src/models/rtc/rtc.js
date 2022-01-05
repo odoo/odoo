@@ -347,6 +347,7 @@ function factory(dependencies) {
             this._disconnectAudioMonitor && this._disconnectAudioMonitor();
             if (this.messaging.userSetting.usePushToTalk || !this.channel || !this.audioTrack) {
                 this.currentRtcSession.update({ isTalking: false });
+                await this._updateLocalAudioTrackEnabledState();
                 return;
             }
             try {
@@ -368,6 +369,7 @@ function factory(dependencies) {
                 });
                 this.currentRtcSession.update({ isTalking: true });
             }
+            await this._updateLocalAudioTrackEnabledState();
         }
 
         //----------------------------------------------------------------------
