@@ -1279,6 +1279,9 @@ class Website(models.Model):
     def button_go_website(self, path='/', mode_edit=False):
         self._force()
         if mode_edit:
+            # If the user gets on a translated page (e.g /fr) the editor will
+            # never start. Forcing the default language fixes this issue.
+            path = url_for(path, self.default_lang_id.url_code)
             path += '?enable_editor=1'
         return {
             'type': 'ir.actions.act_url',
