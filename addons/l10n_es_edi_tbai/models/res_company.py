@@ -49,9 +49,9 @@ class ResCompany(models.Model):
     l10n_es_tbai_tax_agency = fields.Selection(
         string="Tax Agency for TBAI",
         selection=[
-            ('araba', "Hacienda Foral de Araba"),
-            ('bizkaia', "Hacienda Foral de Bizkaia"),
-            ('gipuzkoa', "Hacienda Foral de Gipuzkoa")
+            ('araba', "Hacienda Foral de Araba"),  # es-vi
+            ('bizkaia', "Hacienda Foral de Bizkaia"),  # es-bi
+            ('gipuzkoa', "Hacienda Foral de Gipuzkoa"),  # es-ss
         ],
         default=False,  # TODO set default based on region ?
     )

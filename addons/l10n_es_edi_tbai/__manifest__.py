@@ -24,6 +24,7 @@
     """,
     'depends': [
         'account_edi',
+        'l10n_es',
     ],
     'data': [
         'data/account_edi_data.xml',
