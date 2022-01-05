@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_l10n_es_tbai_invoice_form_inherit" model="ir.ui.view">
+            <field name="name">l10n_es_edi_tbai.invoice.form.inherit</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[last()]" position='after'>
+                    <page id="l10n_es_tbai_tab" string="TicketBAI" attrs="{'invisible': [('l10n_es_tbai_is_required', '=', False)]}">
+                        <sheet id="l10n_es_tbai_info">
+                            <group>
+                                <field name="l10n_es_tbai_is_required" invisible="1"/>
+                                <field name="l10n_es_tbai_sequence" class="oe_readonly"/>
+                                <field name="l10n_es_tbai_number" class="oe_readonly"/>
+                                <field name="l10n_es_tbai_registration_date" class="oe_readonly"/>
+                                <field name="l10n_es_tbai_id" class="oe_readonly"/>
+                                <field name="l10n_es_tbai_qr" class="oe_readonly"/>
+                                <field name="l10n_es_tbai_signature" style="word-break: break-word;" class="oe_readonly" groups="base.group_no_one"/>
+                                <field name="l10n_es_tbai_qr_escaped" class="oe_readonly" groups="base.group_no_one"/>
+                            </group>
+                        </sheet>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
