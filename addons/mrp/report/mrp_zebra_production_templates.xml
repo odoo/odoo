@@ -23,14 +23,17 @@
 ^FO100,150^BY3
 ^BCN,100,Y,N,N
 ^FD<t t-esc="move_line.lot_id.name"/>^FS
-^XZ
 </t>
-<t t-if="move_line.product_id.tracking == 'none' and move_line.product_id.barcode">
+<t t-elif="move_line.product_id.tracking == 'none' and move_line.product_id.barcode">
 ^FO100,100^BY3
 ^BCN,100,Y,N,N
 ^FD<t t-esc="move_line.product_id.barcode"/>^FS
-^XZ
 </t>
+<t t-else="">
+^FO100,100
+^A0N,44,33^FDNo barcode available^FS
+</t>
+^XZ
                             </t>
                         </t>
                     </t>
