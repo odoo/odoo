@@ -54,7 +54,11 @@ export const commandService = {
             global: true,
         });
 
-        function openMainPalette() {
+        /**
+         * @param {CommandPaletteConfig} config command palette config merged with default config
+         * @returns the actual command palette config if the command palette is already open
+         */
+        function openMainPalette(config = {}) {
             const categoriesByNamespace = {};
             commandCategoryRegistry.getEntries().forEach(([category, el]) => {
                 const namespace = el.namespace ? el.namespace : "default";
@@ -69,14 +73,16 @@ export const commandService = {
             commandEmptyMessageRegistry.getEntries().forEach(([key, message]) => {
                 emptyMessageByNamespace[key] = message.toString();
             });
-
-            const config = {
-                categoriesByNamespace,
-                emptyMessageByNamespace,
-                footerTemplate,
-                placeholder: env._t("Search for a command..."),
-                providers: commandProviderRegistry.getAll(),
-            };
+            config = Object.assign(
+                {
+                    categoriesByNamespace,
+                    emptyMessageByNamespace,
+                    footerTemplate,
+                    placeholder: env._t("Search for a command..."),
+                    providers: commandProviderRegistry.getAll(),
+                },
+                config
+            );
             return openPalette(config);
         }
 
@@ -176,6 +182,7 @@ export const commandService = {
                     (command) => command.activeElement === activeElement || command.global
                 );
             },
+            openMainPalette,
             openPalette,
         };
     },

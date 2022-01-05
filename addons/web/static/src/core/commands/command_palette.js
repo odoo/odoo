@@ -9,7 +9,7 @@ import { debounce } from "@web/core/utils/timing";
 import { _lt } from "@web/core/l10n/translation";
 
 const { Component, hooks } = owl;
-const { useState } = hooks;
+const { onWillStart, useState } = hooks;
 
 const DEFAULT_PLACEHOLDER = _lt("Search...");
 const DEFAULT_EMPTY_MESSAGE = _lt("No results found");
@@ -36,11 +36,11 @@ const FUZZY_NAMESPACES = ["default"];
 /**
  * @typedef {{
  *  categoriesByNamespace?: {[namespace]: string[]};
- *  namespace?: string;
  *  emptyMessageByNamespace?: {[namespace]: string};
  *  footerTemplate?: string;
  *  placeholder?: string;
  *  providers: Provider[];
+ *  searchValue?: string;
  * }} CommandPaletteConfig
  */
 
@@ -69,13 +69,12 @@ export class CommandPalette extends Component {
         this.keepLast = new KeepLast();
         this.DefaultCommandItem = DefaultCommandItem;
         this.activeElement = useService("ui").activeElement;
-        const onDebouncedSearchInput = debounce.apply(this, [this.onSearchInput, 200]);
-        this.onDebouncedSearchInput = (...args) => {
-            this.inputPromise = onDebouncedSearchInput.apply(this, args).catch(() => {
-                this.inputPromise = null;
+        const applyDebounceSearchValue = debounce.apply(this, [this.applySearchValue, 200]);
+        this.applyDebounceSearchValue = (...args) => {
+            this.searchValuePromise = applyDebounceSearchValue.apply(this, args).catch(() => {
+                this.searchValuePromise = null;
             });
         };
-
         useAutofocus();
 
         useHotkey("Enter", () => this.executeSelectedCommand());
@@ -94,7 +93,7 @@ export class CommandPalette extends Component {
             commands: [],
         });
 
-        this.setCommandPaletteConfig(this.props.config);
+        onWillStart(() => this.setCommandPaletteConfig(this.props.config));
     }
 
     get commandsByCategory() {
@@ -117,7 +116,7 @@ export class CommandPalette extends Component {
      * Apply the new config to the command pallet
      * @param {CommandPaletteConfig} config
      */
-    setCommandPaletteConfig(config) {
+    async setCommandPaletteConfig(config) {
         const result = { default: [] };
         for (const provider of config.providers) {
             const namespace = provider.namespace || "default";
@@ -135,12 +134,8 @@ export class CommandPalette extends Component {
 
         this.state.placeholder = config.placeholder || DEFAULT_PLACEHOLDER.toString();
 
-        const namespace = config.namespace || "default";
-        this.setCommands(namespace, {
-            activeElement: this.activeElement,
-            searchValue: "",
-        });
-        this.state.searchValue = namespace === "default" ? "" : namespace;
+        const searchValue = config.searchValue || "";
+        await this.applySearchValue(searchValue);
     }
 
     /**
@@ -236,7 +231,7 @@ export class CommandPalette extends Component {
     }
 
     async executeSelectedCommand() {
-        await this.inputPromise;
+        await this.searchValuePromise;
         if (this.state.selectedCommand) {
             this.executeCommand(this.state.selectedCommand);
         }
@@ -250,9 +245,8 @@ export class CommandPalette extends Component {
         }
     }
 
-    async onSearchInput(ev) {
-        this.state.searchValue = ev.target.value;
-        let searchValue = this.state.searchValue;
+    async applySearchValue(searchValue) {
+        this.state.searchValue = searchValue;
         let namespace = "default";
         if (searchValue.length && searchValue[0] in this.providersByNamespace) {
             namespace = searchValue[0];
@@ -262,6 +256,10 @@ export class CommandPalette extends Component {
             searchValue,
             activeElement: this.activeElement,
         });
+    }
+
+    onSearchInput(ev) {
+        this.applyDebounceSearchValue(ev.target.value);
     }
 }
 CommandPalette.template = "web.CommandPalette";
