@@ -93,6 +93,7 @@ odoo.define('payment.manage_form', require => {
                     $tokenCard.remove();
                     this._disableButton(false);
                 }).guardedCatch(error => {
+                    error.event.preventDefault();
                     this._displayError(
                         _t("Server Error"),
                         _t("We are not able to delete your payment method."),
