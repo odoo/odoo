@@ -723,7 +723,10 @@ registry.mediaVideo = Animation.extend({
 
         var def = this._super.apply(this, arguments);
         if (this.$target.children('iframe').length) {
-            // There already is an <iframe/>, do nothing
+            // There already is an <iframe/>, do nothing. This is the normal
+            // case. The whole code that follows is only there to ensure
+            // compatibility with videos added before bug fixes or new Odoo
+            // versions where the <iframe/> element is properly saved.
             return def;
         }
 
@@ -741,11 +744,23 @@ registry.mediaVideo = Animation.extend({
         // the src is saved in the 'data-src' attribute or the
         // 'data-oe-expression' one (the latter is used as a workaround in 10.0
         // system but should obviously be reviewed in master).
+        var src = _.escape(this.$target.data('oe-expression') || this.$target.data('src'));
+        // Validate the src to only accept supported domains we can trust
+        var m = src.match(/^(?:https?:)?\/\/([^/?#]+)/);
+        if (!m) {
+            // Unsupported protocol or wrong URL format, don't inject iframe
+            return def;
+        }
+        var domain = m[1].replace(/^www\./, '');
+        var supportedDomains = ['youtu.be', 'youtube.com', 'youtube-nocookie.com', 'instagram.com', 'vine.co', 'player.vimeo.com', 'vimeo.com', 'dailymotion.com', 'player.youku.com', 'youku.com'];
+        if (!_.contains(supportedDomains, domain)) {
+            // Unsupported domain, don't inject iframe
+            return def;
+        }
         this.$target.append($('<iframe/>', {
-            src: _.escape(this.$target.data('oe-expression') || this.$target.data('src')),
+            src: src,
             frameborder: '0',
             allowfullscreen: 'allowfullscreen',
-            sandbox: 'allow-scripts allow-same-origin', // https://www.html5rocks.com/en/tutorials/security/sandboxed-iframes/
         }));
 
         return def;
