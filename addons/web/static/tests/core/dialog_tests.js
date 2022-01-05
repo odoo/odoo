@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import { useService } from "@web/core/utils/hooks";
+import { useService, useEffect } from "@web/core/utils/hooks";
 import { uiService } from "@web/core/ui/ui_service";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { Dialog } from "@web/core/dialog/dialog";
@@ -28,6 +28,12 @@ class SimpleDialog extends Dialog {
         this.size = "size" in this.props ? this.props.size : this.constructor.size;
         this.fullscreen =
             "fullscreen" in this.props ? this.props.fullscreen : this.constructor.fullscreen;
+        // Forward modal ref to parent through prop
+        useEffect(() => {
+            if (this.props.modalRef) {
+                this.props.modalRef.el = this.modalRef.el;
+            }
+        });
     }
 }
 SimpleDialog.bodyTemplate = owl.tags.xml`<t t-slot="default"/>`;
@@ -280,7 +286,7 @@ QUnit.module("Components", (hooks) => {
         class Parent extends owl.Component {
             setup() {
                 this.ui = useService("ui");
-                this.dialog = useRef("dialogRef");
+                this.modalRef = { el: null };
                 assert.strictEqual(
                     this.ui.activeElement,
                     document,
@@ -288,16 +294,15 @@ QUnit.module("Components", (hooks) => {
                 );
             }
             mounted() {
-                const dialogModalEl = this.dialog.comp.modalRef.el;
                 assert.strictEqual(
                     this.ui.activeElement,
-                    dialogModalEl,
+                    this.modalRef.el,
                     "UI active element should be the dialog modal"
                 );
             }
         }
         const env = await makeTestEnv();
-        Parent.template = owl.tags.xml`<div><SimpleDialog t-ref="dialogRef"/></div>`;
+        Parent.template = owl.tags.xml`<div><SimpleDialog modalRef="modalRef"/></div>`;
         Parent.components = { SimpleDialog };
         parent = await mount(Parent, { env, target });
 
