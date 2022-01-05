@@ -4,6 +4,7 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.tools import format_date, float_repr
+import re
 
 
 class AccountMove(models.Model):
@@ -11,14 +12,34 @@ class AccountMove(models.Model):
 
     l10n_pt_qr_code_str = fields.Char(string='QR Code', compute='_compute_qr_code_str')
 
-    @api.depends('amount_total', 'amount_untaxed', 'company_id', 'company_id.vat')
+    def check_necessary_fields(self):
+        # Check needed values are filled before creating the QR code
+        for record in self:  # record is of type account.move
+            if record.company_id.country_id.code != "PT":
+                continue
+
+            if not self.company_id.vat or not re.match("([0-9]{9})+|([^^]+ [0-9/]+)", record.company_id.vat):
+                raise UserError(_("The `VAT` of your company should be defined and match the following format: 123456789"))
+
+            if not record.partner_id.country_id:
+                raise UserError(_("The `country of the customer should be defined."))
+
+            if record.type not in {'out_invoice', 'out_refund', 'out_receipt'}:
+                raise UserError(_("The type of document should either be an invoice, a credit note, or a receipt"))
+
+    def preview_invoice(self):
+        self.check_necessary_fields()
+        super().preview_invoice()
+
+    def action_invoice_sent(self):
+        self.check_necessary_fields()
+        super().action_invoice_sent()
+
+    @api.depends('partner_id', 'currency_id', 'date', 'type', 'display_name', 'amount_by_group', 'amount_total',
+                 'amount_untaxed', 'company_id', 'company_id.vat', 'company_id.country_id', 'partner_id.country_id')
     def _compute_qr_code_str(self):
-        """ Generate the qr code for Portugal invoicing.
+        """ Generate the informational QR code for Portugal invoicing.
         E.g.: A:509445535*B:123456823*C:BE*D:FT*E:N*F:20220103*G:FT 01P2022/1*H:0*I1:PT*I7:325.20*I8:74.80*N:74.80*O:400.00*P:0.00*Q:P0FE*R:2230
-        E.g.: A:509445535*B:999999990*C:PT*D:FT*E:N*F:20220103*G:FT 01P2022/2*H:0*I1:PT*I7:2.03*I8:0.47*N:0.47*O:2.50*P:0.00*Q:ZYpH*R:2230
-
-        A:False*B:999999990*C:res.country(233,)*D:FT*E:N*F:20220104*G:out_invoice INV/2022/0019*H:0*I1:res.country()
-
         """
 
         def get_base_and_vat(amount_by_group, vat_name, currency):
@@ -32,11 +53,8 @@ class AccountMove(models.Model):
                     'vat': float_repr(vat_values[index], currency.decimal_places)}
 
         for record in self:  # record is of type account.move
-            # Check needed values are filled
-            record.company_id.vat
-            "PT" in record.company_id.country_id.code
-            record.partner_id.country_id
-            record.type in {'out_invoice', 'out_refund', 'out_receipt'}
+            if record.company_id.country_id.code != "PT":
+                continue
 
             qr_code_str = ""
             qr_code_str += f"A:{record.company_id.vat}*"
