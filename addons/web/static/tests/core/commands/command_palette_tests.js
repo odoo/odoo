@@ -416,6 +416,56 @@ QUnit.test("check the concurrency during a research", async (assert) => {
     assert.verifySteps(["b"]);
 });
 
+QUnit.test(
+    "open the command palette with a searchValue already in the searchbar",
+    async (assert) => {
+        testComponent = await mount(TestComponent, { env, target });
+        const action = () => {};
+        const providers = [
+            {
+                provide: () => [
+                    {
+                        name: "Command1",
+                        action,
+                    },
+                    {
+                        name: "Command2",
+                        action,
+                    },
+                ],
+            },
+            {
+                namespace: "@",
+                provide: () => [
+                    {
+                        name: "Command3",
+                        action,
+                    },
+                    {
+                        name: "Command4",
+                        action,
+                    },
+                ],
+            },
+        ];
+        const config = {
+            searchValue: "C1",
+            providers,
+        };
+        env.services.dialog.add(CommandPaletteDialog, {
+            config,
+        });
+        await nextTick();
+        assert.containsOnce(target, ".o_command_palette");
+        assert.strictEqual(target.querySelector(".o_command_palette_search input").value, "C1");
+        assert.containsN(target, ".o_command", 1);
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_command")].map((el) => el.textContent),
+            ["Command1"]
+        );
+    }
+);
+
 QUnit.test("open the command palette with a namespace already in the searchbar", async (assert) => {
     testComponent = await mount(TestComponent, { env, target });
     const action = () => {};
@@ -447,7 +497,7 @@ QUnit.test("open the command palette with a namespace already in the searchbar",
         },
     ];
     const config = {
-        namespace: "@",
+        searchValue: "@",
         providers,
     };
     env.services.dialog.add(CommandPaletteDialog, {
