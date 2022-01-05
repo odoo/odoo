@@ -33,7 +33,7 @@ HTMLElement.prototype.oToggleList = function (offset, mode = 'UL') {
         for (const attribute of this.attributes) {
             list.setAttribute(attribute.name, attribute.value);
         }
-        restoreCursor(new Map([[this, list.firstElementChild]]));
+        restoreCursor({ replace: new Map([[this, list.firstElementChild]]) });
     }
 };
 
@@ -45,7 +45,7 @@ HTMLParagraphElement.prototype.oToggleList = function (offset, mode = 'UL') {
     }
     this.remove();
 
-    restoreCursor(new Map([[this, list.firstChild]]));
+    restoreCursor({ replace: new Map([[this, list.firstChild]])});
     return true;
 };
 
