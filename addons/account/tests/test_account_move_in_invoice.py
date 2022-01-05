@@ -1502,9 +1502,9 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         ''' Ensure two vendor bills can't share the same vendor reference. '''
         self.invoice.ref = 'a supplier reference'
         invoice2 = self.invoice.copy(default={'invoice_date': self.invoice.invoice_date})
-
+        invoice2.ref = 'a supplier reference'
         with self.assertRaises(ValidationError):
-            invoice2.ref = 'a supplier reference'
+            invoice2.action_post()
 
     def test_in_invoice_switch_in_refund_1(self):
         # Test creating an account_move with an in_invoice_type and switch it in an in_refund.

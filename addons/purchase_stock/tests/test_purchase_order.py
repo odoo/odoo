@@ -404,3 +404,45 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
 
         _message_content = _purchase_order.message_ids.mapped("body")[0]
         self.assertIsNotNone(re.search(r"Received Quantity: 5.0 -&gt; 10.0", _message_content), "Already received quantity isn't correctly taken into consideration")
+
+    def test_pol_description(self):
+        """
+        Suppose a product with several sellers, all with the same partner. On the purchase order, the product
+        description should be based on the correct seller
+        """
+        self.env.user.write({'company_id': self.company_data['company'].id})
+
+        product = self.env['product.product'].create({
+            'name': 'Super Product',
+            'seller_ids': [(0, 0, {
+                'name': self.partner_a.id,
+                'min_qty': 1,
+                'price': 10,
+                'product_code': 'C01',
+                'product_name': 'Name01',
+                'sequence': 1,
+            }), (0, 0, {
+                'name': self.partner_a.id,
+                'min_qty': 20,
+                'price': 2,
+                'product_code': 'C02',
+                'product_name': 'Name02',
+                'sequence': 2,
+            })]
+        })
+
+        orderpoint_form = Form(self.env['stock.warehouse.orderpoint'])
+        orderpoint_form.product_id = product
+        orderpoint_form.product_min_qty = 1
+        orderpoint_form.product_max_qty = 0.000
+        order_point = orderpoint_form.save()
+
+        self.env['procurement.group'].run_scheduler()
+
+        pol = self.env['purchase.order.line'].search([('product_id', '=', product.id)])
+        self.assertEqual(pol.name, "[C01] Name01")
+
+        with Form(pol.order_id) as po_form:
+            with po_form.order_line.edit(0) as pol_form:
+                pol_form.product_qty = 25
+        self.assertEqual(pol.name, "[C02] Name02")
