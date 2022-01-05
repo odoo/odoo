@@ -1924,7 +1924,14 @@ export class OdooEditor extends EventTarget {
         const range = sel.getRangeAt(0);
         const isSelForward =
             sel.anchorNode === range.startContainer && sel.anchorOffset === range.startOffset;
+        const startRect = range.startContainer.getBoundingClientRect && range.startContainer.getBoundingClientRect();
         const selRect = range.getBoundingClientRect();
+        // In some undetermined circumstance in chrome, the selection rect is
+        // wrongly defined and result with all the values for x, y, width, and
+        // height to be 0. In that case, use the rect of the startContainer if
+        // possible.
+        const isSelectionPotentiallyBugged = [selRect.x, selRect.y, selRect.width, selRect.height].every( x => x === 0 );
+        const correctedSelectionRect = isSelectionPotentiallyBugged && startRect ? startRect : selRect;
         const toolbarWidth = this.toolbar.offsetWidth;
         const toolbarHeight = this.toolbar.offsetHeight;
         const editorRect = this.editable.getBoundingClientRect();
@@ -1934,7 +1941,7 @@ export class OdooEditor extends EventTarget {
         const scrollY = this.document.defaultView.scrollY;
 
         // Get left position.
-        let left = selRect.left + OFFSET;
+        let left = correctedSelectionRect.left + OFFSET;
         // Ensure the toolbar doesn't overflow the editor on the left.
         left = Math.max(OFFSET, left);
         // Ensure the toolbar doesn't overflow the editor on the right.
@@ -1944,11 +1951,11 @@ export class OdooEditor extends EventTarget {
         this.toolbar.style.left = scrollX + left + 'px';
 
         // Get top position.
-        let top = selRect.top - toolbarHeight - OFFSET;
+        let top = correctedSelectionRect.top - toolbarHeight - OFFSET;
         // Ensure the toolbar doesn't overflow the editor on the top.
         if (top < editorTopPos) {
             // Position the toolbar below the selection.
-            top = selRect.bottom + OFFSET;
+            top = correctedSelectionRect.bottom + OFFSET;
             isBottom = true;
         }
         // Ensure the toolbar doesn't overflow the editor on the bottom.
@@ -1958,7 +1965,7 @@ export class OdooEditor extends EventTarget {
         this.toolbar.style.top = scrollY + top + 'px';
 
         // Position the arrow.
-        let arrowLeftPos = (isSelForward ? selRect.right : selRect.left) - left - OFFSET;
+        let arrowLeftPos = (isSelForward && !isSelectionPotentiallyBugged ? correctedSelectionRect.right : correctedSelectionRect.left) - left - OFFSET;
         // Ensure the arrow doesn't overflow the toolbar on the left.
         arrowLeftPos = Math.max(OFFSET, arrowLeftPos);
         // Ensure the arrow doesn't overflow the toolbar on the right.
