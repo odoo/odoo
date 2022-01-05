@@ -165,7 +165,6 @@ odoo.define('web.test_utils_create', function (require) {
                 super();
                 this.searchModel = new ActionModel(extensions, globalConfig);
                 this.state = useState(props);
-                this.controlPanel = useRef("controlPanel");
             }
             async willStart() {
                 await this.searchModel.load();
@@ -178,13 +177,13 @@ odoo.define('web.test_utils_create', function (require) {
                 if (params.search) {
                     this.searchModel.on('search', this, params.search);
                 }
+                this.controlPanel = Object.values(this.__owl__.children)[0];
             }
         }
         Parent.components = { ControlPanel };
         Parent.env = env;
         Parent.template = xml`
             <ControlPanel
-                t-ref="controlPanel"
                 t-props="state"
                 searchModel="searchModel"
             />`;
@@ -192,7 +191,7 @@ odoo.define('web.test_utils_create', function (require) {
         const parent = new Parent();
         await parent.mount(prepareTarget(debug), { position: 'first-child' });
 
-        const controlPanel = parent.controlPanel.comp;
+        const controlPanel = parent.controlPanel;
         const destroy = controlPanel.destroy;
         controlPanel.destroy = function () {
             controlPanel.destroy = destroy;
