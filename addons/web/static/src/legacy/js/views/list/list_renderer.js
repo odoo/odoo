@@ -1305,16 +1305,8 @@ var ListRenderer = BasicRenderer.extend({
      * @private
      */
     _onToggleOptionalColumnDropdown: function (ev) {
-        // The dropdown toggle is inside the overflow hidden container because
-        // the ellipsis is always in the last column, but we want the actual
-        // dropdown to be outside of the overflow hidden container since it
-        // could easily have a higher height than the table. However, separating
-        // the toggle and the dropdown itself is not supported by popper.js by
-        // default, which is why we need to toggle the dropdown manually.
         ev.stopPropagation();
-        this.$('.o_optional_columns .dropdown-toggle').dropdown('toggle');
-        // Explicitly set left/right of the optional column dropdown as it is pushed
-        // inside this.$el, so we need to position it at the end of top left corner.
+        // set option columns position at the end of top left/right corner.
         var position = (this.$(".table-responsive").css('overflow') === "auto" ? this.$el.width() :
             this.$('table').width());
         var direction = "left";
@@ -1323,6 +1315,13 @@ var ListRenderer = BasicRenderer.extend({
             direction = "right";
         }
         this.$('.o_optional_columns').css(direction, position);
+        // The dropdown toggle is inside the overflow hidden container because
+        // the ellipsis is always in the last column, but we want the actual
+        // dropdown to be outside of the overflow hidden container since it
+        // could easily have a higher height than the table. However, separating
+        // the toggle and the dropdown itself is not supported by popper.js by
+        // default, which is why we need to toggle the dropdown manually.
+        this.$('.o_optional_columns .dropdown-toggle').dropdown('toggle');
     },
     /**
      * Manages the keyboard events on the list. If the list is not editable, when the user navigates to
