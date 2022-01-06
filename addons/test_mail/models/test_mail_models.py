@@ -42,6 +42,11 @@ class MailTestStandard(models.Model):
     container_id = fields.Many2one('mail.test.container', tracking=True)
     company_id = fields.Many2one('res.company')
 
+    def _get_share_url(self, redirect, signup_partner, share_token):
+        """This function is required for a test on 'mail.mail_notification_paynow' template (test_message_post/test_mail_add_signature),
+        another model should be created in master"""
+        return '/mail/view'
+
 
 class MailTestActivity(models.Model):
     """ This model can be used to test activities in addition to simple chatter
