@@ -18,14 +18,16 @@ class AccountMove(models.Model):
             if record.company_id.country_id.code != "PT":
                 continue
 
-            if not self.company_id.vat or not re.match("([0-9]{9})+|([^^]+ [0-9/]+)", record.company_id.vat):
-                raise UserError(_("The `VAT` of your company should be defined and match the following format: 123456789"))
+            company_vat_not_ok = not self.company_id.vat or not re.match("([0-9]{9})+|([^^]+ [0-9/]+)", record.company_id.vat)
+            partner_country_not_ok = not record.partner_id.country_id
+            record_type_not_ok = record.type not in {'out_invoice', 'out_refund', 'out_receipt'}
 
-            if not record.partner_id.country_id:
-                raise UserError(_("The `country of the customer should be defined."))
-
-            if record.type not in {'out_invoice', 'out_refund', 'out_receipt'}:
-                raise UserError(_("The type of document should either be an invoice, a credit note, or a receipt"))
+            if company_vat_not_ok or partner_country_not_ok or record_type_not_ok:
+                error_msg = "Some fields required for the generation of the document are missing or invalid. Please verify them:\n"
+                error_msg += _('The `VAT` of your company should be defined and match the following format: 123456789\n') if company_vat_not_ok else ""
+                error_msg += _('The `country of the customer should be defined.\n') if partner_country_not_ok else ""
+                error_msg += _('The type of document should either be an invoice, a credit note, or a receipt\n') if record_type_not_ok else ""
+                raise UserError(error_msg)
 
     def preview_invoice(self):
         self.check_necessary_fields()
