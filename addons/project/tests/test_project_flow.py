@@ -225,6 +225,7 @@ class TestProjectFlow(TestProjectCommon, MockEmail):
             'partner_id': self.partner_2.id,
             'rating': 5,
             'consumed': False,
+            'feedback': 'Good Job',
         })
 
         rating_bad = self.env['rating.rating'].create({
@@ -253,7 +254,10 @@ class TestProjectFlow(TestProjectCommon, MockEmail):
         self.assertEqual(self.project_pigs.rating_avg, rating_bad.rating, 'Since there is only one rating the Average Rating should be equal to the rating value of this one.')
 
         # Consuming rating_good
-        first_task.rating_apply(5, rating_good.access_token)
+        first_task.rating_apply(5, rating_good.access_token, rating_good.feedback)
+
+        self.assertEqual(len(first_task.message_ids), 1,
+            'Rating request should have logged a message in first task')
 
         # We need to invalidate cache since it is not done automatically by the ORM
         # Our One2Many is linked to a res_id (int) for which the orm doesn't create an inverse
@@ -305,9 +309,12 @@ class TestProjectFlow(TestProjectCommon, MockEmail):
             except Exception as e:
                 raise AssertionError("Error raised unexpectedly while computing a field of the project ! Exception : " + e.args[0])
 
-    def test_send_rating_review(self):
-        project_settings = self.env["res.config.settings"].create({'group_project_rating': True})
+    def set_customer_ratings_setting(self, enabled):
+        project_settings = self.env["res.config.settings"].create({'group_project_rating': enabled})
         project_settings.execute()
+
+    def test_send_rating_review(self):
+        self.set_customer_ratings_setting(True)
         self.assertTrue(self.project_goats.rating_active, 'The customer ratings should be enabled in this project.')
 
         won_stage = self.project_goats.type_ids[-1]
@@ -332,6 +339,8 @@ class TestProjectFlow(TestProjectCommon, MockEmail):
         for task in tasks:
             self.assertEqual(len(task.rating_ids), 1, 'This task should have a generated rating when it arrives in the Won stage.')
             rating_request_message = task.message_ids[:1]
+            self.assertEqual(rating_request_message.partner_ids, rating_request_message.mail_ids.recipient_ids,
+            'The author of the task should be in the recipient_ids of rating notification message.')
             if not task.user_ids or len(task.user_ids) > 1:
                 self.assertFalse(task.rating_ids.rated_partner_id, 'This rating should have no assigned user if the task related have no assignees or more than one assignee.')
                 self.assertEqual(rating_request_message.email_from, self.user_projectmanager.partner_id.email_formatted, 'The message should have the email of the Project Manager as email from.')
@@ -339,3 +348,29 @@ class TestProjectFlow(TestProjectCommon, MockEmail):
                 self.assertEqual(task.rating_ids.rated_partner_id, task.user_ids.partner_id, 'The rating should have an assigned user if the task has only one assignee.')
                 self.assertEqual(rating_request_message.email_from, task.user_ids.partner_id.email_formatted, 'The message should have the email of the assigned user in the task as email from.')
             self.assertTrue(self.partner_1 in rating_request_message.partner_ids, 'The customer of the task should be in the partner_ids of the rating request message.')
+
+    def test_periodic_rating(self):
+        self.set_customer_ratings_setting(True)
+        self.assertTrue(self.project_goats.rating_active, 'The customer ratings should be enabled in this project.')
+
+        self.project_goats.write({
+            'rating_status': 'periodic',
+            'rating_status_period': 'daily'
+        })
+        won_stage = self.project_goats.type_ids[-1]
+        rating_request_mail_template = self.env.ref('project.rating_project_request_email_template')
+        won_stage.write({'rating_template_id': rating_request_mail_template.id})
+        task = self.env['project.task'].with_context(mail_create_nolog=True, default_project_id=self.project_goats.id).create([
+            {'name': 'Goat Task 1', 'user_ids': [Command.set([])]}
+        ])
+
+        with self.mock_mail_gateway():
+            task.write({'stage_id': won_stage.id})
+
+        # due to cr.commit() we have to call _send_task_rating_mail() manually
+        self.project_goats.task_ids._send_task_rating_mail()
+
+        self.assertEqual(len(task.rating_ids), 1, 'Rating request of the task should be sent daily.')
+        rating_request_message = task.message_ids[:1]
+        self.assertTrue(self.partner_1 in rating_request_message.partner_ids,
+            'The customer of the task should be in the partner_ids of the rating request message.')
