@@ -245,12 +245,13 @@ function beforeEach(self) {
     });
 
     data.currentPartnerId = 3;
+    data.currentUserId = 2;
     data['res.partner'].records.push({
         display_name: "Your Company, Mitchell Admin",
         id: data.currentPartnerId,
         name: "Mitchell Admin",
+        user_ids: [data.currentUserId],
     });
-    data.currentUserId = 2;
     data['res.users'].records.push({
         display_name: "Your Company, Mitchell Admin",
         id: data.currentUserId,
