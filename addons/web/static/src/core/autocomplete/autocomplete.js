@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { useService } from "@web/core/utils/hooks";
+import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { debounce } from "@web/core/utils/timing";
 
 const { Component } = owl;
@@ -8,87 +8,216 @@ const { useExternalListener, useRef, useState } = owl.hooks;
 
 export class AutoComplete extends Component {
     setup() {
-        this.hotkey = useService("hotkey");
+        this.nextSourceId = 0;
+        this.nextOptionId = 0;
+        this.sources = [];
 
         this.state = useState({
-            opened: false,
-            suggestions: [],
+            optionsRev: 0,
+            valueRev: 0,
+            open: false,
+            activeSourceOption: null,
         });
 
         this.inputRef = useRef("input");
-        this.debouncedLoadSuggestions = debounce(
-            this.loadSuggestions.bind(this),
-            this.constructor.delay
-        );
 
-        useExternalListener(window, "click", this.onWindowClick);
+        this.debouncedOnInput = debounce(this.onInput.bind(this), 250);
         useExternalListener(window, "scroll", this.onWindowScroll, true);
 
-        this.hotkey.add("escape", () => this.toggle(false));
+        useHotkey("escape", this.onEscapePress.bind(this));
+        useHotkey("enter", this.onEnterPress.bind(this));
+        useHotkey("arrowdown", this.onArrowDownPress.bind(this), { allowRepeat: true });
+        useHotkey("arrowup", this.onArrowUpPress.bind(this), { allowRepeat: true });
     }
 
-    get nextId() {
-        return ++AutoComplete.nextId;
+    loadSources(useInput) {
+        const sources = [];
+        for (const pSource of this.props.sources) {
+            const source = this.makeSource(pSource);
+            sources.push(source);
+
+            const options = this.loadOptions(
+                pSource.options,
+                useInput ? this.inputRef.el.value.trim() : ""
+            );
+            if (options instanceof Promise) {
+                source.isLoading = true;
+                options.then((options) => {
+                    source.options = options.map((option) => this.makeOption(option));
+                    source.isLoading = false;
+                    this.state.optionsRev++;
+                });
+            } else {
+                source.options = options.map((option) => this.makeOption(option));
+            }
+        }
+        this.sources = sources;
     }
+
     get isOpened() {
-        return this.state.opened;
-    }
-    toggle(value = null) {
-        this.state.opened = value !== null ? value : !this.state.opened;
+        return this.state.open;
     }
 
-    async loadSuggestions(request = null) {
-        const results = await this.props.fetchSuggestions(
-            request !== null ? request : this.inputRef.el.value.trim()
-        );
-        this.state.suggestions = results.map((result) => ({
-            ...result,
-            id: this.nextId,
-        }));
-        this.toggle(true);
+    open(useInput = false) {
+        this.state.open = true;
+        this.loadSources(useInput);
+    }
+    close() {
+        this.state.open = false;
+        this.state.activeSourceOption = null;
     }
 
-    async onSuggestionSelected(suggestion) {
-        this.toggle(false);
-        if (suggestion.onSelected) {
-            await suggestion.onSelected({
-                setValue: (value) => {
-                    this.inputRef.el.value = value;
-                },
-            });
-        }
-    }
-    async onInput(ev) {
-        if (this.props.onInput) {
-            this.props.onInput(ev.target.value);
-        }
-        await this.debouncedLoadSuggestions();
-    }
-    onChange(ev) {
-        if (this.props.onChange) {
-            this.props.onChange(ev.target.value);
-        }
-    }
-    async onInputClick() {
-        if (this.isOpened) {
-            this.toggle(false);
+    loadOptions(options, request) {
+        if (typeof options === "function") {
+            return options(request);
         } else {
-            const value = this.inputRef.el.value.trim();
-            await this.loadSuggestions(value !== this.props.value ? value : "");
+            return options;
         }
     }
-    onWindowClick(ev) {
-        if (!this.state.opened) {
+    makeOption(option) {
+        return Object.assign(Object.create(option), {
+            id: ++this.nextOptionId,
+        });
+    }
+    makeSource(source) {
+        return {
+            id: ++this.nextSourceId,
+            options: [],
+            isLoading: false,
+            placeholder: source.placeholder,
+            optionTemplate: source.optionTemplate,
+        };
+    }
+
+    isActiveSourceOption([sourceIndex, optionIndex]) {
+        return (
+            this.state.activeSourceOption &&
+            this.state.activeSourceOption[0] === sourceIndex &&
+            this.state.activeSourceOption[1] === optionIndex
+        );
+    }
+    selectOption(indices) {
+        const option = this.sources[indices[0]].options[indices[1]];
+        if (option.unselectable) {
             return;
         }
-        if (!this.el.contains(ev.target)) {
-            this.toggle(false);
+
+        this.state.valueRev++;
+        this.props.onSelect(option, {
+            inputValue: this.inputRef.el.value.trim(),
+        });
+        this.close();
+    }
+
+    navigate(direction) {
+        let step = Math.sign(direction);
+        if (!step) {
+            return;
+        }
+
+        if (this.state.activeSourceOption) {
+            let [sourceIndex, optionIndex] = this.state.activeSourceOption;
+            let source = this.sources[sourceIndex];
+
+            optionIndex += step;
+            if (0 > optionIndex || optionIndex >= source.options.length) {
+                sourceIndex += step;
+                source = this.sources[sourceIndex];
+
+                while (source && source.isLoading) {
+                    sourceIndex += step;
+                    source = this.sources[sourceIndex];
+                }
+
+                if (source) {
+                    optionIndex = step < 0 ? source.options.length - 1 : 0;
+                }
+            }
+
+            this.state.activeSourceOption = source ? [sourceIndex, optionIndex] : null;
+        } else {
+            let sourceIndex = step < 0 ? this.sources.length - 1 : 0;
+            let source = this.sources[sourceIndex];
+
+            while (source && source.isLoading) {
+                sourceIndex += step;
+                source = this.sources[sourceIndex];
+            }
+
+            if (source) {
+                const optionIndex = step < 0 ? source.options.length - 1 : 0;
+                this.state.activeSourceOption = [sourceIndex, optionIndex];
+            }
         }
     }
+
+    onInputFocus() {
+        this.open();
+    }
+    onInputBlur() {
+        if (this.props.autoSelect && this.state.activeSourceOption) {
+            this.selectOption(this.state.activeSourceOption);
+        } else {
+            this.props.onBlur({
+                inputValue: this.inputRef.el.value,
+            });
+            this.close();
+        }
+    }
+    onInputClick() {
+        if (!this.isOpened) {
+            this.open(this.inputRef.el.value.trim() !== this.props.value);
+        } else {
+            this.close();
+        }
+    }
+    onInputChange() {
+        this.props.onChange({
+            inputValue: this.inputRef.el.value,
+        });
+    }
+    onInput() {
+        this.props.onInput({
+            inputValue: this.inputRef.el.value,
+        });
+        this.open(true);
+    }
+
+    onOptionMouseEnter(indices) {
+        this.state.activeSourceOption = indices;
+    }
+    onOptionMouseLeave() {
+        this.state.activeSourceOption = null;
+    }
+    onOptionClick(indices) {
+        this.selectOption(indices);
+    }
+
+    onEscapePress() {
+        this.close();
+    }
+    onEnterPress() {
+        if (this.isOpened && this.state.activeSourceOption) {
+            this.selectOption(this.state.activeSourceOption);
+        }
+    }
+    onArrowUpPress() {
+        this.navigate(-1);
+        if (!this.isOpened) {
+            this.open(true);
+        }
+    }
+    onArrowDownPress() {
+        this.navigate(+1);
+        if (!this.isOpened) {
+            this.open(true);
+        }
+    }
+
     onWindowScroll(ev) {
         if (this.isOpened) {
             if (!this.el.contains(ev.target)) {
-                this.toggle(false);
+                this.close();
             }
         }
     }
@@ -96,13 +225,30 @@ export class AutoComplete extends Component {
 Object.assign(AutoComplete, {
     template: "web.AutoComplete",
     props: {
-        value: String,
-        fetchSuggestions: Function,
+        value: { type: String },
+        onSelect: { type: Function },
+        sources: {
+            type: Array,
+            element: {
+                type: Object,
+                shape: {
+                    placeholder: { type: String, optional: true },
+                    optionTemplate: { type: String, optional: true },
+                    options: [Array, Function],
+                },
+            },
+        },
         placeholder: { type: String, optional: true },
+        autoSelect: { type: Boolean, optional: true },
         onInput: { type: Function, optional: true },
         onChange: { type: Function, optional: true },
+        onBlur: { type: Function, optional: true },
     },
-
-    nextId: 0,
-    delay: 200,
+    defaultProps: {
+        placeholder: "",
+        autoSelect: false,
+        onInput: () => {},
+        onChange: () => {},
+        onBlur: () => {},
+    },
 });

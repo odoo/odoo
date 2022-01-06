@@ -35,7 +35,11 @@ QUnit.module("Components", (hooks) => {
         class Parent extends Component {}
         Parent.components = { AutoComplete };
         Parent.template = xml`
-            <AutoComplete value="'Hello'" fetchSuggestions="() => [{ label: 'World' }, { label: 'Hello' }]" />
+            <AutoComplete
+                value="'Hello'"
+                sources="[{ options: [{ label: 'World' }, { label: 'Hello' }] }]"
+                onSelect="() => {}"
+            />
         `;
 
         parent = await mount(Parent, { env, target });
@@ -59,28 +63,25 @@ QUnit.module("Components", (hooks) => {
                     value: "Hello",
                 });
             }
-            fetchSuggestions() {
+            get sources() {
                 return [
                     {
-                        label: "World",
-                        onSelected({ setValue }) {
-                            setValue("World");
-                            assert.step("World");
-                        },
-                    },
-                    {
-                        label: "Hello",
-                        onSelected({ setValue }) {
-                            setValue("Hello");
-                            assert.step("Hello");
-                        },
+                        options: [{ label: "World" }, { label: "Hello" }],
                     },
                 ];
+            }
+            onSelect(option) {
+                this.state.value = option.label;
+                assert.step(option.label);
             }
         }
         Parent.components = { AutoComplete };
         Parent.template = xml`
-            <AutoComplete value="state.value" fetchSuggestions="() => this.fetchSuggestions()" />
+            <AutoComplete
+                value="state.value"
+                sources="sources"
+                onSelect="(option) => this.onSelect(option)"
+            />
         `;
 
         parent = await mount(Parent, { env, target });
@@ -101,7 +102,11 @@ QUnit.module("Components", (hooks) => {
         class Parent extends Component {}
         Parent.components = { AutoComplete };
         Parent.template = xml`
-            <AutoComplete value="'Hello'" fetchSuggestions="() => [{ label: 'World' }, { label: 'Hello' }]" />
+            <AutoComplete
+                value="'Hello'"
+                sources="[{ options: [{ label: 'World' }, { label: 'Hello' }] }]"
+                onSelect="() => {}"
+            />
         `;
 
         parent = await mount(Parent, { env, target });
@@ -115,7 +120,11 @@ QUnit.module("Components", (hooks) => {
         class Parent extends Component {}
         Parent.components = { AutoComplete };
         Parent.template = xml`
-            <AutoComplete value="'Hello'" fetchSuggestions="() => [{ label: 'World' }, { label: 'Hello' }]" />
+            <AutoComplete
+                value="'Hello'"
+                sources="[{ options: [{ label: 'World' }, { label: 'Hello' }] }]"
+                onSelect="() => {}"
+            />
         `;
 
         parent = await mount(Parent, { env, target });
@@ -132,7 +141,11 @@ QUnit.module("Components", (hooks) => {
         class Parent extends Component {}
         Parent.components = { AutoComplete };
         Parent.template = xml`
-            <AutoComplete value="'Hello'" fetchSuggestions="() => [{ label: 'World' }, { label: 'Hello' }]" />
+            <AutoComplete
+                value="'Hello'"
+                sources="[{ options: [{ label: 'World' }, { label: 'Hello' }] }]"
+                onSelect="() => {}"
+            />
         `;
 
         parent = await mount(Parent, { env, target });
@@ -149,7 +162,11 @@ QUnit.module("Components", (hooks) => {
         class Parent extends Component {}
         Parent.components = { AutoComplete };
         Parent.template = xml`
-            <AutoComplete value="'Hello'" fetchSuggestions="() => [{ label: 'World' }, { label: 'Hello' }]" />
+            <AutoComplete
+                value="'Hello'"
+                sources="[{ options: [{ label: 'World' }, { label: 'Hello' }] }]"
+                onSelect="() => {}"
+            />
         `;
 
         parent = await mount(Parent, { env, target });
@@ -162,20 +179,24 @@ QUnit.module("Components", (hooks) => {
         assert.containsOnce(target, ".o-autocomplete--dropdown-menu");
     });
 
-    QUnit.test("click outside should close dropdown", async (assert) => {
+    QUnit.test("losing focus should close dropdown", async (assert) => {
         class Parent extends Component {}
         Parent.components = { AutoComplete };
         Parent.template = xml`
-            <AutoComplete value="'Hello'" fetchSuggestions="() => [{ label: 'World' }, { label: 'Hello' }]" />
+            <AutoComplete
+                value="'Hello'"
+                sources="[{ options: [{ label: 'World' }, { label: 'Hello' }] }]"
+                onSelect="() => {}"
+            />
         `;
 
         parent = await mount(Parent, { env, target });
         assert.containsNone(target, ".o-autocomplete--dropdown-menu");
 
-        await click(target, ".o-autocomplete--input");
+        await triggerEvent(target, ".o-autocomplete--input", "focus");
         assert.containsOnce(target, ".o-autocomplete--dropdown-menu");
 
-        await click(target);
+        await triggerEvent(target, ".o-autocomplete--input", "blur");
         assert.containsNone(target, ".o-autocomplete--dropdown-menu");
     });
 });

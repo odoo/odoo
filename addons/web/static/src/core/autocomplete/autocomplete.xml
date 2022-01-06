@@ -6,18 +6,50 @@
             <input
                 type="text"
                 class="o-autocomplete--input o_input"
+                t-att-placeholder="props.placeholder"
                 t-att-value="props.value"
+                t-on-focus="onInputFocus"
+                t-on-blur="onInputBlur"
                 t-on-click="onInputClick"
-                t-on-input="onInput"
-                t-on-change="onChange"
+                t-on-change="onInputChange"
+                t-on-input="debouncedOnInput"
                 t-ref="input"
+                t-key="state.value"
             />
-            <t t-if="state.opened">
-                <ul class="o-autocomplete--dropdown-menu dropdown-menu ui-widget ui-autocomplete show">
-                    <t t-foreach="state.suggestions" t-as="suggestion" t-key="suggestion.id">
-                        <li class="o-autocomplete--dropdown-item ui-menu-item" t-att-class="suggestion.classList" t-on-click.prevent="onSuggestionSelected(suggestion)">
-                            <a class="dropdown-item ui-menu-item-wrapper" href="#" t-esc="suggestion.label" />
-                        </li>
+            <t t-if="isOpened">
+                <ul class="o-autocomplete--dropdown-menu dropdown-menu ui-widget ui-autocomplete show" t-on-mousedown.prevent="">
+                    <t t-foreach="sources" t-as="source" t-key="source.id">
+                        <t t-if="source.isLoading">
+                            <li class="o-autocomplete--dropdown-item ui-menu-item">
+                                <a href="#" class="dropdown-item ui-menu-item-wrapper">
+                                    <i class="fa fa-spin fa-circle-o-notch" /> <t t-esc="source.placeholder" />
+                                </a>
+                            </li>
+                        </t>
+                        <t t-else="">
+                            <t t-foreach="source.options" t-as="option" t-key="option.id">
+                                <li
+                                    class="o-autocomplete--dropdown-item ui-menu-item"
+                                    t-att-class="option.classList"
+                                    t-on-mouseenter="onOptionMouseEnter([source_index, option_index])"
+                                    t-on-mouseleave="onOptionMouseLeave([source_index, option_index])"
+                                    t-on-click="onOptionClick([source_index, option_index])"
+                                >
+                                    <a
+                                        href="#"
+                                        class="dropdown-item ui-menu-item-wrapper"
+                                        t-att-class="{ 'ui-state-active': isActiveSourceOption([source_index, option_index]) }"
+                                    >
+                                        <t t-if="source.optionTemplate">
+                                            <t t-call="{{ source.optionTemplate }}" />
+                                        </t>
+                                        <t t-else="">
+                                            <t t-esc="option.label" />
+                                        </t>
+                                    </a>
+                                </li>
+                            </t>
+                        </t>
                     </t>
                 </ul>
             </t>
