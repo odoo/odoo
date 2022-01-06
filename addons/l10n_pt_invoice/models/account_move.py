@@ -75,7 +75,7 @@ class AccountMove(models.Model):
             qr_code_str += f"D:{invoice_type_map[record.type]}*"
             qr_code_str += f"E:N*"
             qr_code_str += f"F:{format_date(self.env, record.date, date_format='yyyyMMdd')}*"
-            qr_code_str += f"G:{(record.type + ' ' + record.display_name)[:60]}*"
+            qr_code_str += f"G:{(record.type + ' ' + record.ref)[:60]}*"
             qr_code_str += f"H:0*"
             qr_code_str += f"I1:{record.company_id.country_id.code}*"
             base_vat_exempt = get_base_and_vat(record, 'IVA 0%')
