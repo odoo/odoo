@@ -87,6 +87,7 @@ const ReplenishReport = clientAction.extend({
      * @param {Promise<GraphController>} graphPromise
      * @returns {Promise}
      */
+<<<<<<< HEAD
     async _appendGraph(graphPromise) {
         const graphController = await graphPromise;
         const iframeDoc = this.iframe.contentDocument;
@@ -104,6 +105,47 @@ const ReplenishReport = clientAction.extend({
             window.history.pushState({}, "", url);
         }
     },
+=======
+    _createGraphView: async function () {
+        let viewController;
+        const appendGraph = () => {
+            promController.then(() => {
+                this.iframe.removeEventListener('load', appendGraph);
+                const $reportGraphDiv = $(this.iframe).contents().find('.o_report_graph');
+                if (!$reportGraphDiv) {
+                    return;
+                }
+                dom.append(this.$el, viewController.$el, {
+                    in_DOM: true,
+                    callbacks: [{widget: viewController}],
+                });
+                const renderer = viewController.renderer;
+                // Remove the graph control panel.
+                $('.o_control_panel:last').remove();
+                const $graphPanel = $('.o_graph_controller');
+                $graphPanel.appendTo($reportGraphDiv);
+
+                if (!renderer.state.dataPoints.length) {
+                    // Changes the "No Data" helper message.
+                    const graphHelper = renderer.$('.o_view_nocontent');
+                    const newMessage = qweb.render('View.NoContentHelper', {
+                        description: _t("Try to add some incoming or outgoing transfers."),
+                    });
+                    graphHelper.replaceWith(newMessage);
+                } else {
+                    this.chart = renderer.chart;
+                    // Lame hack to fix the size of the graph.
+                    setTimeout(() => {
+                        this.chart.canvas.height = 300;
+                        this.chart.canvas.style.height = "300px";
+                        this.chart.resize();
+                    }, 1);
+                }
+            });
+        };
+        // Wait the iframe fo append the graph chart and move it into the iframe.
+        this.iframe.addEventListener('load', appendGraph);
+>>>>>>> 944b241df10... temp
 
     /**
      * @private
