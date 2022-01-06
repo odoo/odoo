@@ -20,6 +20,7 @@ from . import test_ir_attachment
 from . import test_ir_cron
 from . import test_ir_http
 from . import test_ir_filters
+from . import test_ir_mail_server
 from . import test_ir_model
 from . import test_ir_sequence
 from . import test_ir_sequence_date_range
@@ -51,4 +52,3 @@ from . import test_form_create
 from . import test_cloc
 from . import test_profiler
 from . import test_pdf
-from . import test_ir_mail_server
