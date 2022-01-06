@@ -40,7 +40,7 @@ QUnit.module("Views", {
                     case 'test.wheee':
                         assert.step('unfold');
                         assert.deepEqual(args.args, [42]);
-                        assert.deepEqual(args.kwargs, {other: 5});
+                        assert.deepEqual(args.kwargs, { other: 5, context: {} });
                         return Promise.resolve('<div id="sub">ok</div>');
                 }
             }
