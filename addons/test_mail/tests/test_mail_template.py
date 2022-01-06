@@ -8,7 +8,7 @@ from odoo.tests import tagged
 from odoo.tools import mute_logger
 
 
-@tagged('mail_template')
+@tagged('mail_template', 'multi_lang')
 class TestMailTemplate(TestMailCommon, TestRecipients):
 
     @classmethod
@@ -39,81 +39,22 @@ class TestMailTemplate(TestMailCommon, TestRecipients):
         cls.email_2 = 'test2@example.com'
         cls.email_3 = cls.partner_1.email
 
-        # activate translations
-        cls.env['res.lang']._activate_lang('es_ES')
-        cls.env.ref('base.module_base')._update_translations(['es_ES'])
-
         # create a complete test template
         cls.test_template = cls._create_template('mail.test.lang', {
             'attachment_ids': [(0, 0, cls._attachments[0]), (0, 0, cls._attachments[1])],
-            'body_html': '<p>English Body for <t t-out="object.name"/></p>',
+            'body_html': '<p>EnglishBody for <t t-out="object.name"/></p>',
             'lang': '{{ object.customer_id.lang or object.lang }}',
             'email_to': '%s, %s' % (cls.email_1, cls.email_2),
             'email_cc': '%s' % cls.email_3,
             'partner_to': '%s,%s' % (cls.partner_2.id, cls.user_admin.partner_id.id),
-            'subject': 'English for {{ object.name }}',
+            'subject': 'EnglishSubject for {{ object.name }}',
         })
 
-        # Make sure Spanish translations have not been altered
-        description_translations = cls.env['ir.translation'].search([
-            ('module', '=', 'test_mail'),
-            ('src', '=', cls.test_record._description),
-            ('lang', '=', 'es_ES')
-        ])
-        if description_translations:
-            description_translations.update({'value': 'Spanish description'})
-        else:
-            description_translations.create({
-                'type': 'model',
-                'name': 'ir.model,name',
-                'module': 'test_mail',
-                'lang': 'es_ES',
-                'res_id': cls.env['ir.model']._get_id('mail.test.lang'),
-                'src': cls.test_record._description,
-                'value': 'Spanish description',
-                'state': 'translated',
-            })
-
-        cls.env['ir.translation'].create({
-            'type': 'model',
-            'name': 'mail.template,subject',
-            'module': 'mail',
-            'lang': 'es_ES',
-            'res_id': cls.test_template.id,
-            'value': 'Spanish for {{ object.name }}',
-            'state': 'translated',
-        })
-        cls.env['ir.translation'].create({
-            'type': 'model',
-            'name': 'mail.template,body_html',
-            'module': 'mail',
-            'lang': 'es_ES',
-            'res_id': cls.test_template.id,
-            'value': '<p>Spanish Body for <t t-out="object.name" /></p>',
-            'state': 'translated',
-        })
-        view = cls.env['ir.ui.view'].create({
-            'name': 'test_layout',
-            'key': 'test_layout',
-            'type': 'qweb',
-            'arch_db': '<body><t t-out="message.body"/> English Layout <t t-esc="model_description"/></body>'
-        })
-        cls.env['ir.model.data'].create({
-            'name': 'test_layout',
-            'module': 'test_mail',
-            'model': 'ir.ui.view',
-            'res_id': view.id
-        })
-        cls.env['ir.translation'].create({
-            'type': 'model_terms',
-            'name': 'ir.ui.view,arch_db',
-            'module': 'test_mail',
-            'lang': 'es_ES',
-            'res_id': view.id,
-            'src': 'English Layout',
-            'value': 'Spanish Layout',
-            'state': 'translated',
-        })
+        # activate translations
+        cls._activate_multi_lang(
+            layout_arch_db='<body><t t-out="message.body"/> English Layout for <t t-esc="model_description"/></body>',
+            test_record=cls.test_record, test_template=cls.test_template
+        )
 
         # admin should receive emails
         cls.user_admin.write({'notification_type': 'email'})
@@ -127,7 +68,7 @@ class TestMailTemplate(TestMailCommon, TestRecipients):
         self.assertEqual(mail.email_cc, self.test_template.email_cc)
         self.assertEqual(mail.email_to, self.test_template.email_to)
         self.assertEqual(mail.recipient_ids, self.partner_2 | self.user_admin.partner_id)
-        self.assertEqual(mail.subject, 'English for %s' % self.test_record.name)
+        self.assertEqual(mail.subject, 'EnglishSubject for %s' % self.test_record.name)
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_template_translation_lang(self):
@@ -137,11 +78,11 @@ class TestMailTemplate(TestMailCommon, TestRecipients):
         })
         test_template = self.env['mail.template'].browse(self.test_template.ids)
 
-        mail_id = test_template.send_mail(test_record.id, email_layout_xmlid='test_mail.test_layout')
+        mail_id = test_template.send_mail(test_record.id, email_layout_xmlid='mail.test_layout')
         mail = self.env['mail.mail'].sudo().browse(mail_id)
         self.assertEqual(mail.body_html,
-                         '<body><p>Spanish Body for %s</p> Spanish Layout Spanish description</body>' % self.test_record.name)
-        self.assertEqual(mail.subject, 'Spanish for %s' % self.test_record.name)
+                         '<body><p>SpanishBody for %s</p> Spanish Layout para Spanish description</body>' % self.test_record.name)
+        self.assertEqual(mail.subject, 'SpanishSubject for %s' % self.test_record.name)
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_template_translation_partner_lang(self):
@@ -156,11 +97,11 @@ class TestMailTemplate(TestMailCommon, TestRecipients):
         })
         test_template = self.env['mail.template'].browse(self.test_template.ids)
 
-        mail_id = test_template.send_mail(test_record.id, email_layout_xmlid='test_mail.test_layout')
+        mail_id = test_template.send_mail(test_record.id, email_layout_xmlid='mail.test_layout')
         mail = self.env['mail.mail'].sudo().browse(mail_id)
         self.assertEqual(mail.body_html,
-                         '<body><p>Spanish Body for %s</p> Spanish Layout Spanish description</body>' % self.test_record.name)
-        self.assertEqual(mail.subject, 'Spanish for %s' % self.test_record.name)
+                         '<body><p>SpanishBody for %s</p> Spanish Layout para Spanish description</body>' % self.test_record.name)
+        self.assertEqual(mail.subject, 'SpanishSubject for %s' % self.test_record.name)
 
     def test_template_add_context_action(self):
         self.test_template.create_action()

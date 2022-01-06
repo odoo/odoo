@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 
 
 class MailPerformanceThread(models.Model):
@@ -65,6 +65,18 @@ class MailTestLang(models.Model):
     email_from = fields.Char()
     customer_id = fields.Many2one('res.partner')
     lang = fields.Char('Lang')
+
+    def _notify_get_recipients_groups(self, msg_vals=None):
+        groups = super(MailTestLang, self)._notify_get_recipients_groups(msg_vals=msg_vals)
+        local_msg_vals = dict(msg_vals or {})
+
+        customer_group_opts = next(group for group in groups if group[0] == 'customer')[2]
+        customer_group_opts['has_button_access'] = True
+        customer_group_opts['actions'] = [
+            {'url': self._notify_get_action_link('controller', controller='/test_mail/do_stuff', **local_msg_vals),
+             'title': _('TestStuff')}
+        ]
+        return groups
 
 
 class MailTestTrackCompute(models.Model):
