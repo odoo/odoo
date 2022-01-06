@@ -17,6 +17,7 @@ except ImportError:
     slugify_lib = None
 
 import openerp
+from openerp import http
 from openerp.tools.translate import _
 from openerp.osv import orm, osv, fields
 from openerp.tools import html_escape as escape, ustr, image_resize_and_sharpen, image_save_for_web
@@ -71,7 +72,7 @@ def is_multilang_url(local_url, langs=None):
         url = local_url.split('?')
         path = url[0]
         query_string = url[1] if len(url) > 1 else None
-        router = request.httprequest.app.get_db_router(request.db).bind('')
+        router = http.root.get_db_router(request.db).bind('')
         # Force to check method to POST. Odoo uses methods : ['POST'] and ['GET', 'POST']
         func = router.match(path, method='POST', query_args=query_string)[0]
         return (func.routing.get('website', False) and
@@ -361,7 +362,7 @@ class website(osv.osv):
                 if isinstance(v, orm.browse_record):
                     arguments[k] = v.with_context(lang=lang)
             return router.build(request.endpoint, arguments)
-        router = request.httprequest.app.get_db_router(request.db).bind('')
+        router = http.root.get_db_router(request.db).bind('')
         for code, name in self.get_languages(cr, uid, ids, context=context):
             lg_path = ('/' + code) if code != default else ''
             lg = code.split('_')
@@ -512,7 +513,7 @@ class website(osv.osv):
         :rtype: list({name: str, url: str})
         """
         request.context = dict(request.context, **context)
-        router = request.httprequest.app.get_db_router(request.db)
+        router = http.root.get_db_router(request.db)
         # Force enumeration to be performed as public user
         url_set = set()
         for rule in router.iter_rules():

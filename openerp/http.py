@@ -1645,7 +1645,6 @@ class Root(object):
         """
         try:
             httprequest = werkzeug.wrappers.Request(environ)
-            httprequest.app = self
 
             explicit_session = self.setup_session(httprequest)
             self.setup_db(httprequest)
