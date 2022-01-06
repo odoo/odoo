@@ -198,6 +198,28 @@ class Groups(models.Model):
             return len(groups) if count else groups.ids
         return super(Groups, self)._search(args, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid)
 
+    def check_group_inheritance(self):
+        if not self:
+            return {}
+        inherited_groups = {}
+        for group in self:
+            inherited_groups[group] = self.filtered(
+                lambda grp:
+                group.category_id in grp.implied_ids.category_id and
+                group.category_id != grp.category_id
+            )
+        warnings = {}
+        for key, value in inherited_groups.items():
+            if value:
+                parent_group = value.implied_ids.filtered(
+                    lambda grp:
+                    grp.category_id == key.category_id and
+                    grp not in (key | key.implied_ids | self)
+                )
+                if parent_group:
+                    warnings[key.id] = _("Since you are a/an %s %s, you cannot have %s right lower than %s") % (value[0].category_id.name, value[0].name, parent_group[0].category_id.name, parent_group[0].name)
+        return warnings
+
     def copy(self, default=None):
         self.ensure_one()
         chosen_name = default.get('name') if default else ''
@@ -1256,6 +1278,7 @@ class GroupsView(models.Model):
                     # application name with a selection field
                     field_name = name_selection_groups(gs.ids)
                     attrs['attrs'] = user_type_readonly
+                    attrs['widget'] = 'res_groups_selection'
                     if category_name not in xml_by_category:
                         xml_by_category[category_name] = []
                         xml_by_category[category_name].append(E.newline())

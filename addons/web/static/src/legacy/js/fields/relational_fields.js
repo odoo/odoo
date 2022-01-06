@@ -3409,6 +3409,59 @@ var FieldSelection = AbstractField.extend({
     },
 });
 
+const FieldResGroupsSelection = FieldSelection.extend({
+    resetOnAnyFieldChange: true,
+
+    /**
+     * @override
+     */
+    start: function () {
+        core.bus.on('show_res_groups_inheritance_warning', this, this._showResGroupsInheritanceWarning);
+        return this._super.apply(this, arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Check the Group Inheritance on change of selection
+     * @override
+     * @private
+     */
+    _onChange: async function () {
+        await this._super(...arguments);
+        const groups_id = [];
+        for (const [key, value] of Object.entries(this.recordData)) {
+            if (key.includes('sel_groups_') && value) {
+                groups_id.push(value);
+            }
+        }
+        this._rpc({
+            model: 'res.groups',
+            method: 'check_group_inheritance',
+            args: [groups_id],
+        }).then((result) => {
+            core.bus.trigger('show_res_groups_inheritance_warning', {warnings: result});
+        });
+    },
+
+    /**
+     * Show the Warning if the Current Widget's Previous group is
+     * implied by the other group
+     * @private
+     */
+    _showResGroupsInheritanceWarning: function (event) {
+        this.$el.siblings('.o_user_group_warning').remove();
+        if (event.warnings[this.value]) {
+            const $span = $('<span class="fa fa-exclamation-triangle o_user_group_warning mt-1 ml-1"/>');
+            $span.attr('title', event.warnings[this.value]);
+            $span.insertAfter(this.$el);
+            this.$el.parent().addClass('d-flex');
+        }
+    }
+});
+
 var FieldRadio = FieldSelection.extend({
     description: _lt("Radio"),
     template: null,
@@ -3871,6 +3924,7 @@ return {
     FieldRadio: FieldRadio,
     FieldSelectionBadge: FieldSelectionBadge,
     FieldSelection: FieldSelection,
+    FieldResGroupsSelection: FieldResGroupsSelection,
     FieldStatus: FieldStatus,
     FieldSelectionFont: FieldSelectionFont,
 

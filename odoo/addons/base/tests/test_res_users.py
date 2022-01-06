@@ -196,3 +196,76 @@ class TestUsers2(TransactionCase):
 
         setattr(user_form, group_field_name, group_public.id)
         self.assertTrue(user_form.share, 'The groups_id onchange should have been triggered')
+
+    def test_user_group_inheritance_no_warning(self):
+        cat_foo = self.env['ir.module.category'].create({'name': 'Foo'})
+        cat_bar = self.env['ir.module.category'].create({'name': 'Bar'})
+
+        group_user_foo, group_manager_foo = self.env['res.groups'].create([
+            {'name': name, 'category_id': cat_foo.id}
+            for name in ('User', 'Manager')
+        ])
+
+        group_user_bar, group_manager_bar = self.env['res.groups'].create([
+            {'name': name, 'category_id': cat_bar.id}
+            for name in ('User', 'Manager')
+        ])
+
+        group_manager_foo.implied_ids = group_user_foo
+        group_manager_bar.implied_ids = (group_manager_foo | group_user_bar).ids
+
+        warning = (group_manager_foo | group_manager_bar).check_group_inheritance()
+        self.assertFalse(warning)
+
+    def test_user_group_inheritance_warning(self):
+        cat_foo = self.env['ir.module.category'].create({'name': 'Foo'})
+        cat_bar = self.env['ir.module.category'].create({'name': 'Bar'})
+
+        group_user_foo, group_manager_foo = self.env['res.groups'].create([
+            {'name': name, 'category_id': cat_foo.id}
+            for name in ('User', 'Manager')
+        ])
+
+        group_user_bar, group_manager_bar = self.env['res.groups'].create([
+            {'name': name, 'category_id': cat_bar.id}
+            for name in ('User', 'Manager')
+        ])
+
+        group_manager_foo.implied_ids = group_user_foo
+        group_manager_bar.implied_ids = (group_manager_foo | group_user_bar).ids
+
+        warning = (group_user_foo | group_user_bar | group_manager_bar).check_group_inheritance()
+
+        self.assertTrue(warning)
+        self.assertEqual(warning[group_user_foo.id], 'Since you are a/an Bar Manager, you cannot have Foo right lower than Manager')
+
+    def test_user_multi_group_inheritance_warning(self):
+        cat_foo = self.env['ir.module.category'].create({'name': 'Foo'})
+        cat_bar = self.env['ir.module.category'].create({'name': 'Bar'})
+        cat_baz = self.env['ir.module.category'].create({'name': 'Baz'})
+
+        group_user_foo, group_manager_foo = self.env['res.groups'].create([
+            {'name': name, 'category_id': cat_foo.id}
+            for name in ('User', 'Manager')
+        ])
+
+        group_user_bar, group_manager_bar = self.env['res.groups'].create([
+            {'name': name, 'category_id': cat_bar.id}
+            for name in ('User', 'Manager')
+        ])
+
+        group_user_baz, group_manager_baz = self.env['res.groups'].create([
+            {'name': name, 'category_id': cat_baz.id}
+            for name in ('User', 'Manager')
+        ])
+
+        group_manager_foo.implied_ids = group_user_foo
+        group_manager_bar.implied_ids = (group_manager_foo | group_user_bar).ids
+        group_manager_baz.implied_ids = (group_manager_bar | group_manager_foo | group_user_baz).ids
+
+        warnings = (group_manager_baz | group_user_foo | group_user_bar).check_group_inheritance()
+        self.assertTrue(warnings)
+        self.assertDictEqual(warnings, {
+            group_user_foo.id: 'Since you are a/an Baz Manager, you cannot have Foo right lower than Manager',
+            group_user_bar.id: 'Since you are a/an Baz Manager, you cannot have Bar right lower than Manager'
+        })

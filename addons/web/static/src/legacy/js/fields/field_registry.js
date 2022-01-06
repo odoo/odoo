@@ -77,6 +77,7 @@ registry
 // Relational fields
 registry
     .add('selection', relational_fields.FieldSelection)
+    .add('res_groups_selection', relational_fields.FieldResGroupsSelection)
     .add('radio', relational_fields.FieldRadio)
     .add('selection_badge', relational_fields.FieldSelectionBadge)
     .add('many2one', relational_fields.FieldMany2One)

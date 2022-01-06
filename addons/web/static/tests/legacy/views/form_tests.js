@@ -11892,6 +11892,113 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('FieldResGroupsSelection: Group Warning should be shown', async function (assert) {
+        assert.expect(3);
+
+        Object.assign(this.data.user.fields, {
+            sel_groups_1_2: {
+                string: "Group 1",
+                type: "selection",
+                required: true,
+                selection: [[1, "User"], [2, "Manager"]],
+            },
+            sel_groups_3_4: {
+                string: "Group 2",
+                type: "selection",
+                required: true,
+                selection: [[3, "User"], [4, "Manager"]],
+            }
+        });
+        this.data.user.records.push({
+            'id': 100,
+            'name': 'User 1',
+            'sel_groups_1_2': 2,
+            'sel_groups_3_4': 4,
+        });
+
+        const form = await createView({
+            View: FormView,
+            model: 'user',
+            viewOptions: { mode: 'edit' },
+            data: this.data,
+            arch: `<form string="User">
+                    <group>
+                        <field name="sel_groups_1_2" widget="res_groups_selection"/>
+                        <field name="sel_groups_3_4" widget="res_groups_selection"/>
+                    </group>
+                </form>`,
+            mockRPC: function (route, args) {
+                if (args.method === 'check_group_inheritance') {
+                    assert.deepEqual(args.args[0], [1, 4], "should have [4, 1] groups to check inheritance");
+                    return Promise.resolve({
+                        1: 'Since you are a/an Group 2 Manager, you cannot have Group 1 right lower than Manager.'
+                    });
+                }
+                return this._super.apply(this, arguments);
+            },
+            res_id: 100,
+        });
+
+        await testUtils.fields.editSelect(form.$('select[name=sel_groups_1_2]'), 1);
+
+        assert.containsOnce(form, '.o_user_group_warning', "Should have Group Inheritance Warning");
+        assert.strictEqual(form.$('.o_user_group_warning').attr('title'),
+            'Since you are a/an Group 2 Manager, you cannot have Group 1 right lower than Manager.');
+        form.destroy();
+    });
+
+    QUnit.test('FieldResGroupsSelection: Group Warning should not be shown', async function (assert) {
+        assert.expect(2);
+
+        Object.assign(this.data.user.fields, {
+            sel_groups_1_2: {
+                string: "Group 1",
+                type: "selection",
+                required: true,
+                selection: [[1, "User"], [2, "Manager"]],
+            },
+            sel_groups_3_4: {
+                string: "Group 2",
+                type: "selection",
+                required: true,
+                selection: [[3, "User"], [4, "Manager"]],
+            }
+        });
+
+        this.data.user.records.push({
+            'id': 100,
+            'name': 'User 1',
+            'sel_groups_1_2': 2,
+            'sel_groups_3_4': 4,
+        });
+
+        const form = await createView({
+            View: FormView,
+            model: 'user',
+            viewOptions: { mode: 'edit' },
+            data: this.data,
+            arch: `<form string="User">
+                    <group>
+                        <field name="sel_groups_1_2" widget="res_groups_selection"/>
+                        <field name="sel_groups_3_4" widget="res_groups_selection"/>
+                    </group>
+                </form>`,
+            mockRPC: function (route, args) {
+                if (args.method === 'check_group_inheritance') {
+                    assert.deepEqual(args.args[0], [1, 4], "should have [4, 1] groups to check inheritance");
+                    return Promise.resolve({});
+                }
+                return this._super.apply(this, arguments);
+            },
+            res_id: 100,
+        });
+
+        await testUtils.fields.editSelect(form.$('select[name=sel_groups_1_2]'), 1);
+
+        assert.containsNone(form, '.o_user_group_warning', "Should not have Group Inheritance Warning");
+        form.destroy();
+    });
+
 });
 
 });
