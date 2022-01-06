@@ -206,31 +206,78 @@ class AccountMove(models.Model):
         amount_field = company_currency and 'balance' or 'price_subtotal'
         # if we use balance we need to correct sign (on price_subtotal is positive for refunds and invoices)
         sign = -1 if (company_currency and self.is_inbound()) else 1
-        tax_lines = self.line_ids.filtered('tax_line_id')
-        vat_taxes = tax_lines.filtered(lambda r: r.tax_line_id.tax_group_id.l10n_ar_vat_afip_code)
-
-        vat_taxable = self.env['account.move.line']
-        for line in self.invoice_line_ids:
-            if any(tax.tax_group_id.l10n_ar_vat_afip_code and tax.tax_group_id.l10n_ar_vat_afip_code not in ['0', '1', '2'] for tax in line.tax_ids):
-                vat_taxable |= line
-
         profits_tax_group = self.env.ref('l10n_ar.tax_group_percepcion_ganancias')
-        return {'vat_amount': sign * sum(vat_taxes.mapped(amount_field)),
-                # For invoices of letter C should not pass VAT
-                'vat_taxable_amount': sign * sum(vat_taxable.mapped(amount_field)) if self.l10n_latam_document_type_id.l10n_ar_letter != 'C' else self.amount_untaxed,
-                'vat_exempt_base_amount': sign * sum(self.invoice_line_ids.filtered(lambda x: x.tax_ids.filtered(lambda y: y.tax_group_id.l10n_ar_vat_afip_code == '2')).mapped(amount_field)),
-                'vat_untaxed_base_amount': sign * sum(self.invoice_line_ids.filtered(lambda x: x.tax_ids.filtered(lambda y: y.tax_group_id.l10n_ar_vat_afip_code == '1')).mapped(amount_field)),
-                # used on FE
-                'not_vat_taxes_amount': sign * sum((tax_lines - vat_taxes).mapped(amount_field)),
-                # used on BFE + TXT
-                'iibb_perc_amount': sign * sum(tax_lines.filtered(lambda r: r.tax_line_id.tax_group_id.l10n_ar_tribute_afip_code == '07').mapped(amount_field)),
-                'mun_perc_amount': sign * sum(tax_lines.filtered(lambda r: r.tax_line_id.tax_group_id.l10n_ar_tribute_afip_code == '08').mapped(amount_field)),
-                'intern_tax_amount': sign * sum(tax_lines.filtered(lambda r: r.tax_line_id.tax_group_id.l10n_ar_tribute_afip_code == '04').mapped(amount_field)),
-                'other_taxes_amount': sign * sum(tax_lines.filtered(lambda r: r.tax_line_id.tax_group_id.l10n_ar_tribute_afip_code == '99').mapped(amount_field)),
-                'profits_perc_amount': sign * sum(tax_lines.filtered(lambda r: r.tax_line_id.tax_group_id == profits_tax_group).mapped(amount_field)),
-                'vat_perc_amount': sign * sum(tax_lines.filtered(lambda r: r.tax_line_id.tax_group_id.l10n_ar_tribute_afip_code == '06').mapped(amount_field)),
-                'other_perc_amount': sign * sum(tax_lines.filtered(lambda r: r.tax_line_id.tax_group_id.l10n_ar_tribute_afip_code == '09' and r.tax_line_id.tax_group_id != profits_tax_group).mapped(amount_field)),
-                }
+
+        res = {}.fromkeys(
+            ['vat_amount', 'vat_taxable_amount', 'vat_exempt_base_amount', 'vat_untaxed_base_amount', 'not_vat_taxes_amount', 'iibb_perc_amount',
+             'mun_perc_amount', 'intern_tax_amount', 'other_taxes_amount', 'profits_perc_amount', 'vat_perc_amount', 'other_perc_amount'], 0.0)
+
+        for line in self.line_ids.filtered('tax_line_id'):
+            group = line.tax_line_id.tax_group_id
+            if group.l10n_ar_vat_afip_code:
+                res['vat_amount'] += line[amount_field]
+            if not group.l10n_ar_vat_afip_code:
+                res['not_vat_taxes_amount'] += line[amount_field]
+            if group.l10n_ar_tribute_afip_code == '07':
+                res['iibb_perc_amount'] += line[amount_field]
+            if group.l10n_ar_tribute_afip_code == '08':
+                res['mun_perc_amount'] += line[amount_field]
+            if group.l10n_ar_tribute_afip_code == '04':
+                res['intern_tax_amount'] += line[amount_field]
+            if group.l10n_ar_tribute_afip_code == '99':
+                res['other_taxes_amount'] += line[amount_field]
+            if group == profits_tax_group:
+                res['profits_perc_amount'] += line[amount_field]
+            if group.l10n_ar_tribute_afip_code == '06':
+                res['vat_perc_amount'] += line[amount_field]
+            if group.l10n_ar_tribute_afip_code == '09' and group != profits_tax_group:
+                res['other_perc_amount'] += line[amount_field]
+
+        if self.l10n_latam_document_type_id.l10n_ar_letter == 'C':
+            res['vat_taxable_amount'] = self.amount_untaxed
+        for line in self.invoice_line_ids:
+            if self.l10n_latam_document_type_id.l10n_ar_letter != 'C' and any(tax.tax_group_id.l10n_ar_vat_afip_code and tax.tax_group_id.l10n_ar_vat_afip_code not in ['0', '1', '2'] for tax in line.tax_ids):
+                res['vat_taxable_amount'] += line[amount_field]
+            if line.tax_ids.filtered(lambda y: y.tax_group_id.l10n_ar_vat_afip_code == '2'):
+                res['vat_exempt_base_amount'] += line[amount_field]
+            if line.tax_ids.filtered(lambda y: y.tax_group_id.l10n_ar_vat_afip_code == '1'):
+                res['vat_untaxed_base_amount'] += line[amount_field]
+
+        res = {_: sign * v for _, v in res.items()}
+
+        # get_vat()
+        vat_base_0_lines = self.env['account.move.line']
+        res['vat_amount_detail'] = {}
+        for line in self.line_ids:
+            for vat_id in line.filtered('tax_group_id.l10n_ar_vat_afip_code').mapped('tax_group_id.l10n_ar_vat_afip_code'):
+                k = int(vat_id)
+                # Importe
+                if (vat_id not in ['0', '1', '2'] and line.tax_line_id.tax_group_id.l10n_ar_vat_afip_code == vat_id):
+                    if not (res['vat_amount_detail'].get(k)):
+                        res['vat_amount_detail'][k] = {'Id': k, 'BaseImp': 0.0, 'Importe': 0.0}
+                    res['vat_amount_detail'][k]['Importe'] += sign * line[amount_field]
+
+            for vat_id in line.tax_ids.filtered('tax_group_id.l10n_ar_vat_afip_code').mapped('tax_group_id.l10n_ar_vat_afip_code'):
+                k = int(vat_id)
+                # Base
+                if (line in self.invoice_line_ids and vat_id not in ['0', '1', '2']):
+                    if not (res['vat_amount_detail'].get(k)):
+                        res['vat_amount_detail'][k] = {'Id': k, 'BaseImp': 0.0, 'Importe': 0.0}
+                    res['vat_amount_detail'][k]['BaseImp'] += sign * line[amount_field]
+
+                    # Evitar error 10018: cuando tenemos impuestos de IVA no 0, pero cuyo importe final es 0 (ejemplo caso baseImp 0.01)
+                    # debemos acumular esa base imponible y reportarla en el imp 3
+                    if res['vat_amount_detail'][k]['Importe'] == 0 and line[amount_field]:
+                        vat_base_0_lines |= line
+
+
+        vat_base_0 = sign * sum(vat_base_0_lines.mapped(amount_field))
+        vat_base_3 = sign * sum(self.invoice_line_ids.filtered(lambda x: x.tax_ids.filtered(lambda y: y.tax_group_id.l10n_ar_vat_afip_code == '3')).mapped(amount_field))
+        if (vat_base_0 or vat_base_3) and not res['vat_amount_detail'].get(3):
+            res['vat_amount_detail'][3] = {'Id': 3, 'BaseImp': vat_base_0 + vat_base_3, 'Importe': 0.0}
+
+        res['vat_amount_detail'] = [v for _,v in res['vat_amount_detail'].items()]
+        return res
 
     def _get_vat(self, company_currency=False):
         """ Applies on wsfe web service and in the VAT digital books """
@@ -254,7 +301,8 @@ class AccountMove(models.Model):
         vat_base_0 = sign * sum(self.invoice_line_ids.filtered(lambda x: x.tax_ids.filtered(lambda y: y.tax_group_id.l10n_ar_vat_afip_code == '3')).mapped(amount_field))
         if vat_base_0:
             res += [{'Id': '3', 'BaseImp': vat_base_0, 'Importe': 0.0}]
-
+        import pdb; pdb.set_trace()
+        # raise UserError(_("get_vat"))
         return res if res else []
 
     def _get_name_invoice_report(self, report_xml_id):
