@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
+from odoo.exceptions import UserError
 from odoo.osv import expression
 
 
@@ -134,8 +135,14 @@ class MassMailingContact(models.Model):
         default_list_ids = self._context.get('default_list_ids')
         default_list_ids = default_list_ids if isinstance(default_list_ids, (list, tuple)) else []
 
+        for vals in vals_list:
+            if vals.get('list_ids') and vals.get('subscription_list_ids'):
+                raise UserError(_('You should give either list_ids, either subscription_list_ids to create new contacts.'))
+
         if default_list_ids:
             for vals in vals_list:
+                if vals.get('list_ids'):
+                    continue
                 current_list_ids = []
                 subscription_ids = vals.get('subscription_list_ids') or []
                 for subscription in subscription_ids:
