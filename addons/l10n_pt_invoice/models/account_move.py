@@ -44,15 +44,20 @@ class AccountMove(models.Model):
         E.g.: A:509445535*B:123456823*C:BE*D:FT*E:N*F:20220103*G:FT 01P2022/1*H:0*I1:PT*I7:325.20*I8:74.80*N:74.80*O:400.00*P:0.00*Q:P0FE*R:2230
         """
 
-        def get_base_and_vat(amount_by_group, vat_name, currency):
-            vat_names = [line[0] for line in amount_by_group]
-            vat_values = [line[1] for line in amount_by_group]
-            vat_bases = [line[2] for line in amount_by_group]
+        def get_local_monetary(amount, record):
+            pt_currency = self.env.ref('base.EUR')
+            return float_repr(record.currency_id._convert(amount, pt_currency, record.company_id, record.date), pt_currency.decimal_places)
+
+        def get_base_and_vat(account_move, vat_name):
+            """Returns the base and value tax for each type of tax"""
+            vat_names = [line[0] for line in account_move.amount_by_group]
+            vat_values = [line[1] for line in account_move.amount_by_group]
+            vat_bases = [line[2] for line in account_move.amount_by_group]
             if vat_name not in vat_names:
                 return False
             index = vat_names.index(vat_name)
-            return {'base': float_repr(vat_bases[index], currency.decimal_places),
-                    'vat': float_repr(vat_values[index], currency.decimal_places)}
+            return {'base': get_local_monetary(vat_bases[index], record),
+                    'vat': get_local_monetary(vat_values[index], record)}
 
         for record in self:  # record is of type account.move
             if record.company_id.country_id.code != "PT":
@@ -73,23 +78,32 @@ class AccountMove(models.Model):
             qr_code_str += f"G:{(record.type + ' ' + record.display_name)[:60]}*"
             qr_code_str += f"H:0*"
             qr_code_str += f"I1:{record.company_id.country_id.code}*"
-            base_vat_exempt = get_base_and_vat(record.amount_by_group, 'IVA 0%', record.currency_id)
-            base_vat_reduced = get_base_and_vat(record.amount_by_group, 'IVA 6%', record.currency_id)
-            base_vat_intermediate = get_base_and_vat(record.amount_by_group, 'IVA 13%', record.currency_id)
-            base_vat_normal = get_base_and_vat(record.amount_by_group, 'IVA 23%', record.currency_id)
+            base_vat_exempt = get_base_and_vat(record, 'IVA 0%')
+            base_vat_reduced = get_base_and_vat(record, 'IVA 6%')
+            base_vat_intermediate = get_base_and_vat(record, 'IVA 13%')
+            base_vat_normal = get_base_and_vat(record, 'IVA 23%')
+            amount_tax = 0.0
+            amount_total = 0.0
             if base_vat_exempt:
                 qr_code_str += f"I2:{base_vat_exempt['base']}*"
+                amount_total += float(base_vat_exempt['base'])
             if base_vat_reduced:
                 qr_code_str += f"I3:{base_vat_reduced['base']}*"
                 qr_code_str += f"I4:{base_vat_reduced['vat']}*"
+                amount_total += float(base_vat_reduced['base'])
+                amount_tax += float(base_vat_reduced['vat'])
             if base_vat_intermediate:
                 qr_code_str += f"I5:{base_vat_intermediate['base']}*"
                 qr_code_str += f"I6:{base_vat_intermediate['vat']}*"
+                amount_total += float(base_vat_intermediate['base'])
+                amount_tax += float(base_vat_intermediate['vat'])
             if base_vat_normal:
                 qr_code_str += f"I7:{base_vat_normal['base']}*"
                 qr_code_str += f"I8:{base_vat_normal['vat']}*"
-            qr_code_str += f"N:{record.amount_tax}*"
-            qr_code_str += f"O:{record.amount_total}*"
+                amount_total += float(base_vat_normal['base'])
+                amount_tax += float(base_vat_normal['vat'])
+            qr_code_str += f"N:{float_repr(amount_tax, record.company_id.currency_id.decimal_places)}*"
+            qr_code_str += f"O:{float_repr(amount_total, record.company_id.currency_id.decimal_places)}*"
             qr_code_str += f"Q:TODO*"
             qr_code_str += f"R:TODO*"
 
