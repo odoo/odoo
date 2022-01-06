@@ -215,7 +215,7 @@
                                     <field name="stage_id" optional="show"/>
                                     <button name="action_open_task" type="object" title="View Task" string="View Task" class="btn btn-link pull-right"
                                             context="{'form_view_ref': 'project.project_sharing_project_task_view_form'}"
-                                            attrs="{'invisible': [('display_project_id', '!=', False), ('display_project_id', '!=', 'parent.display_project_id')]}"/>
+                                            attrs="{'invisible': &quot;[('display_project_id', '!=', False), ('display_project_id', '!=', active_id)]&quot;}"/>
                                 </tree>
                             </field>
                         </page>
