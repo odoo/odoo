@@ -221,6 +221,7 @@ export class MockModels {
                     partner_latitude: { string: "Latitude", type: 'float' },
                     partner_longitude: { string: "Longitude", type: 'float' },
                     partner_share: { string: "Share Partner", type: 'boolean', default: false }, // in python a compute, hard-coded value here for simplicity
+                    user_ids: { string: "Users", type: "one2many", relation: 'res.users', default:[] },
                 },
                 records: [],
             },
@@ -231,6 +232,7 @@ export class MockModels {
                     im_status: { string: "IM Status", type: 'char' },
                     name: { string: "Name", type: 'char' },
                     partner_id: { string: "Related partners", type: 'many2one', relation: 'res.partner' },
+                    share: { string: "Shared users", type: 'boolean', default: false },
                 },
                 records: [],
             },

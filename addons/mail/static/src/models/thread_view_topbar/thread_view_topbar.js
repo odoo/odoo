@@ -105,11 +105,7 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onClickTopbarThreadDescription(ev) {
-            if (!this.thread || !this.thread.isChannelDescriptionChangeable) {
-                return;
-            }
-            // Guests cannot edit description
-            if (this.messaging.isCurrentUserGuest) {
+            if (!this.thread || !this.thread.isDescriptionEditableByCurrentUser) {
                 return;
             }
             const selection = window.getSelection();
@@ -302,7 +298,7 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onMouseEnterTopbarThreadDescription(ev) {
-            if (!this.thread || !this.thread.isChannelDescriptionChangeable) {
+            if (!this.exists()) {
                 return;
             }
             this.update({ isMouseOverThreadDescription: true });
@@ -420,6 +416,23 @@ registerModel({
             return Boolean(
                 this.messaging.currentGuest &&
                 this.pendingGuestName !== this.messaging.currentGuest.name
+            );
+        },
+        /**
+         * @private
+         * @returns {boolean}
+         */
+        _computeHasDescriptionArea() {
+            return Boolean(this.thread && (this.thread.description || this.thread.isDescriptionEditableByCurrentUser));
+        },
+        /**
+         * @private
+         * @returns {boolean}
+         */
+        _computeIsDescriptionHighlighted() {
+            return Boolean(
+                this.isMouseOverThreadDescription &&
+                this.thread.isDescriptionEditableByCurrentUser
             );
         },
         /**
@@ -577,6 +590,12 @@ registerModel({
             readonly: true,
         }),
         /**
+         * Determines whether description area should display on top bar.
+         */
+        hasDescriptionArea: attr({
+            compute: '_computeHasDescriptionArea',
+        }),
+        /**
          * Determines whether the guest is currently being renamed.
          */
         isEditingGuestName: attr({
@@ -594,6 +613,12 @@ registerModel({
         invitePopoverView: one2one('mail.popover_view', {
             isCausal: true,
             inverse: 'threadViewTopbarOwner',
+        }),
+        /**
+         * States whether this thread description is highlighted.
+         */
+        isDescriptionHighlighted: attr({
+            compute: '_computeIsDescriptionHighlighted'
         }),
         /**
          * Determines whether this thread is currently being renamed.
