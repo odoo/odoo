@@ -16,6 +16,7 @@ This module adds the batch transfer option in warehouse management
         'views/stock_picking_type_views.xml',
         'views/stock_picking_wave_views.xml',
         'views/stock_move_line_views.xml',
+        'views/stock_picking_views.xml',
         'data/stock_picking_batch_data.xml',
         'wizard/stock_picking_to_batch_views.xml',
         'wizard/stock_add_to_wave_views.xml',
