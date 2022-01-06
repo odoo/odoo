@@ -53,3 +53,24 @@ class PaymentTestUtils(AccountTestInvoicingCommon):
             'action': action,
             'inputs': inputs,
         }
+
+    def _assert_does_not_raise(self, exception_class, func, *args, **kwargs):
+        """ Fail if an exception of the provided class is raised when calling the function.
+
+        If an exception of any other class is raised, it is caught and silently ignored.
+
+        This method cannot be used with functions that make requests. Any exception raised in the
+        scope of the new request will not be caught and will make the test fail.
+
+        :param class exception_class: The class of the exception to monitor
+        :param function fun: The function to call when monitoring for exceptions
+        :param list args: The positional arguments passed as-is to the called function
+        :param dict kwargs: The keyword arguments passed as-is to the called function
+        :return: None
+        """
+        try:
+            func(*args, **kwargs)
+        except exception_class:
+            self.fail(f"{func.__name__} should not raise error of class {exception_class.__name__}")
+        except Exception:
+            pass  # Any exception whose class is not monitored is caught and ignored

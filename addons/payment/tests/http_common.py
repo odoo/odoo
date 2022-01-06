@@ -23,32 +23,83 @@ class PaymentHttpCommon(PaymentTestUtils, HttpCase):
     # Helpers #
     ###########
 
-    def _build_jsonrpc_payload(self, params):
-        """Helper to properly build jsonrpc payload"""
-        if not getattr(self, 'session', None):
-            # We need to create a session (public if no login & passwd)
-            # before generating a csrf token
-            self.authenticate('', '')
-        params['csrf_token'] = http.WebRequest.csrf_token(self)
-        return {
-            "jsonrpc": "2.0",
-            "method": "call",
-            "id": str(uuid4()),
-            "params": params,
-        }
+    def _make_http_get_request(self, url, params=None):
+        """ Make an HTTP GET request to the provided URL.
 
-    def _make_http_get_request(self, url, params):
-        formatted_data = dict()
-        for k, v in params.items():
-            if isinstance(v, float):
-                formatted_data[k] = str(v)
-            else:
-                formatted_data[k] = v
-        return self.opener.get(url, params=formatted_data)
+        :param str url: The URL to make the request to
+        :param dict params: The parameters to be sent in the query string
+        :return: The response of the request
+        :rtype: :class:`requests.models.Response`
+        """
+        formatted_params = self._format_http_request_payload(payload=params)
+        return self.opener.get(url, params=formatted_params)
 
-    def _make_json_request(self, url, params):
-        data = self._build_jsonrpc_payload(params)
+    def _make_http_post_request(self, url, data=None):
+        """ Make an HTTP POST request to the provided URL.
+
+        :param str url: The URL to make the request to
+        :param dict data: The data to be send in the request body
+        :return: The response of the request
+        :rtype: :class:`requests.models.Response`
+        """
+        formatted_data = self._format_http_request_payload(payload=data)
+        return self.opener.post(url, data=formatted_data)
+
+    def _format_http_request_payload(self, payload=None):
+        """ Format a request payload to replace float values by their string representation.
+
+        :param dict payload: The payload to format
+        :return: The formatted payload
+        :rtype: dict
+        """
+        formatted_payload = {}
+        if payload is not None:
+            for k, v in payload.items():
+                formatted_payload[k] = str(v) if isinstance(v, float) else v
+        return formatted_payload
+
+    def _make_json_request(self, url, data=None):
+        """ Make a JSON request to the provided URL.
+
+        :param str url: The URL to make the request to
+        :param dict data: The data to be send in the request body in JSON format
+        :return: The response of the request
+        :rtype: :class:`requests.models.Response`
+        """
+        data = self._ensure_csrf_token(payload=data)
         return self.opener.post(url, json=data)
+
+    def _make_json_rpc_request(self, url, data=None):
+        """ Make a JSON-RPC request to the provided URL.
+
+        :param str url: The URL to make the request to
+        :param dict data: The data to be send in the request body in JSON-RPC 2.0 format
+        :return: The response of the request
+        :rtype: :class:`requests.models.Response`
+        """
+        def _build_jsonrpc_payload(_data):
+            return {
+                'jsonrpc': '2.0',
+                'method': 'call',
+                'id': str(uuid4()),
+                'params': _data,
+            }
+
+        data = self._ensure_csrf_token(payload=data)
+        return self.opener.post(url, json=_build_jsonrpc_payload(data))
+
+    def _ensure_csrf_token(self, payload=None):
+        """ Check if a CSRF token is needed in the request payload and add one if so.
+
+        :param dict payload: The payload of the request
+        :return: The payload with a CSRF token
+        :rtype: dict
+        """
+        payload = {} if payload is None else payload
+        if not getattr(self, 'session', None):  # A CSRF token is required
+            self.authenticate('', '')  # Create a session first
+        payload['csrf_token'] = http.WebRequest.csrf_token(self)
+        return payload
 
     def _get_tx_context(self, response, form_name):
         """Extracts txContext & other form info (acquirer & token ids)
@@ -169,7 +220,7 @@ class PaymentHttpCommon(PaymentTestUtils, HttpCase):
         uri = '/payment/transaction'
         url = self._build_url(uri)
 
-        return self._make_json_request(url, route_kwargs)
+        return self._make_json_rpc_request(url, route_kwargs)
 
     def get_processing_values(self, **route_kwargs):
         response = self.portal_transaction(**route_kwargs)
