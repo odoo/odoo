@@ -19,6 +19,7 @@ const wysiwygUtils = require('@web_editor/js/common/wysiwyg_utils');
 const weUtils = require('web_editor.utils');
 const { PeerToPeer } = require('@web_editor/js/wysiwyg/PeerToPeer');
 const { Mutex } = require('web.concurrency');
+const Link = require('wysiwyg.widgets.Link');
 
 var _t = core._t;
 
@@ -901,7 +902,30 @@ const Wysiwyg = Widget.extend({
             if (options.forceOpen || !this.linkTools) {
                 const $btn = this.toolbar.$el.find('#create-link');
                 if (!this.linkTools || ![options.link, ...wysiwygUtils.ancestors(options.link)].includes(this.linkTools.$link[0])) {
-                    this.linkTools = new weWidgets.LinkTools(this, {wysiwyg: this, noFocusUrl: options.noFocusUrl}, this.odooEditor.editable, {}, $btn, options.link || this.lastMediaClicked);
+                    let link = options.link;
+                    if (link && !$(link).is('a')) {
+                        $(link).wrap('<a href="#"/>');
+                        link = link.parentElement;
+                    }
+                    let needLabel;
+                    if (!link) {
+                        const linkInfos = Link.getOrCreateLink(this.odooEditor.editable);
+                        link = linkInfos.link;
+                        needLabel = linkInfos.needLabel;
+                    }
+                    if (link) {
+                        this.linkTools = new weWidgets.LinkTools(
+                            this, {
+                                wysiwyg: this,
+                                noFocusUrl: options.noFocusUrl,
+                                needLabel,
+                            },
+                            this.odooEditor.editable,
+                            {},
+                            $btn,
+                            link || this.lastMediaClicked
+                        );
+                    }
                 }
                 this.linkTools.noFocusUrl = options.noFocusUrl;
                 const _onMousedown = ev => {
@@ -939,7 +963,7 @@ const Wysiwyg = Widget.extend({
                 const linkWidget = linkDialog.linkWidget;
                 getDeepRange(this.$editable[0], {range: data.range, select: true});
                 if (!linkWidget.$link.length) {
-                    linkWidget.$link = $(linkWidget.getOrCreateLink(this.$editable[0]));
+                    linkWidget.$link = $(Link.getOrCreateLink(this.$editable[0]).link);
                 }
                 if (this.options.userGeneratedContent) {
                     data.rel = 'ugc';
