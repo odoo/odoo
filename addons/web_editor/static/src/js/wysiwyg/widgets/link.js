@@ -63,9 +63,6 @@ const Link = Widget.extend({
             this.data.range = range;
             this.$link = $(link);
             this.linkEl = link;
-        } else {
-            const selection = editable && editable.ownerDocument.getSelection();
-            this.data.range = selection && selection.rangeCount && selection.getRangeAt(0);
         }
 
         if (this.data.range) {
@@ -207,49 +204,24 @@ const Link = Widget.extend({
         this._updateLinkContent(this.$link, data);
     },
     /**
-     * Return the link element to edit. Create one from selection if none was
-     * present in selection.
-     *
-     * @param {Node} editable
-     * @returns {Node}
-     */
-    getOrCreateLink: function (editable) {
-        const doc = editable.ownerDocument;
-        this.needLabel = this.needLabel || false;
-        let link = getInSelection(doc, 'a');
-        const $link = $(link);
-        const range = getDeepRange(editable, {splitText: true, select: true, correctTripleClick: true});
-        if (link && (!$link.has(range.startContainer).length || !$link.has(range.endContainer).length)) {
-            // Expand the current link to include the whole selection.
-            let before = link.previousSibling;
-            while (before !== null && range.intersectsNode(before)) {
-                link.insertBefore(before, link.firstChild);
-                before = link.previousSibling;
-            }
-            let after = link.nextSibling;
-            while (after !== null && range.intersectsNode(after)) {
-                link.appendChild(after);
-                after = link.nextSibling;
-            }
-        } else if (!link) {
-            link = document.createElement('a');
-            if (range.collapsed) {
-                range.insertNode(link);
-                this.needLabel = true;
-            } else {
-                link.appendChild(range.extractContents());
-                range.insertNode(link);
-            }
-        }
-        return link;
-    },
-    /**
      * Focuses the url input.
      */
     focusUrl() {
         const urlInput = this.el.querySelector('input[name="url"]');
         urlInput.focus();
         urlInput.select();
+    },
+
+    /**
+     * Return the link element to edit. Create one from selection if none was
+     * present in selection.
+     *
+     * @param {Node} [options.containerNode]
+     * @param {Node} [options.startNode]
+     * @returns {Object}
+     */
+    getOrCreateLink (options) {
+        Link.getOrCreateLink(options);
     },
 
     //--------------------------------------------------------------------------
@@ -500,6 +472,52 @@ const Link = Widget.extend({
         this.$('.o_strip_domain').toggleClass('d-none', value.indexOf(window.location.origin) !== 0);
     },
 });
+
+/**
+ * Return the link element to edit. Create one from selection if none was
+ * present in selection.
+ *
+ * @param {Node} [options.containerNode]
+ * @param {Node} [options.startNode]
+ * @returns {Object}
+ */
+Link.getOrCreateLink = ({ containerNode, startNode } = {})  => {
+
+    if (startNode && !$(startNode).is('a')) {
+        $(startNode).wrap('<a href="#"/>');
+        return { link: startNode.parentElement, needLabel: false };
+    }
+
+    const doc = containerNode && containerNode.ownerDocument || document;
+    let needLabel = false;
+    let link = getInSelection(doc, 'a');
+    const $link = $(link);
+    const range = getDeepRange(containerNode, {splitText: true, select: true, correctTripleClick: true});
+    const isContained = containerNode.contains(range.startContainer) && containerNode.contains(range.endContainer);
+    if (link && (!$link.has(range.startContainer).length || !$link.has(range.endContainer).length)) {
+        // Expand the current link to include the whole selection.
+        let before = link.previousSibling;
+        while (before !== null && range.intersectsNode(before)) {
+            link.insertBefore(before, link.firstChild);
+            before = link.previousSibling;
+        }
+        let after = link.nextSibling;
+        while (after !== null && range.intersectsNode(after)) {
+            link.appendChild(after);
+            after = link.nextSibling;
+        }
+    } else if (!link && isContained) {
+        link = document.createElement('a');
+        if (range.collapsed) {
+            range.insertNode(link);
+            needLabel = true;
+        } else {
+            link.appendChild(range.extractContents());
+            range.insertNode(link);
+        }
+    }
+    return { link, needLabel };
+};
 
 return Link;
 });
