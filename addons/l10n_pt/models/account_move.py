@@ -61,6 +61,7 @@ class AccountMove(models.Model):
 
         for record in self:  # record is of type account.move
             if record.company_id.country_id.code != "PT":
+                record.l10n_pt_qr_code_str = ""
                 continue
 
             qr_code_str = ""
@@ -110,4 +111,3 @@ class AccountMove(models.Model):
             if qr_code_str[-1] == "*":
                 qr_code_str = qr_code_str[:-1]
             record.l10n_pt_qr_code_str = qr_code_str
-            print(qr_code_str)
