@@ -253,7 +253,7 @@
                             attrs="{'invisible': ['|', '|', ('id', '=', False), ('picking_type_code', '!=', 'outgoing'), ('state', '=', 'done')]}"
                             full_name="partner_id" groups="stock.group_stock_sign_delivery"/>
                     <button name="do_print_picking" string="Print" groups="stock.group_stock_user" type="object" attrs="{'invisible': [('state', '!=', 'assigned')]}" data-hotkey="o"/>
-                    <button string="Print Labels" type="object" name="action_open_label_layout"/>
+                    <button string="Print Labels" type="object" name="action_open_label_type"/>
                     <button name="%(action_report_delivery)d" string="Print" attrs="{'invisible': [('state', '!=', 'done')]}" type="action" groups="base.group_user" data-hotkey="o"/>
                     <button name="%(act_stock_return_picking)d" string="Return" attrs="{'invisible': [('state', '!=', 'done')]}" type="action" groups="base.group_user" data-hotkey="k"/>
                     <button name="do_unreserve" string="Unreserve" groups="base.group_user" type="object" attrs="{'invisible': ['|', '|', '|', ('picking_type_code', '=', 'incoming'), ('immediate_transfer', '=', True), '&amp;', ('state', '!=', 'assigned'), ('move_type', '!=', 'one'), '&amp;', ('state', 'not in', ('assigned', 'confirmed')), ('move_type', '=', 'one')]}" data-hotkey="w"/>

@@ -1496,6 +1496,19 @@ class Picking(models.Model):
                 'default_picking_quantity': 'picking'},
         }
 
+    def action_open_label_type(self):
+        if self.user_has_groups('stock.group_production_lot') and self.move_line_ids.lot_id:
+            view = self.env.ref('stock.picking_label_type_form')
+            return {
+                'name': _('Choose Type of Labels To Print'),
+                'type': 'ir.actions.act_window',
+                'res_model': 'picking.label.type',
+                'views': [(view.id, 'form')],
+                'target': 'new',
+                'context': {'default_picking_ids': self.ids},
+            }
+        return self.action_open_label_layout()
+
     def _attach_sign(self):
         """ Render the delivery report in pdf and attach it to the picking in `self`. """
         self.ensure_one()

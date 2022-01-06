@@ -280,6 +280,16 @@ class StockPickingBatch(models.Model):
         return action
 
     def action_open_label_layout(self):
+        if self.user_has_groups('stock.group_production_lot') and self.move_line_ids.lot_id:
+            view = self.env.ref('stock.picking_label_type_form')
+            return {
+                'name': _('Choose Type of Labels To Print'),
+                'type': 'ir.actions.act_window',
+                'res_model': 'picking.label.type',
+                'views': [(view.id, 'form')],
+                'target': 'new',
+                'context': {'default_picking_ids': self.picking_ids.ids},
+            }
         view = self.env.ref('stock.product_label_layout_form_picking')
         return {
             'name': _('Choose Labels Layout'),
