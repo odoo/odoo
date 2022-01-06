@@ -301,7 +301,10 @@ class ProductTemplate(models.Model):
             price = taxes.compute_all(combination_info['price'], pricelist.currency_id, quantity_1, product, partner)[tax_display]
             if pricelist.discount_policy == 'without_discount':
                 combination_info['list_price'] = self.env['account.tax']._fix_tax_included_price_company(combination_info['list_price'], product.sudo().taxes_id, taxes, company_id)
-                list_price = taxes.compute_all(combination_info['list_price'], pricelist.currency_id, quantity_1, product, partner)[tax_display]
+                if pricelist.item_ids.base == 'pricelist' and pricelist.item_ids.base_pricelist_id:
+                    list_price = pricelist.item_ids.base_pricelist_id._compute_price_rule([(product, quantity_1, partner)])[product.id][0]  # TDE: 0 = price, 1 = rule
+                else:
+                    list_price = taxes.compute_all(combination_info['list_price'], pricelist.currency_id, quantity_1, product, partner)[tax_display]
             else:
                 list_price = price
             combination_info['price_extra'] = self.env['account.tax']._fix_tax_included_price_company(combination_info['price_extra'], product.sudo().taxes_id, taxes, company_id)
