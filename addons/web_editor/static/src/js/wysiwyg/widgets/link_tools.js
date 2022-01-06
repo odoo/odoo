@@ -28,12 +28,8 @@ const LinkTools = Link.extend({
     /**
      * @override
      */
-    init: function (parent, options, editable, data, $button, node) {
-        if (node && !$(node).is('a')) {
-            $(node).wrap('<a href="#"/>');
-            node = node.parentElement;
-        }
-        this._link = node || this.getOrCreateLink(editable);
+    init: function (parent, options, editable, data, $button, link) {
+        this._link = link;
         this._observer = new MutationObserver(() =>{
             this._setLinkContent = false;
             this._observer.disconnect();
