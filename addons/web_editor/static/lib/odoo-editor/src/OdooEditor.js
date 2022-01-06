@@ -1499,6 +1499,7 @@ export class OdooEditor extends EventTarget {
         const result = this._protect(() => this._applyRawCommand(...args));
         this.sanitize();
         this.historyStep();
+        this._handleCommandHint();
         return result;
     }
     /**
@@ -2401,6 +2402,9 @@ export class OdooEditor extends EventTarget {
         this.observerUnactive();
         for (const hint of this.editable.querySelectorAll('.oe-hint')) {
             hint.classList.remove('oe-hint', 'oe-command-temporary-hint');
+            if (hint.classList.length === 0) {
+                hint.removeAttribute('class');
+            }
             hint.removeAttribute('placeholder');
         }
         this.cleanForSave();
@@ -2483,6 +2487,9 @@ export class OdooEditor extends EventTarget {
             if (hint.classList.contains('oe-command-temporary-hint') || !isEmptyBlock(hint)) {
                 this.observerUnactive();
                 hint.classList.remove('oe-hint', 'oe-command-temporary-hint');
+                if (hint.classList.length === 0) {
+                    hint.removeAttribute('class');
+                }
                 hint.removeAttribute('placeholder');
                 this.observerActive();
             }
