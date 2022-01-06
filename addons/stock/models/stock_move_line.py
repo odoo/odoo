@@ -773,8 +773,7 @@ class StockMoveLine(models.Model):
                                                    'description': description,
                                                    'qty_done': move_line.qty_done,
                                                    'qty_ordered': qty_ordered,
-                                                   'product_uom': uom.name,
-                                                   'product_uom_rec': uom,
+                                                   'product_uom': uom,
                                                    'product': move_line.product_id}
             else:
                 aggregated_move_lines[line_key]['qty_done'] += move_line.qty_done
