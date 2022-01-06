@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from odoo import Command
 from odoo.addons.project.tests.test_project_base import TestProjectCommon
 from odoo.tests import tagged
 from odoo.tests.common import Form
@@ -191,3 +192,30 @@ class TestProjectSubtasks(TestProjectCommon):
                 subtask_form.display_project_id = self.project_goats
 
         self.assertEqual(self.task_1.child_ids.stage_id.name, "New", "The stage of the child task should be the default one of the display project id, once set.")
+
+    def test_copy_project_with_subtasks(self):
+        self.env['project.task'].with_context({'mail_create_nolog': True}).create({
+            'name': 'Parent Task',
+            'project_id': self.project_goats.id,
+            'child_ids': [
+                Command.create({'name': 'child 1'}),
+                Command.create({'name': 'child 2', 'display_project_id': self.project_goats.id}),
+                Command.create({'name': 'child 3', 'display_project_id': self.project_pigs.id}),
+                Command.create({'name': 'child 4 with subtask', 'child_ids': [Command.create({'name': 'child 5'})]}),
+                Command.create({'name': 'child archived', 'active': False}),
+            ],
+        })
+
+        task_count_with_subtasks_including_archived_in_project_goats = self.project_goats.with_context(active_test=False).task_count_with_subtasks
+        task_count_in_project_pigs = self.project_pigs.task_count
+        self.project_goats._compute_task_count()  # recompute without archived tasks and subtasks
+        task_count_in_project_goats = self.project_goats.task_count
+        project_goats_duplicated = self.project_goats.copy()
+        self.project_pigs._compute_task_count()  # retrigger since a new task should be added in the project after the duplication of Project Goats
+        self.assertEqual(
+            project_goats_duplicated.with_context(active_test=False).task_count_with_subtasks,
+            task_count_with_subtasks_including_archived_in_project_goats - 1,
+            'The number of duplicated tasks (subtasks included) should be equal to the number of all tasks (with active subtasks included) of both projects, '
+            'that is only the active subtasks are duplicated.')
+        self.assertEqual(self.project_goats.task_count, task_count_in_project_goats, 'The number of tasks should be the same before and after the duplication of this project.')
+        self.assertEqual(self.project_pigs.task_count, task_count_in_project_pigs + 1, 'The project pigs should an additional task after the duplication of the project goats.')
