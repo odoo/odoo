@@ -2065,19 +2065,29 @@ MockServer.include({
             [['id', 'in', ids]],
             { active_test: false }
         );
-        // Servers is also returning `user_id` and `is_internal_user` but not
+        // Servers is also returning `is_internal_user` but not
         // done here for simplification.
-        return new Map(partners.map(partner => [
-            partner.id,
-            {
+        return new Map(partners.map(partner => {
+            const users = this._getRecords('res.users', [['id', 'in', partner.user_ids]]);
+            const internalUsers = users.filter(user => !user.share);
+            let mainUser;
+            if (internalUsers.length > 0) {
+                mainUser = internalUsers[0];
+            } else if (users.length > 0) {
+                mainUser = users[0];
+            } else {
+                mainUser = [];
+            }
+            return [partner.id, {
                 "active": partner.active,
                 "display_name": partner.display_name,
                 "email": partner.email,
                 "id": partner.id,
                 "im_status": partner.im_status,
                 "name": partner.name,
-            }
-        ]));
+                "user_id": mainUser.id,
+            }];
+        }));
     },
     /**
      * Simulates `search_for_channel_invite` on `res.partner`.
