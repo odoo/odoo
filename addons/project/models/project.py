@@ -461,24 +461,21 @@ class Project(models.Model):
     def map_tasks(self, new_project_id):
         """ copy and map tasks from old to new project """
         project = self.browse(new_project_id)
-        tasks = self.env['project.task']
+        new_task_ids = []
+        new_subtasks = self.env['project.task']
         # We want to copy archived task, but do not propagate an active_test context key
-        task_ids = self.env['project.task'].with_context(active_test=False).search([('project_id', '=', self.id)], order='parent_id').ids
-        old_to_new_tasks = {}
+        task_ids = self.env['project.task'].with_context(active_test=False).search([('project_id', '=', self.id), ('parent_id', '=', False)]).ids
         for task in self.env['project.task'].browse(task_ids):
             # preserve task name and stage, normally altered during copy
             defaults = self._map_tasks_default_valeus(task, project)
-            if task.parent_id:
-                # set the parent to the duplicated task
-                defaults['parent_id'] = old_to_new_tasks.get(task.parent_id.id, False)
             new_task = task.copy(defaults)
-            # If child are created before parent (ex sub_sub_tasks)
-            new_child_ids = [old_to_new_tasks[child.id] for child in task.child_ids if child.id in old_to_new_tasks]
-            tasks.browse(new_child_ids).write({'parent_id': new_task.id})
-            old_to_new_tasks[task.id] = new_task.id
-            tasks += new_task
-
-        return project.write({'tasks': [(6, 0, tasks.ids)]})
+            new_task_ids.append(new_task.id)
+            all_subtasks = new_task._get_all_subtasks()
+            if all_subtasks:
+                new_subtasks += new_task.child_ids.filtered(lambda child: child.display_project_id == self)
+        project.write({'tasks': [Command.set(new_task_ids)]})
+        new_subtasks.write({'display_project_id': project.id})
+        return True
 
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
@@ -1476,12 +1473,13 @@ class Task(models.Model):
     def copy(self, default=None):
         if default is None:
             default = {}
-        if not default.get('name'):
+        has_default_name = bool(default.get('name', ''))
+        if not has_default_name:
             default['name'] = _("%s (copy)", self.name)
         if self.recurrence_id:
             default['recurrence_id'] = self.recurrence_id.copy().id
         if self.allow_subtasks:
-            default['child_ids'] = [child.copy().id for child in self.child_ids]
+            default['child_ids'] = [child.copy({'name': child.name} if has_default_name else None).id for child in self.child_ids]
         return super(Task, self).copy(default)
 
     @api.model
