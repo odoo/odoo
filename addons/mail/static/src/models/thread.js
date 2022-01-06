@@ -1292,6 +1292,17 @@ registerModel({
          * @private
          * @returns {boolean}
          */
+        _computeIsDescriptionEditableByCurrentUser() {
+            return Boolean(
+                this.messaging.currentUser &&
+                this.messaging.currentUser.isInternalUser &&
+                this.isChannelDescriptionChangeable
+            );
+        },
+        /**
+         * @private
+         * @returns {boolean}
+         */
         _computeIsChannelRenamable() {
             return (
                 this.model === 'mail.channel' &&
@@ -2044,6 +2055,12 @@ registerModel({
         isCurrentPartnerFollowing: attr({
             compute: '_computeIsCurrentPartnerFollowing',
             default: false,
+        }),
+        /**
+         * States whether this thread description is editable by the current user.
+         */
+        isDescriptionEditableByCurrentUser: attr({
+            compute: '_computeIsDescriptionEditableByCurrentUser',
         }),
         /**
          * States whether `this` is currently loading attachments.

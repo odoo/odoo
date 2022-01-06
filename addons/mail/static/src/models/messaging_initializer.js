@@ -285,7 +285,6 @@ registerModel({
             }
             if (current_partner) {
                 const partnerData = this.messaging.models['Partner'].convertData(current_partner);
-                partnerData.user = insert({ id: currentUserId });
                 this.messaging.update({
                     currentPartner: insert(partnerData),
                     currentUser: insert({ id: currentUserId }),
