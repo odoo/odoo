@@ -31,11 +31,11 @@ class AccountMove(models.Model):
 
     def preview_invoice(self):
         self.check_necessary_fields()
-        super().preview_invoice()
+        return super().preview_invoice()
 
     def action_invoice_sent(self):
         self.check_necessary_fields()
-        super().action_invoice_sent()
+        return super().action_invoice_sent()
 
     @api.depends('partner_id', 'currency_id', 'date', 'type', 'display_name', 'amount_by_group', 'amount_total',
                  'amount_untaxed', 'company_id', 'company_id.vat', 'company_id.country_id', 'partner_id.country_id')
