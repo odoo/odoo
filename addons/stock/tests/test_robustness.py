@@ -221,3 +221,41 @@ class TestRobustness(TransactionCase):
                 'location_dest_id': move2.location_dest_id.id,
             })]})
 
+    def test_lot_quantity_remains_unchanged_after_done(self):
+        """ Make sure the method _set_lot_ids does not change the quantities of lots to 1 once they are done.
+        """
+        productA = self.env['product.product'].create({
+            'name': 'ProductA',
+            'type': 'product',
+            'categ_id': self.env.ref('product.product_category_all').id,
+            'tracking': 'lot',
+        })
+        lotA = self.env['stock.production.lot'].create({
+            'name': 'lotA',
+            'product_id': productA.id,
+            'company_id': self.env.company.id,
+
+        })
+        self.env['stock.quant']._update_available_quantity(productA, self.stock_location, 5, lot_id=lotA)
+        moveA = self.env['stock.move'].create({
+            'name': 'TEST_A',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': productA.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 5.0,
+        })
+
+        moveA._action_confirm()
+        moveA.write({'move_line_ids': [(0, 0, {
+            'product_id': productA.id,
+            'product_uom_id': self.uom_unit.id,
+            'qty_done': 5,
+            'lot_id': lotA.id,
+            'location_id': moveA.location_id.id,
+            'location_dest_id': moveA.location_dest_id.id,
+        })]})
+        moveA._action_done()
+        moveA._set_lot_ids()
+
+        self.assertEqual(moveA.quantity_done, 5)
