@@ -36,8 +36,11 @@
                     <div class="o_input_dropdown">
                         <AutoComplete
                             value="displayName"
-                            placeholder="props.attrs.placeholder"
-                            fetchSuggestions="(term) => this.fetchAutoCompleteSources(term)"
+                            placeholder="'AutoComplete'"
+                            sources="sources"
+                            onSelect="(option) => this.onSelect(option)"
+                            autoSelect="true"
+                            onInput="(value) => this.onInput(value)"
                             onChange="(value) => this.onChange(value)"
                         />
                         <a role="button" class="o_dropdown_button" draggable="false" />
