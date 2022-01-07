@@ -146,7 +146,7 @@ class SaleOrderLine(models.Model):
     def _compute_name(self):
         """Override to add the compute dependency.
 
-        The custom name logic can be found below in get_sale_order_line_multiline_description_sale.
+        The custom name logic can be found below in _get_sale_order_line_multiline_description_sale.
         """
         super()._compute_name()
 
@@ -160,20 +160,16 @@ class SaleOrderLine(models.Model):
     def _unlink_associated_registrations(self):
         self.env['event.registration'].search([('sale_order_line_id', 'in', self.ids)]).unlink()
 
-    def get_sale_order_line_multiline_description_sale(self, product):
+    def _get_sale_order_line_multiline_description_sale(self):
         """ We override this method because we decided that:
                 The default description of a sales order line containing a ticket must be different than the default description when no ticket is present.
                 So in that case we use the description computed from the ticket, instead of the description computed from the product.
                 We need this override to be defined here in sales order line (and not in product) because here is the only place where the event_ticket_id is referenced.
         """
         if self.event_ticket_id:
-            ticket = self.event_ticket_id.with_context(
-                lang=self.order_id.partner_id.lang,
-            )
-
-            return ticket._get_ticket_multiline_description() + self._get_sale_order_line_multiline_description_variants()
+            return self.event_ticket_id._get_ticket_multiline_description() + self._get_sale_order_line_multiline_description_variants()
         else:
-            return super(SaleOrderLine, self).get_sale_order_line_multiline_description_sale(product)
+            return super()._get_sale_order_line_multiline_description_sale()
 
     def _get_display_price(self):
         if self.event_ticket_id and self.event_id:

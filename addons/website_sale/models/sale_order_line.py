@@ -7,18 +7,20 @@ from odoo import api, models, fields, _
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
-    name_short = fields.Char(compute="_compute_name_short")
-
     linked_line_id = fields.Many2one('sale.order.line', string='Linked Order Line', domain="[('order_id', '!=', order_id)]", ondelete='cascade')
     option_line_ids = fields.One2many('sale.order.line', 'linked_line_id', string='Options Linked')
 
-    def get_sale_order_line_multiline_description_sale(self, product):
-        description = super(SaleOrderLine, self).get_sale_order_line_multiline_description_sale(product)
-        if self.linked_line_id:
-            description += "\n" + _("Option for: %s", self.linked_line_id.product_id.display_name)
-        if self.option_line_ids:
-            description += "\n" + '\n'.join([_("Option: %s", option_line.product_id.display_name) for option_line in self.option_line_ids])
-        return description
+    name_short = fields.Char(compute="_compute_name_short")
+
+    #=== COMPUTE METHODS ===#
+
+    @api.depends('linked_line_id', 'option_line_ids')
+    def _compute_name(self):
+        """Override to add the compute dependency.
+
+        The custom name logic can be found below in _get_sale_order_line_multiline_description_sale.
+        """
+        super()._compute_name()
 
     @api.depends('product_id.display_name')
     def _compute_name_short(self):
@@ -27,6 +29,19 @@ class SaleOrderLine(models.Model):
         """
         for record in self:
             record.name_short = record.product_id.with_context(display_default_code=False).display_name
+
+    #=== BUSINESS METHODS ===#
+
+    def _get_sale_order_line_multiline_description_sale(self):
+        description = super()._get_sale_order_line_multiline_description_sale()
+        if self.linked_line_id:
+            description += "\n" + _("Option for: %s", self.linked_line_id.product_id.display_name)
+        if self.option_line_ids:
+            description += "\n" + '\n'.join([
+                _("Option: %s", option_line.product_id.display_name)
+                for option_line in self.option_line_ids
+            ])
+        return description
 
     def get_description_following_lines(self):
         return self.name.splitlines()[1:]
