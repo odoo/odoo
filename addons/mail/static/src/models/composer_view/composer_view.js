@@ -5,7 +5,7 @@ import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2many, many2one, one2one } from '@mail/model/model_field';
 import { clear, insertAndReplace, link, replace, unlink, unlinkAll } from '@mail/model/model_field_command';
 import { OnChange } from '@mail/model/model_onchange';
-import { addLink, escapeAndCompactTextContent, parseAndTransform } from '@mail/js/utils';
+import { createRange, setSelection,} from '@mail/js/utils';
 
 function factory(dependencies) {
 
@@ -89,10 +89,8 @@ function factory(dependencies) {
             if (this.messaging.isCurrentUserGuest) {
                 return; // not supported for guests
             }
-            if (
-                this.suggestionModelName === 'mail.channel_command' ||
-                this._getCommandFromText(this.composer.textInputContent)
-            ) {
+            const command = this._getCommandFromText(this.composer.textInputContent);
+            if (this.suggestionModelName === 'mail.channel_command' || command) {
                 return;
             }
             if (this.composer.thread.typingMembers.includes(this.messaging.currentPartner)) {
@@ -103,61 +101,26 @@ function factory(dependencies) {
         }
 
         /**
-         * Inserts text content in text input based on selection.
-         *
-         * @param {string} content
-         */
-        insertIntoTextInput(content) {
-            const partA = this.composer.textInputContent.slice(0, this.composer.textInputCursorStart);
-            const partB = this.composer.textInputContent.slice(
-                this.composer.textInputCursorEnd,
-                this.composer.textInputContent.length
-            );
-            let suggestionDelimiterPosition = this.suggestionDelimiterPosition;
-            if (
-                suggestionDelimiterPosition !== undefined &&
-                suggestionDelimiterPosition >= this.composer.textInputCursorStart
-            ) {
-                suggestionDelimiterPosition = suggestionDelimiterPosition + content.length;
-            }
-            this.composer.update({
-                isLastStateChangeProgrammatic: true,
-                textInputContent: partA + content + partB,
-                textInputCursorEnd: this.composer.textInputCursorStart + content.length,
-                textInputCursorStart: this.composer.textInputCursorStart + content.length,
-            });
-            this.update({ suggestionDelimiterPosition });
-        }
-
-        /**
          * Inserts the active suggestion at the current cursor position.
          */
         insertSuggestion() {
-            const cursorPosition = this.composer.textInputCursorStart;
-            let textLeft = this.composer.textInputContent.substring(
-                0,
-                this.suggestionDelimiterPosition + 1
+            const replaceRange = createRange(
+                this.suggestionDelimiterPosition.node,
+                this.suggestionDelimiterPosition.offset,
+                this.composer.textInputCursorSelection.anchorNode,
+                this.composer.textInputCursorSelection.anchorOffset,
             );
-            let textRight = this.composer.textInputContent.substring(
-                cursorPosition,
-                this.composer.textInputContent.length
-            );
-            if (this.suggestionDelimiter === ':') {
-                textLeft = this.composer.textInputContent.substring(
-                    0,
-                    this.suggestionDelimiterPosition
-                );
-                textRight = this.composer.textInputContent.substring(
-                    cursorPosition,
-                    this.composer.textInputContent.length
-                );
-            }
-            const recordReplacement = this.activeSuggestedRecord.getMentionText();
+            replaceRange.deleteContents();
+            const contentNode = this._generateMentionsLinks();
+            replaceRange.insertNode(contentNode);
+
+            const range = new Range();
+            range.setStartAfter(contentNode);
+            range.collapse();
+            const selection = setSelection(range);
             const updateData = {
-                isLastStateChangeProgrammatic: true,
-                textInputContent: textLeft + recordReplacement + ' ' + textRight,
-                textInputCursorEnd: textLeft.length + recordReplacement.length + 1,
-                textInputCursorStart: textLeft.length + recordReplacement.length + 1,
+                textInputContent: this.wysiwygRef.comp.getContent(),
+                textInputCursorSelection: selection,
             };
             // Specific cases for channel and partner mentions: the message with
             // the mention will appear in the target channel, or be notified to
@@ -226,7 +189,7 @@ function factory(dependencies) {
             const attachmentIds = this.composer.attachments.map(attachment => attachment.id);
             const context = {
                 default_attachment_ids: attachmentIds,
-                default_body: escapeAndCompactTextContent(this.composer.textInputContent),
+                default_body: this.composer.textInputContent,
                 default_is_log: this.composer.isLog,
                 default_model: this.composer.activeThread.model,
                 default_partner_ids: this.composer.recipients.map(partner => partner.id),
@@ -263,7 +226,7 @@ function factory(dependencies) {
         async postMessage() {
             const composer = this.composer;
             if (composer.thread.model === 'mail.channel') {
-                const command = this._getCommandFromText(composer.textInputContent);
+                const command = this._getCommandFromText(this.composer.textInputContent);
                 if (command) {
                     await command.execute({ channel: composer.thread, body: composer.textInputContent });
                     if (composer.exists()) {
@@ -275,16 +238,7 @@ function factory(dependencies) {
             if (this.messaging.currentPartner) {
                 composer.thread.unregisterCurrentPartnerIsTyping({ immediateNotify: true });
             }
-            const escapedAndCompactContent = escapeAndCompactTextContent(composer.textInputContent);
-            let body = escapedAndCompactContent.replace(/&nbsp;/g, ' ').trim();
-            // This message will be received from the mail composer as html content
-            // subtype but the urls will not be linkified. If the mail composer
-            // takes the responsibility to linkify the urls we end up with double
-            // linkification a bit everywhere. Ideally we want to keep the content
-            // as text internally and only make html enrichment at display time but
-            // the current design makes this quite hard to do.
-            body = this._generateMentionsLinks(body);
-            body = parseAndTransform(body, addLink);
+            let body = this.composer.textInputContent;
             body = this._generateEmojisOnHtml(body);
             const postData = {
                 attachment_ids: composer.attachments.map(attachment => attachment.id),
@@ -426,10 +380,7 @@ function factory(dependencies) {
                 this.messageViewInEditing.messageActionList.update({ showDeleteConfirm: true });
                 return;
             }
-            const escapedAndCompactContent = escapeAndCompactTextContent(composer.textInputContent);
-            let body = escapedAndCompactContent.replace(/&nbsp;/g, ' ').trim();
-            body = this._generateMentionsLinks(body);
-            body = parseAndTransform(body, addLink);
+            let body = this.composer.textInputContent;
             body = this._generateEmojisOnHtml(body);
             let data = {
                 body: body,
@@ -569,12 +520,11 @@ function factory(dependencies) {
         _computeSuggestionDelimiter() {
             if (
                 !this.composer ||
-                this.suggestionDelimiterPosition === undefined ||
-                this.suggestionDelimiterPosition >= this.composer.textInputContent.length
+                this.suggestionDelimiterPosition === undefined
             ) {
                 return clear();
             }
-            return this.composer.textInputContent[this.suggestionDelimiterPosition];
+            return this.composer.textInputCursorSelection.anchorNode.textContent[this.suggestionDelimiterPosition.offset];
         }
 
         /**
@@ -600,15 +550,22 @@ function factory(dependencies) {
          * @private
          * @returns {string}
          */
-        _computeSuggestionSearchTerm() {
+        _onChangeUpdateSuggestionSearchTerm() {
             if (
                 !this.composer ||
                 this.suggestionDelimiterPosition === undefined ||
-                this.suggestionDelimiterPosition >= this.composer.textInputCursorStart
+                this.suggestionDelimiterPosition.offset >= this.composer.textInputCursorSelection.anchorOffset
             ) {
-                return clear();
+                return this.update({
+                    suggestionSearchTerm: clear(),
+                });
             }
-            return this.composer.textInputContent.substring(this.suggestionDelimiterPosition + 1, this.composer.textInputCursorStart);
+            return this.update({
+                suggestionSearchTerm: this.composer.textInputCursorSelection.anchorNode.textContent.substring(
+                    this.suggestionDelimiterPosition.offset + 1,
+                    this.composer.textInputCursorSelection.anchorOffset,
+                    ),
+            });
         }
 
         /**
@@ -663,57 +620,62 @@ function factory(dependencies) {
          * Generates the html link related to the mentioned partner
          *
          * @private
-         * @param {string} body
          * @returns {string}
          */
-        _generateMentionsLinks(body) {
-            // List of mention data to insert in the body.
-            // Useful to do the final replace after parsing to avoid using the
-            // same tag twice if two different mentions have the same name.
+        _generateMentionsLinks() {
+            const suggestion = this.activeSuggestedRecord;
             const mentions = [];
-            for (const partner of this.composer.mentionedPartners) {
-                const placeholder = `@-mention-partner-${partner.id}`;
-                const text = `@${owl.utils.escape(partner.name)}`;
-                mentions.push({
-                    class: 'o_mail_redirect',
-                    id: partner.id,
-                    model: 'res.partner',
-                    placeholder,
-                    text,
-                });
-                body = body.replace(text, placeholder);
-            }
-            for (const channel of this.composer.mentionedChannels) {
-                const placeholder = `#-mention-channel-${channel.id}`;
-                const text = `#${owl.utils.escape(channel.name)}`;
-                mentions.push({
+            switch (suggestion.constructor.modelName) {
+                case 'mail.partner':
+                    mentions.push({
+                        class: 'o_mail_redirect',
+                        id: suggestion.id,
+                        model: 'res.partner',
+                    });
+                    break;
+                case 'mail.thread':
+                    mentions.push({
                     class: 'o_channel_redirect',
-                    id: channel.id,
+                    id: suggestion.id,
                     model: 'mail.channel',
-                    placeholder,
-                    text,
-                });
-                body = body.replace(text, placeholder);
+                    });
+                    break;
+                default:
+                    break;
+            };
+            const Replacement = document.createElement('p');
+            if (['#', '@'].includes(this.suggestionDelimiter)) {
+                const linkReplacement = document.createElement('a');
+                linkReplacement.innerHTML = suggestion.getMentionText();
+                linkReplacement.innerHTML = this.suggestionDelimiter + linkReplacement.innerHTML;
+                if (mentions.length != 0) {
+                    const mention = mentions[0];
+                    const baseHREF = this.env.session.url('/web');
+                    linkReplacement.setAttribute('href', `${baseHREF}#model=${mention.model}&id=${mention.id}`);
+                    linkReplacement.setAttribute('class', `${mention.class}`);
+                    linkReplacement.setAttribute('data-oe-id', `${mention.id}`);
+                    linkReplacement.setAttribute('data-oe-model', `${mention.model}`);
+                    linkReplacement.setAttribute('target', '_blank');
+                    Replacement.append(linkReplacement);
+                }
+            } else if (':' === this.suggestionDelimiter) {
+                Replacement.append(document.createTextNode(suggestion.getMentionText()));
+            } else if ('/' === this.suggestionDelimiter) {
+                Replacement.append(document.createTextNode(this.suggestionDelimiter + suggestion.getMentionText()));
             }
-            const baseHREF = this.env.session.url('/web');
-            for (const mention of mentions) {
-                const href = `href='${baseHREF}#model=${mention.model}&id=${mention.id}'`;
-                const attClass = `class='${mention.class}'`;
-                const dataOeId = `data-oe-id='${mention.id}'`;
-                const dataOeModel = `data-oe-model='${mention.model}'`;
-                const target = `target='_blank'`;
-                const link = `<a ${href} ${attClass} ${dataOeId} ${dataOeModel} ${target}>${mention.text}</a>`;
-                body = body.replace(mention.placeholder, link);
-            }
-            return body;
+            Replacement.append(" ");
+            return Replacement;
         }
 
         /**
          * @private
-         * @param {string} content html content
+         * @param {string} rawContent html content
          * @returns {mail.channel_command|undefined} command, if any in the content
          */
-        _getCommandFromText(content) {
+        _getCommandFromText(rawContent) {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(rawContent, "text/html");
+            const content = htmlDoc.body.textContent;
             if (content.startsWith('/')) {
                 const firstWord = content.substring(1).split(/\s/)[0];
                 return this.messaging.commands.find(command => {
@@ -744,7 +706,8 @@ function factory(dependencies) {
             if (!this.composer) {
                 return;
             }
-            if (this.composer.textInputCursorStart !== this.composer.textInputCursorEnd) {
+            const selection = this.composer.textInputCursorSelection;
+            if (!selection.isCollapsed) {
                 // avoid interfering with multi-char selection
                 return this.update({ suggestionDelimiterPosition: clear() });
             }
@@ -752,31 +715,34 @@ function factory(dependencies) {
             // keep the current delimiter if it is still valid
             if (
                 this.suggestionDelimiterPosition !== undefined &&
-                this.suggestionDelimiterPosition < this.composer.textInputCursorStart
+                this.suggestionDelimiterPosition.offset < this.composer.textInputCursorSelection.anchorOffset
             ) {
                 candidatePositions.push(this.suggestionDelimiterPosition);
             }
             // consider the char before the current cursor position if the
             // current delimiter is no longer valid (or if there is none)
-            if (this.composer.textInputCursorStart > 0) {
-                candidatePositions.push(this.composer.textInputCursorStart - 1);
+            if (selection.anchorOffset > 0) {
+                candidatePositions.push({
+                    node: selection.anchorNode,
+                    offset: selection.anchorOffset - 1,
+                });
             }
             const suggestionDelimiters = ['@', ':', '#', '/'];
             for (const candidatePosition of candidatePositions) {
                 if (
-                    candidatePosition < 0 ||
-                    candidatePosition >= this.composer.textInputContent.length
+                    candidatePosition.offset < 0 ||
+                    candidatePosition.offset >= this.composer.textInputCursorSelection.anchorNode.textContent.length
                 ) {
                     continue;
                 }
-                const candidateChar = this.composer.textInputContent[candidatePosition];
-                if (candidateChar === '/' && candidatePosition !== 0) {
+                const candidateChar = candidatePosition.node.textContent.charAt(candidatePosition.offset);
+                if (candidateChar === '/' && candidatePosition.offset !== 0) {
                     continue;
                 }
                 if (!suggestionDelimiters.includes(candidateChar)) {
                     continue;
                 }
-                const charBeforeCandidate = this.composer.textInputContent[candidatePosition - 1];
+                const charBeforeCandidate = candidatePosition.node.textContent.charAt(candidatePosition.offset - 1)
                 if (charBeforeCandidate && !/\s/.test(charBeforeCandidate)) {
                     continue;
                 }
@@ -981,8 +947,13 @@ function factory(dependencies) {
          * States the search term to use for suggestions (if any).
          */
         suggestionSearchTerm: attr({
-            compute: '_computeSuggestionSearchTerm',
+            default: "",
         }),
+        /**
+         * Determine the legacy wysiwygRef used in composer component.
+         * Used for getting/setting values, calling method from the legacy widget.
+         */
+         wysiwygRef: attr(),
         /**
          * States the thread view on which this composer allows editing (if any).
          */
@@ -998,12 +969,16 @@ function factory(dependencies) {
             methodName: '_onChangeComposer',
         }),
         new OnChange({
-            dependencies: ['composer.textInputContent', 'composer.textInputCursorEnd', 'composer.textInputCursorStart'],
+            dependencies: ['composer.textInputContent', 'composer.textInputCursorSelection'],
             methodName: '_onChangeDetectSuggestionDelimiterPosition',
         }),
         new OnChange({
             dependencies: ['suggestionDelimiterPosition', 'suggestionModelName', 'suggestionSearchTerm', 'composer.activeThread'],
             methodName: '_onChangeUpdateSuggestionList',
+        }),
+        new OnChange({
+            dependencies: ['composer.textInputContent'],
+            methodName: '_onChangeUpdateSuggestionSearchTerm',
         }),
     ];
     ComposerView.modelName = 'mail.composer_view';

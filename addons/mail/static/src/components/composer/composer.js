@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { useDragVisibleDropZone } from '@mail/component_hooks/use_drag_visible_dropzone/use_drag_visible_dropzone';
+import { useRefToModel } from '@mail/component_hooks/use_ref_to_model/use_ref_to_model';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 import {
     isEventHandled,
@@ -36,6 +37,11 @@ export class Composer extends Component {
         this._onClickCaptureGlobal = this._onClickCaptureGlobal.bind(this);
     }
 
+    setup() {
+        super.setup();
+        useRefToModel({ fieldName: 'wysiwygRef', modelName: 'mail.composer_view', propNameAsRecordLocalId: 'composerViewLocalId', refName: 'textInput' });
+    }
+
     mounted() {
         document.addEventListener('click', this._onClickCaptureGlobal, true);
     }
@@ -65,7 +71,12 @@ export class Composer extends Component {
     contains(node) {
         // emoji popover is outside but should be considered inside
         const emojisPopover = this._emojisPopoverRef.comp;
+        const wysiwyg = this._textInputRef.comp;
         if (emojisPopover && emojisPopover.contains(node)) {
+            return true;
+        }
+        // wysiwyg, including toolbar should be considered inside
+        if (wysiwyg.contains(node)) {
             return true;
         }
         return Boolean(this.el && this.el.contains(node));
@@ -147,6 +158,7 @@ export class Composer extends Component {
             return;
         }
         this.composerView.postMessage();
+        this._textInputRef.comp.clear();
     }
 
     //--------------------------------------------------------------------------
@@ -247,7 +259,7 @@ export class Composer extends Component {
     _onEmojiSelection(ev) {
         ev.stopPropagation();
         this._textInputRef.comp.saveStateInStore();
-        this.composerView.insertIntoTextInput(ev.detail.unicode);
+        this._textInputRef.comp.insertIntoTextInput(ev.detail.unicode);
         if (!this.messaging.device.isMobileDevice) {
             this.composerView.update({ doFocus: true });
         }

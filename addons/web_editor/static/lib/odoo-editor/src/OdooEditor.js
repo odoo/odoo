@@ -339,8 +339,10 @@ export class OdooEditor extends EventTarget {
     destroy() {
         this.observerUnactive();
         this._removeDomListener();
-        this.commandBar.destroy();
-        this.commandbarTablePicker.el.remove();
+        if (this.commandBar) {
+            this.commandBar.destroy();
+            this.commandbarTablePicker.el.remove();
+        }
         this._collabSelectionsContainer.remove();
         this._resizeObserver.disconnect();
         clearInterval(this._snapshotInterval);
@@ -1624,6 +1626,9 @@ export class OdooEditor extends EventTarget {
     // ===========
 
     _createCommandBar() {
+        if (this.options.disableCommandBar) {
+            return;
+        }
         this.options.noScrollSelector = this.options.noScrollSelector || 'body';
         this.commandbarTablePicker = new TablePicker({
             document: this.document,
@@ -2173,8 +2178,8 @@ export class OdooEditor extends EventTarget {
                     ev.data.includes(' ') &&
                     selection &&
                     selection.anchorNode
-                    && (!this.commandBar._active ||
-                        this.commandBar._currentOpenOptions.closeOnSpace !== true)
+                    && (this.commandBar && (!this.commandBar._active ||
+                        this.commandBar._currentOpenOptions.closeOnSpace !== true))
                 ) {
                     this._convertUrlInElement(closestElement(selection.anchorNode));
                 }
@@ -2217,7 +2222,7 @@ export class OdooEditor extends EventTarget {
                 ev.preventDefault();
                 this._applyCommand('oDeleteBackward');
             }
-        } else if (ev.key === 'Tab') {
+        } else if (ev.key === 'Tab' && !this.options.disableTab) {
             // Tab
             const sel = this.document.getSelection();
             const closestTag = (closestElement(sel.anchorNode, 'li, table', true) || {}).tagName;
@@ -2351,7 +2356,7 @@ export class OdooEditor extends EventTarget {
         }
     }
     _makeHint(block, text, temporary = false) {
-        const content = block && block.innerHTML.trim();
+        const content = block && block.innerHTML && block.innerHTML.trim();
         if (
             block &&
             (content === '' || content === '<br>') &&

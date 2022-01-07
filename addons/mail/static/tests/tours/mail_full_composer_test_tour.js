@@ -20,8 +20,14 @@ tour.register('mail/static/tests/tours/mail_full_composer_test_tour.js', {
     trigger: '.o_ChatterTopbar_buttonSendMessage',
 }, {
     content: "Write something in composer",
-    trigger: '.o_ComposerTextInput_textarea',
+    trigger: '.o_ComposerTextInput_wysiwyg',
     run: 'text blahblah',
+}, {
+    // inserting text directly into wysiwyg will not trigger saveStateInStore(),
+    // in the real use case, click/keydown/keyup/focusin/focusout will trigger saveStateInStore()
+    // so that the message will be updated.
+    content: "Trigger the composer to update the message",
+    trigger: '.o_ComposerTextInput_wysiwyg',
 }, {
     content: "Add one file in composer",
     trigger: '.o_Composer_buttonAttachment',

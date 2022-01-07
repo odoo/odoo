@@ -6,6 +6,7 @@ import {
     afterNextRender,
     beforeEach,
     dragenterFiles,
+    insertIntoComposer,
     start,
 } from '@mail/utils/test_utils';
 
@@ -339,7 +340,7 @@ QUnit.test('mark channel as fetched when a new message is loaded and as seen whe
 
     await afterNextRender(() => this.afterEvent({
         eventName: 'o-thread-last-seen-by-current-partner-message-id-changed',
-        func: () => document.querySelector('.o_ComposerTextInput_textarea').focus(),
+        func: () => document.querySelector('.o_ComposerTextInput_wysiwyg').focus(),
         message: "should wait until last seen by current partner message id changed after focusing the thread",
         predicate: ({ thread }) => {
             return (
@@ -392,7 +393,7 @@ QUnit.test('mark channel as fetched and seen when a new message is loaded if com
         thread: link(thread),
     });
     await createThreadViewComponent(threadViewer.threadView);
-    document.querySelector('.o_ComposerTextInput_textarea').focus();
+    document.querySelector('.o_ComposerTextInput_wysiwyg').focus();
     // simulate receiving a message
     await this.afterEvent({
         eventName: 'o-thread-last-seen-by-current-partner-message-id-changed',
@@ -539,8 +540,7 @@ QUnit.test('[technical] new messages separator on posting message', async functi
         "should not display 'new messages' separator"
     );
 
-    document.querySelector('.o_ComposerTextInput_textarea').focus();
-    await afterNextRender(() => document.execCommand('insertText', false, "hey !"));
+    await insertIntoComposer('.o_ComposerTextInput_wysiwyg', 'insertText', 'hey !');
     await afterNextRender(() => {
         // need to remove focus from text area to avoid set_last_seen_message
         document.querySelector('.o_Composer_buttonSend').focus();
@@ -610,7 +610,7 @@ QUnit.test('new messages separator on receiving new message [REQUIRE FOCUS]', as
         "should not display 'new messages' separator"
     );
 
-    document.querySelector('.o_ComposerTextInput_textarea').blur();
+    document.querySelector('.o_ComposerTextInput_wysiwyg').blur();
     // simulate receiving a message
     await this.afterEvent({
         eventName: 'o-thread-view-hint-processed',
@@ -655,7 +655,7 @@ QUnit.test('new messages separator on receiving new message [REQUIRE FOCUS]', as
 
     await afterNextRender(() => this.afterEvent({
         eventName: 'o-thread-last-seen-by-current-partner-message-id-changed',
-        func: () => document.querySelector('.o_ComposerTextInput_textarea').focus(),
+        func: () => document.querySelector('.o_ComposerTextInput_wysiwyg').focus(),
         message: "should wait until last seen by current partner message id changed after focusing the thread",
         predicate: ({ thread }) => {
             return (
@@ -704,8 +704,7 @@ QUnit.test('new messages separator on posting message', async function (assert) 
         "should not display 'new messages' separator"
     );
 
-    document.querySelector('.o_ComposerTextInput_textarea').focus();
-    await afterNextRender(() => document.execCommand('insertText', false, "hey !"));
+    await insertIntoComposer('.o_ComposerTextInput_wysiwyg', 'insertText', 'hey !');
     await afterNextRender(() =>
         document.querySelector('.o_Composer_buttonSend').click()
     );
@@ -1175,14 +1174,13 @@ QUnit.test('Post a message containing an email address followed by a mention on 
         thread: link(thread),
     });
     await createThreadViewComponent(threadViewer.threadView);
-    document.querySelector('.o_ComposerTextInput_textarea').focus();
-    await afterNextRender(() => document.execCommand('insertText', false, "email@odoo.com\n"));
+    await insertIntoComposer('.o_ComposerTextInput_wysiwyg', 'insertText', 'email@odoo.com\n');
     await afterNextRender(() => {
         ["@", "T", "e"].forEach((char)=>{
             document.execCommand('insertText', false, char);
-            document.querySelector(`.o_ComposerTextInput_textarea`)
+            document.querySelector(`.o_ComposerTextInput_wysiwyg`)
                 .dispatchEvent(new window.KeyboardEvent('keydown'));
-            document.querySelector(`.o_ComposerTextInput_textarea`)
+            document.querySelector(`.o_ComposerTextInput_wysiwyg`)
                 .dispatchEvent(new window.KeyboardEvent('keyup'));
         });
     });
@@ -1219,13 +1217,13 @@ QUnit.test(`Mention a partner with special character (e.g. apostrophe ')`, async
         thread: link(thread),
     });
     await createThreadViewComponent(threadViewer.threadView);
-    document.querySelector('.o_ComposerTextInput_textarea').focus();
+    document.querySelector('.o_ComposerTextInput_wysiwyg').focus();
     await afterNextRender(() => {
         ["@", "P", "y", "n"].forEach((char)=>{
             document.execCommand('insertText', false, char);
-            document.querySelector(`.o_ComposerTextInput_textarea`)
+            document.querySelector(`.o_ComposerTextInput_wysiwyg`)
                 .dispatchEvent(new window.KeyboardEvent('keydown'));
-            document.querySelector(`.o_ComposerTextInput_textarea`)
+            document.querySelector(`.o_ComposerTextInput_wysiwyg`)
                 .dispatchEvent(new window.KeyboardEvent('keyup'));
         });
     });
@@ -1268,13 +1266,13 @@ QUnit.test('mention 2 different partners that have the same name', async functio
         thread: link(thread),
     });
     await createThreadViewComponent(threadViewer.threadView);
-    document.querySelector('.o_ComposerTextInput_textarea').focus();
+    document.querySelector('.o_ComposerTextInput_wysiwyg').focus();
     await afterNextRender(() => {
         ["@", "T", "e"].forEach((char)=>{
             document.execCommand('insertText', false, char);
-            document.querySelector(`.o_ComposerTextInput_textarea`)
+            document.querySelector(`.o_ComposerTextInput_wysiwyg`)
                 .dispatchEvent(new window.KeyboardEvent('keydown'));
-            document.querySelector(`.o_ComposerTextInput_textarea`)
+            document.querySelector(`.o_ComposerTextInput_wysiwyg`)
                 .dispatchEvent(new window.KeyboardEvent('keyup'));
         });
     });
@@ -1282,9 +1280,9 @@ QUnit.test('mention 2 different partners that have the same name', async functio
     await afterNextRender(() => {
         ["@", "T", "e"].forEach((char)=>{
             document.execCommand('insertText', false, char);
-            document.querySelector(`.o_ComposerTextInput_textarea`)
+            document.querySelector(`.o_ComposerTextInput_wysiwyg`)
                 .dispatchEvent(new window.KeyboardEvent('keydown'));
-            document.querySelector(`.o_ComposerTextInput_textarea`)
+            document.querySelector(`.o_ComposerTextInput_wysiwyg`)
                 .dispatchEvent(new window.KeyboardEvent('keyup'));
         });
     });
@@ -1322,14 +1320,7 @@ QUnit.test('mention a channel with space in the name', async function (assert) {
     });
     await createThreadViewComponent(threadViewer.threadView);
 
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "#");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
-    });
+    await insertIntoComposer('.o_ComposerTextInput_wysiwyg', 'insertText', '#');
     await afterNextRender(() =>
         document.querySelector('.o_ComposerSuggestion').click()
     );
@@ -1367,14 +1358,7 @@ QUnit.test('mention a channel with "&" in the name', async function (assert) {
     });
     await createThreadViewComponent(threadViewer.threadView);
 
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "#");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
-    });
+    await insertIntoComposer('.o_ComposerTextInput_wysiwyg', 'insertText', '#');
     await afterNextRender(() =>
         document.querySelector('.o_ComposerSuggestion').click()
     );
@@ -1412,14 +1396,7 @@ QUnit.test('mention a channel on a second line when the first line contains #', 
     });
     await createThreadViewComponent(threadViewer.threadView);
 
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "#blabla\n#");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
-    });
+    await insertIntoComposer('.o_ComposerTextInput_wysiwyg', 'insertText', '#blabla\n#');
     await afterNextRender(() => {
         document.querySelector('.o_ComposerSuggestion').click();
     });
@@ -1457,26 +1434,13 @@ QUnit.test('mention a channel when replacing the space after the mention by anot
     });
     await createThreadViewComponent(threadViewer.threadView);
 
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "#");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
-    });
+    await insertIntoComposer('.o_ComposerTextInput_wysiwyg', 'insertText', '#');
     await afterNextRender(() => {
         document.querySelector('.o_ComposerSuggestion').click();
     });
-    await afterNextRender(() => {
-        const text = document.querySelector(`.o_ComposerTextInput_textarea`).value;
-        document.querySelector(`.o_ComposerTextInput_textarea`).value = text.slice(0, -1);
-        document.execCommand('insertText', false, ", test");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
-    });
+    document.querySelector(`.o_ComposerTextInput_wysiwyg`)
+        .dispatchEvent(new window.KeyboardEvent('keydown'), { key: 'Backspcace' });
+    await insertIntoComposer('.o_ComposerTextInput_wysiwyg', 'insertText', ', test');
     await afterNextRender(() => {
         document.querySelector('.o_Composer_buttonSend').click();
     });
@@ -1517,13 +1481,13 @@ QUnit.test('mention 2 different channels that have the same name', async functio
         thread: link(thread),
     });
     await createThreadViewComponent(threadViewer.threadView);
-    document.querySelector('.o_ComposerTextInput_textarea').focus();
+    document.querySelector('.o_ComposerTextInput_wysiwyg').focus();
     await afterNextRender(() => {
         ["#", "m", "y"].forEach((char)=>{
             document.execCommand('insertText', false, char);
-            document.querySelector(`.o_ComposerTextInput_textarea`)
+            document.querySelector(`.o_ComposerTextInput_wysiwyg`)
                 .dispatchEvent(new window.KeyboardEvent('keydown'));
-            document.querySelector(`.o_ComposerTextInput_textarea`)
+            document.querySelector(`.o_ComposerTextInput_wysiwyg`)
                 .dispatchEvent(new window.KeyboardEvent('keyup'));
         });
     });
@@ -1531,9 +1495,9 @@ QUnit.test('mention 2 different channels that have the same name', async functio
     await afterNextRender(() => {
         ["#", "m", "y"].forEach((char)=>{
             document.execCommand('insertText', false, char);
-            document.querySelector(`.o_ComposerTextInput_textarea`)
+            document.querySelector(`.o_ComposerTextInput_wysiwyg`)
                 .dispatchEvent(new window.KeyboardEvent('keydown'));
-            document.querySelector(`.o_ComposerTextInput_textarea`)
+            document.querySelector(`.o_ComposerTextInput_wysiwyg`)
                 .dispatchEvent(new window.KeyboardEvent('keyup'));
         });
     });
@@ -1782,14 +1746,13 @@ QUnit.test('first unseen message should be directly preceded by the new message 
     });
     await createThreadViewComponent(threadViewer.threadView);
     // send a command that leads to receiving a transient message
-    document.querySelector('.o_ComposerTextInput_textarea').focus();
-    await afterNextRender(() => document.execCommand('insertText', false, "/who"));
+    await insertIntoComposer('.o_ComposerTextInput_wysiwyg', 'insertText', '/who');
     await afterNextRender(() => {
         document.querySelector('.o_Composer_buttonSend').click();
     });
 
     // composer is focused by default, we remove that focus
-    document.querySelector('.o_ComposerTextInput_textarea').blur();
+    document.querySelector('.o_ComposerTextInput_wysiwyg').blur();
     // simulate receiving a message
     await afterNextRender(() => this.env.services.rpc({
         route: '/mail/chat_post',
@@ -1836,8 +1799,7 @@ QUnit.test('composer should be focused automatically after clicking on the send 
         thread: link(thread),
     });
     await createThreadViewComponent(threadViewer.threadView);
-    document.querySelector('.o_ComposerTextInput_textarea').focus();
-    await afterNextRender(() => document.execCommand('insertText', false, "Dummy Message"));
+    await insertIntoComposer('.o_ComposerTextInput_wysiwyg', 'insertText', 'Dummy Message');
     await afterNextRender(() => {
         document.querySelector('.o_Composer_buttonSend').click();
     });

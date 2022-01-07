@@ -122,10 +122,8 @@ function factory(dependencies) {
                 isLastStateChangeProgrammatic: true,
                 mentionedChannels: clear(),
                 mentionedPartners: clear(),
-                textInputContent: clear(),
-                textInputCursorEnd: clear(),
-                textInputCursorStart: clear(),
-                textInputSelectionDirection: clear(),
+                textInputContent: '<p><br></p>',
+                textInputCursorSelection: clear(),
             });
         }
 
@@ -197,16 +195,10 @@ function factory(dependencies) {
             compute: '_computeRecipients',
         }),
         textInputContent: attr({
+            default: "<p><br></p>",
+        }),
+        textInputCursorSelection: attr({
             default: "",
-        }),
-        textInputCursorEnd: attr({
-            default: 0,
-        }),
-        textInputCursorStart: attr({
-            default: 0,
-        }),
-        textInputSelectionDirection: attr({
-            default: "none",
         }),
         /**
          * States the thread which this composer represents the state (if any).
