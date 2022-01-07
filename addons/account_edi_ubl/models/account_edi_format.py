@@ -98,11 +98,15 @@ class AccountEdiFormat(models.Model):
                 invoice_form.invoice_incoterm_id = self.env['account.incoterms'].search([('code', '=', elements[0].text)], limit=1)
 
             # Partner
+            counterpart = {
+                'out_invoice': 'Customer',
+                'in_invoice': 'Supplier'
+            }.get(self.env.context.get('default_move_type'))
             invoice_form.partner_id = self._retrieve_partner(
-                name=_find_value('//cac:AccountingSupplierParty/cac:Party//cbc:Name'),
-                phone=_find_value('//cac:AccountingSupplierParty/cac:Party//cbc:Telephone'),
-                mail=_find_value('//cac:AccountingSupplierParty/cac:Party//cbc:ElectronicMail'),
-                vat=_find_value('//cac:AccountingSupplierParty/cac:Party//cbc:CompanyID'),
+                name=_find_value(f'//cac:Accounting{counterpart}Party/cac:Party//cbc:Name'),
+                phone=_find_value(f'//cac:Accounting{counterpart}Party/cac:Party//cbc:Telephone'),
+                mail=_find_value(f'//cac:Accounting{counterpart}Party/cac:Party//cbc:ElectronicMail'),
+                vat=_find_value(f'//cac:Accounting{counterpart}Party/cac:Party//cbc:CompanyID'),
             )
 
             # Lines
