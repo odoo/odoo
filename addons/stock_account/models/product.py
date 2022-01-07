@@ -646,7 +646,7 @@ class ProductProduct(models.Model):
             return price or 0.0
         return self.uom_id._compute_price(price, uom)
 
-    def _compute_average_price(self, qty_invoiced, qty_to_invoice, stock_moves):
+    def _compute_average_price(self, qty_invoiced, qty_to_invoice, stock_moves, is_returned=False):
         """Go over the valuation layers of `stock_moves` to value `qty_to_invoice` while taking
         care of ignoring `qty_invoiced`. If `qty_to_invoice` is greater than what's possible to
         value with the valuation layers, use the product's standard price.
@@ -654,6 +654,7 @@ class ProductProduct(models.Model):
         :param qty_invoiced: quantity already invoiced
         :param qty_to_invoice: quantity to invoice
         :param stock_moves: recordset of `stock.move`
+        :param is_returned: if True, consider the incoming moves
         :returns: the anglo saxon price unit
         :rtype: float
         """
@@ -667,7 +668,7 @@ class ProductProduct(models.Model):
                 returned_quantities[move.origin_returned_move_id.id] += abs(sum(move.sudo().stock_valuation_layer_ids.mapped('quantity')))
         candidates = stock_moves\
             .sudo()\
-            .filtered(lambda m: not (m.origin_returned_move_id and sum(m.stock_valuation_layer_ids.mapped('quantity')) >= 0))\
+            .filtered(lambda m: is_returned == bool(m.origin_returned_move_id and sum(m.stock_valuation_layer_ids.mapped('quantity')) >= 0))\
             .mapped('stock_valuation_layer_ids')\
             .sorted()
         qty_to_take_on_candidates = qty_to_invoice
