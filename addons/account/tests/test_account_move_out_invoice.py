@@ -2802,7 +2802,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         })
 
         self.assertEqual(len(invoice.invoice_line_ids), 1)
-        self.assertEqual(len(invoice.line_ids), 2)
+        self.assertEqual(len(invoice.line_ids), 3)
 
     def test_out_invoice_recomputation_receivable_lines(self):
         ''' Test a tricky specific case caused by some framework limitations. Indeed, when
