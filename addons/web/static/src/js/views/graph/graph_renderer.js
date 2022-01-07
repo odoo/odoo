@@ -880,10 +880,13 @@ return AbstractRenderer.extend({
         }
 
         // center the points in the chart (without that code they are put on the left and the graph seems empty)
-        data.labels = data.labels.length > 1 ?
-            data.labels :
-            Array.prototype.concat.apply([], [[['']], data.labels, [['']]]);
 
+        if (data.labels.length < 2) {
+            data.labels = Array.prototype.concat.apply([], [[['']], data.labels, [['']]]);
+            for (let i = 0; i < data.labels.length; i++) {
+                data.labels[i].isNoData = true;
+            }
+        }
         // prepare options
         var options = this._prepareOptions(data.datasets.length);
 
