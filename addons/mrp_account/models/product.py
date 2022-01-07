@@ -46,13 +46,13 @@ class ProductProduct(models.Model):
                 if price:
                     self.standard_price = price
 
-    def _compute_average_price(self, qty_invoiced, qty_to_invoice, stock_moves):
+    def _compute_average_price(self, qty_invoiced, qty_to_invoice, stock_moves, is_returned=False):
         self.ensure_one()
         if stock_moves.product_id == self:
-            return super()._compute_average_price(qty_invoiced, qty_to_invoice, stock_moves)
+            return super()._compute_average_price(qty_invoiced, qty_to_invoice, stock_moves, is_returned=is_returned)
         bom = self.env['mrp.bom']._bom_find(self, company_id=stock_moves.company_id.id, bom_type='phantom')[self]
         if not bom:
-            return super()._compute_average_price(qty_invoiced, qty_to_invoice, stock_moves)
+            return super()._compute_average_price(qty_invoiced, qty_to_invoice, stock_moves, is_returned=is_returned)
         dummy, bom_lines = bom.explode(self, 1)
         bom_lines = {line: data for line, data in bom_lines}
         value = 0
@@ -66,7 +66,7 @@ class ProductProduct(models.Model):
             else:
                 # bom was altered (i.e. bom line removed) after being used
                 line_qty = move.product_qty
-            value += line_qty * move.product_id._compute_average_price(qty_invoiced * line_qty, qty_to_invoice * line_qty, move)
+            value += line_qty * move.product_id._compute_average_price(qty_invoiced * line_qty, qty_to_invoice * line_qty, move, is_returned=is_returned)
         return value
 
     def _compute_bom_price(self, bom, boms_to_recompute=False, byproduct_bom=False):
