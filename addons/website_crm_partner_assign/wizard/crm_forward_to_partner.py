@@ -113,14 +113,6 @@ class CrmLeadForwardToPartner(models.TransientModel):
             action_ref and action_ref.id or False)
         return portal_link
 
-    def get_portal_url(self):
-        if self:
-            portal_url = self[0].get_base_url()
-        else:
-            portal_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        portal_link = "%s/?db=%s" % (portal_url, self.env.cr.dbname)
-        return portal_link
-
     forward_type = fields.Selection([
         ('single', 'a single partner: manual selection of partner'),
         ('assigned', "several partners: automatic assignment, using GPS coordinates and partner's grades")
