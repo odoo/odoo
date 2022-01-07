@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="ProductConfiguratorMany2One" t-extend="FieldMany2One">
+        <t t-jquery="t[t-if*='readonly']" t-operation="replace">
+            <t t-if="widget.mode === 'readonly'">
+                <a t-if="!widget.noOpen and widget.actualMode !== 'readonly'" t-att-tabindex="widget.attrs.tabindex" class="o_form_uri" href="#"/>
+                <span t-if="widget.noOpen or widget.actualMode === 'readonly'"/>
+            </t>
+        </t>
+        
+    </t>
+
+</templates>
