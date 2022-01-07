@@ -122,7 +122,7 @@ export class Composer extends Component {
      * @private
      */
     _onClickAddAttachment() {
-        this.composerView.fileUploaderView.component.openBrowserFileUploader();
+        this.composerView.fileUploaderView.openBrowserFileUploader();
         if (!this.messaging.device.isMobileDevice) {
             this.composerView.update({ doFocus: true });
         }
@@ -172,7 +172,7 @@ export class Composer extends Component {
      * @param {FileList} detail.files
      */
     async _onDropZoneFilesDropped(detail) {
-        await this.composerView.fileUploaderView.component.uploadFiles(detail.files);
+        await this.composerView.fileUploaderView.uploadFiles(detail.files);
         this.isDropZoneVisible.value = false;
     }
 
@@ -201,7 +201,7 @@ export class Composer extends Component {
         if (!ev.clipboardData || !ev.clipboardData.files) {
             return;
         }
-        await this.composerView.fileUploaderView.component.uploadFiles(ev.clipboardData.files);
+        await this.composerView.fileUploaderView.uploadFiles(ev.clipboardData.files);
     }
 
 }

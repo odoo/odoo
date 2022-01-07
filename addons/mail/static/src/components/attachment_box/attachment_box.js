@@ -39,7 +39,7 @@ export class AttachmentBox extends Component {
      * @param {FileList} detail.files
      */
     async _onDropZoneFilesDropped(detail) {
-        await this.attachmentBoxView.fileUploaderView.component.uploadFiles(detail.files);
+        await this.attachmentBoxView.fileUploaderView.uploadFiles(detail.files);
         this.isDropZoneVisible.value = false;
     }
 
