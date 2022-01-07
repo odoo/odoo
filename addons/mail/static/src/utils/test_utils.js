@@ -431,7 +431,7 @@ function getCreateMessageComponent({ components, env, modelManager, widget }) {
             qunitTest: insertAndReplace(),
         });
         await createRootMessagingComponent({ components, env }, "Message", {
-            props: { messageViewLocalId: messageView.localId },
+            props: { localId: messageView.localId },
             target: widget.el,
         });
     };

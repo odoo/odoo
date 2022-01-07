@@ -15,8 +15,8 @@
                 'o-selected': isSelected,
                 'o-squashed': messageView and messageView.isSquashed,
                 'o-starred': messageView and messageView.message.isStarred,
-                'mt-3': messageView and !messageView.isSquashed,
-            }" t-attf-class="{{ className }}" t-on-click="_onClick" t-on-mouseenter="state.isHovered = true" t-on-mouseleave="state.isHovered = false" t-att-data-message-local-id="messageView and messageView.message.localId"
+                'mt-3': messageView and !messageView.isSquashed and messageView.threadView,
+            }" t-attf-class="{{ messageView and messageView.extraClass }} {{ className }}" t-on-click="_onClick" t-on-mouseenter="state.isHovered = true" t-on-mouseleave="state.isHovered = false" t-att-data-message-local-id="messageView and messageView.message.localId"
             t-ref="root"
         >
             <t t-if="messageView" name="rootCondition">
