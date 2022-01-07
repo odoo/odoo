@@ -4,8 +4,12 @@
   <t t-name="web.CommandPalette" owl="1">
     <div>
       <div class="o_command_palette_search">
-        <input type="text" t-model="state.searchValue" t-on-input="onDebouncedSearchInput" autofocus="" t-att-placeholder="state.placeholder"/>
-        <i  t-att-title="state.placeholder" role="img"  t-att-aria-label="state.placeholder" class="fa fa-search"></i>
+        <div class="o_command_palette_search_input">
+          <input type="text" t-model="state.searchValue" class="o_command_palette_main_input" t-on-input="onDebouncedSearchInput" autofocus="" />
+          <input type="text" t-model="state.commandValue" class="o_command_palette_placeholder_input"/>
+        </div>
+          <i  t-att-title="state.placeholder" role="img"  t-att-aria-label="state.placeholder" class="fa fa-search"></i>
+  
       </div>
 
       <div class="o_command_palette_listbox">
