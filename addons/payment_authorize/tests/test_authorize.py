@@ -17,14 +17,12 @@ class AuthorizeTest(AuthorizeCommon):
         # Note: in the test common, 'USD' is specified as authorize_currency_id
         unsupported_currency = self._prepare_currency('CHF')
         acquirers = self.env['payment.acquirer']._get_compatible_acquirers(
-            partner_id=self.partner.id,
-            currency_id=unsupported_currency.id,
-            company_id=self.company.id)
+            self.company.id, self.partner.id, self.amount, currency_id=unsupported_currency.id
+        )
         self.assertNotIn(self.authorize, acquirers)
         acquirers = self.env['payment.acquirer']._get_compatible_acquirers(
-            partner_id=self.partner.id,
-            currency_id=self.currency_usd.id,
-            company_id=self.company.id)
+            self.company.id, self.partner.id, self.amount, currency_id=self.currency_usd.id
+        )
         self.assertIn(self.authorize, acquirers)
 
     def test_processing_values(self):

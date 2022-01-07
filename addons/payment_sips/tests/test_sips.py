@@ -23,17 +23,13 @@ class SipsTest(SipsCommon, PaymentHttpCommon):
         for curr in SUPPORTED_CURRENCIES:
             currency = self._prepare_currency(curr)
             acquirers = self.env['payment.acquirer']._get_compatible_acquirers(
-                partner_id=self.partner.id,
-                company_id=self.company.id,
-                currency_id=currency.id,
+                self.company.id, self.partner.id, self.amount, currency_id=currency.id
             )
             self.assertIn(self.sips, acquirers)
 
         unsupported_currency = self._prepare_currency('VEF')
         acquirers = self.env['payment.acquirer']._get_compatible_acquirers(
-            partner_id=self.partner.id,
-            company_id=self.company.id,
-            currency_id=unsupported_currency.id,
+            self.company.id, self.partner.id, self.amount, currency_id=unsupported_currency.id
         )
         self.assertNotIn(self.sips, acquirers)
 
