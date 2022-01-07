@@ -401,7 +401,8 @@
                                     <div name="alias_def" colspan="2" attrs="{'invisible': [('alias_domain', '=', False)]}">
                                         <!-- Always display the whole alias in edit mode. It depends in read only -->
                                         <field name="alias_enabled" invisible="1"/>
-                                        <span class="font-weight-bold oe_read_only" attrs="{'invisible':  [('alias_name', '=', False)]}">Create tasks by sending an email to </span>
+                                        <span class="oe_read_only" attrs="{'invisible': [('alias_name', '!=', False)]}">Create tasks by sending an email to </span>
+                                        <span class="font-weight-bold oe_read_only" attrs="{'invisible': [('alias_name', '=', False)]}">Create tasks by sending an email to </span>
                                         <span class="font-weight-bold oe_edit_only">Create tasks by sending an email to </span>
                                             <field name="alias_value" class="oe_read_only d-inline" readonly="1" widget="email" attrs="{'invisible':  [('alias_name', '=', False)]}" />
                                             <span class="oe_edit_only">
