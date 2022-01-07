@@ -29,9 +29,10 @@
                         <group>
                             <group>
                                 <field name="date"/>
-                                <field name="allowed_picking_ids" invisible="1"/>
                                 <field name="target_model" widget="radio" invisible="1"/>
-                                <field name="picking_ids" widget="many2many_tags" options="{'no_create_edit': True}" domain="[('id', 'in', allowed_picking_ids)]" attrs="{'invisible': [('target_model', '!=', 'picking')]}"/>
+                                <field name="picking_ids" widget="many2many_tags"
+                                    options="{'no_create_edit': True}" attrs="{'invisible': [('target_model', '!=', 'picking')]}"
+                                    domain="[('company_id', '=', company_id), ('move_lines.stock_valuation_layer_ids', '!=', False)]"/>
                             </group>
                             <group>
                                 <label for="account_journal_id" string="Journal"/>
