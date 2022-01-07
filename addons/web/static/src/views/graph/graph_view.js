@@ -143,6 +143,7 @@ GraphView.props = {
     additionalMeasures: { type: Array, elements: String, optional: true },
     displayGroupByMenu: { type: Boolean, optional: true },
     displayScaleLabels: { type: Boolean, optional: true },
+    additional_context: { type: Object, elements: String, optional: true },
 };
 
 GraphView.type = "graph";

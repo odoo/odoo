@@ -162,6 +162,7 @@ PivotView.components = { Renderer: PivotRenderer, Layout };
 PivotView.props = {
     ...standardViewProps,
     additionalMeasures: { type: Array, elements: String, optional: 1 },
+    additional_context: { type: Object, elements: String, optional: 1 },
 };
 PivotView.defaultProps = {
     additionalMeasures: [],
