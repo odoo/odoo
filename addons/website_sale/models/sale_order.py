@@ -156,12 +156,10 @@ class SaleOrder(models.Model):
     def _cart_update(self, product_id=None, line_id=None, add_qty=0, set_qty=0, **kwargs):
         """ Add or set product quantity, add_qty can be negative """
         self.ensure_one()
-        product_context = dict(self.env.context)
-        product_context.setdefault('lang', self.sudo().partner_id.lang)
-        SaleOrderLineSudo = self.env['sale.order.line'].sudo().with_context(product_context)
-        # change lang to get correct name of attributes/values
-        product_with_context = self.env['product.product'].with_context(product_context)
-        product = product_with_context.browse(int(product_id))
+
+        self = self.with_company(self.company_id)
+        SaleOrderLineSudo = self.env['sale.order.line'].sudo()
+        product = self.env['product.product'].browse(int(product_id))
 
         try:
             if add_qty:
@@ -254,18 +252,10 @@ class SaleOrder(models.Model):
         if quantity <= 0:
             linked_line = order_line.linked_line_id
             order_line.unlink()
-            if linked_line:
-                # update description of the parent
-                linked_product = product_with_context.browse(linked_line.product_id.id)
-                linked_line.name = linked_line.get_sale_order_line_multiline_description_sale(linked_product)
         else:
             # update line
             no_variant_attributes_price_extra = [ptav.price_extra for ptav in order_line.product_no_variant_attribute_value_ids]
             values = self.with_context(no_variant_attributes_price_extra=tuple(no_variant_attributes_price_extra))._website_product_id_change(self.id, product_id, qty=quantity, **kwargs)
-            order = self.sudo().browse(self.id)
-
-            product = product.with_company(order.company_id)
-            product_with_context = product_with_context.with_company(order.company_id)
 
             order_line.write(values)
 
@@ -275,14 +265,6 @@ class SaleOrder(models.Model):
                 order_line.write({
                     'linked_line_id': linked_line.id,
                 })
-                linked_product = product_with_context.browse(linked_line.product_id.id)
-                linked_line.name = linked_line.get_sale_order_line_multiline_description_sale(linked_product)
-            # Generate the description with everything. This is done after
-            # creating because the following related fields have to be set:
-            # - product_no_variant_attribute_value_ids
-            # - product_custom_attribute_value_ids
-            # - linked_line_id
-            order_line.name = order_line.get_sale_order_line_multiline_description_sale(product)
 
         option_lines = self.order_line.filtered(lambda l: l.linked_line_id.id == order_line.id)
 

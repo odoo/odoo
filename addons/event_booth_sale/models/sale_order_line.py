@@ -68,7 +68,7 @@ class SaleOrderLine(models.Model):
     def _compute_name(self):
         """Override to add the compute dependency.
 
-        The custom name logic can be found below in get_sale_order_line_multiline_description_sale.
+        The custom name logic can be found below in _get_sale_order_line_multiline_description_sale.
         """
         super()._compute_name()
 
@@ -85,13 +85,10 @@ class SaleOrderLine(models.Model):
                 so_line.event_booth_ids.action_set_paid()
         return True
 
-    def get_sale_order_line_multiline_description_sale(self, product):
+    def _get_sale_order_line_multiline_description_sale(self):
         if self.event_booth_pending_ids:
-            booths = self.event_booth_pending_ids.with_context(
-                lang=self.order_id.partner_id.lang,
-            )
-            return booths._get_booth_multiline_description()
-        return super(SaleOrderLine, self).get_sale_order_line_multiline_description_sale(product)
+            return self.event_booth_pending_ids._get_booth_multiline_description()
+        return super()._get_sale_order_line_multiline_description_sale()
 
     def _get_display_price(self):
         if self.event_booth_pending_ids and self.event_id:

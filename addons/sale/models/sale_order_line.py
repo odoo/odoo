@@ -620,8 +620,7 @@ class SaleOrderLine(models.Model):
         for line in self:
             if not line.product_id:
                 continue
-            product = line.product_id.with_context(lang=line.order_partner_id.lang)
-            line.name = line.get_sale_order_line_multiline_description_sale(product)
+            line.name = line.with_context(lang=line.order_partner_id.lang)._get_sale_order_line_multiline_description_sale()
 
     @api.depends('product_id')
     def _compute_custom_attribute_values(self):
@@ -876,7 +875,7 @@ class SaleOrderLine(models.Model):
         self.ensure_one()
         return False
 
-    def get_sale_order_line_multiline_description_sale(self, product):
+    def _get_sale_order_line_multiline_description_sale(self):
         """ Compute a default multiline description for this sales order line.
 
         In most cases the product description is enough but sometimes we need to append information that only
@@ -886,7 +885,8 @@ class SaleOrderLine(models.Model):
         - in event_sale we need to know specifically the sales order line as well as the product to generate the name:
           the product is not sufficient because we also need to know the event_id and the event_ticket_id (both which belong to the sale order line).
         """
-        return product.get_product_multiline_description_sale() + self._get_sale_order_line_multiline_description_variants()
+        self.ensure_one()
+        return self.product_id.get_product_multiline_description_sale() + self._get_sale_order_line_multiline_description_variants()
 
     def _get_sale_order_line_multiline_description_variants(self):
         """When using no_variant attributes or is_custom values, the product
