@@ -38,9 +38,9 @@
     .o_nocontent_help {
         .o_view_nocontent_expense_receipt:before {
             @extend %o-nocontent-init-image;
-            @include size(300px, 230px);
-            background: transparent url(/hr_expense/static/img/nocontent.png) no-repeat center;
-            background-size: 300px 230px;
+            @include size(120px, 140px);
+            background: transparent url(/web/static/img/smiling_face.svg) no-repeat center;
+            background-size: 120px 140px;
             margin-bottom: 1rem;
         }
     }
@@ -49,4 +49,9 @@
     .o_button_upload_expense {
         margin-left: 3px;
     }
+}
+
+.o_attach_document {
+    padding: 0 20px;
+    white-space: nowrap;
 }

@@ -165,7 +165,10 @@
                             </div>
                             <field name="tax_ids" widget="many2many_tags" groups="account.group_account_readonly" attrs="{'readonly': [('is_editable', '=', False)], 'invisible': [('product_has_cost', '=', True)]}"  context="{'default_company_id': company_id}"/>
                         </group><group>
-                            <field name="reference" groups="account.group_account_readonly" attrs="{'readonly': [('is_ref_editable', '=', False)], 'invisible': [('product_has_cost', '=', True)]}"/>
+                            <label for="reference" groups="account.group_account_readonly"  attrs="{'invisible': [('product_has_cost', '=', True)]}"/>
+                            <div class="o_row" groups="account.group_account_readonly"  attrs="{'invisible': [('product_has_cost', '=', True)]}">
+                                <field name="reference" attrs="{'readonly': [('is_ref_editable', '=', False)]}"/>
+                            </div>
                             <field name="date"/>
                             <field name="accounting_date" attrs="{'invisible': ['|', ('accounting_date', '=', False), ('state', 'not in', ['approved', 'done'])]}" />
                             <field name="account_id" options="{'no_create': True}" domain="[('internal_type', '=', 'other'), ('company_id', '=', company_id)]" groups="account.group_account_readonly" attrs="{'readonly': [('is_editable', '=', False)]}" context="{'default_company_id': company_id}"/>
@@ -412,6 +415,10 @@
             <field name="context">{'search_default_my_expenses': 1, 'search_default_no_report': 1}</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_expense_receipt">
+                    Create an expense
+                </p>
+                <p>Expenses are part of expense reports which need to be approved<br/>before reimbursement.</p>
+                <!-- <p class="o_view_nocontent_expense_receipt">
                     Did you try the mobile app?
                 </p>
                 <p>Snap pictures of your receipts and let Odoo<br/> automatically create expenses for you.</p>
@@ -422,7 +429,7 @@
                     <a href="https://play.google.com/store/apps/details?id=com.odoo.mobile" target="_blank" class="o_expense_google_store">
                         <img alt="Google Play Store" class="img img-fluid h-100 o_expense_google_store" src="/hr_expense/static/img/play_store.png"/>
                     </a>
-                </p>
+                </p> -->
             </field>
         </record>
 
@@ -447,6 +454,10 @@
             <field name="context">{'search_default_my_expenses': 1}</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_expense_receipt">
+                    Create an expense
+                </p>
+                <p>Expenses are part of expense reports which need to be approved<br/>before reimbursement.</p>
+                <!-- <p class="o_view_nocontent_expense_receipt">
                     Did you try the mobile app?
                 </p>
                 <p>Snap pictures of your receipts and let Odoo<br/> automatically create expenses for you.</p>
@@ -457,7 +468,7 @@
                     <a href="https://play.google.com/store/apps/details?id=com.odoo.mobile" target="_blank" class="o_expense_google_store">
                         <img alt="Google Play Store" class="img img-fluid h-100 o_expense_google_store" src="/hr_expense/static/img/play_store.png"/>
                     </a>
-                </p>
+                </p> -->
             </field>
         </record>
 
