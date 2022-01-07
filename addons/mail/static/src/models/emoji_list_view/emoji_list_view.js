@@ -13,13 +13,12 @@ registerModel({
     },
     recordMethods: {
         /**
-         * @param {MouseEvent} ev 
+         * @param {MouseEvent} ev
          */
         onClickEmoji(ev) {
             if (this.popoverViewOwner.messageActionListOwnerAsReaction) {
                 this.popoverViewOwner.messageActionListOwnerAsReaction.onClickReaction(ev);
-            }
-            if (this.popoverViewOwner.composerViewOwnerAsEmoji) {
+            } else if (this.popoverViewOwner.composerViewOwnerAsEmoji) {
                 this.popoverViewOwner.composerViewOwnerAsEmoji.onClickEmoji(ev);
             }
         },
