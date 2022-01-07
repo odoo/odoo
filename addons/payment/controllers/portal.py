@@ -122,7 +122,7 @@ class PaymentPortal(portal.CustomerPortal):
 
         # Select all acquirers and tokens that match the constraints
         acquirers_sudo = request.env['payment.acquirer'].sudo()._get_compatible_acquirers(
-            company_id, partner_sudo.id, currency_id=currency.id, **kwargs
+            company_id, partner_sudo.id, amount, currency_id=currency.id, **kwargs
         )  # In sudo mode to read the fields of acquirers and partner (if not logged in)
         if acquirer_id in acquirers_sudo.ids:  # Only keep the desired acquirer if it's suitable
             acquirers_sudo = acquirers_sudo.browse(acquirer_id)
@@ -193,7 +193,11 @@ class PaymentPortal(portal.CustomerPortal):
         """
         partner_sudo = request.env.user.partner_id  # env.user is always sudoed
         acquirers_sudo = request.env['payment.acquirer'].sudo()._get_compatible_acquirers(
-            request.env.company.id, partner_sudo.id, force_tokenization=True, is_validation=True
+            request.env.company.id,
+            partner_sudo.id,
+            0.,  # There is no amount to pay with validation transactions.
+            force_tokenization=True,
+            is_validation=True,
         )
 
         # Get all partner's tokens for which acquirers are not disabled.

@@ -20,7 +20,7 @@ class OgoneTest(OgoneCommon, PaymentHttpCommon):
 
     def test_incompatibility_with_validation_operation(self):
         acquirers = self.env['payment.acquirer']._get_compatible_acquirers(
-            self.company.id, self.partner.id, is_validation=True
+            self.company.id, self.partner.id, 0., is_validation=True
         )
         self.assertNotIn(self.ogone, acquirers)
 

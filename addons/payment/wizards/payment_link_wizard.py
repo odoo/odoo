@@ -91,6 +91,7 @@ class PaymentLinkWizard(models.TransientModel):
                 res_id=link.res_id,
                 company_id=link.company_id.id,
                 partner_id=link.partner_id.id,
+                amount=link.amount,
                 currency_id=link.currency_id.id,
             )
 
@@ -115,6 +116,7 @@ class PaymentLinkWizard(models.TransientModel):
                     res_id=res_id,
                     company_id=company_id.id,
                     partner_id=partner_id.id,
+                    amount=related_document.amount_total,
                     currency_id=currency_id.id,
                 ).name_get()
             )

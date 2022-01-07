@@ -23,7 +23,7 @@ class PortalAccount(portal.PortalAccount):
         PaymentPortal._ensure_matching_companies(partner, invoice_company)
 
         acquirers_sudo = request.env['payment.acquirer'].sudo()._get_compatible_acquirers(
-            invoice_company.id, partner.id, currency_id=invoice.currency_id.id
+            invoice_company.id, partner.id, invoice.amount_total, currency_id=invoice.currency_id.id
         )  # In sudo mode to read the fields of acquirers and partner (if not logged in)
         tokens = request.env['payment.token'].search(
             [('acquirer_id', 'in', acquirers_sudo.ids), ('partner_id', '=', partner.id)]
