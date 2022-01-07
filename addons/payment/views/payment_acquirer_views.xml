@@ -7,6 +7,7 @@
         <field name="arch" type="xml">
             <form string="Payment Acquirer">
                 <field name="is_published" invisible="1"/>
+                <field name="main_currency_id" invisible="1"/>
                 <field name="support_fees" invisible="1"/>
                 <field name="support_manual_capture" invisible="1"/>
                 <field name="support_tokenization" invisible="1"/>
@@ -82,7 +83,11 @@
                                     <field name="capture_manually" attrs="{'invisible': [('support_manual_capture', '=', False)]}"/>
                                 </group>
                                 <group string="Availability" name="availability">
-                                    <field name="country_ids" widget="many2many_tags" placeholder="Select countries. Leave empty to use everywhere." options="{'no_open': True, 'no_create': True}"/>
+                                    <field name="maximum_amount" widget="monetary" options="{'currency_field': 'main_currency_id'}"/>
+                                    <field name="available_country_ids"
+                                           widget="many2many_tags"
+                                           placeholder="Select countries. Leave empty to make available everywhere."
+                                           options="{'no_open': True, 'no_create': True}"/>
                                 </group>
                                 <group string="Payment Followup" name="payment_followup">
                                     <field name="journal_id" context="{'default_type': 'bank'}"
@@ -125,7 +130,7 @@
                 <field name="name"/>
                 <field name="provider"/>
                 <field name="state"/>
-                <field name="country_ids" widget="many2many_tags" optional="hide"/>
+                <field name="available_country_ids" widget="many2many_tags" optional="hide"/>
                 <field name="company_id" groups="base.group_multi_company" optional="show"/>
             </tree>
         </field>

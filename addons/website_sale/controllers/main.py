@@ -1014,6 +1014,7 @@ class WebsiteSale(http.Controller):
         acquirers_sudo = request.env['payment.acquirer'].sudo()._get_compatible_acquirers(
             order.company_id.id,
             order.partner_id.id,
+            order.amount_total,
             currency_id=order.currency_id.id,
             sale_order_id=order.id,
             website_id=request.website.id,

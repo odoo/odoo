@@ -16,16 +16,12 @@ class PayUMoneyTest(PayumoneyCommon, PaymentHttpCommon):
 
     def test_compatible_acquirers(self):
         acquirers = self.env['payment.acquirer']._get_compatible_acquirers(
-            partner_id=self.partner.id,
-            company_id=self.company.id,
-            currency_id=self.currency.id,
+            self.company.id, self.partner.id, self.amount, currency_id=self.currency.id
         )
         self.assertIn(self.payumoney, acquirers)
 
         acquirers = self.env['payment.acquirer']._get_compatible_acquirers(
-            partner_id=self.partner.id,
-            company_id=self.company.id,
-            currency_id=self.currency_euro.id,
+            self.company.id, self.partner.id, self.amount, currency_id=self.currency_euro.id
         )
         self.assertNotIn(self.payumoney, acquirers)
 

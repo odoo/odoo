@@ -39,6 +39,10 @@ class PaymentAcquirer(models.Model):
     company_id = fields.Many2one(  # Indexed to speed-up ORM searches (from ir_rule or others)
         string="Company", comodel_name='res.company', default=lambda self: self.env.company.id,
         required=True, index=True)
+    main_currency_id = fields.Many2one(
+        related='company_id.currency_id',
+        help="The main currency of the company, used to display monetary fields.",
+    )
     payment_icon_ids = fields.Many2many(
         string="Supported Payment Icons", comodel_name='payment.icon')
     allow_tokenization = fields.Boolean(
@@ -65,16 +69,28 @@ class PaymentAcquirer(models.Model):
         help="The template rendering the inline payment form when making a payment by token.",
         domain=[('type', '=', 'qweb')],
     )
-    country_ids = fields.Many2many(
-        string="Countries", comodel_name='res.country', relation='payment_country_rel',
-        column1='payment_id', column2='country_id',
-        help="The countries for which this payment acquirer is available.\n"
-             "If none is set, it is available for all countries.")
     journal_id = fields.Many2one(
         string="Payment Journal", comodel_name='account.journal',
         compute='_compute_journal_id', inverse='_inverse_journal_id',
         help="The journal in which the successful transactions are posted",
         domain="[('type', '=', 'bank'), ('company_id', '=', company_id)]")
+
+    # Availability fields.
+    available_country_ids = fields.Many2many(
+        string="Countries",
+        comodel_name='res.country',
+        help="The countries in which this payment acquirer is available. Leave blank to make it "
+             "available in all countries.",
+        relation='payment_country_rel',
+        column1='payment_id',
+        column2='country_id',
+    )
+    maximum_amount = fields.Monetary(
+        string="Maximum Amount",
+        help="The maximum payment amount that this payment acquirer is available for. Leave blank "
+             "to make it available for any payment amount.",
+        currency_field='main_currency_id',
+    )
 
     # Fees fields
     fees_active = fields.Boolean(string="Add Extra Fees")
@@ -376,7 +392,7 @@ class PaymentAcquirer(models.Model):
 
     @api.model
     def _get_compatible_acquirers(
-        self, company_id, partner_id, currency_id=None, force_tokenization=False,
+        self, company_id, partner_id, amount, currency_id=None, force_tokenization=False,
         is_validation=False, **kwargs
     ):
         """ Select and return the acquirers matching the criteria.
@@ -386,6 +402,7 @@ class PaymentAcquirer(models.Model):
 
         :param int company_id: The company to which acquirers must belong, as a `res.company` id
         :param int partner_id: The partner making the payment, as a `res.partner` id
+        :param float amount: The amount to pay, `0` for validation transactions.
         :param int currency_id: The payment currency if known beforehand, as a `res.currency` id
         :param bool force_tokenization: Whether only acquirers allowing tokenization can be matched
         :param bool is_validation: Whether the operation is a validation
@@ -404,8 +421,26 @@ class PaymentAcquirer(models.Model):
         partner = self.env['res.partner'].browse(partner_id)
         if partner.country_id:  # The partner country must either not be set or be supported
             domain = expression.AND([
-                domain,
-                ['|', ('country_ids', '=', False), ('country_ids', 'in', [partner.country_id.id])]
+                domain, [
+                    '|',
+                    ('available_country_ids', '=', False),
+                    ('available_country_ids', 'in', [partner.country_id.id]),
+                ]
+            ])
+
+        # Handle the maximum amount.
+        currency = self.env['res.currency'].browse(currency_id).exists()
+        if not is_validation and currency:  # The currency is required to convert the amount.
+            company = self.env['res.company'].browse(company_id).exists()
+            date = fields.Date.context_today(self)
+            converted_amount = currency._convert(amount, company.currency_id, company, date)
+            domain = expression.AND([
+                domain, [
+                    '|', '|',
+                    ('maximum_amount', '>=', converted_amount),
+                    ('maximum_amount', '=', False),
+                    ('maximum_amount', '=', 0.),
+                ]
             ])
 
         # Handle tokenization support requirements

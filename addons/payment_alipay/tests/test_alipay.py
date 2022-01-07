@@ -19,29 +19,21 @@ class AlipayTest(AlipayCommon, PaymentHttpCommon):
     def test_compatible_acquirers(self):
         self.alipay.alipay_payment_method = 'express_checkout'
         acquirers = self.env['payment.acquirer']._get_compatible_acquirers(
-            partner_id=self.partner.id,
-            currency_id=self.currency_yuan.id,  # 'CNY'
-            company_id=self.company.id,
+            self.company.id, self.partner.id, self.amount, currency_id=self.currency_yuan.id
         )
         self.assertIn(self.alipay, acquirers)
         acquirers = self.env['payment.acquirer']._get_compatible_acquirers(
-            partner_id=self.partner.id,
-            currency_id=self.currency_euro.id,
-            company_id=self.company.id,
+            self.company.id, self.partner.id, self.amount, currency_id=self.currency_euro.id
         )
         self.assertNotIn(self.alipay, acquirers)
 
         self.alipay.alipay_payment_method = 'standard_checkout'
         acquirers = self.env['payment.acquirer']._get_compatible_acquirers(
-            partner_id=self.partner.id,
-            currency_id=self.currency_yuan.id,  # 'CNY'
-            company_id=self.company.id,
+            self.company.id, self.partner.id, self.amount, currency_id=self.currency_yuan.id
         )
         self.assertIn(self.alipay, acquirers)
         acquirers = self.env['payment.acquirer']._get_compatible_acquirers(
-            partner_id=self.partner.id,
-            currency_id=self.currency_euro.id,
-            company_id=self.company.id,
+            self.company.id, self.partner.id, self.amount, currency_id=self.currency_euro.id
         )
         self.assertIn(self.alipay, acquirers)
 

@@ -24,14 +24,14 @@ class PayULatamTest(PayULatamCommon, PaymentHttpCommon):
         for supported_currency_code in SUPPORTED_CURRENCIES:
             supported_currency = self._prepare_currency(supported_currency_code)
             compatible_acquirers = self.env['payment.acquirer']._get_compatible_acquirers(
-                self.company.id, self.partner.id, currency_id=supported_currency.id,
+                self.company.id, self.partner.id, self.amount, currency_id=supported_currency.id
             )
             self.assertIn(self.payulatam, compatible_acquirers)
 
     def test_incompatibility_with_unsupported_currency(self):
         """ Test that the PayULatam acquirer is not compatible with an unsupported currency. """
         compatible_acquirers = self.env['payment.acquirer']._get_compatible_acquirers(
-            self.company.id, self.partner.id, currency_id=self.currency_euro.id,
+            self.company.id, self.partner.id, self.amount, currency_id=self.currency_euro.id
         )
         self.assertNotIn(self.payulatam, compatible_acquirers)
 
