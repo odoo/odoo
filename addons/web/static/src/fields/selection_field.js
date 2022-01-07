@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { Domain } from "@web/core/domain";
 import { registry } from "@web/core/registry";
 import { _lt } from "@web/core/l10n/translation";
 import { standardFieldProps } from "./standard_field_props";
@@ -76,10 +77,18 @@ registry.category("fields").add("selection", SelectionField);
 export function preloadSelection(orm, datapoint, fieldName) {
     const field = datapoint.fields[fieldName];
     if (field.type !== "many2one") {
-        return null;
+        return Promise.resolve();
     }
 
-    const domain = [];
+    const activeField = datapoint.activeFields[fieldName];
+    const context = datapoint.evalContext;
+    const domain = new Domain(activeField.attrs.domain).toList(context);
+
+    if (domain.toString() === datapoint.preloadedDataCaches[fieldName]) {
+        return Promise.resolve();
+    }
+    datapoint.preloadedDataCaches[fieldName] = domain.toString();
+
     return orm.call(field.relation, "name_search", ["", domain]);
 }
 
