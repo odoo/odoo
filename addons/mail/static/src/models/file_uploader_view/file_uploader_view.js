@@ -166,17 +166,14 @@ registerModel({
     fields: {
         activityView: one2one('ActivityView', {
             inverse: 'fileUploaderView',
-            isCausal: true,
             readonly: true,
         }),
         attachmentBoxView: one2one('AttachmentBoxView', {
             inverse: 'fileUploaderView',
-            isCausal: true,
             readonly: true,
         }),
         composerView: one2one('ComposerView', {
             inverse: 'fileUploaderView',
-            isCausal: true,
             readonly: true,
         }),
         fileInputRef: attr(),
