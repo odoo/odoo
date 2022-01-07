@@ -209,6 +209,7 @@ export class Record extends DataPoint {
         this._changes = {};
         this.data = { ...this._values };
         this.preloadedData = {};
+        this.preloadedDataCaches = {};
         this.selected = false;
         this._onChangePromise = Promise.resolve({});
     }
@@ -294,7 +295,10 @@ export class Record extends DataPoint {
 
     loadPreloadedData() {
         const fetchPreloadedData = async (fetchFn, fieldName) => {
-            this.preloadedData[fieldName] = await fetchFn(this.model.orm, this, fieldName);
+            const specialData = await fetchFn(this.model.orm, this, fieldName);
+            if (specialData) {
+                this.preloadedData[fieldName] = specialData;
+            }
         };
 
         const proms = [];
@@ -350,12 +354,12 @@ export class Record extends DataPoint {
     }
 
     async update(fieldName, value) {
-        this.data[fieldName] = value;
-        this._changes[fieldName] = this.data[fieldName];
+        await this._applyChange(fieldName, value);
         const activeField = this.activeFields[fieldName];
         if (activeField && activeField.onChange) {
             await this._performOnchange(fieldName);
         }
+        await this.loadPreloadedData();
         this.model.notify();
     }
 
@@ -468,6 +472,11 @@ export class Record extends DataPoint {
     }
 
     discard() {
+        for (const fieldName in this._changes) {
+            if (["one2many", "many2many"].includes(this.fields[fieldName].type)) {
+                this.data[fieldName].discard();
+            }
+        }
         this.data = { ...this._values };
         this._changes = {};
         this.model.notify();
@@ -483,6 +492,17 @@ export class Record extends DataPoint {
             ...this.context,
         });
         return this._parseServerValues(result[0]);
+    }
+
+    async _applyChange(fieldName, value) {
+        const field = this.fields[fieldName];
+        if (field && ["one2many", "many2many"].includes(field.type)) {
+            this.data[fieldName].update(value);
+            this._changes[fieldName] = true;
+        } else {
+            this.data[fieldName] = value;
+            this._changes[fieldName] = value;
+        }
     }
 
     async _performOnchange(fieldName) {
@@ -543,7 +563,7 @@ export class Record extends DataPoint {
             const fieldType = this.fields[fieldName].type;
             if (fieldType === "one2many" || fieldType === "many2many") {
                 // TODO: need to generate commands
-                changes[fieldName] = [];
+                changes[fieldName] = this.data[fieldName].getChanges();
             } else if (fieldType === "many2one") {
                 changes[fieldName] = changes[fieldName] ? changes[fieldName][0] : false;
             } else if (fieldType === "date") {
@@ -1029,6 +1049,10 @@ export class StaticList extends DataPoint {
         this.orderBy = params.orderBy || {}; // rename orderBy + get back from state
         this.limit = params.limit || state.limit || this.constructor.DEFAULT_LIMIT;
         this.offset = 0;
+
+        this._initialResIds = [...params.resIds];
+        this._initialRecords = [];
+        this._changes = [];
     }
 
     exportState() {
@@ -1113,6 +1137,9 @@ export class StaticList extends DataPoint {
                 }
             });
         }
+        if (!this._initialRecords) {
+            this._initialRecords = [...this.records];
+        }
     }
 
     async sortBy(fieldName) {
@@ -1124,6 +1151,53 @@ export class StaticList extends DataPoint {
 
         await this.load();
         this.model.notify();
+    }
+
+    getChanges() {
+        return this._changes;
+    }
+    async update(command) {
+        await this._applyChange(command);
+    }
+    discard() {
+        this.resIds = this._initialResIds;
+        this.records = this._initialRecords;
+        this._changes = [];
+    }
+
+    // -------------------------------------------------------------------------
+    // Protected
+    // -------------------------------------------------------------------------
+
+    async _applyChange(command) {
+        if (command.operation === "TRIGGER_ONCHANGE") {
+            return;
+        }
+
+        switch (command.operation) {
+            case "ADD":
+                break;
+            case "ADD_M2M":
+                break;
+            case "CREATE":
+                break;
+            case "UPDATE":
+                break;
+            case "FORGET":
+                break;
+            case "DELETE":
+                break;
+            case "DELETE_ALL":
+                break;
+            case "REPLACE_WITH": {
+                this.resIds = command.resIds;
+                this._changes = [[6, false, command.resIds]];
+                await this.load();
+                break;
+            }
+            case "MULTI":
+                break;
+        }
     }
 }
 
