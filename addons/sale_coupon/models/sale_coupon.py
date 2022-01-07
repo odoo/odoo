@@ -54,7 +54,7 @@ class SaleCoupon(models.Model):
         message = {}
         applicable_programs = order._get_applicable_programs()
         if self.state in ('used', 'expired') or \
-           (self.expiration_date and self.expiration_date < order.date_order.date()):
+           (self.expiration_date and self.expiration_date < fields.Datetime.now().date()):
             message = {'error': _('This coupon %s has been used or is expired.') % (self.code)}
         elif self.state == 'reserved':
             message = {'error': _('This coupon %s exists but the origin sales order is not validated yet.') % (self.code)}
