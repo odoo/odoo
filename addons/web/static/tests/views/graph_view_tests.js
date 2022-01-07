@@ -1,13 +1,14 @@
 /** @odoo-module **/
 
 import { makeFakeLocalizationService } from "@web/../tests/helpers/mock_services";
-import { click, makeDeferred, nextTick, triggerEvent } from "@web/../tests/helpers/utils";
+import { click, makeDeferred, nextTick, patchDate, triggerEvent } from "@web/../tests/helpers/utils";
 import {
     editFavoriteName,
     saveFavorite,
     setupControlPanelFavoriteMenuRegistry,
     setupControlPanelServiceRegistry,
     switchView,
+    toggleComparisonMenu,
     toggleFavoriteMenu,
     toggleFilterMenu,
     toggleGroupByMenu,
@@ -3509,5 +3510,35 @@ QUnit.module("Views", (hooks) => {
                 }
             },
         });
+    });
+
+    QUnit.test('fake data in line chart', async function (assert) {
+        assert.expect(1);
+
+        patchDate(2020, 4, 19, 1, 0, 0);
+
+        serverData.models.foo.records = [];
+
+        const graph = await makeView({
+            type: "graph",
+            resModel: "foo",
+            serverData,
+            context: { search_default_date_filter: 1, },
+            arch: `
+                <graph type="line">
+                    <field name="date"/>
+                </graph>
+            `,
+            searchViewArch:`
+                <search>
+                    <filter name="date_filter" domain="[]" date="date" default_period="third_quarter"/>
+                </search>
+            `,
+        });
+
+        await toggleComparisonMenu(graph);
+        await toggleMenuItem(graph, 'Date: Previous period');
+
+        checkLabels(assert, graph, ['', '']);
     });
 });
