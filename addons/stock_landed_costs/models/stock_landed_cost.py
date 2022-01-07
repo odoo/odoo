@@ -78,6 +78,29 @@ class StockLandedCost(models.Model):
         for cost in self:
             cost.amount_total = sum(line.price_unit for line in cost.cost_lines)
 
+<<<<<<< HEAD
+=======
+    @api.depends('company_id')
+    def _compute_allowed_picking_ids(self):
+        # Backport of f329de26: allowed_picking_ids is useless, view_stock_landed_cost_form no longer uses it,
+        # the field and its compute are kept since this is a stable version. Still, this compute has been made
+        # more resilient to MemoryErrors.
+        valued_picking_ids_per_company = defaultdict(list)
+        if self.company_id:
+            self.env.cr.execute("""SELECT sm.picking_id, sm.company_id
+                                     FROM stock_move AS sm
+                               INNER JOIN stock_valuation_layer AS svl ON svl.stock_move_id = sm.id
+                                    WHERE sm.picking_id IS NOT NULL AND sm.company_id IN %s
+                                 GROUP BY sm.picking_id, sm.company_id""", [tuple(self.company_id.ids)])
+            for res in self.env.cr.fetchall():
+                valued_picking_ids_per_company[res[1]].append(res[0])
+        for cost in self:
+            n = 5000
+            cost.allowed_picking_ids = valued_picking_ids_per_company[cost.company_id.id][:n]
+            for ids_chunk in tools.split_every(n, valued_picking_ids_per_company[cost.company_id.id][n:]):
+                cost.allowed_picking_ids = tuple((4, id_) for id_ in ids_chunk)
+
+>>>>>>> 2a902eae1af... temp
     @api.onchange('target_model')
     def _onchange_target_model(self):
         if self.target_model != 'picking':
