@@ -1069,20 +1069,6 @@ class SaleOrder(models.Model):
         transaction = self.get_portal_last_transaction()
         return (self.state == 'sent' or (self.state == 'draft' and include_draft)) and not self.is_expired and self.require_payment and transaction.state != 'done' and self.amount_total
 
-    def _notify_get_groups(self, msg_vals=None):
-        """ Give access button to users and portal customer as portal is integrated
-        in sale. Customer and portal group have probably no right to see
-        the document so they don't have the access button. """
-        groups = super(SaleOrder, self)._notify_get_groups(msg_vals=msg_vals)
-
-        self.ensure_one()
-        if self.state not in ('draft', 'cancel'):
-            for group_name, group_method, group_data in groups:
-                if group_name not in ('customer', 'portal'):
-                    group_data['has_button_access'] = True
-
-        return groups
-
     def preview_sale_order(self):
         self.ensure_one()
         return {
