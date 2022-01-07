@@ -2480,7 +2480,7 @@ class MailThread(models.AbstractModel):
             (
                 'user',
                 lambda pdata: pdata['type'] == 'user',
-                {}
+                {'has_button_access': True}
             ), (
                 'portal',
                 lambda pdata: pdata['type'] == 'portal',
