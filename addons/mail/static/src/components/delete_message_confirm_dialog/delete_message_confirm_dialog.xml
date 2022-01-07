@@ -5,7 +5,7 @@
             <t t-if="messageActionList">
                 <p>Are you sure you want to delete this message?</p>
                 <blockquote class="o_DeleteMessageConfirmDialog_blockquote">
-                    <Message messageViewLocalId="messageActionList.messageViewForDelete.localId"/>
+                    <Message localId="messageActionList.messageViewForDelete.localId"/>
                 </blockquote>
                 <small t-if="!messageActionList.message.originThread or messageActionList.message.originThread.model !== 'mail.channel'">Pay attention: The followers of this document who were notified by email will still be able to read the content of this message and reply to it.</small>
                 <t t-set-slot="buttons">
