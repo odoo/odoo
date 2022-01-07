@@ -100,7 +100,6 @@ class MailComposer(models.TransientModel):
         'ir.attachment', 'mail_compose_message_ir_attachments_rel',
         'wizard_id', 'attachment_id', 'Attachments')
     email_layout_xmlid = fields.Char('Email Notification Layout', copy=False)
-    layout = fields.Char('Layout', copy=False)  # xml id of layout
     email_add_signature = fields.Boolean(default=True)
     # origin
     email_from = fields.Char('From', help="Email address of the sender. This field is set when no matching partner is found and replaces the author_id field in the chatter.")
