@@ -23,7 +23,7 @@ class AccountMove(models.Model):
             record_type_not_ok = record.type not in {'out_invoice', 'out_refund', 'out_receipt'}
 
             if company_vat_not_ok or partner_country_not_ok or record_type_not_ok:
-                error_msg = "Some fields required for the generation of the document are missing or invalid. Please verify them:\n"
+                error_msg = _("Some fields required for the generation of the document are missing or invalid. Please verify them:\n")
                 error_msg += _('The `VAT` of your company should be defined and match the following format: 123456789\n') if company_vat_not_ok else ""
                 error_msg += _('The `country of the customer should be defined.\n') if partner_country_not_ok else ""
                 error_msg += _('The type of document should either be an invoice, a credit note, or a receipt\n') if record_type_not_ok else ""
