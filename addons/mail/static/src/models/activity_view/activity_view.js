@@ -61,7 +61,7 @@ registerModel({
          * explorer for upload.
          */
         onClickUploadDocument() {
-            this.fileUploaderView.component.openBrowserFileUploader();
+            this.fileUploaderView.openBrowserFileUploader();
         },
         /**
          * @private
