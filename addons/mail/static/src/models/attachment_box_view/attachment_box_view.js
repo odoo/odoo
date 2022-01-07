@@ -25,7 +25,7 @@ registerModel({
          * Handles click on the "add attachment" button.
          */
         onClickAddAttachment() {
-            this.fileUploaderView.component.openBrowserFileUploader();
+            this.fileUploaderView.openBrowserFileUploader();
         },
     },
     fields: {
