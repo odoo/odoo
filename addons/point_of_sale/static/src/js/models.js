@@ -1930,7 +1930,8 @@ exports.Orderline = Backbone.Model.extend({
     },
     // sets a discount [0,100]%
     set_discount: function(discount){
-        var parsed_discount = isNaN(parseFloat(discount)) ? 0 : field_utils.parse.float('' + discount);
+        const decimalSeparator = this.pos.attributes.env._t.database.parameters.decimal_point
+        var parsed_discount = isNaN(parseFloat(discount)) ? 0 : field_utils.parse.float(('' + discount).replace('.',decimalSeparator));
         var disc = Math.min(Math.max(parsed_discount || 0, 0),100);
         this.discount = disc;
         this.discountStr = '' + disc;
