@@ -660,13 +660,16 @@ class ProductProduct(models.Model):
         if not qty_to_invoice:
             return 0.0
 
+        # if True, consider the incoming moves
+        is_returned = self.env.context.get('is_returned', False)
+
         returned_quantities = defaultdict(float)
         for move in stock_moves:
             if move.origin_returned_move_id:
                 returned_quantities[move.origin_returned_move_id.id] += abs(sum(move.sudo().stock_valuation_layer_ids.mapped('quantity')))
         candidates = stock_moves\
             .sudo()\
-            .filtered(lambda m: not (m.origin_returned_move_id and sum(m.stock_valuation_layer_ids.mapped('quantity')) >= 0))\
+            .filtered(lambda m: is_returned == bool(m.origin_returned_move_id and sum(m.stock_valuation_layer_ids.mapped('quantity')) >= 0))\
             .mapped('stock_valuation_layer_ids')\
             .sorted()
         qty_to_take_on_candidates = qty_to_invoice
