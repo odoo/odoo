@@ -953,6 +953,7 @@ registerModel({
          */
         composer: many2one('Composer', {
             compute: '_computeComposer',
+            inverse: 'composerViews',
             required: true,
         }),
         /**
