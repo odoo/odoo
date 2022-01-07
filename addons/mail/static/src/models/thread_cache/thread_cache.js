@@ -403,7 +403,6 @@ registerModel({
         }),
         thread: one2one('Thread', {
             inverse: 'cache',
-            isCausal: true,
             readonly: true,
             required: true,
         }),

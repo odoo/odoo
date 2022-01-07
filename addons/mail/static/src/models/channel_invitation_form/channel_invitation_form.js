@@ -219,6 +219,7 @@ registerModel({
          */
         popoverViewOwner: one2one('PopoverView', {
             inverse: 'channelInvitationForm',
+            isCausal: true,
             readonly: true,
         }),
         /**

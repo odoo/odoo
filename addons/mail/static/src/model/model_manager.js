@@ -636,9 +636,6 @@ export class ModelManager {
                 ) {
                     throw new Error(`Mismatched relation types: ${field} on ${Model} (${field.relationType}) and ${inverseField} on ${RelatedModel} (${inverseField.relationType}).`);
                 }
-                if (field.required && !inverseField.isCausal) {
-                    throw new Error(`${field} on ${Model} is required but its inverse ${inverseField} on ${RelatedModel} is not causal.`);
-                }
             }
             for (const identifyingField of Model.__identifyingFieldsFlattened) {
                 const field = Model.__fieldMap[identifyingField];
@@ -1069,9 +1066,9 @@ export class ModelManager {
             relFunc(Model.name, { inverse: field.fieldName }),
             {
                 fieldName: `_inverse_${Model}/${field.fieldName}`,
-                // Note that an identifying field is not necessarily defined as
-                // `required` (example: identifyingFields with an OR). 
-                isCausal: field.required || Model.__identifyingFieldsFlattened.has(field.fieldName),
+                // Allows the inverse of an identifying field to be
+                // automatically generated.
+                isCausal: Model.__identifyingFieldsFlattened.has(field.fieldName),
             },
         ));
         return inverseField;
