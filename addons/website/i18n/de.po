@@ -5,7 +5,6 @@
 # Translators:
 # Anja Funk <anja.funk@afimage.de>, 2020
 # Bülent Tiknas <btiknas@googlemail.com>, 2020
-# Thorsten Vocks <thorsten.vocks@openbig.org>, 2020
 # Thomas Neu <t.neu@runbox.com>, 2020
 # Johannes Croe <jcr@odoo.com>, 2020
 # Marco Tarsia <marco.y.tarsia@gmail.com>, 2020
@@ -28,19 +27,19 @@
 # Henry Mineehen <info@mineehen.de>, 2020
 # Leon Grill <leg@odoo.com>, 2020
 # Chris Egal <sodaswed@web.de>, 2020
-# Martin Trigaux, 2021
-# Andreas Schmidt <schmigo@gmail.com>, 2021
 # Ermin Trevisan <trevi@twanda.com>, 2021
 # Andreas Väthröder <andreas.vaethroeder@alvarium-services.de>, 2021
-# Friederike Fasterling-Nesselbosch, 2021
+# Martin Trigaux, 2022
+# Friederike Fasterling-Nesselbosch, 2022
+# Andreas Schmidt <schmigo@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-04 15:13+0000\n"
+"POT-Creation-Date: 2022-01-07 14:40+0000\n"
 "PO-Revision-Date: 2020-09-07 08:20+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2021\n"
+"Last-Translator: Andreas Schmidt <schmigo@gmail.com>, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -66,6 +65,26 @@ msgstr "\" Alarm mit einem"
 #, python-format
 msgid "\"URL to\" can not be empty."
 msgstr "\"Link zu\" darf nicht leer sein."
+
+#. module: website
+#: code:addons/website/models/website_rewrite.py:0
+#, python-format
+msgid "\"URL to\" cannot contain parameter %s which is not used in \"URL from\"."
+msgstr ""
+"\"URL to\" darf Parameter %s nicht enthalten, der nicht in \"URL from\" "
+"verwendet wird."
+
+#. module: website
+#: code:addons/website/models/website_rewrite.py:0
+#, python-format
+msgid "\"URL to\" is invalid: %s"
+msgstr "\"URL to\" ist ungültig: %s"
+
+#. module: website
+#: code:addons/website/models/website_rewrite.py:0
+#, python-format
+msgid "\"URL to\" must contain parameter %s used in \"URL from\"."
+msgstr "\"URL to\" muss Parameter %s enthalten, der in \"URL from\" verwendet wird."
 
 #. module: website
 #: code:addons/website/models/website_rewrite.py:0
@@ -121,17 +140,6 @@ msgid "&amp;lt;head&amp;gt;"
 msgstr "&amp;lt;head&amp;gt;"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.sitemap_index_xml
-#: model_terms:ir.ui.view,arch_db:website.sitemap_xml
-msgid "&lt;?xml version=\"1.0\" encoding=\"UTF-8\"?&gt;"
-msgstr "&lt;?xml version=\"1.0\" encoding=\"UTF-8\"?&gt;"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.default_xml
-msgid "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;"
-msgstr "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;"
-
-#. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.xml:0
 #, python-format
@@ -183,8 +191,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.template_header_hamburger_oe_structure_header_hamburger_3
 #: model_terms:ir.ui.view,arch_db:website.template_header_sidebar_oe_structure_header_sidebar_1
 #: model_terms:ir.ui.view,arch_db:website.template_header_vertical_oe_structure_header_vertical_2
-msgid "+1 (650) 691-3277"
-msgstr "+1 (650) 691-3277"
+msgid "+1 (650) 555-0111"
+msgstr "+1 (650) 555-0111"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
@@ -215,11 +223,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.s_timeline
 msgid "...and switch the timeline contents to fit your needs."
 msgstr "...und wechseln Sie den Inhalt der Zeitachse nach Ihren Bedürfnissen."
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.default_csv
-msgid "1,2,3"
-msgstr "1,2,3"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_media_list_options
@@ -379,7 +382,6 @@ msgstr "<b>Fügen Sie</b> das ausgewählte Bild<b>hinzu</b>."
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/tours/homepage.js:0
 #: code:addons/website/static/src/js/tours/tour_utils.js:0
 #, python-format
 msgid "<b>Click Edit</b> to start designing your homepage."
@@ -400,17 +402,6 @@ msgstr "<b>Klicken Sie auf ein Snippet</b>, um dessen Optionsmenü aufzurufen."
 #, python-format
 msgid "<b>Click on a text</b> to start editing it."
 msgstr "<b>Klicken Sie auf einen Text</b>, um ihn zu bearbeiten."
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/tours/homepage.js:0
-#, python-format
-msgid ""
-"<b>Click on a text</b> to start editing it. <i>It's that easy to edit your "
-"content!</i>"
-msgstr ""
-"<b>Klicken Sie auf einen Text</b>, um ihn zu bearbeiten. <i>So einfach ist "
-"das Bearbeiten von Inhalten!</i>"
 
 #. module: website
 #. openerp-web
@@ -520,18 +511,6 @@ msgstr "<b>Schieben Sie</b> diese Taste, um die %s Polsterung zu ändern"
 msgid "<b>Slide</b> this button to change the column size."
 msgstr ""
 "<b>Schieben Sie</b> diese Schaltfläche, um die Spaltengröße zu ändern."
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/tours/homepage.js:0
-#, python-format
-msgid ""
-"<b>That's it!</b><p>Your page is all set to go live. Click the "
-"<b>Publish</b> button to publish it on the website.</p>"
-msgstr ""
-"<b>Das war's!</b><p>Deine Seite ist bereit für den Live-Einsatz. Klicken Sie"
-" auf den <b>Veröffentlichen</b> Button, um sie auf der Website zu "
-"veröffentlichen.</p>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.view_edit_robots
@@ -770,31 +749,6 @@ msgid "<i>Instant setup, satisfied or reimbursed.</i>"
 msgstr "<i>Sofortiges Einrichten, mit Zufriedenheitsgarantie.</i>"
 
 #. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/tours/homepage.js:0
-#, python-format
-msgid "<p><b>Click here</b> to create a new page.</p>"
-msgstr "<p><b>Hier klicken,</b> um eine neue Seite zu erstellen.</p>"
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/tours/homepage.js:0
-#, python-format
-msgid ""
-"<p><b>Your homepage is live.</b></p><p>Let's add a new page for your "
-"site.</p>"
-msgstr ""
-"<p><b>Deine Homepage ist online.</b></p><p>Lassen Sie uns eine neue Seite "
-"für Ihre Website hinzufügen.</p>"
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/tours/homepage.js:0
-#, python-format
-msgid "<p>Enter a title for the page.</p>"
-msgstr "<p>Einen Titel für die Seite eingeben.</p>"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_header_magazine_oe_structure_header_magazine_1
 msgid "<small class=\"s_share_title d-none\"><b>Follow us</b></small>"
 msgstr "<small class=\"s_share_title d-none\"><b>Folgen Sie uns</b></small>"
@@ -928,6 +882,15 @@ msgid ""
 msgstr ""
 "<span class=\"o_add_images\" style=\"cursor: pointer;\"><i class=\"fa fa-"
 "plus-circle\"/> Bilder hinzufügen</span>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.layout
+msgid ""
+"<span class=\"o_footer_copyright_name mr-2\">Copyright &amp;copy; Company "
+"name</span>"
+msgstr ""
+"<span class=\"o_footer_copyright_name mr-2\">Copyright &amp;copy; "
+"Firmenname</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -1372,15 +1335,6 @@ msgstr "Adresse"
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
 msgid "Advertising &amp; Marketing"
 msgstr "Werbung &amp; Marketing"
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/tours/homepage.js:0
-#, python-format
-msgid "After having checked how it looks on mobile, <b>close the preview</b>."
-msgstr ""
-"Nachdem Sie überprüft haben, wie es auf Mobilgeräten aussieht, können Sie "
-"die <b>Vorschau schließen</b>."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -2065,7 +2019,7 @@ msgstr "Überprüfen Sie Ihre Konfiguration."
 #. openerp-web
 #: code:addons/website/static/src/js/editor/snippets.editor.js:0
 #, python-format
-msgid "Check your connexion and try again"
+msgid "Check your connection and try again"
 msgstr ""
 
 #. module: website
@@ -2159,24 +2113,9 @@ msgid "Click on"
 msgstr "Klicke auf"
 
 #. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/tours/homepage.js:0
-#, python-format
-msgid "Click on <b>Continue</b> to create the page."
-msgstr "Klicken Sie auf <b>Weiter</b>, um die Seite zu erstellen."
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_process_steps
 msgid "Click on the icon to adapt it <br/>to your purpose."
 msgstr "Klicken Sie auf das Symbol, um es <br/>an Ihren Zweck anzupassen."
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/tours/homepage.js:0
-#: code:addons/website/static/src/js/tours/homepage.js:0
-#, python-format
-msgid "Click the <b>Save</b> button."
-msgstr "Klicken Sie auf den Button <b>Speichern</b>."
 
 #. module: website
 #. openerp-web
@@ -2339,6 +2278,7 @@ msgstr "Kontakt"
 #. module: website
 #: code:addons/website/models/website.py:0
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:website.s_banner
 #: model_terms:ir.ui.view,arch_db:website.template_header_boxed_oe_structure_header_boxed_2
 #: model_terms:ir.ui.view,arch_db:website.template_header_default_oe_structure_header_default_1
 #: model_terms:ir.ui.view,arch_db:website.template_header_hamburger_oe_structure_header_hamburger_1
@@ -2485,7 +2425,9 @@ msgid "Countdown is over - Firework"
 msgstr "Countdown ist vorbei - Feuerwerk"
 
 #. module: website
+#: code:addons/website/models/website.py:0
 #: model:ir.filters,name:website.dynamic_snippet_country_filter
+#, python-format
 msgid "Countries"
 msgstr "Länder"
 
@@ -2674,17 +2616,6 @@ msgstr "Anpassen"
 #: model:ir.model.fields,field_description:website.field_theme_ir_ui_view__customize_show
 msgid "Customize Show"
 msgstr "Anpassen der Anzeige"
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/tours/homepage.js:0
-#, python-format
-msgid ""
-"Customize any block through this menu. Try to change the background color of"
-" this block."
-msgstr ""
-"Passen Sie jeden Block über dieses Menü an. Versuchen Sie, die "
-"Hintergrundfarbe dieses Blocks zu ändern."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
@@ -3077,11 +3008,6 @@ msgid "Do not activate"
 msgstr "Nicht aktivieren"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.s_banner
-msgid "Do something"
-msgstr "Etwas tun"
-
-#. module: website
 #. openerp-web
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #, python-format
@@ -3146,36 +3072,13 @@ msgstr "Ringdiagramm"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/tours/homepage.js:0
-#, python-format
-msgid "Drag another block in your page, below the cover."
-msgstr ""
-"Ziehen Sie einen weiteren Baustein auf Ihre Seite, unterhalb des Titels."
-
-#. module: website
-#. openerp-web
 #: code:addons/website/static/src/js/tours/tour_utils.js:0
 #, python-format
 msgid ""
-"Drag the <b>%s</b> building block and drop it at the bottom of your page."
+"Drag the <b>%s</b> building block and drop it at the bottom of the page."
 msgstr ""
-"Ziehen Sie den <b>%s</b> baustein und legen Sie ihn am unteren Rand Ihrer "
-"Seite ab."
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/tours/homepage.js:0
-#, python-format
-msgid "Drag the <i>Cover</i> block and drop it in your page."
-msgstr ""
-"Ziehen Sie den <i>Titelbaustein</i> und legen Sie ihn auf Ihrer Seite ab."
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/tours/homepage.js:0
-#, python-format
-msgid "Drag the block and drop it in your new page."
-msgstr "Ziehen Sie den Block und fügen Sie ihn auf Ihrer neuen Seite ein."
+"Ziehen Sie den Baustein <b>%s</b> und platzieren Sie ihn am unteren Rand der"
+" Seite."
 
 #. module: website
 #. openerp-web
@@ -3835,13 +3738,6 @@ msgstr "Gehe zu Seite"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/tours/homepage.js:0
-#, python-format
-msgid "Go back to the blocks menu."
-msgstr "Gehen Sie zurück zum Menü \"Blöcke\"."
-
-#. module: website
-#. openerp-web
 #: code:addons/website/static/src/xml/website.backend.xml:0
 #, python-format
 msgid "Go to"
@@ -3874,17 +3770,6 @@ msgstr "Gehe zur Website"
 #, python-format
 msgid "Go to the Options tab"
 msgstr "Wechseln Sie zur Registerkarte Optionen"
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/tours/homepage.js:0
-#, python-format
-msgid ""
-"Good Job! You have designed your homepage. Let's check how this page looks "
-"like on <b>mobile devices</b>."
-msgstr ""
-"Gute Arbeit! Du hast deine Homepage gestaltet. Lassen Sie uns überprüfen, "
-"wie diese Seite auf <b>mobilen Geräten</b> aussieht."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
@@ -4630,11 +4515,6 @@ msgid "Installing \"%s\""
 msgstr "Installiert \"%s\""
 
 #. module: website
-#: model_terms:ir.actions.act_window,help:website.website_visitors_action
-msgid "Interact with them by sending them messages."
-msgstr "Interagieren Sie mit ihnen, indem Sie ihnen Nachrichten senden."
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
 msgid "Interaction History"
 msgstr "Interaktion Historie"
@@ -4742,17 +4622,6 @@ msgstr ""
 #, python-format
 msgid "It looks like your file is being called by"
 msgstr "Anscheinend wird die Datei aufgerufen von"
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/content/website_root.js:0
-#, python-format
-msgid ""
-"It might be possible to edit the relevant items or fix the issue in <a "
-"href=\"%s\">the classic Odoo interface</a>"
-msgstr ""
-"Möglicherweise können die relevanten Elemente bearbeitet oder das Problem in"
-" <a href=\"%s\">der klassischen Odoo-Benutzeroberfläche</a> behoben werden"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -9263,6 +9132,11 @@ msgid "https://fonts.google.com/specimen/Roboto"
 msgstr "https://fonts.google.com/specimen/Roboto"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid "https://www.odoo.com"
+msgstr "https://www.odoo.com"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
 msgid ""
 "im_livechat_previous_operator_pid (Odoo)<br/>\n"
@@ -9463,11 +9337,6 @@ msgstr "bewertung, Rang"
 #: model:ir.model.fields,field_description:website.field_res_config_settings__website_id
 msgid "website"
 msgstr "Website"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
-msgid "www.odoo.com"
-msgstr "www.odoo.com"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.qweb_500

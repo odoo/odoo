@@ -3,7 +3,6 @@
 # 	* website
 # 
 # Translators:
-# Yaroslav Molochko <onorua@gmail.com>, 2020
 # Oleg Pikarevskyi <o@btegri.co>, 2020
 # Zoriana Zaiats, 2020
 # Taras Kovaliuk <tratatuta123@gmail.com>, 2020
@@ -11,15 +10,15 @@
 # ТАрас <tratatuta@i.ua>, 2020
 # Ostap Yakovenko <ostap.yakovenko@maao.com.ua>, 2020
 # Martin Trigaux, 2021
-# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2021
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-04 15:13+0000\n"
+"POT-Creation-Date: 2022-01-07 14:40+0000\n"
 "PO-Revision-Date: 2020-09-07 08:20+0000\n"
-"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2021\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2022\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45,6 +44,24 @@ msgstr "\" попередження з"
 #, python-format
 msgid "\"URL to\" can not be empty."
 msgstr "\"URL\" не може бути пустою."
+
+#. module: website
+#: code:addons/website/models/website_rewrite.py:0
+#, python-format
+msgid "\"URL to\" cannot contain parameter %s which is not used in \"URL from\"."
+msgstr ""
+
+#. module: website
+#: code:addons/website/models/website_rewrite.py:0
+#, python-format
+msgid "\"URL to\" is invalid: %s"
+msgstr ""
+
+#. module: website
+#: code:addons/website/models/website_rewrite.py:0
+#, python-format
+msgid "\"URL to\" must contain parameter %s used in \"URL from\"."
+msgstr ""
 
 #. module: website
 #: code:addons/website/models/website_rewrite.py:0
@@ -100,17 +117,6 @@ msgid "&amp;lt;head&amp;gt;"
 msgstr "&amp;lt;head&amp;gt;"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.sitemap_index_xml
-#: model_terms:ir.ui.view,arch_db:website.sitemap_xml
-msgid "&lt;?xml version=\"1.0\" encoding=\"UTF-8\"?&gt;"
-msgstr "&lt;?xml version=\"1.0\" encoding=\"UTF-8\"?&gt;"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.default_xml
-msgid "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;"
-msgstr "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;"
-
-#. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.xml:0
 #, python-format
@@ -162,8 +168,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.template_header_hamburger_oe_structure_header_hamburger_3
 #: model_terms:ir.ui.view,arch_db:website.template_header_sidebar_oe_structure_header_sidebar_1
 #: model_terms:ir.ui.view,arch_db:website.template_header_vertical_oe_structure_header_vertical_2
-msgid "+1 (650) 691-3277"
-msgstr "+1 (650) 691-3277"
+msgid "+1 (650) 555-0111"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
@@ -194,11 +200,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.s_timeline
 msgid "...and switch the timeline contents to fit your needs."
 msgstr "...і змінюйте вміст часової шкали відповідно до ваших потреб."
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.default_csv
-msgid "1,2,3"
-msgstr "1,2,3"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_media_list_options
@@ -356,7 +357,6 @@ msgstr "<b>Додайте</b> обрані зображення."
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/tours/homepage.js:0
 #: code:addons/website/static/src/js/tours/tour_utils.js:0
 #, python-format
 msgid "<b>Click Edit</b> to start designing your homepage."
@@ -376,17 +376,6 @@ msgstr "<b>Натисніть на сніпет</b>, щоб отримати д�
 #, python-format
 msgid "<b>Click on a text</b> to start editing it."
 msgstr "<b>Натисніть на текст</b>, щоби відредагувати його."
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/tours/homepage.js:0
-#, python-format
-msgid ""
-"<b>Click on a text</b> to start editing it. <i>It's that easy to edit your "
-"content!</i>"
-msgstr ""
-"<b>Натисніть на текст</b> , щоби почати його редагувати. <i>Це так просто "
-"редагувати ваш контент!</i>"
 
 #. module: website
 #. openerp-web
@@ -493,17 +482,6 @@ msgstr "<b>Пересуньте</b> цю кнопку, щоб змінити %s 
 #, python-format
 msgid "<b>Slide</b> this button to change the column size."
 msgstr "<b>Пересуньте</b> цю кнопку, щою змінити розмір колонки."
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/tours/homepage.js:0
-#, python-format
-msgid ""
-"<b>That's it!</b><p>Your page is all set to go live. Click the "
-"<b>Publish</b> button to publish it on the website.</p>"
-msgstr ""
-"<b>Це все!</b><p>Ваша сторінка готова до запуску. Натисніть кнопку "
-"<b>Опублікувати</b> щоб опублікувати її на веб-сайті.</p>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.view_edit_robots
@@ -742,31 +720,6 @@ msgid "<i>Instant setup, satisfied or reimbursed.</i>"
 msgstr "<i>Швидка інсталяція, вибіркова чи відновлена.</i>"
 
 #. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/tours/homepage.js:0
-#, python-format
-msgid "<p><b>Click here</b> to create a new page.</p>"
-msgstr "<p><b>Натисніть</b>, щоб створити нову сторінку.</p>"
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/tours/homepage.js:0
-#, python-format
-msgid ""
-"<p><b>Your homepage is live.</b></p><p>Let's add a new page for your "
-"site.</p>"
-msgstr ""
-"<p><b>Ваша домашня сторінка працює.</b></p><p>Давайте додамо нову сторінку "
-"на вашому сайті.</p>"
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/tours/homepage.js:0
-#, python-format
-msgid "<p>Enter a title for the page.</p>"
-msgstr "<p>Введіть назву сторінки.</p>"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_header_magazine_oe_structure_header_magazine_1
 msgid "<small class=\"s_share_title d-none\"><b>Follow us</b></small>"
 msgstr "<small class=\"s_share_title d-none\"><b>Підпишіться</b></small>"
@@ -900,6 +853,15 @@ msgid ""
 msgstr ""
 "<span class=\"o_add_images\" style=\"cursor: pointer;\"><i class=\"fa fa-"
 "plus-circle\"/> Додати зображення</span>"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.layout
+msgid ""
+"<span class=\"o_footer_copyright_name mr-2\">Copyright &amp;copy; Company "
+"name</span>"
+msgstr ""
+"<span class=\"o_footer_copyright_name mr-2\">Усі права захищені &amp;copy; "
+"Назва компанії</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -1335,15 +1297,6 @@ msgstr "Адреса"
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
 msgid "Advertising &amp; Marketing"
 msgstr "Реклама та маркетинг"
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/tours/homepage.js:0
-#, python-format
-msgid "After having checked how it looks on mobile, <b>close the preview</b>."
-msgstr ""
-"Після перевірки, як це виглядає на мобільних пристроях, <b>закрийте "
-"перегляд</b>."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -2019,8 +1972,8 @@ msgstr "Перевірте ваші налаштування."
 #. openerp-web
 #: code:addons/website/static/src/js/editor/snippets.editor.js:0
 #, python-format
-msgid "Check your connexion and try again"
-msgstr "Перевірте ваше з'єднання і спробуйте знову"
+msgid "Check your connection and try again"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
@@ -2113,24 +2066,9 @@ msgid "Click on"
 msgstr "Натисніть "
 
 #. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/tours/homepage.js:0
-#, python-format
-msgid "Click on <b>Continue</b> to create the page."
-msgstr "Натисніть <b>Продовжити</b>, щоб створити сторінку."
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_process_steps
 msgid "Click on the icon to adapt it <br/>to your purpose."
 msgstr "Натисніть на іконку, щоб адаптувати її <br/>до вашої цілі."
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/tours/homepage.js:0
-#: code:addons/website/static/src/js/tours/homepage.js:0
-#, python-format
-msgid "Click the <b>Save</b> button."
-msgstr "Натисніть кнопку <b>Створити</b>."
 
 #. module: website
 #. openerp-web
@@ -2292,6 +2230,7 @@ msgstr "Контакт"
 #. module: website
 #: code:addons/website/models/website.py:0
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:website.s_banner
 #: model_terms:ir.ui.view,arch_db:website.template_header_boxed_oe_structure_header_boxed_2
 #: model_terms:ir.ui.view,arch_db:website.template_header_default_oe_structure_header_default_1
 #: model_terms:ir.ui.view,arch_db:website.template_header_hamburger_oe_structure_header_hamburger_1
@@ -2439,7 +2378,9 @@ msgid "Countdown is over - Firework"
 msgstr "Відлік закінчився - Firework"
 
 #. module: website
+#: code:addons/website/models/website.py:0
 #: model:ir.filters,name:website.dynamic_snippet_country_filter
+#, python-format
 msgid "Countries"
 msgstr "Країни"
 
@@ -2628,17 +2569,6 @@ msgstr "Налаштувати"
 #: model:ir.model.fields,field_description:website.field_theme_ir_ui_view__customize_show
 msgid "Customize Show"
 msgstr "Налаштувати показ"
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/tours/homepage.js:0
-#, python-format
-msgid ""
-"Customize any block through this menu. Try to change the background color of"
-" this block."
-msgstr ""
-"Налаштуйте будь-який блок за допомогою цього меню. Спробуйте змінити колір "
-"фону цього блоку."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
@@ -3030,11 +2960,6 @@ msgid "Do not activate"
 msgstr "Не активувати"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.s_banner
-msgid "Do something"
-msgstr "Зробіть щось"
-
-#. module: website
 #. openerp-web
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #, python-format
@@ -3099,32 +3024,11 @@ msgstr "Пончик"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/tours/homepage.js:0
-#, python-format
-msgid "Drag another block in your page, below the cover."
-msgstr "Перетягніть інший блок на свою сторінку, під фоновою картинкою."
-
-#. module: website
-#. openerp-web
 #: code:addons/website/static/src/js/tours/tour_utils.js:0
 #, python-format
 msgid ""
-"Drag the <b>%s</b> building block and drop it at the bottom of your page."
-msgstr "Перетягніть конструкторський блок <b>%s</b> вниз вашої сторінки."
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/tours/homepage.js:0
-#, python-format
-msgid "Drag the <i>Cover</i> block and drop it in your page."
-msgstr "Перетягніть <i>фоновий</i> блок та залиште на своїй сторінці."
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/tours/homepage.js:0
-#, python-format
-msgid "Drag the block and drop it in your new page."
-msgstr "Натисніть на блок та перетягніть його на вашу нову сторінку."
+"Drag the <b>%s</b> building block and drop it at the bottom of the page."
+msgstr ""
 
 #. module: website
 #. openerp-web
@@ -3780,13 +3684,6 @@ msgstr "Перейти до сторінки"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/tours/homepage.js:0
-#, python-format
-msgid "Go back to the blocks menu."
-msgstr "Поверніться в меню блоків."
-
-#. module: website
-#. openerp-web
 #: code:addons/website/static/src/xml/website.backend.xml:0
 #, python-format
 msgid "Go to"
@@ -3819,17 +3716,6 @@ msgstr "Перейти на веб-сайт"
 #, python-format
 msgid "Go to the Options tab"
 msgstr "Перейти до вкладки Функцій"
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/tours/homepage.js:0
-#, python-format
-msgid ""
-"Good Job! You have designed your homepage. Let's check how this page looks "
-"like on <b>mobile devices</b>."
-msgstr ""
-"Гарна робота! Ви створили вашу домашню сторінку. Давайте перевіримо, як ця "
-"сторінка виглядає на <b>мобільному пристрої</b>."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
@@ -4566,11 +4452,6 @@ msgid "Installing \"%s\""
 msgstr "Встановлення \"%s\""
 
 #. module: website
-#: model_terms:ir.actions.act_window,help:website.website_visitors_action
-msgid "Interact with them by sending them messages."
-msgstr "Взаємодійте з ними, надсилаючи їм повідомлення."
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
 msgid "Interaction History"
 msgstr "Історія взаємодії"
@@ -4675,17 +4556,6 @@ msgstr ""
 #, python-format
 msgid "It looks like your file is being called by"
 msgstr "Схоже, ваш файл запускається"
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/content/website_root.js:0
-#, python-format
-msgid ""
-"It might be possible to edit the relevant items or fix the issue in <a "
-"href=\"%s\">the classic Odoo interface</a>"
-msgstr ""
-"Можливо, можна буде редагувати відповідні елементи або виправити проблему в "
-"<a href=\"%s\">класичному інтерфейсі Odoo</a>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -9187,6 +9057,11 @@ msgid "https://fonts.google.com/specimen/Roboto"
 msgstr "https://fonts.google.com/specimen/Roboto"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid "https://www.odoo.com"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
 msgid ""
 "im_livechat_previous_operator_pid (Odoo)<br/>\n"
@@ -9387,11 +9262,6 @@ msgstr "оцінка, звання"
 #: model:ir.model.fields,field_description:website.field_res_config_settings__website_id
 msgid "website"
 msgstr "веб-сайт"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
-msgid "www.odoo.com"
-msgstr "www.odoo.com"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.qweb_500

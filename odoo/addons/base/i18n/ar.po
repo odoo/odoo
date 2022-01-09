@@ -39,8 +39,8 @@
 # Mustafa Rawi <mustafa@cubexco.com>, 2020
 # Zaid J. Barghouthi <barghouthi.z@gmail.com>, 2021
 # Rachid Al Assir <rachidalassir@gmail.com>, 2021
-# Malaz Abuidris <msea@odoo.com>, 2021
 # Hussain Hammad, 2021
+# Malaz Abuidris <msea@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -48,7 +48,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 13:50+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Hussain Hammad, 2021\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2022\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -13769,6 +13769,8 @@ msgid ""
 "File from where the view originates.\n"
 "                                                          Useful to (hard) reset broken views or to read arch from file in dev-xml mode."
 msgstr ""
+"قم بالإضافة إلى ملف حيث يتم إنشاء العرض.\n"
+"                                                          يكون مفيداً عندما تقوم بـ (إعادة الضبط حسب إعدادات المصنع) لطرق العرض المعطوبة أو لقراءة البناء من الملف في وضع dev-xml. "
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__filter
@@ -16009,6 +16011,12 @@ msgstr "مفتاح غير صالح: لا ينبغي أن تملك أداة عر�
 #, python-format
 msgid "Invalid model name %r in action definition."
 msgstr "اسم كائن غير صالح %r في تعريف الإجراء."
+
+#. module: base
+#: code:addons/base/models/ir_actions.py:611
+#, python-format
+msgid "many2many fields cannot be evaluated by reference"
+msgstr ""
 
 #. module: base
 #: code:addons/template_inheritance.py:0
