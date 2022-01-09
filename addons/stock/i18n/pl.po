@@ -12,7 +12,6 @@
 # Andrzej Donczew <a.donczew@hadron.eu.com>, 2020
 # Martin Trigaux, 2020
 # Dariusz Żbikowski <darek@krokus.com.pl>, 2020
-# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2020
 # Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2020
 # Tomasz Leppich <t.leppich@gmail.com>, 2020
 # Zdzisław Krajewski <zdzichucb@gmail.com>, 2020
@@ -30,6 +29,7 @@
 # Wojciech Warczakowski <w.warczakowski@gmail.com>, 2021
 # Rafał Kozak <rafal.kozak@openglobe.pl>, 2021
 # Dawid Prus, 2021
+# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2022
 # 
 msgid ""
 msgstr ""
@@ -37,7 +37,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-08-16 09:00+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Dawid Prus, 2021\n"
+"Last-Translator: Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2022\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -124,7 +124,7 @@ msgstr ""
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "%(warehouse)s: Supply Product from %(supplier)s"
-msgstr ""
+msgstr "%(warehouse)s: Dostarcz produkt od %(supplier)s"
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:0
@@ -149,12 +149,12 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_inventory
 msgid "'Inventory - %s' % (object.name)"
-msgstr ""
+msgstr "'Inwentaryzacja - %s' % (object.name)"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_location_barcode
 msgid "'Location - %s' % object.name"
-msgstr ""
+msgstr "'Strefa - %s' % object.name"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_lot_label
@@ -171,6 +171,7 @@ msgstr ""
 msgid ""
 "'Picking Operations - %s - %s' % (object.partner_id.name or '', object.name)"
 msgstr ""
+"'Operacja pobrania - %s - %s' % (object.partner_id.name or '', object.name)"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__state
@@ -460,7 +461,7 @@ msgstr "<span>Nowy</span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
 msgid "<span>Package Type: </span>"
-msgstr ""
+msgstr "<span>Typ paczki: </span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_report_delivery_no_package_section_line
@@ -561,7 +562,7 @@ msgstr "<strong>Ilość</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Scheduled Date:</strong>"
-msgstr ""
+msgstr "<strong>Planowana data:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
