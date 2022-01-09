@@ -16,8 +16,8 @@
 # Mandy Choy <mnc@odoo.com>, 2021
 # JustinC <dev@dottdot.com>, 2021
 # Gerard Chen <gerardpublico@gmail.com>, 2021
-# Benson <Benson.Dr@Gmail.com>, 2021
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2021
+# Benson <Benson.Dr@Gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -25,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-07 10:46+0000\n"
 "PO-Revision-Date: 2016-08-05 12:55+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2021\n"
+"Last-Translator: Benson <Benson.Dr@Gmail.com>, 2022\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -131,13 +131,13 @@ msgstr "%s (捨入)"
 #: code:addons/account/wizard/accrued_orders.py:0
 #, python-format
 msgid "%s - %s; %s Billed, %s Received at %s each"
-msgstr ""
+msgstr "%s - %s; %s 已結算，%s 收到於 %s"
 
 #. module: account
 #: code:addons/account/wizard/accrued_orders.py:0
 #, python-format
 msgid "%s - %s; %s Invoiced, %s Delivered at %s each"
-msgstr ""
+msgstr "%s - %s; %s 已開具應收憑單，%s 已交付於 %s"
 
 #. module: account
 #: code:addons/account/models/product.py:0
@@ -371,6 +371,22 @@ msgid ""
 "    </p>\n"
 "</div>\n"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"     <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"         尊敬的<t t-out=\"object.partner_id.name or ''\">Azure Interior</t><br/><br/>\n"
+"         謝謝您的付款。\n"
+"         這是您的付款收據 <strong t-out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</strong>\n"
+"         <strong t-out=\"format_amount(object.amount, object.currency_id) or ''\">$ 10.00</strong> 從<t t-out=\"object.company_id.name or ''\">YourCompany</strong> t>。\n"
+"         <br/><br/>\n"
+"         如果您有任何問題，請隨時與我們聯繫。\n"
+"         <br/><br/>\n"
+"         最好的祝福，\n"
+"         <t t-if=\"user.signature\">\n"
+"             <br/>\n"
+"             <t t-out=\"user.signature or ''\">--<br/>系統管理員</t>\n"
+"         </t>\n"
+"     </p>\n"
+"</div>\n"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
@@ -2185,7 +2201,7 @@ msgstr "允許使用分析會計."
 #: model:ir.model.fields,field_description:account.field_account_move__always_tax_exigible
 #: model:ir.model.fields,field_description:account.field_account_payment__always_tax_exigible
 msgid "Always Tax Exigible"
-msgstr ""
+msgstr "始終計稅"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax_report_line__carry_over_condition_method__always_carry_over_and_set_to_0
@@ -2389,7 +2405,7 @@ msgstr "分析預設要求至少需要分析帳戶或分析標籤。"
 msgid ""
 "An error occurred when computing the inalterability. Impossible to get the "
 "unique previous posted journal entry."
-msgstr ""
+msgstr "計算不變性時出錯。 無法獲得以前過帳的唯一日記帳分錄."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
@@ -3018,7 +3034,7 @@ msgstr "以下文字僅作為建議，不涉及 Odoo S.A. 的責任。"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__bank_bic
 msgid "Bic"
-msgstr ""
+msgstr "銀行唯一代碼Bic"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -3308,7 +3324,7 @@ msgstr "結轉"
 #: code:addons/account/models/account_tax_report.py:0
 #, python-format
 msgid "Carryover Lines For %s"
-msgstr ""
+msgstr "結轉明細於 %s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_report_line__carryover_line_ids
@@ -5008,6 +5024,9 @@ msgid ""
 " 10 with an existing carryover of 50 will create a new carryover line of "
 "-40, so that the total carryover becomes 10."
 msgstr ""
+"定義此報告行在執行稅務結算時如何建立結轉明細. 如果為 真，則結轉金額將始終相互疊加: 例如，餘額為 10 且現有結轉為 50 "
+"的報告明細將在進行結賬時向其增加額外的 10，構成總結轉 為60. 如果為 假，則總結轉金額將強制計入此報告明細的總計：餘額為 10 且現有結轉為 50"
+" 的報告行將建立新的結轉明細 -40，以便總計 結轉變成 10."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__invoice_cash_rounding_id
@@ -6519,7 +6538,7 @@ msgid ""
 "If set, the carryover amount for this line will be used when calculating its"
 " balance in the report. This means that the carryover could affect other "
 "lines if they are using this one in their computation."
-msgstr ""
+msgstr "如果設定，則在報告中計算其餘額時將使用此明細的結轉金額. 這意味著如果他們在計算中使用這部份明細，結轉可能會影響其他明細."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__preceding_subtotal
@@ -7603,7 +7622,7 @@ msgstr "未設定匹配編號的日記帳項目"
 #: code:addons/account/wizard/account_move_reversal.py:0
 #, python-format
 msgid "Journal should be the same type as the reversed entry."
-msgstr ""
+msgstr "日記帳應與反向分錄的類型相同."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__automatic_entry_default_journal_id
@@ -8012,7 +8031,7 @@ msgstr "留空以分配發票的銷售員."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Leave empty to use the default outstanding account"
-msgstr ""
+msgstr "留空以使用預設未結帳科目"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_entries_accounting_ledgers
@@ -11001,7 +11020,7 @@ msgstr "匹配憑單/帳單的規則"
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__rule_type__writeoff_suggestion
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_template__rule_type__writeoff_suggestion
 msgid "Rule to suggest counterpart entry"
-msgstr ""
+msgstr "建議對應分錄的規則"
 
 #. module: account
 #: model:ir.model,name:account.model_account_reconcile_model_line
@@ -11248,7 +11267,7 @@ msgstr "安全序列"
 #: code:addons/account/models/account_journal.py:0
 #, python-format
 msgid "Securisation of %s - %s"
-msgstr ""
+msgstr "證券化 %s - %s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__access_token
@@ -11840,7 +11859,7 @@ msgstr "正進行會計憑單面板的狀態"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_setup_taxes_state
 msgid "State of the onboarding Taxes step"
-msgstr ""
+msgstr "入稅步驟的狀態"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_setup_bank_data_state
@@ -11850,7 +11869,7 @@ msgstr "有待被確認的銀行數據步驟的狀態"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_setup_bill_state
 msgid "State of the onboarding bill step"
-msgstr ""
+msgstr "目前帳單步驟的狀態"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_setup_coa_state
@@ -11860,7 +11879,7 @@ msgstr "項目狀態"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_onboarding_create_invoice_state
 msgid "State of the onboarding create invoice step"
-msgstr ""
+msgstr "目前建立應收憑單步驟的狀態"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_setup_fy_data_state
@@ -11982,7 +12001,7 @@ msgstr "步驟已完成!"
 #: model:ir.model.fields,field_description:account.field_account_move__string_to_hash
 #: model:ir.model.fields,field_description:account.field_account_payment__string_to_hash
 msgid "String To Hash"
-msgstr ""
+msgstr "字串至散列"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__sub_model_object_field
@@ -12427,7 +12446,7 @@ msgstr "產品上的稅"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_carryover_line__tax_report_line_id
 msgid "Tax report line"
-msgstr ""
+msgstr "稅務報表明細"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line_template__plus_report_line_ids
@@ -13319,7 +13338,7 @@ msgstr "進行結轉的外國財政狀況。"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__group_tax_id
 msgid "The group of taxes that generated this tax line"
-msgstr ""
+msgstr "產生這條稅金明細的稅組"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -13327,6 +13346,8 @@ msgid ""
 "The hash chain is compliant: it is not possible to alter the\n"
 "                                            data without breaking the hash chain for subsequent parts."
 msgstr ""
+"散列鍊是合規的: 無法更改\n"
+"                                            資料而不破壞後續部分的散列鏈."
 
 #. module: account
 #: code:addons/account/models/account_journal.py:0
@@ -13538,6 +13559,8 @@ msgid ""
 "The recipient bank account link to this invoice is archived.\n"
 "So you cannot confirm the invoice."
 msgstr ""
+"此應收憑單的收款人銀行科目帳戶鏈接已歸檔封存。\n"
+"因此您無法確認應收憑單."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_partner_category_ids
@@ -14980,7 +15003,7 @@ msgstr "如果關係型字段被選為第一個字段，這個字段顯示這個
 msgid ""
 "When an internal transfer is posted, a paired payment is created. They are "
 "cross referenced trough this field"
-msgstr ""
+msgstr "過帳內部轉賬時，會建立相應付款. 他們通過這個欄位交叉引用"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_receipt_type
@@ -15361,7 +15384,7 @@ msgstr "您不能刪除鏈接到已過帳傳票的項目。"
 msgid ""
 "You cannot delete this entry, as it has already consumed a sequence number "
 "and is not the last one in the chain. You should probably revert it instead."
-msgstr ""
+msgstr "您不能刪除此分錄，因為它已經消耗了一個序列號並且不是相應鏈中的最後一個. 你可能應該恢復它."
 
 #. module: account
 #: code:addons/account/models/res_config_settings.py:0

@@ -38,7 +38,6 @@
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2021
 # liAnGjiA <liangjia@qq.com>, 2021
 # 稀饭~~ <wangwhai@qq.com>, 2021
-# Benson <Benson.Dr@Gmail.com>, 2021
 # Kevin Wang <kevin@loyal-info.com>, 2021
 # xu aaron, 2021
 # Jeffery CHEN <jeffery9@gmail.com>, 2021
@@ -47,6 +46,7 @@
 # Felix Yuen <fyu@odoo.com>, 2021
 # 深圳市耀影科技有限公司_QQ1006399173 <yoayingkeji@yaoying.vip>, 2021
 # 深圳市耀影科技有限公司_QQ1006399173, 2021
+# Benson <Benson.Dr@Gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -54,7 +54,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-07 10:46+0000\n"
 "PO-Revision-Date: 2016-08-05 13:05+0000\n"
-"Last-Translator: 深圳市耀影科技有限公司_QQ1006399173, 2021\n"
+"Last-Translator: Benson <Benson.Dr@Gmail.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1254,7 +1254,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__can_edit_body
 #: model:ir.model.fields,field_description:mail.field_mail_composer_mixin__can_edit_body
 msgid "Can Edit Body"
-msgstr ""
+msgstr "允许编辑"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__can_resend
@@ -1663,7 +1663,7 @@ msgstr "连接失败(发件服务器问题)"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__reply_to_force_new
 msgid "Considers answers as new thread"
-msgstr ""
+msgstr "将答案视为新行程"
 
 #. module: mail
 #: model:ir.model,name:mail.model_res_partner
@@ -3490,7 +3490,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__is_mail_template_editor
 #: model:ir.model.fields,field_description:mail.field_mail_composer_mixin__is_mail_template_editor
 msgid "Is Editor"
-msgstr ""
+msgstr "编辑"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_is_follower
@@ -3995,7 +3995,7 @@ msgstr "管理消息"
 msgid ""
 "Manage answers as new incoming emails instead of replies going to the same "
 "thread."
-msgstr ""
+msgstr "将回复作为新的传入电子邮件进行管理，而不是将回复发送到同一线程."
 
 #. module: mail
 #. openerp-web
@@ -4971,6 +4971,8 @@ msgid ""
 "a placeholder expression that provides the appropriate language, e.g. {{ "
 "object.partner_id.lang }}."
 msgstr ""
+"在发送邮件时可选择的语言代码(ISO 代码)。如果没有设置，会使用英文版本。一般用占位符来确定合适的语言，例如: {{ "
+"object.partner_id.lang }}."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__null_value
@@ -4987,6 +4989,9 @@ msgid ""
 " Another Email Address: Answers go to the email address mentioned in the tracking message-id instead of original document discussion thread. \n"
 " This has an impact on the generated message-id."
 msgstr ""
+"原始讨论:答案在原始文档讨论线程中.\n"
+" 另一个电子邮件地址: 答复转到跟踪讯息 ID 中提到的电子邮件地址，而不是原始文档讨论线程.\n"
+" 这对产生的信息 ID 有影响."
 
 #. module: mail
 #. openerp-web
@@ -5671,12 +5676,12 @@ msgstr "移除此关注者"
 #: model:ir.model.fields,field_description:mail.field_mail_render_mixin__render_model
 #: model:ir.model.fields,field_description:mail.field_mail_template__render_model
 msgid "Rendering Model"
-msgstr ""
+msgstr "呈现模型"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__reply_to_mode
 msgid "Replies"
-msgstr ""
+msgstr "回复"
 
 #. module: mail
 #. openerp-web

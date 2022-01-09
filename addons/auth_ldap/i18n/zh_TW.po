@@ -6,6 +6,7 @@
 # Martin Trigaux, 2018
 # sejun huang <sejun.huang@gmail.com>, 2019
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2021
+# Benson <Benson.Dr@Gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2016-08-05 12:56+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2021\n"
+"Last-Translator: Benson <Benson.Dr@Gmail.com>, 2022\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,6 +38,18 @@ msgid ""
 "        (|(mail=%s)(uid=%s))\n"
 "    "
 msgstr ""
+"    用於在 LDAP 數據庫中查找用戶帳戶的過濾器. 它是字符串表示形式的任意 LDAP 過濾器. 任何“%s”佔位符都將被使用者提供的登錄名稱(標識符)替換，過濾器應至少包含一個這樣的佔位符.\n"
+"\n"
+"    過濾器必須產生一 (1) 個結果，否則登錄將被視為無效。\n"
+"\n"
+"    範例(實際屬性取決於 LDAP 伺服器和設置定):\n"
+"\n"
+"        (&(objectCategory=person)(objectClass=user)(sAMAccountName=%s))\n"
+"\n"
+"    或是\n"
+"\n"
+"        (|(郵件=%s)(uid=%s))\n"
+" "
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__create_user
@@ -85,7 +98,7 @@ msgstr "創建時間"
 msgid ""
 "DN of the user search scope: all descendants of this base will be searched "
 "for users."
-msgstr ""
+msgstr "使用者搜索範圍的DN: 將搜索基於此範圍的所有使用者."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__display_name
