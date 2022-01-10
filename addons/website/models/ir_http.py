@@ -16,7 +16,7 @@ from functools import partial
 import odoo
 from odoo import api, models
 from odoo import registry, SUPERUSER_ID
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, MissingError
 from odoo.http import request
 from odoo.tools.safe_eval import safe_eval
 from odoo.osv.expression import FALSE_DOMAIN
@@ -410,8 +410,11 @@ class Http(models.AbstractModel):
         elif id and model in self.env:
             obj = self.env[model].browse(int(id))
         if obj and 'website_published' in obj._fields:
-            if self.env[obj._name].sudo().search([('id', '=', obj.id), ('website_published', '=', True)]):
-                self = self.sudo()
+            try:
+                if obj.sudo().website_published:
+                    self = self.sudo()
+            except MissingError:
+                pass
         return super(Http, self).binary_content(
             xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename,
             filename_field=filename_field, download=download, mimetype=mimetype,
