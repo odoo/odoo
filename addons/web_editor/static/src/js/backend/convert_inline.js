@@ -495,7 +495,9 @@ function formatTables($editable) {
     }
     // Ensure a tbody in every table and cancel its default style.
     for (const table of $editable.find('table:not(:has(tbody))')) {
-        $(table).contents().wrap('<tbody style="vertical-align: top;"/>');
+        const $contents = $(table).contents();
+        $(table).prepend('<tbody style="vertical-align: top;"/>');
+        $(table.firstChild).append($contents);
     }
     // Children will only take 100% height if the parent has a height property.
     for (const node of $editable.find('*').filter((i, n) => (
