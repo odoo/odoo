@@ -50,8 +50,6 @@ class AccountEdiFormat(models.Model):
         pass  # TODO
 
     def _post_invoice_edi(self, invoice):
-        self.ensure_one()  # No batching (chaining)
-
         # OVERRIDE
         if self.code != 'es_tbai':
             return super()._post_invoice_edi(invoice)
@@ -85,7 +83,7 @@ class AccountEdiFormat(models.Model):
         # SUCCESS
         if res.get(invoice, {}).get('success'):
 
-            # Track head of chain (last posted invoice) # TODO replace by _compute from unzipped attachment
+            # Track head of chain (last posted invoice)
             invoice.company_id.write({'l10n_es_tbai_last_posted_id': invoice})
 
             # Zip together invoice & response
@@ -99,34 +97,37 @@ class AccountEdiFormat(models.Model):
                     'type': 'binary',
                     'name': invoice.name + ".zip",
                     'raw': stream.getvalue(),
-                    'mimetype': 'application/zip'
+                    'mimetype': 'application/zip',
+                    'res_id': invoice.id,
+                    'res_model': 'account.move',
                 })
                 invoice.with_context(no_new_invoice=True).message_post(
                     body="TicketBAI: submitted XML and response",
                     attachment_ids=attachment.ids)
                 res[invoice]['attachment'] = attachment  # save zip as EDI document
+        # ERROR (TODO remove -> but any error means we lose the exchange -> log ?)
+        else:
+            # Put sent XML in chatter
+            attachment = self.env['ir.attachment'].create({
+                'type': 'binary',
+                'name': invoice.name + '.xml',
+                'raw': etree.tostring(inv_xml, pretty_print=True, xml_declaration=True, encoding='UTF-8'),
+                'mimetype': 'application/xml',
+            })
+            invoice.with_context(no_new_invoice=True).message_post(
+                body="TicketBAI: invoice XML (TODO remove)",
+                attachment_ids=attachment.ids)
 
-        # Put sent XML in chatter (TODO remove)
-        attachment = self.env['ir.attachment'].create({
-            'type': 'binary',
-            'name': invoice.name + '.xml',
-            'raw': etree.tostring(inv_xml, pretty_print=True, xml_declaration=True, encoding='UTF-8'),
-            'mimetype': 'application/xml',
-        })
-        invoice.with_context(no_new_invoice=True).message_post(
-            body="TicketBAI: invoice XML (TODO remove)",
-            attachment_ids=attachment.ids)
-
-        # Put response + any warning/error in chatter (TODO remove)
-        attachment = self.env['ir.attachment'].create({
-            'type': 'binary',
-            'name': invoice.name + '_response.xml',
-            'raw': etree.tostring(res_xml, pretty_print=True, xml_declaration=True, encoding='UTF-8'),
-            'mimetype': 'application/xml',
-        })
-        invoice.with_context(no_new_invoice=True).message_post(
-            body="<pre>TicketBAI: response\n" + message + '</pre>',
-            attachment_ids=attachment.ids)
+            # Put response + any warning/error in chatter (TODO remove)
+            attachment = self.env['ir.attachment'].create({
+                'type': 'binary',
+                'name': invoice.name + '_response.xml',
+                'raw': etree.tostring(res_xml, pretty_print=True, xml_declaration=True, encoding='UTF-8'),
+                'mimetype': 'application/xml',
+            })
+            invoice.with_context(no_new_invoice=True).message_post(
+                body="<pre>TicketBAI: response\n" + message + '</pre>',
+                attachment_ids=attachment.ids)
 
         return res
 
@@ -162,9 +163,9 @@ class AccountEdiFormat(models.Model):
         message, tbai_id = self.get_response_values(res_xml)
 
         # SUCCESS
-        # if res.get(invoice, {}).get('success'): # TODO uncomment
+        # if res.get(invoice, {}).get('success'): # TODO uncomment (but any error means we lose the exchange -> log ?)
 
-        # Zip together invoice & response (TODO access previous zip EDI document)
+        # Zip together invoice & response
         with io.BytesIO() as stream:
             raw1 = etree.tostring(cancel_xml, pretty_print=True, xml_declaration=True, encoding='UTF-8')
             raw2 = etree.tostring(res_xml, pretty_print=True, xml_declaration=True, encoding='UTF-8')
@@ -487,7 +488,6 @@ class AccountEdiFormat(models.Model):
             }
 
     def _l10n_es_tbai_sign_invoice(self, invoice, xml_root):
-        self.ensure_one()
         company = invoice.company_id
         cert_private, cert_public = company.l10n_es_tbai_certificate_id.get_key_pair()
         public_key = cert_public.public_key()
