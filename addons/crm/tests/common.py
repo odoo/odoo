@@ -10,7 +10,7 @@ class TestCrmCases(TransactionCase):
         super(TestCrmCases, self).setUp()
 
         # Create a user as 'Crm Salesmanager' and added the `sales manager` group
-        self.crm_salemanager = self.env['res.users'].create({
+        self.crm_salemanager = self.env['res.users'].with_context(no_reset_password=True).create({
             'company_id': self.env.ref("base.main_company").id,
             'name': "Crm Sales manager",
             'login': "csm",
@@ -19,7 +19,7 @@ class TestCrmCases(TransactionCase):
         })
 
         # Create a user as 'Crm Salesman' and added few groups
-        self.crm_salesman = self.env['res.users'].create({
+        self.crm_salesman = self.env['res.users'].with_context(no_reset_password=True).create({
             'company_id': self.env.ref("base.main_company").id,
             'name': "Crm Salesman",
             'login': "csu",
