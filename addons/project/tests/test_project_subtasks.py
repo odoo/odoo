@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo.addons.project.tests.test_project_base import TestProjectCommon
+from odoo import _
 from odoo.tests import tagged
 from odoo.tests.common import Form
 
@@ -67,6 +68,57 @@ class TestProjectSubtasks(TestProjectCommon):
 
             self.assertEqual(task.project_id, self.project_pigs, "The project should be assigned from the default project, form_view name : %s." % form_view.name)
             self.assertEqual(task.display_project_id, task.project_id, "The display project of a first layer task should be assigned to project_id, form_view name : %s." % form_view.name)
+
+    def test_subtask_creation(self):
+        """
+            1) test the creation of sub-tasks through the notebook
+            2) set a parent task on an existing task
+            3) sub-tasks should not be visible in the project views if their display project is not set, except in the 'my tasks' menu
+            4) test the creation of sub-sub-tasks
+            5) check the correct nb of sub-tasks is displayed in the 'sub-tasks' stat button and on the parent task kanban card
+            6) sub-tasks should be copied when the parent task is duplicated
+        """
+        # 1)
+        with Form(self.task_1.with_context({'tracking_disable': True})) as task_form:
+            with task_form.child_ids.new() as subtask_form:
+                subtask_form.name = 'Test Subtask 1'
+                subtask_form.display_project_id = self.env['project.project']
+
+        self.assertEqual(self.task_1.child_ids.name, "Test Subtask 1", "Check the creation of subtask through notebook")
+
+        # 2)
+        with Form(self.task_1.with_context({'tracking_disable': True})) as task_form:
+            task_form.parent_id = self.task_2
+
+        self.assertEqual(self.task_1.parent_id, self.task_2, "Check Parent task is assigned to existing task")
+
+        # 3)
+        with Form(self.task_1.with_context({'tracking_disable': True})) as task_form:
+            task_form.project_id = self.project_goats
+
+        self.assertEqual(self.project_goats.task_count, 1, "Should not display subtask in project view when project display is not set")
+        self.assertEqual(len(self.project_goats.task_ids), 2, "Should display subtask in my task menu when display projct of subtask is not set")
+
+        # 4)
+        child_subtask = self.task_1.child_ids[0]
+        with Form(child_subtask.with_context(tracking_disable=True)) as subtask_form:
+            with subtask_form.child_ids.new() as subsubtask_form:
+                subsubtask_form.name = 'Test Sub Subtask 1'
+        child_subtask = child_subtask.child_ids
+
+        self.assertEqual(child_subtask.name, "Test Sub Subtask 1", "Check the creation of sub subtask through notebook")
+
+        # 5)
+        self.assertEqual(self.task_1.child_text, _("(+ %(child_count)s tasks)", child_count=self.task_1.subtask_count),
+            "Display correct number of sub-task should be displayed on kanban card")
+        self.assertEqual(self.task_1.subtask_count, 2, "Display correct number of sub-task should be displayed on subtask stat button")
+
+        # 6)
+        parent_task = task_form.save()
+        copy_parent_task = parent_task.copy()
+
+        self.assertTrue(copy_parent_task.child_ids, "Subtasks should be copied when the parent task is duplicated")
+        self.assertEqual(copy_parent_task.child_ids.name, "Test Subtask 1 (copy)")
 
     def test_subtask_display_project(self):
         """

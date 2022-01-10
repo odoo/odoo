@@ -164,6 +164,33 @@ class TestTimesheet(TestCommonTimesheet):
         })
         self.assertEqual(timesheet1.user_id, self.user_employee2, 'Changing timesheet employee should change the related user')
 
+    def test_parent_subtask_log_timesheet(self):
+        #the parent task should take into account the timesheets of its sub-tasks
+        Timesheet = self.env['account.analytic.line']
+        # create child task
+        child_task1 = self.env['project.task'].create({
+            'name': 'Child Task One',
+            'project_id': self.project_customer.id,
+            'parent_id': self.task1.id,
+        })
+        # create timesheet for parent task
+        Timesheet.with_user(self.user_manager).create({
+            'project_id': self.project_customer.id,
+            'task_id': self.task1.id,
+            'name': 'my parent task timesheet',
+            'unit_amount': 4,
+        })
+        # create timesheet for child task
+        Timesheet.with_user(self.user_manager).create({
+            'project_id': self.project_customer.id,
+            'task_id': child_task1.id,
+            'name': 'my child task timesheet',
+            'unit_amount': 4,
+        })
+        self.assertEqual(self.task1.total_hours_spent,
+            self.task1.effective_hours + child_task1.effective_hours,
+            "Parent task timesheet should consider timesheet of its subtasks")
+
     def test_create_unlink_project(self):
         """ Check project creation, and if necessary the analytic account generated when project should track time. """
         # create project wihtout tracking time, nor provide AA
