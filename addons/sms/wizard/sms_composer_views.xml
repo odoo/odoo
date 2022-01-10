@@ -11,7 +11,6 @@
                         <field name="comment_single_recipient" invisible="1"/>
                         <field name="res_id" invisible="1"/>
                         <field name="res_ids" invisible="1"/>
-                        <field name="active_domain" invisible="1"/>
                         <field name="res_model" invisible="1"/>
                         <field name="mass_force_send" invisible="1"/>
                         <field name="recipient_single_valid" invisible="1"/>
@@ -28,15 +27,10 @@
 
                         <!-- Mass mode information (res_ids versus active domain) -->
                         <div colspan="2" class="alert alert-info text-center mb-3" role="alert"
-                                attrs="{'invisible': [('comment_single_recipient', '=', True)]}">
+                                attrs="{'invisible': ['|', ('comment_single_recipient', '=', True), ('recipient_invalid_count', '=', 0)]}">
                             <p class="my-0">
-                                <span attrs="{'invisible': [('use_active_domain', '=', 'True')]}">
-                                    <field class="oe_inline font-weight-bold" name="res_ids_count"/> records selected.
-                                </span>
-                                Check <field class="oe_inline ml-2" name="use_active_domain"/> to send to all
-                                <field class="oe_inline font-weight-bold ml-2" name="active_domain_count"/> records instead. <br/>
-                                <field class="oe_inline font-weight-bold" name="recipient_valid_count"/> recipients are valid
-                                and <field class="oe_inline font-weight-bold" name="recipient_invalid_count"/> are invalid.
+                                <field class="oe_inline font-weight-bold" name="recipient_invalid_count"/> out of
+                                <field class="oe_inline font-weight-bold" name="res_ids_count"/> recipients have an invalid phone number and will not receive this text message.
                             </p>
                         </div>
 
