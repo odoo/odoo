@@ -40,6 +40,11 @@ L10N_ES_EDI_TBAI_URLS = {
         'bizkaia': '',
         'gipuzkoa': 'https://tbai-z.egoitza.gipuzkoa.eus/sarrerak/baja'
     },
+    'xsd': {
+        'araba': '',
+        'bizkaia': '',
+        'gipuzkoa': 'https://www.gipuzkoa.eus/documents/2456431/13761107/Esquemas+de+archivos+XSD+de+env%C3%ADo+y+anulaci%C3%B3n+de+factura_1_2.zip/2d116f8e-4d3a-bff0-7b03-df1cbb07ec52',
+    }
 }
 
 class ResCompany(models.Model):
@@ -80,6 +85,12 @@ class ResCompany(models.Model):
         compute="_compute_l10n_es_tbai_url_qr"
     )
 
+    l10n_es_tbai_url_xsd = fields.Char(
+        string="URL to retrieve XSD validation schemas",
+        readonly=True,
+        compute="_compute_l10n_es_tbai_url_xsd"
+    )
+
     # === TBAI CHAIN HEAD ===
     # TODO should we maintain multiple heads, one for each server (tax administration) ?
     # otherwise (or perhaps either way), user should be prevented from changing administration once chain exists
@@ -104,6 +115,8 @@ class ResCompany(models.Model):
     def _compute_l10n_es_tbai_url(self, prefix):
         if self.country_code == 'ES':
             suffix = 'test' if self.l10n_es_tbai_test_env else 'prod'
+            if prefix == 'xsd':
+                suffix = ''
             return L10N_ES_EDI_TBAI_URLS[prefix + suffix][self.l10n_es_tbai_tax_agency]
         else:
             return False
@@ -122,6 +135,11 @@ class ResCompany(models.Model):
     def _compute_l10n_es_tbai_url_qr(self):
         for company in self:
             company.l10n_es_tbai_url_qr = self._compute_l10n_es_tbai_url('qr_')
+
+    @api.depends('country_id', 'l10n_es_tbai_tax_agency')
+    def _compute_l10n_es_tbai_url_xsd(self):
+        for company in self:
+            company.l10n_es_tbai_url_xsd = self._compute_l10n_es_tbai_url('xsd')
 
     @api.depends('country_id', 'l10n_es_tbai_certificate_ids')
     def _compute_l10n_es_tbai_certificate(self):
