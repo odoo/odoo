@@ -260,9 +260,6 @@ export function parseDateTime(value, options = {}) {
         return false;
     }
 
-    // Something is wrong here ...
-    if (value instanceof DateTime) return value;
-
     const valueDigitsOnly = value.replace(nonDigitsRegex, "");
     const parseOpts = {
         setZone: true,
@@ -356,3 +353,13 @@ export const serializeDateTime = (value) => {
         numberingSystem: "latn",
     });
 };
+
+export function deserializeDate(value) {
+    return DateTime.fromFormat(value, SERVER_DATE_FORMAT, { zone: "utc" });
+}
+
+export function deserializeDateTime(value) {
+    return DateTime.fromFormat(value, `${SERVER_DATE_FORMAT} ${SERVER_TIME_FORMAT}`, {
+        zone: "utc",
+    });
+}
