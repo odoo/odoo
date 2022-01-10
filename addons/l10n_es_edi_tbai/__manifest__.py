@@ -30,6 +30,7 @@
         'data/account_edi_data.xml',
         'data/account_tax_data.xml',
         'data/template_invoice.xml',
+        'data/ir_cron.xml',
 
         'security/ir.model.access.csv',
 

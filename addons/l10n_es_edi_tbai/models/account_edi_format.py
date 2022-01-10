@@ -153,16 +153,12 @@ class AccountEdiFormat(models.Model):
 
         # Generate the XML values.
         cancel_xml = self._l10n_es_tbai_get_invoice_xml(invoice, cancel=True)
-        print("CANCEL XML:")
-        print(etree.tostring(cancel_xml))
 
         # Call the web service and get response
         res = self._l10n_es_tbai_post_to_web_service(invoice, cancel_xml, cancel=True)
 
         # Get TicketBai response
         res_xml = res[invoice]['response']
-        print("CANCEL RESPONSE:")
-        print(etree.tostring(res_xml))
         message, tbai_id = self.get_response_values(res_xml)
 
         # SUCCESS
@@ -196,7 +192,7 @@ class AccountEdiFormat(models.Model):
 
         with zipfile.ZipFile(stream, 'w', compression=zipfile.ZIP_DEFLATED) as zipf:
             for file, fname in zip(files, fnames):
-                fname = regex_sub("/", "-", fname)  # slashes create directory structure
+                fname = regex_sub("/", "_", fname)  # slashes create directory structure
                 zipf.writestr(fname, file)
         return stream
 
@@ -477,7 +473,6 @@ class AccountEdiFormat(models.Model):
 
     def _l10n_es_tbai_get_trail_values(self, invoice, cancel):
         prev_invoice = invoice.company_id.l10n_es_tbai_last_posted_id
-        print("PREV INVOICE:", prev_invoice, "is {!s}".format('True' if prev_invoice else 'False'))
         if prev_invoice and not cancel:
             return {
                 'EncadenamientoFacturaAnterior': True,
