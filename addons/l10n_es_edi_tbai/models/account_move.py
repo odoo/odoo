@@ -92,11 +92,11 @@ class AccountMove(models.Model):
 
     def _get_l10n_es_tbai_values_from_zip(self, xpaths, response=False):
         res = {key: '' for key in xpaths.keys()}
-        for doc in self.edi_document_ids.filtered(lambda d: d.edi_format_id.code == 'es_tbai'):
-            if not doc.attachment_id:
-                print("ZIP: NO ATTACHMENT")
-                return res
-            zip = io.BytesIO(doc.attachment_id.with_context(bin_size=False).raw)  # TODO investigate with_context(bin_size)
+        for doc in self.env['ir.attachment'].search([
+            ('res_model', '=', 'account.move'),
+            ('res_id', '=', self.id)
+        ]):
+            zip = io.BytesIO(doc.with_context(bin_size=False).raw)  # TODO investigate with_context(bin_size)
             try:
                 with zipfile.ZipFile(zip, 'r', compression=zipfile.ZIP_DEFLATED) as zipf:
                     for file in zipf.infolist():
