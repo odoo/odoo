@@ -3,7 +3,6 @@
 
 import io
 import math
-import zipfile
 from base64 import b64encode
 from collections import defaultdict
 from datetime import datetime
@@ -13,11 +12,8 @@ from uuid import uuid4
 from cryptography.hazmat.primitives import serialization
 from lxml import etree
 from odoo import _, models
-from odoo.tools import get_lang
 from pytz import timezone
 
-from .utils import (L10N_ES_TBAI_NS_MAP, l10n_es_tbai_base64_print, l10n_es_tbai_fill_signature,
-                    l10n_es_tbai_long_to_bytes, post, l10n_es_tbai_reference_digests)
 from .res_company import L10N_ES_EDI_TBAI_VERSION
 
 
@@ -78,7 +74,7 @@ class AccountEdiFormat(models.Model):
 
         # Get TicketBai response
         res_xml = res[invoice]['response']
-        message, tbai_id = self.get_response_values(res_xml)
+        message, tbai_id = self.env['l10n_es.edi.tbai.util'].get_response_values(res_xml)
 
         # SUCCESS
         if res.get(invoice, {}).get('success'):
@@ -90,7 +86,11 @@ class AccountEdiFormat(models.Model):
             with io.BytesIO() as stream:
                 raw1 = etree.tostring(inv_xml, pretty_print=True, xml_declaration=True, encoding='UTF-8')
                 raw2 = etree.tostring(res_xml, pretty_print=True, xml_declaration=True, encoding='UTF-8')
-                stream = self.zip_files([raw1, raw2], [invoice.name + ".xml", invoice.name + "_response.xml"], stream)
+                stream = self.env['l10n_es.edi.tbai.util'].zip_files(
+                    [raw1, raw2],
+                    [invoice.name + ".xml", invoice.name + "_response.xml"],
+                    stream
+                )
 
                 # Create attachment & post to chatter
                 attachment = self.env['ir.attachment'].create({
@@ -160,7 +160,7 @@ class AccountEdiFormat(models.Model):
 
         # Get TicketBai response
         res_xml = res[invoice]['response']
-        message, tbai_id = self.get_response_values(res_xml)
+        message, tbai_id = self.env['l10n_es.edi.tbai.util'].get_response_values(res_xml)
 
         # SUCCESS
         # if res.get(invoice, {}).get('success'): # TODO uncomment (but any error means we lose the exchange -> log ?)
@@ -169,7 +169,11 @@ class AccountEdiFormat(models.Model):
         with io.BytesIO() as stream:
             raw1 = etree.tostring(cancel_xml, pretty_print=True, xml_declaration=True, encoding='UTF-8')
             raw2 = etree.tostring(res_xml, pretty_print=True, xml_declaration=True, encoding='UTF-8')
-            stream = self.zip_files([raw1, raw2], [invoice.name + "_cancel.xml", invoice.name + "_cancel_response.xml"], stream)
+            stream = self.env['l10n_es.edi.tbai.util'].zip_files(
+                [raw1, raw2],
+                [invoice.name + "_cancel.xml", invoice.name + "_cancel_response.xml"],
+                stream
+            )
 
             # Create attachment & post to chatter
             attachment = self.env['ir.attachment'].create({
@@ -183,19 +187,6 @@ class AccountEdiFormat(models.Model):
                 attachment_ids=attachment.ids)
 
         return res
-
-    def zip_files(self, files, fnames, stream):
-        """
-        : param fnct_sort : Function to be passed to "key" parameter of built-in
-                            python sorted() to provide flexibility of sorting files
-                            inside ZIP archive according to specific requirements.
-        """
-
-        with zipfile.ZipFile(stream, 'w', compression=zipfile.ZIP_DEFLATED) as zipf:
-            for file, fname in zip(files, fnames):
-                fname = regex_sub("/", "_", fname)  # slashes create directory structure
-                zipf.writestr(fname, file)
-        return stream
 
     # -------------------------------------------------------------------------
     # TBAI XML BUILD
@@ -488,6 +479,7 @@ class AccountEdiFormat(models.Model):
             }
 
     def _l10n_es_tbai_sign_invoice(self, invoice, xml_root):
+        util = self.env['l10n_es.edi.tbai.util']
         company = invoice.company_id
         cert_private, cert_public = company.l10n_es_tbai_certificate_id.get_key_pair()
         public_key = cert_public.public_key()
@@ -502,9 +494,9 @@ class AccountEdiFormat(models.Model):
         values = {
             'dsig': {
                 'document-id': doc_id,
-                'x509-certificate': l10n_es_tbai_base64_print(b64encode(cert_public.public_bytes(encoding=serialization.Encoding.DER))),
-                'public-modulus': l10n_es_tbai_base64_print(b64encode(l10n_es_tbai_long_to_bytes(public_key.public_numbers().n))),
-                'public-exponent': l10n_es_tbai_base64_print(b64encode(l10n_es_tbai_long_to_bytes(public_key.public_numbers().e))),
+                'x509-certificate': util.base64_print(b64encode(cert_public.public_bytes(encoding=serialization.Encoding.DER))),
+                'public-modulus': util.base64_print(b64encode(util.long_to_bytes(public_key.public_numbers().n))),
+                'public-exponent': util.base64_print(b64encode(util.long_to_bytes(public_key.public_numbers().e))),
                 'iso-now': datetime.now().isoformat(),
                 'keyinfo-id': kinfo_id,
                 'signature-id': signature_id,
@@ -517,11 +509,11 @@ class AccountEdiFormat(models.Model):
         xml_root.append(xml_sig)
 
         # Compute digest values for references (may be optional)
-        l10n_es_tbai_reference_digests(xml_sig.find("ds:SignedInfo", namespaces=L10N_ES_TBAI_NS_MAP))
+        util.reference_digests(xml_sig.find("ds:SignedInfo", namespaces=util.NS_MAP))
 
         # Sign (writes into SignatureValue)
-        l10n_es_tbai_fill_signature(xml_sig, cert_private)
-        signature_value = xml_sig.find("ds:SignatureValue", namespaces=L10N_ES_TBAI_NS_MAP).text
+        util.fill_signature(xml_sig, cert_private)
+        signature_value = xml_sig.find("ds:SignatureValue", namespaces=util.NS_MAP).text
 
         # RFC2045 - Base64 Content-Transfer-Encoding (page 25)
         # Any characters outside of the base64 alphabet are to be ignored in
@@ -533,6 +525,7 @@ class AccountEdiFormat(models.Model):
     # -------------------------------------------------------------------------
 
     def _l10n_es_tbai_post_to_web_service(self, invoices, invoice_xml, cancel=False):
+        util = self.env['l10n_es.edi.tbai.util']
         company = invoices.company_id
         xml_str = etree.tostring(invoice_xml, encoding='UTF-8')
 
@@ -544,12 +537,12 @@ class AccountEdiFormat(models.Model):
         cert_file = company.l10n_es_tbai_certificate_id
 
         # Post and retrieve response
-        response = post(url=url, data=xml_str, headers=header, pkcs12_data=cert_file, timeout=30)
+        response = util.post(url=url, data=xml_str, headers=header, pkcs12_data=cert_file, timeout=30)
         data = response.content.decode(response.encoding)
 
         # Error management
         response_xml = etree.fromstring(bytes(data, 'utf-8'))
-        message, tbai_id = self.get_response_values(response_xml)
+        message, tbai_id = self.env['l10n_es.edi.tbai.util'].get_response_values(response_xml)
         state = int(response_xml.find(r'.//Estado').text)
         if state == 0:
             # SUCCESS
@@ -559,12 +552,3 @@ class AccountEdiFormat(models.Model):
             return {invoices: {
                 'success': False, 'error': _(message), 'blocking_level': 'error',
                 'response': response_xml}}
-
-    def get_response_values(self, xml_res):
-        tbai_id_node = xml_res.find(r'.//IdentificadorTBAI')
-        tbai_id = '' if tbai_id_node is None else tbai_id_node.text
-        messages = ''
-        node_name = 'Azalpena' if get_lang(self.env).code == 'eu_ES' else 'Descripcion'
-        for xml_res_node in xml_res.findall(r'.//ResultadosValidacion'):
-            messages += xml_res_node.find('Codigo').text + ": " + xml_res_node.find(node_name).text + "\n"
-        return messages, tbai_id
