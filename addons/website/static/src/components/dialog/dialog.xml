@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+<t t-name="website.DialogBody" owl="1">
+    <t t-esc="props.body"/>
+</t>
+
+<t t-name="website.DialogFooter" owl="1">
+    <button class="btn btn-primary" t-on-click="primaryClick">
+        <t t-esc="primaryTitle"/>
+    </button>
+    <button class="btn btn-secondary" t-on-click="secondaryClick">
+        <t t-esc="secondaryTitle"/>
+    </button>
+</t>
+</templates>
