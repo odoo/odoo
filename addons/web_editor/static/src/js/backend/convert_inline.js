@@ -11,6 +11,7 @@ import { isBlock, rgbToHex } from '../../../lib/odoo-editor/src/utils/utils';
 const RE_COL_MATCH = /(^| )col(-[\w\d]+)*( |$)/;
 const RE_OFFSET_MATCH = /(^| )offset(-[\w\d]+)*( |$)/;
 const RE_PADDING = /([\d.]+)/;
+const RE_WHITESPACE = /[\s\u200b]*/;
 const SELECTORS_IGNORE = /(^\*$|:hover|:before|:after|:active|:link|::|'|\([^(),]+[,(])/;
 // Attributes all tables should have in a mailing.
 const TABLE_ATTRIBUTES = {
@@ -248,25 +249,33 @@ function cardToTable($editable) {
         const $card = $(card);
         const $table = _createTable(card.attributes);
         for (const child of [...card.childNodes]) {
-            if (child.nodeType === Node.TEXT_NODE) {
-                $table.append(child);
-            } else {
-                const $row = $('<tr/>');
-                const $col = $('<td/>');
-                if (child.nodeName === 'IMG') {
+            const $row = $('<tr/>');
+            const $col = $('<td/>');
+            if (child.nodeName === 'IMG') {
+                $col.append(child);
+            } else if (child.nodeType === Node.TEXT_NODE) {
+                if (child.textContent.replace(RE_WHITESPACE, '').length) {
                     $col.append(child);
                 } else {
-                    for (const attr of child.attributes) {
-                        $col.attr(attr.name, attr.value);
-                    }
-                    for (const descendant of [...child.childNodes]) {
-                        $col.append(descendant);
-                    }
-                    $(child).remove();
+                    continue;
                 }
-                $row.append($col);
-                $table.append($row);
+            } else {
+                for (const attr of child.attributes) {
+                    $col.attr(attr.name, attr.value);
+                }
+                for (const descendant of [...child.childNodes]) {
+                    $col.append(descendant);
+                }
+                $(child).remove();
             }
+            const $subTable = _createTable();
+            const $superRow = $('<tr/>');
+            const $superCol = $('<td/>');
+            $row.append($col);
+            $subTable.append($row);
+            $superCol.append($subTable);
+            $superRow.append($superCol);
+            $table.append($superRow);
         }
         $card.before($table);
         $card.remove();
