@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo><data>
+
+    <record id="chatbot_script_view_form" model="ir.ui.view">
+        <field name="name">chatbot.script.view.form</field>
+        <field name="model">im_livechat.chatbot.script</field>
+        <field name="arch" type="xml">
+            <form js_class="im_livechat_chatbot_form_view">
+                <sheet>
+                    <field name="image_1920" widget='image' class="oe_avatar" options='{"zoom": true, "preview_image":"image_128"}'/>
+                    <div class="oe_title">
+                        <label for="name" string="Chatbot Name"/>
+                        <h1><field name="name" default_focus="1" placeholder='e.g. "Meeting Scheduler"'/></h1>
+                    </div>
+                    <group>
+                        <notebook>
+                            <page string="Script">
+                                <field name="step_ids" widget="chatbot_script_step_widget" nolabel="1"/>
+                            </page>
+                        </notebook>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="chatbot_script_view_tree" model="ir.ui.view">
+        <field name="name">chatbot.script.view.tree</field>
+        <field name="model">im_livechat.chatbot.script</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="chatbot_script_action" model="ir.actions.act_window">
+        <field name="name">Chatbot</field>
+        <field name="res_model">im_livechat.chatbot.script</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new Chatbot.
+            </p><p>
+                You can create a new Chatbot with a defined script to speak to your website visitors.
+            </p>
+        </field>
+    </record>
+
+</data></odoo>

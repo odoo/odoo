@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo><data>
+
+    <!-- Chitty Chat Bot Demo Data -->
+
+    <record id="im_livechat_chatbot_script_bot_01" model="im_livechat.chatbot.script">
+        <field name="name">Chitty Chat Bot</field>
+    </record>
+
+    <record id="im_livechat_chatbot_script_bot_01_step_01" model="im_livechat.chatbot.script_step">
+        <field name="message">Hello, my name is Chitty Chat Bot</field>
+        <field name="sequence">1</field>
+        <field name="type">text</field>
+        <field name="chatbot_id" ref="im_livechat_chatbot_script_bot_01"/>
+    </record>
+
+    <record id="im_livechat_chatbot_script_bot_01_step_02" model="im_livechat.chatbot.script_step">
+        <field name="message">How can I help you?</field>
+        <field name="sequence">2</field>
+        <field name="type">question_selection</field>
+        <field name="chatbot_id" ref="im_livechat_chatbot_script_bot_01"/>
+    </record>
+
+    <record id="im_livechat_chatbot_script_bot_01_step_02_answer_01" model="im_livechat.chatbot.script_question_answer">
+        <field name="name">How's the weather?</field>
+        <field name="sequence">1</field>
+        <field name="step_id" ref="im_livechat_chatbot_script_bot_01_step_02"/>
+    </record>
+
+    <record id="im_livechat_chatbot_script_bot_01_step_02_answer_02" model="im_livechat.chatbot.script_question_answer">
+        <field name="name">Are you a real robot?</field>
+        <field name="sequence">2</field>
+        <field name="step_id" ref="im_livechat_chatbot_script_bot_01_step_02"/>
+    </record>
+
+    <record id="im_livechat_chatbot_script_bot_01_step_03" model="im_livechat.chatbot.script_step">
+        <field name="message">It's probably raining... typical Belgium weather!</field>
+        <field name="sequence">3</field>
+        <field name="type">text</field>
+        <field name="chatbot_id" ref="im_livechat_chatbot_script_bot_01"/>
+        <field name="triggering_answer_ids" eval="[(4, ref('im_livechat_chatbot_script_bot_01_step_02_answer_01'))]"/>
+    </record>
+
+    <record id="im_livechat_chatbot_script_bot_01_step_04" model="im_livechat.chatbot.script_step">
+        <field name="message">Of course not... I'm a living being! Why would you think that?</field>
+        <field name="sequence">4</field>
+        <field name="type">question_selection</field>
+        <field name="chatbot_id" ref="im_livechat_chatbot_script_bot_01"/>
+        <field name="triggering_answer_ids" eval="[(4, ref('im_livechat_chatbot_script_bot_01_step_02_answer_02'))]"/>
+    </record>
+
+    <record id="im_livechat_chatbot_script_bot_01_step_04_answer_01" model="im_livechat.chatbot.script_question_answer">
+        <field name="name">You type way too fast for a human being...</field>
+        <field name="sequence">1</field>
+        <field name="step_id" ref="im_livechat_chatbot_script_bot_01_step_04"/>
+    </record>
+
+    <record id="im_livechat_chatbot_script_bot_01_step_04_answer_02" model="im_livechat.chatbot.script_question_answer">
+        <field name="name">You type without making spelling mistakes...</field>
+        <field name="sequence">2</field>
+        <field name="step_id" ref="im_livechat_chatbot_script_bot_01_step_04"/>
+    </record>
+
+    <record id="im_livechat_chatbot_script_bot_01_step_05" model="im_livechat.chatbot.script_step">
+        <field name="message">I've been practicing a lot... during many years... I can't even remember when I first started!</field>
+        <field name="sequence">5</field>
+        <field name="type">text</field>
+        <field name="chatbot_id" ref="im_livechat_chatbot_script_bot_01"/>
+        <field name="triggering_answer_ids" eval="[(4, ref('im_livechat_chatbot_script_bot_01_step_04_answer_01'))]"/>
+    </record>
+
+    <record id="im_livechat_chatbot_script_bot_01_step_06" model="im_livechat.chatbot.script_step">
+        <field name="message">I have always been attentive during English lessons :)</field>
+        <field name="sequence">6</field>
+        <field name="type">text</field>
+        <field name="chatbot_id" ref="im_livechat_chatbot_script_bot_01"/>
+        <field name="triggering_answer_ids" eval="[(4, ref('im_livechat_chatbot_script_bot_01_step_04_answer_02'))]"/>
+    </record>
+
+    <!-- Channel Rule -->
+
+    <record id="im_livechat_channel_ruel_chatbot" model="im_livechat.channel.rule">
+        <field name="regex_url">/contactus</field>
+        <field name="sequence">5</field>
+        <field name="action">use_chatbot</field>
+        <field name="chatbot_id" ref="im_livechat_chatbot_script_bot_01"/>
+        <field name="channel_id" ref="im_livechat_channel_data"/>
+    </record>
+
+</data></odoo>

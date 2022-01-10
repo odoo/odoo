@@ -6,6 +6,7 @@ import base64
 from odoo import http,tools, _
 from odoo.http import request
 from odoo.addons.base.models.assetsbundle import AssetsBundle
+from odoo.addons.mail.controllers.bus import MailChatController
 
 
 class LivechatController(http.Controller):
@@ -51,31 +52,42 @@ class LivechatController(http.Controller):
 
     @http.route('/im_livechat/init', type='json', auth="public", cors="*")
     def livechat_init(self, channel_id):
-        available = len(request.env['im_livechat.channel'].sudo().browse(channel_id)._get_available_users())
+        available = False
         rule = {}
-        if available:
-            # find the country from the request
-            country_id = False
-            country_code = request.session.geoip.get('country_code') if request.session.geoip else False
-            if country_code:
-                country_id = request.env['res.country'].sudo().search([('code', '=', country_code)], limit=1).id
-            # extract url
-            url = request.httprequest.headers.get('Referer')
-            # find the first matching rule for the given country and url
-            matching_rule = request.env['im_livechat.channel.rule'].sudo().match_rule(channel_id, url, country_id)
-            if matching_rule:
-                rule = {
-                    'action': matching_rule.action,
-                    'auto_popup_timer': matching_rule.auto_popup_timer,
-                    'regex_url': matching_rule.regex_url,
-                }
+        # find the country from the request
+        country_id = False
+        country_code = request.session.geoip.get('country_code') if request.session.geoip else False
+        if country_code:
+            country_id = request.env['res.country'].sudo().search([('code', '=', country_code)], limit=1).id
+        # extract url
+        url = request.httprequest.headers.get('Referer')
+        # find the first matching rule for the given country and url
+        matching_rule = request.env['im_livechat.channel.rule'].sudo().match_rule(channel_id, url, country_id)
+        if matching_rule:
+            rule = {
+                'action': matching_rule.action,
+                'auto_popup_timer': matching_rule.auto_popup_timer,
+                'regex_url': matching_rule.regex_url,
+            }
+            if matching_rule.action == 'use_chatbot':
+                chatbot_id = matching_rule.chatbot_id
+                rule.update({'chatbot': {
+                    'id': chatbot_id.id,
+                    'welcome_message': chatbot_id.step_ids[0].message,
+                    'answers': [(answer.id, answer.name) for answer in chatbot_id.step_ids[0].answer_ids]
+                }})
+            else:
+                # We don't really need to know if there are any available operators if there is a chatbot
+                available = len(request.env['im_livechat.channel'].sudo().browse(channel_id)._get_available_users())
         return {
-            'available_for_me': available and (not rule or rule['action'] != 'hide_button'),
+            # TODO PKO: We should change the name of this one... maybe 'livechat_active' or 'activate_livechat' ?
+            'available_for_me': (rule and rule['action'] == 'use_chatbot')
+                                or available and (not rule or rule['action'] != 'hide_button'),
             'rule': rule,
         }
 
     @http.route('/im_livechat/get_session', type="json", auth='public', cors="*")
-    def get_session(self, channel_id, anonymous_name, previous_operator_id=None, **kwargs):
+    def get_session(self, channel_id, anonymous_name, previous_operator_id=None, chatbot_id=None, **kwargs):
         user_id = None
         country_id = None
         # if the user is identifiy (eg: portal user on the frontend), don't use the anonymous name. The user will be added to session.
@@ -95,7 +107,10 @@ class LivechatController(http.Controller):
         if previous_operator_id:
             previous_operator_id = int(previous_operator_id)
 
-        return request.env["im_livechat.channel"].with_context(lang=False).sudo().browse(channel_id)._open_livechat_mail_channel(anonymous_name, previous_operator_id, user_id, country_id)
+        if chatbot_id:
+            chatbot_id = int(chatbot_id)
+
+        return request.env["im_livechat.channel"].with_context(lang=False).sudo().browse(channel_id)._open_livechat_mail_channel(anonymous_name, previous_operator_id, chatbot_id, user_id, country_id)
 
     @http.route('/im_livechat/feedback', type='json', auth='public', cors="*")
     def feedback(self, uuid, rate, reason=None, **kwargs):
@@ -160,3 +175,20 @@ class LivechatController(http.Controller):
         mail_channel = request.env['mail.channel'].sudo().search([('uuid', '=', uuid)])
         if mail_channel:
             mail_channel._close_livechat_session()
+
+
+class LivechatMailChatController(MailChatController):
+
+    @http.route('/mail/chat_post', type="json", auth="public", cors="*")
+    def mail_chat_post(self, uuid, message_content, **kwargs):
+        message_id = super(LivechatMailChatController, self).mail_chat_post(uuid, message_content, **kwargs)
+
+        mail_channel = request.env['mail.channel'].sudo().search([('uuid', '=', uuid)], limit=1)
+        if not mail_channel:
+            return False
+        if mail_channel.livechat_chatbot_current_step_id:
+            next_step = mail_channel.livechat_chatbot_current_step_id._process_answer(mail_channel, message_content)
+            if next_step:
+                mail_channel._process_chatbot_next_step(next_step)
+
+        return message_id

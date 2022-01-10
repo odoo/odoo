@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.exceptions import ValidationError
 from odoo.tools import html_escape
 
 
@@ -19,6 +20,8 @@ class MailChannel(models.Model):
     livechat_active = fields.Boolean('Is livechat ongoing?', help='Livechat session is active until visitor leave the conversation.')
     livechat_channel_id = fields.Many2one('im_livechat.channel', 'Channel')
     livechat_operator_id = fields.Many2one('res.partner', string='Operator', help="""Operator for this specific channel""")
+    livechat_chatbot_current_step_id = fields.Many2one('im_livechat.chatbot.script_step', string='Chatbot Current Step')
+    livechat_chatbot_message_ids = fields.One2many('im_livechat.chatbot.mail.message', 'mail_channel_id', string='Chatbot Messages')
     country_id = fields.Many2one('res.country', string="Country", help="Country of the visitor of the channel")
 
     _sql_constraints = [('livechat_operator_id', "CHECK((channel_type = 'livechat' and livechat_operator_id is not null) or (channel_type != 'livechat'))",
@@ -168,6 +171,34 @@ class MailChannel(models.Model):
             # Notify that the visitor has left the conversation
             self.message_post(author_id=self.env.ref('base.partner_root').id,
                               body=self._get_visitor_leave_message(**kwargs), message_type='comment', subtype_xmlid='mail.mt_comment')
+
+    def _process_chatbot_next_step(self, step_id):
+        self.ensure_one()
+        if step_id.sequence <= self.livechat_chatbot_current_step_id.sequence:
+            raise ValidationError(_('The new step sequence must be higher than the old one.'))
+
+        # We change the current step to the new step
+        self.livechat_chatbot_current_step_id = step_id
+
+        self.with_context(mail_create_nosubscribe=True).message_post(
+            author_id=self.env.ref('base.partner_root').id,
+            body=step_id.message,
+            message_type='comment',
+            subtype_xmlid='mail.mt_comment',
+        )
+
+    def _message_post_after_hook(self, message, msg_vals):
+        """
+        Create a chatbot.mail.message before calling _message_format method which needs the step_id.
+        It's created only if the author is Odoobot and if the mail channel is linked to a chatbot step.
+        """
+        if self.livechat_chatbot_current_step_id and message.author_id == self.env.ref('base.partner_root'):
+            self.env['im_livechat.chatbot.mail.message'].sudo().create({
+                'mail_message_id': message.id,
+                'mail_channel_id': self.id,
+                'chatbot_step_id': self.livechat_chatbot_current_step_id.id,
+            })
+        return super(MailChannel, self)._message_post_after_hook(message, msg_vals)
 
     # Rating Mixin
 

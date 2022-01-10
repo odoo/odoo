@@ -45,17 +45,25 @@ class ImLivechatChannel(models.Model):
         compute='_are_you_inside', store=False, readonly=True)
     script_external = fields.Html('Script (external)', compute='_compute_script_external', store=False, readonly=True, sanitize=False)
     nbr_channel = fields.Integer('Number of conversation', compute='_compute_nbr_channel', store=False, readonly=True)
+    chatbot_count = fields.Integer(string='Number of Chatbot', compute='_compute_chatbot_ids', store=True)
 
     image_128 = fields.Image("Image", max_width=128, max_height=128, default=_default_image)
 
     # relationnal fields
     user_ids = fields.Many2many('res.users', 'im_livechat_channel_im_user', 'channel_id', 'user_id', string='Operators', default=_default_user_ids)
     channel_ids = fields.One2many('mail.channel', 'livechat_channel_id', 'Sessions')
+    chatbot_ids = fields.Many2many('im_livechat.chatbot.script', compute='_compute_chatbot_ids', store=True)
     rule_ids = fields.One2many('im_livechat.channel.rule', 'channel_id', 'Rules')
 
     def _are_you_inside(self):
         for channel in self:
             channel.are_you_inside = bool(self.env.uid in [u.id for u in channel.user_ids])
+
+    @api.depends('rule_ids.chatbot_id')
+    def _compute_chatbot_ids(self):
+        for record in self:
+            record.chatbot_ids = record.rule_ids.mapped('chatbot_id')
+            record.chatbot_count = len(record.chatbot_ids)
 
     def _compute_script_external(self):
         view = self.env.ref('im_livechat.external_loader')
@@ -101,6 +109,16 @@ class ImLivechatChannel(models.Model):
         action['context'] = {'search_default_parent_res_name': self.name}
         return action
 
+    def action_view_chatbot(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Chatbot(s)'),
+            'view_mode': 'tree,form',
+            'res_model': 'im_livechat.chatbot.script',
+            'domain': [('id', 'in', self.chatbot_ids.ids)],
+        }
+
     # --------------------------
     # Channel Methods
     # --------------------------
@@ -111,7 +129,7 @@ class ImLivechatChannel(models.Model):
         self.ensure_one()
         return self.user_ids.filtered(lambda user: user.im_status == 'online')
 
-    def _get_livechat_mail_channel_vals(self, anonymous_name, operator, user_id=None, country_id=None):
+    def _get_livechat_mail_channel_vals(self, anonymous_name, operator, chatbot=None, user_id=None, country_id=None):
         # partner to add to the mail.channel
         operator_partner_id = operator.partner_id.id
         channel_partner_to_add = [Command.create({'partner_id': operator_partner_id, 'is_pinned': False})]
@@ -125,6 +143,7 @@ class ImLivechatChannel(models.Model):
             'livechat_active': True,
             'livechat_operator_id': operator_partner_id,
             'livechat_channel_id': self.id,
+            'livechat_chatbot_current_step_id': chatbot.step_ids[0].id if chatbot else False,
             'anonymous_name': False if user_id else anonymous_name,
             'country_id': country_id,
             'channel_type': 'livechat',
@@ -132,7 +151,7 @@ class ImLivechatChannel(models.Model):
             'public': 'private',
         }
 
-    def _open_livechat_mail_channel(self, anonymous_name, previous_operator_id=None, user_id=None, country_id=None):
+    def _open_livechat_mail_channel(self, anonymous_name, previous_operator_id=None, chatbot_id=None, user_id=None, country_id=None):
         """ Return a mail.channel given a livechat channel. It creates one with a connected operator, or return false otherwise
             :param anonymous_name : the name of the anonymous person of the channel
             :param previous_operator_id : partner_id.id of the previous operator that this visitor had in the past
@@ -147,7 +166,14 @@ class ImLivechatChannel(models.Model):
         """
         self.ensure_one()
         operator = False
-        if previous_operator_id:
+        chatbot = False
+        if chatbot_id:
+            chatbot = self.env['im_livechat.chatbot.script'].sudo().browse(chatbot_id)
+            if chatbot.id not in self.chatbot_ids.ids:
+                return False
+            # if a chatbot is set we set Odoobot as the operator
+            operator = self.env.ref('base.user_root')
+        elif previous_operator_id:
             available_users = self._get_available_users()
             # previous_operator_id is the partner_id of the previous operator, need to convert to user
             if previous_operator_id in available_users.mapped('partner_id').ids:
@@ -159,7 +185,7 @@ class ImLivechatChannel(models.Model):
             return False
 
         # create the session, and add the link with the given channel
-        mail_channel_vals = self._get_livechat_mail_channel_vals(anonymous_name, operator, user_id=user_id, country_id=country_id)
+        mail_channel_vals = self._get_livechat_mail_channel_vals(anonymous_name, operator, chatbot, user_id=user_id, country_id=country_id)
         mail_channel = self.env["mail.channel"].with_context(mail_create_nosubscribe=False).sudo().create(mail_channel_vals)
         mail_channel._broadcast([operator.partner_id.id])
         return mail_channel.sudo().channel_info()[0]
@@ -225,7 +251,7 @@ class ImLivechatChannel(models.Model):
         if username is None:
             username = _('Visitor')
         info = {}
-        info['available'] = len(self._get_available_users()) > 0
+        info['available'] = self.chatbot_count > 0 or len(self._get_available_users()) > 0
         info['server_url'] = self.get_base_url()
         if info['available']:
             info['options'] = self._get_channel_infos()
@@ -246,13 +272,18 @@ class ImLivechatChannelRule(models.Model):
 
     regex_url = fields.Char('URL Regex',
         help="Regular expression specifying the web pages this rule will be applied on.")
-    action = fields.Selection([('display_button', 'Display the button'), ('auto_popup', 'Auto popup'), ('hide_button', 'Hide the button')],
-        string='Action', required=True, default='display_button',
+    action = fields.Selection([
+        ('display_button', 'Display the button'),
+        ('auto_popup', 'Auto popup'),
+        ('hide_button', 'Hide the button'),
+        ('use_chatbot', 'Use a Chatbot')], string='Action', required=True, default='display_button',
         help="* 'Display the button' displays the chat button on the pages.\n"\
              "* 'Auto popup' displays the button and automatically open the conversation pane.\n"\
-             "* 'Hide the button' hides the chat button on the pages.")
+             "* 'Hide the button' hides the chat button on the pages.\n"
+             "* 'Use a Chatbot' will use a chatbot instead of an operator to talk to the visitors.")
     auto_popup_timer = fields.Integer('Auto popup timer', default=0,
         help="Delay (in seconds) to automatically open the conversation window. Note: the selected action must be 'Auto popup' otherwise this parameter will not be taken into account.")
+    chatbot_id = fields.Many2one('im_livechat.chatbot.script', string='Chatbot')
     channel_id = fields.Many2one('im_livechat.channel', 'Channel',
         help="The channel of the rule")
     country_ids = fields.Many2many('res.country', 'im_livechat_channel_country_rel', 'channel_id', 'country_id', 'Country',

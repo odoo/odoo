@@ -78,6 +78,9 @@
                     <sheet>
                         <field name="rating_count" invisible="1"/>
                         <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_butotn" type="object" name="action_view_chatbot" attrs="{'invisible': [('chatbot_count', '=', 0)]}" icon="fa-android">
+                                <field string="Chatbots" name="chatbot_count" widget="statinfo"/>
+                            </button>
                             <button class="oe_stat_button" type="action" attrs="{'invisible':[('nbr_channel','=', 0)]}" name="%(mail_channel_action_from_livechat_channel)d" icon="fa-comments">
                                 <field string="Sessions" name="nbr_channel" widget="statinfo"/>
                             </button>
@@ -232,6 +235,8 @@
                     <sheet>
                         <group>
                             <field name="action" widget="radio"/>
+                            <field name="chatbot_id"
+                                   attrs="{'invisible': [('action', '!=', 'use_chatbot')], 'required': [('action', '=', 'use_chatbot')]}"/>
                             <field name="regex_url" placeholder="e.g. /contactus"/>
                             <label for="auto_popup_timer" class="oe_inline" attrs="{'invisible': [('action', '!=', 'auto_popup')]}"/>
                             <div class="oe_inline" attrs="{'invisible': [('action', '!=', 'auto_popup')]}">
@@ -325,6 +330,14 @@
             action="im_livechat_canned_response_action"
             groups="im_livechat_group_user"
             sequence="15"/>
+
+        <menuitem
+            id="chatbot_config"
+            name="Chatbot"
+            parent="livechat_config"
+            action="chatbot_script_action"
+            groups="im_livechat_group_user"
+            sequence="20"/>
 
     </data>
 </odoo>

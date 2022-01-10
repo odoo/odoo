@@ -18,4 +18,11 @@ class MailMessage(models.Model):
                 vals.pop('email_from')
                 if message_sudo.author_id.user_livechat_username:
                     vals['author_id'] = (message_sudo.author_id.id, message_sudo.author_id.user_livechat_username, message_sudo.author_id.user_livechat_username)
+                if message_sudo.author_id.id == self.env.ref('base.partner_root').id:
+                    chatbot_mail_message_id = self.env['im_livechat.chatbot.mail.message'].sudo().search([
+                        ('mail_message_id', '=', message_sudo.id)], limit=1)
+                    if chatbot_mail_message_id.chatbot_step_id:
+                        vals['chatbot_answer_ids'] = {answer.id: answer.name for answer in chatbot_mail_message_id.chatbot_step_id.answer_ids}
+                    if chatbot_mail_message_id.user_answer_id:
+                        vals['chatbot_selected_answer_id'] = chatbot_mail_message_id.user_answer_id.id
         return vals_list
