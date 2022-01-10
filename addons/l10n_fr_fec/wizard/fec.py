@@ -4,7 +4,7 @@
 # Copyright (C) 2013-2015 Akretion (http://www.akretion.com)
 
 from openerp import models, fields, api, _
-from openerp.exceptions import Warning
+from openerp.exceptions import Warning, AccessDenied
 from datetime import datetime
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
 import base64
@@ -25,7 +25,7 @@ class AccountFrFec(models.TransientModel):
         ('nonofficial', 'Non-official FEC report (posted and unposted entries)'),
         ], string='Export Type', required=True, default='official')
 
-    def do_query_unaffected_earnings(self):
+    def _do_query_unaffected_earnings(self):
         ''' Compute the sum of ending balances for all accounts that are of a type that does not bring forward the balance in new fiscal years.
             This is needed because we have to display only one line for the initial balance of all expense/revenue accounts in the FEC.
         '''
@@ -80,6 +80,8 @@ class AccountFrFec(models.TransientModel):
     @api.multi
     def generate_fec(self):
         self.ensure_one()
+        if not (self.env.user._is_admin() or self.env.user.has_group('account.group_account_user')):
+            raise AccessDenied()
         # We choose to implement the flat file instead of the XML
         # file for 2 reasons :
         # 1) the XSD file impose to have the label on the account.move
@@ -126,7 +128,7 @@ class AccountFrFec(models.TransientModel):
         unaffected_earnings_line = True  # used to make sure that we add the unaffected earning initial balance only once
         if unaffected_earnings_xml_ref:
             #compute the benefit/loss of last year to add in the initial balance of the current year earnings account
-            unaffected_earnings_results = self.do_query_unaffected_earnings()
+            unaffected_earnings_results = self._do_query_unaffected_earnings()
             unaffected_earnings_line = False
 
         sql_query = '''
