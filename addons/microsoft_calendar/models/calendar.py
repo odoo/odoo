@@ -174,7 +174,7 @@ class Meeting(models.Model):
             if email in attendees_by_emails:
                 # Update existing attendees
                 commands_attendee += [(1, attendees_by_emails[email].id, {'state': state})]
-            else:
+            elif attendee[1]:
                 # Create new attendees
                 partner = attendee[1]
                 commands_attendee += [(0, 0, {'state': state, 'partner_id': partner.id})]
