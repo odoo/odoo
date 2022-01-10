@@ -61,6 +61,7 @@ class PosOrder(models.Model):
             'mp_dirty',
             'full_product_name',
             'customer_note',
+            'price_extra',
         ])
         return fields
 
