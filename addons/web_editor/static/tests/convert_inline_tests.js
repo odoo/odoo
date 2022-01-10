@@ -251,9 +251,27 @@ QUnit.module('convert_inline', {}, function () {
         assert.strictEqual($editable.html(),
             getRegularTableHtml(3, 1, 12, 100)
                 .split('style="').join('class="card" style="')
-                .replace(/<td[^>]*>\(0, 0\)<\/td>/, '<td class="card-header"><span>HEADER</span></td>')
-                .replace(/<td[^>]*>\(1, 0\)<\/td>/, '<td class="card-body"><h2 class="card-title">TITLE</h2><small>BODY <img></small></td>')
-                .replace(/<td[^>]*>\(2, 0\)<\/td>/, '<td class="card-footer"><a href="#" class="btn">FOOTER</a></td>'),
+                .replace(/<td[^>]*>\(0, 0\)<\/td>/,
+                    `<td>` +
+                        `<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" width=\"100%\" align=\"center\" ` +
+                        `role=\"presentation\" style=\"width: 100% !important; border-collapse: collapse; text-align: inherit; ` +
+                        `font-size: unset; line-height: unset;\"><tr>` +
+                            `<td class="card-header"><span>HEADER</span></td>` +
+                        `</tr></table></td>`)
+                .replace(/<td[^>]*>\(1, 0\)<\/td>/,
+                    `<td>` +
+                        `<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" width=\"100%\" align=\"center\" ` +
+                        `role=\"presentation\" style=\"width: 100% !important; border-collapse: collapse; text-align: inherit; ` +
+                        `font-size: unset; line-height: unset;\"><tr>` +
+                            `<td class="card-body"><h2 class="card-title">TITLE</h2><small>BODY <img></small></td>` +
+                        `</tr></table></td>`)
+                .replace(/<td[^>]*>\(2, 0\)<\/td>/,
+                    `<td>` +
+                        `<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" width=\"100%\" align=\"center\" ` +
+                        `role=\"presentation\" style=\"width: 100% !important; border-collapse: collapse; text-align: inherit; ` +
+                        `font-size: unset; line-height: unset;\"><tr>` +
+                            `<td class="card-footer"><a href="#" class="btn">FOOTER</a></td>` +
+                        `</tr></table></td>`),
             "should have converted a card structure into a table");
     });
     QUnit.test('convert a list group to a table', async function (assert) {
