@@ -326,7 +326,7 @@
         <field name="sequence" eval="2"/>
         <field name="parent_id" ref="account_tax_report_line_1a_total_sale"/>
         <field name="country_id" ref="base.lu"/>
-        <field name="formula">LUTAX_021 + LUTAX_037 - LUTAX_456</field>
+        <field name="formula">LUTAX_021 + LUTAX_037 - LUTAX_456 - LUTAX_455 - LUTAX_471</field>
     </record>
 
     <record id="account_tax_report_line_1a_app_goods_non_bus" model="account.tax.report.line">
@@ -887,6 +887,7 @@
 
     <record id="account_tax_report_line_3b1_rel_trans" model="account.tax.report.line">
       <field name="name">III.B.1. relating to transactions which are exempt pursuant to articles 44 and 56quater (094)</field>
+      <field name="tag_name">094</field>
       <field name="sequence">1</field>
       <field name="parent_id" ref="account_tax_report_line_3b_total_input_tax_nd"/>
       <field name="code">LUTAX_094</field>
@@ -895,6 +896,7 @@
 
     <record id="account_tax_report_line_3b2_ded_prop" model="account.tax.report.line">
       <field name="name">III.B.2. where the deductible proportion determined in accordance to article 50 is applied (095)</field>
+      <field name="tag_name">095</field>
       <field name="sequence">2</field>
       <field name="parent_id" ref="account_tax_report_line_3b_total_input_tax_nd"/>
       <field name="code">LUTAX_095</field>
