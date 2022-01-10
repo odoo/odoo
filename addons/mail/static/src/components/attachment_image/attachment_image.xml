@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.AttachmentImage" owl="1">
-        <div t-ref="root">
+        <div t-attf-class="{{ className }}" t-ref="root">
             <t t-if="attachmentImage">
                 <div class="o_AttachmentImage d-flex o-details-overlay position-relative"
                     t-att-class="{
                         'o-isUploading': attachmentImage.attachment.isUploading,
                     }"
-                    t-attf-class="{{ className }}"
                     t-att-title="attachmentImage.attachment.displayName ? attachmentImage.attachment.displayName : undefined"
                     t-att-data-id="attachmentImage.attachment.localId"
                     t-on-click="attachmentImage.onClickImage"
