@@ -99,10 +99,10 @@ class TestLeadToQuotation(crm_common.TestCrmCases):
             quotation.user_id, lead_wuser.user_id,
             'Quotation should have the same salesperson as lead'
         )
-        # self.assertEqual(
-        #     quotation.team_id, lead_wuser.team_id,
-        #     'Quotation should have the same sales team as lead'
-        # )
+        self.assertEqual(
+            quotation.team_id, lead_wuser.team_id,
+            'Quotation should have the same sales team as lead'
+        )
 
         # view quotes and create
         sale_quotation_ctx = lead_wuser.action_view_sale_quotation()['context']
@@ -113,10 +113,10 @@ class TestLeadToQuotation(crm_common.TestCrmCases):
             quotation.user_id, lead_wuser.user_id,
             'Quotation should have the same salesperson as lead'
         )
-        # self.assertEqual(
-        #     quotation.team_id, lead_wuser.team_id,
-        #     'Quotation should have the same sales team as lead'
-        # )
+        self.assertEqual(
+            quotation.team_id, lead_wuser.team_id,
+            'Quotation should have the same sales team as lead'
+        )
 
     @users('csm')
     def test_action_new_quotation_from_partner(self):
@@ -224,7 +224,7 @@ class TestLeadToQuotation(crm_common.TestCrmCases):
         self.assertFalse(quotation_form.user_id)
         # set partner: should avoid setting current user as responsible
         quotation_form.partner_id = self.partner_void
-        self.assertEqual(quotation_form.team_id, self.test_team, 'Currently resetting to current user team.')
+        self.assertFalse(quotation_form.team_id)
         self.assertFalse(quotation_form.user_id)
         # reset some info
         quotation_form.partner_id = self.env['res.partner']
@@ -248,8 +248,8 @@ class TestLeadToQuotation(crm_common.TestCrmCases):
         self.assertFalse(quotation_form.user_id)
         # set partner
         quotation_form.partner_id = self.partner_void
-        self.assertEqual(quotation_form.team_id, self.env.ref('sales_team.team_sales_department'))
-        self.assertEqual(quotation_form.user_id, self.crm_salesman)
+        self.assertFalse(quotation_form.team_id)
+        self.assertFalse(quotation_form.user_id)
         # reset some info
         quotation_form.partner_id = self.env['res.partner']
         quotation_form.user_id = self.env.user
@@ -257,8 +257,8 @@ class TestLeadToQuotation(crm_common.TestCrmCases):
         self.assertEqual(quotation_form.user_id, self.env.user)
         # set customer again, check team / user impact
         quotation_form.partner_id = self.partner_void
-        self.assertEqual(quotation_form.team_id, self.env.ref('sales_team.team_sales_department'))
-        self.assertEqual(quotation_form.user_id, self.crm_salesman)
+        self.assertEqual(quotation_form.team_id, self.test_team)
+        self.assertEqual(quotation_form.user_id, self.env.user)
 
         # basic flow
         quotation_form = Form(self.env['sale.order'])
@@ -268,8 +268,8 @@ class TestLeadToQuotation(crm_common.TestCrmCases):
         self.assertFalse(quotation_form.user_id)
         # set partner
         quotation_form.partner_id = self.partner_void
-        self.assertEqual(quotation_form.team_id, self.env.user.team_id)
-        self.assertEqual(quotation_form.user_id, self.env.user)
+        self.assertFalse(quotation_form.team_id)
+        self.assertFalse(quotation_form.user_id)
         # reset some info
         quotation_form.partner_id = self.env['res.partner']
         quotation_form.user_id = self.env.user

@@ -395,26 +395,25 @@ class SaleOrder(models.Model):
             'partner_invoice_id': addr['invoice'],
             'partner_shipping_id': addr['delivery'],
         }
-        user_id = partner_user.id
-        if not self.env.context.get('not_self_saleperson'):
-            user_id = user_id or self.env.context.get('default_user_id', self.env.uid)
-        if user_id and self.user_id.id != user_id:
-            values['user_id'] = user_id
+        if partner_user and self.user_id != partner_user:
+            values['user_id'] = partner_user.id
+
+        if self.partner_id.team_id and self.partner_id.team_id != self.team_id:
+            values['team_id'] = self.partner_id.team_id.id
 
         if self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms') and self.env.company.invoice_terms:
             values['note'] = self.with_context(lang=self.partner_id.lang).env.company.invoice_terms
-        if not self.env.context.get('not_self_saleperson') or not self.team_id:
-            values['team_id'] = self.env['crm.team'].with_context(
-                default_team_id=self.partner_id.team_id.id
-            )._get_default_team_id(domain=['|', ('company_id', '=', self.company_id.id), ('company_id', '=', False)], user_id=user_id)
         self.update(values)
 
     @api.onchange('user_id')
     def onchange_user_id(self):
         if self.user_id:
-            self.team_id = self.env['crm.team'].with_context(
+            if self.team_id and self.user_id in self.team_id.member_ids + self.team_id.user_id:
+                return {}
+            new_team_id = self.env['crm.team'].with_context(
                 default_team_id=self.team_id.id
             )._get_default_team_id(user_id=self.user_id.id)
+            self.team_id = new_team_id
 
     @api.onchange('partner_id')
     def onchange_partner_id_warning(self):
