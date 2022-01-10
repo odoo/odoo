@@ -345,6 +345,7 @@
             role="img"
             aria-label="search"
             t-on-keydown="_onFacetKeydown(facet, facet_index)"
+            t-on-click="_onFacetRemove(facet)"
             >
             <span t-if="facet.icon" t-attf-class="o_searchview_facet_label {{ facet.icon }}"/>
             <span t-else="" class="o_searchview_facet_label" t-esc="facet.title"/>
@@ -358,7 +359,6 @@
                 role="img"
                 aria-label="Remove"
                 title="Remove"
-                t-on-click="_onFacetRemove(facet)"
             />
         </div>
         <input type="text"

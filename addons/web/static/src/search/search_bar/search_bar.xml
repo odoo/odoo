@@ -8,6 +8,7 @@
                 aria-label="search"
                 tabindex="0"
                 t-on-keydown="onFacetKeydown(facet, facet_index)"
+                t-on-click="onFacetRemove(facet)"
                 >
                 <t t-if="facet.icon">
                     <span t-attf-class="o_searchview_facet_label {{ facet.icon }}"/>
@@ -27,7 +28,6 @@
                     role="img"
                     aria-label="Remove"
                     title="Remove"
-                    t-on-click="onFacetRemove(facet)"
                 />
             </div>
         </t>
