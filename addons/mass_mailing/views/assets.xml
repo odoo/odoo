@@ -14,6 +14,7 @@
 
     <template id="iframe_css_assets_readonly" groups="base.group_user">
         <link rel="stylesheet" type="text/scss" href="/mass_mailing/static/src/css/basic_theme_readonly.css"/>
+        <t t-call="mass_mailing.mass_mailing_mail_style"/>
     </template>
 
     <template id="mass_mailing_mail_style">
@@ -21,7 +22,7 @@
             * {
                 box-sizing: border-box !important;
             }
-            * h1, h2, h3, h4, h5, h6, p, td, th {
+            * h1, h2, h3, h4, h5, h6, p, td, th, div {
                 font-family: Arial, sans-serif !important;
             }
             /* Remove space around the email design. */
