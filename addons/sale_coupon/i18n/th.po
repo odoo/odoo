@@ -5,7 +5,7 @@
 # Translators:
 # Martin Trigaux, 2020
 # Odoo Thaidev <odoothaidev@gmail.com>, 2020
-# Wichanon Jamwutthipreecha, 2021
+# Wichanon Jamwutthipreecha, 2022
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:29+0000\n"
 "PO-Revision-Date: 2020-09-07 08:18+0000\n"
-"Last-Translator: Wichanon Jamwutthipreecha, 2021\n"
+"Last-Translator: Wichanon Jamwutthipreecha, 2022\n"
 "Language-Team: Thai (https://www.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -177,7 +177,7 @@ msgstr ""
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_order_line__is_reward_line
 msgid "Is a program reward line"
-msgstr ""
+msgstr "เป็นโปรแกรมไลน์รางวัล"
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_coupon_coupon____last_update
@@ -246,7 +246,7 @@ msgstr "โปรแกรมโปรโมชั่น"
 #: code:addons/sale_coupon/models/coupon_program.py:0
 #, python-format
 msgid "Promotionals codes are not cumulative."
-msgstr ""
+msgstr "โค้ดโปรโมชันไม่สามารถสะสมได้"
 
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_order_view_form
@@ -256,7 +256,7 @@ msgstr "โปรโมชั่น"
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_order__reward_amount
 msgid "Reward Amount"
-msgstr ""
+msgstr "จำนวนรางวัล"
 
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_program_view_coupon_program_form
@@ -297,19 +297,19 @@ msgstr ""
 #: code:addons/sale_coupon/models/coupon_program.py:0
 #, python-format
 msgid "The customer doesn't have access to this reward."
-msgstr ""
+msgstr "ลูกค้าไม่สามารถเข้าถึงรางวัลนี้"
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/coupon_program.py:0
 #, python-format
 msgid "The promo code is already applied on this order"
-msgstr ""
+msgstr "มีการใช้โค้ดโปรโมชั่นกับคำสั่งซื้อนี้แล้ว"
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/coupon_program.py:0
 #, python-format
 msgid "The promotional offer is already applied on this order"
-msgstr ""
+msgstr "ข้อเสนอส่งเสริมการขายนี้ถูกใช้กับคำสั่งซื้อนี้แล้ว"
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/coupon.py:0
@@ -318,17 +318,17 @@ msgstr ""
 msgid ""
 "The reward products should be in the sales order lines to apply the "
 "discount."
-msgstr ""
+msgstr "สินค้าที่เป็นรางวัลควรอยู่ในไลน์คำสั่งขายสำหรับใช้ส่วนลด"
 
 #. module: sale_coupon
 #: model:ir.model.fields,help:sale_coupon.field_coupon_coupon__order_id
 msgid "The sales order from which coupon is generated"
-msgstr ""
+msgstr "คำสั่งขายที่สร้างคูปอง"
 
 #. module: sale_coupon
 #: model:ir.model.fields,help:sale_coupon.field_coupon_coupon__sales_order_id
 msgid "The sales order on which the coupon is applied"
-msgstr ""
+msgstr "คำสั่งขายที่ใช้คูปอง"
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/coupon.py:0
@@ -358,12 +358,12 @@ msgstr ""
 #: code:addons/sale_coupon/wizard/sale_coupon_apply_code.py:0
 #, python-format
 msgid "This coupon is invalid (%s)."
-msgstr ""
+msgstr "คูปองนี้ไม่ถูกต้อง (%s)."
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_coupon_coupon__sales_order_id
 msgid "Used in"
-msgstr ""
+msgstr "ใช้ใน"
 
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_order_view_form
@@ -371,6 +371,8 @@ msgid ""
 "When clicked, the content of the order will be checked to detect (and apply)"
 " possible promotion programs."
 msgstr ""
+"เมื่อคลิก เนื้อหาของคำสั่งซื้อจะถูกตรวจสอบเพื่อตรวจหา (และใช้) "
+"โปรแกรมส่งเสริมการขายที่เป็นไปได้"
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/coupon.py:0
@@ -380,6 +382,9 @@ msgid ""
 "products should be recorded on the sales order. (Example: You need to have 3"
 " T-shirts on your sales order if the promotion is 'Buy 2, Get 1 Free')."
 msgstr ""
+"คุณไม่มีปริมาณผลิตภัณฑ์ที่จำเป็นในใบสั่งขายของคุณ "
+"ควรบันทึกผลิตภัณฑ์ทั้งหมดไว้ในใบสั่งขาย (ตัวอย่าง: คุณต้องมีเสื้อยืด 3 "
+"ตัวในใบสั่งขายของคุณ หากโปรโมชันคือ 'ซื้อ 2 รับฟรี 1 ตัว')"
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/coupon_program.py:0
@@ -390,9 +395,13 @@ msgid ""
 "recorded on the sales order (Example: You need to have 3 T-shirts on your "
 "sales order if the promotion is 'Buy 2, Get 1 Free'."
 msgstr ""
+"คุณไม่มีปริมาณผลิตภัณฑ์ที่จำเป็นในใบสั่งขายของคุณ "
+"หากรางวัลเป็นปริมาณผลิตภัณฑ์เท่ากัน "
+"โปรดตรวจสอบให้แน่ใจว่าผลิตภัณฑ์ทั้งหมดได้รับการบันทึกในใบสั่งขาย (ตัวอย่าง: "
+"คุณต้องมีเสื้อยืด 3 ตัวในใบสั่งขายของคุณ หากโปรโมชันเป็น 'ซื้อ 2 แถม 1 ฟรี'"
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/sale_order.py:0
 #, python-format
 msgid "limited to "
-msgstr ""
+msgstr "จำกัดที่"
