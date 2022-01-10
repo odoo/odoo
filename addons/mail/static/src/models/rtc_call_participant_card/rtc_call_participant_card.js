@@ -7,13 +7,6 @@ import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 registerModel({
     name: 'RtcCallParticipantCard',
     identifyingFields: ['relationalId'],
-    lifecycleHooks: {
-        _created() {
-            this.onChangeVolume = this.onChangeVolume.bind(this);
-            this.onClick = this.onClick.bind(this);
-            this.onClickVolumeAnchor = this.onClickVolumeAnchor.bind(this);
-        },
-    },
     recordMethods: {
         /**
          * @param {Event} ev

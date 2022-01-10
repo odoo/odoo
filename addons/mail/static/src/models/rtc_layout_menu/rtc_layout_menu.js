@@ -7,12 +7,6 @@ import { clear } from '@mail/model/model_field_command';
 registerModel({
     name: 'RtcLayoutMenu',
     identifyingFields: ['callViewer'],
-    lifecycleHooks: {
-        _created() {
-            this.onClickFilter = this.onClickFilter.bind(this);
-            this.onClickLayout = this.onClickLayout.bind(this);
-        },
-    },
     recordMethods: {
         /**
          * @param {MouseEvent} ev

@@ -713,11 +713,21 @@ export class ModelManager {
             this._listenersObservingFieldOfLocalId.get(localId).set(field, new Map());
         }
         /**
-         * Register record and invoke the life-cycle hook `_willCreate.`
+         * Register record.
+         */
+        Model.__records[record.localId] = record;
+        /**
+         * Auto-bind record methods so that `this` always refer to the record.
+         */
+        const recordMethods = registry.get(Model.name).get('recordMethods');
+        for (const methodName of recordMethods.keys()) {
+            record[methodName] = record[methodName].bind(record);
+        }
+        /**
+         * Invoke the life-cycle hook `_willCreate.`
          * After this step the record is in a functioning state and it is
          * considered existing.
          */
-        Model.__records[record.localId] = record;
         const lifecycleHooks = registry.get(Model.name).get('lifecycleHooks');
         if (lifecycleHooks.has('_willCreate')) {
             lifecycleHooks.get('_willCreate').call(record);

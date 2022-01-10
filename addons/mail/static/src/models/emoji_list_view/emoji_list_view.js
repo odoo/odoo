@@ -6,11 +6,6 @@ import { one2one } from '@mail/model/model_field';
 registerModel({
     name: 'EmojiListView',
     identifyingFields: ['popoverViewOwner'],
-    lifecycleHooks: {
-        _created() {
-            this.onClickEmoji = this.onClickEmoji.bind(this);
-        },
-    },
     recordMethods: {
         /**
          * @param {MouseEvent} ev

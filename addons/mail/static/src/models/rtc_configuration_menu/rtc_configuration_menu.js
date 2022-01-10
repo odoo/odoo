@@ -10,8 +10,6 @@ registerModel({
     identifyingFields: ['userSetting'],
     lifecycleHooks: {
         _created() {
-            this._onKeyDown = this._onKeyDown.bind(this);
-            this._onKeyUp = this._onKeyUp.bind(this);
             browser.addEventListener('keydown', this._onKeyDown);
             browser.addEventListener('keyup', this._onKeyUp);
         },

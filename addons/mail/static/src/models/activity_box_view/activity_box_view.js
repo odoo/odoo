@@ -7,12 +7,6 @@ import { insertAndReplace, replace } from '@mail/model/model_field_command';
 registerModel({
     name: 'ActivityBoxView',
     identifyingFields: ['chatter'],
-    lifecycleHooks: {
-        _created() {
-            // Bind necessary until OWL supports arrow function in handlers: https://github.com/odoo/owl/issues/876
-            this.onClickActivityBoxTitle = this.onClickActivityBoxTitle.bind(this);
-        },
-    },
     recordMethods: {
         /**
          * Handles click on activity box title.
