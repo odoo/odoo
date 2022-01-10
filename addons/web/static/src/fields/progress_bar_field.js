@@ -59,11 +59,11 @@ export class ProgressBarField extends Component {
         const value = ev.target.value;
         if (this.checkFormat(value)) {
             this.state.currentValue = value;
-            this.props.update(
-                Number(value) || false,
+            this.props.record.update(
                 this.props.record.data[this.props.options.current_value] !== undefined
-                    ? { name: this.props.options.current_value }
-                    : false
+                    ? this.props.options.current_value
+                    : this.props.name,
+                Number(value) || false
             );
         }
     }
@@ -74,11 +74,11 @@ export class ProgressBarField extends Component {
         const max_value = ev.target.value;
         if (this.checkFormat(max_value)) {
             this.state.maxValue = max_value;
-            this.props.update(
-                Number(max_value) || false,
+            this.props.record.update(
                 this.props.record.data[this.props.options.max_value] !== undefined
-                    ? { name: this.props.options.max_value }
-                    : false
+                    ? this.props.options.max_value
+                    : this.props.name,
+                Number(max_value) || false
             );
         }
     }
