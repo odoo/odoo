@@ -27,7 +27,7 @@ registerModel({
             if (!parentMessageView) {
                 return;
             }
-            threadView.addComponentHint('highlight-reply', parentMessageView);
+            parentMessageView.update({ doHighlight: true });
         },
         /**
          * @private

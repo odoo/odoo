@@ -20,6 +20,19 @@ registerModel({
                 }, 2000),
             });
         },
+        onComponentUpdate() {
+            if (!this.exists()) {
+                return;
+            }
+            if (this.doHighlight && this.component && this.component.root.el) {
+                this.component.root.el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                this.highlight();
+                this.update({ doHighlight: clear() });
+            }
+            if (this.threadView && this.threadView.lastMessageView === this && this.component && this.component.isPartiallyVisible()) {
+                this.threadView.handleVisibleMessage(this.message);
+            }
+        },
         /**
          * Action to initiate reply to current messageView.
          */
@@ -84,6 +97,16 @@ registerModel({
         },
         /**
          * @private
+         * @returns {string|FieldCommand}
+         */
+        _computeExtraClass() {
+            if (this.threadView) {
+                return 'o_MessageList_item o_MessageList_message';
+            }
+            return clear();
+        },
+        /**
+         * @private
          * @returns {FieldCommand}
          */
         _computeMessageActionList() {
@@ -129,6 +152,18 @@ registerModel({
         composerViewInEditing: one2one('ComposerView', {
             inverse: 'messageViewInEditing',
             isCausal: true,
+        }),
+        /**
+         * Determines whether this message view should be highlighted at next
+         * render. Scrolls into view and briefly highlights it.
+         */
+        doHighlight: attr(),
+        /**
+         * Determines which extra class this message view component should have.
+         */
+        extraClass: attr({
+            compute: '_computeExtraClass',
+            default: '',
         }),
         /**
          * id of the current timeout that will reset isHighlighted to false.
