@@ -982,11 +982,26 @@ class Meeting(models.Model):
             self = self.with_context(tz=tz)
         return self._get_display_time(self.start, self.stop, self.duration, self.allday)
 
+<<<<<<< HEAD
     def _get_ics_file(self):
         """ Returns iCalendar file for the event invitation.
             :returns a dict of .ics file content for each meeting
         """
         result = {}
+=======
+        # Add commands to create attendees from partners (if present) if no attendee command
+        # is already given (coming from Google event for example).
+        vals_list = [
+            dict(vals, attendee_ids=self._attendees_values(vals['partner_ids']))
+            if 'partner_ids' in vals and not vals.get('attendee_ids')
+            else vals
+            for vals in vals_list
+        ]
+        recurrence_fields = self._get_recurrent_fields()
+        recurring_vals = [vals for vals in vals_list if vals.get('recurrency')]
+        other_vals = [vals for vals in vals_list if not vals.get('recurrency')]
+        events = super().create(other_vals)
+>>>>>>> 035efc16fb9... temp
 
         def ics_datetime(idate, allday=False):
             if idate:
