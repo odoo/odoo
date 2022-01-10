@@ -83,7 +83,7 @@ class CrmLead(models.Model):
             'default_tag_ids': self.tag_ids.ids,
         }
         if self.team_id:
-            action['context']['default_team_id'] = self.team_id.id,
+            action['context']['default_team_id'] = self.team_id.id
         if self.user_id:
             action['context']['default_user_id'] = self.user_id.id
         return action
