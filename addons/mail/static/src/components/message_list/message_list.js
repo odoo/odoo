@@ -122,9 +122,6 @@ export class MessageList extends Component {
                     // position
                     this._adjustScrollForExtraMessagesAtTheStart();
                     break;
-                case 'highlight-reply':
-                    this._highlightMessageView(hint.data);
-                    break;
             }
             if (threadView && threadView.exists()) {
                 threadView.markComponentHintProcessed(hint);
@@ -242,7 +239,7 @@ export class MessageList extends Component {
         if (!threadView || !threadView.exists()) {
             return;
         }
-        const { length, [length - 1]: lastMessageView } = this.threadView.messageViews;
+        const { lastMessageView } = this.threadView;
         if (lastMessageView && lastMessageView.component && lastMessageView.component.isPartiallyVisible()) {
             threadView.handleVisibleMessage(lastMessageView.message);
         }
@@ -257,19 +254,6 @@ export class MessageList extends Component {
             return this.props.getScrollableElement();
         } else {
             return this.root.el;
-        }
-    }
-
-    /**
-     * Scrolls to a given message view and briefly highlights it.
-     *
-     * @private
-     * @param {MessageView} messageView
-     */
-    _highlightMessageView(messageView) {
-        if (messageView.exists() && messageView.component && messageView.component.el) {
-            messageView.component.el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            messageView.highlight();
         }
     }
 
@@ -313,7 +297,6 @@ export class MessageList extends Component {
      * @private
      */
     _update() {
-        this._checkMostRecentMessageIsVisible();
         this.adjustFromComponentHints();
     }
 
