@@ -215,46 +215,12 @@ class TestSMSComposerBatch(TestMailFullCommon):
         cls._create_records_for_batch('mail.test.sms', 3)
         cls.sms_template = cls._create_sms_template('mail.test.sms')
 
-    def test_composer_batch_active_domain(self):
-        with self.with_user('employee'):
-            composer = self.env['sms.composer'].with_context(
-                default_composition_mode='comment',
-                default_res_model='mail.test.sms',
-                default_use_active_domain=True,
-                active_domain=[('id', 'in', self.records.ids)],
-            ).create({
-                'body': self._test_body,
-            })
-
-            with self.mockSMSGateway():
-                messages = composer._action_send_sms()
-
-        for record in self.records:
-            self.assertSMSNotification([{'partner': r.customer_id} for r in self.records], 'Zizisse an SMS.', messages)
-
     def test_composer_batch_active_ids(self):
         with self.with_user('employee'):
             composer = self.env['sms.composer'].with_context(
                 default_composition_mode='comment',
                 default_res_model='mail.test.sms',
                 active_ids=self.records.ids
-            ).create({
-                'body': self._test_body,
-            })
-
-            with self.mockSMSGateway():
-                messages = composer._action_send_sms()
-
-        for record in self.records:
-            self.assertSMSNotification([{'partner': r.customer_id} for r in self.records], 'Zizisse an SMS.', messages)
-
-    def test_composer_batch_domain(self):
-        with self.with_user('employee'):
-            composer = self.env['sms.composer'].with_context(
-                default_composition_mode='comment',
-                default_res_model='mail.test.sms',
-                default_use_active_domain=True,
-                default_active_domain=repr([('id', 'in', self.records.ids)]),
             ).create({
                 'body': self._test_body,
             })
@@ -291,42 +257,6 @@ class TestSMSComposerMass(TestMailFullCommon):
 
         cls._create_records_for_batch('mail.test.sms', 3)
         cls.sms_template = cls._create_sms_template('mail.test.sms')
-
-    def test_composer_mass_active_domain(self):
-        with self.with_user('employee'):
-            composer = self.env['sms.composer'].with_context(
-                default_composition_mode='mass',
-                default_res_model='mail.test.sms',
-                default_use_active_domain=True,
-                active_domain=[('id', 'in', self.records.ids)],
-            ).create({
-                'body': self._test_body,
-                'mass_keep_log': False,
-            })
-
-            with self.mockSMSGateway():
-                composer.action_send_sms()
-
-        for record in self.records:
-            self.assertSMSOutgoing(record.customer_id, None, content=self._test_body)
-
-    def test_composer_mass_active_domain_w_template(self):
-        with self.with_user('employee'):
-            composer = self.env['sms.composer'].with_context(
-                default_composition_mode='mass',
-                default_res_model='mail.test.sms',
-                default_use_active_domain=True,
-                active_domain=[('id', 'in', self.records.ids)],
-                default_template_id=self.sms_template.id,
-            ).create({
-                'mass_keep_log': False,
-            })
-
-            with self.mockSMSGateway():
-                composer.action_send_sms()
-
-        for record in self.records:
-            self.assertSMSOutgoing(record.customer_id, None, content='Dear %s this is an SMS.' % record.display_name)
 
     def test_composer_mass_active_ids(self):
         with self.with_user('employee'):
