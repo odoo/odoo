@@ -460,6 +460,24 @@
             </field>
         </record>
 
+        <!-- This view is specifically for sending mass mailings from different apps
+        like Contacts/CRM. And for that reason, priority is given high. -->
+        <record id="mailing_mailing_view_form_nomodel" model="ir.ui.view">
+            <field name="name">mailing.mailing.view.form.nomodel</field>
+            <field name="model">mailing.mailing</field>
+            <field name="inherit_id" ref="mass_mailing.view_mail_mass_mailing_form"/>
+            <field name="mode">primary</field>
+            <field name="priority">100</field>
+            <field name="arch" type="xml">
+                <xpath expr="//label[@for='mailing_model_id']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//div[@name='mailing_model_id_container']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+            </field>
+        </record>
+
         <record model="ir.ui.view" id="view_mail_mass_mailing_kanban">
             <field name="name">mailing.mailing.kanban</field>
             <field name="model">mailing.mailing</field>
