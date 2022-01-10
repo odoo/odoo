@@ -90,17 +90,20 @@ class PurchaseOrder(models.Model):
             # If the product is MTO, change the procure_method of the the closest move to purchase to MTS.
             # The purpose is to link the po that the user will manually generate to the existing moves's chain.
             if order.state in ('draft', 'sent', 'to approve', 'purchase'):
+                picking_to_cancel = self.env['stock.picking']
                 for order_line in order.order_line:
+                    picking_to_cancel |= order_line.move_ids.picking_id
                     order_line.move_ids._action_cancel()
                     if order_line.move_dest_ids:
                         move_dest_ids = order_line.move_dest_ids
                         if order_line.propagate_cancel:
+                            picking_to_cancel |= move_dest_ids.picking_id
                             move_dest_ids._action_cancel()
                         else:
                             move_dest_ids.write({'procure_method': 'make_to_stock'})
                             move_dest_ids._recompute_state()
 
-            for pick in order.picking_ids.filtered(lambda r: r.state != 'cancel'):
+            for pick in order.picking_ids.filtered(lambda r: r.state != 'cancel') | picking_to_cancel.filtered(lambda p:p.state == 'cancel'):
                 pick.action_cancel()
 
             order.order_line.write({'move_dest_ids':[(5,0,0)]})
