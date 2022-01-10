@@ -75,6 +75,17 @@
                         <field name="tag_name">Zero Rated</field>
                         <field name="sequence">7</field>
                     </record>
+                    <record id="tax_report_line_non_gst_supplies" model="account.tax.report.line">
+                        <field name="name">Non GST Supplies</field>
+                        <field name="tag_name">Non GST Supplies</field>
+                        <field name="sequence">8</field>
+                    </record>
+                    <!-- The government can impose CESS for purposes such as disaster relief in specific states. So not tax link with this, If government add CESS in specific states then use this in repartition lines-->
+                    <record id="tax_report_line_state_cess" model="account.tax.report.line">
+                        <field name="name">State CESS</field>
+                        <field name="tag_name">State CESS</field>
+                        <field name="sequence">9</field>
+                    </record>
                 </field>
             </record>
         </field>
@@ -147,6 +158,39 @@ if tax &gt; result:result=tax</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),             (0,0, {                 'factor_percent': 100,                 'repartition_type': 'base',                 'plus_report_line_ids': [ref('tax_report_line_nil_rated')],              }),             (0,0, {                 'factor_percent': 100,                 'repartition_type': 'tax',              }),         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),             (0,0, {                 'factor_percent': 100,                 'repartition_type': 'base',                 'minus_report_line_ids': [ref('tax_report_line_nil_rated')],             }),             (0,0, {                 'factor_percent': 100,                 'repartition_type': 'tax',              }),         ]"/>
     </record>
+
+    <record id="non_gst_supplies_sale" model="account.tax.template">
+        <field name="name">Non GST Supplies</field>
+        <field name="description">Non GST Supplies</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">0</field>
+        <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        <field name="tax_group_id" ref="non_gst_supplies_group"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_line_non_gst_supplies')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_line_non_gst_supplies')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+
     <record id="igst_sale_0" model="account.tax.template">
         <field name="name">IGST 0%</field>
         <field name="description">IGST 0%</field>
