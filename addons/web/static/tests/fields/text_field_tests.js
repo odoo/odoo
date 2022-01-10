@@ -203,7 +203,7 @@ QUnit.module("Fields", (hooks) => {
         assert.expect(7);
 
         serverData.models.partner.fields.foo.type = "text";
-        var form = await makeView({
+        const form = await makeView({
             type: "form",
             resModel: "partner",
             resId: 1,
@@ -249,61 +249,65 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skip("text fields in edit mode have correct height", async function (assert) {
+    QUnit.test("text fields in edit mode have correct height", async function (assert) {
         assert.expect(2);
 
         serverData.models.partner.fields.foo.type = "text";
         serverData.models.partner.records[0].foo = "f\nu\nc\nk\nm\ni\nl\ng\nr\no\nm";
-        var form = await makeView({
+        const form = await makeView({
             type: "form",
             resModel: "partner",
+            resId: 1,
             serverData,
-            arch: '<form string="Partners">' + '<field name="foo"/>' + "</form>",
-            res_id: 1,
+            arch: `
+                <form>
+                    <field name="foo" />
+                </form>
+            `,
         });
 
-        var $field = form.$(".o_field_text");
-
+        const field = form.el.querySelector(".o_field_text");
         assert.strictEqual(
-            $field[0].offsetHeight,
-            $field[0].scrollHeight,
+            field.offsetHeight,
+            field.scrollHeight,
             "text field should not have a scroll bar"
         );
 
-        await testUtils.form.clickEdit(form);
+        await click(form.el, ".o_form_button_edit");
 
-        var $textarea = form.$("textarea:first");
-
-        // the difference is to take small calculation errors into account
+        const textarea = form.el.querySelector(".o_field_text textarea");
         assert.strictEqual(
-            $textarea[0].clientHeight,
-            $textarea[0].scrollHeight,
+            textarea.clientHeight,
+            textarea.scrollHeight - Math.abs(textarea.scrollTop),
             "textarea should not have a scroll bar"
         );
-        form.destroy();
     });
 
-    QUnit.skip("text fields in edit mode, no vertical resize", async function (assert) {
+    QUnit.test("text fields in edit mode, no vertical resize", async function (assert) {
         assert.expect(1);
 
-        var form = await makeView({
+        const form = await makeView({
             type: "form",
             resModel: "partner",
+            resId: 1,
             serverData,
-            arch: '<form string="Partners">' + '<field name="txt"/>' + "</form>",
-            res_id: 1,
+            arch: `
+                <form>
+                    <field name="txt" />
+                </form>
+            `,
         });
 
-        await testUtils.form.clickEdit(form);
+        await click(form.el, ".o_form_button_edit");
 
-        var $textarea = form.$("textarea:first");
-
-        assert.strictEqual($textarea.css("resize"), "none", "should not have vertical resize");
-
-        form.destroy();
+        assert.strictEqual(
+            window.getComputedStyle(form.el.querySelector("textarea")).resize,
+            "none",
+            "should not have vertical resize"
+        );
     });
 
-    QUnit.skip("text fields should have correct height after onchange", async function (assert) {
+    QUnit.test("text fields should have correct height after onchange", async function (assert) {
         assert.expect(2);
 
         const damnLongText = `Lorem ipsum dolor sit amet, consectetur adipiscing elit.
@@ -320,36 +324,38 @@ QUnit.module("Fields", (hooks) => {
         serverData.models.partner.records[0].txt = damnLongText;
         serverData.models.partner.records[0].bar = false;
         serverData.models.partner.onchanges = {
-            bar: function (obj) {
+            bar(obj) {
                 obj.txt = damnLongText;
             },
         };
         const form = await makeView({
-            arch: `
-                <form string="Partners">
-                    <field name="bar"/>
-                    <field name="txt" attrs="{'invisible': [('bar', '=', True)]}"/>
-                </form>`,
-            serverData,
-            resModel: "partner",
-            res_id: 1,
             type: "form",
-            viewOptions: { mode: "edit" },
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <field name="bar" />
+                    <field name="txt" attrs="{'invisible': [('bar', '=', True)]}" />
+                </form>
+            `,
         });
 
-        const textarea = form.el.querySelector('textarea[name="txt"]');
+        await click(form.el, ".o_form_button_edit");
+
+        let textarea = form.el.querySelector(".o_field_widget[name='txt'] textarea");
         const initialHeight = textarea.offsetHeight;
 
-        await testUtils.fields.editInput($(textarea), "Short value");
+        textarea.value = "Short value";
+        await triggerEvent(textarea, null, "change");
 
         assert.ok(textarea.offsetHeight < initialHeight, "Textarea height should have shrank");
 
-        await testUtils.dom.click(form.$('.o_field_boolean[name="bar"] input'));
-        await testUtils.dom.click(form.$('.o_field_boolean[name="bar"] input'));
+        await click(form.el, ".o_field_boolean[name='bar'] input");
+        await click(form.el, ".o_field_boolean[name='bar'] input");
 
+        textarea = form.el.querySelector(".o_field_widget[name='txt'] textarea");
         assert.strictEqual(textarea.offsetHeight, initialHeight, "Textarea height should be reset");
-
-        form.destroy();
     });
 
     QUnit.skip("text fields in editable list have correct height", async function (assert) {
@@ -385,44 +391,42 @@ QUnit.module("Fields", (hooks) => {
         list.destroy();
     });
 
-    QUnit.skip("text fields in edit mode should resize on reset", async function (assert) {
+    QUnit.test("text fields in edit mode should resize on reset", async function (assert) {
         assert.expect(1);
 
         serverData.models.partner.fields.foo.type = "text";
 
         serverData.models.partner.onchanges = {
-            bar: function (obj) {
+            bar(obj) {
                 obj.foo = "a\nb\nc\nd\ne\nf";
             },
         };
 
-        var form = await makeView({
+        const form = await makeView({
             type: "form",
             resModel: "partner",
+            resId: 1,
             serverData,
-            arch:
-                '<form string="Partners">' +
-                '<field name="bar"/>' +
-                '<field name="foo"/>' +
-                "</form>",
-            res_id: 1,
+            arch: `
+                <form>
+                    <field name="bar" />
+                    <field name="foo" />
+                </form>
+            `,
         });
 
         // edit the form
         // trigger a textarea reset (through onchange) by clicking the box
         // then check there is no scroll bar
-        await testUtils.form.clickEdit(form);
+        await click(form.el, ".o_form_button_edit");
+        await click(form.el, "div[name='bar'] input");
 
-        await testUtils.dom.click(form.$('div[name="bar"] input'));
-
-        var $textarea = form.$("textarea:first");
+        const textarea = form.el.querySelector("textarea");
         assert.strictEqual(
-            $textarea.innerHeight(),
-            $textarea[0].scrollHeight,
+            textarea.clientHeight,
+            textarea.scrollHeight,
             "textarea should not have a scroll bar"
         );
-
-        form.destroy();
     });
 
     QUnit.skip("text field translatable", async function (assert) {
@@ -433,7 +437,7 @@ QUnit.module("Fields", (hooks) => {
         var multiLang = _t.database.multi_lang;
         _t.database.multi_lang = true;
 
-        var form = await makeView({
+        const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -464,7 +468,7 @@ QUnit.module("Fields", (hooks) => {
                 return this._super.apply(this, arguments);
             },
         });
-        await testUtils.form.clickEdit(form);
+        await click(form.el, ".o_form_button_edit");
         var $button = form.$("textarea + .o_field_translate");
         assert.strictEqual($button.length, 1, "should have a translate button");
         await testUtils.dom.click($button);
@@ -480,7 +484,7 @@ QUnit.module("Fields", (hooks) => {
 
         var multiLang = _t.database.multi_lang;
         _t.database.multi_lang = true;
-        var form = await makeView({
+        const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -552,7 +556,7 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(1);
 
-            var form = await makeView({
+            const form = await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -607,7 +611,7 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(2);
 
-            var form = await makeView({
+            const form = await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -619,7 +623,7 @@ QUnit.module("Fields", (hooks) => {
                 res_id: 1,
             });
 
-            await testUtils.form.clickEdit(form);
+            await click(form.el, ".o_form_button_edit");
 
             // // We need to convert the input type since we can't programmatically set the value of a file input
             form.$(".o_input_file").attr("type", "text").val("coucou.txt");
