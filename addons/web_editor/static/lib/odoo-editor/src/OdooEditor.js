@@ -1827,6 +1827,12 @@ export class OdooEditor extends EventTarget {
         const sel = this.document.getSelection();
         if (!sel.anchorNode) {
             show = false;
+        } else {
+            const selAncestors = [sel.anchorNode, ...ancestors(sel.anchorNode, this.editable)];
+            const isInStars = selAncestors.some(node => node.classList && node.classList.contains('o_stars'));
+            if (isInStars) {
+                show = false;
+            }
         }
         if (this.options.autohideToolbar) {
             if (show !== undefined && !this.isMobile) {

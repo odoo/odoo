@@ -206,7 +206,9 @@ const Wysiwyg = Widget.extend({
                 }).join(' ');
             }
 
-            self.openMediaDialog(params);
+            if (!$el.parent().hasClass('o_stars')) {
+                self.openMediaDialog(params);
+            }
         });
 
         if (options.snippets) {
@@ -1364,7 +1366,7 @@ const Wysiwyg = Widget.extend({
         this.toolbar.$el.find('#create-link').toggleClass('d-none', !range || spansBlocks);
         // Only show the media tools in the toolbar if the current selected
         // snippet is a media.
-        const isInMedia = $target.is(mediaSelector);
+        const isInMedia = $target.is(mediaSelector) && !$target.parent().hasClass('o_stars');
         this.toolbar.$el.find([
             '#image-shape',
             '#image-width',
