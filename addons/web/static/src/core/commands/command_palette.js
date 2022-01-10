@@ -12,7 +12,7 @@ const { Component, hooks } = owl;
 const { onWillStart, useState } = hooks;
 
 const DEFAULT_PLACEHOLDER = _lt("Search...");
-const DEFAULT_EMPTY_MESSAGE = _lt("No results found");
+const DEFAULT_EMPTY_MESSAGE = _lt("No result found");
 const FUZZY_NAMESPACES = ["default"];
 
 /**
@@ -37,7 +37,7 @@ const FUZZY_NAMESPACES = ["default"];
  * @typedef {{
  *  categoriesByNamespace?: {[namespace]: string[]};
  *  emptyMessageByNamespace?: {[namespace]: string};
- *  footerTemplate?: string;
+ *  footerComponent?: Component;
  *  placeholder?: string;
  *  providers: Provider[];
  *  searchValue?: string;
@@ -84,7 +84,7 @@ export class CommandPalette extends Component {
         /**
          * @type {{ commands: CommandItem[],
          *          emptyMessage: string,
-         *          footerTemplate: string,
+         *          footerComponent: Component,
          *          placeholder: string,
          *          searchValue: string,
          *          selectedCommand: CommandItem }}
@@ -130,7 +130,7 @@ export class CommandPalette extends Component {
         this.emptyMessageByNamespace = config.emptyMessageByNamespace || {};
         this.providersByNamespace = result;
 
-        this.state.footerTemplate = config.footerTemplate;
+        this.state.footerComponent = config.footerComponent;
 
         this.state.placeholder = config.placeholder || DEFAULT_PLACEHOLDER.toString();
 
