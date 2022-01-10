@@ -131,7 +131,7 @@ var ThreadWidget = Widget.extend({
         this._currentThreadID = thread.getID();
 
         // copy so that reverse do not alter order in the thread object
-        var messages = _.clone(thread.getMessages({ domain: options.domain || [] }));
+        var messages = _.clone(thread.getMessages());
 
         var modeOptions = options.isCreateMode ? this._disabledOptions :
                                                     this._enabledOptions;

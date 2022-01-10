@@ -11,7 +11,16 @@ import { datetime_to_str } from 'web.time';
 
 QUnit.module('im_livechat', {}, function () {
 QUnit.module('components', {}, function () {
-QUnit.module('discuss_tests.js');
+QUnit.module('discuss_tests.js', {
+    beforeEach() {
+        this.start = async params => {
+            return start(Object.assign({}, params, {
+                autoOpenDiscuss: true,
+                hasDiscuss: true,
+            }));
+        };
+    },
+});
 
 QUnit.test('livechat in the sidebar: basic rendering', async function (assert) {
     assert.expect(5);
@@ -363,6 +372,60 @@ QUnit.test('call buttons should not be present on livechat', async function (ass
         document.body,
         '.o_ThreadViewTopbar_callButton',
         "Call buttons should not be visible in top bar when livechat is active thread"
+    );
+});
+
+QUnit.test('reaction button should not be present on livechat', async function (assert) {
+    assert.expect(1);
+
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv['mail.channel'].create({
+        anonymous_name: "Visitor 11",
+        channel_type: 'livechat',
+        livechat_operator_id: pyEnv.currentPartnerId,
+        channel_partner_ids: [pyEnv.currentPartnerId, pyEnv.publicPartnerId],
+    });
+    const { click, insertText } = await this.start({
+        discuss: {
+            params: {
+                default_active_id: `mail.channel_${mailChannelId1}`,
+            },
+        },
+    });
+    await insertText('.o_ComposerTextInput_textarea', "Test");
+    await click('.o_Composer_buttonSend');
+    await click('.o_Message');
+    assert.containsNone(
+        document.body,
+        '.o_MessageActionList_actionReaction',
+        "should not have action to add a reaction"
+    );
+});
+
+QUnit.test('reply button should not be present on livechat', async function (assert) {
+    assert.expect(1);
+
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv['mail.channel'].create({
+        anonymous_name: "Visitor 11",
+        channel_type: 'livechat',
+        livechat_operator_id: pyEnv.currentPartnerId,
+        channel_partner_ids: [pyEnv.currentPartnerId, pyEnv.publicPartnerId],
+    });
+    const { click, insertText } = await this.start({
+        discuss: {
+            params: {
+                default_active_id: `mail.channel_${mailChannelId1}`,
+            },
+        },
+    });
+    await insertText('.o_ComposerTextInput_textarea', "Test");
+    await click('.o_Composer_buttonSend');
+    await click('.o_Message');
+    assert.containsNone(
+        document.body,
+        '.o_MessageActionList_actionReply',
+        "should not have reply action"
     );
 });
 
