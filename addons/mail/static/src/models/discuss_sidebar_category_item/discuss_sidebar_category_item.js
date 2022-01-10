@@ -9,14 +9,6 @@ import Dialog from 'web.Dialog';
 registerModel({
     name: 'DiscussSidebarCategoryItem',
     identifyingFields: ['category', 'channel'],
-    lifecycleHooks: {
-        _created() {
-            this.onClick = this.onClick.bind(this);
-            this.onClickCommandLeave = this.onClickCommandLeave.bind(this);
-            this.onClickCommandSettings = this.onClickCommandSettings.bind(this);
-            this.onClickCommandUnpin = this.onClickCommandUnpin.bind(this);
-        },
-    },
     recordMethods: {
         /**
          * @private

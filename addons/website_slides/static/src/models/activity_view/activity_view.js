@@ -1,16 +1,8 @@
 /** @odoo-module **/
 
-import { addRecordMethods, patchLifecycleHooks } from '@mail/model/model_core';
+import { addRecordMethods } from '@mail/model/model_core';
 // ensure that the model definition is loaded before the patch
 import '@mail/models/activity_view/activity_view';
-
-patchLifecycleHooks('ActivityView', {
-    _created() {
-        this._super();
-        this.onGrantAccess = this.onGrantAccess.bind(this);
-        this.onRefuseAccess = this.onRefuseAccess.bind(this);
-    },
-});
 
 addRecordMethods('ActivityView', {
     /**

@@ -25,12 +25,6 @@ registerModel({
             this._nextMentionRpcFunction = undefined;
         },
         _created() {
-            this.onClickButtonEmojis = this.onClickButtonEmojis.bind(this);
-            this.onClickCancelLink = this.onClickCancelLink.bind(this);
-            this.onClickCaptureGlobal = this.onClickCaptureGlobal.bind(this);
-            this.onClickSaveLink = this.onClickSaveLink.bind(this);
-            this.onClickStopReplying = this.onClickStopReplying.bind(this);
-            this.onKeydownButtonEmojis = this.onKeydownButtonEmojis.bind(this);
             document.addEventListener('click', this.onClickCaptureGlobal, true);
         },
         _willDelete() {

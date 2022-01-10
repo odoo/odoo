@@ -7,12 +7,6 @@ import { clear, insertAndReplace, link, unlink } from '@mail/model/model_field_c
 registerModel({
     name: 'Discuss',
     identifyingFields: ['messaging'],
-    lifecycleHooks: {
-        _created() {
-            // Bind necessary until OWL supports arrow function in handlers: https://github.com/odoo/owl/issues/876
-            this.onClickStartAMeetingButton = this.onClickStartAMeetingButton.bind(this);
-        },
-    },
     recordMethods: {
         clearIsAddingItem() {
             this.update({

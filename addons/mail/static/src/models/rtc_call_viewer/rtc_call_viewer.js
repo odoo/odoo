@@ -15,12 +15,6 @@ registerModel({
     lifecycleHooks: {
         _created() {
             this._timeoutId = undefined;
-            this.onClick = this.onClick.bind(this);
-            this.onLayoutSettingsDialogClosed = this.onLayoutSettingsDialogClosed.bind(this);
-            this.onMouseMove = this.onMouseMove.bind(this);
-            this.onMouseMoveOverlay = this.onMouseMoveOverlay.bind(this);
-            this.onRtcSettingsDialogClosed = this.onRtcSettingsDialogClosed.bind(this);
-            this._onFullScreenChange = this._onFullScreenChange.bind(this);
             browser.addEventListener('fullscreenchange', this._onFullScreenChange);
         },
         _willDelete() {

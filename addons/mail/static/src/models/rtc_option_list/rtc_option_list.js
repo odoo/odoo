@@ -6,15 +6,6 @@ import { attr, one2one } from '@mail/model/model_field';
 registerModel({
     name: 'RtcOptionList',
     identifyingFields: ['rtcController'],
-    lifecycleHooks: {
-        _created() {
-            this.onClickDownloadLogs = this.onClickDownloadLogs.bind(this);
-            this.onClickActivateFullScreen = this.onClickActivateFullScreen.bind(this);
-            this.onClickDeactivateFullScreen = this.onClickDeactivateFullScreen.bind(this);
-            this.onClickLayout = this.onClickLayout.bind(this);
-            this.onClickOptions = this.onClickOptions.bind(this);
-        },
-    },
     recordMethods: {
         /**
          * Creates and download a file that contains the logs of the current RTC call.

@@ -8,12 +8,6 @@ import { markEventHandled } from '@mail/utils/utils';
 registerModel({
     name: 'MessageInReplyToView',
     identifyingFields: ['messageView'],
-    lifecycleHooks: {
-        _created() {
-            // bind handlers so they can be used in templates
-            this.onClickReply = this.onClickReply.bind(this);
-        },
-    },
     recordMethods: {
         /**
          * @private

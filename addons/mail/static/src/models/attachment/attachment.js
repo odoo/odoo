@@ -1,18 +1,12 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, many2many, many2one, one2many } from '@mail/model/model_field';
+import { attr, many2many, many2one } from '@mail/model/model_field';
 import { clear, insert } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'Attachment',
     identifyingFields: ['id'],
-    lifecycleHooks: {
-        _created() {
-            // Bind necessary until OWL supports arrow function in handlers: https://github.com/odoo/owl/issues/876
-            this.onClickDownload = this.onClickDownload.bind(this);
-        },
-    },
     modelMethods: {
         /**
          * @static

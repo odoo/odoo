@@ -8,16 +8,6 @@ import { markEventHandled } from '@mail/utils/utils';
 registerModel({
     name: 'ChatWindow',
     identifyingFields: ['manager', ['thread', 'managerAsNewMessage']],
-    lifecycleHooks: {
-        _created() {
-            // Bind necessary until OWL supports arrow function in handlers: https://github.com/odoo/owl/issues/876
-            this.onClickHideInviteForm = this.onClickHideInviteForm.bind(this);
-            this.onClickHideMemberList = this.onClickHideMemberList.bind(this);
-            this.onClickShowInviteForm = this.onClickShowInviteForm.bind(this);
-            this.onClickShowMemberList = this.onClickShowMemberList.bind(this);
-            this.onFocusInNewMessageFormInput = this.onFocusInNewMessageFormInput.bind(this);
-        },
-    },
     recordMethods: {
         /**
          * Close this chat window.

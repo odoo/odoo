@@ -2,35 +2,13 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many2one, one2one } from '@mail/model/model_field';
-import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
+import { clear, insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'ThreadViewTopbar',
     identifyingFields: ['threadView'],
     lifecycleHooks: {
         _created() {
-            // Bind necessary until OWL supports arrow function in handlers: https://github.com/odoo/owl/issues/876
-            this.onClickHideMemberList = this.onClickHideMemberList.bind(this);
-            this.onClickInboxMarkAllAsRead = this.onClickInboxMarkAllAsRead.bind(this);
-            this.onClickInviteButton = this.onClickInviteButton.bind(this);
-            this.onClickShowMemberList = this.onClickShowMemberList.bind(this);
-            this.onClickTopbarThreadName = this.onClickTopbarThreadName.bind(this);
-            this.onClickUnstarAll = this.onClickUnstarAll.bind(this);
-            this.onClickUserName = this.onClickUserName.bind(this);
-            this.onInputGuestNameInput = this.onInputGuestNameInput.bind(this);
-            this.onInputThreadNameInput = this.onInputThreadNameInput.bind(this);
-            this.onKeyDownGuestNameInput = this.onKeyDownGuestNameInput.bind(this);
-            this.onKeyDownThreadNameInput = this.onKeyDownThreadNameInput.bind(this);
-            this.onMouseEnterUserName = this.onMouseEnterUserName.bind(this);
-            this.onMouseEnterTopbarThreadName = this.onMouseEnterTopbarThreadName.bind(this);
-            this.onMouseLeaveUserName = this.onMouseLeaveUserName.bind(this);
-            this.onMouseLeaveTopbarThreadName = this.onMouseLeaveTopbarThreadName.bind(this);
-            this._onClickCaptureGlobal = this._onClickCaptureGlobal.bind(this);
-            this.onClickTopbarThreadDescription = this.onClickTopbarThreadDescription.bind(this);
-            this.onInputThreadDescriptionInput = this.onInputThreadDescriptionInput.bind(this);
-            this.onKeyDownThreadDescriptionInput = this.onKeyDownThreadDescriptionInput.bind(this);
-            this.onMouseEnterTopbarThreadDescription = this.onMouseEnterTopbarThreadDescription.bind(this);
-            this.onMouseLeaveTopbarThreadDescription = this.onMouseLeaveTopbarThreadDescription.bind(this);
             document.addEventListener('click', this._onClickCaptureGlobal, true);
         },
         _willDelete() {

@@ -7,12 +7,6 @@ import { insertAndReplace } from '@mail/model/model_field_command';
 registerModel({
     name: 'AttachmentBoxView',
     identifyingFields: ['chatter'],
-    lifecycleHooks: {
-        _created() {
-            this.onAttachmentRemoved = this.onAttachmentRemoved.bind(this);
-            this.onClickAddAttachment = this.onClickAddAttachment.bind(this);
-        },
-    },
     recordMethods: {
         /**
          * Handles attachment removed event.

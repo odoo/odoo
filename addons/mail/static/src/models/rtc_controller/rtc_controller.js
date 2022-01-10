@@ -7,17 +7,6 @@ import { insertAndReplace } from '@mail/model/model_field_command';
 registerModel({
     name: 'RtcController',
     identifyingFields: ['callViewer'],
-    lifecycleHooks: {
-        _created() {
-            this.onClickCamera = this.onClickCamera.bind(this);
-            this.onClickDeafen = this.onClickDeafen.bind(this);
-            this.onClickMicrophone = this.onClickMicrophone.bind(this);
-            this.onClickRejectCall = this.onClickRejectCall.bind(this);
-            this.onClickScreen = this.onClickScreen.bind(this);
-            this.onClickToggleAudioCall = this.onClickToggleAudioCall.bind(this);
-            this.onClickToggleVideoCall = this.onClickToggleVideoCall.bind(this);
-        },
-    },
     recordMethods: {
         /**
          * @param {MouseEvent} ev

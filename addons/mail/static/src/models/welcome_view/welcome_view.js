@@ -12,14 +12,6 @@ const getNextGuestNameInputId = (function () {
 registerModel({
     name: 'WelcomeView',
     identifyingFields: ['messaging'],
-    lifecycleHooks: {
-        _created() {
-            // Bind necessary until OWL supports arrow function in handlers: https://github.com/odoo/owl/issues/876
-            this.onClickJoinButton = this.onClickJoinButton.bind(this);
-            this.onInputGuestNameInput = this.onInputGuestNameInput.bind(this);
-            this.onKeydownGuestNameInput = this.onKeydownGuestNameInput.bind(this);
-        },
-    },
     recordMethods: {
         /**
          * Updates guest if needed then displays the thread view instead of the

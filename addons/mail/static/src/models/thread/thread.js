@@ -107,10 +107,6 @@ registerModel({
                 2.5 * 1000
             );
         },
-        _created() {
-            this.onClick = this.onClick.bind(this);
-            this.onClickLoadMoreMembers = this.onClickLoadMoreMembers.bind(this);
-        },
         _willDelete() {
             this._currentPartnerInactiveTypingTimer.clear();
             this._currentPartnerLongTypingTimer.clear();
