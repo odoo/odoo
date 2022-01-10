@@ -38,6 +38,8 @@ class AccruedExpenseRevenue(models.TransientModel):
         compute="_compute_reversal_date",
         required=True,
         readonly=False,
+        store=True,
+        precompute=True,
     )
     amount = fields.Monetary(string='Amount', help="Specify an arbitrary value that will be accrued on a \
         default account for the entire order, regardless of the products on the different lines.")
