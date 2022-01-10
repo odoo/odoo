@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
+import { useService } from "@web/core/utils/hooks";
 import { debounce } from "@web/core/utils/timing";
 
 const { Component } = owl;
@@ -24,10 +24,21 @@ export class AutoComplete extends Component {
         this.debouncedOnInput = debounce(this.onInput.bind(this), 250);
         useExternalListener(window, "scroll", this.onWindowScroll, true);
 
-        useHotkey("escape", this.onEscapePress.bind(this));
-        useHotkey("enter", this.onEnterPress.bind(this));
-        useHotkey("arrowdown", this.onArrowDownPress.bind(this), { allowRepeat: true });
-        useHotkey("arrowup", this.onArrowUpPress.bind(this), { allowRepeat: true });
+        this.hotkey = useService("hotkey");
+        this.hotkeysToRemove = [];
+    }
+
+    get isOpened() {
+        return this.state.open;
+    }
+
+    open(useInput = false) {
+        this.state.open = true;
+        this.loadSources(useInput);
+    }
+    close() {
+        this.state.open = false;
+        this.state.activeSourceOption = null;
     }
 
     loadSources(useInput) {
@@ -53,20 +64,6 @@ export class AutoComplete extends Component {
         }
         this.sources = sources;
     }
-
-    get isOpened() {
-        return this.state.open;
-    }
-
-    open(useInput = false) {
-        this.state.open = true;
-        this.loadSources(useInput);
-    }
-    close() {
-        this.state.open = false;
-        this.state.activeSourceOption = null;
-    }
-
     loadOptions(options, request) {
         if (typeof options === "function") {
             return options(request);
@@ -151,10 +148,30 @@ export class AutoComplete extends Component {
         }
     }
 
+    registerHotkeys() {
+        const hotkeys = {
+            escape: this.onEscapePress.bind(this),
+            enter: this.onEnterPress.bind(this),
+            arrowdown: this.onArrowDownPress.bind(this),
+            arrowup: this.onArrowUpPress.bind(this),
+        };
+        for (const [hotkey, callback] of Object.entries(hotkeys)) {
+            const remove = this.hotkey.add(hotkey, callback, { allowRepeat: true });
+            this.hotkeysToRemove.push(remove);
+        }
+    }
+    unregisterHotkeys() {
+        for (const removeHotkey of this.hotkeysToRemove) {
+            removeHotkey();
+        }
+        this.hotkeysToRemove = [];
+    }
+
     onInputFocus() {
-        this.open();
+        this.registerHotkeys();
     }
     onInputBlur() {
+        this.unregisterHotkeys();
         if (this.props.autoSelect && this.state.activeSourceOption) {
             this.selectOption(this.state.activeSourceOption);
         } else {

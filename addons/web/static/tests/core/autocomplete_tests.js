@@ -5,7 +5,7 @@ import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { registry } from "@web/core/registry";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { makeTestEnv } from "../helpers/mock_env";
-import { click, getFixture, patchWithCleanup, triggerEvent } from "../helpers/utils";
+import { click, getFixture, patchWithCleanup, triggerEvent, triggerEvents } from "../helpers/utils";
 import { registerCleanup } from "../helpers/cleanup";
 
 const { Component, mount } = owl;
@@ -130,7 +130,7 @@ QUnit.module("Components", (hooks) => {
         parent = await mount(Parent, { env, target });
         assert.containsNone(target, ".o-autocomplete--dropdown-menu");
 
-        await click(target, ".o-autocomplete--input");
+        await triggerEvents(target, ".o-autocomplete--input", ["focus", "click"]);
         assert.containsOnce(target, ".o-autocomplete--dropdown-menu");
 
         await triggerEvent(target, ".o-autocomplete--input", "keydown", { key: "Escape" });
@@ -193,7 +193,7 @@ QUnit.module("Components", (hooks) => {
         parent = await mount(Parent, { env, target });
         assert.containsNone(target, ".o-autocomplete--dropdown-menu");
 
-        await triggerEvent(target, ".o-autocomplete--input", "focus");
+        await triggerEvents(target, ".o-autocomplete--input", ["focus", "click"]);
         assert.containsOnce(target, ".o-autocomplete--dropdown-menu");
 
         await triggerEvent(target, ".o-autocomplete--input", "blur");
