@@ -82,9 +82,6 @@ export function useDebugCategory(category, context = {}) {
     const env = useEnv();
     if (env.debug) {
         const debugContext = useEnvDebugContext();
-        useEffect(
-            () => debugContext.activateCategory(category, context),
-            () => []
-        );
+        useEffect(() => debugContext.activateCategory(category, context));
     }
 }

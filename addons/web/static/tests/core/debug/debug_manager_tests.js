@@ -7,6 +7,8 @@ import { registry } from "@web/core/registry";
 import { useDebugCategory, useOwnDebugContext } from "@web/core/debug/debug_context";
 import { ormService } from "@web/core/orm_service";
 import { uiService } from "@web/core/ui/ui_service";
+import { Layout } from "@web/views/layout";
+import { View } from "@web/views/view";
 import { useSetupView } from "@web/views/helpers/view_hook";
 import { ActionDialog } from "@web/webclient/actions/action_dialog";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
@@ -18,10 +20,11 @@ import {
     makeFakeLocalizationService,
     makeFakeUserService,
 } from "../../helpers/mock_services";
-import { click, getFixture, legacyExtraNextTick, patchWithCleanup } from "../../helpers/utils";
+import { click, getFixture, legacyExtraNextTick, patchWithCleanup, triggerHotkey } from "../../helpers/utils";
 import { createWebClient, doAction, getActionManagerServerData } from "../../webclient/helpers";
 import { openViewItem } from "@web/webclient/debug_items";
 import { editSearchView, editView } from "@web/views/debug_items";
+import { validateSearch } from "../../search/helpers";
 
 const { Component, mount, tags } = owl;
 const { xml } = tags;
@@ -379,6 +382,69 @@ QUnit.module("DebugMenu", (hooks) => {
         assert.strictEqual(
             webClient.el.querySelector(".modal .o_form_view .o_field_widget[name=id]").value,
             "18"
+        );
+    });
+
+    QUnit.test("can edit a view with a subview after a control panel update", async (assert) => {
+        class ToyView extends Component {
+            setup() {
+                useSetupView();
+                this.childViewProps = {
+                    type: "graph",
+                    resModel: this.props.resModel,
+                    display: {
+                        controlPanel: {
+                            "bottom-right": false,
+                            "top-left": false,
+                            "top-right": false,
+                        }
+                    }
+                };
+            }
+        }
+        ToyView.components = { Layout, View };
+        ToyView.template = xml`
+            <Layout>
+                <View t-props="childViewProps" />
+            </Layout>`;
+        ToyView.display_name = "ToyView";
+        ToyView.type = "toy";
+        registry.category("views").add("toy", ToyView);
+
+        prepareRegistriesWithCleanup();
+        registry.category("debug").category("view").add("editViewItem", editView);
+
+        patchWithCleanup(odoo, { debug: true });
+
+        const mockRPC = async (route, args) => {
+            if (args.method === "check_access_rights") {
+                return Promise.resolve(true);
+            }
+        };
+        const serverData = getActionManagerServerData();
+        serverData.views["pony,false,toy"] = "<toy/>";
+        serverData.views["pony,false,graph"] = "<graph/>";
+        const webClient = await createWebClient({ serverData, mockRPC });
+        await doAction(webClient, {
+            res_model: "pony",
+            type: "ir.actions.act_window",
+            views: [[false, "toy"]],
+        });
+        await click(webClient.el.querySelector(".o_debug_manager button"));
+        assert.strictEqual(
+            webClient.el.querySelector(".o_debug_manager .dropdown-item").innerText,
+            "Edit View: Toy"
+        );
+        // Close debug menu
+        await triggerHotkey("escape");
+
+        // Triggers a reload
+        await validateSearch(webClient);
+
+        await click(webClient.el.querySelector(".o_debug_manager button"));
+        assert.strictEqual(
+            webClient.el.querySelector(".o_debug_manager .dropdown-item").innerText,
+            "Edit View: Toy"
         );
     });
 
