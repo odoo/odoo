@@ -124,14 +124,14 @@ class Digest(models.Model):
                 'title': self.name,
                 'top_button_label': _('Connect'),
                 'top_button_url': url_join(web_base_url, '/web/login'),
-                'company': user.company_id,
+                'company': self.env.company,
                 'user': user,
                 'tips_count': tips_count,
                 'formatted_date': datetime.today().strftime('%B %d, %Y'),
                 'display_mobile_banner': True,
-                'kpi_data': self.compute_kpis(user.company_id, user),
-                'tips': self.compute_tips(user.company_id, user, tips_count=tips_count, consumed=consum_tips),
-                'preferences': self.compute_preferences(user.company_id, user),
+                'kpi_data': self.compute_kpis(self.env.company, user),
+                'tips': self.compute_tips(self.env.company, user, tips_count=tips_count, consumed=consum_tips),
+                'preferences': self.compute_preferences(self.env.company, user),
             },
             post_process=True
         )[self.id]
@@ -139,18 +139,18 @@ class Digest(models.Model):
             'digest.digest_mail_layout',
             rendered_body,
             add_context={
-                'company': user.company_id,
+                'company': self.env.company,
                 'user': user,
             },
         )
         # create a mail_mail based on values, without attachments
         mail_values = {
             'auto_delete': True,
-            'email_from': self.company_id.partner_id.email_formatted if self.company_id else self.env.user.email_formatted,
+            'email_from': self.env.company.partner_id.email_formatted if (self.env.company and self.env.company.partner_id.email_formatted != '') else self.env.user.email_formatted,
             'email_to': user.email_formatted,
             'body_html': full_mail,
             'state': 'outgoing',
-            'subject': '%s: %s' % (user.company_id.name, self.name),
+            'subject': '%s: %s' % (self.env.company.display_name, self.name),
         }
         mail = self.env['mail.mail'].sudo().create(mail_values)
         return True
