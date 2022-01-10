@@ -853,7 +853,10 @@ class expression(object):
                         # rewrite condition in terms of ids2
                         subop = 'not inselect' if operator in NEGATIVE_TERM_OPERATORS else 'inselect'
                         subquery = 'SELECT "%s" FROM "%s" WHERE "%s" IN %%s' % (rel_id1, rel_table, rel_id2)
+                        check_null = False in ids2
                         ids2 = tuple(it for it in ids2 if it) or (None,)
+                        if check_null:
+                            subquery += ' OR "%s" is null' % rel_id2
                         push(('id', subop, (subquery, [ids2])), model, alias, internal=True)
 
                 else:
