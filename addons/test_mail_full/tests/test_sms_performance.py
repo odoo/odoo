@@ -113,8 +113,6 @@ class TestSMSMassPerformance(BaseMailPerformance, sms_common.MockSMS):
         composer = self.env['sms.composer'].with_context(
             default_composition_mode='mass',
             default_res_model='mail.test.sms',
-            default_use_active_domain=True,
-            active_domain=[('id', 'in', self.records.ids)],
         ).create({
             'body': self._test_body,
             'mass_keep_log': False,
@@ -130,8 +128,6 @@ class TestSMSMassPerformance(BaseMailPerformance, sms_common.MockSMS):
         composer = self.env['sms.composer'].with_context(
             default_composition_mode='mass',
             default_res_model='mail.test.sms',
-            default_use_active_domain=True,
-            active_domain=[('id', 'in', self.records.ids)],
         ).create({
             'body': self._test_body,
             'mass_keep_log': True,

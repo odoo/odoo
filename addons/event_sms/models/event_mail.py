@@ -49,9 +49,9 @@ class EventMailScheduler(models.Model):
                     continue
                 # Do not send SMS if the communication was scheduled before the event but the event is over
                 if scheduler.scheduled_date <= now and (scheduler.interval_type != 'before_event' or scheduler.event_id.date_end > now):
-                    self.env['event.registration']._message_sms_schedule_mass(
+                    registration_ids = self.env['event.registration'].search([('event_id', '=', scheduler.event_id.id), ('state', '!=', 'cancel')])
+                    registration_ids._message_sms_schedule_mass(
                         template=scheduler.template_ref,
-                        active_domain=[('event_id', '=', scheduler.event_id.id), ('state', '!=', 'cancel')],
                         mass_keep_log=True
                     )
                     scheduler.update({

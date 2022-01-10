@@ -149,6 +149,7 @@ class SMSCase(MockSMS):
         :param fields_values: optional values allowing to check directly some
           values on ``sms.sms`` record;
         """
+
         sms_sms = self._find_sms_sms(partner, number, status)
         if failure_type:
             self.assertEqual(sms_sms.failure_type, failure_type)
@@ -174,6 +175,7 @@ class SMSCase(MockSMS):
     def assertSMSOutgoing(self, partner, number, content=None, fields_values=None):
         """ Check outgoing SMS. Search is done for a pair partner / number where
         partner can be an empty recordset. """
+
         self.assertSMS(partner, number, 'outgoing', content=content, fields_values=fields_values)
 
     def assertNoSMSNotification(self, messages=None):
@@ -193,6 +195,7 @@ class SMSCase(MockSMS):
             'failure_type': optional: sms_number_missing / sms_number_format / sms_credit / sms_server
             }, { ... }]
         """
+
         partners = self.env['res.partner'].concat(*list(p['partner'] for p in recipients_info if p.get('partner')))
         numbers = [p['number'] for p in recipients_info if p.get('number')]
         # special case of void notifications: check for False / False notifications

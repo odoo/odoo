@@ -153,6 +153,7 @@ class MailThread(models.AbstractModel):
         :param active_domain: bypass self.ids and apply composer on active_domain
           instead;
         """
+
         composer_context = {
             'default_res_model': self._name,
             'default_composition_mode': 'mass',
