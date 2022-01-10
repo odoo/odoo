@@ -69,6 +69,7 @@ export class MockModels {
                 },
                 records: [
                     { icon: 'fa-envelope', id: 1, name: "Email" },
+                    { icon: 'fa-upload', id: 28, name: "Upload Document" },
                 ],
             },
             'mail.channel': {
