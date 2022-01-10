@@ -289,6 +289,10 @@ function classToStyle($editable, cssRules) {
                 node.style[styleName] = '';
             }
         }
+        // Ignore font-family (mail-safe font declared in <head>)
+        if ('font-family' in css) {
+            delete css['font-family'];
+        }
 
         // Do not apply css that would override inline styles (which are prioritary).
         let style = $target.attr('style') || '';
