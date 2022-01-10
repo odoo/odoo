@@ -109,7 +109,7 @@ class RecurrenceRule(models.Model):
         for odoo_attendee_email in set(existing_attendees.mapped('email')):
             # Remove old attendees
             if email_normalize(odoo_attendee_email) not in emails:
-                attendee = existing_attendees.filtered(lambda att: att.email == email_normalize(odoo_attendee_email))
+                attendee = existing_attendees.exists().filtered(lambda att: att.email == email_normalize(odoo_attendee_email))
                 self.calendar_event_ids.write({'need_sync': False, 'partner_ids': [(3, attendee.partner_id.id)]})
 
         # Update the recurrence values
