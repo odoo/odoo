@@ -153,25 +153,19 @@ class MailThread(models.AbstractModel):
                 }
         return result
 
-    def _message_sms_schedule_mass(self, body='', template=False, active_domain=None, **composer_values):
+    def _message_sms_schedule_mass(self, body='', template=False, **composer_values):
         """ Shortcut method to schedule a mass sms sending on a recordset.
 
         :param template: an optional sms.template record;
-        :param active_domain: bypass self.ids and apply composer on active_domain
-          instead;
         """
         composer_context = {
             'default_res_model': self._name,
             'default_composition_mode': 'mass',
             'default_template_id': template.id if template else False,
+            'default_res_ids': self.ids,
         }
         if body and not template:
             composer_context['default_body'] = body
-        if active_domain is not None:
-            composer_context['default_use_active_domain'] = True
-            composer_context['default_active_domain'] = repr(active_domain)
-        else:
-            composer_context['default_res_ids'] = self.ids
 
         create_vals = {
             'mass_force_send': False,

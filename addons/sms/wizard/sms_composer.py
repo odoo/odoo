@@ -19,8 +19,6 @@ class SendSMS(models.TransientModel):
 
         result['res_model'] = result.get('res_model') or self.env.context.get('active_model')
 
-        if not result.get('active_domain'):
-            result['active_domain'] = repr(self.env.context.get('active_domain', []))
         if not result.get('res_ids'):
             if not result.get('res_id') and self.env.context.get('active_ids') and len(self.env.context.get('active_ids')) > 1:
                 result['res_ids'] = repr(self.env.context.get('active_ids'))
@@ -40,13 +38,8 @@ class SendSMS(models.TransientModel):
     res_id = fields.Integer('Document ID')
     res_ids = fields.Char('Document IDs')
     res_ids_count = fields.Integer(
-        'Visible records count', compute='_compute_recipients_count', compute_sudo=False,
+        'Visible records count', compute='_compute_res_ids_count', compute_sudo=False,
         help='Number of recipients that will receive the SMS if sent in mass mode, without applying the Active Domain value')
-    use_active_domain = fields.Boolean('Use active domain')
-    active_domain = fields.Text('Active domain', readonly=True)
-    active_domain_count = fields.Integer(
-        'Active records count', compute='_compute_recipients_count', compute_sudo=False,
-        help='Number of records found when searching with the value in Active Domain')
     comment_single_recipient = fields.Boolean(
         'Single Mode', compute='_compute_comment_single_recipient', compute_sudo=False,
         help='Indicates if the SMS composer targets a single specific recipient')
@@ -73,31 +66,27 @@ class SendSMS(models.TransientModel):
         'Message', compute='_compute_body',
         precompute=True, readonly=False, store=True, required=True)
 
-    @api.depends('res_ids_count', 'active_domain_count')
+    @api.depends('res_ids_count')
     @api.depends_context('sms_composition_mode')
     def _compute_composition_mode(self):
         for composer in self:
             if self.env.context.get('sms_composition_mode') == 'guess' or not composer.composition_mode:
-                if composer.res_ids_count > 1 or (composer.use_active_domain and composer.active_domain_count > 1):
+                if composer.res_ids_count > 1:
                     composer.composition_mode = 'mass'
                 else:
                     composer.composition_mode = 'comment'
 
-    @api.depends('res_model', 'res_id', 'res_ids', 'active_domain')
-    def _compute_recipients_count(self):
+    @api.depends('res_model', 'res_id', 'res_ids')
+    def _compute_res_ids_count(self):
         for composer in self:
             composer.res_ids_count = len(literal_eval(composer.res_ids)) if composer.res_ids else 0
-            if composer.res_model:
-                composer.active_domain_count = self.env[composer.res_model].search_count(literal_eval(composer.active_domain or '[]'))
-            else:
-                composer.active_domain_count = 0
 
     @api.depends('res_id', 'composition_mode')
     def _compute_comment_single_recipient(self):
         for composer in self:
             composer.comment_single_recipient = bool(composer.res_id and composer.composition_mode == 'comment')
 
-    @api.depends('res_model', 'res_id', 'res_ids', 'use_active_domain', 'composition_mode', 'number_field_name', 'sanitized_numbers')
+    @api.depends('res_model', 'res_id', 'res_ids', 'composition_mode', 'number_field_name', 'sanitized_numbers')
     def _compute_recipients(self):
         for composer in self:
             composer.recipient_valid_count = 0
@@ -113,7 +102,7 @@ class SendSMS(models.TransientModel):
                 composer.recipient_invalid_count = len([rid for rid, rvalues in res.items() if not rvalues['sanitized']])
             else:
                 composer.recipient_invalid_count = 0 if (
-                    composer.sanitized_numbers or (composer.composition_mode == 'mass' and composer.use_active_domain)
+                    composer.sanitized_numbers or composer.composition_mode == 'mass'
                 ) else 1
 
     @api.depends('res_model', 'number_field_name')
@@ -359,10 +348,7 @@ class SendSMS(models.TransientModel):
     def _get_records(self):
         if not self.res_model:
             return None
-        if self.use_active_domain:
-            active_domain = literal_eval(self.active_domain or '[]')
-            records = self.env[self.res_model].search(active_domain)
-        elif self.res_ids:
+        if self.res_ids:
             records = self.env[self.res_model].browse(literal_eval(self.res_ids))
         elif self.res_id:
             records = self.env[self.res_model].browse(self.res_id)
