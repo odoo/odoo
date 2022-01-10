@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
+import { InvalidNumberError } from "./parsers";
 
 const { Component, hooks } = owl;
 export class FloatField extends Component {
@@ -9,16 +10,17 @@ export class FloatField extends Component {
     }
 
     onChange(ev) {
-        const parsedValue = this.props.parseValue(ev.target.value);
-
-        // Needed cause the formatting was causing owl to not be able any change in the DOM.
-        // ex: If we want 3 digits after the decimal
-        // input: 1.500  DOM: 1.500
-        // input changed to 1.5000, comes back formatted as 1.500.
-        // => the DOM comparaison sees no difference. But the input value displayed is still 1.5000.
-        this.inputRef.el.value = this.formattedInputValue;
-
-        this.props.update(parsedValue);
+        let isValid = true;
+        let value = ev.target.value;
+        try {
+            value = this.props.parseValue(value);
+        } catch (e) {
+            isValid = false;
+            this.props.record.setInvalidField(this.props.name);
+        }
+        if (isValid) {
+            this.props.update(value);
+        }
     }
 
     get inputType() {

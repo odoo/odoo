@@ -213,6 +213,7 @@ export class Record extends DataPoint {
         this._values = params.values;
         this._changes = {};
         this.data = { ...this._values };
+        this._invalidFields = new Set();
         this.preloadedData = {};
         this.preloadedDataCaches = {};
         this.selected = false;
@@ -265,6 +266,15 @@ export class Record extends DataPoint {
         return !this.resId;
     }
 
+    setInvalidField(fieldName) {
+        this._invalidFields.add(fieldName);
+        this.model.notify();
+    }
+
+    isInvalid(fieldName) {
+        return this._invalidFields.has(fieldName);
+    }
+
     async load() {
         if (!this.fieldNames.length) {
             return;
@@ -282,6 +292,7 @@ export class Record extends DataPoint {
         }
         this._values = data; // FIXME: don't update internal state directly
         this.data = { ...data };
+        this._invalidFields = new Set();
 
         // Relational data
         await this.loadRelationalData();
@@ -373,11 +384,19 @@ export class Record extends DataPoint {
             await this._performOnchange(fieldName);
         }
         await this.loadPreloadedData();
+        this._invalidFields.delete(fieldName);
         this.model.notify();
     }
 
     async save() {
         return this.model.mutex.exec(async () => {
+            if (this._invalidFields.size > 0) {
+                this.model.notificationService.add(
+                    this.model.env._t("Invalid fields: ") +
+                        Array.from(this._invalidFields).join(", ")
+                );
+                return false;
+            }
             const changes = this._getChanges();
             const keys = Object.keys(changes);
             let reload = true;
@@ -405,6 +424,7 @@ export class Record extends DataPoint {
                 await this.load();
                 this.model.notify();
             }
+            return true;
         });
     }
 
@@ -516,9 +536,10 @@ export class Record extends DataPoint {
             if (result.domain) {
                 Object.assign(this._domains, result.domain);
             }
-            // for x2many fields, the onchange returns commands, not ids, so we need to process them
-            // for now, we simply return an empty list
             for (const fieldName in result.value) {
+                this._invalidFields.delete(fieldName);
+                // for x2many fields, the onchange returns commands, not ids, so we need to process them
+                // for now, we simply return an empty list
                 if (isX2Many(this.fields[fieldName])) {
                     result.value[fieldName] = [];
                 }

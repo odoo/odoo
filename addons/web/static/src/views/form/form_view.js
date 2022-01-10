@@ -252,6 +252,12 @@ class FormView extends Component {
         for (const btn of btns) {
             btn.setAttribute("disabled", "1");
         }
+        return btns;
+    }
+    enableButtons(btns) {
+        for (const btn of btns) {
+            btn.removeAttribute("disabled");
+        }
     }
 
     edit() {
@@ -263,9 +269,13 @@ class FormView extends Component {
         this.state.inEditMode = true;
     }
     async save() {
-        this.disableButtons();
-        await this.model.root.save();
-        this.state.inEditMode = false;
+        const disabledButtons = this.disableButtons();
+        const saved = await this.model.root.save();
+        if (saved) {
+            this.state.inEditMode = false;
+        } else {
+            this.enableButtons(disabledButtons);
+        }
     }
     discard() {
         this.model.root.discard();

@@ -25,12 +25,17 @@ QUnit.module("Fields", (hooks) => {
                             sortable: true,
                             searchable: true,
                         },
-                        qux: { string: "Qux", type: "float", digits: [16, 1], searchable: true },
+                        float_field: {
+                            string: "Float_field",
+                            type: "float",
+                            digits: [16, 1],
+                            searchable: true,
+                        },
                     },
                     records: [
                         {
                             int_field: 10,
-                            qux: 0.44444,
+                            float_field: 0.44444,
                         },
                     ],
                 },
@@ -46,12 +51,12 @@ QUnit.module("Fields", (hooks) => {
         assert.expect(3);
 
         serverData.models.partner.records = serverData.models.partner.records.slice(0, 1);
-        serverData.models.partner.records[0].qux = 2;
+        serverData.models.partner.records[0].float_field = 2;
 
         serverData.models.partner.onchanges = {
             display_name(obj) {
                 obj.int_field = 999;
-                obj.qux = 5;
+                obj.float_field = 5;
             },
         };
 
@@ -62,15 +67,15 @@ QUnit.module("Fields", (hooks) => {
             arch:
                 "<form>" +
                 '<field name="display_name" />' +
-                '<field name="qux" invisible="1" />' +
-                "<field name=\"int_field\" widget=\"progressbar\" options=\"{'current_value': 'int_field', 'max_value': 'qux'}\" />" +
+                '<field name="float_field" invisible="1" />' +
+                "<field name=\"int_field\" widget=\"progressbar\" options=\"{'current_value': 'int_field', 'max_value': 'float_field'}\" />" +
                 "</form>",
             resId: 1,
             mockRPC(route, { method, args }) {
                 if (method === "write") {
                     assert.deepEqual(
                         args[1],
-                        { int_field: 999, qux: 5, display_name: "new name" },
+                        { int_field: 999, float_field: 5, display_name: "new name" },
                         "New value of progress bar saved"
                     );
                 }
@@ -163,8 +168,8 @@ QUnit.module("Fields", (hooks) => {
                 resModel: "partner",
                 arch:
                     "<form>" +
-                    '<field name="qux" invisible="1" />' +
-                    "<field name=\"int_field\" widget=\"progressbar\" options=\"{'editable': true, 'max_value': 'qux'}\" />" +
+                    '<field name="float_field" invisible="1" />' +
+                    "<field name=\"int_field\" widget=\"progressbar\" options=\"{'editable': true, 'max_value': 'float_field'}\" />" +
                     "</form>",
                 resId: 1,
                 mockRPC(route, { method, args }) {
@@ -217,13 +222,17 @@ QUnit.module("Fields", (hooks) => {
                 resModel: "partner",
                 arch:
                     "<form>" +
-                    '<field name="qux" invisible="1" />' +
-                    "<field name=\"int_field\" widget=\"progressbar\" options=\"{'editable': true, 'max_value': 'qux', 'edit_max_value': true}\" />" +
+                    '<field name="float_field" invisible="1" />' +
+                    "<field name=\"int_field\" widget=\"progressbar\" options=\"{'editable': true, 'max_value': 'float_field', 'edit_max_value': true}\" />" +
                     "</form>",
                 resId: 1,
                 mockRPC(route, { method, args }) {
                     if (method === "write") {
-                        assert.strictEqual(args[1].qux, 69, "New value of progress bar saved");
+                        assert.strictEqual(
+                            args[1].float_field,
+                            69,
+                            "New value of progress bar saved"
+                        );
                     }
                 },
             });
@@ -268,8 +277,8 @@ QUnit.module("Fields", (hooks) => {
                 resModel: "partner",
                 arch:
                     "<form>" +
-                    '<field name="qux" invisible="1" />' +
-                    "<field name=\"int_field\" widget=\"progressbar\" options=\"{'editable': true, 'max_value': 'qux', 'edit_max_value': true, 'edit_current_value': true}\" />" +
+                    '<field name="float_field" invisible="1" />' +
+                    "<field name=\"int_field\" widget=\"progressbar\" options=\"{'editable': true, 'max_value': 'float_field', 'edit_max_value': true, 'edit_current_value': true}\" />" +
                     "</form>",
                 resId: 1,
                 mockRPC(route, { method, args }) {
@@ -279,7 +288,7 @@ QUnit.module("Fields", (hooks) => {
                             2000,
                             "New value of current value saved"
                         );
-                        assert.strictEqual(args[1].qux, 69, "New value of max value saved");
+                        assert.strictEqual(args[1].float_field, 69, "New value of max value saved");
                     }
                 },
             });
@@ -326,8 +335,8 @@ QUnit.module("Fields", (hooks) => {
             resModel: "partner",
             arch:
                 "<form>" +
-                '<field name="qux" invisible="1" />' +
-                "<field name=\"int_field\" widget=\"progressbar\" options=\"{'editable': true, 'max_value': 'qux', 'edit_max_value': true}\" />" +
+                '<field name="float_field" invisible="1" />' +
+                "<field name=\"int_field\" widget=\"progressbar\" options=\"{'editable': true, 'max_value': 'float_field', 'edit_max_value': true}\" />" +
                 "</form>",
             resId: 1,
             mockRPC(route) {
