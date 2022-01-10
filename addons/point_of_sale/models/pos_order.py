@@ -900,6 +900,7 @@ class PosOrderLine(models.Model):
         readonly=True, required=True)
     price_subtotal_incl = fields.Float(string='Subtotal', digits=0,
         readonly=True, required=True)
+    price_extra = fields.Float(string="Price extra")
     margin = fields.Monetary(string="Margin", compute='_compute_margin')
     margin_percent = fields.Float(string="Margin (%)", compute='_compute_margin', digits=(12, 4))
     total_cost = fields.Float(string='Total cost', digits='Product Price', readonly=True)
@@ -1029,6 +1030,7 @@ class PosOrderLine(models.Model):
             'pack_lot_ids': [[0, 0, lot] for lot in orderline.pack_lot_ids.export_for_ui()],
             'customer_note': orderline.customer_note,
             'refunded_qty': orderline.refunded_qty,
+            'price_extra': orderline.price_extra,
         }
 
     def export_for_ui(self):
