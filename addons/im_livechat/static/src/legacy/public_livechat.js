@@ -221,6 +221,15 @@ var LivechatButton = Widget.extend({
                 this._renderMessages();
                 return;
             }
+            case 'mail.message/insert': {
+                const message = this._messages.find(message => message._id === payload.id);
+                if (!message) {
+                    return;
+                }
+                message._body = utils.Markup(payload.body);
+                this._renderMessages()
+                return;
+            }
         }
     },
     /**

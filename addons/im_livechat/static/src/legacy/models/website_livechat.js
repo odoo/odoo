@@ -65,7 +65,8 @@ var WebsiteLivechat = AbstractThread.extend(ThreadTypingMixin, {
      * @returns {im_livechat.legacy.im_livechat.model.WebsiteLivechatMessage[]}
      */
     getMessages: function () {
-        return this._messages;
+        // ignore removed messages
+        return this._messages.filter(message => !message.isEmpty());
     },
     /**
      * @returns {Array}
