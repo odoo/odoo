@@ -34,8 +34,16 @@ class UtilPerf(HttpCase):
 class TestStandardPerformance(UtilPerf):
     def test_10_perf_sql_img_controller(self):
         self.authenticate('demo', 'demo')
+        # not published user, get the not found image placeholder
+        self.assertEqual(self.env['res.users'].sudo().browse(2).website_published, False)
         url = '/web/image/res.users/2/image_256'
         self.assertEqual(self._get_url_hot_query(url), 6)
+
+    def test_11_perf_sql_img_controller(self):
+        self.authenticate('demo', 'demo')
+        self.env['res.users'].sudo().browse(2).website_published = True
+        url = '/web/image/res.users/2/image_256'
+        self.assertEqual(self._get_url_hot_query(url), 5)
 
     def test_20_perf_sql_img_controller_bis(self):
         url = '/web/image/website/1/favicon'
