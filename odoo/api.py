@@ -719,9 +719,9 @@ class Environment(Mapping):
         - ``what`` a collection of fields and ``records`` a recordset, or
         - ``what`` a collection of pairs ``(fields, records)``.
         """
-        prev = self._protected
-        protected = self._protected = prev.new_child()
+        protected = self._protected
         try:
+            protected.maps.insert(0, {})
             if records is not None:  # Handle first signature
                 ids_by_field = {field: records._ids for field in what}
             else:  # Handle second signature
@@ -735,7 +735,7 @@ class Environment(Mapping):
                 protected[field] = ids.union(rec_ids) if ids else frozenset(rec_ids)
             yield
         finally:
-            self._protected = prev
+            protected.maps.pop(0)
 
     def fields_to_compute(self):
         """ Return a view on the field to compute. """
