@@ -17,13 +17,13 @@ class AccountMove(models.Model):
             ('overseas', 'Overseas'),
             ('special_economic_zone', 'Special Economic Zone'),
             ('deemed_export', 'Deemed Export')
-        ], string="GST Treatment", compute="_compute_l10n_in_gst_treatment", store=True, readonly=False)
+        ], string="GST Treatment", compute="_compute_l10n_in_gst_treatment", store=True, readonly=False, copy=True)
     l10n_in_state_id = fields.Many2one('res.country.state', string="Location of supply")
     l10n_in_gstin = fields.Char(string="GSTIN")
     # For Export invoice this data is need in GSTR report
     l10n_in_shipping_bill_number = fields.Char('Shipping bill number', readonly=True, states={'draft': [('readonly', False)]})
     l10n_in_shipping_bill_date = fields.Date('Shipping bill date', readonly=True, states={'draft': [('readonly', False)]})
-    l10n_in_shipping_port_code_id = fields.Many2one('l10n_in.port.code', 'Port code', states={'draft': [('readonly', False)]})
+    l10n_in_shipping_port_code_id = fields.Many2one('l10n_in.port.code', 'Port code', readonly=True, states={'draft': [('readonly', False)]})
     l10n_in_reseller_partner_id = fields.Many2one('res.partner', 'Reseller', domain=[('vat', '!=', False)], help="Only Registered Reseller", readonly=True, states={'draft': [('readonly', False)]})
 
     @api.depends('amount_total')
@@ -94,3 +94,9 @@ class AccountMove(models.Model):
                 if not move.l10n_in_state_id:
                     move.l10n_in_state_id = company_unit_partner.state_id
         return posted
+
+    def _l10n_in_get_warehouse_address(self):
+        """Return address where goods are delivered/received for Invoice/Bill"""
+        # TO OVERRIDE
+        self.ensure_one()
+        return False
