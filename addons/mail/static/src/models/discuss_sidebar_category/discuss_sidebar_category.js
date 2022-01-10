@@ -8,16 +8,6 @@ import { OnChange } from '@mail/model/model_onchange';
 registerModel({
     name: 'DiscussSidebarCategory',
     identifyingFields: [['discussAsChannel', 'discussAsChat']],
-    lifecycleHooks: {
-        _created() {
-            this.onClick = this.onClick.bind(this);
-            this.onHideAddingItem = this.onHideAddingItem.bind(this);
-            this.onAddItemAutocompleteSelect = this.onAddItemAutocompleteSelect.bind(this);
-            this.onAddItemAutocompleteSource = this.onAddItemAutocompleteSource.bind(this);
-            this.onClickCommandAdd = this.onClickCommandAdd.bind(this);
-            this.onClickCommandView = this.onClickCommandView.bind(this);
-        },
-    },
     modelMethods: {
         /**
          * Performs the `set_res_users_settings` RPC on `res.users.settings`.

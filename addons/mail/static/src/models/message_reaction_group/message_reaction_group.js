@@ -8,11 +8,6 @@ import { markEventHandled } from '@mail/utils/utils';
 registerModel({
     name: 'MessageReactionGroup',
     identifyingFields: ['message', 'content'],
-    lifecycleHooks: {
-        _created() {
-            this.onClick = this.onClick.bind(this);
-        },
-    },
     recordMethods: {
         /**
          * Handles click on the reaction group.

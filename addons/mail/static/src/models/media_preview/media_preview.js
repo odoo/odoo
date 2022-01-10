@@ -6,15 +6,6 @@ import { registerModel } from '@mail/model/model_core';
 registerModel({
     name: 'MediaPreview',
     identifyingFields: ['messaging'],
-    lifecycleHooks: {
-        _created() {
-            // Bind necessary until OWL supports arrow function in handlers: https://github.com/odoo/owl/issues/876
-            this.onClickDisableMicrophoneButton = this.onClickDisableMicrophoneButton.bind(this);
-            this.onClickDisableVideoButton = this.onClickDisableVideoButton.bind(this);
-            this.onClickEnableMicrophoneButton = this.onClickEnableMicrophoneButton.bind(this);
-            this.onClickEnableVideoButton = this.onClickEnableVideoButton.bind(this);
-        },
-    },
     modelMethods: {
         /**
          * Iterates tracks of the provided MediaStream, calling the `stop`

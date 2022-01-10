@@ -7,15 +7,6 @@ import { clear, insertAndReplace } from '@mail/model/model_field_command';
 registerModel({
     name: 'ActivityView',
     identifyingFields: ['activityBoxView', 'activity'],
-    lifecycleHooks: {
-        _created() {
-            this.onClickActivity = this.onClickActivity.bind(this);
-            this.onClickCancel = this.onClickCancel.bind(this);
-            this.onClickDetailsButton = this.onClickDetailsButton.bind(this);
-            this.onClickEdit = this.onClickEdit.bind(this);
-            this.onClickUploadDocument = this.onClickUploadDocument.bind(this);
-        }
-    },
     recordMethods: {
         /**
          * Handles the click on a link inside the activity.

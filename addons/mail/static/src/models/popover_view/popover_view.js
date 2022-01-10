@@ -9,7 +9,6 @@ registerModel({
     identifyingFields: [['composerViewOwnerAsEmoji', 'messageActionListOwnerAsReaction', 'threadViewTopbarOwnerAsInvite']],
     lifecycleHooks: {
         _created() {
-            this._onClickCaptureGlobal = this._onClickCaptureGlobal.bind(this);
             document.addEventListener('click', this._onClickCaptureGlobal, true);
         },
         _willDelete() {

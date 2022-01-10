@@ -3,7 +3,7 @@
 import { registerModel } from '@mail/model/model_core';
 import { attr, many2many, many2one, one2many, one2one } from '@mail/model/model_field';
 import { OnChange } from '@mail/model/model_onchange';
-import { insertAndReplace, replace, link, unlink } from '@mail/model/model_field_command';
+import { insertAndReplace, link, unlink } from '@mail/model/model_field_command';
 import { makeDeferred } from '@mail/utils/deferred/deferred';
 
 const { EventBus } = owl.core;
@@ -12,9 +12,6 @@ registerModel({
     name: 'Messaging',
     identifyingFields: [],
     lifecycleHooks: {
-        _created() {
-            this._handleGlobalWindowFocus = this._handleGlobalWindowFocus.bind(this);
-        },
         _willDelete() {
             if (this.env.services['bus_service']) {
                 this.env.services['bus_service'].off('window_focus', null, this._handleGlobalWindowFocus);

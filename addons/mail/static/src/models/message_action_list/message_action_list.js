@@ -8,20 +8,6 @@ import { markEventHandled } from '@mail/utils/utils';
 registerModel({
     name: 'MessageActionList',
     identifyingFields: ['messageView'],
-    lifecycleHooks: {
-        _created() {
-            // bind handlers so they can be used in templates
-            this.onClick = this.onClick.bind(this);
-            this.onClickActionReaction = this.onClickActionReaction.bind(this);
-            this.onClickConfirmDelete = this.onClickConfirmDelete.bind(this);
-            this.onClickDelete = this.onClickDelete.bind(this);
-            this.onClickEdit = this.onClickEdit.bind(this);
-            this.onClickMarkAsRead = this.onClickMarkAsRead.bind(this);
-            this.onClickReplyTo = this.onClickReplyTo.bind(this);
-            this.onClickToggleStar = this.onClickToggleStar.bind(this);
-            this.onDeleteConfirmDialogClosed = this.onDeleteConfirmDialogClosed.bind(this);
-        },
-    },
     recordMethods: {
         /**
          * @private

@@ -28,13 +28,6 @@ registerModel({
         _created() {
             this._attachmentsLoaderTimeout = undefined;
             this._isPreparingAttachmentsLoading = undefined;
-            // Bind necessary until OWL supports arrow function in handlers: https://github.com/odoo/owl/issues/876
-            this.onClickButtonAttachments = this.onClickButtonAttachments.bind(this);
-            this.onClickChatterTopbarClose = this.onClickChatterTopbarClose.bind(this);
-            this.onClickLogNote = this.onClickLogNote.bind(this);
-            this.onClickScheduleActivity = this.onClickScheduleActivity.bind(this);
-            this.onClickSendMessage = this.onClickSendMessage.bind(this);
-            this.onScrollScrollPanel = this.onScrollScrollPanel.bind(this);
         },
         _willDelete() {
             this._stopAttachmentsLoading();

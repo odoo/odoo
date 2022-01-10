@@ -7,14 +7,6 @@ import { insert, insertAndReplace, replace } from '@mail/model/model_field_comma
 registerModel({
     name: 'AttachmentCard',
     identifyingFields: ['attachmentList', 'attachment'],
-    lifecycleHooks: {
-        _created() {
-            // Bind necessary until OWL supports arrow function in handlers: https://github.com/odoo/owl/issues/876
-            this.onClickUnlink = this.onClickUnlink.bind(this);
-            this.onClickImage = this.onClickImage.bind(this);
-            this.onDeleteConfirmDialogClosed = this.onDeleteConfirmDialogClosed.bind(this);
-        },
-    },
     recordMethods: {
         /**
          * Opens the attachment viewer when clicking on viewable attachment.

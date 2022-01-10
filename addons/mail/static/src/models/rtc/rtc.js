@@ -64,12 +64,9 @@ registerModel({
              */
             this._pushToTalkTimeoutId = undefined;
 
-            this._onKeyDown = this._onKeyDown.bind(this);
-            this._onKeyUp = this._onKeyUp.bind(this);
             browser.addEventListener('keydown', this._onKeyDown);
             browser.addEventListener('keyup', this._onKeyUp);
             // Disconnects the RTC session if the page is closed or reloaded.
-            this._onBeforeUnload = this._onBeforeUnload.bind(this);
             browser.addEventListener('beforeunload', this._onBeforeUnload);
             /**
              * Call all sessions for which no peerConnection is established at
