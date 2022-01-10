@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { patchModelMethods } from '@mail/model/model_core';
+import { patchModelMethods, patchRecordMethods } from '@mail/model/model_core';
 import { insertAndReplace } from '@mail/model/model_field_command';
 // ensure the model definition is loaded before the patch
 import '@mail/models/message/message';
@@ -22,5 +22,16 @@ patchModelMethods('Message', {
             }
         }
         return data2;
+    },
+});
+patchRecordMethods('Message', {
+    /**
+     * @override
+     */
+    _computeHasReactionIcon() {
+        if (this.originThread && this.originThread.channel_type === 'livechat') {
+            return false;
+        }
+        return this._super();
     },
 });
