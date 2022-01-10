@@ -66,8 +66,8 @@ class TestLeadToQuotation(crm_common.TestCrmCases):
 
         # view quotes and create
         sale_quotation_ctx = lead_wo_user.action_view_sale_quotation()['context']
-        # self.assertEqual(sale_quotation_ctx['default_team_id'], self.test_team.id)
-        # self.assertNotIn('default_user_id', sale_quotation_ctx)
+        self.assertEqual(sale_quotation_ctx['default_team_id'], self.test_team.id)
+        self.assertNotIn('default_user_id', sale_quotation_ctx)
         quotation = Form(self.env['sale.order'].with_context(sale_quotation_ctx)).save()
         self.assertEqual(
             quotation.user_id, self.env.user,
@@ -106,13 +106,13 @@ class TestLeadToQuotation(crm_common.TestCrmCases):
 
         # view quotes and create
         sale_quotation_ctx = lead_wuser.action_view_sale_quotation()['context']
-        # self.assertEqual(sale_quotation_ctx['default_team_id'], self.test_team2.id)
-        # self.assertEqual(sale_quotation_ctx['default_user_id'], self.crm_salesman.id)
+        self.assertEqual(sale_quotation_ctx['default_team_id'], self.test_team2.id)
+        self.assertEqual(sale_quotation_ctx['default_user_id'], self.crm_salesman.id)
         quotation = Form(self.env['sale.order'].with_context(sale_quotation_ctx)).save()
-        # self.assertEqual(
-        #     quotation.user_id, lead_wuser.user_id,
-        #     'Quotation should have the same salesperson as lead'
-        # )
+        self.assertEqual(
+            quotation.user_id, lead_wuser.user_id,
+            'Quotation should have the same salesperson as lead'
+        )
         # self.assertEqual(
         #     quotation.team_id, lead_wuser.team_id,
         #     'Quotation should have the same sales team as lead'
@@ -147,8 +147,8 @@ class TestLeadToQuotation(crm_common.TestCrmCases):
 
         # view quotes and create
         sale_quotation_ctx = lead_wo_user.action_view_sale_quotation()['context']
-        # self.assertEqual(sale_quotation_ctx['default_team_id'], self.test_team.id)
-        # self.assertNotIn('default_user_id', sale_quotation_ctx)
+        self.assertEqual(sale_quotation_ctx['default_team_id'], self.test_team.id)
+        self.assertNotIn('default_user_id', sale_quotation_ctx)
         quotation = Form(self.env['sale.order'].with_context(sale_quotation_ctx)).save()
         self.assertEqual(
             quotation.user_id, self.partner_wuser.user_id,
@@ -183,8 +183,8 @@ class TestLeadToQuotation(crm_common.TestCrmCases):
 
         # view quotes and create
         sale_quotation_ctx = lead_wuser.action_view_sale_quotation()['context']
-        # self.assertEqual(sale_quotation_ctx['default_team_id'], self.test_team.id)
-        # self.assertEqual(sale_quotation_ctx['default_user_id'], self.crm_salemanager.id)
+        self.assertEqual(sale_quotation_ctx['default_team_id'], self.test_team.id)
+        self.assertEqual(sale_quotation_ctx['default_user_id'], self.crm_salemanager.id)
         quotation = Form(self.env['sale.order'].with_context(sale_quotation_ctx)).save()
         self.assertEqual(
             quotation.user_id, self.partner_wuser.user_id,
