@@ -26,7 +26,8 @@ let target;
 let testComponent;
 const serviceRegistry = registry.category("services");
 
-const footerTemplate = xml`<span>My footer</span>`;
+class footerComponent extends Component {}
+footerComponent.template = xml`<span>My footer</span>`;
 
 class TestComponent extends Component {
     get DialogContainer() {
@@ -78,7 +79,7 @@ QUnit.test("empty providers", async (assert) => {
     assert.containsOnce(target, ".o_command_palette_listbox_empty");
     assert.strictEqual(
         target.querySelector(".o_command_palette_listbox_empty").textContent,
-        "No results found"
+        "No result found"
     );
     assert.strictEqual(
         target.querySelector(".o_command_palette_search input").placeholder,
@@ -153,7 +154,7 @@ QUnit.test("add a footer", async (assert) => {
     testComponent = await mount(TestComponent, { env, target });
     const config = {
         providers: [],
-        footerTemplate,
+        footerComponent,
     };
     env.services.dialog.add(CommandPaletteDialog, {
         config,
@@ -962,7 +963,7 @@ QUnit.test("multi level command", async (assert) => {
     ];
     const config = {
         emptyMessageByNamespace,
-        footerTemplate,
+        footerComponent,
         placeholder: "placeholder test",
         providers,
     };
@@ -1003,7 +1004,7 @@ QUnit.test("multi level command", async (assert) => {
     await editSearchBar("empty");
     assert.strictEqual(
         target.querySelector(".o_command_palette_listbox_empty").textContent,
-        "No results found"
+        "No result found"
     );
     assert.strictEqual(
         target.querySelector(".o_command_palette_search input").placeholder,

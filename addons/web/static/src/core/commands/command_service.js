@@ -2,6 +2,7 @@
 
 import { registry } from "@web/core/registry";
 import { CommandPaletteDialog } from "./command_palette_dialog";
+const { Component } = owl;
 
 const { xml } = owl.tags;
 
@@ -33,12 +34,25 @@ const { xml } = owl.tags;
  */
 
 const commandCategoryRegistry = registry.category("command_categories");
-const commandEmptyMessageRegistry = registry.category("command_empty_list");
 const commandProviderRegistry = registry.category("command_provider");
+const commandSetupRegistry = registry.category("command_setup");
 
-const footerTemplate = xml`
+class DefaultFooter extends Component {
+    setup() {
+        this.elements = commandSetupRegistry
+            .getEntries()
+            .map((el) => ({ namespace: el[0], name: el[1].name }))
+            .filter((el) => el.name);
+    }
+}
+DefaultFooter.template = xml`
 <span>
-    <span class='o_promote'>TIP</span> — search for <span class='o_promote'>@</span>users, <span class='o_promote'>#</span>channels, and <span class='o_promote'>/</span>menus
+    <span class='o_promote'>TIP</span> — search for
+    <t t-foreach="elements" t-as="element">
+        <t t-if="!(element_first || element_last)">, </t>
+        <t t-if="element_last and !element_first"> and </t>
+        <span t-esc="element.namespace" class='o_promote'/><t t-esc="element.name"/>
+    </t>
 </span>
 `;
 
@@ -70,14 +84,16 @@ export const commandService = {
             });
 
             const emptyMessageByNamespace = {};
-            commandEmptyMessageRegistry.getEntries().forEach(([key, message]) => {
-                emptyMessageByNamespace[key] = message.toString();
+            commandSetupRegistry.getEntries().forEach(([key, { emptyMessage }]) => {
+                if (emptyMessage) {
+                    emptyMessageByNamespace[key] = emptyMessage.toString();
+                }
             });
             config = Object.assign(
                 {
                     categoriesByNamespace,
                     emptyMessageByNamespace,
-                    footerTemplate,
+                    footerComponent: DefaultFooter,
                     placeholder: env._t("Search for a command..."),
                     providers: commandProviderRegistry.getAll(),
                 },

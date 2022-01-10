@@ -14,8 +14,11 @@ const commandCategoryRegistry = registry.category("command_categories");
 commandCategoryRegistry.add("apps", { namespace: "/" }, { sequence: 10 });
 commandCategoryRegistry.add("menu_items", { namespace: "/" }, { sequence: 20 });
 
-const commandEmptyMessageRegistry = registry.category("command_empty_list");
-commandEmptyMessageRegistry.add("/", _lt("No menu found"));
+const commandSetupRegistry = registry.category("command_setup");
+commandSetupRegistry.add("/", {
+    emptyMessage: _lt("No menu found"),
+    name: _lt("menus"),
+});
 
 const commandProviderRegistry = registry.category("command_provider");
 commandProviderRegistry.add("menu", {
