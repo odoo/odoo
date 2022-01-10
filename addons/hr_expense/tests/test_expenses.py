@@ -290,5 +290,9 @@ class TestExpenses(TestExpenseCommon):
         sheet.action_sheet_move_create()
         action_data = sheet.action_register_payment()
         wizard =  Form(self.env['account.payment.register'].with_context(action_data['context'])).save()
-        wizard.action_create_payments()
+        action = wizard.action_create_payments()
         self.assertEqual(sheet.state, 'done', 'all account.move.line linked to expenses must be reconciled after payment')
+        
+        move = self.env['account.payment'].browse(action['res_id']).move_id
+        move.button_cancel()
+        self.assertEqual(sheet.state, 'cancel', 'Sheet state must be cancel when the payment linked to that sheet is canceled')
