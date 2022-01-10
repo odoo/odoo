@@ -97,6 +97,14 @@ registerModel({
         },
         /**
          * @private
+         * @returns {FieldCommand}
+         */
+        _computeLastMessageView() {
+            const { length, [length - 1]: lastMessageView } = this.messageViews;
+            return lastMessageView ? replace(lastMessageView) : clear();
+        },
+        /**
+         * @private
          * @returns {MessageView[]}
          */
         _computeMessageViews() {
@@ -387,6 +395,9 @@ registerModel({
          */
         lastMessage: many2one('Message', {
             related: 'thread.lastMessage',
+        }),
+        lastMessageView: one2one('MessageView', {
+            compute: '_computeLastMessageView',
         }),
         /**
          * Most recent message in this ThreadView that has been shown to the

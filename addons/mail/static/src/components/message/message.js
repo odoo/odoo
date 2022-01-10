@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { useComponentToModel } from '@mail/component_hooks/use_component_to_model/use_component_to_model';
+import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model/use_update_to_model';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 import { useUpdate } from '@mail/component_hooks/use_update/use_update';
 import { isEventHandled, markEventHandled } from '@mail/utils/utils';
@@ -22,7 +23,8 @@ export class Message extends Component {
      */
     setup() {
         super.setup();
-        useComponentToModel({ fieldName: 'component', modelName: 'MessageView', propNameAsRecordLocalId: 'messageViewLocalId' });
+        useComponentToModel({ fieldName: 'component', modelName: 'MessageView', propNameAsRecordLocalId: 'localId' });
+        useUpdateToModel({ methodName: 'onComponentUpdate', modelName: 'MessageView', propNameAsRecordLocalId: 'localId' });
         this.state = useState({
             /**
              * Determine whether the message is hovered. When message is hovered
@@ -219,7 +221,7 @@ export class Message extends Component {
      * @returns {MessageView}
      */
     get messageView() {
-        return this.messaging && this.messaging.models['MessageView'].get(this.props.messageViewLocalId);
+        return this.messaging && this.messaging.models['MessageView'].get(this.props.localId);
     }
     /**
      * @returns {string}
@@ -563,9 +565,7 @@ export class Message extends Component {
 }
 
 Object.assign(Message, {
-    props: {
-        messageViewLocalId: String,
-    },
+    props: { localId: String },
     template: 'mail.Message',
 });
 
