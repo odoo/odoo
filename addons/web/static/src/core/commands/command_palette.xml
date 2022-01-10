@@ -28,8 +28,8 @@
         </t>
       </div>
 
-      <div t-if="state.footerTemplate" class="o_command_palette_footer">
-        <t t-call="{{ state.footerTemplate }}"/>
+      <div t-if="state.footerComponent" class="o_command_palette_footer">
+        <t t-component="state.footerComponent"/>
       </div>
 
     </div>

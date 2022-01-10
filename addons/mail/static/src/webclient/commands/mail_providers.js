@@ -14,9 +14,15 @@ DialogCommand.template = xml`
     </div>
 `;
 
-const commandEmptyMessageRegistry = registry.category("command_empty_list");
-commandEmptyMessageRegistry.add("@", _lt("No user found"));
-commandEmptyMessageRegistry.add("#", _lt("No channel found"));
+const commandSetupRegistry = registry.category("command_setup");
+commandSetupRegistry.add("@", {
+    emptyMessage: _lt("No user found"),
+    name: _lt("users"),
+});
+commandSetupRegistry.add("#", {
+    emptyMessage: _lt("No channel found"),
+    name: _lt("channels"),
+});
 
 const commandProviderRegistry = registry.category("command_provider");
 commandProviderRegistry.add("partner", {

@@ -10,6 +10,11 @@ import { DefaultCommandItem } from "./command_palette";
 
 const { Component } = owl;
 
+const commandSetupRegistry = registry.category("command_setup");
+commandSetupRegistry.add("default", {
+    emptyMessage: _lt("No command found"),
+});
+
 export class HotkeyCommandItem extends Component {
     setup() {
         useHotkey(this.props.hotkey, () => {
@@ -29,11 +34,8 @@ export class HotkeyCommandItem extends Component {
     }
 }
 HotkeyCommandItem.template = "web.HotkeyCommandItem";
-const commandEmptyMessageRegistry = registry.category("command_empty_list");
-commandEmptyMessageRegistry.add("default", _lt("No commands found"));
 
 const commandCategoryRegistry = registry.category("command_categories");
-
 const commandProviderRegistry = registry.category("command_provider");
 commandProviderRegistry.add("command", {
     provide: (env, options = {}) => {

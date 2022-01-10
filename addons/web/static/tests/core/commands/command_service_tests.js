@@ -394,10 +394,14 @@ QUnit.test("configure the empty message based on the namespace", async (assert) 
         provide: () => [],
     });
 
-    const commandEmptyMessageRegistry = registry.category("command_empty_list");
-    clearRegistryWithCleanup(commandEmptyMessageRegistry);
-    commandEmptyMessageRegistry.add("default", "Empty Default");
-    commandEmptyMessageRegistry.add("@", "Empty @");
+    const commandSetupRegistry = registry.category("command_setup");
+    clearRegistryWithCleanup(commandSetupRegistry);
+    commandSetupRegistry.add("default", {
+        emptyMessage: "Empty Default",
+    });
+    commandSetupRegistry.add("@", {
+        emptyMessage: "Empty @",
+    });
 
     testComponent = await mount(TestComponent, { env, target });
 
@@ -414,6 +418,74 @@ QUnit.test("configure the empty message based on the namespace", async (assert) 
     assert.strictEqual(
         target.querySelector(".o_command_palette_listbox_empty").textContent,
         "Empty @"
+    );
+});
+
+QUnit.test("footer displays the right tips", async (assert) => {
+    assert.expect(3);
+
+    clearRegistryWithCleanup(commandProviderRegistry);
+
+    commandProviderRegistry.add("default", {
+        namespace: "default",
+        provide: () => [],
+    });
+
+    commandProviderRegistry.add("@", {
+        namespace: "@",
+        provide: () => [],
+    });
+
+    commandProviderRegistry.add("!", {
+        namespace: "!",
+        provide: () => [],
+    });
+
+    commandProviderRegistry.add("#", {
+        namespace: "#",
+        provide: () => [],
+    });
+
+    const commandSetupRegistry = registry.category("command_setup");
+    clearRegistryWithCleanup(commandSetupRegistry);
+    commandSetupRegistry.add("default", {});
+    commandSetupRegistry.add("@", {
+        name: "FirstName",
+    });
+
+    testComponent = await mount(TestComponent, { env, target });
+
+    // Open palette
+    triggerHotkey("control+k");
+    await nextTick();
+    assert.strictEqual(
+        target.querySelector(".o_command_palette_footer").textContent,
+        "TIP — search for @FirstName"
+    );
+
+    // Close palette
+    triggerHotkey("escape");
+    commandSetupRegistry.add("!", {
+        name: "SecondName",
+    });
+    // Open palette
+    triggerHotkey("control+k");
+    await nextTick();
+    assert.strictEqual(
+        target.querySelector(".o_command_palette_footer").textContent,
+        "TIP — search for @FirstName and !SecondName"
+    );
+    // Close palette
+    triggerHotkey("escape");
+    commandSetupRegistry.add("#", {
+        name: "ThirdName",
+    });
+    // Open palette
+    triggerHotkey("control+k");
+    await nextTick();
+    assert.strictEqual(
+        target.querySelector(".o_command_palette_footer").textContent,
+        "TIP — search for @FirstName, !SecondName and #ThirdName"
     );
 });
 
