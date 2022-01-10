@@ -3301,6 +3301,47 @@ QUnit.module("Views", (hooks) => {
         await click(testLink);
     });
 
+    QUnit.skip("Open record when clicking on widget field", async function (assert) {
+        assert.expect(2);
+
+        const kanban = await createView({
+            View: KanbanView,
+            model: "partner",
+            data: this.data,
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click">
+                                <field name="salary" widget="monetary"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            archs: {
+                "product,false,form": '<form string="Product"><field name="display_name"/></form>',
+            },
+            intercepts: {
+                switch_view(ev) {
+                    assert.deepEqual(
+                        {
+                            res_id: ev.data.res_id,
+                            view_type: ev.data.view_type,
+                        },
+                        {
+                            res_id: 1,
+                            view_type: "form",
+                        },
+                        "should trigger an event to open the form view"
+                    );
+                },
+            },
+        });
+        assert.containsN(kanban, ".o_kanban_record:not(.o_kanban_ghost)", 4);
+        kanban.$(".oe_kanban_global_click .o_field_monetary[name=salary]:eq(0)").click();
+        kanban.destroy();
+    });
+
     QUnit.test("o2m loaded in only one batch", async (assert) => {
         assert.expect(9);
 
