@@ -13,10 +13,16 @@
                              and doc.partner_invoice_id != doc.partner_id
                              or doc.partner_shipping_id != doc.partner_invoice_id">
             <t t-set="information_block">
-                <strong t-if="doc.partner_shipping_id == doc.partner_invoice_id">Invoicing and Shipping Address:</strong>
-                <strong t-if="doc.partner_shipping_id != doc.partner_invoice_id">Invoicing Address:</strong>
+                <strong>
+                    <t t-if="doc.partner_shipping_id == doc.partner_invoice_id">
+                        Invoicing and Shipping Address:
+                    </t>
+                    <t t-else="">
+                        Invoicing Address:
+                    </t>
+                </strong>
                 <div t-field="doc.partner_invoice_id"
-                t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
+                    t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
                 <t t-if="doc.partner_shipping_id != doc.partner_invoice_id">
                     <strong>Shipping Address:</strong>
                     <div t-field="doc.partner_shipping_id"
@@ -28,30 +34,25 @@
             <div class="oe_structure"/>
 
             <h2 class="mt16">
-                <t t-if="not (env.context.get('proforma', False) or is_pro_forma)">
-                    <span t-if="doc.state not in ['draft','sent']">Order # </span>
-                    <span t-if="doc.state in ['draft','sent']">Quotation # </span>
-                </t>
-                <t t-if="env.context.get('proforma', False) or is_pro_forma">
-                    <span>Pro-Forma Invoice # </span>
-                </t>
+                <span t-if="env.context.get('proforma', False) or is_pro_forma">Pro-Forma Invoice # </span>
+                <span t-elif="doc.state in ['draft','sent']">Quotation # </span>
+                <span t-else="">Order # </span>
                 <span t-field="doc.name"/>
             </h2>
 
             <div class="row mt32 mb32" id="informations">
-                <div t-if="doc.client_order_ref" class="col-auto col-3 mw-100 mb-2">
+                <div t-if="doc.client_order_ref" class="col-auto col-3 mw-100 mb-2" name="informations_reference">
                     <strong>Your Reference:</strong>
                     <p class="m-0" t-field="doc.client_order_ref"/>
                 </div>
-                <div t-if="doc.date_order and doc.state not in ['draft','sent']" class="col-auto col-3 mw-100 mb-2">
-                    <strong>Order Date:</strong>
-                    <p class="m-0" t-field="doc.date_order"/>
-                </div>
-                <div t-if="doc.date_order and doc.state in ['draft','sent']" class="col-auto col-3 mw-100 mb-2">
-                    <strong>Quotation Date:</strong>
+                <div t-if="doc.date_order" class="col-auto col-3 mw-100 mb-2" name="informations_date">
+                    <strong t-if="doc.state in ['draft', 'sent']">Quotation Date:</strong>
+                    <strong t-else="">Order Date:</strong>
                     <p class="m-0" t-field="doc.date_order" t-options='{"widget": "date"}'/>
                 </div>
-                <div t-if="doc.validity_date and doc.state in ['draft', 'sent']" class="col-auto col-3 mw-100 mb-2" name="expiration_date">
+                <div t-if="doc.validity_date and doc.state in ['draft', 'sent']"
+                    class="col-auto col-3 mw-100 mb-2"
+                    name="expiration_date">
                     <strong>Expiration:</strong>
                     <p class="m-0" t-field="doc.validity_date"/>
                 </div>
@@ -111,14 +112,14 @@
                                     <span t-field="line.price_total" groups="account.group_show_line_subtotals_tax_included"/>
                                 </td>
                             </t>
-                            <t t-if="line.display_type == 'line_section'">
+                            <t t-elif="line.display_type == 'line_section'">
                                 <td name="td_section_line" colspan="99">
                                     <span t-field="line.name"/>
                                 </td>
                                 <t t-set="current_section" t-value="line"/>
                                 <t t-set="current_subtotal" t-value="0"/>
                             </t>
-                            <t t-if="line.display_type == 'line_note'">
+                            <t t-elif="line.display_type == 'line_note'">
                                 <td name="td_note_line" colspan="99">
                                     <span t-field="line.name"/>
                                 </td>
@@ -170,7 +171,8 @@
             <p t-if="not is_html_empty(doc.payment_term_id.note)">
                 <span t-field="doc.payment_term_id.note"/>
             </p>
-            <p id="fiscal_position_remark" t-if="doc.fiscal_position_id and not is_html_empty(doc.fiscal_position_id.sudo().note)">
+            <p t-if="doc.fiscal_position_id and not is_html_empty(doc.fiscal_position_id.sudo().note)"
+                id="fiscal_position_remark">
                 <strong>Fiscal Position Remark:</strong>
                 <span t-field="doc.fiscal_position_id.sudo().note"/>
             </p>
