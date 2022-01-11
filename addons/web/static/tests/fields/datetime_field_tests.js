@@ -1,6 +1,8 @@
 /** @odoo-module **/
 
-import { click } from "../helpers/utils";
+import { registry } from "@web/core/registry";
+import { makeFakeLocalizationService } from "../helpers/mock_services";
+import { click, patchTimeZone, triggerEvent, triggerEvents } from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
 
 let serverData;
@@ -199,139 +201,171 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("DatetimeField");
 
-    QUnit.skip("DatetimeField in form view", async function (assert) {
+    QUnit.test("DatetimeField in form view", async function (assert) {
         assert.expect(7);
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch: '<form string="Partners"><field name="datetime"/></form>',
-            res_id: 1,
-            translateParameters: {
-                // Avoid issues due to localization formats
-                date_format: "%m/%d/%Y",
-                time_format: "%H:%M:%S",
-            },
-            session: {
-                getTZOffset: function () {
-                    return 120;
-                },
-            },
+        patchTimeZone(120);
+
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <field name="datetime" />
+                </form>
+            `,
         });
 
-        var expectedDateString = "02/08/2017 12:00:00"; // 10:00:00 without timezone
+        const expectedDateString = "02/08/2017 12:00:00"; // 10:00:00 without timezone
         assert.strictEqual(
-            form.$(".o_field_date").text(),
+            form.el.querySelector(".o_field_datetime").textContent,
             expectedDateString,
             "the datetime should be correctly displayed in readonly"
         );
 
         // switch to edit mode
-        await testUtils.form.clickEdit(form);
+        await click(form.el, ".o_form_button_edit");
         assert.strictEqual(
-            form.$(".o_datepicker_input").val(),
+            form.el.querySelector(".o_datepicker_input").value,
             expectedDateString,
             "the datetime should be correct in edit mode"
         );
 
         // datepicker should not open on focus
-        assert.containsNone($("body"), ".bootstrap-datetimepicker-widget");
+        assert.containsNone(document.body, ".bootstrap-datetimepicker-widget");
 
-        testUtils.dom.openDatepicker(form.$(".o_datepicker"));
-        assert.containsOnce($("body"), ".bootstrap-datetimepicker-widget");
+        await click(form.el, ".o_datepicker_input");
+        assert.containsOnce(document.body, ".bootstrap-datetimepicker-widget");
 
-        // select 22 February at 8:23:33
-        await testUtils.dom.click($(".bootstrap-datetimepicker-widget .picker-switch").first());
-        await testUtils.dom.click($(".bootstrap-datetimepicker-widget .picker-switch:eq(1)"));
-        await testUtils.dom.click($(".bootstrap-datetimepicker-widget .year:contains(2017)"));
-        await testUtils.dom.click($(".bootstrap-datetimepicker-widget .month").eq(3));
-        await testUtils.dom.click($(".bootstrap-datetimepicker-widget .day:contains(22)"));
-        await testUtils.dom.click($(".bootstrap-datetimepicker-widget .fa-clock-o"));
-        await testUtils.dom.click($(".bootstrap-datetimepicker-widget .timepicker-hour"));
-        await testUtils.dom.click($(".bootstrap-datetimepicker-widget .hour:contains(08)"));
-        await testUtils.dom.click($(".bootstrap-datetimepicker-widget .timepicker-minute"));
-        await testUtils.dom.click($(".bootstrap-datetimepicker-widget .minute:contains(25)"));
-        await testUtils.dom.click($(".bootstrap-datetimepicker-widget .timepicker-second"));
-        await testUtils.dom.click($(".bootstrap-datetimepicker-widget .second:contains(35)"));
-        assert.ok(!$(".bootstrap-datetimepicker-widget").length, "datepicker should be closed");
+        // select 22 February at 8:25:35
+        await click(
+            document.body.querySelectorAll(".bootstrap-datetimepicker-widget .picker-switch")[0]
+        );
+        await click(
+            document.body.querySelectorAll(".bootstrap-datetimepicker-widget .picker-switch")[1]
+        );
+        await click(document.body.querySelectorAll(".bootstrap-datetimepicker-widget .year")[8]);
+        await click(document.body.querySelectorAll(".bootstrap-datetimepicker-widget .month")[3]);
+        await click(
+            document.body.querySelector(".bootstrap-datetimepicker-widget .day[data-day*='/22/']")
+        );
+        await click(document.body.querySelector(".bootstrap-datetimepicker-widget .fa-clock-o"));
+        await click(
+            document.body.querySelector(".bootstrap-datetimepicker-widget .timepicker-hour")
+        );
+        await click(document.body.querySelectorAll(".bootstrap-datetimepicker-widget .hour")[8]);
+        await click(
+            document.body.querySelector(".bootstrap-datetimepicker-widget .timepicker-minute")
+        );
+        await click(document.body.querySelectorAll(".bootstrap-datetimepicker-widget .minute")[5]);
+        await click(
+            document.body.querySelector(".bootstrap-datetimepicker-widget .timepicker-second")
+        );
+        await click(document.body.querySelectorAll(".bootstrap-datetimepicker-widget .second")[7]);
 
-        var newExpectedDateString = "04/22/2017 08:25:35";
+        assert.containsNone(
+            document.body,
+            ".bootstrap-datetimepicker-widget",
+            "datepicker should be closed"
+        );
+
+        const newExpectedDateString = "04/22/2017 08:25:35";
         assert.strictEqual(
-            form.$(".o_datepicker_input").val(),
+            form.el.querySelector(".o_datepicker_input").value,
             newExpectedDateString,
             "the selected date should be displayed in the input"
         );
 
         // save
-        await testUtils.form.clickSave(form);
+        await click(form.el, ".o_form_button_save");
         assert.strictEqual(
-            form.$(".o_field_date").text(),
+            form.el.querySelector(".o_field_datetime").textContent,
             newExpectedDateString,
             "the selected date should be displayed after saving"
         );
-
-        form.destroy();
     });
 
-    QUnit.skip(
+    QUnit.test(
         "DatetimeField does not trigger fieldChange before datetime completly picked",
         async function (assert) {
             assert.expect(6);
 
-            this.data.partner.onchanges = {
-                datetime: function () {},
+            patchTimeZone(120);
+
+            serverData.models.partner.onchanges = {
+                datetime() {},
             };
-            var form = await createView({
-                View: FormView,
-                model: "partner",
-                data: this.data,
-                arch: '<form><field name="datetime"/></form>',
-                res_id: 1,
-                translateParameters: {
-                    // Avoid issues due to localization formats
-                    date_format: "%m/%d/%Y",
-                    time_format: "%H:%M:%S",
-                },
-                session: {
-                    getTZOffset: function () {
-                        return 120;
-                    },
-                },
-                mockRPC: function (route, args) {
-                    if (args.method === "onchange") {
+            const form = await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 1,
+                serverData,
+                arch: `
+                    <form>
+                        <field name="datetime" />
+                    </form>
+                `,
+                mockRPC(route, { method }) {
+                    if (method === "onchange") {
                         assert.step("onchange");
                     }
-                    return this._super.apply(this, arguments);
-                },
-                viewOptions: {
-                    mode: "edit",
                 },
             });
 
-            testUtils.dom.openDatepicker(form.$(".o_datepicker"));
-            assert.containsOnce($("body"), ".bootstrap-datetimepicker-widget");
+            await click(form.el, ".o_form_button_edit");
+
+            await click(form.el, ".o_datepicker_input");
+            assert.containsOnce(document.body, ".bootstrap-datetimepicker-widget");
 
             // select a date and time
-            await testUtils.dom.click($(".bootstrap-datetimepicker-widget .picker-switch").first());
-            await testUtils.dom.click($(".bootstrap-datetimepicker-widget .picker-switch:eq(1)"));
-            await testUtils.dom.click($(".bootstrap-datetimepicker-widget .year:contains(2017)"));
-            await testUtils.dom.click($(".bootstrap-datetimepicker-widget .month").eq(3));
-            await testUtils.dom.click($(".bootstrap-datetimepicker-widget .day:contains(22)"));
-            await testUtils.dom.click($(".bootstrap-datetimepicker-widget .fa-clock-o"));
-            await testUtils.dom.click($(".bootstrap-datetimepicker-widget .timepicker-hour"));
-            await testUtils.dom.click($(".bootstrap-datetimepicker-widget .hour:contains(08)"));
-            await testUtils.dom.click($(".bootstrap-datetimepicker-widget .timepicker-minute"));
-            await testUtils.dom.click($(".bootstrap-datetimepicker-widget .minute:contains(25)"));
-            await testUtils.dom.click($(".bootstrap-datetimepicker-widget .timepicker-second"));
+            await click(
+                document.body.querySelectorAll(".bootstrap-datetimepicker-widget .picker-switch")[0]
+            );
+            await click(
+                document.body.querySelectorAll(".bootstrap-datetimepicker-widget .picker-switch")[1]
+            );
+            await click(
+                document.body.querySelectorAll(".bootstrap-datetimepicker-widget .year")[8]
+            );
+            await click(
+                document.body.querySelectorAll(".bootstrap-datetimepicker-widget .month")[3]
+            );
+            await click(
+                document.body.querySelector(
+                    ".bootstrap-datetimepicker-widget .day[data-day*='/22/']"
+                )
+            );
+            await click(
+                document.body.querySelector(".bootstrap-datetimepicker-widget .fa-clock-o")
+            );
+            await click(
+                document.body.querySelector(".bootstrap-datetimepicker-widget .timepicker-hour")
+            );
+            await click(
+                document.body.querySelectorAll(".bootstrap-datetimepicker-widget .hour")[8]
+            );
+            await click(
+                document.body.querySelector(".bootstrap-datetimepicker-widget .timepicker-minute")
+            );
+            await click(
+                document.body.querySelectorAll(".bootstrap-datetimepicker-widget .minute")[5]
+            );
+            await click(
+                document.body.querySelector(".bootstrap-datetimepicker-widget .timepicker-second")
+            );
             assert.verifySteps([], "should not have done any onchange yet");
-            await testUtils.dom.click($(".bootstrap-datetimepicker-widget .second:contains(35)"));
+            await click(
+                document.body.querySelectorAll(".bootstrap-datetimepicker-widget .second")[7]
+            );
 
-            assert.containsNone($("body"), ".bootstrap-datetimepicker-widget");
-            assert.strictEqual(form.$(".o_datepicker_input").val(), "04/22/2017 08:25:35");
+            assert.containsNone(document.body, ".bootstrap-datetimepicker-widget");
+            assert.strictEqual(
+                form.el.querySelector(".o_datepicker_input").value,
+                "04/22/2017 08:25:35"
+            );
             assert.verifySteps(["onchange"], "should have done only one onchange");
-
-            form.destroy();
         }
     );
 
@@ -340,64 +374,70 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(1);
 
-            var form = await createView({
-                View: FormView,
-                model: "partner",
-                data: this.data,
-                arch:
-                    '<form string="Partners"><field name="txt"/>' +
-                    '<field name="datetime" invisible="True"/></form>',
-                res_id: 1,
-                viewOptions: {
-                    mode: "edit",
-                },
+            const form = await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 1,
+                serverData,
+                arch: `
+                    <form>
+                        <field name="txt" />
+                        <field name="datetime" invisible="1" />
+                    </form>
+                `,
             });
 
-            form.$el.find("textarea[name=txt]").trigger(
-                $.Event("keydown", {
-                    which: $.ui.keyCode.TAB,
-                    keyCode: $.ui.keyCode.TAB,
-                })
-            );
+            await click(form.el, ".o_form_button_edit");
+
+            await triggerEvent(form.el, ".o_field_widget[name='txt'] textarea", "keydown", {
+                key: "Tab",
+            });
             assert.strictEqual(
                 document.activeElement,
-                form.$buttons.find(".o_form_button_save")[0],
+                form.el.querySelector(".o_form_button_save"),
                 "the save button should be selected, because the datepicker did not capture the focus"
             );
-            form.destroy();
         }
     );
 
-    QUnit.skip("DatetimeField with datetime formatted without second", async function (assert) {
+    QUnit.test("DatetimeField with datetime formatted without second", async function (assert) {
         assert.expect(2);
 
-        this.data.partner.fields.datetime.default = "2017-08-02 12:00:05";
-        this.data.partner.fields.datetime.required = true;
+        patchTimeZone(0);
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch: '<form string="Partners"><field name="datetime"/></form>',
-            translateParameters: {
-                // Avoid issues due to localization formats
-                date_format: "%m/%d/%Y",
-                time_format: "%H:%M",
-            },
+        serverData.models.partner.fields.datetime.default = "2017-08-02 12:00:05";
+        serverData.models.partner.fields.datetime.required = true;
+
+        registry.category("services").add(
+            "localization",
+            makeFakeLocalizationService({
+                dateFormat: "MM/dd/yyyy",
+                timeFormat: "HH:mm",
+                dateTimeFormat: "MM/dd/yyyy HH:mm",
+            }),
+            { force: true }
+        );
+
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="datetime"/>
+                </form>
+            `,
         });
 
-        var expectedDateString = "08/02/2017 12:00"; // 10:00:00 without timezone
+        const expectedDateString = "08/02/2017 12:00";
         assert.strictEqual(
-            form.$(".o_field_date input").val(),
+            form.el.querySelector(".o_field_datetime input").value,
             expectedDateString,
             "the datetime should be correctly displayed in readonly"
         );
 
-        await testUtils.form.clickDiscard(form);
-
-        assert.strictEqual($(".modal").length, 0, "there should not be a Warning dialog");
-
-        form.destroy();
+        await click(form.el, ".o_form_button_cancel");
+        assert.containsNone(document.body, ".modal", "there should not be a Warning dialog");
     });
 
     QUnit.skip("DatetimeField in editable list view", async function (assert) {
@@ -535,169 +575,146 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skip("DatetimeField remove value", async function (assert) {
         assert.expect(4);
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch: '<form string="Partners"><field name="datetime"/></form>',
-            res_id: 1,
-            mockRPC: function (route, args) {
+        patchTimeZone(120);
+
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <field name="datetime" />
+                </form>
+            `,
+            mockRPC(route, { args }) {
                 if (route === "/web/dataset/call_kw/partner/write") {
                     assert.strictEqual(
-                        args.args[1].datetime,
+                        args[1].datetime,
                         false,
                         "the correct value should be saved"
                     );
                 }
-                return this._super.apply(this, arguments);
-            },
-            translateParameters: {
-                // Avoid issues due to localization formats
-                date_format: "%m/%d/%Y",
-                time_format: "%H:%M:%S",
-            },
-            session: {
-                getTZOffset: function () {
-                    return 120;
-                },
             },
         });
 
         // switch to edit mode
-        await testUtils.form.clickEdit(form);
+        await click(form.el, ".o_form_button_edit");
         assert.strictEqual(
-            form.$(".o_datepicker_input").val(),
+            form.el.querySelector(".o_datepicker_input").value,
             "02/08/2017 12:00:00",
             "the date time should be correct in edit mode"
         );
 
-        await testUtils.fields.editAndTrigger($(".o_datepicker_input"), "", [
-            "input",
-            "change",
-            "focusout",
-        ]);
-        assert.strictEqual(form.$(".o_datepicker_input").val(), "", "should have an empty input");
+        const input = form.el.querySelector(".o_datepicker_input");
+        input.value = "";
+        await triggerEvents(input, null, ["input", "change", "focusout"]);
+        assert.strictEqual(
+            form.el.querySelector(".o_datepicker_input").value,
+            "",
+            "should have an empty input"
+        );
 
         // save
-        await testUtils.form.clickSave(form);
+        await click(form.el, ".o_form_button_save");
         assert.strictEqual(
-            form.$(".o_field_date").text(),
+            form.el.querySelector(".o_field_datetime").textContent,
             "",
             "the selected date should be displayed after saving"
         );
-
-        form.destroy();
     });
 
-    QUnit.skip(
+    QUnit.test(
         "DatetimeField with date/datetime widget (with day change)",
         async function (assert) {
             assert.expect(2);
 
-            this.data.partner.records[0].p = [2];
-            this.data.partner.records[1].datetime = "2017-02-08 02:00:00"; // UTC
+            patchTimeZone(-240);
 
-            var form = await createView({
-                View: FormView,
-                model: "partner",
-                data: this.data,
-                arch:
-                    '<form string="Partners">' +
-                    '<field name="p">' +
-                    "<tree>" +
-                    '<field name="datetime"/>' +
-                    "</tree>" +
-                    "<form>" +
-                    // display datetime in readonly as modal will open in edit
-                    '<field name="datetime" widget="date" attrs="{\'readonly\': 1}"/>' +
-                    "</form>" +
-                    "</field>" +
-                    "</form>",
-                res_id: 1,
-                translateParameters: {
-                    // Avoid issues due to localization formats
-                    date_format: "%m/%d/%Y",
-                    time_format: "%H:%M:%S",
-                },
-                session: {
-                    getTZOffset: function () {
-                        return -240;
-                    },
-                },
+            serverData.models.partner.records[0].p = [2];
+            serverData.models.partner.records[1].datetime = "2017-02-08 02:00:00"; // UTC
+
+            const form = await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 1,
+                serverData,
+                arch: `
+                    <form>
+                        <field name="p">
+                            <tree>
+                                <field name="datetime" />
+                            </tree>
+                            <form>
+                                <!-- display datetime in readonly as modal will open in edit -->
+                                <field name="datetime" widget="date" attrs="{'readonly': 1}" />
+                            </form>
+                        </field>
+                    </form>
+                `,
             });
 
-            var expectedDateString = "02/07/2017 22:00:00"; // local time zone
+            const expectedDateString = "02/07/2017 22:00:00"; // local time zone
             assert.strictEqual(
-                form.$(".o_field_widget[name=p] .o_data_cell").text(),
+                form.el.querySelector(".o_field_widget[name='p'] .o_data_cell").textContent,
                 expectedDateString,
                 "the datetime (datetime widget) should be correctly displayed in tree view"
             );
 
             // switch to form view
-            await testUtils.dom.click(form.$(".o_field_widget[name=p] .o_data_row"));
+            await click(form.el, ".o_field_widget[name='p'] .o_data_row");
             assert.strictEqual(
-                $(".modal .o_field_date[name=datetime]").text(),
+                document.body.querySelector(".modal .o_field_date[name='datetime']").textContent,
                 "02/07/2017",
                 "the datetime (date widget) should be correctly displayed in form view"
             );
-
-            form.destroy();
         }
     );
 
-    QUnit.skip(
+    QUnit.test(
         "DatetimeField with date/datetime widget (without day change)",
         async function (assert) {
             assert.expect(2);
 
-            this.data.partner.records[0].p = [2];
-            this.data.partner.records[1].datetime = "2017-02-08 10:00:00"; // without timezone
+            patchTimeZone(-240);
 
-            var form = await createView({
-                View: FormView,
-                model: "partner",
-                data: this.data,
-                arch:
-                    '<form string="Partners">' +
-                    '<field name="p">' +
-                    "<tree>" +
-                    '<field name="datetime"/>' +
-                    "</tree>" +
-                    "<form>" +
-                    // display datetime in readonly as modal will open in edit
-                    '<field name="datetime" widget="date" attrs="{\'readonly\': 1}"/>' +
-                    "</form>" +
-                    "</field>" +
-                    "</form>",
-                res_id: 1,
-                translateParameters: {
-                    // Avoid issues due to localization formats
-                    date_format: "%m/%d/%Y",
-                    time_format: "%H:%M:%S",
-                },
-                session: {
-                    getTZOffset: function () {
-                        return -240;
-                    },
-                },
+            serverData.models.partner.records[0].p = [2];
+            serverData.models.partner.records[1].datetime = "2017-02-08 10:00:00"; // without timezone
+
+            const form = await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 1,
+                serverData,
+                arch: `
+                    <form>
+                        <field name="p">
+                            <tree>
+                                <field name="datetime" />
+                            </tree>
+                            <form>
+                                <!-- display datetime in readonly as modal will open in edit -->
+                                <field name="datetime" widget="date" attrs="{'readonly': 1}" />
+                            </form>
+                        </field>
+                    </form>
+                `,
             });
 
-            var expectedDateString = "02/08/2017 06:00:00"; // with timezone
+            const expectedDateString = "02/08/2017 06:00:00"; // with timezone
             assert.strictEqual(
-                form.$(".o_field_widget[name=p] .o_data_cell").text(),
+                form.el.querySelector(".o_field_widget[name='p'] .o_data_cell").textContent,
                 expectedDateString,
                 "the datetime (datetime widget) should be correctly displayed in tree view"
             );
 
             // switch to form view
-            await testUtils.dom.click(form.$(".o_field_widget[name=p] .o_data_row"));
+            await click(form.el, ".o_field_widget[name='p'] .o_data_row");
             assert.strictEqual(
-                $(".modal .o_field_date[name=datetime]").text(),
+                document.body.querySelector(".modal .o_field_date[name='datetime']").textContent,
                 "02/08/2017",
                 "the datetime (date widget) should be correctly displayed in form view"
             );
-
-            form.destroy();
         }
     );
 

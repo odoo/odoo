@@ -9,11 +9,19 @@ import { standardFieldProps } from "./standard_field_props";
 const { Component } = owl;
 
 export class DateField extends Component {
-    get value() {
+    get date() {
         return this.props.value && this.props.value.startOf("day");
     }
+    get isDateTime() {
+        return this.props.record.fields[this.props.name].type === "datetime";
+    }
     get formattedValue() {
-        return this.props.value ? formatDate(this.value) : "";
+        return this.props.value
+            ? formatDate(this.props.value, {
+                  // get local date if field type is datetime
+                  timezone: this.isDateTime,
+              })
+            : "";
     }
     get datePickerOptions() {
         return Object.assign({}, this.props.options.datepicker);
