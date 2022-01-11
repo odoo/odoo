@@ -300,6 +300,7 @@ class SaleOrder(models.Model):
             'target': 'new',
             'context': {
                 'default_composition_mode': 'mass_mail' if len(self.ids) > 1 else 'comment',
+                'default_email_layout_xmlid': 'mail.mail_notification_paynow',
                 'default_res_id': self.ids[0],
                 'default_model': 'sale.order',
                 'default_use_template': bool(template_id),
@@ -334,6 +335,19 @@ class SaleOrder(models.Model):
                 template.send_mail(order.id)
                 sent_orders |= order
         sent_orders.write({'cart_recovery_email_sent': True})
+
+    def _notify_get_groups(self, msg_vals=None):
+        """ In case of cart recovery email, update link to redirect directly
+        to the cart (like ``mail_template_sale_cart_recovery`` template). """
+        groups = super(SaleOrder, self)._notify_get_groups(msg_vals=msg_vals)
+
+        customer_portal_group = next(group for group in groups if group[0] == 'portal_customer')
+        if customer_portal_group:
+            access_opt = customer_portal_group[2].setdefault('button_access', {})
+            if self._context.get('website_sale_send_recovery_email'):
+                access_opt['title'] = _('Resume Order')
+                access_opt['url'] = '%s/shop/cart?access_token=%s' % (self.get_base_url(), self.access_token)
+        return groups
 
     def action_confirm(self):
         res = super(SaleOrder, self).action_confirm()
