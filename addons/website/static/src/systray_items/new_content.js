@@ -2,7 +2,7 @@
 
 import { registry } from '@web/core/registry';
 import { useService } from '@web/core/utils/hooks';
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { WebsiteDialog, AddPageDialog } from "@website/components/dialog/dialog";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 
 const { Component, xml, useState, onWillStart } = owl;
@@ -123,7 +123,15 @@ export class NewContentModal extends Component {
         return this.state.newContentElements.filter(({status}) => status !== MODULE_STATUS.NOT_INSTALLED).concat(this.state.newContentElements.filter(({status}) => status === MODULE_STATUS.NOT_INSTALLED));
     }
 
-    createNewPage() {}
+    createNewPage() {
+        this.dialogs.add(AddPageDialog, {
+            addPage: async (name, addMenu) => {
+                const url = `/website/add/${encodeURIComponent(name)}`;
+                const res = await this.website.sendRequest(url, { add_menu: addMenu || '' });
+                this.website.goToWebsite({ path: res });
+            },
+        });
+    }
 
     async installModule(id, redirectUrl) {
         await this.orm.call(
@@ -148,9 +156,10 @@ export class NewContentModal extends Component {
 
         const {id, name} = this.modulesInfo[element.moduleXmlId];
         const dialogProps = {
-            title: this.env._t("Install"),
+            title: element.title,
             body: _.str.sprintf(this.newContentText.installNeeded, name),
-            confirm: async () => {
+            primaryTitle: this.env._t("Install"),
+            primaryClick: async () => {
                 // Update the NewContentElement with installing icon and text.
                 this.state.newContentElements = this.state.newContentElements.map(el => {
                     if (el.moduleXmlId === element.moduleXmlId) {
@@ -175,9 +184,8 @@ export class NewContentModal extends Component {
                     console.error(error);
                 }
             },
-            cancel: () => {},
         };
-        this.dialogs.add(ConfirmationDialog, dialogProps);
+        this.dialogs.add(WebsiteDialog, dialogProps);
     }
 }
 NewContentModal.template = "website.NewContentModal";

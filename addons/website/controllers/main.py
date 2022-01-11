@@ -597,8 +597,8 @@ class Website(Home):
         url = page['url']
 
         if ext_special_case:  # redirect non html pages to backend to edit
-            return werkzeug.utils.redirect('/web#id=' + str(page.get('view_id')) + '&view_type=form&model=ir.ui.view')
-        return werkzeug.utils.redirect(url + "?enable_editor=1")
+            return '/web#id=' + str(page.get('view_id')) + '&view_type=form&model=ir.ui.view'
+        return url + "?enable_editor=1"
 
     @http.route("/website/get_switchable_related_views", type="json", auth="user", website=True)
     def get_switchable_related_views(self, key):
