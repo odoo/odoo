@@ -23,6 +23,7 @@
     'data': [
         'security/mass_mailing_security.xml',
         'security/ir.model.access.csv',
+        'data/digest_data.xml',
         'data/mail_data.xml',
         'data/mailing_data_templates.xml',
         'data/mass_mailing_data.xml',
