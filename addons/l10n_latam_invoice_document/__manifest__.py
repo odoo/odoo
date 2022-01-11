@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     "name": "LATAM Document",
-    "version": "1.0",
+    "version": "1.2",
     "author": "ADHOC SA",
     "category": "Localization",
     "summary": "LATAM Document Types",

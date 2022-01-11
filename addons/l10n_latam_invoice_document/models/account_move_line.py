@@ -25,9 +25,16 @@ class AccountMoveLine(models.Model):
     def compute_l10n_latam_prices_and_taxes(self):
         for line in self:
             invoice = line.move_id
-            included_taxes = \
-                invoice.l10n_latam_document_type_id and invoice.l10n_latam_document_type_id._filter_taxes_included(
-                    line.tax_ids)
+            if not invoice.l10n_latam_use_documents and invoice.company_id.country_id == self.env.ref('base.ar') and (
+                    invoice.journal_id.discriminate_taxes == 'no' or (
+                        invoice.journal_id.discriminate_taxes == 'according_to_partner' and
+                        invoice.company_id.l10n_ar_company_requires_vat and
+                        invoice.partner_id.l10n_ar_afip_responsibility_type_id.code != '1')):
+                included_taxes = line.tax_ids.filtered('tax_group_id.l10n_ar_vat_afip_code')
+            else:
+                included_taxes = \
+                    invoice.l10n_latam_document_type_id and invoice.l10n_latam_document_type_id._filter_taxes_included(
+                        line.tax_ids)
             # For the unit price, we need the number rounded based on the product price precision.
             # The method compute_all uses the accuracy of the currency so, we multiply and divide for 10^(decimal accuracy of product price) to get the price correctly rounded.
             price_digits = 10**self.env['decimal.precision'].precision_get('Product Price')

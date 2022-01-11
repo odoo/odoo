@@ -98,8 +98,15 @@ class AccountMove(models.Model):
         for invoice in recs_invoice:
             tax_lines = invoice.line_ids.filtered('tax_line_id')
             currencies = invoice.line_ids.filtered(lambda x: x.currency_id == invoice.currency_id).mapped('currency_id')
-            included_taxes = invoice.l10n_latam_document_type_id and \
-                invoice.l10n_latam_document_type_id._filter_taxes_included(tax_lines.mapped('tax_line_id'))
+            if not invoice.l10n_latam_use_documents and invoice.company_id.country_id == self.env.ref('base.ar') and (
+                    invoice.journal_id.discriminate_taxes == 'no' or (
+                        invoice.journal_id.discriminate_taxes == 'according_to_partner' and
+                        invoice.company_id.l10n_ar_company_requires_vat and
+                        invoice.partner_id.l10n_ar_afip_responsibility_type_id.code != '1')):
+                included_taxes = tax_lines.mapped('tax_line_id').filtered('tax_group_id.l10n_ar_vat_afip_code')
+            else:
+                included_taxes = invoice.l10n_latam_document_type_id and \
+                    invoice.l10n_latam_document_type_id._filter_taxes_included(tax_lines.mapped('tax_line_id'))
             if not included_taxes:
                 l10n_latam_amount_untaxed = invoice.amount_untaxed
                 not_included_invoice_taxes = tax_lines
@@ -204,7 +211,8 @@ class AccountMove(models.Model):
         if not report_or_portal_view:
             return super()._compute_invoice_taxes_by_group()
 
-        move_with_doc_type = self.filtered('l10n_latam_document_type_id')
+        # con documentos o argentinos (a los argentinos simpres los pasamos por acá para que procesen discriminate_taxes)
+        move_with_doc_type = self.filtered(lambda x: x.l10n_latam_document_type_id or x.company_id.country_id == self.env.ref('base.ar'))
         for move in move_with_doc_type:
             lang_env = move.with_context(lang=move.partner_id.lang).env
             tax_lines = move.l10n_latam_tax_ids

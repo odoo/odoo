@@ -14,6 +14,16 @@ class AccountJournal(models.Model):
     l10n_latam_company_use_documents = fields.Boolean(compute='_compute_l10n_latam_company_use_documents')
     l10n_latam_country_code = fields.Char(
         related='company_id.country_id.code', help='Technical field used to hide/show fields regarding the localization')
+    discriminate_taxes = fields.Selection(
+        [
+            ('yes', 'Yes'),
+            ('no', 'No'),
+            ('according_to_partner', 'According to partner VAT responsibility')
+        ],
+        string='Discriminate taxes?',
+        default='yes',
+        required=True,
+    )
 
     @api.depends('company_id')
     def _compute_l10n_latam_company_use_documents(self):
