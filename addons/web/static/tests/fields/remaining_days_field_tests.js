@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { click, patchDate, triggerEvents } from "../helpers/utils";
+import { click, patchDate, patchTimeZone, triggerEvents } from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
 
 let serverData;
@@ -475,11 +475,12 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(form.el.querySelector(".o_field_widget > div").textContent, "Tomorrow");
     });
 
-    QUnit.skip(
+    QUnit.test(
         "RemainingDaysField on a datetime field in list view in UTC",
         async function (assert) {
             assert.expect(16);
 
+            patchTimeZone(0);
             patchDate(2017, 9, 8, 15, 35, 11); // October 8 2017, 15:35:11
             serverData.models.partner.records = [
                 { id: 1, datetime: "2017-10-08 20:00:00" }, // today
@@ -501,49 +502,75 @@ QUnit.module("Fields", (hooks) => {
                         <field name="datetime" widget="remaining_days" />
                     </tree>
                 `,
-                session: {
-                    getTZOffset: () => 0,
-                },
             });
 
-            assert.strictEqual(list.$(".o_data_cell:nth(0)").text(), "Today");
-            assert.strictEqual(list.$(".o_data_cell:nth(1)").text(), "Tomorrow");
-            assert.strictEqual(list.$(".o_data_cell:nth(2)").text(), "Yesterday");
-            assert.strictEqual(list.$(".o_data_cell:nth(3)").text(), "In 2 days");
-            assert.strictEqual(list.$(".o_data_cell:nth(4)").text(), "3 days ago");
-            assert.strictEqual(list.$(".o_data_cell:nth(5)").text(), "02/08/2018");
-            assert.strictEqual(list.$(".o_data_cell:nth(6)").text(), "06/08/2017");
-            assert.strictEqual(list.$(".o_data_cell:nth(7)").text(), "");
-
+            assert.strictEqual(list.el.querySelectorAll(".o_data_cell")[0].textContent, "Today");
+            assert.strictEqual(list.el.querySelectorAll(".o_data_cell")[1].textContent, "Tomorrow");
             assert.strictEqual(
-                list.$(".o_data_cell:nth(0) .o_field_widget").attr("title"),
+                list.el.querySelectorAll(".o_data_cell")[2].textContent,
+                "Yesterday"
+            );
+            assert.strictEqual(
+                list.el.querySelectorAll(".o_data_cell")[3].textContent,
+                "In 2 days"
+            );
+            assert.strictEqual(
+                list.el.querySelectorAll(".o_data_cell")[4].textContent,
+                "3 days ago"
+            );
+            assert.strictEqual(
+                list.el.querySelectorAll(".o_data_cell")[5].textContent,
+                "02/08/2018"
+            );
+            assert.strictEqual(
+                list.el.querySelectorAll(".o_data_cell")[6].textContent,
+                "06/08/2017"
+            );
+            assert.strictEqual(list.el.querySelectorAll(".o_data_cell")[7].textContent, "");
+
+            assert.hasAttrValue(
+                list.el.querySelector(".o_data_cell .o_field_widget div"),
+                "title",
                 "10/08/2017"
             );
 
-            assert.hasClass(list.$(".o_data_cell:nth(0) div"), "font-weight-bold text-warning");
+            assert.hasClass(
+                list.el.querySelectorAll(".o_data_cell div div")[0],
+                "font-weight-bold text-warning"
+            );
             assert.doesNotHaveClass(
-                list.$(".o_data_cell:nth(1) div"),
+                list.el.querySelectorAll(".o_data_cell div div")[1],
                 "font-weight-bold text-warning text-danger"
             );
-            assert.hasClass(list.$(".o_data_cell:nth(2) div"), "font-weight-bold text-danger");
+            assert.hasClass(
+                list.el.querySelectorAll(".o_data_cell div div")[2],
+                "font-weight-bold text-danger"
+            );
             assert.doesNotHaveClass(
-                list.$(".o_data_cell:nth(3) div"),
+                list.el.querySelectorAll(".o_data_cell div div")[3],
                 "font-weight-bold text-warning text-danger"
             );
-            assert.hasClass(list.$(".o_data_cell:nth(4) div"), "font-weight-bold text-danger");
+            assert.hasClass(
+                list.el.querySelectorAll(".o_data_cell div div")[4],
+                "font-weight-bold text-danger"
+            );
             assert.doesNotHaveClass(
-                list.$(".o_data_cell:nth(5) div"),
+                list.el.querySelectorAll(".o_data_cell div div")[5],
                 "font-weight-bold text-warning text-danger"
             );
-            assert.hasClass(list.$(".o_data_cell:nth(6) div"), "font-weight-bold text-danger");
+            assert.hasClass(
+                list.el.querySelectorAll(".o_data_cell div div")[6],
+                "font-weight-bold text-danger"
+            );
         }
     );
 
-    QUnit.skip(
+    QUnit.test(
         "RemainingDaysField on a datetime field in list view in UTC+6",
         async function (assert) {
             assert.expect(6);
 
+            patchTimeZone(360);
             patchDate(2017, 9, 8, 15, 35, 11); // October 8 2017, 15:35:11, UTC+6
             serverData.models.partner.records = [
                 { id: 1, datetime: "2017-10-08 20:00:00" }, // tomorrow
@@ -562,27 +589,32 @@ QUnit.module("Fields", (hooks) => {
                         <field name="datetime" widget="remaining_days" />
                     </tree>
                 `,
-                session: {
-                    getTZOffset: () => 360,
-                },
             });
 
-            assert.strictEqual(list.$(".o_data_cell:nth(0)").text(), "Tomorrow");
-            assert.strictEqual(list.$(".o_data_cell:nth(1)").text(), "Tomorrow");
-            assert.strictEqual(list.$(".o_data_cell:nth(2)").text(), "Today");
-            assert.strictEqual(list.$(".o_data_cell:nth(3)").text(), "Yesterday");
-            assert.strictEqual(list.$(".o_data_cell:nth(4)").text(), "In 2 days");
-
+            assert.strictEqual(list.el.querySelectorAll(".o_data_cell")[0].textContent, "Tomorrow");
+            assert.strictEqual(list.el.querySelectorAll(".o_data_cell")[1].textContent, "Tomorrow");
+            assert.strictEqual(list.el.querySelectorAll(".o_data_cell")[2].textContent, "Today");
             assert.strictEqual(
-                list.$(".o_data_cell:nth(0) .o_field_widget").attr("title"),
+                list.el.querySelectorAll(".o_data_cell")[3].textContent,
+                "Yesterday"
+            );
+            assert.strictEqual(
+                list.el.querySelectorAll(".o_data_cell")[4].textContent,
+                "In 2 days"
+            );
+
+            assert.hasAttrValue(
+                list.el.querySelector(".o_data_cell .o_field_widget div"),
+                "title",
                 "10/09/2017"
             );
         }
     );
 
-    QUnit.skip("RemainingDaysField on a date field in list view in UTC-6", async function (assert) {
+    QUnit.test("RemainingDaysField on a date field in list view in UTC-6", async function (assert) {
         assert.expect(6);
 
+        patchTimeZone(-360);
         patchDate(2017, 9, 8, 15, 35, 11); // October 8 2017, 15:35:11
         serverData.models.partner.records = [
             { id: 1, date: "2017-10-08" }, // today
@@ -601,28 +633,27 @@ QUnit.module("Fields", (hooks) => {
                     <field name="date" widget="remaining_days" />
                 </tree>
             `,
-            session: {
-                getTZOffset: () => -360,
-            },
         });
 
-        assert.strictEqual(list.$(".o_data_cell:nth(0)").text(), "Today");
-        assert.strictEqual(list.$(".o_data_cell:nth(1)").text(), "Tomorrow");
-        assert.strictEqual(list.$(".o_data_cell:nth(2)").text(), "Yesterday");
-        assert.strictEqual(list.$(".o_data_cell:nth(3)").text(), "In 2 days");
-        assert.strictEqual(list.$(".o_data_cell:nth(4)").text(), "3 days ago");
+        assert.strictEqual(list.el.querySelectorAll(".o_data_cell")[0].textContent, "Today");
+        assert.strictEqual(list.el.querySelectorAll(".o_data_cell")[1].textContent, "Tomorrow");
+        assert.strictEqual(list.el.querySelectorAll(".o_data_cell")[2].textContent, "Yesterday");
+        assert.strictEqual(list.el.querySelectorAll(".o_data_cell")[3].textContent, "In 2 days");
+        assert.strictEqual(list.el.querySelectorAll(".o_data_cell")[4].textContent, "3 days ago");
 
-        assert.strictEqual(
-            list.$(".o_data_cell:nth(0) .o_field_widget").attr("title"),
+        assert.hasAttrValue(
+            list.el.querySelector(".o_data_cell .o_field_widget div"),
+            "title",
             "10/08/2017"
         );
     });
 
-    QUnit.skip(
+    QUnit.test(
         "RemainingDaysField on a datetime field in list view in UTC-8",
         async function (assert) {
             assert.expect(5);
 
+            patchTimeZone(-560);
             patchDate(2017, 9, 8, 15, 35, 11); // October 8 2017, 15:35:11, UTC-8
             serverData.models.partner.records = [
                 { id: 1, datetime: "2017-10-08 20:00:00" }, // today
@@ -641,16 +672,19 @@ QUnit.module("Fields", (hooks) => {
                         <field name="datetime" widget="remaining_days" />
                     </tree>
                 `,
-                session: {
-                    getTZOffset: () => -560,
-                },
             });
 
-            assert.strictEqual(list.$(".o_data_cell:nth(0)").text(), "Today");
-            assert.strictEqual(list.$(".o_data_cell:nth(1)").text(), "Today");
-            assert.strictEqual(list.$(".o_data_cell:nth(2)").text(), "Tomorrow");
-            assert.strictEqual(list.$(".o_data_cell:nth(3)").text(), "Yesterday");
-            assert.strictEqual(list.$(".o_data_cell:nth(4)").text(), "2 days ago");
+            assert.strictEqual(list.el.querySelectorAll(".o_data_cell")[0].textContent, "Today");
+            assert.strictEqual(list.el.querySelectorAll(".o_data_cell")[1].textContent, "Today");
+            assert.strictEqual(list.el.querySelectorAll(".o_data_cell")[2].textContent, "Tomorrow");
+            assert.strictEqual(
+                list.el.querySelectorAll(".o_data_cell")[3].textContent,
+                "Yesterday"
+            );
+            assert.strictEqual(
+                list.el.querySelectorAll(".o_data_cell")[4].textContent,
+                "2 days ago"
+            );
         }
     );
 });

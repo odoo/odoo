@@ -21,12 +21,18 @@ export class RemainingDaysField extends Component {
         if (!this.props.value) {
             return null;
         }
-        const today = luxon.DateTime.local().startOf("day");
-        return Math.floor(this.props.value.startOf("day").diff(today, "days").days);
+        const today = this.correctDate(luxon.DateTime.utc()).startOf("day");
+        return Math.floor(
+            this.correctDate(this.props.value).startOf("day").diff(today, "days").days
+        );
     }
 
     get formattedValue() {
-        return this.props.value ? formatDate(this.props.value, { timezone: true }) : "";
+        return this.props.value ? formatDate(this.props.value, { timezone: this.hasTime }) : "";
+    }
+
+    correctDate(date) {
+        return this.hasTime ? date.toLocal() : date.toUTC();
     }
 }
 
