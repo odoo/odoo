@@ -3,7 +3,9 @@
 
 from contextlib import closing
 from datetime import datetime, timedelta
+from unittest.mock import patch
 
+from odoo import fields
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.exceptions import ValidationError
 from odoo.tests.common import TransactionCase
@@ -687,3 +689,42 @@ class StockQuant(TransactionCase):
         self.assertEqual(quants[0][0].reserved_quantity, 2)
         # The last one should then be taken in stock_location/subloc3 since the first location doesn't have enough products
         self.assertEqual(quants[1][0].reserved_quantity, 1)
+
+    def test_in_date_6(self):
+        """
+        One P in stock, P is delivered. Later on, a stock adjustement adds one P. This test checks
+        the date value of the related quant
+        """
+        self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 1.0)
+
+        move = self.env['stock.move'].create({
+            'name': 'OUT 1 product',
+            'product_id': self.product.id,
+            'product_uom_qty': 1,
+            'product_uom': self.product.uom_id.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.ref('stock.stock_location_customers'),
+        })
+        move._action_confirm()
+        move._action_assign()
+        move.quantity_done = 1
+        move._action_done()
+
+
+        tomorrow = fields.Datetime.now() + timedelta(days=1)
+        with patch.object(fields.Datetime, 'now', lambda: tomorrow):
+            move = self.env['stock.move'].create({
+                'name': 'IN 1 product',
+                'product_id': self.product.id,
+                'product_uom_qty': 1,
+                'product_uom': self.product.uom_id.id,
+                'location_id': self.ref('stock.stock_location_suppliers'),
+                'location_dest_id': self.stock_location.id,
+            })
+            move._action_confirm()
+            move._action_assign()
+            move.quantity_done = 1
+            move._action_done()
+
+            quant = self.env['stock.quant'].search([('product_id', '=', self.product.id), ('location_id', '=', self.stock_location.id), ('quantity', '>', 0)])
+            self.assertEqual(quant.in_date, tomorrow)
