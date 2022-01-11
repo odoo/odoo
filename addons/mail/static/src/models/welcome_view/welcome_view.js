@@ -11,7 +11,7 @@ const getNextGuestNameInputId = (function () {
 
 registerModel({
     name: 'WelcomeView',
-    identifyingFields: ['messaging'],
+    identifyingFields: ['discussPublicView'],
     recordMethods: {
         /**
          * Updates guest if needed then displays the thread view instead of the
@@ -184,6 +184,7 @@ registerModel({
          */
         mediaPreview: one2one('MediaPreview', {
             compute: '_computeMediaPreview',
+            inverse: 'welcomeView',
             isCausal: true,
             readonly: true,
         }),

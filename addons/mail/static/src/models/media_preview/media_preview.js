@@ -1,11 +1,11 @@
 /** @odoo-module **/
 
-import { attr } from '@mail/model/model_field';
+import { attr, one2one } from '@mail/model/model_field';
 import { registerModel } from '@mail/model/model_core';
 
 registerModel({
     name: 'MediaPreview',
-    identifyingFields: ['messaging'],
+    identifyingFields: ['welcomeView'],
     modelMethods: {
         /**
          * Iterates tracks of the provided MediaStream, calling the `stop`
@@ -171,6 +171,13 @@ registerModel({
          */
         videoStream: attr({
             default: null,
+        }),
+        /**
+         * States the welcome view containing this media preview.
+         */
+        welcomeView: one2one('WelcomeView', {
+            inverse: 'mediaPreview',
+            readonly: true,
         }),
     },
 });
