@@ -165,7 +165,7 @@ odoo.define("web/static/src/js/views/graph/graph_renderer", function (require) {
                 dataset.pointBackgroundColor = dataset.borderColor;
                 dataset.pointBorderColor = "rgba(0,0,0,0.2)";
             }
-            if (data.datasets.length === 1) {
+            if (data.datasets.length === 1 && data.datasets[0].originIndex === 0) {
                 const dataset = data.datasets[0];
                 dataset.fill = "origin";
                 dataset.backgroundColor = hexToRGBA(COLORS[0], 0.4);
