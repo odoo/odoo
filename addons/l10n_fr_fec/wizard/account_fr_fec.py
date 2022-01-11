@@ -7,9 +7,10 @@ import base64
 import io
 
 from odoo import api, fields, models, _
-from odoo.exceptions import Warning, AccessDenied
+from odoo.exceptions import AccessDenied, UserError
 from odoo.tools import float_is_zero, pycompat
 from odoo.tools.misc import get_lang
+from stdnum.fr import siren
 
 
 class AccountFrFec(models.TransientModel):
@@ -83,13 +84,24 @@ class AccountFrFec(models.TransientModel):
         sources:
             https://www.service-public.fr/professionnels-entreprises/vosdroits/F23570
             http://www.douane.gouv.fr/articles/a11024-tva-dans-les-dom
+
+        * Returns the siren if the company is french or an empty siren for dom-tom
+        * For non-french companies -> returns the complete vat number
         """
         dom_tom_group = self.env.ref('l10n_fr.dom-tom')
         is_dom_tom = company.country_id.code in dom_tom_group.country_ids.mapped('code')
-        if not company.vat or is_dom_tom:
-            return {'siren': ''}
+        if is_dom_tom:
+            return ''
+        elif company.country_id.code == 'FR':
+            if not company.vat:
+                raise UserError(_("Missing VAT number for company %s") % company.display_name)
+            elif len(company.vat) < 13 or not siren.is_valid(company.vat[4:13]):
+                raise UserError(_("Invalid VAT number for company %s") % company.display_name)
+            else:
+                return company.vat[4:13]
         else:
-            return {'siren': company.vat[4:13]}
+            return '' if not company.vat else company.vat
+
 
     def generate_fec(self):
         self.ensure_one()
@@ -371,7 +383,7 @@ class AccountFrFec(models.TransientModel):
         self.write({
             'fec_data': base64.encodebytes(fecvalue),
             # Filename = <siren>FECYYYYMMDD where YYYMMDD is the closing date
-            'filename': '%sFEC%s%s.csv' % (company_legal_data['siren'], end_date, suffix),
+            'filename': '%sFEC%s%s.csv' % (company_legal_data, end_date, suffix),
             })
 
         action = {
