@@ -406,7 +406,7 @@ QUnit.module('convert_inline', {}, function () {
                     `<td style="padding-right: 29.1px; padding-top: 10px;">(0, 4, 0)</td>` + // TR
                 `</tr>` +
                 `<tr>` +
-                    `<td style="padding-left: 40px;">` + // L
+                    `<td style="padding-right: 20px; padding-left: 40px;">` + // LR
                         `<table style="">` +
                             `<tbody>` +
                                 `<tr>` +
