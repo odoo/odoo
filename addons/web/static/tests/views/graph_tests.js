@@ -423,6 +423,76 @@ QUnit.module('Views', {
         graph.destroy();
     });
 
+    QUnit.test('fake data in line chart', async function (assert) {
+        assert.expect(1);
+
+        const unpatchDate = patchDate(2020, 4, 19, 1, 0, 0);
+
+        this.data.foo.records = [];
+
+        var graph = await createView({
+            View: GraphView,
+            model: "foo",
+            data: this.data,
+            context: { search_default_date_filter: 1, },
+            arch: '<graph type="line">' +
+                        '<field name="date"/>' +
+                '</graph>',
+            archs: {
+                'foo,false,search': `
+                    <search>
+                        <filter name="date_filter" domain="[]" date="date" default_period="third_quarter"/>
+                    </search>
+                `,
+            },
+        });
+
+        await cpHelpers.toggleComparisonMenu(graph);
+        await cpHelpers.toggleMenuItem(graph, 'Date: Previous period');
+
+        assert.checkLabels(graph, [[''], ['']]);
+
+        unpatchDate();
+        graph.destroy();
+    });
+
+    QUnit.test('no filling color for period of comparison', async function (assert) {
+        assert.expect(1);
+
+        const unpatchDate = patchDate(2020, 4, 19, 1, 0, 0);
+
+        this.data.foo.records.forEach((r) => {
+            if (r.date) {
+                r.date = r.date.replace(/\d\d\d\d/, "2019");
+            }
+        });
+
+        var graph = await createView({
+            View: GraphView,
+            model: "foo",
+            data: this.data,
+            context: { search_default_date_filter: 1, },
+            arch: '<graph type="line">' +
+                        '<field name="product_id"/>' +
+                '</graph>',
+            archs: {
+                'foo,false,search': `
+                    <search>
+                        <filter name="date_filter" domain="[]" date="date" default_period="this_year"/>
+                    </search>
+                `,
+            },
+        });
+
+        await cpHelpers.toggleComparisonMenu(graph);
+        await cpHelpers.toggleMenuItem(graph, 'Date: Previous period');
+
+        assert.checkDatasets(graph, ["data", "backgroundColor"], { data: [4, 2] });
+
+        unpatchDate();
+        graph.destroy();
+    });
+
     QUnit.test('no content helper after update', async function (assert) {
         assert.expect(6);
 

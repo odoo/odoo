@@ -1592,3 +1592,86 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
         self.assertRecordValues(statement_line.line_ids.analytic_line_ids, [
             {'amount': 100.0, 'account_id': analytic_account.id},
         ])
+
+    def test_reconciliation_line_with_no_partner(self):
+        """
+        Ensure that entry lines and statement line have no partner when reconciling
+        lines without partner with others with partner
+        """
+        statement = self.env['account.bank.statement'].create({
+            'name': 'test_statement',
+            'date': '2019-01-01',
+            'journal_id': self.bank_journal_1.id,
+            'line_ids': [
+                (0, 0, {
+                    'date': '2022-01-01',
+                    'payment_ref': "Happy new year",
+                    'amount': 200.0,
+                }),
+            ],
+        })
+        statement.button_post()
+
+        partner = self.env['res.partner'].create({'name': 'test'})
+
+        receivable_account = self.company_data['default_account_receivable']
+        outstanding_account = self.company_data['default_journal_bank']['payment_debit_account_id']
+
+        payments = self.env['account.payment'].create([
+            {
+                'name': 'Payment without partner',
+                'date': fields.Date.from_string('2022-01-01'),
+                'is_internal_transfer': False,
+                'amount': 100.0,
+                'payment_type': 'inbound',
+                'partner_type': 'customer',
+                'destination_account_id': receivable_account.id,
+                'journal_id': self.bank_journal_1.id,
+            },
+            {
+                'name': 'Payment with partner',
+                'date': fields.Date.from_string('2022-01-01'),
+                'is_internal_transfer': False,
+                'amount': 100.0,
+                'payment_type': 'inbound',
+                'partner_type': 'customer',
+                'partner_id': partner.id,
+                'destination_account_id': receivable_account.id,
+                'journal_id': self.bank_journal_1.id,
+            },
+        ])
+        payments.action_post()
+
+        statement_line = statement.line_ids
+
+        statement_line.reconcile([
+            {'id': payments[0].move_id.line_ids.filtered(lambda line: line.account_id == outstanding_account).id},
+            {'id': payments[1].move_id.line_ids.filtered(lambda line: line.account_id == outstanding_account).id},
+        ])
+
+        self.assertRecordValues(
+            statement.line_ids.move_id.line_ids,
+            [
+                {
+                    'debit': 200.0,
+                    'credit': 0.0,
+                    'partner_id': False,
+                    'account_id': self.bank_journal_1.default_account_id.id
+                },
+                {
+                    'debit': 0.0,
+                    'credit': 100.0,
+                    'partner_id': False,
+                    'account_id': outstanding_account.id
+                },
+                {
+                    'debit': 0.0,
+                    'credit': 100.0,
+                    'partner_id': partner.id,
+                    'account_id': outstanding_account.id
+                },
+            ])
+
+        self.assertRecordValues(statement.line_ids, [{
+            'partner_id': False,
+        }])
