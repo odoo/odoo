@@ -476,7 +476,7 @@ function formatTables($editable) {
         const $columns = $table.find('td').filter((i, td) => $(td).closest('table').is($table));
         for (const column of $columns) {
             const $column = $(column);
-            const $columnsInRow = $column.closest('tr').find('td');
+            const $columnsInRow = $column.closest('tr').find('td').filter((i, td) => $(td).closest('table').is($table));
             const columnIndex = $columnsInRow.toArray().findIndex(col => $(col).is($column));
             const rowIndex = $rows.toArray().findIndex(row => $(row).is($column.closest('tr')));
             if (!rowIndex) {
