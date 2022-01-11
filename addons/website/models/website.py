@@ -9,7 +9,7 @@ import re
 from werkzeug import urls
 from werkzeug.exceptions import NotFound
 
-from odoo import api, fields, models, tools
+from odoo import api, fields, models, tools, http
 from odoo.addons.http_routing.models.ir_http import slugify, _guess_mimetype
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.portal.controllers.portal import pager
@@ -456,7 +456,7 @@ class Website(models.Model):
                     arguments[key] = val.with_context(lang=lang)
             return router.build(request.endpoint, arguments)
 
-        router = request.httprequest.app.get_db_router(request.db).bind('')
+        router = http.root.get_db_router(request.db).bind('')
         for code, dummy in self.get_languages():
             lg_path = ('/' + code) if code != default else ''
             lg_codes = code.split('_')
@@ -693,7 +693,7 @@ class Website(models.Model):
             :rtype: list({name: str, url: str})
         """
 
-        router = request.httprequest.app.get_db_router(request.db)
+        router = http.root.get_db_router(request.db)
         # Force enumeration to be performed as public user
         url_set = set()
 

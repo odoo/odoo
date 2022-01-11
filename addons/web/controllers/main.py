@@ -99,9 +99,8 @@ def redirect_with_hash(*args, **kw):
     return http.redirect_with_hash(*args, **kw)
 
 def abort_and_redirect(url):
-    r = request.httprequest
     response = werkzeug.utils.redirect(url, 302)
-    response = r.app.get_response(r, response, explicit_session=False)
+    response = http.root.get_response(request.httprequest, response, explicit_session=False)
     werkzeug.exceptions.abort(response)
 
 def ensure_db(redirect='/web/database/selector'):
@@ -669,7 +668,7 @@ class Proxy(http.Controller):
         from werkzeug.wrappers import BaseResponse
 
         base_url = request.httprequest.base_url
-        return Client(request.httprequest.app, BaseResponse).get(path, base_url=base_url).data
+        return Client(http.root, BaseResponse).get(path, base_url=base_url).data
 
     @http.route('/web/proxy/post/<path:path>', type='http', auth='user', methods=['GET'])
     def post(self, path):
@@ -681,7 +680,7 @@ class Proxy(http.Controller):
             from werkzeug.wrappers import BaseResponse
             base_url = request.httprequest.base_url
             query_string = request.httprequest.query_string
-            client = Client(request.httprequest.app, BaseResponse)
+            client = Client(http.root, BaseResponse)
             headers = {'X-Openerp-Session-Id': request.session.sid}
             return client.post('/' + path, base_url=base_url, query_string=query_string,
                                headers=headers, data=data)
