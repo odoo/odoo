@@ -13,6 +13,7 @@ export class ProgressBarField extends Component {
     setup() {
         this.eventTimeout = undefined;
         this.notifications = useService("notification");
+        this.parse = registry.category("parsers").get("float");
         this.state = useState({
             currentValue: this.getFieldValue("current_value"),
             maxValue: this.getFieldValue("max_value"),
@@ -63,7 +64,7 @@ export class ProgressBarField extends Component {
                 this.props.record.data[this.props.options.current_value] !== undefined
                     ? this.props.options.current_value
                     : this.props.name,
-                Number(value)
+                this.parse(value)
             );
         }
     }
@@ -78,7 +79,7 @@ export class ProgressBarField extends Component {
                 this.props.record.data[this.props.options.max_value] !== undefined
                     ? this.props.options.max_value
                     : this.props.name,
-                Number(max_value)
+                this.parse(max_value)
             );
         }
     }
