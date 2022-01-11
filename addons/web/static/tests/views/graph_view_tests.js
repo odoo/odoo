@@ -3549,4 +3549,40 @@ QUnit.module("Views", (hooks) => {
 
         checkLabels(assert, graph, ['', '']);
     });
+
+    QUnit.test('no filling color for period of comparison', async function (assert) {
+        assert.expect(1);
+
+        patchDate(2020, 4, 19, 1, 0, 0);
+
+        serverData.models.foo.records.forEach((r) => {
+            if (r.date) {
+                r.date = r.date.replace(/\d\d\d\d/, "2019");
+            }
+        });
+
+        const graph = await makeView({
+            type: "graph",
+            resModel: "foo",
+            serverData,
+            context: { search_default_date_filter: 1, },
+            arch: `
+                <graph type="line">
+                    <field name="product_id"/>
+                </graph>
+            `,
+            searchViewArch: `
+                <search>
+                    <filter name="date_filter" domain="[]" date="date" default_period="this_year"/>
+                </search>
+            `,
+        });
+
+        await toggleComparisonMenu(graph);
+        await toggleMenuItem(graph, 'Date: Previous period');
+
+        checkDatasets(assert, graph, "backgroundColor", {
+            "backgroundColor": undefined,
+        });
+    });
 });
