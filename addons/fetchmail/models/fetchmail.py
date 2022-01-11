@@ -192,6 +192,7 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
                 try:
                     while True:
                         failed_in_loop = 0
+                        num = 0
                         pop_server = server.connect()
                         (num_messages, total_size) = pop_server.stat()
                         pop_server.list()
