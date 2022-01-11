@@ -569,6 +569,10 @@ class Product(models.Model):
         linked_product_ids = [group['product_id'][0] for group in lines]
         return super(Product, self - self.browse(linked_product_ids))._filter_to_unlink()
 
+    @api.model
+    def _count_returned_sn_products(self, sn_lot):
+        return 0
+
 
 class ProductTemplate(models.Model):
     _inherit = 'product.template'

@@ -711,7 +711,7 @@ class Meeting(models.Model):
         # is already given (coming from Google event for example).
         vals_list = [
             dict(vals, attendee_ids=self._attendees_values(vals['partner_ids']))
-            if 'partner_ids' in vals and 'attendee_ids' not in vals
+            if 'partner_ids' in vals and not vals.get('attendee_ids')
             else vals
             for vals in vals_list
         ]
