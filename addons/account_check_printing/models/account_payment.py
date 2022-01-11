@@ -46,12 +46,12 @@ class AccountPayment(models.Model):
 
     @api.constrains('check_number', 'journal_id')
     def _constrains_check_number(self):
-        if not self:
+        payment_checks = self.filtered('check_number')
+        if not payment_checks:
             return
-        try:
-            self.mapped(lambda p: str(int(p.check_number)))
-        except ValueError:
-            raise ValidationError(_('Check numbers can only consist of digits'))
+        for payment_check in payment_checks:
+            if not payment_check.check_number.isdecimal():
+                raise ValidationError(_('Check numbers can only consist of digits'))
         self.flush()
         self.env.cr.execute("""
             SELECT payment.check_number, move.journal_id
@@ -66,8 +66,10 @@ class AccountPayment(models.Model):
                AND payment.id IN %(ids)s
                AND move.state = 'posted'
                AND other_move.state = 'posted'
+               AND payment.check_number IS NOT NULL
+               AND other_payment.check_number IS NOT NULL
         """, {
-            'ids': tuple(self.ids),
+            'ids': tuple(payment_checks.ids),
         })
         res = self.env.cr.dictfetchall()
         if res:
