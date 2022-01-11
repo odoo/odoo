@@ -935,6 +935,20 @@ class Lead(models.Model):
             self.write(dict(additional_values))
         return res
 
+    def action_send_mail_to_leads(self):
+        # Send emails from composer to selected leads
+        action = {
+            "type": "ir.actions.act_window",
+            "view_mode": "form",
+            "res_model": "mail.compose.message",
+            "target": "new",
+            "context": {    
+                'default_composition_mode': 'mass_mail',
+                'default_use_template': False,
+            }
+        }
+        return action
+
     def action_set_won(self):
         """ Won semantic: probability = 100 (active untouched) """
         self.action_unarchive()

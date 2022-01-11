@@ -728,17 +728,16 @@
             <field name="binding_view_types">form</field>
         </record>
 
-        <record id="action_lead_mass_mail" model="ir.actions.act_window">
+        <record id="action_lead_mass_mail" model="ir.actions.server">
             <field name="name">Send email</field>
-            <field name="res_model">mail.compose.message</field>
-            <field name="view_mode">form</field>
-            <field name="target">new</field>
-            <field name="context" eval="{
-    'default_composition_mode': 'mass_mail',
-    'default_use_template': False,
-                }"/>
-            <field name="binding_model_id" ref="model_crm_lead"/>
+            <field name="model_id" ref="crm.model_crm_lead"/>
+            <field name="binding_model_id" ref="crm.model_crm_lead"/>
             <field name="binding_view_types">list</field>
+            <field name="state">code</field>
+            <field name="code">
+                if records:
+                    action = records.action_send_mail_to_leads()
+            </field>
         </record>
 
         <!--
