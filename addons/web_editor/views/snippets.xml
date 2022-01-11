@@ -383,7 +383,19 @@
     <div data-js="ReplaceMedia" data-selector="img, .media_iframe_video, span.fa, i.fa" data-exclude="a[href^='/website/social/'] > i.fa">
         <we-row string="Media">
             <we-button class="o_we_bg_brand_primary" data-replace-media="true" data-no-preview="true">Replace</we-button>
+            <we-button class="fa fa-link"
+                data-name="media_link_opt"
+                data-set-link="true" data-no-preview="true"
+                title="Redirect the user elsewhere when he clicks on the media."/>
         </we-row>
+        <we-input string="⌙ Your URL"
+            data-name="media_url_opt" data-dependencies="media_link_opt"
+            data-set-url="" data-no-preview="true"
+            class="o_we_large" placeholder="www.example.com"
+            data-request-focus="true"/>
+        <we-checkbox string="⌙ Open in new window"
+            data-dependencies="media_url_opt"
+            data-set-new-window="true" data-no-preview="true"/>
     </div>
 
     <div data-js="FontawesomeTools" data-selector="span.fa, i.fa">
