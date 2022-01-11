@@ -80,14 +80,8 @@ export function preloadSelection(orm, datapoint, fieldName) {
         return Promise.resolve();
     }
 
-    const activeField = datapoint.activeFields[fieldName];
     const context = datapoint.evalContext;
-    const domain = new Domain(activeField.attrs.domain).toList(context);
-
-    if (domain.toString() === datapoint.preloadedDataCaches[fieldName]) {
-        return Promise.resolve();
-    }
-    datapoint.preloadedDataCaches[fieldName] = domain.toString();
+    const domain = datapoint.getFieldDomain(fieldName).toList(context);
 
     return orm.call(field.relation, "name_search", ["", domain]);
 }

@@ -217,6 +217,7 @@ export class Record extends DataPoint {
         this.preloadedDataCaches = {};
         this.selected = false;
         this._onChangePromise = Promise.resolve({});
+        this._domains = {};
     }
 
     get evalContext() {
@@ -296,12 +297,19 @@ export class Record extends DataPoint {
             this.evalContext
         );
     }
+    getFieldDomain(fieldName) {
+        return Domain.and([
+            this._domains[fieldName] || [],
+            this.activeFields[fieldName].domain || [],
+        ]);
+    }
 
     loadPreloadedData() {
         const fetchPreloadedData = async (fetchFn, fieldName) => {
-            const specialData = await fetchFn(this.model.orm, this, fieldName);
-            if (specialData) {
-                this.preloadedData[fieldName] = specialData;
+            const domain = this.getFieldDomain(fieldName).toList(this.evalContext).toString();
+            if (domain.toString() !== this.preloadedDataCaches[fieldName]) {
+                this.preloadedDataCaches[fieldName] = domain.toString();
+                this.preloadedData[fieldName] = await fetchFn(this.model.orm, this, fieldName);
             }
         };
 
@@ -456,6 +464,7 @@ export class Record extends DataPoint {
         }
         this.data = { ...this._values };
         this._changes = {};
+        this._domains = {};
         this.model.notify();
     }
 
@@ -502,6 +511,9 @@ export class Record extends DataPoint {
                         type: "warning",
                     });
                 }
+            }
+            if (result.domain) {
+                Object.assign(this._domains, result.domain);
             }
             // for x2many fields, the onchange returns commands, not ids, so we need to process them
             // for now, we simply return an empty list

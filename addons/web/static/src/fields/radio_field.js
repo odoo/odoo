@@ -73,7 +73,9 @@ export async function preloadRadio(orm, datapoint, fieldName) {
         return null;
     }
 
-    const records = await orm.searchRead(field.relation, [], ["id"]);
+    const context = datapoint.evalContext;
+    const domain = datapoint.getFieldDomain(fieldName).toList(context);
+    const records = await orm.searchRead(field.relation, domain, ["id"]);
     return await orm.call(field.relation, "name_get", [records.map((record) => record.id)]);
 }
 

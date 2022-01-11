@@ -488,28 +488,29 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skip(
+    QUnit.test(
         "SelectionField on a many2one: domain updated by an onchange",
         async function (assert) {
             assert.expect(4);
 
             serverData.models.partner.onchanges = {
-                int_field: function () {},
+                int_field() {},
             };
 
-            var domain = [];
+            let domain = [];
             const form = await makeView({
                 type: "form",
                 resModel: "partner",
+                resId: 1,
                 serverData,
-                arch:
-                    "<form>" +
-                    '<field name="int_field"/>' +
-                    '<field name="trululu" widget="selection"/>' +
-                    "</form>",
-                res_id: 1,
-                mockRPC: function (route, args) {
-                    if (args.method === "onchange") {
+                arch: `
+                    <form>
+                        <field name="int_field" />
+                        <field name="trululu" widget="selection" />
+                    </form>
+                `,
+                mockRPC(route, { args, method }) {
+                    if (method === "onchange") {
                         domain = [["id", "in", [10]]];
                         return Promise.resolve({
                             domain: {
@@ -517,33 +518,31 @@ QUnit.module("Fields", (hooks) => {
                             },
                         });
                     }
-                    if (args.method === "name_search") {
-                        assert.deepEqual(args.args[1], domain, "sent domain should be correct");
+                    if (method === "name_search") {
+                        assert.deepEqual(args[1], domain, "sent domain should be correct");
                     }
-                    return this._super(route, args);
-                },
-                viewOptions: {
-                    mode: "edit",
                 },
             });
 
+            await click(form.el, ".o_form_button_edit");
+
             assert.containsN(
                 form,
-                ".o_field_widget[name=trululu] option",
+                ".o_field_widget[name='trululu'] option",
                 4,
                 "should be 4 options in the selection"
             );
 
             // trigger an onchange that will update the domain
-            await testUtils.fields.editInput(form.$(".o_field_widget[name=int_field]"), 2);
+            const input = form.el.querySelector(".o_field_widget[name='int_field'] input");
+            input.value = 2;
+            await triggerEvent(input, null, "change");
 
             assert.containsOnce(
                 form,
-                ".o_field_widget[name=trululu] option",
+                ".o_field_widget[name='trululu'] option",
                 "should be 1 option in the selection"
             );
-
-            form.destroy();
         }
     );
 

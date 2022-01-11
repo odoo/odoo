@@ -161,6 +161,7 @@ Field.parseFieldNode = function (node, fields, viewType) {
     const fieldInfo = {
         name,
         context: node.getAttribute("context") || "{}",
+        domain: new Domain(node.getAttribute("domain") || []),
         string: node.getAttribute("string") || field.string,
         widget,
         options: evaluateExpr(node.getAttribute("options") || "{}"),

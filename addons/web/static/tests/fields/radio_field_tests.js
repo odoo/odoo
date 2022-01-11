@@ -444,7 +444,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skip(
+    QUnit.test(
         "widget radio on a many2one: domain updated by an onchange",
         async function (assert) {
             assert.expect(4);
@@ -492,7 +492,7 @@ QUnit.module("Fields", (hooks) => {
             );
 
             // trigger an onchange that will update the domain
-            const input = form.el.querySelector(".o_field_widget[name='int_field']");
+            const input = form.el.querySelector(".o_field_widget[name='int_field'] input");
             input.value = "2";
             await triggerEvent(input, null, "change");
             assert.containsNone(
