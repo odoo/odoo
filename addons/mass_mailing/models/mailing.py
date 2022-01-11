@@ -971,7 +971,11 @@ class MassMailing(models.Model):
                     'kpi_mail_required': not mass_mailing.sent_date,
                 })
 
+<<<<<<< HEAD
         if self.env['ir.config_parameter'].sudo().get_param('mass_mailing.mass_mailing_reports'):
+=======
+        if not self.env['ir.config_parameter'].sudo().get_param('mass_mailing.mailing_report_deactivated'):
+>>>>>>> 4421f732038... temp
             mailings = self.env['mailing.mailing'].search([
                 ('kpi_mail_required', '=', True),
                 ('state', '=', 'done'),
@@ -984,6 +988,12 @@ class MassMailing(models.Model):
     # ------------------------------------------------------
     # STATISTICS
     # ------------------------------------------------------
+
+    def _get_unsubscribe_token(self, user_id):
+        """Generate a secure hash for this user. It allows to
+        opt out from mailing reports while keeping some security in that process.
+        """
+        return tools.hmac(self.env(su=True), 'mailing-report-deactivated', user_id)
 
     def _action_send_statistics(self):
         """Send an email to the responsible of each finished mailing with the statistics."""
@@ -1023,7 +1033,11 @@ class MassMailing(models.Model):
 
             rendered_body = self.env['ir.qweb']._render(
                 'digest.digest_mail_main',
+<<<<<<< HEAD
                 rendering_data
+=======
+                rendering_data,
+>>>>>>> 4421f732038... temp
             )
 
             full_mail = self.env['mail.render.mixin']._render_encapsulate(
