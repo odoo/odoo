@@ -1,0 +1,56 @@
+
+.website_referral {
+	.o_referral_cover_container {
+		color: white;
+		background: linear-gradient(120deg, #875A7B, #68465f);
+	}
+	.o_btn-facebook {
+		background-color: map-get($o-social-colors, "facebook");
+		&:hover{
+			background-color: darken(map-get($o-social-colors, "facebook"), 10%);
+		}
+	}
+	.o_btn-twitter {
+		background-color: map-get($o-social-colors, "twitter");
+		&:hover{
+			background-color: darken(map-get($o-social-colors, "twitter"), 10%);
+		}
+	}
+	.o_btn-linkedin {
+		background-color: map-get($o-social-colors, "linkedin");
+		&:hover{
+			background-color: darken(map-get($o-social-colors, "linkedin"), 10%);
+		}
+	}
+	.o_border-dashed {
+		border-style: dashed;
+	}
+	.o_referral_sidebar {
+		position: absolute;
+		top:0;
+		bottom: 0;
+		right: 0;
+		width: 35%;
+	}
+	.alert {
+		z-index:5;
+	}
+	.o_sample_overlay {
+		@include o-position-absolute(0, 0, 0, 0);
+		z-index: 4;
+		overflow: hidden;
+		opacity: .5;
+		&:before{
+			background:url('/website_sale_referral/static/src/img/Sample.png');
+			opacity: .2;
+			content:"";
+			display: block;
+			width: 100%;
+			height: 100%;
+		}
+	}
+	.form-control[readonly] {
+		background-color: #ffffff !important;
+	}
+
+}

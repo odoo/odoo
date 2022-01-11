@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<odoo>
+        <!-- Referral Page -->
+        <record id="sale_referral_page" model="website.page">
+            <field name="name">Sale Referral</field>
+            <field name="website_published">True</field>
+            <field name="url">/referral</field>
+            <field name="view_id" ref="website_sale_referral.referral_controller_template"/>
+        </record>
+</odoo>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="portal_my_home_odoo_referral" name="Portal My Home : Odoo Referral" inherit_id="portal.portal_my_home" priority="90">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="title">Odoo Referral Program</t>
+                <t t-set="url" t-value="referral_link"/>
+                <t t-set="count" t-value="referral_updates_count"/>
+            </t>
+        </xpath>
+    </template>
+</odoo>

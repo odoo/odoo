@@ -70,6 +70,8 @@ class ResConfigSettings(models.TransientModel):
         help="Email sent to the customer once the order is paid."
     )
 
+    module_website_sale_referral = fields.Boolean(string="Referral Program", help="Allow customers to send referral links.")
+
     def set_values(self):
         super(ResConfigSettings, self).set_values()
         if self.default_invoice_policy != 'order':

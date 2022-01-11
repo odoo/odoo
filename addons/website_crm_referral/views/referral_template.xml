@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="assets_frontend" inherit_id="website.assets_frontend" name="Referral Form">
+        <xpath expr="//script[last()]" position="after">
+            <script type="text/javascript" src="/website_crm_referral/static/src/js/referral_widget.js"></script>
+        </xpath>
+    </template>
+
+
+    <template id="referral_controller_template_extended" name="Referrals" inherit_id="website_sale_referral.referral_controller_template">
+        <xpath expr="//div[@id='sharer']" position="after">
+            <div id="lead_generator">
+                <hr class="py-2"/>
+                <h2 class="h5">Or refer someone to us</h2>
+                <p class="text-muted">Know someone who might be interested? Send us their details and we’ll get in touch with them soon.</p>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="text-900 font-weight-normal">Name<span class="text-danger">*</span></label>
+                            <input type="text" name="name" required="1" placeholder="Jane Doe" class="form-control" />
+                            <div class="invalid-feedback">
+                              This field is required
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="text-900 font-weight-normal">Email<span class="text-danger">*</span></label>
+                            <input type="email" name="email" required="1" class="form-control" placeholder="jane.doe@email.com"/> 
+                            <div class="invalid-feedback">
+                              Please input a valid e-mail address
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="text-900 font-weight-normal">Phone</label>
+                            <input type="text" name="phone" placeholder="ex: +32472693299" class="form-control" />
+                            <div class="invalid-feedback">
+                              Please input a valid phone number
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="text-900 font-weight-normal">Company</label>
+                            <input type='text' name="company" placeholder="My Company" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-12">
+                        <label class="text-900 font-weight-normal">Comments</label>
+                        <textarea rows="3" style="min-height:100px" name="comment" class="form-control" placeholder="Tell us something about your referral..."></textarea>
+                    </div>
+                </div>
+                <button type="button" id='create_lead' name="channel" value="direct" class="btn btn-primary float-right">
+                    <div id="create_referral_lead_button_text">
+                        <span>Send</span>
+                    </div>
+                </button>
+            </div>
+        </xpath>
+    </template>
+
+</odoo>

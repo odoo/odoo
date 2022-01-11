@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.referral</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='sales_setting_referral']" position="after">
+            <div class="col-12 col-lg-6">
+                <div class="o_setting_box">
+                    <div class="o_setting_right_pane">
+                        <div id="referral_sale_setting" class="container">
+                            <span class="o_form_label">Reward</span>
+                            <div class="row">
+                                <label for="reward_value" class="col-lg-5 o_light_label"/>
+                                <field name="currency_id" invisible='1' />
+                                <field name="reward_value"/>
+                            </div>
+                            <div class="row" id="responsible_id">
+                                <label for="responsible_id"  class="col-lg-5 o_light_label"/>
+                                <field name="responsible_id"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="o_setting_box mt-3">
+                    <div class="o_setting_right_pane">
+                        <div class="container">
+                            <span class="o_form_label">Follow-up</span>
+                            <div class="row">
+                                <label for="redirect_page" class="col-lg-5 o_light_label"/>
+                                <field name="redirect_page"/>
+                            </div>
+                            <div class="row">
+                                <label for="twitter_message" class="col-lg-5 o_light_label"/>
+                                <field name="twitter_message"/>
+                            </div>
+                            <div class="row">
+                                <label for="salesteam_id" class="col-lg-5 o_light_label"/>
+                                <field name="salesteam_id"/>
+                            </div>
+                            <div class="row" id="salesperson_id">
+                                <label for="salesperson_id" class="col-lg-5 o_light_label"/>
+                                <field name="salesperson_id"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </xpath>
+            <xpath expr="//div[@id='sales_setting_referral_desc']" position="after">
+                <div class="mt16" id="sales_setting_referral_link">
+                    <a href="/referral" target="_new" class="btn-link" role="button"><i class="fa fa-fw fa-arrow-right"/>Referral Portal</a>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

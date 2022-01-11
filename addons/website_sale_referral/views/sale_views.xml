@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="sale_order_to_reward_view_search" model="ir.ui.view">
+        <field name="name">sale.order.search.inherit.sale</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.sale_order_view_search_inherit_sale" />
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='order_date']" position="after" >
+                <group name="to_reward">
+                    <separator />
+                    <filter name="filter_to_reward"
+                            string="To Reward"
+                            domain="[('deserve_reward', '=', True), ('reward_done', '=', False)]"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

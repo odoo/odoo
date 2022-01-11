@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.referral.crm</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="website_sale_referral.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='sales_setting_referral_link']" position="before">
+                <div class="mt16">
+                    <field name="referral_reward_on_lead" class="oe_inline o_light_label" widget="radio" />
+                    <field name="group_referral_reward_on_lead" invisible="1"/>
+                </div>
+            </xpath>
+            <xpath expr="//div[@id='salesperson_id']" position="after">
+                <div class="row">
+                    <label for="lead_tag_ids"  class="col-lg-5 o_light_label"/>
+                    <field name="lead_tag_ids" widget="many2many_tags"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
