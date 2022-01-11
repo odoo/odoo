@@ -836,11 +836,9 @@ function createVideoNode(url, options) {
         .attr('width', '510')
         .attr('src', '//player.youku.com/embed/' + youkuMatch[1]);
     } else {
-      // this is not a known video link. Now what, Cat? Now what?
-          $video = $('<iframe webkitallowfullscreen mozallowfullscreen allowfullscreen>')
-            .attr('width', '640')
-            .attr('height', '360')
-            .attr('src', url);
+        // this is not a known video link. Now what, Cat? Now what?
+        $video = $('<iframe>');
+        console.error("Unsupported URL");
     }
 
     if (options.autoplay) {
