@@ -2829,6 +2829,7 @@ export class OdooEditor extends EventTarget {
                     }
                 }
             }
+            this.historyStep();
         }
     }
     /**
