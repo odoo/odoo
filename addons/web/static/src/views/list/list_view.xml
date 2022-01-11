@@ -17,19 +17,21 @@
                         resModel="model.root.resModel"/>
                 </t>
             </t>
-            <ListRenderer list="model.root" fields="props.fields" info="archInfo" hasSelectors="props.hasSelectors" openRecord="openRecord" toggleSelection="toggleSelection" toggleRecordSelection="toggleRecordSelection"/>
+            <ListRenderer list="model.root" fields="props.fields" info="archInfo" editedRecordId="editedRecord and editedRecord.id" hasSelectors="props.hasSelectors" openRecord="record => this.openRecord(record)"/>
         </Layout>
     </t>
 
     <t t-name="web.ListView.Buttons" owl="1">
         <div class="o_list_buttons d-flex" role="toolbar" aria-label="Main actions">
-            <button type="button" class="btn btn-primary o_list_button_save" data-tooltip="Save record" aria-label="Save record" data-hotkey="s">
-                Save
-            </button>
-            <button type="button" class="btn btn-secondary o_list_button_discard" data-tooltip="Discard record" aria-label="Discard record" data-hotkey="j">
-                Discard
-            </button>
-            <t t-if="activeActions['create']">
+            <t t-if="editedRecord">
+                <button type="button" class="btn btn-primary o_list_button_save" data-tooltip="Save record" aria-label="Save record" data-hotkey="s" t-on-click="onClickSave">
+                    Save
+                </button>
+                <button type="button" class="btn btn-secondary o_list_button_discard" data-tooltip="Discard changes" aria-label="Discard changes" data-hotkey="j" t-on-click="onClickDiscard">
+                    Discard
+                </button>
+            </t>
+            <t t-elif="activeActions['create'] and !model.root.isGrouped">
                 <button type="button" class="btn btn-primary o_list_button_add" data-tooltip="Create record" aria-label="Create record" data-hotkey="c" t-on-click="onClickCreate">
                     Create
                 </button>
@@ -46,7 +48,7 @@
                         defaultRank="button.defaultRank"
                         domain="props.domain"
                         icon="button.icon"
-                        getSelectedResIds="getSelectedResIds"
+                        getSelectedResIds="() => this.getSelectedResIds()"
                         resModel="model.root.resModel"
                         string="button.string"
                         title="button.title"/>

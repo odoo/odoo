@@ -191,11 +191,21 @@ export class ListRenderer extends Component {
         return classNames.join(" ");
     }
 
-    getRowDecoration(record) {
-        return this.props.info.decorations
+    /**
+     * Returns the classnames to apply to the row representing the given record.
+     * @param {Record} record
+     * @returns {string}
+     */
+    getRowClass(record) {
+        // classnames coming from decorations
+        const classNames = this.props.info.decorations
             .filter((decoration) => evaluateExpr(decoration.condition, record.evalContext))
-            .map((decoration) => decoration.class)
-            .join(" ");
+            .map((decoration) => decoration.class);
+        // "o_selected_row" classname for the potential row in edition
+        if (this.props.editedRecordId === record.id) {
+            classNames.push("o_selected_row");
+        }
+        return classNames.join(" ");
     }
 
     getCellClass(column, record) {
@@ -313,6 +323,9 @@ export class ListRenderer extends Component {
     }
 
     onClickSortColumn(column) {
+        if (this.props.editedRecordId) {
+            return;
+        }
         const fieldName = column.name;
         const list = this.props.list;
         if (this.fields[fieldName].sortable && column.hasLabel) {
@@ -328,8 +341,8 @@ export class ListRenderer extends Component {
         }
     }
 
-    openRecord(record, ev) {
-        if (!ev.target.closest("button")) {
+    onRowClicked(record, ev) {
+        if (!ev.target.closest("button") && this.props.editedRecordId !== record.id) {
             this.props.openRecord(record);
         }
     }

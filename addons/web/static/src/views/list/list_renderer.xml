@@ -7,7 +7,7 @@
                 <thead>
                     <tr>
                         <th t-if="props.hasSelectors" class="o_list_record_selector" t-on-click.stop="toggleSelection">
-                            <CheckBox value="selectAll" t-on-change="toggleSelection"  t-on-click.stop=""/>
+                            <CheckBox disabled="!!props.editedRecordId" value="selectAll" t-on-change="toggleSelection"  t-on-click.stop=""/>
                         </th>
                         <t t-foreach="state.columns" t-as="column" t-key="column.name">
                             <th t-if="column.type === 'field'" t-att-class="getColumnClass(column)" t-on-click="onClickSortColumn(column)">
@@ -109,14 +109,14 @@
     </t>
 
     <t t-name="web.ListRenderer.RecordRow" owl="1">
-        <tr class="o_data_row" t-att-class="getRowDecoration(record)" t-on-click="openRecord(record)">
+        <tr class="o_data_row" t-att-class="getRowClass(record)" t-on-click="onRowClicked(record)">
             <td t-if="props.hasSelectors" class="o_list_record_selector" t-on-click.stop="toggleRecordSelection(record)">
-                <CheckBox value="record.selected" t-on-change="toggleRecordSelection(record)" t-on-click.stop=""/>
+                <CheckBox disabled="!!props.editedRecordId" value="record.selected" t-on-change="toggleRecordSelection(record)" t-on-click.stop=""/>
             </td>
             <t t-foreach="state.columns" t-as="column" t-key="column.name">
                 <t t-if="column.type === 'field'">
                     <td class="o_data_cell" t-att-class="getCellClass(column, record)" t-att-title="getCellTitle(column, record)">
-                        <Field name="column.name" record="record" readonly="true" type="column.widget" />
+                        <Field name="column.name" record="record" readonly="props.editedRecordId !== record.id" type="column.widget" />
                     </td>
                 </t>
                 <t t-if="column.type === 'button_group'">

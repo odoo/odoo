@@ -1,39 +1,24 @@
 /** @odoo-module **/
 
-import { dialogService } from "@web/core/dialog/dialog_service";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
-import { makeFakeLocalizationService, makeFakeUserService } from "../helpers/mock_services";
+import { makeFakeUserService } from "../helpers/mock_services";
 import {
     click,
+    editInput,
     legacyExtraNextTick,
     makeDeferred,
-    mockDownload,
     nextTick,
-    patchDate,
     patchWithCleanup,
     triggerEvent,
-    triggerEvents,
     mouseEnter,
 } from "../helpers/utils";
 import {
-    applyGroup,
-    editFavoriteName,
-    removeFacet,
-    saveFavorite,
-    selectGroup,
-    setupControlPanelFavoriteMenuRegistry,
-    setupControlPanelServiceRegistry,
-    toggleAddCustomGroup,
-    toggleComparisonMenu,
     toggleFavoriteMenu,
     toggleFilterMenu,
     toggleGroupByMenu,
-    toggleMenu,
     toggleMenuItem,
     toggleActionMenu,
-    toggleMenuItemOption,
-    toggleSaveFavorite,
     groupByMenu,
     getButtons,
     getFacetTexts,
@@ -270,24 +255,35 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(list, "div.o_control_panel .o_cp_action_menus .dropdown-menu");
     });
 
-    QUnit.skip('editable list with edit="0"', async function (assert) {
-        assert.expect(2);
+    QUnit.test('editable list with edit="0"', async function (assert) {
+        // FIXME: there should be no dependency from views to actionService
+        const fakeActionService = {
+            start() {
+                return {
+                    switchView(viewType) {
+                        assert.step(`switch to ${viewType}`);
+                    },
+                };
+            },
+        };
+        serviceRegistry.add("action", fakeActionService, { force: true });
 
         const list = await makeView({
             type: "list",
             resModel: "foo",
             serverData,
-            actionMenus: {},
             arch: '<tree editable="top" edit="0"><field name="foo"/></tree>',
         });
 
         assert.ok(
-            $(list.el).find("tbody td.o_list_record_selector").length,
+            list.el.querySelectorAll("tbody td.o_list_record_selector").length,
             "should have at least one record"
         );
 
-        await click($(list.el).find("tr td:not(.o_list_record_selector)").first());
+        await click(list.el.querySelector(".o_data_cell"));
         assert.containsNone(list, "tbody tr.o_selected_row", "should not have editable row");
+
+        assert.verifySteps(["switch to form"]);
     });
 
     QUnit.skip(
@@ -843,9 +839,7 @@ QUnit.module("Views", (hooks) => {
         ]);
     });
 
-    QUnit.skip("simple editable rendering", async function (assert) {
-        assert.expect(15);
-
+    QUnit.test("simple editable rendering", async function (assert) {
         const list = await makeView({
             type: "list",
             resModel: "foo",
@@ -858,77 +852,54 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(list, ".o_list_record_selector input:enabled", 5);
         assert.containsOnce(list, "td:contains(yop)", "should contain yop");
 
-        assert.isVisible(
-            $(list.el).findbuttons.find(".o_list_button_add"),
-            "should have a visible Create button"
-        );
-        assert.isNotVisible(
-            $(list.el).findbuttons.find(".o_list_button_save"),
-            "should not have a visible save button"
-        );
-        assert.isNotVisible(
-            $(list.el).findbuttons.find(".o_list_button_discard"),
-            "should not have a visible discard button"
-        );
+        assert.containsOnce(list.el, ".o_list_button_add");
+        assert.containsNone(list.el, ".o_list_button_save");
+        assert.containsNone(list.el, ".o_list_button_discard");
 
-        await click($(list.el).find("td:not(.o_list_record_selector)").first());
+        await click(list.el.querySelector(".o_field_cell"));
 
-        assert.isNotVisible(
-            $(list.el).findbuttons.find(".o_list_button_add"),
-            "should not have a visible Create button"
-        );
-        assert.isVisible(
-            $(list.el).findbuttons.find(".o_list_button_save"),
-            "should have a visible save button"
-        );
-        assert.isVisible(
-            $(list.el).findbuttons.find(".o_list_button_discard"),
-            "should have a visible discard button"
-        );
+        assert.containsNone(list.el, ".o_list_button_add");
+        assert.containsOnce(list.el, ".o_list_button_save");
+        assert.containsOnce(list.el, ".o_list_button_discard");
         assert.containsNone(list, ".o_list_record_selector input:enabled");
 
-        await click($(list.el).findbuttons.find(".o_list_button_save"));
+        await click(list.el.querySelector(".o_list_button_save"));
 
-        assert.isVisible(
-            $(list.el).findbuttons.find(".o_list_button_add"),
-            "should have a visible Create button"
-        );
-        assert.isNotVisible(
-            $(list.el).findbuttons.find(".o_list_button_save"),
-            "should not have a visible save button"
-        );
-        assert.isNotVisible(
-            $(list.el).findbuttons.find(".o_list_button_discard"),
-            "should not have a visible discard button"
-        );
+        assert.containsOnce(list.el, ".o_list_button_add");
+        assert.containsNone(list.el, ".o_list_button_save");
+        assert.containsNone(list.el, ".o_list_button_discard");
         assert.containsN(list, ".o_list_record_selector input:enabled", 5);
     });
 
     QUnit.skip("editable rendering with handle and no data", async function (assert) {
-        assert.expect(6);
-
         serverData.models.foo.records = [];
         const list = await makeView({
             type: "list",
             resModel: "foo",
             serverData,
-            arch:
-                '<tree editable="bottom">' +
-                '<field name="int_field" widget="handle"/>' +
-                '<field name="currency_id"/>' +
-                '<field name="m2o"/>' +
-                "</tree>",
+            arch: `
+                <tree editable="bottom">
+                    <field name="int_field" widget="handle"/>
+                    <field name="currency_id"/>
+                    <field name="m2o"/>
+                </tree>`,
         });
         assert.containsN(list, "thead th", 4, "there should be 4 th");
-        assert.hasClass($(list.el).find("thead th:eq(0)"), "o_list_record_selector");
-        assert.hasClass($(list.el).find("thead th:eq(1)"), "o_handle_cell");
+        assert.hasClass(list.el.querySelectorAll("thead th")[0], "o_list_record_selector");
+        assert.hasClass(list.el.querySelectorAll("thead th")[1], "o_handle_cell");
         assert.strictEqual(
-            $(list.el).find("thead th:eq(1)").text(),
+            list.el.querySelectorAll("thead th")[1].innerText,
             "",
             "the handle field shouldn't have a header description"
         );
-        assert.strictEqual($(list.el).find("thead th:eq(2)").attr("style"), "width: 50%;");
-        assert.strictEqual($(list.el).find("thead th:eq(3)").attr("style"), "width: 50%;");
+        assert.strictEqual(
+            list.el.querySelectorAll("thead th")[2].getAttribute("style"),
+            "width: 50%;"
+        );
+        assert.strictEqual(
+            list.el.querySelectorAll("thead th")[3].getAttribute("style"),
+            "width: 50%;"
+        );
     });
 
     QUnit.test("invisible columns are not displayed", async function (assert) {
@@ -1166,7 +1137,7 @@ QUnit.module("Views", (hooks) => {
             assert.containsN(list, ".o_data_row", 3);
             assert.containsN(list, "tbody tr", 4);
 
-            await click($(list.el).find(".o_list_button_add"));
+            await click(list.el.querySelector(".o_list_button_add"));
 
             assert.containsN(list, ".o_data_row", 4);
             assert.hasClass($(list.el).find("tbody tr:first"), "o_selected_row");
@@ -1812,33 +1783,40 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["openRecord", "openRecord"]);
     });
 
-    QUnit.skip("editable list view: readonly fields cannot be edited", async function (assert) {
-        assert.expect(4);
-
+    QUnit.test("editable list view: readonly fields cannot be edited", async function (assert) {
         serverData.models.foo.fields.foo.readonly = true;
 
         const list = await makeView({
             type: "list",
             resModel: "foo",
             serverData,
-            arch:
-                '<tree editable="bottom">' +
-                '<field name="foo"/>' +
-                '<field name="bar"/>' +
-                '<field name="int_field" readonly="1"/>' +
-                "</tree>",
+            arch: `
+                <tree editable="bottom">
+                    <field name="foo"/>
+                    <field name="bar"/>
+                    <field name="int_field" readonly="1"/>
+                </tree>`,
         });
-        var $td = $(list.el).find("td:not(.o_list_record_selector)").first();
-        var $second_td = $(list.el).find("td:not(.o_list_record_selector)").eq(1);
-        var $third_td = $(list.el).find("td:not(.o_list_record_selector)").eq(2);
-        await click($td);
-        assert.hasClass($td.parent(), "o_selected_row", "row should be in edit mode");
-        assert.hasClass($td, "o_readonly_modifier", "foo cell should be readonly in edit mode");
-        assert.doesNotHaveClass($second_td, "o_readonly_modifier", "bar cell should be editable");
+        await click(list.el.querySelector(".o_field_cell"));
         assert.hasClass(
-            $third_td,
+            list.el.querySelector(".o_data_row"),
+            "o_selected_row",
+            "row should be in edit mode"
+        );
+        assert.hasClass(
+            list.el.querySelector(".o_field_widget[name=foo]"),
             "o_readonly_modifier",
-            "int_field cell should be readonly in edit mode"
+            "foo field should be readonly in edit mode"
+        );
+        assert.doesNotHaveClass(
+            list.el.querySelector(".o_field_widget[name=bar]"),
+            "o_readonly_modifier",
+            "bar field should be editable"
+        );
+        assert.hasClass(
+            list.el.querySelector(".o_field_widget[name=int_field]"),
+            "o_readonly_modifier",
+            "int_field field should be readonly in edit mode"
         );
     });
 
@@ -1947,8 +1925,6 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("edit field in editable field without editing the row", async function (assert) {
         // some widgets are editable in readonly (e.g. priority, boolean_toggle...) and they
         // thus don't require the row to be switched in edition to be edited
-        assert.expect(13);
-
         const list = await makeView({
             type: "list",
             resModel: "foo",
@@ -1962,7 +1938,6 @@ QUnit.module("Views", (hooks) => {
                 if (args.method === "write") {
                     assert.step("write: " + args.args[1].bar);
                 }
-                return this._super(...arguments);
             },
         });
 
@@ -2050,7 +2025,7 @@ QUnit.module("Views", (hooks) => {
             "pager should be correct"
         );
 
-        await click($(list.el).findbuttons.find(".o_list_button_discard"));
+        await click(list.el.querySelector(".o_list_button_discard"));
 
         assert.containsN(list, "tbody tr", 4, "list should still contain 4 rows");
         assert.containsOnce(
@@ -2090,9 +2065,7 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(n, 1, "field_changed should not have been triggered");
     });
 
-    QUnit.skip("editable list view: basic char field edition", async function (assert) {
-        assert.expect(4);
-
+    QUnit.test("editable list view: basic char field edition", async function (assert) {
         const list = await makeView({
             type: "list",
             resModel: "foo",
@@ -2100,22 +2073,24 @@ QUnit.module("Views", (hooks) => {
             arch: '<tree editable="bottom"><field name="foo"/><field name="bar"/></tree>',
         });
 
-        var $td = $(list.el).find("td:not(.o_list_record_selector)").first();
-        await click($td);
-        await testUtils.fields.editInput($td.find("input"), "abc");
-        assert.strictEqual($td.find("input").val(), "abc", "char field has been edited correctly");
-
-        var $next_row_td = $(list.el)
-            .find("tbody tr:eq(1) td:not(.o_list_record_selector)")
-            .first();
-        await click($next_row_td);
+        await click(list.el.querySelector(".o_field_cell"));
+        assert.hasClass(list.el.querySelector(".o_data_row"), "o_selected_row");
+        await editInput(list.el, ".o_field_widget input", "abc");
         assert.strictEqual(
-            $(list.el).find("td:not(.o_list_record_selector)").first().text(),
+            list.el.querySelector(".o_field_widget input").value,
+            "abc",
+            "char field has been edited correctly"
+        );
+
+        await click(list.el.querySelectorAll(".o_data_row")[1].querySelector(".o_data_cell"));
+        assert.strictEqual(
+            list.el.querySelector(".o_field_cell").innerText,
             "abc",
             "changes should be saved correctly"
         );
+        assert.hasClass(list.el.querySelectorAll(".o_data_row")[1], "o_selected_row");
         assert.doesNotHaveClass(
-            $(list.el).find("tbody tr").first(),
+            list.el.querySelector(".o_data_row"),
             "o_selected_row",
             "saved row should be in readonly mode"
         );
@@ -2126,7 +2101,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skip(
+    QUnit.test(
         "editable list view: save data when list sorting in edit mode",
         async function (assert) {
             assert.expect(3);
@@ -2146,36 +2121,28 @@ QUnit.module("Views", (hooks) => {
                             "should correctly save the edited record"
                         );
                     }
-                    return this._super.apply(this, arguments);
                 },
             });
 
-            await click($(list.el).find(".o_data_cell:first"));
-            await testUtils.fields.editInput($(list.el).find('input[name="foo"]'), "xyz");
-            await click($(list.el).find(".o_column_sortable"));
+            await click(list.el.querySelector(".o_data_cell"));
+            await editInput(list.el, '.o_field_widget[name="foo"] input', "xyz");
+            await click(list.el.querySelector(".o_column_sortable"));
 
             assert.hasClass(
-                $(list.el).find(".o_data_row:first"),
+                list.el.querySelector(".o_data_row"),
                 "o_selected_row",
                 "first row should still be in edition"
             );
 
-            await click($(list.el).findbuttons.find(".o_list_button_save"));
-            assert.doesNotHaveClass(
-                $(list.el).findbuttons,
-                "o-editing",
-                "list buttons should be back to their readonly mode"
-            );
+            await click(list.el.querySelector(".o_list_button_save"));
+            assert.containsNone(list.el, ".o_list_button_save");
         }
     );
 
     QUnit.skip(
         "editable list view: check that controlpanel buttons are updating when groupby applied",
         async function (assert) {
-            assert.expect(4);
-
             serverData.models.foo.fields.foo = { string: "Foo", type: "char", required: true };
-
             serverData.actions = {
                 11: {
                     id: 11,
@@ -2190,36 +2157,32 @@ QUnit.module("Views", (hooks) => {
                 "foo,3,list":
                     '<tree editable="top"><field name="display_name"/><field name="foo"/></tree>',
 
-                "foo,9,search":
-                    "<search>" +
-                    '<filter string="candle" name="itsName" context="{\'group_by\': \'foo\'}"/>' +
-                    "</search>",
+                "foo,9,search": `
+                    <search>
+                        <filter string="candle" name="itsName" context="{'group_by': 'foo'}"/>
+                    </search>`,
             };
 
             const webClient = await createWebClient({ serverData });
 
             await doAction(webClient, 11);
-            await click($(webClient.el).find(".o_list_button_add"));
+            await click(webClient.el.querySelector(".o_list_button_add"));
 
-            assert.isNotVisible(
-                $(webClient.el).find(".o_list_button_add"),
-                "create button should be invisible"
-            );
-            assert.isVisible(
-                $(webClient.el).find(".o_list_button_save"),
-                "save button should be visible"
-            );
+            assert.containsNone(webClient, ".o_list_button_add");
+            assert.containsOnce(webClient, ".o_list_button_save");
 
-            await click($(webClient.el).find('.dropdown-toggle:contains("Group By")'));
-            await click($(webClient.el).find('.o_group_by_menu .o_menu_item:contains("candle")'));
+            await toggleGroupByMenu(webClient);
+            await toggleMenuItem(webClient, "candle");
 
-            assert.isNotVisible(
-                $(webClient.el).find(".o_list_button_add"),
-                "create button should be invisible"
+            assert.containsNone(
+                webClient,
+                ".o_list_button_add",
+                "Create not available as list is grouped"
             );
-            assert.isNotVisible(
-                $(webClient.el).find(".o_list_button_save"),
-                "save button should be invisible after applying groupby"
+            assert.containsNone(
+                webClient,
+                ".o_list_button_save",
+                "Save not available as no row in edition"
             );
         }
     );
@@ -2960,7 +2923,7 @@ QUnit.module("Views", (hooks) => {
         var editionWidth = $(list.el).find("table").addBack("table").width();
 
         // leave edition
-        await click($(list.el).findbuttons.find(".o_list_button_save"));
+        await click(list.el.querySelector(".o_list_button_save"));
 
         var readonlyWidths = _.pluck($(list.el).find("thead th"), "offsetWidth");
         var readonlyWidth = $(list.el).find("table").addBack("table").width();
@@ -3195,7 +3158,7 @@ QUnit.module("Views", (hooks) => {
             assert.containsOnce(list, ".o_view_nocontent", "should have no content help");
 
             // click on create button
-            await click($(list.el).find(".o_list_button_add"));
+            await click(list.el.querySelector(".o_list_button_add"));
             const handleWidgetMinWidth = "33px";
             const handleWidgetHeader = $(list.el).find("thead > tr > th.o_handle_cell");
             assert.strictEqual(
@@ -3718,7 +3681,7 @@ QUnit.module("Views", (hooks) => {
             "justo nec tincidunt feugiat, mi justo suscipit libero, sit amet tempus ipsum purus " +
             "bibendum est.";
         await testUtils.fields.editInput($(list.el).find(".o_field_widget[name=text]"), longVal);
-        await click($(list.el).findbuttons.find(".o_list_button_save"));
+        await click(list.el.querySelector(".o_list_button_save"));
 
         assert.containsNone(list, ".o_selected_row");
         assert.strictEqual($(list.el).find('th[data-name="datetime"]')[0].offsetWidth, width);
@@ -4007,7 +3970,7 @@ QUnit.module("Views", (hooks) => {
             var editionWidth = $(list.el).find(".o_data_row:first").outerWidth();
 
             // leave edition
-            await click($(list.el).findbuttons.find(".o_list_button_save"));
+            await click(list.el.querySelector(".o_list_button_save"));
             var readonlyHeight = $(list.el).find(".o_data_row:first").outerHeight();
             var readonlyWidth = $(list.el).find(".o_data_row:first").outerWidth();
 
@@ -5903,7 +5866,7 @@ QUnit.module("Views", (hooks) => {
             "buttons should be disabled while the record is not yet created"
         );
 
-        await click($(list.el).findbuttons.find(".o_list_button_save"));
+        await click(list.el.querySelector(".o_list_button_save"));
 
         assert.strictEqual(
             $(list.el).find("tbody tr:eq(0) .o_list_record_selector input").prop("disabled"),
@@ -5987,11 +5950,11 @@ QUnit.module("Views", (hooks) => {
         );
 
         assert.ok(
-            $(list.el).findbuttons.find(".o_list_button_discard").is(":visible"),
+            list.el.querySelector(".o_list_button_discard").is(":visible"),
             "discard button should be visible"
         );
 
-        await click($(list.el).findbuttons.find(".o_list_button_discard"));
+        await click(list.el.querySelector(".o_list_button_discard"));
 
         assert.strictEqual(
             $(list.el).find("td:not(.o_list_record_selector) input").length,
@@ -6000,7 +5963,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         assert.ok(
-            !$(list.el).findbuttons.find(".o_list_button_discard").is(":visible"),
+            !list.el.querySelector(".o_list_button_discard").is(":visible"),
             "discard button should not be visible"
         );
     });
@@ -6147,7 +6110,7 @@ QUnit.module("Views", (hooks) => {
             "o_invisible_modifier",
             "button with invisible attrs should be properly hidden"
         );
-        await click($(list.el).findbuttons.find(".o_list_button_discard"));
+        await click(list.el.querySelector(".o_list_button_discard"));
 
         // click on the invisible field's cell to edit first row
         await click($(list.el).find("tbody tr:nth(0) td:nth(4)"));
@@ -6599,7 +6562,7 @@ QUnit.module("Views", (hooks) => {
             "discard button should be visible"
         );
         assert.containsNone(list, ".o_list_record_selector input:enabled");
-        await click($(list.el).findbuttons.find(".o_list_button_discard"));
+        await click(list.el.querySelector(".o_list_button_discard"));
         assert.containsN(list, "tr.o_data_row", 4, "should still have 4 records");
         assert.strictEqual(
             $(list.el).findbuttons.find(".o_list_button_add:visible").length,
@@ -7372,13 +7335,13 @@ QUnit.module("Views", (hooks) => {
             $(list.el).find(".o_data_row:nth(2)").is(".o_selected_row"),
             "third row should be in edition"
         );
-        await click($(list.el).findbuttons.find(".o_list_button_discard"));
+        await click(list.el.querySelector(".o_list_button_discard"));
         await click($(list.el).findbuttons.find(".o_list_button_add"));
         assert.ok(
             $(list.el).find(".o_data_row:nth(0)").is(".o_selected_row"),
             "first row should be in edition (creation)"
         );
-        await click($(list.el).findbuttons.find(".o_list_button_discard"));
+        await click(list.el.querySelector(".o_list_button_discard"));
         assert.containsNone(list, ".o_selected_row", "no row should be selected");
         await click(
             $(list.el).find(".o_data_row:nth(2) > td:not(.o_list_record_selector)").first()
@@ -8133,7 +8096,7 @@ QUnit.module("Views", (hooks) => {
 
             await click($(list.el).find(".o_data_cell:first"));
             await testUtils.fields.editInput($(list.el).find('input[name="foo"]'), "hello");
-            await click($(list.el).findbuttons.find(".o_list_button_discard"));
+            await click(list.el.querySelector(".o_list_button_discard"));
             assert.containsNone(
                 document.body,
                 ".modal",
@@ -8285,7 +8248,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(list, "tr.o_data_row", 4, "should have only 4 data row after escape");
         assert.containsNone(list, "tr.o_data_row.o_selected_row", "no rows should be selected");
         assert.ok(
-            !$(list.el).findbuttons.find(".o_list_button_save").is(":visible"),
+            !list.el.querySelector(".o_list_button_save").is(":visible"),
             "should not have a visible save button"
         );
     });
@@ -8309,7 +8272,7 @@ QUnit.module("Views", (hooks) => {
             assert.containsN(list, "tr.o_data_row", 4, "should have only 4 data row after escape");
             assert.containsNone(list, "tr.o_data_row.o_selected_row", "no rows should be selected");
             assert.ok(
-                !$(list.el).findbuttons.find(".o_list_button_save").is(":visible"),
+                !list.el.querySelector(".o_list_button_save").is(":visible"),
                 "should not have a visible save button"
             );
         }
@@ -8825,7 +8788,7 @@ QUnit.module("Views", (hooks) => {
         await testUtils.fields.editInput($(list.el).find("tbody tr:eq(3) td:last input"), 301);
         await click($(list.el).find("tbody tr:eq(0) td:last"));
 
-        await click($(list.el).findbuttons.find(".o_list_button_save"));
+        await click(list.el.querySelector(".o_list_button_save"));
 
         assert.strictEqual(
             $(list.el).find("tbody tr:eq(0) td:last").text(),
@@ -8880,7 +8843,7 @@ QUnit.module("Views", (hooks) => {
             assert.containsOnce(list, ".o_data_row");
             assert.containsN(list, "tbody tr", 4);
 
-            await click($(list.el).find(".o_list_button_add"));
+            await click(list.el.querySelector(".o_list_button_add"));
             assert.containsN(list, ".o_data_row", 2);
             assert.doesNotHaveClass($(list.el).find(".o_data_row:first"), "o_selected_row");
             assert.hasClass($(list.el).find(".o_data_row:nth(1)"), "o_selected_row");
@@ -9271,7 +9234,7 @@ QUnit.module("Views", (hooks) => {
 
         await click($(list.el).find(".o_data_cell:first"));
         await testUtils.fields.editInput($(list.el).find(".o_field_widget[name=foo]"), "abc");
-        await click($(list.el).findbuttons.find(".o_list_button_save"));
+        await click(list.el.querySelector(".o_list_button_save"));
     });
 
     QUnit.skip("editable list view: contexts with multiple edit", async function (assert) {
@@ -9396,7 +9359,7 @@ QUnit.module("Views", (hooks) => {
             assert.containsOnce(list, ".o_selected_row");
 
             // discard row and create new record and keep required field empty and click anywhere
-            await click($(list.el).findbuttons.find(".o_list_button_discard"));
+            await click(list.el.querySelector(".o_list_button_discard"));
             await click($(".o_list_button_add"));
             assert.containsOnce(list, ".o_selected_row", "row should be selected");
             await testUtils.fields.editInput(
@@ -9920,7 +9883,7 @@ QUnit.module("Views", (hooks) => {
             await click($(list.el).find(".o_data_row:first() .o_data_cell:first()"));
             $(list.el).find(".o_data_row:first() .o_data_cell:first() input").val("oof");
 
-            const $discardButton = $(list.el).findbuttons.find(".o_list_button_discard");
+            const $discardButton = list.el.querySelector(".o_list_button_discard");
 
             // Simulates an actual click (event chain is: mousedown > change > blur > focus > mouseup > click)
             await testUtils.dom.triggerEvents($discardButton, ["mousedown"]);
@@ -9964,10 +9927,9 @@ QUnit.module("Views", (hooks) => {
             $(list.el).find(".o_data_row:first() .o_data_cell:first() input").val("oof");
 
             // Simulates a pseudo drag and drop
-            await testUtils.dom.triggerEvents(
-                $(list.el).findbuttons.find(".o_list_button_discard"),
-                ["mousedown"]
-            );
+            await testUtils.dom.triggerEvents(list.el.querySelector(".o_list_button_discard"), [
+                "mousedown",
+            ]);
             await testUtils.dom.triggerEvents(
                 $(list.el).find(".o_data_row:first() .o_data_cell:first() input"),
                 ["change", "blur", "focusout"]
@@ -10606,8 +10568,6 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.skip("editable list with fields with readonly modifier", async function (assert) {
-        assert.expect(8);
-
         const list = await makeView({
             type: "list",
             resModel: "foo",
@@ -10621,7 +10581,7 @@ QUnit.module("Views", (hooks) => {
                 </tree>`,
         });
 
-        await click($(list.el).find(".o_list_button_add"));
+        await click(list.el.querySelector(".o_list_button_add"));
 
         assert.containsOnce(list, ".o_selected_row");
         assert.notOk($(list.el).find(".o_selected_row .o_field_boolean input").is(":checked"));
@@ -11082,7 +11042,7 @@ QUnit.module("Views", (hooks) => {
             $(list.el).find(".o_selected_row .o_field_widget"),
             "some value"
         );
-        await click($(list.el).findbuttons.find(".o_list_button_save"));
+        await click(list.el.querySelector(".o_list_button_save"));
 
         // edit an existing record
         await click($(list.el).find(".o_data_cell:first"));
@@ -11090,7 +11050,7 @@ QUnit.module("Views", (hooks) => {
             $(list.el).find(".o_selected_row .o_field_widget"),
             "new value"
         );
-        await click($(list.el).findbuttons.find(".o_list_button_save"));
+        await click(list.el.querySelector(".o_list_button_save"));
 
         // delete a record
         await click($(list.el).find(".o_data_row:first .o_list_record_selector input"));
@@ -11416,7 +11376,7 @@ QUnit.module("Views", (hooks) => {
             $(list.el).find(".o_selected_row input[name=foo]"),
             "some value"
         );
-        await click($(list.el).findbuttons.find(".o_list_button_save"));
+        await click(list.el.querySelector(".o_list_button_save"));
 
         // modifiers should be evaluted to true
         assert.hasClass(
@@ -11797,7 +11757,7 @@ QUnit.module("Views", (hooks) => {
             "pla",
             "input"
         );
-        await click($(list.el).findbuttons.find(".o_list_button_save"));
+        await click(list.el.querySelector(".o_list_button_save"));
 
         assert.strictEqual(
             serverData.models.foo.records[0].foo,
@@ -11807,22 +11767,30 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(list, ".o_data_row:first:contains(pla)");
     });
 
-    QUnit.skip("control panel buttons in editable grouped list views", async function (assert) {
-        assert.expect(2);
-
+    QUnit.test("control panel buttons in editable grouped list views", async function (assert) {
         const list = await makeView({
             type: "list",
             resModel: "foo",
             serverData,
             arch: '<tree editable="top"><field name="foo"/><field name="bar"/></tree>',
-            groupBy: ["bar"],
+            searchViewArch: `
+                <search>
+                    <filter name="bar" string="bar" context="{'group_by': 'bar'}"/>
+                </search>`,
         });
 
-        assert.isNotVisible($(list.el).findbuttons.find(".o_list_button_add"));
+        assert.containsOnce(list, ".o_list_button_add");
 
-        // reload without groupBy
-        await list.reload({ groupBy: [] });
-        assert.isVisible($(list.el).findbuttons.find(".o_list_button_add"));
+        // reload with a groupby
+        await toggleGroupByMenu(list);
+        await toggleMenuItem(list, "bar");
+
+        assert.containsNone(list, ".o_list_button_add");
+
+        // reload without groupby
+        await toggleMenuItem(list, "bar");
+
+        assert.containsOnce(list, ".o_list_button_add");
     });
 
     QUnit.skip(
@@ -11874,9 +11842,7 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skip("edit a line and discard it in grouped editable", async function (assert) {
-        assert.expect(5);
-
+    QUnit.test("edit a line and discard it in grouped editable", async function (assert) {
         const list = await makeView({
             type: "list",
             resModel: "foo",
@@ -11885,29 +11851,22 @@ QUnit.module("Views", (hooks) => {
             groupBy: ["bar"],
         });
 
-        await click($(list.el).find(".o_group_header:first"));
-        await click($(list.el).find(".o_data_row:nth(2) > td:contains(gnap)"));
-        assert.ok(
-            $(list.el).find(".o_data_row:nth(2)").is(".o_selected_row"),
-            "third group row should be in edition"
-        );
+        await click(list.el.querySelector(".o_group_header"));
+        await click(list.el.querySelectorAll(".o_data_row")[2].querySelector(".o_data_cell"));
+        assert.containsOnce(list, ".o_selected_row");
+        assert.hasClass(list.el.querySelectorAll(".o_data_row")[2], "o_selected_row");
 
-        await click($(list.el).findbuttons.find(".o_list_button_discard"));
-        await click($(list.el).find(".o_data_row:nth(0) > td:contains(yop)"));
-        assert.ok(
-            $(list.el).find(".o_data_row:eq(0)").is(".o_selected_row"),
-            "first group row should be in edition"
-        );
+        await click(list.el.querySelector(".o_list_button_discard"));
+        await click(list.el.querySelectorAll(".o_data_row")[0].querySelector(".o_data_cell"));
+        assert.containsOnce(list, ".o_selected_row");
+        assert.hasClass(list.el.querySelectorAll(".o_data_row")[0], "o_selected_row");
 
-        await click($(list.el).findbuttons.find(".o_list_button_discard"));
+        await click(list.el.querySelector(".o_list_button_discard"));
         assert.containsNone(list, ".o_selected_row");
 
-        await click($(list.el).find(".o_data_row:nth(2) > td:contains(gnap)"));
+        await click(list.el.querySelectorAll(".o_data_row")[2].querySelector(".o_data_cell"));
         assert.containsOnce(list, ".o_selected_row");
-        assert.ok(
-            $(list.el).find(".o_data_row:nth(2)").is(".o_selected_row"),
-            "third group row should be in edition"
-        );
+        assert.hasClass(list.el.querySelectorAll(".o_data_row")[2], "o_selected_row");
     });
 
     QUnit.skip(
@@ -11942,7 +11901,7 @@ QUnit.module("Views", (hooks) => {
             assert.containsN(list, ".o_data_row", 2);
 
             // discard
-            await click($(list.el).findbuttons.find(".o_list_button_discard"));
+            await click(list.el.querySelector(".o_list_button_discard"));
             assert.containsOnce(list, ".o_data_row");
 
             assert.verifySteps(["destroy"]);
@@ -12014,7 +11973,7 @@ QUnit.module("Views", (hooks) => {
             assert.containsOnce(list, "tbody tr td:contains(yop)");
             assert.containsN(list, "tr.o_data_row", 3);
             assert.containsNone(list, "tr.o_data_row.o_selected_row");
-            assert.isNotVisible($(list.el).findbuttons.find(".o_list_button_save"));
+            assert.isNotVisible(list.el.querySelector(".o_list_button_save"));
         }
     );
 
@@ -13092,7 +13051,7 @@ QUnit.module("Views", (hooks) => {
         );
         assert.containsN(list, "tbody:nth(1) .o_data_row", 4);
 
-        await click($(list.el).findbuttons.find(".o_list_button_discard")); // discard new row
+        await click(list.el.querySelector(".o_list_button_discard")); // discard new row
         await click($(list.el).find(".o_group_header:eq(1)")); // open second group
         assert.containsOnce(list, "tbody:nth(3) .o_data_row");
 
@@ -13110,7 +13069,7 @@ QUnit.module("Views", (hooks) => {
             "pla",
             "input"
         );
-        await click($(list.el).findbuttons.find(".o_list_button_save"));
+        await click(list.el.querySelector(".o_list_button_save"));
         assert.containsN(list, "tbody:nth(3) .o_data_row", 2);
     });
 
@@ -13130,7 +13089,7 @@ QUnit.module("Views", (hooks) => {
         assert.hasClass($(list.el).find(".o_data_row:nth(3)"), "o_selected_row");
         assert.containsN(list, "tbody:nth(1) .o_data_row", 4);
 
-        await click($(list.el).findbuttons.find(".o_list_button_discard")); // discard new row
+        await click(list.el.querySelector(".o_list_button_discard")); // discard new row
         await click($(list.el).find(".o_group_header:eq(1)")); // open second group
         assert.containsOnce(list, "tbody:nth(3) .o_data_row");
         await click($(list.el).find(".o_group_field_row_add a:eq(1)")); // create row in second group
@@ -13141,7 +13100,7 @@ QUnit.module("Views", (hooks) => {
             "pla",
             "input"
         );
-        await click($(list.el).findbuttons.find(".o_list_button_save"));
+        await click(list.el.querySelector(".o_list_button_save"));
         assert.containsN(list, "tbody:nth(3) .o_data_row", 2);
     });
 
@@ -13165,7 +13124,7 @@ QUnit.module("Views", (hooks) => {
                 "enter"
             );
             assert.containsN(list, "tbody:nth(1) .o_data_row", 4, "new data row should be created");
-            await click($(list.el).findbuttons.find(".o_list_button_discard"));
+            await click(list.el.querySelector(".o_list_button_discard"));
             // At this point, a crash manager should appear if no proper link targetting
             assert.containsN(
                 list,
@@ -14544,7 +14503,7 @@ QUnit.module("Views", (hooks) => {
 
         assert.strictEqual($(list.el).find('.o_field_cell[name="foo"]').text(), "yopblipgnap");
 
-        await click($(list.el).find(".o_list_button_add"));
+        await click(list.el.querySelector(".o_list_button_add"));
         await testUtils.fields.editInput($(list.el).find('.o_field_widget[name="foo"]'), "test");
         await testUtils.controlPanel.pagerNext(list);
 

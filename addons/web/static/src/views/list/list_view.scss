@@ -239,8 +239,7 @@
             &.o_boolean_favorite_cell,
             &.o_boolean_toggle_cell,
             &.o_toggle_button_cell {
-
-                &:not(.o_readonly_modifier) .custom-checkbox {
+                > .o_field_widget:not(.o_readonly_modifier) .custom-checkbox {
                     pointer-events: auto;
                 }
             }
@@ -264,61 +263,63 @@
             }
         }
 
-        .o_data_row.o_selected_row > .o_data_cell:not(.o_readonly_modifier):not(.o_invisible_modifier) {
+        .o_data_row.o_selected_row > .o_data_cell {
             position: relative; // for o_field_translate
             &:not(.o_handle_cell) {
                 background-color: white;
             }
-            .o_input {
-                border: none;
-                padding: 0;
-            }
-            > .o_field_text {
-                vertical-align: top;
-            }
-            > .o_field_widget {
+            > .o_field_widget:not(.o_readonly_modifier):not(.o_invisible_modifier) {
                 width: 100%;
-                .o_external_button {
-                    padding: 0;
+                .o_input {
                     border: none;
-                    background-color: inherit;
-                    margin-left: 5px;
-                    font-size: 12px;
+                    padding: 0;
                 }
-            }
-            > .o_field_monetary input {
-                width: 0; // override width: 100px and let flex makes this input grow
-                margin: 0 4px;
-            }
-            > .o_field_many2manytags > .o_field_many2one {
-                // reduce basis to prevent many2one input from going to the next line to often
-                flex-basis: 40px;
-            }
-            .o_input_dropdown, .o_datepicker {
-                > .o_input {
-                    padding-right: 15px; // to prevent caret overlapping
-                }
-                > .o_dropdown_button, .o_datepicker_button {
-                    margin-right: 5px;
-                    @include o-position-absolute(0, 0);
-                }
-            }
-            > input.o_field_translate, textarea.o_field_translate {
-                padding-right: 25px;
-                + span.o_field_translate {
-                    margin-left: -35px;
-                    padding: 0px 1px;
-                    text-align: right;
-                    width: 35px;
+                &.o_field_text {
                     vertical-align: top;
-                    font-size: 12px;
                 }
-            }
-            > .o_row_handle {
-                visibility: hidden; // hide sequence when editing
-            }
-            > .o_field_badge {
-                width: auto; // override width: 100% to keep the optimal badge width
+                &.o_field_many2one {
+                    .o_external_button {
+                        padding: 0;
+                        border: none;
+                        background-color: inherit;
+                        margin-left: 5px;
+                        font-size: 12px;
+                    }
+                }
+                &.o_field_monetary input {
+                    width: 0; // override width: 100px and let flex makes this input grow
+                    margin: 0 4px;
+                }
+                &.o_field_many2manytags > .o_field_many2one {
+                    // reduce basis to prevent many2one input from going to the next line to often
+                    flex-basis: 40px;
+                }
+                &.o_field_badge {
+                    width: auto; // override width: 100% to keep the optimal badge width
+                }
+                .o_input_dropdown, .o_datepicker {
+                    > .o_input {
+                        padding-right: 15px; // to prevent caret overlapping
+                    }
+                    > .o_dropdown_button, .o_datepicker_button {
+                        margin-right: 5px;
+                        @include o-position-absolute(0, 0);
+                    }
+                }
+                > input.o_field_translate, textarea.o_field_translate {
+                    padding-right: 25px;
+                    + span.o_field_translate {
+                        margin-left: -35px;
+                        padding: 0px 1px;
+                        text-align: right;
+                        width: 35px;
+                        vertical-align: top;
+                        font-size: 12px;
+                    }
+                }
+                > .o_row_handle {
+                    visibility: hidden; // hide sequence when editing
+                }
             }
         }
 
@@ -362,21 +363,6 @@
                     padding-left: 10px;
                 }
             }
-        }
-    }
-}
-
-// Buttons in ControlPanel
-.o_list_view .o_list_buttons {
-    .o_list_button_save, .o_list_button_discard {
-        display: none;
-    }
-    &.o-editing { // for list view editable
-        .o_list_button_add {
-            display: none
-        }
-        .o_list_button_save, .o_list_button_discard {
-            display: inline-block
         }
     }
 }

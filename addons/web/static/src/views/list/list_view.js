@@ -19,7 +19,8 @@ import { getActiveActions, getDecoration, processButton } from "../helpers/view_
 import { RelationalModel } from "../relational_model";
 import { ListRenderer } from "./list_renderer";
 
-const { onWillStart, useSubEnv } = owl.hooks;
+const { hooks, useState } = owl;
+const { onWillStart, useSubEnv } = hooks;
 
 export class ListViewHeaderButton extends ViewButton {
     async onClick() {
@@ -69,6 +70,7 @@ export class ListArchParser extends XMLParser {
         };
         const decorations = getDecoration(xmlDoc);
         const defaultOrder = xmlDoc.getAttribute("default_order");
+        const editable = xmlDoc.getAttribute("editable") || false;
         const activeFields = {};
         const columns = [];
         let buttonId = 0;
@@ -78,8 +80,8 @@ export class ListArchParser extends XMLParser {
         };
         let headerButtons = [];
         const groupListArchParser = new GroupListArchParser();
-        let buttonGroup = undefined;
-        const config = {}; // TODO: remove if only for limit
+        let buttonGroup;
+        let limit;
         this.visitXML(arch, (node) => {
             if (node.tagName !== "button") {
                 buttonGroup = undefined;
@@ -158,14 +160,15 @@ export class ListArchParser extends XMLParser {
                     .filter((button) => button.modifiers.invisible !== true);
                 return false;
             } else if (node.tagName === "tree") {
-                const limit = node.getAttribute("limit");
-                config.limit = limit && parseInt(limit, 10);
+                const limitAttr = node.getAttribute("limit");
+                limit = limitAttr && parseInt(limitAttr, 10);
             }
         });
 
         return {
             activeActions,
-            config,
+            editable,
+            limit,
             headerButtons,
             fields: activeFields,
             columns,
@@ -187,13 +190,14 @@ export class ListView extends owl.Component {
 
         this.archInfo = new ListArchParser().parse(this.props.arch, this.props.fields);
         this.activeActions = this.archInfo.activeActions;
+        this.editable = this.activeActions.edit ? this.archInfo.editable : false;
         this.model = useModel(RelationalModel, {
             resModel: this.props.resModel,
             fields: this.props.fields,
             activeFields: this.archInfo.fields,
             viewMode: "list",
             groupByInfo: this.archInfo.groupBy.fields,
-            limit: this.archInfo.config.limit || this.props.limit,
+            limit: this.archInfo.limit || this.props.limit,
             defaultOrder: this.archInfo.defaultOrder,
         });
         useViewButtons(this.model);
@@ -207,9 +211,6 @@ export class ListView extends owl.Component {
         onWillStart(async () => {
             this.isExportEnable = await this.user.hasGroup("base.group_allow_export");
         });
-
-        this.openRecord = this.openRecord.bind(this);
-        this.getSelectedResIds = this.getSelectedResIds.bind(this);
 
         useSubEnv({ model: this.model }); // do this in useModel?
 
@@ -233,28 +234,59 @@ export class ListView extends owl.Component {
     }
 
     async openRecord(record) {
-        const resIds = this.model.root.records.map((datapoint) => datapoint.resId);
-        try {
-            await this.actionService.switchView("form", { resId: record.resId, resIds });
-        } catch (e) {
-            if (e instanceof ViewNotFoundError) {
-                // there's no form view in the current action
-                return;
+        if (this.editable) {
+            // edit record
+            if (this.editedRecord) {
+                await this.editedRecord.save();
             }
-            throw e;
+            this.editedRecord = record;
+            this.render();
+        } else {
+            // switch to form view
+            const resIds = this.model.root.records.map((datapoint) => datapoint.resId);
+            try {
+                await this.actionService.switchView("form", { resId: record.resId, resIds });
+            } catch (e) {
+                if (e instanceof ViewNotFoundError) {
+                    // there's no form view in the current action
+                    return;
+                }
+                throw e;
+            }
         }
     }
 
     async onClickCreate() {
-        try {
-            await this.actionService.switchView("form", { resId: false });
-        } catch (e) {
-            if (e instanceof ViewNotFoundError) {
-                // there's no form view in the current action
-                return;
+        if (this.editable) {
+            // add a new row
+            if (this.editedRecord) {
+                await this.editedRecord.save();
             }
-            throw e;
+            // this.editedRecord = record;
+            this.render();
+        } else {
+            // switch to form view to create a new record
+            try {
+                await this.actionService.switchView("form", { resId: false });
+            } catch (e) {
+                if (e instanceof ViewNotFoundError) {
+                    // there's no form view in the current action
+                    return;
+                }
+                throw e;
+            }
         }
+    }
+
+    onClickDiscard() {
+        this.editedRecord.discard();
+        this.editedRecord = null;
+    }
+
+    async onClickSave() {
+        await this.editedRecord.save();
+        this.editedRecord = null;
+        this.render();
     }
 
     getSelectedResIds() {
@@ -395,10 +427,6 @@ export class ListView extends owl.Component {
             cancel: () => {},
         };
         this.dialogService.add(ConfirmationDialog, dialogProps);
-    }
-
-    onClickCreate() {
-        this.actionService.switchView("form", { resId: undefined });
     }
 }
 
