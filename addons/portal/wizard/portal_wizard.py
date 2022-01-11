@@ -206,7 +206,7 @@ class PortalWizardUser(models.TransientModel):
         return self.action_refresh_modal()
 
     def action_refresh_modal(self):
-        """Refresh the portal wizard modal and keep it open. Used as action of email state icon buttons,
+        """Refresh the portal wizard modal and keep it open. Used as fallback action of email state icon buttons,
         required as they must be non-disabled buttons to fire mouse events to show tooltips on email state."""
         return self.wizard_id._action_open_modal()
 
