@@ -4741,7 +4741,6 @@ registry.SnippetMove = SnippetOptionWidget.extend({
  * Allows for media to be replaced.
  */
 registry.ReplaceMedia = SnippetOptionWidget.extend({
-    xmlDependencies: ['/web_editor/static/src/xml/image_link_tools.xml'],
 
     /**
      * @override
@@ -4880,14 +4879,6 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
             return !this.$target[0].classList.contains('media_iframe_video');
         }
         return this._super(...arguments);
-    },
-    /**
-     * @override
-     */
-    async _renderCustomXML(uiFragment) {
-        const rowEl = uiFragment.querySelector('we-row');
-        rowEl.insertAdjacentHTML('beforeend', qweb.render('web_editor.media_link_tools_button'));
-        rowEl.insertAdjacentHTML('afterend', qweb.render('web.editor.media_link_tools_fields'));
     },
 });
 
