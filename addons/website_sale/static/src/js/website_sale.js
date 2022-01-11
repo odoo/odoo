@@ -779,6 +779,10 @@ publicWidget.registry.WebsiteSaleLayout = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onApplyShopLayoutChange: function (ev) {
+        const wysiwyg = this.options.wysiwyg;
+        if (wysiwyg) {
+            wysiwyg.odooEditor.observerUnactive('_onApplyShopLayoutChange');
+        }
         var switchToList = $(ev.currentTarget).find('.o_wsale_apply_list input').is(':checked');
         if (!this.editableMode) {
             this._rpc({
@@ -797,6 +801,9 @@ publicWidget.registry.WebsiteSaleLayout = publicWidget.Widget.extend({
         $grid.toggleClass('o_wsale_layout_list', switchToList);
         void $grid[0].offsetWidth;
         $grid.find('*').css('transition', '');
+        if (wysiwyg) {
+            wysiwyg.odooEditor.observerActive('_onApplyShopLayoutChange');
+        }
     },
 });
 
