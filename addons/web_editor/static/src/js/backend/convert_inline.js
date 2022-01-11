@@ -360,9 +360,9 @@ function toInline($editable, cssRules) {
     // fields).
     _.each(['width', 'height'], function (attribute) {
         $editable.find('img').attr(attribute, function () {
-            return $(this)[attribute]();
+            return ($(this).attr(attribute)) || (attribute === 'height' && this.offsetHeight) || $(this)[attribute]();
         }).css(attribute, function () {
-            return $(this).get(0).style[attribute] || attribute === 'width' ? $(this)[attribute]() + 'px' : '';
+            return $(this).attr(attribute);
         });
     });
 
