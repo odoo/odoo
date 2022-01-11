@@ -73,7 +73,7 @@ QUnit.module("Fields", (hooks) => {
             resModel: "partner",
             arch:
                 '<form string="Partners">' +
-                '<field name="document"/>' +
+                '<field name="document" filename="foo"/>' +
                 '<field name="foo"/>' +
                 "</form>",
             resId: 1,
