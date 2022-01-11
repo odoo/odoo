@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from ast import literal_eval
+
 from odoo import http, _
 from odoo.osv import expression
 from odoo.addons.portal.controllers.portal import CustomerPortal, pager as portal_pager
@@ -79,6 +81,10 @@ class PortalAccount(CustomerPortal):
         if not filterby:
             filterby = 'all'
         domain += searchbar_filters[filterby]['domain']
+
+        # filter based on id
+        if kw.get('invoice_ids', False):
+            domain += [('id', 'in', literal_eval(kw.get('invoice_ids')))]
 
         if date_begin and date_end:
             domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]

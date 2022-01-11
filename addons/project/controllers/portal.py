@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from ast import literal_eval
 from collections import OrderedDict
 from operator import itemgetter
 from markupsafe import Markup
@@ -331,6 +332,10 @@ class ProjectCustomerPortal(CustomerPortal):
         if not sortby:
             sortby = 'date'
         order = searchbar_sortings[sortby]['order']
+
+        # Filter based on id
+        if kw.get('task_ids'):
+            domain += [('id', 'in', literal_eval(kw.get('task_ids')))]
 
         # default group by value
         if not groupby:
