@@ -31,7 +31,7 @@
                     <field name="welcome_message"
                         placeholder="This text is included at the end of the email sent to new portal users."
                         class="mb-3"/>
-                    <field name="user_ids">
+                    <field name="user_ids" class="o_portal_wizard_user_one2many" widget="portal_wizard_user_one2many">
                         <tree string="Contacts" editable="bottom" create="false" delete="false">
                             <field name="partner_id" force_save="1"/>
                             <field name="email" attrs="{'readonly': [('is_internal', '=', True)]}"/>
