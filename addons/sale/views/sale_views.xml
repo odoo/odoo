@@ -1227,6 +1227,7 @@
                 <data>
                     <xpath expr="//field[@name='partner_id']" position="after">
                        <field name="partner_shipping_id"
+                              domain="['|', ('type', '=', 'delivery'), ('parent_id', '=', None)]"
                               groups="sale.group_delivery_invoice_address"
                               attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund', 'out_receipt'))]}"/>
                    </xpath>
