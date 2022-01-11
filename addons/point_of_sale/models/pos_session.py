@@ -649,10 +649,14 @@ class PosSession(models.Model):
                 lines.reconcile()
 
         # reconcile invoice receivable lines
-        for account_id in order_account_move_receivable_lines:
-            ( order_account_move_receivable_lines[account_id]
-            | invoice_receivable_lines.get(account_id, self.env['account.move.line'])
-            ).reconcile()
+        partner_ids = self.env['res.partner']
+        for partner in data.get('invoice_receivables').keys():
+            partner_ids |= partner.commercial_partner_id
+        for partner in partner_ids:
+            for account_id in order_account_move_receivable_lines:
+                ( order_account_move_receivable_lines[account_id].filtered(lambda line: line.partner_id == partner)
+                | invoice_receivable_lines.get(account_id, self.env['account.move.line']).filtered(lambda line: line.partner_id == partner)
+                ).reconcile()
 
         # reconcile stock output lines
         orders_to_invoice = self.order_ids.filtered(lambda order: not order.is_invoiced)
