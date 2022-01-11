@@ -167,25 +167,8 @@ class Pricelist(models.Model):
             # Used to fetch pricelist rules and currency rates
             date = fields.Datetime.now()
 
-        categ_ids = {}
-        for p in products:
-            categ = p.categ_id
-            while categ:
-                categ_ids[categ.id] = True
-                categ = categ.parent_id
-        category_ids = list(categ_ids)
-
-        is_product_template = products[0]._name == "product.template"
-        if is_product_template:
-            product_tmpl_ids = products.ids
-            # all variants of all products
-            product_ids = products.product_variant_ids.ids
-        else:
-            product_ids = products.ids
-            product_tmpl_ids = products.product_tmpl_id.ids
-
         # Fetch all rules potentially matching specified products/templates/categories and date
-        rules = self._get_applicable_rules(date, product_tmpl_ids, product_ids, category_ids)
+        rules = self._get_applicable_rules(products, date)
 
         results = {}
         for product in products:
@@ -221,21 +204,28 @@ class Pricelist(models.Model):
         return results
 
     # Split methods to ease (community) overrides
-    def _get_applicable_rules(self, *args, **kwargs):
+    def _get_applicable_rules(self, products, date, **kwargs):
         self.ensure_one()
         # Do not filter out archived pricelist items, since it means current pricelist is also archived
         # We do not want the computation of prices for archived pricelist to always fallback on the Sales price
         # because no rule was found (thanks to the automatic orm filtering on active field)
         return self.env['product.pricelist.item'].with_context(active_test=False).search(
-            self._get_applicable_rules_domain(*args, **kwargs)
+            self._get_applicable_rules_domain(products=products, date=date, **kwargs)
         )
 
-    def _get_applicable_rules_domain(self, date, product_tmpl_ids, product_ids, category_ids):
+    def _get_applicable_rules_domain(self, products, date, **kwargs):
+        if products._name == 'product.template':
+            templates_domain = ('product_tmpl_id', 'in', products.ids)
+            products_domain = ('product_id.product_tmpl_id', 'in', products.ids)
+        else:
+            templates_domain = ('product_tmpl_id', 'in', products.product_tmpl_id.ids)
+            products_domain = ('product_id', 'in', products.ids)
+
         return [
             ('pricelist_id', '=', self.id),
-            '|', ('product_tmpl_id', '=', False), ('product_tmpl_id', 'in', product_tmpl_ids),
-            '|', ('product_id', '=', False), ('product_id', 'in', product_ids),
-            '|', ('categ_id', '=', False), ('categ_id', 'in', category_ids),
+            '|', ('categ_id', '=', False), ('categ_id', 'child_of', products.categ_id.ids),
+            '|', ('product_tmpl_id', '=', False), templates_domain,
+            '|', ('product_id', '=', False), products_domain,
             '|', ('date_start', '=', False), ('date_start', '<=', date),
             '|', ('date_end', '=', False), ('date_end', '>=', date),
         ]
