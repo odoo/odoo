@@ -63,7 +63,7 @@ export class ProgressBarField extends Component {
                 this.props.record.data[this.props.options.current_value] !== undefined
                     ? this.props.options.current_value
                     : this.props.name,
-                Number(value) || false
+                Number(value)
             );
         }
     }
@@ -78,7 +78,7 @@ export class ProgressBarField extends Component {
                 this.props.record.data[this.props.options.max_value] !== undefined
                     ? this.props.options.max_value
                     : this.props.name,
-                Number(max_value) || false
+                Number(max_value)
             );
         }
     }

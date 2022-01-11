@@ -53,7 +53,7 @@ export class BinaryField extends Component {
     onFileRemove() {
         this.state.isValid = true;
         this.props.update(false);
-        this.props.update(false, { name: this.props.attrs.filename });
+        this.props.record.update(this.props.attrs.filename, false);
     }
     onFileUploaded(info) {
         this.state.filename = info.name;
