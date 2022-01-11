@@ -2,13 +2,21 @@
 
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "./standard_field_props";
+import { useEffect } from "@web/core/utils/hooks";
 
 const { Component } = owl;
+const { useRef } = owl.hooks;
 
 class CopyClipboard extends Component {
-    onCopyClicked() {
-        //todo
-        console.log("clicked");
+    setup() {
+        this.copyRef = useRef("copyBtn");
+        useEffect(() => {
+            this.clipboard = new ClipboardJS(this.copyRef.el);
+            this.tooltip = new Tooltip(this.copyRef.el);
+            this.clipboard.on("success", (e) => {
+                this.tooltip.show();
+            });
+        });
     }
 }
 Object.assign(CopyClipboard, {
