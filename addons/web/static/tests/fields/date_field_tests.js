@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { click, triggerEvent, triggerEvents } from "../helpers/utils";
+import { click, patchTimeZone, triggerEvent, triggerEvents } from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
 
 let serverData;
@@ -21,69 +21,6 @@ QUnit.module("Fields", (hooks) => {
                             searchable: true,
                             trim: true,
                         },
-                        bar: { string: "Bar", type: "boolean", default: true, searchable: true },
-                        empty_string: {
-                            string: "Empty string",
-                            type: "char",
-                            default: false,
-                            searchable: true,
-                            trim: true,
-                        },
-                        txt: {
-                            string: "txt",
-                            type: "text",
-                            default: "My little txt Value\nHo-ho-hoooo Merry Christmas",
-                        },
-                        int_field: {
-                            string: "int_field",
-                            type: "integer",
-                            sortable: true,
-                            searchable: true,
-                        },
-                        qux: { string: "Qux", type: "float", digits: [16, 1], searchable: true },
-                        p: {
-                            string: "one2many field",
-                            type: "one2many",
-                            relation: "partner",
-                            searchable: true,
-                        },
-                        trululu: {
-                            string: "Trululu",
-                            type: "many2one",
-                            relation: "partner",
-                            searchable: true,
-                        },
-                        timmy: {
-                            string: "pokemon",
-                            type: "many2many",
-                            relation: "partner_type",
-                            searchable: true,
-                        },
-                        product_id: {
-                            string: "Product",
-                            type: "many2one",
-                            relation: "product",
-                            searchable: true,
-                        },
-                        sequence: { type: "integer", string: "Sequence", searchable: true },
-                        currency_id: {
-                            string: "Currency",
-                            type: "many2one",
-                            relation: "currency",
-                            searchable: true,
-                        },
-                        selection: {
-                            string: "Selection",
-                            type: "selection",
-                            searchable: true,
-                            selection: [
-                                ["normal", "Normal"],
-                                ["blocked", "Blocked"],
-                                ["done", "Done"],
-                            ],
-                        },
-                        document: { string: "Binary", type: "binary" },
-                        hex_color: { string: "hexadecimal color", type: "char" },
                     },
                     records: [
                         {
@@ -91,104 +28,20 @@ QUnit.module("Fields", (hooks) => {
                             date: "2017-02-03",
                             datetime: "2017-02-08 10:00:00",
                             display_name: "first record",
-                            bar: true,
                             foo: "yop",
-                            int_field: 10,
-                            qux: 0.44444,
-                            p: [],
-                            timmy: [],
-                            trululu: 4,
-                            selection: "blocked",
-                            document: "coucou==\n",
-                            hex_color: "#ff0000",
                         },
                         {
                             id: 2,
                             display_name: "second record",
-                            bar: true,
                             foo: "blip",
-                            int_field: 0,
-                            qux: 0,
-                            p: [],
-                            timmy: [],
-                            trululu: 1,
-                            sequence: 4,
-                            currency_id: 2,
-                            selection: "normal",
                         },
                         {
                             id: 4,
                             display_name: "aaa",
                             foo: "abc",
-                            sequence: 9,
-                            int_field: false,
-                            qux: false,
-                            selection: "done",
                         },
-                        { id: 3, bar: true, foo: "gnap", int_field: 80, qux: -3.89859 },
-                        { id: 5, bar: false, foo: "blop", int_field: -4, qux: 9.1, currency_id: 1 },
-                    ],
-                    onchanges: {},
-                },
-                product: {
-                    fields: {
-                        name: { string: "Product Name", type: "char", searchable: true },
-                    },
-                    records: [
-                        {
-                            id: 37,
-                            display_name: "xphone",
-                        },
-                        {
-                            id: 41,
-                            display_name: "xpad",
-                        },
-                    ],
-                },
-                partner_type: {
-                    fields: {
-                        name: { string: "Partner Type", type: "char", searchable: true },
-                        color: { string: "Color index", type: "integer", searchable: true },
-                    },
-                    records: [
-                        { id: 12, display_name: "gold", color: 2 },
-                        { id: 14, display_name: "silver", color: 5 },
-                    ],
-                },
-                currency: {
-                    fields: {
-                        digits: { string: "Digits" },
-                        symbol: { string: "Currency Sumbol", type: "char", searchable: true },
-                        position: { string: "Currency Position", type: "char", searchable: true },
-                    },
-                    records: [
-                        {
-                            id: 1,
-                            display_name: "$",
-                            symbol: "$",
-                            position: "before",
-                        },
-                        {
-                            id: 2,
-                            display_name: "€",
-                            symbol: "€",
-                            position: "after",
-                        },
-                    ],
-                },
-                "ir.translation": {
-                    fields: {
-                        lang: { type: "char" },
-                        value: { type: "char" },
-                        resId: { type: "integer" },
-                    },
-                    records: [
-                        {
-                            id: 99,
-                            resId: 37,
-                            value: "",
-                            lang: "en_US",
-                        },
+                        { id: 3, foo: "gnap" },
+                        { id: 5, foo: "blop" },
                     ],
                 },
             },
@@ -400,115 +253,117 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skip("DateField in form view (with positive time zone offset)", async function (assert) {
+    QUnit.test("DateField in form view (with positive time zone offset)", async function (assert) {
         assert.expect(8);
+
+        patchTimeZone(120); // Should be ignored by date fields
 
         const form = await makeView({
             type: "form",
             resModel: "partner",
-            serverData,
-            arch: '<form><field name="date"/></form>',
             resId: 1,
-            mockRPC: function (route, args) {
+            serverData,
+            arch: `
+                <form>
+                    <field name="date" />
+                </form>
+            `,
+            mockRPC(route, { args }) {
                 if (route === "/web/dataset/call_kw/partner/write") {
                     assert.strictEqual(
-                        args.args[1].date,
+                        args[1].date,
                         "2017-02-22",
                         "the correct value should be saved"
                     );
                 }
-                return this._super.apply(this, arguments);
-            },
-            translateParameters: {
-                // Avoid issues due to localization formats
-                date_format: "%m/%d/%Y",
-            },
-            session: {
-                getTZOffset: function () {
-                    return 120; // Should be ignored by date fields
-                },
             },
         });
 
         assert.strictEqual(
-            form.$(".o_field_date").text(),
+            form.el.querySelector(".o_field_date").textContent,
             "02/03/2017",
             "the date should be correctly displayed in readonly"
         );
 
         // switch to edit mode
-        await testUtils.form.clickEdit(form);
+        await click(form.el, ".o_form_button_edit");
         assert.strictEqual(
-            form.$(".o_datepicker_input").val(),
+            form.el.querySelector(".o_datepicker_input").value,
             "02/03/2017",
             "the date should be correct in edit mode"
         );
 
         // open datepicker and select another value
-        testUtils.dom.openDatepicker(form.$(".o_datepicker"));
-        assert.ok($(".bootstrap-datetimepicker-widget").length, "datepicker should be open");
-        assert.strictEqual(
-            $(".day.active").data("day"),
-            "02/03/2017",
+        await click(form.el, ".o_datepicker_input");
+        assert.containsOnce(
+            document.body,
+            ".bootstrap-datetimepicker-widget",
+            "datepicker should be opened"
+        );
+        assert.containsOnce(
+            document.body,
+            ".day.active[data-day='02/03/2017']",
             "datepicker should be highlight February 3"
         );
-        testUtils.dom.click($(".bootstrap-datetimepicker-widget .picker-switch").first());
-        testUtils.dom.click($(".bootstrap-datetimepicker-widget .picker-switch:eq(1)").first());
-        testUtils.dom.click($(".bootstrap-datetimepicker-widget .year:contains(2017)"));
-        testUtils.dom.click($(".bootstrap-datetimepicker-widget .month").eq(1));
-        testUtils.dom.click($(".day:contains(22)"));
-        assert.ok(!$(".bootstrap-datetimepicker-widget").length, "datepicker should be closed");
+        await click(
+            document.body.querySelectorAll(".bootstrap-datetimepicker-widget .picker-switch")[0]
+        );
+        await click(
+            document.body.querySelectorAll(".bootstrap-datetimepicker-widget .picker-switch")[1]
+        );
+        await click(document.body.querySelectorAll(".bootstrap-datetimepicker-widget .year")[8]);
+        await click(document.body.querySelectorAll(".bootstrap-datetimepicker-widget .month")[1]);
+        await click(document.body.querySelector(".day[data-day*='/22/']"));
+        assert.containsNone(
+            document.body,
+            ".bootstrap-datetimepicker-widget",
+            "datepicker should be closed"
+        );
         assert.strictEqual(
-            form.$(".o_datepicker_input").val(),
+            form.el.querySelector(".o_datepicker_input").value,
             "02/22/2017",
             "the selected date should be displayed in the input"
         );
 
         // save
-        await testUtils.form.clickSave(form);
+        await click(form.el, ".o_form_button_save");
         assert.strictEqual(
-            form.$(".o_field_date").text(),
+            form.el.querySelector(".o_field_date").textContent,
             "02/22/2017",
             "the selected date should be displayed after saving"
         );
-        form.destroy();
     });
 
-    QUnit.skip("DateField in form view (with negative time zone offset)", async function (assert) {
+    QUnit.test("DateField in form view (with negative time zone offset)", async function (assert) {
         assert.expect(2);
+
+        patchTimeZone(-120); // Should be ignored by date fields
 
         const form = await makeView({
             type: "form",
             resModel: "partner",
-            serverData,
-            arch: '<form><field name="date"/></form>',
             resId: 1,
-            translateParameters: {
-                // Avoid issues due to localization formats
-                date_format: "%m/%d/%Y",
-            },
-            session: {
-                getTZOffset: function () {
-                    return -120; // Should be ignored by date fields
-                },
-            },
+            serverData,
+            arch: `
+                <form>
+                    <field name="date" />
+                </form>
+            `,
         });
 
         assert.strictEqual(
-            form.$(".o_field_date").text(),
+            form.el.querySelector(".o_field_date").textContent,
             "02/03/2017",
             "the date should be correctly displayed in readonly"
         );
 
         // switch to edit mode
-        await testUtils.form.clickEdit(form);
+        await click(form.el, ".o_form_button_edit");
         assert.strictEqual(
-            form.$(".o_datepicker_input").val(),
+            form.el.querySelector(".o_datepicker_input").value,
             "02/03/2017",
             "the date should be correct in edit mode"
         );
-
-        form.destroy();
     });
 
     QUnit.test("DateField dropdown disappears on scroll", async function (assert) {
