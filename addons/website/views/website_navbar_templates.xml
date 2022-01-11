@@ -94,12 +94,6 @@
                                     <t t-set="is_system" t-value="env.user.has_group('base.group_system')"/>
                                     <t t-set="is_designer" t-value="env.user.has_group('website.group_website_designer')"/>
 
-                                    <div t-if='is_designer' class="col-md-4 mb8 o_new_content_element">
-                                        <a href="#" data-action="new_page" aria-label="New page" title="New page">
-                                            <i class="fa fa-file-o"/>
-                                            <p>Page</p>
-                                        </a>
-                                    </div>
                                     <t t-set="mod" t-value="env.ref('base.module_website_blog')"/>
                                     <div name="module_website_blog" t-if='is_system' t-cache="is_system"
                                          t-att-data-module-id="mod.id"

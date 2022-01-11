@@ -1,6 +1,9 @@
 /** @odoo-module **/
 
 import { Dialog } from '@web/core/dialog/dialog';
+import { Switch } from '@website/components/switch/switch';
+
+const { xml, useState } = owl;
 
 export class WebsiteDialog extends Dialog {
     setup() {
@@ -44,3 +47,46 @@ WebsiteDialog.bodyTemplate = "website.DialogBody";
 WebsiteDialog.footerTemplate = "website.DialogFooter";
 WebsiteDialog.size = "modal-md";
 WebsiteDialog.contentClass = "o_website_dialog";
+
+export class AddPageDialog extends WebsiteDialog {
+    setup() {
+        super.setup();
+
+        this.title = this.env._t("New Page");
+        this.primaryTitle = this.env._t("Create");
+
+        this.state = useState({
+            addMenu: true,
+            name: '',
+        });
+    }
+
+    onChangeAddMenu(value) {
+        this.state.addMenu = value;
+    }
+
+    async primaryClick() {
+        await this.props.addPage(this.state.name, this.state.addMenu);
+        this.close();
+    }
+}
+AddPageDialog.props = {
+    ...WebsiteDialog.props,
+    addPage: Function,
+};
+AddPageDialog.components = {
+    Switch,
+};
+AddPageDialog.bodyTemplate = xml`
+<div>
+    <div class="form-group row">
+        <label class="col-form-label col-md-3">
+            Page Title
+        </label>
+        <div class="col-md-9">
+            <input type="text" t-model="state.name" class="form-control" required="required"/>
+        </div>
+    </div>
+    <Switch extraClasses="'offset-md-3 col-md-9 text-left'" label="'Add to menu'" value="state.addMenu" onChange="(value) => this.onChangeAddMenu(value)"/>
+</div>
+`;
