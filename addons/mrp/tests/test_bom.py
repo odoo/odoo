@@ -4,7 +4,7 @@
 from odoo import exceptions
 from odoo.tests import Form
 from odoo.addons.mrp.tests.common import TestMrpCommon
-from odoo.tools import float_compare, float_round
+from odoo.tools import float_compare, float_round, float_repr
 
 
 class TestBoM(TestMrpCommon):
@@ -324,6 +324,41 @@ class TestBoM(TestMrpCommon):
         location = self.env.ref('stock.stock_location_stock')
         self.env['stock.quant']._update_available_quantity(product_dozens, location, 1.0)
         self.assertEqual(product_unit.qty_available, 12.0)
+
+    def test_13_negative_on_hand_qty(self):
+        # We set the Product Unit of Measure digits to 5.
+        # Because float_round(-384.0, 5) = -384.00000000000006
+        # And float_round(-384.0, 2) = -384.0
+        precision = self.env.ref('product.decimal_product_uom')
+        precision.digits = 5
+
+        # We set the Unit(s) rounding to 0.0001 (digit = 4)
+        uom_unit = self.env.ref('uom.product_uom_unit')
+        uom_unit.rounding = 0.0001
+
+        _ = self.env['mrp.bom'].create({
+            'product_id': self.product_2.id,
+            'product_tmpl_id': self.product_2.product_tmpl_id.id,
+            'product_uom_id': uom_unit.id,
+            'product_qty': 1.00,
+            'type': 'phantom',
+            'bom_line_ids': [
+                (0, 0, {
+                    'product_id': self.product_3.id,
+                    'product_qty': 1.000,
+                }),
+            ]
+        })
+
+        self.env['stock.quant']._update_available_quantity(self.product_3, self.env.ref('stock.stock_location_stock'), -384.0)
+
+        kit_product_qty = self.product_2.qty_available  # Without product_3 in the prefetch
+        # Use the float_repr to remove extra small decimal (and represent the front-end behavior)
+        self.assertEqual(float_repr(float_round(kit_product_qty, precision_digits=precision.digits), precision_digits=precision.digits), '-384.00000')
+
+        self.product_2.invalidate_cache(fnames=['qty_available'], ids=self.product_2.ids)
+        kit_product_qty, _ = (self.product_2 + self.product_3).mapped("qty_available")  # With product_3 in the prefetch
+        self.assertEqual(float_repr(float_round(kit_product_qty, precision_digits=precision.digits), precision_digits=precision.digits), '-384.00000')
 
     def test_20_bom_report(self):
         """ Simulate a crumble receipt with mrp and open the bom structure
