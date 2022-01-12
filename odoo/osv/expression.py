@@ -1018,13 +1018,11 @@ class expression(object):
                     params = [it for it in right if it != False]
                     check_null = len(params) < len(right)
                 if params:
-                    if left == 'id':
-                        instr = ','.join(['%s'] * len(params))
-                    else:
+                    if left != 'id':
                         field = model._fields[left]
-                        instr = ','.join([field.column_format] * len(params))
                         params = [field.convert_to_column(p, model, validate=False) for p in params]
-                    query = '(%s."%s" %s (%s))' % (table_alias, left, operator, instr)
+                    query = f'({table_alias}."{left}" {operator} %s)'
+                    params = [tuple(params)]
                 else:
                     # The case for (left, 'in', []) or (left, 'not in', []).
                     query = 'FALSE' if operator == 'in' else 'TRUE'
@@ -1069,10 +1067,9 @@ class expression(object):
             sql_operator = {'=like': 'like', '=ilike': 'ilike'}.get(operator, operator)
             cast = '::text' if sql_operator.endswith('like') else ''
 
-            column_format = '%s' if need_wildcard else field.column_format
             unaccent = self._unaccent(field) if sql_operator.endswith('like') else lambda x: x
             column = '%s.%s' % (table_alias, _quote(left))
-            query = '(%s %s %s)' % (unaccent(column + cast), sql_operator, unaccent(column_format))
+            query = f'({unaccent(column + cast)} {sql_operator} {unaccent("%s")})'
 
             if (need_wildcard and not right) or (right and operator in NEGATIVE_TERM_OPERATORS):
                 query = '(%s OR %s."%s" IS NULL)' % (query, table_alias, left)
