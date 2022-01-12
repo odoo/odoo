@@ -86,7 +86,6 @@ class IrActionsReport(models.Model):
     _description = 'Report Action'
     _inherit = 'ir.actions.actions'
     _table = 'ir_act_report_xml'
-    _sequence = 'ir_actions_id_seq'
     _order = 'name'
 
     name = fields.Char(translate=True)
