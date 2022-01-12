@@ -129,6 +129,8 @@ const loadBundleDefinition = memoize(async function (bundleName) {
 
 const bundlesCache = {};
 
+const literal = {a: 'b'};
+const literal2 = {'a': 'b'};
 /**
  * Loads a bundle.
  *
