@@ -18,8 +18,7 @@ class AccountMove(models.Model):
     # Stored fields
     l10n_es_tbai_is_required = fields.Boolean(
         string="Is the Bask EDI (TicketBAI) needed",
-        compute='_compute_l10n_es_tbai_is_required',
-        store=True
+        compute='_compute_l10n_es_tbai_is_required'
     )
 
     # Non-stored fields
@@ -133,11 +132,10 @@ class AccountMove(models.Model):
             sequence = regex_sub(r"[^0-9A-Za-z.\_\-\/]", "", sequence)  # remove forbidden characters
             sequence = regex_sub(r"[\s]+", " ", sequence)  # no more than once consecutive whitespace allowed
             # TODO (optional) issue warning if sequence uses chars out of ([0123456789ABCDEFGHJKLMNPQRSTUVXYZ.\_\-\/ ])
-            record.write({'l10n_es_tbai_sequence': sequence + ("TEST" if record.company_id.l10n_es_tbai_test_env else "")})
+            self.l10n_es_tbai_sequence = sequence + ("TEST" if record.company_id.l10n_es_tbai_test_env else "")
 
-    @api.depends('name')
+    @ api.depends('name')
     def _compute_l10n_es_tbai_number(self):
         for record in self:
             _, number = record.name.rsplit('/', 1)
-            number = regex_sub(r"[^0-9]", "", number)  # remove non-decimal characters
-            record.write({'l10n_es_tbai_number': number})
+            self.l10n_es_tbai_number = regex_sub(r"[^0-9]", "", number)  # remove non-decimal characters
