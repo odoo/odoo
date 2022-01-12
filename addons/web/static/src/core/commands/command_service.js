@@ -93,7 +93,7 @@ export const commandService = {
                 {
                     categoriesByNamespace,
                     emptyMessageByNamespace,
-                    footerComponent: DefaultFooter,
+                    FooterComponent: DefaultFooter,
                     placeholder: env._t("Search for a command..."),
                     providers: commandProviderRegistry.getAll(),
                 },

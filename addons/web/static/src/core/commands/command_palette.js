@@ -37,7 +37,7 @@ const FUZZY_NAMESPACES = ["default"];
  * @typedef {{
  *  categoriesByNamespace?: {[namespace]: string[]};
  *  emptyMessageByNamespace?: {[namespace]: string};
- *  footerComponent?: Component;
+ *  FooterComponent?: Component;
  *  placeholder?: string;
  *  providers: Provider[];
  *  searchValue?: string;
@@ -84,7 +84,7 @@ export class CommandPalette extends Component {
         /**
          * @type {{ commands: CommandItem[],
          *          emptyMessage: string,
-         *          footerComponent: Component,
+         *          FooterComponent: Component,
          *          placeholder: string,
          *          searchValue: string,
          *          selectedCommand: CommandItem }}
@@ -132,7 +132,7 @@ export class CommandPalette extends Component {
         this.emptyMessageByNamespace = config.emptyMessageByNamespace || {};
         this.providersByNamespace = result;
 
-        this.state.footerComponent = config.footerComponent;
+        this.state.FooterComponent = config.FooterComponent;
 
         this.state.placeholder = config.placeholder || DEFAULT_PLACEHOLDER.toString();
 
