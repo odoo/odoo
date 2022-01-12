@@ -292,10 +292,7 @@ export class Record extends DataPoint {
     }
 
     getFieldContext(fieldName) {
-        return makeContext(
-            [this.context, this.activeFields[fieldName].attrs.context],
-            this.evalContext
-        );
+        return makeContext([this.context, this.activeFields[fieldName].context], this.evalContext);
     }
     getFieldDomain(fieldName) {
         return Domain.and([
