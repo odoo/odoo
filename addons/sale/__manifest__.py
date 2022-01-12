@@ -52,7 +52,7 @@ This module contains all the common features of Sales Management and eCommerce.
         'views/sale_menus.xml',  # Last because referencing actions defined in previous files
     ],
     'demo': [
-        'data/product_product_demo.xml',
+        'data/product_demo.xml',
         'data/sale_demo.xml',
     ],
     'installable': True,
