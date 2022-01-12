@@ -15,6 +15,6 @@ export const SystrayService = AbstractService.extend({
      */
     async start() {
         systrayRegistry.add('mail.MessagingMenuContainer', { Component: MessagingMenuContainer });
-        systrayRegistry.add('mail.RtcActivityNoticeContainer', { Component: RtcActivityNoticeContainer });
+        systrayRegistry.add('mail.RtcActivityNoticeContainer', { Component: RtcActivityNoticeContainer }, { sequence: 100 });
     },
 });
