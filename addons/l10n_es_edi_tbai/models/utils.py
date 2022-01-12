@@ -6,6 +6,7 @@ import struct
 import zipfile
 from base64 import b64decode, b64encode
 from io import BytesIO
+from random import randint
 from re import sub as regex_sub
 
 import requests
@@ -220,3 +221,14 @@ class L10nEsTbaiFillSignXml(models.AbstractModel):
         for c in data:
             crc = self.CRC8_TABLE[(crc ^ ord(c)) & 0xFF]
         return '{:03d}'.format(crc & 0xFF)
+
+    # -------------------------------------------------------------------------
+    # MISC
+    # -------------------------------------------------------------------------
+
+    def random_vat(self, force_new=False):
+        if not force_new and self.env['res.company'].l10n_es_tbai_last_posted_id:
+            return self.company_id.vat
+        else:
+            vat = randint(0, 99999999)
+            return "ES" + "{:08}".format(vat) + "TRWAGMYFPDXBNJZSQVHLCKE"[vat % 23]
