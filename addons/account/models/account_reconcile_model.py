@@ -291,6 +291,8 @@ class AccountReconcileModel(models.Model):
 
         new_aml_dicts = []
         for tax_res in res['taxes']:
+            if self.company_id.currency_id.is_zero(tax_res['amount']):
+                continue
             tax = self.env['account.tax'].browse(tax_res['id'])
             balance = tax_res['amount']
             name = ' '.join([x for x in [base_line_dict.get('name', ''), tax_res['name']] if x])
