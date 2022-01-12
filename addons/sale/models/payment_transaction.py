@@ -88,7 +88,7 @@ class PaymentTransaction(models.Model):
         """
         super()._log_message_on_linked_documents(message)
         for order in self.sale_order_ids:
-            order.message_post(body=message)
+            order.with_user(SUPERUSER_ID).message_post(body=message)
 
     def _reconcile_after_done(self):
         """ Override of payment to automatically confirm quotations and generate invoices. """

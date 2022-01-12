@@ -9,7 +9,7 @@ from datetime import datetime
 import psycopg2
 from dateutil import relativedelta
 
-from odoo import _, api, fields, models
+from odoo import _, api, fields, models, SUPERUSER_ID
 from odoo.exceptions import ValidationError
 from odoo.tools import consteq, format_amount, ustr
 from odoo.tools.misc import hmac as hmac_tool
@@ -988,11 +988,11 @@ class PaymentTransaction(models.Model):
         """
         self.ensure_one()
         if self.source_transaction_id.payment_id:
-            self.source_transaction_id.payment_id.message_post(body=message)
+            self.source_transaction_id.payment_id.with_user(SUPERUSER_ID).message_post(body=message)
             for invoice in self.source_transaction_id.invoice_ids:
-                invoice.message_post(body=message)
+                invoice.with_user(SUPERUSER_ID).message_post(body=message)
         for invoice in self.invoice_ids:
-            invoice.message_post(body=message)
+            invoice.with_user(SUPERUSER_ID).message_post(body=message)
 
     #=== BUSINESS METHODS - GETTERS ===#
 
