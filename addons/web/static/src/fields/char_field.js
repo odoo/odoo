@@ -9,7 +9,7 @@ const { Component } = owl;
 export class CharField extends Component {
     get formattedValue() {
         let value = typeof this.props.value === "string" ? this.props.value : "";
-        if (this.isPassword) {
+        if (this.props.isPassword) {
             value = "*".repeat(value.length);
         }
         return value;
@@ -19,9 +19,6 @@ export class CharField extends Component {
     }
     get maxLength() {
         return this.props.record.fields[this.props.name].size;
-    }
-    get isPassword() {
-        return "password" in this.props.attrs;
     }
 
     /**
@@ -41,12 +38,20 @@ Object.assign(CharField, {
     props: {
         ...standardFieldProps,
         autocomplete: { type: String, optional: true },
-        password: { type: String, optional: true },
+        isPassword: { type: Boolean, optional: true },
         placeholder: { type: String, optional: true },
     },
 
     displayName: _lt("Text"),
     supportedTypes: ["char"],
+
+    convertAttrsToProps(attrs) {
+        return {
+            autocomplete: attrs.autocomplete,
+            isPassword: "password" in attrs,
+            placeholder: attrs.placeholder,
+        };
+    },
 });
 
 CharField.template = "web.CharField";

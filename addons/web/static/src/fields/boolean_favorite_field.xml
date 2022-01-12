@@ -11,7 +11,7 @@
                     t-att-title="props.value ? 'Remove from Favorites' : 'Add to Favorites'"
                     t-att-aria-label="props.value ? 'Remove from Favorites' : 'Add to Favorites'"
                 />
-                <t t-if="!props.attrs.nolabel"> <t t-esc="props.value ? 'Remove from Favorites' : 'Add to Favorites'" /></t>
+                <t t-if="!props.noLabel"> <t t-esc="props.value ? 'Remove from Favorites' : 'Add to Favorites'" /></t>
             </a>
         </div>
     </t>

@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import { InvalidNumberError } from "./parsers";
+import { standardFieldProps } from "./standard_field_props";
 
 const { Component, hooks } = owl;
 export class FloatField extends Component {
@@ -23,34 +23,39 @@ export class FloatField extends Component {
         }
     }
 
-    get inputType() {
-        return this.props.options.type === "number" ? "number" : "text";
-    }
-
-    get digits() {
-        let digits;
-        // Sadly, digits param was available as an option and an attr.
-        // The option version could be removed with some xml refactoring.
-        if (this.props.attrs.digits) {
-            digits = JSON.parse(this.props.attrs.digits);
-        }
-        return digits || this.props.options.digits;
-    }
-
     get formattedValue() {
         return this.props.formatValue(this.props.value, {
-            digits: this.digits,
+            digits: this.props.digits,
             field: this.props.record.fields[this.props.name],
         });
     }
 
     get formattedInputValue() {
-        if (this.inputType === "number") return this.props.value;
+        if (this.props.inputType === "number") {
+            return this.props.value;
+        }
         return this.formattedValue;
     }
 }
 
 FloatField.template = "web.FloatField";
+FloatField.props = {
+    ...standardFieldProps,
+    inputType: { type: String, optional: true },
+    digits: { type: Array, optional: true },
+};
+FloatField.defaultProps = {
+    inputType: "text",
+};
+
 FloatField.isEmpty = () => false;
+FloatField.convertAttrsToProps = function (attrs) {
+    return {
+        inputType: attrs.type,
+        // Sadly, digits param was available as an option and an attr.
+        // The option version could be removed with some xml refactoring.
+        digits: attrs.digits ? JSON.parse(attrs.digits) : attrs.options.digits,
+    };
+};
 
 registry.category("fields").add("float", FloatField);

@@ -2793,7 +2793,9 @@ QUnit.module("Views", (hooks) => {
 
         class MyField extends owl.Component {
             setup() {
-                assert.deepEqual(this.props.options, { horizontal: true });
+                assert.deepEqual(this.props.record.activeFields[this.props.name].options, {
+                    horizontal: true,
+                });
             }
         }
         MyField.template = owl.tags.xml`<div>ok</div>`;

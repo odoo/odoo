@@ -11,7 +11,7 @@ export class UrlField extends Component {
         let value = "";
         if (typeof this.props.value === "string") {
             const shouldaddPrefix = !(
-                this.props.options.website_path ||
+                this.props.websitePath ||
                 this.props.value.includes("://") ||
                 /^\//.test(this.props.value)
             );
@@ -39,10 +39,19 @@ Object.assign(UrlField, {
     props: {
         ...standardFieldProps,
         placeholder: { type: String, optional: true },
+        text: { type: String, optional: true },
+        websitePath: { type: Boolean, optional: true },
     },
 
     displayName: _lt("URL"),
     supportedTypes: ["char"],
+
+    convertAttrsToProps(attrs) {
+        return {
+            text: attrs.text,
+            websitePath: Boolean(attrs.options.website_path),
+        };
+    },
 });
 
 registry.category("fields").add("url", UrlField);

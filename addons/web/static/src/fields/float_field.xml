@@ -3,7 +3,7 @@
 
     <t t-name="web.FloatField" owl="1">
         <span t-if="props.readonly" t-esc="formattedValue" />
-        <input t-ref="input" t-att-type="inputType" t-else="" class="o_input" t-att-value="formattedInputValue" t-on-change="onChange" />
+        <input t-ref="input" t-att-type="props.inputType" t-else="" class="o_input" t-att-value="formattedInputValue" t-on-change="onChange" />
     </t>
 
 </templates>

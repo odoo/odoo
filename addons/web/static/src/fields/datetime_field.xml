@@ -7,7 +7,7 @@
         </t>
         <t t-else="">
             <DateTimePicker
-                t-props="datePickerOptions"
+                t-props="props.pickerOptions"
                 date="props.value or null"
                 onDateTimeChanged="(datetime) => props.update(datetime)"
             />

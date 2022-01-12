@@ -3,7 +3,7 @@
 
     <t t-name="web.IntegerField" owl="1">
         <span t-if="props.readonly" t-esc="props.formatValue(props.value)" />
-        <input t-att-type="inputType" inputmode="numeric" t-else="" class="o_input" t-att-value="formattedInputValue" t-on-change="onChange" />
+        <input t-att-type="props.inputType" inputmode="numeric" t-else="" class="o_input" t-att-value="formattedInputValue" t-on-change="onChange" />
     </t>
 
 </templates>

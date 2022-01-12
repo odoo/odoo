@@ -8,7 +8,7 @@ const { Component } = owl;
 
 export class StatusBarField extends Component {
     get isDisabled() {
-        return !this.props.options.clickable;
+        return !this.props.clickable;
     }
 
     getVisibleMany2Ones() {
@@ -23,11 +23,10 @@ export class StatusBarField extends Component {
 
     getVisibleSelection() {
         let selection = this.props.record.fields[this.props.name].selection;
-        const { statusbarVisible } = this.props.attrs;
-        if (statusbarVisible) {
-            const visibleSelection = statusbarVisible.trim().split(/\s*,\s*/g);
+        if (this.props.visibleSelection.length) {
             selection = selection.filter(
-                (item) => visibleSelection.includes(item[0]) || item[0] === this.props.value
+                (item) =>
+                    this.props.visibleSelection.includes(item[0]) || item[0] === this.props.value
             );
         }
         return selection.map((item) => ({
@@ -76,12 +75,21 @@ Object.assign(StatusBarField, {
     template: "web.StatusBarField",
     props: {
         ...standardFieldProps,
+        clickable: { type: Boolean, optional: true },
+        visibleSelection: { type: Array, optional: true },
     },
 
     supportedTypes: ["many2one", "selection"],
 
     isEmpty() {
         return false;
+    },
+    convertAttrsToProps(attrs) {
+        return {
+            clickable: Boolean(attrs.options.clickable),
+            visibleSelection:
+                attrs.statusbar_visible && attrs.statusbar_visible.trim().split(/\s*,\s*/g),
+        };
     },
 });
 

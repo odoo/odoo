@@ -84,8 +84,7 @@ export class Field extends Component {
         }
 
         return {
-            attrs: activeField.attrs || {},
-            options: activeField.options || {},
+            ...activeField.props,
             required: this.evalModifier("required"), // AAB: does the field really need this?
             update: async (value) => {
                 await record.update(this.props.name, value);
@@ -153,6 +152,19 @@ Field.getFieldComponent = function (viewType, fieldType, widget) {
     return getFieldClassFromRegistry(viewType, fieldType, widget) || DefaultField;
 };
 
+const EXCLUDED_ATTRS = [
+    "name",
+    "widget",
+    "context",
+    "domain",
+    "options",
+    "modifiers",
+    "required",
+    "readonly",
+    "invisible",
+    "on_change",
+];
+
 Field.parseFieldNode = function (node, fields, viewType) {
     const name = node.getAttribute("name");
     const widget = node.getAttribute("widget");
@@ -163,12 +175,17 @@ Field.parseFieldNode = function (node, fields, viewType) {
         domain: new Domain(node.getAttribute("domain") || []),
         string: node.getAttribute("string") || field.string,
         widget,
-        options: evaluateExpr(node.getAttribute("options") || "{}"),
         modifiers: JSON.parse(node.getAttribute("modifiers") || "{}"),
         onChange: isAttr(node, "on_change").truthy(),
         FieldComponent: Field.getFieldComponent(viewType, fields[name].type, widget),
         decorations: {}, // populated below
+        noLabel: isAttr(node, "nolabel").truthy(true),
+        props: {},
         attrs: {},
+        options: evaluateExpr(node.getAttribute("options") || "{}"),
+    };
+    const attrs = {
+        options: fieldInfo.options,
     };
     for (const attribute of node.attributes) {
         if (attribute.name in Field.forbiddenAttributeNames) {
@@ -182,8 +199,14 @@ Field.parseFieldNode = function (node, fields, viewType) {
             continue;
         }
 
-        // FIXME: black list special attributes like on_change, name... ?
-        fieldInfo.attrs[snakeToCamel(attribute.name)] = attribute.value;
+        fieldInfo.attrs[attribute.name] = attribute.value;
+        if (EXCLUDED_ATTRS.includes(attribute.name)) {
+            continue;
+        }
+        attrs[attribute.name] = attribute.value;
+    }
+    if (fieldInfo.FieldComponent.convertAttrsToProps) {
+        fieldInfo.props = fieldInfo.FieldComponent.convertAttrsToProps(attrs);
     }
     if (X2M_TYPES.includes(field.type)) {
         fieldInfo.viewMode = getX2MViewModes(node.getAttribute("mode"))[0];
@@ -216,7 +239,7 @@ Field.parseFieldNode = function (node, fields, viewType) {
         // add fields required by specific FieldComponents
         Object.assign(relatedFields, fieldInfo.FieldComponent.fieldsToFetch);
         // special case for color field
-        const colorField = fieldInfo.options.color_field;
+        const colorField = attrs.options.color_field;
         if (colorField) {
             relatedFields[colorField] = { name: colorField, type: "integer", active: true };
         }

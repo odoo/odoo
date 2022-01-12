@@ -79,8 +79,7 @@ class KanbanDynamicGroupList extends DynamicGroupList {
         }
         const activeField = this.activeFields[this.groupByField.name];
         if (activeField && !activeField.readonly && DATE_TYPES.includes(this.groupByField.type)) {
-            // TODO: replace this with 'allow_group_range_value' if possible
-            return activeField.attrs.allowGroupRangeValue;
+            return activeField.attrs.allow_group_range_value;
         }
         return QUICK_CREATE_FIELD_TYPES.includes(this.groupByField.type);
     }

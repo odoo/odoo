@@ -17,8 +17,8 @@ export class StatInfoField extends Component {
     }
 
     get text() {
-        return this.props.options.label_field
-            ? this.props.record.data[this.props.options.label_field]
+        return this.props.labelField
+            ? this.props.record.data[this.props.labelField]
             : this.props.record.activeFields[this.props.name].string;
     }
 }
@@ -27,12 +27,20 @@ Object.assign(StatInfoField, {
     template: "web.StatInfoField",
     props: {
         ...standardFieldProps,
+        labelField: { type: String, optional: true },
+        noLabel: { type: Boolean, optional: true },
     },
 
     supportedTypes: ["float", "integer"],
 
     isEmpty() {
         return false;
+    },
+    convertAttrsToProps(attrs) {
+        return {
+            labelField: attrs.options.label_field,
+            noLabel: "nolabel" in attrs,
+        };
     },
 });
 

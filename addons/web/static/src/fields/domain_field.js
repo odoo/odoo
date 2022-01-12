@@ -36,10 +36,10 @@ export class DomainField extends Component {
     }
 
     getResModel(props) {
-        if (props.record.fieldNames.includes(props.options.model)) {
-            return props.record.data[props.options.model];
+        if (props.record.fieldNames.includes(props.model)) {
+            return props.record.data[props.model];
         }
-        return props.options.model;
+        return props.model;
     }
     getDomain(value) {
         return new Domain(value || "[]");
@@ -77,6 +77,7 @@ Object.assign(DomainField, {
     template: "web.DomainField",
     props: {
         ...standardFieldProps,
+        model: { type: String, optional: true },
     },
     components: {
         CharField,
@@ -87,6 +88,11 @@ Object.assign(DomainField, {
 
     isEmpty() {
         return false;
+    },
+    convertAttrsToProps(attrs) {
+        return {
+            model: attrs.options.model,
+        };
     },
 });
 

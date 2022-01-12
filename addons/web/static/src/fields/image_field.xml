@@ -5,8 +5,8 @@
         <div class="o_field_image" aria-atomic="true">
             <t t-if="!props.readonly">
                 <FileUploader
-                    acceptedFileExtensions="props.options.accepted_file_extensions or 'image/*'"
-                    fileUploadStyle="props.options.size and `max-width: ${props.options.size[0]}px`"
+                    acceptedFileExtensions="props.acceptedFileExtensions"
+                    fileUploadStyle="sizeStyle"
                     onUploaded="(info) => onFileUploaded(info)"
                     onRemove="() => onFileRemove()"
                     type="'image'"
@@ -18,9 +18,9 @@
                 t-att-src="url"
                 t-att-border="props.readonly ? 0 : 1"
                 t-att-name="props.name"
-                t-att-height="props.options.size and props.options.size[1]"
-                t-att-width="props.options.size and props.options.size[0]"
-                t-att-style="props.options.size and `max-height: ${props.options.size[1]}px; max-width: ${props.options.size[0]}px;`"
+                t-att-height="props.height"
+                t-att-width="props.width"
+                t-att-style="sizeStyle"
                 t-on-error="onLoadFailed"
             />
         </div>

@@ -53,6 +53,7 @@ Object.assign(RadioField, {
     template: "web.RadioField",
     props: {
         ...standardFieldProps,
+        horizontal: { type: Boolean, optional: true },
     },
 
     displayName: _lt("Radio"),
@@ -60,6 +61,11 @@ Object.assign(RadioField, {
 
     isEmpty() {
         return false;
+    },
+    convertAttrsToProps(attrs) {
+        return {
+            horizontal: Boolean(attrs.options.horizontal),
+        };
     },
 
     nextId: 0,

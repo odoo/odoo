@@ -12,15 +12,16 @@ export class DateTimeField extends Component {
     get formattedValue() {
         return this.props.value ? formatDateTime(this.props.value, { timezone: true }) : "";
     }
-    get datePickerOptions() {
-        return Object.assign({}, this.props.options.datepicker);
-    }
 }
 
 Object.assign(DateTimeField, {
     template: "web.DateTimeField",
     props: {
         ...standardFieldProps,
+        pickerOptions: { type: Object, optional: true },
+    },
+    defaultProps: {
+        pickerOptions: {},
     },
     components: {
         DateTimePicker,
@@ -28,6 +29,12 @@ Object.assign(DateTimeField, {
 
     displayName: _lt("Date & Time"),
     supportedTypes: ["datetime"],
+
+    convertAttrsToProps(attrs) {
+        return {
+            pickerOptions: attrs.options.datepicker,
+        };
+    },
 });
 
 registry.category("fields").add("datetime", DateTimeField);

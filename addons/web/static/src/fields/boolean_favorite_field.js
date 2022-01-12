@@ -16,6 +16,10 @@ Object.assign(BooleanFavoriteField, {
     template: "web.BooleanFavoriteField",
     props: {
         ...standardFieldProps,
+        noLabel: { type: Boolean, optional: true },
+    },
+    defaultProps: {
+        noLabel: false,
     },
 
     displayName: _lt("Favorite"),
@@ -23,6 +27,12 @@ Object.assign(BooleanFavoriteField, {
 
     isEmpty() {
         return false;
+    },
+
+    convertAttrsToProps(attrs) {
+        return {
+            noLabel: "nolabel" in attrs,
+        };
     },
 });
 

@@ -23,15 +23,16 @@ export class DateField extends Component {
               })
             : "";
     }
-    get datePickerOptions() {
-        return Object.assign({}, this.props.options.datepicker);
-    }
 }
 
 Object.assign(DateField, {
     template: "web.DateField",
     props: {
         ...standardFieldProps,
+        pickerOptions: { type: Object, optional: true },
+    },
+    defaultProps: {
+        pickerOptions: {},
     },
     components: {
         DatePicker,
@@ -39,6 +40,12 @@ Object.assign(DateField, {
 
     displayName: _lt("Date"),
     supportedTypes: ["date", "datetime"],
+
+    convertAttrsToProps(attrs) {
+        return {
+            pickerOptions: attrs.options.datepicker,
+        };
+    },
 });
 
 registry.category("fields").add("date", DateField);

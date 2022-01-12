@@ -25,10 +25,17 @@ Object.assign(PercentPieField, {
     template: "web.PercentPieField",
     props: {
         ...standardFieldProps,
+        string: { type: String, optional: true },
     },
 
     displayName: _lt("PercentPie"),
     supportedTypes: ["integer", "float"],
+
+    convertAttrsToProps(attrs) {
+        return {
+            string: attrs.string,
+        };
+    },
 });
 
 registry.category("fields").add("percentpie", PercentPieField);

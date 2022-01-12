@@ -45,25 +45,22 @@ export class Many2OneField extends Component {
         return this.props.record.fields[this.props.name].relation;
     }
     get noOpen() {
-        return this.props.options.no_open;
+        return this.props.noOpen;
     }
     get hasExternalButton() {
         return !this.noOpen && !!this.props.value && !this.state.isFloating;
     }
     get canCreate() {
-        const attr =
-            "canCreate" in this.props.attrs ? JSON.parse(this.props.attrs.canCreate) : true;
-        const option = !this.props.options.no_create;
-        return attr && option;
+        return this.props.canCreate && !this.props.noCreate;
     }
     get canWrite() {
-        return "canWrite" in this.props.attrs ? JSON.parse(this.props.attrs.canWrite) : true;
+        return this.props.canWrite;
     }
     get canQuickCreate() {
-        return this.canCreate && !this.props.options.no_quick_create;
+        return this.canCreate && !this.props.noQuickCreate;
     }
     get canCreateEdit() {
-        return this.canCreate && !this.props.options.no_create_edit;
+        return this.canCreate && !this.props.noCreateEdit;
     }
     get sources() {
         return [this.recordSource];
@@ -76,13 +73,13 @@ export class Many2OneField extends Component {
     }
 
     getDomain() {
-        return new Domain(this.props.attrs.domain).toList(
-            this.props.record.getFieldContext(this.props.name)
-        );
+        return this.props.record
+            .getFieldDomain(this.props.name)
+            .toList(this.props.record.getFieldContext(this.props.name));
     }
 
     async loadDisplayName(value) {
-        if (this.props.options.always_reload && value) {
+        if (this.props.alwaysReload && value) {
             const nameGet = await this.orm.call(this.relation, "name_get", [value[0]], {
                 context: this.props.record.getFieldContext(this.props.name),
             });
@@ -219,6 +216,17 @@ Object.assign(Many2OneField, {
     props: {
         ...standardFieldProps,
         placeholder: { type: String, optional: true },
+        noOpen: { type: Boolean, optional: true },
+        noCreate: { type: Boolean, optional: true },
+        canCreate: { type: Boolean, optional: true },
+        canWrite: { type: Boolean, optional: true },
+        noQuickCreate: { type: Boolean, optional: true },
+        noCreateEdit: { type: Boolean, optional: true },
+        alwaysReload: { type: Boolean, optional: true },
+    },
+    defaultProps: {
+        canCreate: true,
+        canWrite: true,
     },
     components: {
         AutoComplete,
@@ -226,6 +234,18 @@ Object.assign(Many2OneField, {
 
     displayName: _lt("Many2one"),
     supportedTypes: ["many2one"],
+
+    convertAttrsToProps(attrs) {
+        return {
+            noOpen: Boolean(attrs.options.no_open),
+            noCreate: Boolean(attrs.options.no_create),
+            canCreate: attrs.can_create && Boolean(JSON.parse(attrs.can_create)),
+            canWrite: attrs.can_write && Boolean(JSON.parse(attrs.can_write)),
+            noQuickCreate: Boolean(attrs.options.no_quick_create),
+            noCreateEdit: Boolean(attrs.options.no_create_edit),
+            alwaysReload: Boolean(attrs.options.always_reload),
+        };
+    },
 
     searchLimit: 7,
 });

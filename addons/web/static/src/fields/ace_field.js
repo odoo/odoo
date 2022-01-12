@@ -41,9 +41,6 @@ export class AceField extends Component {
     get aceSession() {
         return this.aceEditor.getSession();
     }
-    get mode() {
-        return this.props.options.mode || "qweb";
-    }
 
     setupAce() {
         this.aceEditor = ace.edit(this.editorRef.el);
@@ -68,7 +65,7 @@ export class AceField extends Component {
         }
 
         this.aceSession.setOptions({
-            mode: `ace/mode/${this.mode === "xml" ? "qweb" : this.mode}`,
+            mode: `ace/mode/${this.props.mode === "xml" ? "qweb" : this.props.mode}`,
         });
 
         this.aceEditor.setOptions({
@@ -102,9 +99,19 @@ Object.assign(AceField, {
     template: "web.AceField",
     props: {
         ...standardFieldProps,
+        mode: { type: String, optional: true },
+    },
+    defaultProps: {
+        mode: "qweb",
     },
 
     supportedTypes: ["text"],
+
+    convertAttrsToProps(attrs) {
+        return {
+            mode: attrs.options.mode,
+        };
+    },
 });
 
 registry.category("fields").add("ace", AceField);

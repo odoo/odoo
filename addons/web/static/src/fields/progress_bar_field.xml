@@ -7,7 +7,7 @@
                 <div class="o_progress" aria-valuemin="0" t-att-aria-valuemax="state.maxValue" t-att-aria-valuenow="state.currentValue">
                     <div class="o_progressbar_complete" t-att-style="'width: min(' + 100 * state.currentValue / state.maxValue + '%, 100%)'"></div>
                 </div>
-                <t t-if="props.options.max_value">
+                <t t-if="props.maxValue">
                     <div class="o_progressbar_value" t-esc="state.currentValue + ' / ' + state.maxValue"/>
                 </t>
                 <t t-else="">
@@ -24,8 +24,8 @@
                 <div class="o_progress" aria-valuemin="0" t-att-aria-valuemax="state.maxValue" t-att-aria-valuenow="state.currentValue">
                     <div class="o_progressbar_complete" t-att-style="'width: min(' + 100 * state.currentValue / state.maxValue + '%, 100%)'"></div>
                 </div>
-                <t t-if="props.options.max_value">
-                    <t t-if="(props.options.editable and !props.options.edit_max_value) or props.options.edit_current_value">
+                <t t-if="props.maxValue">
+                    <t t-if="(props.editable and !props.editMaxValue) or props.editCurrentValue">
                         <input
                             class="o_progressbar_value o_input"
                             type="text"
@@ -39,7 +39,7 @@
                         <span class="o_progressbar_value" t-esc="state.currentValue"/>
                     </t>
                     <span>/</span>
-                    <t t-if="props.options.edit_max_value">
+                    <t t-if="props.editMaxValue">
                         <input
                             class="o_progressbar_value o_input"
                             type="text"

@@ -4,7 +4,7 @@
     <t t-name="web.RadioField" owl="1">
         <div
             role="radiogroup"
-            t-att-class="props.options.horizontal ? 'o_horizontal' : 'o_vertical'"
+            t-att-class="props.horizontal ? 'o_horizontal' : 'o_vertical'"
             t-att-aria-label="props.record.activeFields[props.name].string"
         >
             <t t-foreach="items" t-as="item" t-key="item[0]">

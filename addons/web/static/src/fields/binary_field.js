@@ -31,8 +31,8 @@ export class BinaryField extends Component {
             data: this.props.record.data[this.props.name],
             name:
                 this.state.filename ||
-                this.props.record.data[this.props.attrs.filename] ||
-                this.props.attrs.filename ||
+                this.props.record.data[this.props.filename] ||
+                this.props.filename ||
                 this.props.value,
         };
     }
@@ -53,7 +53,7 @@ export class BinaryField extends Component {
     onFileRemove() {
         this.state.isValid = true;
         this.props.update(false);
-        this.props.record.update(this.props.attrs.filename, false);
+        this.props.record.update(this.props.filename, false);
     }
     onFileUploaded(info) {
         this.state.filename = info.name;
@@ -74,7 +74,19 @@ BinaryField.components = {
 };
 BinaryField.props = {
     ...standardFieldProps,
+    filename: { type: String, optional: true },
+    acceptedFileExtensions: { type: String, optional: true },
+};
+BinaryField.defaultProps = {
+    acceptedFileExtensions: "*",
 };
 BinaryField.template = "web.BinaryField";
+
+BinaryField.convertAttrsToProps = function (attrs) {
+    return {
+        filename: attrs.filename,
+        acceptedFileExtensions: attrs.options.accepted_file_extensions,
+    };
+};
 
 registry.category("fields").add("binary", BinaryField);

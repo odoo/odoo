@@ -32,7 +32,7 @@ export class ImageField extends Component {
     get url() {
         if (this.state.isValid && this.props.value) {
             if (isBinarySize(this.props.value)) {
-                const previewFieldName = this.props.options.preview_image || this.props.name;
+                const previewFieldName = this.props.previewImage || this.props.name;
                 return url("/web/image", {
                     model: this.props.record.resModel,
                     id: this.props.record.resId,
@@ -45,6 +45,16 @@ export class ImageField extends Component {
             }
         }
         return placeholder;
+    }
+    get sizeStyle() {
+        let style = "";
+        if (this.props.width) {
+            style += `max-width: ${this.props.width}px;`;
+        }
+        if (this.props.height) {
+            style += `max-height: ${this.props.height}px;`;
+        }
+        return style;
     }
 
     onFileRemove() {
@@ -67,6 +77,13 @@ Object.assign(ImageField, {
     template: "web.ImageField",
     props: {
         ...standardFieldProps,
+        previewImage: { type: String, optional: true },
+        acceptedFileExtensions: { type: String, optional: true },
+        width: { type: Number, optional: true },
+        height: { type: Number, optional: true },
+    },
+    defaultProps: {
+        acceptedFileExtensions: "image/*",
     },
     components: {
         FileUploader,
@@ -74,6 +91,15 @@ Object.assign(ImageField, {
 
     displayName: _lt("Image"),
     supportedTypes: ["binary"],
+
+    convertAttrsToProps(attrs) {
+        return {
+            previewImage: attrs.preview_image,
+            acceptedFileExtensions: attrs.options.accepted_file_extensions,
+            width: attrs.options.size && attrs.options.size[0],
+            height: attrs.options.size && attrs.options.size[1],
+        };
+    },
 });
 
 registry.category("fields").add("image", ImageField);

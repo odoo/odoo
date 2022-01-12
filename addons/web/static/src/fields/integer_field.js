@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
+import { standardFieldProps } from "./standard_field_props";
 
 const { Component } = owl;
 export class IntegerField extends Component {
@@ -18,12 +19,8 @@ export class IntegerField extends Component {
         }
     }
 
-    get inputType() {
-        return this.props.options.type === "number" ? "number" : "text";
-    }
-
     get formattedInputValue() {
-        if (this.inputType === "number") return this.props.value;
+        if (this.props.inputType === "number") return this.props.value;
         return this.props.formatValue(this.props.value, {
             field: this.props.record.fields[this.props.name],
         });
@@ -31,6 +28,19 @@ export class IntegerField extends Component {
 }
 
 IntegerField.template = "web.IntegerField";
+IntegerField.props = {
+    ...standardFieldProps,
+    inputType: { type: String, optional: true },
+};
+IntegerField.defaultProps = {
+    inputType: "text",
+};
+
 IntegerField.isEmpty = () => false;
+IntegerField.convertAttrsToProps = function (attrs) {
+    return {
+        inputType: attrs.options.type,
+    };
+};
 
 registry.category("fields").add("integer", IntegerField);
