@@ -247,6 +247,11 @@ class HrAttendance(models.Model):
                             overtime_duration += post_work_time
                         # Global overtime including the thresholds
                         overtime_duration_real = sum(attendances.mapped('worked_hours')) - planned_work_duration
+                        # We don't want to count tolerance time into extra hours
+                        if overtime_duration_real > 0 and overtime_duration > 0:
+                            overtime_duration = min(overtime_duration_real, overtime_duration)
+                        elif overtime_duration_real < 0 and overtime_duration > 0:
+                            overtime_duration = 0
 
                 overtime = overtimes.filtered(lambda o: o.date == attendance_date)
                 if not float_is_zero(overtime_duration, 2) or unfinished_shifts:
