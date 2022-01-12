@@ -90,3 +90,44 @@ class TestEventNotifications(SavepointCase):
         self.assertNotIn(self.partner, self.event.attendee_ids.partner_id, "It should have removed the attendee")
         self.assertNotIn(self.partner, self.event.message_follower_ids.partner_id, "It should have unsubscribed the partner")
         self.assertIn(partner_bis, self.event.attendee_ids.partner_id, "It should have left the attendee")
+
+    def test_default_attendee(self):
+        """
+        Check if priority list id correctly followed
+        1) vals_list[0]['attendee_ids']
+        2) vals_list[0]['partner_ids']
+        3) context.get('default_attendee_ids')
+        """
+        partner_bis = self.env['res.partner'].create({'name': "Xavier"})
+        event = self.env['calendar.event'].with_user(
+            self.user
+        ).with_context(
+            default_attendee_ids=[(0, 0, {'partner_id': partner_bis.id})]
+        ).create({
+            'name': "Doom's day",
+            'partner_ids': [(4, self.partner.id)],
+            'start': datetime(2019, 10, 25, 8, 0),
+            'stop': datetime(2019, 10, 27, 18, 0),
+        })
+        self.assertIn(self.partner, event.attendee_ids.partner_id, "Partner should be in attendee")
+        self.assertNotIn(partner_bis, event.attendee_ids.partner_id, "Partner bis should not be in attendee")
+
+    def test_default_attendee_2(self):
+        """
+        Check if priority list id correctly followed
+        1) vals_list[0]['attendee_ids']
+        2) vals_list[0]['partner_ids']
+        3) context.get('default_attendee_ids')
+        """
+        partner_bis = self.env['res.partner'].create({'name': "Xavier"})
+        event = self.env['calendar.event'].with_user(
+            self.user
+        ).with_context(
+            default_attendee_ids=[(0, 0, {'partner_id': partner_bis.id})]
+        ).create({
+            'name': "Doom's day",
+            'start': datetime(2019, 10, 25, 8, 0),
+            'stop': datetime(2019, 10, 27, 18, 0),
+        })
+        self.assertNotIn(self.partner, event.attendee_ids.partner_id, "Partner should not be in attendee")
+        self.assertIn(partner_bis, event.attendee_ids.partner_id, "Partner bis should be in attendee")
