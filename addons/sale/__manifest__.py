@@ -13,7 +13,8 @@ This module contains all the common features of Sales Management and eCommerce.
     'depends': ['sales_team', 'payment', 'portal', 'utm'],
     'data': [
         'security/ir.model.access.csv',
-        'security/sale_security.xml',
+        'security/res_groups.xml',
+        'security/ir_rules.xml',
 
         'report/account_invoice_report_views.xml',
         'report/ir_actions_report_templates.xml',
