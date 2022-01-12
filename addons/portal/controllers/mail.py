@@ -82,13 +82,13 @@ def _message_post_helper(res_model, res_id, message, token='', _hash=False, pid=
         partner = request.env['res.partner'].sudo().browse(author_id)
         email_from = partner.email_formatted if partner.email else None
 
-    message_post_args = dict(
-        body=message,
-        message_type=kw.pop('message_type', "comment"),
-        subtype_xmlid=kw.pop('subtype_xmlid', "mail.mt_comment"),
-        author_id=author_id,
+    message_post_args = {
+        'body': message,
+        'message_type': kw.pop('message_type', "comment"),
+        'subtype_xmlid': kw.pop('subtype_xmlid', "mail.mt_comment"),
+        'author_id': author_id,
         **kw
-    )
+    }
 
     # This is necessary as mail.message checks the presence
     # of the key to compute its default email from

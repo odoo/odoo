@@ -591,7 +591,7 @@ class Partner(models.Model):
             for partner in self:
                 if company_id and partner.user_ids:
                     company = self.env['res.company'].browse(company_id)
-                    companies = set(user.company_id for user in partner.user_ids)
+                    companies = partner.mapped('user_ids.company_id')
                     if len(companies) > 1 or company not in companies:
                         raise UserError(
                             ("The selected company is not compatible with the companies of the related user(s)"))
@@ -689,13 +689,13 @@ class Partner(models.Model):
         self.ensure_one()
         if self.company_name:
             # Create parent company
-            values = dict(name=self.company_name, is_company=True, vat=self.vat)
+            values = {'name': self.company_name, 'is_company': True, 'vat': self.vat}
             values.update(self._update_fields_values(self._address_fields()))
             new_company = self.create(values)
             # Set new company as my parent
             self.write({
                 'parent_id': new_company.id,
-                'child_ids': [Command.update(partner_id, dict(parent_id=new_company.id)) for partner_id in self.child_ids.ids]
+                'child_ids': [Command.update(partner_id, {'parent_id': new_company.id}) for partner_id in self.child_ids.ids]
             })
         return True
 

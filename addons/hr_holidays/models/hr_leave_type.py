@@ -359,7 +359,7 @@ class HolidaysType(models.Model):
             ['holiday_status_id'],
             ['holiday_status_id'],
         )
-        grouped_dict = dict((data['holiday_status_id'][0], data['holiday_status_id_count']) for data in grouped_res)
+        grouped_dict = {data['holiday_status_id'][0]: data['holiday_status_id_count'] for data in grouped_res}
         for allocation in self:
             allocation.allocation_count = grouped_dict.get(allocation.id, 0)
 
@@ -377,13 +377,13 @@ class HolidaysType(models.Model):
             ['holiday_status_id'],
             ['holiday_status_id'],
         )
-        grouped_dict = dict((data['holiday_status_id'][0], data['holiday_status_id_count']) for data in grouped_res)
+        grouped_dict = {data['holiday_status_id'][0]: data['holiday_status_id_count'] for data in grouped_res}
         for allocation in self:
             allocation.group_days_leave = grouped_dict.get(allocation.id, 0)
 
     def _compute_accrual_count(self):
         accrual_allocations = self.env['hr.leave.accrual.plan'].read_group([('time_off_type_id', 'in', self.ids)], ['time_off_type_id'], ['time_off_type_id'])
-        mapped_data = dict((data['time_off_type_id'][0], data['time_off_type_id_count']) for data in accrual_allocations)
+        mapped_data = {data['time_off_type_id'][0]: data['time_off_type_id_count'] for data in accrual_allocations}
         for leave_type in self:
             leave_type.accrual_count = mapped_data.get(leave_type.id, 0)
 

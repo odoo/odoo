@@ -685,7 +685,7 @@ class WebsiteSale(http.Controller):
         # mode: tuple ('new|edit', 'billing|shipping')
         # all_form_values: all values before preprocess
         # data: values after preprocess
-        error = dict()
+        error = {}
         error_message = []
 
         # Required fields from form
@@ -1181,13 +1181,13 @@ class WebsiteSale(http.Controller):
 
     @http.route(['/shop/country_infos/<model("res.country"):country>'], type='json', auth="public", methods=['POST'], website=True)
     def country_infos(self, country, mode, **kw):
-        return dict(
-            fields=country.get_address_fields(),
-            states=[(st.id, st.name, st.code) for st in country.get_website_sale_states(mode=mode)],
-            phone_code=country.phone_code,
-            zip_required=country.zip_required,
-            state_required=country.state_required,
-        )
+        return {
+            'fields': country.get_address_fields(),
+            'states': [(st.id, st.name, st.code) for st in country.get_website_sale_states(mode=mode)],
+            'phone_code': country.phone_code,
+            'zip_required': country.zip_required,
+            'state_required': country.state_required
+        }
 
     # --------------------------------------------------------------------------
     # Products Recently Viewed

@@ -320,7 +320,7 @@ actual arch.
 
     def _inverse_arch(self):
         for view in self:
-            data = dict(arch_db=view.arch)
+            data = {'arch_db': view.arch}
             if 'install_filename' in self._context:
                 # we store the relative path to the resource instead of the absolute path, if found
                 # (it will be missing e.g. when importing data-only modules using base_import_module)
@@ -1879,10 +1879,10 @@ actual arch.
             or any(self.is_node_branded(child) for child in node.iterdescendants())
 
     def _pop_view_branding(self, element):
-        distributed_branding = dict(
-            (attribute, element.attrib.pop(attribute))
+        distributed_branding = {
+            attribute: element.attrib.pop(attribute)
             for attribute in MOVABLE_BRANDING
-            if element.get(attribute))
+            if element.get(attribute)}
         return distributed_branding
 
     def distribute_branding(self, e, branding=None, parent_xpath='',
@@ -1971,7 +1971,7 @@ actual arch.
     def _render(self, values=None, engine='ir.qweb', minimal_qcontext=False, options=None):
         assert isinstance(self.id, int)
 
-        qcontext = dict() if minimal_qcontext else self._prepare_qcontext()
+        qcontext = {} if minimal_qcontext else self._prepare_qcontext()
         qcontext.update(values or {})
 
         return self.env[engine]._render(self.id, qcontext, **(options or {}))
@@ -1981,27 +1981,26 @@ actual arch.
         """ Returns the qcontext : rendering context with website specific value (required
             to render website layout template)
         """
-        qcontext = dict(
-            env=self.env,
-            user_id=self.env["res.users"].browse(self.env.user.id),
-            res_company=self.env.company.sudo(),
-            keep_query=keep_query,
-            request=request,  # might be unbound if we're not in an httprequest context
-            debug=request.session.debug if request else '',
-            test_mode_enabled=bool(config['test_enable'] or config['test_file']),
-            json=json_scriptsafe,
-            quote_plus=werkzeug.urls.url_quote_plus,
-            time=safe_eval.time,
-            datetime=safe_eval.datetime,
-            relativedelta=relativedelta,
-            xmlid=self.sudo().key,
-            viewid=self.id,
-            to_text=pycompat.to_text,
-            image_data_uri=image_data_uri,
-            # specific 'math' functions to ease rounding in templates and lessen controller marshmalling
-            floor=math.floor,
-            ceil=math.ceil,
-        )
+        qcontext = {
+            'env': self.env,
+            'user_id': self.env["res.users"].browse(self.env.user.id),
+            'res_company': self.env.company.sudo(),
+            'keep_query': keep_query,
+            'request': request,
+            'debug': request.session.debug if request else '',
+            'test_mode_enabled': bool(config['test_enable'] or config['test_file']),
+            'json': json_scriptsafe,
+            'quote_plus': werkzeug.urls.url_quote_plus,
+            'time': safe_eval.time,
+            'datetime': safe_eval.datetime,
+            'relativedelta': relativedelta,
+            'xmlid': self.sudo().key,
+            'viewid': self.id,
+            'to_text': pycompat.to_text,
+            'image_data_uri': image_data_uri,
+            'floor': math.floor,
+            'ceil': math.ceil
+        }
         return qcontext
 
     #------------------------------------------------------
@@ -2198,9 +2197,9 @@ class NameManager:
         self.available_fields = collections.defaultdict(dict)   # {field_name: field_info}
         self.available_actions = set()
         self.available_names = set()
-        self.mandatory_fields = dict()          # {field_name: use}
-        self.mandatory_parent_fields = dict()   # {field_name: use}
-        self.mandatory_names = dict()           # {name: use}
+        self.mandatory_fields = {}  # {field_name: use}
+        self.mandatory_parent_fields = {}  # {field_name: use}
+        self.mandatory_names = {}  # {name: use}
 
     @lazy_property
     def field_info(self):

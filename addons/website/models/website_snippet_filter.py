@@ -72,10 +72,10 @@ class WebsiteSnippetFilter(models.Model):
         if is_sample:
             records = self._prepare_sample(limit)
         View = self.env['ir.ui.view'].sudo().with_context(inherit_branding=False)
-        content = View._render_template(template_key, dict(
-            records=records,
-            is_sample=is_sample,
-        ))
+        content = View._render_template(template_key, {
+            'records': records,
+            'is_sample': is_sample
+        })
         return [etree.tostring(el, encoding='unicode') for el in html.fromstring('<root>%s</root>' % str(content)).getchildren()]
 
     def _prepare_values(self, limit=None, search_domain=None):

@@ -59,16 +59,16 @@ class Coupon(models.Model):
         self.ensure_one()
         default_template = self._get_default_template()
         compose_form = self.env.ref('mail.email_compose_message_wizard_form', False)
-        ctx = dict(
-            default_model='coupon.coupon',
-            default_res_id=self.id,
-            default_use_template=bool(default_template),
-            default_template_id=default_template and default_template.id,
-            default_composition_mode='comment',
-            default_email_layout_xmlid='mail.mail_notification_light',
-            mark_coupon_as_sent=True,
-            force_email=True,
-        )
+        ctx = {
+            'default_model': 'coupon.coupon',
+            'default_res_id': self.id,
+            'default_use_template': bool(default_template),
+            'default_template_id': default_template and default_template.id,
+            'default_composition_mode': 'comment',
+            'default_email_layout_xmlid': 'mail.mail_notification_light',
+            'mark_coupon_as_sent': True,
+            'force_email': True
+        }
         return {
             'name': _('Compose Email'),
             'type': 'ir.actions.act_window',

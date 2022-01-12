@@ -188,7 +188,7 @@ class ProjectCreateSalesOrder(models.TransientModel):
         task_id = self.env['project.task'].search([('project_id', '=', self.project_id.id)], order='create_date DESC', limit=1).id
         project_id = self.project_id.id
 
-        lines_already_present = dict([(l.employee_id.id, l) for l in self.project_id.sale_line_employee_ids])
+        lines_already_present = {l.employee_id.id: l for l in self.project_id.sale_line_employee_ids}
 
         non_billable_tasks = self.project_id.tasks.filtered(lambda task: not task.sale_line_id)
 

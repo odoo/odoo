@@ -120,7 +120,7 @@ class TeamMember(models.Model):
                 _('Leads team allocation should be done for at least 0.2 or maximum 30 work days, not %.2f.', work_days)
             )
 
-        members_data, population, weights = dict(), list(), list()
+        members_data, population, weights = {}, [], []
         members = self.filtered(lambda member: not member.assignment_optout and member.assignment_max > 0)
         if not members:
             return members_data
@@ -189,10 +189,10 @@ class TeamMember(models.Model):
         if auto_commit:
             self._cr.commit()
         # log results and return
-        result_data = dict(
-            (member_info["team_member"], {"assigned": member_info["assigned"]})
-            for member_id, member_info in members_data.items()
-        )
+        result_data = {
+            member_info["team_member"]: {"assigned": member_info["assigned"]}
+            for member_info in members_data.values()
+        }
         _logger.info('Assigned %s leads to %s salesmen', len(leads_done_ids), len(members))
         for member, member_info in result_data.items():
             _logger.info('-> member %s: assigned %d leads (%s)', member.id, len(member_info["assigned"]), member_info["assigned"])

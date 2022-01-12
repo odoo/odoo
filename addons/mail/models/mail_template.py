@@ -181,8 +181,8 @@ class MailTemplate(models.Model):
             res_ids = [res_ids]
             multi_mode = False
 
-        results = dict()
-        for lang, (template, template_res_ids) in self._classify_per_lang(res_ids).items():
+        results = {}
+        for template, template_res_ids in self._classify_per_lang(res_ids).values():
             for field in fields:
                 generated_field_values = template._render_field(
                     field, template_res_ids,
@@ -190,7 +190,7 @@ class MailTemplate(models.Model):
                     post_process=(field == 'body_html')
                 )
                 for res_id, field_value in generated_field_values.items():
-                    results.setdefault(res_id, dict())[field] = field_value
+                    results.setdefault(res_id, {})[field] = field_value
             # compute recipients
             if any(field in fields for field in ['email_to', 'partner_to', 'email_cc']):
                 results = template.generate_recipients(results, template_res_ids)
@@ -295,7 +295,7 @@ class MailTemplate(models.Model):
                     model = model.with_context(lang=lang)
 
                 template_ctx = {
-                    'message': self.env['mail.message'].sudo().new(dict(body=values['body_html'], record_name=record.display_name)),
+                    'message': self.env['mail.message'].sudo().new({'body': values['body_html'], 'record_name': record.display_name}),
                     'model_description': model.display_name,
                     'company': 'company_id' in record and record['company_id'] or self.env.company,
                     'record': record,

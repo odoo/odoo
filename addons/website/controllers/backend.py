@@ -34,10 +34,10 @@ class WebsiteBackend(http.Controller):
 
         if has_group_designer:
             if current_website.google_management_client_id and current_website.google_analytics_key:
-                dashboard_data['dashboards']['visits'] = dict(
-                    ga_client_id=current_website.google_management_client_id or '',
-                    ga_analytics_key=current_website.google_analytics_key or '',
-                )
+                dashboard_data['dashboards']['visits'] = {
+                    'ga_client_id': current_website.google_management_client_id or '',
+                    'ga_analytics_key': current_website.google_analytics_key or ''
+                }
         return dashboard_data
 
     @http.route('/website/dashboard/set_ga_data', type='json', auth='user')

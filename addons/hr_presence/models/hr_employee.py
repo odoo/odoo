@@ -179,15 +179,15 @@ Do not hesitate to contact your manager or the human resource department.""")
             raise UserError(_("There is no professional email address for this employee."))
         template = self.env.ref('hr_presence.mail_template_presence', False)
         compose_form = self.env.ref('mail.email_compose_message_wizard_form', False)
-        ctx = dict(
-            default_model="hr.employee",
-            default_res_id=self.id,
-            default_use_template=bool(template),
-            default_template_id=template.id,
-            default_composition_mode='comment',
-            default_is_log=True,
-            default_email_layout_xmlid='mail.mail_notification_light',
-        )
+        ctx = {
+            'default_model': "hr.employee",
+            'default_res_id': self.id,
+            'default_use_template': bool(template),
+            'default_template_id': template.id,
+            'default_composition_mode': 'comment',
+            'default_is_log': True,
+            'default_email_layout_xmlid': 'mail.mail_notification_light'
+        }
         return {
             'name': _('Compose Email'),
             'type': 'ir.actions.act_window',

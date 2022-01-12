@@ -66,7 +66,7 @@ class LinkTracker(models.Model):
             )
             mapped_data = {m['link_id'][0]: m['link_id_count'] for m in clicks_data}
         else:
-            mapped_data = dict()
+            mapped_data = {}
         for tracker in self:
             tracker.count = mapped_data.get(tracker.id, 0)
 
@@ -297,7 +297,7 @@ class LinkTrackerClick(models.Model):
     country_id = fields.Many2one('res.country', 'Country')
 
     def _prepare_click_values_from_route(self, **route_values):
-        click_values = dict((fname, route_values[fname]) for fname in self._fields if fname in route_values)
+        click_values = {fname: route_values[fname] for fname in self._fields if fname in route_values}
         if not click_values.get('country_id') and route_values.get('country_code'):
             click_values['country_id'] = self.env['res.country'].search([('code', '=', route_values['country_code'])], limit=1).id
         return click_values

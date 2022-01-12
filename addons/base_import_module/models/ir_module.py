@@ -60,11 +60,11 @@ class IrModule(models.Model):
 
         mod = known_mods_names.get(module)
         if mod:
-            mod.write(dict(state='installed', **values))
+            mod.write({'state': 'installed', **values})
             mode = 'update' if not force else 'init'
         else:
             assert terp.get('installable', True), "Module not installable"
-            self.create(dict(name=module, state='installed', imported=True, **values))
+            self.create({'name': module, 'state': 'installed', 'imported': True, **values})
             mode = 'init'
 
         for kind in ['data', 'init_xml', 'update_xml']:
@@ -93,13 +93,13 @@ class IrModule(models.Model):
                     if not isinstance(url_path, str):
                         url_path = url_path.decode(sys.getfilesystemencoding())
                     filename = os.path.split(url_path)[1]
-                    values = dict(
-                        name=filename,
-                        url=url_path,
-                        res_model='ir.ui.view',
-                        type='binary',
-                        datas=data,
-                    )
+                    values = {
+                        'name': filename,
+                        'url': url_path,
+                        'res_model': 'ir.ui.view',
+                        'type': 'binary',
+                        'datas': data
+                    }
                     attachment = IrAttachment.search([('url', '=', url_path), ('type', '=', 'binary'), ('res_model', '=', 'ir.ui.view')])
                     if attachment:
                         attachment.write(values)
@@ -155,7 +155,7 @@ class IrModule(models.Model):
             raise UserError(_('Only zip files are supported.'))
 
         success = []
-        errors = dict()
+        errors = {}
         module_names = []
         with zipfile.ZipFile(module_file, "r") as z:
             for zf in z.filelist:

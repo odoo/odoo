@@ -59,13 +59,13 @@ class OAuthLogin(Home):
         for provider in providers:
             return_url = request.httprequest.url_root + 'auth_oauth/signin'
             state = self.get_state(provider)
-            params = dict(
-                response_type='token',
-                client_id=provider['client_id'],
-                redirect_uri=return_url,
-                scope=provider['scope'],
-                state=json.dumps(state),
-            )
+            params = {
+                'response_type': 'token',
+                'client_id': provider['client_id'],
+                'redirect_uri': return_url,
+                'scope': provider['scope'],
+                'state': json.dumps(state)
+            }
             provider['auth_link'] = "%s?%s" % (provider['auth_endpoint'], werkzeug.urls.url_encode(params))
         return providers
 
@@ -73,11 +73,11 @@ class OAuthLogin(Home):
         redirect = request.params.get('redirect') or 'web'
         if not redirect.startswith(('//', 'http://', 'https://')):
             redirect = '%s%s' % (request.httprequest.url_root, redirect[1:] if redirect[0] == '/' else redirect)
-        state = dict(
-            d=request.session.db,
-            p=provider['id'],
-            r=werkzeug.urls.url_quote_plus(redirect),
-        )
+        state = {
+            'd': request.session.db,
+            'p': provider['id'],
+            'r': werkzeug.urls.url_quote_plus(redirect)
+        }
         token = request.params.get('token')
         if token:
             state['t'] = token

@@ -208,16 +208,14 @@ class Digest(models.Model):
         self.ensure_one()
         digest_fields = self._get_kpi_fields()
         invalid_fields = []
-        kpis = [
-            dict(kpi_name=field_name,
-                 kpi_fullname=self.env['ir.model.fields']._get(self._name, field_name).field_description,
-                 kpi_action=False,
-                 kpi_col1=dict(),
-                 kpi_col2=dict(),
-                 kpi_col3=dict(),
-                 )
-            for field_name in digest_fields
-        ]
+        kpis = [{
+            'kpi_name': field_name,
+            'kpi_fullname': self.env['ir.model.fields']._get(self._name, field_name).field_description,
+            'kpi_action': False,
+            'kpi_col1': {},
+            'kpi_col2': {},
+            'kpi_col3': {}
+        } for field_name in digest_fields]
         kpis_actions = self._compute_kpis_actions(company, user)
 
         for col_index, (tf_name, tf) in enumerate(self._compute_timeframes(company)):

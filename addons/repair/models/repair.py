@@ -466,7 +466,7 @@ class Repair(models.Model):
         repairs.mapped('operations').filtered(lambda op: op.type == 'add').write({'invoiced': True})
         repairs.mapped('fees_lines').write({'invoiced': True})
 
-        return dict((repair.id, repair.invoice_id.id) for repair in repairs)
+        return {repair.id: repair.invoice_id.id for repair in repairs}
 
     def action_created_invoice(self):
         self.ensure_one()

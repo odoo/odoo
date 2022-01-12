@@ -85,7 +85,7 @@ class MrpRoutingWorkcenter(models.Model):
         data = self.env['mrp.workorder'].read_group([
             ('operation_id', 'in', self.ids),
             ('state', '=', 'done')], ['operation_id'], ['operation_id'])
-        count_data = dict((item['operation_id'][0], item['operation_id_count']) for item in data)
+        count_data = {item['operation_id'][0]: item['operation_id_count'] for item in data}
         for operation in self:
             operation.workorder_count = count_data.get(operation.id, 0)
 

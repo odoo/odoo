@@ -17,9 +17,9 @@ class SaleOrder(models.Model):
                 [('sale_order_id', 'in', self.ids)],
                 ['sale_order_id'], ['sale_order_id']
             )
-            slot_mapped = dict((data['sale_order_id'][0], data['sale_order_id_count']) for data in slot_data)
+            slot_mapped = {data['sale_order_id'][0]: data['sale_order_id_count'] for data in slot_data}
         else:
-            slot_mapped = dict()
+            slot_mapped = {}
         for so in self:
             so.event_booth_count = slot_mapped.get(so.id, 0)
 

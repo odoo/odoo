@@ -144,10 +144,7 @@ class Challenge(models.Model):
               GROUP BY gamification_challenge_id
             """
             self.env.cr.execute(query, [tuple(self.ids)])
-            mapped_data = dict(
-                (challenge_id, user_count)
-                for challenge_id, user_count in self.env.cr.fetchall()
-            )
+            mapped_data = dict(self.env.cr.fetchall())
         for challenge in self:
             challenge.user_count = mapped_data.get(challenge.id, 0)
 

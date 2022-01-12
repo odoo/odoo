@@ -48,8 +48,8 @@ class HrEmployeeBase(models.AbstractModel):
         """
         self._cr.execute("""
             SELECT
-                sum(h.number_of_days) AS days,
-                h.employee_id
+                h.employee_id,
+                sum(h.number_of_days) AS days
             FROM
                 (
                     SELECT holiday_status_id, number_of_days,
@@ -66,7 +66,7 @@ class HrEmployeeBase(models.AbstractModel):
                 s.requires_allocation='yes' AND
                 h.employee_id in %s
             GROUP BY h.employee_id""", (tuple(self.ids),))
-        return dict((row['employee_id'], row['days']) for row in self._cr.dictfetchall())
+        return dict(self._cr.fetchall())
 
     def _compute_remaining_leaves(self):
         remaining = {}
@@ -89,7 +89,7 @@ class HrEmployeeBase(models.AbstractModel):
             ('date_to', '=', False),
             ('date_to', '>=', current_date),
         ], ['number_of_days:sum', 'employee_id'], ['employee_id'])
-        rg_results = dict((d['employee_id'][0], {"employee_id_count": d['employee_id_count'], "number_of_days": d['number_of_days']}) for d in data)
+        rg_results = {d['employee_id'][0]: d for d in data}
         for employee in self:
             result = rg_results.get(employee.id)
             employee.allocation_count = float_round(result['number_of_days'], precision_digits=2) if result else 0.0
@@ -107,7 +107,7 @@ class HrEmployeeBase(models.AbstractModel):
             ('holiday_allocation_id.date_to', '=', False),
             ('holiday_allocation_id.date_to', '>=', current_date),
         ], ['number_of_days:sum', 'employee_id'], ['employee_id'])
-        results_leave = dict((d['employee_id'][0], {"employee_id_count": d['employee_id_count'], "number_of_days": d['number_of_days']}) for d in data_leave)
+        results_leave = {d['employee_id'][0]: d for d in data_leave}
         for employee in self:
             result = results_leave.get(employee.id)
             leaves_taken = float_round(result['number_of_days'], precision_digits=2) if result else 0.0

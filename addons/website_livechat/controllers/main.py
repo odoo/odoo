@@ -33,7 +33,7 @@ class WebsiteLivechat(LivechatController):
             percentage[grade] = round(repartition[grade] * 100.0 / sum(repartition.values()), 1) if sum(repartition.values()) else 0
 
         # filter only on the team users that worked on the last 100 ratings and get their detailed stat
-        ratings_per_partner = {partner_id: dict(great=0, okay=0, bad=0)
+        ratings_per_partner = {partner_id: {'great': 0, 'okay': 0, 'bad': 0}
                                for partner_id in ratings.mapped('rated_partner_id.id')}
         total_ratings_per_partner = dict.fromkeys(ratings.mapped('rated_partner_id.id'), 0)
         # keep 10 for backward compatibility

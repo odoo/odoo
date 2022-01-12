@@ -259,13 +259,13 @@ GROUP BY fol.id%s%s""" % (
         :return: see ``_add_followers``
         """
         if not partner_ids:
-            return dict(), dict()
+            return {}, {}
 
         default, _, external = self.env['mail.message.subtype'].default_subtypes(res_model)
         if partner_ids and customer_ids is None:
             customer_ids = self.env['res.partner'].sudo().search([('id', 'in', partner_ids), ('partner_share', '=', True)]).ids
 
-        p_stypes = dict((pid, external.ids if pid in customer_ids else default.ids) for pid in partner_ids)
+        p_stypes = {pid: external.ids if pid in customer_ids else default.ids for pid in partner_ids}
 
         return self._add_followers(res_model, res_ids, partner_ids, p_stypes, check_existing=check_existing, existing_policy=existing_policy)
 
@@ -299,7 +299,7 @@ GROUP BY fol.id%s%s""" % (
           * update: gives an update dict allowing to add missing subtypes (no subtype removal);
         """
         _res_ids = res_ids or [0]
-        data_fols, doc_pids = dict(), dict((i, set()) for i in _res_ids)
+        data_fols, doc_pids = {}, {i: set() for i in _res_ids}
 
         if check_existing and res_ids:
             for fid, rid, pid, sids in self._get_subscription_data([(res_model, res_ids)], partner_ids or None):
@@ -311,7 +311,7 @@ GROUP BY fol.id%s%s""" % (
             if existing_policy == 'force':
                 self.sudo().browse(data_fols.keys()).unlink()
 
-        new, update = dict(), dict()
+        new, update = {}, {}
         for res_id in _res_ids:
             for partner_id in set(partner_ids or []):
                 if partner_id not in doc_pids[res_id]:

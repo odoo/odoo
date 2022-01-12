@@ -556,10 +556,7 @@ class IrHttp(models.AbstractModel):
     def _get_exception_code_values(cls, exception):
         """ Return a tuple with the error code following by the values matching the exception"""
         code = 500  # default code
-        values = dict(
-            exception=exception,
-            traceback=traceback.format_exc(),
-        )
+        values = {'exception': exception, 'traceback': traceback.format_exc()}
         if isinstance(exception, exceptions.UserError):
             values['error_message'] = exception.args[0]
             code = 400

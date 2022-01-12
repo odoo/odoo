@@ -149,9 +149,7 @@ class FloatConverter(models.AbstractModel):
     @api.model
     def get_available_options(self):
         options = super(FloatConverter, self).get_available_options()
-        options.update(
-            precision=dict(type='integer', string=_('Rounding precision')),
-        )
+        options['precision'] = {'type': 'integer', 'string': _('Rounding precision')}
         return options
 
     @api.model
@@ -194,9 +192,7 @@ class DateConverter(models.AbstractModel):
     @api.model
     def get_available_options(self):
         options = super(DateConverter, self).get_available_options()
-        options.update(
-            format=dict(type='string', string=_('Date format'))
-        )
+        options['format'] = {'type': 'string', 'string': _('Date format')}
         return options
 
     @api.model
@@ -213,11 +209,11 @@ class DateTimeConverter(models.AbstractModel):
     def get_available_options(self):
         options = super(DateTimeConverter, self).get_available_options()
         options.update(
-            format=dict(type='string', string=_('Pattern to format')),
-            tz_name=dict(type='char', string=_('Optional timezone name')),
-            time_only=dict(type='boolean', string=_('Display only the time')),
-            hide_seconds=dict(type='boolean', string=_('Hide seconds')),
-            date_only=dict(type='boolean', string=_('Display only the date')),
+            format={'type': 'string', 'string': _('Pattern to format')},
+            tz_name={'type': 'char', 'string': _('Optional timezone name')},
+            time_only={'type': 'boolean', 'string': _('Display only the time')},
+            hide_seconds={'type': 'boolean', 'string': _('Hide seconds')},
+            date_only={'type': 'boolean', 'string': _('Display only the date')},
         )
         return options
 
@@ -286,9 +282,7 @@ class SelectionConverter(models.AbstractModel):
     @api.model
     def get_available_options(self):
         options = super(SelectionConverter, self).get_available_options()
-        options.update(
-            selection=dict(type='selection', string=_('Selection'), description=_('By default the widget uses the field information'), required=True)
-        )
+        options['selection'] = {'type': 'selection', 'string': _('Selection'), 'description': _('By default the widget uses the field information'), 'required': True}
         return options
 
     @api.model
@@ -411,10 +405,10 @@ class MonetaryConverter(models.AbstractModel):
     def get_available_options(self):
         options = super(MonetaryConverter, self).get_available_options()
         options.update(
-            from_currency=dict(type='model', params='res.currency', string=_('Original currency')),
-            display_currency=dict(type='model', params='res.currency', string=_('Display currency'), required="value_to_html"),
-            date=dict(type='date', string=_('Date'), description=_('Date used for the original currency (only used for t-esc). by default use the current date.')),
-            company_id=dict(type='model', params='res.company', string=_('Company'), description=_('Company used for the original currency (only used for t-esc). By default use the user company')),
+            from_currency={'type': 'model', 'params': 'res.currency', 'string': _('Original currency')},
+            display_currency={'type': 'model', 'params': 'res.currency', 'string': _('Display currency'), 'required': "value_to_html"},
+            date={'type': 'date', 'string': _('Date'), 'description': _('Date used for the original currency (only used for t-esc). by default use the current date.')},
+            company_id={'type': 'model', 'params': 'res.company', 'string': _('Company'), 'description': _('Company used for the original currency (only used for t-esc). By default use the user company')},
         )
         return options
 
@@ -532,24 +526,24 @@ class DurationConverter(models.AbstractModel):
         options = super(DurationConverter, self).get_available_options()
         unit = [(value, str(label)) for value, label, ratio in TIMEDELTA_UNITS]
         options.update(
-            digital=dict(type="boolean", string=_('Digital formatting')),
-            unit=dict(type="selection", params=unit, string=_('Date unit'), description=_('Date unit used for comparison and formatting'), default_value='second', required=True),
-            round=dict(type="selection", params=unit, string=_('Rounding unit'), description=_("Date unit used for the rounding. The value must be smaller than 'hour' if you use the digital formatting."), default_value='second'),
-            format=dict(
-                type="selection",
-                params=[
+            digital={'type': "boolean", 'string': _('Digital formatting')},
+            unit={'type': "selection", 'params': unit, 'string': _('Date unit'), 'description': _('Date unit used for comparison and formatting'), 'default_value': 'second', 'required': True},
+            round={'type': "selection", 'params': unit, 'string': _('Rounding unit'), 'description': _("Date unit used for the rounding. The value must be smaller than 'hour' if you use the digital formatting."), 'default_value': 'second'},
+            format={
+                'type': "selection",
+                'params': [
                     ('long', _('Long')),
                     ('short', _('Short')),
                     ('narrow', _('Narrow'))],
-                string=_('Format'),
-                description=_("Formatting: long, short, narrow (not used for digital)"),
-                default_value='long'
-            ),
-            add_direction=dict(
-                type="boolean",
-                string=_("Add direction"),
-                description=_("Add directional information (not used for digital)")
-            ),
+                'string': _('Format'),
+                'description': _("Formatting: long, short, narrow (not used for digital)"),
+                'default_value': 'long'
+            },
+            add_direction={
+                'type': "boolean",
+                'string': _("Add direction"),
+                'description': _("Add directional information (not used for digital)")
+            },
         )
         return options
 
@@ -608,9 +602,7 @@ class RelativeDatetimeConverter(models.AbstractModel):
     @api.model
     def get_available_options(self):
         options = super(RelativeDatetimeConverter, self).get_available_options()
-        options.update(
-            now=dict(type='datetime', string=_('Reference date'), description=_('Date to compare with the field value, by default use the current date.'))
-        )
+        options['now'] = {'type': 'datetime', 'string': _('Reference date'), 'description': _('Date to compare with the field value, by default use the current date.')}
         return options
 
     @api.model
@@ -645,12 +637,12 @@ class BarcodeConverter(models.AbstractModel):
     def get_available_options(self):
         options = super(BarcodeConverter, self).get_available_options()
         options.update(
-            symbology=dict(type='string', string=_('Barcode symbology'), description=_('Barcode type, eg: UPCA, EAN13, Code128'), default_value='Code128'),
-            width=dict(type='integer', string=_('Width'), default_value=600),
-            height=dict(type='integer', string=_('Height'), default_value=100),
-            humanreadable=dict(type='integer', string=_('Human Readable'), default_value=0),
-            quiet=dict(type='integer', string='Quiet', default_value=1),
-            mask=dict(type='string', string='Mask', default_value='')
+            symbology={'type': 'string', 'string': _('Barcode symbology'), 'description': _('Barcode type, eg: UPCA, EAN13, Code128'), 'default_value': 'Code128'},
+            width={'type': 'integer', 'string': _('Width'), 'default_value': 600},
+            height={'type': 'integer', 'string': _('Height'), 'default_value': 100},
+            humanreadable={'type': 'integer', 'string': _('Human Readable'), 'default_value': 0},
+            quiet={'type': 'integer', 'string': 'Quiet', 'default_value': 1},
+            mask={'type': 'string', 'string': 'Mask', 'default_value': ''}
         )
         return options
 
@@ -690,18 +682,18 @@ class Contact(models.AbstractModel):
             {'field_name': 'email', 'label': _('Email'), 'default': True},
             {'field_name': 'vat', 'label': _('VAT')},
         ]
-        separator_params = dict(
-            type='selection',
-            selection=[[" ", _("Space")], [",", _("Comma")], ["-", _("Dash")], ["|", _("Vertical bar")], ["/", _("Slash")]],
-            placeholder=_('Linebreak'),
-        )
+        separator_params = {
+            'type': 'selection',
+            'selection': [[" ", _("Space")], [",", _("Comma")], ["-", _("Dash")], ["|", _("Vertical bar")], ["/", _("Slash")]],
+            'placeholder': _('Linebreak')
+        }
         options.update(
-            fields=dict(type='array', params=dict(type='selection', params=contact_fields), string=_('Displayed fields'), description=_('List of contact fields to display in the widget'), default_value=[param.get('field_name') for param in contact_fields if param.get('default')]),
-            separator=dict(type='selection', params=separator_params, string=_('Address separator'), description=_('Separator use to split the address from the display_name.'), default_value=False),
-            no_marker=dict(type='boolean', string=_('Hide badges'), description=_("Don't display the font awesome marker")),
-            no_tag_br=dict(type='boolean', string=_('Use comma'), description=_("Use comma instead of the <br> tag to display the address")),
-            phone_icons=dict(type='boolean', string=_('Display phone icons'), description=_("Display the phone icons even if no_marker is True")),
-            country_image=dict(type='boolean', string=_('Display country image'), description=_("Display the country image if the field is present on the record")),
+            fields={'type': 'array', 'params': {'type': 'selection', 'params': contact_fields}, 'string': _('Displayed fields'), 'description': _('List of contact fields to display in the widget'), 'default_value': [param.get('field_name') for param in contact_fields if param.get('default')]},
+            separator={'type': 'selection', 'params': separator_params, 'string': _('Address separator'), 'description': _('Separator use to split the address from the display_name.'), 'default_value': False},
+            no_marker={'type': 'boolean', 'string': _('Hide badges'), 'description': _("Don't display the font awesome marker")},
+            no_tag_br={'type': 'boolean', 'string': _('Use comma'), 'description': _("Use comma instead of the <br> tag to display the address")},
+            phone_icons={'type': 'boolean', 'string': _('Display phone icons'), 'description': _("Display the phone icons even if no_marker is True")},
+            country_image={'type': 'boolean', 'string': _('Display country image'), 'description': _("Display the country image if the field is present on the record")},
         )
         return options
 

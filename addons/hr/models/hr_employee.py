@@ -267,10 +267,7 @@ class HrEmployeePrivate(models.Model):
             self.tz = self.resource_calendar_id.tz
 
     def _sync_user(self, user, employee_has_image=False):
-        vals = dict(
-            work_email=user.email,
-            user_id=user.id,
-        )
+        vals = {'work_email': user.email, 'user_id': user.id}
         if not employee_has_image:
             vals['image_1920'] = user.image_1920
         if user.tz:

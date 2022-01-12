@@ -150,7 +150,7 @@ class AccountMove(models.Model):
         pdf_name = re.sub(r'\W+', '', self.name) + '.pdf'
 
         # tax map for 0% taxes which have no tax_line_id
-        tax_map = dict()
+        tax_map = {}
         for line in self.line_ids:
             for tax in line.tax_ids:
                 if tax.amount == 0.0:

@@ -58,7 +58,7 @@ class ResPartner(models.Model):
 
             route = 'login'
             # the parameters to encode for the query
-            query = dict(db=self.env.cr.dbname)
+            query = {'db': self.env.cr.dbname}
             signup_type = self.env.context.get('signup_force_type_in_url', partner.sudo().signup_type or '')
             if signup_type:
                 route = 'reset_password' if signup_type == 'reset' else signup_type
@@ -73,7 +73,7 @@ class ResPartner(models.Model):
             if url:
                 query['redirect'] = url
             else:
-                fragment = dict()
+                fragment = {}
                 base = '/web#'
                 if action == '/mail/view':
                     base = '/mail/view?'

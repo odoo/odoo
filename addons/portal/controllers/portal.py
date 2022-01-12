@@ -341,7 +341,7 @@ class CustomerPortal(Controller):
         return attachment_sudo.unlink()
 
     def details_form_validate(self, data):
-        error = dict()
+        error = {}
         error_message = []
 
         # Validation

@@ -87,7 +87,7 @@ class RecruitmentStage(models.Model):
     @api.depends('hired_stage')
     def _compute_is_warning_visible(self):
         applicant_data = self.env['hr.applicant'].read_group([('stage_id', 'in', self.ids)], ['stage_id'], 'stage_id')
-        applicants = dict((data['stage_id'][0], data['stage_id_count']) for data in applicant_data)
+        applicants = {data['stage_id'][0]: data['stage_id_count'] for data in applicant_data}
         for stage in self:
             if stage._origin.hired_stage and not stage.hired_stage and applicants.get(stage._origin.id):
                 stage.is_warning_visible = True
@@ -225,9 +225,9 @@ class Applicant(models.Model):
             }
             self.env.cr.execute(query_str, where_clause_params)
 
-            application_data_mapped = dict((data['l_email_from'], data['count']) for data in self.env.cr.dictfetchall())
+            application_data_mapped = dict(self.env.cr.fetchall())
         else:
-            application_data_mapped = dict()
+            application_data_mapped = {}
         for applicant in applicants:
             applicant.application_count = application_data_mapped.get(applicant.email_from.lower(), 1) - 1
         (self - applicants).application_count = False
@@ -261,7 +261,7 @@ class Applicant(models.Model):
         read_group_res = self.env['ir.attachment'].read_group(
             [('res_model', '=', 'hr.applicant'), ('res_id', 'in', self.ids)],
             ['res_id'], ['res_id'])
-        attach_data = dict((res['res_id'], res['res_id_count']) for res in read_group_res)
+        attach_data = {res['res_id']: res['res_id_count'] for res in read_group_res}
         for record in self:
             record.attachment_number = attach_data.get(record.id, 0)
 
@@ -598,7 +598,7 @@ class Applicant(models.Model):
 
     def reset_applicant(self):
         """ Reinsert the applicant into the recruitment pipe in the first stage"""
-        default_stage = dict()
+        default_stage = {}
         for job_id in self.mapped('job_id'):
             default_stage[job_id.id] = self.env['hr.recruitment.stage'].search(
                 ['|',

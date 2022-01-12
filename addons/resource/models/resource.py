@@ -1053,7 +1053,7 @@ class ResourceResource(models.Model):
         resource_calendar_validity_intervals = {}
         calendar_resources = defaultdict(lambda: self.env['resource.resource'])
         resource_work_intervals = defaultdict(Intervals)
-        calendar_work_intervals = dict()
+        calendar_work_intervals = {}
 
         resource_calendar_validity_intervals = self._get_calendars_validity_within_period(start, end)
         for resource in self:

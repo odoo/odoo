@@ -21,7 +21,7 @@ class EventEvent(models.Model):
 
     def _compute_sponsor_count(self):
         data = self.env['event.sponsor'].read_group([], ['event_id'], ['event_id'])
-        result = dict((data['event_id'][0], data['event_id_count']) for data in data)
+        result = {data['event_id'][0]: data['event_id_count'] for data in data}
         for event in self:
             event.sponsor_count = result.get(event.id, 0)
 

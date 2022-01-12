@@ -57,7 +57,7 @@ class PaymentToken(models.Model):
         :return: The dict of acquirer-specific create values
         :rtype: dict
         """
-        return dict()
+        return {}
 
     def write(self, values):
         """ Delegate the handling of active state switch to dedicated methods.

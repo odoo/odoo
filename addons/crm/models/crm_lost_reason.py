@@ -18,7 +18,7 @@ class LostReason(models.Model):
             ['lost_reason_id'],
             ['lost_reason_id']
         )
-        mapped_data = dict((data['lost_reason_id'][0], data['lost_reason_id_count']) for data in lead_data)
+        mapped_data = {data['lost_reason_id'][0]: data['lost_reason_id_count'] for data in lead_data}
         for reason in self:
             reason.leads_count = mapped_data.get(reason.id, 0)
 

@@ -104,7 +104,7 @@ class Partner(models.Model):
     # ------------------------------------------------------------
 
     def mail_partner_format(self):
-        partners_format = dict()
+        partners_format = {}
         for partner in self:
             internal_users = partner.user_ids - partner.user_ids.filtered('share')
             main_user = internal_users[0] if len(internal_users) > 0 else partner.user_ids[0] if len(partner.user_ids) > 0 else self.env['res.users']

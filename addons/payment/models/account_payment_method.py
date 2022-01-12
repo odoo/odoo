@@ -25,7 +25,7 @@ class AccountPaymentMethodLine(models.Model):
         ])
 
         # Make sure to pick the active acquirer, if any.
-        acquirers_map = dict()
+        acquirers_map = {}
         for acquirer in acquirers:
             current_value = acquirers_map.get((acquirer.provider, acquirer.company_id), False)
             if current_value and current_value.state != 'disabled':

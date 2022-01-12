@@ -34,6 +34,6 @@ class WebsiteSaleProductComparison(WebsiteSale):
                     "website_sale_comparison.product_product",
                     {'product': prod, 'website': request.website}
                 ),
-                'product': dict(id=prod.id, name=prod.name, display_name=prod.display_name),
+                'product': {'id': prod.id, 'name': prod.name, 'display_name': prod.display_name},
             }
         return ret

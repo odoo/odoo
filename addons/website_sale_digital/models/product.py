@@ -11,7 +11,7 @@ class ProductTemplate(models.Model):
 
     def _compute_attachment_count(self):
         attachment_data = self.env['ir.attachment'].read_group([('res_model', '=', self._name), ('res_id', 'in', self.ids), ('product_downloadable', '=', True)], ['res_id'], ['res_id'])
-        mapped_data = dict([(data['res_id'], data['res_id_count']) for data in attachment_data])
+        mapped_data = {data['res_id']: data['res_id_count'] for data in attachment_data}
         for product_template in self:
             product_template.attachment_count = mapped_data.get(product_template.id, 0)
 

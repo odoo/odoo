@@ -460,14 +460,14 @@ class View(models.Model):
                     for comp in self.env.user.company_ids if comp != cur_company
                 ]
 
-            qcontext.update(dict(
+            qcontext.update(
                 main_object=self,
                 website=request.website,
                 is_view_active=request.website.is_view_active,
                 res_company=request.website.company_id.sudo(),
                 translatable=translatable,
                 editable=editable,
-            ))
+            )
 
         return qcontext
 

@@ -781,7 +781,7 @@ class IrActionsReport(models.Model):
 
         save_in_attachment = OrderedDict()
         # Maps the streams in `save_in_attachment` back to the records they came from
-        stream_record = dict()
+        stream_record = {}
         if res_ids:
             # Dispatch the records by ones having an attachment and ones requesting a call to
             # wkhtmltopdf.

@@ -70,7 +70,7 @@ class PaymentTransaction(models.Model):
             'transactionReference': self.reference,
             'statementReference': self.reference,
             'keyVersion': self.acquirer_id.sips_key_version,
-            'returnContext': json.dumps(dict(reference=self.reference)),
+            'returnContext': json.dumps({'reference': self.reference}),
         }
         api_url = self.acquirer_id.sips_prod_url if self.acquirer_id.state == 'enabled' \
             else self.acquirer_id.sips_test_url

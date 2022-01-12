@@ -25,7 +25,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
         kwargs['is_donation'] = True
         kwargs['currency_id'] = int(kwargs.get('currency_id', request.env.company.currency_id.id))
         kwargs['amount'] = float(kwargs.get('amount', 25))
-        kwargs['donation_options'] = kwargs.get('donation_options', json_safe.dumps(dict(customAmount="freeAmount")))
+        kwargs['donation_options'] = kwargs.get('donation_options', json_safe.dumps({'customAmount': "freeAmount"}))
 
         if request.env.user._is_public():
             kwargs['partner_id'] = request.env.user.partner_id.id

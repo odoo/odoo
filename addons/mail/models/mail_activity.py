@@ -206,7 +206,7 @@ class MailActivity(models.Model):
 
         # fall back on related document access right checks. Use the same as defined for mail.thread
         # if available; otherwise fall back on read for read, write for other operations.
-        activity_to_documents = dict()
+        activity_to_documents = {}
         for activity in remaining_sudo:
             # write / unlink: if not updating self or assigned, limit to automated activities to avoid
             # updating other people's activities. As unlinking a document bypasses access rights checks
@@ -356,7 +356,7 @@ class MailActivity(models.Model):
             self._cr.execute("""
                 SELECT DISTINCT activity.id, activity.res_model, activity.res_id
                 FROM "%s" activity
-                WHERE activity.id = ANY (%%(ids)s) AND activity.res_id != 0""" % self._table, dict(ids=list(sub_ids)))
+                WHERE activity.id = ANY (%%(ids)s) AND activity.res_id != 0""" % self._table, {'ids': list(sub_ids)})
             activities_to_check += self._cr.dictfetchall()
 
         activity_to_documents = {}
@@ -437,11 +437,11 @@ class MailActivity(models.Model):
                 activity = activity.with_context(lang=activity.user_id.lang)
             model_description = self.env['ir.model']._get(activity.res_model).display_name
             body = body_template._render(
-                dict(
-                    activity=activity,
-                    model_description=model_description,
-                    access_link=self.env['mail.thread']._notify_get_action_link('view', model=activity.res_model, res_id=activity.res_id),
-                ),
+                {
+                    'activity': activity,
+                    'model_description': model_description,
+                    'access_link': self.env['mail.thread']._notify_get_action_link('view', model=activity.res_model, res_id=activity.res_id)
+                },
                 engine='ir.qweb',
                 minimal_qcontext=True
             )
@@ -567,7 +567,7 @@ class MailActivity(models.Model):
         activities = self.read()
         mail_template_ids = {template_id for activity in activities for template_id in activity["mail_template_ids"]}
         mail_template_info = self.env["mail.template"].browse(mail_template_ids).read(['id', 'name'])
-        mail_template_dict = dict([(mail_template['id'], mail_template) for mail_template in mail_template_info])
+        mail_template_dict = {mail_template['id']: mail_template for mail_template in mail_template_info}
         for activity in activities:
             activity['mail_template_ids'] = [mail_template_dict[mail_template_id] for mail_template_id in activity['mail_template_ids']]
         return activities

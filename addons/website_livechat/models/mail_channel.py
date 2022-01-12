@@ -28,7 +28,7 @@ class MailChannel(models.Model):
         at the top of the livechat channel discussion view in discuss module.
         """
         channel_infos = super().channel_info()
-        channel_infos_dict = dict((c['id'], c) for c in channel_infos)
+        channel_infos_dict = {c['id']: c for c in channel_infos}
         for channel in self:
             visitor = channel.livechat_visitor_id
             if visitor:

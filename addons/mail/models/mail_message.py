@@ -300,7 +300,7 @@ class Message(models.Model):
                 ON partner_rel.mail_message_id = m.id AND partner_rel.res_partner_id = %%(pid)s
                 LEFT JOIN "mail_notification" needaction_rel
                 ON needaction_rel.mail_message_id = m.id AND needaction_rel.res_partner_id = %%(pid)s
-                WHERE m.id = ANY (%%(ids)s)""" % self._table, dict(pid=pid, ids=list(sub_ids)))
+                WHERE m.id = ANY (%%(ids)s)""" % self._table, {'pid': pid, 'ids': list(sub_ids)})
             for msg_id, rmod, rid, author_id, message_type, partner_id in self._cr.fetchall():
                 if author_id == pid:
                     author_ids.add(msg_id)
@@ -391,7 +391,7 @@ class Message(models.Model):
                 )
 
         # Read mail_message.ids to have their values
-        message_values = dict((message_id, {}) for message_id in self.ids)
+        message_values = {message_id: {} for message_id in self.ids}
 
         self.flush(['model', 'res_id', 'author_id', 'parent_id', 'message_type', 'partner_ids'])
         self.env['mail.notification'].flush(['mail_message_id', 'res_partner_id'])
@@ -406,7 +406,7 @@ class Message(models.Model):
                 ON partner_rel.mail_message_id = m.id AND partner_rel.res_partner_id = %%(pid)s
                 LEFT JOIN "mail_notification" needaction_rel
                 ON needaction_rel.mail_message_id = m.id AND needaction_rel.res_partner_id = %%(pid)s
-                WHERE m.id = ANY (%%(ids)s)""" % self._table, dict(pid=self.env.user.partner_id.id, ids=self.ids))
+                WHERE m.id = ANY (%%(ids)s)""" % self._table, {'pid': self.env.user.partner_id.id, 'ids': self.ids})
             for mid, rmod, rid, author_id, parent_id, partner_id, message_type in self._cr.fetchall():
                 message_values[mid] = {
                     'model': rmod,
@@ -426,7 +426,7 @@ class Message(models.Model):
                 ON partner_rel.mail_message_id = m.id AND partner_rel.res_partner_id = %%(pid)s
                 LEFT JOIN "mail_notification" needaction_rel
                 ON needaction_rel.mail_message_id = m.id AND needaction_rel.res_partner_id = %%(pid)s
-                WHERE m.id = ANY (%%(ids)s)""" % self._table, dict(pid=self.env.user.partner_id.id, uid=self.env.user.id, ids=self.ids))
+                WHERE m.id = ANY (%%(ids)s)""" % self._table, {'pid': self.env.user.partner_id.id, 'uid': self.env.user.id, 'ids': self.ids})
             for mid, rmod, rid, author_id, parent_id, partner_id, message_type in self._cr.fetchall():
                 message_values[mid] = {
                     'model': rmod,

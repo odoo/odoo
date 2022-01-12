@@ -10,3 +10,22 @@ rules:
     severity: WARNING
     message: Use a set literal or comprehension
     pattern: set([...])
+
+  - id: dict-literals
+    languages: [python]
+    severity: WARNING
+    message: Use a dict literal or comprehension
+    pattern-either:
+      - pattern: dict()
+      - pattern: dict([...])
+      - patterns:
+        - pattern: dict(...)
+        - pattern-not: dict($POSITIONAL, ...)
+
+  - id: dict-update # way too many hits, holy crap
+    languages: [] # [python]
+    severity: WARNING
+    message: dict.update has the same signature as dict()
+    pattern-either:
+        - pattern: $X.update(dict(...))
+        - pattern: $X.update({...})

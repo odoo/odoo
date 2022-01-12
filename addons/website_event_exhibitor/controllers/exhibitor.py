@@ -77,7 +77,7 @@ class ExhibitorController(WebsiteEventController):
         sponsor_types = sponsors_all.mapped('sponsor_type_id')
         sponsor_countries = sponsors_all.mapped('partner_id.country_id').sorted('name')
         # organize sponsors into categories to help display
-        sponsor_categories_dict = dict()
+        sponsor_categories_dict = {}
         sponsor_categories = []
         is_event_user = request.env.user.has_group('event.group_event_registration_desk')
         for sponsor in sponsors:

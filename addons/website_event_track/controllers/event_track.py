@@ -95,7 +95,7 @@ class EventTrackController(http.Controller):
             # Doing it this way allows to only get events who are tagged "age: 10-12" AND "activity: football".
             # Add another tag "age: 12-15" to the search and it would fetch the ones who are tagged:
             # ("age: 10-12" OR "age: 12-15") AND "activity: football
-            grouped_tags = dict()
+            grouped_tags = {}
             for search_tag in search_tags:
                 grouped_tags.setdefault(search_tag.category_id, list()).append(search_tag)
             search_domain_items = [
@@ -213,8 +213,8 @@ class EventTrackController(http.Controller):
 
         # Create the dict that contains the tracks at the correct time_slots / locations coordinates
         tracks_by_days = dict.fromkeys(days, 0)
-        time_slots_by_day = dict((day, dict(start=set(), end=set())) for day in days)
-        tracks_by_rounded_times = dict((time_slot, dict((location, {}) for location in locations)) for time_slot in track_time_slots)
+        time_slots_by_day = {day: {'start': set(), 'end': set()} for day in days}
+        tracks_by_rounded_times = {time_slot: {location: {} for location in locations} for time_slot in track_time_slots}
         for track, time_slots in time_slots_by_tracks.items():
             start_date = fields.Datetime.from_string(track.date).replace(tzinfo=pytz.utc).astimezone(local_tz)
             end_date = start_date + timedelta(hours=(track.duration or 0.25))
@@ -234,7 +234,7 @@ class EventTrackController(http.Controller):
                 tracks_by_days[day] += 1
 
         # split days into 15 minutes time slots
-        global_time_slots_by_day = dict((day, {}) for day in days)
+        global_time_slots_by_day = {day: {} for day in days}
         for day, time_slots in time_slots_by_day.items():
             start_time_slot = min(time_slots['start'])
             end_time_slot = max(time_slots['end'])

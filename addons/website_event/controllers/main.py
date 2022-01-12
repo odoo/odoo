@@ -204,10 +204,10 @@ class WebsiteEventController(http.Controller):
                 continue
             ticket_order[int(registration_items[1])] = int(value)
 
-        ticket_dict = dict((ticket.id, ticket) for ticket in request.env['event.event.ticket'].sudo().search([
+        ticket_dict = {ticket.id: ticket for ticket in request.env['event.event.ticket'].sudo().search([
             ('id', 'in', [tid for tid in ticket_order.keys() if tid]),
             ('event_id', '=', event.id)
-        ]))
+        ])}
 
         return [{
             'id': tid if ticket_dict.get(tid) else 0,
@@ -273,7 +273,7 @@ class WebsiteEventController(http.Controller):
             if counter == '0':
                 global_values[attr_name] = value
             else:
-                registrations.setdefault(counter, dict())[attr_name] = value
+                registrations.setdefault(counter, {})[attr_name] = value
         for key, value in global_values.items():
             for registration in registrations.values():
                 registration[key] = value

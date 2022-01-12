@@ -32,7 +32,7 @@ class AccountMove(models.Model):
     @api.depends('timesheet_ids')
     def _compute_timesheet_count(self):
         timesheet_data = self.env['account.analytic.line'].read_group([('timesheet_invoice_id', 'in', self.ids)], ['timesheet_invoice_id'], ['timesheet_invoice_id'])
-        mapped_data = dict([(t['timesheet_invoice_id'][0], t['timesheet_invoice_id_count']) for t in timesheet_data])
+        mapped_data = {t['timesheet_invoice_id'][0]: t['timesheet_invoice_id_count'] for t in timesheet_data}
         for invoice in self:
             invoice.timesheet_count = mapped_data.get(invoice.id, 0)
 

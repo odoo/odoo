@@ -244,7 +244,7 @@ class LunchOrder(models.Model):
             return
         notified_users = set()
         # (company, lang): (subject, body)
-        translate_cache = dict()
+        translate_cache = {}
         for order in self:
             user = order.user_id
             if user in notified_users:

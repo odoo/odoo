@@ -187,7 +187,7 @@ class IrModel(models.Model):
         installed_names = set(installed_modules.mapped('name'))
         xml_ids = models.Model._get_external_ids(self)
         for model in self:
-            module_names = set(xml_id.split('.')[0] for xml_id in xml_ids[model.id])
+            module_names = {xml_id.split('.')[0] for xml_id in xml_ids[model.id]}
             model.modules = ", ".join(sorted(installed_names & module_names))
 
     @api.depends()
@@ -555,7 +555,7 @@ class IrModelFields(models.Model):
         installed_names = set(installed_modules.mapped('name'))
         xml_ids = models.Model._get_external_ids(self)
         for field in self:
-            module_names = set(xml_id.split('.')[0] for xml_id in xml_ids[field.id])
+            module_names = {xml_id.split('.')[0] for xml_id in xml_ids[field.id]}
             field.modules = ", ".join(sorted(installed_names & module_names))
 
     @api.constrains('domain')
@@ -746,7 +746,7 @@ class IrModelFields(models.Model):
             self._cr.execute("""SELECT relation_table FROM ir_model_fields
                                 WHERE relation_table IN %s AND id NOT IN %s""",
                              (tuple(tables_to_drop), tuple(self.ids)))
-            tables_to_keep = set(row[0] for row in self._cr.fetchall())
+            tables_to_keep = {row[0] for row in self._cr.fetchall()}
             for rel_name in tables_to_drop - tables_to_keep:
                 self._cr.execute(sql.SQL('DROP TABLE {}').format(sql.Identifier(rel_name)))
 
@@ -1269,7 +1269,7 @@ class IrModelSelection(models.Model):
         # selection rows {value: row}
         cur_rows = self._existing_selection_data(model_name, field_name)
         new_rows = {
-            value: dict(value=value, name=label, sequence=index)
+            value: {'value': value, 'name': label, 'sequence': index}
             for index, (value, label) in enumerate(selection)
         }
 
@@ -1506,7 +1506,7 @@ class IrModelConstraint(models.Model):
 
             # double-check we are really going to delete all the owners of this schema element
             self._cr.execute("""SELECT id from ir_model_constraint where name=%s""", (data.name,))
-            external_ids = set(x[0] for x in self._cr.fetchall())
+            external_ids = {x[0] for x in self._cr.fetchall()}
             if external_ids - ids_set:
                 # as installed modules have defined this element we must not delete it!
                 continue
@@ -1574,7 +1574,7 @@ class IrModelConstraint(models.Model):
             return self.browse(cr.fetchone()[0])
 
         cons_id = cons.pop('id')
-        if cons != dict(type=type, definition=definition, message=message):
+        if cons != {'type': type, 'definition': definition, 'message': message}:
             query = """ UPDATE ir_model_constraint
                         SET write_date=now() AT TIME ZONE 'UTC',
                             write_uid=%s, type=%s, definition=%s, message=%s
@@ -1607,7 +1607,7 @@ class IrModelConstraint(models.Model):
             record = self._reflect_constraint(model, conname, 'u', cons_text(definition), module, message)
             if record:
                 xml_id = '%s.constraint_%s' % (module, conname)
-                data_list.append(dict(xml_id=xml_id, record=record))
+                data_list.append({'xml_id': xml_id, 'record': record})
 
         self.env['ir.model.data']._update_xmlids(data_list)
 
@@ -1641,7 +1641,7 @@ class IrModelRelation(models.Model):
 
             # double-check we are really going to delete all the owners of this schema element
             self._cr.execute("""SELECT id from ir_model_relation where name = %s""", (data.name,))
-            external_ids = set(x[0] for x in self._cr.fetchall())
+            external_ids = {x[0] for x in self._cr.fetchall()}
             if external_ids - ids_set:
                 # as installed modules have defined this element we must not delete it!
                 continue

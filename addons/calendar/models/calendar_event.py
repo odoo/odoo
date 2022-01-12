@@ -636,7 +636,7 @@ class Meeting(models.Model):
         attendee_commands += [[2, attendee.id] for attendee in attendees_to_unlink]  # Removes and delete
 
         attendee_commands += [
-            [0, 0, dict(partner_id=partner_id)]
+            [0, 0, {'partner_id': partner_id}]
             for partner_id in added_partner_ids
         ]
         return attendee_commands
@@ -665,15 +665,15 @@ class Meeting(models.Model):
         template_id = self.env['ir.model.data']._xmlid_to_res_id('calendar.calendar_template_meeting_update', raise_if_not_found=False)
         # The mail is sent with datetime corresponding to the sending user TZ
         composition_mode = self.env.context.get('composition_mode', 'comment')
-        compose_ctx = dict(
-            default_composition_mode=composition_mode,
-            default_model='calendar.event',
-            default_res_ids=self.ids,
-            default_use_template=bool(template_id),
-            default_template_id=template_id,
-            default_partner_ids=self.partner_ids.ids,
-            mail_tz=self.env.user.tz,
-        )
+        compose_ctx = {
+            'default_composition_mode': composition_mode,
+            'default_model': 'calendar.event',
+            'default_res_ids': self.ids,
+            'default_use_template': bool(template_id),
+            'default_template_id': template_id,
+            'default_partner_ids': self.partner_ids.ids,
+            'mail_tz': self.env.user.tz
+        }
         return {
             'type': 'ir.actions.act_window',
             'name': _('Contact Attendees'),

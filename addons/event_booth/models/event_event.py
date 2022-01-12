@@ -57,8 +57,8 @@ class Event(models.Model):
             [('event_id', 'in', self.ids)],
             ['event_id', 'state'], ['event_id', 'state'], lazy=False
         )
-        elements_total_count = dict()
-        elements_available_count = dict()
+        elements_total_count = {}
+        elements_available_count = {}
         for element in elements:
             event_id = element['event_id'][0]
             if element['state'] == 'available':

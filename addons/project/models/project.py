@@ -1643,7 +1643,7 @@ class Task(models.Model):
         is_portal_user = self.env.user.has_group('base.group_portal')
         if is_portal_user:
             self.check_access_rights('create')
-        default_stage = dict()
+        default_stage = {}
         for vals in vals_list:
             if is_portal_user:
                 self._ensure_fields_are_accessible(vals.keys(), operation='write', check_group_user=False)
@@ -1902,7 +1902,7 @@ class Task(models.Model):
                 subtype = self.env['ir.model.data']._xmlid_to_res_id('project.mt_task_dependency_change')
                 # We want to include the original subtype message coming from the child task
                 # for example when the stage changes the message in the chatter starts with 'Stage Changed'
-                child_subtype = self._track_subtype(dict((col_name, initial_values[col_name]) for col_name in changes))
+                child_subtype = self._track_subtype({col_name: initial_values[col_name] for col_name in changes})
                 child_subtype_info = child_subtype.description or child_subtype.name if child_subtype else False
                 # NOTE: the subtype does not have a description on purpose, otherwise the description would be put
                 #  at the end of the message instead of at the top, we use the name here

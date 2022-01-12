@@ -58,7 +58,7 @@ def _deduplicate_loggers(loggers):
     # there are no duplicates within the output sequence
     return (
         '{}:{}'.format(logger, level)
-        for logger, level in dict(it.split(':') for it in loggers).items()
+        for logger, level in dict(it.split(':') for it in loggers).items()  # nosemgrep
     )
 
 class configmanager(object):
@@ -91,10 +91,10 @@ class configmanager(object):
         self.misc = {}
         self.config_file = fname
 
-        self._LOGLEVELS = dict([
-            (getattr(loglevels, 'LOG_%s' % x), getattr(logging, x))
+        self._LOGLEVELS = {
+            getattr(loglevels, 'LOG_%s' % x): getattr(logging, x)
             for x in ('CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG', 'NOTSET')
-        ])
+        }
 
         version = "%s %s" % (release.description, release.version)
         self.parser = parser = optparse.OptionParser(version=version, option_class=MyOption)

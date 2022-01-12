@@ -290,7 +290,7 @@ class StockWarehouseOrderpoint(models.Model):
 
     def _get_lead_days_values(self):
         self.ensure_one()
-        return dict()
+        return {}
 
     def _get_product_context(self):
         """Used to call `virtual_available` when running an orderpoint."""

@@ -111,7 +111,7 @@ class PurchaseOrder(models.Model):
                 res = False
                 if new_lines:
                     # Add new PO lines
-                    self.update(dict(order_line=new_lines))
+                    self.update({'order_line': new_lines})
 
                 # Recompute prices for new/modified lines:
                 for line in self.order_line.filtered(lambda line: line.product_id.id in product_ids):

@@ -297,7 +297,7 @@ class Slide(models.Model):
             ['slide_id'],
             groupby=['slide_id']
         )
-        mapped_data = dict((res['slide_id'][0], res['slide_id_count']) for res in read_group_res)
+        mapped_data = {res['slide_id'][0]: res['slide_id_count'] for res in read_group_res}
         for slide in self:
             slide.slide_views = mapped_data.get(slide.id, 0)
 
@@ -324,7 +324,7 @@ class Slide(models.Model):
         # Do not use dict.fromkeys(self.ids, dict()) otherwise it will use the same dictionnary for all keys.
         # Therefore, when updating the dict of one key, it updates the dict of all keys.
         keys = ['nbr_%s' % slide_category for slide_category in self.env['slide.slide']._fields['slide_category'].get_values(self.env)]
-        default_vals = dict((key, 0) for key in keys + ['total_slides'])
+        default_vals = dict.fromkeys(keys + ['total_slides'], 0)
 
         res = self.env['slide.slide'].read_group(
             [('is_published', '=', True), ('category_id', 'in', self.ids), ('is_category', '=', False)],
@@ -340,7 +340,7 @@ class Slide(models.Model):
         """ Compute statistics based on all existing slide categories """
         slide_categories = self.env['slide.slide']._fields['slide_category'].get_values(self.env)
         keys = ['nbr_%s' % slide_category for slide_category in slide_categories]
-        result = dict((cid, dict((key, 0) for key in keys + ['total_slides'])) for cid in self.ids)
+        result = {cid: dict.fromkeys(keys + ['total_slides'], 0) for cid in self.ids}
         for res_group in read_group_res:
             cid = res_group['category_id'][0]
             slide_category = res_group.get('slide_category')
@@ -879,7 +879,7 @@ class Slide(models.Model):
             ('slide_id', 'in', self.ids),
             ('partner_id', '=', target_partner.id)
         ])
-        slide_partners_map = dict((sp.slide_id.id, sp) for sp in slide_partners)
+        slide_partners_map = {sp.slide_id.id: sp for sp in slide_partners}
         for slide in self:
             if not slide.question_ids:
                 gains = [0]

@@ -153,7 +153,7 @@ class EventLeadRule(models.Model):
 
         # second: check registrations matching rules (in batch)
         new_registrations = self.env['event.registration']
-        rule_to_new_regs = dict()
+        rule_to_new_regs = {}
         for rule in self:
             new_for_rule = registrations.filtered(lambda reg: reg not in rule_to_existing_regs[rule])
             rule_registrations = rule._filter_registrations(new_for_rule)

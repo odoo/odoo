@@ -35,11 +35,11 @@ class ProductWishlist(models.Model):
             product = wishlist.with_context(website_id=wishlist.website_id.id).product_id
             if not product._is_sold_out():
                 body_html = tmpl._render({"wishlist": wishlist})
-                msg = self.env["mail.message"].sudo().new(dict(body=body_html, record_name=product.name))
+                msg = self.env["mail.message"].sudo().new({'body': body_html, 'record_name': product.name})
                 full_mail = self.env["mail.render.mixin"]._render_encapsulate(
                     "mail.mail_notification_light",
                     body_html,
-                    add_context=dict(message=msg, model_description=_("Wishlist")),
+                    add_context={'message': msg, 'model_description': _("Wishlist")},
                 )
                 mail_values = {
                     "subject": _("The product '%(product_name)s' is now available") % {'product_name': product.name},

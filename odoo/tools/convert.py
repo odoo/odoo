@@ -315,7 +315,7 @@ form: module.record_id""" % (xml_id,)
             res['paperformat_id'] = pf_id
 
         xid = self.make_xml_id(xml_id)
-        data = dict(xml_id=xid, values=res, noupdate=self.noupdate)
+        data = {'xml_id': xid, 'values': res, 'noupdate': self.noupdate}
         report = self.env['ir.actions.report']._load_records([data], self.mode == 'update')
         self.idref[xml_id] = report.id
 
@@ -423,7 +423,7 @@ form: module.record_id""" % (xml_id,)
             if views is not None:
                 res['binding_view_types'] = views
         xid = self.make_xml_id(xml_id)
-        data = dict(xml_id=xid, values=res, noupdate=self.noupdate)
+        data = {'xml_id': xid, 'values': res, 'noupdate': self.noupdate}
         self.env['ir.actions.act_window']._load_records([data], self.mode == 'update')
 
     def _tag_menuitem(self, rec, parent=None):
@@ -587,7 +587,7 @@ form: module.record_id""" % (xml_id,)
         if extra_vals:
             res.update(extra_vals)
 
-        data = dict(xml_id=xid, values=res, noupdate=self.noupdate)
+        data = {'xml_id': xid, 'values': res, 'noupdate': self.noupdate}
         record = model._load_records([data], self.mode == 'update')
         if rec_id:
             self.idref[rec_id] = record.id

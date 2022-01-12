@@ -104,9 +104,9 @@ class CRMLeadMiningRequest(models.Model):
                 ['lead_mining_request_id'], ['lead_mining_request_id'])
         else:
             leads_data = []
-        mapped_data = dict(
-            (m['lead_mining_request_id'][0], m['lead_mining_request_id_count'])
-            for m in leads_data)
+        mapped_data = {
+            m['lead_mining_request_id'][0]: m['lead_mining_request_id_count']
+            for m in leads_data}
         for request in self:
             request.lead_count = mapped_data.get(request.id, 0)
 

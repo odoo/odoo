@@ -44,7 +44,7 @@ class PosConfig(models.Model):
         domain = [('state', '=', 'draft'), ('table_id', 'in', tables.ids)]
 
         order_stats = self.env['pos.order'].read_group(domain, ['table_id'], 'table_id')
-        orders_map = dict((s['table_id'][0], s['table_id_count']) for s in order_stats)
+        orders_map = {s['table_id'][0]: s['table_id_count'] for s in order_stats}
 
         result = []
         for table in tables:

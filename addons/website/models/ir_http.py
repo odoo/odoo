@@ -91,7 +91,7 @@ class Http(models.AbstractModel):
         logger.debug("_generate_routing_rules for website: %s", website_id)
         domain = [('redirect_type', 'in', ('308', '404')), '|', ('website_id', '=', False), ('website_id', '=', website_id)]
 
-        rewrites = dict([(x.url_from, x) for x in request.env['website.rewrite'].sudo().search(domain)])
+        rewrites = {x.url_from: x for x in request.env['website.rewrite'].sudo().search(domain)}
         cls._rewrite_len[website_id] = len(rewrites)
 
         for url, endpoint, routing in super(Http, cls)._generate_routing_rules(modules, converters):

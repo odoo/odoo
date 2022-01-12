@@ -23,7 +23,7 @@ class CrmTeam(models.Model):
             ('session_id.state', '=', 'opened'),
             ('config_id.crm_team_id', 'in', self.ids),
         ], ['price_total:sum', 'config_id'], ['config_id'])
-        rg_results = dict((d['config_id'][0], d['price_total']) for d in data)
+        rg_results = {d['config_id'][0]: d['price_total'] for d in data}
         for team in self:
             team.pos_order_amount_total = sum([
                 rg_results.get(config.id, 0.0)

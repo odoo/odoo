@@ -159,7 +159,7 @@ class Website(Home):
     @http.route(['/website/country_infos/<model("res.country"):country>'], type='json', auth="public", methods=['POST'], website=True)
     def country_infos(self, country, **kw):
         fields = country.get_address_fields()
-        return dict(fields=fields, states=[(st.id, st.name, st.code) for st in country.state_ids], phone_code=country.phone_code)
+        return {'fields': fields, 'states': [(st.id, st.name, st.code) for st in country.state_ids], 'phone_code': country.phone_code}
 
     @http.route(['/robots.txt'], type='http', auth="public", website=True, sitemap=False)
     def robots(self, **kwargs):
@@ -300,8 +300,8 @@ class Website(Home):
         return {
             'matching_pages': sorted(matching_pages, key=lambda o: o['label']),
             'others': [
-                dict(title=_('Last modified pages'), values=matching_last_modified),
-                dict(title=_('Apps url'), values=suggested_controllers),
+                {'title': _('Last modified pages'), 'values': matching_last_modified},
+                {'title': _('Apps url'), 'values': suggested_controllers},
             ]
         }
 
@@ -586,7 +586,7 @@ class Website(Home):
             if request.env.ref(default_templ, False):
                 template = default_templ
 
-        template = template and dict(template=template) or {}
+        template = {'template': template} if template else {}
         page = request.env['website'].new_page(path, add_menu=add_menu, **template)
         url = page['url']
         if noredirect:

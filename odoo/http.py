@@ -943,7 +943,7 @@ def _generate_routing_rules(modules, nodb_only, converters=None):
             members = inspect.getmembers(o, inspect.ismethod)
             for _, mv in members:
                 if hasattr(mv, 'routing'):
-                    routing = dict(type='http', auth='user', methods=None, routes=None)
+                    routing = {'type': 'http', 'auth': 'user', 'methods': None, 'routes': None}
                     methods_done = list()
                     # update routing attributes from subclasses(auth, methods...)
                     for claz in reversed(mv.__self__.__class__.mro()):
@@ -997,12 +997,12 @@ class OpenERPSession(sessions.Session):
         """
 
         wsgienv = request.httprequest.environ
-        env = dict(
-            interactive=True,
-            base_location=request.httprequest.url_root.rstrip('/'),
-            HTTP_HOST=wsgienv['HTTP_HOST'],
-            REMOTE_ADDR=wsgienv['REMOTE_ADDR'],
-        )
+        env = {
+            'interactive': True,
+            'base_location': request.httprequest.url_root.rstrip('/'),
+            'HTTP_HOST': wsgienv['HTTP_HOST'],
+            'REMOTE_ADDR': wsgienv['REMOTE_ADDR']
+        }
         uid = odoo.registry(db)['res.users'].authenticate(db, login, password, env)
         self.pre_uid = uid
 
@@ -1221,7 +1221,7 @@ class Response(werkzeug.wrappers.Response):
 
     def set_default(self, template=None, qcontext=None, uid=None):
         self.template = template
-        self.qcontext = qcontext or dict()
+        self.qcontext = qcontext or {}
         self.qcontext['response_template'] = self.template
         self.uid = uid
         # Support for Cross-Origin Resource Sharing
@@ -1556,7 +1556,7 @@ def db_filter(dbs, httprequest=None):
     elif odoo.tools.config['db_name']:
         # In case --db-filter is not provided and --database is passed, Odoo will
         # use the value of --database as a comma separated list of exposed databases.
-        exposed_dbs = set(db.strip() for db in odoo.tools.config['db_name'].split(','))
+        exposed_dbs = {db.strip() for db in odoo.tools.config['db_name'].split(',')}
         dbs = sorted(exposed_dbs.intersection(dbs))
     return dbs
 

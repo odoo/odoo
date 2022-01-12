@@ -52,7 +52,7 @@ class RatingParentMixin(models.AbstractModel):
 
         # get repartition of grades per parent id
         default_grades = {'great': 0, 'okay': 0, 'bad': 0}
-        grades_per_parent = dict((parent_id, dict(default_grades)) for parent_id in self.ids)  # map: {parent_id: {'great': 0, 'bad': 0, 'ok': 0}}
+        grades_per_parent = {parent_id: dict(default_grades) for parent_id in self.ids}
         rating_scores_per_parent = defaultdict(int)  # contains the total of the rating values per record
         for item in data:
             parent_id = item['parent_res_id']

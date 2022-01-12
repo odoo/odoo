@@ -1428,7 +1428,7 @@ class StockMove(models.Model):
                 grouped_move_lines_out[k] = sum(self.env['stock.move.line'].concat(*g).mapped('reserved_qty'))
             available_move_lines = {key: grouped_move_lines_in[key] - grouped_move_lines_out.get(key, 0) for key in grouped_move_lines_in}
             # pop key if the quantity available amount to 0
-            return dict((k, v) for k, v in available_move_lines.items() if v)
+            return {k: v for k, v in available_move_lines.items() if v}
 
         StockMove = self.env['stock.move']
         assigned_moves_ids = OrderedSet()

@@ -64,7 +64,7 @@ class Graph(dict):
             elif module != 'studio_customization':
                 _logger.warning('module %s: not installable, skipped', module)
 
-        dependencies = dict([(p, info['depends']) for p, info in packages])
+        dependencies = {p: info['depends'] for p, info in packages}
         current, later = {p for p, info in packages}, set()
 
         while packages and current > later:

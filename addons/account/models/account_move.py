@@ -3151,22 +3151,22 @@ class AccountMove(models.Model):
         if not lang:
             lang = get_lang(self.env).code
         compose_form = self.env.ref('account.account_invoice_send_wizard_form', raise_if_not_found=False)
-        ctx = dict(
-            default_model='account.move',
-            default_res_id=self.id,
+        ctx = {
+            'default_model': 'account.move',
+            'default_res_id': self.id,
             # For the sake of consistency we need a default_res_model if
             # default_res_id is set. Not renaming default_model as it can
             # create many side-effects.
-            default_res_model='account.move',
-            default_use_template=bool(template),
-            default_template_id=template and template.id or False,
-            default_composition_mode='comment',
-            mark_invoice_as_sent=True,
-            default_email_layout_xmlid="mail.mail_notification_paynow",
-            model_description=self.with_context(lang=lang).type_name,
-            force_email=True,
-            wizard_opened=True
-        )
+            'default_res_model': 'account.move',
+            'default_use_template': bool(template),
+            'default_template_id': template and template.id or False,
+            'default_composition_mode': 'comment',
+            'mark_invoice_as_sent': True,
+            'default_email_layout_xmlid': "mail.mail_notification_paynow",
+            'model_description': self.with_context(lang=lang).type_name,
+            'force_email': True,
+            'wizard_opened': True
+        }
         return {
             'name': _('Send Invoice'),
             'type': 'ir.actions.act_window',

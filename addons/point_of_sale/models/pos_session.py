@@ -129,7 +129,7 @@ class PosSession(models.Model):
     @api.depends('order_ids.payment_ids.amount')
     def _compute_total_payments_amount(self):
         result = self.env['pos.payment'].read_group([('session_id', 'in', self.ids)], ['amount'], ['session_id'])
-        session_amount_map = dict((data['session_id'][0], data['amount']) for data in result)
+        session_amount_map = {data['session_id'][0]: data['amount'] for data in result}
         for session in self:
             session.total_payments_amount = session_amount_map.get(session.id) or 0
 

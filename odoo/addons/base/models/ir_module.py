@@ -770,7 +770,7 @@ class Module(models.Model):
                 if not mod_path or not terp:
                     continue
                 state = "uninstalled" if terp.get('installable', True) else "uninstallable"
-                mod = self.create(dict(name=mod_name, state=state, **values))
+                mod = self.create({'name': mod_name, 'state': state, **values})
                 res[1] += 1
 
             mod._update_dependencies(terp.get('depends', []), terp.get('auto_install'))
@@ -884,7 +884,7 @@ class Module(models.Model):
         return tools.config.get('apps_server', 'https://apps.odoo.com/apps')
 
     def _update_dependencies(self, depends=None, auto_install_requirements=()):
-        existing = set(dep.name for dep in self.dependencies_id)
+        existing = {dep.name for dep in self.dependencies_id}
         needed = set(depends or [])
         for dep in (needed - existing):
             self._cr.execute('INSERT INTO ir_module_module_dependency (module_id, name) values (%s, %s)', (self.id, dep))
@@ -895,7 +895,7 @@ class Module(models.Model):
         self.invalidate_cache(['dependencies_id'], self.ids)
 
     def _update_exclusions(self, excludes=None):
-        existing = set(excl.name for excl in self.exclusion_ids)
+        existing = {excl.name for excl in self.exclusion_ids}
         needed = set(excludes or [])
         for name in (needed - existing):
             self._cr.execute('INSERT INTO ir_module_module_exclusion (module_id, name) VALUES (%s, %s)', (self.id, name))
@@ -1030,11 +1030,11 @@ class ModuleDependency(models.Model):
     @api.depends('name')
     def _compute_depend(self):
         # retrieve all modules corresponding to the dependency names
-        names = list(set(dep.name for dep in self))
+        names = list({dep.name for dep in self})
         mods = self.env['ir.module.module'].search([('name', 'in', names)])
 
         # index modules by name, and assign dependencies
-        name_mod = dict((mod.name, mod) for mod in mods)
+        name_mod = {mod.name: mod for mod in mods}
         for dep in self:
             dep.depend_id = name_mod.get(dep.name)
 
@@ -1067,7 +1067,7 @@ class ModuleExclusion(models.Model):
     @api.depends('name')
     def _compute_exclusion(self):
         # retrieve all modules corresponding to the exclusion names
-        names = list(set(excl.name for excl in self))
+        names = list({excl.name for excl in self})
         mods = self.env['ir.module.module'].search([('name', 'in', names)])
 
         # index modules by name, and assign dependencies

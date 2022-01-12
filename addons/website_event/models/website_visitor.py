@@ -29,11 +29,12 @@ class WebsiteVisitor(models.Model):
             read_group_res = self.env['event.registration'].read_group(
                 [('visitor_id', 'in', self.ids)],
                 ['visitor_id'], ['visitor_id'])
-            visitor_mapping = dict(
-                (item['visitor_id'][0], item['visitor_id_count'])
-                for item in read_group_res)
+            visitor_mapping = {
+                item['visitor_id'][0]: item['visitor_id_count']
+                for item in read_group_res
+            }
         else:
-            visitor_mapping = dict()
+            visitor_mapping = {}
         for visitor in self:
             visitor.event_registration_count = visitor_mapping.get(visitor.id) or 0
 

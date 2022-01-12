@@ -380,7 +380,7 @@ class Web_Editor(http.Controller):
         excluded_url_matcher = re.compile("^(.+/lib/.+)|(.+import_bootstrap.+\.scss)$")
 
         # First check the t-call-assets used in the related views
-        url_infos = dict()
+        url_infos = {}
         for v in views:
             for asset_call_node in etree.fromstring(v["arch"]).xpath("//t[@t-call-assets]"):
                 attr = asset_call_node.get(resources_type_info['t_call_assets_attribute'])

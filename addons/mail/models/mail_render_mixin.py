@@ -475,11 +475,7 @@ class MailRenderMixin(models.AbstractModel):
         if not isinstance(res_ids, (list, tuple)):
             raise ValueError(_('Template rendering for language should be called with a list of IDs.'))
 
-        rendered_langs = self._render_template(self.lang, self.render_model, res_ids, engine=engine)
-        return dict(
-            (res_id, lang)
-            for res_id, lang in rendered_langs.items()
-        )
+        return self._render_template(self.lang, self.render_model, res_ids, engine=engine)
 
     def _classify_per_lang(self, res_ids, engine='inline_template'):
         """ Given some record ids, return for computed each lang a contextualized
@@ -501,10 +497,10 @@ class MailRenderMixin(models.AbstractModel):
             for res_id, lang in self._render_lang(res_ids, engine=engine).items():
                 lang_to_res_ids.setdefault(lang, []).append(res_id)
 
-        return dict(
-            (lang, (self.with_context(lang=lang) if lang else self, lang_res_ids))
+        return {
+            lang: (self.with_context(lang=lang) if lang else self, lang_res_ids)
             for lang, lang_res_ids in lang_to_res_ids.items()
-        )
+        }
 
     def _render_field(self, field, res_ids, engine='inline_template',
                       compute_lang=False, set_lang=False,
@@ -545,14 +541,14 @@ class MailRenderMixin(models.AbstractModel):
 
         # rendering options
         engine = getattr(self._fields[field], 'render_engine', engine)
-        options.update(**getattr(self._fields[field], 'render_options', {}))
+        options.update(getattr(self._fields[field], 'render_options', {}))
         post_process = options.get('post_process') or post_process
 
-        return dict(
-            (res_id, rendered)
-            for lang, (template, tpl_res_ids) in templates_res_ids.items()
+        return {
+            res_id: rendered
+            for template, tpl_res_ids in templates_res_ids.values()
             for res_id, rendered in template._render_template(
                 template[field], template.render_model, tpl_res_ids, engine=engine,
                 add_context=add_context, options=options, post_process=post_process
             ).items()
-        )
+        }

@@ -646,7 +646,7 @@ class AccountChartTemplate(models.Model):
         for template, vals in template_vals:
             module, name = template_xmlids[template.id].split('.', 1)
             xml_id = "%s.%s_%s" % (module, company.id, name)
-            data_list.append(dict(xml_id=xml_id, values=vals, noupdate=True))
+            data_list.append({'xml_id': xml_id, 'values': vals, 'noupdate': True})
         return self.env[model]._load_records(data_list)
 
     @api.model
@@ -666,11 +666,11 @@ class AccountChartTemplate(models.Model):
                 account_xml_id = data['xml_id'] + '_liquidity_transfer'
                 if not self.env.ref(account_xml_id, raise_if_not_found=False):
                     account_vals = record._prepare_transfer_account_template()
-                    account_data_list.append(dict(
-                        xml_id=account_xml_id,
-                        values=account_vals,
-                        noupdate=data.get('noupdate'),
-                    ))
+                    account_data_list.append({
+                        'xml_id': account_xml_id,
+                        'values': account_vals,
+                        'noupdate': data.get('noupdate')
+                    })
         self.env['account.account.template']._load_records(account_data_list, update)
         return records
 

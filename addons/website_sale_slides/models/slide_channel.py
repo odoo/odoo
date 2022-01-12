@@ -32,10 +32,10 @@ class Channel(models.Model):
             ('state', 'in', self.env['sale.report']._get_done_states()),
             ('product_id', 'in', self.product_id.ids),
         ]
-        rg_data = dict(
-            (item['product_id'][0], item['price_total'])
+        rg_data = {
+            item['product_id'][0]: item['price_total']
             for item in self.env['sale.report'].read_group(domain, ['product_id', 'price_total'], ['product_id'])
-        )
+        }
         for channel in self:
             channel.product_sale_revenues = rg_data.get(channel.product_id.id, 0)
 

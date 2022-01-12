@@ -44,7 +44,7 @@ class Department(models.Model):
 
     def _compute_total_employee(self):
         emp_data = self.env['hr.employee'].read_group([('department_id', 'in', self.ids)], ['department_id'], ['department_id'])
-        result = dict((data['department_id'][0], data['department_id_count']) for data in emp_data)
+        result = {data['department_id'][0]: data['department_id_count'] for data in emp_data}
         for department in self:
             department.total_employee = result.get(department.id, 0)
 

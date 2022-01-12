@@ -1103,7 +1103,7 @@ class BaseModel(metaclass=MetaModel):
                 return
 
             data_list = [
-                dict(xml_id=xid, values=vals, info=info, noupdate=noupdate)
+                {'xml_id': xid, 'values': vals, 'info': info, 'noupdate': noupdate}
                 for xid, vals, info in batch
             ]
             batch.clear()
@@ -1255,7 +1255,7 @@ class BaseModel(metaclass=MetaModel):
                 only_o2m_values, itertools.islice(data, index + 1, None))
             # stitch record row back on for relational fields
             record_span = list(itertools.chain([row], record_span))
-            for relfield in set(fnames[0] for fnames in fields_ if is_relational(fnames[0])):
+            for relfield in {fnames[0] for fnames in fields_ if is_relational(fnames[0])}:
                 comodel = self.env[fields[relfield].comodel_name]
 
                 # get only cells for this sub-field, should be strictly
@@ -3406,10 +3406,10 @@ Fields:
             res = self.read(LOG_ACCESS_COLUMNS)
         else:
             res = [{'id': x} for x in self.ids]
-        xml_data = dict((x['res_id'], x) for x in IrModelData.search_read([('model', '=', self._name),
-                                                                           ('res_id', 'in', self.ids)],
-                                                                          ['res_id', 'noupdate', 'module', 'name'],
-                                                                          order='id DESC'))
+        xml_data = {x['res_id']: x for x in IrModelData.search_read(
+            [('model', '=', self._name), ('res_id', 'in', self.ids)],
+            ['res_id', 'noupdate', 'module', 'name'],
+            order='id DESC')}
         for r in res:
             value = xml_data.get(r['id'], {})
             r['xmlid'] = '%(module)s.%(name)s' % value if value else False
@@ -4794,7 +4794,7 @@ Fields:
 
         # build a black list of fields that should not be copied
         blacklist = set(MAGIC_COLUMNS + ['parent_path'])
-        whitelist = set(name for name, field in self._fields.items() if not field.inherited)
+        whitelist = {name for name, field in self._fields.items() if not field.inherited}
 
         def blacklist_given_fields(model):
             # blacklist the fields that are given by inheritance
@@ -6343,7 +6343,7 @@ Fields:
                 return (
                     len(self[name]) != len(record[name])
                     or (
-                        set(line_snapshot["<record>"].id for line_snapshot in self[name])
+                        {line_snapshot["<record>"].id for line_snapshot in self[name]}
                         != set(record[name]._ids)
                     )
                     or any(
@@ -6550,12 +6550,12 @@ Fields:
             title, message, type = warnings.pop()
             if not type:
                 type = 'dialog'
-            result['warning'] = dict(title=title, message=message, type=type)
+            result['warning'] = {'title': title, 'message': message, 'type': type}
         elif len(warnings) > 1:
             # concatenate warning titles and messages
             title = _("Warnings")
             message = '\n\n'.join([warn_title + '\n\n' + warn_message for warn_title, warn_message, warn_type in warnings])
-            result['warning'] = dict(title=title, message=message, type='dialog')
+            result['warning'] = {'title': title, 'message': message, 'type': 'dialog'}
 
         return result
 
@@ -6842,7 +6842,7 @@ def convert_pgerror_unique(model, fields, info, e):
     }
 
 def convert_pgerror_constraint(model, fields, info, e):
-    sql_constraints = dict([(('%s_%s') % (e.diag.table_name, x[0]), x) for x in model._sql_constraints])
+    sql_constraints = {('%s_%s') % (e.diag.table_name, x[0]): x for x in model._sql_constraints}
     if e.diag.constraint_name in sql_constraints.keys():
         return {'message': "'%s'" % sql_constraints[e.diag.constraint_name][2]}
     return {'message': tools.ustr(e)}

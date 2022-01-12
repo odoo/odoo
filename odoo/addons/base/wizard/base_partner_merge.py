@@ -251,7 +251,7 @@ class MergePartnerAutomatic(models.TransientModel):
             else:
                 return item
         # get all fields that are not computed or x2many
-        values = dict()
+        values = {}
         for column in model_fields:
             field = dst_partner._fields[column]
             if field.type not in ('many2many', 'one2many') and field.compute is None:
@@ -297,7 +297,7 @@ class MergePartnerAutomatic(models.TransientModel):
         if partner_ids & child_ids:
             raise UserError(_("You cannot merge a contact with one of his parent."))
 
-        if extra_checks and len(set(partner.email for partner in partner_ids)) > 1:
+        if extra_checks and len({partner.email for partner in partner_ids}) > 1:
             raise UserError(_("All contacts must have the same email. Only the Administrator can merge contacts with different emails."))
 
         # remove dst_partner from partners to merge

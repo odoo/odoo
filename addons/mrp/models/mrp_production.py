@@ -506,7 +506,7 @@ class MrpProduction(models.Model):
 
     def _compute_scrap_move_count(self):
         data = self.env['stock.scrap'].read_group([('production_id', 'in', self.ids)], ['production_id'], ['production_id'])
-        count_data = dict((item['production_id'][0], item['production_id_count']) for item in data)
+        count_data = {item['production_id'][0]: item['production_id_count'] for item in data}
         for production in self:
             production.scrap_count = count_data.get(production.id, 0)
 

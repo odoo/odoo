@@ -15,7 +15,7 @@ class Project(models.Model):
             ('account_analytic_id', '!=', False),
             ('account_analytic_id', 'in', self.analytic_account_id.ids)
         ], ['account_analytic_id', 'order_id:count_distinct'], ['account_analytic_id'])
-        mapped_data = dict([(data['account_analytic_id'][0], data['order_id']) for data in purchase_orders_data])
+        mapped_data = {data['account_analytic_id'][0]: data['order_id'] for data in purchase_orders_data}
         for project in self:
             project.purchase_orders_count = mapped_data.get(project.analytic_account_id.id, 0)
 

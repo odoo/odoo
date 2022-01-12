@@ -359,7 +359,7 @@ class Mailing(models.Model):
 
     def _get_default_ab_testing_campaign_values(self, values=None):
         campaign_values = super()._get_default_ab_testing_campaign_values(values)
-        values = values or dict()
+        values = values or {}
         if self.mailing_type == 'sms':
             sms_subject = values.get('sms_subject') or self.sms_subject
             if sms_subject:

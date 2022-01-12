@@ -268,7 +268,7 @@ class Team(models.Model):
         # on singleton record set, do not bother doing a specific message per team)
         log_action = _("Lead Assignment requested by %(user_name)s", user_name=self.env.user.name)
         log_message = "<p>%s<br /><br />%s</p>" % (log_action, html_message)
-        self._message_log_batch(bodies=dict((team.id, log_message) for team in self))
+        self._message_log_batch(bodies={team.id: log_message for team in self})
 
         return {
             'type': 'ir.actions.client',
@@ -449,10 +449,10 @@ class Team(models.Model):
 
         # leads
         max_create_dt = fields.Datetime.now() - datetime.timedelta(hours=BUNDLE_HOURS_DELAY)
-        duplicates_lead_cache = dict()
+        duplicates_lead_cache = {}
 
         # teams data
-        teams_data, population, weights = dict(), list(), list()
+        teams_data, population, weights = {}, [], []
         for team in self:
             if not team.assignment_max:
                 continue
@@ -488,7 +488,7 @@ class Team(models.Model):
             self._cr.commit()
 
         # assignment process data
-        global_data = dict(assigned=set(), merged=set(), duplicates=set())
+        global_data = {'assigned': set(), 'merged': set(), 'duplicates': set()}
         leads_done_ids, lead_unlink_ids, counter = set(), set(), 0
         while population:
             counter += 1
@@ -547,12 +547,12 @@ class Team(models.Model):
           and fetch information in it instead;
         """
         self.ensure_one()
-        duplicates_cache = duplicates_cache if duplicates_cache is not None else dict()
+        duplicates_cache = duplicates_cache if duplicates_cache is not None else {}
 
         # classify leads
         leads_assigned = self.env['crm.lead']  # direct team assign
         leads_done_ids, leads_merged_ids, leads_dup_ids = set(), set(), set()  # classification
-        leads_dups_dict = dict()  # lead -> its duplicate
+        leads_dups_dict = {}  # lead -> its duplicate
         for lead in leads:
             if lead.id not in leads_done_ids:
 

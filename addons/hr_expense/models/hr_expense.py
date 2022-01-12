@@ -193,7 +193,7 @@ class HrExpense(models.Model):
 
     def _compute_attachment_number(self):
         attachment_data = self.env['ir.attachment'].read_group([('res_model', '=', 'hr.expense'), ('res_id', 'in', self.ids)], ['res_id'], ['res_id'])
-        attachment = dict((data['res_id'], data['res_id_count']) for data in attachment_data)
+        attachment = {data['res_id']: data['res_id_count'] for data in attachment_data}
         for expense in self:
             expense.attachment_number = attachment.get(expense._origin.id, 0)
 

@@ -91,7 +91,7 @@ class SlideChannelInvite(models.TransientModel):
             else:
                 # could be great to use _notify_prepare_template_context someday
                 template_ctx = {
-                    'message': self.env['mail.message'].sudo().new(dict(body=mail_values['body_html'], record_name=self.channel_id.name)),
+                    'message': self.env['mail.message'].sudo().new({'body': mail_values['body_html'], 'record_name': self.channel_id.name}),
                     'model_description': self.env['ir.model']._get('slide.channel').display_name,
                     'record': slide_channel_partner,
                     'company': self.env.company,

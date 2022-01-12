@@ -315,19 +315,20 @@ class Website(models.Model):
 
     @api.model
     def configurator_init(self):
-        r = dict()
         company = self.get_current_website().company_id
         configurator_features = self.env['website.configurator.feature'].search([])
-        r['features'] = [{
-            'id': feature.id,
-            'name': feature.name,
-            'description': feature.description,
-            'type': 'page' if feature.page_view_id else 'app',
-            'icon': feature.icon,
-            'website_config_preselection': feature.website_config_preselection,
-            'module_state': feature.module_id.state,
-        } for feature in configurator_features]
-        r['logo'] = False
+        r = {
+            'logo': False,
+            'features': [{
+                'id': feature.id,
+                'name': feature.name,
+                'description': feature.description,
+                'type': 'page' if feature.page_view_id else 'app',
+                'icon': feature.icon,
+                'website_config_preselection': feature.website_config_preselection,
+                'module_state': feature.module_id.state,
+            } for feature in configurator_features]
+        }
         if company.logo and company.logo != company._get_logo():
             r['logo'] = company.logo.decode('utf-8')
         try:
@@ -399,7 +400,7 @@ class Website(models.Model):
                     result = self.env['website'].new_page(
                         name=feature.name,
                         add_menu=add_menu,
-                        page_values=dict(url=feature.feature_url, is_published=True),
+                        page_values={'url': feature.feature_url, 'is_published': True},
                         menu_values=add_menu and {
                             'url': feature.feature_url,
                             'sequence': feature.menu_sequence,

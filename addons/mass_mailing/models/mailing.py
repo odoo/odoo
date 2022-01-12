@@ -227,7 +227,7 @@ class MassMailing(models.Model):
             GROUP BY stats.mass_mailing_id
         """, [tuple(self.ids) or (None,)])
         mass_mailing_data = self.env.cr.dictfetchall()
-        mapped_data = dict([(m['id'], 100 * m['nb_clicks'] / m['nb_mails']) for m in mass_mailing_data])
+        mapped_data = {m['id']: 100 * m['nb_clicks'] / m['nb_mails'] for m in mass_mailing_data}
         for mass_mailing in self:
             mass_mailing.clicks_ratio = mapped_data.get(mass_mailing.id, 0)
 
@@ -733,7 +733,7 @@ class MassMailing(models.Model):
         }
 
     def _get_default_ab_testing_campaign_values(self, values=None):
-        values = values or dict()
+        values = values or {}
         return {
             'ab_testing_schedule_datetime': values.get('ab_testing_schedule_datetime') or self.ab_testing_schedule_datetime,
             'ab_testing_winner_selection': values.get('ab_testing_winner_selection') or self.ab_testing_winner_selection,

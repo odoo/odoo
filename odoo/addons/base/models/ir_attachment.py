@@ -187,7 +187,7 @@ class IrAttachment(models.Model):
         for names in cr.split_for_in_conditions(checklist):
             # determine which files to keep among the checklist
             cr.execute("SELECT store_fname FROM ir_attachment WHERE store_fname IN %s", [names])
-            whitelist = set(row[0] for row in cr.fetchall())
+            whitelist = {row[0] for row in cr.fetchall()}
 
             # remove garbage files, and clean up checklist
             for fname in names:
@@ -481,7 +481,7 @@ class IrAttachment(models.Model):
         if not any(item[0] in ('id', 'res_field') for item in domain):
             domain.insert(0, ('res_field', '=', False))
         allowed_fields = self._read_group_allowed_fields()
-        fields_set = set(field.split(':')[0] for field in fields + groupby)
+        fields_set = {field.split(':')[0] for field in fields + groupby}
         if not self.env.is_system() and (not fields or fields_set.difference(allowed_fields)):
             raise AccessError(_("Sorry, you are not allowed to access these fields on attachments."))
         return super().read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
@@ -588,7 +588,7 @@ class IrAttachment(models.Model):
         # database allowed it. Helps avoid errors when concurrent transactions
         # are deleting the same file, and some of the transactions are
         # rolled back by PostgreSQL (due to concurrent updates detection).
-        to_delete = set(attach.store_fname for attach in self if attach.store_fname)
+        to_delete = {attach.store_fname for attach in self if attach.store_fname}
         res = super(IrAttachment, self).unlink()
         for file_path in to_delete:
             self._file_delete(file_path)

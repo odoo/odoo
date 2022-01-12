@@ -114,7 +114,7 @@ class SaleOrder(models.Model):
                     ))
             if new_lines:
                 # Add new SO lines
-                self.update(dict(order_line=new_lines))
+                self.update({'order_line': new_lines})
 
     def _get_matrix(self, product_template):
         """Return the matrix of the given product, updated with current SOLines quantities.

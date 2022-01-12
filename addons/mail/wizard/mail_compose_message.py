@@ -84,7 +84,7 @@ class MailComposer(models.TransientModel):
         if 'create_uid' in fields and 'create_uid' not in result:
             result['create_uid'] = self.env.uid
 
-        filtered_result = dict((fname, result[fname]) for fname in result if fname in fields)
+        filtered_result = {fname: val for fname, val in result.items() if fname in fields}
         return filtered_result
 
     # content
@@ -307,14 +307,15 @@ class MailComposer(models.TransientModel):
                     if wizard.composition_mode == 'mass_mail':
                         batch_mails_sudo |= self.env['mail.mail'].sudo().create(mail_values)
                     else:
-                        post_params = dict(
-                            message_type=wizard.message_type,
-                            subtype_id=subtype_id,
-                            email_layout_xmlid=wizard.email_layout_xmlid,
-                            add_sign=not bool(wizard.template_id),
-                            mail_auto_delete=wizard.template_id.auto_delete if wizard.template_id else self._context.get('mail_auto_delete', True),
-                            model_description=model_description)
-                        post_params.update(mail_values)
+                        post_params = {
+                            'message_type': wizard.message_type,
+                            'subtype_id': subtype_id,
+                            'email_layout_xmlid': wizard.email_layout_xmlid,
+                            'add_sign': not bool(wizard.template_id),
+                            'mail_auto_delete': wizard.template_id.auto_delete if wizard.template_id else self._context.get('mail_auto_delete', True),
+                            'model_description': model_description,
+                            **mail_values,
+                        }
                         if ActiveModel._name == 'mail.thread':
                             if wizard.model:
                                 post_params['model'] = wizard.model
@@ -543,7 +544,7 @@ class MailComposer(models.TransientModel):
         if template_id and composition_mode == 'mass_mail':
             template = self.env['mail.template'].browse(template_id)
             fields = ['subject', 'body_html', 'email_from', 'reply_to', 'mail_server_id']
-            values = dict((field, getattr(template, field)) for field in fields if getattr(template, field))
+            values = {field: getattr(template, field) for field in fields if getattr(template, field)}
             if template.attachment_ids:
                 values['attachment_ids'] = [att.id for att in template.attachment_ids]
             if template.mail_server_id:
@@ -570,7 +571,7 @@ class MailComposer(models.TransientModel):
                 values['attachment_ids'] = [Command.set(values.get('attachment_ids', []) + attachment_ids)]
         else:
             default_values = self.with_context(default_composition_mode=composition_mode, default_model=model, default_res_id=res_id).default_get(['composition_mode', 'model', 'res_id', 'parent_id', 'partner_ids', 'subject', 'body', 'email_from', 'reply_to', 'attachment_ids', 'mail_server_id'])
-            values = dict((key, default_values[key]) for key in ['subject', 'body', 'partner_ids', 'email_from', 'reply_to', 'attachment_ids', 'mail_server_id'] if key in default_values)
+            values = {key: default_values[key] for key in ['subject', 'body', 'partner_ids', 'email_from', 'reply_to', 'attachment_ids', 'mail_server_id'] if key in default_values}
 
         if values.get('body_html'):
             values['body'] = values.pop('body_html')
@@ -623,7 +624,7 @@ class MailComposer(models.TransientModel):
                 'email_from': emails_from[res_id],
                 'reply_to': replies_to[res_id],
             }
-            results[res_id].update(default_recipients.get(res_id, dict()))
+            results[res_id].update(default_recipients.get(res_id, {}))
 
         # generate template-based values
         if self.template_id:
@@ -642,7 +643,7 @@ class MailComposer(models.TransientModel):
                 # remove attachments from template values as they should not be rendered
                 template_values[res_id].pop('attachment_ids', None)
             else:
-                template_values[res_id] = dict()
+                template_values[res_id] = {}
             # update template values by composer values
             template_values[res_id].update(results[res_id])
 
@@ -662,7 +663,7 @@ class MailComposer(models.TransientModel):
 
         template_values = self.env['mail.template'].with_context(tpl_partners_only=True).browse(template_id).generate_email(res_ids, fields)
         for res_id in res_ids:
-            res_id_values = dict((field, template_values[res_id][field]) for field in returned_fields if template_values[res_id].get(field))
+            res_id_values = {field: template_values[res_id][field] for field in returned_fields if template_values[res_id].get(field)}
             res_id_values['body'] = res_id_values.pop('body_html', '')
             values[res_id] = res_id_values
 

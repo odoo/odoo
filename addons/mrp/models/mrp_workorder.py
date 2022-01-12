@@ -169,11 +169,13 @@ class MrpWorkorder(models.Model):
             [('next_work_order_id', 'in', self.ids)],
             ['ids:array_agg(id)', 'date_planned_start:max', 'date_planned_finished:max'],
             ['next_work_order_id'])
-        previous_wo_dict = dict([(x['next_work_order_id'][0], {
-            'id': x['ids'][0],
-            'date_planned_start': x['date_planned_start'],
-            'date_planned_finished': x['date_planned_finished']})
-            for x in previous_wo_data])
+        previous_wo_dict = {
+            x['next_work_order_id'][0]: {
+                'id': x['ids'][0],
+                'date_planned_start': x['date_planned_start'],
+                'date_planned_finished': x['date_planned_finished']
+            } for x in previous_wo_data
+        }
         if self.ids:
             conflicted_dict = self._get_conflicted_workorder_ids()
         for wo in self:
@@ -367,7 +369,7 @@ class MrpWorkorder(models.Model):
 
     def _compute_scrap_move_count(self):
         data = self.env['stock.scrap'].read_group([('workorder_id', 'in', self.ids)], ['workorder_id'], ['workorder_id'])
-        count_data = dict((item['workorder_id'][0], item['workorder_id_count']) for item in data)
+        count_data = {item['workorder_id'][0]: item['workorder_id_count'] for item in data}
         for workorder in self:
             workorder.scrap_count = count_data.get(workorder.id, 0)
 

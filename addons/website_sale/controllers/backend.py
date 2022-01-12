@@ -25,16 +25,17 @@ class WebsiteSaleBackend(WebsiteBackend):
         datetime_from = datetime.combine(date_date_from, time.min)
         datetime_to = datetime.combine(date_date_to, time.max)
 
-        sales_values = dict(
-            graph=[],
-            best_sellers=[],
-            summary=dict(
-                order_count=0, order_carts_count=0, order_unpaid_count=0,
-                order_to_invoice_count=0, order_carts_abandoned_count=0,
-                payment_to_capture_count=0, total_sold=0,
-                order_per_day_ratio=0, order_sold_ratio=0, order_convertion_pctg=0,
-            )
-        )
+        sales_values = {
+            'graph': [],
+            'best_sellers': [],
+            'summary': {
+                'order_count': 0, 'order_carts_count': 0,
+                'order_unpaid_count': 0, 'order_to_invoice_count': 0,
+                'order_carts_abandoned_count': 0, 'payment_to_capture_count': 0,
+                'total_sold': 0, 'order_per_day_ratio': 0,
+                'order_sold_ratio': 0, 'order_convertion_pctg': 0
+            }
+        }
 
         results['dashboards']['sales'] = sales_values
 

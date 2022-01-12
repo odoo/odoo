@@ -435,7 +435,7 @@ class MailActivityMixin(models.AbstractModel):
         if self.env.context.get('mail_activity_automation_skip'):
             return False
 
-        render_context = render_context or dict()
+        render_context = render_context or {}
         if isinstance(views_or_xmlid, str):
             views = self.env.ref(views_or_xmlid, raise_if_not_found=False)
         else:

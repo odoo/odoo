@@ -25,6 +25,6 @@ class WebsiteMenu(models.Model):
         # update events
         for event, to_update in event_updates.items():
             if to_update:
-                event.write(dict((fname, False) for fname in to_update))
+                event.write(dict.fromkeys(to_update, False))
 
         return res

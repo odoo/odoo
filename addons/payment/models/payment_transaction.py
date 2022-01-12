@@ -236,7 +236,7 @@ class PaymentTransaction(models.Model):
         :return: The dict of acquirer-specific create values
         :rtype: dict
         """
-        return dict()
+        return {}
 
     #=== ACTION METHODS ===#
 
@@ -510,7 +510,7 @@ class PaymentTransaction(models.Model):
         :return: The dict of acquirer-specific processing values
         :rtype: dict
         """
-        return dict()
+        return {}
 
     def _get_specific_rendering_values(self, processing_values):
         """ Return a dict of acquirer-specific values used to render the redirect form.
@@ -523,7 +523,7 @@ class PaymentTransaction(models.Model):
         :return: The dict of acquirer-specific rendering values
         :rtype: dict
         """
-        return dict()
+        return {}
 
     def _send_payment_request(self):
         """ Request the provider of the acquirer handling the transaction to execute the payment.

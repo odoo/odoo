@@ -124,13 +124,13 @@ class BaseModel(models.AbstractModel):
 
         alias_domain = self.env['ir.config_parameter'].sudo().get_param("mail.catchall.domain")
         result = dict.fromkeys(_res_ids, False)
-        result_email = dict()
-        doc_names = doc_names if doc_names else dict()
+        result_email = {}
+        doc_names = doc_names or {}
 
         if alias_domain:
             if model and res_ids:
                 if not doc_names:
-                    doc_names = dict((rec.id, rec.display_name) for rec in _records)
+                    doc_names = {rec.id: rec.display_name for rec in _records}
 
                 mail_aliases = self.env['mail.alias'].sudo().search([
                     ('alias_parent_model_id.model', '=', model),
@@ -145,7 +145,7 @@ class BaseModel(models.AbstractModel):
             if left_ids:
                 catchall = self.env['ir.config_parameter'].sudo().get_param("mail.catchall.alias")
                 if catchall:
-                    result_email.update(dict((rid, '%s@%s' % (catchall, alias_domain)) for rid in left_ids))
+                    result_email.update((rid, '%s@%s' % (catchall, alias_domain)) for rid in left_ids)
 
             # compute name of reply-to - TDE tocheck: quotes and stuff like that
             company_name = company.name if company else self.env.company.name
@@ -155,7 +155,7 @@ class BaseModel(models.AbstractModel):
 
         left_ids = set(_res_ids) - set(result_email)
         if left_ids:
-            result.update(dict((res_id, default) for res_id in left_ids))
+            result.update((res_id, default) for res_id in left_ids)
 
         return result
 

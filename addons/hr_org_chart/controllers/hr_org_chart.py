@@ -32,16 +32,16 @@ class HrOrgChartController(http.Controller):
 
     def _prepare_employee_data(self, employee):
         job = employee.sudo().job_id
-        return dict(
-            id=employee.id,
-            name=employee.name,
-            link='/mail/view?model=%s&res_id=%s' % ('hr.employee.public', employee.id,),
-            job_id=job.id,
-            job_name=job.name or '',
-            job_title=employee.job_title or '',
-            direct_sub_count=len(employee.child_ids),
-            indirect_sub_count=employee.child_all_count,
-        )
+        return {
+            'id': employee.id,
+            'name': employee.name,
+            'link': '/mail/view?model=%s&res_id=%s' % ('hr.employee.public', employee.id,),
+            'job_id': job.id,
+            'job_name': job.name or '',
+            'job_title': employee.job_title or '',
+            'direct_sub_count': len(employee.child_ids),
+            'indirect_sub_count': employee.child_all_count
+        }
 
     @http.route('/hr/get_redirect_model', type='json', auth='user')
     def get_redirect_model(self):
@@ -65,16 +65,16 @@ class HrOrgChartController(http.Controller):
             ancestors += current.parent_id
             current = current.parent_id
 
-        values = dict(
-            self=self._prepare_employee_data(employee),
-            managers=[
+        values = {
+            'self': self._prepare_employee_data(employee),
+            'managers': [
                 self._prepare_employee_data(ancestor)
                 for idx, ancestor in enumerate(ancestors)
                 if idx < self._managers_level
             ],
-            managers_more=len(ancestors) > self._managers_level,
-            children=[self._prepare_employee_data(child) for child in employee.child_ids],
-        )
+            'managers_more': len(ancestors) > self._managers_level,
+            'children': [self._prepare_employee_data(child) for child in employee.child_ids]
+        }
         values['managers'].reverse()
         return values
 

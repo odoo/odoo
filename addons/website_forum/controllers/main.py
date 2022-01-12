@@ -29,10 +29,8 @@ class WebsiteForum(WebsiteProfile):
     def _prepare_user_values(self, **kwargs):
         values = super(WebsiteForum, self)._prepare_user_values(**kwargs)
         values['forum_welcome_message'] = request.httprequest.cookies.get('forum_welcome_message', False)
-        values.update({
-            'header': kwargs.get('header', dict()),
-            'searches': kwargs.get('searches', dict()),
-        })
+        values['header'] = kwargs.get('header', {})
+        values['searches'] = kwargs.get('searches', {})
         if kwargs.get('forum'):
             values['forum'] = kwargs.get('forum')
         elif kwargs.get('forum_id'):
@@ -152,25 +150,25 @@ class WebsiteForum(WebsiteProfile):
                                       url_args=url_args)
 
         values = self._prepare_user_values(forum=forum, searches=post, header={'ask_hide': not forum.active})
-        values.update({
-            'main_object': tag or forum,
-            'edit_in_backend': not tag,
-            'question_ids': question_ids,
-            'question_count': question_count,
-            'search_count': question_count,
-            'pager': pager,
-            'tag': tag,
-            'filters': filters,
-            'my': my,
-            'sorting': sorting,
-            'search': fuzzy_search_term or search,
-            'original_search': fuzzy_search_term and search,
-        })
+        values.update(
+            main_object=tag or forum,
+            edit_in_backend=not tag,
+            question_ids=question_ids,
+            question_count=question_count,
+            search_count=question_count,
+            pager=pager,
+            tag=tag,
+            filters=filters,
+            my=my,
+            sorting=sorting,
+            search=fuzzy_search_term or search,
+            original_search=fuzzy_search_term and search
+        )
         return request.render("website_forum.forum_index", values)
 
     @http.route(['''/forum/<model("forum.forum"):forum>/faq'''], type='http', auth="public", website=True, sitemap=True)
     def forum_faq(self, forum, **post):
-        values = self._prepare_user_values(forum=forum, searches=dict(), header={'is_guidelines': True}, **post)
+        values = self._prepare_user_values(forum=forum, searches={}, header={'is_guidelines': True}, **post)
         return request.render("website_forum.faq", values)
 
     @http.route(['/forum/<model("forum.forum"):forum>/faq/karma'], type='http', auth="public", website=True, sitemap=False)
@@ -378,7 +376,7 @@ class WebsiteForum(WebsiteProfile):
             return {'error': 'anonymous_user'}
 
         # set all answers to False, only one can be accepted
-        (post.parent_id.child_ids - post).write(dict(is_correct=False))
+        (post.parent_id.child_ids - post).write({'is_correct': False})
         post.is_correct = not post.is_correct
         return post.is_correct
 
@@ -392,7 +390,7 @@ class WebsiteForum(WebsiteProfile):
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/edit', type='http', auth="user", website=True)
     def post_edit(self, forum, post, **kwargs):
-        tags = [dict(id=tag.id, name=tag.name) for tag in post.tag_ids]
+        tags = [{'id': tag.id, 'name': tag.name} for tag in post.tag_ids]
         tags = json.dumps(tags)
         values = self._prepare_user_values(forum=forum)
         values.update({

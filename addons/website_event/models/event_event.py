@@ -241,7 +241,7 @@ class Event(models.Model):
           'activated': subset of self having its menu currently set to True
           'deactivated': subset of self having its menu currently set to False
         } """
-        menus_state_by_field = dict()
+        menus_state_by_field = {}
         for fname in self._get_menu_update_fields():
             activated = self.filtered(lambda event: event[fname])
             menus_state_by_field[fname] = {
@@ -264,7 +264,7 @@ class Event(models.Model):
           'activated': subset of self having its menu toggled to True
           'deactivated': subset of self having its menu toggled to False
         } """
-        menus_update_by_field = dict()
+        menus_update_by_field = {}
         for fname in self._get_menu_update_fields():
             if fname in force_update:
                 menus_update_by_field[fname] = self

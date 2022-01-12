@@ -273,10 +273,10 @@ class Channel(models.Model):
 
     def _subscribe_users_automatically_get_members(self):
         """ Return new members per channel ID """
-        return dict(
-            (channel.id, (channel.group_ids.users.partner_id - channel.channel_partner_ids).ids)
+        return {
+            channel.id: (channel.group_ids.users.partner_id - channel.channel_partner_ids).ids
             for channel in self
-        )
+        }
 
     def action_unfollow(self):
         return self._action_unfollow(self.env.user.partner_id)
@@ -731,7 +731,7 @@ class Channel(models.Model):
             return []
         channel_infos = []
         rtc_sessions_by_channel = self.sudo().rtc_session_ids._mail_rtc_session_format_by_channel()
-        channel_last_message_ids = dict((r['id'], r['message_id']) for r in self._channel_last_message_ids())
+        channel_last_message_ids = {r['id']: r['message_id'] for r in self._channel_last_message_ids()}
         all_needed_members_domain = expression.OR([
             [('channel_id.channel_type', '!=', 'channel')],
             [('rtc_inviting_session_id', '!=', False)],
@@ -1130,7 +1130,7 @@ class Channel(models.Model):
         if not self:
             return []
         channels_last_message_ids = self._channel_last_message_ids()
-        channels_preview = dict((r['message_id'], r) for r in channels_last_message_ids)
+        channels_preview = {r['message_id']: r for r in channels_last_message_ids}
         last_messages = self.env['mail.message'].browse(channels_preview).message_format()
         for message in last_messages:
             channel = channels_preview[message['id']]

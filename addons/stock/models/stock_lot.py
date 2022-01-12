@@ -199,7 +199,7 @@ class StockLot(models.Model):
         ]
         move_lines = self.env['stock.move.line'].search(domain)
         if delivery_by_lot is None:
-            delivery_by_lot = dict()
+            delivery_by_lot = {}
         for lot in self:
             delivery_ids = set()
             if lot.id in lot_path:

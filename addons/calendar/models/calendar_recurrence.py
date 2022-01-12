@@ -489,10 +489,10 @@ class RecurrenceRule(models.Model):
     def _get_rrule(self, dtstart=None):
         self.ensure_one()
         freq = self.rrule_type
-        rrule_params = dict(
-            dtstart=dtstart,
-            interval=self.interval,
-        )
+        rrule_params = {
+            'dtstart': dtstart,
+            'interval': self.interval
+        }
         if freq == 'monthly' and self.month_by == 'date':  # e.g. every 15th of the month
             rrule_params['bymonthday'] = self.day
         elif freq == 'monthly' and self.month_by == 'day':  # e.g. every 2nd Monday in the month

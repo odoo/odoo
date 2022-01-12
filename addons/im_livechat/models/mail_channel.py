@@ -52,7 +52,7 @@ class MailChannel(models.Model):
             :rtype : list(dict)
         """
         channel_infos = super().channel_info()
-        channel_infos_dict = dict((c['id'], c) for c in channel_infos)
+        channel_infos_dict = {c['id']: c for c in channel_infos}
         for channel in self:
             # add the last message date
             if channel.channel_type == 'livechat':

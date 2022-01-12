@@ -188,20 +188,20 @@ class IrFieldsConverter(models.AbstractModel):
     def _str_to_boolean(self, model, field, value):
         # all translatables used for booleans
         # potentially broken casefolding? What about locales?
-        trues = set(word.lower() for word in itertools.chain(
+        trues = {word.lower() for word in itertools.chain(
             [u'1', u"true", u"yes"], # don't use potentially translated values
             self._get_translations(['code'], u"true"),
             self._get_translations(['code'], u"yes"),
-        ))
+        )}
         if value.lower() in trues:
             return True, []
 
         # potentially broken casefolding? What about locales?
-        falses = set(word.lower() for word in itertools.chain(
+        falses = {word.lower() for word in itertools.chain(
             [u'', u"0", u"false", u"no"],
             self._get_translations(['code'], u"false"),
             self._get_translations(['code'], u"no"),
-        ))
+        )}
         if value.lower() in falses:
             return False, []
 

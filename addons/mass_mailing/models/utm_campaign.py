@@ -63,8 +63,8 @@ class UtmCampaign(models.Model):
                     ab_testing_mapped_data.setdefault(data['campaign_id'][0], []).append(data['__count'])
                 mapped_data.setdefault(data['campaign_id'][0], []).append(data['__count'])
         else:
-            mapped_data = dict()
-            ab_testing_mapped_data = dict()
+            mapped_data = {}
+            ab_testing_mapped_data = {}
         for campaign in self:
             campaign.mailing_mail_count = sum(mapped_data.get(campaign.id, []))
             campaign.ab_testing_mailings_count = sum(ab_testing_mapped_data.get(campaign.id, []))

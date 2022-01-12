@@ -115,7 +115,7 @@ class FleetVehicle(models.Model):
         '''
         Copies all the related fields from the model to the vehicle
         '''
-        model_values = dict()
+        model_values = {}
         for vehicle in self.filtered('model_id'):
             if vehicle.model_id.id in model_values:
                 write_vals = model_values[vehicle.model_id.id]

@@ -241,7 +241,7 @@ class MailThread(models.AbstractModel):
                                                               fields=['res_id'],
                                                               groupby=['res_id'])
 
-        attachment_count_dict = dict((d['res_id'], d['res_id_count']) for d in read_group_var)
+        attachment_count_dict = {d['res_id']: d['res_id_count'] for d in read_group_var}
         for record in self:
             record.message_attachment_count = attachment_count_dict.get(record.id, 0)
 
@@ -291,9 +291,9 @@ class MailThread(models.AbstractModel):
                 else:
                     threads_no_subtype += thread
             if threads_no_subtype:
-                bodies = dict(
-                    (thread.id, thread._creation_message())
-                    for thread in threads_no_subtype)
+                bodies = {
+                    thread.id: thread._creation_message()
+                    for thread in threads_no_subtype}
                 threads_no_subtype._message_log_batch(bodies=bodies)
 
         # post track template if a tracked field changed
@@ -562,7 +562,7 @@ class MailThread(models.AbstractModel):
             return {}
 
         tracked_fields = self.fields_get(fields_iter)
-        tracking = dict()
+        tracking = {}
         for record in self:
             try:
                 tracking[record.id] = record._mail_track(tracked_fields, initial_values_dict[record.id])
@@ -577,9 +577,9 @@ class MailThread(models.AbstractModel):
                 continue
 
             # find subtypes and post messages or log if no subtype found
+            record_values = initial_values_dict[record.id]
             subtype = record._track_subtype(
-                dict((col_name, initial_values_dict[record.id][col_name])
-                     for col_name in changes)
+                {col_name: record_values[col_name] for col_name in changes}
             )
             if subtype:
                 if not subtype.exists():
@@ -627,7 +627,7 @@ class MailThread(models.AbstractModel):
         return True
 
     def _track_template(self, changes):
-        return dict()
+        return {}
 
     # ------------------------------------------------------
     # MAIL GATEWAY
@@ -1042,7 +1042,7 @@ class MailThread(models.AbstractModel):
                 else:
                     subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
 
-            post_params = dict(subtype_id=subtype_id, partner_ids=partner_ids, **message_dict)
+            post_params = {'subtype_id': subtype_id, 'partner_ids': partner_ids, **message_dict}
             # remove computational values not stored on mail.message and avoid warnings when creating it
             for x in ('from', 'to', 'cc', 'recipients', 'references', 'in_reply_to', 'bounced_email', 'bounced_message', 'bounced_msg_id', 'bounced_partner'):
                 post_params.pop(x, None)
@@ -1480,7 +1480,7 @@ class MailThread(models.AbstractModel):
     def _message_get_suggested_recipients(self):
         """ Returns suggested recipients for ids. Those are a list of
         tuple (partner_id, partner_name, reason), to be managed by Chatter. """
-        result = dict((res_id, []) for res_id in self.ids)
+        result = {res_id: [] for res_id in self.ids}
         if 'user_id' in self._fields:
             for obj in self.sudo():  # SUPERUSER because of a read on res.users that would crash otherwise
                 if not obj.user_id or not obj.user_id.partner_id:
@@ -1778,8 +1778,8 @@ class MailThread(models.AbstractModel):
         """
         self.ensure_one()  # should always be posted on a record, use message_notify if no record
         # split message additional values from notify additional values
-        msg_kwargs = dict((key, val) for key, val in kwargs.items() if key in self.env['mail.message']._fields)
-        notif_kwargs = dict((key, val) for key, val in kwargs.items() if key not in msg_kwargs)
+        msg_kwargs = {key: val for key, val in kwargs.items() if key in self.env['mail.message']._fields}
+        notif_kwargs = {key: val for key, val in kwargs.items() if key not in msg_kwargs}
 
         # preliminary value safety check
         partner_ids = set(partner_ids or [])
@@ -1877,7 +1877,7 @@ class MailThread(models.AbstractModel):
         alone, because there is nothing in template and composer that allows
         to handle views in batch. This method should probably disappear when
         templates handle ir ui views. """
-        values = kwargs.pop('values', None) or dict()
+        values = kwargs.pop('values', None) or {}
         try:
             from odoo.addons.http_routing.models.ir_http import slug
             values['slug'] = slug
@@ -1942,8 +1942,8 @@ class MailThread(models.AbstractModel):
         if self:
             self.ensure_one()
         # split message additional values from notify additional values
-        msg_kwargs = dict((key, val) for key, val in kwargs.items() if key in self.env['mail.message']._fields)
-        notif_kwargs = dict((key, val) for key, val in kwargs.items() if key not in msg_kwargs)
+        msg_kwargs = {key: val for key, val in kwargs.items() if key in self.env['mail.message']._fields}
+        notif_kwargs = {key: val for key, val in kwargs.items() if key not in msg_kwargs}
 
         author_id, email_from = self._message_compute_author(author_id, email_from, raise_exception=True)
 
@@ -2430,11 +2430,11 @@ class MailThread(models.AbstractModel):
         }
         # whitelist accepted parameters: action (deprecated), token (assign), access_token
         # (view), auth_signup_token and auth_login (for auth_signup support)
-        params.update(dict(
+        params.update(
             (key, value)
             for key, value in kwargs.items()
             if key in ('action', 'token', 'access_token', 'auth_signup_token', 'auth_login')
-        ))
+        )
 
         if link_type in ['view', 'assign', 'follow', 'unfollow']:
             base_link = '/mail/%s' % link_type
@@ -2626,7 +2626,7 @@ class MailThread(models.AbstractModel):
         else:
             self.env['mail.followers']._insert_followers(
                 self._name, self.ids,
-                partner_ids, subtypes=dict((pid, subtype_ids) for pid in partner_ids),
+                partner_ids, subtypes=dict.fromkeys(partner_ids, subtype_ids),
                 customer_ids=customer_ids, check_existing=True, existing_policy='replace')
 
         return True
@@ -2738,11 +2738,11 @@ class MailThread(models.AbstractModel):
         if not self:
             return True
 
-        new_partner_subtypes = dict()
+        new_partner_subtypes = {}
 
         # return data related to auto subscription based on subtype matching (aka:
         # default task subtypes or subtypes from project triggering task subtypes)
-        updated_relation = dict()
+        updated_relation = {}
         child_ids, def_ids, all_int_ids, parent, relation = self.env['mail.message.subtype']._get_auto_subscription_subtypes(self._name)
 
         # check effectively modified relation field
@@ -2766,7 +2766,7 @@ class MailThread(models.AbstractModel):
                     else:
                         new_partner_subtypes[partner_id] = set(sids)
 
-        notify_data = dict()
+        notify_data = {}
         res = self._message_auto_subscribe_followers(updated_values, def_ids)
         for partner_id, sids, template in res:
             new_partner_subtypes.setdefault(partner_id, sids)

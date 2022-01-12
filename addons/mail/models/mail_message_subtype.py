@@ -74,9 +74,9 @@ class MailMessageSubtype(models.Model):
           * parent: dict(parent subtype id, child subtype id), i.e. {task_new.id: new.id}
           * relation: dict(parent_model, relation_fields), i.e. {'project.project': ['project_id']}
         """
-        child_ids, def_ids = list(), list()
-        all_int_ids = list()
-        parent, relation = dict(), dict()
+        child_ids, def_ids = [], []
+        all_int_ids = []
+        parent, relation = {}, {}
         subtypes = self.sudo().search([
             '|', '|', ('res_model', '=', False),
             ('res_model', '=', model_name),

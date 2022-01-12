@@ -153,13 +153,13 @@ class AssetsBundle(object):
                                                     extension='')
                 else:
                     href = attachment.url
-                attr = dict([
-                    ["type", "text/css"],
-                    ["rel", "stylesheet"],
-                    ["href", href],
-                    ['data-asset-bundle', self.name],
-                    ['data-asset-version', self.version],
-                ])
+                attr = {
+                    "type": "text/css",
+                    "rel": "stylesheet",
+                    "href": href,
+                    'data-asset-bundle': self.name,
+                    'data-asset-version': self.version,
+                }
                 response.append(("link", attr, None))
             if self.css_errors:
                 msg = '\n'.join(self.css_errors)
@@ -169,14 +169,14 @@ class AssetsBundle(object):
         if js and self.javascripts:
             js_attachment = self.js(is_minified=not is_debug_assets)
             src = self.get_debug_asset_url(name=js_attachment.name, extension='') if is_debug_assets else js_attachment[0].url
-            attr = dict([
-                ["async", "async" if async_load else None],
-                ["defer", "defer" if defer_load or lazy_load else None],
-                ["type", "text/javascript"],
-                ["data-src" if lazy_load else "src", src],
-                ['data-asset-bundle', self.name],
-                ['data-asset-version', self.version],
-            ])
+            attr = {
+                "async": "async" if async_load else None,
+                "defer": "defer" if defer_load or lazy_load else None,
+                "type": "text/javascript",
+                "data-src" if lazy_load else "src": src,
+                'data-asset-bundle': self.name,
+                'data-asset-version': self.version,
+            }
             response.append(("script", attr, None))
 
         return response
@@ -547,7 +547,7 @@ class AssetsBundle(object):
 
         for atype in asset_types:
             outdated = False
-            assets = dict((asset.html_url, asset) for asset in self.stylesheets if isinstance(asset, atype))
+            assets = {asset.html_url: asset for asset in self.stylesheets if isinstance(asset, atype)}
             if assets:
                 assets_domain = self._get_assets_domain_for_already_processed_css(assets)
                 attachments = self.env['ir.attachment'].sudo().search(assets_domain)
@@ -822,19 +822,19 @@ class JavascriptAsset(WebAsset):
 
     def to_node(self):
         if self.url:
-            return ("script", dict([
-                ["type", "text/javascript"],
-                ["src", self.html_url],
-                ['data-asset-bundle', self.bundle.name],
-                ['data-asset-version', self.bundle.version],
-            ]), None)
+            return ("script", {
+                "type": "text/javascript",
+                "src": self.html_url,
+                'data-asset-bundle': self.bundle.name,
+                'data-asset-version': self.bundle.version,
+            }, None)
         else:
-            return ("script", dict([
-                ["type", "text/javascript"],
-                ["charset", "utf-8"],
-                ['data-asset-bundle', self.bundle.name],
-                ['data-asset-version', self.bundle.version],
-            ]), self.with_header())
+            return ("script", {
+                "type": "text/javascript",
+                "charset": "utf-8",
+                'data-asset-bundle': self.bundle.name,
+                'data-asset-version': self.bundle.version,
+            }, self.with_header())
 
     def with_header(self, content=None, minimal=True):
         if minimal:
@@ -925,22 +925,22 @@ class StylesheetAsset(WebAsset):
 
     def to_node(self):
         if self.url:
-            attr = dict([
-                ["type", "text/css"],
-                ["rel", "stylesheet"],
-                ["href", self.html_url],
-                ["media", escape(to_text(self.media)) if self.media else None],
-                ['data-asset-bundle', self.bundle.name],
-                ['data-asset-version', self.bundle.version],
-            ])
+            attr = {
+                "type": "text/css",
+                "rel": "stylesheet",
+                "href": self.html_url,
+                "media": escape(to_text(self.media)) if self.media else None,
+                'data-asset-bundle': self.bundle.name,
+                'data-asset-version': self.bundle.version,
+            }
             return ("link", attr, None)
         else:
-            attr = dict([
-                ["type", "text/css"],
-                ["media", escape(to_text(self.media)) if self.media else None],
-                ['data-asset-bundle', self.bundle.name],
-                ['data-asset-version', self.bundle.version],
-            ])
+            attr = {
+                "type": "text/css",
+                "media": escape(to_text(self.media)) if self.media else None,
+                'data-asset-bundle': self.bundle.name,
+                'data-asset-version': self.bundle.version,
+            }
             return ("style", attr, self.with_header())
 
 

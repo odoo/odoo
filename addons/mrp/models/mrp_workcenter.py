@@ -89,7 +89,7 @@ class MrpWorkcenter(models.Model):
         data = MrpWorkorder.read_group(
             [('workcenter_id', 'in', self.ids), ('state', 'in', ('pending', 'waiting', 'ready')), ('date_planned_start', '<', datetime.datetime.now().strftime('%Y-%m-%d'))],
             ['workcenter_id'], ['workcenter_id'])
-        count_data = dict((item['workcenter_id'][0], item['workcenter_id_count']) for item in data)
+        count_data = {item['workcenter_id'][0]: item['workcenter_id_count'] for item in data}
         # Count All, Pending, Ready, Progress Workorder
         res = MrpWorkorder.read_group(
             [('workcenter_id', 'in', self.ids)],
@@ -135,7 +135,7 @@ class MrpWorkcenter(models.Model):
             ('date_end', '!=', False),
             ('loss_type', '!=', 'productive')],
             ['duration', 'workcenter_id'], ['workcenter_id'], lazy=False)
-        count_data = dict((item['workcenter_id'][0], item['duration']) for item in data)
+        count_data = {item['workcenter_id'][0]: item['duration'] for item in data}
         for workcenter in self:
             workcenter.blocked_time = count_data.get(workcenter.id, 0.0) / 60.0
 
@@ -147,7 +147,7 @@ class MrpWorkcenter(models.Model):
             ('date_end', '!=', False),
             ('loss_type', '=', 'productive')],
             ['duration', 'workcenter_id'], ['workcenter_id'], lazy=False)
-        count_data = dict((item['workcenter_id'][0], item['duration']) for item in data)
+        count_data = {item['workcenter_id'][0]: item['duration'] for item in data}
         for workcenter in self:
             workcenter.productive_time = count_data.get(workcenter.id, 0.0) / 60.0
 
@@ -164,8 +164,8 @@ class MrpWorkcenter(models.Model):
             ('date_start', '>=', fields.Datetime.to_string(datetime.datetime.now() - relativedelta.relativedelta(months=1))),
             ('workcenter_id', 'in', self.ids),
             ('state', '=', 'done')], ['duration_expected', 'workcenter_id', 'duration'], ['workcenter_id'], lazy=False)
-        duration_expected = dict((data['workcenter_id'][0], data['duration_expected']) for data in wo_data)
-        duration = dict((data['workcenter_id'][0], data['duration']) for data in wo_data)
+        duration_expected = {data['workcenter_id'][0]: data['duration_expected'] for data in wo_data}
+        duration = {data['workcenter_id'][0]: data['duration'] for data in wo_data}
         for workcenter in self:
             if duration.get(workcenter.id):
                 workcenter.performance = 100 * duration_expected.get(workcenter.id, 0.0) / duration[workcenter.id]

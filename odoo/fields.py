@@ -1708,14 +1708,15 @@ class _String(Field):
                         ('res_id', 'in', real_recs._ids)
                     ]).unlink()
                 elif single_lang:
-                    records.env['ir.translation']._update_translations([dict(
-                        src=source_value,
-                        value=value,
-                        name=tname,
-                        lang=lang,
-                        type='model',
-                        state='translated',
-                        res_id=res_id) for res_id in real_recs._ids])
+                    records.env['ir.translation']._update_translations([{
+                        'src': source_value,
+                        'value': value,
+                        'name': tname,
+                        'lang': lang,
+                        'type': 'model',
+                        'state': 'translated',
+                        'res_id': res_id
+                    } for res_id in real_recs._ids])
                 else:
                     records.env['ir.translation']._set_ids(
                         tname, 'model', lang, real_recs._ids, value, source_value,
@@ -4034,7 +4035,7 @@ class Many2many(_RelationalMulti):
                 elif command[0] in (Command.CLEAR, Command.SET):
                     # new lines must no longer be linked to records
                     line_ids = command[2] if command[0] == Command.SET else ()
-                    line_ids = set(new(line_id) for line_id in line_ids)
+                    line_ids = {new(line_id) for line_id in line_ids}
                     for id_ in recs._ids:
                         new_relation[id_] = set(line_ids)
 

@@ -38,9 +38,9 @@ class Department(models.Model):
              ('date_from', '<=', today_end), ('date_to', '>=', today_start)],
             ['department_id'], ['department_id'])
 
-        res_leave = dict((data['department_id'][0], data['department_id_count']) for data in leave_data)
-        res_allocation = dict((data['department_id'][0], data['department_id_count']) for data in allocation_data)
-        res_absence = dict((data['department_id'][0], data['department_id_count']) for data in absence_data)
+        res_leave = {data['department_id'][0]: data['department_id_count'] for data in leave_data}
+        res_allocation = {data['department_id'][0]: data['department_id_count'] for data in allocation_data}
+        res_absence = {data['department_id'][0]: data['department_id_count'] for data in absence_data}
 
         for department in self:
             department.leave_to_approve_count = res_leave.get(department.id, 0)

@@ -137,7 +137,7 @@ class ImDispatch(object):
 
         # immediatly returns in peek mode
         if options.get('peek'):
-            return dict(notifications=notifications, channels=channels)
+            return {'notifications': notifications, 'channels': channels}
 
         # or wait for future ones
         if not notifications:

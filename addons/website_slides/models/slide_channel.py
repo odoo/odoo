@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import collections
 import logging
 import uuid
 from collections import defaultdict
@@ -43,14 +43,13 @@ class ChannelUsersRelation(models.Model):
              ('slide_id.active', '=', True)],
             ['channel_id', 'partner_id'],
             groupby=['channel_id', 'partner_id'], lazy=False)
-        mapped_data = dict()
+        mapped_data = collections.defaultdict(dict)
         for item in read_group_res:
-            mapped_data.setdefault(item['channel_id'][0], dict())
             mapped_data[item['channel_id'][0]][item['partner_id'][0]] = item['__count']
 
         completed_records = self.env['slide.channel.partner']
         for record in self:
-            record.completed_slides_count = mapped_data.get(record.channel_id.id, dict()).get(record.partner_id.id, 0)
+            record.completed_slides_count = mapped_data[record.channel_id.id].get(record.partner_id.id, 0)
             record.completion = 100.0 if record.completed else round(100.0 * record.completed_slides_count / (record.channel_id.total_slides or 1))
             if not record.completed and record.channel_id.active and record.completed_slides_count >= record.channel_id.total_slides:
                 completed_records += record
@@ -95,7 +94,7 @@ class ChannelUsersRelation(models.Model):
 
     def _send_completed_mail(self):
         """ Send an email to the attendee when he has successfully completed a course. """
-        template_to_records = dict()
+        template_to_records = {}
         for record in self:
             template = record.channel_id.completed_template_id
             if template:
@@ -119,7 +118,7 @@ class ChannelUsersRelation(models.Model):
             email_values['body_html'] = template._render_encapsulate(
                 'mail.mail_notification_light', email_values['body_html'],
                 add_context={
-                    'message': self.env['mail.message'].sudo().new(dict(body=email_values['body_html'], record_name=record.channel_id.name)),
+                    'message': self.env['mail.message'].sudo().new({'body': email_values['body_html'], 'record_name': record.channel_id.name}),
                     'model_description': _('Completed Course')  # tde fixme: translate into partner lang
                 }
             )
@@ -258,14 +257,14 @@ class Channel(models.Model):
     @api.depends('channel_partner_ids.channel_id')
     def _compute_members_count(self):
         read_group_res = self.env['slide.channel.partner'].sudo().read_group([('channel_id', 'in', self.ids)], ['channel_id'], 'channel_id')
-        data = dict((res['channel_id'][0], res['channel_id_count']) for res in read_group_res)
+        data = {res['channel_id'][0]: res['channel_id_count'] for res in read_group_res}
         for channel in self:
             channel.members_count = data.get(channel.id, 0)
 
     @api.depends('channel_partner_ids.channel_id', 'channel_partner_ids.completed')
     def _compute_members_done_count(self):
         read_group_res = self.env['slide.channel.partner'].sudo().read_group(['&', ('channel_id', 'in', self.ids), ('completed', '=', True)], ['channel_id'], 'channel_id')
-        data = dict((res['channel_id'][0], res['channel_id_count']) for res in read_group_res)
+        data = {res['channel_id'][0]: res['channel_id_count'] for res in read_group_res}
         for channel in self:
             channel.members_done_count = data.get(channel.id, 0)
 
@@ -284,14 +283,16 @@ class Channel(models.Model):
     @api.depends_context('uid')
     @api.model
     def _compute_is_member(self):
-        channel_partners = self.env['slide.channel.partner'].sudo().search([
+        channel_partner_ids = self.env['slide.channel.partner'].sudo().search([
             ('channel_id', 'in', self.ids),
         ])
-        result = dict()
-        for cp in channel_partners:
-            result.setdefault(cp.channel_id.id, []).append(cp.partner_id.id)
+        channel_partners = collections.defaultdict(list)
+        for cp in channel_partner_ids:
+            channel_partners[cp.channel_id.id].append(cp.partner_id.id)
+
+        current_partner_id = self.env.user.partner_id.id
         for channel in self:
-            channel.is_member = channel.is_member = self.env.user.partner_id.id in result.get(channel.id, [])
+            channel.is_member = current_partner_id in channel_partners[channel.id]
 
     @api.depends('slide_ids.is_category')
     def _compute_category_and_slide_ids(self):
@@ -302,22 +303,22 @@ class Channel(models.Model):
     @api.depends('slide_ids.slide_category', 'slide_ids.is_published', 'slide_ids.completion_time',
                  'slide_ids.likes', 'slide_ids.dislikes', 'slide_ids.total_views', 'slide_ids.is_category', 'slide_ids.active')
     def _compute_slides_statistics(self):
-        default_vals = dict(total_views=0, total_votes=0, total_time=0, total_slides=0)
+        default_vals = {'total_views': 0, 'total_votes': 0, 'total_time': 0, 'total_slides': 0}
         keys = ['nbr_%s' % slide_category for slide_category in self.env['slide.slide']._fields['slide_category'].get_values(self.env)]
-        default_vals.update(dict((key, 0) for key in keys))
+        default_vals.update((key, 0) for key in keys)
 
-        result = dict((cid, dict(default_vals)) for cid in self.ids)
+        result = {cid: dict(default_vals) for cid in self.ids}
         read_group_res = self.env['slide.slide'].read_group(
             [('active', '=', True), ('is_published', '=', True), ('channel_id', 'in', self.ids), ('is_category', '=', False)],
             ['channel_id', 'slide_category', 'likes', 'dislikes', 'total_views', 'completion_time'],
             groupby=['channel_id', 'slide_category'],
             lazy=False)
         for res_group in read_group_res:
-            cid = res_group['channel_id'][0]
-            result[cid]['total_views'] += res_group.get('total_views', 0)
-            result[cid]['total_votes'] += res_group.get('likes', 0)
-            result[cid]['total_votes'] -= res_group.get('dislikes', 0)
-            result[cid]['total_time'] += res_group.get('completion_time', 0)
+            item = result[res_group['channel_id'][0]]
+            item['total_views'] += res_group.get('total_views', 0)
+            item['total_votes'] += res_group.get('likes', 0)
+            item['total_votes'] -= res_group.get('dislikes', 0)
+            item['total_time'] += res_group.get('completion_time', 0)
 
         category_stats = self._compute_slides_statistics_category(read_group_res)
         for cid, cdata in category_stats.items():
@@ -330,7 +331,7 @@ class Channel(models.Model):
         """ Compute statistics based on all existing slide categories """
         slide_categories = self.env['slide.slide']._fields['slide_category'].get_values(self.env)
         keys = ['nbr_%s' % slide_category for slide_category in slide_categories]
-        result = dict((cid, dict((key, 0) for key in keys + ['total_slides'])) for cid in self.ids)
+        result = {cid: dict.fromkeys(keys + ['total_slides'], 0) for cid in self.ids}
         for res_group in read_group_res:
             cid = res_group['channel_id'][0]
             slide_category = res_group.get('slide_category')
@@ -351,7 +352,7 @@ class Channel(models.Model):
         current_user_info = self.env['slide.channel.partner'].sudo().search(
             [('channel_id', 'in', self.ids), ('partner_id', '=', self.env.user.partner_id.id)]
         )
-        mapped_data = dict((info.channel_id.id, (info.completed, info.completed_slides_count)) for info in current_user_info)
+        mapped_data = {info.channel_id.id: (info.completed, info.completed_slides_count) for info in current_user_info}
         for record in self:
             completed, completed_slides_count = mapped_data.get(record.id, (False, 0))
             record.completed = completed
@@ -590,14 +591,15 @@ class Channel(models.Model):
                 ('channel_id', 'in', self.ids),
                 ('partner_id', 'in', target_partners.ids)
             ])
-            existing_map = dict((cid, list()) for cid in self.ids)
+            existing_map = collections.defaultdict(list)
             for item in existing:
                 existing_map[item.channel_id.id].append(item.partner_id.id)
 
             to_create_values = [
-                dict(channel_id=channel.id, partner_id=partner.id, **member_values)
+                {'channel_id': channel.id, 'partner_id': partner.id, **member_values}
                 for channel in to_join
-                for partner in target_partners if partner.id not in existing_map[channel.id]
+                for partner in target_partners
+                if partner.id not in existing_map[channel.id]
             ]
             slide_partners_sudo = self.env['slide.channel.partner'].sudo().create(to_create_values)
             to_join.message_subscribe(partner_ids=target_partners.ids, subtype_ids=[self.env.ref('website_slides.mt_channel_slide_published').id])

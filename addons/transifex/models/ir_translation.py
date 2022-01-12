@@ -46,7 +46,7 @@ class IrTranslation(models.Model):
             languages = self.env['res.lang'].with_context(active_test=False).search(
                 [('code', 'in', translation_languages)])
 
-            language_codes = dict((l.code, l.iso_code) for l in languages)
+            language_codes = {l.code: l.iso_code for l in languages}
 
             # .tx/config files contains the project reference
             # using ini files like '[odoo-master.website_sale]'

@@ -34,8 +34,8 @@ class CouponGenerate(models.TransientModel):
             for partner in self.env['res.partner'].search(ast.literal_eval(self.partners_domain)):
                 vals.update({'partner_id': partner.id, 'state': 'sent' if partner.email else 'new'})
                 coupon = self.env['coupon.coupon'].create(vals)
-                context = dict(lang=partner.lang)
-                subject = _('%s, a coupon has been generated for you') % (partner.name)
+                context = {'lang': partner.lang}
+                subject = _('%s, a coupon has been generated for you') % partner.name
                 del context
                 if self.template_id:
                     email_values = {'email_from': self.env.user.email or '', 'subject': subject}

@@ -15,7 +15,7 @@ class SaleOrder(models.Model):
     @api.depends('procurement_group_id.stock_move_ids.created_production_id.procurement_group_id.mrp_production_ids')
     def _compute_mrp_production_count(self):
         data = self.env['procurement.group'].read_group([('sale_id', 'in', self.ids)], ['ids:array_agg(id)'], ['sale_id'])
-        mrp_count = dict()
+        mrp_count = {}
         for item in data:
             procurement_groups = self.env['procurement.group'].browse(item['ids'])
             mrp_count[item['sale_id'][0]] = len(

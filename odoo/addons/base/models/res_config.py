@@ -269,10 +269,13 @@ class ResConfigInstaller(models.TransientModel, ResConfigModuleInstallationMixin
           addons in the value are added to the set of modules to install
         * not already installed
         """
-        base = set(module_name
-                   for installer in self.read()
-                   for module_name, to_install in installer.items()
-                   if self._fields[module_name].type == 'boolean' and to_install)
+        base = {
+            module_name
+            for installer in self.read()
+            for module_name, to_install in installer.items()
+            if to_install
+            if self._fields[module_name].type == 'boolean'
+        }
 
         hooks_results = set()
         for module in base:
@@ -280,10 +283,12 @@ class ResConfigInstaller(models.TransientModel, ResConfigModuleInstallationMixin
             if hook:
                 hooks_results.update(hook() or set())
 
-        additionals = set(module
-                          for requirements, consequences in self._install_if.items()
-                          if base.issuperset(requirements)
-                          for module in consequences)
+        additionals = {
+            module
+            for requirements, consequences in self._install_if.items()
+            if base.issuperset(requirements)
+            for module in consequences
+        }
 
         return (base | hooks_results | additionals) - set(self.already_installed())
 

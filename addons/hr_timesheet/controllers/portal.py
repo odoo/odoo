@@ -139,11 +139,11 @@ class TimesheetCustomerPortal(CustomerPortal):
             if field:
                 if groupby == 'date':
                     time_data = Timesheet_sudo.read_group(domain, ['date', 'unit_amount:sum'], ['date:day'])
-                    mapped_time = dict([(datetime.strptime(m['date:day'], '%d %b %Y').date(), m['unit_amount']) for m in time_data])
+                    mapped_time = {datetime.strptime(m['date:day'], '%d %b %Y').date(): m['unit_amount'] for m in time_data}
                     grouped_timesheets = [(Timesheet_sudo.concat(*g), mapped_time[k]) for k, g in groupbyelem(timesheets, itemgetter('date'))]
                 else:
-                    time_data = time_data = Timesheet_sudo.read_group(domain, [field, 'unit_amount:sum'], [field])
-                    mapped_time = dict([(m[field][0] if m[field] else False, m['unit_amount']) for m in time_data])
+                    time_data = Timesheet_sudo.read_group(domain, [field, 'unit_amount:sum'], [field])
+                    mapped_time = {m[field][0] if m[field] else False: m['unit_amount'] for m in time_data}
                     grouped_timesheets = [(Timesheet_sudo.concat(*g), mapped_time[k.id]) for k, g in groupbyelem(timesheets, itemgetter(field))]
                 return timesheets, grouped_timesheets
 

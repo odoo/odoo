@@ -22,7 +22,7 @@ class WebsiteVisitor(models.Model):
 
         left_visitors = self.filtered(lambda visitor: not visitor.email or not visitor.mobile)
         leads = left_visitors.mapped('lead_ids').sorted('create_date', reverse=True)
-        visitor_to_lead_ids = dict((visitor.id, visitor.lead_ids.ids) for visitor in left_visitors)
+        visitor_to_lead_ids = {visitor.id: visitor.lead_ids.ids for visitor in left_visitors}
 
         for visitor in left_visitors:
             visitor_leads = leads.filtered(lambda lead: lead.id in visitor_to_lead_ids[visitor.id])

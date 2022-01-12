@@ -34,7 +34,7 @@ class Usb(Escpos):
         # pyusb dropped the 'interface' parameter from usb.Device.write() at 1.0.0b2
         # https://github.com/pyusb/pyusb/commit/20cd8c1f79b24082ec999c022b56c3febedc0964#diff-b5a4f98a864952f0f55d569dd14695b7L293
         if usb.version_info < (1, 0, 0) or (usb.version_info == (1, 0, 0) and usb.version_info[3] in ("a1", "a2", "a3", "b1")):
-            self.write_kwargs = dict(interface=self.interface)
+            self.write_kwargs = {'interface': self.interface}
         else:
             self.write_kwargs = {}
 

@@ -61,7 +61,7 @@ class Job(models.Model):
 
     def _compute_document_ids(self):
         applicants = self.mapped('application_ids').filtered(lambda self: not self.emp_id)
-        app_to_job = dict((applicant.id, applicant.job_id.id) for applicant in applicants)
+        app_to_job = {applicant.id: applicant.job_id.id for applicant in applicants}
         attachments = self.env['ir.attachment'].search([
             '|',
             '&', ('res_model', '=', 'hr.job'), ('res_id', 'in', self.ids),
@@ -79,13 +79,13 @@ class Job(models.Model):
 
     def _compute_all_application_count(self):
         read_group_result = self.env['hr.applicant'].with_context(active_test=False).read_group([('job_id', 'in', self.ids)], ['job_id'], ['job_id'])
-        result = dict((data['job_id'][0], data['job_id_count']) for data in read_group_result)
+        result = {data['job_id'][0]: data['job_id_count'] for data in read_group_result}
         for job in self:
             job.all_application_count = result.get(job.id, 0)
 
     def _compute_application_count(self):
         read_group_result = self.env['hr.applicant'].read_group([('job_id', 'in', self.ids)], ['job_id'], ['job_id'])
-        result = dict((data['job_id'][0], data['job_id_count']) for data in read_group_result)
+        result = {data['job_id'][0]: data['job_id_count'] for data in read_group_result}
         for job in self:
             job.application_count = result.get(job.id, 0)
 

@@ -118,7 +118,7 @@ class EventRegistration(models.Model):
             contact_id = partner.address_get().get('contact', False)
             if contact_id:
                 contact = self.env['res.partner'].browse(contact_id)
-                return dict((fname, contact[fname]) for fname in fnames if contact[fname])
+                return {fname: contact[fname] for fname in fnames if contact[fname]}
         return {}
 
     # ------------------------------------------------------------
@@ -209,14 +209,14 @@ class EventRegistration(models.Model):
         self.ensure_one()
         template = self.env.ref('event.event_registration_mail_template_badge')
         compose_form = self.env.ref('mail.email_compose_message_wizard_form')
-        ctx = dict(
-            default_model='event.registration',
-            default_res_id=self.id,
-            default_use_template=bool(template),
-            default_template_id=template.id,
-            default_composition_mode='comment',
-            default_email_layout_xmlid="mail.mail_notification_light",
-        )
+        ctx = {
+            'default_model': 'event.registration',
+            'default_res_id': self.id,
+            'default_use_template': bool(template),
+            'default_template_id': template.id,
+            'default_composition_mode': 'comment',
+            'default_email_layout_xmlid': "mail.mail_notification_light"
+        }
         return {
             'name': _('Compose Email'),
             'type': 'ir.actions.act_window',

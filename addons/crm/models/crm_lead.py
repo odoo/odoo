@@ -397,10 +397,10 @@ class Lead(models.Model):
         one if set. """
         # prepare cache
         lang_codes = [code for code in self.mapped('partner_id.lang') if code]
-        lang_id_by_code = dict(
-            (code, self.env['res.lang']._lang_get_id(code))
+        lang_id_by_code = {
+            code: self.env['res.lang']._lang_get_id(code)
             for code in lang_codes
-        )
+        }
         for lead in self.filtered('partner_id'):
             lead.lang_id = lang_id_by_code.get(lead.partner_id.lang, False)
 
@@ -496,7 +496,7 @@ class Lead(models.Model):
             ], ['opportunity_id'], ['opportunity_id'])
             mapped_data = {m['opportunity_id'][0]: m['opportunity_id_count'] for m in meeting_data}
         else:
-            mapped_data = dict()
+            mapped_data = {}
         for lead in self:
             lead.calendar_event_count = mapped_data.get(lead.id, 0)
 
@@ -769,7 +769,7 @@ class Lead(models.Model):
             ['res_id'],
             orderby='date_deadline ASC'
         )
-        my_lead_mapping = dict((item['res_id'], item['date_deadline']) for item in my_lead_activities)
+        my_lead_mapping = {item['res_id']: item['date_deadline'] for item in my_lead_activities}
         my_lead_ids = list(my_lead_mapping.keys())
         my_lead_domain = expression.AND([[('id', 'in', my_lead_ids)], args])
         my_lead_order = ', '.join(item for item in order_items if 'my_activity_date_deadline' not in item)
@@ -1967,8 +1967,8 @@ class Lead(models.Model):
         # each value probability must be computed only with their own variable related total count
         # special case: for lead for which team_id is not in frequency table or lead with no team_id,
         # we consider all the records, independently from team_id (this is why we add a result[-1])
-        result = dict((team_id, dict((field, dict(won_total=0, lost_total=0)) for field in leads_fields)) for team_id in frequency_team_ids)
-        result[-1] = dict((field, dict(won_total=0, lost_total=0)) for field in leads_fields)
+        result = {team_id: {field: {'won_total': 0, 'lost_total': 0} for field in leads_fields} for team_id in frequency_team_ids}
+        result[-1] = {field: {'won_total': 0, 'lost_total': 0} for field in leads_fields}
         for frequency in frequencies:
             field = frequency['variable']
             value = frequency['value']
@@ -2223,9 +2223,9 @@ class Lead(models.Model):
 
         # split leads values by team_id
         # get current frequencies related to the target leads
-        leads_frequency_values_by_team = dict((team_id, []) for team_id in team_ids)
+        leads_frequency_values_by_team = {team_id: [] for team_id in team_ids}
         leads_pls_fields = set()  # ensure to keep each field unique (can have multiple tag_id leads_values_dict)
-        for lead_id, values in leads_values_dict.items():
+        for values in leads_values_dict.values():
             team_id = values.get('team_id', 0)  # If team_id is unset, consider it as team 0
             lead_frequency_values = {'count': 1}
             for field, value in values['values']:
@@ -2257,7 +2257,7 @@ class Lead(models.Model):
             for frequency in existing_frequencies:
                 team_id = frequency['team_id'][0] if frequency.get('team_id') else 0
                 if team_id not in existing_frequencies_by_team:
-                    existing_frequencies_by_team[team_id] = dict((field, {}) for field in leads_pls_fields)
+                    existing_frequencies_by_team[team_id] = {field: {} for field in leads_pls_fields}
 
                 existing_frequencies_by_team[team_id][frequency['variable']][frequency['value']] = {
                     'frequency_id': frequency['id'],
@@ -2359,7 +2359,7 @@ class Lead(models.Model):
         """new state is used when getting frequencies for leads that are changing to lost or won.
         Stays none if we are checking frequencies for leads already won or lost."""
         pls_fields = leads_pls_fields.copy()
-        frequencies = dict((field, {}) for field in pls_fields)
+        frequencies = {field: {} for field in pls_fields}
 
         stage_ids = self.env['crm.stage'].search_read([], ['sequence', 'name', 'id'], order='sequence')
         stage_sequences = {stage['id']: stage['sequence'] for stage in stage_ids}
