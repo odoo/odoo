@@ -3,17 +3,21 @@
 
     <t t-name="web.PercentageField" owl="1">
         <t t-if="props.readonly">
-            <PercentageViewer
-                value="props.value"
-            />
+            <span t-esc="props.formatValue(props.value)"/>
         </t>
         <t t-else="">
-            <PercentageEditor
-                fieldClass="'o_percentage_field'"
-                onChange="(ev) => onChange(ev)"
-                value="props.value"
-            />
+            <div class="d-flex">
+                <input
+                    t-attf-class="o_input"
+                    type="text"
+                    inputmode="numeric"
+                    t-att-value="props.value * 100"
+                    t-on-change="onChange"
+                />
+                <span>%</span>
+            </div>
         </t>
     </t>
+
 
 </templates>

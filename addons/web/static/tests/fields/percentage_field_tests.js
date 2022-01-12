@@ -11,17 +11,15 @@ QUnit.module("Fields", (hooks) => {
             models: {
                 partner: {
                     fields: {
-                        foo: {
-                            string: "Foo",
-                            type: "char",
-                            default: "My little Foo Value",
-                            trim: true,
+                        float_field: {
+                            string: "Float_field",
+                            type: "float",
+                            digits: [0, 1],
                         },
-                        qux: { string: "Qux", type: "float", digits: [16, 1], searchable: true },
                     },
                     records: [
                         {
-                            qux: 0.44444,
+                            float_field: 0.44444,
                         },
                     ],
                 },
@@ -40,13 +38,13 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             type: "form",
             resModel: "partner",
-            arch: ` <form string="Partners">
-                        <field name="qux" widget="percentage"/>
+            arch: ` <form>
+                        <field name="float_field" widget="percentage"/>
                     </form>`,
             mockRPC(route, { args, method }) {
                 if (method === "write") {
                     assert.strictEqual(
-                        args[1].qux,
+                        args[1].float_field,
                         0.24,
                         "the correct float value should be saved"
                     );
@@ -61,17 +59,17 @@ QUnit.module("Fields", (hooks) => {
         );
         await click(form.el.querySelector(".o_form_button_edit"));
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget[name=qux] input").value,
+            form.el.querySelector(".o_field_widget[name=float_field] input").value,
             "44.444",
             "The input should be rendered without the percentage symbol."
         );
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget[name=qux] span").innerText,
+            form.el.querySelector(".o_field_widget[name=float_field] span").innerText,
             "%",
             "The input should be followed by a span containing the percentage symbol."
         );
-        const field = form.el.querySelector(".o_percentage_field");
-        await editInput(form.el, ".o_percentage_field", "24");
+        const field = form.el.querySelector("input");
+        await editInput(form.el, "input", "24");
         assert.strictEqual(field.value, "24", "The value should not be formated yet.");
         await click(form.el.querySelector(".o_form_button_save"));
         assert.strictEqual(
