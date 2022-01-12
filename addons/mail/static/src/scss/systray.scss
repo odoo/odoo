@@ -1,11 +1,7 @@
 // Systray icon and dropdown
 .o_mail_systray_item {
-    &.o_no_notification > a {
-        @include o-mail-systray-no-notification-style();
-
-        .o_notification_counter {
-            display: none;
-        }
+    &.o_no_notification .o_notification_counter {
+        display: none;
     }
     &.show .o_mail_systray_dropdown {
         display: flex;
