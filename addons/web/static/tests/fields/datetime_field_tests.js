@@ -572,7 +572,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip("DatetimeField remove value", async function (assert) {
+    QUnit.test("DatetimeField remove value", async function (assert) {
         assert.expect(4);
 
         patchTimeZone(120);
