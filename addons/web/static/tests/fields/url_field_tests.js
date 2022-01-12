@@ -22,6 +22,9 @@ QUnit.module("Fields", (hooks) => {
                         {
                             foo: "yop",
                         },
+                        {
+                            foo: "blip",
+                        },
                     ],
                     onchanges: {},
                 },
@@ -50,7 +53,7 @@ QUnit.module("Fields", (hooks) => {
                 "</form>",
             resId: 1,
         });
-        const matchingEl = form.el.querySelector("a.o-url-field.o_field_widget.o_form_uri");
+        const matchingEl = form.el.querySelector("a.o_url_field.o_field_widget.o_form_uri");
         assert.containsOnce(form, matchingEl, "should have a anchor with correct classes");
         assert.hasAttrValue(matchingEl, "href", "http://yop", "should have proper href link");
         assert.hasAttrValue(
@@ -81,7 +84,7 @@ QUnit.module("Fields", (hooks) => {
 
         // save
         await click(form.el.querySelector(".o_form_button_save"));
-        const editedElement = form.el.querySelector("a.o-url-field.o_field_widget.o_form_uri");
+        const editedElement = form.el.querySelector("a.o_url_field.o_field_widget.o_form_uri");
         assert.containsOnce(form, editedElement, "should still have a anchor with correct classes");
         assert.hasAttrValue(
             editedElement,
@@ -98,10 +101,10 @@ QUnit.module("Fields", (hooks) => {
 
         await click(form.el.querySelector(".o_form_button_save"));
         assert.hasAttrValue(
-            form.el.querySelector("a.o-url-field.o_field_widget.o_form_uri"),
+            form.el.querySelector(".o_field_widget[name='foo'] a"),
             "href",
             "/web/limbo",
-            "should'nt have change link"
+            "shouldn't have change link"
         );
     });
 
@@ -181,28 +184,28 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skip("UrlField in editable list view", async function (assert) {
+    QUnit.test("UrlField in editable list view", async function (assert) {
         assert.expect(10);
 
-        var list = await makeView({
+        const list = await makeView({
             serverData,
             type: "list",
             resModel: "partner",
             arch: '<tree editable="bottom"><field name="foo" widget="url"/></tree>',
         });
         assert.strictEqual(
-            list.el.querySelectorAll("tbody td:not(.o_list_record_selector)").length,
-            5,
-            "should have 5 cells"
+            list.el.querySelectorAll("tbody td:not(.o_list_record_selector) a").length,
+            2,
+            "should have 2 cells with a link"
         );
         assert.containsN(
             list,
-            "a.o_field_widget.o_field_url",
-            5,
-            "should have 5 anchors with correct classes"
+            ".o_field_url.o_field_widget[name='foo'] a",
+            2,
+            "should have 2 anchors with correct classes"
         );
         assert.hasAttrValue(
-            list.el.querySelector("a.o_field_widget.o_field_url"),
+            list.el.querySelector(".o_field_widget[name='foo'] a"),
             "href",
             "http://yop",
             "should have proper href link"
@@ -214,28 +217,32 @@ QUnit.module("Fields", (hooks) => {
         );
 
         // Edit a line and check the result
-        var cell = list.el.querySelector("tbody td:not(.o_list_record_selector)");
-        await testUtils.dom.click(cell);
+        let cell = list.el.querySelector("tbody td:not(.o_list_record_selector)");
+        await click(cell);
         assert.hasClass(cell.parentElement, "o_selected_row", "should be set as edit mode");
         assert.strictEqual(
             cell.querySelector("input").value,
             "yop",
-            "should have the corect value in internal input"
+            "should have the correct value in internal input"
         );
-        await testUtils.fields.editInput(cell.querySelector("input"), "brolo");
+        cell.querySelector("input").value = "brolo";
+        await triggerEvent(cell.querySelector("input"), null, "change");
 
         // save
-        await click(form.el.querySelector(".o_form_button_save"));
+        await click(list.el.querySelector(".o_list_button_save"));
         cell = list.el.querySelector("tbody td:not(.o_list_record_selector)");
         assert.doesNotHaveClass(
             cell.parentElement,
             "o_selected_row",
             "should not be in edit mode anymore"
         );
-        const resultEl = list.el.querySelector(
-            "div.o_form_uri.o_field_widget.o_text_overflow.o_field_url > a"
+        const resultEl = list.el.querySelector(".o_field_widget[name='foo'] a");
+        assert.containsN(
+            list,
+            ".o_field_widget[name='foo'] a",
+            2,
+            "should still have anchors with correct classes"
         );
-        assert.containsN(list, resultEl, 5, "should still have 5 anchors with correct classes");
         assert.hasAttrValue(resultEl, "href", "http://brolo", "should have proper new href link");
         assert.strictEqual(resultEl.innerText, "brolo", "value should be properly updated");
     });

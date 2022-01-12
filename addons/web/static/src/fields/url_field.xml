@@ -3,11 +3,11 @@
 
     <t t-name="web.UrlField" owl="1">
         <t t-if="props.readonly">
-            <a class="o-url-field o_field_widget o_form_uri" t-att-href="formattedHref" t-esc="props.attrs.text || formattedValue" target="_blank"/>
+            <a class="o_url_field o_field_widget o_form_uri" t-att-href="formattedHref" t-esc="props.attrs.text || formattedValue" target="_blank"/>
         </t>
         <t t-else="">
             <input
-                class="o-url-field o_input"
+                class="o_url_field o_input"
                 type="text"
                 t-att-value="props.value or ''"
                 t-att-placeholder="props.placeholder"

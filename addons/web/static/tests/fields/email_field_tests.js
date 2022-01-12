@@ -35,6 +35,9 @@ QUnit.module("Fields", (hooks) => {
                         {
                             foo: "yop",
                         },
+                        {
+                            foo: "blip",
+                        },
                     ],
                 },
             },
@@ -62,14 +65,14 @@ QUnit.module("Fields", (hooks) => {
                 "</form>",
             resId: 1,
         });
-        let mailtoLink = form.el.querySelector("a.o-email-field.o_form_uri.o_text_overflow");
+        let mailtoLink = form.el.querySelector("a.o_field_email.o_form_uri.o_text_overflow");
         assert.containsOnce(form, mailtoLink, "should have a anchor with correct classes");
         assert.strictEqual(mailtoLink.innerText, "yop", "the value should be displayed properly");
         assert.hasAttrValue(mailtoLink, "href", "mailto:yop", "should have proper mailto prefix");
 
         // switch to edit mode and check the result
         await click(form.el.querySelector(".o_form_button_edit"));
-        const mailtoEdit = form.el.querySelector('input[type="email"].o-email-field');
+        const mailtoEdit = form.el.querySelector('input[type="email"].o_field_email');
         assert.containsOnce(form, mailtoEdit, "should have an input for the email field");
         assert.strictEqual(
             mailtoEdit.value,
@@ -83,7 +86,7 @@ QUnit.module("Fields", (hooks) => {
 
         // save
         await click(form.el.querySelector(".o_form_button_save"));
-        mailtoLink = form.el.querySelector("a.o-email-field");
+        mailtoLink = form.el.querySelector("a.o_field_email");
         assert.strictEqual(mailtoLink.innerText, "new", "new value should be displayed properly");
         assert.hasAttrValue(
             mailtoLink,
@@ -93,20 +96,19 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skip("EmailField in editable list view", async function (assert) {
+    QUnit.test("EmailField in editable list view", async function (assert) {
         assert.expect(10);
 
-        var list = await makeView({
+        const list = await makeView({
             serverData,
             type: "list",
             resModel: "partner",
             arch: '<tree edit="1" editable="bottom"><field name="foo"  widget="email"/></tree>',
         });
-
         assert.strictEqual(
-            list.el.querySelectorAll("tbody td:not(.o_list_record_selector)").length,
-            5,
-            "should have 5 cells"
+            list.el.querySelectorAll("tbody td:not(.o_list_record_selector) a").length,
+            2,
+            "should have 2 cells with a link"
         );
         assert.strictEqual(
             list.el.querySelector("tbody td:not(.o_list_record_selector)").innerText,
@@ -114,8 +116,13 @@ QUnit.module("Fields", (hooks) => {
             "value should be displayed properly as text"
         );
 
-        var mailtoLink = list.el.querySelectorAll("a.o-email-field");
-        assert.strictEqual(mailtoLink.length, 5, "should have anchors with correct classes");
+        let mailtoLink = list.el.querySelectorAll("a.o_field_email");
+        assert.containsN(
+            list,
+            ".o_field_email.o_field_widget[name='foo'] a",
+            2,
+            "should have 2 anchors with correct classes"
+        );
         assert.hasAttrValue(
             mailtoLink[0],
             "href",
@@ -123,7 +130,7 @@ QUnit.module("Fields", (hooks) => {
             "should have proper mailto prefix"
         );
         // Edit a line and check the result
-        var cell = list.el.querySelector("tbody td:not(.o_list_record_selector)");
+        let cell = list.el.querySelector("tbody td:not(.o_list_record_selector)");
         await click(cell);
         assert.hasClass(cell.parentElement, "o_selected_row", "should be set as edit mode");
         const mailField = cell.querySelector("input");
@@ -136,7 +143,7 @@ QUnit.module("Fields", (hooks) => {
         await triggerEvent(mailField, null, "change");
 
         // save
-        await click(list.buttons.find(".o_list_button_save"));
+        await click(list.el.querySelector(".o_list_button_save"));
         cell = list.el.querySelector("tbody td:not(.o_list_record_selector)");
         assert.doesNotHaveClass(
             cell.parentElement,
@@ -148,10 +155,8 @@ QUnit.module("Fields", (hooks) => {
             "new",
             "value should be properly updated"
         );
-        mailtoLink = list.el.querySelectorAll(
-            "div.o_form_uri.o_field_widget.o_text_overflow.o-email-field > a"
-        );
-        assert.strictEqual(mailtoLink.length, 5, "should still have anchors with correct classes");
+        mailtoLink = list.el.querySelectorAll(".o_field_widget[name='foo'] a");
+        assert.strictEqual(mailtoLink.length, 2, "should still have anchors with correct classes");
         assert.hasAttrValue(
             mailtoLink[0],
             "href",
@@ -178,7 +183,7 @@ QUnit.module("Fields", (hooks) => {
         });
 
         await click(form.el.querySelector(".o_form_button_save"));
-        const mailtoLink = form.el.querySelector("a.o-email-field");
+        const mailtoLink = form.el.querySelector("a.o_field_email");
         assert.strictEqual(mailtoLink.innerText, "", "the value should be displayed properly");
     });
 
@@ -235,7 +240,7 @@ QUnit.module("Fields", (hooks) => {
             });
             // check initial rendering
             assert.strictEqual(
-                form.el.querySelector(".o-email-field").innerText,
+                form.el.querySelector(".o_field_email").innerText,
                 "dolores.abernathy@delos",
                 "Initial email text should be set"
             );
@@ -249,7 +254,7 @@ QUnit.module("Fields", (hooks) => {
 
             // check rendering after changes
             assert.strictEqual(
-                form.el.querySelector(".o-email-field").innerText,
+                form.el.querySelector(".o_field_email").innerText,
                 "lara.espin@unknown",
                 "email text should be updated"
             );
