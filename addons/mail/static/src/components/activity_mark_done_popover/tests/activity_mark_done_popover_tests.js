@@ -1,13 +1,6 @@
 /** @odoo-module **/
 
-import { insert } from '@mail/model/model_field_command';
-import {
-    afterEach,
-    afterNextRender,
-    beforeEach,
-    createRootMessagingComponent,
-    start,
-} from '@mail/utils/test_utils';
+import { afterEach, beforeEach, start } from '@mail/utils/test_utils';
 
 import Bus from 'web.Bus';
 
@@ -17,13 +10,6 @@ QUnit.module('activity_mark_done_popover', {}, function () {
 QUnit.module('activity_mark_done_popover_tests.js', {
     beforeEach() {
         beforeEach(this);
-
-        this.createActivityMarkDonePopoverComponent = async activity => {
-            await createRootMessagingComponent(this, "ActivityMarkDonePopover", {
-                props: { activityLocalId: activity.localId },
-                target: this.widget.el,
-            });
-        };
 
         this.start = async params => {
             const res = await start({ ...params, data: this.data });
