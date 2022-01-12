@@ -149,18 +149,26 @@ class AccountPaymentMethodLine(models.Model):
 
         return super(AccountPaymentMethodLine, unused_payment_method_lines).unlink()
 
-    def write(self, vals):
-        if 'payment_account_id' in vals:
-            account = self.env['account.account'].browse(vals['payment_account_id'])
-            if not account.reconcile:
-                account.reconcile = True
-        return super().write(vals)
+    @api.model
+    def _auto_toggle_account_to_reconcile(self, account_id):
+        """ Automatically toggle the account to reconcile if allowed.
+
+        :param account_id: The id of an account.account.
+        """
+        account = self.env['account.account'].browse(account_id)
+        if not account.reconcile and account.internal_type != 'liquidity' and account.internal_group != 'off_balance':
+            account.reconcile = True
 
     @api.model_create_multi
     def create(self, vals_list):
+        # OVERRIDE
         for vals in vals_list:
-            if 'payment_account_id' in vals:
-                account = self.env['account.account'].browse(vals['payment_account_id'])
-                if not account.reconcile:
-                    account.reconcile = True
+            if vals.get('payment_account_id'):
+                self._auto_toggle_account_to_reconcile(vals['payment_account_id'])
         return super().create(vals_list)
+
+    def write(self, vals):
+        # OVERRIDE
+        if vals.get('payment_account_id'):
+            self._auto_toggle_account_to_reconcile(vals['payment_account_id'])
+        return super().write(vals)
