@@ -6,9 +6,9 @@ var core = require('web.core');
 var _t = core._t;
 
 var PrinterMixin = {
-    init: function () {
+    init: function (pos) {
         this.receipt_queue = [];
-        this.htmlToImgLetterRendering = false; // Whether to render each letter seperately. Necessary if letter-spacing is used.
+        this.pos = pos;
     },
 
     /**
@@ -58,7 +58,7 @@ var PrinterMixin = {
                     $('.pos-receipt-print').empty();
                     resolve(self.process_canvas(canvas));
                 },
-                letterRendering: self.htmlToImgLetterRendering,
+                letterRendering: self.pos.htmlToImgLetterRendering(),
             })
         });
         return promise;
@@ -85,9 +85,7 @@ var PrinterMixin = {
 
 var Printer = core.Class.extend(PrinterMixin, {
     init: function (url, pos) {
-        PrinterMixin.init.call(this, arguments);
-        this.pos = pos;
-        this.htmlToImgLetterRendering = pos.htmlToImgLetterRendering();
+        PrinterMixin.init.call(this, pos);
         this.connection = new Session(undefined, url || 'http://localhost:8069', { use_cors: true});
     },
 
