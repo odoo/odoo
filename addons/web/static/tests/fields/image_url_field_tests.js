@@ -1,8 +1,11 @@
 /** @odoo-module **/
 
-import { setupViewRegistries } from "../views/helpers";
+import { click } from "../helpers/utils";
+import { makeView, setupViewRegistries } from "../views/helpers";
 
 let serverData;
+const FR_FLAG_URL = "/base/static/img/country_flags/fr.png";
+const EN_FLAG_URL = "/base/static/img/country_flags/gb.png";
 
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
@@ -202,7 +205,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.module("ImageUrlField", {
         beforeEach: function () {
             // specific sixth partner data for image_url widget tests
-            this.data.partner.records.push({
+            serverData.models.partner.records.push({
                 id: 6,
                 bar: false,
                 foo: FR_FLAG_URL,
@@ -216,59 +219,57 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skip("image fields are correctly rendered", async function (assert) {
         assert.expect(6);
 
-        const form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+        const form = await makeView({
+            serverData,
+            type: "form",
+            resModel: "partner",
             arch:
                 '<form string="Partners">' +
                 '<field name="foo" widget="image_url" options="{\'size\': [90, 90]}"/> ' +
                 "</form>",
-            res_id: 6,
-            async mockRPC(route, args) {
+            resId: 6,
+            async mockRPC(route) {
                 if (route === FR_FLAG_URL) {
                     assert.ok(true, "the correct route should have been called.");
                 }
-                return this._super.apply(this, arguments);
             },
         });
 
         assert.hasClass(
-            form.$('div[name="foo"]'),
-            "o_field_image",
+            form.el.querySelector('div[name="foo"]'),
+            "o_field_image_url",
             "the widget should have the correct class"
         );
         assert.containsOnce(form, 'div[name="foo"] > img', "the widget should contain an image");
         assert.hasClass(
-            form.$('div[name="foo"] > img'),
+            form.el.querySelector('div[name="foo"] > img'),
             "img-fluid",
             "the image should have the correct class"
         );
         assert.hasAttrValue(
-            form.$('div[name="foo"] > img'),
+            form.el.querySelector('div[name="foo"] > img'),
             "width",
             "90",
             "the image should correctly set its attributes"
         );
         assert.strictEqual(
-            form.$('div[name="foo"] > img').css("max-width"),
+            form.el.querySelector('div[name="foo"] > img').style.maxWidth,
             "90px",
             "the image should correctly set its attributes"
         );
-        form.destroy();
     });
 
     QUnit.skip("ImageUrlField in subviews are loaded correctly", async function (assert) {
         assert.expect(6);
 
-        this.data.partner_type.fields.image = { name: "image", type: "char" };
-        this.data.partner_type.records[0].image = EN_FLAG_URL;
-        this.data.partner.records[5].timmy = [12];
+        serverData.models.partner_type.fields.image = { name: "image", type: "char" };
+        serverData.models.partner_type.records[0].image = EN_FLAG_URL;
+        serverData.models.partner.records[5].timmy = [12];
 
-        const form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+        const form = await makeView({
+            serverData,
+            type: "form",
+            resModel: "partner",
             arch:
                 '<form string="Partners">' +
                 '<field name="foo" widget="image_url" options="{\'size\': [90, 90]}"/>' +
@@ -290,7 +291,7 @@ QUnit.module("Fields", (hooks) => {
                 "</form>" +
                 "</field>" +
                 "</form>",
-            res_id: 6,
+            resId: 6,
             async mockRPC(route) {
                 if (route === FR_FLAG_URL) {
                     assert.step("The view's image should have been fetched");
@@ -300,7 +301,6 @@ QUnit.module("Fields", (hooks) => {
                     assert.step("The dialog's image should have been fetched");
                     return;
                 }
-                return this._super.apply(this, arguments);
             },
         });
         assert.verifySteps(["The view's image should have been fetched"]);
@@ -312,24 +312,26 @@ QUnit.module("Fields", (hooks) => {
         );
 
         // Actual flow: click on an element of the m2m to get its form view
-        await testUtils.dom.click(form.$(".oe_kanban_global_click"));
-        assert.strictEqual($(".modal").length, 1, "The modal should have opened");
+        await click(form.el.querySelector(".oe_kanban_global_click"));
+        assert.strictEqual(
+            form.el.querySelector(".modal").length,
+            1,
+            "The modal should have opened"
+        );
         assert.verifySteps(["The dialog's image should have been fetched"]);
-
-        form.destroy();
     });
 
     QUnit.skip("image fields in x2many list are loaded correctly", async function (assert) {
         assert.expect(2);
 
-        this.data.partner_type.fields.image = { name: "image", type: "char" };
-        this.data.partner_type.records[0].image = EN_FLAG_URL;
-        this.data.partner.records[5].timmy = [12];
+        serverData.models.partner_type.fields.image = { name: "image", type: "char" };
+        serverData.models.partner_type.records[0].image = EN_FLAG_URL;
+        serverData.models.partner.records[5].timmy = [12];
 
-        const form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+        const form = await makeView({
+            serverData,
+            type: "form",
+            resModel: "partner",
             arch:
                 '<form string="Partners">' +
                 '<field name="timmy" widget="many2many">' +
@@ -338,18 +340,15 @@ QUnit.module("Fields", (hooks) => {
                 "</tree>" +
                 "</field>" +
                 "</form>",
-            res_id: 6,
+            resId: 6,
             async mockRPC(route) {
                 if (route === EN_FLAG_URL) {
                     assert.ok(true, "The list's image should have been fetched");
                     return;
                 }
-                return this._super.apply(this, arguments);
             },
         });
 
         assert.containsOnce(form, "tr.o_data_row", "There should be one record in the many2many");
-
-        form.destroy();
     });
 });
