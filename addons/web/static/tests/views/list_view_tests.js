@@ -6106,11 +6106,10 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skip("edit a row by clicking on a readonly field", async function (assert) {
+    QUnit.test("edit a row by clicking on a readonly field", async function (assert) {
         assert.expect(9);
 
         serverData.models.foo.fields.foo.readonly = true;
-
         const list = await makeView({
             type: "list",
             resModel: "foo",
@@ -6118,50 +6117,42 @@ QUnit.module("Views", (hooks) => {
             arch: '<tree editable="bottom"><field name="foo"/><field name="int_field"/></tree>',
         });
 
-        assert.hasClass(
-            $(list.el).find(".o_data_row:first td:nth(1)"),
-            "o_readonly_modifier",
-            "foo field cells should have class 'o_readonly_modifier'"
-        );
+        assert.containsN(list, ".o_field_widget[name=foo].o_readonly_modifier", 4);
 
         // edit the first row
-        await click($(list.el).find(".o_data_row:first td:nth(1)"));
+        await click(list.el.querySelector(".o_field_cell"));
         assert.hasClass(
-            $(list.el).find(".o_data_row:first"),
+            list.el.querySelector(".o_data_row"),
             "o_selected_row",
             "first row should be selected"
         );
-        var $cell = $(list.el).find(".o_data_row:first td:nth(1)");
-        // review
-        assert.hasClass($cell, "o_readonly_modifier");
-        assert.hasClass($cell.parent(), "o_selected_row");
+        assert.hasClass(list.el.querySelector(".o_data_row"), "o_selected_row");
+        assert.hasClass(
+            list.el.querySelector(".o_selected_row .o_field_widget[name=foo]"),
+            "o_readonly_modifier"
+        );
         assert.strictEqual(
-            $(list.el).find(".o_data_row:first td:nth(1) span").text(),
+            list.el.querySelector(".o_selected_row .o_field_widget[name=foo] span").innerText,
             "yop",
             "a widget should have been rendered for readonly fields"
         );
-        assert.hasClass(
-            $(list.el).find(".o_data_row:first td:nth(2)").parent(),
-            "o_selected_row",
-            "field 'int_field' should be in edition"
-        );
-        assert.strictEqual(
-            $(list.el).find(".o_data_row:first td:nth(2) input").length,
-            1,
-            "a widget for field 'int_field should have been rendered'"
+        assert.containsOnce(
+            list,
+            ".o_selected_row .o_field_widget[name=int_field] input",
+            "'int_field' should be editable"
         );
 
         // click again on readonly cell of first line: nothing should have changed
-        await click($(list.el).find(".o_data_row:first td:nth(1)"));
+        await click(list.el.querySelector(".o_field_cell"));
+        assert.hasClass(list.el.querySelector(".o_data_row"), "o_selected_row");
         assert.hasClass(
-            $(list.el).find(".o_data_row:first"),
-            "o_selected_row",
-            "first row should be selected"
+            list.el.querySelector(".o_selected_row .o_field_widget[name=foo]"),
+            "o_readonly_modifier"
         );
-        assert.strictEqual(
-            $(list.el).find(".o_data_row:first td:nth(2) input").length,
-            1,
-            "a widget for field 'int_field' should have been rendered (only once)"
+        assert.containsOnce(
+            list,
+            ".o_selected_row .o_field_widget[name=int_field] input",
+            "'int_field' should be editable"
         );
     });
 
