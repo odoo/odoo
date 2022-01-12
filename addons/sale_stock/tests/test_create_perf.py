@@ -104,7 +104,7 @@ class TestPERF(common.TransactionCase):
         # NOTE: sometimes more queries on runbot,
         # do not change without verifying in multi-builds
         # (Seems to be a time-based problem, everytime happening around 10PM)
-        self._test_complex_sales_orders_batch_creation_perf(1501)
+        self._test_complex_sales_orders_batch_creation_perf(1502)
 
     @users('admin')
     @warmup
