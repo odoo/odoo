@@ -4,7 +4,8 @@
 import hashlib
 import struct
 import zipfile
-from base64 import b64encode
+from base64 import b64decode, b64encode
+from io import BytesIO
 from re import sub as regex_sub
 
 import requests
@@ -13,6 +14,7 @@ from cryptography.hazmat.primitives.asymmetric import padding
 from lxml import etree
 from odoo import models
 from odoo.tools import get_lang
+from odoo.tools.xml_utils import _check_with_xsd
 from OpenSSL.crypto import FILETYPE_PEM, load_certificate, load_privatekey
 from urllib3.util.ssl_ import DEFAULT_CIPHERS, create_urllib3_context
 
@@ -63,7 +65,7 @@ class L10nEsTbaiFillSignXml(models.AbstractModel):
     _description = "Utility Methods for Bask Country's TicketBAI"
 
     # -------------------------------------------------------------------------
-    # XML: FILL & SIGN
+    # XML: FILL & SIGN & VALIDATE
     # -------------------------------------------------------------------------
 
     NS_MAP = {"ds": "http://www.w3.org/2000/09/xmldsig#"}
@@ -175,6 +177,20 @@ class L10nEsTbaiFillSignXml(models.AbstractModel):
             hashes.SHA256()
         )
         node.find("ds:SignatureValue", namespaces=self.NS_MAP).text = self.base64_print(b64encode(signature))
+
+    def validate_format_xsd(self, xml_bytes, xsd_id):
+        """
+        Checks that the xml file represented by xml_bytes respects the xsd schema with ID xsd_id.
+        In case of validation failure, throws back the UserError thrown by _check_with_xsd.
+        """
+        xsd_attachment = self.env.ref(xsd_id, False)
+        xsd_datas = b64decode(xsd_attachment.datas) if xsd_attachment else None
+        with BytesIO(xsd_datas) as xsd:
+            _check_with_xsd(
+                xml_bytes,
+                xsd,
+                self.env  # allows function to find reference to local xsd (for imports, see schemaLocation in xsd)
+            )
 
     # -------------------------------------------------------------------------
     # CRC-8

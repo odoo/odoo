@@ -2,13 +2,20 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from datetime import datetime, timedelta
 
 L10N_ES_EDI_TBAI_VERSION = 1.2
 L10N_ES_EDI_TBAI_URLS = {
     'signing_policy': {
-        'araba': ('https://ticketbai.araba.eus/tbai/sinadura/', ''),
-        'bizkaia': ('', ''),
-        'gipuzkoa': ('https://www.gipuzkoa.eus/documents/2456431/12093238/TicketBAI_Pol%C3%ADtica_firma_v_1_0.pdf/3c6e5431-bb1d-34ed-5b26-206aaf085452', ''),
+        'araba': (
+            'https://ticketbai.araba.eus/tbai/sinadura/',
+            ''),  # TODO find this
+        'bizkaia': (
+            'https://www.batuz.eus/fitxategiak/batuz/ticketbai/sinadura_elektronikoaren_zehaztapenak_especificaciones_de_la_firma_electronica_v1_0.pdf',
+            'Quzn98x3PMbSHwbUzaj5f5KOpiH0u8bvmwbbbNkO9Es='),
+        'gipuzkoa': (
+            'https://www.gipuzkoa.eus/TicketBAI/signature',
+            '6NrKAm60o7u62FUQwzZew24ra2ve9PRQYwC21AM6In0='),
     },
     'invoice_test': {
         'araba': 'https://pruebas-ticketbai.araba.eus/TicketBAI/v1/facturas/',
@@ -17,7 +24,7 @@ L10N_ES_EDI_TBAI_URLS = {
     },
     'invoice_prod': {
         'araba': 'https://ticketbai.araba.eus/TicketBAI/v1/facturas/',
-        'bizkaia': '',
+        'bizkaia': '',  # TODO find this
         'gipuzkoa': 'https://tbai-z.egoitza.gipuzkoa.eus/sarrerak/alta'
     },
     'qr_test': {
@@ -37,13 +44,15 @@ L10N_ES_EDI_TBAI_URLS = {
     },
     'cancel_prod': {
         'araba': 'https://ticketbai.araba.eus/TicketBAI/v1/anulaciones/',
-        'bizkaia': '',
+        'bizkaia': '',  # TODO find this
         'gipuzkoa': 'https://tbai-z.egoitza.gipuzkoa.eus/sarrerak/baja'
     },
     'xsd': {
-        'araba': '',
-        'bizkaia': '',
-        'gipuzkoa': 'https://www.gipuzkoa.eus/documents/2456431/13761107/Esquemas+de+archivos+XSD+de+env%C3%ADo+y+anulaci%C3%B3n+de+factura_1_2.zip/2d116f8e-4d3a-bff0-7b03-df1cbb07ec52',
+        'araba': 'https://web.araba.eus/documents/105044/5608600/TicketBai12+%282%29.zip',
+        'bizkaia': (
+            'https://www.batuz.eus/fitxategiak/batuz/ticketbai/Anula_ticketBaiV1-2.xsd',
+            'https://www.batuz.eus/fitxategiak/batuz/ticketbai/ticketBaiV1-2.xsd'),
+        'gipuzkoa': 'https://www.gipuzkoa.eus/documents/2456431/13761107/Esquemas+de+archivos+XSD+de+env%C3%ADo+y+anulaci%C3%B3n+de+factura_1_2.zip',
     }
 }
 
@@ -92,8 +101,8 @@ class ResCompany(models.Model):
     )
 
     # === TBAI CHAIN HEAD ===
-    # TODO should we maintain multiple heads, one for each server (tax administration) ?
-    # otherwise (or perhaps either way), user should be prevented from changing administration once chain exists
+    # TODO should we maintain multiple heads, one for each server (tax administration), one for test another for prod ?
+    # otherwise (or perhaps either way), prevent user from changing administration or "test_env" setting once chain exists
     l10n_es_tbai_last_posted_id = fields.Many2one(
         string="Last posted invoice",
         store=True,
@@ -112,10 +121,19 @@ class ResCompany(models.Model):
         inverse_name='company_id',
     )
 
+    def write(self, vals):
+        # OVERRIDE
+        super(ResCompany, self).write(vals)
+        xsd_cron = self.env.ref('l10n_es_edi_tbai.l10n_es_edi_tbai_ir_cron_load_xsd_files')
+        if self.l10n_es_tbai_tax_agency:
+            xsd_cron.active = True
+            # We could deactivate the cron if/when tax agency is unset
+            # but then we would have to check it's not running (else: lock error)
+
     def _compute_l10n_es_tbai_url(self, prefix):
         if self.country_code == 'ES':
             suffix = 'test' if self.l10n_es_tbai_test_env else 'prod'
-            if prefix == 'xsd':
+            if prefix == 'xsd':  # XSD schemas are the same for test/prod
                 suffix = ''
             return L10N_ES_EDI_TBAI_URLS[prefix + suffix][self.l10n_es_tbai_tax_agency]
         else:
@@ -138,6 +156,12 @@ class ResCompany(models.Model):
 
     @api.depends('country_id', 'l10n_es_tbai_tax_agency')
     def _compute_l10n_es_tbai_url_xsd(self):
+        """
+        Returns URLs pointing to the XSD validation schemas for posting and canceling invoices.
+        Return value depends on tax agencies:
+        Araba and Gipuzkoa each have a single URL pointing to a zip file (which may contain more than those two XSDs)
+        Bizkaia has two URLs (one for each XSD): in that case a tuple of strings is returned (instead of a single string)
+        """
         for company in self:
             company.l10n_es_tbai_url_xsd = self._compute_l10n_es_tbai_url('xsd')
 
