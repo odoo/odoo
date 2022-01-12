@@ -45,8 +45,8 @@ class EpsonPrintResultGenerator extends PrintResultGenerator {
 }
 
 var EpsonPrinter = core.Class.extend(PrinterMixin, {
-    init(ip) {
-        PrinterMixin.init.call(this, arguments);
+    init(ip, pos) {
+        PrinterMixin.init.call(this, pos);
         var url = window.location.protocol + '//' + ip;
         this.address = url + '/cgi-bin/epos/service.cgi?devid=local_printer';
         this.printResultGenerator = new EpsonPrintResultGenerator(url);
