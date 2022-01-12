@@ -120,7 +120,7 @@ class AccountMoveLine(models.Model):
             posted_invoice_lines = so_line.invoice_lines.filtered(lambda l: l.move_id.state == 'posted' and bool(l.move_id.reversed_entry_id) == is_line_reversing)
             qty_invoiced = sum([x.product_uom_id._compute_quantity(x.quantity, x.product_id.uom_id) for x in posted_invoice_lines])
 
-            average_price_unit = self.product_id.with_context(force_company=self.company_id.id)._compute_average_price(qty_invoiced, qty_to_invoice, so_line.move_ids, is_returned=is_line_reversing)
+            average_price_unit = self.product_id.with_context(force_company=self.company_id.id, is_returned=is_line_reversing)._compute_average_price(qty_invoiced, qty_to_invoice, so_line.move_ids)
             price_unit = average_price_unit or price_unit
             price_unit = self.product_id.uom_id.with_context(force_company=self.company_id.id)._compute_price(price_unit, self.product_uom_id)
         return price_unit

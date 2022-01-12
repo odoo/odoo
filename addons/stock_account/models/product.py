@@ -601,7 +601,7 @@ class ProductProduct(models.Model):
             return price or 0.0
         return self.uom_id._compute_price(price, uom)
 
-    def _compute_average_price(self, qty_invoiced, qty_to_invoice, stock_moves, is_returned=False):
+    def _compute_average_price(self, qty_invoiced, qty_to_invoice, stock_moves):
         """Go over the valuation layers of `stock_moves` to value `qty_to_invoice` while taking
         care of ignoring `qty_invoiced`. If `qty_to_invoice` is greater than what's possible to
         value with the valuation layers, use the product's standard price.
@@ -609,13 +609,15 @@ class ProductProduct(models.Model):
         :param qty_invoiced: quantity already invoiced
         :param qty_to_invoice: quantity to invoice
         :param stock_moves: recordset of `stock.move`
-        :param is_returned: if True, consider the incoming moves
         :returns: the anglo saxon price unit
         :rtype: float
         """
         self.ensure_one()
         if not qty_to_invoice:
             return 0.0
+
+        # if True, consider the incoming moves
+        is_returned = self.env.context.get('is_returned', False)
 
         returned_quantities = defaultdict(float)
         for move in stock_moves:
