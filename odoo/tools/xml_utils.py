@@ -2,10 +2,15 @@
 """Utilities for generating, parsing and checking XML/XSD files on top of the lxml.etree module."""
 
 import base64
+import logging
+import requests
 from io import BytesIO
 from lxml import etree
 
 from odoo.exceptions import UserError
+
+
+_logger = logging.getLogger(__name__)
 
 
 class odoo_resolver(etree.Resolver):
@@ -83,3 +88,67 @@ def create_xml_node(parent_node, node_name, node_value=None):
     :returns (etree._Element):
     """
     return create_xml_node_chain(parent_node, [node_name], node_value)[0]
+
+
+def load_xsd_from_url(env, url, xsd_code, force_reload=False, request_max_timeout=10):
+    """Load XSD file or ZIP archive and save it as ir.attachment.
+
+    If the XSD file/archive has already been saved in database, then just return the attachment.
+    In such a case, the attachment content can also be updated by force if desired.
+
+    The ir.attachment file name is of the following format:
+
+    *<xsd_code>.xsd_cached_<short_url>*
+
+    Where *short_url* is the last part of the provided URL (each part is separated by a slash),
+    with every dot replaced by an underscore.
+
+    This format is used to ensure the uniqueness of the attachment, based on a special code (module name for instance).
+
+    :param odoo.api.Environment env: environment of calling module
+    :param str url: URL of XSD file/ZIP archive
+    :param str xsd_code: the code (prefix) given to the XSD attachment name in order to index the attachments.
+    :param bool force_reload: if True, reload the attachment from URL, even if it is already cached
+    :param int request_max_timeout: maximum time (in seconds) before the request times out
+    :rtype: odoo.api.ir.attachment
+    :return: the attachment or False if an error occurred (see warning logs)
+    """
+    if not url.endswith(('.xsd', '.zip')):
+        _logger.warning("The given URL (%s) needs to lead to an XSD file or a ZIP archive", url)
+        return False
+
+    short_url = url.split('/')[-1].replace('.', '_')
+    xsd_file_name = '%s.xsd_cached_%s' % (xsd_code, short_url)
+
+    fetched_attachment = env['ir.attachment'].search([('name', '=', xsd_file_name)])
+    if fetched_attachment and not force_reload:
+        _logger.info("Retrieved attachment from database, with name: %s", fetched_attachment.name)
+        return fetched_attachment
+
+    try:
+        _logger.info("Fetching file/archive from given URL: %s", url)
+        response = requests.get(url, timeout=request_max_timeout)
+        response.raise_for_status()
+    except requests.exceptions.HTTPError as error:
+        _logger.warning('HTTP error: %s with the given URL: %s', error, url)
+        return False
+    except requests.exceptions.ConnectionError as error:
+        _logger.warning('Connection error: %s with the given URL: %s', error, url)
+        return False
+    except requests.exceptions.Timeout as error:
+        _logger.warning('Request timeout: %s with the given URL: %s', error, url)
+        return False
+
+    if fetched_attachment:
+        _logger.info("Updating the content of ir.attachment with name: %s", xsd_file_name)
+        fetched_attachment.update({
+            'raw': response.content
+        })
+        return fetched_attachment
+
+    _logger.info("Saving XSD file as ir.attachment, with name: %s", xsd_file_name)
+    return env['ir.attachment'].create({
+        'name': xsd_file_name,
+        'raw': response.content,
+        'public': True,
+    })
