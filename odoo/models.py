@@ -2770,8 +2770,7 @@ class BaseModel(metaclass=MetaModel):
         if necessary:
             _logger.debug("Table '%s': setting default value of new column %s to %r",
                           self._table, column_name, value)
-            query = 'UPDATE "%s" SET "%s"=%s WHERE "%s" IS NULL' % (
-                self._table, column_name, field.column_format, column_name)
+            query = f'UPDATE "{self._table}" SET "{column_name}" = %s WHERE "{column_name}" IS NULL'
             self._cr.execute(query, (value,))
 
     @ormcache()
@@ -3936,7 +3935,7 @@ Fields:
             vals.setdefault('write_date', self.env.cr.now())
 
         # determine SQL values
-        columns = []                    # list of (column_name, format, value)
+        columns = {}                    # {column_name: value}
 
         for name, val in sorted(vals.items()):
             if self._log_access and name in LOG_ACCESS_COLUMNS and not val:
@@ -3948,14 +3947,13 @@ Fields:
                 _logger.warning('Field %s is deprecated: %s', field, field.deprecated)
 
             assert field.column_type
-            columns.append((name, field.column_format, val))
+            columns[name] = val
 
         # update columns
         if columns:
-            query = 'UPDATE "%s" SET %s WHERE id IN %%s' % (
-                self._table, ','.join('"%s"=%s' % (column[0], column[1]) for column in columns),
-            )
-            params = [column[2] for column in columns]
+            template = ', '.join(f'"{name}" = %s' for name in columns)
+            query = f'UPDATE "{self._table}" SET {template} WHERE id IN %s'
+            params = list(columns.values())
             for sub_ids in cr.split_for_in_conditions(set(self.ids)):
                 cr.execute(query, params + [sub_ids])
                 if cr.rowcount != len(sub_ids):
@@ -4203,14 +4201,14 @@ Fields:
         for data in data_list:
             # determine column values
             stored = data['stored']
-            columns = []
+            columns = {}
             for name, val in sorted(stored.items()):
                 field = self._fields[name]
                 assert field.store
 
                 if field.column_type:
                     col_val = field.convert_to_column(val, self, stored)
-                    columns.append((name, field.column_format, col_val))
+                    columns[name] = col_val
                     if field.translate is True:
                         translated_fields.add(field)
                 else:
@@ -4238,15 +4236,11 @@ Fields:
             #
             # That said, we haven't closed the door completely.
             if not columns:  # Manage the case where we create empty record
-                columns = [('id', '%s', psycopg2.extensions.AsIs('DEFAULT'))]
+                columns = {'id': psycopg2.extensions.AsIs('DEFAULT')}
 
-            query = "INSERT INTO {} ({}) VALUES ({}) RETURNING id".format(
-                quote(self._table),
-                ", ".join(quote(name) for name, fmt, val in columns),
-                ", ".join(fmt for name, fmt, val in columns),
-            )
-            params = [val for name, fmt, val in columns]
-            cr.execute(query, params)
+            header = ", ".join(quote(name) for name in columns)
+            query = f'INSERT INTO "{self._table}" ({header}) VALUES %s RETURNING id'
+            cr.execute(query, [tuple(columns.values())])
             ids.append(cr.fetchone()[0])
 
         # put the new records in cache, and update inverse fields, for many2one

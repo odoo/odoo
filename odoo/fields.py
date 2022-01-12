@@ -238,7 +238,6 @@ class Field(MetaField('DummyField', (object,), {})):
     translate = False                   # whether the field is translated
 
     column_type = None                  # database column type (ident, spec)
-    column_format = '%s'                # placeholder for value in queries
     column_cast_from = ()               # column types that may be cast to this
     write_sequence = 0                  # field ordering for write()
 

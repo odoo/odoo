@@ -1568,7 +1568,7 @@ class TestOne2many(TransactionCase):
                         SELECT "res_partner_bank"."partner_id"
                         FROM "res_partner_bank"
                         WHERE ((
-                            "res_partner_bank"."id" IN (%s,%s,%s)
+                            "res_partner_bank"."id" IN %s
                         ) AND (
                             "res_partner_bank"."sanitized_acc_number"::text LIKE %s
                         ))

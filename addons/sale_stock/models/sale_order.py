@@ -60,8 +60,7 @@ class SaleOrder(models.Model):
         if value is not None:
             _logger.debug("Table '%s': setting default value of new column %s to %r",
                 self._table, column_name, value)
-            query = 'UPDATE "%s" SET "%s"=%s WHERE "%s" IS NULL' % (
-                self._table, column_name, field.column_format, column_name)
+            query = f'UPDATE "{self._table}" SET "{column_name}" = %s WHERE "{column_name}" IS NULL'
             self._cr.execute(query, (value,))
 
     @api.depends('picking_ids.date_done')

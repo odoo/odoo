@@ -3388,11 +3388,8 @@ class TestFieldParametersValidation(common.TransactionCase):
 def insert(model, *fnames):
     """ Return the expected query string to INSERT the given columns. """
     columns = sorted(fnames + ('create_uid', 'create_date', 'write_uid', 'write_date'))
-    return 'INSERT INTO "{}" ({}) VALUES ({}) RETURNING id'.format(
-        model._table,
-        ", ".join('"{}"'.format(column) for column in columns),
-        ", ".join('%s' for column in columns),
-    )
+    header = ", ".join(f'"{column}"' for column in columns)
+    return f'INSERT INTO "{model._table}" ({header}) VALUES %s RETURNING id'
 
 
 def update(model, *fnames):
