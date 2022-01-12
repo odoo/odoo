@@ -150,6 +150,11 @@ registerModel({
             readonly: true,
             required: true,
         }),
+        activityMarkDonePopoverView: one2one('ActivityMarkDonePopoverView', {
+            default: insertAndReplace(),
+            inverse: 'activityViewOwner',
+            isCausal: true,
+        }),
         /**
          * Determines whether the details are visible.
          */

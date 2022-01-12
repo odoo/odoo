@@ -1,5 +1,7 @@
 /** @odoo-module **/
 
+import { useComponentToModel } from '@mail/component_hooks/use_component_to_model/use_component_to_model';
+import { useRefToModel } from '@mail/component_hooks/use_ref_to_model/use_ref_to_model';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
@@ -12,6 +14,8 @@ export class ActivityMarkDonePopover extends Component {
      */
     setup() {
         super.setup();
+        useComponentToModel({ fieldName: 'component', modelName: 'ActivityMarkDonePopoverView', propNameAsRecordLocalId: 'localId' });
+        useRefToModel({ fieldName: 'feedbackTextareaRef', modelName: 'ActivityMarkDonePopoverView', propNameAsRecordLocalId: 'localId', refName: 'feedbackTextarea' });
         this._feedbackTextareaRef = useRef('feedbackTextarea');
         onMounted(() => this._mounted());
     }
@@ -22,92 +26,23 @@ export class ActivityMarkDonePopover extends Component {
 
     _mounted() {
         this._feedbackTextareaRef.el.focus();
-        if (this.activity.feedbackBackup) {
-            this._feedbackTextareaRef.el.value = this.activity.feedbackBackup;
+        if (this.activityMarkDonePopoverView.activityViewOwner.activity.feedbackBackup) {
+            this._feedbackTextareaRef.el.value = this.activityMarkDonePopoverView.activityViewOwner.activity.feedbackBackup;
         }
     }
 
     /**
-     * @returns {Activity}
+     * @returns {ActivityMarkDonePopoverView}
      */
-    get activity() {
-        return this.messaging && this.messaging.models['Activity'].get(this.props.activityLocalId);
-    }
-
-    /**
-     * @returns {string}
-     */
-    get DONE_AND_SCHEDULE_NEXT() {
-        return this.env._t("Done & Schedule Next");
-    }
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     */
-    _close() {
-        this.trigger('o-popover-close');
-    }
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     */
-    _onBlur() {
-        if (!this.activity) {
-            return;
-        }
-        this.activity.update({
-            feedbackBackup: this._feedbackTextareaRef.el.value,
-        });
-    }
-
-    /**
-     * @private
-     */
-    _onClickDiscard() {
-        this._close();
-    }
-
-    /**
-     * @private
-     */
-    async _onClickDone() {
-        await this.activity.markAsDone({
-            feedback: this._feedbackTextareaRef.el.value,
-        });
-        this.trigger('reload', { keepChanges: true });
-    }
-
-    /**
-     * @private
-     */
-    _onClickDoneAndScheduleNext() {
-        this.activity.markAsDoneAndScheduleNext({
-            feedback: this._feedbackTextareaRef.el.value,
-        });
-    }
-
-    /**
-     * @private
-     */
-    _onKeydown(ev) {
-        if (ev.key === 'Escape') {
-            this._close();
-        }
+    get activityMarkDonePopoverView() {
+        return this.messaging && this.messaging.models['ActivityMarkDonePopoverView'].get(this.props.localId);
     }
 
 }
 
 Object.assign(ActivityMarkDonePopover, {
     props: {
-        activityLocalId: String,
+        localId: String,
     },
     template: 'mail.ActivityMarkDonePopover',
 });
