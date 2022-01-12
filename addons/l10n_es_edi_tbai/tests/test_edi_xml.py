@@ -40,8 +40,8 @@ class TestEdiXmls(TestEsEdiCommon):
 
         # TODO validate for all tax agencies
         self._validate_format_xsd(
-            etree.tostring(xml_doc, encoding="UTF-8"),
-            f'l10n_es_tbai.{self.env.company.l10n_es_tbai_tax_agency}_ticketBaiV1-2.xsd'
+            xml_doc,
+            f'l10n_es_edi_tbai.{self.env.company.l10n_es_tbai_tax_agency}_ticketBaiV1-2.xsd'
         )
 
     def test_format_cancel(self):
@@ -49,19 +49,13 @@ class TestEdiXmls(TestEsEdiCommon):
 
         # TODO validate for all tax agencies
         self._validate_format_xsd(
-            etree.tostring(xml_doc, encoding="UTF-8"),
-            f'l10n_es_tbai.{self.env.company.l10n_es_tbai_tax_agency}_Anula_ticketBaiV1-2.xsd'
+            xml_doc,
+            f'l10n_es_edi_tbai.{self.env.company.l10n_es_tbai_tax_agency}_Anula_ticketBaiV1-2.xsd'
         )
 
-    def _validate_format_xsd(self, xml_bytes, xsd_name):
-        xsd_attachment = self.env.ref(xsd_name, False)
-        xsd_datas = base64.b64decode(xsd_attachment.datas) if xsd_attachment else None
+    def _validate_format_xsd(self, xml_doc, xsd_name):
+        xml_bytes = etree.tostring(xml_doc, encoding="UTF-8")
         try:
-            with io.BytesIO(xsd_datas) as xsd:
-                _check_with_xsd(
-                    xml_bytes,
-                    xsd,
-                    self.env  # allows function to find reference to local xsd (for imports, see schemaLocation in xsd)
-                )
+            self.env['l10n_es.edi.tbai.util'].validate_format_xsd(xml_bytes, xsd_name)
         except UserError as e:
             self.fail(str(e))

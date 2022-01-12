@@ -3,7 +3,7 @@
 
 import io
 import math
-from base64 import b64encode
+from base64 import b64encode, b64decode
 from collections import defaultdict
 from datetime import datetime
 from re import sub as regex_sub
@@ -12,6 +12,7 @@ from uuid import uuid4
 from cryptography.hazmat.primitives import serialization
 from lxml import etree
 from odoo import _, models
+from odoo.exceptions import UserError
 from pytz import timezone
 
 from .res_company import L10N_ES_EDI_TBAI_VERSION
@@ -69,8 +70,18 @@ class AccountEdiFormat(models.Model):
         # Generate the XML values.
         inv_xml = self._l10n_es_tbai_get_invoice_xml(invoice)
 
+        # Optional check using the XSD
+        res = {}
+        xsd_id = 'l10n_es_edi_tbai.{invoice.company_id.l10n_es_tbai_tax_agency}_ticketBaiV1-2.xsd'
+        xsd_attachment = self.env.ref(xsd_id, False)
+        if xsd_attachment:
+            try:
+                self.env['l10n_es.edi.tbai.util'].validate_format_xsd(inv_xml, xsd_id)
+            except UserError as e:
+                res['errors'] = str(e).split('\\n')
+
         # Call the web service and get response
-        res = self._l10n_es_tbai_post_to_web_service(invoice, inv_xml)
+        res.update(self._l10n_es_tbai_post_to_web_service(invoice, inv_xml))
 
         # Get TicketBai response
         res_xml = res[invoice]['response']
@@ -105,6 +116,7 @@ class AccountEdiFormat(models.Model):
                     body="TicketBAI: submitted XML and response",
                     attachment_ids=attachment.ids)
                 res[invoice]['attachment'] = attachment  # save zip as EDI document
+
         # ERROR (TODO remove -> but any error means we lose the exchange -> log ?)
         else:
             # Put sent XML in chatter
@@ -155,8 +167,18 @@ class AccountEdiFormat(models.Model):
         # Generate the XML values.
         cancel_xml = self._l10n_es_tbai_get_invoice_xml(invoice, cancel=True)
 
+        # Optional check using the XSD
+        res = {}
+        xsd_id = 'l10n_es_edi_tbai.{invoice.company_id.l10n_es_tbai_tax_agency}_Anula_ticketBaiV1-2.xsd'
+        xsd_attachment = self.env.ref(xsd_id, False)
+        if xsd_attachment:
+            try:
+                self.env['l10n_es.edi.tbai.util'].validate_format_xsd(cancel_xml, xsd_id)
+            except UserError as e:
+                res['errors'] = str(e).split('\\n')
+
         # Call the web service and get response
-        res = self._l10n_es_tbai_post_to_web_service(invoice, cancel_xml, cancel=True)
+        res.update(self._l10n_es_tbai_post_to_web_service(invoice, cancel_xml, cancel=True))
 
         # Get TicketBai response
         res_xml = res[invoice]['response']

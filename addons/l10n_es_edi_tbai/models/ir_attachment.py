@@ -35,20 +35,19 @@ class IrAttachment(models.Model):
         })
         self.env['ir.model.data'].create({
             'name': name,
-            'module': 'l10n_es_tbai',
+            'module': 'l10n_es_edi_tbai',
             'res_id': attachment.id,
             'model': 'ir.attachment',
             'noupdate': True,
         })
         _logger.info("Created XSD attachment: " + name)
 
-    def _l10n_es_tbai_load_xsd_core(self):
-        file_name = "xmldsig-core-schema.xsd"
-        attachment = self.env.ref(file_name, False)
+    def _l10n_es_tbai_load_xsd_file(self, file_name, url):
+        attachment = self.env.ref('l10n_es_edi_tbai.' + file_name, False)
         if attachment:
             return
 
-        response = self._l10n_es_tbai_get_url_content("https://www.w3.org/TR/xmldsig-core/xmldsig-core-schema.xsd")
+        response = self._l10n_es_tbai_get_url_content(url)
         if response is None:
             return
 
@@ -60,17 +59,17 @@ class IrAttachment(models.Model):
         validated_content = etree.tostring(xsd_object, pretty_print=True)
         self._l10n_es_tbai_create_xsd_attachment(file_name, validated_content, "Core schema, locally imported by schemas")
 
-    def _l10n_es_tbai_load_xsd_schemas(self):
+    def _l10n_es_tbai_load_xsd_zip(self, url):
         # This method only downloads the xsd files if they don't exist as attachments
 
-        response = self._l10n_es_tbai_get_url_content(self.env.company.l10n_es_tbai_url_xsd)
+        response = self._l10n_es_tbai_get_url_content(url)
         if response is None:
             return
 
         try:
             archive = zipfile.ZipFile(io.BytesIO(response.content))
         except Exception:
-            _logger.warning('UNZIP for XSD failed from URL: %s', self.env.company.l10n_es_tbai_url_xsd)
+            _logger.warning('UNZIP for XSD failed from URL: %s', url)
             return
 
         for file_name in archive.namelist():
@@ -78,7 +77,7 @@ class IrAttachment(models.Model):
                 continue
 
             attachment_name = f'{self.env.company.l10n_es_tbai_tax_agency}_{file_name}'
-            attachment = self.env.ref(attachment_name, False)
+            attachment = self.env.ref('l10n_es_edi_tbai.' + attachment_name, False)
             if attachment:
                 continue
 
@@ -98,5 +97,6 @@ class IrAttachment(models.Model):
             )
 
     def _l10n_es_tbai_load_xsd_attachments(self):
-        self._l10n_es_tbai_load_xsd_core()
-        self._l10n_es_tbai_load_xsd_schemas()
+        if self.env.company.l10n_es_tbai_url_xsd:
+            self._l10n_es_tbai_load_xsd_file("xmldsig-core-schema.xsd", "https://www.w3.org/TR/xmldsig-core/xmldsig-core-schema.xsd")
+            self._l10n_es_tbai_load_xsd_zip(self.env.company.l10n_es_tbai_url_xsd)
