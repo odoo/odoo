@@ -458,9 +458,13 @@ class RecipientsNotificationTest(TestMailCommon):
     def assertRecipientsData(self, recipients_data, records, partners, partner_to_users=None):
         """ Custom assert as recipients structure is custom and may change due
         to some implementation choice. """
-        self.assertEqual(set(recipients_data.keys()), set(records.ids))
-        for record in records:
-            record_data = recipients_data[record.id]
+        if records:
+            self.assertEqual(set(recipients_data.keys()), set(records.ids))
+            record_ids = records.ids
+        else:
+            records, record_ids = [False], [0]
+        for record, record_id in zip(records, record_ids):
+            record_data = recipients_data[record_id]
             self.assertEqual(set(record_data.keys()), set(partners.ids))
             for partner in partners:
                 partner_data = record_data[partner.id]
@@ -479,7 +483,10 @@ class RecipientsNotificationTest(TestMailCommon):
                     self.assertEqual(partner_data['groups'], set())
                     self.assertEqual(partner_data['notif'], 'email')
                     self.assertFalse(partner_data['uid'])
-                self.assertEqual(partner_data['is_follower'], partner in record.message_partner_ids)
+                if record:
+                    self.assertEqual(partner_data['is_follower'], partner in record.message_partner_ids)
+                else:
+                    self.assertFalse(partner_data['is_follower'])
                 self.assertEqual(partner_data['share'], partner.partner_share)
                 self.assertEqual(partner_data['ushare'], user.share)
 
@@ -675,3 +682,11 @@ class RecipientsNotificationTest(TestMailCommon):
             pids=(self.env.user.partner_id + self.partner_admin).ids
         )
         self.assertRecipientsData(recipients_data, test_records, self.env.user.partner_id + self.partner_admin)
+
+        # on mail.thread, False everywhere: pathologic case
+        test_partners = self.partner_admin + self.partner_employee + self.common_partner
+        recipients_data = self.env['mail.followers']._get_recipient_data(
+            self.env['mail.thread'], False, False,
+            pids=test_partners.ids
+        )
+        self.assertRecipientsData(recipients_data, False, test_partners)
