@@ -1,11 +1,7 @@
 # coding: utf-8
-import base64
-import io
-
 from lxml import etree
 from odoo.exceptions import UserError
 from odoo.tests import tagged
-from odoo.tools.xml_utils import _check_with_xsd
 
 from .common import TestEsEdiCommon
 

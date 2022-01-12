@@ -503,7 +503,7 @@ class AccountEdiFormat(models.Model):
     def _l10n_es_tbai_sign_invoice(self, invoice, xml_root):
         util = self.env['l10n_es.edi.tbai.util']
         company = invoice.company_id
-        cert_private, cert_public = company.l10n_es_tbai_certificate_id.get_key_pair()
+        cert_private, cert_public = company.l10n_es_tbai_certificate_id._get_key_pair()
         public_key = cert_public.public_key()
 
         # Identifiers
