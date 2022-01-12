@@ -59,7 +59,7 @@ class Certificate(models.Model):
         )
         return pem_certificate, pem_private_key, certificate
 
-    def get_key_pair(self):
+    def _get_key_pair(self):
         self.ensure_one()
 
         if not self.password:
@@ -72,12 +72,6 @@ class Certificate(models.Model):
         )
 
         return private_key, certificate
-
-    def get_file(self):
-        return b64decode(self.content)
-
-    def get_password(self):
-        return self.password
 
     # -------------------------------------------------------------------------
     # LOW-LEVEL METHODS

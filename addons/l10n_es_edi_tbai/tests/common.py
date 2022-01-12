@@ -29,12 +29,11 @@ class TestEsEdiCommon(AccountEdiTestCommon):
             'password': 'IZDesa2021',
         })
 
-        random_vat = randint(0, 99999999)
         cls.company_data['company'].write({
             'country_id': cls.env.ref('base.es').id,
             'state_id': cls.env.ref('base.state_es_ss').id,  # TODO test all
             'l10n_es_tbai_certificate_id': cls.certificate.id,
-            'vat': "ES" + "{:08}".format(random_vat) + "TRWAGMYFPDXBNJZSQVHLCKE"[random_vat % 23],  # random VAT (so chain is new)
+            'vat': cls.env['l10n_es.edi.tbai.util'].random_vat(force_new=True),  # random VAT (so chain is new)
             'l10n_es_tbai_test_env': True,
             'l10n_es_tbai_tax_agency': 'gipuzkoa',  # TODO test all
         })
