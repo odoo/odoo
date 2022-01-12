@@ -398,6 +398,10 @@ class ProductTemplate(models.Model):
             type_mapping = self._detailed_type_mapping()
             vals['type'] = type_mapping.get(vals['detailed_type'], vals['detailed_type'])
 
+    def _get_related_fields_variant_template(self):
+        """ Return a list of fields present on template and variants models and that are related"""
+        return ['barcode', 'default_code', 'standard_price', 'volume', 'weight', 'packaging_ids']
+
     @api.model_create_multi
     def create(self, vals_list):
         ''' Store the initial standard price in order to be able to retrieve the cost of a product template for a given date'''
@@ -410,19 +414,9 @@ class ProductTemplate(models.Model):
         # This is needed to set given values to first variant after creation
         for template, vals in zip(templates, vals_list):
             related_vals = {}
-            if vals.get('barcode'):
-                related_vals['barcode'] = vals['barcode']
-            if vals.get('default_code'):
-                related_vals['default_code'] = vals['default_code']
-            if vals.get('standard_price'):
-                related_vals['standard_price'] = vals['standard_price']
-            if vals.get('volume'):
-                related_vals['volume'] = vals['volume']
-            if vals.get('weight'):
-                related_vals['weight'] = vals['weight']
-            # Please do forward port
-            if vals.get('packaging_ids'):
-                related_vals['packaging_ids'] = vals['packaging_ids']
+            for field_name in self._get_related_fields_variant_template():
+                if vals.get(field_name):
+                    related_vals[field_name] = vals[field_name]
             if related_vals:
                 template.write(related_vals)
 
