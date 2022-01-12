@@ -5,13 +5,12 @@
         <div class="o_field_copy o_field_widget" t-att-class="{'o_text_overflow': props.isInline}">
             <span t-esc="props.value"/>
             <button 
-                t-attf-class="btn btn-sm btn-primary o_clipboard_button {{'o_btn_' + props.type + '_copy'}}"
+                t-attf-class="btn btn-sm btn-primary o_clipboard_button {{'o_btn_' + props.type + '_copy'}} {{state.isCopied ? 'bg-success' : ''}}"
                 t-ref="copyBtn"
                 t-att-data-clipboard-text="props.value"
-                t-att-data-tooltip="'Copied!'"
             >
-                <span class="fa fa-clipboard mx-1"></span>
-                <span>Copy</span>
+                <span t-if="!state.isCopied"><span class="fa fa-clipboard mx-1"></span>Copy</span>
+                <span t-else=""><span class="fa fa-check mx-1"></span>Copied</span>
             </button>
         </div>
     </t>

@@ -11,14 +11,14 @@ QUnit.module("Fields", (hooks) => {
                 partner: {
                     fields: {
                         display_name: { string: "Displayed name", type: "char", searchable: true },
-                        foo: {
+                        char_field: {
                             string: "Foo",
                             type: "char",
                             default: "My little Foo Value",
                             searchable: true,
                             trim: true,
                         },
-                        txt: {
+                        text_field: {
                             string: "txt",
                             type: "text",
                             default: "My little txt Value\nHo-ho-hoooo Merry Christmas",
@@ -27,7 +27,7 @@ QUnit.module("Fields", (hooks) => {
                     records: [
                         {
                             id: 1,
-                            foo: "yop",
+                            char_field: "yop",
                         },
                     ],
                 },
@@ -48,8 +48,8 @@ QUnit.module("Fields", (hooks) => {
                 '<form string="Partners">' +
                 "<sheet>" +
                 "<div>" +
-                '<field name="txt" widget="CopyClipboardText"/>' +
-                '<field name="foo" widget="CopyClipboardChar"/>' +
+                '<field name="text_field" widget="CopyClipboardText"/>' +
+                '<field name="char_field" widget="CopyClipboardChar"/>' +
                 "</div>" +
                 "</sheet>" +
                 "</form>",
@@ -69,7 +69,7 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("CopyClipboardField on unset field", async function (assert) {
-        serverData.models.partner.records[0].foo = false;
+        serverData.models.partner.records[0].char_field = false;
 
         const form = await makeView({
             serverData,
@@ -79,7 +79,7 @@ QUnit.module("Fields", (hooks) => {
                 "<form>" +
                 "<sheet>" +
                 "<group>" +
-                '<field name="foo" widget="CopyClipboardChar" />' +
+                '<field name="char_field" widget="CopyClipboardChar" />' +
                 "</group>" +
                 "</sheet>" +
                 "</form>",
@@ -88,8 +88,8 @@ QUnit.module("Fields", (hooks) => {
 
         assert.containsNone(
             form,
-            '.o_field_copy[name="foo"] .o_clipboard_button',
-            "foo (unset) should not contain a button"
+            '.o_field_copy[name="char_field"] .o_clipboard_button',
+            "char_field (unset) should not contain a button"
         );
     });
 

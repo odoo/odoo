@@ -5,17 +5,24 @@ import { standardFieldProps } from "./standard_field_props";
 import { useEffect } from "@web/core/utils/hooks";
 
 const { Component } = owl;
-const { useRef } = owl.hooks;
+const { useRef, useState } = owl.hooks;
 
 class CopyClipboard extends Component {
     setup() {
         this.copyRef = useRef("copyBtn");
+        this.state = useState({
+            isCopied: false,
+        });
+        this.timeout = undefined;
         useEffect(() => {
             this.clipboard = new ClipboardJS(this.copyRef.el);
-            this.tooltip = new Tooltip(this.copyRef.el);
-            this.clipboard.on("success", (e) => {
-                this.tooltip.show();
+            this.clipboard.on("success", () => {
+                this.state.isCopied = true;
+                setTimeout(() => {
+                    this.timeout = this.state.isCopied = false;
+                }, 800);
             });
+            return clearTimeout(this.timeout);
         });
     }
 }
