@@ -37,9 +37,8 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(parseFloat("1,234.567"), 1234.567);
         expectInvalidNumberError(assert, parseFloat, "1.000.000");
 
-        // TODO: GES it is skipped while on vacation
-        // patchWithCleanup(localization, { decimalPoint: ",", thousandsSep: "." });
-        // assert.strictEqual(parseFloat("1.234,567"), 1234.567);
+        patchWithCleanup(localization, { decimalPoint: ",", thousandsSep: "." });
+        assert.strictEqual(parseFloat("1.234,567"), 1234.567);
     });
 
     QUnit.test("parseFloatTime", function (assert) {
@@ -70,11 +69,10 @@ QUnit.module("Fields", (hooks) => {
 
         patchWithCleanup(localization, { decimalPoint: ",", thousandsSep: "." });
 
-        // TODO: GES it is skipped while on vacation
-        // assert.strictEqual(parseInteger("1.000.000"), 1000000);
-        // expectInvalidNumberError(assert, parseInteger, "1.234,567");
+        assert.strictEqual(parseInteger("1.000.000"), 1000000);
+        expectInvalidNumberError(assert, parseInteger, "1.234,567");
         // fallback to en localization
-        // assert.strictEqual(parseInteger("1,000,000"), 1000000);
+        assert.strictEqual(parseInteger("1,000,000"), 1000000);
     });
 
     QUnit.test("parsePercentage", function (assert) {
@@ -132,7 +130,7 @@ QUnit.module("Fields", (hooks) => {
         assert.throws(() => parseMonetary("$&nbsp;12.00&nbsp;34", { currencyId: 3 }));
     });
 
-    QUnit.skip("parsers fallback on english localisation", function (assert) {
+    QUnit.test("parsers fallback on english localisation", function (assert) {
         patchWithCleanup(localization, {
             decimalPoint: ",",
             thousandsSep: ".",
