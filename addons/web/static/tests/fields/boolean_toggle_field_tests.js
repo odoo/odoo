@@ -55,4 +55,25 @@ QUnit.module("Fields", (hooks) => {
             "Boolean toggle should have fa-times-circle icon"
         );
     });
+
+    QUnit.test("readonly switch", async function (assert) {
+        assert.expect(2);
+
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="bar" widget="boolean_toggle" readonly="1" />
+                </form>
+            `,
+        });
+
+        assert.containsOnce(form.el, ".o_boolean_toggle input:disabled:checked");
+
+        await click(form.el, ".o_field_widget[name='bar'] label");
+
+        assert.containsOnce(form.el, ".o_boolean_toggle input:disabled:checked");
+    });
 });
