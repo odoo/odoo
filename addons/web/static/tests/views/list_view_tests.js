@@ -3166,8 +3166,6 @@ QUnit.module("Views", (hooks) => {
     );
 
     QUnit.skip("editable list: overflowing table", async function (assert) {
-        assert.expect(1);
-
         serverData.models.bar = {
             fields: {
                 titi: { string: "Small char", type: "char", sortable: true },
@@ -3193,19 +3191,19 @@ QUnit.module("Views", (hooks) => {
             ],
         };
         const list = await makeView({
+            type: "list",
+            resModel: "bar",
+            serverData,
             arch: `
                 <tree editable="top">
                     <field name="titi"/>
                     <field name="grosminet" widget="char"/>
                 </tree>`,
-            serverData,
-            model: "bar",
-            type: "list",
         });
 
         assert.strictEqual(
-            $(list.el).find("table").width(),
-            $(list.el).find(".o_list_view").width(),
+            list.el.querySelector("table").offsetWidth,
+            list.el.querySelector(".o_list_renderer").offsetWidth,
             "Table should not be stretched by its content"
         );
     });
@@ -3514,28 +3512,23 @@ QUnit.module("Views", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip(
-        "editable list view, click on m2o dropdown do not close editable row",
+    QUnit.test(
+        "editable list view, click on m2o dropdown does not close editable row",
         async function (assert) {
-            assert.expect(2);
-
             const list = await makeView({
                 type: "list",
                 resModel: "foo",
                 serverData,
-                arch:
-                    '<tree string="Phonecalls" editable="top">' + '<field name="m2o"/>' + "</tree>",
+                arch: '<tree editable="top"><field name="m2o"/></tree>',
             });
 
             await click(list.el.querySelector(".o_list_button_add"));
-            await click($(list.el).find(".o_selected_row .o_data_cell .o_field_many2one input"));
-            const $dropdown = list
-                .$(".o_selected_row .o_data_cell .o_field_many2one input")
-                .autocomplete("widget");
-            await click($dropdown);
-            assert.containsOnce(list, ".o_selected_row", "should still have editable row");
+            assert.strictEqual(list.el.querySelector(".o_selected_row .o_field_many2one input").value, "");
+            await click(list.el.querySelector(".o_selected_row .o_field_many2one input"));
+            assert.containsOnce(list, ".o_field_many2one .o-autocomplete--dropdown-menu");
 
-            await click($dropdown.find("li:first"));
+            await click(list.el.querySelector(".o_field_many2one .o-autocomplete--dropdown-menu .dropdown-item"));
+            assert.strictEqual(list.el.querySelector(".o_selected_row .o_field_many2one input").value, "Value 1");
             assert.containsOnce(list, ".o_selected_row", "should still have editable row");
         }
     );
@@ -4768,18 +4761,16 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skip("can display button in edit mode", async function (assert) {
-        assert.expect(2);
-
+    QUnit.test("can display button in edit mode", async function (assert) {
         const list = await makeView({
             type: "list",
             resModel: "foo",
             serverData,
-            arch:
-                '<tree editable="bottom">' +
-                '<field name="foo"/>' +
-                '<button name="notafield" type="object" icon="fa-asterisk" class="o_yeah"/>' +
-                "</tree>",
+            arch: `
+                <tree editable="top">
+                    <field name="foo"/>
+                    <button name="notafield" type="object" icon="fa-asterisk" class="o_yeah"/>
+                </tree>`,
         });
         assert.containsN(list, "tbody button[name=notafield]", 4);
         assert.containsN(
@@ -4788,6 +4779,9 @@ QUnit.module("Views", (hooks) => {
             4,
             "class o_yeah should be set on the four button"
         );
+
+        await click(list.el.querySelector(".o_field_cell"));
+        assert.containsOnce(list, ".o_selected_row button[name=notafield]");
     });
 
     QUnit.test("can display a list with a many2many field", async function (assert) {
