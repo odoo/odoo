@@ -964,37 +964,21 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("record-depending invisible lines are correctly aligned", async function (assert) {
-        assert.expect(4);
-
         const list = await makeView({
             type: "list",
             resModel: "foo",
             serverData,
-            arch:
-                "<tree>" +
-                '<field name="foo"/>' +
-                "<field name=\"bar\" attrs=\"{'invisible': [('id','=', 1)]}\"/>" +
-                '<field name="int_field"/>' +
-                "</tree>",
+            arch: `
+                <tree>
+                    <field name="foo"/>
+                    <field name="bar" attrs="{'invisible': [('id','=', 1)]}"/>
+                    <field name="int_field"/>
+                </tree>`,
         });
 
-        assert.containsN(list, "tbody tr:first td", 4, "there should be 4 cells in the first row");
-        assert.containsOnce(
-            list,
-            "tbody td.o_invisible_modifier",
-            "there should be 1 invisible bar cell"
-        );
-        assert.hasClass(
-            $(list.el).find("tbody tr:first td:eq(2)"),
-            "o_invisible_modifier",
-            "the 3rd cell should be invisible"
-        );
-        assert.containsN(
-            list,
-            "tbody tr:eq(0) td:visible",
-            $(list.el).find("tbody tr:eq(1) td:visible").length,
-            "there should be the same number of visible cells in different rows"
-        );
+        assert.containsN(list, ".o_data_row", 4);
+        assert.containsN(list, ".o_data_row td", 16); // 4 cells per row
+        assert.strictEqual(list.el.querySelectorAll(".o_data_row td")[2].innerHTML, "");
     });
 
     QUnit.skip(
@@ -6026,55 +6010,33 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skip("invisible attrs in readonly and editable list", async function (assert) {
-        assert.expect(5);
-
+    QUnit.test("invisible attrs in readonly and editable list", async function (assert) {
         const list = await makeView({
             type: "list",
             resModel: "foo",
             serverData,
-            arch:
-                '<tree editable="top">' +
-                '<button string="a button" name="button_action" icon="fa-car" ' +
-                "type=\"object\" attrs=\"{'invisible': [('id','=', 1)]}\"/>" +
-                '<field name="int_field"/>' +
-                '<field name="qux"/>' +
-                "<field name=\"foo\" attrs=\"{'invisible': [('id','=', 1)]}\"/>" +
-                "</tree>",
+            arch: `
+                <tree editable="top">
+                    <button string="a button" name="button_action" icon="fa-car" type="object" attrs="{'invisible': [('id','=', 1)]}"/>
+                    <field name="int_field"/>
+                    <field name="qux"/>
+                    <field name="foo" attrs="{'invisible': [('id','=', 1)]}"/>
+                </tree>`,
         });
 
-        assert.equal(
-            $(list.el).find("tbody tr:nth(0) td:nth(4)").html(),
-            "",
-            "td that contains an invisible field should be empty"
-        );
-        assert.hasClass(
-            $(list.el).find("tbody tr:nth(0) td:nth(1) button"),
-            "o_invisible_modifier",
-            "button with invisible attrs should be properly hidden"
-        );
+        assert.strictEqual(list.el.querySelectorAll(".o_field_cell")[2].innerHTML, "");
+        assert.strictEqual(list.el.querySelector(".o_data_cell.o_list_button").innerHTML, "");
 
         // edit first row
-        await click($(list.el).find("tbody tr:nth(0) td:nth(2)"));
-        assert.strictEqual(
-            $(list.el).find("tbody tr:nth(0) td:nth(4) input.o_invisible_modifier").length,
-            1,
-            "td that contains an invisible field should not be empty in edition"
-        );
-        assert.hasClass(
-            $(list.el).find("tbody tr:nth(0) td:nth(1) button"),
-            "o_invisible_modifier",
-            "button with invisible attrs should be properly hidden"
-        );
+        await click(list.el.querySelector(".o_field_cell"));
+        assert.strictEqual(list.el.querySelectorAll(".o_field_cell")[2].innerHTML, "");
+        assert.strictEqual(list.el.querySelector(".o_data_cell.o_list_button").innerHTML, "");
+
         await click(list.el.querySelector(".o_list_button_discard"));
 
         // click on the invisible field's cell to edit first row
-        await click($(list.el).find("tbody tr:nth(0) td:nth(4)"));
-        assert.hasClass(
-            $(list.el).find("tbody tr:nth(0)"),
-            "o_selected_row",
-            "first row should be in edition"
-        );
+        await click(list.el.querySelectorAll(".o_field_cell")[2]);
+        assert.hasClass(list.el.querySelector(".o_data_row"), "o_selected_row");
     });
 
     QUnit.skip("monetary fields are properly rendered", async function (assert) {

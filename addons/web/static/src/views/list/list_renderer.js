@@ -211,7 +211,7 @@ export class ListRenderer extends Component {
         return classNames.join(" ");
     }
 
-    getCellClass(column, record) {
+    getCellClass(column) {
         if (!this.cellClassByColumn[column.name]) {
             const classNames = ["o_data_cell"];
             if (column.type === "button_group") {
@@ -228,15 +228,7 @@ export class ListRenderer extends Component {
             }
             this.cellClassByColumn[column.name] = classNames;
         }
-        const modifiersClassNames = [];
-        if (column.type === "field") {
-            const invisible = record.activeFields[column.name].modifiers.invisible;
-            if (invisible && new Domain(invisible).contains(record.data)) {
-                modifiersClassNames.push("o_invisible_modifier");
-            }
-        }
-
-        return [...this.cellClassByColumn[column.name], ...modifiersClassNames].join(" ");
+        return this.cellClassByColumn[column.name].join(" ");
     }
 
     getCellTitle(column, record) {

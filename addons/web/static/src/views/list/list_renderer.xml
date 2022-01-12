@@ -115,12 +115,12 @@
             </td>
             <t t-foreach="state.columns" t-as="column" t-key="column.name">
                 <t t-if="column.type === 'field'">
-                    <td class="o_data_cell" t-att-class="getCellClass(column, record)" t-att-title="getCellTitle(column, record)">
-                        <Field name="column.name" record="record" readonly="props.editedRecordId !== record.id" type="column.widget" />
+                    <td class="o_data_cell" t-att-class="getCellClass(column)" t-att-title="getCellTitle(column, record)">
+                        <Field t-if="!evalModifier(column.modifiers.invisible, record)" name="column.name" record="record" readonly="props.editedRecordId !== record.id" type="column.widget" />
                     </td>
                 </t>
                 <t t-if="column.type === 'button_group'">
-                    <td class="o_data_cell" t-att-class="getCellClass(column, record)">
+                    <td class="o_data_cell" t-att-class="getCellClass(column)">
                         <t t-foreach="column.buttons" t-as="button" t-key="button.id">
                             <ViewButton t-if="!evalModifier(button.modifiers.invisible, record)"
                                 classes="button.classes"
