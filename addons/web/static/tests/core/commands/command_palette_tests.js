@@ -26,8 +26,8 @@ let target;
 let testComponent;
 const serviceRegistry = registry.category("services");
 
-class footerComponent extends Component {}
-footerComponent.template = xml`<span>My footer</span>`;
+class FooterComponent extends Component {}
+FooterComponent.template = xml`<span>My footer</span>`;
 
 class TestComponent extends Component {
     get DialogContainer() {
@@ -154,7 +154,7 @@ QUnit.test("add a footer", async (assert) => {
     testComponent = await mount(TestComponent, { env, target });
     const config = {
         providers: [],
-        footerComponent,
+        FooterComponent,
     };
     env.services.dialog.add(CommandPaletteDialog, {
         config,
@@ -963,7 +963,7 @@ QUnit.test("multi level command", async (assert) => {
     ];
     const config = {
         emptyMessageByNamespace,
-        footerComponent,
+        FooterComponent,
         placeholder: "placeholder test",
         providers,
     };
