@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { Domain } from "@web/core/domain";
 import { registry } from "@web/core/registry";
 import { _lt } from "@web/core/l10n/translation";
 import { standardFieldProps } from "./standard_field_props";
@@ -23,7 +22,9 @@ export class SelectionField extends Component {
             case "many2one":
                 return this.props.value ? this.props.value[1] : "";
             case "selection":
-                return this.props.value ? Object.fromEntries(this.options)[this.props.value] : "";
+                return this.props.value !== false
+                    ? this.options.find((o) => o[0] === this.props.value)[1]
+                    : "";
             default:
                 return "";
         }

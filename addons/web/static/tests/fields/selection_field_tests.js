@@ -352,7 +352,7 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps(["read", "name_search", "name_search", "onchange"]);
     });
 
-    QUnit.skip("unset selection field with 0 as key", async function (assert) {
+    QUnit.test("unset selection field with 0 as key", async function (assert) {
         // The server doesn't make a distinction between false value (the field
         // is unset), and selection 0, as in that case the value it returns is
         // false. So the client must convert false to value 0 if it exists.
