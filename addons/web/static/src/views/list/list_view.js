@@ -19,7 +19,7 @@ import { getActiveActions, getDecoration, processButton } from "../helpers/view_
 import { RelationalModel } from "../relational_model";
 import { ListRenderer } from "./list_renderer";
 
-const { hooks, useState } = owl;
+const { hooks } = owl;
 const { onWillStart, useSubEnv } = hooks;
 
 export class ListViewHeaderButton extends ViewButton {
@@ -221,7 +221,7 @@ export class ListView extends owl.Component {
         usePager(() => {
             return {
                 offset: this.model.root.offset,
-                limit: this.model.root.limit,
+                limit: Math.max(this.model.root.limit, this.model.root.records.length),
                 total: this.model.root.count,
                 onUpdate: async ({ offset, limit }) => {
                     this.model.root.offset = offset;
@@ -256,13 +256,22 @@ export class ListView extends owl.Component {
         }
     }
 
+    async leaveEdition() {
+        if (this.editedRecord) {
+            await this.editedRecord.save();
+            this.editedRecord = null;
+            this.render();
+        }
+    }
+
     async onClickCreate() {
         if (this.editable) {
             // add a new row
             if (this.editedRecord) {
                 await this.editedRecord.save();
             }
-            // this.editedRecord = record;
+            const newRecord = await this.model.root.addNewRecord(this.editable);
+            this.editedRecord = newRecord;
             this.render();
         } else {
             // switch to form view to create a new record
@@ -279,14 +288,19 @@ export class ListView extends owl.Component {
     }
 
     onClickDiscard() {
-        this.editedRecord.discard();
+        if (this.editedRecord.isNew) {
+            this.model.root.abandonRecord(this.editedRecord);
+        } else {
+            this.editedRecord.discard();
+        }
         this.editedRecord = null;
     }
 
     async onClickSave() {
-        await this.editedRecord.save();
-        this.editedRecord = null;
-        this.render();
+        // this is useless since we save on click outside
+        // await this.editedRecord.save();
+        // this.editedRecord = null;
+        // this.render();
     }
 
     getSelectedResIds() {

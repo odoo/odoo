@@ -3,7 +3,7 @@
 
     <t t-name="web.ListRenderer" owl="1">
         <div class="o_list_renderer table-responsive">
-            <table t-attf-class="o_list_table table table-sm table-hover table-striped {{props.list.isGrouped ? 'o_list_table_grouped' : 'o_list_table_ungrouped'}}">
+            <table t-attf-class="o_list_table table table-sm table-hover table-striped {{props.list.isGrouped ? 'o_list_table_grouped' : 'o_list_table_ungrouped'}}" t-ref="table">
                 <thead>
                     <tr>
                         <th t-if="props.hasSelectors" class="o_list_record_selector" t-on-click.stop="toggleSelection">

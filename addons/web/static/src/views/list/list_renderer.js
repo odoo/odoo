@@ -8,7 +8,8 @@ import { registry } from "@web/core/registry";
 import { Field } from "@web/fields/field";
 import { ViewButton } from "@web/views/view_button/view_button";
 
-const { Component, useState } = owl;
+const { Component, hooks, useState } = owl;
+const { useExternalListener, useRef } = hooks;
 
 const formatterRegistry = registry.category("formatters");
 
@@ -37,6 +38,8 @@ export class ListRenderer extends Component {
                 (col) => !col.optional || this.optionalActiveFields[col.name]
             ),
         });
+        useExternalListener(document, "click", this.onGlobalClick.bind(this));
+        this.tableRef = useRef("table");
     }
 
     editGroupRecord(group) {
@@ -384,6 +387,16 @@ export class ListRenderer extends Component {
         this.saveOptionalActiveFields(
             this.allColumns.filter((col) => this.optionalActiveFields[col.name] && col.optional)
         );
+    }
+
+    onGlobalClick(ev) {
+        if (!this.props.editedRecordId) {
+            return; // there's no row in edition
+        }
+        if (this.tableRef.el.contains(ev.target)) {
+            return; // we clicked inside the table
+        }
+        this.props.leaveEdition();
     }
 }
 

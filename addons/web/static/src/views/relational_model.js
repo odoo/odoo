@@ -261,6 +261,10 @@ export class Record extends DataPoint {
         return true;
     }
 
+    get isNew() {
+        return !this.resId;
+    }
+
     async load() {
         if (!this.fieldNames.length) {
             return;
@@ -714,6 +718,33 @@ export class DynamicRecordList extends DynamicList {
         if (result) {
             await this.model.load();
         }
+    }
+
+    /**
+     * @param {"top" | "bottom"} [position="top"]
+     * @returns {Record} the newly created record
+     */
+    async addNewRecord(position = "top") {
+        const newRecord = this.model.createDataPoint("record", {
+            resModel: this.resModel,
+            fields: this.fields,
+            activeFields: this.activeFields,
+        });
+        if (position === "top") {
+            this.records.unshift(newRecord);
+        } else {
+            this.records.push(newRecord);
+        }
+        this.count++;
+        await newRecord.load();
+        return newRecord;
+    }
+
+    abandonRecord(record) {
+        const index = this.records.indexOf(record);
+        this.records.splice(index, 1);
+        this.count--;
+        this.model.notify();
     }
 
     // -------------------------------------------------------------------------
