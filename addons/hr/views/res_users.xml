@@ -2,7 +2,7 @@
 <odoo>
     <data>
 
-        <!-- Inherit the preference view to remove title, image and footer -->
+        <!-- Inherit the preference view to remove title and image -->
         <!-- This view is meant to be included in the employee profile view -->
         <!-- It ensures that if the 'normal' Preferences view is changed, it's
             also reflected in the employee's profile -->
@@ -12,9 +12,6 @@
             <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
             <field name="mode">primary</field>
             <field name="arch" type="xml">
-                <footer position="attributes">
-                    <attribute name="invisible">1</attribute>
-                </footer>
                 <h1 position="replace"/>
                 <xpath expr="//field[@name='image_1920']" position="replace"/>
                 <xpath expr="//field[@name='company_id']" position="attributes">
