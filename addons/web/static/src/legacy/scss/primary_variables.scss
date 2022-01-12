@@ -46,8 +46,11 @@ $o-theme-text-colors: (
     "danger": #d23f3a,
 )!default;
 
+$o-opacity-disabled: .5 !default;
+$o-opacity-muted: .76 !default;
+
 $o-main-text-color: $o-gray-700 !default;
-$o-main-color-muted: rgba($o-main-text-color, .76) !default;
+$o-main-color-muted: rgba($o-main-text-color, $o-opacity-muted) !default;
 $o-main-headings-color: $o-gray-900 !default;
 $o-main-link-color: darken($o-brand-primary, 5%) !default;
 $o-main-favorite-color: #f3cc00 !default;
