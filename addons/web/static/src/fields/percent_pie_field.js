@@ -16,17 +16,6 @@ export class PercentPieField extends Component {
             value: rotateDeg,
         };
     }
-    /**
-     * @param {Event} ev
-     */
-    onChange(ev) {
-        let value = ev.target.value;
-        if (this.props.record.fields[this.props.name].trim) {
-            value = value.trim();
-        }
-        value = value / 100;
-        this.props.update(value || false);
-    }
 }
 
 Object.assign(PercentPieField, {
