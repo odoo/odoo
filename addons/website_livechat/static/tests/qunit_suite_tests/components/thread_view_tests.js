@@ -7,7 +7,7 @@ import {
 
 QUnit.module('website_livechat', {}, function () {
 QUnit.module('components', {}, function () {
-QUnit.module('discuss_tests.js', {
+QUnit.module('thread_view_tests.js', {
     async beforeEach() {
         await beforeEach(this);
     },
