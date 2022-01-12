@@ -12,7 +12,7 @@ class ProjectTaskCreateTimesheet(models.TransientModel):
 
     _sql_constraints = [('time_positive', 'CHECK(time_spent > 0)', 'The timesheet\'s time must be positive' )]
 
-    time_spent = fields.Float('Time', digits=(16, 2))
+    time_spent = fields.Float('Time')
     description = fields.Char('Description')
     task_id = fields.Many2one(
         'project.task', "Task", required=True,
