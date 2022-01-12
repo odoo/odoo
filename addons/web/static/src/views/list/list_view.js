@@ -270,8 +270,7 @@ export class ListView extends owl.Component {
             if (this.editedRecord) {
                 await this.editedRecord.save();
             }
-            const newRecord = await this.model.root.addNewRecord(this.editable);
-            this.editedRecord = newRecord;
+            this.editedRecord = await this.model.root.addNewRecord(this.editable);
             this.render();
         } else {
             // switch to form view to create a new record

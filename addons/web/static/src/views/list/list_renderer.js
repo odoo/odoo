@@ -389,12 +389,16 @@ export class ListRenderer extends Component {
         );
     }
 
+    onFooterClick() {
+        this.props.leaveEdition();
+    }
+
     onGlobalClick(ev) {
         if (!this.props.editedRecordId) {
             return; // there's no row in edition
         }
         if (this.tableRef.el.contains(ev.target)) {
-            return; // we clicked inside the table
+            return; // ignore clicks inside the table, they are handled directly by the renderer
         }
         this.props.leaveEdition();
     }
