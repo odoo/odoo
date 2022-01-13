@@ -91,7 +91,7 @@ else:
         try:
             with close_srv(ws.OpenSCManager(None, None, ws.SC_MANAGER_ALL_ACCESS)) as hscm,\
                  close_srv(wsu.SmartOpenService(hscm, nt_service_name, ws.SERVICE_ALL_ACCESS)) as hs:
-                     info = ws.QueryServiceStatusEx(hs)
-                     return info['ProcessId'] == os.getppid()
+                    info = ws.QueryServiceStatusEx(hs)
+                    return info['ProcessId'] == os.getppid()
         except Exception:
             return False
