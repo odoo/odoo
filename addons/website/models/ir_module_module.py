@@ -152,7 +152,9 @@ class IrModuleModule(models.Model):
                 # special case for attachment
                 # if module B override attachment from dependence A, we update it
                 if not find and model_name == 'ir.attachment':
-                    find = rec.copy_ids.search([('key', '=', rec.key), ('website_id', '=', website.id)])
+                    # In master, a unique constraint over (theme_template_id, website_id)
+                    # will be introduced, thus ensuring unicity of 'find'
+                    find = rec.copy_ids.search([('key', '=', rec.key), ('website_id', '=', website.id), ("original_id", "=", False)])
 
                 if find:
                     imd = self.env['ir.model.data'].search([('model', '=', find._name), ('res_id', '=', find.id)])
