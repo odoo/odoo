@@ -6437,9 +6437,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(list, ".o_data_row", "open group should display 1 record");
     });
 
-    QUnit.skip("edition: create new line, then discard", async function (assert) {
-        assert.expect(11);
-
+    QUnit.test("edition: create new line, then discard", async function (assert) {
         const list = await makeView({
             type: "list",
             resModel: "foo",
@@ -6448,276 +6446,153 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.containsN(list, "tr.o_data_row", 4, "should have 4 records");
-        assert.strictEqual(
-            $(list.el).findbuttons.find(".o_list_button_add:visible").length,
-            1,
-            "create button should be visible"
-        );
-        assert.strictEqual(
-            $(list.el).findbuttons.find(".o_list_button_discard:visible").length,
-            0,
-            "discard button should be hidden"
-        );
+        assert.containsOnce(list, ".o_list_button_add");
+        assert.containsNone(list, ".o_list_button_discard");
         assert.containsN(list, ".o_list_record_selector input:enabled", 5);
         await click(list.el.querySelector(".o_list_button_add"));
-        assert.strictEqual(
-            $(list.el).findbuttons.find(".o_list_button_add:visible").length,
-            0,
-            "create button should be hidden"
-        );
-        assert.strictEqual(
-            $(list.el).findbuttons.find(".o_list_button_discard:visible").length,
-            1,
-            "discard button should be visible"
-        );
+        assert.containsNone(list, ".o_list_button_add");
+        assert.containsOnce(list, ".o_list_button_discard");
         assert.containsNone(list, ".o_list_record_selector input:enabled");
         await click(list.el.querySelector(".o_list_button_discard"));
         assert.containsN(list, "tr.o_data_row", 4, "should still have 4 records");
-        assert.strictEqual(
-            $(list.el).findbuttons.find(".o_list_button_add:visible").length,
-            1,
-            "create button should be visible again"
-        );
-        assert.strictEqual(
-            $(list.el).findbuttons.find(".o_list_button_discard:visible").length,
-            0,
-            "discard button should be hidden again"
-        );
+        assert.containsOnce(list, ".o_list_button_add");
+        assert.containsNone(list, ".o_list_button_discard");
         assert.containsN(list, ".o_list_record_selector input:enabled", 5);
     });
 
-    QUnit.skip(
+    QUnit.test(
         "invisible attrs on fields are re-evaluated on field change",
         async function (assert) {
-            assert.expect(7);
-
             const list = await makeView({
                 type: "list",
                 resModel: "foo",
                 serverData,
-                arch:
-                    '<tree editable="top">' +
-                    "<field name=\"foo\" attrs=\"{'invisible': [['bar', '=', True]]}\"/>" +
-                    '<field name="bar"/>' +
-                    "</tree>",
+                arch: `
+                    <tree editable="top">
+                        <field name="foo" attrs="{'invisible': [['bar', '=', True]]}"/>
+                        <field name="bar"/>
+                    </tree>`,
             });
 
-            assert.containsN(
-                list,
-                "tbody td.o_invisible_modifier",
-                3,
-                "there should be 3 invisible foo cells in readonly mode"
+            let fooCells = list.el.querySelectorAll(".o_data_cell.o_list_char");
+            assert.deepEqual(
+                [...fooCells].map((c) => c.innerText),
+                ["", "", "", "blip"]
             );
 
             // Make first line editable
-            await click($(list.el).find("tbody tr:nth(0) td:nth(1)"));
+            await click(list.el.querySelector(".o_field_cell"));
+            assert.containsNone(list, ".o_selected_row .o_list_char .o_field_widget[name=foo]");
 
-            assert.strictEqual(
-                $(list.el).find(
-                    'tbody tr:nth(0) td:nth(1) > input[name="foo"].o_invisible_modifier'
-                ).length,
-                1,
-                "the foo field widget should have been rendered as invisible"
+            await click(list.el.querySelector(".o_field_widget[name=bar] input"));
+            assert.containsOnce(list, ".o_selected_row .o_list_char .o_field_widget[name=foo]");
+            assert.strictEqual(list.el.querySelector(".o_list_char input").value, "yop");
+            fooCells = list.el.querySelectorAll(".o_data_cell.o_list_char");
+            assert.deepEqual(
+                [...fooCells].map((c) => c.innerText),
+                ["", "", "", "blip"]
             );
 
-            await click($(list.el).find("tbody tr:nth(0) td:nth(2) input"));
-            assert.strictEqual(
-                $(list.el).find(
-                    'tbody tr:nth(0) td:nth(1) > input[name="foo"]:not(.o_invisible_modifier)'
-                ).length,
-                1,
-                "the foo field widget should have been marked as non-invisible"
-            );
-            assert.containsN(
-                list,
-                "tbody td.o_invisible_modifier",
-                2,
-                "the foo field widget parent cell should not be invisible anymore"
+            await click(list.el.querySelector(".o_field_widget[name=bar] input"));
+            assert.containsNone(list, ".o_selected_row .o_list_char .o_field_widget[name=foo]");
+            fooCells = list.el.querySelectorAll(".o_data_cell.o_list_char");
+            assert.deepEqual(
+                [...fooCells].map((c) => c.innerText),
+                ["", "", "", "blip"]
             );
 
-            await click($(list.el).find("tbody tr:nth(0) td:nth(2) input"));
-            assert.strictEqual(
-                $(list.el).find(
-                    'tbody tr:nth(0) td:nth(1) > input[name="foo"].o_invisible_modifier'
-                ).length,
-                1,
-                "the foo field widget should have been marked as invisible again"
-            );
-            assert.containsN(
-                list,
-                "tbody td.o_invisible_modifier",
-                3,
-                "the foo field widget parent cell should now be invisible again"
-            );
+            // Reswitch the field to visible and save the row
+            await click(list.el.querySelector(".o_field_widget[name=bar] input"));
+            await click(list.el.querySelector(".o_list_button_save"));
 
-            // Reswitch the cell to editable and save the row
-            await click($(list.el).find("tbody tr:nth(0) td:nth(2) input"));
-            await click($(list.el).find("thead"));
-
-            assert.containsN(
-                list,
-                "tbody td.o_invisible_modifier",
-                2,
-                "there should be 2 invisible foo cells in readonly mode"
+            list.el.querySelectorAll(".o_data_cell.o_list_char");
+            assert.deepEqual(
+                [...fooCells].map((c) => c.innerText),
+                ["yop", "", "", "blip"]
             );
         }
     );
 
-    QUnit.skip(
+    QUnit.test(
         "readonly attrs on fields are re-evaluated on field change",
         async function (assert) {
-            assert.expect(9);
-
             const list = await makeView({
                 type: "list",
                 resModel: "foo",
                 serverData,
-                arch:
-                    '<tree editable="top">' +
-                    "<field name=\"foo\" attrs=\"{'readonly': [['bar', '=', True]]}\"/>" +
-                    '<field name="bar"/>' +
-                    "</tree>",
+                arch: `
+                    <tree editable="top">
+                        <field name="foo" attrs="{'readonly': [['bar', '=', True]]}"/>
+                        <field name="bar"/>
+                    </tree>`,
             });
 
-            assert.containsN(
-                list,
-                "tbody td.o_readonly_modifier",
-                3,
-                "there should be 3 readonly foo cells in readonly mode"
-            );
+            assert.containsN(list, "tbody td .o_readonly_modifier", 3);
 
             // Make first line editable
-            await click($(list.el).find("tbody tr:nth(0) td:nth(1)"));
+            await click(list.el.querySelector(".o_field_cell"));
+            assert.containsOnce(list, ".o_selected_row .o_field_widget[name=foo] span");
 
-            assert.strictEqual(
-                $(list.el).find('tbody tr:nth(0) td:nth(1) > span[name="foo"]').length,
-                1,
-                "the foo field widget should have been rendered as readonly"
-            );
+            await click(list.el.querySelector(".o_field_widget[name=bar] input"));
+            assert.containsOnce(list, ".o_selected_row .o_field_widget[name=foo] input");
+            assert.containsN(list, "tbody td .o_readonly_modifier", 2);
 
-            await click($(list.el).find("tbody tr:nth(0) td:nth(2) input"));
-            assert.strictEqual(
-                $(list.el).find('tbody tr:nth(0) td:nth(1) > input[name="foo"]').length,
-                1,
-                "the foo field widget should have been rerendered as editable"
-            );
-            assert.containsN(
-                list,
-                "tbody td.o_readonly_modifier",
-                2,
-                "the foo field widget parent cell should not be readonly anymore"
-            );
+            await click(list.el.querySelector(".o_field_widget[name=bar] input"));
+            assert.containsOnce(list, ".o_selected_row .o_field_widget[name=foo] span");
+            assert.containsN(list, "tbody td .o_readonly_modifier", 3);
 
-            await click($(list.el).find("tbody tr:nth(0) td:nth(2) input"));
-            assert.strictEqual(
-                $(list.el).find('tbody tr:nth(0) td:nth(1) > span[name="foo"]').length,
-                1,
-                "the foo field widget should have been rerendered as readonly"
-            );
-            assert.containsN(
-                list,
-                "tbody td.o_readonly_modifier",
-                3,
-                "the foo field widget parent cell should now be readonly again"
-            );
-
-            await click($(list.el).find("tbody tr:nth(0) td:nth(2) input"));
-            assert.strictEqual(
-                $(list.el).find('tbody tr:nth(0) td:nth(1) > input[name="foo"]').length,
-                1,
-                "the foo field widget should have been rerendered as editable again"
-            );
-            assert.containsN(
-                list,
-                "tbody td.o_readonly_modifier",
-                2,
-                "the foo field widget parent cell should not be readonly again"
-            );
+            await click(list.el.querySelector(".o_field_widget[name=bar] input"));
+            assert.containsOnce(list, ".o_selected_row .o_field_widget[name=foo] input");
+            assert.containsN(list, "tbody td .o_readonly_modifier", 2);
 
             // Click outside to leave edition mode
-            await click($(list.el).findel);
-
-            assert.containsN(
-                list,
-                "tbody td.o_readonly_modifier",
-                2,
-                "there should be 2 readonly foo cells in readonly mode"
-            );
+            await click(list.el);
+            assert.containsN(list, "tbody td .o_readonly_modifier", 2);
         }
     );
 
-    QUnit.skip(
+    QUnit.test(
         "required attrs on fields are re-evaluated on field change",
         async function (assert) {
-            assert.expect(7);
-
             const list = await makeView({
                 type: "list",
                 resModel: "foo",
                 serverData,
-                arch:
-                    '<tree editable="top">' +
-                    "<field name=\"foo\" attrs=\"{'required': [['bar', '=', True]]}\"/>" +
-                    '<field name="bar"/>' +
-                    "</tree>",
+                arch: `
+                    <tree editable="top">
+                        <field name="foo" attrs="{'required': [['bar', '=', True]]}"/>
+                        <field name="bar"/>
+                    </tree>`,
             });
 
-            assert.containsN(
-                list,
-                "tbody td.o_required_modifier",
-                3,
-                "there should be 3 required foo cells in readonly mode"
-            );
+            assert.containsN(list, "tbody td .o_required_modifier", 3);
 
             // Make first line editable
-            await click($(list.el).find("tbody tr:nth(0) td:nth(1)"));
-
-            assert.strictEqual(
-                $(list.el).find('tbody tr:nth(0) td:nth(1) > input[name="foo"].o_required_modifier')
-                    .length,
-                1,
-                "the foo field widget should have been rendered as required"
+            await click(list.el.querySelector(".o_field_cell"));
+            assert.hasClass(
+                list.el.querySelector(".o_selected_row .o_field_widget[name=foo]"),
+                "o_required_modifier"
             );
 
-            await click($(list.el).find("tbody tr:nth(0) td:nth(2) input"));
-            assert.strictEqual(
-                $(list.el).find(
-                    'tbody tr:nth(0) td:nth(1) > input[name="foo"]:not(.o_required_modifier)'
-                ).length,
-                1,
-                "the foo field widget should have been marked as non-required"
+            await click(list.el.querySelector(".o_field_widget[name=bar] input"));
+            assert.doesNotHaveClass(
+                list.el.querySelector(".o_selected_row .o_field_widget[name=foo]"),
+                "o_required_modifier"
             );
-            assert.containsN(
-                list,
-                "tbody td.o_required_modifier",
-                2,
-                "the foo field widget parent cell should not be required anymore"
-            );
+            assert.containsN(list, "tbody td .o_required_modifier", 2);
 
-            await click($(list.el).find("tbody tr:nth(0) td:nth(2) input"));
-            assert.strictEqual(
-                $(list.el).find('tbody tr:nth(0) td:nth(1) > input[name="foo"].o_required_modifier')
-                    .length,
-                1,
-                "the foo field widget should have been marked as required again"
+            await click(list.el.querySelector(".o_field_widget[name=bar] input"));
+            assert.hasClass(
+                list.el.querySelector(".o_selected_row .o_field_widget[name=foo]"),
+                "o_required_modifier"
             );
-            assert.containsN(
-                list,
-                "tbody td.o_required_modifier",
-                3,
-                "the foo field widget parent cell should now be required again"
-            );
+            assert.containsN(list, "tbody td .o_required_modifier", 3);
 
-            // Reswitch the cell to editable and save the row
-            await click($(list.el).find("tbody tr:nth(0) td:nth(2) input"));
-            await click($(list.el).find("thead"));
+            // Reswitch the field to required and save the row
+            await click(list.el.querySelector(".o_field_widget[name=bar] input"));
+            await click(list.el.querySelector(".o_list_button_save"));
 
-            assert.containsN(
-                list,
-                "tbody td.o_required_modifier",
-                2,
-                "there should be 2 required foo cells in readonly mode"
-            );
+            assert.containsN(list, "tbody td .o_required_modifier", 2);
         }
     );
 
