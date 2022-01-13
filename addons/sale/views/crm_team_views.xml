@@ -102,7 +102,6 @@
         <field name="model">crm.team</field>
         <field name="inherit_id" ref="sales_team.crm_team_view_kanban_dashboard"/>
         <field name="arch" type="xml">
-        <data>
             <xpath expr="//templates" position="before">
                 <field name="use_quotations"/>
                 <field name="invoiced_target"/>
@@ -182,8 +181,6 @@
                     </a>
                 </div>
             </div>
-
-        </data>
         </field>
     </record>
 

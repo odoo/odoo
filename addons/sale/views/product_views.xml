@@ -35,7 +35,7 @@
     </record>
 
     <!-- TODO VFE inherit product_template_form_view and factorize both views -->
-    <record model="ir.ui.view" id="product_form_view_sale_order_button">
+    <record id="product_form_view_sale_order_button" model="ir.ui.view">
         <field name="name">product.product.sale.order</field>
         <field name="model">product.product</field>
         <field name="inherit_id" ref="product.product_normal_form_view"/>
@@ -68,7 +68,7 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="product_template_form_view_sale_order_button">
+    <record id="product_template_form_view_sale_order_button" model="ir.ui.view">
         <field name="name">product.template.sale.order.button</field>
         <field name="model">product.template</field>
         <field name="inherit_id" ref="product.product_template_only_form_view"/>
