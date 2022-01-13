@@ -67,6 +67,7 @@ class TestSaleProject(TransactionCase):
             'default_code': 'SERV-ORDERED3',
             'service_tracking': 'task_in_project',
             'project_id': False,  # will create a project
+            'project_template_id': cls.project_template.id,
         })
         cls.product_order_service4 = cls.env['product.product'].create({
             'name': "Service Ordered, create project only",
@@ -127,3 +128,6 @@ class TestSaleProject(TransactionCase):
         # service_tracking 'project_only'
         self.assertFalse(so_line_order_only_project.task_id, "Task should not be created")
         self.assertTrue(so_line_order_only_project.project_id, "Sales order line should be linked to newly created project")
+        # service_tracking 'project template'
+        self.assertEqual(self.project_template.type_ids, so_line_order_new_task_new_project.project_id.type_ids,
+            "Newly created project linked to sales order line should have same stage as the project template")
