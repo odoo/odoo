@@ -15,6 +15,7 @@ class CopyClipboard extends Component {
         });
         this.timeout = undefined;
         useEffect(() => {
+            if (!this.copyRef.el) return;
             this.clipboard = new ClipboardJS(this.copyRef.el);
             this.clipboard.on("success", () => {
                 this.state.isCopied = true;
@@ -55,12 +56,12 @@ Object.assign(CopyClipboardTextField, {
 });
 registry.category("fields").add("CopyClipboardText", CopyClipboardTextField);
 
-export class CopyClipboardUrlField extends Component {}
-Object.assign(CopyClipboardUrlField, {
+export class CopyClipboardURLField extends Component {}
+Object.assign(CopyClipboardURLField, {
     components: { CopyClipboard },
     props: {
         ...standardFieldProps,
     },
-    template: "web.CopyClipboardUrlField",
+    template: "web.CopyClipboardURLField",
 });
-registry.category("fields").add("CopyClipboardUrl", CopyClipboardUrlField);
+registry.category("fields").add("CopyClipboardURL", CopyClipboardURLField);
