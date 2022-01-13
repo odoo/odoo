@@ -10,9 +10,6 @@ registerModel({
     name: 'RtcSession',
     identifyingFields: ['id'],
     lifecycleHooks: {
-        _created() {
-            this._timeoutId = undefined;
-        },
         _willDelete() {
             this.reset();
         },
@@ -22,7 +19,7 @@ registerModel({
          * restores the session to its default values
          */
         reset() {
-            this._timeoutId && browser.clearTimeout(this._timeoutId);
+            this.timeoutId && browser.clearTimeout(this.timeoutId);
             this._removeAudio();
             this.removeVideo();
             this.update({
@@ -240,13 +237,23 @@ registerModel({
          * @private
          */
         _debounce(f, delay) {
-            this._timeoutId && browser.clearTimeout(this._timeoutId);
-            this._timeoutId = browser.setTimeout(() => {
-                if (!this.exists()) {
-                    return;
-                }
-                f();
-            }, delay);
+            this.timeoutId && browser.clearTimeout(this.timeoutId);
+            this.update({
+                timeoutId: browser.setTimeout(
+                    this._onDebounceTimeout.bind(this, f),
+                    delay,
+                ),
+            });
+        },
+        /**
+         * @private
+         * @param {Function} f
+         */
+        _onDebounceTimeout(f) {
+            if (!this.exists()) {
+                return;
+            }
+            f();
         },
         /**
          * cleanly removes the audio stream of the session
@@ -409,6 +416,7 @@ registerModel({
         rtc: one('Rtc', {
             inverse: 'currentRtcSession',
         }),
+        timeoutId: attr(),
         /**
          * MediaStream of the user's video.
          *

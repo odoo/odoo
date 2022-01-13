@@ -14,11 +14,10 @@ registerModel({
     identifyingFields: ['threadView'],
     lifecycleHooks: {
         _created() {
-            this._timeoutId = undefined;
             browser.addEventListener('fullscreenchange', this._onFullScreenChange);
         },
         _willDelete() {
-            browser.clearTimeout(this._timeoutId);
+            browser.clearTimeout(this.timeoutId);
             browser.removeEventListener('fullscreenchange', this._onFullScreenChange);
         },
     },
@@ -58,7 +57,7 @@ registerModel({
             this.update({
                 showOverlay: true,
             });
-            browser.clearTimeout(this._timeoutId);
+            browser.clearTimeout(this.timeoutId);
         },
         /**
          * @param {MouseEvent} ev
@@ -248,13 +247,13 @@ registerModel({
          * @private
          */
         _debounce(f, { delay = 0 } = {}) {
-            browser.clearTimeout(this._timeoutId);
-            this._timeoutId = browser.setTimeout(() => {
-                if (!this.exists()) {
-                    return;
-                }
-                f();
-            }, delay);
+            browser.clearTimeout(this.timeoutId);
+            this.update({
+                timeoutId: browser.setTimeout(
+                    this._onDebounceTimeout.bind(this, f),
+                    delay,
+                ),
+            });
         },
         /**
          * @private
@@ -270,6 +269,16 @@ registerModel({
             if (this.threadView.thread.videoCount === 0) {
                 this.update({ filterVideoGrid: false });
             }
+        },
+        /**
+         * @private
+         * @param {Function} f
+         */
+        _onDebounceTimeout(f) {
+            if (!this.exists()) {
+                return;
+            }
+            f();
         },
         /**
          * Shows the overlay (buttons) for a set a mount of time.
@@ -397,6 +406,7 @@ registerModel({
             compute: '_computeTileParticipantCards',
             inverse: 'rtcCallViewerOfTile',
         }),
+        timeoutId: attr(),
     },
     onChanges: [
         new OnChange({

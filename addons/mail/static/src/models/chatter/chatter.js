@@ -25,12 +25,8 @@ registerModel({
     name: 'Chatter',
     identifyingFields: ['id'],
     lifecycleHooks: {
-        _created() {
-            this._attachmentsLoaderTimeout = undefined;
-            this._isPreparingAttachmentsLoading = undefined;
-        },
         _willDelete() {
-            this._stopAttachmentsLoading();
+            this.env.browser.clearTimeout(this.attachmentsLoaderTimeout);
         },
     },
     recordMethods: {
@@ -176,6 +172,15 @@ registerModel({
         /**
          * @private
          */
+        _onAttachmentsLoadingTimeout() {
+            this.update({
+                isPreparingAttachmentsLoading: clear(),
+                isShowingAttachmentsLoading: true,
+            });
+        },
+        /**
+         * @private
+         */
         _onThreadIdOrThreadModelChanged() {
             if (this.threadId) {
                 if (this.thread && this.thread.isTemporary) {
@@ -221,7 +226,7 @@ registerModel({
                 this.update({ isShowingAttachmentsLoading: false });
                 return;
             }
-            if (this._isPreparingAttachmentsLoading || this.isShowingAttachmentsLoading) {
+            if (this.isPreparingAttachmentsLoading || this.isShowingAttachmentsLoading) {
                 return;
             }
             this._prepareAttachmentsLoading();
@@ -230,19 +235,23 @@ registerModel({
          * @private
          */
         _prepareAttachmentsLoading() {
-            this._isPreparingAttachmentsLoading = true;
-            this._attachmentsLoaderTimeout = this.messaging.browser.setTimeout(() => {
-                this.update({ isShowingAttachmentsLoading: true });
-                this._isPreparingAttachmentsLoading = false;
-            }, this.messaging.loadingBaseDelayDuration);
+            this.update({
+                attachmentsLoaderTimeout: this.messaging.browser.setTimeout(
+                    this._onAttachmentsLoadingTimeout,
+                    this.messaging.loadingBaseDelayDuration,
+                ),
+                isPreparingAttachmentsLoading: true,
+            });
         },
         /**
          * @private
          */
         _stopAttachmentsLoading() {
-            this.messaging.browser.clearTimeout(this._attachmentsLoaderTimeout);
-            this._attachmentsLoaderTimeout = null;
-            this._isPreparingAttachmentsLoading = false;
+            this.messaging.browser.clearTimeout(this.attachmentsLoaderTimeout);
+            this.update({
+                attachmentsLoaderTimeout: clear(),
+                isPreparingAttachmentsLoading: clear(),
+            });
         },
     },
     fields: {
@@ -255,6 +264,7 @@ registerModel({
             inverse: 'chatter',
             isCausal: true,
         }),
+        attachmentsLoaderTimeout: attr(),
         /**
          * States the OWL Chatter component of this chatter.
          */
@@ -329,6 +339,9 @@ registerModel({
         }),
         isDisabled: attr({
             compute: '_computeIsDisabled',
+            default: false,
+        }),
+        isPreparingAttachmentsLoading: attr({
             default: false,
         }),
         isShowingAttachmentsLoading: attr({

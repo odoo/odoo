@@ -11,11 +11,10 @@ registerModel({
     identifyingFields: ['id'],
     lifecycleHooks: {
         _created() {
-            this._timeoutIds = {};
             this._loadLocalSettings();
         },
         _willDelete() {
-            for (const timeoutId of Object.values(this._timeoutIds)) {
+            for (const timeoutId of Object.values(this.timeoutIds)) {
                 browser.clearTimeout(timeoutId);
             }
         },
@@ -179,13 +178,21 @@ registerModel({
          * @param {any} key
          */
         _debounce(f, delay, key) {
-            this._timeoutIds[key] && browser.clearTimeout(this._timeoutIds[key]);
-            this._timeoutIds[key] = browser.setTimeout(() => {
-                if (!this.exists()) {
-                    return;
-                }
-                f();
-            }, delay);
+            this.timeoutIds[key] && browser.clearTimeout(this.timeoutIds[key]);
+            this.update({
+                timeoutIds: {
+                    ...this.timeoutIds,
+                    [key]: browser.setTimeout(
+                        () => {
+                            if (!this.exists()) {
+                                return;
+                            }
+                            f();
+                        },
+                        delay,
+                    ),
+                },
+            });
         },
         /**
          * @private
@@ -262,6 +269,9 @@ registerModel({
          */
         rtcLayout: attr({
             default: 'tiled',
+        }),
+        timeoutIds: attr({
+            default: {},
         }),
         /**
          * true if the user wants to use push to talk (over voice activation)

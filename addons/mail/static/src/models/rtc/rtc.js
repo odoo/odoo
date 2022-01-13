@@ -27,71 +27,16 @@ registerModel({
     identifyingFields: ['messaging'],
     lifecycleHooks: {
         _created() {
-            // technical fields that are not exposed
-            // Especially important for _peerConnections, as garbage collection of peerConnections is important for
-            // peerConnection.close().
-            /**
-             * Object { token: dataChannel<RTCDataChannel> }
-             * Contains the RTCDataChannels with the other rtc sessions.
-             */
-            this._dataChannels = {};
-            /**
-             * callback to properly end the audio monitoring.
-             * If set it indicates that we are currently monitoring the local
-             * audioTrack for the voice activation feature.
-             */
-            this._disconnectAudioMonitor = undefined;
-            /**
-             * Object { token: timeoutId<Number> }
-             * Contains the timeoutIds of the reconnection attempts.
-             */
-            this._fallBackTimeouts = {};
-            /**
-             * Set of peerTokens, used to track which calls are outgoing,
-             * which is used when attempting to recover a failed peer connection by
-             * inverting the call direction.
-             */
-            this._outGoingCallTokens = new Set();
-             /**
-             * Object { token: peerConnection<RTCPeerConnection> }
-             * Contains the RTCPeerConnection established with the other rtc sessions.
-             * Exposing this field and keeping references to closed peer connections may lead
-             * to difficulties reconnecting to the same peer.
-             */
-            this._peerConnections = {};
-            /**
-             *  timeoutId for the push to talk release delay.
-             */
-            this._pushToTalkTimeoutId = undefined;
-
             browser.addEventListener('keydown', this._onKeyDown);
             browser.addEventListener('keyup', this._onKeyUp);
             // Disconnects the RTC session if the page is closed or reloaded.
             browser.addEventListener('beforeunload', this._onBeforeUnload);
-            /**
-             * Call all sessions for which no peerConnection is established at
-             * a regular interval to try to recover any connection that failed
-             * to start.
-             *
-             * This is distinct from this._recoverConnection which tries to restores
-             * connection that were established but failed or timed out.
-             */
-            this._intervalId = browser.setInterval(async () => {
-                if (!this.currentRtcSession || !this.channel) {
-                    return;
-                }
-                await this._pingServer();
-                if (!this.currentRtcSession || !this.channel) {
-                    return;
-                }
-                this._callSessions();
-            }, 30000); // 30 seconds
         },
         async _willDelete() {
             browser.removeEventListener('beforeunload', this._onBeforeUnload);
             browser.removeEventListener('keydown', this._onKeyDown);
             browser.removeEventListener('keyup', this._onKeyUp);
-            browser.clearInterval(this._intervalId);
+            browser.clearInterval(this.intervalId);
         },
     },
     recordMethods: {
@@ -106,7 +51,7 @@ registerModel({
          */
         async filterCallees(currentSessions) {
             const currentSessionsTokens = new Set(currentSessions.map(session => session.peerToken));
-            for (const token of Object.keys(this._peerConnections)) {
+            for (const token of Object.keys(this.peerConnections)) {
                 if (!currentSessionsTokens.has(token)) {
                     this._addLogEntry(token, 'session removed from the server');
                     this._removePeer(token);
@@ -124,7 +69,7 @@ registerModel({
          */
         filterIncomingVideoTraffic(allowedTokens) {
             const tokenSet = new Set(allowedTokens);
-            for (const [token, peerConnection] of Object.entries(this._peerConnections)) {
+            for (const [token, peerConnection] of Object.entries(this.peerConnections)) {
                 const fullDirection = this.videoTrack ? 'sendrecv' : 'recvonly';
                 const limitedDirection = this.videoTrack ? 'sendonly' : 'inactive';
                 const transceiver = this._getTransceiver(peerConnection, 'video');
@@ -152,7 +97,7 @@ registerModel({
             if (!this.isClientRtcCompatible) {
                 return;
             }
-            if (!this._peerConnections[sender] && (!channelId || !this.channel || channelId !== this.channel.id)) {
+            if (!this.peerConnections[sender] && (!channelId || !this.channel || channelId !== this.channel.id)) {
                 return;
             }
             switch (event) {
@@ -210,30 +155,29 @@ registerModel({
          * @private
          */
         reset() {
-            if (this._peerConnections) {
-                const peerTokens = Object.keys(this._peerConnections);
+            if (this.peerConnections) {
+                const peerTokens = Object.keys(this.peerConnections);
                 for (const token of peerTokens) {
                     this._removePeer(token);
                 }
             }
 
-            this._disconnectAudioMonitor && this._disconnectAudioMonitor();
+            this.disconnectAudioMonitor && this.disconnectAudioMonitor();
             this.audioTrack && this.audioTrack.stop();
             this.videoTrack && this.videoTrack.stop();
 
-            this._disconnectAudioMonitor = undefined;
-            this._dataChannels = {};
-            this._fallBackTimeouts = {};
-            this._outGoingCallTokens = new Set();
-            this._peerConnections = {};
-
             this.update({
+                audioTrack: clear(),
                 currentRtcSession: clear(),
+                dataChannels: clear(),
+                disconnectAudioMonitor: clear(),
+                fallBackTimeouts: clear(),
                 logs: clear(),
+                outGoingCallTokens: clear(),
+                peerConnections: clear(),
                 sendUserVideo: clear(),
                 sendDisplay: clear(),
                 videoTrack: clear(),
-                audioTrack: clear(),
             });
         },
         /**
@@ -317,7 +261,7 @@ registerModel({
                 audioTrack.enabled = !this.currentRtcSession.isMute && this.currentRtcSession.isTalking;
                 this.update({ audioTrack });
                 await this.async(() => this.updateVoiceActivation());
-                for (const [token, peerConnection] of Object.entries(this._peerConnections)) {
+                for (const [token, peerConnection] of Object.entries(this.peerConnections)) {
                     await this._updateRemoteTrack(peerConnection, 'audio', { token });
                 }
             }
@@ -335,18 +279,21 @@ registerModel({
          * attaches an audio monitor for voice activation if necessary.
          */
         async updateVoiceActivation() {
-            this._disconnectAudioMonitor && this._disconnectAudioMonitor();
+            this.disconnectAudioMonitor && this.disconnectAudioMonitor();
             if (this.messaging.userSetting.usePushToTalk || !this.channel || !this.audioTrack) {
                 this.currentRtcSession.update({ isTalking: false });
                 await this._updateLocalAudioTrackEnabledState();
                 return;
             }
             try {
-                this._disconnectAudioMonitor = await monitorAudio(this.audioTrack, {
-                    onThreshold: async (isAboveThreshold) => {
-                        this._setSoundBroadcast(isAboveThreshold);
-                    },
-                    volumeThreshold: this.messaging.userSetting.voiceActivationThreshold,
+                this.update({
+                    disconnectAudioMonitor: await monitorAudio(
+                        this.audioTrack,
+                        {
+                            onThreshold: this._onThresholdAudioMonitor,
+                            volumeThreshold: this.messaging.userSetting.voiceActivationThreshold,
+                        },
+                    ),
                 });
             } catch (e) {
                 /**
@@ -404,7 +351,12 @@ registerModel({
             for (const trackKind of TRANSCEIVER_ORDER) {
                 await this._updateRemoteTrack(peerConnection, trackKind, { initTransceiver: true, token });
             }
-            this._outGoingCallTokens.add(token);
+            this.update({
+                outGoingCallTokens: {
+                    ...this.outGoingCallTokens,
+                    [token]: true,
+                },
+            });
         },
         /**
          * Call all the sessions that do not have an already initialized peerConnection.
@@ -416,7 +368,7 @@ registerModel({
                 return;
             }
             for (const session of this.channel.rtcSessions) {
-                if (session.peerToken in this._peerConnections) {
+                if (session.peerToken in this.peerConnections) {
                     continue;
                 }
                 if (session === this.currentRtcSession) {
@@ -428,6 +380,13 @@ registerModel({
                 this._addLogEntry(session.peerToken, 'init call', { step: 'init call' });
                 this._callPeer(session.peerToken);
             }
+        },
+        /**
+         * @private
+         * @returns {Integer}
+         */
+        _computeIntervalId() {
+            return browser.setInterval(this._onInterval, 30000); // 30 seconds
         },
         /**
          * @private
@@ -511,8 +470,16 @@ registerModel({
                     this._addLogEntry(token, `failed to send on datachannel; dataChannelInfo: ${this._serializeRTCDataChannel(dataChannel)}`, { error: e });
                 }
             };
-            this._peerConnections[token] = peerConnection;
-            this._dataChannels[token] = dataChannel;
+            this.update({
+                peerConnections: {
+                    ...this.peerConnections,
+                    [token]: peerConnection,
+                },
+                dataChannels: {
+                    ...this.dataChannels,
+                    [token]: dataChannel,
+                },
+            });
             return peerConnection;
         },
         /**
@@ -532,7 +499,7 @@ registerModel({
          * @param {Object} param1.sdp Session Description Protocol
          */
         async _handleRtcTransactionAnswer(fromToken, { sdp }) {
-            const peerConnection = this._peerConnections[fromToken];
+            const peerConnection = this.peerConnections[fromToken];
             if (!peerConnection || this.invalidIceConnectionStates.has(peerConnection.iceConnectionState) || peerConnection.signalingState === 'stable') {
                 return;
             }
@@ -555,7 +522,7 @@ registerModel({
          * @param {Object} param1.candidate RTCIceCandidateInit
          */
         async _handleRtcTransactionICECandidate(fromToken, { candidate }) {
-            const peerConnection = this._peerConnections[fromToken];
+            const peerConnection = this.peerConnections[fromToken];
             if (!peerConnection || this.invalidIceConnectionStates.has(peerConnection.iceConnectionState)) {
                 return;
             }
@@ -574,7 +541,7 @@ registerModel({
          * @param {Object} param1.sdp Session Description Protocol
          */
         async _handleRtcTransactionOffer(fromToken, { sdp }) {
-            const peerConnection = this._peerConnections[fromToken] || this._createPeerConnection(fromToken);
+            const peerConnection = this.peerConnections[fromToken] || this._createPeerConnection(fromToken);
 
             if (!peerConnection || this.invalidIceConnectionStates.has(peerConnection.iceConnectionState)) {
                 return;
@@ -672,7 +639,7 @@ registerModel({
             }
             if (type === 'peerToPeer') {
                 for (const token of targetTokens) {
-                    const dataChannel = this._dataChannels[token];
+                    const dataChannel = this.dataChannels[token];
                     if (!dataChannel || dataChannel.readyState !== 'open') {
                         continue;
                     }
@@ -683,6 +650,52 @@ registerModel({
                     }));
                 }
             }
+        },
+        /**
+         * @private
+         */
+        async _onInterval() {
+            if (!this.currentRtcSession || !this.channel) {
+                return;
+            }
+            await this._pingServer();
+            if (!this.currentRtcSession || !this.channel) {
+                return;
+            }
+            this._callSessions();
+        },
+        /**
+         * @private
+         * @param {string} token 
+         * @param {string} [reason]
+         */
+        async _onRecoverConnectionTimeout(token, reason) {
+            const newFallBackTimeouts = { ...this.fallBackTimeouts };
+            delete newFallBackTimeouts[token];
+            this.update({ fallBackTimeouts: newFallBackTimeouts });
+            const peerConnection = this.peerConnections[token];
+            if (!peerConnection || !this.channel) {
+                return;
+            }
+            if (this.outGoingCallTokens[token]) {
+                return;
+            }
+            if (peerConnection.iceConnectionState === 'connected') {
+                return;
+            }
+            this._addLogEntry(token, `calling back to recover ${peerConnection.iceConnectionState} connection, reason: ${reason}`);
+            await this._notifyPeers([token], {
+                event: 'disconnect',
+            });
+            this._removePeer(token);
+            this._callPeer(token);
+        },
+        /**
+         * @private
+         * @param {boolean} isAboveThreshold 
+         */
+        _onThresholdAudioMonitor(isAboveThreshold) {
+            this._setSoundBroadcast(isAboveThreshold);
         },
         /**
          * Pings the server to ensure this session is kept alive.
@@ -712,28 +725,18 @@ registerModel({
          * @param {string} [param1.reason]
          */
         _recoverConnection(token, { delay = 0, reason = '' } = {}) {
-            if (this._fallBackTimeouts[token]) {
+            if (this.fallBackTimeouts[token]) {
                 return;
             }
-            this._fallBackTimeouts[token] = browser.setTimeout(async () => {
-                delete this._fallBackTimeouts[token];
-                const peerConnection = this._peerConnections[token];
-                if (!peerConnection || !this.channel) {
-                    return;
+            this.update({
+                fallBackTimeouts: {
+                    ...this.fallBackTimeouts,
+                    [token]: browser.setTimeout(
+                        this._onRecoverConnectionTimeout.bind(this, token, reason),
+                        delay,
+                    ),
                 }
-                if (this._outGoingCallTokens.has(token)) {
-                    return;
-                }
-                if (peerConnection.iceConnectionState === 'connected') {
-                    return;
-                }
-                this._addLogEntry(token, `calling back to recover ${peerConnection.iceConnectionState} connection, reason: ${reason}`);
-                await this._notifyPeers([token], {
-                    event: 'disconnect',
-                });
-                this._removePeer(token);
-                this._callPeer(token);
-            }, delay);
+            });
         },
         /**
          * Cleans up a peer by closing all its associated content and the connection.
@@ -746,20 +749,28 @@ registerModel({
             if (rtcSession) {
                 rtcSession.reset();
             }
-            const dataChannel = this._dataChannels[token];
+            const dataChannel = this.dataChannels[token];
             if (dataChannel) {
                 dataChannel.close();
             }
-            delete this._dataChannels[token];
-            const peerConnection = this._peerConnections[token];
+            const newDataChannels = { ...this.dataChannels };
+            delete newDataChannels[token];
+            this.update({ dataChannels: newDataChannels });
+            const peerConnection = this.peerConnections[token];
             if (peerConnection) {
                 this._removeRemoteTracks(peerConnection);
                 peerConnection.close();
             }
-            delete this._peerConnections[token];
-            browser.clearTimeout(this._fallBackTimeouts[token]);
-            delete this._fallBackTimeouts[token];
-            this._outGoingCallTokens.delete(token);
+            const newPeerConnections = { ...this.peerConnections };
+            delete newPeerConnections[token];
+            this.update({ peerConnections: newPeerConnections });
+            browser.clearTimeout(this.fallBackTimeouts[token]);
+            const newFallBackTimeouts = { ...this.fallBackTimeouts };
+            delete newFallBackTimeouts[token];
+            this.update({ fallBackTimeouts: newFallBackTimeouts });
+            const newOutGoingCallTokens = { ...this.outGoingCallTokens };
+            delete newOutGoingCallTokens[token];
+            this.update({ outGoingCallTokens: newOutGoingCallTokens });
             this._addLogEntry(token, 'peer removed', { step: 'peer removed' });
         },
         /**
@@ -900,7 +911,7 @@ registerModel({
                 return;
             }
             await this._toggleLocalVideoTrack(trackOptions);
-            for (const [token, peerConnection] of Object.entries(this._peerConnections)) {
+            for (const [token, peerConnection] of Object.entries(this.peerConnections)) {
                 await this._updateRemoteTrack(peerConnection, 'video', { token });
             }
             if (!this.currentRtcSession) {
@@ -974,7 +985,7 @@ registerModel({
                 return;
             }
             this.audioTrack.enabled = !this.currentRtcSession.isMute && this.currentRtcSession.isTalking;
-            await this._notifyPeers(Object.keys(this._peerConnections), {
+            await this._notifyPeers(Object.keys(this.peerConnections), {
                 event: 'trackChange',
                 type: 'peerToPeer',
                 payload: {
@@ -1164,8 +1175,8 @@ registerModel({
             if (this.messaging.userSetting.rtcConfigurationMenu.isRegisteringKey) {
                 return;
             }
-            if (this._pushToTalkTimeoutId) {
-                browser.clearTimeout(this._pushToTalkTimeoutId);
+            if (this.pushToTalkTimeoutId) {
+                browser.clearTimeout(this.pushToTalkTimeoutId);
             }
             if (!this.currentRtcSession.isTalking) {
                 this.messaging.soundEffects.pushToTalkOn.play();
@@ -1189,12 +1200,18 @@ registerModel({
             if (!this.currentRtcSession.isMute) {
                 this.messaging.soundEffects.pushToTalkOff.play();
             }
-            this._pushToTalkTimeoutId = browser.setTimeout(
-                () => {
-                    this._setSoundBroadcast(false);
-                },
-                this.messaging.userSetting.voiceActiveDuration || 0,
-            );
+            this.update({
+                pushToTalkTimeoutId: browser.setTimeout(
+                    this._onPushToTalkTimeout,
+                    this.messaging.userSetting.voiceActiveDuration || 0,
+                ),
+            });
+        },
+        /**
+         * @private
+         */
+        _onPushToTalkTimeout() {
+            this._setSoundBroadcast(false);
         },
     },
     fields: {
@@ -1215,6 +1232,26 @@ registerModel({
             inverse: 'rtc',
         }),
         /**
+         * Object { token: dataChannel<RTCDataChannel> }
+         * Contains the RTCDataChannels with the other rtc sessions.
+         */
+        dataChannels: attr({
+            default: {},
+        }),
+        /**
+         * callback to properly end the audio monitoring.
+         * If set it indicates that we are currently monitoring the local
+         * audioTrack for the voice activation feature.
+         */
+        disconnectAudioMonitor: attr(),
+        /**
+         * Object { token: timeoutId<Number> }
+         * Contains the timeoutIds of the reconnection attempts.
+         */
+        fallBackTimeouts: attr({
+            default: {},
+        }),
+        /**
          * ICE servers used by RTCPeerConnection to retrieve the public IP address (STUN)
          * or to relay packets when necessary (TURN).
          */
@@ -1227,6 +1264,17 @@ registerModel({
                     ],
                 },
             ],
+        }),
+        /**
+         * Call all sessions for which no peerConnection is established at
+         * a regular interval to try to recover any connection that failed
+         * to start.
+         *
+         * This is distinct from this._recoverConnection which tries to restores
+         * connection that were established but failed or timed out.
+         */
+        intervalId: attr({
+            compute: '_computeIntervalId',
         }),
         /**
          * list of connection states considered invalid, which means that
@@ -1253,6 +1301,26 @@ registerModel({
         logs: attr({
             default: {},
         }),
+        /**
+         * Object that represents a set of peerTokens, used to track which calls are outgoing,
+         * which is used when attempting to recover a failed peer connection by
+         * inverting the call direction.
+         *
+         * Key: token
+         * Value: truthy when set
+         */
+        outGoingCallTokens: attr({
+            default: {},
+        }),
+        /**
+         * Object { token: peerConnection<RTCPeerConnection> }
+         * Contains the RTCPeerConnection established with the other rtc sessions.
+         * Exposing this field and keeping references to closed peer connections may lead
+         * to difficulties reconnecting to the same peer.
+         */
+        peerConnections: attr({
+            default: {},
+        }),
         peerNotificationsToSend: many('RtcPeerNotification', {
             isCausal: true,
         }),
@@ -1266,6 +1334,10 @@ registerModel({
         peerNotificationWaitDelay: attr({
             default: 50,
         }),
+        /**
+         *  timeoutId for the push to talk release delay.
+         */
+        pushToTalkTimeoutId: attr(),
         /**
          * How long to wait before considering a connection as needing recovery in ms.
          */
