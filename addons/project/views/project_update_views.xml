@@ -15,7 +15,7 @@
         <field name="name">project.update.view.form</field>
         <field name="model">project.update</field>
         <field name="arch" type="xml">
-            <form string="Project Update" class="o_form_project_update">
+            <form string="Project Update" class="o_form_project_update" js_class="form_description_expander">
                 <sheet>
                     <div class="oe_title">
                         <h1>
@@ -37,7 +37,7 @@
                     <separator/>
                     <notebook>
                         <page string="Description" name="description">
-                            <field name="description" widget="html_with_action" nolabel="1" class="o_project_update_description"/>
+                            <field name="description" widget="html_with_action" nolabel="1" class="o_project_update_description" options="{'resizable': false}"/>
                         </page>
                     </notebook>
                 </sheet>
