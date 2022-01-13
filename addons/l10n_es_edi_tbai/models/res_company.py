@@ -5,7 +5,7 @@ from odoo import api, fields, models
 
 L10N_ES_EDI_TBAI_VERSION = 1.2
 L10N_ES_EDI_TBAI_URLS = {
-    'signing_policy': {
+    'sigpolicy': {
         'araba': (
             'https://ticketbai.araba.eus/tbai/sinadura/',
             ''),  # TODO find this
@@ -121,11 +121,14 @@ class ResCompany(models.Model):
     def _get_l10n_es_tbai_url(self, prefix):
         if self.country_code == 'ES':
             suffix = 'test' if self.l10n_es_tbai_test_env else 'prod'
-            if prefix == 'xsd':  # XSD schemas are the same for test/prod
+            if prefix in ('xsd', 'sigpolicy'):  # XSD schemas and signature policies are the same for test/prod
                 suffix = ''
             return L10N_ES_EDI_TBAI_URLS[prefix + suffix][self.l10n_es_tbai_tax_agency]
         else:
             return False
+
+    def get_l10n_es_tbai_url_sigpolicy(self, get_hash=False):
+        return self._get_l10n_es_tbai_url('sigpolicy')[1 if get_hash else 0]
 
     def get_l10n_es_tbai_url_invoice(self):
         return self._get_l10n_es_tbai_url('invoice_')

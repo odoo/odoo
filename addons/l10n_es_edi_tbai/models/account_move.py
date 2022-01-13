@@ -26,7 +26,7 @@ class AccountMove(models.Model):
     l10n_es_tbai_number = fields.Char(string="TicketBAI number", compute="_compute_l10n_es_tbai_number")
     l10n_es_tbai_id = fields.Char(string="TicketBAI ID", compute="_compute_l10n_es_tbai_id")
     l10n_es_tbai_signature = fields.Char(string="Signature value of XML", compute="_compute_l10n_es_tbai_values")
-    l10n_es_tbai_registration_date = fields.Date(  # TODO replace with record.invoice_date
+    l10n_es_tbai_registration_date = fields.Date(  # TODO replace with record.invoice_date ?
         string="Registration Date",
         help="Technical field to keep the date the invoice was sent the first time as the date the invoice was "
              "registered into the system.",
@@ -59,7 +59,7 @@ class AccountMove(models.Model):
                     tbai_id_no_crc = '-'.join([
                         'TBAI',
                         str(company.vat[2:] if company.vat.startswith('ES') else company.vat),
-                        datetime.strftime(record.l10n_es_tbai_registration_date, '%d%m%y'),  # TODO use record.invoice_date (also in XMLs)
+                        datetime.strftime(record.l10n_es_tbai_registration_date, '%d%m%y'),  # TODO use record.invoice_date ? (also in XMLs)
                         record.l10n_es_tbai_signature[:13],
                         ''  # CRC
                     ])
@@ -93,7 +93,7 @@ class AccountMove(models.Model):
             ('res_model', '=', 'account.move'),
             ('res_id', '=', self.id)
         ]):
-            zip = io.BytesIO(doc.with_context(bin_size=False).raw)  # TODO investigate with_context(bin_size)
+            zip = io.BytesIO(doc.with_context(bin_size=False).raw)  # Without bin_size=False, size is returned instead of content
             try:
                 with zipfile.ZipFile(zip, 'r', compression=zipfile.ZIP_DEFLATED) as zipf:
                     for file in zipf.infolist():

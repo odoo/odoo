@@ -44,7 +44,7 @@ class AccountEdiFormat(models.Model):
         return journal.country_code == 'ES'
 
     def _get_invoice_edi_content(self, invoice):
-        pass  # TODO
+        pass  # TODO ?
 
     def _post_invoice_edi(self, invoice):
         # OVERRIDE
@@ -281,8 +281,8 @@ class AccountEdiFormat(models.Model):
 
         values.update({
             'Destinatarios': xml_recipients,
-            'VariosDestinatarios': "N",  # TODO
-            'TerceroODestinatario': "D",  # TODO
+            'VariosDestinatarios': "N",  # Odoo supports only one recipient
+            'TerceroODestinatario': "D",  # TODO for Bizkaia this might be "T" (if "in" invoice)
         })
         return values
 
@@ -326,7 +326,7 @@ class AccountEdiFormat(models.Model):
             })
         values['DetallesFactura'] = detalles
 
-        # Claves: TODO there's 15 more codes to implement, there can be up to 3
+        # Claves: TODO there's 15 more codes to implement, also there can be up to 3 in total
         com_partner = invoice.commercial_partner_id
         if not com_partner.country_id or com_partner.country_id.code in eu_country_codes:
             values['ClaveRegimenIvaOpTrascendencia'] = '01'
@@ -523,8 +523,8 @@ class AccountEdiFormat(models.Model):
                 'keyinfo-id': kinfo_id,
                 'signature-id': signature_id,
                 'sigpolicy-id': sp_id,
-                'sigpolicy-url': 'http://ticketbai.eus/politicafirma',  # TODO use specific links for each agency (from res_company)
-                'sigpolicy-digest': 'lX1xDvBVAsPXkkJ7R07WCVbAm9e0H33I1sCpDtQNkbc=',  # TODO figure out how digests are computed (SHA1/256 ?)
+                'sigpolicy-url': company.get_l10n_es_tbai_url_sigpolicy(),
+                'sigpolicy-digest': company.get_l10n_es_tbai_url_sigpolicy(get_hash=True),
             }
         }
         xml_sig = etree.fromstring(self.env.ref('l10n_es_edi_tbai.template_digital_signature')._render(values))
