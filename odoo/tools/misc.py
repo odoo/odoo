@@ -7,6 +7,7 @@ Miscellaneous tools used by OpenERP.
 """
 import cProfile
 import collections
+import contextlib
 import datetime
 import hmac as hmac_lib
 import hashlib
@@ -23,9 +24,9 @@ import time
 import traceback
 import types
 import unicodedata
+import warnings
 from collections import OrderedDict
 from collections.abc import Iterable, Mapping, MutableMapping, MutableSet
-from contextlib import contextmanager
 from difflib import HtmlDiff
 from functools import wraps
 from itertools import islice, groupby as itergroupby
@@ -1234,12 +1235,9 @@ class Reverse(object):
     def __le__(self, other): return self.val >= other.val
     def __lt__(self, other): return self.val > other.val
 
-@contextmanager
 def ignore(*exc):
-    try:
-        yield
-    except exc:
-        pass
+    warnings.warn("`odoo.tools.ignore` is replaced by `contextlib.suppress`", DeprecationWarning, stacklevel=2)
+    return contextlib.suppress(*exc)
 
 html_escape = markupsafe.escape
 
