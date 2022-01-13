@@ -164,7 +164,7 @@ class AccountMove(models.Model):
                 rec.l10n_ar_currency_rate = 1.0
             elif not rec.l10n_ar_currency_rate:
                 rec.l10n_ar_currency_rate = rec.currency_id._convert(
-                    1.0, rec.company_id.currency_id, rec.company_id, rec.invoice_date or fields.Date.today(), round=False)
+                    1.0, rec.company_id.currency_id, rec.company_id, rec.date, round=False)
 
         # We make validations here and not with a constraint because we want validation before sending electronic
         # data on l10n_ar_edi
