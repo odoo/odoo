@@ -11,6 +11,7 @@ from odoo.exceptions import UserError
 from odoo.osv import expression
 from odoo.tools import float_is_zero
 from odoo.tools.float_utils import float_round
+from odoo.tools.mail import html2plaintext, is_html_empty
 
 OPERATORS = {
     '<': py_operator.lt,
@@ -233,7 +234,7 @@ class Product(models.Model):
         """
         self.ensure_one()
         picking_code = picking_type_id.code
-        description = self.description or self.name
+        description = html2plaintext(self.description) if not is_html_empty(self.description) else self.name
         if picking_code == 'incoming':
             return self.description_pickingin or description
         if picking_code == 'outgoing':
