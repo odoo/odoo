@@ -9,7 +9,6 @@ the ORM does, in fact.
 """
 
 from contextlib import contextmanager
-from functools import wraps
 import itertools
 import logging
 import os
@@ -25,6 +24,8 @@ from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT, ISOLATION_LEVEL_READ
 from psycopg2.pool import PoolError
 from psycopg2.sql import SQL, Identifier
 from werkzeug import urls
+
+from .tools.func import frame_codeinfo, locked
 
 psycopg2.extensions.register_type(psycopg2.extensions.UNICODE)
 
@@ -46,7 +47,6 @@ psycopg2.extensions.register_type(psycopg2.extensions.new_type((700, 701, 1700,)
 
 
 from . import tools
-from .tools.func import frame_codeinfo
 
 from .tools import parse_version as pv
 if pv(psycopg2.__version__) < pv('2.7'):
@@ -657,6 +657,7 @@ class PsycoConnection(psycopg2.extensions.connection):
     def lobject(*args, **kwargs):
         pass
 
+
 class ConnectionPool(object):
     """ The pool of connections to database(s)
 
@@ -666,17 +667,6 @@ class ConnectionPool(object):
         The connections are *not* automatically closed. Only a close_db()
         can trigger that.
     """
-
-    def locked(fun):
-        @wraps(fun)
-        def _locked(self, *args, **kwargs):
-            self._lock.acquire()
-            try:
-                return fun(self, *args, **kwargs)
-            finally:
-                self._lock.release()
-        return _locked
-
     def __init__(self, maxconn=64):
         self._connections = []
         self._maxconn = max(maxconn, 1)

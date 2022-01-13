@@ -22,6 +22,7 @@ from odoo.sql_db import TestCursor
 from odoo.tools import (config, existing_tables, ignore,
                         lazy_classproperty, lazy_property, sql,
                         Collector, OrderedSet)
+from odoo.tools.func import locked
 from odoo.tools.lru import LRU
 
 _logger = logging.getLogger(__name__)
@@ -67,41 +68,41 @@ class Registry(Mapping):
                 threading.current_thread().dbname = db_name
 
     @classmethod
+    @locked
     def new(cls, db_name, force_demo=False, status=None, update_module=False):
         """ Create and return a new registry for the given database name. """
         t0 = time.time()
-        with cls._lock:
-            registry = object.__new__(cls)
-            registry.init(db_name)
+        registry = object.__new__(cls)
+        registry.init(db_name)
 
-            # Initializing a registry will call general code which will in
-            # turn call Registry() to obtain the registry being initialized.
-            # Make it available in the registries dictionary then remove it
-            # if an exception is raised.
-            cls.delete(db_name)
-            cls.registries[db_name] = registry  # pylint: disable=unsupported-assignment-operation
+        # Initializing a registry will call general code which will in
+        # turn call Registry() to obtain the registry being initialized.
+        # Make it available in the registries dictionary then remove it
+        # if an exception is raised.
+        cls.delete(db_name)
+        cls.registries[db_name] = registry  # pylint: disable=unsupported-assignment-operation
+        try:
+            registry.setup_signaling()
+            # This should be a method on Registry
             try:
-                registry.setup_signaling()
-                # This should be a method on Registry
-                try:
-                    odoo.modules.load_modules(registry, force_demo, status, update_module)
-                except Exception:
-                    odoo.modules.reset_modules_state(db_name)
-                    raise
+                odoo.modules.load_modules(registry, force_demo, status, update_module)
             except Exception:
-                _logger.error('Failed to load registry')
-                del cls.registries[db_name]     # pylint: disable=unsupported-delete-operation
+                odoo.modules.reset_modules_state(db_name)
                 raise
+        except Exception:
+            _logger.error('Failed to load registry')
+            del cls.registries[db_name]     # pylint: disable=unsupported-delete-operation
+            raise
 
-            # load_modules() above can replace the registry by calling
-            # indirectly new() again (when modules have to be uninstalled).
-            # Yeah, crazy.
-            registry = cls.registries[db_name]  # pylint: disable=unsubscriptable-object
+        # load_modules() above can replace the registry by calling
+        # indirectly new() again (when modules have to be uninstalled).
+        # Yeah, crazy.
+        registry = cls.registries[db_name]  # pylint: disable=unsubscriptable-object
 
-            registry._init = False
-            registry.ready = True
-            registry.registry_invalidated = bool(update_module)
-            registry.new = registry.init = registry.registries = None
+        registry._init = False
+        registry.ready = True
+        registry.registry_invalidated = bool(update_module)
+        registry.new = registry.init = registry.registries = None
 
         _logger.info("Registry loaded in %.3fs", time.time() - t0)
         return registry
@@ -153,17 +154,17 @@ class Registry(Mapping):
             self.has_trigram = odoo.modules.db.has_trigram(cr)
 
     @classmethod
+    @locked
     def delete(cls, db_name):
         """ Delete the registry linked to a given database. """
-        with cls._lock:
-            if db_name in cls.registries:
-                del cls.registries[db_name]
+        if db_name in cls.registries:  # pylint: disable=unsupported-membership-test
+            del cls.registries[db_name]  # pylint: disable=unsupported-delete-operation
 
     @classmethod
+    @locked
     def delete_all(cls):
         """ Delete all the registries. """
-        with cls._lock:
-            cls.registries.clear()
+        cls.registries.clear()
 
     #
     # Mapping abstract methods implementation
