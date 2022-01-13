@@ -99,7 +99,7 @@ export class FileUploader extends Component {
 FileUploader.props = {
     onUploaded: Function,
     onRemove: Function,
-    file: Object | null,
+    file: { type: Object, optional: true },
     fileUploadClass: { type: String, optional: true },
     fileUploadStyle: { type: String, optional: true },
     fileUploadAction: { type: String, optional: true },
@@ -118,7 +118,7 @@ export class FileDownloader extends Component {
     }
 }
 FileDownloader.props = {
-    file: Object | null,
+    file: { type: Object, optional: true },
     fileDownloadAction: { type: String, optional: true },
     onDownload: Function,
 };
