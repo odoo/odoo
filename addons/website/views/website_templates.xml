@@ -47,6 +47,10 @@
             'data-main-object': repr(main_object),
             'data-seo-object': repr(seo_object) if seo_object else None,
             'data-oe-company-name': res_company.name,
+            'data-is-published': 'website_published' in main_object.fields_get() and main_object.website_published,
+            'data-can-publish': 'can_publish' in main_object.fields_get() and main_object.can_publish,
+            'data-object': main_object._name,
+            'data-id': main_object.id,
         }"/>
     </xpath>
     <xpath expr="//head" position="before">

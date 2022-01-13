@@ -23,6 +23,7 @@ export const websiteService = {
             },
             set currentMetadata(metadata) {
                 currentMetadata = metadata;
+                websiteSystrayRegistry.trigger('CONTENT-UPDATED');
             },
             get currentWebsite() {
                 const currentWebsite = websites.find(w => w.id === currentWebsiteId);

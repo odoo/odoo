@@ -17,6 +17,7 @@ patch(NavBar.prototype, 'website_navbar', {
         }
 
         useBus(websiteSystrayRegistry, 'EDIT-WEBSITE', () => this.render(true));
+        useBus(websiteSystrayRegistry, 'CONTENT-UPDATED', () => this.render(true));
     },
 
     /**
