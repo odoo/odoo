@@ -11,9 +11,9 @@ import QWeb from 'web.QWeb';
 import session from 'web.session';
 import utils from 'web.utils';
 
+const { useState } = owl;
 const _t = core._t;
 
-const { useState } = owl.hooks;
 
 /**
  * Owl Component Adapter for ActivityRecord which is KanbanRecord (Odoo Widget)

@@ -9,10 +9,8 @@ import { WithSearch } from "@web/search/with_search/with_search";
 import { useActionLinks } from "@web/views/helpers/view_hook";
 import { extractLayoutComponents } from "@web/views/layout";
 
+const { Component, useSubEnv } = owl;
 const viewRegistry = registry.category("views");
-
-const { Component, hooks } = owl;
-const { useSubEnv } = hooks;
 
 /** @typedef {Object} Config
  *  @property {integer|false} actionId

@@ -1,6 +1,8 @@
 odoo.define('web.OwlCompatibility', function () {
     "use strict";
 
+    const { Component, useRef, useSubEnv, xml } = owl;
+
     /**
      * This file defines the necessary tools for the transition phase where Odoo
      * legacy widgets and Owl components will coexist. There are two possible
@@ -9,15 +11,12 @@ odoo.define('web.OwlCompatibility', function () {
      *  2) A legacy widget has to instantiate Owl components
      */
 
-    const { Component, hooks, tags } = owl;
-    const { useRef, useSubEnv } = hooks;
-    const { xml } = tags;
 
     const widgetSymbol = odoo.widgetSymbol;
     const children = new WeakMap(); // associates legacy widgets with their Owl children
 
-    const templateForLegacy = tags.xml`<div/>`;
-    const templateForOwl = tags.xml`<t t-component="props.Component" t-props="childProps" />`;
+    const templateForLegacy = xml`<div/>`;
+    const templateForOwl = xml`<t t-component="props.Component" t-props="childProps" />`;
     /**
      * Case 1) An Owl component has to instantiate legacy widgets
      * ----------------------------------------------------------

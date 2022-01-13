@@ -11,8 +11,8 @@ import {
     triggerEvent,
 } from "../helpers/utils";
 
-const { Component, mount, tags } = owl;
-const { css, xml } = tags;
+const { Component, css, mount, xml } = owl;
+
 let container;
 let reference;
 

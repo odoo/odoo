@@ -2,8 +2,7 @@
 
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
-const { Component } = owl;
-const { onMounted, onWillUnmount, useRef, useState } = owl.hooks;
+const { Component, onMounted, onWillUnmount, useRef, useState } = owl;
 
 export class FollowerListMenu extends Component {
 

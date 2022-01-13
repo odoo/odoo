@@ -4,8 +4,7 @@ import { useComponentToModel } from '@mail/component_hooks/use_component_to_mode
 import { useRefToModel } from '@mail/component_hooks/use_ref_to_model/use_ref_to_model';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
-const { Component } = owl;
-const { onMounted, useRef } = owl.hooks;
+const { Component, onMounted, useRef } = owl;
 
 export class ActivityMarkDonePopover extends Component {
 

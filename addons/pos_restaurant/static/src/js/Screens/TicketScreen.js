@@ -7,7 +7,8 @@ odoo.define('pos_restaurant.TicketScreen', function (require) {
     const { useAutofocus } = require('web.custom_hooks');
     const { posbus } = require('point_of_sale.utils');
     const { parse } = require('web.field_utils');
-    const { useState, useContext } = owl.hooks;
+
+    const { useContext, useState } = owl;
 
     const PosResTicketScreen = (TicketScreen) =>
         class extends TicketScreen {

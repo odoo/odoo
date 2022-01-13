@@ -6,8 +6,7 @@ import { useUpdate } from '@mail/component_hooks/use_update/use_update';
 import { FormViewDialog } from 'web.view_dialogs';
 import { ComponentAdapter } from 'web.OwlCompatibility';
 
-const { Component } = owl;
-const { useRef } = owl.hooks;
+const { Component, useRef } = owl;
 
 class FormViewDialogComponentAdapter extends ComponentAdapter {
 

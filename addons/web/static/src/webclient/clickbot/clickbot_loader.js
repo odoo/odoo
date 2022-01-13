@@ -2,7 +2,7 @@
 
 import { registry } from "../../core/registry";
 
-const { loadJS } = owl.utils;
+const { loadJS } = owl;
 
 export default async function startClickEverywhere(xmlId, appsMenusOnly) {
     await loadJS("web/static/src/webclient/clickbot/clickbot.js");

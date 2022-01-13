@@ -2,7 +2,6 @@
 odoo.define('point_of_sale.models', function (require) {
 "use strict";
 
-const { Context } = owl;
 var BarcodeParser = require('barcodes.BarcodeParser');
 var BarcodeReader = require('point_of_sale.BarcodeReader');
 var PosDB = require('point_of_sale.DB');
@@ -14,6 +13,8 @@ var field_utils = require('web.field_utils');
 var time = require('web.time');
 var utils = require('web.utils');
 var { Gui } = require('point_of_sale.Gui');
+
+const { Context } = owl;
 
 var QWeb = core.qweb;
 var _t = core._t;

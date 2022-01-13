@@ -1,10 +1,11 @@
 odoo.define('point_of_sale.ClientListScreen', function(require) {
     'use strict';
 
-    const { debounce } = owl.utils;
     const PosComponent = require('point_of_sale.PosComponent');
     const Registries = require('point_of_sale.Registries');
     const { useListener } = require('web.custom_hooks');
+
+    const { Observer, debounce } = owl;
 
     /**
      * Render this screen using `showTempScreen` to select client.
@@ -31,7 +32,7 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
             // We are not using useState here because the object
             // passed to useState converts the object and its contents
             // to Observer proxy. Not sure of the side-effects of making
-            // a persistent object, such as pos, into owl.Observer. But it
+            // a persistent object, such as pos, into Observer. But it
             // is better to be safe.
             this.state = {
                 query: null,

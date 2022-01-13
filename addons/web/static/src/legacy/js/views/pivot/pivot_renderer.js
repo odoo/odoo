@@ -5,8 +5,7 @@
     import field_utils from 'web.field_utils';
     import { DEFAULT_INTERVAL, INTERVAL_OPTIONS, getIntervalOptions } from 'web.searchUtils';
 
-    const { Component, hooks } = owl;
-    const { useExternalListener, useState } = hooks;
+    const { Component, useExternalListener, useState } = owl;
 
     class PivotCustomGroupByItem extends Component {
         constructor() {

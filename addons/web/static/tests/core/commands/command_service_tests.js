@@ -13,8 +13,7 @@ import testUtils from "web.test_utils";
 import { clearRegistryWithCleanup, makeTestEnv } from "../../helpers/mock_env";
 import { click, getFixture, nextTick, patchWithCleanup, triggerHotkey } from "../../helpers/utils";
 
-const { Component, mount, tags } = owl;
-const { xml } = tags;
+const { Component, mount, xml } = owl;
 
 let env;
 let target;

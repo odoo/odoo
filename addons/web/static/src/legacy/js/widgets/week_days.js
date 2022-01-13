@@ -4,10 +4,11 @@ odoo.define('web.WeekDays', function (require) {
     const CustomCheckbox = require('web.CustomCheckbox');
     const Registry = require('web.widgetRegistry');
     const utils = require('web.utils');
-    const { useState } = owl.hooks;
+
+    const { Component, useState } = owl;
 
 
-    class WeekDays extends owl.Component {
+    class WeekDays extends Component {
         constructor(parent) {
             super(...arguments);
             this.parent = parent;

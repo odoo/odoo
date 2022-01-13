@@ -3,6 +3,7 @@ import { registry } from "@web/core/registry";
 import { DebugMenuBasic } from "@web/core/debug/debug_menu_basic";
 import { createDebugContext } from "@web/core/debug/debug_context";
 
+const { mount } = owl;
 const debugMenuService = {
     dependencies: ["localization", "orm"],
     start(env) {
@@ -10,7 +11,7 @@ const debugMenuService = {
             const systray = document.querySelector('.o_menu_systray');
             if (systray) {
                 Object.assign(env, createDebugContext(env, {categories: ["default"]}));
-                owl.mount(DebugMenuBasic, {
+                mount(DebugMenuBasic, {
                     target: systray,
                     position: 'first-child',
                     env,

@@ -1,8 +1,7 @@
 odoo.define('web.CustomFileInput', function (require) {
     "use strict";
 
-    const { Component, hooks } = owl;
-    const { useRef } = hooks;
+    const { Component, useRef } = owl;
 
     /**
      * Custom file input

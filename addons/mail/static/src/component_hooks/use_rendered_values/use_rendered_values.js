@@ -2,8 +2,7 @@
 
 import { Listener } from '@mail/model/model_listener';
 
-const { Component } = owl;
-const { onMounted, onPatched } = owl.hooks;
+const { Component, onMounted, onPatched } = owl;
 
 /**
  * This hooks provides support for accessing the values returned by the given

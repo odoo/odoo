@@ -2,9 +2,8 @@
 
 import { registry } from "@web/core/registry";
 import { CommandPaletteDialog } from "./command_palette_dialog";
-const { Component } = owl;
 
-const { xml } = owl.tags;
+const { Component, xml } = owl;
 
 /**
  * @typedef {import("./command_palette").CommandPaletteConfig} CommandPaletteConfig

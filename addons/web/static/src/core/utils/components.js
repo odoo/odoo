@@ -1,13 +1,13 @@
 /** @odoo-module **/
 
-const { Component, tags } = owl;
+const { Component, xml } = owl;
 
 export class NotUpdatable extends Component {
     shouldUpdate() {
         return false;
     }
 }
-NotUpdatable.template = tags.xml`<t t-slot="default" />`;
+NotUpdatable.template = xml`<t t-slot="default" />`;
 
 export class ErrorHandler extends Component {
     catchError(error) {
@@ -16,4 +16,4 @@ export class ErrorHandler extends Component {
         }
     }
 }
-ErrorHandler.template = tags.xml`<t t-slot="default" />`;
+ErrorHandler.template = xml`<t t-slot="default" />`;

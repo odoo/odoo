@@ -2,7 +2,7 @@
 import { registry } from "./registry";
 import { NotUpdatable, ErrorHandler } from "./utils/components";
 
-const { Component, tags } = owl;
+const { Component, xml } = owl;
 
 export class MainComponentsContainer extends Component {
     setup() {
@@ -24,7 +24,7 @@ export class MainComponentsContainer extends Component {
     }
 }
 
-MainComponentsContainer.template = tags.xml`
+MainComponentsContainer.template = xml`
 <div>
     <t t-foreach="Components" t-as="C" t-key="C[0]">
         <NotUpdatable>

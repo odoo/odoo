@@ -21,6 +21,8 @@ var utils = require('web.utils');
 const widgetRegistry = require('web.widget_registry');
 const widgetRegistryOwl = require('web.widgetRegistry');
 
+const { Component } = owl;
+
 var BasicView = AbstractView.extend({
     config: _.extend({}, AbstractView.prototype.config, {
         Model: BasicModel,
@@ -418,7 +420,7 @@ var BasicView = AbstractView.extend({
         // custom widget may have fieldDependencies so add it to fields of fields_view
         if (node.tag === 'widget') {
             const Widget = widgetRegistryOwl.get(node.attrs.name) || widgetRegistry.get(node.attrs.name);
-            const legacy = !(Widget.prototype instanceof owl.Component);
+            const legacy = !(Widget.prototype instanceof Component);
             let deps;
             if (legacy && Widget.prototype.fieldDependencies) {
                 deps = Widget.prototype.fieldDependencies;

@@ -5,7 +5,8 @@ odoo.define('web.basic_view_tests', function (require) {
     const BasicRenderer = require("web.BasicRenderer");
     const testUtils = require('web.test_utils');
     const widgetRegistryOwl = require('web.widgetRegistry');
-    const { xml } = owl.tags;
+
+    const { Component, xml } = owl;
 
     const createView = testUtils.createView;
 
@@ -42,7 +43,7 @@ odoo.define('web.basic_view_tests', function (require) {
                 })
             });
 
-            class MyWidget extends owl.Component {}
+            class MyWidget extends Component {}
             MyWidget.fieldDependencies = {
                 foo: { type: 'char' },
                 bar: { type: 'boolean' },

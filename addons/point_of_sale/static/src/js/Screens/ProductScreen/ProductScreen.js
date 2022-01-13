@@ -8,8 +8,9 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
     const Registries = require('point_of_sale.Registries');
     const { onChangeOrder, useBarcodeReader } = require('point_of_sale.custom_hooks');
     const { isConnectionError, posbus } = require('point_of_sale.utils');
-    const { useState, onMounted } = owl.hooks;
     const { parse } = require('web.field_utils');
+
+    const { onMounted, useState } = owl;
 
     class ProductScreen extends ControlButtonsMixin(PosComponent) {
         constructor() {

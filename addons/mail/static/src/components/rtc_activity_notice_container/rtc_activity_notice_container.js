@@ -13,7 +13,7 @@ export class RtcActivityNoticeContainer extends Component {
     setup() {
         // for now, the legacy env is needed for internal functions such as
         // `useModels` to work
-        this.env = owl.Component.env;
+        this.env = Component.env;
         useModels();
         super.setup();
     }

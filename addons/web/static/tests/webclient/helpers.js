@@ -47,7 +47,7 @@ import { ClientActionAdapter, ViewAdapter } from "@web/legacy/action_adapters";
 import { commandService } from "@web/core/commands/command_service";
 import { CustomFavoriteItem } from "@web/search/favorite_menu/custom_favorite_item";
 
-const { Component, mount, tags } = owl;
+const { Component, mount, xml } = owl;
 
 const actionRegistry = registry.category("actions");
 const serviceRegistry = registry.category("services");
@@ -192,7 +192,7 @@ export function addLegacyMockEnvironment(env, legacyParams = {}) {
     registerCleanup(() => (debouncedField.prototype.DEBOUNCE = initialDebouncedVal));
 
     if (legacyParams.withLegacyMockServer) {
-        const adapter = new ComponentAdapter(null, { Component: owl.Component });
+        const adapter = new ComponentAdapter(null, { Component: Component });
         adapter.env = legacyEnv;
         const W = Widget.extend({ do_push_state() {} });
         const widget = new W(adapter);
@@ -308,7 +308,7 @@ export async function loadState(env, state) {
 export function getActionManagerServerData() {
     // additional basic client action
     class TestClientAction extends Component {}
-    TestClientAction.template = tags.xml`
+    TestClientAction.template = xml`
       <div class="test_client_action">
         ClientAction_<t t-esc="props.action.params?.description"/>
       </div>`;

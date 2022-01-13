@@ -6,9 +6,7 @@ import { debounce } from "@web/core/utils/timing";
 import { BlockUI } from "./block_ui";
 import { browser } from "@web/core/browser/browser";
 
-const { Component, core, hooks } = owl;
-const { EventBus } = core;
-const { useRef } = hooks;
+const { Component, EventBus, useRef } = owl;
 
 export const SIZES = { XS: 0, VSM: 1, SM: 2, MD: 3, LG: 4, XL: 5, XXL: 6 };
 

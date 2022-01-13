@@ -16,7 +16,8 @@ import { makeTestEnv } from "../../helpers/mock_env";
 import { makeFakeDialogService, makeFakeLocalizationService } from "../../helpers/mock_services";
 import { click, getFixture, nextTick, patchWithCleanup } from "../../helpers/utils";
 
-const { Component, mount, tags } = owl;
+const { Component, mount, xml } = owl;
+
 let target;
 let env;
 let parent;
@@ -47,7 +48,7 @@ QUnit.test("ErrorDialog with traceback", async (assert) => {
         }
     }
     Parent.components = { ErrorDialog };
-    Parent.template = tags.xml`<ErrorDialog traceback="traceback" name="name" message="message" data="data"/>`;
+    Parent.template = xml`<ErrorDialog traceback="traceback" name="name" message="message" data="data"/>`;
     assert.containsNone(target, ".o_dialog");
     env = await makeTestEnv();
     parent = await mount(Parent, { env, target });
@@ -99,7 +100,7 @@ QUnit.test("Client ErrorDialog with traceback", async (assert) => {
         }
     }
     Parent.components = { ClientErrorDialog };
-    Parent.template = tags.xml`<ClientErrorDialog traceback="traceback" name="name" message="message" data="data"/>`;
+    Parent.template = xml`<ClientErrorDialog traceback="traceback" name="name" message="message" data="data"/>`;
     assert.containsNone(target, ".o_dialog");
     env = await makeTestEnv();
     parent = await mount(Parent, { env, target });
@@ -171,7 +172,7 @@ QUnit.test("button clipboard copy error traceback", async (assert) => {
         }
     }
     Parent.components = { ErrorDialog };
-    Parent.template = tags.xml`<ErrorDialog traceback="traceback" name="name" message="message" data="data"/>`;
+    Parent.template = xml`<ErrorDialog traceback="traceback" name="name" message="message" data="data"/>`;
     parent = await mount(Parent, { env, target });
     const clipboardButton = target.querySelector(".fa-clipboard");
     click(clipboardButton);
@@ -189,7 +190,7 @@ QUnit.test("WarningDialog", async (assert) => {
         }
     }
     Parent.components = { WarningDialog };
-    Parent.template = tags.xml`<WarningDialog exceptionName="name" message="message" data="data"/>`;
+    Parent.template = xml`<WarningDialog exceptionName="name" message="message" data="data"/>`;
     assert.containsNone(target, ".o_dialog");
     env = await makeTestEnv();
     parent = await mount(Parent, { env, target });
@@ -221,7 +222,7 @@ QUnit.test("RedirectWarningDialog", async (assert) => {
         }
     }
     Parent.components = { RedirectWarningDialog: CloseRedirectWarningDialog };
-    Parent.template = tags.xml`<RedirectWarningDialog data="data" close="close"/>`;
+    Parent.template = xml`<RedirectWarningDialog data="data" close="close"/>`;
     const faceActionService = {
         name: "action",
         start() {
@@ -255,7 +256,7 @@ QUnit.test("Error504Dialog", async (assert) => {
     assert.expect(5);
     class Parent extends Component {}
     Parent.components = { Error504Dialog };
-    Parent.template = tags.xml`<Error504Dialog/>`;
+    Parent.template = xml`<Error504Dialog/>`;
     assert.containsNone(target, ".o_dialog");
     env = await makeTestEnv();
     parent = await mount(Parent, { env, target });
@@ -272,7 +273,7 @@ QUnit.test("SessionExpiredDialog", async (assert) => {
     assert.expect(7);
     class Parent extends Component {}
     Parent.components = { SessionExpiredDialog };
-    Parent.template = tags.xml`<SessionExpiredDialog/>`;
+    Parent.template = xml`<SessionExpiredDialog/>`;
     patchWithCleanup(browser, {
         location: {
             reload() {

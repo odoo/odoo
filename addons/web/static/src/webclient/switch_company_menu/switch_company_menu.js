@@ -5,8 +5,7 @@ import { registry } from "@web/core/registry";
 import { browser } from "@web/core/browser/browser";
 import { symmetricalDifference } from "@web/core/utils/arrays";
 
-const { Component, hooks } = owl;
-const { useState } = hooks;
+const { Component, useState } = owl;
 
 export class SwitchCompanyMenu extends Component {
     setup() {

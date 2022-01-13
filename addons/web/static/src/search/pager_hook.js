@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-const { useEnv, useSubEnv } = owl.hooks;
+const { useEnv, useSubEnv } = owl;
 
 /**
  * @typedef PagerUpdateParams

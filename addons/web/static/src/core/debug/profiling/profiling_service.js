@@ -4,7 +4,7 @@ import { registry } from "@web/core/registry";
 import { ProfilingItem } from "./profiling_item";
 import { session } from "@web/session";
 
-const { core } = owl;
+const { EventBus } = owl;
 
 const profilingService = {
     dependencies: ["orm"],
@@ -17,7 +17,7 @@ const profilingService = {
                 return Boolean(state.session);
             },
         };
-        const bus = new core.EventBus();
+        const bus = new EventBus();
 
         let recordingIcon = null;
         function updateDebugIcon() {
@@ -46,7 +46,8 @@ const profilingService = {
                 params
             );
             const resp = await orm.call("ir.profile", "set_profiling", [], kwargs);
-            if (resp.type) {  // most likely an "ir.actions.act_window"
+            if (resp.type) {
+                // most likely an "ir.actions.act_window"
                 env.services.action.doAction(resp);
             } else {
                 state.session = resp.session;

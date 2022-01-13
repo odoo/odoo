@@ -8,8 +8,7 @@ import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { makeTestEnv } from "../../helpers/mock_env";
 import { getFixture, nextTick, patchWithCleanup, triggerHotkey } from "../../helpers/utils";
 
-const { Component, mount, tags } = owl;
-const { xml } = tags;
+const { Component, mount, xml } = owl;
 const serviceRegistry = registry.category("services");
 
 let env;

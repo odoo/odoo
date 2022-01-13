@@ -2,8 +2,7 @@
 
     import { Model, useModel } from "web.Model";
 
-    const { Component, hooks } = owl;
-    const { useState, useSubEnv } = hooks;
+    const { Component, useState, useSubEnv } = owl;
 
     /**
      * Search panel

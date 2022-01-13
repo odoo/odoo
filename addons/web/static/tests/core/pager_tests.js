@@ -11,9 +11,7 @@ import {
     triggerEvents,
 } from "../helpers/utils";
 
-const { Component, mount } = owl;
-const { useState } = owl.hooks;
-const { xml } = owl.tags;
+const { Component, mount, useState, xml } = owl;
 
 class PagerController extends Component {
     setup() {

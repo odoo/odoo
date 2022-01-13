@@ -4,6 +4,7 @@ odoo.define('web.dropdown_menu_tests', function (require) {
     const DropdownMenu = require('web.DropdownMenu');
     const testUtils = require('web.test_utils');
 
+    const { Component, useState, xml } = owl;
     const { createComponent } = testUtils;
 
     QUnit.module('Components', {
@@ -358,14 +359,14 @@ odoo.define('web.dropdown_menu_tests', function (require) {
             assert.expect(7);
 
             const props = { items: this.items };
-            class Parent extends owl.Component {
+            class Parent extends Component {
                 constructor() {
                     super(...arguments);
-                    this.state = owl.useState(props);
+                    this.state = useState(props);
                 }
             }
             Parent.components = { DropdownMenu };
-            Parent.template = owl.tags.xml`
+            Parent.template = xml`
                 <div>
                     <DropdownMenu class="first" title="'First'" items="state.items"/>
                     <DropdownMenu class="second" title="'Second'" items="state.items"/>
@@ -405,14 +406,14 @@ odoo.define('web.dropdown_menu_tests', function (require) {
             assert.expect(5);
 
             const items = this.items;
-            class Parent extends owl.Component {
+            class Parent extends Component {
                 constructor() {
                     super(...arguments);
                     this.items = items;
                 }
             }
             Parent.components = { DropdownMenu };
-            Parent.template = owl.tags.xml`
+            Parent.template = xml`
                 <div>
                     <DropdownMenu class="first" title="'First'" items="items"/>
                 </div>`;

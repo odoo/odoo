@@ -14,8 +14,7 @@ import { View } from "@web/views/view";
 import { ActionDialog } from "./action_dialog";
 import { CallbackRecorder } from "./action_hook";
 
-const { Component, hooks, tags } = owl;
-const { useRef, useSubEnv } = hooks;
+const { Component, useRef, useSubEnv, xml } = owl;
 
 const actionHandlersRegistry = registry.category("action_handlers");
 const actionRegistry = registry.category("actions");
@@ -74,7 +73,7 @@ export class InvalidButtonParamsError extends Error {}
 const CTX_KEY_REGEX = /^(?:(?:default_|search_default_|show_).+|.+_view_ref|group_by|group_by_no_leaf|active_id|active_ids|orderedBy)$/;
 
 // only register this template once for all dynamic classes ControllerComponent
-const ControllerComponentTemplate = tags.xml`<t t-component="Component" t-props="props"
+const ControllerComponentTemplate = xml`<t t-component="Component" t-props="props"
     t-ref="component"
     t-on-history-back="onHistoryBack"/>`;
 
@@ -988,7 +987,7 @@ function makeActionManager(env) {
         const controller = {
             jsId: `controller_${++id}`,
             // for historical reasons, the report Component is a client action,
-            // but there's no need to keep this when it will be converted to owl.
+            // but there's no need to keep this when it will be converted to
             Component: actionRegistry.get("report.client_action"),
             action,
             ..._getActionInfo(action, props),

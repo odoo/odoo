@@ -4,9 +4,8 @@ import { localization } from "@web/core/l10n/localization";
 import { registry } from "@web/core/registry";
 import { useAutofocus } from "@web/core/utils/hooks";
 
-const { Component, hooks } = owl;
+const { Component, useExternalListener, useRef, useState } = owl;
 const { DateTime } = luxon;
-const { useExternalListener, useRef, useState } = hooks;
 
 const formatters = registry.category("formatters");
 const parsers = registry.category("parsers");

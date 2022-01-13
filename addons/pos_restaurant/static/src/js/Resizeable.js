@@ -1,10 +1,11 @@
 odoo.define('pos_restaurant.Resizeable', function(require) {
     'use strict';
 
-    const { useExternalListener } = owl.hooks;
     const { useListener } = require('web.custom_hooks');
     const PosComponent = require('point_of_sale.PosComponent');
     const Registries = require('point_of_sale.Registries');
+
+    const { useExternalListener } = owl;
 
     class Resizeable extends PosComponent {
         constructor() {

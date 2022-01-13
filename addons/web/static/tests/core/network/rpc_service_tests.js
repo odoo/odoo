@@ -11,8 +11,7 @@ import { makeMockXHR } from "../../helpers/mock_services";
 import { getFixture, makeDeferred, nextTick, patchWithCleanup } from "../../helpers/utils";
 import { registerCleanup } from "../../helpers/cleanup";
 
-const { Component, mount, tags } = owl;
-const { xml } = tags;
+const { Component, mount, xml } = owl;
 
 let isXHRMocked = false;
 const serviceRegistry = registry.category("services");

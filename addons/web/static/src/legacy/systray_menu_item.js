@@ -4,7 +4,7 @@ import { ComponentAdapter } from "web.OwlCompatibility";
 import * as legacySystrayMenu from "web.SystrayMenu";
 import { registry } from "../core/registry";
 
-const { Component, tags } = owl;
+const { Component, xml } = owl;
 const systrayRegistry = registry.category("systray");
 
 class SystrayItemAdapter extends ComponentAdapter {
@@ -20,7 +20,7 @@ const legacySystrayMenuItems = legacySystrayMenu.Items;
 const convertedItems = [];
 let id = 1;
 
-const legacySystrayItemTemplate = tags.xml`<SystrayItemAdapter Component="Widget" />`;
+const legacySystrayItemTemplate = xml`<SystrayItemAdapter Component="Widget" />`;
 
 function addSystrayItem(Widget) {
     const name = `_legacy_systray_item_${id++}`;

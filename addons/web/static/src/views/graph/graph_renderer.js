@@ -8,8 +8,7 @@ import { sortBy } from "@web/core/utils/arrays";
 import { useAssets } from "@web/core/assets";
 import { useEffect } from "@web/core/utils/hooks";
 
-const { Component, hooks } = owl;
-const { useRef } = hooks;
+const { Component, useRef } = owl;
 
 const NO_DATA = _lt("No data");
 

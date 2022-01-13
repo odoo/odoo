@@ -6,8 +6,7 @@ import { mapLegacyEnvToWowlEnv } from "./legacy/utils";
 import { processTemplates } from "./core/assets";
 import { session } from "@web/session";
 
-const { mount, utils } = owl;
-const { whenReady } = utils;
+const { Component, mount, whenReady } = owl;
 
 /**
  * Function to start a webclient.
@@ -15,7 +14,7 @@ const { whenReady } = utils;
  * It's meant to be webclient flexible so we can have a subclass of
  * webclient in enterprise with added features.
  *
- * @param {owl.Component} Webclient
+ * @param {Component} Webclient
  */
 export async function startWebClient(Webclient) {
     odoo.info = {

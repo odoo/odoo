@@ -2,6 +2,8 @@
 
 import core from 'web.core';
 
+const { escape } = owl;
+
 var _t = core._t;
 
 /**
@@ -146,7 +148,7 @@ function parseEmail(text) {
  */
 function escapeAndCompactTextContent(content) {
     //Removing unwanted extra spaces from message
-    let value = owl.utils.escape(content).trim();
+    let value = escape(content).trim();
     value = value.replace(/(\r|\n){2,}/g, '<br/><br/>');
     value = value.replace(/(\r|\n)/g, '<br/>');
 

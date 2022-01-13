@@ -5,8 +5,7 @@ import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 import Dialog from 'web.OwlDialog';
 
-const { Component, useState } = owl;
-const { useRef } = owl.hooks;
+const { Component, useRef, useState } = owl;
 
 const components = {
     Dialog,

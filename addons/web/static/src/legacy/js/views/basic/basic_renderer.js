@@ -20,6 +20,8 @@ const { WidgetAdapterMixin } = require('web.OwlCompatibility');
 const FieldWrapper = require('web.FieldWrapper');
 const WidgetWrapper = require("web.WidgetWrapper");
 
+const { Component } = owl;
+
 var qweb = core.qweb;
 const _t = core._t;
 
@@ -730,7 +732,7 @@ var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
         // Initialize and register the widget
         // Readonly status is known as the modifiers have just been registered
         var Widget = record.fieldsInfo[this.viewType][fieldName].Widget;
-        const legacy = !(Widget.prototype instanceof owl.Component);
+        const legacy = !(Widget.prototype instanceof Component);
         const widgetOptions = {
             // Distinct readonly from renderer and readonly from modifier,
             // renderer can be readonly while modifier not.
@@ -809,7 +811,7 @@ var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
     _renderWidget: function (record, node) {
         const name = node.attrs.name;
         const Widget = widgetRegistryOwl.get(name) || widgetRegistry.get(name);
-        const legacy = !(Widget.prototype instanceof owl.Component);
+        const legacy = !(Widget.prototype instanceof Component);
         let widget;
         if (legacy) {
             widget = new Widget(this, record, node, { mode: this.mode });

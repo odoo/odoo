@@ -7,8 +7,7 @@ import { registry } from "@web/core/registry";
 import { debounce } from "@web/core/utils/timing";
 import { ErrorHandler, NotUpdatable } from "@web/core/utils/components";
 
-const { Component, hooks } = owl;
-const { useExternalListener, useRef } = hooks;
+const { Component, useExternalListener, useRef } = owl;
 const systrayRegistry = registry.category("systray");
 
 const getBoundingClientRect = Element.prototype.getBoundingClientRect;

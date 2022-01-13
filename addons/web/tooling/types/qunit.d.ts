@@ -1,4 +1,7 @@
 // Type definitions for QUnit v2.9.2
+
+const { Component } = owl;
+
 // Project: http://qunitjs.com/
 // Definitions by: James Bracy <https://github.com/waratuman>
 //                 Mike North <https://github.com/mike-north>
@@ -55,7 +58,7 @@ interface Assert {
      * - is unique
      * - has the given attribute with the proper value
      *
-     * @param {Widget|jQuery|HTMLElement|owl.Component} target
+     * @param {Widget|jQuery|HTMLElement|Component} target
      */
     hasAttrValue(target: HTMLElement, attr: string, value: string, msg?: string): void;
   

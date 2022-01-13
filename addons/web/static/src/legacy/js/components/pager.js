@@ -3,8 +3,7 @@ odoo.define('web.Pager', function (require) {
 
     const { useAutofocus } = require('web.custom_hooks');
 
-    const { Component, hooks } = owl;
-    const { useState } = hooks;
+    const { Component, useState } = owl;
 
     /**
      * Pager

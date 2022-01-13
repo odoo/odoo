@@ -5,7 +5,7 @@ import { DebugMenu } from "@web/core/debug/debug_menu";
 import { useOwnDebugContext } from "@web/core/debug/debug_context";
 import { useEffect } from "@web/core/utils/hooks";
 
-const { hooks } = owl;
+const { useRef } = owl;
 
 const LEGACY_SIZE_CLASSES = {
     "extra-large": "modal-xl",
@@ -20,7 +20,7 @@ class ActionDialog extends Dialog {
     setup() {
         super.setup();
         useOwnDebugContext();
-        this.actionRef = hooks.useRef("actionRef");
+        this.actionRef = useRef("actionRef");
         const actionProps = this.props && this.props.actionProps;
         const action = actionProps && actionProps.action;
         this.actionType = action && action.type;

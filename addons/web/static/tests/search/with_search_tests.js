@@ -17,9 +17,7 @@ import {
     toggleMenuItem,
 } from "./helpers";
 
-const { Component, hooks, mount, tags } = owl;
-const { useState } = hooks;
-const { xml } = tags;
+const { Component, mount, useState, xml } = owl;
 
 const serviceRegistry = registry.category("services");
 

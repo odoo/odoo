@@ -6,8 +6,7 @@ import { useService } from "@web/core/utils/hooks";
 import { makeTestEnv } from "../helpers/mock_env";
 import { getFixture } from "../helpers/utils";
 
-const { Component, mount, tags } = owl;
-const { xml } = tags;
+const { Component, mount, xml } = owl;
 const serviceRegistry = registry.category("services");
 
 QUnit.module("ORM Service", {

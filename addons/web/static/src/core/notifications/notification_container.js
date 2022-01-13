@@ -2,7 +2,7 @@
 
 import { Notification } from "./notification";
 
-const { Component, tags } = owl;
+const { Component, xml } = owl;
 
 export class NotificationContainer extends Component {
     setup() {
@@ -12,7 +12,7 @@ export class NotificationContainer extends Component {
     }
 }
 
-NotificationContainer.template = tags.xml`
+NotificationContainer.template = xml`
     <div class="o_notification_manager">
         <t t-foreach="props.notifications" t-as="notification" t-key="notification.id">
             <Notification

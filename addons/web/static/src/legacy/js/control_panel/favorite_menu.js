@@ -5,6 +5,7 @@ odoo.define('web.FavoriteMenu', function (require) {
     const { FACET_ICONS } = require("web.searchUtils");
     const Registry = require('web.Registry');
     const { useModel } = require('web.Model');
+
     const { Component, useState } = owl;
 
     /**

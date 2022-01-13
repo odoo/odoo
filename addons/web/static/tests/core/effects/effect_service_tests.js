@@ -10,7 +10,7 @@ import { makeFakeLocalizationService } from "../../helpers/mock_services";
 import { click, getFixture, mockTimeout, nextTick, patchWithCleanup } from "../../helpers/utils";
 import { registerCleanup } from "../../helpers/cleanup";
 
-const { Component, mount, tags } = owl;
+const { Component, mount, xml } = owl;
 const serviceRegistry = registry.category("services");
 const mainComponentRegistry = registry.category("main_components");
 
@@ -20,7 +20,7 @@ class Parent extends Component {
         this.NotificationContainer = mainComponentRegistry.get("NotificationContainer");
     }
 }
-Parent.template = tags.xml`
+Parent.template = xml`
     <div>
       <t t-component="EffectContainer.Component" t-props="EffectContainer.props" />
       <t t-component="NotificationContainer.Component" t-props="NotificationContainer.props" />
@@ -131,7 +131,7 @@ QUnit.module("Effect Service", (hooks) => {
                 assert.deepEqual(this.props, props, "should have received these props");
             }
         }
-        Custom.template = tags.xml`<div class="custom">foo is <t t-esc="props.foo"/></div>`;
+        Custom.template = xml`<div class="custom">foo is <t t-esc="props.foo"/></div>`;
 
         const parent = await makeParent();
         parent.env.services.effect.add({ Component: Custom, props });
