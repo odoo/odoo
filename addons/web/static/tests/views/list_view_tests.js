@@ -7854,35 +7854,29 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.test(
         "discarding changes in a row properly updates the rendering",
         async function (assert) {
-            assert.expect(3);
-
             const list = await makeView({
                 type: "list",
                 resModel: "foo",
                 serverData,
-                arch: '<tree editable="top">' + '<field name="foo"/>' + "</tree>",
+                arch: '<tree editable="top"><field name="foo"/></tree>',
             });
 
             assert.strictEqual(
-                $(list.el).find(".o_data_cell:first").text(),
+                list.el.querySelector(".o_field_cell").innerText,
                 "yop",
                 "first cell should contain 'yop'"
             );
 
-            await click($(list.el).find(".o_data_cell:first"));
-            await editInput($(list.el).find('input[name="foo"]'), "hello");
+            await click(list.el.querySelector(".o_field_cell"));
+            await editInput(list.el, ".o_field_widget[name=foo] input", "hello");
             await click(list.el.querySelector(".o_list_button_discard"));
-            assert.containsNone(
-                document.body,
-                ".modal",
-                "a modal to ask for discard should not be visible"
-            );
+            assert.containsNone(document.body, ".modal", "should be no modal to ask for discard");
 
             assert.strictEqual(
-                $(list.el).find(".o_data_cell:first").text(),
+                list.el.querySelector(".o_field_cell").innerText,
                 "yop",
                 "first cell should still contain 'yop'"
             );
@@ -8983,35 +8977,23 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skip("editable list view: contexts are correctly sent", async function (assert) {
-        assert.expect(6);
-
+    QUnit.test("editable list view: contexts are correctly sent", async function (assert) {
+        patchWithCleanup(session.user_context, { someKey: "some value" });
         const list = await makeView({
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree editable="top">' + '<field name="foo"/>' + "</tree>",
+            arch: '<tree editable="top"><field name="foo"/></tree>',
             mockRPC: function (route, args) {
-                var context;
-                if (route === "/web/dataset/search_read") {
-                    context = args.context;
-                } else {
-                    context = args.kwargs.context;
-                }
+                const context = args.kwargs.context;
                 assert.strictEqual(context.active_field, 2, "context should be correct");
                 assert.strictEqual(context.someKey, "some value", "context should be correct");
-                return this._super.apply(this, arguments);
             },
-            session: {
-                user_context: { someKey: "some value" },
-            },
-            viewOptions: {
-                context: { active_field: 2 },
-            },
+            context: { active_field: 2 },
         });
 
-        await click($(list.el).find(".o_data_cell:first"));
-        await editInput($(list.el).find(".o_field_widget[name=foo]"), "abc");
+        await click(list.el.querySelector(".o_data_cell"));
+        await editInput(list.el, ".o_field_widget[name=foo]", "abc");
         await click(list.el.querySelector(".o_list_button_save"));
     });
 
@@ -9050,85 +9032,78 @@ QUnit.module("Views", (hooks) => {
         await click($(".modal-dialog button.btn-primary"));
     });
 
-    QUnit.skip("editable list view: single edition with selected records", async function (assert) {
-        assert.expect(2);
-
+    QUnit.test("editable list view: single edition with selected records", async function (assert) {
         const list = await makeView({
-            arch: `<tree editable="top" multi_edit="1"><field name="foo"/></tree>`,
-            serverData,
+            type: "list",
             resModel: "foo",
             serverData,
+            arch: `<tree editable="top" multi_edit="1"><field name="foo"/></tree>`,
         });
 
         // Select first record
-        await click($(list.el).find(".o_data_row:eq(0) .o_list_record_selector input"));
+        await click(list.el.querySelector(".o_data_row .o_list_record_selector input"));
 
         // Edit the second
-        await click($(list.el).find(".o_data_row:eq(1) .o_data_cell:first()"));
-        await editInput($(list.el).find(".o_data_row:eq(1) .o_data_cell:first() input"), "oui");
-        await click($(".o_list_button_save"));
+        await click(list.el.querySelectorAll(".o_data_row")[1].querySelector(".o_data_cell"));
+        await editInput(list.el, ".o_data_cell input", "oui");
+        await click(list.el.querySelector(".o_list_button_save"));
 
-        assert.strictEqual(
-            $(list.el).find(".o_data_row:eq(0) .o_data_cell:first()").text(),
-            "yop",
-            "First row should remain unchanged"
-        );
-        assert.strictEqual(
-            $(list.el).find(".o_data_row:eq(1) .o_data_cell:first()").text(),
-            "oui",
-            "Second row should have been updated"
-        );
+        const fooFields = list.el.querySelectorAll(".o_data_cell .o_field_widget[name=foo]");
+        assert.strictEqual(fooFields[0].innerText, "yop", "First row should remain unchanged");
+        assert.strictEqual(fooFields[1].innerText, "oui", "Second row should have been updated");
     });
 
     QUnit.skip(
         "editable list view: non dirty record with required fields",
         async function (assert) {
-            assert.expect(10);
-
             const list = await makeView({
-                arch: `
-                <tree editable="top">
-                    <field name="foo" required="1"/>
-                    <field name="int_field"/>
-                </tree>`,
-                serverData,
+                type: "list",
                 resModel: "foo",
                 serverData,
+                arch: `
+                    <tree editable="top">
+                        <field name="foo" required="1"/>
+                        <field name="int_field"/>
+                    </tree>`,
             });
 
-            await click($(".o_list_button_add"));
+            assert.containsN(list, "o_data_row", 4);
+
+            await click(list.el.querySelector(".o_list_button_add"));
+            assert.containsN(list, "o_data_row", 5);
             assert.containsOnce(list, ".o_selected_row");
 
             // do not change anything and then click outside should discard record
             await click("body");
+            assert.containsN(list, "o_data_row", 4);
             assert.containsNone(list, ".o_selected_row");
 
-            await click($(".o_list_button_add"));
+            await click(list.el.querySelector(".o_list_button_add"));
+            assert.containsN(list, "o_data_row", 5);
             assert.containsOnce(list, ".o_selected_row");
+
             // do not change anything and then click save button should not allow to discard record
-            await click($(".o_list_button_save"));
+            await click(list.el.querySelector(".o_list_button_save"));
+            assert.containsN(list, "o_data_row", 5);
             assert.containsOnce(list, ".o_selected_row");
 
             // selecting some other row should discard non dirty record
-            assert.strictEqual(
-                $(list.el).find(".o_selected_row").data("id"),
-                "foo_7",
-                "foo_7 record should be currently selected"
-            );
-            await click($(list.el).find(".o_data_row:eq(1) .o_data_cell:eq(0)"));
-            assert.strictEqual(
-                $(list.el).find(".o_selected_row").data("id"),
-                "foo_2",
-                "foo_2 record should be currently selected"
-            );
+            await click(list.el.querySelectorAll(".o_data_row")[1].querySelector(".o_data_cell"));
+            assert.containsN(list, "o_data_row", 4);
+            assert.containsOnce(list, ".o_selected_row");
 
             // click somewhere else to discard currently selected row
             await click("body");
-            await click($(".o_list_button_add"));
+            assert.containsN(list, "o_data_row", 4);
+            assert.containsNone(list, ".o_selected_row");
+
+            await click(list.el.querySelector(".o_list_button_add"));
+            assert.containsN(list, "o_data_row", 5);
             assert.containsOnce(list, ".o_selected_row");
+
             // do not change anything and press Enter key should not allow to discard record
             await testUtils.fields.triggerKeydown(
-                $(list.el).find('tr.o_selected_row input.o_field_widget[name="foo"]'),
+                list.el.querySelector('tr.o_selected_row input.o_field_widget[name="foo"]'),
                 "enter"
             );
             assert.containsOnce(list, ".o_selected_row");
@@ -9138,7 +9113,7 @@ QUnit.module("Views", (hooks) => {
             await click($(".o_list_button_add"));
             assert.containsOnce(list, ".o_selected_row", "row should be selected");
             await editInput(
-                $(list.el).find(".o_selected_row .o_field_widget[name=int_field]"),
+                list.el.querySelector(".o_selected_row .o_field_widget[name=int_field]"),
                 123
             );
             await click("body");
