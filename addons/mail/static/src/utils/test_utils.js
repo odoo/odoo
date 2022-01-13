@@ -433,7 +433,7 @@ function getCreateComposerComponent({ components, env, modelManager, widget }) {
             }),
         });
         await createRootMessagingComponent({ components, env }, "Composer", {
-            props: { composerViewLocalId: composerView.localId, ...props },
+            props: { localId: composerView.localId, ...props },
             target: widget.el,
         });
     };
@@ -502,7 +502,7 @@ function getCreateThreadViewComponent({ afterEvent, components, env, widget }) {
             target = widget.el;
         }
         async function func() {
-            return createRootMessagingComponent({ components, env }, "ThreadView", { props: { threadViewLocalId: threadView.localId, ...otherProps }, target });
+            return createRootMessagingComponent({ components, env }, "ThreadView", { props: { localId: threadView.localId, ...otherProps }, target });
         }
         if (waitUntilMessagesLoaded) {
             await afterNextRender(() => afterEvent({

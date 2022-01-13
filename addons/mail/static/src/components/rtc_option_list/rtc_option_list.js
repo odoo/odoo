@@ -12,12 +12,8 @@ export class RtcOptionList extends Component {
      */
     setup() {
         super.setup();
-        useComponentToModel({ fieldName: 'component', modelName: 'RtcOptionList', propNameAsRecordLocalId: 'localId' });
+        useComponentToModel({ fieldName: 'component', modelName: 'RtcOptionList' });
     }
-
-    //--------------------------------------------------------------------------
-    // Getters / Setters
-    //--------------------------------------------------------------------------
 
     /**
      * @returns {RtcOptionList}
@@ -29,9 +25,7 @@ export class RtcOptionList extends Component {
 }
 
 Object.assign(RtcOptionList, {
-    props: {
-        localId: String,
-    },
+    props: { localId: String },
     template: 'mail.RtcOptionList',
 });
 

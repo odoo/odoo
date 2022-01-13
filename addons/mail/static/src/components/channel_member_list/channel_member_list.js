@@ -16,9 +16,7 @@ export class ChannelMemberList extends Component {
 }
 
 Object.assign(ChannelMemberList, {
-    props: {
-        channelLocalId: String,
-    },
+    props: { channelLocalId: String },
     template: 'mail.ChannelMemberList',
 });
 

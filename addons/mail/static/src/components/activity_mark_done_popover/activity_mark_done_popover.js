@@ -14,8 +14,8 @@ export class ActivityMarkDonePopover extends Component {
      */
     setup() {
         super.setup();
-        useComponentToModel({ fieldName: 'component', modelName: 'ActivityMarkDonePopoverView', propNameAsRecordLocalId: 'localId' });
-        useRefToModel({ fieldName: 'feedbackTextareaRef', modelName: 'ActivityMarkDonePopoverView', propNameAsRecordLocalId: 'localId', refName: 'feedbackTextarea' });
+        useComponentToModel({ fieldName: 'component', modelName: 'ActivityMarkDonePopoverView' });
+        useRefToModel({ fieldName: 'feedbackTextareaRef', modelName: 'ActivityMarkDonePopoverView', refName: 'feedbackTextarea' });
         this._feedbackTextareaRef = useRef('feedbackTextarea');
         onMounted(() => this._mounted());
     }
@@ -41,9 +41,7 @@ export class ActivityMarkDonePopover extends Component {
 }
 
 Object.assign(ActivityMarkDonePopover, {
-    props: {
-        localId: String,
-    },
+    props: { localId: String },
     template: 'mail.ActivityMarkDonePopover',
 });
 

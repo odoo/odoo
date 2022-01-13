@@ -10,15 +10,13 @@ export class MobileMessagingNavbar extends Component {
      * @returns {MobileMessagingNavbarView}
      */
     get mobileMessagingNavbarView() {
-        return this.messaging && this.messaging.models['MobileMessagingNavbarView'].get(this.props.mobileMessagingNavbarViewLocalId);
+        return this.messaging && this.messaging.models['MobileMessagingNavbarView'].get(this.props.localId);
     }
 
 }
 
 Object.assign(MobileMessagingNavbar, {
-    props: {
-        mobileMessagingNavbarViewLocalId: String,
-    },
+    props: { localId: String },
     template: 'mail.MobileMessagingNavbar',
 });
 

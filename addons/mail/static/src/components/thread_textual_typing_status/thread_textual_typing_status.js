@@ -6,10 +6,6 @@ const { Component } = owl;
 
 export class ThreadTextualTypingStatus extends Component {
 
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
     /**
      * @returns {Thread}
      */
@@ -20,9 +16,7 @@ export class ThreadTextualTypingStatus extends Component {
 }
 
 Object.assign(ThreadTextualTypingStatus, {
-    props: {
-        threadLocalId: String,
-    },
+    props: { threadLocalId: String },
     template: 'mail.ThreadTextualTypingStatus',
 });
 

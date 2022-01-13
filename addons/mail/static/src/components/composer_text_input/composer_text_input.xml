@@ -6,7 +6,7 @@
             <t t-if="composerView">
                 <t t-if="composerView.hasSuggestions">
                     <ComposerSuggestionList
-                        composerViewLocalId="props.composerViewLocalId"
+                        composerViewLocalId="composerView.localId"
                         isBelow="props.hasMentionSuggestionsBelowPosition"
                     />
                 </t>

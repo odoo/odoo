@@ -36,7 +36,7 @@ export class Dialog extends Component {
      * @returns {Dialog}
      */
     get dialog() {
-        return this.messaging && this.messaging.models['Dialog'].get(this.props.dialogLocalId);
+        return this.messaging && this.messaging.models['Dialog'].get(this.props.localId);
     }
 
     //--------------------------------------------------------------------------
@@ -83,9 +83,7 @@ export class Dialog extends Component {
 }
 
 Object.assign(Dialog, {
-    props: {
-        dialogLocalId: String,
-    },
+    props: { localId: String },
     template: 'mail.Dialog',
 });
 

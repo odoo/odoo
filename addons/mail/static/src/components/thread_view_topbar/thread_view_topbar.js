@@ -13,11 +13,11 @@ export class ThreadViewTopbar extends Component {
      */
     setup() {
         super.setup();
-        useRefToModel({ fieldName: 'guestNameInputRef', modelName: 'ThreadViewTopbar', propNameAsRecordLocalId: 'localId', refName: 'guestNameInput' });
-        useRefToModel({ fieldName: 'inviteButtonRef', modelName: 'ThreadViewTopbar', propNameAsRecordLocalId: 'localId', refName: 'inviteButton' });
-        useRefToModel({ fieldName: 'threadNameInputRef', modelName: 'ThreadViewTopbar', propNameAsRecordLocalId: 'localId', refName: 'threadNameInput' });
-        useRefToModel({ fieldName: 'threadDescriptionInputRef', modelName: 'ThreadViewTopbar', propNameAsRecordLocalId: 'localId', refName: 'threadDescriptionInput' });
-        useUpdateToModel({ methodName: 'onComponentUpdate', modelName: 'ThreadViewTopbar', propNameAsRecordLocalId: 'localId' });
+        useRefToModel({ fieldName: 'guestNameInputRef', modelName: 'ThreadViewTopbar', refName: 'guestNameInput' });
+        useRefToModel({ fieldName: 'inviteButtonRef', modelName: 'ThreadViewTopbar', refName: 'inviteButton' });
+        useRefToModel({ fieldName: 'threadNameInputRef', modelName: 'ThreadViewTopbar', refName: 'threadNameInput' });
+        useRefToModel({ fieldName: 'threadDescriptionInputRef', modelName: 'ThreadViewTopbar', refName: 'threadDescriptionInput' });
+        useUpdateToModel({ methodName: 'onComponentUpdate', modelName: 'ThreadViewTopbar' });
     }
 
     //--------------------------------------------------------------------------
@@ -62,9 +62,7 @@ export class ThreadViewTopbar extends Component {
 }
 
 Object.assign(ThreadViewTopbar, {
-    props: {
-        localId: String,
-    },
+    props: { localId: String },
     template: 'mail.ThreadViewTopbar',
 });
 

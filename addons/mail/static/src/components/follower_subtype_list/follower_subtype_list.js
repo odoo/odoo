@@ -12,7 +12,7 @@ export class FollowerSubtypeList extends Component {
      */
      setup() {
         super.setup();
-        useComponentToModel({ fieldName: 'component', modelName: 'FollowerSubtypeList', propNameAsRecordLocalId: 'localId' });
+        useComponentToModel({ fieldName: 'component', modelName: 'FollowerSubtypeList' });
     }
 
     //--------------------------------------------------------------------------
@@ -53,9 +53,7 @@ export class FollowerSubtypeList extends Component {
 }
 
 Object.assign(FollowerSubtypeList, {
-    props: {
-        localId: String,
-    },
+    props: { localId: String },
     template: 'mail.FollowerSubtypeList',
 });
 

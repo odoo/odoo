@@ -16,9 +16,7 @@ export class NotificationPopover extends Component {
 }
 
 Object.assign(NotificationPopover, {
-    props: {
-        messageViewLocalId: String,
-    },
+    props: { messageViewLocalId: String },
     template: 'mail.NotificationPopover',
 });
 

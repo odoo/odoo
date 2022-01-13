@@ -76,7 +76,7 @@
                             'o_Composer_textInput-mobile': messaging.device.isMobile,
                             'o-has-current-partner-avatar': props.hasCurrentPartnerAvatar,
                         }"
-                        composerViewLocalId="composerView.localId"
+                        localId="composerView.localId"
                         hasMentionSuggestionsBelowPosition="props.hasMentionSuggestionsBelowPosition"
                         isCompact="props.isCompact"
                         onComposerTextInputSendShortcut="_onComposerTextInputSendShortcut"
@@ -105,7 +105,7 @@
                                 >
                                     <i class="fa fa-smile-o"/>
                                 </button>
-                                <PopoverView t-if="composerView.emojisPopoverView" popoverViewLocalId="composerView.emojisPopoverView.localId"/>
+                                <PopoverView t-if="composerView.emojisPopoverView" localId="composerView.emojisPopoverView.localId"/>
                                 <button class="o_Composer_button o_Composer_buttonAttachment o_Composer_toolButton btn btn-light fa fa-paperclip" t-att-class="{ 'o-mobile': messaging.device.isMobile }" title="Add attachment" type="button" t-on-click="_onClickAddAttachment"/>
                             </div>
                             <t t-if="props.isExpandable">
@@ -128,7 +128,7 @@
                             t-if="composerView.attachmentList"
                             className="'o_Composer_attachmentList'"
                             classNameObj="{ 'o-composer-is-compact': props.isCompact }"
-                            attachmentListLocalId="composerView.attachmentList.localId"
+                            localId="composerView.attachmentList.localId"
                         />
                         <t t-if="!props.isCompact">
                             <t t-call="mail.Composer.actionButtons"/>

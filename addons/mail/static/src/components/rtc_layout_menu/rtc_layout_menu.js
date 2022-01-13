@@ -12,12 +12,8 @@ export class RtcLayoutMenu extends Component {
      */
     setup() {
         super.setup();
-        useComponentToModel({ fieldName: 'component', modelName: 'RtcLayoutMenu', propNameAsRecordLocalId: 'localId' });
+        useComponentToModel({ fieldName: 'component', modelName: 'RtcLayoutMenu' });
     }
-
-    //--------------------------------------------------------------------------
-    // Getters / Setters
-    //--------------------------------------------------------------------------
 
     /**
      * @returns {RtcLayoutMenu}
@@ -29,9 +25,7 @@ export class RtcLayoutMenu extends Component {
 }
 
 Object.assign(RtcLayoutMenu, {
-    props: {
-        localId: String,
-    },
+    props: { localId: String },
     template: 'mail.RtcLayoutMenu',
 });
 

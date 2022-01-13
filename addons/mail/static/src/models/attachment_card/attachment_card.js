@@ -10,8 +10,6 @@ registerModel({
     recordMethods: {
         /**
          * Opens the attachment viewer when clicking on viewable attachment.
-         *
-         * @param {String} attachmentlistLocalId
          */
         onClickImage() {
             if (!this.attachment || !this.attachment.isViewable) {

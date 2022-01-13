@@ -5,7 +5,6 @@ import { registerMessagingComponent } from '@mail/utils/messaging_component';
 import Dialog from 'web.OwlDialog';
 
 const { Component } = owl;
-const { useRef } = owl.hooks;
 
 export class DeleteMessageConfirmDialog extends Component {
 
@@ -21,7 +20,7 @@ export class DeleteMessageConfirmDialog extends Component {
      * @returns {MessageActionList}
      */
     get messageActionList() {
-        return this.messaging && this.messaging.models['MessageActionList'].get(this.props.messageActionListLocalId);
+        return this.messaging && this.messaging.models['MessageActionList'].get(this.props.localId);
     }
 }
 
@@ -30,7 +29,7 @@ Object.assign(DeleteMessageConfirmDialog, {
         Dialog,
     },
     props: {
-        messageActionListLocalId: String,
+        localId: String,
     },
     template: 'mail.DeleteMessageConfirmDialog',
 });

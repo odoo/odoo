@@ -64,9 +64,7 @@ export class DiscussSidebar extends Component {
 }
 
 Object.assign(DiscussSidebar, {
-    props: {
-        localId: String
-    },
+    props: { localId: String },
     template: 'mail.DiscussSidebar',
 });
 

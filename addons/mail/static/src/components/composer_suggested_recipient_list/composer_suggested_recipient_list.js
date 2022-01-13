@@ -49,9 +49,7 @@ export class ComposerSuggestedRecipientList extends Component {
 }
 
 Object.assign(ComposerSuggestedRecipientList, {
-    props: {
-        threadLocalId: String,
-    },
+    props: { threadLocalId: String },
     template: 'mail.ComposerSuggestedRecipientList',
 });
 
