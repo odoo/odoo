@@ -296,11 +296,11 @@ class AccountEdiFormat(models.Model):
         # === CABECERA===
         values['SerieFactura'] = invoice.l10n_es_tbai_sequence
         values['NumFactura'] = invoice.l10n_es_tbai_number
-        values['FechaExpedicionFactura'] = datetime.strftime(datetime.now(tz=timezone('Europe/Madrid')), '%d-%m-%Y')
-
         if cancel:
+            values['FechaExpedicionFactura'] = datetime.strftime(invoice.l10n_es_tbai_registration_date, '%d-%m-%Y')
             return values
 
+        values['FechaExpedicionFactura'] = datetime.strftime(datetime.now(tz=timezone('Europe/Madrid')), '%d-%m-%Y')
         values['HoraExpedicionFactura'] = datetime.strftime(datetime.now(tz=timezone('Europe/Madrid')), '%H:%M:%S')
 
         # TODO simplified & rectified invoices
