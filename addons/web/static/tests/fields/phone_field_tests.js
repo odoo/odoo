@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { click, triggerEvent } from "../helpers/utils";
+import { click, editInput, triggerEvent } from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
 
 let serverData;
@@ -78,9 +78,7 @@ QUnit.module("Fields", (hooks) => {
         );
 
         // change value in edit mode
-        const field = form.el.querySelector('input[type="phone"].o_field_widget');
-        field.value = "new";
-        await triggerEvent(field, null, "change");
+        await editInput(form.el, "input[type='phone'].o_field_widget", "new");
 
         // save
         await click(form.el.querySelector(".o_form_button_save"));
@@ -129,9 +127,7 @@ QUnit.module("Fields", (hooks) => {
             "yop",
             "should have the corect value in internal input"
         );
-        const inputField = cell.querySelector("input");
-        inputField.value = "new";
-        await triggerEvent(inputField, null, "change");
+        await editInput(cell, "input", "new");
 
         // save
         await click(form.el.querySelector(".o_form_button_save"));

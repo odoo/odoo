@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { click, triggerEvent } from "../helpers/utils";
+import { click, editInput } from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
 
 let serverData;
@@ -81,8 +81,7 @@ QUnit.module("Fields", (hooks) => {
         );
 
         // change value in edit mode
-        mailtoEdit.value = "new";
-        await triggerEvent(mailtoEdit, null, "change");
+        await editInput(form.el, "input[type='email'].o_field_email", "new");
 
         // save
         await click(form.el.querySelector(".o_form_button_save"));
@@ -139,8 +138,7 @@ QUnit.module("Fields", (hooks) => {
             "yop",
             "should have the correct value in internal input"
         );
-        mailField.value = "new";
-        await triggerEvent(mailField, null, "change");
+        await editInput(cell, "input", "new");
 
         // save
         await click(list.el.querySelector(".o_list_button_save"));
@@ -196,9 +194,8 @@ QUnit.module("Fields", (hooks) => {
             resModel: "partner",
             arch: '<form><field name="foo" widget="email"/></form>',
         });
+        await editInput(form.el, ".o_field_widget[name='foo'] input", "  abc@abc.com  ");
         const mailFieldInput = form.el.querySelector('.o_field_widget[name="foo"] input');
-        mailFieldInput.value = "  abc@abc.com  ";
-        await triggerEvent(mailFieldInput, null, "change");
         await click(form.el.querySelector(".o_form_button_save"));
         await click(form.el.querySelector(".o_form_button_edit"));
         assert.strictEqual(
@@ -247,9 +244,7 @@ QUnit.module("Fields", (hooks) => {
 
             // edit the phone field, but with the mail in readonly mode
             await click(form.el.querySelector(".o_form_button_edit"));
-            const field = form.el.querySelector('.o_field_widget[name="int_field"] input');
-            field.value = 3;
-            await triggerEvent(field, null, "change");
+            await editInput(form.el, ".o_field_widget[name='int_field'] input", 3);
             await click(form.el.querySelector(".o_form_button_save"));
 
             // check rendering after changes

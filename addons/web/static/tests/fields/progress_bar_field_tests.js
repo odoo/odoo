@@ -2,7 +2,7 @@
 
 import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
 import { registry } from "@web/core/registry";
-import { click, triggerEvent } from "../helpers/utils";
+import { click, editInput } from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
 
 let serverData;
@@ -90,10 +90,7 @@ QUnit.module("Fields", (hooks) => {
         // The view should be in edit mode
         await click(form.el.querySelector(".o_form_button_edit"));
 
-        // trigger the onchange
-        const field = form.el.querySelector(".o_field_widget[name=display_name] input");
-        field.value = "new name";
-        await triggerEvent(field, null, "change");
+        await editInput(form.el, ".o_field_widget[name=display_name] input", "new name");
         await click(form.el.querySelector(".o_form_button_save"));
 
         assert.strictEqual(
@@ -143,8 +140,7 @@ QUnit.module("Fields", (hooks) => {
 
             assert.strictEqual(input.value, "99", "Initial value in input is still correct");
 
-            input.value = "69";
-            await triggerEvent(input, null, "change");
+            await editInput(form.el, ".o_progressbar_value.o_input", "69");
 
             await click(form.el.querySelector(".o_form_button_save"));
 
@@ -197,8 +193,7 @@ QUnit.module("Fields", (hooks) => {
             const input = form.el.querySelector(".o_progressbar_value.o_input");
             assert.strictEqual(input.value, "99", "Initial value in input is still correct");
 
-            input.value = "69";
-            await triggerEvent(input, null, "change");
+            await editInput(form.el, ".o_progressbar_value.o_input", "69");
 
             await click(form.el.querySelector(".o_form_button_save"));
 
@@ -252,8 +247,7 @@ QUnit.module("Fields", (hooks) => {
             const input = form.el.querySelector(".o_progressbar_value.o_input");
             assert.strictEqual(input.value, "0.44444", "Initial value in input is correct");
 
-            input.value = "69";
-            await triggerEvent(input, null, "change");
+            await editInput(form.el, ".o_progressbar_value.o_input", "69");
 
             await click(form.el.querySelector(".o_form_button_save"));
 
@@ -310,10 +304,8 @@ QUnit.module("Fields", (hooks) => {
             assert.strictEqual(currentVal.value, "99", "Initial value in input is correct");
             assert.strictEqual(maxVal.value, "0.44444", "Initial value in input is correct");
 
-            currentVal.value = "2000";
-            await triggerEvent(currentVal, null, "change");
-            maxVal.value = "69";
-            await triggerEvent(maxVal, null, "change");
+            await editInput(form.el, ".o_progressbar input:nth-of-type(1)", "2000");
+            await editInput(form.el, ".o_progressbar input:nth-of-type(2)", "69");
 
             await click(form.el.querySelector(".o_form_button_save"));
 
@@ -456,8 +448,7 @@ QUnit.module("Fields", (hooks) => {
 
             assert.strictEqual(input.value, "99", "Initial value in input is correct");
 
-            input.value = "trente sept virgule neuf";
-            await triggerEvent(input, null, "change");
+            await editInput(form.el, ".o_progressbar_value.o_input", "trente sept virgule neuf");
 
             await click(form.el.querySelector(".o_form_button_save"));
 

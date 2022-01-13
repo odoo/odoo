@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { click, triggerEvent } from "../helpers/utils";
+import { click, editInput } from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
 
 let serverData;
@@ -77,10 +77,7 @@ QUnit.module("Fields", (hooks) => {
             "input should contain field value in edit mode"
         );
 
-        // change value in edit mode
-        let editField = form.el.querySelector('.o_field_widget input[type="text"]');
-        editField.value = "limbo";
-        await triggerEvent(editField, null, "change");
+        await editInput(form.el, ".o_field_widget input[type='text']", "limbo");
 
         // save
         await click(form.el.querySelector(".o_form_button_save"));
@@ -95,9 +92,7 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(editedElement.innerText, "limbo", "the new value should be displayed");
 
         await click(form.el.querySelector(".o_form_button_edit"));
-        editField = form.el.querySelector('.o_field_widget input[type="text"]');
-        editField.value = "/web/limbo";
-        await triggerEvent(editField, null, "change");
+        await editInput(form.el, ".o_field_widget input[type='text']", "/web/limbo");
 
         await click(form.el.querySelector(".o_form_button_save"));
         assert.hasAttrValue(
@@ -225,8 +220,7 @@ QUnit.module("Fields", (hooks) => {
             "yop",
             "should have the correct value in internal input"
         );
-        cell.querySelector("input").value = "brolo";
-        await triggerEvent(cell.querySelector("input"), null, "change");
+        await editInput(cell, "input", "brolo");
 
         // save
         await click(list.el.querySelector(".o_list_button_save"));
@@ -305,9 +299,7 @@ QUnit.module("Fields", (hooks) => {
             "foo2",
             "input should contain field value in edit mode"
         );
-        const field = form.el.querySelector(".o_field_widget[name=foo2] input");
-        field.value = "bonjour";
-        await triggerEvent(field, null, "change");
+        await editInput(form.el, ".o_field_widget[name=foo2] input", "bonjour");
         assert.strictEqual(
             form.el.querySelector(".o_field_widget[name=foo]").innerText,
             "bonjour",

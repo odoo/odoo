@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { click, triggerEvent } from "../helpers/utils";
+import { click, editInput } from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
 
 let serverData;
@@ -71,8 +71,7 @@ QUnit.module("Fields", (hooks) => {
             "The input should be followed by a span containing the percentage symbol."
         );
         const field = form.el.querySelector(".o_percentage_field");
-        field.value = "24";
-        await triggerEvent(field, null, "change");
+        await editInput(form.el, ".o_percentage_field", "24");
         assert.strictEqual(field.value, "24", "The value should not be formated yet.");
         await click(form.el.querySelector(".o_form_button_save"));
         assert.strictEqual(
