@@ -20,13 +20,12 @@ except ImportError:
     # `sassc` executable in the path.
     libsass = None
 
-from odoo import SUPERUSER_ID
+from odoo import release, SUPERUSER_ID
 from odoo.http import request
 from odoo.modules.module import get_resource_path
 from odoo.tools import func, misc, transpile_javascript, is_odoo_module, SourceMapGenerator, profiler
 from odoo.tools.misc import file_open, html_escape as escape
 from odoo.tools.pycompat import to_text
-from odoo.release import version as server_version
 
 _logger = logging.getLogger(__name__)
 
@@ -344,7 +343,7 @@ class AssetsBundle(object):
         # to invite the user to refresh their browser
         if self.env and 'bus.bus' in self.env and self.name in self.TRACKED_BUNDLES:
             self.env['bus.bus']._sendone('broadcast', 'bundle_changed', {
-                'server_version': server_version
+                'server_version': release.version # Needs to be dynamically imported
             })
             _logger.debug('Asset Changed: bundle: %s -- version: %s', self.name, self.version)
 
