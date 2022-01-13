@@ -72,7 +72,7 @@ class AccountMove(models.Model):
         for record in self:
             if record.l10n_es_tbai_is_required and record.edi_state != 'to_send':
                 company = record.company_id
-                tbai_qr_no_crc = company.l10n_es_tbai_url_qr + '?' + '&'.join([
+                tbai_qr_no_crc = company.get_l10n_es_tbai_url_qr() + '?' + '&'.join([
                     'id=' + record.l10n_es_tbai_id,
                     's=' + record.l10n_es_tbai_sequence,
                     'nf=' + record.l10n_es_tbai_number,
