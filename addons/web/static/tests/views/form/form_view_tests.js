@@ -2789,15 +2789,17 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("evaluate in python field options", async function (assert) {
-        assert.expect(2);
+        assert.expect(3);
 
         class MyField extends owl.Component {
             setup() {
-                assert.deepEqual(this.props.record.activeFields[this.props.name].options, {
-                    horizontal: true,
-                });
+                assert.strictEqual(this.props.horizontal, true);
             }
         }
+        MyField.convertAttrsToProps = function (attrs) {
+            assert.deepEqual(attrs.options, { horizontal: true });
+            return { horizontal: attrs.options.horizontal };
+        };
         MyField.template = owl.tags.xml`<div>ok</div>`;
         fieldRegistry.add("my_field", MyField);
 

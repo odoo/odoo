@@ -31,7 +31,7 @@ Object.assign(BooleanFavoriteField, {
 
     convertAttrsToProps(attrs) {
         return {
-            noLabel: "nolabel" in attrs,
+            noLabel: Boolean(attrs.nolabel && !/^(0|false)$/i.test(attrs.nolabel)),
         };
     },
 });

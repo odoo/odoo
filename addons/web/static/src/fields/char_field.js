@@ -48,7 +48,7 @@ Object.assign(CharField, {
     convertAttrsToProps(attrs) {
         return {
             autocomplete: attrs.autocomplete,
-            isPassword: "password" in attrs,
+            isPassword: Boolean(attrs.password && !/^(0|false)$/i.test(attrs.password)),
             placeholder: attrs.placeholder,
         };
     },

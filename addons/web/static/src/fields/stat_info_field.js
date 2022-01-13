@@ -39,7 +39,7 @@ Object.assign(StatInfoField, {
     convertAttrsToProps(attrs) {
         return {
             labelField: attrs.options.label_field,
-            noLabel: "nolabel" in attrs,
+            noLabel: Boolean(attrs.nolabel && !/^(0|false)$/i.test(attrs.nolabel)),
         };
     },
 });
