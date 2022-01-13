@@ -282,7 +282,7 @@
             <field name="name">project.project.form</field>
             <field name="model">project.project</field>
             <field name="arch" type="xml">
-                <form string="Project" class="o_form_project_project" delete="0">
+                <form string="Project" class="o_form_project_project" delete="0" js_class="form_description_expander">
                     <header>
                         <button name="%(project.project_share_wizard_action)d" string="Share Readonly" type="action" class="oe_highlight" groups="project.group_project_manager"
                         attrs="{'invisible': [('privacy_visibility', '!=', 'portal')]}" context="{'default_access_mode': 'read'}"/>
@@ -403,7 +403,7 @@
                     </group>
                     <notebook>
                         <page name="description" string="Description">
-                            <field name="description"/>
+                            <field name="description" options="{'resizable': false}"/>
                         </page>
                         <page name="settings" string="Settings">
                             <group>
@@ -938,7 +938,7 @@
                     </group>
                     <notebook>
                         <page name="description_page" string="Description">
-                            <field name="description" type="html" options="{'collaborative': true}"/>
+                            <field name="description" type="html" options="{'collaborative': true, 'resizable': false}"/>
                         </page>
                         <page name="sub_tasks_page" string="Sub-tasks" attrs="{'invisible': [('allow_subtasks', '=', False)]}">
                             <field name="child_ids" context="{'default_project_id': project_id if not parent_id or not display_project_id else display_project_id, 'default_user_ids': user_ids, 'default_parent_id': id, 'default_partner_id': partner_id}" widget="subtasks_one2many">
