@@ -7,6 +7,8 @@
         display: block;
         height: 0;
         opacity: 0;
+        position: relative;
+        z-index: -1;
     }
 
     .o_calendar_warning:hover + .o_calendar_warning_tooltip {
@@ -14,5 +16,6 @@
         height: auto;
         opacity: 1;
         transition: opacity 0.5s linear;
+        position: static;
     }
 }
