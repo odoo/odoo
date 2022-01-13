@@ -39,5 +39,4 @@ registerModel({
             default: true,
         }),
     },
-
 });

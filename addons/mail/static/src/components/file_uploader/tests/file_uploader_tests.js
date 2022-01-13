@@ -32,11 +32,11 @@ QUnit.test('no conflicts between file uploaders', async function (assert) {
 
     this.data['res.partner'].records.push({ id: 100 }, { id: 101 });
     const { afterNextRender, createChatterContainerComponent } = await this.start();
-    await createChatterContainerComponent({
+    const firstChatterContainerComponent = await createChatterContainerComponent({
         threadId: 100,
         threadModel: 'res.partner',
     });
-    await createChatterContainerComponent({
+    const secondChatterContainerComponent = await createChatterContainerComponent({
         threadId: 101,
         threadModel: 'res.partner',
     });
@@ -50,7 +50,10 @@ QUnit.test('no conflicts between file uploaders', async function (assert) {
         content: 'hello, world',
         contentType: 'text/plain',
     });
-    await afterNextRender(() => inputFiles(document.querySelectorAll('.o_FileUploader_input')[0], [file1]));
+    await afterNextRender(() => inputFiles(
+        firstChatterContainerComponent.chatter.attachmentBoxView.fileUploader.fileInput,
+        [file1]
+    ));
     assert.strictEqual(
         this.messaging.models['Attachment'].all().length,
         1,
@@ -62,7 +65,10 @@ QUnit.test('no conflicts between file uploaders', async function (assert) {
         content: 'hello, world',
         contentType: 'text/plain',
     });
-    await afterNextRender(() => inputFiles(document.querySelectorAll('.o_FileUploader_input')[1], [file2]));
+    await afterNextRender(() => inputFiles(
+        secondChatterContainerComponent.chatter.attachmentBoxView.fileUploader.fileInput,
+        [file2]
+    ));
     assert.strictEqual(
         this.messaging.models['Attachment'].all().length,
         2,

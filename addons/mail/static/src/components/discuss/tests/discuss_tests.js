@@ -1244,7 +1244,7 @@ QUnit.test('basic rendering of message', async function (assert) {
         1,
         "should have date in header of message"
     );
-    await afterNextRender(() => 
+    await afterNextRender(() =>
         document.querySelector('.o_Message').click()
     );
     assert.strictEqual(
@@ -1387,7 +1387,7 @@ QUnit.test('basic rendering of squashed message', async function (assert) {
         message2.querySelector(`:scope .o_Message_sidebar`).classList.contains('o-message-squashed'),
         "message 2 should have squashed sidebar"
     );
-    await afterNextRender(() => 
+    await afterNextRender(() =>
         document.querySelector('.o_Message.o-squashed').click()
     );
     assert.strictEqual(
@@ -2649,7 +2649,7 @@ QUnit.test('composer state: attachments save and restore', async function (asser
         { id: 20, name: "General" },
         { id: 21, name: "Special" }
     );
-    await this.start({
+    const { discussWidget } = await this.start({
         discuss: {
             params: {
                 default_active_id: 'mail.channel_20',
@@ -2667,7 +2667,7 @@ QUnit.test('composer state: attachments save and restore', async function (asser
             name: 'text.txt',
         });
         inputFiles(
-            document.querySelector('.o_FileUploader_input'),
+            discussWidget.discuss.threadView.composerView.fileUploader.fileInput,
             [file]
         );
     });
@@ -2693,7 +2693,7 @@ QUnit.test('composer state: attachments save and restore', async function (asser
     ];
     await afterNextRender(() =>
         inputFiles(
-            document.querySelector('.o_FileUploader_input'),
+            discussWidget.discuss.threadView.composerView.fileUploader.fileInput,
             files
         )
     );
@@ -4016,7 +4016,7 @@ QUnit.test('warning on send with shortcut when attempting to post message with s
     assert.expect(7);
 
     this.data['mail.channel'].records.push({ id: 10 });
-    await this.start({
+    const { discussWidget } = await this.start({
         discuss: {
             context: {
                 active_id: 'mail.channel_10',
@@ -4055,7 +4055,7 @@ QUnit.test('warning on send with shortcut when attempting to post message with s
     });
     await afterNextRender(() =>
         inputFiles(
-            document.querySelector('.o_FileUploader_input'),
+            discussWidget.discuss.threadView.composerView.fileUploader.fileInput,
             [file]
         )
     );
