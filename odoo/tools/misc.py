@@ -66,19 +66,6 @@ def find_in_path(name):
         path.append(config['bin_path'])
     return which(name, path=os.pathsep.join(path))
 
-def _exec_pipe(prog, args, env=None):
-    cmd = (prog,) + args
-    # on win32, passing close_fds=True is not compatible
-    # with redirecting std[in/err/out]
-    close_fds = os.name=="posix"
-    pop = subprocess.Popen(cmd, bufsize=-1, stdin=subprocess.PIPE, stdout=subprocess.PIPE, close_fds=close_fds, env=env)
-    return pop.stdin, pop.stdout
-
-def exec_command_pipe(name, *args):
-    prog = find_in_path(name)
-    if not prog:
-        raise Exception('Command `%s` not found.' % name)
-    return _exec_pipe(prog, args)
 
 #----------------------------------------------------------
 # Postgres subprocesses
@@ -126,9 +113,14 @@ def exec_pg_command(name, *args):
             raise Exception('Postgres subprocess %s error %s' % (args2, rc))
 
 def exec_pg_command_pipe(name, *args):
-    prog = find_pg_tool(name)
     env = exec_pg_environ()
-    return _exec_pipe(prog, args, env)
+    pg = subprocess.Popen(
+        (find_pg_tool(name), *args),
+        bufsize=-1,
+        stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+        env=env
+    )
+    return pg.stdin, pg.stdout
 
 #----------------------------------------------------------
 # File paths
