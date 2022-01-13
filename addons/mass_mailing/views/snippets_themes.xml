@@ -926,7 +926,7 @@
     <t t-set="mailing_content_selector" t-translation="off">.note-editable > div:not(.o_layout), .note-editable .oe_structure > div, .oe_snippet_body</t>
     <div data-js="content"
         t-att-data-selector="mailing_content_selector"
-        data-exclude=".o_mail_no_options"
+        data-exclude=".o_mail_no_options, .s_mail_block_signature"
         data-drop-near="[data-oe-field='body_html']:not(:has(.o_layout)) > *, .oe_structure > *"
         data-drop-in="[data-oe-field='body_html']:not(:has(.o_layout)), .oe_structure"/>
 
@@ -935,10 +935,15 @@
         t-att-data-selector="so_snippet_addition_selector"
         data-drop-in=":not(p).oe_structure:not(.oe_structure_solo), :not(.o_mega_menu):not(p)[data-oe-type=html], :not(p).oe_structure.oe_structure_solo:not(:has(> section, > div))"/>
 
-    <t t-set="so_content_addition_selector" t-translation="off">.s_mail_blockquote, .s_mail_alert, .s_rating, .s_hr, .s_mail_text_highlight, .s_mail_block_signature</t>
+    <t t-set="so_content_addition_selector" t-translation="off">.s_mail_blockquote, .s_mail_alert, .s_rating, .s_hr, .s_mail_text_highlight</t>
     <div id="so_content_addition"
         t-att-data-selector="so_content_addition_selector"
         t-attf-data-drop-near="p, h1, h2, h3, ul, ol, .row > div > img, #{so_content_addition_selector}"
+        data-drop-in=".content, nav"/>
+
+    <div id="so_content_addition_signature"
+        data-selector=".s_mail_block_signature"
+        data-drop-near="p"
         data-drop-in=".content, nav"/>
 
     <div data-js="sizing_y"
