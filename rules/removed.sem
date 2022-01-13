@@ -30,3 +30,12 @@ rules:
     - pattern: odoo.tools.misc.attrgetter($X)
   fix: operator.attrgetter($X)
   severity: ERROR
+
+- id: use-markupsafe
+  languages: [python]
+  severity: ERROR
+  message: to_xml is nonsense, use markupsafe.escape
+  pattern-either:
+    - pattern: odoo.tools.to_xml($X)
+    - pattern: odoo.tools.misc.to_xml($X)
+  fix: markupsafe.escape($X)

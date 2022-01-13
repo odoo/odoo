@@ -355,9 +355,6 @@ except ImportError:
     xlsxwriter = None
 
 
-def to_xml(s):
-    return s.replace('&','&amp;').replace('<','&lt;').replace('>','&gt;')
-
 def get_iso_codes(lang):
     if lang.find('_') != -1:
         if lang.split('_')[0] == lang.split('_')[1].lower():
