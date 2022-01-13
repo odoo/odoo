@@ -6,10 +6,6 @@ const { Component } = owl;
 
 export class DiscussSidebarMailbox extends Component {
 
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
     /**
      * @returns {Thread}
      */
@@ -20,9 +16,7 @@ export class DiscussSidebarMailbox extends Component {
 }
 
 Object.assign(DiscussSidebarMailbox, {
-    props: {
-        threadLocalId: String,
-    },
+    props: { threadLocalId: String },
     template: 'mail.DiscussSidebarMailbox',
 });
 

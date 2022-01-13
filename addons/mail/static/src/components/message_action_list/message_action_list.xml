@@ -4,7 +4,7 @@
         <div class="o_MessageActionList d-flex" t-attf-class="{{ className }}" t-on-click="messageActionList and messageActionList.onClick" t-ref="root">
             <t t-if="messageActionList">
                 <i t-if="messageActionList.message.hasReactionIcon" class="o_MessageActionList_action o_MessageActionList_actionReaction p-2 fa fa-lg fa-smile-o" t-att-title="ADD_A_REACTION" t-on-click="messageActionList.onClickActionReaction" t-ref="actionReaction"/>
-                <PopoverView t-if="messageActionList.reactionPopoverView" popoverViewLocalId="messageActionList.reactionPopoverView.localId"/>
+                <PopoverView t-if="messageActionList.reactionPopoverView" localId="messageActionList.reactionPopoverView.localId"/>
                 <span t-if="messageActionList.message.canStarBeToggled" class="o_MessageActionList_action o_MessageActionList_actionStar p-2" t-att-class="{
                         'o_MessageActionList_actionStar_active': messageActionList.message.isStarred,
                         'fa fa-lg fa-star': messageActionList.message.isStarred,
@@ -14,7 +14,7 @@
                 <span t-if="messageActionList.hasMarkAsReadIcon" class="o_MessageActionList_action o_MessageActionList_actionMarkRead p-2 fa fa-lg fa-check" title="Mark as Read" t-on-click="messageActionList.onClickMarkAsRead"/>
                 <span t-if="messageActionList.message.canBeDeleted" class="o_MessageActionList_action o_MessageActionList_actionEdit p-2 fa fa-lg fa-pencil" title="Edit" t-on-click="messageActionList.onClickEdit"/>
                 <span t-if="messageActionList.message.canBeDeleted" class="o_MessageActionList_action o_MessageActionList_actionDelete p-2 fa fa-lg fa-trash" title="Delete" t-on-click="messageActionList.onClickDelete"/>
-                <DeleteMessageConfirmDialog t-if="messageActionList.showDeleteConfirm" messageActionListLocalId="messageActionList.localId"/>
+                <DeleteMessageConfirmDialog t-if="messageActionList.showDeleteConfirm" localId="messageActionList.localId"/>
             </t>
         </div>
     </t>

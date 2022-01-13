@@ -11,7 +11,7 @@ export class AttachmentCard extends Component {
      */
     setup() {
         super.setup();
-        useComponentToModel({ fieldName: 'component', modelName: 'AttachmentCard', propNameAsRecordLocalId: 'attachmentCardLocalId' });
+        useComponentToModel({ fieldName: 'component', modelName: 'AttachmentCard' });
     }
 
     //--------------------------------------------------------------------------
@@ -22,14 +22,14 @@ export class AttachmentCard extends Component {
      * @returns {AttachmentCard}
      */
     get attachmentCard() {
-        return this.messaging && this.messaging.models['AttachmentCard'].get(this.props.attachmentCardLocalId);
+        return this.messaging && this.messaging.models['AttachmentCard'].get(this.props.localId);
     }
 
 }
 
 Object.assign(AttachmentCard, {
     props: {
-        attachmentCardLocalId: String,
+        localId: String,
         onAttachmentRemoved: {
             type: Function,
             optional: true,

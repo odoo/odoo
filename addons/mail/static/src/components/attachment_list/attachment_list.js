@@ -10,14 +10,14 @@ export class AttachmentList extends Component {
      * @returns {AttachmentList}
      */
     get attachmentList() {
-        return this.messaging && this.messaging.models['AttachmentList'].get(this.props.attachmentListLocalId);
+        return this.messaging && this.messaging.models['AttachmentList'].get(this.props.localId);
     }
 
 }
 
 Object.assign(AttachmentList, {
     props: {
-        attachmentListLocalId: String,
+        localId: String,
         onAttachmentRemoved: {
             type: Function,
             optional: true,

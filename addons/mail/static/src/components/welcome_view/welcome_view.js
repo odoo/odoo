@@ -11,8 +11,8 @@ export class WelcomeView extends owl.Component {
      */
     setup() {
         super.setup();
-        useRefToModel({ fieldName: 'guestNameInputRef', modelName: 'WelcomeView', propNameAsRecordLocalId: 'localId', refName: 'guestNameInput' });
-        useUpdateToModel({ methodName: 'onComponentUpdate', modelName: 'WelcomeView', propNameAsRecordLocalId: 'localId' });
+        useRefToModel({ fieldName: 'guestNameInputRef', modelName: 'WelcomeView', refName: 'guestNameInput' });
+        useUpdateToModel({ methodName: 'onComponentUpdate', modelName: 'WelcomeView' });
     }
 
     /**

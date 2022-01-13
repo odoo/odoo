@@ -5,7 +5,6 @@ import { registerMessagingComponent } from '@mail/utils/messaging_component';
 import Dialog from 'web.OwlDialog';
 
 const { Component } = owl;
-const { useRef } = owl.hooks;
 
 export class AttachmentDeleteConfirmDialog extends Component {
 
@@ -57,7 +56,7 @@ export class AttachmentDeleteConfirmDialog extends Component {
         if (this.props.onAttachmentRemoved) {
             this.props.onAttachmentRemoved({
                 attachmentLocalId: this.props.attachmentLocalId,
-            })
+            });
         }
     }
 

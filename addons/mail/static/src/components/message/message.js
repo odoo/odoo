@@ -23,8 +23,8 @@ export class Message extends Component {
      */
     setup() {
         super.setup();
-        useComponentToModel({ fieldName: 'component', modelName: 'MessageView', propNameAsRecordLocalId: 'localId' });
-        useUpdateToModel({ methodName: 'onComponentUpdate', modelName: 'MessageView', propNameAsRecordLocalId: 'localId' });
+        useComponentToModel({ fieldName: 'component', modelName: 'MessageView' });
+        useUpdateToModel({ methodName: 'onComponentUpdate', modelName: 'MessageView' });
         this.state = useState({
             /**
              * Determine whether the message is hovered. When message is hovered

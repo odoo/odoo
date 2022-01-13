@@ -6,22 +6,16 @@ const { Component } = owl;
 
 export class DiscussSidebarCategory extends Component {
 
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
     /**
      * @returns {DiscussSidebarCategory}
      */
     get category() {
-        return this.messaging.models['DiscussSidebarCategory'].get(this.props.categoryLocalId);
+        return this.messaging.models['DiscussSidebarCategory'].get(this.props.localId);
     }
 }
 
 Object.assign(DiscussSidebarCategory, {
-    props: {
-        categoryLocalId: String,
-    },
+    props: { localId: String },
     template: 'mail.DiscussSidebarCategory',
 });
 

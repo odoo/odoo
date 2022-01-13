@@ -30,7 +30,7 @@ QUnit.module('attachment_box_tests.js', {
                 threadModel: thread.model,
             });
             const props = {
-                attachmentBoxViewLocalId: chatter.attachmentBoxView.localId,
+                localId: chatter.attachmentBoxView.localId,
                 ...otherProps,
             };
             await createRootMessagingComponent(this, "AttachmentBox", {

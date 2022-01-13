@@ -15,7 +15,7 @@ export class ComposerTextInput extends Component {
      */
     setup() {
         super.setup();
-        useComponentToModel({ fieldName: 'textInputComponent', modelName: 'ComposerView', propNameAsRecordLocalId: 'composerViewLocalId' });
+        useComponentToModel({ fieldName: 'textInputComponent', modelName: 'ComposerView' });
         /**
          * Updates the composer text input content when composer is mounted
          * as textarea content can't be changed from the DOM.
@@ -46,7 +46,7 @@ export class ComposerTextInput extends Component {
      * @returns {ComposerView}
      */
     get composerView() {
-        return this.messaging && this.messaging.models['ComposerView'].get(this.props.composerViewLocalId);
+        return this.messaging && this.messaging.models['ComposerView'].get(this.props.localId);
     }
 
     /**
@@ -404,7 +404,7 @@ Object.assign(ComposerTextInput, {
         hasMentionSuggestionsBelowPosition: false,
     },
     props: {
-        composerViewLocalId: String,
+        localId: String,
         hasMentionSuggestionsBelowPosition: Boolean,
         isCompact: Boolean,
         onComposerTextInputSendShortcut: {

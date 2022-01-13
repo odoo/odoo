@@ -41,7 +41,7 @@ export class ChatWindow extends Component {
      * @returns {ChatWindow}
      */
     get chatWindow() {
-        return this.messaging && this.messaging.models['ChatWindow'].get(this.props.chatWindowLocalId);
+        return this.messaging && this.messaging.models['ChatWindow'].get(this.props.localId);
     }
 
     /**
@@ -257,7 +257,7 @@ Object.assign(ChatWindow, {
         isFullscreen: false,
     },
     props: {
-        chatWindowLocalId: String,
+        localId: String,
         hasCloseAsBackButton: Boolean,
         isExpandable: Boolean,
         isFullscreen: Boolean,

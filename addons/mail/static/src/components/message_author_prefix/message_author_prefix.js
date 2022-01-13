@@ -6,10 +6,6 @@ const { Component } = owl;
 
 export class MessageAuthorPrefix extends Component {
 
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
     /**
      * @returns {Message}
      */

@@ -22,7 +22,7 @@
             <t t-if="messageView" name="rootCondition">
                 <MessageInReplyToView t-if="messageView.messageInReplyToView" messageInReplyToViewLocalId="messageView.messageInReplyToView.localId"/>
                 <div t-if="isActive and messageView.messageActionList" class="o_Message_actionListContainer pl-5 pr-3" t-att-class="{ 'o-squashed': messageView.isSquashed }">
-                    <MessageActionList messageActionListLocalId="messageView.messageActionList.localId"/>
+                    <MessageActionList localId="messageView.messageActionList.localId"/>
                 </div>
                 <div class="d-flex flex-shrink-0">
                     <div class="o_Message_highlightIndicator" t-att-class="{ 'o-active': messageView.message.isHighlighted or messageView.isHighlighted }"/>
@@ -131,7 +131,7 @@
                             <t t-if="messageView.composerViewInEditing">
                                 <Composer
                                     className="'o_Message_composer mb-1'"
-                                    composerViewLocalId="messageView.composerViewInEditing.localId"
+                                    localId="messageView.composerViewInEditing.localId"
                                     hasCurrentPartnerAvatar="false"
                                     hasDiscardButton="false"
                                     hasMentionSuggestionsBelowPosition="false"
@@ -161,10 +161,10 @@
                                 </ul>
                             </t>
                         </div>
-                        <AttachmentList t-if="messageView.attachmentList" attachmentListLocalId="messageView.attachmentList.localId"/>
+                        <AttachmentList t-if="messageView.attachmentList" localId="messageView.attachmentList.localId"/>
                         <div t-if="messageView.message.messageReactionGroups.length > 0" class="d-flex flex-wrap ml-2">
                             <t t-foreach="messageView.message.messageReactionGroups" t-as="messageReactionGroup" t-key="messageReactionGroup.localId">
-                                <MessageReactionGroup className="'mr-1 mb-1'" messageReactionGroupLocalId="messageReactionGroup.localId"/>
+                                <MessageReactionGroup className="'mr-1 mb-1'" localId="messageReactionGroup.localId"/>
                             </t>
                         </div>
                     </div>

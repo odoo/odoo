@@ -12,7 +12,7 @@ export class MessageActionList extends Component {
      */
     setup() {
         super.setup();
-        useRefToModel({ fieldName: 'actionReactionRef', modelName: 'MessageActionList', propNameAsRecordLocalId: 'messageActionListLocalId', refName: 'actionReaction' });
+        useRefToModel({ fieldName: 'actionReactionRef', modelName: 'MessageActionList', refName: 'actionReaction' });
         this.ADD_A_REACTION = this.env._t("Add a Reaction");
     }
 
@@ -20,15 +20,13 @@ export class MessageActionList extends Component {
      * @returns {MessageActionList}
      */
     get messageActionList() {
-        return this.messaging && this.messaging.models['MessageActionList'].get(this.props.messageActionListLocalId);
+        return this.messaging && this.messaging.models['MessageActionList'].get(this.props.localId);
     }
 
 }
 
 Object.assign(MessageActionList, {
-    props: {
-        messageActionListLocalId: String,
-    },
+    props: { localId: String },
     template: "mail.MessageActionList",
 });
 

@@ -55,9 +55,7 @@ export class RtcInvitationCard extends Component {
 }
 
 Object.assign(RtcInvitationCard, {
-    props: {
-        threadLocalId: String,
-    },
+    props: { threadLocalId: String },
     template: 'mail.RtcInvitationCard',
 });
 
