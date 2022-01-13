@@ -17,3 +17,4 @@ Katherine Zaoral kz@adhoc.com.ar https://github.com/zaoral
 Valentino Defelice vd@adhoc.com.ar https://github.com/ValentinoDefelice
 Bruno Zanotti bz@adhoc.com.ar https://github.com/Bruno-Zanotti
 Pablo Santiago Paez Sheridan pp@adhoc.com.ar https://github.com/PabloPaezSheridan
+Augusto Weiss awe@adhoc.com.ar https://github.com/augusto-weiss
