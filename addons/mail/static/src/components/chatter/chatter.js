@@ -16,8 +16,8 @@ export class Chatter extends Component {
     setup() {
         super.setup();
         useUpdate({ func: () => this._update() });
-        useComponentToModel({ fieldName: 'component', modelName: 'Chatter', propNameAsRecordLocalId: 'chatterLocalId' });
-        useRefToModel({ fieldName: 'threadRef', modelName: 'Chatter', propNameAsRecordLocalId: 'chatterLocalId', refName: 'thread' });
+        useComponentToModel({ fieldName: 'component', modelName: 'Chatter' });
+        useRefToModel({ fieldName: 'threadRef', modelName: 'Chatter', refName: 'thread' });
         /**
          * Reference of the scroll Panel (Real scroll element). Useful to pass the Scroll element to
          * child component to handle proper scrollable element.
@@ -34,7 +34,7 @@ export class Chatter extends Component {
      * @returns {Chatter}
      */
     get chatter() {
-        return this.messaging && this.messaging.models['Chatter'].get(this.props.chatterLocalId);
+        return this.messaging && this.messaging.models['Chatter'].get(this.props.localId);
     }
 
     /**
@@ -76,9 +76,7 @@ export class Chatter extends Component {
 }
 
 Object.assign(Chatter, {
-    props: {
-        chatterLocalId: String,
-    },
+    props: { localId: String },
     template: 'mail.Chatter',
 });
 

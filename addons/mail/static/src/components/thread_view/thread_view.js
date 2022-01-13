@@ -61,7 +61,7 @@ export class ThreadView extends Component {
      * @returns {ThreadView}
      */
     get threadView() {
-        return this.messaging && this.messaging.models['ThreadView'].get(this.props.threadViewLocalId);
+        return this.messaging && this.messaging.models['ThreadView'].get(this.props.localId);
     }
 
     //--------------------------------------------------------------------------
@@ -128,13 +128,13 @@ Object.assign(ThreadView, {
             type: Boolean,
             optional: true,
         },
+        localId: String,
         onFocusin: {
             type: Function,
             optional: true,
         },
         showComposerAttachmentsExtensions: Boolean,
         showComposerAttachmentsFilenames: Boolean,
-        threadViewLocalId: String,
     },
     template: 'mail.ThreadView',
 });

@@ -12,31 +12,29 @@ const { onWillUpdateProps, useComponent, useRef } = owl.hooks;
  * @param {Object} param0
  * @param {string} param0.fieldName Name of the field on the target record.
  * @param {string} param0.modelName Name of the model of the target record.
- * @param {string} param0.propNameAsRecordLocalId Name of the prop of this
- *  component containing the localId of the target record.
  * @param {string} param0.refName Name of the t-ref on this component.
  */
-export function useRefToModel({ fieldName, modelName, propNameAsRecordLocalId, refName }) {
+export function useRefToModel({ fieldName, modelName, refName }) {
     const component = useComponent();
     const { modelManager } = component.env.services.messaging;
-    const record = modelManager.models[modelName].get(component.props[propNameAsRecordLocalId]);
+    const record = modelManager.models[modelName].get(component.props.localId);
     const ref = useRef(refName);
     if (record) {
         record.update({ [fieldName]: ref });
     }
     onWillUpdateProps(nextProps => {
-        const currentRecord = modelManager.models[modelName].get(component.props[propNameAsRecordLocalId]);
+        const currentRecord = modelManager.models[modelName].get(component.props.localId);
         if (currentRecord) {
             currentRecord.update({ [fieldName]: clear() });
         }
-        const nextRecord = modelManager.models[modelName].get(nextProps[propNameAsRecordLocalId]);
+        const nextRecord = modelManager.models[modelName].get(nextProps.localId);
         if (nextRecord) {
             nextRecord.update({ [fieldName]: ref });
         }
     });
     const __destroy = component.__destroy;
     component.__destroy = parent => {
-        const record = modelManager.models[modelName].get(component.props[propNameAsRecordLocalId]);
+        const record = modelManager.models[modelName].get(component.props.localId);
         if (record) {
             record.update({ [fieldName]: clear() });
         }

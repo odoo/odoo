@@ -12,12 +12,8 @@ export class FileUploader extends Component {
      */
     setup() {
         super.setup();
-        useRefToModel({ fieldName: 'fileInputRef', modelName: 'FileUploaderView', propNameAsRecordLocalId: 'localId', refName: 'fileInput' });
+        useRefToModel({ fieldName: 'fileInputRef', modelName: 'FileUploaderView', refName: 'fileInput' });
     }
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
 
     get fileUploaderView() {
         return this.messaging && this.messaging.models['FileUploaderView'].get(this.props.localId);

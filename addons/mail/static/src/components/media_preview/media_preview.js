@@ -10,8 +10,8 @@ export class MediaPreview extends owl.Component {
      */
     setup() {
         super.setup();
-        useRefToModel({ fieldName: 'audioRef', modelName: 'MediaPreview', propNameAsRecordLocalId: 'localId', refName: 'audio' });
-        useRefToModel({ fieldName: 'videoRef', modelName: 'MediaPreview', propNameAsRecordLocalId: 'localId', refName: 'video' });
+        useRefToModel({ fieldName: 'audioRef', modelName: 'MediaPreview', refName: 'audio' });
+        useRefToModel({ fieldName: 'videoRef', modelName: 'MediaPreview', refName: 'video' });
     }
 
     /**

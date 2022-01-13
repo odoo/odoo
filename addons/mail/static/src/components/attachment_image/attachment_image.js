@@ -11,25 +11,21 @@ export class AttachmentImage extends Component {
      */
     setup() {
         super.setup();
-        useComponentToModel({ fieldName: 'component', modelName: 'AttachmentImage', propNameAsRecordLocalId: 'attachmentImageLocalId' });
+        useComponentToModel({ fieldName: 'component', modelName: 'AttachmentImage' });
     }
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
 
     /**
      * @returns {AttachmentImage}
      */
     get attachmentImage() {
-        return this.messaging && this.messaging.models['AttachmentImage'].get(this.props.attachmentImageLocalId);
+        return this.messaging && this.messaging.models['AttachmentImage'].get(this.props.localId);
     }
 
 }
 
 Object.assign(AttachmentImage, {
     props: {
-        attachmentImageLocalId: String,
+        localId: String,
         onAttachmentRemoved: {
             type: Function,
             optional: true,

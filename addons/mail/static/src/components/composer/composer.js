@@ -16,8 +16,8 @@ export class Composer extends Component {
     setup() {
         super.setup();
         this.isDropZoneVisible = useDragVisibleDropZone();
-        useComponentToModel({ fieldName: 'component', modelName: 'ComposerView', propNameAsRecordLocalId: 'composerViewLocalId' });
-        useRefToModel({ fieldName: 'buttonEmojisRef', modelName: 'ComposerView', propNameAsRecordLocalId: 'composerViewLocalId', refName: 'buttonEmojis' });
+        useComponentToModel({ fieldName: 'component', modelName: 'ComposerView' });
+        useRefToModel({ fieldName: 'buttonEmojisRef', modelName: 'ComposerView', refName: 'buttonEmojis' });
         this._onDropZoneFilesDropped = this._onDropZoneFilesDropped.bind(this);
         this._onComposerTextInputSendShortcut = this._onComposerTextInputSendShortcut.bind(this);
         this._onPasteTextInput = this._onPasteTextInput.bind(this);
@@ -31,7 +31,7 @@ export class Composer extends Component {
      * @returns {ComposerView}
      */
     get composerView() {
-        return this.messaging && this.messaging.models['ComposerView'].get(this.props.composerViewLocalId);
+        return this.messaging && this.messaging.models['ComposerView'].get(this.props.localId);
     }
 
     /**
@@ -218,7 +218,7 @@ Object.assign(Composer, {
         isExpandable: false,
     },
     props: {
-        composerViewLocalId: String,
+        localId: String,
         hasCurrentPartnerAvatar: Boolean,
         hasDiscardButton: Boolean,
         hasFollowers: Boolean,

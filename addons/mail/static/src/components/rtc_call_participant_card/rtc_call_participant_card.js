@@ -23,7 +23,7 @@ export class RtcCallParticipantCard extends Component {
      * @returns {Thread|undefined}
      */
     get callParticipantCard() {
-        return this.messaging.models['RtcCallParticipantCard'].get(this.props.callParticipantCardLocalId);
+        return this.messaging.models['RtcCallParticipantCard'].get(this.props.localId);
     }
 
     //--------------------------------------------------------------------------
@@ -47,11 +47,7 @@ export class RtcCallParticipantCard extends Component {
 }
 
 Object.assign(RtcCallParticipantCard, {
-    props: {
-        callParticipantCardLocalId: {
-            type: String,
-        },
-    },
+    props: { localId: String },
     template: 'mail.RtcCallParticipantCard',
 });
 

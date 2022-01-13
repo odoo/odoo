@@ -16,9 +16,7 @@ export class ChatterTopbar extends Component {
 }
 
 Object.assign(ChatterTopbar, {
-    props: {
-        chatterLocalId: String,
-    },
+    props: { chatterLocalId: String },
     template: 'mail.ChatterTopbar',
 });
 

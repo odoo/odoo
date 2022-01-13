@@ -4,7 +4,7 @@
     <t t-name="mail.ChatterContainer" owl="1">
         <div class="o_ChatterContainer" t-attf-class="{{ className }}" data-command-category="mail" t-ref="root">
             <t t-if="chatter">
-                <Chatter chatterLocalId="chatter.localId"/>
+                <Chatter localId="chatter.localId"/>
             </t>
             <t t-else="">
                 <div class="o_ChatterContainer_noChatter"><i class="o_ChatterContainer_noChatterIcon fa fa-circle-o-notch fa-spin"/>Please wait...</div>

@@ -129,9 +129,7 @@ export class RtcCallViewer extends Component {
 
 Object.assign(RtcCallViewer, {
     components,
-    props: {
-        localId: String,
-    },
+    props: { localId: String },
     template: 'mail.RtcCallViewer',
 });
 

@@ -17,7 +17,7 @@ QUnit.module('chatter_tests.js', {
         beforeEach(this);
 
         this.createChatterComponent = async ({ chatter }, otherProps) => {
-            const props = Object.assign({ chatterLocalId: chatter.localId }, otherProps);
+            const props = Object.assign({ localId: chatter.localId }, otherProps);
             await createRootMessagingComponent(this, "Chatter", {
                 props,
                 target: this.widget.el,

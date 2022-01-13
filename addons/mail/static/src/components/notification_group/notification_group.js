@@ -73,9 +73,7 @@ export class NotificationGroup extends Component {
 }
 
 Object.assign(NotificationGroup, {
-    props: {
-        localId: String,
-    },
+    props: { localId: String },
     template: 'mail.NotificationGroup',
 });
 

@@ -53,9 +53,7 @@ export class EmojiList extends Component {
 }
 
 Object.assign(EmojiList, {
-    props: {
-        localId: String,
-    },
+    props: { localId: String },
     template: 'mail.EmojiList',
 });
 

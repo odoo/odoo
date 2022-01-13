@@ -42,14 +42,14 @@
                     <t t-foreach="category.filteredCategoryItems" t-as="item" t-key="item.localId">
                         <DiscussSidebarCategoryItem
                             className="'o_DiscussSidebarCategory_item'"
-                            categoryItemLocalId="item.localId"
+                            localId="item.localId"
                         />
                     </t>
                 </t>
                 <t t-if="!category.isOpen and category.activeItem">
                     <DiscussSidebarCategoryItem
                         className="'o_DiscussSidebarCategory_item'"
-                        categoryItemLocalId="category.activeItem.localId"
+                        localId="category.activeItem.localId"
                     />
                 </t>
             </div>

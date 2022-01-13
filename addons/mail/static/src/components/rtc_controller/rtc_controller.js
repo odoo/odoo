@@ -6,10 +6,6 @@ const { Component } = owl;
 
 export class RtcController extends Component {
 
-    //--------------------------------------------------------------------------
-    // Getters / Setters
-    //--------------------------------------------------------------------------
-
     /**
      * @returns {RtcController}
      */
@@ -20,11 +16,7 @@ export class RtcController extends Component {
 }
 
 Object.assign(RtcController, {
-    props: {
-        localId: {
-            type: String,
-        },
-    },
+    props: { localId: String },
     template: 'mail.RtcController',
 });
 

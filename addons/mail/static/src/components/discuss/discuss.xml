@@ -52,7 +52,7 @@
                 hasComposerDiscardButton="discuss.thread === messaging.inbox"
                 hasComposerThreadName="discuss.thread === messaging.inbox"
                 hasComposerThreadTyping="true"
-                threadViewLocalId="discuss.threadView.localId"
+                localId="discuss.threadView.localId"
             />
         </t>
         <t t-if="!discuss.thread and (!messaging.device.isMobile or discuss.activeMobileNavbarTabId === 'mailbox')">
@@ -78,7 +78,7 @@
         <t t-if="discuss.mobileMessagingNavbarView">
             <MobileMessagingNavbar
                 className="'o_Discuss_mobileNavbar'"
-                mobileMessagingNavbarViewLocalId="discuss.mobileMessagingNavbarView.localId"
+                localId="discuss.mobileMessagingNavbarView.localId"
             />
         </t>
     </t>
