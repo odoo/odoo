@@ -1197,7 +1197,7 @@ QUnit.test('composer: add an attachment', async function (assert) {
         id: 20,
         model: 'mail.channel',
     });
-    await createComposerComponent(thread.composer);
+    const composerComponent = await createComposerComponent(thread.composer);
 
     const file = await createFile({
         content: 'hello, world',
@@ -1206,7 +1206,7 @@ QUnit.test('composer: add an attachment', async function (assert) {
     });
     await afterNextRender(() =>
         inputFiles(
-            document.querySelector('.o_FileUploader_input'),
+            composerComponent.composerView.fileUploader.fileInput,
             [file]
         )
     );
@@ -1564,7 +1564,7 @@ QUnit.test('composer: send button is disabled if attachment upload is not finish
         id: 20,
         model: 'mail.channel',
     });
-    await createComposerComponent(thread.composer);
+    const composerComponent = await createComposerComponent(thread.composer);
     const file = await createFile({
         content: 'hello, world',
         contentType: 'text/plain',
@@ -1572,7 +1572,7 @@ QUnit.test('composer: send button is disabled if attachment upload is not finish
     });
     await afterNextRender(() =>
         inputFiles(
-            document.querySelector('.o_FileUploader_input'),
+            composerComponent.composerView.fileUploader.fileInput,
             [file]
         )
     );
@@ -1630,7 +1630,7 @@ QUnit.test('remove an attachment from composer does not need any confirmation', 
         id: 20,
         model: 'mail.channel',
     });
-    await createComposerComponent(thread.composer);
+    const composerComponent = await createComposerComponent(thread.composer);
     const file = await createFile({
         content: 'hello, world',
         contentType: 'text/plain',
@@ -1638,7 +1638,7 @@ QUnit.test('remove an attachment from composer does not need any confirmation', 
     });
     await afterNextRender(() =>
         inputFiles(
-            document.querySelector('.o_FileUploader_input'),
+            composerComponent.composerView.fileUploader.fileInput,
             [file]
         )
     );
@@ -1683,7 +1683,7 @@ QUnit.test('remove an uploading attachment', async function (assert) {
         id: 20,
         model: 'mail.channel',
     });
-    await createComposerComponent(thread.composer);
+    const composerComponent = await createComposerComponent(thread.composer);
     const file = await createFile({
         content: 'hello, world',
         contentType: 'text/plain',
@@ -1691,7 +1691,7 @@ QUnit.test('remove an uploading attachment', async function (assert) {
     });
     await afterNextRender(() =>
         inputFiles(
-            document.querySelector('.o_FileUploader_input'),
+            composerComponent.composerView.fileUploader.fileInput,
             [file]
         )
     );
@@ -1740,7 +1740,7 @@ QUnit.test('remove an uploading attachment aborts upload', async function (asser
         id: 20,
         model: 'mail.channel',
     });
-    await createComposerComponent(thread.composer);
+    const composerComponent = await createComposerComponent(thread.composer);
     const file = await createFile({
         content: 'hello, world',
         contentType: 'text/plain',
@@ -1748,7 +1748,7 @@ QUnit.test('remove an uploading attachment aborts upload', async function (asser
     });
     await afterNextRender(() =>
         inputFiles(
-            document.querySelector('.o_FileUploader_input'),
+            composerComponent.composerView.fileUploader.fileInput,
             [file]
         )
     );
@@ -1863,7 +1863,7 @@ QUnit.test('[technical] does not crash when an attachment is removed before its 
         id: 20,
         model: 'mail.channel',
     });
-    await createComposerComponent(thread.composer);
+    const composerComponent = await createComposerComponent(thread.composer);
     const file1 = await createFile({
         name: 'text1.txt',
         content: 'hello, world',
@@ -1876,7 +1876,7 @@ QUnit.test('[technical] does not crash when an attachment is removed before its 
     });
     await afterNextRender(() =>
         inputFiles(
-            document.querySelector('.o_FileUploader_input'),
+            composerComponent.composerView.fileUploader.fileInput,
             [file1, file2]
         )
     );

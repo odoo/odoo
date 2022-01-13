@@ -19,7 +19,7 @@ registerModel({
          * Handles click on the "add attachment" button.
          */
         onClickAddAttachment() {
-            this.fileUploaderView.openBrowserFileUploader();
+            this.fileUploader.openBrowserFileUploader();
         },
     },
     fields: {
@@ -32,7 +32,7 @@ registerModel({
          * States the OWL component displaying this attachment box.
          */
         component: attr(),
-        fileUploaderView: one2one('FileUploaderView', {
+        fileUploader: one2one('FileUploader', {
             default: insertAndReplace(),
             inverse: 'attachmentBoxView',
             isCausal: true,

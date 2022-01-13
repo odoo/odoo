@@ -970,7 +970,7 @@ registerModel({
         extraSuggestedRecords: many2many('Model', {
             compute: '_computeExtraSuggestedRecords',
         }),
-        fileUploaderView: one2one('FileUploaderView', {
+        fileUploader: one2one('FileUploader', {
             default: insertAndReplace(),
             inverse: 'composerView',
             isCausal: true,

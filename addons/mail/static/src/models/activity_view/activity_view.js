@@ -54,7 +54,7 @@ registerModel({
          * explorer for upload.
          */
         onClickUploadDocument() {
-            this.fileUploaderView.openBrowserFileUploader();
+            this.fileUploader.openBrowserFileUploader();
         },
         /**
          * @private
@@ -94,7 +94,7 @@ registerModel({
          * @private
          * @returns {FieldCommand}
          */
-        _computeFileUploaderView() {
+        _computeFileUploader() {
             return this.activity.category === 'upload_file' ? insertAndReplace() : clear();
         },
         /**
@@ -173,8 +173,8 @@ registerModel({
         delayLabel: attr({
             compute: '_computeDelayLabel',
         }),
-        fileUploaderView: one2one('FileUploaderView', {
-            compute: '_computeFileUploaderView',
+        fileUploader: one2one('FileUploader', {
+            compute: '_computeFileUploader',
             inverse: 'activityView',
             isCausal: true,
         }),
