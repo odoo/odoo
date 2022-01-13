@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
-from datetime import datetime, timedelta
 
 L10N_ES_EDI_TBAI_VERSION = 1.2
 L10N_ES_EDI_TBAI_URLS = {
@@ -73,31 +72,8 @@ class ResCompany(models.Model):
     l10n_es_tbai_test_env = fields.Boolean(
         string="Test Mode",
         help="Use the test environment",
-        copy=False
-    )
-
-    l10n_es_tbai_url_invoice = fields.Char(
-        string="URL for submitting invoices",
-        readonly=True,
-        compute="_compute_l10n_es_tbai_url_invoice"
-    )
-
-    l10n_es_tbai_url_cancel = fields.Char(
-        string="URL for canceling invoices",
-        readonly=True,
-        compute="_compute_l10n_es_tbai_url_cancel"
-    )
-
-    l10n_es_tbai_url_qr = fields.Char(
-        string="URL for generating QR code",
-        readonly=True,
-        compute="_compute_l10n_es_tbai_url_qr"
-    )
-
-    l10n_es_tbai_url_xsd = fields.Char(
-        string="URL to retrieve XSD validation schemas",
-        readonly=True,
-        compute="_compute_l10n_es_tbai_url_xsd"
+        copy=False,
+        default=False
     )
 
     # === TBAI CHAIN HEAD ===
@@ -121,50 +97,6 @@ class ResCompany(models.Model):
         inverse_name='company_id',
     )
 
-    def write(self, vals):
-        # OVERRIDE
-        super(ResCompany, self).write(vals)
-        xsd_cron = self.env.ref('l10n_es_edi_tbai.l10n_es_edi_tbai_ir_cron_load_xsd_files')
-        if self.l10n_es_tbai_tax_agency:
-            xsd_cron.active = True
-            # We could deactivate the cron if/when tax agency is unset
-            # but then we would have to check it's not running (else: lock error)
-
-    def _compute_l10n_es_tbai_url(self, prefix):
-        if self.country_code == 'ES':
-            suffix = 'test' if self.l10n_es_tbai_test_env else 'prod'
-            if prefix == 'xsd':  # XSD schemas are the same for test/prod
-                suffix = ''
-            return L10N_ES_EDI_TBAI_URLS[prefix + suffix][self.l10n_es_tbai_tax_agency]
-        else:
-            return False
-
-    @api.depends('country_id', 'l10n_es_tbai_tax_agency', 'l10n_es_tbai_test_env')
-    def _compute_l10n_es_tbai_url_invoice(self):
-        for company in self:
-            company.l10n_es_tbai_url_invoice = self._compute_l10n_es_tbai_url('invoice_')
-
-    @api.depends('country_id', 'l10n_es_tbai_tax_agency', 'l10n_es_tbai_test_env')
-    def _compute_l10n_es_tbai_url_cancel(self):
-        for company in self:
-            company.l10n_es_tbai_url_cancel = self._compute_l10n_es_tbai_url('cancel_')
-
-    @api.depends('country_id', 'l10n_es_tbai_tax_agency', 'l10n_es_tbai_test_env')
-    def _compute_l10n_es_tbai_url_qr(self):
-        for company in self:
-            company.l10n_es_tbai_url_qr = self._compute_l10n_es_tbai_url('qr_')
-
-    @api.depends('country_id', 'l10n_es_tbai_tax_agency')
-    def _compute_l10n_es_tbai_url_xsd(self):
-        """
-        Returns URLs pointing to the XSD validation schemas for posting and canceling invoices.
-        Return value depends on tax agencies:
-        Araba and Gipuzkoa each have a single URL pointing to a zip file (which may contain more than those two XSDs)
-        Bizkaia has two URLs (one for each XSD): in that case a tuple of strings is returned (instead of a single string)
-        """
-        for company in self:
-            company.l10n_es_tbai_url_xsd = self._compute_l10n_es_tbai_url('xsd')
-
     @api.depends('country_id', 'l10n_es_tbai_certificate_ids')
     def _compute_l10n_es_tbai_certificate(self):
         for company in self:
@@ -176,3 +108,39 @@ class ResCompany(models.Model):
                 )
             else:
                 company.l10n_es_tbai_certificate_id = False
+
+    def write(self, vals):
+        # OVERRIDE
+        super(ResCompany, self).write(vals)
+        xsd_cron = self.env.ref('l10n_es_edi_tbai.l10n_es_edi_tbai_ir_cron_load_xsd_files')
+        if self.l10n_es_tbai_tax_agency:
+            xsd_cron.active = True
+            # We could deactivate the cron if/when tax agency is unset
+            # but then we would have to check it's not running (else: lock error)
+
+    def _get_l10n_es_tbai_url(self, prefix):
+        if self.country_code == 'ES':
+            suffix = 'test' if self.l10n_es_tbai_test_env else 'prod'
+            if prefix == 'xsd':  # XSD schemas are the same for test/prod
+                suffix = ''
+            return L10N_ES_EDI_TBAI_URLS[prefix + suffix][self.l10n_es_tbai_tax_agency]
+        else:
+            return False
+
+    def get_l10n_es_tbai_url_invoice(self):
+        return self._get_l10n_es_tbai_url('invoice_')
+
+    def get_l10n_es_tbai_url_cancel(self):
+        return self._get_l10n_es_tbai_url('cancel_')
+
+    def get_l10n_es_tbai_url_qr(self):
+        return self._get_l10n_es_tbai_url('qr_')
+
+    def get_l10n_es_tbai_url_xsd(self):
+        """
+        Returns URLs pointing to the XSD validation schemas for posting and canceling invoices.
+        Return value depends on tax agencies:
+        Araba and Gipuzkoa each have a single URL pointing to a zip file (which may contain more than those two XSDs)
+        Bizkaia has two URLs (one for each XSD): in that case a tuple of strings is returned (instead of a single string)
+        """
+        return self._get_l10n_es_tbai_url('xsd')
