@@ -1,9 +1,10 @@
 odoo.define("pos_gift_card.GiftCardPopup", function (require) {
   "use strict";
 
-  const { useState, useRef } = owl.hooks;
   const AbstractAwaitablePopup = require("point_of_sale.AbstractAwaitablePopup");
   const Registries = require("point_of_sale.Registries");
+
+  const { useState } = owl;
 
   class GiftCardPopup extends AbstractAwaitablePopup {
     constructor() {

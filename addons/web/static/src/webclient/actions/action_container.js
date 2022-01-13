@@ -2,7 +2,7 @@
 
 import { ActionDialog } from "./action_dialog";
 
-const { Component, tags } = owl;
+const { Component, xml } = owl;
 
 // -----------------------------------------------------------------------------
 // ActionContainer (Component)
@@ -22,7 +22,7 @@ export class ActionContainer extends Component {
     }
 }
 ActionContainer.components = { ActionDialog };
-ActionContainer.template = tags.xml`
+ActionContainer.template = xml`
     <t t-name="web.ActionContainer">
       <div class="o_action_manager">
         <t t-if="info.Component" t-component="info.Component" t-props="info.componentProps" t-key="info.id"/>

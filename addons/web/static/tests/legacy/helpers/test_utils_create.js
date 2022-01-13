@@ -21,9 +21,7 @@ odoo.define('web.test_utils_create', function (require) {
     const testUtilsMock = require('web.test_utils_mock');
     const Widget = require('web.Widget');
 
-    const { Component } = owl;
-    const { useRef, useState } = owl.hooks;
-    const { xml } = owl.tags;
+    const { Component, useRef, useState, xml } = owl;
 
     /**
      * Similar as createView, but specific for calendar views. Some calendar

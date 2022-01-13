@@ -2,7 +2,7 @@
 
 import { SERVICES_METADATA } from "@web/env";
 
-const { onMounted, onWillPatch, onPatched, onWillUnmount, useComponent } = owl.hooks;
+const { onMounted, onPatched, onWillPatch, onWillUnmount, useComponent } = owl;
 
 /**
  * This file contains various custom hooks.

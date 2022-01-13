@@ -2,7 +2,7 @@
 
 import { useUpdate } from '@mail/component_hooks/use_update/use_update';
 
-const { useComponent } = owl.hooks;
+const { useComponent } = owl;
 
 /**
  * This hook provides support for binding the onMounted/onPatched hooks to the

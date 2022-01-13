@@ -4,6 +4,8 @@
  */
 odoo.define("root.widget", function (require) {
     const { ComponentAdapter } = require("web.OwlCompatibility");
+
     const { Component } = owl;
+
     return new ComponentAdapter(null, { Component });
 });

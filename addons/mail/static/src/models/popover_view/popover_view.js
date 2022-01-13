@@ -4,6 +4,8 @@ import { registerModel } from '@mail/model/model_core';
 import { attr, one2one } from '@mail/model/model_field';
 import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
 
+const { Ref } = owl;
+
 registerModel({
     name: 'PopoverView',
     identifyingFields: [['composerViewOwnerAsEmoji', 'messageActionListOwnerAsReaction', 'threadViewTopbarOwnerAsInvite']],
@@ -28,7 +30,7 @@ registerModel({
         },
         /**
          * @private
-         * @returns {owl.Ref}
+         * @returns {Ref}
          */
         _computeAnchorRef() {
             if (this.threadViewTopbarOwnerAsInvite) {

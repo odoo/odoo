@@ -1,10 +1,10 @@
 odoo.define('account.ShowGroupedList', function (require) {
 "use strict";
 
-const { Component } = owl;
-const { useState } = owl.hooks;
 const AbstractFieldOwl = require('web.AbstractFieldOwl');
 const field_registry = require('web.field_registry_owl');
+
+const { Component } = owl;
 
 class ListItem extends Component { }
 ListItem.template = 'account.GroupedItemTemplate';

@@ -113,7 +113,7 @@
      * - is unique
      * - has the given attribute with the proper value
      *
-     * @param {Widget|jQuery|HTMLElement|owl.Component} w
+     * @param {Widget|jQuery|HTMLElement|Component} w
      * @param {string} attr
      * @param {string} value
      * @param {string} [msg]
@@ -363,12 +363,12 @@
         }
     });
     const oldError = QUnit.onError;
-    QUnit.onError = err => {
-        if (err.message === 'ResizeObserver loop limit exceeded') {
+    QUnit.onError = (err) => {
+        if (err.message === "ResizeObserver loop limit exceeded") {
             return true;
         }
         return oldError(err);
-    }
+    };
 
     // -----------------------------------------------------------------------------
     // Add sort button

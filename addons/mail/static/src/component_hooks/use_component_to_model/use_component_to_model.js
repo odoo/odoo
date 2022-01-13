@@ -2,7 +2,7 @@
 
 import { clear } from '@mail/model/model_field_command';
 
-const { onWillUpdateProps, useComponent } = owl.hooks;
+const { onWillUpdateProps, useComponent } = owl;
 
 /**
  * This hook provides support for saving the reference of the component directly

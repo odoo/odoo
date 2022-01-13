@@ -21,7 +21,7 @@ import {
 } from "../../helpers/mock_services";
 import { makeDeferred, nextTick, patchWithCleanup } from "../../helpers/utils";
 
-const { Component, tags } = owl;
+const { Component, xml } = owl;
 const errorDialogRegistry = registry.category("error_dialogs");
 const errorHandlerRegistry = registry.category("error_handlers");
 const serviceRegistry = registry.category("services");
@@ -84,7 +84,7 @@ QUnit.test(
     async (assert) => {
         assert.expect(2);
         class CustomDialog extends Component {}
-        CustomDialog.template = tags.xml`<RPCErrorDialog title="'Strange Error'"/>`;
+        CustomDialog.template = xml`<RPCErrorDialog title="'Strange Error'"/>`;
         CustomDialog.components = { RPCErrorDialog };
         const error = new RPCError();
         error.code = 701;
@@ -120,10 +120,10 @@ QUnit.test(
     async (assert) => {
         assert.expect(2);
         class CustomDialog extends Component {}
-        CustomDialog.template = tags.xml`<RPCErrorDialog title="'Strange Error'"/>`;
+        CustomDialog.template = xml`<RPCErrorDialog title="'Strange Error'"/>`;
         CustomDialog.components = { RPCErrorDialog };
         class NormalDialog extends Component {}
-        NormalDialog.template = tags.xml`<RPCErrorDialog title="'Normal Error'"/>`;
+        NormalDialog.template = xml`<RPCErrorDialog title="'Normal Error'"/>`;
         NormalDialog.components = { RPCErrorDialog };
         const error = new RPCError();
         error.code = 701;

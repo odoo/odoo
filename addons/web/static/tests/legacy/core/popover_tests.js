@@ -6,9 +6,7 @@ odoo.define('web.popover_tests', function (require) {
     const testUtils = require('web.test_utils');
     const { useEffect } = require("@web/core/utils/hooks");
 
-    const { Component, tags, hooks } = owl;
-    const { useRef, useState } = hooks;
-    const { xml } = tags;
+    const { Component, useRef, useState, xml } = owl;
 
     QUnit.module('core', {}, function () {
         QUnit.module('Popover');

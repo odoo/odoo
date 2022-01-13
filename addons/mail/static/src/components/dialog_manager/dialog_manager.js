@@ -2,8 +2,7 @@
 
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
-const { Component } = owl;
-const { onMounted, onPatched } = owl.hooks;
+const { Component, onMounted, onPatched } = owl;
 
 export class DialogManager extends Component {
 

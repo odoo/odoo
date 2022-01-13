@@ -3,9 +3,11 @@ odoo.define('web.field_registry_owl', function (require) {
 
     const Registry = require('web.Registry');
 
+    const { Component } = owl;
+
     return new Registry(
         null,
-        (value) => value.prototype instanceof owl.Component
+        (value) => value.prototype instanceof Component
     );
 });
 

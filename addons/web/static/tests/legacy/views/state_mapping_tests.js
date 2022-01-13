@@ -25,6 +25,7 @@ import { mock } from "web.test_utils";
 import legacyViewRegistry from "web.view_registry";
 import { browser } from "@web/core/browser/browser";
 
+const { Component, xml } = owl;
 const serviceRegistry = registry.category("services");
 const viewRegistry = registry.category("views");
 const searchModelRegistry = registry.category("search_models");
@@ -75,13 +76,13 @@ QUnit.module("Views", (hooks) => {
         setupControlPanelServiceRegistry();
         serviceRegistry.add("dialog", dialogService);
 
-        class ToyView extends owl.Component {}
+        class ToyView extends Component {}
         ToyView.components = { ControlPanel };
         ToyView.display_name = _lt("Toy view");
         ToyView.icon = "fab fa-android";
         ToyView.multiRecord = true;
         ToyView.searchMenuTypes = ["filter", "groupBy", "comparison", "favorite"];
-        ToyView.template = owl.tags.xml`
+        ToyView.template = xml`
             <div class="o_toy_view">
                 <ControlPanel />
             </div>

@@ -6,9 +6,8 @@ import { registry } from "@web/core/registry";
 import { useBus } from "@web/core/utils/hooks";
 import { useService } from "@web/core/utils/hooks";
 
-const favoriteMenuRegistry = registry.category("favoriteMenu");
-
 const { Component } = owl;
+const favoriteMenuRegistry = registry.category("favoriteMenu");
 
 export class FavoriteMenu extends Component {
     setup() {

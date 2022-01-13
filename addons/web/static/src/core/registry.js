@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
-const { core } = owl;
-const { EventBus } = core;
+const { EventBus } = owl;
 
 // -----------------------------------------------------------------------------
 // Errors

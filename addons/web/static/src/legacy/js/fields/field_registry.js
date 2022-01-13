@@ -3,9 +3,11 @@ odoo.define('web.field_registry', function (require) {
 
     const Registry = require('web.Registry');
 
+    const { Component } = owl;
+
     return new Registry(
         null,
-        (value) => !(value.prototype instanceof owl.Component)
+        (value) => !(value.prototype instanceof Component)
     );
 });
 
@@ -17,7 +19,6 @@ var basic_fields = require('web.basic_fields');
 var relational_fields = require('web.relational_fields');
 var registry = require('web.field_registry');
 var special_fields = require('web.special_fields');
-
 
 // Basic fields
 registry

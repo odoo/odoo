@@ -18,6 +18,7 @@ import { DialogContainer } from "@web/core/dialog/dialog_container";
 import { getFixture } from "@web/../tests/helpers/utils";
 import { nextTick } from "@web/../tests/helpers/utils";
 
+const { mount } = owl;
 const serviceRegistry = registry.category("services");
 
 QUnit.module("base_automation", {}, function () {
@@ -79,7 +80,7 @@ QUnit.module("base_automation", {}, function () {
 
         const env = await makeTestEnv();
         const { Component: Container, props } = registry.category("main_components").get("DialogContainer");
-        const dialogContainer = await owl.mount(Container, { target: getFixture(), env, props });
+        const dialogContainer = await mount(Container, { target: getFixture(), env, props });
 
         const errorEvent = new PromiseRejectionEvent("error", { reason: {
             message: error,
@@ -114,7 +115,7 @@ QUnit.module("base_automation", {}, function () {
 
         const env = await makeTestEnv();
         const { Component: Container, props } = registry.category("main_components").get("DialogContainer");
-        const dialogContainer = await owl.mount(Container, { target: getFixture(), env, props });
+        const dialogContainer = await mount(Container, { target: getFixture(), env, props });
 
         const errorEvent = new PromiseRejectionEvent("error", { reason: {
             message: error,

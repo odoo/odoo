@@ -3,8 +3,7 @@
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { useActiveElement } from "../ui/ui_service";
 
-const { Component, hooks } = owl;
-const { useRef, useSubEnv } = hooks;
+const { Component, useRef, useSubEnv, xml } = owl;
 
 export class Dialog extends Component {
     setup() {
@@ -46,5 +45,5 @@ Dialog.renderHeader = true;
 Dialog.size = "modal-lg";
 Dialog.technical = true;
 Dialog.title = "Odoo";
-Dialog.bodyTemplate = owl.tags.xml`<div/>`;
+Dialog.bodyTemplate = xml`<div/>`;
 Dialog.footerTemplate = "web.DialogFooterDefault";

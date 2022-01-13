@@ -2,8 +2,7 @@
 
 import { useService } from "@web/core/utils/hooks";
 
-const { Component, hooks, QWeb } = owl;
-const { useRef } = hooks;
+const { Component, QWeb, useRef } = owl;
 
 /**
  * Custom file input

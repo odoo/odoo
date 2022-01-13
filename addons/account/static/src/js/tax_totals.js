@@ -1,12 +1,12 @@
 /** @odoo-module alias=account.tax_group_owl **/
 "use strict";
 
-const { Component } = owl;
-const { useState, useRef } = owl.hooks;
 import session from 'web.session';
 import AbstractFieldOwl from 'web.AbstractFieldOwl';
 import fieldUtils from 'web.field_utils';
 import field_registry from 'web.field_registry_owl';
+
+const { Component, useRef, useState } = owl;
 
 /**
     A line of some TaxTotalsComponent, giving the values of a tax group.

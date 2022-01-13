@@ -12,9 +12,8 @@ import { GraphArchParser } from "./graph_arch_parser";
 import { GraphModel } from "./graph_model";
 import { GraphRenderer } from "./graph_renderer";
 
-const viewRegistry = registry.category("views");
-
 const { Component } = owl;
+const viewRegistry = registry.category("views");
 
 export class GraphView extends Component {
     setup() {

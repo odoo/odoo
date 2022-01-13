@@ -3,7 +3,7 @@
 import { getScrollPosition, setScrollPosition } from "@web/core/utils/scrolling";
 import { useEffect } from "@web/core/utils/hooks";
 
-const { useComponent } = owl.hooks;
+const { useComponent } = owl;
 
 // -----------------------------------------------------------------------------
 // Action hook

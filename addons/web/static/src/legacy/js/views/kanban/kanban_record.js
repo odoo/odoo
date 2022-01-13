@@ -24,6 +24,8 @@ var QWeb = core.qweb;
 var KANBAN_RECORD_COLORS = require('web.basic_fields').FieldColorPicker.prototype.RECORD_COLORS;
 var NB_KANBAN_RECORD_COLORS = KANBAN_RECORD_COLORS.length;
 
+const { Component } = owl;
+
 var KanbanRecord = Widget.extend(WidgetAdapterMixin, {
     events: {
         'click .oe_kanban_action': '_onKanbanActionClicked',
@@ -369,7 +371,7 @@ var KanbanRecord = Widget.extend(WidgetAdapterMixin, {
 
             const name = $field.attr('name');
             const Widget = widgetRegistryOwl.get(name) || widgetRegistry.get(name);
-            const legacy = !(Widget.prototype instanceof owl.Component);
+            const legacy = !(Widget.prototype instanceof Component);
             let widget;
             if (legacy) {
                 widget = new Widget(self, self.state, options);

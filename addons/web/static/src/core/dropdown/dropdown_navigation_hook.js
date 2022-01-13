@@ -5,6 +5,8 @@ import { browser } from "../browser/browser";
 import { localization } from "@web/core/l10n/localization";
 import { scrollTo } from "../utils/scrolling";
 
+const { useComponent, useRef } = owl;
+
 /**
  * @typedef {{
  *  el: HTMLElement,
@@ -17,9 +19,6 @@ import { scrollTo } from "../utils/scrolling";
  *  openSubDropdown: (immediate?:boolean)=>void,
  * }} MenuElement
  */
-
-const { hooks } = owl;
-const { useComponent, useRef } = hooks;
 
 const ACTIVE_MENU_ELEMENT_CLASS = "focus";
 const MENU_ELEMENTS_SELECTORS = [":scope > .dropdown-item", ":scope > .dropdown"];

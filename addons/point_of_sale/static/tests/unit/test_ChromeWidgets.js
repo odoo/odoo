@@ -5,7 +5,8 @@ odoo.define('point_of_sale.tests.ChromeWidgets', function (require) {
     const PopupControllerMixin = require('point_of_sale.PopupControllerMixin');
     const testUtils = require('web.test_utils');
     const makePosTestEnv = require('point_of_sale.test_env');
-    const { xml } = owl.tags;
+
+    const { xml } = owl;
 
     QUnit.module('unit tests for Chrome Widgets', {});
 

@@ -6,8 +6,7 @@ import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 import { _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 
-const { Component, hooks } = owl;
-const { useState } = hooks;
+const { Component, useState } = owl;
 
 const { DateTime } = luxon;
 

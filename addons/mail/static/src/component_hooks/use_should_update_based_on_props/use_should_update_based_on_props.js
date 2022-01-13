@@ -1,8 +1,7 @@
 /** @odoo-module **/
 'use strict';
 
-const { Component } = owl;
-const { onPatched } = owl.hooks;
+const { Component, onPatched } = owl;
 
 /**
  * Shallow compares props `a` and `b`.

@@ -5,7 +5,7 @@ import { Dialog } from "@web/core/dialog/dialog";
 import { editModelDebug } from "@web/core/debug/debug_utils";
 import { registry } from "@web/core/registry";
 
-const { tags } = owl;
+const { xml } = owl;
 
 const debugRegistry = registry.category("debug");
 
@@ -14,7 +14,7 @@ FieldViewGetDialog.props = Object.assign({}, Dialog.props, {
     arch: { type: String },
     close: Function,
 });
-FieldViewGetDialog.bodyTemplate = tags.xml`<pre t-esc="props.arch"/>`;
+FieldViewGetDialog.bodyTemplate = xml`<pre t-esc="props.arch"/>`;
 FieldViewGetDialog.title = _lt("Fields View Get");
 
 function viewSeparator() {

@@ -2,7 +2,9 @@
 
 import { TimeOffCard } from './time_off_card';
 
-export class TimeOffDashboard extends owl.Component {}
+const { Component } = owl;
+
+export class TimeOffDashboard extends Component {}
 
 TimeOffDashboard.components = { TimeOffCard };
 TimeOffDashboard.template = 'hr_holidays.TimeOffDashboard';

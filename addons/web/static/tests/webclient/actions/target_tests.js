@@ -11,6 +11,8 @@ import { errorService } from "@web/core/errors/error_service";
 import { useService } from "@web/core/utils/hooks";
 import { ClientErrorDialog } from "@web/core/errors/error_dialogs";
 
+const { Component, xml } = owl;
+
 let serverData;
 
 QUnit.module("ActionManager", (hooks) => {
@@ -340,19 +342,19 @@ QUnit.module("ActionManager", (hooks) => {
             onUnhandledRejection: () => {},
         });
 
-        class ErrorClientAction extends owl.Component {
+        class ErrorClientAction extends Component {
             setup() {
                 throw new Error("my error");
             }
         }
-        ErrorClientAction.template = owl.tags.xml`<div/>`;
+        ErrorClientAction.template = xml`<div/>`;
         registry.category("actions").add("failing", ErrorClientAction);
 
-        class ClientActionTargetNew extends owl.Component {}
-        ClientActionTargetNew.template = owl.tags.xml`<div class="my_action_new" />`;
+        class ClientActionTargetNew extends Component {}
+        ClientActionTargetNew.template = xml`<div class="my_action_new" />`;
         registry.category("actions").add("clientActionNew", ClientActionTargetNew);
 
-        class ClientAction extends owl.Component {
+        class ClientAction extends Component {
             setup() {
                 this.action = useService("action");
             }
@@ -367,7 +369,7 @@ QUnit.module("ActionManager", (hooks) => {
                 }
             }
         }
-        ClientAction.template = owl.tags.xml`<div class="my_action" t-on-click="onClick" />`;
+        ClientAction.template = xml`<div class="my_action" t-on-click="onClick" />`;
         registry.category("actions").add("clientAction", ClientAction);
 
         const errorDialogOpened = makeDeferred();

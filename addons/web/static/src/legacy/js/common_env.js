@@ -25,6 +25,7 @@ odoo.define("web.commonEnv", function (require) {
     const { _t } = require("web.translation");
     const utils = require("web.utils");
 
+    const { QWeb } = owl;
     const browser = {
         clearInterval: window.clearInterval.bind(window),
         clearTimeout: window.clearTimeout.bind(window),
@@ -49,7 +50,7 @@ odoo.define("web.commonEnv", function (require) {
         bus,
         device,
         isDebug,
-        qweb: new owl.QWeb({ translateFn: _t }),
+        qweb: new QWeb({ translateFn: _t }),
         services: {
             ajaxJsonRPC() {
                 return jsonRpc(...arguments);

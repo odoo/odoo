@@ -1,7 +1,6 @@
 odoo.define("base.abstract_controller_tests", function (require) {
 "use strict";
 
-const { xml } = owl.tags;
 
 var testUtils = require("web.test_utils");
 var createView = testUtils.createView;
@@ -9,6 +8,8 @@ var BasicView = require("web.BasicView");
 var BasicRenderer = require("web.BasicRenderer");
 const AbstractRenderer = require('web.AbstractRendererOwl');
 const RendererWrapper = require('web.RendererWrapper');
+
+const { xml } = owl;
 
 function getHtmlRenderer(html) {
     return BasicRenderer.extend({

@@ -1,10 +1,11 @@
 odoo.define('point_of_sale.TextAreaPopup', function(require) {
     'use strict';
 
-    const { useState, useRef } = owl.hooks;
     const AbstractAwaitablePopup = require('point_of_sale.AbstractAwaitablePopup');
     const Registries = require('point_of_sale.Registries');
     const { _lt } = require('@web/core/l10n/translation');
+
+    const { useRef, useState } = owl;
 
     // formerly TextAreaPopupWidget
     // IMPROVEMENT: This code is very similar to TextInputPopup.

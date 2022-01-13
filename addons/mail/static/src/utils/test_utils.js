@@ -29,13 +29,12 @@ import { createWebClient, getActionManagerServerData } from "@web/../tests/webcl
 
 import LegacyRegistry from "web.Registry";
 
+const { Component, EventBus } = owl;
 const {
     addMockEnvironment,
     patch: legacyPatch,
     unpatch: legacyUnpatch,
 } = mock;
-const { Component } = owl;
-const { EventBus } = owl.core;
 
 //------------------------------------------------------------------------------
 // Private
@@ -163,7 +162,7 @@ function _useDiscuss(callbacks, { afterNextRender }) {
  * @returns {Promise}
  */
 function nextAnimationFrame() {
-    const requestAnimationFrame = owl.Component.scheduler.requestAnimationFrame;
+    const requestAnimationFrame = Component.scheduler.requestAnimationFrame;
     return new Promise(function (resolve) {
         setTimeout(() => requestAnimationFrame(() => resolve()));
     });
@@ -178,10 +177,10 @@ function nextAnimationFrame() {
  * @returns {Promise}
  */
 const afterNextRender = (function () {
-    const stop = owl.Component.scheduler.stop;
+    const stop = Component.scheduler.stop;
     const stopPromises = [];
 
-    owl.Component.scheduler.stop = function () {
+    Component.scheduler.stop = function () {
         const wasRunning = this.isRunning;
         stop.call(this);
         if (wasRunning) {
@@ -201,7 +200,7 @@ const afterNextRender = (function () {
         const timeoutProm = new Promise((resolve, reject) => {
             timeoutNoRender = setTimeout(() => {
                 let error = startError;
-                if (owl.Component.scheduler.isRunning) {
+                if (Component.scheduler.isRunning) {
                     error = stopError;
                 }
                 console.error(error);
@@ -222,7 +221,7 @@ const afterNextRender = (function () {
         await funcRes;
         // Wait one more frame to make sure no new render has been queued.
         await nextAnimationFrame();
-        if (owl.Component.scheduler.isRunning) {
+        if (Component.scheduler.isRunning) {
             await afterNextRender(() => {}, timeoutDelay);
         }
     }

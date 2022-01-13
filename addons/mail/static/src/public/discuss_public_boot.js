@@ -24,20 +24,22 @@ import {
 } from '@web/legacy/utils';
 import * as legacySession from 'web.session';
 
-owl.Component.env = legacyEnv;
+const { Component, config, mount, whenReady } = owl;
+
+Component.env = legacyEnv;
 
 (async function boot() {
-    await owl.utils.whenReady();
-    owl.config.mode = owl.Component.env.isDebug() ? 'dev' : 'prod';
-    AbstractService.prototype.deployServices(owl.Component.env);
+    await whenReady();
+    config.mode = Component.env.isDebug() ? 'dev' : 'prod';
+    AbstractService.prototype.deployServices(Component.env);
     const serviceRegistry = registry.category('services');
-    serviceRegistry.add('legacy_rpc', makeLegacyRpcService(owl.Component.env));
-    serviceRegistry.add('legacy_session', makeLegacySessionService(owl.Component.env, legacySession));
-    serviceRegistry.add('legacy_notification', makeLegacyNotificationService(owl.Component.env));
-    serviceRegistry.add('legacy_crash_manager', makeLegacyCrashManagerService(owl.Component.env));
-    serviceRegistry.add('legacy_dialog_mapping', makeLegacyDialogMappingService(owl.Component.env));
+    serviceRegistry.add('legacy_rpc', makeLegacyRpcService(Component.env));
+    serviceRegistry.add('legacy_session', makeLegacySessionService(Component.env, legacySession));
+    serviceRegistry.add('legacy_notification', makeLegacyNotificationService(Component.env));
+    serviceRegistry.add('legacy_crash_manager', makeLegacyCrashManagerService(Component.env));
+    serviceRegistry.add('legacy_dialog_mapping', makeLegacyDialogMappingService(Component.env));
     await legacySession.is_bound;
-    owl.Component.env.qweb.addTemplates(legacySession.owlTemplates);
+    Component.env.qweb.addTemplates(legacySession.owlTemplates);
     Object.assign(odoo, {
         info: {
             db: session.db,
@@ -53,19 +55,19 @@ owl.Component.env = legacyEnv;
         odoo.loadTemplatesPromise.then(processTemplates),
     ]);
     env.qweb.addTemplates(templates);
-    mapLegacyEnvToWowlEnv(owl.Component.env, env);
+    mapLegacyEnvToWowlEnv(Component.env, env);
     odoo.isReady = true;
     legacyServiceRegistry.add('messaging', MessagingService.extend({
         messagingValues: {
             autofetchPartnerImStatus: false,
         },
     }));
-    await owl.mount(MainComponentsContainer, { env, target: document.body });
+    await mount(MainComponentsContainer, { env, target: document.body });
     createAndMountDiscussPublicView();
 })();
 
 async function createAndMountDiscussPublicView() {
-    const messaging = await owl.Component.env.services.messaging.get();
+    const messaging = await Component.env.services.messaging.get();
     // needed by the attachment viewer
     const DialogManager = getMessagingComponent('DialogManager');
     const dialogManagerComponent = new DialogManager(null, {});

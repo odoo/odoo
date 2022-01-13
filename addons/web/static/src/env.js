@@ -2,6 +2,8 @@
 
 import { registry } from "./core/registry";
 
+const { EventBus, QWeb } = owl;
+
 // -----------------------------------------------------------------------------
 // Types
 // -----------------------------------------------------------------------------
@@ -9,8 +11,8 @@ import { registry } from "./core/registry";
 /**
  * @typedef {Object} OdooEnv
  * @property {Object} services
- * @property {owl.core.EventBus} bus
- * @property {owl.QWeb} qweb
+ * @property {EventBus} bus
+ * @property {QWeb} qweb
  * @property {string} debug
  * @property {(str: string) => string} _t
  * @property {boolean} [isSmall]
@@ -27,8 +29,8 @@ import { registry } from "./core/registry";
  */
 export function makeEnv() {
     return {
-        qweb: new owl.QWeb(),
-        bus: new owl.core.EventBus(),
+        qweb: new QWeb(),
+        bus: new EventBus(),
         services: {},
         debug: odoo.debug,
         _t: () => {

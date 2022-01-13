@@ -17,8 +17,8 @@ import {
 } from "./utils/dates";
 import { FACET_ICONS } from "./utils/misc";
 
+const { EventBus } = owl;
 const { DateTime } = luxon;
-const EventBus = owl.core.EventBus;
 
 /**
  * @typedef {Object} ComparisonDomain

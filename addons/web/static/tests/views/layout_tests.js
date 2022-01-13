@@ -8,9 +8,7 @@ import { Layout } from "@web/views/layout";
 import { getDefaultConfig } from "@web/views/view";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 
-const { Component, hooks, mount, tags } = owl;
-const { xml } = tags;
-const { useSubEnv } = hooks;
+const { Component, mount, useSubEnv, xml } = owl;
 
 const serviceRegistry = registry.category("services");
 

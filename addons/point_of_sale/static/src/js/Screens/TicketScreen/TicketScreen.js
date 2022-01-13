@@ -1,7 +1,6 @@
 odoo.define('point_of_sale.TicketScreen', function (require) {
     'use strict';
 
-    const { useState } = owl.hooks;
     const models = require('point_of_sale.models');
     const Registries = require('point_of_sale.Registries');
     const IndependentToOrderScreen = require('point_of_sale.IndependentToOrderScreen');
@@ -10,6 +9,7 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
     const { posbus } = require('point_of_sale.utils');
     const { parse } = require('web.field_utils');
 
+    const { useState } = owl;
 
     class TicketScreen extends IndependentToOrderScreen {
         constructor() {

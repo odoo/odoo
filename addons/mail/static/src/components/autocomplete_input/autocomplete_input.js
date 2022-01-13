@@ -2,8 +2,7 @@
 
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
-const { Component } = owl;
-const { onMounted, onWillUnmount } = owl.hooks;
+const { Component, onMounted, onWillUnmount } = owl;
 
 export class AutocompleteInput extends Component {
 

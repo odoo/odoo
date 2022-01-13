@@ -3,7 +3,7 @@
 import { registry } from "../registry";
 import { PopoverContainer } from "./popover_container";
 
-const { EventBus } = owl.core;
+const { EventBus } = owl;
 
 export const popoverService = {
     start() {

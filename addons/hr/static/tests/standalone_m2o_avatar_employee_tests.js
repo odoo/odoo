@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-    const { xml } = owl.tags;
 
     import AbstractRendererOwl from 'web.AbstractRendererOwl';
     import BasicView from "web.BasicView";
@@ -9,6 +8,8 @@
     import { createView } from 'web.test_utils';
 
     import StandaloneM2OAvatarEmployee from '@hr/js/standalone_m2o_avatar_employee';
+
+    const { xml } = owl;
 
     function getHtmlRenderer(html) {
         return BasicRenderer.extend({

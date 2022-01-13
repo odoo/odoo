@@ -31,6 +31,8 @@ const { mapLegacyEnvToWowlEnv } = require("@web/legacy/utils");
 const { registry } = require("@web/core/registry");
 const { scrollerService } = require("@web/core/scroller_service");
 
+const { Component, xml } = owl;
+
 let serverData;
 QUnit.module('Views', {
     beforeEach: async function () {
@@ -8346,12 +8348,12 @@ QUnit.module('Views', {
     QUnit.test('basic support for widgets (being Owl Components)', async function (assert) {
         assert.expect(1);
 
-        class MyComponent extends owl.Component {
+        class MyComponent extends Component {
             get value() {
                 return JSON.stringify(this.props.record.data);
             }
         }
-        MyComponent.template = owl.tags.xml`<div t-esc="value"/>`;
+        MyComponent.template = xml`<div t-esc="value"/>`;
         widgetRegistryOwl.add('test', MyComponent);
 
         const form = await createView({

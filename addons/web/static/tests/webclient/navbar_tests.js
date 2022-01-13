@@ -11,8 +11,7 @@ import { NavBar } from "@web/webclient/navbar/navbar";
 import { clearRegistryWithCleanup, makeTestEnv } from "../helpers/mock_env";
 import { click, getFixture, nextTick, patchWithCleanup, makeDeferred } from "../helpers/utils";
 
-const { Component, mount, tags } = owl;
-const { xml } = tags;
+const { Component, mount, xml } = owl;
 const systrayRegistry = registry.category("systray");
 const serviceRegistry = registry.category("services");
 
@@ -427,7 +426,10 @@ QUnit.test("Do not execute adapt when navbar is destroyed", async (assert) => {
     let prom = makeDeferred();
 
     patchWithCleanup(browser, {
-        setTimeout: async (handler, delay, ...args) => { await prom; return handler(...args); },
+        setTimeout: async (handler, delay, ...args) => {
+            await prom;
+            return handler(...args);
+        },
         clearTimeout: () => {},
     });
     class MyNavbar extends NavBar {

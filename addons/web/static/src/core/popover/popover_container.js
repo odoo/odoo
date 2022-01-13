@@ -2,9 +2,7 @@
 
 import { Popover } from "./popover";
 
-const { Component } = owl;
-const { useExternalListener, useState } = owl.hooks;
-const { xml } = owl.tags;
+const { Component, useExternalListener, useState, xml } = owl;
 
 class PopoverController extends Component {
     setup() {

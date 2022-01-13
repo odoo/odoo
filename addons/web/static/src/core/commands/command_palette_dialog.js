@@ -3,8 +3,7 @@
 import { Dialog } from "@web/core/dialog/dialog";
 import { CommandPalette } from "./command_palette";
 
-const { hooks } = owl;
-const { useExternalListener } = hooks;
+const { useExternalListener } = owl;
 
 /**
  * @typedef {import("./command_service").Command} Command

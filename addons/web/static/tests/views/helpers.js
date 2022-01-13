@@ -7,7 +7,7 @@ import { getDefaultConfig, View } from "@web/views/view";
 import { _fieldsViewGet } from "../helpers/mock_server";
 import { addLegacyMockEnvironment } from "../webclient/helpers";
 
-const { mount } = owl;
+const { Component, mount } = owl;
 
 /**
  * @typedef {{
@@ -21,7 +21,7 @@ const { mount } = owl;
 
 /**
  * @param {MakeViewParams} params
- * @returns {owl.Component}
+ * @returns {Component}
  */
 export const makeView = async (params) => {
     const props = { ...params };

@@ -3,8 +3,7 @@ odoo.define('web.DropdownMenuItem', function (require) {
 
     const { useListener } = require('web.custom_hooks');
 
-    const { Component, hooks } = owl;
-    const { useExternalListener, useRef, useState } = hooks;
+    const { Component, useExternalListener, useRef, useState } = owl;
 
     /**
      * Dropdown menu item
