@@ -3,29 +3,12 @@
 import Dialog from 'web.Dialog';
 import FormView from 'web.FormView';
 import FormController from 'web.FormController';
-import { bus, _t } from 'web.core';
-import { device } from 'web.config';
+import FormRenderer from 'web.FormRenderer';
+import { _t } from 'web.core';
 import viewRegistry from 'web.view_registry';
+import FormHtmlFieldExpanderMixin from './project_form_html_field_expander_mixin'
 
 const ProjectFormController = FormController.extend({
-    on_attach_callback() {
-        this._super(...arguments);
-        if (!device.isMobile) {
-            bus.on("DOM_updated", this, this._onDomUpdated);
-        }
-    },
-    _onDomUpdated() {
-        const $editable = this.$el.find('.note-editable');
-        if ($editable.length) {
-            const resizerHeight = this.$el.find('.o_wysiwyg_resizer').outerHeight();
-            const newHeight = window.innerHeight - $editable.offset().top - resizerHeight - 1;
-            $editable.outerHeight(newHeight);
-        }
-    },
-    on_detach_callback() {
-        this._super(...arguments);
-        bus.off('DOM_updated', this._onDomUpdated);
-    },
     _getActionMenuItems(state) {
         if (!this.archiveEnabled || !state.data['recurrence_id']) {
             return this._super(...arguments);
@@ -112,10 +95,24 @@ const ProjectFormController = FormController.extend({
     }
 });
 
-export const ProjectFormView = FormView.extend({
+const FormDescriptionExpanderRenderer = FormRenderer.extend(Object.assign({}, FormHtmlFieldExpanderMixin, {
+    // 58px is the sum of the top margin of o_form_sheet 12 px + the bottom padding of o_form_sheet 24px
+    // + 5px margin bottom (o_field_widget) + 1px border + the bottom padding of tab-pane 16 px.
+    bottomDistance: 58,
+}));
+
+export const FormDescriptionExpanderView = FormView.extend({
     config: Object.assign({}, FormView.prototype.config, {
+        Renderer: FormDescriptionExpanderRenderer,
+    }),
+})
+
+export const ProjectFormView = FormDescriptionExpanderView.extend({
+    config: Object.assign({}, FormDescriptionExpanderView.prototype.config, {
         Controller: ProjectFormController,
     }),
 });
 
 viewRegistry.add('project_form', ProjectFormView);
+
+viewRegistry.add('form_description_expander', FormDescriptionExpanderView)

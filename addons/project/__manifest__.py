@@ -69,6 +69,7 @@
             'project/static/src/js/project_activity.js',
             'project/static/src/js/project_control_panel.js',
             'project/static/src/js/project_form.js',
+            'project/static/src/js/project_form_html_field_expander_mixin.js',
             'project/static/src/js/project_graph_view.js',
             'project/static/src/js/project_kanban.js',
             'project/static/src/js/project_list.js',
