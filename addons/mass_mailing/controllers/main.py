@@ -201,7 +201,7 @@ class MassMailController(http.Controller):
         if not token or not user_id:
             raise werkzeug.exceptions.NotFound()
         user_id = int(user_id)
-        correct_token = consteq(token, request.env['mailing.mailing']._get_unsubscribe_token(user_id))
+        correct_token = hmac.compare_digest(token, request.env['mailing.mailing']._get_unsubscribe_token(user_id))
         user = request.env['res.users'].sudo().browse(user_id)
         if correct_token and user.has_group('mass_mailing.group_mass_mailing_user'):
             request.env['ir.config_parameter'].sudo().set_param('mass_mailing.mass_mailing_reports', False)
