@@ -144,7 +144,7 @@
                                     <i class="fa fa-link mr-2"/><span t-esc="link.name"/>
                                 </a>
                                 <span t-else="" class="o_wslides_fs_slide_link text-600">
-                                    <i class="fa fa-link mr-2"/><span t-esc="resource.name"/>
+                                    <i class="fa fa-link mr-2"/><span t-esc="link.name"/>
                                 </span>
                             </li>
                             <t t-set="resources" t-value="slide.slide_resource_ids.filtered(lambda res: res.resource_type == 'file')"/>
