@@ -19,3 +19,4 @@ Bruno Zanotti bz@adhoc.com.ar https://github.com/Bruno-Zanotti
 Pablo Santiago Paez Sheridan pp@adhoc.com.ar https://github.com/PabloPaezSheridan
 Juan Ignacio Carreras jc@adhoc.com.ar https://github.com/jcadhoc
 Joel Zilli joz@adhoc.com.ar https://github.com/JoelZilli
+Augusto Weiss awe@adhoc.com.ar https://github.com/augusto-weiss
