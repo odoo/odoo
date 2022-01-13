@@ -19,7 +19,7 @@ import psycopg2
 import odoo
 from .. import SUPERUSER_ID
 from odoo.sql_db import TestCursor
-from odoo.tools import (config, existing_tables, ignore,
+from odoo.tools import (config, existing_tables,
                         lazy_classproperty, lazy_property, sql,
                         Collector, OrderedSet)
 from odoo.tools.lru import LRU
