@@ -14,7 +14,6 @@ import hashlib
 import itertools
 import os
 import re
-import socket
 import subprocess
 import sys
 import threading
@@ -450,58 +449,6 @@ def logged(f):
 
     return wrapper
 
-
-def detect_ip_addr():
-    """Try a very crude method to figure out a valid external
-       IP or hostname for the current machine. Don't rely on this
-       for binding to an interface, but it could be used as basis
-       for constructing a remote URL to the server.
-    """
-    def _detect_ip_addr():
-        from array import array
-        from struct import pack, unpack
-
-        try:
-            import fcntl
-        except ImportError:
-            fcntl = None
-
-        ip_addr = None
-
-        if not fcntl: # not UNIX:
-            host = socket.gethostname()
-            ip_addr = socket.gethostbyname(host)
-        else: # UNIX:
-            # get all interfaces:
-            nbytes = 128 * 32
-            s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-            names = array('B', '\0' * nbytes)
-            #print 'names: ', names
-            outbytes = unpack('iL', fcntl.ioctl( s.fileno(), 0x8912, pack('iL', nbytes, names.buffer_info()[0])))[0]
-            namestr = names.tostring()
-
-            # try 64 bit kernel:
-            for i in range(0, outbytes, 40):
-                name = namestr[i:i+16].split('\0', 1)[0]
-                if name != 'lo':
-                    ip_addr = socket.inet_ntoa(namestr[i+20:i+24])
-                    break
-
-            # try 32 bit kernel:
-            if ip_addr is None:
-                ifaces = [namestr[i:i+32].split('\0', 1)[0] for i in range(0, outbytes, 32)]
-
-                for ifname in [iface for iface in ifaces if iface if iface != 'lo']:
-                    ip_addr = socket.inet_ntoa(fcntl.ioctl(s.fileno(), 0x8915, pack('256s', ifname[:15]))[20:24])
-                    break
-
-        return ip_addr or 'localhost'
-
-    try:
-        ip_addr = _detect_ip_addr()
-    except Exception:
-        ip_addr = 'localhost'
-    return ip_addr
 
 DEFAULT_SERVER_DATE_FORMAT = "%Y-%m-%d"
 DEFAULT_SERVER_TIME_FORMAT = "%H:%M:%S"
