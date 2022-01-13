@@ -554,7 +554,7 @@ class AccountEdiFormat(models.Model):
         # === Call the web service ===
 
         # Get connection data
-        url = company.l10n_es_tbai_url_cancel if cancel else company.l10n_es_tbai_url_invoice
+        url = company.get_l10n_es_tbai_url_cancel() if cancel else company.get_l10n_es_tbai_url_invoice()
         header = {"Content-Type": "application/xml; charset=UTF-8"}
         cert_file = company.l10n_es_tbai_certificate_id
 

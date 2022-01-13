@@ -26,11 +26,27 @@ class IrAttachment(models.Model):
             return None
         return response
 
-    def _l10n_es_tbai_create_xsd_attachment(self, name, xsd, description=None):
+    def _l10n_es_tbai_replace_xsd_import(self, xsd_bytes):
+        # xmldsig is found by a custom parser in odoo.tools._check_with_xsd
+        # note: module name not used by odoo resolver for schemaLocation
+        # note: default encoding for b'' objects is utf-8
+        # note: failure of .replace method does not throw errors
+        return xsd_bytes.replace(b'schemaLocation="http://www.w3.org/TR/xmldsig-core/xmldsig-core-schema.xsd"', b'schemaLocation="xmldsig-core-schema.xsd"')
+
+    def _l10n_es_tbai_create_xsd_attachment(self, name, xsd_bytes, description=None):
+        xsd_bytes = self._l10n_es_tbai_replace_xsd_import(xsd_bytes)
+
+        try:
+            xsd_object = objectify.fromstring(xsd_bytes)
+        except etree.XMLSyntaxError as e:
+            _logger.warning('You are trying to load an invalid xsd file.\n%s', e)
+            return
+        xsd_str = etree.tostring(xsd_object, pretty_print=True)
+
         attachment = self.env['ir.attachment'].create({
             'name': name,
             'description': description,
-            'datas': base64.encodebytes(xsd),
+            'datas': base64.encodebytes(xsd_str),
             'company_id': False,
         })
         self.env['ir.model.data'].create({
@@ -51,17 +67,10 @@ class IrAttachment(models.Model):
         if response is None:
             return
 
-        try:
-            xsd_object = objectify.fromstring(bytes(response.text, "utf-8"))
-        except etree.XMLSyntaxError as e:
-            _logger.warning('You are trying to load an invalid xsd file.\n%s', e)
-            return
-        validated_content = etree.tostring(xsd_object, pretty_print=True)
-        self._l10n_es_tbai_create_xsd_attachment(file_name, validated_content, "Core schema, locally imported by schemas")
+        xsd_bytes = bytes(response.text, "utf-8")
+        self._l10n_es_tbai_create_xsd_attachment(file_name, xsd_bytes, "Core schema, locally imported by schemas")
 
     def _l10n_es_tbai_load_xsd_zip(self, url):
-        # This method only downloads the xsd files if they don't exist as attachments
-
         response = self._l10n_es_tbai_get_url_content(url)
         if response is None:
             return
@@ -81,22 +90,23 @@ class IrAttachment(models.Model):
             if attachment:
                 continue
 
-            content = archive.read(file_name)
-            try:
-                # xmldsig is found by custom parser in odoo.tools._check_with_xsd
-                # module name not used by odoo resolver for schemaLocation
-                content = content.replace(b'schemaLocation="http://www.w3.org/TR/xmldsig-core/xmldsig-core-schema.xsd"', b'schemaLocation="xmldsig-core-schema.xsd"')
-                xsd_object = objectify.fromstring(content)
-            except etree.XMLSyntaxError as e:
-                _logger.warning('You are trying to load an invalid xsd file.\n%s', e)
-                return
-            validated_content = etree.tostring(xsd_object, pretty_print=True)
+            xsd_bytes = archive.read(file_name)
             self._l10n_es_tbai_create_xsd_attachment(
-                attachment_name, validated_content,
+                attachment_name, xsd_bytes,
                 "XSD validation schema for " + ("canceling" if "Anula" in file_name else "posting")
             )
 
     def _l10n_es_tbai_load_xsd_attachments(self):
-        if self.env.company.l10n_es_tbai_url_xsd:
+        """
+        This method only downloads the xsd validation schemas for the selected tax agency if they don't already exist.
+        """
+        url = self.env.company.get_l10n_es_tbai_url_xsd()
+        if url:
             self._l10n_es_tbai_load_xsd_file("xmldsig-core-schema.xsd", "https://www.w3.org/TR/xmldsig-core/xmldsig-core-schema.xsd")
-            self._l10n_es_tbai_load_xsd_zip(self.env.company.l10n_es_tbai_url_xsd)
+            # For Bizkaia, one url per file
+            if isinstance(url, tuple):
+                for u in url:
+                    self._l10n_es_tbai_load_xsd_file(u.rsplit("/", 1)[1], u)
+            # For other agencies, single url to zip file
+            else:
+                self._l10n_es_tbai_load_xsd_zip(url)
