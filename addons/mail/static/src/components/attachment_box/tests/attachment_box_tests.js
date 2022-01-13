@@ -33,18 +33,19 @@ QUnit.module('attachment_box_tests.js', {
                 localId: chatter.attachmentBoxView.localId,
                 ...otherProps,
             };
-            await createRootMessagingComponent(this, "AttachmentBox", {
+            return await createRootMessagingComponent(this, "AttachmentBox", {
                 props,
                 target: this.widget.el,
             });
         };
 
         this.start = async params => {
-            const { env, widget } = await start(Object.assign({}, params, {
+            const res = await start(Object.assign({}, params, {
                 data: this.data,
             }));
-            this.env = env;
-            this.widget = widget;
+            this.env = res.env;
+            this.widget = res.widget;
+            return res;
         };
     },
     afterEach() {
@@ -61,7 +62,7 @@ QUnit.test('base empty rendering', async function (assert) {
         id: 100,
         model: 'res.partner',
     });
-    await this.createAttachmentBoxComponent(thread);
+    const attachmentBoxComponent = await this.createAttachmentBoxComponent(thread);
     assert.strictEqual(
         document.querySelectorAll(`.o_AttachmentBox`).length,
         1,
@@ -72,10 +73,9 @@ QUnit.test('base empty rendering', async function (assert) {
         1,
         "should have a button add"
     );
-    assert.strictEqual(
-        document.querySelectorAll(`.o_FileUploader_input`).length,
-        1,
-        "should have a file input"
+    assert.ok(
+        attachmentBoxComponent.attachmentBoxView.fileUploader,
+        "should have a file uploader"
     );
     assert.strictEqual(
         document.querySelectorAll(`.o_AttachmentBox .o_AttachmentCard`).length,
@@ -114,7 +114,7 @@ QUnit.test('base non-empty rendering', async function (assert) {
         id: 100,
         model: 'res.partner',
     });
-    await this.createAttachmentBoxComponent(thread);
+    const attachmentBoxComponent = await this.createAttachmentBoxComponent(thread);
     assert.verifySteps(
         ['ir.attachment/search_read'],
         "should have fetched attachments"
@@ -129,10 +129,9 @@ QUnit.test('base non-empty rendering', async function (assert) {
         1,
         "should have a button add"
     );
-    assert.strictEqual(
-        document.querySelectorAll(`.o_FileUploader_input`).length,
-        1,
-        "should have a file input"
+    assert.ok(
+        attachmentBoxComponent.attachmentBoxView.fileUploader,
+        "should have a file uploader"
     );
     assert.strictEqual(
         document.querySelectorAll(`.o_attachmentBox_attachmentList`).length,

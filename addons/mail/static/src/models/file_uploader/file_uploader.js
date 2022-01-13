@@ -15,11 +15,11 @@ const getAttachmentNextTemporaryId = (function () {
 })();
 
 registerModel({
-    name: 'FileUploaderView',
+    name: 'FileUploader',
     identifyingFields: [['activityView', 'attachmentBoxView', 'composerView']],
     recordMethods: {
         openBrowserFileUploader() {
-            this.fileInputRef.el.click();
+            this.fileInput.click();
         },
         /**
          * Called when there are changes in the file input.
@@ -37,9 +37,24 @@ registerModel({
          */
         async uploadFiles(files) {
             await this._performUpload({ files });
-            if (this.fileInputRef && this.fileInputRef.el) {
-                this.fileInputRef.el.value = '';
+            if (this.fileInput && this.fileInput.el) {
+                this.fileInput.el.value = '';
             }
+        },
+        /**
+         * Create an HTML element that will serve as file input.
+         * This element does not need to be inserted in the DOM since it's just
+         * use to trigger the file browser and start the upload process.
+         *
+         * @private
+         * @returns {HTMLElement}
+         */
+        _computeFileInput() {
+            const fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.multiple = true;
+            fileInput.onchange = this.onChangeAttachment;
+            return fileInput;
         },
         /**
          * @private
@@ -160,18 +175,20 @@ registerModel({
     },
     fields: {
         activityView: one2one('ActivityView', {
-            inverse: 'fileUploaderView',
+            inverse: 'fileUploader',
             readonly: true,
         }),
         attachmentBoxView: one2one('AttachmentBoxView', {
-            inverse: 'fileUploaderView',
+            inverse: 'fileUploader',
             readonly: true,
         }),
         composerView: one2one('ComposerView', {
-            inverse: 'fileUploaderView',
+            inverse: 'fileUploader',
             readonly: true,
         }),
-        fileInputRef: attr(),
+        fileInput: attr({
+            compute: '_computeFileInput',
+        }),
         thread: many2one('Thread', {
             compute: '_computeThread',
             readonly: true,

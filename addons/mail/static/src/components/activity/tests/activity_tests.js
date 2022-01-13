@@ -795,7 +795,7 @@ QUnit.test('activity upload document is available', async function (assert) {
         res_model: 'res.partner',
     });
     const { createChatterContainerComponent } = await this.start();
-    await createChatterContainerComponent({
+    const chatterContainerComponent = await createChatterContainerComponent({
         threadId: 100,
         threadModel: 'res.partner',
     });
@@ -809,9 +809,8 @@ QUnit.test('activity upload document is available', async function (assert) {
         1,
         "should have activity upload button"
     );
-    assert.strictEqual(
-        document.querySelectorAll('.o_FileUploader').length,
-        1,
+    assert.ok(
+        chatterContainerComponent.chatter.activityBoxView.activityViews[0].fileUploader,
         "should have a file uploader"
     );
 });

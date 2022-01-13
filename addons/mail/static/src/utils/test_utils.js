@@ -384,6 +384,7 @@ function getAfterEvent({ messagingBus }) {
  * @param {Object} param2
  * @param {Object} [param2.props={}] forwarded to component constructor
  * @param {DOM.Element} param2.target mount target for the component
+ * @returns {Component}
  */
 async function createRootComponent(self, Component, { props = {}, target }) {
     Component.env = self.env;
@@ -391,6 +392,7 @@ async function createRootComponent(self, Component, { props = {}, target }) {
     delete Component.env;
     self.components.push(component);
     await afterNextRender(() => component.mount(target));
+    return component;
 }
 
 /**
@@ -405,9 +407,10 @@ async function createRootComponent(self, Component, { props = {}, target }) {
  * @param {Object} param2
  * @param {Object} [param2.props={}] forwarded to component constructor
  * @param {DOM.Element} param2.target mount target for the component
+ * @returns {Component}
  */
 async function createRootMessagingComponent(self, componentName, { props = {}, target }) {
-    await createRootComponent(self, getMessagingComponent(componentName), { props, target });
+    return await createRootComponent(self, getMessagingComponent(componentName), { props, target });
 }
 
 function getClick({ afterNextRender }) {
@@ -418,7 +421,7 @@ function getClick({ afterNextRender }) {
 
 function getCreateChatterContainerComponent({ components, env, widget }) {
     return async function createChatterContainerComponent(props) {
-        await createRootMessagingComponent({ components, env }, "ChatterContainer", {
+        return await createRootMessagingComponent({ components, env }, "ChatterContainer", {
             props,
             target: widget.el,
         });
@@ -432,7 +435,7 @@ function getCreateComposerComponent({ components, env, modelManager, widget }) {
                 composer: replace(composer),
             }),
         });
-        await createRootMessagingComponent({ components, env }, "Composer", {
+        return await createRootMessagingComponent({ components, env }, "Composer", {
             props: { localId: composerView.localId, ...props },
             target: widget.el,
         });
@@ -468,7 +471,7 @@ function getCreateMessageComponent({ components, env, modelManager, widget }) {
 
 function getCreateMessagingMenuComponent({ components, env, widget }) {
     return async function createMessagingMenuComponent() {
-        await createRootComponent({ components, env }, MessagingMenuContainer, { target: widget.el });
+        return await createRootComponent({ components, env }, MessagingMenuContainer, { target: widget.el });
     };
 }
 

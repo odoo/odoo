@@ -931,7 +931,7 @@ QUnit.test('chat window: composer state conservation on toggle discuss', async f
     // with random unique id that is needed to link messages
     this.data['mail.channel'].records.push({ id: 20 });
     const { createMessagingMenuComponent } = await this.start();
-    await createMessagingMenuComponent();
+    const messagingMenuComponent = await createMessagingMenuComponent();
     await afterNextRender(() => document.querySelector(`.o_MessagingMenu_toggler`).click());
     await afterNextRender(() =>
         document.querySelector(`.o_MessagingMenu_dropdownMenu .o_NotificationList_preview`).click()
@@ -961,7 +961,7 @@ QUnit.test('chat window: composer state conservation on toggle discuss', async f
     ];
     await afterNextRender(() =>
         inputFiles(
-            document.querySelector('.o_FileUploader_input'),
+            messagingMenuComponent.messaging.chatWindowManager.chatWindows[0].threadView.composerView.fileUploader.fileInput,
             files
         )
     );
