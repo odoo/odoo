@@ -8,6 +8,7 @@ from functools import wraps
 from inspect import getsourcefile
 from json import JSONEncoder
 
+from decorator import decorator
 
 class lazy_property(object):
     """ Decorator for a lazy property of an object, i.e., an object attribute
@@ -62,17 +63,12 @@ def conditional(condition, decorator):
         return lambda fn: fn
 
 def synchronized(lock_attr='_lock'):
-    def decorator(func):
-        @wraps(func)
-        def wrapper(self, *args, **kwargs):
-            lock = getattr(self, lock_attr)
-            try:
-                lock.acquire()
-                return func(self, *args, **kwargs)
-            finally:
-                lock.release()
-        return wrapper
-    return decorator
+    @decorator
+    def locked(func, inst, *args, **kwargs):
+        with getattr(inst, lock_attr):
+            return func(inst, *args, **kwargs)
+    return locked
+locked = synchronized()
 
 def frame_codeinfo(fframe, back=0):
     """ Return a (filename, line) pair for a previous frame .
