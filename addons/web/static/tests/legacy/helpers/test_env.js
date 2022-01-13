@@ -6,6 +6,8 @@ odoo.define('web.test_env', async function (require) {
     const session = require('web.session');
     const { registerCleanup } = require("@web/../tests/helpers/cleanup");
 
+    const { Component, QWeb } = owl;
+
     let qweb;
 
     /**
@@ -21,7 +23,7 @@ odoo.define('web.test_env', async function (require) {
         if (!qweb) {
             // avoid parsing templates at every test because it takes a lot of
             // time and they never change
-            qweb = new owl.QWeb({ templates: session.owlTemplates });
+            qweb = new QWeb({ templates: session.owlTemplates });
         }
         registerCleanup(() => {
             qweb.subscriptions = {};
@@ -98,10 +100,10 @@ odoo.define('web.test_env', async function (require) {
     }
 
     /**
-     * Before each test, we want owl.Component.env to be a fresh test environment.
+     * Before each test, we want Component.env to be a fresh test environment.
      */
     QUnit.on('OdooBeforeTestHook', function () {
-        owl.Component.env = makeTestEnvironment();
+        Component.env = makeTestEnvironment();
     });
 
     return makeTestEnvironment;

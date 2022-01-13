@@ -10,6 +10,8 @@ odoo.define('web.utils', function (require) {
 var translation = require('web.translation');
 var cookieUtils = require('web.utils.cookies');
 
+const { Component } = owl;
+
 var _t = translation._t;
 var id = -1;
 
@@ -581,12 +583,12 @@ var utils = Object.assign({
         return (/^\d+(\.\d*)? [^0-9]+$/).test(v);
     },
     /**
-     * Checks if a class is an extension of owl.Component.
+     * Checks if a class is an extension of Component.
      *
      * @param {any} value A class reference
      */
     isComponent: function (value) {
-        return value.prototype instanceof owl.Component;
+        return value.prototype instanceof Component;
     },
     /**
      * Checks if a keyboard event concerns

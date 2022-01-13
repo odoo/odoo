@@ -24,6 +24,8 @@ const { FieldOne2Many } = relationalFields;
 const AbstractFieldOwl = require('web.AbstractFieldOwl');
 const fieldRegistryOwl = require('web.field_registry_owl');
 
+const { onMounted, onWillUnmount, xml } = owl;
+
 QUnit.module('fields', {}, function () {
 
     QUnit.module('relational_fields', {
@@ -9650,10 +9652,10 @@ QUnit.module('fields', {}, function () {
             patch(ControlPanel.prototype, 'cp_patch_mock', {
                 setup() {
                     this._super(...arguments);
-                    owl.hooks.onMounted(() => {
+                    onMounted(() => {
                         assert.step('mounted');
                     });
-                    owl.hooks.onWillUnmount(() => {
+                    onWillUnmount(() => {
                         assert.step('willUnmount');
                     });
                 },
@@ -9881,7 +9883,7 @@ QUnit.module('fields', {}, function () {
 
         QUnit.test("Editable list's field widgets call on_attach_callback on row update", async function (assert) {
             // We use here a badge widget (owl component, does have a on_attach_callback method) and check its decoration
-            // is properly managed in this scenario.       
+            // is properly managed in this scenario.
             assert.expect(3);
 
             this.data.partner.records[0].p = [1, 2];
@@ -10036,11 +10038,11 @@ QUnit.module('fields', {}, function () {
                 setup() {
                     super.setup();
                     const ID = testInst++;
-                    owl.hooks.onMounted(() => {
+                    onMounted(() => {
                         assert.step(`mounted ${ID}`);
                     });
 
-                    owl.hooks.onWillUnmount(() => {
+                    onWillUnmount(() => {
                         assert.step(`willUnmount ${ID}`);
                     });
                 }
@@ -10049,7 +10051,7 @@ QUnit.module('fields', {}, function () {
                 }
             }
 
-            TestField.template = owl.tags.xml`<span>test</span>`;
+            TestField.template = xml`<span>test</span>`;
             fieldRegistryOwl.add('test_field', TestField);
 
             const def = testUtils.makeTestPromise();

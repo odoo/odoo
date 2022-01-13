@@ -12,9 +12,8 @@ import { PivotArchParser } from "@web/views/pivot/pivot_arch_parser";
 import { PivotModel } from "@web/views/pivot/pivot_model";
 import { PivotRenderer } from "@web/views/pivot/pivot_renderer";
 
-const viewRegistry = registry.category("views");
-
 const { Component } = owl;
+const viewRegistry = registry.category("views");
 
 export class PivotView extends Component {
     setup() {

@@ -13,7 +13,7 @@ import { makeFakeLocalizationService, makeFakeRPCService } from "../helpers/mock
 import { click, getFixture, makeDeferred, nextTick, patchWithCleanup } from "../helpers/utils";
 import { Dialog } from "../../src/core/dialog/dialog";
 
-const { Component, mount, tags } = owl;
+const { Component, mount, xml } = owl;
 
 let env;
 let target;
@@ -26,7 +26,7 @@ class PseudoWebClient extends Component {
         this.Components = mainComponentRegistry.getEntries();
     }
 }
-PseudoWebClient.template = tags.xml`
+PseudoWebClient.template = xml`
         <div>
             <div>
                 <t t-foreach="Components" t-as="C" t-key="C[0]">

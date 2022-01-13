@@ -1,5 +1,7 @@
 /** @odoo-module alias=web.AbstractRendererOwl **/
 
+const { Component } = owl;
+
 // Renderers may display sample data when there is no real data to display. In
 // this case the data is displayed with opacity and can't be clicked. Moreover,
 // we also want to prevent the user from accessing DOM elements with TAB
@@ -11,7 +13,7 @@ const FOCUSABLE_ELEMENTS = [
     '[tabindex="0"]'
 ].map((sel) => `:scope ${sel}`).join(', ');
 
-class AbstractRenderer extends owl.Component {
+class AbstractRenderer extends Component {
 
     constructor() {
         super(...arguments);

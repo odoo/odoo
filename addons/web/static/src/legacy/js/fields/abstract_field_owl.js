@@ -5,6 +5,8 @@ odoo.define('web.AbstractFieldOwl', function (require) {
     const { useListener } = require('web.custom_hooks');
     const { useEffect } = require("@web/core/utils/hooks");
 
+    const { Component } = owl;
+
     /**
      * This file defines the Owl version of the AbstractField. Specific fields
      * written in Owl should override this component.
@@ -44,7 +46,7 @@ odoo.define('web.AbstractFieldOwl', function (require) {
      *
      * @module web.AbstractFieldOwl
      */
-    class AbstractField extends owl.Component {
+    class AbstractField extends Component {
         /**
          * Abstract field class
          *

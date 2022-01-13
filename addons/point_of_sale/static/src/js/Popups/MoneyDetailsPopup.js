@@ -1,9 +1,10 @@
 odoo.define('point_of_sale.MoneyDetailsPopup', function(require) {
     'use strict';
 
-    const { useState } = owl.hooks;
     const PosComponent = require('point_of_sale.PosComponent');
     const Registries = require('point_of_sale.Registries');
+
+    const { useState } = owl;
 
     /**
      * Even if this component has a "confirm and cancel"-like buttons, this should not be an AbstractAwaitablePopup.

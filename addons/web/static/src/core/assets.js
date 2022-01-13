@@ -1,11 +1,11 @@
 /** @odoo-module **/
 
-const { useEnv, onWillStart } = owl.hooks;
 import { memoize } from "./utils/functions";
 import { browser } from "./browser/browser";
 
-class AssetsLoadingError extends Error {
-}
+const { onWillStart, useEnv } = owl;
+
+class AssetsLoadingError extends Error {}
 
 //------------------------------------------------------------------------------
 // Types
@@ -116,7 +116,6 @@ export const loadBundleTemplates = memoize(async function loadBundleTemplates(na
     return processTemplates(templates);
 });
 
-
 /**
  * Loads the content definition of a bundle
  * @param {string} name the bundleName of the bundle as declared in the manifest.
@@ -145,18 +144,22 @@ export async function loadBundle(name, options) {
         bundlesCache[name].templates = loadBundleTemplates(name);
     }
 
-    if (css && !bundlesCache[name].css || js && !bundlesCache[name].js) {
+    if ((css && !bundlesCache[name].css) || (js && !bundlesCache[name].js)) {
         // we only load the bundle info (that is an RPC) if JS or CSS is requested on the bundle,
         // and if it has not yet been requested.
         /** @type BundleInfo[] */
         const bundleInfo = await loadBundleDefinition(name);
 
         if (options.js) {
-            bundlesCache[name].js = Promise.all(bundleInfo.filter((i) => i.type === "script").map((i) => loadJS(i.src)));
+            bundlesCache[name].js = Promise.all(
+                bundleInfo.filter((i) => i.type === "script").map((i) => loadJS(i.src))
+            );
         }
 
         if (options.css) {
-            bundlesCache[name].css = Promise.all(bundleInfo.filter((i) => i.type === "link").map((i) => loadCSS(i.src)));
+            bundlesCache[name].css = Promise.all(
+                bundleInfo.filter((i) => i.type === "link").map((i) => loadCSS(i.src))
+            );
         }
     }
 

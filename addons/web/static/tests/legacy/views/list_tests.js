@@ -1,32 +1,33 @@
 odoo.define('web.list_tests', function (require) {
 "use strict";
 
-var AbstractFieldOwl = require('web.AbstractFieldOwl');
-var AbstractStorageService = require('web.AbstractStorageService');
-var BasicModel = require('web.BasicModel');
-var core = require('web.core');
+const AbstractFieldOwl = require('web.AbstractFieldOwl');
+const AbstractStorageService = require('web.AbstractStorageService');
+const BasicModel = require('web.BasicModel');
+const core = require('web.core');
 const Domain = require('web.Domain')
-var basicFields = require('web.basic_fields');
-var fieldRegistry = require('web.field_registry');
-var fieldRegistryOwl = require('web.field_registry_owl');
-var FormView = require('web.FormView');
-var ListRenderer = require('web.ListRenderer');
-var ListView = require('web.ListView');
-var mixins = require('web.mixins');
-var RamStorage = require('web.RamStorage');
-var testUtils = require('web.test_utils');
+const basicFields = require('web.basic_fields');
+const fieldRegistry = require('web.field_registry');
+const fieldRegistryOwl = require('web.field_registry_owl');
+const FormView = require('web.FormView');
+const ListRenderer = require('web.ListRenderer');
+const ListView = require('web.ListView');
+const mixins = require('web.mixins');
+const RamStorage = require('web.RamStorage');
+const testUtils = require('web.test_utils');
 const { patch, unpatch } = require('web.utils');
-var widgetRegistry = require('web.widget_registry');
+const widgetRegistry = require('web.widget_registry');
 const widgetRegistryOwl = require('web.widgetRegistry');
-var Widget = require('web.Widget');
-
-
-var _t = core._t;
+const Widget = require('web.Widget');
+const ControlPanel = require('web.ControlPanel');
+const ListController = require('web.ListController');
 const cpHelpers = require('@web/../tests/search/helpers');
-var createView = testUtils.createView;
-
 const { click, legacyExtraNextTick } = require("@web/../tests/helpers/utils");
 const { createWebClient, doAction, loadState } = require('@web/../tests/webclient/helpers');
+
+const { Component, xml } = owl;
+const createView = testUtils.createView;
+const _t = core._t;
 
 let serverData;
 
@@ -9303,12 +9304,12 @@ QUnit.module('Views', {
     QUnit.test('basic support for widgets (being Owl Components)', async function (assert) {
         assert.expect(1);
 
-        class MyComponent extends owl.Component {
+        class MyComponent extends Component {
             get value() {
                 return JSON.stringify(this.props.record.data);
             }
         }
-        MyComponent.template = owl.tags.xml`<div t-esc="value"/>`;
+        MyComponent.template = xml`<div t-esc="value"/>`;
         widgetRegistryOwl.add('test', MyComponent);
 
         const list = await createView({
@@ -12129,7 +12130,7 @@ QUnit.module('Views', {
                 willUnmountCalls++;
             }
         }
-        MyField.template = owl.tags.xml`<span>Hello World</span>`;
+        MyField.template = xml`<span>Hello World</span>`;
         fieldRegistryOwl.add('my_owl_field', MyField);
 
         const list = await createView({
@@ -12270,8 +12271,6 @@ QUnit.module('Views', {
     });
 
     QUnit.test("update control panel while list view is mounting", async function (assert) {
-        const ControlPanel = require('web.ControlPanel');
-        const ListController = require('web.ListController');
 
         let mountedCounterCall = 0;
 

@@ -9,7 +9,7 @@ import { registerCleanup } from "../../helpers/cleanup";
 import { click, legacyExtraNextTick, patchWithCleanup } from "../../helpers/utils";
 import { createWebClient, doAction, getActionManagerServerData } from "./../helpers";
 
-const { Component, tags } = owl;
+const { Component, xml } = owl;
 
 let serverData;
 const actionRegistry = registry.category("actions");
@@ -98,7 +98,7 @@ QUnit.module("ActionManager", (hooks) => {
     QUnit.test("can execute client actions from tag name", async function (assert) {
         assert.expect(4);
         class ClientAction extends Component {}
-        ClientAction.template = tags.xml`<div class="o_client_action_test">Hello World</div>`;
+        ClientAction.template = xml`<div class="o_client_action_test">Hello World</div>`;
         actionRegistry.add("HelloWorldTest", ClientAction);
 
         const mockRPC = async function (route, args) {
@@ -230,7 +230,7 @@ QUnit.module("ActionManager", (hooks) => {
     QUnit.test("action can use a custom control panel (legacy)", async function (assert) {
         assert.expect(1);
         class CustomControlPanel extends Component {}
-        CustomControlPanel.template = tags.xml`
+        CustomControlPanel.template = xml`
         <div class="custom-control-panel">My custom control panel</div>
       `;
         const ClientAction = AbstractAction.extend({
@@ -344,7 +344,7 @@ QUnit.module("ActionManager", (hooks) => {
                 this.env.config.setDisplayName(this.breadcrumbTitle);
             }
         }
-        ClientAction.template = tags.xml`<div class="my_owl_action" t-on-click="onClick">owl client action</div>`;
+        ClientAction.template = xml`<div class="my_owl_action" t-on-click="onClick">owl client action</div>`;
         actionRegistry.add("OwlClientAction", ClientAction);
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 8);
@@ -365,7 +365,7 @@ QUnit.module("ActionManager", (hooks) => {
                 assert.strictEqual(this.props.division, "bell");
             }
         }
-        ClientAction.template = tags.xml`<div class="my_owl_action"></div>`;
+        ClientAction.template = xml`<div class="my_owl_action"></div>`;
         actionRegistry.add("OwlClientAction", ClientAction);
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, "OwlClientAction", {

@@ -13,6 +13,7 @@ import ControlPanel from "web.ControlPanel";
 import Widget from "web.Widget";
 import { ComponentWrapper } from "web.OwlCompatibility";
 
+const { Component } = owl;
 const AbstractAction = Widget.extend(ActionMixin, {
     config: {
         ControlPanel: ControlPanel,
@@ -78,7 +79,7 @@ const AbstractAction = Widget.extend(ActionMixin, {
         this.searchModelConfig = {
             context: Object.assign({}, action.context),
             domain: action.domain || [],
-            env: owl.Component.env,
+            env: Component.env,
             searchMenuTypes: this.searchMenuTypes,
         };
         this.extensions = {};

@@ -2,8 +2,7 @@
 
 import { useAutofocus } from "../utils/hooks";
 
-const { Component } = owl;
-const { useExternalListener, useRef, useState } = owl.hooks;
+const { Component, useExternalListener, useRef, useState } = owl;
 
 /**
  * Pager

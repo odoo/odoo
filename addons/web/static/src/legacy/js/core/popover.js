@@ -1,9 +1,7 @@
 odoo.define('web.Popover', function (require) {
     'use strict';
 
-    const { Component, hooks, misc, QWeb } = owl;
-    const { Portal } = misc;
-    const { useRef, useState } = hooks;
+    const { Component, Portal, QWeb, useRef, useState } = owl;
 
     /**
      * Popover

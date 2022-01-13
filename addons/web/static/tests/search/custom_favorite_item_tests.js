@@ -20,6 +20,7 @@ import {
     validateSearch,
 } from "./helpers";
 
+const { Component, xml } = owl;
 const serviceRegistry = registry.category("services");
 
 /**
@@ -159,7 +160,7 @@ QUnit.module("Search", (hooks) => {
     QUnit.test("save filter", async function (assert) {
         assert.expect(1);
 
-        class TestComponent extends owl.Component {
+        class TestComponent extends Component {
             setup() {
                 useSetupAction({
                     getContext: () => {
@@ -169,7 +170,7 @@ QUnit.module("Search", (hooks) => {
             }
         }
         TestComponent.components = { FavoriteMenu };
-        TestComponent.template = owl.tags.xml`<div><FavoriteMenu/></div>`;
+        TestComponent.template = xml`<div><FavoriteMenu/></div>`;
 
         const comp = await makeWithSearch({
             serverData,

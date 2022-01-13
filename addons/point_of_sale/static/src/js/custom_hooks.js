@@ -1,8 +1,7 @@
 odoo.define('point_of_sale.custom_hooks', function (require) {
     'use strict';
 
-    const { Component } = owl;
-    const { onMounted, onPatched, onWillUnmount } = owl.hooks;
+    const { Component, onMounted, onPatched, onWillUnmount } = owl;
 
     /**
      * Introduce error handlers in the component.

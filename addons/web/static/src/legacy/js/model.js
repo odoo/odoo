@@ -4,8 +4,7 @@ odoo.define("web.Model", function (require) {
     const { groupBy, partitionBy } = require("web.utils");
     const Registry = require("web.Registry");
 
-    const { Component, core } = owl;
-    const { EventBus, Observer } = core;
+    const { Component, EventBus, Observer } = owl;
     const isNotNull = (val) => val !== null && val !== undefined;
 
     /**

@@ -20,6 +20,8 @@ var nextTick = testUtils.nextTick;
  const cpHelpers = require('@web/../tests/search/helpers');
 var createView = testUtils.createView;
 
+ const { Component, xml } = owl;
+
 QUnit.module('Views', {
     before: function () {
         this._initialKanbanProgressBarAnimate = KanbanColumnProgressBar.prototype.ANIMATE;
@@ -6172,12 +6174,12 @@ QUnit.module('Views', {
     QUnit.test('basic support for widgets (being Owl Components)', async function (assert) {
         assert.expect(1);
 
-        class MyComponent extends owl.Component {
+        class MyComponent extends Component {
             get value() {
                 return JSON.stringify(this.props.record.data);
             }
         }
-        MyComponent.template = owl.tags.xml`<div t-esc="value"/>`;
+        MyComponent.template = xml`<div t-esc="value"/>`;
         widgetRegistryOwl.add('test', MyComponent);
 
         const kanban = await createView({

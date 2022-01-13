@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-const { useState, onMounted, onWillUnmount } = owl.hooks;
+const { onMounted, onWillUnmount, useState } = owl;
 
 /**
  * This hook handle the visibility of the dropzone based on drag & drop events.

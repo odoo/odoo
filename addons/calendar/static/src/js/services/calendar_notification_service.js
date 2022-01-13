@@ -4,6 +4,8 @@ import { browser } from "@web/core/browser/browser";
 import { ConnectionLostError } from "@web/core/network/rpc_service";
 import { registry } from "@web/core/registry";
 
+const { Component } = owl;
+
 export const calendarNotificationService = {
     dependencies: ["action", "notification", "rpc"],
 
@@ -13,7 +15,7 @@ export const calendarNotificationService = {
         const displayedNotifications = new Set();
 
         env.bus.on("WEB_CLIENT_READY", null, async () => {
-            const legacyEnv = owl.Component.env;
+            const legacyEnv = Component.env;
             legacyEnv.services.bus_service.onNotification(this, (notifications) => {
                 for (const { payload, type } of notifications) {
                     if (type === "calendar.alarm") {

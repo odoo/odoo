@@ -11,9 +11,9 @@ import { ViewNotFoundError } from "../webclient/actions/action_service";
 import { cleanDomFromBootstrap, wrapSuccessOrFail } from "./utils";
 import { mapDoActionOptionAPI } from "./backend_utils";
 
-const { Component, tags, hooks } = owl;
+const { Component, onMounted, useExternalListener, xml } = owl;
 
-const warningDialogBodyTemplate = tags.xml`<t t-esc="props.message"/>`;
+const warningDialogBodyTemplate = xml`<t t-esc="props.message"/>`;
 
 class ActionAdapter extends ComponentAdapter {
     setup() {
@@ -56,7 +56,7 @@ class ActionAdapter extends ComponentAdapter {
             },
             () => []
         );
-        hooks.useExternalListener(window, "click", () => {
+        useExternalListener(window, "click", () => {
             cleanDomFromBootstrap();
         });
     }
@@ -168,7 +168,7 @@ export class ClientActionAdapter extends ActionAdapter {
     setup() {
         super.setup();
         useDebugCategory("action", { action: this.props.widgetArgs[0] });
-        owl.hooks.onMounted(() => {
+        onMounted(() => {
             const action = this.props.widgetArgs[0];
             if ("params" in action) {
                 const newState = {};

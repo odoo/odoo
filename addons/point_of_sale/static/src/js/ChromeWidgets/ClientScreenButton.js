@@ -1,9 +1,10 @@
 odoo.define('point_of_sale.ClientScreenButton', function(require) {
     'use strict';
 
-    const { useState } = owl;
     const PosComponent = require('point_of_sale.PosComponent');
     const Registries = require('point_of_sale.Registries');
+
+    const { useState } = owl;
 
     // Formerly ClientScreenWidget
     class ClientScreenButton extends PosComponent {

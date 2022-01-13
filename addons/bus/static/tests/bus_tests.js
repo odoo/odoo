@@ -12,6 +12,7 @@ const { ConnectionLostError } = require("@web/core/network/rpc_service");
 const { patchWithCleanup, nextTick } = require("@web/../tests/helpers/utils");
 const { createWebClient } =  require('@web/../tests/webclient/helpers');
 
+const { Component } = owl;
 
 var LocalStorageServiceMock;
 
@@ -114,7 +115,7 @@ QUnit.module('Bus', {
             },
             legacyParams: { serviceRegistry: legacyRegistry },
         });
-        busService = owl.Component.env.services.bus_service;
+        busService = Component.env.services.bus_service;
         busService.startPolling();
         // Give longpolling bus a tick to try to restart polling
         await nextTick();

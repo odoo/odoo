@@ -13,10 +13,9 @@ import { registerCleanup } from "../helpers/cleanup";
 import { makeTestEnv } from "../helpers/mock_env";
 import { click, getFixture, mouseEnter, triggerEvent } from "../helpers/utils";
 
+const { Component, mount } = owl;
 const serviceRegistry = registry.category("services");
 const favoriteMenuRegistry = registry.category("favoriteMenu");
-
-const { Component, mount } = owl;
 
 export const setupControlPanelServiceRegistry = () => {
     serviceRegistry.add("action", actionService);

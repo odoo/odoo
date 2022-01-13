@@ -1,10 +1,11 @@
 odoo.define('point_of_sale.ProductConfiguratorPopup', function(require) {
     'use strict';
 
-    const { useState, useSubEnv } = owl.hooks;
     const PosComponent = require('point_of_sale.PosComponent');
     const AbstractAwaitablePopup = require('point_of_sale.AbstractAwaitablePopup');
     const Registries = require('point_of_sale.Registries');
+
+    const { useState, useSubEnv } = owl;
 
     class ProductConfiguratorPopup extends AbstractAwaitablePopup {
         constructor() {

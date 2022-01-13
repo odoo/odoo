@@ -14,9 +14,8 @@ odoo.define('web.owl_dialog_tests', function (require) {
     const { getFixture, nextTick, patchWithCleanup } = require("@web/../tests/helpers/utils");
     const { createWebClient, doAction } = require("@web/../tests/webclient/helpers");
 
-    const { Component, tags, useState, mount } = owl;
+    const { Component, mount, useState, xml } = owl;
     const EscapeKey = { key: 'Escape', keyCode: 27, which: 27 };
-    const { xml } = tags;
 
     QUnit.module('core', {}, function () {
         QUnit.module('OwlDialog');
@@ -283,7 +282,7 @@ odoo.define('web.owl_dialog_tests', function (require) {
 
             let id = 1;
             // OwlDialog env
-            class OwlDialogWrapper extends owl.Component {
+            class OwlDialogWrapper extends Component {
                 setup() {
                     this.env = legacyEnv;
                 }

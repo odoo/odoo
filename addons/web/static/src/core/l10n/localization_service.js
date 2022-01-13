@@ -7,11 +7,13 @@ import { localization } from "./localization";
 import { translatedTerms, _t } from "./translation";
 import { session } from "@web/session";
 
+const { config } = owl;
+
 export const localizationService = {
     dependencies: ["user"],
     start: async (env, { user }) => {
         // add "data-toolip" to the list of translatable attributes in owl templates
-        owl.config.translatableAttributes.push("data-tooltip");
+        config.translatableAttributes.push("data-tooltip");
 
         const cacheHashes = session.cache_hashes || {};
         const translationsHash = cacheHashes.translations || new Date().getTime().toString();

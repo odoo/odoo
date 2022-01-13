@@ -2,8 +2,7 @@
 
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
-const { Component } = owl;
-const { useState } = owl.hooks;
+const { Component, useState } = owl;
 
 export class ComposerSuggestedRecipientList extends Component {
 

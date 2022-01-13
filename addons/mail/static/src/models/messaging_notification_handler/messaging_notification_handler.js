@@ -7,6 +7,7 @@ import { htmlToTextContentInline } from '@mail/js/utils';
 import { str_to_datetime } from 'web.time';
 import { Markup } from 'web.utils';
 
+const { escape } = owl;
 const PREVIEW_MSG_MAX_SIZE = 350; // optimal for native English speakers
 
 registerModel({
@@ -692,7 +693,7 @@ registerModel({
                     notificationTitle = author.nameOrDisplayName;
                 }
             }
-            const notificationContent = owl.utils.escape(
+            const notificationContent = escape(
                 htmlToTextContentInline(message.body).substr(0, PREVIEW_MSG_MAX_SIZE)
             );
             this.env.services['bus_service'].sendNotification({

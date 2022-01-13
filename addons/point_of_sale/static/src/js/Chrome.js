@@ -1,8 +1,6 @@
 odoo.define('point_of_sale.Chrome', function(require) {
     'use strict';
 
-    const { useState, useRef, useContext, useExternalListener } = owl.hooks;
-    const { debounce } = owl.utils;
     const { loadCSS } = require('web.ajax');
     const { useListener } = require('web.custom_hooks');
     const { BarcodeEvents } = require('barcodes.BarcodeEvents');
@@ -22,6 +20,8 @@ odoo.define('point_of_sale.Chrome', function(require) {
     // when we create an instance of one of the classes,
     // we instantiate the extended one.
     const models = require('point_of_sale.models');
+
+    const { debounce, useContext, useExternalListener, useRef, useState } = owl;
 
     /**
      * Chrome is the root component of the PoS App.

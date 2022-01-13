@@ -1,11 +1,13 @@
 /* @odoo-module */
 
-export class TimeOffCardPopover extends owl.Component {}
+const { Component } = owl;
+
+export class TimeOffCardPopover extends Component {}
 
 TimeOffCardPopover.template = 'hr_holidays.TimeOffCardPopover';
 TimeOffCardPopover.props = ['allocated', 'approved', 'planned', 'left'];
 
-export class TimeOffCard extends owl.Component {}
+export class TimeOffCard extends Component {}
 
 TimeOffCard.components = { TimeOffCardPopover };
 TimeOffCard.template = 'hr_holidays.TimeOffCard';

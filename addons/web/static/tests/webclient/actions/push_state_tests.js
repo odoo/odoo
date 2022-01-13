@@ -7,7 +7,7 @@ import testUtils from "web.test_utils";
 import { click, legacyExtraNextTick, nextTick, patchWithCleanup } from "../../helpers/utils";
 import { createWebClient, doAction, getActionManagerServerData } from "./../helpers";
 
-const { Component, tags } = owl;
+const { Component, xml } = owl;
 
 let serverData;
 const actionRegistry = registry.category("actions");
@@ -77,7 +77,7 @@ QUnit.module("ActionManager", (hooks) => {
                 this.router.pushState({ arbitrary: "actionPushed" });
             }
         }
-        ClientActionPushes.template = tags.xml`
+        ClientActionPushes.template = xml`
       <div class="test_client_action" t-on-click="_actionPushState">
         ClientAction_<t t-esc="props.params and props.params.description" />
       </div>`;
@@ -106,7 +106,7 @@ QUnit.module("ActionManager", (hooks) => {
                 this.router.pushState({ arbitrary: "actionPushed" });
             }
         }
-        ClientActionPushes.template = tags.xml`
+        ClientActionPushes.template = xml`
       <div class="test_client_action" t-on-click="_actionPushState">
         ClientAction_<t t-esc="props.params and props.params.description" />
       </div>`;
@@ -136,7 +136,7 @@ QUnit.module("ActionManager", (hooks) => {
                 this.router.pushState({ arbitrary: "actionPushed" });
             }
         }
-        ClientActionPushes.template = tags.xml`
+        ClientActionPushes.template = xml`
       <div class="test_client_action" t-on-click="_actionPushState">
         ClientAction_<t t-esc="props.params and props.params.description" />
       </div>`;

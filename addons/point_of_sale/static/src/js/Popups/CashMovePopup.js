@@ -6,15 +6,17 @@ odoo.define('point_of_sale.CashMovePopup', function (require) {
     const { _t } = require('web.core');
     const { parse } = require('web.field_utils');
 
+    const { useRef, useState } = owl;
+
     class CashMovePopup extends AbstractAwaitablePopup {
         setup() {
-            this.state = owl.hooks.useState({
+            this.state = useState({
                 inputType: '', // '' | 'in' | 'out'
                 inputAmount: '',
                 inputReason: '',
                 inputHasError: false,
             });
-            this.inputAmountRef = owl.hooks.useRef('input-amount-ref');
+            this.inputAmountRef = useRef('input-amount-ref');
         }
         confirm() {
             try {

@@ -4,8 +4,7 @@ import { patchDate } from "@web/../tests/helpers/utils";
 import { makeWithSearch, setupControlPanelServiceRegistry } from "./helpers";
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
 
-const { Component, tags } = owl;
-const { xml } = tags;
+const { Component, xml } = owl;
 
 class TestComponent extends Component {}
 TestComponent.template = xml`<div class="o_test_component"/>`;

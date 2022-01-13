@@ -3,11 +3,12 @@ odoo.define('point_of_sale.NumberPopup', function(require) {
     var core = require('web.core');
     var _t = core._t;
 
-    const { useState } = owl;
     const AbstractAwaitablePopup = require('point_of_sale.AbstractAwaitablePopup');
     const NumberBuffer = require('point_of_sale.NumberBuffer');
     const { useListener } = require('web.custom_hooks');
     const Registries = require('point_of_sale.Registries');
+
+    const { useState } = owl;
 
     // formerly NumberPopupWidget
     class NumberPopup extends AbstractAwaitablePopup {

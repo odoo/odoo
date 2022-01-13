@@ -1,10 +1,11 @@
 odoo.define('pos_sale.SaleOrderFetcher', function (require) {
     'use strict';
 
-    const { EventBus } = owl.core;
     const { Gui } = require('point_of_sale.Gui');
     const { isConnectionError } = require('point_of_sale.utils');
     const models = require('point_of_sale.models');
+
+    const { EventBus } = owl;
 
     class SaleOrderFetcher extends EventBus {
         constructor() {

@@ -2,7 +2,8 @@ odoo.define('point_of_sale.MobileSaleOrderManagementScreen', function (require) 
     const SaleOrderManagementScreen = require('pos_sale.SaleOrderManagementScreen');
     const Registries = require('point_of_sale.Registries');
     const { useListener } = require('web.custom_hooks');
-    const { useState } = owl.hooks;
+
+    const { useState } = owl;
 
     const MobileSaleOrderManagementScreen = (SaleOrderManagementScreen) => {
         class MobileSaleOrderManagementScreen extends SaleOrderManagementScreen {

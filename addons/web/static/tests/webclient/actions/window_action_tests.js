@@ -25,6 +25,8 @@ import { WarningDialog } from "@web/core/errors/error_dialogs";
 import { makeFakeUserService } from "@web/../tests/helpers/mock_services";
 import * as cpHelpers from "@web/../tests/search/helpers";
 
+const { onMounted } = owl;
+
 let serverData;
 const serviceRegistry = registry.category("services");
 
@@ -2348,7 +2350,7 @@ QUnit.module("ActionManager", (hooks) => {
         class WarningDialogWait extends WarningDialog {
             setup() {
                 super.setup();
-                owl.hooks.onMounted(() => warningOpened.resolve());
+                onMounted(() => warningOpened.resolve());
             }
         }
 

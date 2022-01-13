@@ -1,5 +1,6 @@
 /** @odoo-module **/
 import { DROPDOWN } from "./dropdown";
+
 const { Component, QWeb } = owl;
 
 /**

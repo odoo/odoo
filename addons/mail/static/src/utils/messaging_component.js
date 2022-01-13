@@ -3,7 +3,7 @@
 import { useModels } from "@mail/component_hooks/use_models/use_models";
 import { useShouldUpdateBasedOnProps } from "@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props";
 
-const { useRef } = owl.hooks;
+const { useRef } = owl;
 
 const componentRegistry = {};
 

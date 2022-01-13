@@ -5,9 +5,7 @@ import { useBus, useService } from "@web/core/utils/hooks";
 import { buildSampleORM } from "@web/views/helpers/sample_server";
 import { useSetupView } from "@web/views/helpers/view_hook";
 
-const { core, hooks } = owl;
-const { EventBus } = core;
-const { onWillStart, onWillUpdateProps, useComponent } = hooks;
+const { EventBus, onWillStart, onWillUpdateProps, useComponent } = owl;
 
 /**
  * @typedef {import("@web/search/search_model").SearchParams} SearchParams

@@ -2,7 +2,7 @@
 
 import { browser } from "@web/core/browser/browser";
 
-const { Component, tags, useState } = owl;
+const { Component, useState, xml } = owl;
 
 export class BlockUI extends Component {
     setup() {
@@ -70,7 +70,7 @@ export class BlockUI extends Component {
     }
 }
 
-BlockUI.template = tags.xml`
+BlockUI.template = xml`
     <div t-att-class="state.blockUI ? 'o_blockUI' : ''">
       <t t-if="state.blockUI">
         <div class="o_spinner">

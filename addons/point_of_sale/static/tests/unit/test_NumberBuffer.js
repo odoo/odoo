@@ -1,11 +1,11 @@
 odoo.define('point_of_sale.tests.NumberBuffer', function(require) {
     'use strict';
 
-    const { Component, useState } = owl;
-    const { xml } = owl.tags;
     const NumberBuffer = require('point_of_sale.NumberBuffer');
     const makeTestEnvironment = require('web.test_env');
     const testUtils = require('web.test_utils');
+
+    const { Component, useState, xml } = owl;
 
     QUnit.module('unit tests for NumberBuffer', {
         before() {},

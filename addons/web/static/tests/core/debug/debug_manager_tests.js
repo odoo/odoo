@@ -23,8 +23,7 @@ import { createWebClient, doAction, getActionManagerServerData } from "../../web
 import { openViewItem } from "@web/webclient/debug_items";
 import { editSearchView, editView } from "@web/views/debug_items";
 
-const { Component, mount, tags } = owl;
-const { xml } = tags;
+const { Component, mount, xml } = owl;
 
 export class DebugMenuParent extends Component {
     setup() {

@@ -6,7 +6,7 @@ import { registerCleanup } from "../../helpers/cleanup";
 import { click, nextTick, patchWithCleanup } from "../../helpers/utils";
 import { errorService } from "@web/core/errors/error_service";
 
-const { Component, tags } = owl;
+const { Component, xml } = owl;
 
 let serverData;
 const actionRegistry = registry.category("actions");
@@ -21,7 +21,7 @@ QUnit.module("ActionManager", (hooks) => {
     QUnit.test("error in a client action (at rendering)", async function (assert) {
         assert.expect(4);
         class Boom extends Component {}
-        Boom.template = tags.xml`<div><t t-esc="a.b.c"/></div>`;
+        Boom.template = xml`<div><t t-esc="a.b.c"/></div>`;
         actionRegistry.add("Boom", Boom);
 
         const webClient = await createWebClient({ serverData });
@@ -60,7 +60,7 @@ QUnit.module("ActionManager", (hooks) => {
                 this.render();
             }
         }
-        Boom.template = tags.xml`
+        Boom.template = xml`
             <div>
                 <t t-if="boom" t-esc="a.b.c"/>
                 <button t-else="" class="my_button" t-on-click="onClick">Click Me</button>

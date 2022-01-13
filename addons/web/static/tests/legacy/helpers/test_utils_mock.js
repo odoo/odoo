@@ -24,6 +24,7 @@ const RamStorage = require('web.RamStorage');
 const session = require('web.session');
 const { patchDate } = require("@web/../tests/helpers/utils");
 
+const { Component } = owl;
 const DebouncedField = basic_fields.DebouncedField;
 
 
@@ -541,8 +542,8 @@ async function addMockEnvironment(widget, params) {
     if (!('mockSRC' in params)) { // redirect src rpcs to the mock server
         params.mockSRC = true;
     }
-    const cleanUp = await addMockEnvironmentOwl(owl.Component, params, mockServer);
-    const env = owl.Component.env;
+    const cleanUp = await addMockEnvironmentOwl(Component, params, mockServer);
+    const env = Component.env;
 
     // ensure to clean up everything when the widget will be destroyed
     const destroy = widget.destroy;

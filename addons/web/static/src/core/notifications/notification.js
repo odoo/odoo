@@ -1,11 +1,11 @@
 /** @odoo-module **/
 
-const { Component, hooks } = owl;
+const { Component, onWillUnmount } = owl;
 
 export class Notification extends Component {
     setup() {
         if (this.props.onClose) {
-            hooks.onWillUnmount(() => this.props.onClose());
+            onWillUnmount(() => this.props.onClose());
         }
     }
 
@@ -40,13 +40,13 @@ Notification.props = {
             return (
                 typeof m === "string" || (typeof m === "object" && typeof m.toString === "function")
             );
-        }
+        },
     },
     title: { type: [String, Boolean, { toString: Function }], optional: true },
     type: {
         type: String,
         optional: true,
-        validate: (t) => ["warning", "danger", "success", "info"].includes(t)
+        validate: (t) => ["warning", "danger", "success", "info"].includes(t),
     },
     messageIsHtml: { type: Boolean, optional: true },
     className: { type: String, optional: true },
@@ -58,15 +58,15 @@ Notification.props = {
                 name: { type: String },
                 icon: { type: String, optional: true },
                 primary: { type: Boolean, optional: true },
-                onClick: Function
-            }
-        }
+                onClick: Function,
+            },
+        },
     },
-    onClose: { type: Function, optional: true }
+    onClose: { type: Function, optional: true },
 };
 Notification.defaultProps = {
     buttons: [],
     className: "",
     messageIsHtml: false,
-    type: "warning"
+    type: "warning",
 };

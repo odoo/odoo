@@ -3,8 +3,7 @@
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 import { clear } from '@mail/model/model_field_command';
 
-const { Component } = owl;
-const { onWillUpdateProps } = owl.hooks;
+const { Component, onWillUpdateProps } = owl;
 
 const getChatterNextTemporaryId = (function () {
     let tmpId = 0;

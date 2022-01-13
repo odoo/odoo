@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
-const { Component, hooks } = owl;
-const { useState } = hooks;
+const { Component, useState } = owl;
 
 /**
  * Search panel

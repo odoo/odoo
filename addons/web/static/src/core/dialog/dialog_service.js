@@ -4,8 +4,7 @@ import { registry } from "../registry";
 import { Dialog } from "./dialog";
 import { DialogContainer } from "./dialog_container";
 
-const { core } = owl;
-const { EventBus } = core;
+const { EventBus } = owl;
 
 /**
  *  @typedef {{

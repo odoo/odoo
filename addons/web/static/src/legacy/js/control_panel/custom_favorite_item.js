@@ -5,8 +5,7 @@ odoo.define('web.CustomFavoriteItem', function (require) {
     const { useAutofocus } = require('web.custom_hooks');
     const { useModel } = require('web.Model');
 
-    const { Component, hooks, useState } = owl;
-    const { useRef } = hooks;
+    const { Component, useRef, useState } = owl;
 
     let favoriteId = 0;
 

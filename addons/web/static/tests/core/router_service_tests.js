@@ -6,9 +6,11 @@ import { makeTestEnv } from "../helpers/mock_env";
 import { makeFakeRouterService } from "../helpers/mock_services";
 import { nextTick, patchWithCleanup } from "../helpers/utils";
 
+const { EventBus } = owl;
+
 async function createRouter(params = {}) {
     const env = params.env || {};
-    env.bus = env.bus || new owl.core.EventBus();
+    env.bus = env.bus || new EventBus();
     if (params.onPushState) {
         const originalPushState = browser.history.pushState;
         const onPushState = params.onPushState;

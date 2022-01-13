@@ -4,6 +4,8 @@ odoo.define('web.test_utils_dom', function (require) {
     const concurrency = require('web.concurrency');
     const Widget = require('web.Widget');
 
+    const { Component } = owl;
+
     /**
      * DOM Test Utils
      *
@@ -368,7 +370,7 @@ odoo.define('web.test_utils_dom', function (require) {
      */
     function getNode(target) {
         let nodes;
-        if (target instanceof owl.Component || target instanceof Widget) {
+        if (target instanceof Component || target instanceof Widget) {
             nodes = [target.el];
         } else if (typeof target === 'string') {
             nodes = document.querySelectorAll(target);

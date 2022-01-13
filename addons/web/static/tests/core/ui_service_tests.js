@@ -6,7 +6,7 @@ import { makeTestEnv } from "../helpers/mock_env";
 import { makeFakeLocalizationService } from "../helpers/mock_services";
 import { getFixture, nextTick } from "../helpers/utils";
 
-const { Component, mount } = owl;
+const { Component, mount, xml } = owl;
 const serviceRegistry = registry.category("services");
 
 let target;
@@ -71,7 +71,7 @@ QUnit.test("a component can be the active element", async (assert) => {
             useActiveElement();
         }
     }
-    MyComponent.template = owl.tags.xml`<div/>`;
+    MyComponent.template = xml`<div/>`;
 
     const env = await makeTestEnv({ ...baseConfig });
     const ui = env.services.ui;
@@ -91,7 +91,7 @@ QUnit.test("a component can be the  UI active element: with t-ref delegation", a
             useActiveElement("delegatedRef");
         }
     }
-    MyComponent.template = owl.tags.xml`
+    MyComponent.template = xml`
     <div>
       <h1>My Component</h1>
       <div id="owner" t-ref="delegatedRef"/>

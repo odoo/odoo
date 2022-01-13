@@ -7,9 +7,8 @@ odoo.define('web.SearchBar', function (require) {
     const { useModel } = require('web.Model');
     const { fuzzyTest } = require('@web/core/utils/search');
 
+    const { Component, useExternalListener, useRef, useState } = owl;
     const CHAR_FIELDS = ['char', 'html', 'many2many', 'many2one', 'one2many', 'text'];
-    const { Component, hooks } = owl;
-    const { useExternalListener, useRef, useState } = hooks;
 
     let sourceId = 0;
 

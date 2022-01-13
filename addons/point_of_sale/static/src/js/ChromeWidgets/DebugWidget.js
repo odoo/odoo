@@ -1,13 +1,13 @@
 odoo.define('point_of_sale.DebugWidget', function (require) {
     'use strict';
 
-    const { useState } = owl;
-    const { useRef } = owl.hooks;
     const { getFileAsText } = require('point_of_sale.utils');
     const { parse } = require('web.field_utils');
     const NumberBuffer = require('point_of_sale.NumberBuffer');
     const PosComponent = require('point_of_sale.PosComponent');
     const Registries = require('point_of_sale.Registries');
+
+    const { useRef, useState } = owl;
 
     class DebugWidget extends PosComponent {
         constructor() {

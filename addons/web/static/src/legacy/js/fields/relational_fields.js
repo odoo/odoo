@@ -29,7 +29,8 @@ var ListRenderer = require('web.ListRenderer');
 const { ComponentWrapper, WidgetAdapterMixin } = require('web.OwlCompatibility');
 const { sprintf, toBoolElse } = require("web.utils");
 
-const { escape } = owl.utils;
+const { escape } = owl;
+
 var _t = core._t;
 var _lt = core._lt;
 var qweb = core.qweb;

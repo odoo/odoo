@@ -7,7 +7,7 @@ import { registerCleanup } from "../helpers/cleanup";
 import { makeTestEnv } from "../helpers/mock_env";
 import { click, getFixture, nextTick } from "../helpers/utils";
 
-const { Component, mount, tags } = owl;
+const { Component, mount, xml } = owl;
 const serviceRegistry = registry.category("services");
 
 let env;
@@ -28,7 +28,7 @@ QUnit.test("Ignore empty hrefs", async (assert) => {
     assert.expect(1);
 
     class MyComponent extends Component {}
-    MyComponent.template = tags.xml/* xml */ `
+    MyComponent.template = xml/* xml */ `
         <div class="my_component">
             <a href="#" class="inactive_link">This link does nothing</a>
             <button class="btn btn-secondary">
@@ -68,7 +68,7 @@ QUnit.test("Simple rendering with a scroll", async (assert) => {
     target.append(scrollableParent);
 
     class MyComponent extends Component {}
-    MyComponent.template = tags.xml/* xml */ `
+    MyComponent.template = xml/* xml */ `
         <div class="o_content">
             <a href="#scrollToHere"  class="btn btn-primary">sroll to ...</a>
             <p>
@@ -122,7 +122,7 @@ QUnit.test("Rendering with multiple anchors and scrolls", async (assert) => {
     target.append(scrollableParent);
 
     class MyComponent extends Component {}
-    MyComponent.template = tags.xml/* xml */ `
+    MyComponent.template = xml/* xml */ `
         <div class="o_content">
             <h2 id="anchor3">ANCHOR 3</h2>
             <a href="#anchor1" class="link1">sroll to ...</a>
@@ -196,7 +196,7 @@ QUnit.test("clicking anchor when no scrollable", async (assert) => {
     target.append(scrollableParent);
 
     class MyComponent extends Component {}
-    MyComponent.template = tags.xml/* xml */ `
+    MyComponent.template = xml/* xml */ `
         <div class="o_content">
             <a href="#scrollToHere"  class="btn btn-primary">scroll to ...</a>
             <div class="active-container">
@@ -234,7 +234,7 @@ QUnit.test("clicking anchor when multi levels scrollables", async (assert) => {
     target.append(scrollableParent);
 
     class MyComponent extends Component {}
-    MyComponent.template = tags.xml/* xml */ `
+    MyComponent.template = xml/* xml */ `
         <div class="o_content scrollable-1">
             <a href="#scroll1"  class="btn1 btn btn-primary">go to level 2 anchor</a>
             <div>
@@ -329,7 +329,7 @@ QUnit.test("Simple scroll to HTML elements", async (assert) => {
     target.append(scrollableParent);
 
     class MyComponent extends Component {}
-    MyComponent.template = tags.xml/* xml */ `
+    MyComponent.template = xml/* xml */ `
         <div class="o_content">
             <p>
                 Aliquam convallis sollicitudin purus. 

@@ -10,7 +10,7 @@ import testUtils from "web.test_utils";
 import { useSetupView } from "@web/views/helpers/view_hook";
 import * as cpHelpers from "@web/../tests/search/helpers";
 
-const { Component, tags } = owl;
+const { Component, xml } = owl;
 const actionRegistry = registry.category("actions");
 
 let serverData;
@@ -484,7 +484,7 @@ QUnit.module("ActionManager", (hooks) => {
                     return slowWillStartDef;
                 }
             }
-            ClientAction.template = tags.xml`<div class="client_action">ClientAction</div>`;
+            ClientAction.template = xml`<div class="client_action">ClientAction</div>`;
             actionRegistry.add("slowAction", ClientAction);
             const webClient = await createWebClient({ serverData });
             doAction(webClient, "slowAction");
@@ -650,7 +650,7 @@ QUnit.module("ActionManager", (hooks) => {
         ToyView.icon = "fab fa-android";
         ToyView.multiRecord = true;
         ToyView.searchMenuTypes = ["filter"];
-        ToyView.template = owl.tags.xml`
+        ToyView.template = xml`
             <div class="o_toy_view">
                 <ControlPanel />
             </div>

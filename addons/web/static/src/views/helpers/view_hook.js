@@ -6,7 +6,7 @@ import { registry } from "@web/core/registry";
 import { useListener, useService } from "@web/core/utils/hooks";
 import { evaluateExpr } from "@web/core/py_js/py";
 
-const { useComponent } = owl.hooks;
+const { useComponent, xml } = owl;
 
 export function useSetupView(params) {
     const component = useComponent();
@@ -30,7 +30,7 @@ export function useViewArch(arch, params = {}) {
 
     const { compile, extract } = params;
     if (!("template" in processedArch) && compile) {
-        processedArch.template = owl.tags.xml`${compile(arch)}`;
+        processedArch.template = xml`${compile(arch)}`;
     }
     if (!("extracted" in processedArch) && extract) {
         processedArch.extracted = extract(arch);
@@ -54,7 +54,7 @@ export function useViewArch(arch, params = {}) {
  */
 export function useActionLinks({ resModel, reload }) {
     const selector = `a[type="action"]`;
-    const component = owl.hooks.useComponent();
+    const component = useComponent();
     const keepLast = component.env.keepLast;
 
     const orm = useService("orm");

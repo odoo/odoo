@@ -8,8 +8,7 @@ import { fuzzyLookup } from "@web/core/utils/search";
 import { debounce } from "@web/core/utils/timing";
 import { _lt } from "@web/core/l10n/translation";
 
-const { Component, hooks } = owl;
-const { onWillStart, useRef, useState } = hooks;
+const { Component, onWillStart, useRef, useState } = owl;
 
 const DEFAULT_PLACEHOLDER = _lt("Search...");
 const DEFAULT_EMPTY_MESSAGE = _lt("No result found");
@@ -21,7 +20,7 @@ const FUZZY_NAMESPACES = ["default"];
 
 /**
  * @typedef {Command & {
- *  Component?: owl.Component;
+ *  Component?: Component;
  *  props?: object;
  * }} CommandItem
  */
