@@ -17,10 +17,10 @@ export class PriorityField extends Component {
     get index() {
         return this.state.index > -1
             ? this.state.index
-            : Object.keys(this.selection).indexOf(this.props.value);
+            : this.selection.findIndex((o) => o[0] === this.props.value);
     }
     get selection() {
-        return Object.fromEntries(this.props.record.fields[this.props.name].selection);
+        return this.props.record.fields[this.props.name].selection;
     }
 
     /**
@@ -29,7 +29,7 @@ export class PriorityField extends Component {
     onStarClicked(value, ev) {
         ev.stopPropagation();
         ev.preventDefault();
-        const actualValue = this.props.value === value ? Object.keys(this.selection)[0] : value;
+        const actualValue = this.props.value === value ? this.selection[0][0] : value;
         this.props.update(actualValue);
     }
 }
