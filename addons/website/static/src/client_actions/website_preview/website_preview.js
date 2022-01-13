@@ -2,6 +2,7 @@
 
 import { registry } from '@web/core/registry';
 import { useService } from '@web/core/utils/hooks';
+import { unslugHtmlDataObject } from '../../services/website_service';
 
 const { Component, onWillStart, useRef, useEffect } = owl;
 
@@ -84,8 +85,12 @@ export class WebsitePreview extends Component {
         this.currentUrl = this.iframe.el.contentDocument.location.href;
         history.replaceState({}, this.props.action.display_name, this.currentUrl);
 
+        const { mainObject, isPublished, canPublish } = this.iframe.el.contentDocument.documentElement.dataset;
         this.websiteService.currentMetadata = {
             path: this.currentUrl,
+            mainObject: unslugHtmlDataObject(mainObject),
+            isPublished: isPublished === 'True',
+            canPublish: canPublish === 'True',
         };
 
         // Before leaving the iframe, its content is replicated on an

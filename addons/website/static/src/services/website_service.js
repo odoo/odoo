@@ -6,7 +6,7 @@ const { reactive } = owl;
 
 const websiteSystrayRegistry = registry.category('website_systray');
 
-const unslugHtmlDataObject = (repr) => {
+export const unslugHtmlDataObject = (repr) => {
     const match = repr && repr.match(/(.+)\((\d+),(.*)\)/);
     if (!match) {
         return null;
@@ -37,6 +37,7 @@ export const websiteService = {
             },
             set currentMetadata(metadata) {
                 currentMetadata = metadata;
+                websiteSystrayRegistry.trigger('CONTENT-UPDATED');
             },
             get currentWebsite() {
                 const currentWebsite = websites.find(w => w.id === currentWebsiteId);

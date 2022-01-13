@@ -75,11 +75,7 @@
                     </t>
                 </div>
 
-                <div class="o_menu_systray d-none d-md-flex ml-auto" groups="website.group_website_publisher">
-                    <t t-call="website.website_publisher">
-                        <t t-set="extra_classes" t-valuef="o_menu_systray_item"/>
-                        <t t-set="desktop_navbar" t-value="true"/>
-                    </t>
+                <div class="o_menu_systray d-none d-md-flex" groups="website.group_website_publisher">
                     <!-- Mobile preview -->
                     <div class="o_mobile_preview o_menu_systray_item" id="mobile-menu">
                         <a data-action="show-mobile-preview" href="#" accesskey="v"><span title="Mobile preview" role="img" aria-label="Mobile preview" class="fa fa-lg fa-mobile"/></a>

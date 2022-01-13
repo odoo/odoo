@@ -20,6 +20,8 @@ patch(NavBar.prototype, 'website_navbar', {
         if (this.env.debug && !websiteSystrayRegistry.contains('web.debug_mode_menu')) {
             websiteSystrayRegistry.add('web.debug_mode_menu', registry.category('systray').get('web.debug_mode_menu'), {sequence: 100});
         }
+
+        useBus(websiteSystrayRegistry, 'CONTENT-UPDATED', () => this.render(true));
     },
 
     /**
