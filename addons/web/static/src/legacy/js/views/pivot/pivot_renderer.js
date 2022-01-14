@@ -163,6 +163,13 @@
          * @returns {string} Formatted value
          */
         _getFormattedValue(cell) {
+            const field = this.props.fields[cell.measure];
+            if (["date", "datetime"].includes(field.type)) {
+                if (!cell.value) {
+                    return "-";
+                }
+                return cell.value;
+            }
             const type = this.props.widgets[cell.measure] ||
                 (this.props.fields[cell.measure].type === 'many2one' ? 'integer' : this.props.fields[cell.measure].type);
             const formatter = field_utils.format[type];

@@ -3651,5 +3651,92 @@ QUnit.module('Views', {
 
         pivot.destroy();
     });
+
+    QUnit.test("a pivot view can use a measure with date type", async function (assert) {
+        assert.expect(2);
+
+        serverData.models.partner.fields.date.group_operator = "max";
+
+        let readGroupCount = 0;
+        const pivot = await createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: `
+                <pivot>
+                <field name="product_id" type="row"/>
+                <field name="date" type="measure"/>
+                </pivot>
+            `,
+            async mockRPC(route, args) {
+                if (args.method === "read_group") {
+                    readGroupCount++;
+                    if (readGroupCount === 1) {
+                        return [{ __count: 4, date: "2016-12-15" }];
+                    } else {
+                        return [
+                            { __count: 3, date: "2016-12-15", product_id: [1, "Product 1"] },
+                            { __count: 1, date: "2016-10-13", product_id: [2, "Product 2"] },
+                            { __count: 3, date: false, product_id: [3, "Product 3"] },
+                        ];
+                    }
+                }
+            },
+        });
+
+        let values = ["2016-12-15", "2016-12-15", "2016-10-13", "-"];
+        assert.strictEqual(getCurrentValues(pivot), values.join(","));
+
+        await testUtils.dom.click(pivot.el.querySelector("th.o_pivot_measure_row"));
+
+        values = ["2016-12-15", "2016-10-13", "2016-12-15", "-"];
+        assert.strictEqual(getCurrentValues(pivot), values.join(","));
+
+        pivot.destroy();
+    });
+
+    QUnit.test("a pivot view can use a measure with datetime type", async function (assert) {
+        assert.expect(2);
+
+        serverData.models.partner.fields.date.type = "datetime";
+        serverData.models.partner.fields.date.group_operator = "max";
+        // mockRPC below makes as if serverData.models.partner.records[3].date = false;
+
+        let readGroupCount = 0;
+        const pivot = await createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: `
+                <pivot>
+                    <field name="product_id" type="row"/>
+                    <field name="date" type="measure"/>
+                </pivot>
+            `,
+            async mockRPC(route, args) {
+                if (args.method === "read_group") {
+                    readGroupCount++;
+                    if (readGroupCount === 1) {
+                        return [{ __count: 4, date: "2016-12-15 16:06:06" }];
+                    } else {
+                        return [
+                            { __count: 3, date: "2016-12-15 16:06:06", product_id: [1, "Product 1"] },
+                            { __count: 1, date: "2016-10-13 05:25:25", product_id: [2, "Product 2"] },
+                            { __count: 3, date: false, product_id: [3, "Product 3"] },
+                        ];
+                    }
+                }
+            },
+        });
+
+        let values = ["2016-12-15 16:06:06", "2016-12-15 16:06:06", "2016-10-13 05:25:25", "-"];
+        assert.strictEqual(getCurrentValues(pivot), values.join(","));
+
+        await testUtils.dom.click(pivot.el.querySelector("th.o_pivot_measure_row"));
+
+        values = ["2016-12-15 16:06:06", "2016-10-13 05:25:25", "2016-12-15 16:06:06", "-"];
+        assert.strictEqual(getCurrentValues(pivot), values.join(","));
+        pivot.destroy();
+    });
 });
 });

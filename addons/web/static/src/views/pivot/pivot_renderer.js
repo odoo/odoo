@@ -26,6 +26,12 @@ export class PivotRenderer extends Component {
      */
     getFormattedValue(cell) {
         const field = this.model.metaData.measures[cell.measure];
+        if (["date", "datetime"].includes(field.type)) {
+            if (!cell.value) {
+                return "-";
+            }
+            return cell.value;
+        }
         let formatType = this.model.metaData.widgets[cell.measure];
         if (!formatType) {
             const fieldType = field.type;
