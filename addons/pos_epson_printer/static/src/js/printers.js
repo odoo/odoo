@@ -10,8 +10,7 @@ var _t = core._t;
 
 var EpsonPrinter = core.Class.extend(PrinterMixin, {
     init: function (ip, pos) {
-        PrinterMixin.init.call(this, arguments);
-        this.pos = pos;
+        PrinterMixin.init.call(this, pos);
         this.ePOSDevice = new epson.ePOSDevice();
         var port = window.location.protocol === 'http:' ? '8008' : '8043';
         this.ePOSDevice.connect(ip, port, this.callback_connect.bind(this), {eposprint: true});
