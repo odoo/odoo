@@ -154,7 +154,7 @@ class AccountEdiFormat(models.Model):
         if invoice.l10n_it_einvoice_id:
             invoice.l10n_it_einvoice_id.unlink()
         res = invoice.invoice_generate_xml()
-        if len(invoice.commercial_partner_id.l10n_it_pa_index or '') == 6:
+        if invoice._is_commercial_partner_pa():
             invoice.message_post(
                 body=(_("Invoices for PA are not managed by Odoo, you can download the document and send it on your own."))
             )
