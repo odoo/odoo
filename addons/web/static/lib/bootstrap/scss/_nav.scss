@@ -1,7 +1,7 @@
 // Base class
 //
 // Kickstart any navigation component with a set of style resets. Works with
-// `<nav>`s or `<ul>`s.
+// `<nav>`s, `<ul>`s or `<ol>`s.
 
 .nav {
   display: flex;
@@ -14,9 +14,16 @@
 .nav-link {
   display: block;
   padding: $nav-link-padding-y $nav-link-padding-x;
+  @include font-size($nav-link-font-size);
+  font-weight: $nav-link-font-weight;
+  color: $nav-link-color;
+  text-decoration: if($link-decoration == none, null, none);
+  @include transition($nav-link-transition);
 
-  @include hover-focus {
-    text-decoration: none;
+  &:hover,
+  &:focus {
+    color: $nav-link-hover-color;
+    text-decoration: if($link-hover-decoration == underline, none, null);
   }
 
   // Disabled state lightens text
@@ -34,16 +41,17 @@
 .nav-tabs {
   border-bottom: $nav-tabs-border-width solid $nav-tabs-border-color;
 
-  .nav-item {
-    margin-bottom: -$nav-tabs-border-width;
-  }
-
   .nav-link {
+    margin-bottom: -$nav-tabs-border-width;
+    background: none;
     border: $nav-tabs-border-width solid transparent;
     @include border-top-radius($nav-tabs-border-radius);
 
-    @include hover-focus {
+    &:hover,
+    &:focus {
       border-color: $nav-tabs-link-hover-border-color;
+      // Prevents active .nav-link tab overlapping focus outline of previous/next .nav-link
+      isolation: isolate;
     }
 
     &.disabled {
@@ -75,13 +83,15 @@
 
 .nav-pills {
   .nav-link {
+    background: none;
+    border: 0;
     @include border-radius($nav-pills-border-radius);
   }
 
   .nav-link.active,
   .show > .nav-link {
     color: $nav-pills-link-active-color;
-    background-color: $nav-pills-link-active-bg;
+    @include gradient-bg($nav-pills-link-active-bg);
   }
 }
 
@@ -91,6 +101,7 @@
 //
 
 .nav-fill {
+  > .nav-link,
   .nav-item {
     flex: 1 1 auto;
     text-align: center;
@@ -98,10 +109,18 @@
 }
 
 .nav-justified {
+  > .nav-link,
   .nav-item {
     flex-basis: 0;
     flex-grow: 1;
     text-align: center;
+  }
+}
+
+.nav-fill,
+.nav-justified {
+  .nav-item .nav-link {
+    width: 100%; // Make sure button will grow
   }
 }
 

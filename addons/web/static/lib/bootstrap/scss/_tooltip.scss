@@ -14,7 +14,7 @@
 
   &.show { opacity: $tooltip-opacity; }
 
-  .arrow {
+  .tooltip-arrow {
     position: absolute;
     display: block;
     width: $tooltip-arrow-width;
@@ -32,28 +32,28 @@
 .bs-tooltip-top {
   padding: $tooltip-arrow-height 0;
 
-  .arrow {
+  .tooltip-arrow {
     bottom: 0;
 
     &::before {
-      top: 0;
-      border-width: $tooltip-arrow-height ($tooltip-arrow-width / 2) 0;
+      top: -1px;
+      border-width: $tooltip-arrow-height ($tooltip-arrow-width * .5) 0;
       border-top-color: $tooltip-arrow-color;
     }
   }
 }
 
-.bs-tooltip-right {
+.bs-tooltip-end {
   padding: 0 $tooltip-arrow-height;
 
-  .arrow {
+  .tooltip-arrow {
     left: 0;
     width: $tooltip-arrow-height;
     height: $tooltip-arrow-width;
 
     &::before {
-      right: 0;
-      border-width: ($tooltip-arrow-width / 2) $tooltip-arrow-height ($tooltip-arrow-width / 2) 0;
+      right: -1px;
+      border-width: ($tooltip-arrow-width * .5) $tooltip-arrow-height ($tooltip-arrow-width * .5) 0;
       border-right-color: $tooltip-arrow-color;
     }
   }
@@ -62,45 +62,45 @@
 .bs-tooltip-bottom {
   padding: $tooltip-arrow-height 0;
 
-  .arrow {
+  .tooltip-arrow {
     top: 0;
 
     &::before {
-      bottom: 0;
-      border-width: 0 ($tooltip-arrow-width / 2) $tooltip-arrow-height;
+      bottom: -1px;
+      border-width: 0 ($tooltip-arrow-width * .5) $tooltip-arrow-height;
       border-bottom-color: $tooltip-arrow-color;
     }
   }
 }
 
-.bs-tooltip-left {
+.bs-tooltip-start {
   padding: 0 $tooltip-arrow-height;
 
-  .arrow {
+  .tooltip-arrow {
     right: 0;
     width: $tooltip-arrow-height;
     height: $tooltip-arrow-width;
 
     &::before {
-      left: 0;
-      border-width: ($tooltip-arrow-width / 2) 0 ($tooltip-arrow-width / 2) $tooltip-arrow-height;
+      left: -1px;
+      border-width: ($tooltip-arrow-width * .5) 0 ($tooltip-arrow-width * .5) $tooltip-arrow-height;
       border-left-color: $tooltip-arrow-color;
     }
   }
 }
 
 .bs-tooltip-auto {
-  &[x-placement^="top"] {
+  &[data-popper-placement^="top"] {
     @extend .bs-tooltip-top;
   }
-  &[x-placement^="right"] {
-    @extend .bs-tooltip-right;
+  &[data-popper-placement^="right"] {
+    @extend .bs-tooltip-end;
   }
-  &[x-placement^="bottom"] {
+  &[data-popper-placement^="bottom"] {
     @extend .bs-tooltip-bottom;
   }
-  &[x-placement^="left"] {
-    @extend .bs-tooltip-left;
+  &[data-popper-placement^="left"] {
+    @extend .bs-tooltip-start;
   }
 }
 
