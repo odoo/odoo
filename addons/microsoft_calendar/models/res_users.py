@@ -10,7 +10,7 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.loglevels import exception_to_unicode
 from odoo.addons.microsoft_account.models.microsoft_service import MICROSOFT_TOKEN_ENDPOINT
-from odoo.addons.microsoft_calendar.utils.microsoft_calendar import MicrosoftCalendarService, InvalidSyncToken
+from odoo.addons.microsoft_calendar.utils.microsoft_calendar import InvalidSyncToken
 
 _logger = logging.getLogger(__name__)
 
@@ -25,12 +25,12 @@ class User(models.Model):
 
     def _get_microsoft_calendar_token(self):
         self.ensure_one()
-        if self._is_microsoft_calendar_valid():
+        if self.microsoft_calendar_rtoken and not self._is_microsoft_calendar_valid():
             self._refresh_microsoft_calendar_token()
         return self.microsoft_calendar_token
 
     def _is_microsoft_calendar_valid(self):
-        return self.microsoft_calendar_token_validity and self.microsoft_calendar_token_validity < (fields.Datetime.now() + timedelta(minutes=1))
+        return self.microsoft_calendar_token_validity and self.microsoft_calendar_token_validity >= (fields.Datetime.now() + timedelta(minutes=1))
 
     def _refresh_microsoft_calendar_token(self):
         self.ensure_one()
@@ -50,7 +50,9 @@ class User(models.Model):
         }
 
         try:
-            dummy, response, dummy = self.env['microsoft.service']._do_request(MICROSOFT_TOKEN_ENDPOINT, params=data, headers=headers, method='POST', preuri='')
+            dummy, response, dummy = self.env['microsoft.service']._do_request(
+                MICROSOFT_TOKEN_ENDPOINT, params=data, headers=headers, method='POST', preuri=''
+            )
             ttl = response.get('expires_in')
             self.write({
                 'microsoft_calendar_token': response.get('access_token'),
@@ -65,35 +67,38 @@ class User(models.Model):
                     'microsoft_calendar_token': False,
                     'microsoft_calendar_token_validity': False,
                     'microsoft_calendar_sync_token': False,
-                })                
+                })
                 self.env.cr.commit()
             error_key = error.response.json().get("error", "nc")
-            error_msg = _("Something went wrong during your token generation. Maybe your Authorization Code is invalid or already expired [%s]", error_key)
+            error_msg = _(
+                "An error occurred while generating the token. Your authorization code may be invalid or has already expired [%s]. "
+                "You should check your Client ID and secret on the Microsoft Azure portal or try to stop and restart your calendar synchronisation.",
+                error_key)
             raise UserError(error_msg)
 
-    def _sync_microsoft_calendar(self, calendar_service: MicrosoftCalendarService):
+    def _sync_microsoft_calendar(self):
         self.ensure_one()
+        calendar_service = self.env["calendar.event"]._get_microsoft_service()
         full_sync = not bool(self.microsoft_calendar_sync_token)
         with microsoft_calendar_token(self) as token:
             try:
-                events, next_sync_token, default_reminders = calendar_service.get_events(self.microsoft_calendar_sync_token, token=token)
+                events, next_sync_token = calendar_service.get_events(self.microsoft_calendar_sync_token, token=token)
             except InvalidSyncToken:
-                events, next_sync_token, default_reminders = calendar_service.get_events(token=token)
+                events, next_sync_token = calendar_service.get_events(token=token)
                 full_sync = True
         self.microsoft_calendar_sync_token = next_sync_token
 
         # Microsoft -> Odoo
-        recurrences = events.filter(lambda e: e.is_recurrent())
-        synced_events, synced_recurrences = self.env['calendar.event']._sync_microsoft2odoo(events, default_reminders=default_reminders) if events else (self.env['calendar.event'], self.env['calendar.recurrence'])
+        synced_events, synced_recurrences = self.env['calendar.event']._sync_microsoft2odoo(events) if events else (self.env['calendar.event'], self.env['calendar.recurrence'])
 
         # Odoo -> Microsoft
         recurrences = self.env['calendar.recurrence']._get_microsoft_records_to_sync(full_sync=full_sync)
         recurrences -= synced_recurrences
-        recurrences._sync_odoo2microsoft(calendar_service)
+        recurrences._sync_odoo2microsoft()
         synced_events |= recurrences.calendar_event_ids
 
         events = self.env['calendar.event']._get_microsoft_records_to_sync(full_sync=full_sync)
-        (events - synced_events)._sync_odoo2microsoft(calendar_service)
+        (events - synced_events)._sync_odoo2microsoft()
 
         return bool(events | synced_events) or bool(recurrences | synced_recurrences)
 
@@ -101,10 +106,11 @@ class User(models.Model):
     def _sync_all_microsoft_calendar(self):
         """ Cron job """
         users = self.env['res.users'].search([('microsoft_calendar_rtoken', '!=', False)])
-        microsoft = MicrosoftCalendarService(self.env['microsoft.service'])
         for user in users:
             _logger.info("Calendar Synchro - Starting synchronization for %s", user)
             try:
-                user.with_user(user).sudo()._sync_microsoft_calendar(microsoft)
+                user.with_user(user).sudo()._sync_microsoft_calendar()
+                self.env.cr.commit()
             except Exception as e:
                 _logger.exception("[%s] Calendar Synchro - Exception : %s !", user, exception_to_unicode(e))
+                self.env.cr.rollback()
