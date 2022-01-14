@@ -22,8 +22,8 @@ class BarcodeRule(models.Model):
             ('package', 'Package'),
             ('use_date', 'Best before Date'),
             ('expiration_date', 'Expiration Date'),
-            ('package_type', 'Packaging Type'),
-            ('packaging_date', 'Packaging Date'),
+            ('package_type', 'Package Type'),
+            ('pack_date', 'Pack Date'),
         ], ondelete={
             'quantity': 'set default',
             'location': 'set default',
@@ -33,7 +33,7 @@ class BarcodeRule(models.Model):
             'use_date': 'set default',
             'expiration_date': 'set default',
             'package_type': 'set default',
-            'packaging_date': 'set default',
+            'pack_date': 'set default',
         })
     is_gs1_nomenclature = fields.Boolean(related="barcode_nomenclature_id.is_gs1_nomenclature")
     gs1_content_type = fields.Selection([
