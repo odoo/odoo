@@ -672,7 +672,6 @@ class PosOrder(models.Model):
             'datas': ticket,
             'res_model': 'pos.order',
             'res_id': orders[:1].id,
-            'store_fname': filename,
             'mimetype': 'image/jpeg',
         })
         template_data = {
@@ -691,7 +690,6 @@ class PosOrder(models.Model):
                 'name': filename,
                 'type': 'binary',
                 'datas': base64.b64encode(report[0]),
-                'store_fname': filename,
                 'res_model': 'pos.order',
                 'res_id': orders[:1].id,
                 'mimetype': 'application/x-pdf'
