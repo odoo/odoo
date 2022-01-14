@@ -77,8 +77,8 @@ BlockUI.template = tags.xml`
             <img src="/web/static/img/spin.png" alt="Loading..."/>
         </div>
         <div class="o_message">
-            <t t-raw="state.line1"/> <br/>
-            <t t-raw="state.line2"/>
+            <t t-esc="state.line1"/> <br/>
+            <t t-esc="state.line2"/>
         </div>
       </t>
     </div>`;
