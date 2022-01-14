@@ -14,7 +14,7 @@ class SaleOrderOption(models.Model):
         store=True, readonly=False, precompute=True,
         sanitize_attributes=False, translate=html_translate)
 
-    @api.depends('product_id', 'uom_id')
+    @api.depends('product_id')
     def _compute_website_description(self):
         for option in self:
             if not option.product_id:
