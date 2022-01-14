@@ -602,7 +602,7 @@ class MailCase(MockEmail):
         return cls.email_template
 
 
-    def _generate_notify_recipients(self, partners):
+    def _generate_notify_recipients(self, partners, record=None):
         """ Tool method to generate recipients data according to structure used
         in notification methods. Purpose is to allow testing of internals of
         some notification methods, notably testing links or group-based notification
@@ -612,11 +612,13 @@ class MailCase(MockEmail):
         """
         return [
             {'id': partner.id,
-             'active': True,
-             'share': partner.partner_share,
+             'active': partner.active,
+             'is_follower': partner in record.message_partner_ids if record else False,
              'groups': partner.user_ids.groups_id.ids,
              'notif': partner.user_ids.notification_type or 'email',
+             'share': partner.partner_share,
              'type': 'user' if partner.user_ids and not partner.partner_share else partner.user_ids and 'portal' or 'customer',
+             'ushare': all(user.share for user in partner.user_ids) if partner.user_ids else False,
             } for partner in partners
         ]
 

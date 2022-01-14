@@ -2503,15 +2503,15 @@ class MailThread(models.AbstractModel):
         TDE/XDO TODO: flag rdata directly, with for example r['notif'] = 'ocn_client' and r['needaction']=False
         and correctly override _notify_get_recipients
 
-        :return list recipients_data: this is a list of recipients information
-          composed of a dictionary {
-            'active': partner.active;
+        :return list recipients_data: this is a list of recipients information (see
+          ``MailFollowers._get_recipient_data()`` for more details) formatted like
+          [{'active': partner.active;
             'id': id of the res.partner;
             'groups': res.group IDs if linked to a user;
             'notif': 'inbox', 'email', 'sms' (SMS App);
             'share': partner.partner_share;
             'type': 'customer', 'portal', 'user;'
-          }
+           }, {...}]
         """
         msg_sudo = message.sudo()
         # get values from msg_vals or from message if msg_vals doen't exists
@@ -2521,27 +2521,17 @@ class MailThread(models.AbstractModel):
         # is it possible to have record but no subtype_id ?
         recipients_data = []
 
-        res = self.env['mail.followers']._get_recipient_data(self, message_type, subtype_id, pids)
+        res = self.env['mail.followers']._get_recipient_data(self, message_type, subtype_id, pids)[self.id if self else 0]
         if not res:
             return recipients_data
 
         author_id = msg_vals.get('author_id') or message.author_id.id
-        for pid, active, pshare, notif, groups in res:
+        for pid, pdata in res.items():
             if pid and pid == author_id and not self.env.context.get('mail_notify_author'):  # do not notify the author of its own messages
                 continue
-            if pid:
-                if active is False:
-                    continue
-                pdata = {'id': pid, 'active': active, 'share': pshare, 'groups': groups or []}
-                if notif == 'inbox':
-                    recipients_data.append(dict(pdata, notif=notif, type='user'))
-                elif not pshare and notif:  # has an user and is not shared, is therefore user
-                    recipients_data.append(dict(pdata, notif=notif, type='user'))
-                elif pshare and notif:  # has an user but is shared, is therefore portal
-                    recipients_data.append(dict(pdata, notif=notif, type='portal'))
-                else:  # has no user, is therefore customer
-                    recipients_data.append(dict(pdata, notif=notif if notif else 'email', type='customer'))
-
+            if pdata['active'] is False:
+                continue
+            recipients_data.append(pdata)
         return recipients_data
 
     def _notify_get_recipients_groups(self, msg_vals=None):
