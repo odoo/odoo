@@ -9,7 +9,7 @@ import { debounce } from "@web/core/utils/timing";
 import { _lt } from "@web/core/l10n/translation";
 
 const { Component, hooks } = owl;
-const { onWillStart, useState } = hooks;
+const { onWillStart, useRef, useState } = hooks;
 
 const DEFAULT_PLACEHOLDER = _lt("Search...");
 const DEFAULT_EMPTY_MESSAGE = _lt("No result found");
@@ -92,6 +92,8 @@ export class CommandPalette extends Component {
         this.state = useState({
             commands: [],
         });
+
+        this.listboxRef = useRef("listbox");
 
         onWillStart(() => this.setCommandPaletteConfig(this.props.config));
     }
@@ -205,9 +207,8 @@ export class CommandPalette extends Component {
         }
         this.selectCommand(nextIndex);
 
-        const listbox = this.el.querySelector(".o_command_palette_listbox");
-        const command = listbox.querySelector(`#o_command_${nextIndex}`);
-        scrollTo(command, { scrollable: listbox });
+        const command = this.listboxRef.el.querySelector(`#o_command_${nextIndex}`);
+        scrollTo(command, { scrollable: this.listboxRef.el });
     }
 
     onCommandClicked(index) {
