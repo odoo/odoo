@@ -75,12 +75,12 @@ QUnit.module('Barcode GS1 Parser', {
                         gs1_decimal_usage: false
                     }, {
                         id: 6,
-                        name: "Packaging date (YYMMDD)",
+                        name: "Pack date (YYMMDD)",
                         barcode_nomenclature_id: 2,
                         sequence: 103,
                         encoding: "gs1-128",
                         pattern: "(13)(\\d{6})",
-                        type: "packaging_date",
+                        type: "pack_date",
                         gs1_content_type: "date",
                         gs1_decimal_usage: false
                     }, {
