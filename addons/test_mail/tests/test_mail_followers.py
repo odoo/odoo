@@ -453,27 +453,35 @@ class RecipientsNotificationTest(TestMailCommon):
              'partner_id': cls.common_partner.id,
             }
         ])
+        (cls.user_1 + cls.user_2).flush()
 
     def assertRecipientsData(self, recipients_data, records, partners, partner_to_users=None):
         """ Custom assert as recipients structure is custom and may change due
-        to some implementation choice. Currently supporting only single-record
-        computation. """
-        self.assertEqual(len(recipients_data), len(partners.ids))
-        for partner in partners:
-            partner_data = next(r for r in recipients_data if r[0] == partner.id)
-            (pid, active, pshare, notif, groups) = partner_data
-            if partner_to_users and partner_to_users.get(pid):  #helps making test explicit
-                user = partner_to_users[pid]
-            else:
-                user = partner.user_ids[-1] if partner.user_ids else self.env['res.users']
-            self.assertEqual(active, partner.active)
-            if user:
-                self.assertEqual(set(groups), set(user.groups_id.ids))
-                self.assertEqual(notif, user.notification_type)
-            else:
-                self.assertEqual(set(groups), {None})
-                self.assertEqual(notif, None)
-            self.assertEqual(pshare, partner.partner_share)
+        to some implementation choice. """
+        self.assertEqual(set(recipients_data.keys()), set(records.ids))
+        for record in records:
+            record_data = recipients_data[record.id]
+            self.assertEqual(set(record_data.keys()), set(partners.ids))
+            for partner in partners:
+                partner_data = record_data[partner.id]
+                if partner_to_users and partner_to_users.get(partner.id):  #helps making test explicit
+                    user = partner_to_users[partner.id]
+                else:
+                    user = next((user for user in partner.user_ids if not user.share), self.env['res.users'])
+                    if not user:
+                        user = next((user for user in partner.user_ids), self.env['res.users'])
+                self.assertEqual(partner_data['active'], partner.active)
+                if user:
+                    self.assertEqual(partner_data['groups'], set(user.groups_id.ids))
+                    self.assertEqual(partner_data['notif'], user.notification_type)
+                    self.assertEqual(partner_data['uid'], user.id)
+                else:
+                    self.assertEqual(partner_data['groups'], set())
+                    self.assertEqual(partner_data['notif'], 'email')
+                    self.assertFalse(partner_data['uid'])
+                self.assertEqual(partner_data['is_follower'], partner in record.message_partner_ids)
+                self.assertEqual(partner_data['share'], partner.partner_share)
+                self.assertEqual(partner_data['ushare'], user.share)
 
     @users('employee')
     def test_notification_nodupe(self):
@@ -490,13 +498,13 @@ class RecipientsNotificationTest(TestMailCommon):
             ('res_partner_id', '=', self.common_partner.id)
         ])
         self.assertEqual(len(notif), 1)
-        self.assertEqual(notif.notification_type, 'email')
+        self.assertEqual(notif.notification_type, 'inbox', 'Multi users should take internal users if possible')
 
-        res = self.env['mail.followers']._get_recipient_data(
+        recipients_data = self.env['mail.followers']._get_recipient_data(
             test, 'comment', self.env.ref('mail.mt_comment').id,
             pids=self.common_partner.ids)
-        self.assertRecipientsData(res, test, self.common_partner + self.partner_employee,
-                                  partner_to_users={self.common_partner.id: self.user_1})
+        self.assertRecipientsData(recipients_data, test, self.common_partner + self.partner_employee,
+                                  partner_to_users={self.common_partner.id: self.user_2})
 
     @users('employee')
     def test_notification_unlink(self):
@@ -556,6 +564,8 @@ class RecipientsNotificationTest(TestMailCommon):
              'partner_id': shared_partner.id,
             }
         ])
+        (user_2_1 + user_2_2 + user_2_3).flush()
+
         # just ensure current share status
         self.assertFalse(shared_partner.partner_share)
         self.assertTrue(user_2_1.share)
@@ -566,7 +576,7 @@ class RecipientsNotificationTest(TestMailCommon):
 
         with self.assertSinglePostNotifications(
                 [{'group': 'customer', 'partner': shared_partner,
-                  'status': 'sent', 'type': 'email'}],
+                  'status': 'sent', 'type': 'inbox'}],
                 message_info={'content': 'User Choice Notification'}):
             test.message_post(
                 body='<p>User Choice Notification</p>',
@@ -579,13 +589,10 @@ class RecipientsNotificationTest(TestMailCommon):
             test, 'comment', self.env.ref('mail.mt_comment').id,
             pids=shared_partner.ids)
         self.assertRecipientsData(recipients_data, test, self.partner_employee + shared_partner,
-                                  partner_to_users={shared_partner.id: user_2_1})
+                                  partner_to_users={shared_partner.id: user_2_2})
 
     @users('employee')
     def test_recipients_fetch(self):
-        """ Test internals of ``_get_recipient_data`` to ease its maintenance.
-        Even if it is low-level knowing what it produces allows to write short
-        tests. """
         test_records = self.env['mail.test.simple'].create([
             {'email_from': 'ignasse@example.com',
              'name': 'Test %s' % idx,
@@ -640,13 +647,31 @@ class RecipientsNotificationTest(TestMailCommon):
             test_records[0], 'comment', False,
             pids=(self.common_partner + self.partner_admin).ids
         )
-        # TDE FIXME: currently crashes as no user infomation is fetched for PIDs
-        # self.assertRecipientsData(recipients_data, test_records[0], self.common_partner + self.partner_admin)
-        self.assertEqual(len(recipients_data), 2)
-        for partner in self.common_partner + self.partner_admin:
-            partner_data = next(r for r in recipients_data if r[0] == partner.id)
-            (_pid, active, pshare, notif, groups) = partner_data
-            self.assertEqual(active, partner.active)
-            self.assertEqual(groups, None, 'FIXME: currently not fetching any group information')
-            self.assertEqual(notif, 'inbox' if partner == self.partner_admin else 'email')
-            self.assertEqual(pshare, partner.partner_share)
+        self.assertRecipientsData(recipients_data, test_records[0], self.common_partner + self.partner_admin)
+
+        # multi mode
+        test_records[1].message_subscribe(self.partner_portal.ids)
+        test_records[0:4].message_subscribe(self.common_partner.ids)
+        recipients_data = self.env['mail.followers']._get_recipient_data(
+            test_records, 'comment', self.env.ref('mail.mt_comment').id,
+            pids=self.partner_admin.ids
+        )
+        # 0: portal is follower but does not follow comment + common partner (+ admin as pid)
+        recipients_data_1 = dict((r, recipients_data[r]) for r in recipients_data if r in  test_records[0:1].ids)
+        self.assertRecipientsData(recipients_data_1, test_records[0:1], self.env.user.partner_id + self.common_partner + self.partner_admin)
+        # 1: portal is follower with comment + common partner (+ admin as pid)
+        recipients_data_1 = dict((r, recipients_data[r]) for r in recipients_data if r in  test_records[1:2].ids)
+        self.assertRecipientsData(recipients_data_1, test_records[1:2], self.env.user.partner_id + self.common_partner + self.partner_portal + self.partner_admin)
+        # 2-3: common partner (+ admin as pid)
+        recipients_data_2 = dict((r, recipients_data[r]) for r in recipients_data if r in  test_records[2:4].ids)
+        self.assertRecipientsData(recipients_data_2, test_records[2:4], self.env.user.partner_id + self.common_partner + self.partner_admin)
+        # 4+: env user partner (+ admin as pid)
+        recipients_data_3 = dict((r, recipients_data[r]) for r in recipients_data if r in  test_records[4:].ids)
+        self.assertRecipientsData(recipients_data_3, test_records[4:], self.env.user.partner_id + self.partner_admin)
+
+        # multi mode, pids only
+        recipients_data = self.env['mail.followers']._get_recipient_data(
+            test_records, 'comment', False,
+            pids=(self.env.user.partner_id + self.partner_admin).ids
+        )
+        self.assertRecipientsData(recipients_data, test_records, self.env.user.partner_id + self.partner_admin)

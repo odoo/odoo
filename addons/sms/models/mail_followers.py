@@ -1,24 +1,29 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import models
 
 
 class Followers(models.Model):
     _inherit = ['mail.followers']
 
     def _get_recipient_data(self, records, message_type, subtype_id, pids=None):
-        if message_type == 'sms':
-            if pids is None:
-                sms_pids = records._sms_get_default_partners().ids
-            else:
-                sms_pids = pids
-            res = super(Followers, self)._get_recipient_data(records, message_type, subtype_id, pids=pids)
-            new_res = []
-            for pid, active, pshare, notif, groups in res:
-                if pid and pid in sms_pids:
-                    notif = 'sms'
-                new_res.append((pid, active, pshare, notif, groups))
-            return new_res
-        else:
+        if message_type != 'sms' or not (pids or records):
             return super(Followers, self)._get_recipient_data(records, message_type, subtype_id, pids=pids)
+
+        if pids is None and records:
+            records_pids = dict(
+                (record.id, record._sms_get_default_partners().ids)
+                for record in records
+            )
+        elif pids and records:
+            records_pids = dict((record.id, pids) for record in records)
+        else:
+            records_pids = {0: pids if pids else []}
+        recipients_data = super(Followers, self)._get_recipient_data(records, message_type, subtype_id, pids=pids)
+        for rid, rdata in recipients_data.items():
+            sms_pids = records_pids.get(rid) or []
+            for pid, pdata in rdata.items():
+                if pid in sms_pids:
+                    pdata['notif'] = 'sms'
+        return recipients_data

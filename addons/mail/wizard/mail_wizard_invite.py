@@ -70,25 +70,14 @@ class Invite(models.TransientModel):
                     'reply_to_force_new': True,
                     'email_add_signature': True,
                 })
-                partners_data = []
-                recipients_data = self.env['mail.followers']._get_recipient_data(document, 'comment', False, pids=new_partners.ids)
-                for pid, active, pshare, notif, groups in recipients_data:
-                    pdata = {
-                        'active': active,
-                        'id': pid,
-                        'groups': groups or [],
-                        'notif': 'email',
-                        'share': pshare,
-                    }
-                    if not pshare and notif:  # has an user and is not shared, is therefore user
-                        partners_data.append(dict(pdata, type='user'))
-                    elif pshare and notif:  # has an user and is shared, is therefore portal
-                        partners_data.append(dict(pdata, type='portal'))
-                    else:  # has no user, is therefore customer
-                        partners_data.append(dict(pdata, type='customer'))
+                email_partners_data = []
+                recipients_data = self.env['mail.followers']._get_recipient_data(document, 'comment', False, pids=new_partners.ids)[document.id]
+                for _pid, pdata in recipients_data.items():
+                    pdata['notif'] = 'email'
+                    email_partners_data.append(pdata)
 
                 document._notify_thread_by_email(
-                    message, partners_data,
+                    message, email_partners_data,
                     send_after_commit=False
                 )
                 # in case of failure, the web client must know the message was
