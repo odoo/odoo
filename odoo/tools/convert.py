@@ -579,10 +579,12 @@ form: module.record_id""" % (xml_id,)
                     elif field_type == 'boolean' and isinstance(f_val, str):
                         f_val = str2bool(f_val)
                     elif field_type == 'one2many':
-                        if isinstance(f_val, str):
-                            f_val = None
                         for child in field.findall('./record'):
                             sub_records.append((child, model._fields[f_name].inverse_name))
+                        if isinstance(f_val, str):
+                            # We do not want to write on the field since we will write
+                            # on the childrens' parents later
+                            continue
             res[f_name] = f_val
         if extra_vals:
             res.update(extra_vals)

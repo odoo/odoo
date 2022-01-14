@@ -188,6 +188,37 @@ class TestEvalXML(common.TransactionCase):
         self.assertEqual(args, ())
         self.assertEqual(kwargs, {})
 
+    def test_o2m_sub_records(self):
+        # patch the model's class with a proxy that copies the argument
+        Model = self.registry['test_convert.test_model']
+        call_args = []
+
+        def _load_records(self, data_list, update=False):
+            call_args.append(data_list)
+            # pylint: disable=bad-super-call
+            return super(Model, self)._load_records(data_list, update=update)
+
+        self.patch(Model, '_load_records', _load_records)
+
+        # import a record with a subrecord
+        xml = ET.fromstring("""
+            <record id="test_convert.test_o2m_record" model="test_convert.test_model">
+                <field name="usered_ids">
+                    <record id="test_convert.test_o2m_subrecord" model="test_convert.usered">
+                        <field name="name">subrecord</field>
+                    </record>
+                </field>
+            </record>
+        """.strip())
+        obj = xml_import(self.cr, 'test_convert', None, 'init')
+        obj._tag_record(xml)
+
+        # check that field 'usered_ids' is not passed
+        self.assertEqual(len(call_args), 1)
+        for data in call_args[0]:
+            self.assertNotIn('usered_ids', data['values'],
+                             "Unexpected value in O2M When loading XML with sub records")
+
     @unittest.skip("not tested")
     def test_xml(self):
         pass

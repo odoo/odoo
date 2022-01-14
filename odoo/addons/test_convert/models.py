@@ -7,6 +7,8 @@ class TestModel(models.Model):
     _name = 'test_convert.test_model'
     _description = "Test Convert Model"
 
+    usered_ids = fields.One2many('test_convert.usered', 'test_id')
+
     @api.model
     def action_test_date(self, today_date):
         return True
@@ -25,6 +27,7 @@ class Usered(models.Model):
 
     name = fields.Char()
     user_id = fields.Many2one('res.users', default=lambda self: self.env.user)
+    test_id = fields.Many2one('test_convert.test_model')
     tz = fields.Char(default=lambda self: self.env.context.get('tz') or self.env.user.tz)
 
     @api.model
