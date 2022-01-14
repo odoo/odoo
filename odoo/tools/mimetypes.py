@@ -179,7 +179,7 @@ else:
         _guesser = ms.buffer
 
     def guess_mimetype(bin_data, default=None):
-        mimetype = _guesser(bin_data)
+        mimetype = _guesser(bin_data[:1024])
         # upgrade incorrect mimetype to official one, fixed upstream
         # https://github.com/file/file/commit/1a08bb5c235700ba623ffa6f3c95938fe295b262
         if mimetype == 'image/svg':
