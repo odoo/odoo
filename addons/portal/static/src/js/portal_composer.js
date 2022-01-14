@@ -158,14 +158,23 @@ var PortalComposer = publicWidget.Widget.extend({
      */
     _onSubmitButtonClick: function (ev) {
         ev.preventDefault();
-        if (!this.$inputTextarea.val().trim() && !this.attachments.length) {
+        const error = this._onSubmitCheckContent();
+        if (error) {
             this.$inputTextarea.addClass('border-danger');
-            const error = _t('Some fields are required. Please make sure to write a message or attach a document');
             this.$(".o_portal_chatter_composer_error").text(error).removeClass('d-none');
             return Promise.reject();
         } else {
             return this._chatterPostMessage(ev.currentTarget.getAttribute('data-action'));
         }
+    },
+
+    /**
+     * @private
+     */
+    _onSubmitCheckContent: function () {
+        if (!this.$inputTextarea.val().trim() && !this.attachments.length) {
+            return _t('Some fields are required. Please make sure to write a message or attach a document');
+        };
     },
 
     //--------------------------------------------------------------------------
