@@ -194,6 +194,13 @@ class RecurrenceRule(models.Model):
         ranges_to_create = (event_range for event_range in ranges if event_range not in existing_ranges)
         return synced_events, ranges_to_create
 
+    def _select_new_base_event(self):
+        """
+        when the base event is no more available (archived, deleted, etc.), a new one should be selected
+        """
+        for recurrence in self:
+            recurrence.base_event_id = recurrence._get_first_event()
+
     def _apply_recurrence(self, specific_values_creation=None, no_send_edit=False):
         """Create missing events in the recurrence and detach events which no longer
         follow the recurrence rules.
@@ -211,7 +218,7 @@ class RecurrenceRule(models.Model):
             if specific_values_creation:
                 ranges = set([(x[1], x[2]) for x in specific_values_creation if x[0] == recurrence.id])
             else:
-                ranges = set(recurrence._get_ranges(event.start, duration))
+                ranges = recurrence._range_calculation(event, duration)
 
             events_to_keep, ranges = recurrence._reconcile_events(ranges)
             keep |= events_to_keep
@@ -313,7 +320,7 @@ class RecurrenceRule(models.Model):
         data = {}
         day_list = ['mo', 'tu', 'we', 'th', 'fr', 'sa', 'su']
 
-        if 'Z' in rule_str and not date_start.tzinfo:
+        if 'Z' in rule_str and date_start and not date_start.tzinfo:
             date_start = pytz.utc.localize(date_start)
         rule = rrule.rrulestr(rule_str, dtstart=date_start)
 
@@ -385,6 +392,28 @@ class RecurrenceRule(models.Model):
                 starts = set(recurrence._get_occurrences(start))
                 synced_events |= recurrence.calendar_event_ids.filtered(lambda e: e.start in starts)
         return self.calendar_event_ids - synced_events
+
+    def _range_calculation(self, event, duration):
+        """ Calculate the range of recurrence when applying the recurrence
+        The following issues are taken into account:
+            start of period is sometimes in the past (weekly or monthly rule).
+            We can easily filter these range values but then the count value may be wrong...
+            In that case, we just increase the count value, recompute the ranges and dismiss the useless values
+        """
+        self.ensure_one()
+        original_count = self.end_type == 'count' and self.count
+        ranges = set(self._get_ranges(event.start, duration))
+        future_events = set((x, y) for x, y in ranges if x.date() >= event.start.date() and y.date() >= event.start.date())
+        if original_count and len(future_events) < original_count:
+            # Rise count number because some past values will be dismissed.
+            self.count = (2*original_count) - len(future_events)
+            ranges = set(self._get_ranges(event.start, duration))
+            # We set back the occurrence number to its original value
+            self.count = original_count
+        # Remove ranges of events occurring in the past
+        ranges = set((x, y) for x, y in ranges if x.date() >= event.start.date() and y.date() >= event.start.date())
+        return ranges
+
 
     def _get_ranges(self, start, event_duration):
         starts = self._get_occurrences(start)
