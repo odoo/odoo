@@ -195,6 +195,7 @@ class MassMailController(http.Controller):
                 record.sudo().message_post(body=_("Feedback from %(email)s: %(feedback)s", email=email, feedback=feedback))
             return bool(records)
         return 'error'
+<<<<<<< HEAD
 
     @http.route('/mailing/report/unsubscribe', type='http', website=True, auth='public')
     def turn_off_mailing_reports(self, token, user_id):
@@ -210,3 +211,5 @@ class MassMailController(http.Controller):
                 return request.render('mass_mailing.mailing_report_deactivated', {'menu_id': menu_id})
             return request.render('mass_mailing.mailing_report_deactivated')
         raise werkzeug.exceptions.NotFound()
+=======
+>>>>>>> 8044163aa9d... temp
