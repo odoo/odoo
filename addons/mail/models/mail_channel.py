@@ -579,7 +579,8 @@ class Channel(models.Model):
     def _message_compute_parent_id(self, parent_id):
         # super() unravels the chain of parents to set parent_id as the first
         # ancestor. We don't want that in channel.
-        return parent_id
+        parent_message = self.env['mail.message'].search([('id', '=', parent_id), ('model', '=', 'mail.channel'), ('res_id', '=', self.id)])
+        return parent_message.id
 
     @api.returns('mail.message', lambda value: value.id)
     def message_post(self, *, message_type='notification', **kwargs):
