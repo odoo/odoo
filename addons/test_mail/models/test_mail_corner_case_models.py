@@ -70,12 +70,13 @@ class MailTestLang(models.Model):
         groups = super(MailTestLang, self)._notify_get_recipients_groups(msg_vals=msg_vals)
         local_msg_vals = dict(msg_vals or {})
 
-        customer_group_opts = next(group for group in groups if group[0] == 'customer')[2]
-        customer_group_opts['has_button_access'] = True
-        customer_group_opts['actions'] = [
-            {'url': self._notify_get_action_link('controller', controller='/test_mail/do_stuff', **local_msg_vals),
-             'title': _('TestStuff')}
-        ]
+        for group in [g for g in groups if g[0] in('follower', 'customer')]:
+            group_options = group[2]
+            group_options['has_button_access'] = True
+            group_options['actions'] = [
+                {'url': self._notify_get_action_link('controller', controller='/test_mail/do_stuff', **local_msg_vals),
+                 'title': _('TestStuff')}
+            ]
         return groups
 
 
