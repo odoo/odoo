@@ -4,16 +4,6 @@
 // .modal-content   - actual modal w/ bg and corners and stuff
 
 
-.modal-open {
-  // Kill the scroll on the body
-  overflow: hidden;
-
-  .modal {
-    overflow-x: hidden;
-    overflow-y: auto;
-  }
-}
-
 // Container that the modal scrolls within
 .modal {
   position: fixed;
@@ -23,7 +13,8 @@
   display: none;
   width: 100%;
   height: 100%;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   // Prevent Chrome on Windows from adding a focus outline. For details, see
   // https://github.com/twbs/bootstrap/pull/10951.
   outline: 0;
@@ -48,20 +39,19 @@
   .modal.show & {
     transform: $modal-show-transform;
   }
+
+  // When trying to close, animate focus to scale
+  .modal.modal-static & {
+    transform: $modal-scale-transform;
+  }
 }
 
 .modal-dialog-scrollable {
-  display: flex; // IE10/11
-  max-height: calc(100% - #{$modal-dialog-margin * 2});
+  height: subtract(100%, $modal-dialog-margin * 2);
 
   .modal-content {
-    max-height: calc(100vh - #{$modal-dialog-margin * 2}); // IE10/11
+    max-height: 100%;
     overflow: hidden;
-  }
-
-  .modal-header,
-  .modal-footer {
-    flex-shrink: 0;
   }
 
   .modal-body {
@@ -72,29 +62,7 @@
 .modal-dialog-centered {
   display: flex;
   align-items: center;
-  min-height: calc(100% - #{$modal-dialog-margin * 2});
-
-  // Ensure `modal-dialog-centered` extends the full height of the view (IE10/11)
-  &::before {
-    display: block; // IE10
-    height: calc(100vh - #{$modal-dialog-margin * 2});
-    content: "";
-  }
-
-  // Ensure `.modal-body` shows scrollbar (IE10/11)
-  &.modal-dialog-scrollable {
-    flex-direction: column;
-    justify-content: center;
-    height: 100%;
-
-    .modal-content {
-      max-height: none;
-    }
-
-    &::before {
-      content: none;
-    }
-  }
+  min-height: subtract(100%, $modal-dialog-margin * 2);
 }
 
 // Actual modal
@@ -117,33 +85,23 @@
 
 // Modal background
 .modal-backdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: $zindex-modal-backdrop;
-  width: 100vw;
-  height: 100vh;
-  background-color: $modal-backdrop-bg;
-
-  // Fade for backdrop
-  &.fade { opacity: 0; }
-  &.show { opacity: $modal-backdrop-opacity; }
+  @include overlay-backdrop($zindex-modal-backdrop, $modal-backdrop-bg, $modal-backdrop-opacity);
 }
 
 // Modal header
 // Top section of the modal w/ title and dismiss
 .modal-header {
   display: flex;
-  align-items: flex-start; // so the close btn always stays on the upper right corner
+  flex-shrink: 0;
+  align-items: center;
   justify-content: space-between; // Put modal header elements (title and dismiss) on opposite ends
   padding: $modal-header-padding;
   border-bottom: $modal-header-border-width solid $modal-header-border-color;
-  @include border-top-radius($modal-content-border-radius);
+  @include border-top-radius($modal-content-inner-border-radius);
 
-  .close {
-    padding: $modal-header-padding;
-    // auto on the left force icon to the right even when there is no .modal-title
-    margin: (-$modal-header-padding-y) (-$modal-header-padding-x) (-$modal-header-padding-y) auto;
+  .btn-close {
+    padding: ($modal-header-padding-y * .5) ($modal-header-padding-x * .5);
+    margin: ($modal-header-padding-y * -.5) ($modal-header-padding-x * -.5) ($modal-header-padding-y * -.5) auto;
   }
 }
 
@@ -158,7 +116,7 @@
 .modal-body {
   position: relative;
   // Enable `flex-grow: 1` so that the body take up as much space as possible
-  // when should there be a fixed height on `.modal-dialog`.
+  // when there should be a fixed height on `.modal-dialog`.
   flex: 1 1 auto;
   padding: $modal-inner-padding;
 }
@@ -166,24 +124,20 @@
 // Footer (for actions)
 .modal-footer {
   display: flex;
+  flex-wrap: wrap;
+  flex-shrink: 0;
   align-items: center; // vertically center
   justify-content: flex-end; // Right align buttons with flex property because text-align doesn't work on flex items
-  padding: $modal-inner-padding;
+  padding: $modal-inner-padding - $modal-footer-margin-between * .5;
   border-top: $modal-footer-border-width solid $modal-footer-border-color;
-  @include border-bottom-radius($modal-content-border-radius);
+  @include border-bottom-radius($modal-content-inner-border-radius);
 
-  // Easily place margin between footer elements
-  > :not(:first-child) { margin-left: .25rem; }
-  > :not(:last-child) { margin-right: .25rem; }
-}
-
-// Measure scrollbar width for padding body during modal show/hide
-.modal-scrollbar-measure {
-  position: absolute;
-  top: -9999px;
-  width: 50px;
-  height: 50px;
-  overflow: scroll;
+  // Place margin between footer elements
+  // This solution is far from ideal because of the universal selector usage,
+  // but is needed to fix https://github.com/twbs/bootstrap/issues/24800
+  > * {
+    margin: $modal-footer-margin-between * .5;
+  }
 }
 
 // Scale up the modal
@@ -195,19 +149,11 @@
   }
 
   .modal-dialog-scrollable {
-    max-height: calc(100% - #{$modal-dialog-margin-y-sm-up * 2});
-
-    .modal-content {
-      max-height: calc(100vh - #{$modal-dialog-margin-y-sm-up * 2});
-    }
+    height: subtract(100%, $modal-dialog-margin-y-sm-up * 2);
   }
 
   .modal-dialog-centered {
-    min-height: calc(100% - #{$modal-dialog-margin-y-sm-up * 2});
-
-    &::before {
-      height: calc(100vh - #{$modal-dialog-margin-y-sm-up * 2});
-    }
+    min-height: subtract(100%, $modal-dialog-margin-y-sm-up * 2);
   }
 
   .modal-content {
@@ -227,3 +173,37 @@
 @include media-breakpoint-up(xl) {
   .modal-xl { max-width: $modal-xl; }
 }
+
+// scss-docs-start modal-fullscreen-loop
+@each $breakpoint in map-keys($grid-breakpoints) {
+  $infix: breakpoint-infix($breakpoint, $grid-breakpoints);
+  $postfix: if($infix != "", $infix + "-down", "");
+
+  @include media-breakpoint-down($breakpoint) {
+    .modal-fullscreen#{$postfix} {
+      width: 100vw;
+      max-width: none;
+      height: 100%;
+      margin: 0;
+
+      .modal-content {
+        height: 100%;
+        border: 0;
+        @include border-radius(0);
+      }
+
+      .modal-header {
+        @include border-radius(0);
+      }
+
+      .modal-body {
+        overflow-y: auto;
+      }
+
+      .modal-footer {
+        @include border-radius(0);
+      }
+    }
+  }
+}
+// scss-docs-end modal-fullscreen-loop
