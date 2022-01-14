@@ -173,6 +173,12 @@ class GoogleSync(models.AbstractModel):
         # We only handle the most problematic errors of sync events.
         if http_error.response.status_code in (403, 400):
             response = http_error.response.json()
+            if not self.exists():
+                reason = "Google gave the following explanation: %s" % response['error'].get('message')
+                error_log = "Error while syncing record. It does not exists anymore in the database. %s" % reason
+                _logger.error(error_log)
+                return
+
             if self._name == 'calendar.event':
                 start = self.start and self.start.strftime('%Y-%m-%d at %H:%M') or _("undefined time")
                 event_ids = self.id
