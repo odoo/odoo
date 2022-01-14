@@ -32,8 +32,9 @@ class MassMailingList(models.Model):
     subscription_ids = fields.One2many(
         'mailing.contact.subscription', 'list_id', string='Subscription Information',
         copy=True, depends=['contact_ids'])
-    is_public = fields.Boolean(default=True, help="The mailing list can be accessible by recipient in the unsubscription"
-                                                  " page to allows him to update his subscription preferences.")
+    is_public = fields.Boolean(default=True, string='Show In Preferences',
+        help='The mailing list can be accessible by recipient in the unsubscription'
+        ' page to allows him to update his subscription preferences.')
 
     # ------------------------------------------------------
     # COMPUTE / ONCHANGE
