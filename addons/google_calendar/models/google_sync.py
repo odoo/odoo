@@ -237,7 +237,7 @@ class GoogleSync(models.AbstractModel):
                 except HTTPError as e:
                     if e.response.status_code in (400, 403):
                         self._google_error_handling(e)
-                self.need_sync = False
+                self.exists().with_context(dont_notify=True).need_sync = False
 
     @after_commit
     def _google_insert(self, google_service: GoogleCalendarService, values, timeout=TIMEOUT):
@@ -255,7 +255,7 @@ class GoogleSync(models.AbstractModel):
                 except HTTPError as e:
                     if e.response.status_code in (400, 403):
                         self._google_error_handling(e)
-                        self.need_sync = False
+                        self.with_context(dont_notify=True).need_sync = False
 
     def _get_records_to_sync(self, full_sync=False):
         """Return records that should be synced from Odoo to Google
