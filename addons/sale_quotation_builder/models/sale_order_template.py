@@ -34,6 +34,7 @@ class SaleOrderTemplateLine(models.Model):
         translate=html_translate,
         sanitize_form=False)
 
+    @api.depends('product_id')
     def _compute_website_description(self):
         for line in self:
             if not line.product_id:
@@ -51,6 +52,7 @@ class SaleOrderTemplateOption(models.Model):
         translate=html_translate,
         sanitize_attributes=False)
 
+    @api.depends('product_id')
     def _compute_website_description(self):
         for option in self:
             if not option.product_id:
