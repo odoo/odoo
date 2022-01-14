@@ -81,6 +81,12 @@ class AccountMove(models.Model):
         )
         return {'attachment': attachment}
 
+    def _is_commercial_partner_pa(self):
+        """
+            Returns True if the destination of the FatturaPA belongs to the Public Administration.
+        """
+        return len(self.commercial_partner_id.l10n_it_pa_index or '')  == 6
+
     def _prepare_fatturapa_export_values(self):
         self.ensure_one()
 
@@ -132,9 +138,7 @@ class AccountMove(models.Model):
                 return True
             return False
 
-        formato_trasmissione = "FPR12"
-        if len(self.commercial_partner_id.l10n_it_pa_index or '1') == 6:
-            formato_trasmissione = "FPA12"
+        formato_trasmissione = "FPA12" if self._is_commercial_partner_pa() else "FPR12"
 
         if self.move_type == 'out_invoice':
             document_type = 'TD01'
