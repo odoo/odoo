@@ -21,9 +21,9 @@ class IrActionsReport(models.Model):
             if edi_attachment:
                 old_xml = base64.b64decode(edi_attachment.with_context(bin_size=False).datas, validate=True)
                 tree = etree.fromstring(old_xml)
-                document_currency_code_elements = tree.xpath("//*[local-name()='DocumentCurrencyCode']")
+                anchor_elements = tree.xpath("//*[local-name()='AccountingSupplierParty']")
                 additional_document_elements = tree.xpath("//*[local-name()='AdditionalDocumentReference']")
-                if document_currency_code_elements and not additional_document_elements:
+                if anchor_elements and not additional_document_elements:
                     pdf = base64.b64encode(buffer.getvalue()).decode()
                     pdf_name = '%s.pdf' % record._get_efff_name()
                     to_inject = '''
@@ -40,7 +40,8 @@ class IrActionsReport(models.Model):
                         </cac:AdditionalDocumentReference>
                     ''' % (escape(pdf_name), quoteattr(pdf_name), pdf)
 
-                    document_currency_code_elements[0].addnext(etree.fromstring(to_inject))
+                    anchor_index = tree.index(anchor_elements[0])
+                    tree.insert(anchor_index, etree.fromstring(to_inject))
                     new_xml = etree.tostring(tree, pretty_print=True)
                     edi_attachment.write({
                         'res_model': 'account.move',
