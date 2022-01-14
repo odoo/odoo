@@ -30,10 +30,6 @@ export class AttachmentCard extends Component {
 Object.assign(AttachmentCard, {
     props: {
         localId: String,
-        onAttachmentRemoved: {
-            type: Function,
-            optional: true,
-        },
     },
     template: 'mail.AttachmentCard',
 });

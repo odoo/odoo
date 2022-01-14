@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, many2many, many2one } from '@mail/model/model_field';
-import { clear, insert } from '@mail/model/model_field_command';
+import { attr, many2many, many2one, one2one } from '@mail/model/model_field';
+import { clear, insert, insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'Attachment',
@@ -278,6 +278,11 @@ registerModel({
          */
         attachmentLists: many2many('AttachmentList', {
             inverse: 'attachments',
+        }),
+        attachmentDeleteConfirmDialogView: one2one('AttachmentDeleteConfirmDialogView', {
+            default: insertAndReplace(),
+            inverse: 'attachment',
+            isCausal: true,
         }),
         checksum: attr(),
         /**
