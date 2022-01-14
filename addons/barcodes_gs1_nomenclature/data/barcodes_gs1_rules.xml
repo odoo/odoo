@@ -90,12 +90,12 @@
 
         <!-- Date Barcodes -->
         <record id="barcode_rule_gs1_13" model="barcode.rule">
-            <field name="name">Packaging date (YYMMDD)</field>
+            <field name="name">Pack date (YYMMDD)</field>
             <field name="barcode_nomenclature_id" ref="default_gs1_nomenclature"/>
             <field name="sequence">137</field>
             <field name="encoding">gs1-128</field>
             <field name="pattern">(13)(\d{6})</field>
-            <field name="type">packaging_date</field>
+            <field name="type">pack_date</field>
             <field name="gs1_content_type">date</field>
         </record>
 
