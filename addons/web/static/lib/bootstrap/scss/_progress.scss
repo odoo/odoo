@@ -1,10 +1,12 @@
 // Disable animation if transitions are disabled
+
+// scss-docs-start progress-keyframes
 @if $enable-transitions {
   @keyframes progress-bar-stripes {
-    from { background-position: $progress-height 0; }
-    to { background-position: 0 0; }
+    0% { background-position-x: $progress-height; }
   }
 }
+// scss-docs-end progress-keyframes
 
 .progress {
   display: flex;
@@ -20,6 +22,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  overflow: hidden;
   color: $progress-bar-color;
   text-align: center;
   white-space: nowrap;
@@ -34,10 +37,12 @@
 
 @if $enable-transitions {
   .progress-bar-animated {
-    animation: progress-bar-stripes $progress-bar-animation-timing;
+    animation: $progress-bar-animation-timing progress-bar-stripes;
 
-    @media (prefers-reduced-motion: reduce) {
-      animation: none;
+    @if $enable-reduced-motion {
+      @media (prefers-reduced-motion: reduce) {
+        animation: none;
+      }
     }
   }
 }
