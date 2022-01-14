@@ -452,6 +452,13 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
 
         self.in_invoice_1.partner_bank_id = bank1
         self.in_invoice_2.partner_bank_id = bank2
+        # Update the bank journal (now default payment register journal is bank/cash journal with the lowest sequence)
+        self.bank_journal_1 = self.env['account.journal'].search([
+            ('type', 'in', ('bank', 'cash')),
+            ('company_id', '=', self.env.company.id),
+        ], order='sequence asc', limit=1)
+        self.inbound_payment_method_line = self.bank_journal_1.inbound_payment_method_line_ids[0]
+        self.outbound_payment_method_line = self.bank_journal_1.outbound_payment_method_line_ids[0]
 
         active_ids = (self.in_invoice_1 + self.in_invoice_2 + self.in_refund_1).ids
         payments = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=active_ids).create({
@@ -527,6 +534,14 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
         ''' Choose to pay multiple batches, one with two customer invoices (1000 + 2000)
         and one with a vendor bill of 600, by grouping payments.
         '''
+        # Update the bank journal (now default payment register journal is bank/cash journal with the lowest sequence)
+        self.bank_journal_1 = self.env['account.journal'].search([
+                    ('type', 'in', ('bank', 'cash')),
+                    ('company_id', '=', self.env.company.id),
+                ], order='sequence asc', limit=1)
+        self.inbound_payment_method_line = self.bank_journal_1.inbound_payment_method_line_ids[0]
+        self.outbound_payment_method_line = self.bank_journal_1.outbound_payment_method_line_ids[0]
+
         active_ids = (self.in_invoice_1 + self.in_invoice_2 + self.in_invoice_3).ids
         payments = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=active_ids).create({
             'group_payment': True,
@@ -583,6 +598,13 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
         ''' Choose to pay multiple batches, one with two customer invoices (1000 + 2000)
          and one with a vendor bill of 600, by splitting payments.
          '''
+         # Update the bank journal (now default payment register journal is bank/cash journal with the lowest sequence)
+        self.bank_journal_1 = self.env['account.journal'].search([
+            ('type', 'in', ('bank', 'cash')),
+            ('company_id', '=', self.env.company.id),
+        ], order='sequence asc', limit=1)
+        self.inbound_payment_method_line = self.bank_journal_1.inbound_payment_method_line_ids[0]
+        self.outbound_payment_method_line = self.bank_journal_1.outbound_payment_method_line_ids[0]
         self.in_invoice_1.partner_bank_id = self.partner_bank_account1
         self.in_invoice_2.partner_bank_id = self.partner_bank_account2
 

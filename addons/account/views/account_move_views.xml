@@ -423,6 +423,7 @@
                       sample="1">
                     <header>
                         <button name="action_register_payment" type="object" string="Register Payment"
+                            context="{'dont_redirect_to_payments': True}"
                             groups="account.group_account_user"
                             invisible="context.get('default_move_type') not in ('out_invoice', 'out_refund', 'out_receipt', 'in_invoice', 'in_refund','in_receipt')"/>
                     </header>

@@ -329,7 +329,7 @@ class AccountPaymentRegister(models.TransientModel):
                 wizard.journal_id = self.env['account.journal'].search([
                     ('type', 'in', ('bank', 'cash')),
                     ('company_id', '=', wizard.company_id.id),
-                ], limit=1)
+                ], order='sequence asc', limit=1)
 
     @api.depends('can_edit_wizard', 'journal_id')
     def _compute_available_partner_bank_ids(self):
