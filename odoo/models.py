@@ -3918,9 +3918,13 @@ Fields:
         return True
 
     def _write(self, vals):
-        # low-level implementation of write()
+        """ Low-level implementation of write()
+
+        The ids of self should be a database id and unique.
+        Ignore non-existent record.
+        """
         if not self:
-            return True
+            return
 
         self._check_concurrency()
         cr = self._cr
@@ -3954,19 +3958,12 @@ Fields:
             template = ', '.join(f'"{name}" = %s' for name in columns)
             query = f'UPDATE "{self._table}" SET {template} WHERE id IN %s'
             params = list(columns.values())
-            for sub_ids in cr.split_for_in_conditions(set(self.ids)):
+            for sub_ids in cr.split_for_in_conditions(self._ids):
                 cr.execute(query, params + [sub_ids])
-                if cr.rowcount != len(sub_ids):
-                    raise MissingError(
-                        _('One of the records you are trying to modify has already been deleted (Document type: %s).', self._description)
-                        + '\n\n({} {}, {} {})'.format(_('Records:'), sub_ids[:6], _('User:'), self._uid)
-                    )
 
         # update parent_path
         if parent_records:
             parent_records._parent_store_update()
-
-        return True
 
     @api.model_create_multi
     @api.returns('self', lambda value: value.id)
@@ -5696,11 +5693,7 @@ Fields:
                 updates[frozendict(vals)].append(rid)
 
             for vals, ids in updates.items():
-                recs = model.browse(ids)
-                try:
-                    recs._write(vals)
-                except MissingError:
-                    recs.exists()._write(vals)
+                model.browse(ids)._write(vals)
 
         if fnames is None:
             # flush everything
