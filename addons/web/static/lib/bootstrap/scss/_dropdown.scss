@@ -1,8 +1,8 @@
 // The dropdown wrapper (`<div>`)
 .dropup,
-.dropright,
+.dropend,
 .dropdown,
-.dropleft {
+.dropstart {
   position: relative;
 }
 
@@ -10,20 +10,17 @@
   white-space: nowrap;
 
   // Generate the caret automatically
-  @include caret;
+  @include caret();
 }
 
 // The dropdown menu
 .dropdown-menu {
   position: absolute;
-  top: 100%;
-  left: 0;
   z-index: $zindex-dropdown;
   display: none; // none by default, but block on "open" of the menu
-  float: left;
   min-width: $dropdown-min-width;
-  padding: $dropdown-padding-y 0;
-  margin: $dropdown-spacer 0 0; // override default ul
+  padding: $dropdown-padding-y $dropdown-padding-x;
+  margin: 0; // Override default margin of ul
   @include font-size($dropdown-font-size);
   color: $dropdown-color;
   text-align: left; // Ensures proper alignment if parent has it changed (e.g., modal footer)
@@ -33,28 +30,47 @@
   border: $dropdown-border-width solid $dropdown-border-color;
   @include border-radius($dropdown-border-radius);
   @include box-shadow($dropdown-box-shadow);
+
+  &[data-bs-popper] {
+    top: 100%;
+    left: 0;
+    margin-top: $dropdown-spacer;
+  }
 }
+
+// scss-docs-start responsive-breakpoints
+// We deliberately hardcode the `bs-` prefix because we check
+// this custom property in JS to determine Popper's positioning
 
 @each $breakpoint in map-keys($grid-breakpoints) {
   @include media-breakpoint-up($breakpoint) {
     $infix: breakpoint-infix($breakpoint, $grid-breakpoints);
 
-    .dropdown-menu#{$infix}-left {
-      right: auto;
-      left: 0;
+    .dropdown-menu#{$infix}-start {
+      --bs-position: start;
+
+      &[data-bs-popper] {
+        right: auto;
+        left: 0;
+      }
     }
 
-    .dropdown-menu#{$infix}-right {
-      right: 0;
-      left: auto;
+    .dropdown-menu#{$infix}-end {
+      --bs-position: end;
+
+      &[data-bs-popper] {
+        right: 0;
+        left: auto;
+      }
     }
   }
 }
+// scss-docs-end responsive-breakpoints
 
 // Allow for dropdowns to go bottom up (aka, dropup-menu)
 // Just add .dropup after the standard .dropdown class and you're set.
 .dropup {
-  .dropdown-menu {
+  .dropdown-menu[data-bs-popper] {
     top: auto;
     bottom: 100%;
     margin-top: 0;
@@ -66,8 +82,8 @@
   }
 }
 
-.dropright {
-  .dropdown-menu {
+.dropend {
+  .dropdown-menu[data-bs-popper] {
     top: 0;
     right: auto;
     left: 100%;
@@ -76,15 +92,15 @@
   }
 
   .dropdown-toggle {
-    @include caret(right);
+    @include caret(end);
     &::after {
       vertical-align: 0;
     }
   }
 }
 
-.dropleft {
-  .dropdown-menu {
+.dropstart {
+  .dropdown-menu[data-bs-popper] {
     top: 0;
     right: 100%;
     left: auto;
@@ -93,28 +109,20 @@
   }
 
   .dropdown-toggle {
-    @include caret(left);
+    @include caret(start);
     &::before {
       vertical-align: 0;
     }
   }
 }
 
-// When enabled Popper.js, reset basic dropdown position
-// stylelint-disable-next-line no-duplicate-selectors
-.dropdown-menu {
-  &[x-placement^="top"],
-  &[x-placement^="right"],
-  &[x-placement^="bottom"],
-  &[x-placement^="left"] {
-    right: auto;
-    bottom: auto;
-  }
-}
 
 // Dividers (basically an `<hr>`) within the dropdown
 .dropdown-divider {
-  @include nav-divider($dropdown-divider-bg, $dropdown-divider-margin-y);
+  height: 0;
+  margin: $dropdown-divider-margin-y 0;
+  overflow: hidden;
+  border-top: 1px solid $dropdown-divider-bg;
 }
 
 // Links, buttons, and more within the dropdown menu
@@ -128,6 +136,7 @@
   font-weight: $font-weight-normal;
   color: $dropdown-link-color;
   text-align: inherit; // For `<button>`s
+  text-decoration: if($link-decoration == none, null, none);
   white-space: nowrap; // prevent links from randomly breaking onto new lines
   background-color: transparent; // For `<button>`s
   border: 0; // For `<button>`s
@@ -144,9 +153,10 @@
     }
   }
 
-  @include hover-focus {
+  &:hover,
+  &:focus {
     color: $dropdown-link-hover-color;
-    text-decoration: none;
+    text-decoration: if($link-hover-decoration == underline, none, null);
     @include gradient-bg($dropdown-link-hover-bg);
   }
 
@@ -163,9 +173,7 @@
     pointer-events: none;
     background-color: transparent;
     // Remove CSS gradients if they're enabled
-    @if $enable-gradients {
-      background-image: none;
-    }
+    background-image: if($enable-gradients, none, null);
   }
 }
 
@@ -176,7 +184,7 @@
 // Dropdown section headers
 .dropdown-header {
   display: block;
-  padding: $dropdown-padding-y $dropdown-item-padding-x;
+  padding: $dropdown-header-padding;
   margin-bottom: 0; // for use with heading elements
   @include font-size($font-size-sm);
   color: $dropdown-header-color;
@@ -188,4 +196,45 @@
   display: block;
   padding: $dropdown-item-padding-y $dropdown-item-padding-x;
   color: $dropdown-link-color;
+}
+
+// Dark dropdowns
+.dropdown-menu-dark {
+  color: $dropdown-dark-color;
+  background-color: $dropdown-dark-bg;
+  border-color: $dropdown-dark-border-color;
+  @include box-shadow($dropdown-dark-box-shadow);
+
+  .dropdown-item {
+    color: $dropdown-dark-link-color;
+
+    &:hover,
+    &:focus {
+      color: $dropdown-dark-link-hover-color;
+      @include gradient-bg($dropdown-dark-link-hover-bg);
+    }
+
+    &.active,
+    &:active {
+      color: $dropdown-dark-link-active-color;
+      @include gradient-bg($dropdown-dark-link-active-bg);
+    }
+
+    &.disabled,
+    &:disabled {
+      color: $dropdown-dark-link-disabled-color;
+    }
+  }
+
+  .dropdown-divider {
+    border-color: $dropdown-dark-divider-bg;
+  }
+
+  .dropdown-item-text {
+    color: $dropdown-dark-link-color;
+  }
+
+  .dropdown-header {
+    color: $dropdown-dark-header-color;
+  }
 }
