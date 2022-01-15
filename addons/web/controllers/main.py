@@ -31,7 +31,7 @@ from werkzeug.urls import url_encode, url_parse, iri_to_uri
 import odoo
 import odoo.modules.registry
 from odoo.api import call_kw
-from odoo.addons.base.models.qweb import QWeb
+from odoo.addons.base.models.ir_qweb import render as qweb_render
 from odoo.modules import get_resource_path, module
 from odoo.tools import html_escape, pycompat, ustr, apply_inheritance_specs, lazy_property, float_repr, osutil
 from odoo.tools.mimetypes import guess_mimetype
@@ -1083,7 +1083,7 @@ class Database(http.Controller):
         def load(template_name, options):
             return (html.fragment_fromstring(templates[template_name]), template_name)
 
-        return QWeb()._render(html.document_fromstring(template), d, load=load)
+        return qweb_render(html.document_fromstring(template), d, load=load)
 
     @http.route('/web/database/selector', type='http', auth="none")
     def selector(self, **kw):
