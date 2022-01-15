@@ -409,6 +409,8 @@ def render(template_name, values, load, **options):
         _Registry__cache = {}
 
     class MockIrQWeb(IrQWeb):
+        _name = 'ir.qweb.mock'
+
         pool = MockPool()
 
         def _get_field(self, *args):
