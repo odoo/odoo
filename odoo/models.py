@@ -65,6 +65,7 @@ from .tools import date_utils
 from .tools import populate
 from .tools import unique
 from .tools.lru import LRU
+from .tools.sql import pg_try_advisory_lock
 
 _logger = logging.getLogger(__name__)
 _unlink = logging.getLogger(__name__ + '.unlink')
@@ -6777,6 +6778,10 @@ class TransientModel(Model):
         - the 10 rows that have been created/changed the last 5 minutes will NOT
           be deleted
         """
+        # Ensure the vacuum for this model is not already running on a different worker
+        if not pg_try_advisory_lock(self.env.cr, "transient.vacuum." + self._name):
+            return
+
         if self._transient_max_hours:
             # Age-based expiration
             self._transient_clean_rows_older_than(self._transient_max_hours * 60 * 60)

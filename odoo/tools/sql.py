@@ -3,8 +3,10 @@
 
 # pylint: disable=sql-injection
 
+import hashlib
 import logging
 import psycopg2
+import struct
 
 _schema = logging.getLogger('odoo.schema')
 
@@ -296,3 +298,19 @@ def increment_field_skiplock(record, field):
     cr.execute(query, {'ids': tuple(record.ids)})
 
     return bool(cr.fetchone())
+
+
+def pg_try_advisory_lock(cr, reference):
+    """Attempt to acquire a pg_try_advisory_xact_lock for the given reference.
+
+    Use this method to create database lock with a specific static reference. This
+    reference always resolves to the same hash so the lock cannot be set twice. Useful
+    to solve data concurrency issues where records are accessed and updated by
+    different processes.
+    """
+    hasher = hashlib.sha1(reference)
+    pglock = struct.unpack('q', hasher.digest()[:8])[0]
+    cr.execute("SELECT pg_try_advisory_xact_lock(%s);", (pglock,))
+    if not cr.fetchone()[0]:
+        return False
+    return True
