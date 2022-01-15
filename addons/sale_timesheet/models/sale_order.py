@@ -236,7 +236,9 @@ class SaleOrderLine(models.Model):
         if self.product_uom.id != company_time_uom_id.id and self.product_uom.category_id.id == company_time_uom_id.category_id.id:
             planned_hours = self.product_uom._compute_quantity(self.product_uom_qty, company_time_uom_id)
         else:
-            planned_hours = self.product_uom_qty
+            # if no time mode is set for this company, then fallback to
+            # default conversion based on hour UoM definition
+            planned_hours = super()._convert_qty_company_hours(dest_company)
         return planned_hours
 
     def _timesheet_create_project(self):

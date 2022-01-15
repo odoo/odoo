@@ -186,7 +186,13 @@ class SaleOrderLine(models.Model):
     ###########################################
 
     def _convert_qty_company_hours(self, dest_company):
-        return self.product_uom_qty
+        # Use default hour UoM definition 
+        uom_hour = self.env.ref('uom.product_uom_hour', raise_if_not_found=False)
+        if uom_hour and self.product_uom.id != uom_hour.id and self.product_uom.category_id.id == uom_hour.category_id.id:
+            planned_hours = self.product_uom._compute_quantity(self.product_uom_qty, uom_hour)
+        else:
+            planned_hours = self.product_uom_qty
+        return planned_hours
 
     def _timesheet_create_project_prepare_values(self):
         """Generate project values"""
