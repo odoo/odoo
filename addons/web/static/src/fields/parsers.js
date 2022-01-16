@@ -125,24 +125,27 @@ export function parsePercentage(value) {
  */
 export function parseMonetary(value, options = {}) {
     const values = value.split("&nbsp;");
-    if (values.length === 1) {
-        return parseFloat(value);
-    }
     let currency;
+    let numericValue;
+    // get the currency
     if (options.currencyId) {
         currency = session.currencies[options.currencyId];
     } else {
         currency = Object.values(session.currencies)[0];
     }
-    const symbolIndex = values.findIndex((v) => v === currency.symbol);
-    if (symbolIndex === -1) {
+    // get the numeric value (without the currency symbol)
+    if (values.length === 1) {
+        numericValue = values[0];
+    } else if (values.length === 2) {
+        numericValue = values[0] === currency.symbol ? values[1] : values[0]
+    } else {
         throw new InvalidNumberError(`"${value}" is not a correct number`);
     }
-    values.splice(symbolIndex, 1);
-    if (values.length !== 1) {
-        throw new InvalidNumberError(`"${value}" is not a correct number`);
-    }
-    return parseFloat(values[0]);
+    //check if the separator is a non html special character as parse float doesn't expect that.
+    let isMarkup = /&#[0-9a-zA-Z]{2,3};/.exec(numericValue);
+    isMarkup ? numericValue = numericValue.replace(isMarkup[0], '') : numericValue = numericValue;
+
+    return parseFloat(numericValue);
 }
 
 registry

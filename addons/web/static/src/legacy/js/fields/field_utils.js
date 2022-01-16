@@ -417,7 +417,7 @@ function formatSelection(value, field, options) {
 /**
  * Smart date inputs are shortcuts to write dates quicker.
  * These shortcuts should respect the format ^[+-]\d+[dmwy]?$
- * 
+ *
  * e.g.
  *   "+1d" or "+1" will return now + 1 day
  *   "-2w" will return now - 2 weeks
@@ -611,14 +611,10 @@ function parseFloat(value) {
  */
 function parseMonetary(value, field, options) {
     var values = value.split('&nbsp;');
-    if (values.length === 1) {
-        return parseFloat(value);
-    }
-    else if (values.length !== 2) {
-        throw new Error(_.str.sprintf(core._t("'%s' is not a correct monetary field"), value));
-    }
     options = options || {};
     var currency = options.currency;
+    var numericValue;
+    // get the currency
     if (!currency) {
         var currency_id = options.currency_id;
         if (!currency_id && options.data) {
@@ -627,7 +623,19 @@ function parseMonetary(value, field, options) {
         }
         currency = session.get_currency(currency_id);
     }
-    return parseFloat(values[0] === currency.symbol ? values[1] : values[0]);
+    // get the numeric value (without currency symbol)
+    if (values.length === 1) {
+        numericValue = values[0];
+    } else if (values.length === 2) {
+        numericValue = values[0] === currency.symbol ? values[1] : values[0]
+    } else {
+        throw new Error(_.str.sprintf(core._t("'%s' is not a correct monetary"), value));
+    }
+    //check if the separator is a non html special character as parse float doesn't expect that.
+    var isMarkup = /&#[0-9a-zA-Z]{2,3};/.exec(numericValue);
+    isMarkup ? numericValue = numericValue.replace(isMarkup[0], '') : numericValue = numericValue;
+
+    return parseFloat(numericValue);
 }
 
 /**
