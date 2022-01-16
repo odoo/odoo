@@ -6,6 +6,7 @@ const FormEditorRegistry = require('website.form_editor_registry');
 const options = require('web_editor.snippets.options');
 const Dialog = require('web.Dialog');
 const dom = require('web.dom');
+const {generateHTMLId} = require('web_editor.utils');
 require('website.editor.snippets.options');
 
 const qweb = core.qweb;
@@ -54,15 +55,6 @@ const FormEditor = options.Class.extend({
             });
         }
         return field.records;
-    },
-    /**
-     * Generates a new ID.
-     *
-     * @private
-     * @returns {string} The new ID
-     */
-    _generateUniqueID() {
-        return Math.random().toString(36).substring(2, 15);
     },
     /**
      * Returns a field object
@@ -135,7 +127,7 @@ const FormEditor = options.Class.extend({
      */
     _renderField: function (field, resetId = false) {
         if (!field.id) {
-            field.id = this._generateUniqueID();
+            field.id = generateHTMLId(30);
         }
         const template = document.createElement('template');
         template.innerHTML = qweb.render("website.form_field_" + field.type, {field: field}).trim();

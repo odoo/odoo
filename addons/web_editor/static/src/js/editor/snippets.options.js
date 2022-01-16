@@ -17,6 +17,7 @@ const {
     backgroundImageCssToParts,
     backgroundImagePartsToCss,
     DEFAULT_PALETTE,
+    generateHTMLId,
 } = weUtils;
 var weWidgets = require('wysiwyg.widgets');
 const {
@@ -2034,14 +2035,14 @@ const ListUserValueWidget = UserValueWidget.extend({
             inputEl.name = id;
         }
         if (recordData) {
+            if (recordData.placeholder) {
+                inputEl.placeholder = recordData.placeholder;
+            }
             for (const key of Object.keys(recordData)) {
                 inputEl.dataset[key] = recordData[key];
             }
         }
         inputEl.disabled = !this.isCustom;
-        const buttonEl = document.createElement('we-button');
-        buttonEl.classList.add('o_we_select_remove_option', 'o_we_link', 'o_we_text_danger', 'fa', 'fa-fw', 'fa-minus');
-        buttonEl.dataset.removeOption = id;
         const inputTdEl = document.createElement('td');
         inputTdEl.classList.add('o_we_list_record_name');
         inputTdEl.appendChild(inputEl);
@@ -2061,9 +2062,14 @@ const ListUserValueWidget = UserValueWidget.extend({
             checkboxTdEl.appendChild(checkboxEl);
             trEl.appendChild(checkboxTdEl);
         }
-        const buttonTdEl = document.createElement('td');
-        buttonTdEl.appendChild(buttonEl);
-        trEl.appendChild(buttonTdEl);
+        if (!recordData || !recordData.undeletable) {
+            const buttonTdEl = document.createElement('td');
+            const buttonEl = document.createElement('we-button');
+            buttonEl.classList.add('o_we_select_remove_option', 'o_we_link', 'o_we_text_danger', 'fa', 'fa-fw', 'fa-minus');
+            buttonEl.dataset.removeOption = id;
+            buttonTdEl.appendChild(buttonEl);
+            trEl.appendChild(buttonTdEl);
+        }
         this.listTable.appendChild(trEl);
     },
     /**
@@ -2089,7 +2095,10 @@ const ListUserValueWidget = UserValueWidget.extend({
      */
     _notifyCurrentState() {
         const values = [...this.listTable.querySelectorAll('.o_we_list_record_name input')].map(el => {
-            const id = this.isCustom ? el.value : el.name;
+            let id = this.isCustom ? el.value : el.name;
+            if (this.el.dataset.idMode && this.el.dataset.idMode === "name") {
+                id = el.name;
+            }
             const idInt = parseInt(id);
             return Object.assign({
                 id: isNaN(idInt) ? id : idInt,
@@ -2148,7 +2157,14 @@ const ListUserValueWidget = UserValueWidget.extend({
      * @private
      */
     _onAddCustomItemClick() {
-        this._addItemToTable();
+        let id;
+        if (this.el.dataset.generateIdForNewItems) {
+            id = generateHTMLId(30);
+        }
+        if (this.el.dataset.newElementsToggled) {
+            this.selected.push(id);
+        }
+        this._addItemToTable(id, this.el.dataset.defaultValue);
         this._notifyCurrentState();
     },
     /**
