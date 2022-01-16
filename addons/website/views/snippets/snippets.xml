@@ -139,6 +139,7 @@
                     </t>
                     <t t-snippet="website.s_card" t-thumbnail="/website/static/src/img/snippets_thumbs/s_card.svg"/>
                     <t t-snippet="website.s_share" t-thumbnail="/website/static/src/img/snippets_thumbs/s_share.svg"/>
+                    <t t-snippet="website.s_social_media" t-thumbnail="/website/static/src/img/snippets_thumbs/s_facebook_page.svg"/> <!-- TODO replace by new thumbnail-->
                     <t t-snippet="website.s_searchbar_input" t-thumbnail="/website/static/src/img/snippets_thumbs/s_searchbar_inline.svg"/>
                     <t id="mass_mailing_newsletter_hook"/>
                     <t t-snippet="website.s_text_highlight" t-thumbnail="/website/static/src/img/snippets_thumbs/s_text_highlight.svg"/>
@@ -354,7 +355,7 @@
     </div>
 
     <!-- H-ALIGN -->
-    <div id="so_text_align" data-selector=".s_share, .s_text_highlight">
+    <div id="so_text_align" data-selector=".s_share, .s_text_highlight, .s_social_media">
         <we-button-group string="Alignment">
             <we-button class="fa fa-fw fa-align-left" title="Left" data-select-class="text-left"/>
             <we-button class="fa fa-fw fa-align-center" title="Center" data-select-class="text-center"/>
@@ -530,7 +531,7 @@
         <!-- /!\ drop-in here is partly duplicated for s_popup (see dedicated options) -->
         <!-- TODO should be improved -->
 
-    <t t-set="so_content_addition_selector" t-translation="off">blockquote, .s_card:not(.s_timeline_card), .s_alert, .o_facebook_page, .s_share, .s_rating, .s_hr, .s_google_map, .s_map, .s_countdown, .s_chart, .s_text_highlight, .s_progress_bar, .s_badge, .s_embed_code, .s_donation</t>
+    <t t-set="so_content_addition_selector" t-translation="off">blockquote, .s_card:not(.s_timeline_card), .s_alert, .o_facebook_page, .s_share, .s_social_media, .s_rating, .s_hr, .s_google_map, .s_map, .s_countdown, .s_chart, .s_text_highlight, .s_progress_bar, .s_badge, .s_embed_code, .s_donation</t>
     <div id="so_content_addition"
         t-att-data-selector="so_content_addition_selector"
         t-attf-data-drop-near="p, h1, h2, h3, ul, ol, .row > div > img, #{so_content_addition_selector}"
