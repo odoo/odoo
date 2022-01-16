@@ -30,3 +30,11 @@ class TestSnippets(HttpCase):
 
     def test_04_countdown_preview(self):
         self.start_tour("/?enable_editor=1", "snippet_countdown", login='admin')
+
+    def test_05_social_media(self):
+        self.start_tour("/?enable_editor=1", 'snippet_social_media', login="admin")
+        self.assertEqual(
+            self.env['website'].browse(1).social_instagram,
+            'https://instagram.com/odoo.official/',
+            'Social media should have been updated'
+        )
