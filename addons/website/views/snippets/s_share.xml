@@ -27,8 +27,9 @@
 
 <template id="s_share_options" inherit_id="website.snippet_options">
     <xpath expr="." position="inside">
-        <div data-selector=".s_share">
-            <we-select string="Title Position" data-apply-to=".s_share_title">
+        <!-- TODO: Now that it is shared with social media, move elsewhere? -->
+        <div data-selector=".s_share, .s_social_media">
+            <we-select string="Title Position" data-apply-to=".s_share_title, .s_social_media_title">
                 <we-button data-select-class="d-block">Top</we-button>
                 <we-button data-select-class="">Left</we-button>
                 <we-button data-select-class="d-none">None</we-button>
