@@ -682,7 +682,7 @@ form: module.record_id""" % (xml_id,)
                 raise
             except ValidationError as err:
                 msg = "while parsing {file}:{viewline}\n{err}\n\nView error context:\n{context}\n".format(
-                    file=rec.getroottree().docinfo.URL,
+                    file=rec.getroottree().docinfo.URL or self.xml_filename,
                     viewline=rec.sourceline,
                     context=pprint.pformat(getattr(err, 'context', None) or '-no context-'),
                     err=err.args[0],
