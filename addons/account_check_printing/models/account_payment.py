@@ -135,8 +135,8 @@ class AccountPayment(models.Model):
                     FROM account_payment payment
                     JOIN account_move move ON movE.id = payment.move_id
                    WHERE journal_id = %(journal_id)s
-                   AND check_number IS NOT NULL
-                ORDER BY check_number::INTEGER DESC
+                   AND payment.check_number IS NOT NULL
+                ORDER BY payment.check_number::INTEGER DESC
                    LIMIT 1
             """, {
                 'journal_id': self.journal_id.id,
