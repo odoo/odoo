@@ -337,6 +337,21 @@ function _isColorGradient(value) {
     return value && value.includes('-gradient(');
 }
 /**
+ * Generates a string ID.
+ *
+ * @private
+ * @param {integer} length the length of the generated ID.
+ * @returns {string}
+ */
+function _generateHTMLId(length) {
+    let result = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    while (result.length < length) {
+        result += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    return result;
+}
+/**
  * Returns the class of the element that matches the specified prefix.
  *
  * @private
@@ -367,6 +382,7 @@ return {
     getBgImageURL: _getBgImageURL,
     backgroundImageCssToParts: _backgroundImageCssToParts,
     backgroundImagePartsToCss: _backgroundImagePartsToCss,
+    generateHTMLId: _generateHTMLId,
     getColorClass: _getColorClass,
 };
 });
