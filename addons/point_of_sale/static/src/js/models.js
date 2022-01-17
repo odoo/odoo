@@ -1161,7 +1161,7 @@ class Orderline extends PosModel {
         this.selected = false;
         this.description = '';
         this.price_extra = 0;
-        this.full_product_name = '';
+        this.full_product_name = options.description || '';
         this.id = orderline_id++;
         this.customerNote = this.customerNote || '';
 
