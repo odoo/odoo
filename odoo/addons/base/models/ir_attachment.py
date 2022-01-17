@@ -152,12 +152,6 @@ class IrAttachment(models.Model):
         cr = self._cr
         cr.commit()
 
-        # prevent all concurrent updates on ir_attachment while collecting,
-        # but only attempt to grab the lock for a little bit, otherwise it'd
-        # start blocking other transactions. (will be retried later anyway)
-        cr.execute("SET LOCAL lock_timeout TO '10s'")
-        cr.execute("LOCK ir_attachment IN SHARE MODE")
-
         # retrieve the file names from the checklist
         checklist = {}
         for dirpath, _, filenames in os.walk(self._full_path('checklist')):
@@ -166,29 +160,44 @@ class IrAttachment(models.Model):
                 fname = "%s/%s" % (dirname, filename)
                 checklist[fname] = os.path.join(dirpath, filename)
 
-        # Clean up the checklist. The checklist is split in chunks and files are garbage-collected
-        # for each chunk.
-        removed = 0
-        for names in cr.split_for_in_conditions(checklist):
-            # determine which files to keep among the checklist
-            cr.execute("SELECT store_fname FROM ir_attachment WHERE store_fname IN %s", [names])
-            whitelist = set(row[0] for row in cr.fetchall())
+        with self.pool.cursor() as new_cr:
+            # Clean up the checklist. The checklist is split in chunks and files are garbage-collected
+            # for each chunk.
+            removed = 0
 
-            # remove garbage files, and clean up checklist
-            for fname in names:
-                filepath = checklist[fname]
-                if fname not in whitelist:
-                    try:
-                        os.unlink(self._full_path(fname))
-                        _logger.debug("_file_gc unlinked %s", self._full_path(fname))
-                        removed += 1
-                    except (OSError, IOError):
-                        _logger.info("_file_gc could not unlink %s", self._full_path(fname), exc_info=True)
-                with tools.ignore(OSError):
-                    os.unlink(filepath)
+            for names in new_cr.split_for_in_conditions(checklist):
 
-        # commit to release the lock
-        cr.commit()
+                try:
+                    # prevent all concurrent updates on ir_attachment while collecting,
+                    # but only attempt to grab the lock for a little bit, otherwise it'd
+                    # start blocking other transactions. (will be retried later anyway)
+                    new_cr.execute("SET LOCAL lock_timeout TO '10s'")
+                    new_cr.execute("LOCK ir_attachment IN SHARE MODE")
+
+                    # determine which files to keep among the checklist
+                    new_cr.execute("SELECT store_fname FROM ir_attachment WHERE store_fname IN %s", [names])
+                    whitelist = set(row[0] for row in new_cr.fetchall())
+                except Exception:
+                    new_cr.rollback()
+                    break
+
+                # remove garbage files, and clean up checklist
+                for fname in names:
+                    filepath = checklist[fname]
+                    if fname not in whitelist:
+                        try:
+                            os.unlink(self._full_path(fname))
+                            _logger.debug("_file_gc unlinked %s", self._full_path(fname))
+                            removed += 1
+                        except (OSError, IOError):
+                            _logger.info("_file_gc could not unlink %s", self._full_path(fname), exc_info=True)
+                    with tools.ignore(OSError):
+                        os.unlink(filepath)
+
+                # commit to release the lock
+                # and do the next chunk thus avoiding another transaction wait for this to finish.
+                new_cr.commit()
+
         _logger.info("filestore gc %d checked, %d removed", len(checklist), removed)
 
     @api.depends('store_fname', 'db_datas')
