@@ -13,6 +13,7 @@ class Contract(models.Model):
     _name = 'hr.contract'
     _description = 'Contract'
     _inherit = ['mail.thread', 'mail.activity.mixin']
+    _mail_post_access = 'read'
 
     name = fields.Char('Contract Reference', required=True)
     active = fields.Boolean(default=True)
