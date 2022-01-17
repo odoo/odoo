@@ -47,12 +47,12 @@ class WebsiteEventSaleController(WebsiteEventController):
 
         # we have at least one registration linked to a ticket -> sale mode activate
         if any(info['event_ticket_id'] for info in registrations):
-            order = request.website.sale_get_order()
-            if order.amount_total:
+            order_sudo = request.website.sale_get_order()
+            if order_sudo.amount_total:
                 return request.redirect("/shop/checkout")
             # free tickets -> order with amount = 0: auto-confirm, no checkout
-            elif order:
-                order.action_confirm()  # tde notsure: email sending ?
+            elif order_sudo:
+                order_sudo.action_confirm()  # tde notsure: email sending ?
                 request.website.sale_reset()
 
         return res

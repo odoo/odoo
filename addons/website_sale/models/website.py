@@ -247,164 +247,153 @@ class Website(models.Model):
             self.env['account.payment.term'].sudo().search([('company_id', '=', self.company_id.id)], limit=1)
         ).id
 
-    def _prepare_sale_order_values(self, partner, pricelist):
+    def _prepare_sale_order_values(self, partner_sudo):
         self.ensure_one()
-        affiliate_id = request.session.get('affiliate_id')
-        salesperson_id = affiliate_id if self.env['res.users'].sudo().browse(affiliate_id).exists() else request.website.salesperson_id.id
-        addr = partner.address_get(['delivery'])
+        addr = partner_sudo.address_get(['delivery'])
         if not request.website.is_public_user():
-            last_sale_order = self.env['sale.order'].sudo().search([('partner_id', '=', partner.id)], limit=1, order="date_order desc, id desc")
+            # FIXME VFE why not use last_website_so_id field ?
+            last_sale_order = self.env['sale.order'].sudo().search(
+                [('partner_id', '=', partner_sudo.id)],
+                limit=1,
+                order="date_order desc, id desc",
+            )
             if last_sale_order and last_sale_order.partner_shipping_id.active:  # first = me
                 addr['delivery'] = last_sale_order.partner_shipping_id.id
-        default_user_id = partner.parent_id.user_id.id or partner.user_id.id
+
+        affiliate_id = request.session.get('affiliate_id')
+        salesperson_user_sudo = self.env['res.users'].sudo().browse(affiliate_id).exists()
+        if not salesperson_user_sudo:
+            salesperson_user_sudo = self.salesperson_id or partner_sudo.parent_id.user_id or partner_sudo.user_id
+
+        pricelist_id = self._get_current_pricelist_id(partner_sudo)
+
         values = {
-            'partner_id': partner.id,
-            'pricelist_id': pricelist.id,
-            'payment_term_id': self.sale_get_payment_term(partner),
-            'team_id': self.salesteam_id.id or partner.parent_id.team_id.id or partner.team_id.id,
-            'partner_invoice_id': partner.id,
-            'partner_shipping_id': addr['delivery'],
-            'user_id': salesperson_id or self.salesperson_id.id or default_user_id,
-            'website_id': self._context.get('website_id'),
             'company_id': self.company_id.id,
+
+            'partner_id': partner_sudo.id,
+            'partner_invoice_id': partner_sudo.id,
+            'partner_shipping_id': addr['delivery'],
+
+            'pricelist_id': pricelist_id,
+            'payment_term_id': self.sale_get_payment_term(partner_sudo),
+
+            'team_id': self.salesteam_id.id or partner_sudo.parent_id.team_id.id or partner_sudo.team_id.id,
+            'user_id': salesperson_user_sudo.id,
+            'website_id': self.id,
         }
-        if self.env['ir.config_parameter'].sudo().get_param('sale.use_sale_note'):
-            values['note'] = self.company_id.sale_note or ""
+
+        # If the current user is the website public user, the fiscal position
+        # is computed according to geolocation.
+        if request.website.partner_id.id == partner_sudo.id:
+            country_code = request.session['geoip'].get('country_code')
+            if country_code:
+                country_id = self.env['res.country'].search([('code', '=', country_code)], limit=1).id
+                values['fiscal_position_id'] = self.env['account.fiscal.position'].sudo()._get_fpos_by_region(country_id).id
 
         return values
 
-    def sale_get_order(self, force_create=False, code=None, update_pricelist=False, force_pricelist=False):
+    def sale_get_order(self, force_create=False, update_pricelist=False):
         """ Return the current sales order after mofications specified by params.
+
         :param bool force_create: Create sales order if not already existing
-        :param str code: Code to force a pricelist (promo code)
-                         If empty, it's a special case to reset the pricelist with the first available else the default.
         :param bool update_pricelist: Force to recompute all the lines from sales order to adapt the price with the current pricelist.
-        :param int force_pricelist: pricelist_id - if set,  we change the pricelist with this one
-        :returns: browse record for the current sales order
+        :returns: record for the current sales order (might be empty)
+        :rtype: `sale.order` recordset
         """
         self.ensure_one()
 
         self = self.with_company(self.company_id)
-        partner_sudo = self.env.user.partner_id
-
         SaleOrder = self.env['sale.order'].sudo()
 
+        partner_sudo = self.env.user.partner_id
         sale_order_id = request.session.get('sale_order_id')
-        check_fpos = False
-        if not sale_order_id and not self.env.user._is_public():
-            last_order = partner_sudo.last_website_so_id
-            if last_order:
+
+        if sale_order_id:
+            sale_order_sudo = SaleOrder.browse(sale_order_id).exists()
+        elif not self.env.user._is_public():
+            sale_order_sudo = partner_sudo.last_website_so_id
+            if sale_order_sudo:
                 available_pricelists = self.get_pricelist_available()
-                # Do not reload the cart of this user last visit if the cart uses a pricelist no longer available.
-                sale_order_id = last_order.pricelist_id in available_pricelists and last_order.id
-                check_fpos = True
+                if sale_order_sudo.pricelist_id not in available_pricelists:
+                    # Do not reload the cart of this user last visit
+                    # if the cart uses a pricelist no longer available.
+                    sale_order_sudo = SaleOrder
+                else:
+                    # Do not reload the cart of this user last visit
+                    # if the Fiscal Position has changed.
+                    fpos = sale_order_sudo.env['account.fiscal.position'].with_company(
+                        sale_order_sudo.company_id
+                    )._get_fiscal_position(
+                        sale_order_sudo.partner_id,
+                        delivery=sale_order_sudo.partner_shipping_id
+                    )
+                    if fpos.id != sale_order_sudo.fiscal_position_id.id:
+                        sale_order_sudo = SaleOrder
+        else:
+            sale_order_sudo = SaleOrder
 
-        # Test validity of the sale_order_id
-        sale_order = SaleOrder.browse(sale_order_id).exists() if sale_order_id else None
-
-        # Do not reload the cart of this user last visit if the Fiscal Position has changed.
-        if check_fpos and sale_order:
-            fpos_id = (
-                self.env['account.fiscal.position'].sudo()
-                .with_company(sale_order.company_id.id)
-                ._get_fiscal_position(sale_order.partner_id, delivery=sale_order.partner_shipping_id)
-            ).id
-            if sale_order.fiscal_position_id.id != fpos_id:
-                sale_order = None
-
-        if not (sale_order or force_create or code):
+        if not (sale_order_sudo or force_create):
+            # Do not create a SO record unless needed
             if request.session.get('sale_order_id'):
                 request.session['sale_order_id'] = None
             return self.env['sale.order']
 
-        if self.env['product.pricelist'].browse(force_pricelist).exists():
-            pricelist_id = force_pricelist
-            request.session['website_sale_current_pl'] = pricelist_id
-            update_pricelist = True
-        else:
-            pricelist_id = request.session.get('website_sale_current_pl') or self.get_current_pricelist().id
+        # Only set when neeeded
+        pricelist_id = False
 
-        if not self._context.get('pricelist'):
-            self = self.with_context(pricelist=pricelist_id)
-
-        # cart creation was requested (either explicitly or to configure a promo code)
-        if not sale_order:
+        # cart creation was requested
+        if not sale_order_sudo:
             # TODO cache partner_id session
-            pricelist = self.env['product.pricelist'].browse(pricelist_id).sudo()
-            so_data = self._prepare_sale_order_values(partner_sudo, pricelist)
-            sale_order = SaleOrder.with_user(SUPERUSER_ID).create(so_data)
+            so_data = self._prepare_sale_order_values(partner_sudo)
+            sale_order_sudo = SaleOrder.with_user(SUPERUSER_ID).create(so_data)
 
-            # set fiscal position
-            if request.website.partner_id.id == partner_sudo.id: # For public user, fiscal position based on geolocation
-                country_code = request.session['geoip'].get('country_code')
-                if country_code:
-                    country_id = request.env['res.country'].search([('code', '=', country_code)], limit=1).id
-                    sale_order.fiscal_position_id = request.env['account.fiscal.position'].sudo().with_company(request.website.company_id.id)._get_fpos_by_region(country_id)
+            request.session['sale_order_id'] = sale_order_sudo.id
+            return sale_order_sudo
 
-            request.session['sale_order_id'] = sale_order.id
+        # Existing Cart:
+        #   * For logged user
+        #   * In session, for specified partner
 
         # case when user emptied the cart
         if not request.session.get('sale_order_id'):
-            request.session['sale_order_id'] = sale_order.id
-
-        # check for change of pricelist with a coupon
-        pricelist_id = pricelist_id or partner_sudo.property_product_pricelist.id
+            request.session['sale_order_id'] = sale_order_sudo.id
 
         # check for change of partner_id ie after signup
-        if sale_order.partner_id.id != partner_sudo.id and request.website.partner_id.id != partner_sudo.id:
-            flag_pricelist = False
-            if pricelist_id != sale_order.pricelist_id.id:
-                flag_pricelist = True
-            fiscal_position = sale_order.fiscal_position_id.id
+        if sale_order_sudo.partner_id.id != partner_sudo.id and request.website.partner_id.id != partner_sudo.id:
+            previous_fiscal_position = sale_order_sudo.fiscal_position_id
+            previous_pricelist = sale_order_sudo.pricelist_id
 
-            # change the partner, and trigger the onchange
-            sale_order.write({
+            pricelist_id = self._get_current_pricelist_id(partner_sudo)
+
+            # change the partner, and trigger the computes (fpos)
+            sale_order_sudo.write({
                 'partner_id': partner_sudo.id,
                 'partner_invoice_id': partner_sudo.id,
                 'payment_term_id': self.sale_get_payment_term(partner_sudo),
+                # Must be specified to ensure it is not recomputed when it shouldn't
+                'pricelist_id': pricelist_id,
             })
 
-            # check the pricelist : update it if the pricelist is not the 'forced' one
-            values = {}
-            if sale_order.pricelist_id:
-                if sale_order.pricelist_id.id != pricelist_id:
-                    values['pricelist_id'] = pricelist_id
-                    update_pricelist = True
+            if sale_order_sudo.fiscal_position_id != previous_fiscal_position:
+                sale_order_sudo.order_line._compute_tax_id()
 
-            # if fiscal position, update the order lines taxes
-            if sale_order.fiscal_position_id:
-                sale_order._compute_tax_id()
-
-            # if values, then make the SO update
-            if values:
-                sale_order.write(values)
-
-            # check if the fiscal position has changed with the partner_id update
-            recent_fiscal_position = sale_order.fiscal_position_id.id
-            # when buying a free product with public user and trying to log in, SO state is not draft
-            if (flag_pricelist or recent_fiscal_position != fiscal_position) and sale_order.state == 'draft':
+            if sale_order_sudo.pricelist_id != previous_pricelist:
                 update_pricelist = True
-
-        if code and code != sale_order.pricelist_id.code:
-            code_pricelist = self.env['product.pricelist'].sudo().search([('code', '=', code)], limit=1)
-            if code_pricelist:
-                pricelist_id = code_pricelist.id
-                update_pricelist = True
-        elif code is not None and sale_order.pricelist_id.code and code != sale_order.pricelist_id.code:
-            # code is not None when user removes code and click on "Apply"
-            pricelist_id = partner_sudo.property_product_pricelist.id
-            update_pricelist = True
+        elif update_pricelist:
+            # Only compute pricelist if needed
+            pricelist_id = self._get_current_pricelist_id(partner_sudo)
 
         # update the pricelist
         if update_pricelist:
             request.session['website_sale_current_pl'] = pricelist_id
-            values = {'pricelist_id': pricelist_id}
-            sale_order.write(values)
-            for line in sale_order.order_line:
-                if line.exists():
-                    sale_order._cart_update(product_id=line.product_id.id, line_id=line.id, add_qty=0)
+            sale_order_sudo.write({'pricelist_id': pricelist_id})
+            sale_order_sudo.update_prices()
 
-        return sale_order
+        return sale_order_sudo
+
+    def _get_current_pricelist_id(self, partner_sudo):
+        return self.get_current_pricelist().id \
+            or partner_sudo.property_product_pricelist.id
 
     def sale_reset(self):
         request.session.update({
