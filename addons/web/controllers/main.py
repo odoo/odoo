@@ -1134,6 +1134,12 @@ class Database(http.Controller):
         try:
             dispatch_rpc('db','drop', [master_pwd, name])
             request._cr = None  # dropping a database leads to an unusable cursor
+            # if the user is connected to the dropped database, redirect will raise an operational error
+            # trying to access the registry of this database.
+            # Removing db from this request will prevent an invalid error message. (logout looks like a good idea in this case)
+            # https://github.com/odoo/odoo/pull/54102 is proposing a complete fix for this issue.
+            if request.session.db == name:
+                request.session.logout()
             return request.redirect('/web/database/manager')
         except Exception as e:
             error = "Database deletion error: %s" % (str(e) or repr(e))

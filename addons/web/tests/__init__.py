@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from . import test_db_manager
 from . import test_health
 from . import test_image
 from . import test_js
