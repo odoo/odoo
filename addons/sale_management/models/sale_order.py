@@ -87,12 +87,15 @@ class SaleOrder(models.Model):
     def _onchange_sale_order_template_id(self):
         sale_order_template = self.sale_order_template_id.with_context(lang=self.partner_id.lang)
 
-        self.order_line = [
+        order_lines_data = [fields.Command.clear()]
+        order_lines_data += [
             fields.Command.create(
                 self._compute_line_data_for_template_change(line)
             )
             for line in sale_order_template.sale_order_template_line_ids
         ]
+
+        self.order_line = order_lines_data
 
         option_lines_data = [fields.Command.clear()]
         option_lines_data += [
