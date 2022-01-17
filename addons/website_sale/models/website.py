@@ -15,22 +15,25 @@ _logger = logging.getLogger(__name__)
 class Website(models.Model):
     _inherit = 'website'
 
-    pricelist_id = fields.Many2one('product.pricelist', compute='_compute_pricelist_id', string='Default Pricelist')
-    currency_id = fields.Many2one('res.currency',
-        related='pricelist_id.currency_id', depends=(), related_sudo=False,
-        string='Default Currency', readonly=False)
-    salesperson_id = fields.Many2one('res.users', string='Salesperson')
-
-    def _get_default_website_team(self):
-        try:
-            team = self.env.ref('sales_team.salesteam_website_sales')
-            return team if team.active else None
-        except ValueError:
+    def _default_salesteam_id(self):
+        team = self.env.ref('sales_team.salesteam_website_sales', False)
+        if team and team.active:
+            return team.id
+        else:
             return None
 
+    salesperson_id = fields.Many2one('res.users', string='Salesperson')
     salesteam_id = fields.Many2one('crm.team',
         string='Sales Team', ondelete="set null",
-        default=_get_default_website_team)
+        default=_default_salesteam_id)
+
+    pricelist_id = fields.Many2one(
+        'product.pricelist',
+        compute='_compute_pricelist_id',
+        string='Default Pricelist')
+    currency_id = fields.Many2one(
+        related='pricelist_id.currency_id', depends=(), related_sudo=False,
+        string='Default Currency', readonly=False)
     pricelist_ids = fields.One2many('product.pricelist', compute="_compute_pricelist_ids",
                                     string='Price list available for this Ecommerce/Website')
     all_pricelist_ids = fields.One2many('product.pricelist', 'website_id', string='All pricelists',
