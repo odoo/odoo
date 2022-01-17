@@ -1601,11 +1601,17 @@ class _String(Field):
             kwargs['translate'] = bool(kwargs['translate'])
         super(_String, self).__init__(string=string, **kwargs)
 
-    def _setup_attrs(self, model_class, name):
-        super()._setup_attrs(model_class, name)
+    def setup_nonrelated(self, model):
+        super().setup_nonrelated(model)
         if self.prefetch is None:
-            # do not prefetch complex translated fields by default
-            self.prefetch = not callable(self.translate)
+            # translated fields are not prefetched by default except for _rec_name
+            self.prefetch = not self.translate or model._rec_name == self.name
+
+    def setup_related(self, model):
+        super().setup_related(model)
+        if self.prefetch is None:
+            # translated fields are not prefetched by default except for _rec_name
+            self.prefetch = not self.translate or model._rec_name == self.name
 
     _related_translate = property(attrgetter('translate'))
 

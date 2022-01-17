@@ -1514,3 +1514,14 @@ class PrecomputeRequired(models.Model):
 
     partner_id = fields.Many2one('res.partner', required=True)
     name = fields.Char(related='partner_id.name', precompute=True, store=True, required=True)
+
+
+class PrefetchTranslateField(models.Model):
+    _name = 'test_new_api.prefetch.translate'
+    _description = 'A model with some translate fields to check prefetch'
+
+    name = fields.Char('Name', translate=True)
+    description = fields.Char('Description', translate=True, prefetch=True)
+    html_description = fields.Html('Styled description', translate=True, prefetch=True)
+    rare_description = fields.Char('Rare Description', translate=True)
+    rare_html_description = fields.Html('Rare Styled description', translate=True)
