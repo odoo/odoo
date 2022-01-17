@@ -55,36 +55,21 @@ class PaymentTransaction(models.Model):
         :rtype: recordset of `payment.transaction`
         :raise: ValidationError if inconsistent data were received
         :raise: ValidationError if the data match no transaction
-        :raise: ValidationError if the signature can not be verified
         """
         tx = super()._get_tx_from_feedback_data(provider, data)
         if provider != 'payumoney':
             return tx
 
         reference = data.get('txnid')
-        shasign = data.get('hash')
-        if not reference or not shasign:
+        if not reference:
             raise ValidationError(
-                "PayUmoney: " + _(
-                    "Received data with missing reference (%(ref)s) or shasign (%(sign)s)",
-                    ref=reference, sign=shasign,
-                )
+                "PayUmoney: " + _("Received data with missing reference (%s)", reference)
             )
 
         tx = self.search([('reference', '=', reference), ('provider', '=', 'payumoney')])
         if not tx:
             raise ValidationError(
                 "PayUmoney: " + _("No transaction found matching reference %s.", reference)
-            )
-
-        # Verify shasign
-        shasign_check = tx.acquirer_id._payumoney_generate_sign(data, incoming=True)
-        if shasign_check != shasign:
-            raise ValidationError(
-                "PayUmoney: " + _(
-                    "Invalid shasign: received %(sign)s, computed %(computed)s.",
-                    sign=shasign, computed=shasign_check
-                )
             )
 
         return tx

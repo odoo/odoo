@@ -5,6 +5,22 @@ from odoo.addons.payment.tests.common import PaymentCommon
 
 class OgoneCommon(PaymentCommon):
 
+    NOTIFICATION_DATA = {
+        'AAVADDRESS': 'NO',
+        'amount': '1111.11',
+        'CARDNO': 'XXXXXXXXXXXX1111',
+        'CN': 'Dummy Customer Name',
+        'currency': 'USD',
+        'IP': '101.00.111.22',
+        'NCERROR': '0',
+        'orderID': 'Test Transaction',  # Shamefully copy-pasted from payment
+        'PAYID': '01234567899',
+        'PM': 'CreditCard',
+        'SHASIGN': '2CE444D2260D914EA7E56450B7B28F189238553B',
+        'STATUS': '9',  # 'Payment requested' (done)
+        'TRXDATE': '01/31/22',
+    }
+
     @classmethod
     def setUpClass(cls, chart_template_ref=None):
         super().setUpClass(chart_template_ref=chart_template_ref)

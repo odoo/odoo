@@ -1,19 +1,22 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from unittest.mock import patch
+
 from freezegun import freeze_time
+from werkzeug.exceptions import Forbidden
 
 from odoo.fields import Command
 from odoo.tests import tagged
 from odoo.tools import mute_logger
 
 from odoo.addons.payment import utils as payment_utils
-
-from .common import OgoneCommon
-from ..controllers.main import OgoneController
+from odoo.addons.payment.tests.http_common import PaymentHttpCommon
+from odoo.addons.payment_ogone.controllers.main import OgoneController
+from odoo.addons.payment_ogone.tests.common import OgoneCommon
 
 
 @tagged('post_install', '-at_install')
-class OgoneTest(OgoneCommon):
+class OgoneTest(OgoneCommon, PaymentHttpCommon):
 
     def test_incompatibility_with_validation_operation(self):
         acquirers = self.env['payment.acquirer']._get_compatible_acquirers(
@@ -96,3 +99,65 @@ class OgoneTest(OgoneCommon):
                 value,
                 f"received value {inputs[form_key]} for input {form_key} (expected {value})"
             )
+
+    @mute_logger('odoo.addons.payment_ogone.controllers.main')
+    def test_webhook_notification_confirms_transaction(self):
+        """ Test the processing of a webhook notification. """
+        tx = self.create_transaction('redirect')
+        url = self._build_url(OgoneController._return_url)
+        with patch(
+            'odoo.addons.payment_ogone.controllers.main.OgoneController'
+            '._verify_notification_signature'
+        ):
+            self._make_http_post_request(url, data=self.NOTIFICATION_DATA)
+        self.assertEqual(tx.state, 'done')
+
+    @mute_logger('odoo.addons.payment_ogone.controllers.main')
+    def test_webhook_notification_triggers_signature_check(self):
+        """ Test that receiving a webhook notification triggers a signature check. """
+        self.create_transaction('redirect')
+        url = self._build_url(OgoneController._return_url)
+        with patch(
+            'odoo.addons.payment_ogone.controllers.main.OgoneController'
+            '._verify_notification_signature'
+        ) as signature_check_mock, patch(
+            'odoo.addons.payment.models.payment_transaction.PaymentTransaction'
+            '._handle_feedback_data'
+        ):
+            self._make_http_post_request(url, data=self.NOTIFICATION_DATA)
+            self.assertEqual(signature_check_mock.call_count, 1)
+
+    def test_accept_notification_with_valid_signature(self):
+        """ Test the verification of a notification with a valid signature. """
+        tx = self.create_transaction('redirect')
+        self._assert_does_not_raise(
+            Forbidden,
+            OgoneController._verify_notification_signature,
+            self.NOTIFICATION_DATA,
+            self.NOTIFICATION_DATA['SHASIGN'],
+            tx,
+        )
+
+    @mute_logger('odoo.addons.payment_ogone.controllers.main')
+    def test_reject_notification_with_missing_signature(self):
+        """ Test the verification of a notification with a missing signature. """
+        tx = self.create_transaction('redirect')
+        self.assertRaises(
+            Forbidden,
+            OgoneController._verify_notification_signature,
+            self.NOTIFICATION_DATA,
+            None,
+            tx,
+        )
+
+    @mute_logger('odoo.addons.payment_ogone.controllers.main')
+    def test_reject_notification_with_invalid_signature(self):
+        """ Test the verification of a notification with an invalid signature. """
+        tx = self.create_transaction('redirect')
+        self.assertRaises(
+            Forbidden,
+            OgoneController._verify_notification_signature,
+            self.NOTIFICATION_DATA,
+            'dummy',
+            tx,
+        )

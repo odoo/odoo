@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
@@ -39,7 +38,7 @@ class PaymentTransaction(models.Model):
         # The acquirer reference is set now to allow fetching the payment status after redirection
         self.acquirer_reference = payment_data.get('id')
 
-        return {'api_url': payment_data["_links"]["checkout"]["href"]}
+        return {'api_url': payment_data['_links']['checkout']['href']}
 
     def _mollie_prepare_payment_request_payload(self):
         """ Create the payload for the payment request based on the transaction values.
@@ -50,7 +49,7 @@ class PaymentTransaction(models.Model):
         user_lang = self.env.context.get('lang')
         base_url = self.acquirer_id.get_base_url()
         redirect_url = urls.url_join(base_url, MollieController._return_url)
-        webhook_url = urls.url_join(base_url, MollieController._notify_url)
+        webhook_url = urls.url_join(base_url, MollieController._webhook_url)
 
         return {
             'description': self.reference,

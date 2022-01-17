@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
@@ -12,15 +11,15 @@ _logger = logging.getLogger(__name__)
 
 
 class MollieController(http.Controller):
-    _return_url = "/payment/mollie/return"
-    _notify_url = "/payment/mollie/notify"
+    _return_url = '/payment/mollie/return'
+    _webhook_url = '/payment/mollie/webhook'
 
     @http.route(
         _return_url, type='http', auth='public', methods=['GET', 'POST'], csrf=False,
         save_session=False
     )
-    def mollie_return(self, **data):
-        """ Process the data returned by Mollie after redirection.
+    def mollie_return_from_checkout(self, **data):
+        """ Process the notification data sent by Mollie after redirection from checkout.
 
         The route is flagged with `save_session=False` to prevent Odoo from assigning a new session
         to the user if they are redirected to this route with a POST request. Indeed, as the session
@@ -37,9 +36,9 @@ class MollieController(http.Controller):
         request.env['payment.transaction'].sudo()._handle_feedback_data('mollie', data)
         return request.redirect('/payment/status')
 
-    @http.route(_notify_url, type='http', auth='public', methods=['POST'], csrf=False)
-    def mollie_notify(self, **data):
-        """ Process the data sent by Mollie to the webhook.
+    @http.route(_webhook_url, type='http', auth='public', methods=['POST'], csrf=False)
+    def mollie_webhook(self, **data):
+        """ Process the notification data sent by Mollie to the webhook.
 
         :param dict data: The feedback data (only `id`) and the transaction reference (`ref`)
                           embedded in the return URL
@@ -50,5 +49,5 @@ class MollieController(http.Controller):
         try:
             request.env['payment.transaction'].sudo()._handle_feedback_data('mollie', data)
         except ValidationError:  # Acknowledge the notification to avoid getting spammed
-            _logger.exception("unable to handle the data; skipping to acknowledge the notification")
-        return ''  # Acknowledge the notification with an HTTP 200 response
+            _logger.exception("unable to handle the notification data; skipping to acknowledge")
+        return ''  # Acknowledge the notification
