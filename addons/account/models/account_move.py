@@ -2341,6 +2341,16 @@ class AccountMove(models.Model):
             'in_receipt': _('Purchase Receipt Created'),
         }[self.move_type]
 
+    def _merge_method(self, destination, source):
+        self.env['data_merge.record']._update_foreign_keys(destination=destination, source=source)
+        destination._compute_amount()
+
+        return {
+            'records_merged': len(source) + 1,
+            'log_chatter': True,
+            'post_merge': True,
+        }
+
     # -------------------------------------------------------------------------
     # RECONCILIATION METHODS
     # -------------------------------------------------------------------------
