@@ -179,7 +179,9 @@
                 <div class="o_wsale_product_information_text flex-grow-1">
                     <h6 class="o_wsale_products_item_title mb-2">
                         <a class="text-primary text-decoration-none" itemprop="name" t-att-href="product_href" t-att-content="product.name" t-field="product.name" />
-                        <a role="button" t-if="not product.website_published" t-att-href="product_href" class="btn btn-sm btn-danger" title="This product is unpublished.">Unpublished</a>
+                        <a t-if="not product.website_published" role="button" t-att-href="product_href" class="btn btn-sm btn-danger" title="This product is unpublished.">
+                            Unpublished
+                        </a>
                     </h6>
                 </div>
                 <div class="o_wsale_product_sub d-flex justify-content-between align-items-end pb-1">
@@ -222,7 +224,7 @@
     <template id="pricelist_list" name="Pricelists Dropdown">
         <t t-set="website_sale_pricelists" t-value="website.get_pricelist_available(show_visible=True)" />
         <div t-attf-class="o_pricelist_dropdown dropdown#{'' if website_sale_pricelists and len(website_sale_pricelists)&gt;1 else ' d-none'} #{_classes}">
-            <t t-set="curr_pl" t-value="website.get_current_pricelist()" />
+            <t t-set="curr_pl" t-value="website.pricelist_id" />
             <a role="button" href="#" class="dropdown-toggle btn btn-light border-0 px-0 text-muted align-baseline" data-toggle="dropdown">
                 <t t-esc="curr_pl and curr_pl.name or ' - '" />
             </a>
@@ -317,19 +319,17 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <t t-else="">
-                                <div class="text-center text-muted">
-                                    <t t-if="not search">
-                                        <h3 class="mt8">No product defined</h3>
-                                        <p t-if="category">No product defined in category "<strong t-esc="category.display_name"/>".</p>
-                                    </t>
-                                    <t t-else="">
-                                        <h3 class="mt8">No results</h3>
-                                        <p>No results for "<strong t-esc='search'/>"<t t-if="category"> in category "<strong t-esc="category.display_name"/>"</t>.</p>
-                                    </t>
-                                    <p t-ignore="true" groups="sales_team.group_sale_manager">Click <i>'New'</i> in the top-right corner to create your first product.</p>
-                                </div>
-                            </t>
+                            <div t-else="" class="text-center text-muted">
+                                <t t-if="not search">
+                                    <h3 class="mt8">No product defined</h3>
+                                    <p t-if="category">No product defined in category "<strong t-esc="category.display_name"/>".</p>
+                                </t>
+                                <t t-else="">
+                                    <h3 class="mt8">No results</h3>
+                                    <p>No results for "<strong t-esc='search'/>"<t t-if="category"> in category "<strong t-esc="category.display_name"/>"</t>.</p>
+                                </t>
+                                <p t-ignore="true" groups="sales_team.group_sale_manager">Click <i>'New'</i> in the top-right corner to create your first product.</p>
+                            </div>
                             <div class="products_pager form-inline justify-content-center py-3">
                                 <t t-call="website.pager"/>
                             </div>
@@ -756,16 +756,20 @@
     <template id="recommended_products" inherit_id="website_sale.product" customize_show="True" name="Alternative Products">
         <xpath expr="//div[@id='product_full_description']" position="after">
             <t t-set="alternative_products" t-value="product._get_website_alternative_product()"/>
-            <div class="container mt32" t-if="alternative_products">
+            <div t-if="alternative_products" class="container mt32">
                 <h3>Alternative Products:</h3>
                 <div class="row mt16" style="">
                     <t t-foreach="alternative_products" t-as="alt_product">
                         <div class="col-lg-2" t-att-data-publish="alt_product.website_published and 'on' or 'off'" style="width: 170px; height:130px; float:left; display:inline; margin-right: 10px; overflow:hidden;">
                             <div class="mt16 text-center" style="height: 100%;">
-                                <t t-set="combination_info" t-value="alt_product._get_combination_info()"/>
-                                <t t-set="product_variant" t-value="alt_product.env['product.product'].browse(combination_info['product_id'])"/>
-                                <div t-if="product_variant" t-field="product_variant.image_128" t-options="{'widget': 'image', 'qweb_img_responsive': False, 'class': 'rounded shadow o_alternative_product o_image_64_max' }" />
-                                <div t-else="" t-field="alt_product.image_128" t-options="{'widget': 'image', 'qweb_img_responsive': False, 'class': 'rounded shadow o_alternative_product o_image_64_max' }" />
+                                <t t-set="first_combination" t-value="alt_product._get_first_possible_combination(False)"/>
+                                <t t-set="alternative_variant" t-value="alt_product._get_variant_for_combination(combination)"/>
+                                <div t-if="alternative_variant"
+                                    t-field="alternative_variant.image_128"
+                                    t-options="{'widget': 'image', 'qweb_img_responsive': False, 'class': 'rounded shadow o_alternative_product o_image_64_max' }"/>
+                                <div t-else=""
+                                    t-field="alt_product.image_128"
+                                    t-options="{'widget': 'image', 'qweb_img_responsive': False, 'class': 'rounded shadow o_alternative_product o_image_64_max' }"/>
                                 <h6>
                                     <a t-att-href="alt_product.website_url" style="display: block">
                                         <span t-att-title="alt_product.name" t-field="alt_product.name" class="o_text_overflow" style="display: block;" />
@@ -835,14 +839,14 @@
     </template>
 
     <template id="product_price">
-      <div itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer" class="product_price d-inline-block mt-2 mb-3">
-          <h3 class="css_editable_mode_hidden">
-              <span class="oe_price" style="white-space: nowrap;" t-esc="combination_info['price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
-              <span itemprop="price" style="display:none;" t-esc="combination_info['price']"/>
-              <span itemprop="priceCurrency" style="display:none;" t-esc="website.currency_id.name"/>
-              <span t-attf-class="text-danger oe_default_price ml-1 h5 {{'' if combination_info['has_discounted_price'] else 'd-none'}}" style="text-decoration: line-through; white-space: nowrap;"
-                  t-esc="combination_info['list_price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
-              />
+        <div itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer" class="product_price d-inline-block mt-2 mb-3">
+            <h3 class="css_editable_mode_hidden">
+                <span class="oe_price" style="white-space: nowrap;" t-esc="combination_info['price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                <span itemprop="price" style="display:none;" t-esc="combination_info['price']"/>
+                <span itemprop="priceCurrency" style="display:none;" t-esc="website.currency_id.name"/>
+                <span t-attf-class="text-danger oe_default_price ml-1 h5 {{'' if combination_info['has_discounted_price'] else 'd-none'}}" style="text-decoration: line-through; white-space: nowrap;"
+                    t-esc="combination_info['list_price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
+                />
                 <del t-if="product.compare_list_price">
                     <span t-field="product.compare_list_price"
                         groups="website_sale.group_product_price_comparison"
@@ -851,23 +855,23 @@
                            "display_currency": product.currency_id,
                        }'/>
                 </del>
-          </h3>
-          <h3 class="css_non_editable_mode_hidden decimal_precision" t-att-data-precision="str(website.currency_id.decimal_places)">
-            <span t-field="product.list_price"
-                t-options='{
-                   "widget": "monetary",
-                   "display_currency": product.currency_id,
-               }'/>
-            <del t-if="product.compare_list_price">
-                <span t-field="product.compare_list_price"
-                    groups="website_sale.group_product_price_comparison"
+            </h3>
+            <h3 class="css_non_editable_mode_hidden decimal_precision" t-att-data-precision="str(website.currency_id.decimal_places)">
+                <span t-field="product.list_price"
                     t-options='{
                        "widget": "monetary",
                        "display_currency": product.currency_id,
-                   }'/>
-            </del>
-          </h3>
-      </div>
+                }'/>
+                <del t-if="product.compare_list_price">
+                    <span t-field="product.compare_list_price"
+                        groups="website_sale.group_product_price_comparison"
+                        t-options='{
+                            "widget": "monetary",
+                            "display_currency": product.currency_id,
+                        }'/>
+                </del>
+            </h3>
+        </div>
     </template>
 
     <template id="product_variants" inherit_id="website_sale.product" active="False" customize_show="True" name="List View of Variants">
@@ -1039,10 +1043,11 @@
 
     <!-- This template displays all the lines following the first one on the description of the sale order line, with a muted style. For typical products this content will be the product description_sale. -->
     <template id="cart_line_description_following_lines" name="Shopping Cart Line Description Following Lines">
-        <div t-if="line.get_description_following_lines()" t-attf-class="text-muted {{div_class}} small">
-            <t t-foreach="line.get_description_following_lines()" t-as="name_line">
-                <span><t t-esc="name_line"/></span>
-                <br t-if="not name_line_last" />
+        <t t-set="description_lines" t-value="line.get_description_following_lines()"/>
+        <div t-if="description_lines" t-attf-class="text-muted {{div_class}} small">
+            <t t-foreach="description_lines" t-as="name_line">
+                <span t-esc="name_line"/>
+                <br t-if="not name_line_last"/>
             </t>
         </div>
     </template>
@@ -1050,15 +1055,15 @@
     <!-- This template is the one at the "Review order" step (the first one) on the checkout workflow. -->
     <template id="cart_lines" name="Shopping Cart Lines">
         <div t-if="not website_sale_order or not website_sale_order.website_order_line" class="js_cart_lines alert alert-info">
-          Your cart is empty!
+            Your cart is empty!
         </div>
-        <table class="mb16 table table-striped table-sm js_cart_lines" id="cart_products" t-if="website_sale_order and website_sale_order.website_order_line">
+        <table t-if="website_sale_order and website_sale_order.website_order_line" class="mb16 table table-striped table-sm js_cart_lines" id="cart_products">
+            <t t-set="show_qty" t-value="is_view_active('website_sale.product_quantity')"/>
             <thead>
                 <tr>
                     <th class="td-img">Product</th>
                     <th></th>
                     <th class="text-center td-qty">
-                        <t t-set="show_qty" t-value="is_view_active('website_sale.product_quantity')"/>
                         <t t-if="show_qty">
                             Quantity
                         </t>
@@ -1070,26 +1075,30 @@
             <tbody>
                 <t t-foreach="website_sale_order.website_order_line" t-as="line">
                     <tr t-att-class="'optional_product info' if line.linked_line_id else None">
-                        <td colspan="2" t-if="not line.product_id.product_tmpl_id" class='td-img'></td>
-                        <td align="center" t-if="line.product_id.product_tmpl_id" class='td-img'>
-                            <span t-if="line._is_not_sellable_line() and line.product_id.image_128">
-                                <img t-att-src="image_data_uri(line.product_id.image_128)" class="img o_image_64_max rounded" t-att-alt="line.name_short"/>
-                            </span>
-                            <span t-else=""
-                                t-field="line.product_id.image_128"
-                                t-options="{'widget': 'image', 'qweb_img_responsive': False, 'class': 'rounded o_image_64_max'}"
-                            />
-                        </td>
-                        <td t-if="line.product_id.product_tmpl_id" class='td-product_name'>
-                            <div>
-                                <t t-call="website_sale.cart_line_product_link">
-                                    <strong t-field="line.name_short" />
+                        <td t-if="not line.product_id" colspan="2" class='td-img'/>
+                        <t t-else="">
+                            <td align="center" class='td-img'>
+                                <span t-if="line._is_not_sellable_line() and line.product_id.image_128">
+                                    <img t-att-src="image_data_uri(line.product_id.image_128)"
+                                        class="img o_image_64_max rounded"
+                                        t-att-alt="line.name_short"/>
+                                </span>
+                                <span t-else=""
+                                    t-field="line.product_id.image_128"
+                                    t-options="{'widget': 'image', 'qweb_img_responsive': False, 'class': 'rounded o_image_64_max'}"
+                                />
+                            </td>
+                            <td class='td-product_name'>
+                                <div>
+                                    <t t-call="website_sale.cart_line_product_link">
+                                        <strong t-field="line.name_short" />
+                                    </t>
+                                </div>
+                                <t t-call="website_sale.cart_line_description_following_lines">
+                                    <t t-set="div_class" t-value="'d-none d-md-block'"/>
                                 </t>
-                            </div>
-                            <t t-call="website_sale.cart_line_description_following_lines">
-                                <t t-set="div_class" t-value="'d-none d-md-block'"/>
-                            </t>
-                        </td>
+                            </td>
+                        </t>
                         <td class="text-center td-qty">
                             <div class="css_quantity input-group mx-auto justify-content-center">
                                 <t t-if="not line._is_not_sellable_line()">
@@ -1117,20 +1126,21 @@
                             </div>
                         </td>
                         <td class="text-center td-price" name="price">
-                            <t t-set="combination" t-value="line.product_id.product_template_attribute_value_ids + line.product_no_variant_attribute_value_ids"/>
-                            <t t-set="combination_info" t-value="line.product_id.product_tmpl_id._get_combination_info(combination, pricelist=website_sale_order.pricelist_id, add_qty=line.product_uom_qty)"/>
-
-                            <t t-set="list_price_converted" t-value="website.currency_id._convert(combination_info['list_price'], website_sale_order.currency_id, website_sale_order.company_id, date)"/>
-                            <t groups="account.group_show_line_subtotals_tax_excluded" t-if="(website_sale_order.pricelist_id.discount_policy == 'without_discount' and website_sale_order.currency_id.compare_amounts(list_price_converted, line.price_reduce_taxexcl) == 1) or website_sale_order.currency_id.compare_amounts(line.price_unit, line.price_reduce) == 1" name="order_line_discount">
-                                <del t-attf-class="#{'text-danger mr8'}" style="white-space: nowrap;" t-esc="list_price_converted" t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}" />
+                            <t groups="account.group_show_line_subtotals_tax_excluded">
+                                <span t-field="line.price_reduce_taxexcl" style="white-space: nowrap;" t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
                             </t>
-                            <span t-field="line.price_reduce_taxexcl" style="white-space: nowrap;" t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}" groups="account.group_show_line_subtotals_tax_excluded" />
-                            <t groups="account.group_show_line_subtotals_tax_included" t-if="(website_sale_order.pricelist_id.discount_policy == 'without_discount' and website_sale_order.currency_id.compare_amounts(list_price_converted, line.price_reduce_taxinc) == 1) or website_sale_order.currency_id.compare_amounts(line.price_unit, line.price_reduce) == 1" name="order_line_discount">
-                                <del t-attf-class="#{'text-danger mr8'}" style="white-space: nowrap;" t-esc="list_price_converted" t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}" />
+                            <t groups="account.group_show_line_subtotals_tax_included">
+                                <span t-field="line.price_reduce_taxinc" style="white-space: nowrap;" t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
                             </t>
-                            <span t-field="line.price_reduce_taxinc" style="white-space: nowrap;" t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}" groups="account.group_show_line_subtotals_tax_included" />
-                            <small t-if="not line._is_not_sellable_line() and line.product_id.base_unit_price" class="cart_product_base_unit_price d-block text-muted" groups="website_sale.group_show_uom_price">
-                                <t t-call='website_sale.base_unit_price'><t t-set='product' t-value='line.product_id' /></t>
+                            <t t-if="line.discount">
+                                <del t-attf-class="#{'text-danger mr8'}" style="white-space: nowrap;" t-esc="line.price_unit" t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}" />
+                            </t>
+                            <small t-if="not line._is_not_sellable_line() and line.product_id.base_unit_price"
+                                class="cart_product_base_unit_price d-block text-muted"
+                                groups="website_sale.group_show_uom_price">
+                                <t t-call='website_sale.base_unit_price'>
+                                    <t t-set='product' t-value='line.product_id'/>
+                                </t>
                             </small>
                         </td>
                         <td class="td-action">
@@ -1140,7 +1150,6 @@
                 </t>
             </tbody>
         </table>
-
     </template>
 
     <template id="cart" name="Shopping Cart">
@@ -1164,13 +1173,18 @@
                                         <t t-if="access_token">
                                             <p>This is your current cart.</p>
                                             <p>
-                                                <strong><a t-attf-href="/shop/cart/?access_token=#{access_token}&amp;revive=squash">Click here</a></strong> if you want to restore your previous cart. Your current cart will be replaced with your previous cart.</p>
+                                                <strong>
+                                                    <a t-attf-href="/shop/cart/?access_token=#{access_token}&amp;revive=squash">Click here</a>
+                                                </strong> if you want to restore your previous cart. Your current cart will be replaced with your previous cart.
+                                            </p>
                                             <p>
-                                                <strong><a t-attf-href="/shop/cart/?access_token=#{access_token}&amp;revive=merge">Click here</a></strong> if you want to merge your previous cart into current cart.
+                                                <strong>
+                                                    <a t-attf-href="/shop/cart/?access_token=#{access_token}&amp;revive=merge">Click here</a>
+                                                </strong> if you want to merge your previous cart into current cart.
                                             </p>
                                         </t>
                                     </div>
-                                    <t t-call="website_sale.cart_lines" />
+                                    <t t-call="website_sale.cart_lines"/>
                                     <div class="clearfix" />
                                     <a role="button" href="/shop" class="btn btn-secondary mb32 d-none d-xl-inline-block">
                                         <span class="fa fa-chevron-left" />
@@ -1737,21 +1751,23 @@
                         </thead>
                         <tbody>
                             <tr t-foreach="website_sale_order.website_order_line" t-as="line">
-                                <td colspan="2" t-if="not line.product_id.product_tmpl_id"></td>
-                                <td class='td-img text-center' t-if="line.product_id.product_tmpl_id">
-                                    <span t-if="line._is_not_sellable_line() and line.product_id.image_128">
-                                        <img t-att-src="image_data_uri(line.product_id.image_128)" class="img o_image_64_max rounded" t-att-alt="line.name_short"/>
-                                    </span>
-                                    <span t-else=""
-                                        t-field="line.product_id.image_128"
-                                        t-options="{'widget': 'image', 'qweb_img_responsive': False, 'class': 'rounded o_image_64_max'}"
-                                    />
-                                </td>
-                                <td class='td-product_name' t-if="line.product_id.product_tmpl_id">
-                                    <div>
-                                        <strong t-field="line.name_short" />
-                                    </div>
-                                </td>
+                                <td colspan="2" t-if="not line.product_id.product_tmpl_id"/>
+                                <t t-else="">
+                                    <td class='td-img text-center'>
+                                        <span t-if="line._is_not_sellable_line() and line.product_id.image_128">
+                                            <img t-att-src="image_data_uri(line.product_id.image_128)" class="img o_image_64_max rounded" t-att-alt="line.name_short"/>
+                                        </span>
+                                        <span t-else=""
+                                            t-field="line.product_id.image_128"
+                                            t-options="{'widget': 'image', 'qweb_img_responsive': False, 'class': 'rounded o_image_64_max'}"
+                                        />
+                                    </td>
+                                    <td class='td-product_name'>
+                                        <div>
+                                            <strong t-field="line.name_short" />
+                                        </div>
+                                    </td>
+                                </t>
                                 <td class='td-qty'>
                                     <div t-esc="line.product_uom_qty" />
                                 </td>
