@@ -1983,16 +1983,6 @@
         </xpath>
     </template>
 
-    <!-- User Navbar -->
-    <template id="user_navbar_inherit_website_sale" inherit_id="website.user_navbar">
-        <xpath expr="//div[@id='o_new_content_menu_choices']//div[@name='module_website_sale']" position="attributes">
-            <attribute name="name"/>
-            <attribute name="t-att-data-module-id"/>
-            <attribute name="t-att-data-module-shortdesc"/>
-            <attribute name="t-if">env.user.has_group('sales_team.group_sale_manager')</attribute>
-        </xpath>
-    </template>
-
     <template id="sale_order_portal_content_inherit_website_sale" name="Orders Followup Products Links" inherit_id="sale.sale_order_portal_content">
         <xpath expr="//section[@id='details']//td[@id='product_name']/*" position="replace">
             <a t-if="line.product_id.website_published" t-att-href="line.product_id.website_url">

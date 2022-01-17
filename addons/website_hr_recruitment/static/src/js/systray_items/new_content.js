@@ -15,5 +15,7 @@ patch(NewContentModal.prototype, 'website_hr_recruitment_new_content', {
         });
     },
 
-    async createNewJob() {}
+    createNewJob() {
+        this.website.goToWebsite({ path: '/jobs/add' });
+    }
 });
