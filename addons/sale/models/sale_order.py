@@ -991,7 +991,7 @@ class SaleOrder(models.Model):
                     x.get(grouping_key) for grouping_key in invoice_grouping_keys
                 ]
             )
-            for grouping_keys, invoices in groupby(invoice_vals_list, key=lambda x: [x.get(grouping_key) for grouping_key in invoice_grouping_keys]):
+            for _grouping_keys, invoices in groupby(invoice_vals_list, key=lambda x: [x.get(grouping_key) for grouping_key in invoice_grouping_keys]):
                 origins = set()
                 payment_refs = set()
                 refs = set()
@@ -1186,11 +1186,11 @@ class SaleOrder(models.Model):
     #=== CORE METHODS OVERRIDES ===#
 
     @api.model
-    def get_empty_list_help(self, help):
+    def get_empty_list_help(self, help_msg):
         self = self.with_context(
             empty_list_help_document_name=_("sale order"),
         )
-        return super().get_empty_list_help(help)
+        return super().get_empty_list_help(help_msg)
 
     def _compute_field_value(self, field):
         if field.name == 'invoice_status' and not self.env.context.get('mail_activity_automation_skip'):
