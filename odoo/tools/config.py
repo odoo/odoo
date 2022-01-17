@@ -633,11 +633,17 @@ class configmanager(object):
         except ConfigParser.NoSectionError:
             pass
 
-    def save(self):
+    def save(self, keys=None):
         p = ConfigParser.RawConfigParser()
         loglevelnames = dict(zip(self._LOGLEVELS.values(), self._LOGLEVELS))
-        p.add_section('options')
+        rc_exists = os.path.exists(self.rcfile)
+        if rc_exists and keys:
+            p.read([self.rcfile])
+        if not p.has_section('options'):
+            p.add_section('options')
         for opt in sorted(self.options):
+            if keys is not None and opt not in keys:
+                continue
             if opt in ('version', 'language', 'translate_out', 'translate_in', 'overwrite_existing_translations', 'init', 'update'):
                 continue
             if opt in self.blacklist_for_save:
@@ -656,7 +662,6 @@ class configmanager(object):
 
         # try to create the directories and write the file
         try:
-            rc_exists = os.path.exists(self.rcfile)
             if not rc_exists and not os.path.exists(os.path.dirname(self.rcfile)):
                 os.makedirs(os.path.dirname(self.rcfile))
             try:
