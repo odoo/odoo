@@ -120,26 +120,6 @@
                                             <p>Forum</p>
                                         </a>
                                     </div>
-                                    <t t-set="mod" t-value="env.ref('base.module_website_hr_recruitment')"/>
-                                    <div name="module_website_hr_recruitment" t-if='is_system' t-cache="is_system"
-                                         t-att-data-module-id="mod.id"
-                                         t-att-data-module-shortdesc="mod.shortdesc"
-                                         class="col-md-4 mb8 o_new_content_element">
-                                            <a href="#">
-                                                <i class="fa fa-briefcase"/>
-                                                <p>Job Offer</p>
-                                            </a>
-                                    </div>
-                                    <t t-set="mod" t-value="env.ref('base.module_website_sale')"/>
-                                    <div name="module_website_sale" t-if='is_system' t-cache="is_system"
-                                         t-att-data-module-id="mod.id"
-                                         t-att-data-module-shortdesc="mod.shortdesc"
-                                         class="col-md-4 mb8 o_new_content_element">
-                                        <a href="#" data-action="new_product">
-                                            <i class="fa fa-shopping-cart"/>
-                                            <p>Product</p>
-                                        </a>
-                                    </div>
                                     <t t-set="mod" t-value="env.ref('base.module_website_slides')"/>
                                     <div name="module_website_slides" t-if='is_system' t-cache="is_system"
                                          t-att-data-module-id="mod.id"

@@ -12,5 +12,7 @@ patch(NewContentModal.prototype, 'website_hr_recruitment_new_content', {
         newJobElement.status = MODULE_STATUS.INSTALLED;
     },
 
-    async createNewJob() {}
+    createNewJob() {
+        this.website.goToWebsite({ path: '/jobs/add' });
+    }
 });
