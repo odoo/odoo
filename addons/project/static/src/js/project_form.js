@@ -123,6 +123,7 @@ const FormDescriptionExpanderRenderer = FormRenderer.extend(Object.assign({}, Fo
     // 58px is the sum of the top margin of o_form_sheet 12 px + the bottom padding of o_form_sheet 24px
     // + 5px margin bottom (o_field_widget) + 1px border + the bottom padding of tab-pane 16 px.
     bottomDistance: 58,
+    fieldQuerySelector: '.o_xxl_form_view .oe_form_field.oe_form_field_html[name="description"]',
 }));
 
 export const FormDescriptionExpanderView = FormView.extend({
