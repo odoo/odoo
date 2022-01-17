@@ -9,26 +9,40 @@ class SaleOrder(models.Model):
 
     warning_stock = fields.Char('Warning')
 
-    def _cart_update(self, product_id=None, line_id=None, add_qty=0, set_qty=0, **kwargs):
-        values = super(SaleOrder, self)._cart_update(product_id, line_id, add_qty, set_qty, **kwargs)
-        line_id = values.get('line_id')
+    def _verify_updated_quantity(self, order_line, product_id, new_qty, **kwargs):
+        self.ensure_one()
+        product = self.env['product.product'].browse(product_id)
+        if product.type == 'product' and not product.allow_out_of_stock_order:
+            available_qty = product.with_context(warehouse=self.warehouse_id.id).free_qty
+            product_qty_in_cart = sum(
+                self.order_line.filtered(
+                    lambda p: p.product_id.id == product_id
+                ).mapped('product_uom_qty')
+            )
 
-        for line in self.order_line:
-            if line.product_id.type == 'product' and not line.product_id.allow_out_of_stock_order:
-                cart_qty = sum(self.order_line.filtered(lambda p: p.product_id.id == line.product_id.id).mapped('product_uom_qty'))
-                if cart_qty > line.product_id.with_context(warehouse=self.warehouse_id.id).free_qty and (line_id == line.id):
-                    qty = line.product_id.with_context(warehouse=self.warehouse_id.id).free_qty - cart_qty
-                    new_val = super(SaleOrder, self)._cart_update(line.product_id.id, line.id, qty, 0, **kwargs)
-                    values.update(new_val)
+            old_qty = order_line.product_uom_qty if order_line else 0
+            added_qty = new_qty - old_qty
 
-                    # Make sure line still exists, it may have been deleted in super()_cartupdate because qty can be <= 0
-                    if line.exists() and new_val['quantity']:
-                        line.warning_stock = _('You ask for %s products but only %s is available') % (cart_qty, new_val['quantity'])
-                        values['warning'] = line.warning_stock
+            if available_qty < (product_qty_in_cart + added_qty):
+                allowed_line_qty = available_qty - (product_qty_in_cart - old_qty)
+                if allowed_line_qty > 0:
+                    warning = _(
+                        'You ask for %s products but only %s is available',
+                        product_qty_in_cart + added_qty,
+                        available_qty,
+                    )
+                    if order_line:
+                        order_line.warning_stock = warning
                     else:
-                        self.warning_stock = _("Some products became unavailable and your cart has been updated. We're sorry for the inconvenience.")
-                        values['warning'] = self.warning_stock
-        return values
+                        self.warning_stock = warning
+                else:  # 0 or negative allowed_qty
+                    # if existing line: it will be deleted
+                    # if no existing line: no line will be created
+                    self.warning_stock = _(
+                        "Some products became unavailable and your cart has been updated. We're sorry for the inconvenience.")
+                return allowed_line_qty, order_line.warning_stock or self.warning_stock
+
+        return super()._verify_updated_quantity(order_line, product_id, new_qty, **kwargs)
 
     def _get_stock_warning(self, clear=True):
         self.ensure_one()

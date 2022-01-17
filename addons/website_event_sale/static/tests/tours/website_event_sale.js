@@ -59,18 +59,13 @@ tour.register('event_buy_tickets', {
             trigger: 'a:contains(Return to Cart)',
         },
         {
-            content: "Modify the cart to add 1 unit of `VIP` ticket type",
-            extra_trigger: "#cart_products:contains(Standard):contains(VIP)",
-            trigger: "#cart_products tr:contains(VIP) .fa-plus",
-        },
-        {
             content: "Now click on `Process Checkout`",
-            extra_trigger: 'a:has(.my_cart_quantity):contains(4),#cart_products input.js_quantity[value="3"]',
+            extra_trigger: 'a:has(.my_cart_quantity):contains(3),#cart_products input.js_quantity[value="3"]',
             trigger: '.btn-primary:contains("Process Checkout")'
         },
         {
-            content: "Check that the subtotal is 5,500.00 USD", // this test will fail if the currency of the main company is not USD
-            trigger: '#order_total_untaxed .oe_currency_value:contains("5,500.00")',
+            content: "Check that the subtotal is 4,000.00 USD", // this test will fail if the currency of the main company is not USD
+            trigger: '#order_total_untaxed .oe_currency_value:contains("4,000.00")',
             run: function () {}, // it's a check
         },
         {

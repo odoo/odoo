@@ -274,10 +274,10 @@ class TestWebsitePriceList(TransactionCase):
         self.assertEqual(sol.price_total, 0)
         so.pricelist_id = website_pricelist
         with MockRequest(self.env, website=current_website, sale_order_id=so.id):
-            so._cart_update(product_id=product.id, line_id=sol.id, set_qty=5)
+            so._cart_update(product_id=product.id, line_id=sol.id, set_qty=6)
         self.assertEqual(sol.price_unit, 10.0, 'Pricelist price should be applied')
         self.assertEqual(sol.price_reduce, 10.0, 'Pricelist price should be applied')
-        self.assertEqual(sol.price_total, 50.0)
+        self.assertEqual(sol.price_total, 60.0)
 
 
 def simulate_frontend_context(self, website_id=1):
