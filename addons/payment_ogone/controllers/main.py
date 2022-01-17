@@ -1,13 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import hmac
 import logging
 import pprint
 import re
 
-import werkzeug
+from werkzeug.exceptions import Forbidden
 
-from odoo import _, http
-from odoo.exceptions import ValidationError
+from odoo import http
 from odoo.http import request
 
 _logger = logging.getLogger(__name__)
@@ -28,55 +28,65 @@ class OgoneController(http.Controller):
     @http.route(
         [_return_url] + _backward_compatibility_urls, type='http', auth='public',
         methods=['GET', 'POST'], csrf=False
-    )  # 'GET' or 'POST' depending on the configuration in Ogone backend
-    def ogone_return_from_redirect(self, **feedback_data):
-        """ Process the data returned by Ogone after redirection to the Hosted Payment Page.
+    )  # Redirect are made with GET requests only. Webhook notifications can be set to GET or POST.
+    def ogone_return_from_checkout(self, **raw_data):
+        """ Process the notification data sent by Ogone after redirection from checkout.
 
         This route can also accept S2S notifications from Ogone if it is configured as a webhook in
-        Ogone's backend.
+        Ogone's backend. The user can choose between GET or POST for the webhook notifications.
 
-        :param dict feedback_data: The feedback data
+        :param dict raw_data: The un-formatted notification data
         """
-        # Check the source and integrity of the data
-        data = self._homogenize_data(feedback_data)
-        self._verify_signature(feedback_data, data)
+        _logger.info("handling redirection from Ogone with data:\n%s", pprint.pformat(raw_data))
+        data = self._normalize_data_keys(raw_data)
 
-        # Handle the feedback data
-        _logger.info("handling redirection from Ogone with data:\n%s", pprint.pformat(data))
+        # Check the integrity of the notification
+        received_signature = data.get('SHASIGN')
+        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_feedback_data(
+            'ogone', data
+        )
+        self._verify_notification_signature(raw_data, received_signature, tx_sudo)
+
+        # Handle the notification data
         request.env['payment.transaction'].sudo()._handle_feedback_data('ogone', data)
         return request.redirect('/payment/status')
 
-    def _homogenize_data(self, data):
-        """ Format keys to follow an homogenized convention inspired by Ogone Directlink API.
+    @staticmethod
+    def _normalize_data_keys(data):
+        """ Set all keys of a dictionary to upper-case.
 
         The keys received from Ogone APIs have inconsistent formatting and must be homogenized to
         allow re-using the same methods. We reformat them to follow a unified nomenclature inspired
-        by DirectLink's order direct endpoint.
+        by Ogone Directlink API.
 
         Formatting steps:
         1) Uppercase key strings: 'Something' -> 'SOMETHING', 'something' -> 'SOMETHING'
         2) Remove the prefix: 'CARD.SOMETHING' -> 'SOMETHING', 'ALIAS.SOMETHING' -> 'SOMETHING'
+
+        :param dict data: The data whose keys to normalize
+        :return: The normalized data
+        :rtype: dict
         """
         return {re.sub(r'.*\.', '', k.upper()): v for k, v in data.items()}
 
-    def _verify_signature(self, sign_data, data):
-        """ Check that the signature computed from the feedback matches the received one.
+    @staticmethod
+    def _verify_notification_signature(notification_data, received_signature, tx_sudo):
+        """ Check that the received signature matches the expected one.
 
-        :param dict sign_data: The original feedback data used to compute the signature
-        :param dict sign_data: The formatted feedback data used to find the tx and received sig
+        :param dict notification_data: The notification data
+        :param str received_signature: The signature received with the notification data
+        :param recordset tx_sudo: The sudoed transaction referenced by the notification data, as a
+                                  `payment.transaction` record
         :return: None
-        :raise: ValidationError if the signatures don't match
+        :raise: :class:`werkzeug.exceptions.Forbidden` if the signatures don't match
         """
-        acquirer_sudo = request.env['payment.transaction'].sudo()._get_tx_from_feedback_data(
-            'ogone', data
-        ).acquirer_id  # Find the acquirer based on the transaction
-        received_signature = data.get('SHASIGN')
-        expected_signature = acquirer_sudo._ogone_generate_signature(sign_data)
-        if received_signature != expected_signature.upper():
-            raise ValidationError(
-                "Ogone: " + _(
-                    "Received data with invalid signature. expected: %(exp)s ; received: %(rec)s ; "
-                    "data:\n%(data)s",
-                    exp=expected_signature, rec=received_signature, data=pprint.pformat(sign_data)
-                )
-            )
+        # Check for the received signature
+        if not received_signature:
+            _logger.warning("received notification with missing signature")
+            raise Forbidden()
+
+        # Compare the received signature with the expected signature computed from the data
+        expected_signature = tx_sudo.acquirer_id._ogone_generate_signature(notification_data)
+        if not hmac.compare_digest(received_signature, expected_signature.upper()):
+            _logger.warning("received notification with invalid signature")
+            raise Forbidden()

@@ -42,9 +42,9 @@ class PaymentAcquirer(models.Model):
 
         return acquirers
 
-    def _alipay_build_sign(self, val):
+    def _alipay_compute_signature(self, data):
         # Rearrange parameters in the data set alphabetically
-        data_to_sign = sorted(val.items())
+        data_to_sign = sorted(data.items())
         # Format key-value pairs of parameters that should be signed
         data_to_sign = [f"{k}={v}" for k, v in data_to_sign
                         if k not in ['sign', 'sign_type', 'reference']]

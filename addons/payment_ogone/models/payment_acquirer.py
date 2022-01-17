@@ -88,8 +88,7 @@ class PaymentAcquirer(models.Model):
             formatted_items = [(k.upper(), v) for k, v in values.items()]
         sorted_items = sorted(formatted_items)
         signing_string = ''.join(f'{k}={v}{key}' for k, v in sorted_items if _filter_key(k) and v)
-        shasign = sha1(signing_string.encode()).hexdigest()
-        return shasign
+        return sha1(signing_string.encode()).hexdigest()
 
     def _ogone_make_request(self, payload=None, method='POST'):
         """ Make a request to one of Ogone APIs.

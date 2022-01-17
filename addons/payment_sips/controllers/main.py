@@ -1,8 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 # Original Copyright 2015 Eezee-It, modified and maintained by Odoo.
 
+import hmac
 import logging
 import pprint
+
+from werkzeug.exceptions import Forbidden
 
 from odoo import http
 from odoo.exceptions import ValidationError
@@ -12,14 +15,14 @@ _logger = logging.getLogger(__name__)
 
 
 class SipsController(http.Controller):
-    _return_url = '/payment/sips/dpn/'
-    _notify_url = '/payment/sips/ipn/'
+    _return_url = '/payment/sips/return/'
+    _webhook_url = '/payment/sips/webhook/'
 
     @http.route(
         _return_url, type='http', auth='public', methods=['POST'], csrf=False, save_session=False
     )
-    def sips_dpn(self, **post):
-        """ Process the data returned by SIPS after redirection.
+    def sips_return_from_checkout(self, **data):
+        """ Process the notification data sent by SIPS after redirection from checkout.
 
         The route is flagged with `save_session=False` to prevent Odoo from assigning a new session
         to the user if they are redirected to this route with a POST request. Indeed, as the session
@@ -29,47 +32,60 @@ class SipsController(http.Controller):
         will satisfy any specification of the `SameSite` attribute, the session of the user will be
         retrieved and with it the transaction which will be immediately post-processed.
 
-        :param dict post: The feedback data to process
+        :param dict data: The notification data
         """
-        _logger.info("handling redirection from SIPS with data:\n%s", pprint.pformat(post))
-        try:
-            if self._sips_validate_data(post):
-                request.env['payment.transaction'].sudo()._handle_feedback_data('sips', post)
-        except ValidationError:
-            pass
+        _logger.info("handling redirection from SIPS with data:\n%s", pprint.pformat(data))
+
+        # Check the integrity of the notification
+        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_feedback_data(
+            'sips', data
+        )
+        self._verify_notification_signature(data, tx_sudo)
+
+        # Handle the notification data
+        request.env['payment.transaction'].sudo()._handle_feedback_data('sips', data)
         return request.redirect('/payment/status')
 
-    @http.route(_notify_url, type='http', auth='public', methods=['POST'], csrf=False)
-    def sips_ipn(self, **post):
-        """ Sips IPN. """
-        _logger.info("notification received from SIPS with data:\n%s", pprint.pformat(post))
-        if not post:
-            # SIPS sometimes sends empty notifications, the reason why is unclear but they tend to
-            # pollute logs and do not provide any meaningful information; log as a warning instead
-            # of a traceback.
-            _logger.warning("unable to handle the data; skipping to acknowledge the notification")
-        else:
-            try:
-                if self._sips_validate_data(post):
-                    request.env['payment.transaction'].sudo()._handle_feedback_data('sips', post)
-            except ValidationError:
-                pass  # Acknowledge the notification to avoid getting spammed
+    @http.route(_webhook_url, type='http', auth='public', methods=['POST'], csrf=False)
+    def sips_webhook(self, **data):
+        """ Process the notification data sent by SIPS to the webhook.
+
+        :param dict data: The notification data
+        :return: An empty string to acknowledge the notification
+        :rtype: str
+        """
+        _logger.info("notification received from SIPS with data:\n%s", pprint.pformat(data))
+        try:
+            # Check the integrity of the notification
+            tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_feedback_data(
+                'sips', data
+            )
+            self._verify_notification_signature(data, tx_sudo)
+
+            # Handle the notification data
+            request.env['payment.transaction'].sudo()._handle_feedback_data('sips', data)
+        except ValidationError:
+            _logger.exception("unable to handle the notification data; skipping to acknowledge")
         return ''
 
-    def _sips_validate_data(self, post):
-        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_feedback_data('sips', post)
-        acquirer_sudo = tx_sudo.acquirer_id
-        security = acquirer_sudo._sips_generate_shasign(post['Data'])
-        if security == post['Seal']:
-            _logger.debug(
-                "authenticity of notification data verified for transaction with reference %s",
-                tx_sudo.reference
-            )
-            return True
-        else:
-            _logger.warning(
-                "unable to verify the authenticity of notification data for transaction with "
-                "reference %s",
-                tx_sudo.reference,
-            )
-            return False
+    @staticmethod
+    def _verify_notification_signature(notification_data, tx_sudo):
+        """ Check that the received signature matches the expected one.
+
+        :param dict notification_data: The notification data
+        :param recordset tx_sudo: The sudoed transaction referenced by the notification data, as a
+                                  `payment.transaction` record
+        :return: None
+        :raise: :class:`werkzeug.exceptions.Forbidden` if the signatures don't match
+        """
+        # Retrieve the received signature from the data
+        received_signature = notification_data.get('Seal')
+        if not received_signature:
+            _logger.warning("received notification with missing signature")
+            raise Forbidden()
+
+        # Compare the received signature with the expected signature computed from the data
+        expected_signature = tx_sudo.acquirer_id._sips_generate_shasign(notification_data['Data'])
+        if not hmac.compare_digest(received_signature, expected_signature):
+            _logger.warning("received notification with invalid signature")
+            raise Forbidden()

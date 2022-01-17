@@ -39,7 +39,7 @@ class PaymentTransaction(models.Model):
             total_fee = self.amount
         rendering_values = {
             '_input_charset': 'utf-8',
-            'notify_url': urls.url_join(base_url, AlipayController._notify_url),
+            'notify_url': urls.url_join(base_url, AlipayController._webhook_url),
             'out_trade_no': self.reference,
             'partner': self.acquirer_id.alipay_merchant_partner_id,
             'return_url': urls.url_join(base_url, AlipayController._return_url),
@@ -60,7 +60,7 @@ class PaymentTransaction(models.Model):
                 'seller_email': self.acquirer_id.alipay_seller_email,
             })
 
-        sign = self.acquirer_id._alipay_build_sign(rendering_values)
+        sign = self.acquirer_id._alipay_compute_signature(rendering_values)
         rendering_values.update({
             'sign_type': 'MD5',
             'sign': sign,
@@ -99,16 +99,6 @@ class PaymentTransaction(models.Model):
                 "Alipay: " + _("No transaction found matching reference %s.", reference)
             )
 
-        # Verify signature (done here because we need the reference to get the acquirer)
-        sign_check = tx.acquirer_id._alipay_build_sign(data)
-        sign = data.get('sign')
-        if sign != sign_check:
-            raise ValidationError(
-                "Alipay: " + _(
-                    "Expected signature %(sc) but received %(sign)s.", sc=sign_check, sign=sign
-                )
-            )
-
         return tx
 
     def _process_feedback_data(self, data):
@@ -123,41 +113,6 @@ class PaymentTransaction(models.Model):
         super()._process_feedback_data(data)
         if self.provider != 'alipay':
             return
-
-        if float_compare(float(data.get('total_fee', '0.0')), (self.amount + self.fees), 2) != 0:
-            # mc_gross is amount + fees
-            _logger.error(
-                "the paid amount (%(amount)s) does not match the total + fees (%(total)s + "
-                "%(fees)s) for transaction with reference %(ref)s",
-                {
-                    'amount': data.get('total_fee', '0.0'),
-                    'total': self.amount,
-                    'fees': self.fees,
-                    'ref': self.reference,
-                }
-            )
-            raise ValidationError("Alipay: " + _("The amount does not match the total + fees."))
-        if self.acquirer_id.alipay_payment_method == 'standard_checkout':
-            if data.get('currency') != self.currency_id.name:
-                raise ValidationError(
-                    "Alipay: " + _(
-                        "The currency returned by Alipay %(rc)s does not match the transaction "
-                        "currency %(tc)s.", rc=data.get('currency'), tc=self.currency_id.name
-                    )
-                )
-        elif data.get('seller_email') != self.acquirer_id.alipay_seller_email:
-            _logger.error(
-                "the seller email (%(email)s) does not match the configured Alipay account "
-                "(%(acc_email)s) for transaction with reference %(ref)s",
-                {
-                    'email': data.get('seller_email'),
-                    'acc_email:':  self.acquirer_id.alipay_seller_email,
-                    'ref': self.reference,
-                },
-            )
-            raise ValidationError(
-                "Alipay: " + _("The seller email does not match the configured Alipay account.")
-            )
 
         self.acquirer_reference = data.get('trade_no')
         status = data.get('trade_status')

@@ -5,6 +5,19 @@ from odoo.addons.payment.tests.common import PaymentCommon
 
 class AlipayCommon(PaymentCommon):
 
+    NOTIFICATION_DATA = {
+        'currency': 'CNY',
+        'notify_id': '1234567890123456789012345678901234',
+        'notify_time': '2021-12-01 01:01:01',
+        'notify_type': 'trade_status_sync',
+        'out_trade_no': 'Test Transaction',  # Shamefully copy-pasted from payment
+        'sign': '782b6d1015549f847e2ab27d1edb65c7',
+        'sign_type': 'MD5',
+        'total_fee': '1111.11',
+        'trade_no': '2021111111111111111111111111',
+        'trade_status': 'TRADE_FINISHED',
+    }
+
     @classmethod
     def setUpClass(cls, chart_template_ref=None):
         super().setUpClass(chart_template_ref=chart_template_ref)
@@ -14,7 +27,7 @@ class AlipayCommon(PaymentCommon):
             'alipay_merchant_partner_id': 'dummy',
             'alipay_md5_signature_key': 'dummy',
             'alipay_seller_email': 'dummy',
-            'fees_active': False, # Only activate fees in dedicated tests
+            'fees_active': False,  # Only activate fees in dedicated tests
         })
 
         # override defaults for helpers

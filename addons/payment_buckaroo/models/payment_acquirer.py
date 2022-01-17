@@ -36,27 +36,27 @@ class PaymentAcquirer(models.Model):
         """ Generate the shasign for incoming or outgoing communications.
 
         :param dict values: The values used to generate the signature
-        :param bool incoming: Whether the signature must be generate for an incoming (Buckaroo to
+        :param bool incoming: Whether the signature must be generated for an incoming (Buckaroo to
                               Odoo) or outgoing (Odoo to Buckaroo) communication.
         :return: The shasign
         :rtype: str
         """
         if incoming:
-            # Remove the signature from the values used to check the signature
-            for key in values.keys():
-                if key.upper() == 'BRQ_SIGNATURE':  # Keys are case-insensitive
-                    del values[key]
-                    break
-            # Incoming communication values must be URL-decoded before checking the signature
-            items = [(k, urls.url_unquote_plus(v)) for k, v in values.items()]
-        else:
-            # Only use items whose key starts with 'add_', 'brq_', or 'cust_' (case insensitive)
+            # Incoming communication values must be URL-decoded before checking the signature. The
+            # key 'brq_signature' must be ignored.
             items = [
-                (k, v) for k, v in values.items()
-                if any(k.upper().startswith(key_prefix) for key_prefix in ('ADD_', 'BRQ_', 'CUST_'))
+                (k, urls.url_unquote_plus(v)) for k, v in values.items()
+                if k.lower() != 'brq_signature'
             ]
-        # Sort parameters by lower-cased key. Not upper- because ord('A') < ord('_') < ord('a').
-        sorted_items = sorted(items, key=lambda pair: pair[0].lower())
+        else:
+            items = values.items()
+        # Only use items whose key starts with 'add_', 'brq_', or 'cust_' (case insensitive)
+        filtered_items = [
+            (k, v) for k, v in items
+            if any(k.lower().startswith(key_prefix) for key_prefix in ('add_', 'brq_', 'cust_'))
+        ]
+        # Sort parameters by lower-cased key. Not upper-case because ord('A') < ord('_') < ord('a').
+        sorted_items = sorted(filtered_items, key=lambda pair: pair[0].lower())
         # Build the signing string by concatenating all parameters
         sign_string = ''.join(f'{k}={v or ""}' for k, v in sorted_items)
         # Append the pre-shared secret key to the signing string
