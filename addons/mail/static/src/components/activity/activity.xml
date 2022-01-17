@@ -54,44 +54,46 @@
 
                     <t t-if="activityView.areDetailsVisible">
                         <div class="o_Activity_details">
-                            <dl class="dl-horizontal">
-                                <t t-if="activityView.activity.type">
-                                    <dt>Activity type</dt>
-                                    <dd class="o_Activity_type">
+                            <div class="d-md-table table table-sm mt-2 mb-3">
+                                <div t-if="activityView.activity.type" class="d-md-table-row mb-3">
+                                    <div class="d-md-table-cell font-weight-bold text-md-right m-0 py-md-1 px-md-4">Activity type</div>
+                                    <div class="o_Activity_type d-md-table-cell py-md-1 pr-4">
                                         <t t-esc="activityView.activity.type.displayName"/>
-                                    </dd>
-                                </t>
-                                <t t-if="activityView.activity.creator">
-                                    <dt>Created</dt>
-                                    <dd class="o_Activity_detailsCreation">
-                                        <t t-esc="activityView.formattedCreateDatetime"/>
+                                    </div>
+                                </div>
+                                <div t-if="activityView.activity.creator" class="d-md-table-row mb-3">
+                                    <div class="d-md-table-cell font-weight-bold text-md-right m-0 py-md-1 px-md-4">Created</div>
+                                    <div class="o_Activity_detailsCreation d-md-table-cell py-md-1 pr-4">
+                                        <t t-esc="activityView.formattedCreateDatetime"/>, by
                                         <img class="o_Activity_detailsUserAvatar o_Activity_detailsCreatorAvatar" t-attf-src="/web/image/res.users/{{ activityView.activity.creator.id }}/avatar_128" t-att-title="activityView.activity.creator.nameOrDisplayName" t-att-alt="activityView.activity.creator.nameOrDisplayName"/>
-                                        <span class="o_Activity_detailsCreator">
+                                        <b class="o_Activity_detailsCreator">
                                             <t t-esc="activityView.activity.creator.nameOrDisplayName"/>
-                                        </span>
-                                    </dd>
-                                </t>
-                                <t t-if="activityView.activity.assignee">
-                                    <dt>Assigned to</dt>
-                                    <dd class="o_Activity_detailsAssignation">
+                                        </b>
+                                    </div>
+                                </div>
+                                <div t-if="activityView.activity.assignee" class="d-md-table-row mb-3">
+                                    <div class="d-md-table-cell font-weight-bold text-md-right m-0 py-md-1 px-md-4">Assigned to</div>
+                                    <div class="o_Activity_detailsAssignation d-md-table-cell py-md-1 pr-4">
                                         <img class="o_Activity_detailsUserAvatar o_Activity_detailsAssignationUserAvatar" t-attf-src="/web/image/res.users/{{ activityView.activity.assignee.id }}/avatar_128" t-att-title="activityView.activity.assignee.nameOrDisplayName" t-att-alt="activityView.activity.assignee.nameOrDisplayName"/>
-                                        <t t-esc="activityView.activity.assignee.nameOrDisplayName"/>
-                                    </dd>
-                                </t>
-                                <dt>Due on</dt>
-                                <dd class="o_Activity_detailsDueDate">
-                                    <span class="o_Activity_deadlineDateText"
-                                        t-att-class="{
-                                            'o-default': activityView.activity.state === 'default',
-                                            'o-overdue': activityView.activity.state === 'overdue',
-                                            'o-planned': activityView.activity.state === 'planned',
-                                            'o-today': activityView.activity.state === 'today',
-                                        }"
-                                    >
-                                        <t t-esc="activityView.formattedDeadlineDate"/>
-                                    </span>
-                                </dd>
-                            </dl>
+                                        <b t-esc="activityView.activity.assignee.nameOrDisplayName"/>
+                                    </div>
+                                </div>
+                                <div class="d-md-table-row">
+                                    <div class="d-md-table-cell font-weight-bold text-md-right m-0 py-md-1 px-md-4">Due on</div>
+                                    <div class="o_Activity_detailsDueDate d-md-table-cell py-md-1 pr-4">
+                                        <span class="o_Activity_deadlineDateText"
+                                            t-att-class="{
+                                                'o-default': activityView.activity.state === 'default',
+                                                'o-overdue': activityView.activity.state === 'overdue',
+                                                'o-planned': activityView.activity.state === 'planned',
+                                                'o-today': activityView.activity.state === 'today',
+                                            }"
+                                        >
+                                            <t t-esc="activityView.formattedDeadlineDate"/>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </t>
 
