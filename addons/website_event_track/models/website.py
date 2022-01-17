@@ -3,6 +3,7 @@
 
 
 from PIL import Image
+import base64
 
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
@@ -37,10 +38,10 @@ class Website(models.Model):
             if not website.favicon:
                 website.app_icon = False
                 continue
-            image = ImageProcess(website.favicon)
+            image = ImageProcess(base64.b64decode(website.favicon))
             w, h = image.image.size
             square_size = w if w > h else h
             image.crop_resize(square_size, square_size)
             image.image = image.image.resize((512, 512))
             image.operationsCount += 1
-            website.app_icon = image.image_quality_base64(output_format='PNG')
+            website.app_icon = base64.b64encode(image.image_quality(output_format='PNG'))

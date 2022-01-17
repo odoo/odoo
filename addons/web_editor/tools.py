@@ -144,5 +144,5 @@ def get_video_thumbnail(video_url):
         response = requests.get(f'https://www.instagram.com/p/{video_id}/media/?size=t', timeout=10)
 
     if response and response.ok:
-        return image_process(base64.b64encode(response.content))
+        return image_process(response.content)
     return None

@@ -747,22 +747,21 @@ class WebsiteSlides(WebsiteProfile):
         if not slide:
             raise werkzeug.exceptions.NotFound()
 
-        status, headers, image_base64 = request.env['ir.http'].sudo().binary_content(
+        status, headers, image = request.env['ir.http'].sudo().binary_content(
             model='slide.slide', id=slide.id, field=field,
             default_mimetype='image/png')
         if status == 301:
-            return request.env['ir.http']._response_by_status(status, headers, image_base64)
+            return request.env['ir.http']._response_by_status(status, headers, image)
         if status == 304:
             return werkzeug.wrappers.Response(status=304)
 
-        if not image_base64:
-            image_base64 = self._get_default_avatar()
+        if not image:
+            image = self._get_default_avatar()
             if not (width or height):
                 width, height = tools.image_guess_size_from_field_name(field)
 
-        image_base64 = tools.image_process(image_base64, size=(int(width), int(height)), crop=crop)
+        content = tools.image_process(image, size=(int(width), int(height)), crop=crop)
 
-        content = base64.b64decode(image_base64)
         headers = http.set_safe_image_headers(headers, content)
         response = request.make_response(content, headers)
         response.status_code = status

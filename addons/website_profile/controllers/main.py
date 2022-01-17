@@ -36,9 +36,8 @@ class WebsiteProfile(http.Controller):
         return False
 
     def _get_default_avatar(self):
-        img_path = modules.get_module_resource('web', 'static/img', 'placeholder.png')
-        with open(img_path, 'rb') as f:
-            return base64.b64encode(f.read())
+        with tools.file_open("web/static/img/placeholder.png", 'rb') as f:
+            return f.read()
 
     def _check_user_profile_access(self, user_id):
         user_sudo = request.env['res.users'].sudo().browse(user_id)
@@ -82,26 +81,24 @@ class WebsiteProfile(http.Controller):
 
         can_sudo = self._check_avatar_access(user_id, **post)
         if can_sudo:
-            status, headers, image_base64 = request.env['ir.http'].sudo().binary_content(
+            status, headers, image = request.env['ir.http'].sudo().binary_content(
                 model='res.users', id=user_id, field=field,
                 default_mimetype='image/png')
         else:
-            status, headers, image_base64 = request.env['ir.http'].binary_content(
+            status, headers, image = request.env['ir.http'].binary_content(
                 model='res.users', id=user_id, field=field,
                 default_mimetype='image/png')
         if status == 301:
-            return request.env['ir.http']._response_by_status(status, headers, image_base64)
+            return request.env['ir.http']._response_by_status(status, headers, image)
         if status == 304:
             return werkzeug.wrappers.Response(status=304)
 
-        if not image_base64:
-            image_base64 = self._get_default_avatar()
+        if not image:
+            image = self._get_default_avatar()
             if not (width or height):
                 width, height = tools.image_guess_size_from_field_name(field)
 
-        image_base64 = tools.image_process(image_base64, size=(int(width), int(height)), crop=crop)
-
-        content = base64.b64decode(image_base64)
+        content = tools.image_process(image, size=(int(width), int(height)), crop=crop)
         headers = http.set_safe_image_headers(headers, content)
         response = request.make_response(content, headers)
         response.status_code = status

@@ -264,7 +264,7 @@ class Partner(models.Model):
         partners_with_internal_user = self.filtered(lambda partner: partner.user_ids - partner.user_ids.filtered('share'))
         super(Partner, partners_with_internal_user)._compute_avatar(avatar_field, image_field)
         for partner in self - partners_with_internal_user:
-            partner[avatar_field] = partner[image_field] or partner._avatar_get_placeholder()
+            partner[avatar_field] = partner[image_field] or base64.b64encode(partner._avatar_get_placeholder())
 
     def _avatar_get_placeholder_path(self):
         if self.is_company:

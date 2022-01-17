@@ -140,54 +140,50 @@ class Http(models.AbstractModel):
         if status != 200:
             return self._response_by_status(status, headers, content)
         else:
-            content_base64 = base64.b64decode(content)
-            headers.append(('Content-Length', len(content_base64)))
-            response = request.make_response(content_base64, headers)
+            headers.append(('Content-Length', len(content)))
+            response = request.make_response(content, headers)
         return response
 
     @api.model
-    def _content_image(self, xmlid=None, model='ir.attachment', res_id=None, field='datas',
+    def _content_image(self, xmlid=None, model='ir.attachment', res_id=None, field='raw',
             filename_field='name', unique=None, filename=None, mimetype=None, download=None,
             width=0, height=0, crop=False, quality=0, access_token=None, **kwargs):
-        status, headers, image_base64 = self.binary_content(
+        status, headers, image = self.binary_content(
             xmlid=xmlid, model=model, id=res_id, field=field, unique=unique, filename=filename,
             filename_field=filename_field, download=download, mimetype=mimetype,
             default_mimetype='image/png', access_token=access_token
         )
         return self._content_image_get_response(
-            status, headers, image_base64, model=model, field=field, download=download,
+            status, headers, image, model=model, field=field, download=download,
             width=width, height=height, crop=crop, quality=quality)
 
     @api.model
-    def _content_image_get_response(self, status, headers, image_base64, model='ir.attachment',
-            field='datas', download=None, width=0, height=0, crop=False, quality=0):
+    def _content_image_get_response(self, status, headers, image, model='ir.attachment',
+            field='raw', download=None, width=0, height=0, crop=False, quality=0):
         if status in [301, 304] or (status != 200 and download):
-            return self._response_by_status(status, headers, image_base64)
-        if not image_base64:
+            return self._response_by_status(status, headers, image)
+        if not image:
             placeholder_filename = False
             if model in self.env:
                 placeholder_filename = self.env[model]._get_placeholder_filename(field)
-            placeholder_content = self._placeholder(image=placeholder_filename)
+            image = self._placeholder(image=placeholder_filename)
             # Since we set a placeholder for any missing image, the status must be 200. In case one
             # wants to configure a specific 404 page (e.g. though nginx), a 404 status will cause
             # troubles.
             status = 200
-            image_base64 = base64.b64encode(placeholder_content)
             if not (width or height):
                 width, height = odoo.tools.image_guess_size_from_field_name(field)
         try:
-            image_base64 = image_process(image_base64, size=(int(width), int(height)), crop=crop, quality=int(quality))
+            content = image_process(image, size=(int(width), int(height)), crop=crop, quality=int(quality))
         except Exception:
             return request.not_found()
-        content = base64.b64decode(image_base64)
         headers = http.set_safe_image_headers(headers, content)
         response = request.make_response(content, headers)
         response.status_code = status
         return response
 
     @api.model
-    def _placeholder_image_get_response(self, placeholder_base64):
-        content = base64.b64decode(placeholder_base64)
+    def _placeholder_image_get_response(self, content):
         headers = http.set_safe_image_headers([], content)
         response = request.make_response(content, headers)
         response.status_code = 200

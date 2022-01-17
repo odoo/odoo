@@ -20,7 +20,7 @@ from odoo.exceptions import UserError
 from odoo.modules.module import get_resource_path
 from odoo.tools import file_open
 from odoo.tools.mimetypes import guess_mimetype
-from odoo.tools.image import image_data_uri, base64_to_image
+from odoo.tools.image import image_data_uri, binary_to_image
 from odoo.addons.base.models.assetsbundle import AssetsBundle
 
 from ..models.ir_attachment import SUPPORTED_IMAGE_EXTENSIONS, SUPPORTED_IMAGE_MIMETYPES
@@ -193,8 +193,8 @@ class Web_Editor(http.Controller):
         if is_image:
             format_error_msg = _("Uploaded image's format is not supported. Try with: %s", ', '.join(SUPPORTED_IMAGE_EXTENSIONS))
             try:
-                data = tools.image_process(data, size=(width, height), quality=quality, verify_resolution=True)
-                mimetype = guess_mimetype(b64decode(data))
+                data = tools.image_process(b64decode(data), size=(width, height), quality=quality, verify_resolution=True)
+                mimetype = guess_mimetype(data)
                 if mimetype not in SUPPORTED_IMAGE_MIMETYPES:
                     return {'error': format_error_msg}
             except UserError:
@@ -299,7 +299,7 @@ class Web_Editor(http.Controller):
         }
 
         if data:
-            attachment_data['datas'] = data
+            attachment_data['raw'] = data
         elif url:
             attachment_data.update({
                 'type': 'url',
@@ -613,7 +613,7 @@ class Web_Editor(http.Controller):
                     or not attachment.public
                     or not attachment.url.startswith(request.httprequest.path)):
                 raise werkzeug.exceptions.NotFound()
-            svg = b64decode(attachment.datas).decode('utf-8')
+            svg = attachment.raw.decode('utf-8')
         else:
             svg = self._get_shape_svg(module, 'shapes', filename)
 
@@ -634,18 +634,18 @@ class Web_Editor(http.Controller):
     @http.route(['/web_editor/image_shape/<string:img_key>/<module>/<path:filename>'], type='http', auth="public", website=True)
     def image_shape(self, module, filename, img_key, **kwargs):
         svg = self._get_shape_svg(module, 'image_shapes', filename)
-        _, _, image_base64 = request.env['ir.http'].binary_content(
+        _, _, image = request.env['ir.http'].binary_content(
             xmlid=img_key, model='ir.attachment', field='datas', default_mimetype='image/png')
-        if not image_base64:
-            image_base64 = b64encode(request.env['ir.http']._placeholder())
-        image = base64_to_image(image_base64)
-        width, height = tuple(str(size) for size in image.size)
+        if not image:
+            image = request.env['ir.http']._placeholder()
+        img = binary_to_image(image)
+        width, height = tuple(str(size) for size in img.size)
         root = etree.fromstring(svg)
         root.attrib.update({'width': width, 'height': height})
         # Update default color palette on shape SVG.
         svg, _ = self._update_svg_colors(kwargs, etree.tostring(root, pretty_print=True).decode('utf-8'))
         # Add image in base64 inside the shape.
-        uri = image_data_uri(image_base64)
+        uri = image_data_uri(b64encode(image))
         svg = svg.replace('<image xlink:href="', '<image xlink:href="%s' % uri)
 
         return request.make_response(svg, [

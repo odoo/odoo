@@ -88,10 +88,12 @@ class CustomerPortal(portal.CustomerPortal):
 
     def _purchase_order_get_page_view_values(self, order, access_token, **kwargs):
         #
-        def resize_to_48(b64source):
-            if not b64source:
-                b64source = base64.b64encode(request.env['ir.http']._placeholder())
-            return image_process(b64source, size=(48, 48))
+        def resize_to_48(source):
+            if not source:
+                source = request.env['ir.http']._placeholder()
+            else:
+                source = base64.b64decode(source)
+            return base64.b64encode(image_process(source, size=(48, 48)))
 
         values = {
             'order': order,

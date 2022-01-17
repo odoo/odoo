@@ -2356,10 +2356,17 @@ class Image(Binary):
         records.env.cache.update(records, self, [cache_value] * len(records))
 
     def _image_process(self, value):
-        return image_process(value,
+        if self.readonly and not self.max_width and not self.max_height:
+            # no need to process images for computed fields, or related fields
+            return value
+        try:
+            img = base64.b64decode(value or '') or False
+        except:
+            raise UserError(_("Image is not encoded in base64."))
+        return base64.b64encode(image_process(img,
             size=(self.max_width, self.max_height),
             verify_resolution=self.verify_resolution,
-        )
+        ) or b'') or False
 
     def _process_related(self, value):
         """Override to resize the related value before saving it on self."""

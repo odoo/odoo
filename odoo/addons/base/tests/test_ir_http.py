@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo.tests import common
+import base64
 import odoo
 
 GIF = b"R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs="
@@ -62,9 +63,9 @@ class test_ir_http_mimetype(common.TransactionCase):
             'type': 'binary',
         })
 
-        resized = odoo.tools.image_process(prop.value_binary, size=(64, 64))
+        resized = odoo.tools.image_process(base64.b64decode(prop.value_binary), size=(64, 64))
         # Simul computed field which resize and that is not attachement=True (E.G. on product)
-        prop.write({'value_binary': resized})
+        prop.write({'value_binary': base64.b64encode(resized)})
         status, headers, content = self.env['ir.http'].binary_content(
             model='ir.property',
             id=prop.id,

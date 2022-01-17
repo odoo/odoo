@@ -359,11 +359,11 @@ class IrHttp(models.AbstractModel):
                     module_resource_path = os.path.normpath(module_resource_path)
                     if module_resource_path.startswith(module_path):
                         with open(module_resource_path, 'rb') as f:
-                            content = base64.b64encode(f.read())
+                            content = f.read()
                         status = 200
                         filename = os.path.basename(module_resource_path)
-                        mimetype = guess_mimetype(base64.b64decode(content), default=default_mimetype)
-                        filehash = '"%s"' % hashlib.md5(pycompat.to_text(content).encode('utf-8')).hexdigest()
+                        mimetype = record.mimetype
+                        filehash = record.checksum
 
             if not content:
                 status = 301
@@ -372,7 +372,7 @@ class IrHttp(models.AbstractModel):
         return status, content, filename, mimetype, filehash
 
     def _binary_record_content(
-            self, record, field='datas', filename=None,
+            self, record, field='raw', filename=None,
             filename_field='name', default_mimetype='application/octet-stream'):
 
         model = record._name
@@ -383,18 +383,23 @@ class IrHttp(models.AbstractModel):
         field_def = record._fields[field]
         if field_def.type == 'binary' and field_def.attachment and not field_def.related:
             if model != 'ir.attachment':
-                field_attachment = self.env['ir.attachment'].sudo().search_read(domain=[('res_model', '=', model), ('res_id', '=', record.id), ('res_field', '=', field)], fields=['datas', 'mimetype', 'checksum'], limit=1)
+                field_attachment = self.env['ir.attachment'].sudo().search_read(domain=[('res_model', '=', model), ('res_id', '=', record.id), ('res_field', '=', field)], fields=['raw', 'mimetype', 'checksum'], limit=1)
                 if field_attachment:
                     mimetype = field_attachment[0]['mimetype']
-                    content = field_attachment[0]['datas']
+                    content = field_attachment[0]['raw']
                     filehash = field_attachment[0]['checksum']
             else:
                 mimetype = record['mimetype']
-                content = record['datas']
+                content = record['raw']
                 filehash = record['checksum']
 
         if not content:
-            content = record[field] or ''
+            if model == 'ir.attachment':
+                content = record.raw
+            else:
+                data = record[field] or b''
+                content = base64.b64decode(data)
+                filehash = '"%s"' % hashlib.md5(str(content).encode('utf-8')).hexdigest()
 
         # filename
         default_filename = False
@@ -406,11 +411,7 @@ class IrHttp(models.AbstractModel):
                 filename = "%s-%s-%s" % (record._name, record.id, field)
 
         if not mimetype:
-            try:
-                decoded_content = base64.b64decode(content)
-            except base64.binascii.Error:  # if we could not decode it, no need to pass it down: it would crash elsewhere...
-                return (404, [], None)
-            mimetype = guess_mimetype(decoded_content, default=default_mimetype)
+            mimetype = guess_mimetype(content, default=default_mimetype)
 
         # extension
         _, existing_extension = os.path.splitext(filename)
@@ -420,12 +421,12 @@ class IrHttp(models.AbstractModel):
                 filename = "%s%s" % (filename, extension)
 
         if not filehash:
-            filehash = '"%s"' % hashlib.md5(pycompat.to_text(content).encode('utf-8')).hexdigest()
+            filehash = '"%s"' % hashlib.md5(str(base64.b64encode(content)).encode('utf-8')).hexdigest()
 
         status = 200 if content else 404
         return status, content, filename, mimetype, filehash
 
-    def _binary_set_headers(self, status, content, filename, mimetype, unique, filehash=None, download=False):
+    def _binary_set_headers(self, status, filename, mimetype, unique, filehash=None, download=False):
         headers = [('Content-Type', mimetype), ('X-Content-Type-Options', 'nosniff'), ('Content-Security-Policy', "default-src 'none'")]
         # cache
         etag = bool(request) and request.httprequest.headers.get('If-None-Match')
@@ -439,9 +440,9 @@ class IrHttp(models.AbstractModel):
         if download:
             headers.append(('Content-Disposition', content_disposition(filename)))
 
-        return (status, headers, content)
+        return (status, headers)
 
-    def binary_content(self, xmlid=None, model='ir.attachment', id=None, field='datas',
+    def binary_content(self, xmlid=None, model='ir.attachment', id=None, field='raw',
                        unique=False, filename=None, filename_field='name', download=False,
                        mimetype=None, default_mimetype='application/octet-stream',
                        access_token=None):
@@ -479,8 +480,8 @@ class IrHttp(models.AbstractModel):
                 record, field=field, filename=filename, filename_field=filename_field,
                 default_mimetype='application/octet-stream')
 
-        status, headers, content = self._binary_set_headers(
-            status, content, filename, mimetype, unique, filehash=filehash, download=download)
+        status, headers = self._binary_set_headers(
+            status, filename, mimetype, unique, filehash=filehash, download=download)
 
         return status, headers, content
 
