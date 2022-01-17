@@ -53,8 +53,6 @@ class EventTemplateTicket(models.Model):
     def _compute_price_reduce(self):
         for ticket in self:
             product = ticket.product_id
-            # TODO drop price field usage
-            # and ideally remove this whole price_reduce logic
             # seems strange to not apply pricelist logic but still use pricelist discount...
             discount = (
                 product.lst_price - product._get_contextual_price()
