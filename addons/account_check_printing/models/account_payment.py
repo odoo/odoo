@@ -44,7 +44,7 @@ class AccountPayment(models.Model):
     )
     payment_method_line_id = fields.Many2one(index=True)
 
-    @api.constrains('check_number', 'journal_id')
+    @api.constrains('check_number', 'journal_id', 'state')
     def _constrains_check_number(self):
         if not self:
             return
