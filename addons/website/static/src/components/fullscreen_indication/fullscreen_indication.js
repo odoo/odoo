@@ -1,40 +1,27 @@
 /** @odoo-module **/
 
-import Widget from 'web.Widget';
+const { Component, xml, useState } = owl;
 
-export const FullscreenIndication = Widget.extend({
-    xmlDependencies: ['/website/static/src/xml/website.xml'],
-    template: 'website.fullscreen_indication', 
+export class FullscreenIndication extends Component {
+    setup() {
+        this.state = useState({ isVisible: false });
+        this.props.bus.on('FULLSCREEN-INDICATION-SHOW', this, this.show);
+        this.props.bus.on('FULLSCREEN-INDICATION-HIDE', this, this.hide);
+    }
 
-    init: function () {
-        this.visible = false;
-        this.displayTime = 2000;
-        this._super(...arguments);
-    },
+    show() {
+        setTimeout(() => this.state.isVisible = true);
+        this.autofade = setTimeout(() => this.state.isVisible = false, 2000);
+    }
 
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-     * Displays the fullscreen indication modal
-     */
-    show: function () {
-        clearTimeout(this.autofade);
-        this.visible = true;
-        this.el.classList.add('o_transition', 'o_visible');
-        this.autofade = setTimeout(() => {
-            this.hide(true);
-        }, this.displayTime);
-    },
-    /**
-     * Hides the fullscreen indication modal with optionnal transition
-     * 
-     * @param {boolean} [withTransition=false]
-     */
-    hide: function (withTransition = false) {
-        this.el.classList.toggle('o_transition', withTransition);
-        this.el.classList.remove('o_visible');
-        this.visible = false;
-    },
-});
+    hide() {
+        if (this.state.isVisible) {
+            this.state.isVisible = false;
+            clearTimeout(this.autofade);
+        }
+    }
+}
+FullscreenIndication.template = xml`
+<div class="o_fullscreen_indication" t-att-class="{ o_visible: state.isVisible }">
+    <p>Press <span>esc</span> to exit full screen</p>
+</div>`;
