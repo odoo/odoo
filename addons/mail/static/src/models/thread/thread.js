@@ -168,6 +168,9 @@ registerModel({
             if ('group_based_subscription' in data) {
                 data2.group_based_subscription = data.group_based_subscription;
             }
+            if ('guestMembers' in data) {
+                data2.guestMembers = data.guestMembers;
+            }
             if ('id' in data) {
                 data2.id = data.id;
             }
@@ -1293,8 +1296,10 @@ registerModel({
             if (this.channel_type === 'chat' && this.correspondent) {
                 return this.custom_channel_name || this.correspondent.nameOrDisplayName;
             }
-            if (this.channel_type === 'group') {
-                return this.name || this.members.map(partner => partner.nameOrDisplayName).join(', ');
+            if (this.channel_type === 'group' && !this.name) {
+                const partnerNames = this.members.map(partner => partner.nameOrDisplayName);
+                const guestNames = this.guestMembers.map(guest => guest.name);
+                return [...partnerNames, ...guestNames].join(this.env._t(", "));
             }
             return this.name;
         },
@@ -1845,6 +1850,26 @@ registerModel({
         },
         /**
          * @private
+         * @returns {Array[]}
+         */
+        _sortGuestMembers() {
+            return [
+                ['defined-first', 'name'],
+                ['case-insensitive-asc', 'name'],
+            ];
+        },
+        /**
+         * @private
+         * @returns {Array[]}
+         */
+        _sortPartnerMembers() {
+            return [
+                ['defined-first', 'nameOrDisplayName'],
+                ['case-insensitive-asc', 'nameOrDisplayName'],
+            ];
+        },
+        /**
+         * @private
          * @param {mail.partner[]} members
          * @returns {mail.partner[]}
          */
@@ -2018,7 +2043,9 @@ registerModel({
         group_based_subscription: attr({
             default: false,
         }),
-        guestMembers: many2many('mail.guest'),
+        guestMembers: many2many('mail.guest', {
+            sort: '_sortGuestMembers',
+        }),
         /**
          * States whether `this` has activities (`mail.activity.mixin` server side).
          */
@@ -2188,6 +2215,7 @@ registerModel({
         memberCount: attr(),
         members: many2many('mail.partner', {
             inverse: 'memberThreads',
+            sort: '_sortPartnerMembers',
         }),
         /**
          * Determines the last mentioned channels of the last composer related
