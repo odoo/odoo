@@ -11,7 +11,7 @@ from random import randint
 from odoo import api, Command, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import UserError, ValidationError, AccessError
 from odoo.tools import format_amount
-from odoo.osv.expression import OR
+from odoo.osv.expression import OR, AND
 from odoo.tools.misc import get_lang
 
 from .project_task_recurrence import DAYS, WEEKS
@@ -2233,7 +2233,27 @@ class ProjectTags(models.Model):
 
     name = fields.Char('Name', required=True, translate=True)
     color = fields.Integer(string='Color', default=_get_default_color)
+    project_ids = fields.Many2many('project.project', 'project_project_project_tags_rel', string='Projects')
+    task_ids = fields.Many2many('project.task', string='Tasks')
 
     _sql_constraints = [
         ('name_uniq', 'unique (name)', "Tag name already exists!"),
     ]
+
+    @api.model
+    def _name_search(self, name='', args=None, operator='ilike', limit=100, name_get_uid=None):
+        domain = args
+        if 'project_id' in self.env.context:
+            project_id = self.env.context.get('project_id')
+            domain = AND([
+                domain,
+                ['|', ('task_ids.project_id', '=', project_id), ('project_ids', 'in', project_id)]
+            ])
+        return super()._name_search(name, domain, operator, limit, name_get_uid)
+
+    @api.model
+    def name_create(self, name):
+        existing_tag = self.search([('name', '=ilike', name.strip())], limit=1)
+        if existing_tag:
+            return existing_tag.name_get()[0]
+        return super().name_create(name)
