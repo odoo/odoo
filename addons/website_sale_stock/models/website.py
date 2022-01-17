@@ -18,7 +18,7 @@ class Website(models.Model):
 
     def _get_warehouse_available(self):
         return (
-            self.warehouse_id and self.warehouse_id.id or
+            self.warehouse_id.id or
             self.env['ir.default'].get('sale.order', 'warehouse_id', company_id=self.company_id.id) or
             self.env['ir.default'].get('sale.order', 'warehouse_id') or
             self.env['stock.warehouse'].sudo().search([('company_id', '=', self.company_id.id)], limit=1).id
