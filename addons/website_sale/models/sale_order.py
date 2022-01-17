@@ -152,6 +152,19 @@ class SaleOrder(models.Model):
             'price_unit': price,
             'discount': discount,
         }
+    def _cart_update_pricelist(self, pricelist_id=None, update_pricelist=False):
+        self.ensure_one()
+
+        previous_pricelist_id = self.pricelist_id.id
+
+        if pricelist_id:
+            self.pricelist_id = pricelist_id
+
+        if update_pricelist:
+            self._compute_pricelist_id()
+
+        if update_pricelist or previous_pricelist_id != self.pricelist_id.id:
+            self.update_prices()
 
     def _cart_update(self, product_id=None, line_id=None, add_qty=0, set_qty=0, **kwargs):
         """ Add or set product quantity, add_qty can be negative """

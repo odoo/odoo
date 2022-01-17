@@ -432,10 +432,11 @@ class WebsiteSale(http.Controller):
             'view_track': view_track,
         }
 
-    @http.route(['/shop/change_pricelist/<model("product.pricelist"):pl_id>'], type='http', auth="public", website=True, sitemap=False)
-    def pricelist_change(self, pl_id, **post):
-        if (pl_id.selectable or pl_id == request.env.user.partner_id.property_product_pricelist) \
-                and request.website.is_pricelist_available(pl_id.id):
+    @http.route(['/shop/change_pricelist/<model("product.pricelist"):pricelist>'], type='http', auth="public", website=True, sitemap=False)
+    def pricelist_change(self, pricelist, **post):
+        website = request.env['website'].get_current_website()
+        if (pricelist.selectable or pricelist == request.env.user.partner_id.property_product_pricelist) \
+                and website.is_pricelist_available(pricelist.id):
             redirect_url = request.httprequest.referrer
             if redirect_url and request.website.is_view_active('website_sale.filter_products_price'):
                 decoded_url = url_parse(redirect_url)
@@ -447,20 +448,20 @@ class WebsiteSale(http.Controller):
                     try:
                         min_price = float(min_price)
                         args['min_price'] = min_price and str(
-                            previous_price_list.currency_id._convert(min_price, pl_id.currency_id, request.website.company_id, fields.Date.today(), round=False)
+                            previous_price_list.currency_id._convert(min_price, pricelist.currency_id, request.website.company_id, fields.Date.today(), round=False)
                         )
                     except (ValueError, TypeError):
                         pass
                     try:
                         max_price = float(max_price)
                         args['max_price'] = max_price and str(
-                            previous_price_list.currency_id._convert(max_price, pl_id.currency_id, request.website.company_id, fields.Date.today(), round=False)
+                            previous_price_list.currency_id._convert(max_price, pricelist.currency_id, request.website.company_id, fields.Date.today(), round=False)
                         )
                     except (ValueError, TypeError):
                         pass
                     redirect_url = decoded_url.replace(query=url_encode(args)).to_url()
-            request.session['website_sale_current_pl'] = pl_id.id
-            request.website.sale_get_order(force_pricelist=pl_id.id)
+            request.session['website_sale_current_pl'] = pricelist.id
+            request.website.sale_get_order(update_pricelist=True)
         return request.redirect(redirect_url or '/shop')
 
     @http.route(['/shop/pricelist'], type='http', auth="public", website=True, sitemap=False)
@@ -472,7 +473,14 @@ class WebsiteSale(http.Controller):
             if not (pricelist_sudo and request.website.is_pricelist_available(pricelist_sudo.id)):
                 return request.redirect("%s?code_not_available=1" % redirect)
 
-        request.website.sale_get_order(code=promo)
+            # TODO find the best way to create the order with the correct pricelist directly ?
+            # not really necessary, but could avoid one write on SO record
+            order_sudo = request.website.sale_get_order(force_create=True)
+            order_sudo._cart_update_pricelist(pricelist_id=pricelist_sudo.id)
+        else:
+            order_sudo = request.website.sale_get_order()
+            if order_sudo:
+                order_sudo._cart_update_pricelist(update_pricelist=True)
         return request.redirect(redirect)
 
     @http.route(['/shop/cart'], type='http', auth="public", website=True, sitemap=False)
