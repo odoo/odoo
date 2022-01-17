@@ -73,7 +73,7 @@ class TestPERF(common.TransactionCase):
     @warmup
     def test_light_sales_orders_batch_creation_perf_without_taxes(self):
         self.products[0].taxes_id = [Command.set([])]
-        with self.assertQueryCount(admin=58):
+        with self.assertQueryCount(admin=59):
             self.env['sale.order'].create([{
                 'partner_id': self.partners[0].id,
                 'user_id': self.salesmans[0].id,
@@ -87,7 +87,7 @@ class TestPERF(common.TransactionCase):
     @users('admin')
     @warmup
     def test_light_sales_orders_batch_creation_perf(self):
-        with self.assertQueryCount(admin=69):  # 68 locally, 69 in nightly runbot
+        with self.assertQueryCount(admin=70):  # 69 locally, 70 in nightly runbot
             self.env['sale.order'].create([{
                 'partner_id': self.partners[0].id,
                 'user_id': self.salesmans[0].id,
@@ -104,7 +104,7 @@ class TestPERF(common.TransactionCase):
         # NOTE: sometimes more queries on runbot,
         # do not change without verifying in multi-builds
         # (Seems to be a time-based problem, everytime happening around 10PM)
-        self._test_complex_sales_orders_batch_creation_perf(1502)
+        self._test_complex_sales_orders_batch_creation_perf(1504)
 
     @users('admin')
     @warmup
@@ -114,7 +114,7 @@ class TestPERF(common.TransactionCase):
         self.env.user.groups_id += self.env.ref('product.group_discount_per_so_line')
 
         # Verify any modification to this count on nightly runbot builds
-        self._test_complex_sales_orders_batch_creation_perf(1545)
+        self._test_complex_sales_orders_batch_creation_perf(1546)
 
     def _test_complex_sales_orders_batch_creation_perf(self, query_count):
         MSG = "Model %s, %i records, %s, time %.2f"

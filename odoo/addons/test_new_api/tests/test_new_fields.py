@@ -2522,6 +2522,20 @@ class TestFields(TransactionCaseWithUserDemo):
         with self.assertRaises(AccessError):
             record_user.read(['tags'])
 
+    def test_98_prefetch_translate(self):
+        Model = self.registry['test_new_api.prefetch.translate']
+
+        # translated '_rec_name' field should be prefetched
+        self.assertTrue(Model.name.prefetch)
+
+        # parameter 'prefetch' can be always overridden
+        self.assertTrue(Model.description.prefetch)
+        self.assertTrue(Model.html_description.prefetch)
+
+        # translated fields should be prefetch=False by default
+        self.assertFalse(Model.rare_description.prefetch)
+        self.assertFalse(Model.rare_html_description.prefetch)
+
 
 class TestX2many(common.TransactionCase):
     def test_definition_many2many(self):

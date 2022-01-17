@@ -20,7 +20,7 @@ class MailMessageSubtype(models.Model):
              'change in a process (Stage change). Message subtypes allow to '
              'precisely tune the notifications the user want to receive on its wall.')
     description = fields.Text(
-        'Description', translate=True,
+        'Description', translate=True, prefetch=True,
         help='Description that will be added in the message posted for this '
              'subtype. If void, the name will be added instead.')
     internal = fields.Boolean(
