@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
 from pytz import UTC
 from datetime import datetime, time
 from random import choice
@@ -153,7 +154,7 @@ class HrEmployeePrivate(models.Model):
                 if employee.user_id:
                     avatar = employee.user_id[avatar_field]
                 else:
-                    avatar = employee._avatar_get_placeholder()
+                    avatar = base64.b64encode(employee._avatar_get_placeholder())
             employee[avatar_field] = avatar
 
     def name_get(self):

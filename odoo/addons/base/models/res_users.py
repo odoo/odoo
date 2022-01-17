@@ -28,7 +28,7 @@ from odoo.exceptions import AccessDenied, AccessError, UserError, ValidationErro
 from odoo.http import request
 from odoo.osv import expression
 from odoo.service.db import check_super
-from odoo.tools import partition, collections, frozendict, lazy_property, image_process
+from odoo.tools import partition, collections, frozendict, lazy_property
 
 _logger = logging.getLogger(__name__)
 

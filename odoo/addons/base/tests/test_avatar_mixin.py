@@ -51,10 +51,10 @@ class TestAvatarMixin(TransactionCase):
         self.assertEqual(expectedAvatar, b64decode(self.user_without_image.partner_id.avatar_1920).decode('utf-8'))
 
     def test_partner_without_name_has_default_placeholder_image_as_avatar(self):
-        self.assertEqual(self.user_without_name.partner_id._avatar_get_placeholder(), self.user_without_name.partner_id.avatar_1920)
+        self.assertEqual(self.user_without_name.partner_id._avatar_get_placeholder(), b64decode(self.user_without_name.partner_id.avatar_1920))
 
     def test_external_partner_has_default_placeholder_image_as_avatar(self):
-        self.assertEqual(self.external_partner._avatar_get_placeholder(), self.external_partner.avatar_1920)
+        self.assertEqual(self.external_partner._avatar_get_placeholder(), b64decode(self.external_partner.avatar_1920))
 
     def test_partner_and_user_have_the_same_avatar(self):
         self.assertEqual(self.user_without_image.partner_id.avatar_1920, self.user_without_image.avatar_1920)

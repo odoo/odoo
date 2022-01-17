@@ -1436,7 +1436,7 @@ class Binary(http.Controller):
         '/web/image/<int:id>-<string:unique>/<string:filename>',
         '/web/image/<int:id>-<string:unique>/<int:width>x<int:height>',
         '/web/image/<int:id>-<string:unique>/<int:width>x<int:height>/<string:filename>'], type='http', auth="public")
-    def content_image(self, xmlid=None, model='ir.attachment', id=None, field='datas',
+    def content_image(self, xmlid=None, model='ir.attachment', id=None, field='raw',
                       filename_field='name', unique=None, filename=None, mimetype=None,
                       download=None, width=0, height=0, crop=False, access_token=None,
                       **kwargs):
