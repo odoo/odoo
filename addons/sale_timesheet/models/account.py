@@ -50,10 +50,13 @@ class AccountAnalyticLine(models.Model):
                         invoice_type = 'billable_fixed'
                 timesheet.timesheet_invoice_type = invoice_type
             else:
-                if timesheet.so_line and timesheet.so_line.product_id.type == 'service':
-                    timesheet.timesheet_invoice_type = 'service_revenues'
+                if timesheet.amount >= 0:
+                    if timesheet.so_line and timesheet.so_line.product_id.type == 'service':
+                        timesheet.timesheet_invoice_type = 'service_revenues'
+                    else:
+                        timesheet.timesheet_invoice_type = 'other_revenues'
                 else:
-                    timesheet.timesheet_invoice_type = 'other_revenues' if timesheet.amount >= 0 else 'other_costs'
+                    timesheet.timesheet_invoice_type = 'other_costs'
 
     @api.depends('task_id.sale_line_id', 'project_id.sale_line_id', 'employee_id', 'project_id.allow_billable')
     def _compute_so_line(self):
