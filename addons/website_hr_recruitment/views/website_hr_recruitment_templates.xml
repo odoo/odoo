@@ -593,18 +593,4 @@
     </xpath>
 </template>
 
-<!-- User Navbar -->
-<template id="user_navbar_inherit_website_hr_recruitment" inherit_id="website.user_navbar">
-    <xpath expr="//div[@id='o_new_content_menu_choices']//div[@name='module_website_hr_recruitment']/a" position="attributes">
-        <attribute name="href">/jobs/add</attribute>
-    </xpath>
-    <xpath expr="//div[@id='o_new_content_menu_choices']//div[@name='module_website_hr_recruitment']" position="attributes">
-        <attribute name="name"/>
-        <attribute name="t-att-data-module-id"/>
-        <attribute name="t-att-data-module-shortdesc"/>
-        <attribute name="t-if">is_designer</attribute>
-        <attribute name="t-cache"/>
-    </xpath>
-</template>
-
 </odoo>
