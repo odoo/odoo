@@ -115,6 +115,22 @@ div.o_boolean_toggle.custom-control.custom-checkbox {
   }
 }
 
+// == Inline margins
+//------------------------------------------------------------------------------
+// "Bootstrap v5 ready" utility-classes to handle inline margins.
+// These classes definitions can be safely removed after migrating to BTS v5.
+
+$o-inline-spacers: map-merge($spacers, ('auto': auto));
+
+@each $size, $length in $o-inline-spacers {
+  .ms-#{$size} {
+    margin-inline-start: $length !important;
+  }
+  .me-#{$size} {
+    margin-inline-end: $length !important;
+  }
+}
+
 //== Badges
 .badge {
   margin: 1px 2px 1px 0;
