@@ -145,6 +145,30 @@ function defaultOptions(defaultObject, object) {
     }
     return newObject;
 }
+function getImageFiles(dataTransfer) {
+    let files;
+    if (!dataTransfer.items) {
+        files = [...dataTransfer.items]
+            .filter(item => item.kind === 'file' && item.type.includes('image/'))
+            .map((item) => item.getAsFile());
+    } else {
+        files = [...dataTransfer.files];
+    }
+    return files || [];
+}
+function getImageUrl (file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+
+        reader.readAsDataURL(file);
+        reader.onloadend = (e) => {
+            if (reader.error) {
+                return reject(reader.error);
+            }
+            resolve(e.target.result);
+        }
+    });
+}
 export class OdooEditor extends EventTarget {
     constructor(editable, options = {}) {
         super();
@@ -2832,13 +2856,31 @@ export class OdooEditor extends EventTarget {
     }
 
     /**
+     * Add images inside the editable at the current selection.
+     *
+     * @param {File[]} imageFiles
+     */
+    addImagesFiles(imageFiles) {
+        for (const imageFile of imageFiles) {
+            const imageNode = document.createElement('img');
+            imageNode.dataset.fileName = imageFile.name;
+            getImageUrl(imageFile).then((url)=> {
+                imageNode.src = url;
+                this.execCommand('insertHTML', imageNode.outerHTML);
+            });
+        }
+    }
+    /**
      * Handle safe pasting of html or plain text into the editor.
      */
     _onPaste(ev) {
         ev.preventDefault();
-        const clipboardData = ev.clipboardData.getData('text/html');
-        if (clipboardData) {
-            this.execCommand('insertHTML', this._prepareClipboardData(clipboardData));
+        const files = getImageFiles(ev.clipboardData);
+        const clipboardHtml = ev.clipboardData.getData('text/html');
+        if (files.length) {
+            this.addImagesFiles(files);
+        } else if (clipboardHtml) {
+            this.execCommand('insertHTML', this._prepareClipboardData(clipboardHtml));
         } else {
             const text = ev.clipboardData.getData('text/plain');
             const splitAroundUrl = text.split(URL_REGEX);
@@ -2994,6 +3036,13 @@ export class OdooEditor extends EventTarget {
      */
     _onDrop(ev) {
         ev.preventDefault();
+
+        const imageFiles = getImageFiles(ev.dataTransfer);
+        if (imageFiles.length) {
+            this.addImagesFiles(imageFiles);
+            return;
+        }
+
         const sel = this.document.getSelection();
         let isInEditor = false;
         let ancestor = sel.anchorNode;
