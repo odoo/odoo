@@ -5,7 +5,7 @@ import base64
 import logging
 
 
-from odoo import _, api, fields, models, tools
+from odoo import _, api, fields, models, tools, SUPERUSER_ID
 from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
@@ -206,7 +206,7 @@ class MailTemplate(models.Model):
                     report_service = report.report_name
 
                     if report.report_type in ['qweb-html', 'qweb-pdf']:
-                        result, format = report._render_qweb_pdf([res_id])
+                        result, format = report.with_user(SUPERUSER_ID)._render_qweb_pdf([res_id])
                     else:
                         res = report._render([res_id])
                         if not res:
