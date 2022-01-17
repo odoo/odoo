@@ -12,6 +12,7 @@ from contextlib import contextmanager
 from functools import wraps
 import itertools
 import logging
+import os
 import time
 import uuid
 import warnings
@@ -28,6 +29,8 @@ from werkzeug import urls
 psycopg2.extensions.register_type(psycopg2.extensions.UNICODE)
 
 _logger = logging.getLogger(__name__)
+_logger_conn = _logger.getChild("connection")
+
 
 def unbuffer(symb, cr):
     if symb is None:
@@ -685,7 +688,7 @@ class ConnectionPool(object):
         return "ConnectionPool(used=%d/count=%d/max=%d)" % (used, count, self._maxconn)
 
     def _debug(self, msg, *args):
-        _logger.debug(('%r ' + msg), self, *args)
+        _logger_conn.debug(('%r ' + msg), self, *args)
 
     @locked
     def borrow(self, connection_info):
@@ -743,7 +746,7 @@ class ConnectionPool(object):
             raise
         result._original_dsn = connection_info
         self._connections.append((result, True))
-        self._debug('Create new connection')
+        self._debug('Create new connection backend PID %d', result.get_backend_pid())
         return result
 
     @locked
@@ -806,6 +809,7 @@ def connection_info_for(db_or_uri):
     :param str db_or_uri: database name or postgres dsn
     :rtype: (str, dict)
     """
+    app_name = "odoo-%d" % os.getpid()
     if db_or_uri.startswith(('postgresql://', 'postgres://')):
         # extract db from uri
         us = urls.url_parse(db_or_uri)
@@ -815,9 +819,9 @@ def connection_info_for(db_or_uri):
             db_name = us.username
         else:
             db_name = us.hostname
-        return db_name, {'dsn': db_or_uri}
+        return db_name, {'dsn': db_or_uri, 'application_name': app_name}
 
-    connection_info = {'database': db_or_uri}
+    connection_info = {'database': db_or_uri, 'application_name': app_name}
     for p in ('host', 'port', 'user', 'password', 'sslmode'):
         cfg = tools.config['db_' + p]
         if cfg:
