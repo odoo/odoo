@@ -764,7 +764,7 @@ class Project(models.Model):
             buttons.append({
                 'icon': 'smile-o',
                 'text': _lt('Satisfaction'),
-                'number': f'{self.rating_avg_percentage} %',
+                'number': f'{round(100 * self.rating_avg_percentage, 2)} %',
                 'action_type': 'object',
                 'action': 'action_view_all_rating',
                 'show': self.rating_active and self.rating_count > 0,
