@@ -4729,17 +4729,17 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
     /**
      * @override
      */
-    async start() {
+    onFocus() {
         core.bus.on('activate_image_link_tool', this, this._activateLinkTool);
-        return this._super(...arguments);
+        // When we start editing an image, rerender the UI to ensure the
+        // we-select that suggests the anchors is in a consistent state.
+        this.rerender = true;
     },
     /**
      * @override
      */
-    onFocus() {
-        // When we start editing an image, rerender the UI to ensure the
-        // we-select that suggests the anchors is in a consistent state.
-        this.rerender = true;
+    onBlur() {
+        core.bus.off('activate_image_link_tool', this, this._activateLinkTool);
     },
 
     //--------------------------------------------------------------------------
