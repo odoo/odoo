@@ -3,6 +3,7 @@
 from . import test_attachment
 from . import test_auth_signup_uninvited
 from . import test_base_url
+from . import test_configurator
 from . import test_controllers
 from . import test_converter
 from . import test_crawl
