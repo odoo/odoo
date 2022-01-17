@@ -15,7 +15,8 @@ odoo.define('fg_custom.FgEmailReceiptButton', function (require) {
 
         }
         async emailReceipt() {
-            var email = this.props.inputEmail;
+            var email = this.props.inputEmail || (this.props.order.attributes.client && this.props.order.attributes.client.email) || '';
+            console.log(this.props);
             if(email){
                try {
                     await this._sendReceiptToCustomer(email);
