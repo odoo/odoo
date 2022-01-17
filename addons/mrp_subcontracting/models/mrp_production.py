@@ -3,7 +3,7 @@
 
 from collections import defaultdict
 from odoo import fields, models, _, api
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tools.float_utils import float_compare, float_is_zero
 
 
@@ -34,6 +34,11 @@ class MrpProduction(models.Model):
                 move['additional'] = True
                 production.move_raw_ids = [(0, 0, move)]
                 production.move_raw_ids.filtered(lambda m: m.product_id == product_id)[:1].move_line_ids = lines
+
+    def action_merge(self):
+        if any(production._get_subcontract_move() for production in self):
+            raise ValidationError(_("Subcontracted manufacturing orders cannot be merged."))
+        super().action_merge()
 
     def subcontracting_record_component(self):
         self.ensure_one()

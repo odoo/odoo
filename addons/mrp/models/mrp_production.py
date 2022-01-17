@@ -10,7 +10,7 @@ from ast import literal_eval
 from collections import defaultdict
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, _, Command
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_compare, float_round, float_is_zero, format_datetime
 from odoo.tools.misc import OrderedSet, format_date
@@ -381,7 +381,7 @@ class MrpProduction(models.Model):
         for production in self:
             production.confirm_cancel = productions_with_done_move.get(production.id, False)
 
-    @api.depends('procurement_group_id')
+    @api.depends('procurement_group_id', 'procurement_group_id.stock_move_ids.group_id')
     def _compute_picking_ids(self):
         for order in self:
             order.picking_ids = self.env['stock.picking'].search([
@@ -539,7 +539,7 @@ class MrpProduction(models.Model):
                 and order.state not in {'cancel', 'draft'}
             )
 
-    @api.depends('state','move_raw_ids')
+    @api.depends('state', 'move_raw_ids')
     def _compute_show_lot_ids(self):
         for order in self:
             order.show_lot_ids = order.state != 'draft' and any(m.product_id.tracking == 'serial' for m in order.move_raw_ids)
@@ -1406,7 +1406,6 @@ class MrpProduction(models.Model):
         self.workorder_ids.filtered(lambda x: x.state not in ['done', 'cancel']).action_cancel()
         finish_moves = self.move_finished_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
         raw_moves = self.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
-
         (finish_moves | raw_moves)._action_cancel()
         picking_ids = self.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
         picking_ids.action_cancel()
@@ -1482,7 +1481,7 @@ class MrpProduction(models.Model):
             'move_finished_ids': None,
             'lot_producing_id': False,
             'origin': self.origin,
-            'state': 'confirmed',
+            'state': 'draft' if self.state == 'draft' else 'confirmed',
             'date_deadline': self.date_deadline,
             'orderpoint_id': self.orderpoint_id.id,
         }
@@ -1928,6 +1927,73 @@ class MrpProduction(models.Model):
         }
         return action
 
+    def action_split(self):
+        self._pre_action_split_merge_hook(split=True)
+        if len(self) > 1:
+            productions = [Command.create({'production_id': production.id}) for production in self]
+            # Wizard need a real id to have buttons enable in the view
+            wizard = self.env['mrp.production.split.multi'].create({'production_ids': productions})
+            action = self.env['ir.actions.actions']._for_xml_id('mrp.action_mrp_production_split_multi')
+            action['res_id'] = wizard.id
+            return action
+        else:
+            action = self.env['ir.actions.actions']._for_xml_id('mrp.action_mrp_production_split')
+            action['context'] = {
+                'default_production_id': self.id,
+            }
+            return action
+
+    def action_merge(self):
+        self._pre_action_split_merge_hook(merge=True)
+        products = set([(production.product_id, production.bom_id) for production in self])
+        product_id, bom_id = products.pop()
+        users = set([production.user_id for production in self])
+        if len(users) == 1:
+            user_id = users.pop()
+        else:
+            user_id = self.env.user
+
+        origs = {}
+        for move in self.move_raw_ids:
+            origs.setdefault(move.bom_line_id.id, []).extend(move.move_orig_ids.ids)
+        dests = {}
+        for move in self.move_finished_ids:
+            dests.setdefault(move.byproduct_id.id, []).extend(move.move_dest_ids.ids)
+
+        production = self.env['mrp.production'].create({
+            'product_id': product_id.id,
+            'bom_id': bom_id.id,
+            'picking_type_id': bom_id.picking_type_id or self._get_default_picking_type(),
+            'product_qty': sum(production.product_uom_qty for production in self),
+            'product_uom_id': product_id.uom_id.id,
+            'user_id': user_id.id,
+            'origin': ",".join(sorted([production.name for production in self])),
+        })
+        self.env['stock.move'].create(production._get_moves_raw_values())
+        self.env['stock.move'].create(production._get_moves_finished_values())
+        production._create_workorder()
+
+        for move in production.move_raw_ids:
+            move.move_orig_ids = [Command.set(origs[move.bom_line_id.id])]
+        for move in production.move_finished_ids:
+            move.move_dest_ids = [Command.set(dests[move.byproduct_id.id])]
+        production.move_dest_ids = [Command.set(sum(list(dests.values()), []))]
+
+        self.procurement_group_id.stock_move_ids.group_id = production.procurement_group_id
+
+        if 'confirmed' in self.mapped('state'):
+            production.action_confirm()
+
+        self.with_context(skip_activity=True)._action_cancel()
+
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'mrp.production',
+            'view_mode': 'form',
+            'res_id': production.id,
+            'target': 'main',
+        }
+
     @api.model
     def _prepare_procurement_group_vals(self, values):
         return {'name': values['name']}
@@ -2033,3 +2099,30 @@ class MrpProduction(models.Model):
                     ) and float_is_zero(production.qty_producing, precision_digits=pd):
                 immediate_productions |= production
         return immediate_productions
+
+    def _pre_action_split_merge_hook(self, merge=False, split=False):
+        if not merge and not split:
+            return True
+        ope_str = merge and 'merge' or 'split'
+        if any(production.state not in ('draft', 'confirmed') for production in self):
+            raise UserError(_("Only manufacturing orders in either a draft or confirmed state can be %s.", ope_str))
+        if any(not production.bom_id for production in self):
+            raise UserError(_("Only manufacturing orders with a Bill of Materials can be %s.", ope_str))
+        if split:
+            return True
+
+        if len(self) < 2:
+            raise UserError(_("You need at least two production orders to merge them."))
+        products = set([(production.product_id, production.bom_id) for production in self])
+        if len(products) > 1:
+            raise UserError(_('You can only merge manufacturing orders of identical products with same BoM.'))
+        additional_raw_ids = self.mapped("move_raw_ids").filtered(lambda move: not move.bom_line_id)
+        additional_byproduct_ids = self.mapped('move_byproduct_ids').filtered(lambda move: not move.byproduct_id)
+        if additional_raw_ids or additional_byproduct_ids:
+            raise UserError(_("You can only merge manufacturing orders with no additional components or by-products."))
+        if len(set(self.mapped('state'))) > 1:
+            raise UserError(_("You can only merge manufacturing with the same state."))
+        if len(set(self.mapped('picking_type_id'))) > 1:
+            raise UserError(_('You can only merge manufacturing with the same operation type'))
+        # TODO explode and check no quantity has been edited
+        return True
