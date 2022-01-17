@@ -6,7 +6,6 @@ import logging
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 
 from odoo.http import request
-from odoo.addons.website.models import ir_http
 from odoo.addons.http_routing.models.ir_http import url_for
 
 _logger = logging.getLogger(__name__)
@@ -158,16 +157,11 @@ class Website(models.Model):
         :param bool show_visible: if True, we don't display pricelist where selectable is False (Eg: Code promo)
         :returns: pricelist recordset
         """
-        website = ir_http.get_request_website()
-        if not website:
-            if self.env.context.get('website_id'):
-                website = self.browse(self.env.context['website_id'])
-            else:
-                # In the weird case we are coming from the backend (https://github.com/odoo/odoo/issues/20245)
-                website = len(self) == 1 and self or self.search([], limit=1)
-        isocountry = req and req.session.geoip and req.session.geoip.get('country_code') or False
+        self.ensure_one()
 
-        website = website.with_company(website.company_id)
+        country_code = req and req.session.geoip and req.session.geoip.get('country_code') or False
+
+        website = self.with_company(self.company_id)
 
         partner_sudo = website.env.user.partner_id
         last_order_pricelist = partner_sudo.last_website_so_id.pricelist_id
@@ -178,7 +172,7 @@ class Website(models.Model):
         current_pricelist_id = req and req.session.get('website_sale_current_pl') or None
 
         pricelist_ids = website._get_pl_partner_order(
-            isocountry,
+            country_code,
             show_visible,
             website_pricelist.id,
             current_pricelist_id,

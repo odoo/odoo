@@ -293,8 +293,9 @@ def simulate_frontend_context(self, website_id=1):
 class TestWebsitePriceListAvailable(TransactionCase):
     # This is enough to avoid a mock (request.session/website do not exist during test)
     def get_pricelist_available(self, show_visible=False, website_id=1, country_code=None, website_sale_current_pl=None):
+        website = self.env['website'].browse(website_id)
         request = DotDict({
-            'website': self.env['website'].browse(website_id),
+            'website': website,
             'session': {
                 'geoip': {
                     'country_code': country_code,
@@ -302,7 +303,7 @@ class TestWebsitePriceListAvailable(TransactionCase):
                 'website_sale_current_pl': website_sale_current_pl,
             },
         })
-        return self.env['website']._get_pricelist_available(request, show_visible)
+        return website._get_pricelist_available(request, show_visible)
 
     def setUp(self):
         super(TestWebsitePriceListAvailable, self).setUp()
