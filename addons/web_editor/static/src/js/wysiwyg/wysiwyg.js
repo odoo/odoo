@@ -1312,7 +1312,7 @@ const Wysiwyg = Widget.extend({
         // Open the link tool when CTRL+K is pressed.
         if (e && e.key === 'k' && (e.ctrlKey || e.metaKey)) {
             e.preventDefault();
-            const targetEl = this.odooEditor.document.getSelection().baseNode; // FIXME this is undefined on Firefox after clicking on an image and hitting CTRL-K
+            const targetEl = this.odooEditor.document.getSelection().getRangeAt(0).startContainer;
             // Link tool is different if the selection is an image or a text.
             if (targetEl instanceof HTMLElement
                     && (targetEl.tagName === 'IMG' || targetEl.querySelectorAll('img').length === 1)) {
