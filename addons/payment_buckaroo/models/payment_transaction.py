@@ -84,7 +84,7 @@ class PaymentTransaction(models.Model):
         if not reference or not shasign:
             raise ValidationError(
                 "Buckaroo: " + _(
-                    "Received data with missing reference (%(ref)s) or shasign (%(sign))",
+                    "Received data with missing reference (%(ref)s) or shasign (%(sign)s)",
                     ref=reference, sign=shasign
                 )
             )
