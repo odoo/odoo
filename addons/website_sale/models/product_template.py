@@ -156,6 +156,50 @@ class ProductTemplate(models.Model):
 
         return self._get_possible_variants(parent_combination).sorted(_sort_key_variant)
 
+    def _get_sales_prices(self, pricelist, fiscal_position=None):
+        pricelist.ensure_one()
+        partner_sudo = self.env.user.partner_id
+
+        # TODO use geoip fiscal pos (and/or fpos from order if any exist)
+        fiscal_position = self.env['account.fiscal.position'].sudo()._get_fiscal_position(partner_sudo)
+
+        sales_prices = pricelist._get_products_price(self, 1.0)
+        show_discount = pricelist.discount_policy == 'without_discount'
+
+        base_sales_prices = None
+        if show_discount:
+            base_sales_prices = self.price_compute(
+                'list_price', currency=pricelist.currency_id)
+
+        res = {}
+        for template in self:
+            price_reduce = sales_prices[template.id]
+
+            product_taxes = template.sudo().taxes_id.filtered(lambda t: t.company_id == t.env.company)
+            taxes = fiscal_position.map_tax(product_taxes)
+
+            price_reduce = self.env['account.tax']._fix_tax_included_price_company(
+                price_reduce, product_taxes, taxes, self.env.company)
+
+            tax_display = self.user_has_groups('account.group_show_line_subtotals_tax_excluded') and 'total_excluded' or 'total_included'
+            price_reduce = taxes.compute_all(price_reduce, pricelist.currency_id, 1, template, partner_sudo)[tax_display]
+
+            template_price_vals = {
+                'price_reduce': price_reduce
+            }
+
+            if show_discount:
+                base_price = base_sales_prices[template.id]
+                if base_price != price_reduce:
+                    base_price = self.env['account.tax']._fix_tax_included_price_company(
+                        base_price, product_taxes, taxes, self.env.company)
+                    base_price = taxes.compute_all(base_price, pricelist.currency_id, 1, template, partner_sudo)[tax_display]
+                    template_price_vals['base_price'] = base_price
+
+            res[template.id] = template_price_vals
+
+        return res
+
     def _get_combination_info(self, combination=False, product_id=False, add_qty=1, pricelist=False, parent_combination=False, only_template=False):
         """Override for website, where we want to:
             - take the website pricelist if no pricelist is set

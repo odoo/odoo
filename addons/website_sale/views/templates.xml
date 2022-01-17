@@ -158,8 +158,6 @@
     <template id="products_item" name="Products item">
         <t t-set="product_href" t-value="keep(product.website_url, page=(pager['page']['num'] if pager['page']['num']&gt;1 else None))" />
 
-        <t t-set="combination_info" t-value="product._get_combination_info(only_template=True, add_qty=add_qty or 1, pricelist=pricelist)"/>
-
         <form action="/shop/cart/update" method="post" class="oe_product_cart h-100 d-flex"
             t-att-data-publish="product.website_published and 'on' or 'off'"
             itemscope="itemscope" itemtype="http://schema.org/Product">
@@ -187,11 +185,13 @@
                 <div class="o_wsale_product_sub d-flex justify-content-between align-items-end pb-1">
                     <div class="o_wsale_product_btn"/>
                     <div class="product_price" itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer">
-                        <del t-attf-class="text-muted mr-1 h6 mb-0 {{'' if combination_info['has_discounted_price'] else 'd-none'}}" style="white-space: nowrap;">
-                            <em class="small" t-esc="combination_info['list_price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" />
-                        </del>
-                        <span class="h6 mb-0" t-if="combination_info['price']" t-esc="combination_info['price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
-                        <span itemprop="price" style="display:none;" t-esc="combination_info['price']" />
+                        <t t-if="'base_price' in template_price_vals">
+                            <del t-attf-class="text-muted mr-1 h6 mb-0" style="white-space: nowrap;">
+                                <em class="small" t-esc="template_price_vals['base_price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" />
+                            </del>
+                        </t>
+                        <span class="h6 mb-0" t-if="template_price_vals['price_reduce']" t-esc="template_price_vals['price_reduce']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                        <span itemprop="price" style="display:none;" t-esc="template_price_vals['price_reduce']" />
                         <span itemprop="priceCurrency" style="display:none;" t-esc="website.currency_id.name" />
                     </div>
                 </div>
@@ -293,6 +293,7 @@
                                         <col t-foreach="ppr" t-as="p"/>
                                     </colgroup>
                                     <tbody>
+                                        <t t-set="products_prices" t-value="products._get_sales_prices(pricelist)"/>
                                         <tr t-foreach="bins" t-as="tr_product">
                                             <t t-foreach="tr_product" t-as="td_product">
                                                 <t t-if="td_product">
@@ -304,7 +305,9 @@
                                                         t-att-data-ribbon-id="td_product['ribbon'].id"
                                                         t-att-data-name="product_block_name">
                                                         <div t-attf-class="o_wsale_product_grid_wrapper position-relative h-100 o_wsale_product_grid_wrapper_#{td_product['x']}_#{td_product['y']}">
-                                                            <t t-call="website_sale.products_item"/>
+                                                            <t t-call="website_sale.products_item">
+                                                                <t t-set="template_price_vals" t-value="products_prices[product.id]"/>
+                                                            </t>
                                                         </div>
                                                     </td>
                                                 </t>
