@@ -272,18 +272,21 @@ class SaleOrder(models.Model):
 
     def _cart_accessories(self):
         """ Suggest accessories based on 'Accessory Products' of products in cart """
-        for order in self:
-            products = order.website_order_line.mapped('product_id')
-            accessory_products = self.env['product.product']
-            for line in order.website_order_line.filtered(lambda l: l.product_id):
+        products = self.website_order_line.product_id
+        all_accessory_products = self.env['product.product']
+        for line in self.website_order_line.filtered('product_id'):
+            accessory_products = line.product_id.product_tmpl_id._get_website_accessory_product()
+            if accessory_products:
+                # Do not read ptavs if there is no accessory products to filter
                 combination = line.product_id.product_template_attribute_value_ids + line.product_no_variant_attribute_value_ids
-                accessory_products |= line.product_id.product_tmpl_id._get_website_accessory_product().filtered(lambda product:
-                    product not in products and
-                    product._is_variant_possible(parent_combination=combination) and
-                    (product.company_id == line.company_id or not product.company_id)
+                all_accessory_products |= accessory_products.filtered(
+                    lambda product:
+                        product not in products and
+                        (not product.company_id or product.company_id == line.company_id) and
+                        product._is_variant_possible(parent_combination=combination)
                 )
 
-            return random.sample(accessory_products, len(accessory_products))
+        return random.sample(all_accessory_products, len(all_accessory_products))
 
     def action_recovery_email_send(self):
         for order in self:
