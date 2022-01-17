@@ -29,17 +29,17 @@ class WebsiteEventBoothController(WebsiteEventController):
             return json.dumps({'error': 'boothCategoryError'})
 
         booth_values = self._prepare_booth_registration_values(event, kwargs)
-        order = request.website.sale_get_order(force_create=True)
-        order._cart_update(
+        order_sudo = request.website.sale_get_order(force_create=True)
+        order_sudo._cart_update(
             product_id=booth_category.product_id.id,
             set_qty=1,
             event_booth_pending_ids=booths.ids,
             registration_values=booth_values,
         )
-        if order.amount_total:
+        if order_sudo.amount_total:
             return json.dumps({'redirect': '/shop/checkout'})
-        elif order:
-            order.action_confirm()
+        elif order_sudo:
+            order_sudo.action_confirm()
             request.website.sale_reset()
 
             return self._prepare_booth_registration_success_values(event.name, booth_values)
