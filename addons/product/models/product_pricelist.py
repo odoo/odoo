@@ -571,12 +571,7 @@ class PricelistItem(models.Model):
                 values.update(dict(product_id=None, categ_id=None))
             elif applied_on == '0_product_variant':
                 values.update(dict(categ_id=None))
-        res = super(PricelistItem, self).write(values)
-        # When the pricelist changes we need the product.template price
-        # to be invalided and recomputed.
-        self.flush()
-        self.invalidate_cache()
-        return res
+        return super(PricelistItem, self).write(values)
 
     def _is_applicable_for(self, product, qty_in_product_uom):
         """Check whether the current rule is valid for the given product & qty.
