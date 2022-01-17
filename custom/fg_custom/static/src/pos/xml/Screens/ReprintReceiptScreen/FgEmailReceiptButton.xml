@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="FgEmailReceiptButton" owl="1">
+        <form t-on-submit.prevent="emailReceipt" class="send-email">
+
+            <div class="input-email" style="text-align:center">
+                <t t-if="props.order.attributes.client !== null ">
+                    <input type="email" placeholder="Email Receipt"   t-model="props.order.attributes.client.email" />
+                </t>
+                <t t-if="props.order.attributes.client == null">
+                    <input type="email" placeholder="Email Receipt"  t-model="props.inputEmail" />
+                </t>
+                <button class="button print" type="submit">Send</button>
+            </div>
+            <div class="pos-receipt-container">
+                <OrderReceipt order="props.order" t-ref="order-receipt" />
+            </div>
+        </form>
+    </t>
+</templates>
