@@ -444,7 +444,8 @@ class HrEmployeePrivate(models.Model):
         dfrom = datetime.combine(fields.Date.from_string(date_from), time.min).replace(tzinfo=pytz.UTC)
         dto = datetime.combine(fields.Date.from_string(date_to), time.max).replace(tzinfo=pytz.UTC)
 
-        works = {d[0].date() for d in calendar._work_intervals_batch(dfrom, dto)[False]}
+        domain = [('company_id', 'in', self.env.companies.ids)]
+        works = {d[0].date() for d in calendar._work_intervals_batch(dfrom, dto, domain=domain)[False]}
         return {fields.Date.to_string(day.date()): (day.date() not in works) for day in rrule(DAILY, dfrom, until=dto)}
 
     # ---------------------------------------------------------
