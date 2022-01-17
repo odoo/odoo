@@ -95,6 +95,18 @@ span.o_force_ltr {
     direction: ltr;
 }
 
+// == Inline avatar image
+//------------------------------------------------------------------------------
+// Commonly used for avatar images rendered within text.
+// Its size is relative to the current font-size.
+
+.o_avatar_inline {
+    width: $o-avatar-inline-size;
+    height: $o-avatar-inline-size;
+    object-fit: cover;
+    vertical-align: text-bottom;
+}
+
 // To fill the available space while keeping aspect ratio (crop).
 // Assuming the important part of the image is its center.
 .o_object_fit_cover {
