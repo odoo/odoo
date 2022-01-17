@@ -1,10 +1,9 @@
-odoo.define('sale.product_configurator_pricelist_tour', function (require) {
-"use strict";
+/** @odoo-module **/
 
-var tour = require('web_tour.tour');
+import tour from 'web_tour.tour';
 
 tour.register('sale_product_configurator_pricelist_tour', {
-    url: "/web",
+    url: '/web',
     test: true,
 },
 [
@@ -12,11 +11,6 @@ tour.stepUtils.showAppsMenuItem(),
 {
     content: "navigate to the sale app",
     trigger: '.o_app[data-menu-xmlid="sale.sale_menu_root"]',
-    edition: 'community'
-}, {
-    content: "navigate to the sale app",
-    trigger: '.o_app[data-menu-xmlid="sale.sale_menu_root"]',
-    edition: 'enterprise'
 }, {
     content: "create a new order",
     trigger: '.o_list_button_add',
@@ -36,20 +30,12 @@ tour.stepUtils.showAppsMenuItem(),
     content: "select the pricelist",
     trigger: 'ul.ui-autocomplete > li > a:contains(Custom pricelist (TEST))',
 }, {
-    trigger: "a:contains('Add a product')"
+    trigger: 'a:contains("Add a product")',
 }, {
     trigger: 'div[name="product_template_id"] input',
-    run: function (){
-        var $input = $('div[name="product_template_id"] input');
-        $input.click();
-        $input.val('Custo');
-        var keyDownEvent = jQuery.Event("keydown");
-        keyDownEvent.which = 42;
-        $input.trigger(keyDownEvent);
-    }
+    run: 'text Custo',
 }, {
     trigger: 'ul.ui-autocomplete a:contains("Customizable Desk (TEST)")',
-    run: 'click'
 }, {
     content: "check price is correct (USD)",
     trigger: 'span.oe_currency_value:contains("750.00")',
@@ -65,17 +51,14 @@ tour.stepUtils.showAppsMenuItem(),
     content: "check we are on the add modal",
     trigger: '.td-product_name:contains("Customizable Desk (TEST) (Steel, White)")',
     extra_trigger: '.oe_advanced_configurator_modal',
-    run: 'click'
 }, {
     content: "add conference chair",
     trigger: '.js_product:has(strong:contains(Conference Chair)) .js_add',
     extra_trigger: '.oe_advanced_configurator_modal .js_product:has(strong:contains(Conference Chair))',
-    run: 'click'
 }, {
     content: "add chair floor protection",
     trigger: '.js_product:has(strong:contains(Chair floor protection)) .js_add',
     extra_trigger: '.oe_advanced_configurator_modal .js_product:has(strong:contains(Chair floor protection))',
-    run: 'click'
 }, {
     content: "verify configurator final price", // tax excluded
     trigger: '.o_total_row .oe_currency_value:contains("1,257.00")',
@@ -83,7 +66,6 @@ tour.stepUtils.showAppsMenuItem(),
     content: "add to SO",
     trigger: 'button span:contains(Confirm)',
     extra_trigger: '.oe_advanced_configurator_modal',
-    run: 'click'
 }, {
     content: "verify SO final price excluded",
     trigger: 'span[name="Untaxed Amount"]:contains("1,257.00")',
@@ -92,5 +74,3 @@ tour.stepUtils.showAppsMenuItem(),
     trigger: 'span[name="amount_total"]:contains("1,437.00")',
 }
 ]);
-
-});

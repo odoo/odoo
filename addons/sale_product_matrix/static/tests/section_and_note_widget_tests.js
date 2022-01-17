@@ -1,9 +1,9 @@
 odoo.define('sale_product_matrix.section_and_note_widget_tests', function (require) {
 "use strict";
 
-var FormView = require('web.FormView');
-var testUtils = require('web.test_utils');
-var createView = testUtils.createView;
+const FormView = require('web.FormView');
+const testUtils = require('web.test_utils');
+const createView = testUtils.createView;
 
 QUnit.module('section_and_note: sale_product_matrix', {
     beforeEach: function () {
@@ -58,7 +58,7 @@ QUnit.module('section_and_note: sale_product_matrix', {
             },
             grid: () => {},
         };
-        var form = await createView({
+        const form = await createView({
             View: FormView,
             model: 'sale_order',
             data: this.data,

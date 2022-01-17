@@ -1,35 +1,22 @@
-odoo.define('sale.product_configurator_optional_products_tour', function (require) {
-"use strict";
+/** @odoo-module **/
 
-var tour = require('web_tour.tour');
+import tour from 'web_tour.tour';
 
 tour.register('sale_product_configurator_optional_products_tour', {
-    url: "/web",
+    url: '/web',
     test: true,
 }, [tour.stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="sale.sale_menu_root"]',
-    edition: 'community'
 }, {
-    trigger: '.o_app[data-menu-xmlid="sale.sale_menu_root"]',
-    edition: 'enterprise'
+    trigger: '.o_list_button_add',
+    extra_trigger: '.o_sale_order'
 }, {
-    trigger: ".o_list_button_add",
-    extra_trigger: ".o_sale_order"
-}, {
-    trigger: "a:contains('Add a product')"
+    trigger: 'a:contains("Add a product")',
 }, {
     trigger: 'div[name="product_template_id"] input',
-    run: function () {
-        var $input = $('div[name="product_template_id"] input');
-        $input.click();
-        $input.val('Customizable Desk');
-        var keyDownEvent = jQuery.Event("keydown");
-        keyDownEvent.which = 42;
-        $input.trigger(keyDownEvent);
-    }
+    run: 'text Custo',
 }, {
     trigger: 'ul.ui-autocomplete a:contains("Customizable Desk (TEST)")',
-    run: 'click'
 }, {
     trigger: 'tr:has(.td-product_name:contains("Office Chair Black")) .js_add',
 }, {
@@ -51,7 +38,6 @@ tour.register('sale_product_configurator_optional_products_tour', {
 }, {
     trigger: 'button span:contains(Confirm)',
     extra_trigger: '.oe_advanced_configurator_modal',
-    run: 'click'
 }, {
     trigger: 'tr:has(td.o_data_cell:contains("Customizable Desk")) td.o_data_cell:contains("2.0")',
     extra_trigger: 'div[name="order_line"]',
@@ -73,5 +59,3 @@ tour.register('sale_product_configurator_optional_products_tour', {
     extra_trigger: 'div[name="order_line"]',
     run: function () {}, // check added product
 }]);
-
-});
