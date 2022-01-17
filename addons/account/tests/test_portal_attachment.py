@@ -26,7 +26,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
             ],
         })
 
-        cls.base_url = cls.out_invoice.get_base_url()
+        cls.invoice_base_url = cls.out_invoice.get_base_url()
 
     @mute_logger('odoo.addons.http_routing.models.ir_http', 'odoo.http')
     def test_01_portal_attachment(self):
@@ -36,7 +36,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
 
         # Test public user can't create attachment without token of document
         res = self.url_open(
-            url='%s/portal/attachment/add' % self.base_url,
+            url=f'{self.invoice_base_url}/portal/attachment/add',
             data={
                 'name': "new attachment",
                 'res_model': self.out_invoice._name,
@@ -50,7 +50,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
 
         # Test public user can create attachment with token
         res = self.url_open(
-            url='%s/portal/attachment/add' % self.base_url,
+            url=f'{self.invoice_base_url}/portal/attachment/add',
             data={
                 'name': "new attachment",
                 'res_model': self.out_invoice._name,
@@ -74,7 +74,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
 
         # Test mimetype is neutered as non-admin
         res = self.url_open(
-            url='%s/portal/attachment/add' % self.base_url,
+            url=f'{self.invoice_base_url}/portal/attachment/add',
             data={
                 'name': "new attachment",
                 'res_model': self.out_invoice._name,
@@ -98,7 +98,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
 
         # Test attachment can't be removed without valid token
         res = self.opener.post(
-            url='%s/portal/attachment/remove' % self.base_url,
+            url=f'{self.invoice_base_url}/portal/attachment/remove',
             json={
                 'params': {
                     'attachment_id': create_res['id'],
@@ -112,7 +112,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
 
         # Test attachment can be removed with token if "pending" state
         res = self.opener.post(
-            url='%s/portal/attachment/remove' % self.base_url,
+            url=f'{self.invoice_base_url}/portal/attachment/remove',
             json={
                 'params': {
                     'attachment_id': create_res['id'],
@@ -131,7 +131,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
             'access_token': self.env['ir.attachment']._generate_access_token(),
         })
         res = self.opener.post(
-            url='%s/portal/attachment/remove' % self.base_url,
+            url=f'{self.invoice_base_url}/portal/attachment/remove',
             json={
                 'params': {
                     'attachment_id': attachment.id,
@@ -153,7 +153,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
             'attachment_ids': [(6, 0, attachment.ids)],
         })
         res = self.opener.post(
-            url='%s/portal/attachment/remove' % self.base_url,
+            url=f'{self.invoice_base_url}/portal/attachment/remove',
             json={
                 'params': {
                     'attachment_id': attachment.id,
@@ -168,7 +168,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
 
         # Test attachment can't be associated if no attachment token.
         res = self.opener.post(
-            url='%s/mail/chatter_post' % self.base_url,
+            url=f'{self.invoice_base_url}/mail/chatter_post',
             json={
                 'params': {
                     'res_model': self.out_invoice._name,
@@ -185,7 +185,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
 
         # Test attachment can't be associated if no main document token
         res = self.opener.post(
-            url='%s/mail/chatter_post' % self.base_url,
+            url=f'{self.invoice_base_url}/mail/chatter_post',
             json={
                 'params': {
                     'res_model': self.out_invoice._name,
@@ -204,7 +204,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
         self.assertFalse(self.out_invoice.message_ids)
         attachment.write({'res_model': 'model'})
         res = self.opener.post(
-            url='%s/mail/chatter_post' % self.base_url,
+            url=f'{self.invoice_base_url}/mail/chatter_post',
             json={
                 'params': {
                     'res_model': self.out_invoice._name,
@@ -226,7 +226,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
         # Test attachment can't be associated if not correct user
         attachment.write({'res_model': 'mail.compose.message'})
         res = self.opener.post(
-            url='%s/mail/chatter_post' % self.base_url,
+            url=f'{self.invoice_base_url}/mail/chatter_post',
             json={
                 'params': {
                     'res_model': self.out_invoice._name,
@@ -247,7 +247,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
 
         # Test attachment can be associated if all good (complete flow)
         res = self.url_open(
-            url='%s/portal/attachment/add' % self.base_url,
+            url=f'{self.invoice_base_url}/portal/attachment/add',
             data={
                 'name': "final attachment",
                 'res_model': self.out_invoice._name,
@@ -262,7 +262,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
         self.assertEqual(create_res['name'], "final attachment")
 
         res = self.opener.post(
-            url='%s/mail/chatter_post' % self.base_url,
+            url=f'{self.invoice_base_url}/mail/chatter_post',
             json={
                 'params': {
                     'res_model': self.out_invoice._name,
