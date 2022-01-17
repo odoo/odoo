@@ -31,7 +31,7 @@ class MailTemplate(models.Model):
     name = fields.Char('Name', translate=True)
     model_id = fields.Many2one('ir.model', 'Applies to', help="The type of document this template can be used with")
     model = fields.Char('Related Document Model', related='model_id.model', index=True, store=True, readonly=True)
-    subject = fields.Char('Subject', translate=True, help="Subject (placeholders may be used here)")
+    subject = fields.Char('Subject', translate=True, prefetch=True, help="Subject (placeholders may be used here)")
     email_from = fields.Char('From',
                              help="Sender address (placeholders may be used here). If not set, the default "
                                   "value will be the author's email alias if configured, or email address.")
@@ -47,12 +47,12 @@ class MailTemplate(models.Model):
     email_cc = fields.Char('Cc', help="Carbon copy recipients (placeholders may be used here)")
     reply_to = fields.Char('Reply To', help="Email address to which replies will be redirected when sending emails in mass; only used when the reply is not logged in the original discussion thread.")
     # content
-    body_html = fields.Html('Body', render_engine='qweb', translate=True, sanitize=False)
+    body_html = fields.Html('Body', render_engine='qweb', translate=True, prefetch=True, sanitize=False)
     attachment_ids = fields.Many2many('ir.attachment', 'email_template_attachment_rel', 'email_template_id',
                                       'attachment_id', 'Attachments',
                                       help="You may attach files to this template, to be added to all "
                                            "emails created from this template")
-    report_name = fields.Char('Report Filename', translate=True,
+    report_name = fields.Char('Report Filename', translate=True, prefetch=True,
                               help="Name to use for the generated report file (may contain placeholders)\n"
                                    "The extension can be omitted and will then come from the report type.")
     report_template = fields.Many2one('ir.actions.report', 'Optional report to print and attach')

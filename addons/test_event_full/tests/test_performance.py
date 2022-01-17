@@ -70,7 +70,7 @@ class TestEventPerformance(EventPerformanceCase):
         event_type = self.env['event.type'].browse(self.test_event_type.ids)
 
         # complex with type
-        with freeze_time(self.reference_now), self.assertQueryCount(event_user=785):  # tef only: 785 (779) - com runbot: 779 - ent runbot 779
+        with freeze_time(self.reference_now), self.assertQueryCount(event_user=786):  # tef only: 785 (779) - com runbot: 779 - ent runbot 779
             self.env.cr._now = self.reference_now  # force create_date to check schedulers
             event_values = [
                 dict(self.event_base_vals,
@@ -144,7 +144,7 @@ class TestEventPerformance(EventPerformanceCase):
         has_social = 'social_menu' in self.env['event.event']  # otherwise view may crash in enterprise
 
         # type and website
-        with freeze_time(self.reference_now), self.assertQueryCount(event_user=783):  # tef only: 673 - com runbot: 675
+        with freeze_time(self.reference_now), self.assertQueryCount(event_user=784):  # tef only: 673 - com runbot: 675
             self.env.cr._now = self.reference_now  # force create_date to check schedulers
             with Form(self.env['event.event']) as event_form:
                 event_form.name = 'Test Event'
@@ -187,7 +187,7 @@ class TestEventPerformance(EventPerformanceCase):
         event_type = self.env['event.type'].browse(self.test_event_type.ids)
 
         # complex with type
-        with freeze_time(self.reference_now), self.assertQueryCount(event_user=81):  # tef only: 81 (75) - com runbot: 75 - ent runbot 75
+        with freeze_time(self.reference_now), self.assertQueryCount(event_user=82):  # tef only: 81 (75) - com runbot: 75 - ent runbot 75
             self.env.cr._now = self.reference_now  # force create_date to check schedulers
             event_values = dict(
                 self.event_base_vals,
