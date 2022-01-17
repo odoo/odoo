@@ -6671,6 +6671,7 @@ Fields:
             if len(create_values) >= batch_size:
                 _logger.info('Batch: %s/%s', record_count, min_size)
                 records_batches.append(self.create(create_values))
+                self.env.cr.commit()
                 create_values = []
 
         if create_values:
