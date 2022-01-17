@@ -90,7 +90,7 @@ class Web_Unsplash(http.Controller):
                     continue
 
                 # get mime-type of image url because unsplash url dosn't contains mime-types in url
-                image_base64 = base64.b64encode(req.content)
+                image = req.content
             except requests.exceptions.ConnectionError as e:
                 logger.exception("Connection Error: " + str(e))
                 continue
@@ -98,8 +98,8 @@ class Web_Unsplash(http.Controller):
                 logger.exception("Timeout: " + str(e))
                 continue
 
-            image_base64 = tools.image_process(image_base64, verify_resolution=True)
-            mimetype = guess_mimetype(base64.b64decode(image_base64))
+            image = tools.image_process(image, verify_resolution=True)
+            mimetype = guess_mimetype(image)
             # append image extension in name
             query += mimetypes.guess_extension(mimetype) or ''
 
@@ -110,7 +110,7 @@ class Web_Unsplash(http.Controller):
                 'name': '_'.join(url_frags),
                 'url': '/' + '/'.join(url_frags),
                 'mimetype': mimetype,
-                'datas': image_base64,
+                'raw': image,
                 'public': res_model == 'ir.ui.view',
                 'res_id': res_id,
                 'res_model': res_model,

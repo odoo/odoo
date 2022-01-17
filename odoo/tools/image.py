@@ -49,14 +49,13 @@ IMAGE_MAX_RESOLUTION = 45e6
 
 class ImageProcess():
 
-    def __init__(self, base64_source, verify_resolution=True):
-        """Initialize the `base64_source` image for processing.
+    def __init__(self, source, verify_resolution=True):
+        """Initialize the `source` image for processing.
 
-        :param base64_source: the original image base64 encoded
+        :param source: the original image binary
 
-            No processing will be done if the `base64_source` is falsy or if
+            No processing will be done if the `source` is falsy or if
             the image is SVG.
-        :type base64_source: string or bytes
 
         :param verify_resolution: if True, make sure the original image size is not
             excessive before starting to process it. The max allowed resolution is
@@ -65,16 +64,19 @@ class ImageProcess():
         :rtype: ImageProcess
 
         :raise: ValueError if `verify_resolution` is True and the image is too large
-        :raise: UserError if the base64 is incorrect or the image can't be identified by PIL
+        :raise: UserError if the image can't be identified by PIL
         """
-        self.base64_source = base64_source or False
+        self.source = source or False
         self.operationsCount = 0
 
-        if not base64_source or base64_source[:1] in (b'P', 'P'):
+        if not source or source[:1] == b'<':
             # don't process empty source or SVG
             self.image = False
         else:
-            self.image = base64_to_image(self.base64_source)
+            try:
+                self.image = Image.open(io.BytesIO(source))
+            except (OSError, binascii.Error):
+                raise UserError(_("This file could not be decoded as an image file."))
 
             # Original format has to be saved before fixing the orientation or
             # doing any other operations because the information will be lost on
@@ -112,7 +114,7 @@ class ImageProcess():
         :rtype: bytes or False
         """
         if not self.image:
-            return self.image
+            return self.source
 
         output_image = self.image
 
@@ -123,7 +125,7 @@ class ImageProcess():
             output_format = 'JPEG'
 
         if not self.operationsCount and output_format == self.original_format and not quality:
-            return self.image
+            return self.source
 
         opt = {'output_format': output_format}
 
@@ -144,40 +146,6 @@ class ImageProcess():
             output_image = output_image.convert("RGB")
 
         return image_apply_opt(output_image, **opt)
-
-    def image_quality_base64(self, quality=0, output_format=''):
-        """Return the base64 encoded image resulting of all the image processing
-        operations that have been applied previously.
-
-        Return False if the initialized `base64_source` was falsy, and return
-        the initialized `base64_source` without change if it was SVG.
-
-        Also return the initialized `base64_source` if no operations have been
-        applied and the `output_format` is the same as the original format and
-        the quality is not specified.
-
-        :param int quality: quality setting to apply. Default to 0.
-
-            - for JPEG: 1 is worse, 95 is best. Values above 95 should be
-              avoided. Falsy values will fallback to 95, but only if the image
-              was changed, otherwise the original image is returned.
-            - for PNG: set falsy to prevent conversion to a WEB palette.
-            - for other formats: no effect.
-        :param str output_format: the output format. Can be PNG, JPEG, GIF, or ICO.
-            Default to the format of the original image. BMP is converted to
-            PNG, other formats than those mentioned above are converted to JPEG.
-        :return: image base64 encoded or False
-        :rtype: bytes or False
-        """
-
-        if not self.image:
-            return self.base64_source
-
-        stream = self.image_quality(quality=quality, output_format=output_format)
-
-        if stream != self.image:
-            return base64.b64encode(stream)
-        return self.base64_source
 
     def resize(self, max_width=0, max_height=0):
         """Resize the image.
@@ -280,16 +248,16 @@ class ImageProcess():
         return self
 
 
-def image_process(base64_source, size=(0, 0), verify_resolution=False, quality=0, crop=None, colorize=False, output_format=''):
-    """Process the `base64_source` image by executing the given operations and
-    return the result as a base64 encoded image.
+def image_process(source, size=(0, 0), verify_resolution=False, quality=0, crop=None, colorize=False, output_format=''):
+    """Process the `source` image by executing the given operations and
+    return the result image.
     """
-    if not base64_source or ((not size or (not size[0] and not size[1])) and not verify_resolution and not quality and not crop and not colorize and not output_format):
+    if not source or ((not size or (not size[0] and not size[1])) and not verify_resolution and not quality and not crop and not colorize and not output_format):
         # for performance: don't do anything if the image is falsy or if
         # no operations have been requested
-        return base64_source
+        return source
 
-    image = ImageProcess(base64_source, verify_resolution)
+    image = ImageProcess(source, verify_resolution)
     if size:
         if crop:
             center_x = 0.5
@@ -303,7 +271,7 @@ def image_process(base64_source, size=(0, 0), verify_resolution=False, quality=0
             image.resize(max_width=size[0], max_height=size[1])
     if colorize:
         image.colorize()
-    return image.image_quality_base64(quality=quality, output_format=output_format)
+    return image.image_quality(quality=quality, output_format=output_format)
 
 
 # ----------------------------------------
@@ -411,6 +379,12 @@ def image_fix_orientation(image):
     return image
 
 
+def binary_to_image(source):
+    try:
+        return Image.open(io.BytesIO(source))
+    except (OSError, binascii.Error):
+        raise UserError(_("This file could not be decoded as an image file."))
+
 def base64_to_image(base64_source):
     """Return a PIL image from the given `base64_source`.
 
@@ -422,7 +396,7 @@ def base64_to_image(base64_source):
     try:
         return Image.open(io.BytesIO(base64.b64decode(base64_source)))
     except (OSError, binascii.Error):
-        raise UserError(_("This file could not be decoded as an image file. Please try with a different file."))
+        raise UserError(_("This file could not be decoded as an image file."))
 
 
 def image_apply_opt(image, output_format, **params):
@@ -523,12 +497,3 @@ def rgb_to_hex(rgb):
     """Converts a RGB tuple or list to an hexadecimal string"""
     return '#' + ''.join([(hex(c).split('x')[-1].zfill(2)) for c in rgb])
 
-
-if __name__=="__main__":
-    import sys
-
-    assert len(sys.argv)==3, 'Usage to Test: image.py SRC.png DEST.png'
-
-    img = base64.b64encode(open(sys.argv[1],'rb').read())
-    new = image_process(img, size=(128, 100))
-    open(sys.argv[2], 'wb').write(base64.b64decode(new))

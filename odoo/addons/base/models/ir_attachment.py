@@ -316,13 +316,11 @@ class IrAttachment(models.Model):
                 try:
                     img = fn_quality = False
                     if is_raw:
-                        img = ImageProcess(False, verify_resolution=False)
-                        img.image = Image.open(io.BytesIO(values['raw']))
-                        img.original_format = (img.image.format or '').upper()
+                        img = ImageProcess(values['raw'], verify_resolution=False)
                         fn_quality = img.image_quality
                     else:  # datas
-                        img = ImageProcess(values['datas'], verify_resolution=False)
-                        fn_quality = img.image_quality_base64
+                        img = ImageProcess(base64.b64decode(values['datas']), verify_resolution=False)
+                        fn_quality = lambda **args: base64.b64encode(img.image_quality(**args))
 
                     w, h = img.image.size
                     nw, nh = map(int, max_resolution.split('x'))
