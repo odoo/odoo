@@ -3,7 +3,7 @@
 
 import io
 import math
-from base64 import b64encode, b64decode
+from base64 import b64encode
 from collections import defaultdict
 from datetime import datetime
 from re import sub as regex_sub
@@ -65,20 +65,17 @@ class AccountEdiFormat(models.Model):
             return {inv: {
                 'error': _("Please specify a tax agency on your company for TicketBAI."),
                 'blocking_level': 'error',
+                'success': False
             } for inv in invoice}
 
         # Generate the XML values.
         inv_xml = self._l10n_es_tbai_get_invoice_xml(invoice)
 
         # Optional check using the XSD
-        res = {}
-        xsd_id = 'l10n_es_edi_tbai.{invoice.company_id.l10n_es_tbai_tax_agency}_ticketBaiV1-2.xsd'
-        xsd_attachment = self.env.ref(xsd_id, False)
-        if xsd_attachment:
-            try:
-                self.env['l10n_es.edi.tbai.util'].validate_format_xsd(inv_xml, xsd_id)
-            except UserError as e:
-                res['errors'] = str(e).split('\\n')
+        xsd_id = f'l10n_es_edi_tbai.{invoice.company_id.l10n_es_tbai_tax_agency}_ticketBaiV1-2.xsd'
+        res = {invoice: self._l10n_es_tbai_verify_xml(inv_xml, xsd_id)}
+        if 'error' in res[invoice]:
+            return res
 
         # Call the web service and get response
         res.update(self._l10n_es_tbai_post_to_web_service(invoice, inv_xml))
@@ -168,14 +165,10 @@ class AccountEdiFormat(models.Model):
         cancel_xml = self._l10n_es_tbai_get_invoice_xml(invoice, cancel=True)
 
         # Optional check using the XSD
-        res = {}
-        xsd_id = 'l10n_es_edi_tbai.{invoice.company_id.l10n_es_tbai_tax_agency}_Anula_ticketBaiV1-2.xsd'
-        xsd_attachment = self.env.ref(xsd_id, False)
-        if xsd_attachment:
-            try:
-                self.env['l10n_es.edi.tbai.util'].validate_format_xsd(cancel_xml, xsd_id)
-            except UserError as e:
-                res['errors'] = str(e).split('\\n')
+        xsd_id = f'l10n_es_edi_tbai.{invoice.company_id.l10n_es_tbai_tax_agency}_Anula_ticketBaiV1-2.xsd'
+        res = {invoice: self._l10n_es_tbai_verify_xml(cancel_xml, xsd_id)}
+        if 'error' in res[invoice]:
+            return res
 
         # Call the web service and get response
         res.update(self._l10n_es_tbai_post_to_web_service(invoice, cancel_xml, cancel=True))
@@ -209,6 +202,23 @@ class AccountEdiFormat(models.Model):
                 attachment_ids=attachment.ids)
 
         return res
+
+    # -------------------------------------------------------------------------
+    # TBAI XML VERIFY
+    # -------------------------------------------------------------------------
+
+    def _l10n_es_tbai_verify_xml(self, xml, xsd_id):
+        xsd_attachment = self.env.ref(xsd_id, False)
+        if xsd_attachment:
+            try:
+                self.env['l10n_es.edi.tbai.util'].validate_format_xsd(xml, xsd_id)
+            except UserError as e:
+                return {
+                    'error': str(e).split('\\n'),
+                    'blocking_level': 'error',
+                    'success': False,
+                }
+        return {}
 
     # -------------------------------------------------------------------------
     # TBAI XML BUILD
