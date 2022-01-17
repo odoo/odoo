@@ -389,31 +389,23 @@ class WebsiteSale(http.Controller):
         return request.redirect(_build_url_w_params("/shop/%s" % slug(product), request.params), code=301)
 
     def _prepare_product_values(self, product, category, search, **kwargs):
-        add_qty = int(kwargs.get('add_qty', 1))
-
-        product_context = dict(request.env.context, quantity=add_qty,
-                               active_id=product.id,
-                               partner=request.env.user.partner_id)
         ProductCategory = request.env['product.public.category']
 
         if category:
             category = ProductCategory.browse(int(category)).exists()
 
         attrib_list = request.httprequest.args.getlist('attrib')
-        min_price = request.params.get('min_price')
-        max_price = request.params.get('max_price')
         attrib_values = [[int(x) for x in v.split("-")] for v in attrib_list if v]
         attrib_set = {v[1] for v in attrib_values}
 
-        keep = QueryURL('/shop', category=category and category.id, search=search, attrib=attrib_list, min_price=min_price, max_price=max_price)
-
-        categs = ProductCategory.search([('parent_id', '=', False)])
-
-        pricelist = request.website.get_current_pricelist()
-
-        if not product_context.get('pricelist'):
-            product_context['pricelist'] = pricelist.id
-            product = product.with_context(product_context)
+        keep = QueryURL(
+            '/shop',
+            category=category and category.id,
+            search=search,
+            attrib=attrib_list,
+            min_price=request.params.get('min_price'),
+            max_price=request.params.get('max_price'),
+        )
 
         # Needed to trigger the recently viewed product rpc
         view_track = request.website.viewref("website_sale.product").track
@@ -421,14 +413,14 @@ class WebsiteSale(http.Controller):
         return {
             'search': search,
             'category': category,
-            'pricelist': pricelist,
+            'pricelist': request.website.get_current_pricelist(),
             'attrib_values': attrib_values,
             'attrib_set': attrib_set,
             'keep': keep,
-            'categories': categs,
+            'categories': ProductCategory.search([('parent_id', '=', False)]),
             'main_object': product,
             'product': product,
-            'add_qty': add_qty,
+            'add_qty': 1.0,
             'view_track': view_track,
         }
 
@@ -517,10 +509,7 @@ class WebsiteSale(http.Controller):
         })
         if order:
             order.order_line.filtered(lambda l: not l.product_id.active).unlink()
-            _order = order
-            if not request.env.context.get('pricelist'):
-                _order = order.with_context(pricelist=order.pricelist_id.id)
-            values['suggested_products'] = _order._cart_accessories()
+            values['suggested_products'] = order._cart_accessories()
 
         if post.get('type') == 'popover':
             # force no-cache so IE11 doesn't cache this XHR
