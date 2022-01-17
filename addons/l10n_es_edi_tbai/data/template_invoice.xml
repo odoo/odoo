@@ -82,19 +82,19 @@
                         <FechaExpedicionFactura t-out="FechaExpedicionFactura"/>
                         <HoraExpedicionFactura t-if="Emision" t-out="HoraExpedicionFactura"/>
                         <!-- TODO factura simplificada / en sustitucion de simplificada ? -->
-                        <FacturaRectificativa t-if="FacturaRectificativa">
-                            <Codigo>R1</Codigo>
-                            <Tipo>S</Tipo>
-                            <ImporteRectificacionSustitutiva>
+                        <FacturaRectificativa t-if="FacturasRectificadasSustituidas">
+                            <Codigo t-out="CodigoRectificativa"/>
+                            <Tipo>I</Tipo>
+                            <!-- <ImporteRectificacionSustitutiva>
                                 <BaseRectificada>180.00</BaseRectificada>
                                 <CuotaRectificada>20.21</CuotaRectificada>
-                            </ImporteRectificacionSustitutiva>
+                            </ImporteRectificacionSustitutiva> -->
                         </FacturaRectificativa>
                         <FacturasRectificadasSustituidas t-if="FacturasRectificadasSustituidas">
-                            <IDFacturaRectificadaSustituida>
-                                <SerieFactura>TBAITEST/</SerieFactura>
-                                <NumFactura>00001</NumFactura>
-                                <FechaExpedicionFactura>23-11-2021</FechaExpedicionFactura>
+                            <IDFacturaRectificadaSustituida t-foreach="FacturasRectificadasSustituidas" t-as="r">
+                                <SerieFactura t-out="r['SerieFactura']"/>
+                                <NumFactura t-out="r['NumFactura']"/>
+                                <FechaExpedicionFactura t-out="r['FechaExpedicionFactura']"/>
                             </IDFacturaRectificadaSustituida>
                         </FacturasRectificadasSustituidas>
                     </CabeceraFactura>
@@ -162,6 +162,7 @@
                                                 <BaseImponible t-out="det['BaseImponible']"/>
                                                 <TipoImpositivo t-out="det['TipoImpositivo']"/>
                                                 <CuotaImpuesto t-out="det['CuotaRepercutida']"/>
+                                                <!-- TODO investigate the Y option below -->
                                                 <OperacionEnRecargoDeEquivalenciaORegimenSimplificado>N</OperacionEnRecargoDeEquivalenciaORegimenSimplificado>
                                             </DetalleIVA>
                                         </DesgloseIVA>

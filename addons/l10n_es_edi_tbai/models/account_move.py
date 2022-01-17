@@ -35,6 +35,19 @@ class AccountMove(models.Model):
     l10n_es_tbai_qr = fields.Char(string="QR code to verify posted invoice", compute="_compute_l10n_es_tbai_qr")
     l10n_es_tbai_qr_escaped = fields.Char(string="QR code, escaped", compute="_compute_l10n_es_tbai_qr_escaped")
 
+    # Optional fields
+    l10n_es_tbai_refund_reason = fields.Selection([
+        ('R1', "R1: Art. 80.1, 80.2, 80.6 and rights founded error"),
+        ('R2', "R2: Art. 80.3"),
+        ('R3', "R3: Art. 80.4"),
+        ('R4', "R4: Art. 80 - other"),
+        ('R5', "R5: Factura rectificativa en facturas simplificadas")
+    ],
+        string="Invoice Refund Reason Code",
+        help="BOE-A-1992-28740. Ley 37/1992, de 28 de diciembre, del Impuesto sobre el "
+        "Valor Añadido. Artículo 80. Modificación de la base imponible.",
+    )
+
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
