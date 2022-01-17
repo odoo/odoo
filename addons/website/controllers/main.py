@@ -254,10 +254,11 @@ class Website(Home):
         if not request.env.user.has_group('website.group_website_designer'):
             raise werkzeug.exceptions.NotFound()
         website_id = request.env['website'].get_current_website()
-        if website_id.configurator_done is False:
-            return request.render('website.website_configurator', {'lang': request.env.user.lang})
-        else:
+        if website_id.configurator_done:
             return request.redirect('/')
+        if request.env.lang != website_id.default_lang_id.code:
+            return request.redirect('/%s%s' % (website_id.default_lang_id.url_code, request.httprequest.path))
+        return request.render('website.website_configurator')
 
     @http.route(['/website/social/<string:social>'], type='http', auth="public", website=True, sitemap=False)
     def social(self, social, **kwargs):
