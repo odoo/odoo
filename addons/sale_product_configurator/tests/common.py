@@ -93,12 +93,24 @@ class TestProductConfiguratorCommon(TransactionCase):
 
         # Setup a second optional product
         cls.product_product_conf_chair_floor_protect = cls.env['product.template'].create({
-            'name': 'Chair floor protection',
+            'name': 'Chair floor protection (TEST)',
             'list_price': 12.0,
         })
         cls.product_product_conf_chair.optional_product_ids = [(4, cls.product_product_conf_chair_floor_protect.id)]
 
+        cls.custom_pricelist = cls.env['product.pricelist'].create({
+            'name': 'Custom pricelist (TEST)',
+            'item_ids': [(0, 0, {
+                'base': 'list_price',
+                'applied_on': '1_product',
+                'product_tmpl_id': cls.product_product_custo_desk.id,
+                'price_discount': 20,
+                'min_quantity': 2,
+                'compute_price': 'formula'
+            })]
+        })
 
+    @classmethod
     def _create_pricelist(cls, pricelists):
         for pricelist in pricelists:
             if not pricelist.item_ids.filtered(lambda i: i.product_tmpl_id == cls.product_product_custo_desk and i.price_discount == 20):

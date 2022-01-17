@@ -25,9 +25,6 @@
         'web.qunit_suite_tests': [
             'sale_product_matrix/static/tests/section_and_note_widget_tests.js',
         ],
-        'web.assets_tests': [
-            'sale_product_matrix/static/tests/tours/**/*',
-        ],
     },
     'license': 'LGPL-3',
 }

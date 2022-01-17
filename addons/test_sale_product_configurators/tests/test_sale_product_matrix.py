@@ -1,22 +1,40 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import odoo.tests
-from odoo.addons.product_matrix.tests import common
+from odoo.tests import tagged
+
+from odoo.addons.mail.tests.common import mail_new_test_user
+from odoo.addons.product_matrix.tests.common import TestMatrixCommon
 
 
-@odoo.tests.tagged('post_install', '-at_install')
-class TestSaleMatrixUi(common.TestMatrixCommon):
+@tagged('post_install', '-at_install')
+class TestSaleMatrixUi(TestMatrixCommon):
 
-    """
-        This test needs sale_management module to work.
-    """
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        # Adding sale users to test the access rights
+        mail_new_test_user(
+            cls.env,
+            name='Salesman',
+            login='salesman',
+            password='salesman',
+            groups='sales_team.group_sale_salesman',
+        )
+
+        # Setup partner since user salesman don't have the right to create it on the fly
+        cls.env['res.partner'].create({'name': 'Agrolait'})
+
+        # Setup currency
+        cls.env['res.currency'].search([('name', '!=', 'USD')]).action_archive()
+        cls.currency = cls.env['res.currency'].search([('name', '=', 'USD')])
+        cls.currency.action_unarchive()
 
     def test_sale_matrix_ui(self):
         # Set the template as configurable by matrix.
         self.matrix_template.product_add_mode = "matrix"
 
-        self.start_tour("/web", 'sale_matrix_tour', login="admin")
+        self.start_tour("/web", 'sale_matrix_tour', login='salesman')
 
         # Ensures some dynamic create variants have been created by the matrix
         # Ensures a SO has been created with exactly x lines ...

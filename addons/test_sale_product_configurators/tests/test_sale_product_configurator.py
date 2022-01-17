@@ -1,43 +1,37 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import odoo.tests
-from .common import TestProductConfiguratorCommon
+from odoo.tests.common import HttpCase, tagged
+
+from odoo.addons.mail.tests.common import mail_new_test_user
+from odoo.addons.sale_product_configurator.tests.common import TestProductConfiguratorCommon
 
 
-@odoo.tests.tagged('post_install', '-at_install', 'kzh')
-class TestUi(odoo.tests.HttpCase, TestProductConfiguratorCommon):
+@tagged('post_install', '-at_install')
+class TestProductConfiguratorUi(HttpCase, TestProductConfiguratorCommon):
 
-    def setUp(self):
-        super(TestUi, self).setUp()
-        self.custom_pricelist = self.env['product.pricelist'].create({
-            'name': 'Custom pricelist (TEST)',
-            'item_ids': [(0, 0, {
-                'base': 'list_price',
-                'applied_on': '1_product',
-                'product_tmpl_id': self.product_product_custo_desk.id,
-                'price_discount': 20,
-                'min_quantity': 2,
-                'compute_price': 'formula'
-            })]
-        })
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        # Adding sale users to test the access rights
+        cls.salesman = mail_new_test_user(
+            cls.env,
+            name='Salesman',
+            login='salesman',
+            password='salesman',
+            groups='sales_team.group_sale_salesman',
+        )
+
+        # Setup partner since user salesman don't have the right to create it on the fly
+        cls.env['res.partner'].create({'name': 'Tajine Saucisse'})
 
     def test_01_product_configurator(self):
-        # To be able to test the product configurator, admin user must have access to "variants" feature, so we give him the right group for that
-        self.env.ref('base.user_admin').write({'groups_id': [(4, self.env.ref('product.group_product_variant').id)]})
-        self.start_tour("/web", 'sale_product_configurator_tour', login="admin")
+        self.start_tour("/web", 'sale_product_configurator_tour', login='salesman')
 
     def test_02_product_configurator_advanced(self):
-        # group_product_variant: use the product configurator
-        # group_sale_pricelist: display the pricelist to determine when it is changed after choosing
         # group_delivery_invoice_address: show the shipping address (needed for a trigger)
-        #                       the partner
-        self.env.ref('base.user_admin').write({
-            'groups_id': [
-                (4, self.env.ref('product.group_product_variant').id),
-                (4, self.env.ref('product.group_product_pricelist').id),
-                (4, self.env.ref('account.group_delivery_invoice_address').id),
-            ],
+        self.salesman.write({
+            'groups_id': [(4, self.env.ref('account.group_delivery_invoice_address').id)],
         })
 
         # Prepare relevant test data
@@ -85,24 +79,26 @@ class TestUi(odoo.tests.HttpCase, TestProductConfiguratorCommon):
             'product_tmpl_id': product_template.id,
             'value_ids': [(6, 0, product_attribute.value_ids.ids)],
         } for product_attribute in product_attributes])
-        self.start_tour("/web", 'sale_product_configurator_advanced_tour', login="admin")
+
+        self.assertEqual(len(product_template.product_variant_ids), 0)
+        self.assertEqual(
+            len(product_template.product_variant_ids.product_template_attribute_value_ids), 0,
+        )
+
+        self.start_tour("/web", 'sale_product_configurator_advanced_tour', login='salesman')
+
+        # Ensures some dynamic create variants have been created by the configurator
+        self.assertEqual(len(product_template.product_variant_ids), 2)
+        self.assertEqual(
+            len(product_template.product_variant_ids.product_template_attribute_value_ids),
+            8,
+            "2 variants are created during the tour, with each 5 PAV, but only 8 distinct PAV."
+        )
 
     def test_03_product_configurator_edition(self):
-        # To be able to test the product configurator, admin user must have access to "variants" feature, so we give him the right group for that
-        self.env.ref('base.user_admin').write({'groups_id': [(4, self.env.ref('product.group_product_variant').id)]})
-        self.start_tour("/web", 'sale_product_configurator_edition_tour', login="admin")
+        self.start_tour("/web", 'sale_product_configurator_edition_tour', login='salesman')
 
     def test_04_product_configurator_single_custom_value(self):
-        # group_product_variant: use the product configurator
-        # group_sale_pricelist: display the pricelist to determine when it is changed after choosing
-        #                       the partner
-        self.env.ref('base.user_admin').write({
-            'groups_id': [
-                (4, self.env.ref('product.group_product_variant').id),
-                (4, self.env.ref('product.group_product_pricelist').id),
-            ],
-        })
-
         # Prepare relevant test data
         # This is not included in demo data to avoid useless noise
         product_attributes = self.env['product.attribute'].create([{
@@ -124,22 +120,18 @@ class TestUi(odoo.tests.HttpCase, TestProductConfiguratorCommon):
             'product_tmpl_id': product_template.id,
             'value_ids': [(6, 0, [product_attribute_values[0].id])]
         }])
-        self.start_tour("/web", 'sale_product_configurator_single_custom_attribute_tour', login="admin")
+
+        self.start_tour(
+            "/web",
+            'sale_product_configurator_single_custom_attribute_tour',
+            login='salesman'
+        )
 
     def test_05_product_configurator_pricelist(self):
-        """The goal of this test is to make sure pricelist rules are correctly
-        applied on the backend product configurator.
+        """The goal of this test is to make sure pricelist rules are correctly applied on the
+        backend product configurator.
         Also testing B2C setting: no impact on the backend configurator.
         """
-
-        admin = self.env.ref('base.user_admin')
-
-        # Activate B2C
-        self.env.ref('account.group_show_line_subtotals_tax_excluded').users -= admin
-        self.env.ref('account.group_show_line_subtotals_tax_included').users |= admin
-
-        # Active pricelist on SO
-        self.env.ref('product.group_product_pricelist').users |= admin
 
         # Add a 15% tax on desk
         tax = self.env['account.tax'].create({'name': "Test tax", 'amount': 15})
@@ -148,14 +140,11 @@ class TestUi(odoo.tests.HttpCase, TestProductConfiguratorCommon):
         # Remove tax from Conference Chair and Chair floor protection
         self.product_product_conf_chair.taxes_id = None
         self.product_product_conf_chair_floor_protect.taxes_id = None
-        # YTI FIXME: This tour requires sale_management, as the Sale
-        # root menu item is clicked
-        self.start_tour("/web", 'sale_product_configurator_pricelist_tour', login="admin")
+        self.start_tour("/web", 'sale_product_configurator_pricelist_tour', login='salesman')
 
     def test_06_product_configurator_optional_products(self):
-        """The goal of this test is to check that the product configurator
-        window opens correctly and lets you select optional products even
-        if the main product does not have variants.
+        """The goal of this test is to check that the product configurator window opens correctly
+        and lets you select optional products even if the main product does not have variants.
         """
         # add an optional product to the office chair and the custo desk for testing purposes
         office_chair = self.env['product.product'].create({
@@ -167,7 +156,13 @@ class TestUi(odoo.tests.HttpCase, TestProductConfiguratorCommon):
             'optional_product_ids': [(6, 0, [self.product_product_conf_chair_floor_protect.id])]
         })
         custo_desk.update({
-            'optional_product_ids': [(6, 0, [office_chair.product_tmpl_id.id, self.product_product_conf_chair.id])]
+            'optional_product_ids': [
+                (6, 0, [office_chair.product_tmpl_id.id, self.product_product_conf_chair.id])
+            ]
         })
-        self.product_product_custo_desk.optional_product_ids = [(4, self.product_product_conf_chair.id)]
-        self.start_tour("/web", 'sale_product_configurator_optional_products_tour', login="admin")
+        self.product_product_custo_desk.optional_product_ids = [
+            (4, self.product_product_conf_chair.id)
+        ]
+        self.start_tour(
+            "/web", 'sale_product_configurator_optional_products_tour', login='salesman'
+        )

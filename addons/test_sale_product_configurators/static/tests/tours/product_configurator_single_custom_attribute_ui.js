@@ -1,36 +1,22 @@
-odoo.define('sale.product_configurator_single_custom_attribute_tour', function (require) {
-"use strict";
+/** @odoo-module **/
 
-var tour = require('web_tour.tour');
+import tour from 'web_tour.tour';
 
 tour.register('sale_product_configurator_single_custom_attribute_tour', {
-    url: "/web",
+    url: '/web',
     test: true,
 }, [tour.stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="sale.sale_menu_root"]',
-    edition: 'community'
 }, {
-    trigger: '.o_app[data-menu-xmlid="sale.sale_menu_root"]',
-    edition: 'enterprise'
+    trigger: '.o_list_button_add',
+    extra_trigger: '.o_sale_order'
 }, {
-    trigger: ".o_list_button_add",
-    extra_trigger: ".o_sale_order"
-}, {
-    trigger: "a:contains('Add a product')"
+    trigger: 'a:contains("Add a product")'
 }, {
     trigger: 'div[name="product_template_id"] input',
-    run: function (){
-        var $input = $('div[name="product_template_id"] input');
-        $input.click();
-        $input.val('Custo');
-        // fake keydown to trigger search
-        var keyDownEvent = jQuery.Event("keydown");
-        keyDownEvent.which = 42;
-        $input.trigger(keyDownEvent);
-    }
+    run: 'text Custo',
 }, {
     trigger: 'ul.ui-autocomplete a:contains("Customizable Desk (TEST)")',
-    run: 'click'
 }, {
     trigger: '.oe_advanced_configurator_modal span:contains("Aluminium")',
     run: function () {
@@ -50,7 +36,6 @@ tour.register('sale_product_configurator_single_custom_attribute_tour', {
 }, {
     trigger: 'button span:contains(Confirm)',
     extra_trigger: '.oe_advanced_configurator_modal',
-    run: 'click'
 }, {
     trigger: 'td.o_data_cell:contains("single product attribute value: great single custom value")',
     extra_trigger: 'div[name="order_line"]',
@@ -73,5 +58,3 @@ tour.register('sale_product_configurator_single_custom_attribute_tour', {
         //check
     }
 }]);
-
-});
