@@ -840,10 +840,6 @@ class SaleOrderLine(models.Model):
 
     @api.depends('product_id', 'product_uom', 'product_uom_qty')
     def _compute_discount(self):
-        if not self.env.user.has_group('product.group_discount_per_so_line'):
-            # Do not compute discounts if the feature is not enabled.
-            return
-
         for line in self:
             if not line.product_id or line.display_type:
                 line.discount = 0.0
