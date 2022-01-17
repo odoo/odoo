@@ -26,7 +26,7 @@ class WebsiteSaleProductConfiguratorController(ProductConfiguratorController):
             return False
         if variant_values:
             kw["already_configured"] = True
-        return self.show_advanced_configurator(product_id, variant_values, request.website.get_current_pricelist(), **kw)
+        return self.show_advanced_configurator(product_id, variant_values, request.website.pricelist_id, **kw)
 
     @http.route(['/sale_product_configurator/optional_product_items_website'], type='json', auth="public", methods=['POST'], website=True)
     def optional_product_items_website(self, product_id, **kw):
@@ -34,7 +34,7 @@ class WebsiteSaleProductConfiguratorController(ProductConfiguratorController):
         This route is called in JS by appending _website to the base route.
         """
         kw.pop('pricelist_id')
-        return self.optional_product_items(product_id, request.website.get_current_pricelist(), **kw)
+        return self.optional_product_items(product_id, request.website.pricelist_id, **kw)
 
 
 class WebsiteSale(main.WebsiteSale):

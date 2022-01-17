@@ -1,25 +1,26 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import http, _
+from odoo import _
+from odoo.http import request, route
+
 from odoo.addons.website_event.controllers.main import WebsiteEventController
-from odoo.http import request
 
 
 class WebsiteEventSaleController(WebsiteEventController):
 
-    @http.route()
+    @route()
     def event_register(self, event, **post):
         event = event.with_context(pricelist=request.website.id)
         if not request.context.get('pricelist'):
-            pricelist = request.website.get_current_pricelist()
+            pricelist = request.website.pricelist_id
             if pricelist:
                 event = event.with_context(pricelist=pricelist.id)
-        return super(WebsiteEventSaleController, self).event_register(event, **post)
+        return super().event_register(event, **post)
 
     def _process_tickets_form(self, event, form_details):
         """ Add price information on ticket order """
-        res = super(WebsiteEventSaleController, self)._process_tickets_form(event, form_details)
+        res = super()._process_tickets_form(event, form_details)
         for item in res:
             item['price'] = item['ticket']['price'] if item['ticket'] else 0
         return res
@@ -27,7 +28,8 @@ class WebsiteEventSaleController(WebsiteEventController):
     def _create_attendees_from_registration_post(self, event, registration_data):
         # we have at least one registration linked to a ticket -> sale mode activate
         if any(info.get('event_ticket_id') for info in registration_data):
-            order = request.website.sale_get_order(force_create=1)
+            order = request.website.sale_get_order(force_create=True)
+
 
         for info in [r for r in registration_data if r.get('event_ticket_id')]:
             ticket = request.env['event.event.ticket'].sudo().browse(info['event_ticket_id'])
@@ -35,17 +37,17 @@ class WebsiteEventSaleController(WebsiteEventController):
             info['sale_order_id'] = order.id
             info['sale_order_line_id'] = cart_values.get('line_id')
 
-        return super(WebsiteEventSaleController, self)._create_attendees_from_registration_post(event, registration_data)
+        return super()._create_attendees_from_registration_post(event, registration_data)
 
-    @http.route()
+    @route()
     def registration_confirm(self, event, **post):
-        res = super(WebsiteEventSaleController, self).registration_confirm(event, **post)
+        res = super().registration_confirm(event, **post)
 
         registrations = self._process_attendees_form(event, post)
 
         # we have at least one registration linked to a ticket -> sale mode activate
         if any(info['event_ticket_id'] for info in registrations):
-            order = request.website.sale_get_order(force_create=False)
+            order = request.website.sale_get_order()
             if order.amount_total:
                 return request.redirect("/shop/checkout")
             # free tickets -> order with amount = 0: auto-confirm, no checkout
@@ -56,7 +58,7 @@ class WebsiteEventSaleController(WebsiteEventController):
         return res
 
     def _prepare_event_values(self, name, event_start, event_end, address_values=None):
-        values = super(WebsiteEventSaleController, self)._prepare_event_values(name, event_start, event_end, address_values)
+        values = super()._prepare_event_values(name, event_start, event_end, address_values)
         product = request.env.ref('event_sale.product_product_event', raise_if_not_found=False)
         if product:
             values.update({
