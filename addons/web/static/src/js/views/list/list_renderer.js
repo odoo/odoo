@@ -556,7 +556,7 @@ var ListRenderer = BasicRenderer.extend({
         var formattedValue = formatter(value, field, formatOptions);
         var title = '';
         if (field.type !== 'boolean') {
-            title = formatter(value, field, _.extend(formatOptions, {escape: false}));
+            title = formatter(value, field, _.extend(formatOptions, {escape: false, forceString: true}));
         }
         return $td.html(formattedValue).attr('title', title);
     },
