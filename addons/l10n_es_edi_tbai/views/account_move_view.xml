@@ -14,6 +14,7 @@
                                 <field name="l10n_es_tbai_sequence" class="oe_readonly"/>
                                 <field name="l10n_es_tbai_number" class="oe_readonly"/>
                                 <field name="l10n_es_tbai_registration_date" class="oe_readonly"/>
+                                <field name="l10n_es_tbai_refund_reason" attrs="{'readonly': [('state', '!=', 'draft')], 'invisible': [('l10n_es_tbai_refund_reason', '=', False)]}"/>
                                 <field name="l10n_es_tbai_id" class="oe_readonly"/>
                                 <field name="l10n_es_tbai_qr" class="oe_readonly"/>
                                 <field name="l10n_es_tbai_signature" style="word-break: break-word;" class="oe_readonly" groups="base.group_no_one"/>

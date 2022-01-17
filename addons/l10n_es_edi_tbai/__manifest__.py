@@ -38,6 +38,8 @@
         'views/l10n_es_tbai_certificate_views.xml',
         'views/res_config_settings_views.xml',
         'views/report_invoice.xml',
+
+        'wizards/account_invoice_refund_views.xml',
     ],
     'demo': [
         'demo/demo_company.xml'
