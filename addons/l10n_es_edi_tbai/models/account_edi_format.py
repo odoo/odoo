@@ -113,7 +113,7 @@ class AccountEdiFormat(models.Model):
                     'res_model': 'account.move',
                 })
                 invoice.with_context(no_new_invoice=True).message_post(
-                    body="TicketBAI: submitted XML and response",
+                    body="<pre>TicketBAI: submitted XML and response\n" + message + "</pre>",
                     attachment_ids=attachment.ids)
                 res[invoice]['attachment'] = attachment  # save zip as EDI document
 
@@ -303,7 +303,17 @@ class AccountEdiFormat(models.Model):
         values['FechaExpedicionFactura'] = datetime.strftime(datetime.now(tz=timezone('Europe/Madrid')), '%d-%m-%Y')
         values['HoraExpedicionFactura'] = datetime.strftime(datetime.now(tz=timezone('Europe/Madrid')), '%H:%M:%S')
 
-        # TODO simplified & rectified invoices
+        # === RECTIFICATIVA ===
+        refund = invoice.move_type == 'out_refund'
+        if refund:
+            values['CodigoRectificativa'] = invoice.l10n_es_tbai_refund_reason or 'R1'
+            values['FacturasRectificadasSustituidas'] = [{
+                'SerieFactura': invoice.reversed_entry_id.l10n_es_tbai_sequence,
+                'NumFactura': invoice.reversed_entry_id.l10n_es_tbai_number,
+                'FechaExpedicionFactura': datetime.strftime(invoice.reversed_entry_id.l10n_es_tbai_registration_date, '%d-%m-%Y')
+            }]
+
+        # TODO simplified & rectified invoices (if simplified => refund code always R5)
         # is_simplified = invoice.partner_id == simplified_partner
         # if invoice.move_type == 'out_invoice':
         #     invoice_node['TipoFactura'] = 'F2' if is_simplified else 'F1'
@@ -320,9 +330,9 @@ class AccountEdiFormat(models.Model):
             detalles.append({
                 "DescripcionDetalle": regex_sub(r"[^0-9a-zA-Z ]", "", line.name)[:250],
                 "Cantidad": line.quantity,
-                "ImporteUnitario": line.price_unit,
+                "ImporteUnitario": line.price_unit * (-1 if refund else 1),
                 "Descuento": line.discount or "0.00",
-                "ImporteTotal": line.price_total,
+                "ImporteTotal": line.price_total * (-1 if refund else 1),
             })
         values['DetallesFactura'] = detalles
 
