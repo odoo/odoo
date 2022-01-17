@@ -794,6 +794,10 @@ class Channel(models.Model):
                     'fetched_message_id': cp.fetched_message_id.id,
                     'seen_message_id': cp.seen_message_id.id,
                 } for cp in members_by_channel[channel] if cp.partner_id], key=lambda p: p['partner_id'])
+                info['guestMembers'] = [('insert', sorted([{
+                    'id': member.guest_id.id,
+                    'name': member.guest_id.name,
+                } for member in members_by_channel[channel] if member.guest_id], key=lambda g: g['id']))]
 
             # add RTC sessions info
             info.update({
