@@ -2674,7 +2674,21 @@ export class OdooEditor extends EventTarget {
         const node = ev.target;
         // handle checkbox lists
         if (node.tagName == 'LI' && getListMode(node.parentElement) == 'CL') {
-            if (ev.offsetX < 0) {
+            const beforStyle = window.getComputedStyle(node, 'before');
+            const style1 = {
+                left: parseInt(beforStyle.getPropertyValue('left'), 10),
+                top: parseInt(beforStyle.getPropertyValue('top'), 10),
+            }
+            style1.right = style1.left + parseInt(beforStyle.getPropertyValue('width'), 10);
+            style1.bottom = style1.top + parseInt(beforStyle.getPropertyValue('height'), 10);
+
+            const isMouseInsideCheckboxBox =
+                ev.offsetX >= style1.left &&
+                ev.offsetX <= style1.right &&
+                ev.offsetY >= style1.top &&
+                ev.offsetY <= style1.bottom;
+
+            if (isMouseInsideCheckboxBox) {
                 toggleClass(node, 'o_checked');
                 ev.preventDefault();
                 this.historyStep();
