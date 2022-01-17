@@ -2,7 +2,9 @@
 
 import { registry } from '@web/core/registry';
 
-const { reactive } = owl;
+import { FullscreenIndication } from '../components/fullscreen_indication/fullscreen_indication';
+
+const { reactive, EventBus } = owl;
 
 const websiteSystrayRegistry = registry.category('website_systray');
 
@@ -18,19 +20,33 @@ export const unslugHtmlDataObject = (repr) => {
 };
 
 export const websiteService = {
-    dependencies: ['orm', 'action'],
-    async start(env, { orm, action }) {
+    dependencies: ['orm', 'action', 'hotkey'],
+    async start(env, { orm, action, hotkey }) {
         let websites = [];
         let currentWebsiteId;
         let currentMetadata = {};
+        let fullscreen;
         const context = reactive({
             showNewContentModal: false,
         });
+        const bus = new EventBus();
 
         const setCurrentWebsiteId = id => {
             currentWebsiteId = id;
             websiteSystrayRegistry.trigger('EDIT-WEBSITE');
         };
+        hotkey.add("escape", () => {
+            // Toggle fullscreen mode when pressing escape.
+            if (currentWebsiteId) {
+                fullscreen = !fullscreen;
+                document.body.classList.toggle('o_website_fullscreen', fullscreen);
+                bus.trigger((fullscreen ? 'FULLSCREEN-INDICATION-SHOW' : 'FULLSCREEN-INDICATION-HIDE'));
+            }
+        });
+        registry.category('main_components').add('FullscreenIndication', {
+            Component: FullscreenIndication,
+            props: { bus },
+        });
         return {
             set currentWebsiteId(id) {
                 setCurrentWebsiteId(id);

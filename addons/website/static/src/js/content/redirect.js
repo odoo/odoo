@@ -7,6 +7,8 @@ const _t = str => str;
 /**
  * This script, served with frontend pages, displays buttons in the top left
  * corner to provide the authenticated user an access to his odoo backend.
+ * In the case of the page being viewed in the website_preview client action,
+ * it will forward some events to its parent.
  */
 document.addEventListener('DOMContentLoaded', () => {
     if (session.is_website_user) {
