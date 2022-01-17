@@ -1,16 +1,19 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from unittest.mock import patch
+
 from werkzeug.exceptions import Forbidden
 
 from odoo.tests import tagged
 from odoo.tools import mute_logger
 
+from odoo.addons.payment.tests.http_common import PaymentHttpCommon
 from odoo.addons.payment_buckaroo.controllers.main import BuckarooController
 from odoo.addons.payment_buckaroo.tests.common import BuckarooCommon
 
 
 @tagged('post_install', '-at_install')
-class BuckarooTest(BuckarooCommon):
+class BuckarooTest(BuckarooCommon, PaymentHttpCommon):
 
     def test_redirect_form_values(self):
         return_url = self._build_url(BuckarooController._return_url)
@@ -19,7 +22,7 @@ class BuckarooTest(BuckarooCommon):
             'Brq_amount': str(self.amount),
             'Brq_currency': self.currency.name,
             'Brq_invoicenumber': self.reference,
-            'Brq_signature': '669d4f64ea9cbb58cfefba9b802389667e4eef39',
+            'Brq_signature': 'dacc220c3087edcc1200a38a6db0191c823e7f69',
             'Brq_return': return_url,
             'Brq_returncancel': return_url,
             'Brq_returnerror': return_url,
@@ -58,14 +61,26 @@ class BuckarooTest(BuckarooCommon):
         self.env['payment.transaction']._handle_feedback_data('buckaroo', notification_data)
         self.assertEqual(tx.state, 'error')
 
+    @mute_logger('odoo.addons.payment_buckaroo.controllers.main')
+    def test_webhook_notification_confirms_transaction(self):
+        """ Test the processing of a webhook notification. """
+        tx = self.create_transaction('redirect')
+        url = self._build_url(BuckarooController._webhook_url)
+        with patch(
+            'odoo.addons.payment_buckaroo.controllers.main.BuckarooController'
+            '._verify_notification_signature'
+        ):
+            self._make_http_post_request(url, data=self.ASYNC_NOTIFICATION_DATA)
+        self.assertEqual(tx.state, 'done')
+
     def test_accept_notification_with_valid_signature(self):
         """ Test the verification of a notification with a valid signature. """
         tx = self.create_transaction('redirect')
         self._assert_does_not_raise(
             Forbidden,
             BuckarooController._verify_notification_signature,
-            self.SYNC_NOTIFICATION_DATA,
-            self.SYNC_NOTIFICATION_DATA['brq_signature'],
+            self.ASYNC_NOTIFICATION_DATA,
+            self.ASYNC_NOTIFICATION_DATA['brq_signature'],
             tx,
         )
 
@@ -76,7 +91,7 @@ class BuckarooTest(BuckarooCommon):
         self.assertRaises(
             Forbidden,
             BuckarooController._verify_notification_signature,
-            self.SYNC_NOTIFICATION_DATA,
+            self.ASYNC_NOTIFICATION_DATA,
             None,
             tx,
         )
@@ -88,7 +103,7 @@ class BuckarooTest(BuckarooCommon):
         self.assertRaises(
             Forbidden,
             BuckarooController._verify_notification_signature,
-            self.SYNC_NOTIFICATION_DATA,
+            self.ASYNC_NOTIFICATION_DATA,
             'dummy',
             tx,
         )
