@@ -446,6 +446,8 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         module_list = [name for (name,) in cr.fetchall()]
         if module_list:
             _logger.error("Some modules have inconsistent states, some dependencies may be missing: %s", sorted(module_list))
+            if tools.config.options['test_enable']:
+                report.record_failure()
 
         # STEP 3.6: apply remaining constraints in case of an upgrade
         registry.finalize_constraints()
