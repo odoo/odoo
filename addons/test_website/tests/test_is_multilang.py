@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from urllib.parse import urlparse
 import odoo.tests
 import lxml
 
@@ -34,7 +35,7 @@ class TestIsMultiLang(odoo.tests.HttpCase):
 
         it.active = True
         be.active = True
-        website.domain = 'http://127.0.0.1:8069'  # for _is_canonical_url
+        website.domain = self.base_url()  # for _is_canonical_url
         website.default_lang_id = en
         website.language_ids = en + it + be
         params = {
@@ -52,13 +53,14 @@ class TestIsMultiLang(odoo.tests.HttpCase):
             'lang': be.code,
         })
         self.env['ir.translation'].create(params)
-        r = self.url_open('/test_lang_url/%s' % country1.id)
-        self.assertEqual(r.status_code, 200)
-        self.assertTrue(r.url.endswith('/test_lang_url/my-super-country-%s' % country1.id))
 
-        r = self.url_open('/%s/test_lang_url/%s' % (it.url_code, country1.id))
+        r = self.url_open(f'/test_lang_url/{country1.id}')
         self.assertEqual(r.status_code, 200)
-        self.assertTrue(r.url.endswith('/%s/test_lang_url/my-super-country-italia-%s' % (it.url_code, country1.id)))
+        self.assertEqual(urlparse(r.url).path, f'/test_lang_url/my-super-country-{country1.id}')
+
+        r = self.url_open(f'/{it.url_code}/test_lang_url/{country1.id}')
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(urlparse(r.url).path, f'/{it.url_code}/test_lang_url/my-super-country-italia-{country1.id}')
 
         body = lxml.html.fromstring(r.content)
         # Note: this test is indirectly testing the `ref=canonical` tag is correctly set,
@@ -66,6 +68,6 @@ class TestIsMultiLang(odoo.tests.HttpCase):
         it_href = body.find('./head/link[@rel="alternate"][@hreflang="it"]').get('href')
         fr_href = body.find('./head/link[@rel="alternate"][@hreflang="fr"]').get('href')
         en_href = body.find('./head/link[@rel="alternate"][@hreflang="en"]').get('href')
-        self.assertTrue(it_href.endswith('/%s/test_lang_url/my-super-country-italia-%s' % (it.url_code, country1.id)))
-        self.assertTrue(fr_href.endswith('/%s/test_lang_url/my-super-country-belgium-%s' % (be.url_code, country1.id)))
-        self.assertTrue(en_href.endswith('/test_lang_url/my-super-country-%s' % country1.id))
+        self.assertEqual(urlparse(it_href).path, f'/{it.url_code}/test_lang_url/my-super-country-italia-{country1.id}')
+        self.assertEqual(urlparse(fr_href).path, f'/{be.url_code}/test_lang_url/my-super-country-belgium-{country1.id}')
+        self.assertEqual(urlparse(en_href).path, f'/test_lang_url/my-super-country-{country1.id}')

@@ -7,9 +7,6 @@ from odoo.addons.web_unsplash.controllers.main import Web_Unsplash
 import odoo.tests
 
 from odoo import http
-from odoo.tools import config
-
-BASE_URL = "http://127.0.0.1:%s" % (config["http_port"],)
 
 
 @odoo.tests.common.tagged('post_install', '-at_install')
@@ -19,6 +16,8 @@ class TestImageUploadProgress(odoo.tests.HttpCase):
         self.start_tour("/test_image_progress", 'test_image_upload_progress', login="admin")
 
     def test_02_image_upload_progress_unsplash(self):
+        BASE_URL = self.base_url()
+
         def media_library_search(self, **params):
             return {"results": 0, "media": []}
 
