@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import rpc from 'web.rpc';
 import utils from 'web.utils';
 import weUtils from 'web_editor.utils';
 import session from 'web.session';
@@ -70,7 +69,7 @@ const SESSION_STORAGE_ITEM_NAME = 'websiteConfigurator' + session.website_id;
 
 class SkipButton extends Component {
     async skip() {
-        await skipConfigurator();
+        await skipConfigurator(Component.env.services);
     }
 }
 
@@ -319,7 +318,7 @@ class PaletteSelectionScreen extends Component {
             img = await svgToPNG(img);
         }
         img = img.split(',')[1];
-        const [color1, color2] = await rpc.query({
+        const [color1, color2] = await this.rpc({
             model: 'base.document.layout',
             method: 'extract_image_primary_secondary_colors',
             args: [img],
@@ -354,7 +353,7 @@ class FeaturesSelectionScreen extends Component {
             industry_id: industryId,
             palette: this.state.selectedPalette
         };
-        const themes = await rpc.query({
+        const themes = await this.rpc({
             model: 'website',
             method: 'configurator_recommended_themes',
             kwargs: params,
@@ -437,7 +436,7 @@ const useRouter = () => {
 
 class Store {
     async start() {
-        Object.assign(this, await getInitialState());
+        Object.assign(this, await getInitialState(Component.env.services));
     }
 
     //-------------------------------------------------------------------------
@@ -552,9 +551,9 @@ class Store {
     }
 }
 
-async function getInitialState() {
+async function getInitialState(services) {
     // Load values from python and iap
-    var results = await rpc.query({
+    var results = await services.rpc({
         model: 'website',
         method: 'configurator_init',
     });
@@ -588,7 +587,7 @@ async function getInitialState() {
                 industry_id: localState.selectedIndustry.id,
                 palette: localState.selectedPalette
             };
-            themes = await rpc.query({
+            themes = await services.rpc({
                 model: 'website',
                 method: 'configurator_recommended_themes',
                 kwargs: params,
@@ -637,8 +636,8 @@ const useStore = () => {
 // Helpers
 //-----------------------------------------------------------------------------
 
-async function skipConfigurator() {
-    await rpc.query({
+async function skipConfigurator(services) {
+    await services.rpc({
         model: 'website',
         method: 'configurator_skip',
     });
@@ -676,7 +675,7 @@ async function applyConfigurator(self, themeName) {
             website_type: WEBSITE_TYPES[self.state.selectedType].name,
             logo_attachment_id: self.state.logoAttachmentId,
         };
-        const resp = await rpc.query({
+        const resp = await self.rpc({
             model: 'website',
             method: 'configurator_apply',
             kwargs: {...data},
@@ -721,7 +720,7 @@ async function makeEnvironment() {
 async function setup() {
     const env = await makeEnvironment();
     if (!env.state.industries) {
-        await skipConfigurator();
+        await skipConfigurator(env.services);
     } else {
         const templates = await (await fetch('/website/static/src/components/configurator/configurator.xml')).text();
         const app = new App(Configurator, {
