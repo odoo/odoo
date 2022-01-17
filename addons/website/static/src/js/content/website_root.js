@@ -7,7 +7,6 @@ import {Markup} from 'web.utils';
 import session from 'web.session';
 import publicRootData from 'web.public.root';
 import "web.zoomodoo";
-import { FullscreenIndication } from '@website/js/widgets/fullscreen_indication';
 
 export const WebsiteRoot = publicRootData.PublicRoot.extend(KeyboardNavigationMixin, {
     // TODO remove KeyboardNavigationMixin in master
@@ -33,16 +32,6 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend(KeyboardNavigationMi
             skipRenderOverlay: true,
         });
         return this._super(...arguments);
-    },
-    /**
-     * @override
-     */
-    willStart: async function () {
-        this.fullscreenIndication = new FullscreenIndication(this);
-        return Promise.all([
-            this._super(...arguments),
-            this.fullscreenIndication.appendTo(document.body),
-        ]);
     },
     /**
      * @override
@@ -169,45 +158,6 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend(KeyboardNavigationMi
         }
         return this._gmapAPILoading;
     },
-    /**
-     * Toggles the fullscreen mode.
-     *
-     * @private
-     * @param {boolean} state toggle fullscreen on/off (true/false)
-     */
-    _toggleFullscreen(state) {
-        this.isFullscreen = state;
-        if (this.isFullscreen) {
-            this.fullscreenIndication.show();
-        } else {
-            this.fullscreenIndication.hide();
-        }
-        document.body.classList.add('o_fullscreen_transition');
-        document.body.classList.toggle('o_fullscreen', this.isFullscreen);
-        document.body.style.overflowX = 'hidden';
-        let resizing = true;
-        window.requestAnimationFrame(function resizeFunction() {
-            window.dispatchEvent(new Event('resize'));
-            if (resizing) {
-                window.requestAnimationFrame(resizeFunction);
-            }
-        });
-        let stopResizing;
-        const onTransitionEnd = ev => {
-            if (ev.target === document.body && ev.propertyName === 'padding-top') {
-                stopResizing();
-            }
-        };
-        stopResizing = () => {
-            resizing = false;
-            document.body.style.overflowX = '';
-            document.body.removeEventListener('transitionend', onTransitionEnd);
-            document.body.classList.remove('o_fullscreen_transition');
-        };
-        document.body.addEventListener('transitionend', onTransitionEnd);
-        // Safeguard in case the transitionend event doesn't trigger for whatever reason.
-        window.setTimeout(() => stopResizing(), 500);
-    },
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -328,7 +278,6 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend(KeyboardNavigationMi
         if (ev.keyCode !== $.ui.keyCode.ESCAPE || !document.body.contains(ev.target) || ev.target.closest('.modal')) {
             return KeyboardNavigationMixin._onKeyDown.apply(this, arguments);
         }
-        this._toggleFullscreen(!this.isFullscreen);
     },
 });
 
