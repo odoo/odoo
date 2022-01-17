@@ -66,7 +66,7 @@ class PaymentTransaction(models.Model):
             'currencyCode': SUPPORTED_CURRENCIES[self.currency_id.name],  # The ISO 4217 code
             'merchantId': self.acquirer_id.sips_merchant_id,
             'normalReturnUrl': urls.url_join(base_url, SipsController._return_url),
-            'automaticResponseUrl': urls.url_join(base_url, SipsController._notify_url),
+            'automaticResponseUrl': urls.url_join(base_url, SipsController._webhook_url),
             'transactionReference': self.reference,
             'statementReference': self.reference,
             'keyVersion': self.acquirer_id.sips_key_version,
@@ -91,8 +91,6 @@ class PaymentTransaction(models.Model):
         :return: The transaction if found
         :rtype: recordset of `payment.transaction`
         :raise: ValidationError if the data match no transaction
-        :raise: ValidationError if the currency is not supported
-        :raise: ValidationError if the amount mismatch
         """
         tx = super()._get_tx_from_feedback_data(provider, data)
         if provider != 'sips':
@@ -111,22 +109,6 @@ class PaymentTransaction(models.Model):
                 "Sips: " + _("No transaction found matching reference %s.", reference)
             )
 
-        sips_currency = SUPPORTED_CURRENCIES.get(tx.currency_id.name)
-        if not sips_currency:
-            raise ValidationError(
-                "Sips: " + _("This currency is not supported: %s.", tx.currency_id.name)
-            )
-
-        amount_converted = payment_utils.to_major_currency_units(
-            float(data.get('amount', '0.0')), tx.currency_id
-        )
-        if tx.currency_id.compare_amounts(amount_converted, tx.amount) != 0:
-            raise ValidationError(
-                "Sips: " + _(
-                    "Incorrect amount: received %(received).2f, expected %(expected).2f",
-                    received=amount_converted, expected=tx.amount
-                )
-            )
         return tx
 
     def _process_feedback_data(self, data):

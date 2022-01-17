@@ -1,11 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.exceptions import ValidationError
+from werkzeug.exceptions import Forbidden
+
 from odoo.tests import tagged
 from odoo.tools import mute_logger
 
-from .common import BuckarooCommon
-from ..controllers.main import BuckarooController
+from odoo.addons.payment_buckaroo.controllers.main import BuckarooController
+from odoo.addons.payment_buckaroo.tests.common import BuckarooCommon
 
 
 @tagged('post_install', '-at_install')
@@ -35,65 +36,62 @@ class BuckarooTest(BuckarooCommon):
         self.assertDictEqual(expected_values, form_info['inputs'],
             "Buckaroo: invalid inputs specified in the redirect form.")
 
+    @mute_logger('odoo.addons.payment_buckaroo.models.payment_transaction')
     def test_feedback_processing(self):
-        self.amount = 2240.0
-        self.reference = 'SO004'
-
-        # typical data posted by buckaroo after client has successfully paid
-        buckaroo_post_data = {
-            'BRQ_RETURNDATA': u'',
-            'BRQ_AMOUNT': str(self.amount),
-            'BRQ_CURRENCY': self.currency.name,
-            'BRQ_CUSTOMER_NAME': u'Jan de Tester',
-            'BRQ_INVOICENUMBER': self.reference,
-            'brq_payment': u'573311D081B04069BD6336001611DBD4',
-            'BRQ_PAYMENT_METHOD': u'paypal',
-            'BRQ_SERVICE_PAYPAL_PAYERCOUNTRY': u'NL',
-            'BRQ_SERVICE_PAYPAL_PAYEREMAIL': u'fhe@odoo.com',
-            'BRQ_SERVICE_PAYPAL_PAYERFIRSTNAME': u'Jan',
-            'BRQ_SERVICE_PAYPAL_PAYERLASTNAME': u'Tester',
-            'BRQ_SERVICE_PAYPAL_PAYERMIDDLENAME': u'de',
-            'BRQ_SERVICE_PAYPAL_PAYERSTATUS': u'verified',
-            'Brq_signature': u'e67e32ee1be1030a86c7764adfcc01856e00f9a7',
-            'BRQ_STATUSCODE': u'190',
-            'BRQ_STATUSCODE_DETAIL': u'S001',
-            'BRQ_STATUSMESSAGE': u'Transaction successfully processed',
-            'BRQ_TIMESTAMP': u'2014-05-08 12:41:21',
-            'BRQ_TRANSACTIONS': u'D6106678E1D54EEB8093F5B3AC42EA7B',
-            'BRQ_WEBSITEKEY': u'5xTGyGyPyl',
-        }
-
-        with self.assertRaises(ValidationError):  # unknown transaction
-            self.env['payment.transaction']._handle_feedback_data('buckaroo', buckaroo_post_data)
-
+        notification_data = BuckarooController._normalize_data_keys(self.SYNC_NOTIFICATION_DATA)
         tx = self.create_transaction(flow='redirect')
-
-        # validate it
-        tx._handle_feedback_data('buckaroo', buckaroo_post_data)
+        tx._handle_feedback_data('buckaroo', notification_data)
+        self.assertEqual(tx.state, 'done')
+        self.assertEqual(tx.acquirer_reference, notification_data.get('brq_transactions'))
+        tx._handle_feedback_data('buckaroo', notification_data)
         self.assertEqual(tx.state, 'done', 'Buckaroo: validation did not put tx into done state')
-        self.assertEqual(tx.acquirer_reference, buckaroo_post_data.get('BRQ_TRANSACTIONS'),
-            'Buckaroo: validation did not update tx payid')
+        self.assertEqual(tx.acquirer_reference, notification_data.get('brq_transactions'))
 
-        # New reference for new tx
-        self.reference = 'SO004-2'
+        self.reference = 'Test Transaction 2'
         tx = self.create_transaction(flow='redirect')
+        notification_data = BuckarooController._normalize_data_keys(dict(
+            self.SYNC_NOTIFICATION_DATA,
+            brq_invoicenumber=self.reference,
+            brq_statuscode='2',
+            brq_signature='b8e54e26b2b5a5e697b8ed5085329ea712fd48b2',
+        ))
+        self.env['payment.transaction']._handle_feedback_data('buckaroo', notification_data)
+        self.assertEqual(tx.state, 'error')
 
-        buckaroo_post_data['BRQ_INVOICENUMBER'] = self.reference
-        # now buckaroo post is ok: try to modify the SHASIGN
-        buckaroo_post_data['Brq_signature'] = '54d928810e343acf5fb0c3ee75fd747ff159ef7a'
-        with self.assertRaises(ValidationError):
-            self.env['payment.transaction']._handle_feedback_data('buckaroo', buckaroo_post_data)
+    def test_accept_notification_with_valid_signature(self):
+        """ Test the verification of a notification with a valid signature. """
+        tx = self.create_transaction('redirect')
+        self._assert_does_not_raise(
+            Forbidden,
+            BuckarooController._verify_notification_signature,
+            self.SYNC_NOTIFICATION_DATA,
+            self.SYNC_NOTIFICATION_DATA['brq_signature'],
+            tx,
+        )
 
-        # simulate an error
-        buckaroo_post_data['BRQ_STATUSCODE'] = '2'
-        buckaroo_post_data['Brq_signature'] = '3e67da5181b1a895d322987303e42bab2a376eec'
+    @mute_logger('odoo.addons.payment_buckaroo.controllers.main')
+    def test_reject_notification_with_missing_signature(self):
+        """ Test the verification of a notification with a missing signature. """
+        tx = self.create_transaction('redirect')
+        self.assertRaises(
+            Forbidden,
+            BuckarooController._verify_notification_signature,
+            self.SYNC_NOTIFICATION_DATA,
+            None,
+            tx,
+        )
 
-        # Avoid warning log bc of unknown status code
-        with mute_logger('odoo.addons.payment_buckaroo.models.payment_transaction'):
-            self.env['payment.transaction']._handle_feedback_data('buckaroo', buckaroo_post_data)
-
-        self.assertEqual(tx.state, 'error',
-            'Buckaroo: unexpected status code should put tx in error state')
+    @mute_logger('odoo.addons.payment_buckaroo.controllers.main')
+    def test_reject_notification_with_invalid_signature(self):
+        """ Test the verification of a notification with an invalid signature. """
+        tx = self.create_transaction('redirect')
+        self.assertRaises(
+            Forbidden,
+            BuckarooController._verify_notification_signature,
+            self.SYNC_NOTIFICATION_DATA,
+            'dummy',
+            tx,
+        )
 
     def test_signature_is_computed_based_on_lower_case_data_keys(self):
         """ Test that lower case keys are used to execute the case-insensitive sort. """

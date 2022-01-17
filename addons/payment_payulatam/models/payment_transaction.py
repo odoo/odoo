@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import hmac
 import logging
 
 from werkzeug import urls
@@ -117,7 +118,7 @@ class PaymentTransaction(models.Model):
 
         # Verify signature
         sign_check = tx.acquirer_id._payulatam_generate_sign(data, incoming=True)
-        if sign_check != sign:
+        if not hmac.compare_digest(sign_check, sign):
             raise ValidationError(
                 "PayU Latam: " + _(
                     "Invalid sign: received %(sign)s, computed %(check)s.",

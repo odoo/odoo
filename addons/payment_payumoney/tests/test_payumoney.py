@@ -1,15 +1,18 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from werkzeug.exceptions import Forbidden
+
 from odoo.tests import tagged
 from odoo.tools import mute_logger
 
-from .common import PayumoneyCommon
-from ..controllers.main import PayUMoneyController
 from odoo.addons.payment import utils as payment_utils
+from odoo.addons.payment.tests.http_common import PaymentHttpCommon
+from odoo.addons.payment_payumoney.controllers.main import PayUMoneyController
+from odoo.addons.payment_payumoney.tests.common import PayumoneyCommon
 
 
 @tagged('post_install', '-at_install')
-class PayumoneyTest(PayumoneyCommon):
+class PayUMoneyTest(PayumoneyCommon, PaymentHttpCommon):
 
     def test_compatible_acquirers(self):
         acquirers = self.env['payment.acquirer']._get_compatible_acquirers(
@@ -54,3 +57,31 @@ class PayumoneyTest(PayumoneyCommon):
             'https://sandboxsecure.payu.in/_payment')
         self.assertDictEqual(form_info['inputs'], expected_values,
             "PayUMoney: invalid inputs specified in the redirect form.")
+
+    def test_accept_notification_with_valid_signature(self):
+        """ Test the verification of a notification with a valid signature. """
+        tx = self.create_transaction('redirect')
+        self._assert_does_not_raise(
+            Forbidden,
+            PayUMoneyController._verify_notification_signature,
+            self.NOTIFICATION_DATA,
+            tx,
+        )
+
+    @mute_logger('odoo.addons.payment_payumoney.controllers.main')
+    def test_reject_notification_with_missing_signature(self):
+        """ Test the verification of a notification with a missing signature. """
+        tx = self.create_transaction('redirect')
+        payload = dict(self.NOTIFICATION_DATA, hash=None)
+        self.assertRaises(
+            Forbidden, PayUMoneyController._verify_notification_signature, payload, tx
+        )
+
+    @mute_logger('odoo.addons.payment_payumoney.controllers.main')
+    def test_reject_notification_with_invalid_signature(self):
+        """ Test the verification of a notification with an invalid signature. """
+        tx = self.create_transaction('redirect')
+        payload = dict(self.NOTIFICATION_DATA, hash='dummy')
+        self.assertRaises(
+            Forbidden, PayUMoneyController._verify_notification_signature, payload, tx
+        )
