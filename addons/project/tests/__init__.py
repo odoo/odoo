@@ -14,6 +14,7 @@ from . import test_project_ui
 from . import test_project_update_access_rights
 from . import test_project_update_flow
 from . import test_project_update_ui
+from . import test_project_visibility
 from . import test_portal
 from . import test_multicompany
 from . import test_personal_stages
