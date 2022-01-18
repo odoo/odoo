@@ -204,7 +204,7 @@
         <field name="model">hr.leave</field>
         <field name="priority">32</field>
         <field name="arch" type="xml">
-            <form string="Time Off Request" js_class="allocation_leave_form">
+            <form string="Time Off Request" class="o_hr_leave_form" js_class="allocation_leave_form">
             <field name="active" invisible="1"/>
             <field name="can_reset" invisible="1"/>
             <field name="can_approve" invisible="1"/>
@@ -238,118 +238,119 @@
                 <field name="tz_mismatch" invisible="1"/>
                 <field name="holiday_type" invisible="1"/>
                 <field name="leave_type_request_unit" invisible="1"/>
-                <div name="title">
-                    <field name="display_name" invisible="1"/>
-                    <field name="employee_id" nolabel="1" readonly="1" force_save="1" invisible="1"/>
-                    <field name="employee_ids" invisible="1"/>
-                </div>
-                <group>
-                    <group name="col_left">
-                        <field name="holiday_status_id" force_save="1" domain="['|', ('requires_allocation', '=', 'no'), '&amp;', ('has_valid_allocation', '=', True), '&amp;', ('virtual_remaining_leaves', '&gt;', 0), ('max_leaves', '>', '0')]" context="{'employee_id':employee_id, 'default_date_from':date_from}" options="{'no_create': True, 'no_open': True, 'request_type':'leave'}" class="w-100"/>
-                        <label for="request_date_from" string="Dates" id="label_dates"/>
-                        <div>
-                            <field name="date_from" invisible="1" widget="daterange"/>
-                            <field name="date_to" invisible="1"/>
-                            <div class="o_row o_row_readonly">
-                                <span class="oe_inline"
-                                    attrs="{'invisible': ['|', ('request_unit_half', '=', True), ('request_unit_hours', '=', True)]}">
-                                    From
-                                </span>
-                                <field name="request_date_from" class="oe_inline" nolabel="1"
-                                    attrs="{'readonly': [('state', 'not in', ('draft', 'confirm'))],
-                                            'required': ['|', ('date_from', '=', False), ('date_to', '=', False)]
-                                            }"
-                                    widget="daterange" options="{'related_end_date': 'request_date_to'}"/>
-                                <span class="oe_inline"
-                                    attrs="{'invisible': ['|', ('request_unit_half', '=', True), ('request_unit_hours', '=', True)]}">
-                                    To
-                                </span>
-                                <field name="request_date_to" class="oe_inline"
-                                    attrs="{
+                <div class="o_hr_leave_content row">
+                    <div class="o_hr_leave_column col_left col-md-6 col-12">
+                        <div name="title" class="o_hr_leave_title">
+                            <field name="display_name" invisible="1"/>
+                            <field name="employee_id" nolabel="1" readonly="1" force_save="1" invisible="1"/>
+                            <field name="employee_ids" invisible="1"/>
+                        </div>
+                        <group name="col_left">
+                            <field name="holiday_status_id" force_save="1" domain="['|', ('requires_allocation', '=', 'no'), '&amp;', ('has_valid_allocation', '=', True), '&amp;', ('virtual_remaining_leaves', '&gt;', 0), ('max_leaves', '>', '0')]" context="{'employee_id':employee_id, 'default_date_from':date_from}" options="{'no_create': True, 'no_open': True, 'request_type':'leave'}" class="w-100"/>
+                            <label for="request_date_from" string="Dates" id="label_dates"/>
+                            <div>
+                                <field name="date_from" invisible="1" widget="daterange"/>
+                                <field name="date_to" invisible="1"/>
+                                <div class="o_row o_row_readonly o_hr_leave_date">
+                                    <div>
+                                        <span class="oe_inline"
+                                            attrs="{'invisible': ['|', ('request_unit_half', '=', True), ('request_unit_hours', '=', True)]}">
+                                            From
+                                        </span>
+                                        <field name="request_date_from" class="oe_inline" nolabel="1"
+                                            attrs="{'readonly': [('state', 'not in', ('draft', 'confirm'))],
+                                                    'required': ['|', ('date_from', '=', False), ('date_to', '=', False)]
+                                                    }"
+                                            widget="daterange" options="{'related_end_date': 'request_date_to'}"/>
+                                    </div>
+                                    <div>
+                                        <span class="oe_inline"
+                                            attrs="{'invisible': ['|', ('request_unit_half', '=', True), ('request_unit_hours', '=', True)]}">
+                                            To
+                                        </span>
+                                        <field name="request_date_to" class="oe_inline"
+                                            attrs="{
+                                                'readonly': [('state', 'not in', ('draft', 'confirm'))],
+                                                'invisible': ['|', ('request_unit_half', '=', True), ('request_unit_hours', '=', True)],
+                                                'required': ['|', ('date_from', '=', False), ('date_to', '=', False)]
+                                                    }"
+                                            widget="daterange" options="{'related_start_date': 'request_date_from'}"/>
+                                        <field name="request_date_from_period" class="oe_inline"
+                                            string="In"
+                                            options="{'horizontal': True}"
+                                            attrs="{
+                                                'readonly': [('state', 'not in', ('draft', 'confirm'))],
+                                                'required': [('request_unit_half', '=', True)],
+                                                'invisible': [('request_unit_half', '=', False)]}"/>
+                                    </div>
+                                </div>
+                                <div class="o_row o_row_readonly oe_edit_only" style="margin-left: -2px;">
+                                    <field name="request_unit_half" attrs="{
                                         'readonly': [('state', 'not in', ('draft', 'confirm'))],
-                                        'invisible': ['|', ('request_unit_half', '=', True), ('request_unit_hours', '=', True)],
-                                        'required': ['|', ('date_from', '=', False), ('date_to', '=', False)]
-                                            }"
-                                    widget="daterange" options="{'related_start_date': 'request_date_from'}"/>
-                                <field name="request_date_from_period" class="oe_inline"
-                                    string="In"
-                                    options="{'horizontal': True}"
-                                    attrs="{
+                                        'invisible': [('leave_type_request_unit', '=', 'day')]
+                                    }"/>
+                                    <label for="request_unit_half" attrs="{
+                                        'invisible': [('leave_type_request_unit', '=', 'day')]
+                                    }"/>
+                                    <field name="request_unit_hours" attrs="{
                                         'readonly': [('state', 'not in', ('draft', 'confirm'))],
-                                        'required': [('request_unit_half', '=', True)],
-                                        'invisible': [('request_unit_half', '=', False)]}"/>
-                            </div>
-                            <div class="o_row o_row_readonly oe_edit_only" style="margin-left: -2px;">
-                                <field name="request_unit_half" attrs="{
-                                    'readonly': [('state', 'not in', ('draft', 'confirm'))],
-                                    'invisible': [('leave_type_request_unit', '=', 'day')]
-                                }"/>
-                                <label for="request_unit_half" attrs="{
-                                    'invisible': [('leave_type_request_unit', '=', 'day')]
-                                 }"/>
-                                <field name="request_unit_hours" attrs="{
-                                    'readonly': [('state', 'not in', ('draft', 'confirm'))],
-                                    'invisible': [('leave_type_request_unit', '!=', 'hour')]
-                                 }" class="ml-5"/>
-                                <label for="request_unit_hours" attrs="{
-                                    'invisible': [('leave_type_request_unit', '!=', 'hour')]
-                                }"/>
+                                        'invisible': [('leave_type_request_unit', '!=', 'hour')]
+                                    }" class="ml-5"/>
+                                    <label for="request_unit_hours" attrs="{
+                                        'invisible': [('leave_type_request_unit', '!=', 'hour')]
+                                    }"/>
 
-                                <field name="request_unit_custom" invisible="1" attrs="{
-                                    'readonly': [('state', 'not in', ('draft', 'confirm'))],
-                                 }" class="ml-5"/>
-                                <label for="request_unit_custom" invisible="1"/>
-                            </div>
-                            <div class="o_row o_row_readonly">
-                                <label for="request_hour_from" string="From"
-                                    attrs="{'invisible': [('request_unit_hours', '=', False)]}"/>
-                                <field name="request_hour_from"
-                                    attrs="{
-                                        'readonly': [('state', '=', 'validate')],
-                                        'required': [('request_unit_hours', '=', True)],
-                                        'invisible': [('request_unit_hours', '=', False)]}"/>
-                                <label for="request_hour_to" string="To"
-                                    attrs="{'invisible': [('request_unit_hours', '=', False)]}"/>
-                                <field name="request_hour_to"
-                                    attrs="{
-                                        'readonly': [('state', '=', 'validate')],
-                                        'required': [('request_unit_hours', '=', True)],
-                                        'invisible': [('request_unit_hours', '=', False)]}"/>
-                            </div>
-                            <div class="o_row mb-2 alert alert-warning text-justify" role="alert" attrs="{'invisible': [('has_stress_day', '=', False)]}">
-                                Your time off request covers one (or more) stress days. Taking time off during stress days is not authorized.
-                            </div>
-                        </div>
-                        <!-- When the user is leave manager, he should always see `number_of_days` to allow
-                        him to edit the value. `number_of_hours_display` is only an informative field -->
-                        <label for="number_of_days" string="Duration" attrs="{'invisible': [('request_unit_half', '=', True), ('leave_type_request_unit', '!=', 'hour')]}"/>
-                        <div name="duration_display">
-                            <div class="o_row">
-                                <div groups="!hr_holidays.group_hr_holidays_manager" attrs="{'invisible': ['|', ('request_unit_half', '=', True), ('request_unit_hours', '=', True)]}" class="o_row">
-                                    <field name="number_of_days_display" nolabel="1" readonly="1" class="oe_inline"/>
-                                    <span>Days</span>
+                                    <field name="request_unit_custom" invisible="1" attrs="{
+                                        'readonly': [('state', 'not in', ('draft', 'confirm'))],
+                                    }" class="ml-5"/>
+                                    <label for="request_unit_custom" invisible="1"/>
                                 </div>
-                                <div groups="hr_holidays.group_hr_holidays_manager" class="o_row" attrs="{'invisible': ['|', ('request_unit_half', '=', True), ('request_unit_hours', '=', True)]}">
-                                    <field name="number_of_days" nolabel="1" class="oe_inline"/>
-                                    <span>Days</span>
-                                </div>
-                                <div attrs="{'invisible': [('leave_type_request_unit', '!=', 'hour')]}" class="o_row">
-                                    <field name="number_of_hours_text" nolabel="1" class="oe_inline"/>
+                                <div class="o_row o_row_readonly">
+                                    <label for="request_hour_from" string="From"
+                                        attrs="{'invisible': [('request_unit_hours', '=', False)]}"/>
+                                    <field name="request_hour_from"
+                                        attrs="{
+                                            'readonly': [('state', '=', 'validate')],
+                                            'required': [('request_unit_hours', '=', True)],
+                                            'invisible': [('request_unit_hours', '=', False)]}"/>
+                                    <label for="request_hour_to" string="To"
+                                        attrs="{'invisible': [('request_unit_hours', '=', False)]}"/>
+                                    <field name="request_hour_to"
+                                        attrs="{
+                                            'readonly': [('state', '=', 'validate')],
+                                            'required': [('request_unit_hours', '=', True)],
+                                            'invisible': [('request_unit_hours', '=', False)]}"/>
                                 </div>
                             </div>
-                        </div>
-                        <field name="name" attrs="{'readonly': [('state', 'not in', ('draft', 'confirm'))]}" widget="text"/>
-                        <field name="user_id" invisible="1"/>
-                        <field name="leave_type_support_document" invisible="1"/>
-                        <label for="supported_attachment_ids" string="Supporting Document"
-                            attrs="{'invisible': ['|', ('leave_type_support_document', '=', False), ('state', 'not in', ('draft', 'confirm', 'validate1'))]}"/>
-                        <field name="supported_attachment_ids" widget="many2many_binary" nolabel="1"
-                            attrs="{'invisible': ['|', ('leave_type_support_document', '=', False), ('state', 'not in', ('draft', 'confirm', 'validate1'))]}"/>
-                    </group>
-                    <group name="col_right">
-                        <field name="department_id" groups="hr_holidays.group_hr_holidays_user" invisible="1"/>
-                    </group>
-                </group>
+
+                            <!-- When the user is leave manager, he should always see `number_of_days` to allow
+                            him to edit the value. `number_of_hours_display` is only an informative field -->
+                            <label for="number_of_days" string="Duration" attrs="{'invisible': [('request_unit_half', '=', True), ('leave_type_request_unit', '!=', 'hour')]}"/>
+                            <div name="duration_display">
+                                <div class="o_row">
+                                    <div groups="!hr_holidays.group_hr_holidays_manager" attrs="{'invisible': ['|', ('request_unit_half', '=', True), ('request_unit_hours', '=', True)]}" class="o_row">
+                                        <field name="number_of_days_display" nolabel="1" readonly="1" class="oe_inline"/>
+                                        <span>Days</span>
+                                    </div>
+                                    <div groups="hr_holidays.group_hr_holidays_manager" class="o_row" attrs="{'invisible': ['|', ('request_unit_half', '=', True), ('request_unit_hours', '=', True)]}">
+                                        <field name="number_of_days" nolabel="1" class="oe_inline"/>
+                                        <span>Days</span>
+                                    </div>
+                                    <div attrs="{'invisible': [('leave_type_request_unit', '!=', 'hour')]}" class="o_row">
+                                        <field name="number_of_hours_text" nolabel="1" class="oe_inline"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <field name="name" attrs="{'readonly': [('state', 'not in', ('draft', 'confirm'))]}" widget="text"/>
+                            <field name="user_id" invisible="1"/>
+                            <field name="leave_type_support_document" invisible="1"/>
+                            <label for="supported_attachment_ids" string="Supporting Document"
+                                attrs="{'invisible': ['|', ('leave_type_support_document', '=', False), ('state', 'not in', ('draft', 'confirm', 'validate1'))]}"/>
+                            <field name="supported_attachment_ids" widget="many2many_binary" nolabel="1"
+                                attrs="{'invisible': ['|', ('leave_type_support_document', '=', False), ('state', 'not in', ('draft', 'confirm', 'validate1'))]}"/>
+                        </group>
+                    </div>
+                </div>
             </sheet>
             <div class="oe_chatter">
                 <field name="message_follower_ids"/>
@@ -423,9 +424,25 @@
         <field name="mode">primary</field>
         <field name="priority">16</field>
         <field name="arch" type="xml">
+            <xpath expr="//field[@name='holiday_status_id']" position="before">
+                <field name="holiday_type" string="Mode"
+                    groups="hr_holidays.group_hr_holidays_user"/>
+                <field name="mode_company_id" string="Company" groups="hr_holidays.group_hr_holidays_user" attrs="{
+                    'required': [('holiday_type', '=', 'company')],
+                    'invisible': [('holiday_type', '!=', 'company')]
+                    }"/>
+                <field name="category_id" groups="hr_holidays.group_hr_holidays_user" attrs="{
+                    'required': [('holiday_type', '=', 'category')],
+                    'invisible': [('holiday_type', '!=','category')]
+                    }"/>
+                <field name="department_id" groups="hr_holidays.group_hr_holidays_user" attrs="{
+                    'required': [('holiday_type', '=', 'department')],
+                    'invisible': [('holiday_type', '!=', 'department')]
+                    }"/>
+            </xpath>
             <field name="holiday_status_id" position="replace"/>
             <div name="title" position="inside">
-                <h1 class="d-flex flex-row justify-content-between">
+                <h1 class="d-flex flex-row align-items-end justify-content-between o_hr_leave_title">
                     <field name="holiday_status_id" options="{'no_open': True}" context="{'request_type':'leave', 'from_manager_leave_form': True ,'employee_id': employee_id}"/>
                 </h1>
             </div>
@@ -438,31 +455,22 @@
                     <field name="employee_ids" groups="hr_holidays.group_hr_holidays_user" attrs="{
                         'required': [('holiday_type', '=', 'employee'), ('state', 'in', ('draft', 'cancel', 'refuse'))],
                         'invisible': ['|', ('holiday_type', '!=', 'employee'), '&amp;', ('state', '=', 'validate'), ('employee_id', '!=', False)],
-                        }" widget="many2many_tags"/>
+                        }" widget="many2many_avatar_employee"/>
             </label>
             <field name="name" position="replace"/>
             <field name="user_id" position="before">
                 <field name="name"/>
             </field>
+            <xpath expr="//div[hasclass('col_left')]" position="after">
+                <div class="o_hr_leave_column col_right col-md-6 col-12">
+                    <group name="col_right">
+                        <field name="department_id" groups="hr_holidays.group_hr_holidays_user" invisible="1"/>
+                    </group>
+                </div>
+            </xpath>
             <xpath expr="//group[@name='col_right']" position="replace">
                 <group>
                     <widget name="hr_leave_stats"/>
-                </group>
-                <group>
-                    <field name="holiday_type" string="Mode"
-                        groups="hr_holidays.group_hr_holidays_user"/>
-                    <field name="mode_company_id" string="Company" groups="hr_holidays.group_hr_holidays_user" attrs="{
-                        'required': [('holiday_type', '=', 'company')],
-                        'invisible': [('holiday_type', '!=', 'company')]
-                        }"/>
-                    <field name="category_id" groups="hr_holidays.group_hr_holidays_user" attrs="{
-                        'required': [('holiday_type', '=', 'category')],
-                        'invisible': [('holiday_type', '!=','category')]
-                        }"/>
-                    <field name="department_id" groups="hr_holidays.group_hr_holidays_user" attrs="{
-                        'required': [('holiday_type', '=', 'department')],
-                        'invisible': [('holiday_type', '!=', 'department')]
-                        }"/>
                 </group>
             </xpath>
         </field>
