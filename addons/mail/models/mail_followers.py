@@ -136,7 +136,7 @@ SELECT DISTINCT ON (pid) * FROM (
 ) AS x
 ORDER BY pid, notif
 """
-            params = [subtype_id, records._name, tuple(records.ids), list(pids) or []]
+            params = [subtype_id, records._name, tuple(records.ids), list(pids or [])]
             self.env.cr.execute(query, tuple(params))
             res = self.env.cr.fetchall()
         elif pids:
