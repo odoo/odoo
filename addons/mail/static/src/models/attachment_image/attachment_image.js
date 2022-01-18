@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { clear, insert, insertAndReplace, replace } from '@mail/model/model_field_command';
+import { clear, insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'AttachmentImage',
@@ -15,14 +15,7 @@ registerModel({
             if (!this.attachment || !this.attachment.isViewable) {
                 return;
             }
-            this.messaging.dialogManager.update({
-                dialogs: insert({
-                    attachmentViewer: insertAndReplace({
-                        attachment: replace(this.attachment),
-                        attachmentList: replace(this.attachmentList),
-                    }),
-                }),
-            });
+            this.update({ attachmentViewDialog: insertAndReplace() });
         },
         /**
          * Handles the click on delete attachment and open the confirm dialog.
@@ -38,17 +31,8 @@ registerModel({
                 this.component.trigger('o-attachment-removed', { attachmentLocalId: this.attachment.localId });
                 this.attachment.remove();
             } else {
-                this.update({ hasDeleteConfirmDialog: true });
+                this.update({ attachmentDeleteConfirmDialog: insertAndReplace() });
             }
-        },
-        /**
-         * Synchronize the `hasDeleteConfirmDialog` when the dialog is closed.
-         */
-        onDeleteConfirmDialogClosed() {
-            if (!this.exists()) {
-                return;
-            }
-            this.update({ hasDeleteConfirmDialog: false });
         },
         /**
          * @private
@@ -101,6 +85,10 @@ registerModel({
             readonly: true,
             required: true,
         }),
+        attachmentDeleteConfirmDialog: one('Dialog', {
+            isCausal: true,
+            inverse: 'attachmentImageOwnerAsAttachmentDeleteConfirm',
+        }),
         /**
          * States the attachmentList displaying this attachment image.
          */
@@ -109,16 +97,14 @@ registerModel({
             readonly: true,
             required: true,
         }),
+        attachmentViewDialog: one('Dialog', {
+            isCausal: true,
+            inverse: 'attachmentImageOwnerAsAttachmentView',
+        }),
         /**
          * States the OWL component of this attachment image.
          */
         component: attr(),
-        /**
-         * Determines the status of the delete confirm dialog (open/closed).
-         */
-        hasDeleteConfirmDialog: attr({
-            default: false,
-        }),
         /**
          * Determines the max height of this attachment image in px.
          */

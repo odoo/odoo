@@ -3,6 +3,7 @@
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
 import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
+import { markEventHandled } from '@mail/utils/utils';
 
 registerModel({
     name: 'MessageView',
@@ -19,6 +20,13 @@ registerModel({
                     this.update({ isHighlighted: false });
                 }, 2000),
             });
+        },
+        /**
+         * @param {MouseEvent} ev
+         */
+        onClickFailure(ev) {
+            markEventHandled(ev, 'Message.ClickFailure');
+            this.message.openResendAction();
         },
         onComponentUpdate() {
             if (!this.exists()) {

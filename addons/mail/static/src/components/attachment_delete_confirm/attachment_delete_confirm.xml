@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.AttachmentDeleteConfirm" owl="1">
+        <div class="o_AttachmentDeleteConfirm" t-attf-class="{{ className }}" title="attachmentDeleteConfirmView.title" t-ref="root">
+            <t t-if="attachmentDeleteConfirmView">
+                <p class="o_AttachmentDeleteConfirm_mainText" t-esc="attachmentDeleteConfirmView.body"/>
+                <div class="o_AttachmentDeleteConfirm_buttons">
+                    <button class="o_AttachmentDeleteConfirm_confirmButton btn btn-primary" t-on-click="attachmentDeleteConfirmView.onClickOk">Ok</button>
+                    <button class="o_AttachmentDeleteConfirm_cancelButton btn btn-secondary" t-on-click="attachmentDeleteConfirmView.onClickCancel">Cancel</button>
+                </div>
+            </t>
+        </div>
+    </t>
+</templates>

@@ -459,7 +459,7 @@ registerModel({
         async updateMessage() {
             const composer = this.composer;
             if (!composer.textInputContent) {
-                this.messageViewInEditing.messageActionList.update({ showDeleteConfirm: true });
+                this.messageViewInEditing.messageActionList.update({ deleteConfirmDialog: insertAndReplace() });
                 return;
             }
             const escapedAndCompactContent = escapeAndCompactTextContent(composer.textInputContent);

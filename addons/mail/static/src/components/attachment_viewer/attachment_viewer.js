@@ -114,7 +114,7 @@ export class AttachmentViewer extends Component {
      * @private
      */
     _close() {
-        this.attachmentViewer.close();
+        this.attachmentViewer.delete();
     }
 
     /**

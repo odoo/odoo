@@ -654,7 +654,7 @@ QUnit.test('only show messaging seen indicator if authored by me, after last see
 QUnit.test('allow attachment delete on authored message', async function (assert) {
     assert.expect(5);
 
-    const { createMessageComponent } = await this.start();
+    const { createMessageComponent } = await this.start({ hasDialog: true });
     const message = this.messaging.models['Message'].create({
         attachments: insertAndReplace({
             filename: "BLAH.jpg",
@@ -682,17 +682,17 @@ QUnit.test('allow attachment delete on authored message', async function (assert
     await afterNextRender(() => document.querySelector('.o_AttachmentImage_actionUnlink').click());
     assert.containsOnce(
         document.body,
-        '.o_AttachmentDeleteConfirmDialog',
+        '.o_AttachmentDeleteConfirm',
         "An attachment delete confirmation dialog should have been opened"
     );
     assert.strictEqual(
-        document.querySelector('.o_AttachmentDeleteConfirmDialog_mainText').textContent,
+        document.querySelector('.o_AttachmentDeleteConfirm_mainText').textContent,
         `Do you really want to delete "BLAH"?`,
         "Confirmation dialog should contain the attachment delete confirmation text"
     );
 
     await afterNextRender(() =>
-        document.querySelector('.o_AttachmentDeleteConfirmDialog_confirmButton').click()
+        document.querySelector('.o_AttachmentDeleteConfirm_confirmButton').click()
     );
     assert.containsNone(
         document.body,

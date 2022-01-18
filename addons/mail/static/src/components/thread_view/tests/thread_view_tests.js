@@ -986,7 +986,7 @@ QUnit.test("delete all attachments of message without content should no longer d
             res_id: 11,
         }
     );
-    const { createThreadViewComponent } = await this.start();
+    const { createThreadViewComponent } = await this.start({ hasDialog: true });
     const threadViewer = this.messaging.models['ThreadViewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),
@@ -1019,7 +1019,7 @@ QUnit.test("delete all attachments of message without content should no longer d
         }"] .o_AttachmentCard_asideItemUnlink`).click();
     });
     await afterNextRender(() =>
-        document.querySelector('.o_AttachmentDeleteConfirmDialog_confirmButton').click()
+        document.querySelector('.o_AttachmentDeleteConfirm_confirmButton').click()
     );
     assert.containsNone(
         document.body,
@@ -1046,7 +1046,7 @@ QUnit.test('delete all attachments of a message with some text content should st
             res_id: 11,
         },
     );
-    const { createThreadViewComponent } = await this.start();
+    const { createThreadViewComponent } = await this.start({ hasDialog: true });
     const threadViewer = this.messaging.models['ThreadViewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),
@@ -1079,7 +1079,7 @@ QUnit.test('delete all attachments of a message with some text content should st
         }"] .o_AttachmentCard_asideItemUnlink`).click();
     });
     await afterNextRender(() =>
-        document.querySelector('.o_AttachmentDeleteConfirmDialog_confirmButton').click()
+        document.querySelector('.o_AttachmentDeleteConfirm_confirmButton').click()
     );
     assert.containsOnce(
         document.body,
@@ -1113,7 +1113,7 @@ QUnit.test('delete all attachments of a message with tracking fields should stil
         new_value: "New name",
         old_value: "Old name",
     });
-    const { createThreadViewComponent } = await this.start();
+    const { createThreadViewComponent } = await this.start({ hasDialog: true });
     const threadViewer = this.messaging.models['ThreadViewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),
@@ -1146,7 +1146,7 @@ QUnit.test('delete all attachments of a message with tracking fields should stil
         }"] .o_AttachmentCard_asideItemUnlink`).click();
     });
     await afterNextRender(() =>
-        document.querySelector('.o_AttachmentDeleteConfirmDialog_confirmButton').click()
+        document.querySelector('.o_AttachmentDeleteConfirm_confirmButton').click()
     );
     assert.containsOnce(
         document.body,

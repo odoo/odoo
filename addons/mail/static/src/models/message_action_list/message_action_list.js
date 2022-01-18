@@ -31,7 +31,7 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onClickDelete(ev) {
-            this.update({ showDeleteConfirm: true });
+            this.update({ deleteConfirmDialog: insertAndReplace() });
         },
         /**
          * @private
@@ -81,13 +81,6 @@ registerModel({
          */
         onClickToggleStar(ev) {
             this.message.toggleStar();
-        },
-        /**
-         * @private
-         * @param {CustomEvent} ev
-         */
-        onDeleteConfirmDialogClosed(ev) {
-            this.update({ showDeleteConfirm: false });
         },
         /**
          * @private
@@ -174,8 +167,9 @@ registerModel({
         /**
          * Determines whether to show the message delete-confirm dialog.
          */
-        showDeleteConfirm: attr({
-            default: false,
+        deleteConfirmDialog: one('Dialog', {
+            isCausal: true,
+            inverse: 'messageActionListOwnerAsDeleteConfirm',
         }),
     },
 });

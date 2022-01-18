@@ -2,10 +2,11 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
+import { replace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'FollowerSubtypeList',
-    identifyingFields: ['follower'],
+    identifyingFields: ['dialogOwner'],
     recordMethods: {
         /**
          * Returns whether the given html element is inside this follower subtype list.
@@ -16,6 +17,13 @@ registerModel({
         containsElement(element) {
             return Boolean(this.component && this.component.root.el && this.component.root.el.contains(element));
         },
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
+        _computeFollower() {
+            return replace(this.dialogOwner.followerOwnerAsSubtypeList);
+        },
     },
     fields: {
         /**
@@ -25,14 +33,13 @@ registerModel({
         /**
          * States the dialog displaying this follower subtype list.
          */
-        dialog: one('Dialog', {
+        dialogOwner: one('Dialog', {
             inverse: 'followerSubtypeList',
             isCausal: true,
             readonly: true,
         }),
         follower: one('Follower', {
-            inverse: 'subtypeList',
-            readonly: true,
+            compute: '_computeFollower',
             required: true,
         }),
     },

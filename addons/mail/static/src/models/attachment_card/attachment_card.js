@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { insert, insertAndReplace, replace } from '@mail/model/model_field_command';
+import { insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'AttachmentCard',
@@ -15,14 +15,7 @@ registerModel({
             if (!this.attachment || !this.attachment.isViewable) {
                 return;
             }
-            this.messaging.dialogManager.update({
-                dialogs: insert({
-                    attachmentViewer: insertAndReplace({
-                        attachment: replace(this.attachment),
-                        attachmentList: replace(this.attachmentList),
-                    }),
-                }),
-            });
+            this.update({ attachmentViewDialog: insertAndReplace() });
         },
         /**
          * Handles the click on delete attachment and open the confirm dialog.
@@ -38,17 +31,8 @@ registerModel({
                 this.component.trigger('o-attachment-removed', { attachmentLocalId: this.attachment.localId });
                 this.attachment.remove();
             } else {
-                this.update({ hasDeleteConfirmDialog: true });
+                this.update({ attachmentDeleteConfirmDialog: insertAndReplace() });
             }
-        },
-        /**
-         * Synchronizes the `hasDeleteConfirmDialog` when the dialog is closed.
-         */
-        onDeleteConfirmDialogClosed() {
-            if (!this.exists()) {
-                return;
-            }
-            this.update({ hasDeleteConfirmDialog: false });
         },
     },
     fields: {
@@ -58,6 +42,14 @@ registerModel({
         attachment: one('Attachment', {
             readonly: true,
             required: true,
+        }),
+        attachmentDeleteConfirmDialog: one('Dialog', {
+            isCausal: true,
+            inverse: 'attachmentCardOwnerAsAttachmentDeleteConfirm',
+        }),
+        attachmentViewDialog: one('Dialog', {
+            isCausal: true,
+            inverse: 'attachmentCardOwnerAsAttachmentView',
         }),
         /**
          * States the attachmentList displaying this card.
@@ -71,11 +63,5 @@ registerModel({
          * States the OWL component of this attachment card.
          */
         component: attr(),
-        /**
-         * Determines the status of the delete confirm dialog (open/closed).
-         */
-        hasDeleteConfirmDialog: attr({
-            default: false,
-        }),
     },
 });

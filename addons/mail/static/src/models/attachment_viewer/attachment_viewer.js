@@ -2,20 +2,12 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
+import { clear, replace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'AttachmentViewer',
-    identifyingFields: ['attachmentList'],
+    identifyingFields: ['dialogOwner'],
     recordMethods: {
-        /**
-         * Close the attachment viewer by closing its linked dialog.
-         */
-        close() {
-            const dialog = this.messaging.models['Dialog'].find(dialog => dialog.record === this);
-            if (dialog) {
-                dialog.delete();
-            }
-        },
         /**
          * Returns whether the given html element is inside this attachment viewer.
          *
@@ -24,6 +16,32 @@ registerModel({
          */
         containsElement(element) {
             return Boolean(this.component && this.component.root.el && this.component.root.el.contains(element));
+        },
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
+        _computeAttachment() {
+            if (this.dialogOwner.attachmentCardOwnerAsAttachmentView) {
+                return replace(this.dialogOwner.attachmentCardOwnerAsAttachmentView.attachment);
+            }
+            if (this.dialogOwner.attachmentImageOwnerAsAttachmentView) {
+                return replace(this.dialogOwner.attachmentImageOwnerAsAttachmentView.attachment);
+            }
+            return clear();
+        },
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
+        _computeAttachmentList() {
+            if (this.dialogOwner.attachmentCardOwnerAsAttachmentView) {
+                return replace(this.dialogOwner.attachmentCardOwnerAsAttachmentView.attachmentList);
+            }
+            if (this.dialogOwner.attachmentImageOwnerAsAttachmentView) {
+                return replace(this.dialogOwner.attachmentImageOwnerAsAttachmentView.attachmentList);
+            }
+            return clear();
         },
         /**
          * @private
@@ -47,9 +65,11 @@ registerModel({
         angle: attr({
             default: 0,
         }),
-        attachment: one('Attachment'),
+        attachment: one('Attachment', {
+            compute: '_computeAttachment',
+        }),
         attachmentList: one('AttachmentList', {
-            readonly: true,
+            compute: '_computeAttachmentList',
             required: true,
         }),
         attachments: many('Attachment', {
@@ -62,7 +82,7 @@ registerModel({
         /**
          * Determines the dialog displaying this attachment viewer.
          */
-        dialog: one('Dialog', {
+        dialogOwner: one('Dialog', {
             inverse: 'attachmentViewer',
             isCausal: true,
             readonly: true,

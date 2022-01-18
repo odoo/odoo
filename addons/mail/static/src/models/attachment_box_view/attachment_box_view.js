@@ -9,13 +9,6 @@ registerModel({
     identifyingFields: ['chatter'],
     recordMethods: {
         /**
-         * Handles attachment removed event.
-         */
-        onAttachmentRemoved() {
-            // FIXME Could be changed by spying attachments count (task-2252858)
-            this.component.trigger('o-attachments-changed');
-        },
-        /**
          * Handles click on the "add attachment" button.
          */
         onClickAddAttachment() {

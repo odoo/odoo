@@ -272,6 +272,7 @@ QUnit.test('clicking on the delete attachment button multiple times should do th
     assert.expect(2);
 
     const { createMessageComponent } = await this.start({
+        hasDialog: true,
         async mockRPC(route, args) {
             if (route === '/mail/attachment/delete') {
                 assert.step('attachment_unlink');
@@ -299,9 +300,9 @@ QUnit.test('clicking on the delete attachment button multiple times should do th
     });
 
     await afterNextRender(() => {
-        document.querySelector('.o_AttachmentDeleteConfirmDialog_confirmButton').click();
-        document.querySelector('.o_AttachmentDeleteConfirmDialog_confirmButton').click();
-        document.querySelector('.o_AttachmentDeleteConfirmDialog_confirmButton').click();
+        document.querySelector('.o_AttachmentDeleteConfirm_confirmButton').click();
+        document.querySelector('.o_AttachmentDeleteConfirm_confirmButton').click();
+        document.querySelector('.o_AttachmentDeleteConfirm_confirmButton').click();
     });
     assert.verifySteps(
         ['attachment_unlink'],
