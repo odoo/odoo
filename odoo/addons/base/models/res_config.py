@@ -20,27 +20,14 @@ class ResConfigModuleInstallationMixin(object):
     def _install_modules(self, modules):
         """ Install the requested modules.
 
-        :param modules: a list of tuples (module_name, module_record)
+        :param modules: a recordset of ir.module.module records
         :return: the next action to execute
         """
-        to_install_modules = self.env['ir.module.module']
-        to_install_missing_names = []
-
-        for name, module in modules:
-            if not module:
-                to_install_missing_names.append(name)
-            elif module.state == 'uninstalled':
-                to_install_modules += module
         result = None
+
+        to_install_modules = modules.filtered(lambda module: module.state == 'uninstalled')
         if to_install_modules:
             result = to_install_modules.button_immediate_install()
-        #FIXME: if result is not none, the corresponding todo will be skipped because it was just marked done
-        if to_install_missing_names:
-            return {
-                'type': 'ir.actions.client',
-                'tag': 'apps',
-                'params': {'modules': to_install_missing_names},
-            }
 
         return result
 
@@ -316,12 +303,19 @@ class ResConfigInstaller(models.TransientModel, ResConfigModuleInstallationMixin
         _logger.info('Selecting addons %s to install', to_install)
 
         IrModule = self.env['ir.module.module']
-        modules = []
-        for name in to_install:
-            module = IrModule.search([('name', '=', name)], limit=1)
-            modules.append((name, module))
+        modules = IrModule.search([('name', 'in', to_install)])
+        module_names = {module.name for module in modules}
+        to_install_missing_names = [name for name in to_install if name not in module_names]
 
-        return self._install_modules(modules)
+        result = self._install_modules(modules)
+        #FIXME: if result is not none, the corresponding todo will be skipped because it was just marked done
+        if to_install_missing_names:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'apps',
+                'params': {'modules': to_install_missing_names},
+            }
+        return result
 
 
 class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin):
@@ -458,7 +452,8 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
         if fnames is None:
             fnames = self._fields.keys()
 
-        defaults, groups, modules, configs, others = [], [], [], [], []
+        defaults, groups, configs, others = [], [], [], []
+        modules = IrModule
         for name in fnames:
             field = self._fields[name]
             if name.startswith('default_'):
@@ -476,8 +471,7 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
             elif name.startswith('module_'):
                 if field.type not in ('boolean', 'selection'):
                     raise Exception("Field %s must have type 'boolean' or 'selection'" % field)
-                module = IrModule._get(name[7:])
-                modules.append((name, module))
+                modules += IrModule._get(name[7:])
             elif hasattr(field, 'config_parameter'):
                 if field.type not in ('boolean', 'integer', 'float', 'char', 'selection', 'many2one', 'datetime'):
                     raise Exception("Field %s must have type 'boolean', 'integer', 'float', 'char', 'selection', 'many2one' or 'datetime'" % field)
@@ -514,10 +508,8 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
                 res[name] = str(int(res[name]))     # True, False -> '1', '0'
 
         # modules: which modules are installed/to install
-        for name, module in classified['module']:
-            res[name] = module.state in ('installed', 'to install', 'to upgrade')
-            if self._fields[name].type == 'selection':
-                res[name] = str(int(res[name]))     # True, False -> '1', '0'
+        for module in classified['module']:
+            res[f'module_{module.name}'] = module.state in ('installed', 'to install', 'to upgrade')
 
         # config: get & convert stored ir.config_parameter (or default)
         WARNING_MESSAGE = "Error when converting value %r of field %s for ir.config.parameter %r"
@@ -636,27 +628,20 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
         self.set_values()
 
         # module fields: install/uninstall the selected modules
-        to_install = []
-        to_uninstall_modules = self.env['ir.module.module']
-        lm = len('module_')
-        for name, module in classified['module']:
-            if int(self[name]):
-                if module.state == "installed":
-                    continue
-                to_install.append((name[lm:], module))
-            else:
-                if module and module.state in ('installed', 'to upgrade'):
-                    to_uninstall_modules += module
+        to_install = classified['module'].filtered(
+            lambda m: self[f'module_{m.name}'] and m.state != 'installed')
+        to_uninstall = classified['module'].filtered(
+            lambda m: not self[f'module_{m.name}'] and m.state in ('installed', 'to upgrade'))
 
-        if to_install or to_uninstall_modules:
+        if to_install or to_uninstall:
             self.flush()
 
-        if to_uninstall_modules:
-            to_uninstall_modules.button_immediate_uninstall()
+        if to_uninstall:
+            to_uninstall.button_immediate_uninstall()
 
         installation_status = self._install_modules(to_install)
 
-        if installation_status or to_uninstall_modules:
+        if installation_status or to_uninstall:
             # After the uninstall/install calls, the registry and environments
             # are no longer valid. So we reset the environment.
             self.env.reset()
