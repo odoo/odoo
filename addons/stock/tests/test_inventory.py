@@ -306,6 +306,7 @@ class TestInventory(TransactionCase):
             'inventory_quantity': 42,
         })
         # Applies the change, the quant must have a quantity of 42 and a inventory quantity to 0.
+        inventory_quant = inventory_quant.with_context(inventory_mode=True)
         inventory_quant.action_apply_inventory()
         self.assertEqual(len(inventory_quant), 1)
         self.assertEqual(inventory_quant.inventory_quantity, 0)
@@ -338,6 +339,7 @@ class TestInventory(TransactionCase):
         # and its `inventory_quantity` must be equal to zero.
         self.assertEqual(inventory_quant.inventory_quantity, 0)
 
+        inventory_quant = inventory_quant.with_context(inventory_mode=True)
         inventory_quant.inventory_quantity = 5
         self.assertEqual(inventory_quant.inventory_diff_quantity, -2)
 

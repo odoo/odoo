@@ -133,7 +133,7 @@ class StockQuant(models.Model):
 
     @api.depends('inventory_quantity')
     def _compute_inventory_quantity_set(self):
-        self.inventory_quantity_set = True
+        self.inventory_quantity_set = False
 
     @api.depends('inventory_quantity', 'quantity', 'product_id')
     def _compute_is_outdated(self):
@@ -197,6 +197,7 @@ class StockQuant(models.Model):
             quant.inventory_quantity = inventory_quantity
             quant.user_id = vals.get('user_id', self.env.user.id)
             quant.inventory_date = fields.Date.today()
+            quant.inventory_quantity_set = True
 
             return quant
         res = super(StockQuant, self).create(vals)
@@ -238,6 +239,8 @@ class StockQuant(models.Model):
             if any(quant.location_id.usage == 'inventory' for quant in self):
                 # Do nothing when user tries to modify manually a inventory loss
                 return
+            if 'inventory_quantity' in vals and 'inventory_quantity_set' not in vals:
+                vals['inventory_quantity_set'] = True
             if any(field for field in vals.keys() if field not in allowed_fields):
                 raise UserError(_("Quant's editing is restricted, you can't do this operation."))
             self = self.sudo()
