@@ -126,9 +126,13 @@ class AccountMove(models.Model):
             return False
 
         def get_vat_number(vat):
+            if vat[:2].isdecimal():
+                return vat.replace(' ', '')
             return vat[2:].replace(' ', '')
 
         def get_vat_country(vat):
+            if vat[:2].isdecimal():
+                return 'IT'
             return vat[:2].upper()
 
         def in_eu(partner):
