@@ -101,7 +101,7 @@ class Lead(models.Model):
 
     # Description
     name = fields.Char(
-        'Opportunity', index=True, required=True,
+        'Opportunity', index='gin', required=True,
         compute='_compute_name', readonly=False, store=True)
     user_id = fields.Many2one(
         'res.users', string='Salesperson', default=lambda self: self.env.user,
@@ -123,8 +123,7 @@ class Lead(models.Model):
     description = fields.Html('Notes')
     active = fields.Boolean('Active', default=True, tracking=True)
     type = fields.Selection([
-        ('lead', 'Lead'), ('opportunity', 'Opportunity')],
-        index=True, required=True, tracking=15,
+        ('lead', 'Lead'), ('opportunity', 'Opportunity')], required=True, tracking=15, index=True,
         default=lambda self: 'lead' if self.env['res.users'].has_group('crm.group_use_lead') else 'opportunity')
     # Pipeline management
     priority = fields.Selection(
@@ -175,13 +174,13 @@ class Lead(models.Model):
         'Contact Name', tracking=30,
         compute='_compute_contact_name', readonly=False, store=True)
     partner_name = fields.Char(
-        'Company Name', tracking=20, index=True,
+        'Company Name', tracking=20,
         compute='_compute_partner_name', readonly=False, store=True,
         help='The name of the future partner company that will be created while converting the lead into opportunity')
     function = fields.Char('Job Position', compute='_compute_function', readonly=False, store=True)
     title = fields.Many2one('res.partner.title', string='Title', compute='_compute_title', readonly=False, store=True)
     email_from = fields.Char(
-        'Email', tracking=40, index=True,
+        'Email', tracking=40, index='gin',
         compute='_compute_email_from', inverse='_inverse_email_from', readonly=False, store=True)
     phone = fields.Char(
         'Phone', tracking=50,
@@ -193,7 +192,7 @@ class Lead(models.Model):
     email_state = fields.Selection([
         ('correct', 'Correct'),
         ('incorrect', 'Incorrect')], string='Email Quality', compute="_compute_email_state", store=True)
-    website = fields.Char('Website', index=True, help="Website of the contact", compute="_compute_website", readonly=False, store=True)
+    website = fields.Char('Website', help="Website of the contact", compute="_compute_website", readonly=False, store=True)
     lang_id = fields.Many2one('res.lang', string='Language', compute='_compute_lang_id', readonly=False, store=True)
     lang_code = fields.Char(related='lang_id.code')
     # Address fields

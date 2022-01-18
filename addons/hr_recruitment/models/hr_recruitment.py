@@ -112,14 +112,14 @@ class Applicant(models.Model):
     _inherit = ['mail.thread.cc', 'mail.activity.mixin', 'utm.mixin']
     _mailing_enabled = True
 
-    name = fields.Char("Subject / Application Name", required=True, help="Email subject for applications sent via email")
+    name = fields.Char("Subject / Application Name", required=True, help="Email subject for applications sent via email", index='gin')
     active = fields.Boolean("Active", default=True, help="If the active field is set to false, it will allow you to hide the case without removing it.")
     description = fields.Html("Description")
     email_from = fields.Char("Email", size=128, help="Applicant email", compute='_compute_partner_phone_email',
         inverse='_inverse_partner_email', store=True)
     probability = fields.Float("Probability")
     partner_id = fields.Many2one('res.partner', "Contact", copy=False)
-    create_date = fields.Datetime("Creation Date", readonly=True, index=True)
+    create_date = fields.Datetime("Creation Date", readonly=True)
     stage_id = fields.Many2one('hr.recruitment.stage', 'Stage', ondelete='restrict', tracking=True,
                                compute='_compute_stage', store=True, readonly=False,
                                domain="['|', ('job_ids', '=', False), ('job_ids', '=', job_id)]",
@@ -132,8 +132,8 @@ class Applicant(models.Model):
     user_id = fields.Many2one(
         'res.users', "Recruiter", compute='_compute_user',
         tracking=True, store=True, readonly=False)
-    date_closed = fields.Datetime("Hire Date", compute='_compute_date_closed', store=True, index=True, readonly=False, tracking=True)
-    date_open = fields.Datetime("Assigned", readonly=True, index=True)
+    date_closed = fields.Datetime("Hire Date", compute='_compute_date_closed', store=True, readonly=False, tracking=True)
+    date_open = fields.Datetime("Assigned", readonly=True)
     date_last_stage_update = fields.Datetime("Last Stage Update", index=True, default=fields.Datetime.now)
     priority = fields.Selection(AVAILABLE_PRIORITIES, "Appreciation", default='0')
     job_id = fields.Many2one('hr.job', "Applied Job", domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", tracking=True)

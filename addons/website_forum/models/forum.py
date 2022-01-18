@@ -356,7 +356,7 @@ class Post(models.Model):
 
     # closing
     closed_reason_id = fields.Many2one('forum.post.reason', string='Reason', copy=False)
-    closed_uid = fields.Many2one('res.users', string='Closed by', index=True, readonly=True, copy=False)
+    closed_uid = fields.Many2one('res.users', string='Closed by', readonly=True, copy=False)
     closed_date = fields.Datetime('Closed on', readonly=True, copy=False)
 
     # karma calculation and access

@@ -9,7 +9,7 @@ class LeadTest(models.Model):
     _name = "base.automation.lead.test"
     _description = "Automated Rule Test"
 
-    name = fields.Char(string='Subject', required=True, index=True)
+    name = fields.Char(string='Subject', required=True)
     user_id = fields.Many2one('res.users', string='Responsible')
     state = fields.Selection([('draft', 'New'), ('cancel', 'Cancelled'), ('open', 'In Progress'),
                               ('pending', 'Pending'), ('done', 'Closed')],
