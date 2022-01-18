@@ -292,10 +292,14 @@ class TestProjectFlow(TestProjectCommon, MockEmail):
 
             1) Try to compute every field of a task which has no project.
             2) Try to compute every field of a project and assert it isn't affected by this use case.
+            3) task with no project set should be visible to users assigned to them
         """
         task_without_project = self.env['project.task'].with_context({'mail_create_nolog': True}).create({
-            'name': 'Test task without project'
+            'name': 'Test task without project',
+            'user_ids': self.user_projectuser
         })
+        self.assertTrue(task_without_project.with_user(self.user_projectuser).personal_stage_id,
+            'Project User assigned to task without project, he should have personal stage assigned as he is able to see the task')
 
         for field in task_without_project._fields.keys():
             try:

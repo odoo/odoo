@@ -45,6 +45,8 @@ class TestPersonalStages(TestProjectCommon):
             'Modifying the personal stage on task 2 for Project Manager should not have affected the stage on task 1.')
 
     def test_personal_stage_search(self):
+        self.assertEqual(self.task_1.with_user(self.user_projectuser).personal_stage_type_id.name, 'Inbox',
+            'Task assign to current user should be in inbox stage by default')
         self.task_2.user_ids += self.user_projectuser
         # Make sure both personal stages are different
         self.task_1.with_user(self.user_projectuser).personal_stage_type_id = self.user_stages[0]
