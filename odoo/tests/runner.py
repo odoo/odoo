@@ -108,6 +108,9 @@ class OdooTestResult(unittest.result.TestResult):
             else:
                 flavour = "ERROR"
             self.logError(flavour, subtest, err)
+            if self._soft_fail:
+                self.had_failure = True
+                err = None
         super().addSubTest(test, subtest, err)
 
     def addSkip(self, test, reason):
