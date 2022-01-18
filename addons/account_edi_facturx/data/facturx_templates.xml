@@ -26,10 +26,11 @@
 
                     <!-- Amounts. -->
                     <ram:SpecifiedLineTradeAgreement>
+                        <!-- Line information, with discount and unit price separate -->
                         <ram:GrossPriceProductTradePrice>
                             <ram:ChargeAmount
                                 t-att-currencyID="record.currency_id.name"
-                                t-esc="format_monetary(line.price_subtotal, record.currency_id)"/>
+                                t-esc="format_monetary(line.price_unit, record.currency_id)"/>
 
                             <!-- Discount. -->
                             <ram:AppliedTradeAllowanceCharge t-if="line.discount">
@@ -39,6 +40,19 @@
                                 <ram:CalculationPercent t-esc="line.discount"/>
                             </ram:AppliedTradeAllowanceCharge>
                         </ram:GrossPriceProductTradePrice>
+                        <!-- Line unit price, with discount applied -->
+                        <ram:NetPriceProductTradePrice>
+                            <t t-if="line.quantity > 0">
+                                <ram:ChargeAmount
+                                    t-att-currencyID="record.currency_id.name"
+                                    t-esc="format_monetary(line.price_subtotal/line.quantity, record.currency_id)"/>
+                            </t>
+                            <t t-else="">
+                                <ram:ChargeAmount
+                                    t-att-currencyID="record.currency_id.name"
+                                    t-esc="format_monetary(0.0, record.currency_id)"/>
+                            </t>
+                        </ram:NetPriceProductTradePrice>
                     </ram:SpecifiedLineTradeAgreement>
 
                     <!-- Quantity. -->
