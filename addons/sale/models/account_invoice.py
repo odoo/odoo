@@ -28,6 +28,8 @@ class AccountMove(models.Model):
         """
         Trigger the change of fiscal position when the shipping address is modified.
         """
+        if self.type not in self.get_sale_types():
+            return
         delivery_partner_id = self._get_invoice_delivery_partner_id()
         fiscal_position = self.env['account.fiscal.position'].with_context(force_company=self.company_id.id).get_fiscal_position(
             self.partner_id.id, delivery_id=delivery_partner_id)

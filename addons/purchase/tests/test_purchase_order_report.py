@@ -100,3 +100,50 @@ class TestPurchaseOrderReport(common.TransactionCase):
         )
         self.assertEqual(round(report[0]['delay']), -10, msg="The PO has been confirmed 10 days in advance")
         self.assertEqual(round(report[0]['delay_pass']), 5, msg="There are 5 days between the order date and the planned date")
+
+    def test_fiscal_position_on_vendor_bill(self):
+        """
+        Check the fiscal position set on a vendor bill,
+        it should be the one from the purchase order instead of
+        the vendor's one.
+        """
+        fiscal_pos_a, fiscas_pos_b = self.env['account.fiscal.position'].create([
+            {
+                'name': 'Position A',
+                'company_id': self.env.company.id,
+            },
+            {
+                'name': 'Position B',
+                'company_id': self.env.company.id,
+            }])
+
+        vendor = self.partner_id.copy({'property_account_position_id': fiscal_pos_a.id})
+
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': vendor.id,
+            'fiscal_position_id': fiscas_pos_b.id,
+            'order_line': [
+                (0, 0, {
+                    'name': self.product1.name,
+                    'product_id': self.product1.id,
+                    'product_uom': self.env.ref('uom.product_uom_unit').id,
+                    'product_qty': 1.0,
+                    'price_unit': 100.0,
+                    'date_planned': datetime.today(),
+                    'qty_received': 1.0,
+                })
+            ]
+        })
+
+        purchase_order.button_confirm()
+
+        action = purchase_order.action_view_invoice()
+        invoice_form = Form(self.env['account.move'].with_context(action['context']))
+        invoice = invoice_form.save()
+
+        self.assertRecordValues(invoice, [
+            {
+                'partner_id': vendor.id,
+                'fiscal_position_id': fiscas_pos_b.id
+            }
+        ])

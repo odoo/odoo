@@ -79,6 +79,13 @@ class AccountMove(models.Model):
     @api.onchange('partner_id', 'company_id')
     def _onchange_partner_id(self):
         res = super(AccountMove, self)._onchange_partner_id()
+        if self.type not in self.get_purchase_types():
+            return
+        delivery_partner_id = self._get_invoice_delivery_partner_id()
+        new_fiscal_position_id = self.env['account.fiscal.position'].with_context(force_company=self.company_id.id).get_fiscal_position(self.partner_id.id, delivery_id=delivery_partner_id)
+        self.fiscal_position_id = self.purchase_id.fiscal_position_id \
+            or self.env['purchase.order'].browse(self.env.context.get('default_purchase_id')).fiscal_position_id \
+            or self.env['account.fiscal.position'].browse(new_fiscal_position_id)
         if self.partner_id and\
                 self.type in ['in_invoice', 'in_refund'] and\
                 self.currency_id != self.partner_id.property_purchase_currency_id and\
