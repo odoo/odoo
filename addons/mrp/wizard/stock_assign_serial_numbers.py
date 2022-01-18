@@ -57,11 +57,11 @@ class StockAssignSerialNumbers(models.TransientModel):
         self.produced_qty = len(serial_numbers)
         self.show_apply = self.produced_qty == self.expected_qty
         self.show_backorders = self.produced_qty > 0 and self.produced_qty < self.expected_qty
-    
+
     def _assign_serial_numbers(self, cancel_remaining_quantity=False):
         serial_numbers = self._get_serial_numbers()
         productions = self.production_id._split_productions(
-            {self.production_id: [1] * len(serial_numbers)}, cancel_remaining_quantity)
+            {self.production_id: [1] * len(serial_numbers)}, cancel_remaining_quantity, set_consumed_qty=True)
         production_lots_vals = []
         for serial_name in serial_numbers:
             production_lots_vals.append({
@@ -75,6 +75,10 @@ class StockAssignSerialNumbers(models.TransientModel):
             production.qty_producing = production.product_qty
             for workorder in production.workorder_ids:
                 workorder.qty_produced = workorder.qty_producing
+
+        if productions and len(production_lots) < len(productions):
+            productions[-1].move_raw_ids.move_line_ids.write({'qty_done': 0})
+            productions[-1].state = "confirmed"
 
     def apply(self):
         self._assign_serial_numbers()
