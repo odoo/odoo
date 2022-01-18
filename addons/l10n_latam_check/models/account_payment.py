@@ -53,9 +53,9 @@ class AccountPayment(models.Model):
                 pay.l10n_latam_checkbook_id.next_number)
         return super(AccountPayment, self - no_print_checkbooks)._compute_check_number()
 
-    def action_mark_sent(self):
-        """ Check that the recordset is valid, set the payments state to sent and call print_checks() """
-        self.write({'is_move_sent': True})
+    # def action_mark_sent(self):
+    #     """ Check that the recordset is valid, set the payments state to sent and call print_checks() """
+    #     self.write({'is_move_sent': True})
 
     @api.onchange('l10n_latam_check_id')
     def _onchange_check(self):
