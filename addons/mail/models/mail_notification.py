@@ -44,7 +44,7 @@ class MailNotification(models.Model):
     failure_reason = fields.Text('Failure reason', copy=False)
 
     _sql_constraints = [
-        # email notification;: partner is required
+        # email notification: partner is required
         ('notification_partner_required',
          "CHECK(notification_type NOT IN ('email', 'inbox') OR res_partner_id IS NOT NULL)",
          'Customer is required for inbox / email notification'),
@@ -59,6 +59,11 @@ class MailNotification(models.Model):
             CREATE INDEX IF NOT EXISTS mail_notification_res_partner_id_is_read_notification_status_mail_message_id
                                     ON mail_notification (res_partner_id, is_read, notification_status, mail_message_id)
         """)
+        self.env.cr.execute(
+            """CREATE UNIQUE INDEX IF NOT EXISTS unique_mail_message_id_res_partner_id_if_set
+                                              ON %s (mail_message_id, res_partner_id)
+                                           WHERE res_partner_id IS NOT NULL""" % self._table
+        )
 
     @api.model_create_multi
     def create(self, vals_list):
