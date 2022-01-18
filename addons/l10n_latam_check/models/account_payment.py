@@ -128,14 +128,14 @@ class AccountPayment(models.Model):
                         rec.payment_type == 'outbound' and
                         rec.l10n_latam_check_id.l10n_latam_check_current_journal_id != rec.journal_id) or (
                         rec.payment_type == 'inbound' and rec.is_internal_transfer and
-                        rec.l10n_latam_check_current_journal_id != rec.destination_journal_id):
+                        rec.l10n_latam_check_id.l10n_latam_check_current_journal_id != rec.destination_journal_id):
                     # check outbound payment and transfer or inbound transfer
                     raise ValidationError(_(
                         'Check "%s" is not anymore in journal "%s", it seems it has been moved by another payment.') % (
                             rec.l10n_latam_check_id.display_name, rec.journal_id.name
                             if rec.payment_type == 'outbound' else rec.destination_journal_id.name))
                 elif rec.payment_type == 'inbound' and not rec.is_internal_transfer and \
-                        rec.l10n_latam_check_current_journal_id:
+                        rec.l10n_latam_check_id.l10n_latam_check_current_journal_id:
                     raise ValidationError(_("Check '%s' is on journal '%s', we can't receive it again") % (
                         rec.l10n_latam_check_id.display_name, rec.journal_id.name))
 
