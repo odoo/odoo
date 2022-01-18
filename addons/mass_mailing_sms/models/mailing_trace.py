@@ -17,13 +17,13 @@ class MailingTrace(models.Model):
     trace_type = fields.Selection(selection_add=[
         ('sms', 'SMS')
     ], ondelete={'sms': 'set default'})
-    sms_sms_id = fields.Many2one('sms.sms', string='SMS', index=True, ondelete='set null')
+    sms_sms_id = fields.Many2one('sms.sms', string='SMS', index="not null", ondelete='set null')
     sms_sms_id_int = fields.Integer(
         string='SMS ID (tech)',
         help='ID of the related sms.sms. This field is an integer field because '
              'the related sms.sms can be deleted separately from its statistics. '
              'However the ID is needed for several action and controllers.',
-        index=True,
+        index="not null",
     )
     sms_number = fields.Char('Number')
     sms_code = fields.Char('Code')

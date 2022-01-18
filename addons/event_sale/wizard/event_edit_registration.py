@@ -80,7 +80,7 @@ class RegistrationEditorLine(models.TransientModel):
     email = fields.Char(string='Email')
     phone = fields.Char(string='Phone')
     mobile = fields.Char(string='Mobile')
-    name = fields.Char(string='Name', index=True)
+    name = fields.Char(string='Name')
 
     def get_registration_data(self):
         self.ensure_one()

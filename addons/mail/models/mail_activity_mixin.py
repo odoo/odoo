@@ -71,7 +71,7 @@ class MailActivityMixin(models.AbstractModel):
         'mail.activity.type', 'Next Activity Type',
         related='activity_ids.activity_type_id', readonly=False,
         search='_search_activity_type_id',
-        groups="base.group_user")
+        groups="base.group_user", index="not null")
     activity_type_icon = fields.Char('Activity Type Icon', related='activity_ids.icon')
     activity_date_deadline = fields.Date(
         'Next Activity Deadline',

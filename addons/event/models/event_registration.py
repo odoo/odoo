@@ -29,7 +29,7 @@ class EventRegistration(models.Model):
     # attendee
     partner_id = fields.Many2one('res.partner', string='Booked by', tracking=1)
     name = fields.Char(
-        string='Attendee Name', index=True,
+        string='Attendee Name', index='gin',
         compute='_compute_name', readonly=False, store=True, tracking=10)
     email = fields.Char(string='Email', compute='_compute_email', readonly=False, store=True, tracking=11)
     phone = fields.Char(string='Phone', compute='_compute_phone', readonly=False, store=True, tracking=12)

@@ -19,7 +19,7 @@ class AccountInvoiceSend(models.TransientModel):
     invoice_ids = fields.Many2many('account.move', 'account_move_account_invoice_send_rel', string='Invoices')
     composer_id = fields.Many2one('mail.compose.message', string='Composer', required=True, ondelete='cascade')
     template_id = fields.Many2one(
-        'mail.template', 'Use template', index=True,
+        'mail.template', 'Use template',
         domain="[('model', '=', 'account.move')]"
         )
 

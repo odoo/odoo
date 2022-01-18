@@ -25,7 +25,7 @@ class AccountAnalyticDistribution(models.Model):
 class AccountAnalyticTag(models.Model):
     _name = 'account.analytic.tag'
     _description = 'Analytic Tags'
-    name = fields.Char(string='Analytic Tag', index=True, required=True)
+    name = fields.Char(string='Analytic Tag', index='gin', required=True)
     color = fields.Integer('Color Index')
     active = fields.Boolean(default=True, help="Set active to false to hide the Analytic Tag without removing it.")
     active_analytic_distribution = fields.Boolean('Analytic Distribution')
@@ -41,7 +41,7 @@ class AccountAnalyticGroup(models.Model):
     name = fields.Char(required=True)
     description = fields.Text(string='Description')
     parent_id = fields.Many2one('account.analytic.group', string="Parent", ondelete='cascade', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
-    parent_path = fields.Char(index=True, unaccent=False)
+    parent_path = fields.Char(index='btree', unaccent=False)
     children_ids = fields.One2many('account.analytic.group', 'parent_id', string="Childrens")
     complete_name = fields.Char('Complete Name', compute='_compute_complete_name', recursive=True, store=True)
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
@@ -123,8 +123,8 @@ class AccountAnalyticAccount(models.Model):
             account.credit = data_credit.get(account.id, 0.0)
             account.balance = account.credit - account.debit
 
-    name = fields.Char(string='Analytic Account', index=True, required=True, tracking=True)
-    code = fields.Char(string='Reference', index=True, tracking=True)
+    name = fields.Char(string='Analytic Account', index='gin', required=True, tracking=True)
+    code = fields.Char(string='Reference', index='btree', tracking=True)
     active = fields.Boolean('Active', help="If the active field is set to False, it will allow you to hide the account without removing it.", default=True)
 
     group_id = fields.Many2one('account.analytic.group', string='Group', check_company=True)

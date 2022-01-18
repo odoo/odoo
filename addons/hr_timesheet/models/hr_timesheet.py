@@ -40,7 +40,7 @@ class AccountAnalyticLine(models.Model):
         return []
 
     task_id = fields.Many2one(
-        'project.task', 'Task', index=True,
+        'project.task', 'Task', index='not null',
         compute='_compute_task_id', store=True, readonly=False,
         domain="[('company_id', '=', company_id), ('project_id.allow_timesheets', '=', True), ('project_id', '=?', project_id)]")
     project_id = fields.Many2one(

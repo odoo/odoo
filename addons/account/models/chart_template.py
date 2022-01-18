@@ -40,7 +40,7 @@ class AccountGroupTemplate(models.Model):
     _description = 'Template for Account Groups'
     _order = 'code_prefix_start'
 
-    parent_id = fields.Many2one('account.group.template', index=True, ondelete='cascade')
+    parent_id = fields.Many2one('account.group.template', ondelete='cascade')
     name = fields.Char(required=True)
     code_prefix_start = fields.Char()
     code_prefix_end = fields.Char()
@@ -53,9 +53,9 @@ class AccountAccountTemplate(models.Model):
     _description = 'Templates for Accounts'
     _order = "code"
 
-    name = fields.Char(required=True, index=True)
+    name = fields.Char(required=True)
     currency_id = fields.Many2one('res.currency', string='Account Currency', help="Forces all moves for this account to have this secondary currency.")
-    code = fields.Char(size=64, required=True, index=True)
+    code = fields.Char(size=64, required=True)
     user_type_id = fields.Many2one('account.account.type', string='Type', required=True,
         help="These types are defined according to your country. The type contains more information "\
         "about the account and its specificities.")

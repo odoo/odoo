@@ -215,17 +215,27 @@ def fix_foreign_key(cr, tablename1, columnname1, tablename2, columnname2, ondele
     if not found:
         return add_foreign_key(cr, tablename1, columnname1, tablename2, columnname2, ondelete)
 
+def has_pg_trgm(cr):
+    with cr.savepoint(flush=False):
+        try:
+            cr.execute('CREATE EXTENSION IF NOT EXISTS pg_trgm')
+            result = True
+        except:
+            result = False
+    return result
+
+
 def index_exists(cr, indexname):
     """ Return whether the given index exists. """
     cr.execute("SELECT 1 FROM pg_indexes WHERE indexname=%s", (indexname,))
     return cr.rowcount
 
-def create_index(cr, indexname, tablename, expressions):
+def create_index(cr, indexname, tablename, expressions, method='btree', where=''):
     """ Create the given index unless it exists. """
     if index_exists(cr, indexname):
         return
     args = ', '.join(expressions)
-    cr.execute('CREATE INDEX "{}" ON "{}" ({})'.format(indexname, tablename, args))
+    cr.execute('CREATE INDEX "{}" ON "{}" USING {} ({}) {}'.format(indexname, tablename, method, args, where))
     _schema.debug("Table %r: created index %r (%s)", tablename, indexname, args)
 
 def create_unique_index(cr, indexname, tablename, expressions):

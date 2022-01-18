@@ -55,11 +55,11 @@ class AccountAccount(models.Model):
                                                            ('user_type_id', '=', data_unaffected_earnings.id)])
                 raise ValidationError(_('You cannot have more than one account with "Current Year Earnings" as type. (accounts: %s)', [a.code for a in account_unaffected_earnings]))
 
-    name = fields.Char(string="Account Name", required=True, index=True, tracking=True)
+    name = fields.Char(string="Account Name", required=True, index='gin', tracking=True)
     currency_id = fields.Many2one('res.currency', string='Account Currency',
         help="Forces all moves for this account to have this account currency.", tracking=True)
     code = fields.Char(size=64, required=True, index=True, tracking=True)
-    deprecated = fields.Boolean(index=True, default=False, tracking=True)
+    deprecated = fields.Boolean(default=False, tracking=True)
     used = fields.Boolean(compute='_compute_used', search='_search_used')
     user_type_id = fields.Many2one('account.account.type', string='Type', required=True, tracking=True,
         help="Account Type is used for information purpose, to generate country-specific legal reports, and set the rules to close a fiscal year and generate opening entries.")

@@ -57,7 +57,7 @@ class ResPartner(models.Model):
         help="This should be a numerical value greater than 0 which will decide the contention for this partner to take this lead/opportunity.")
     grade_id = fields.Many2one('res.partner.grade', 'Partner Level', tracking=True)
     grade_sequence = fields.Integer(related='grade_id.sequence', readonly=True, store=True)
-    activation = fields.Many2one('res.partner.activation', 'Activation', index=True, tracking=True)
+    activation = fields.Many2one('res.partner.activation', 'Activation', index='not null', tracking=True)
     date_partnership = fields.Date('Partnership Date')
     date_review = fields.Date('Latest Partner Review')
     date_review_next = fields.Date('Next Partner Review')
