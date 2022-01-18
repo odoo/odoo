@@ -53,6 +53,7 @@ class TestMessagePost(TestMailCommon, TestRecipients):
         for email_xmlid in ['mail.message_notification_email',
                             'mail.mail_notification_light',
                             'mail.mail_notification_paynow']:
+            test_message.sudo().notification_ids.unlink()  # otherwise partner/message constraint fails
             test_message.write({'email_layout_xmlid': email_xmlid})
             with self.mock_mail_gateway():
                 test_record._notify_thread_by_email(
