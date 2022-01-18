@@ -516,7 +516,7 @@ class AccountBankStatementLine(models.Model):
         string='Statement', index=True, required=True, ondelete='cascade',
         check_company=True)
 
-    sequence = fields.Integer(index=True, help="Gives the sequence order when displaying a list of bank statement lines.", default=1)
+    sequence = fields.Integer(help="Gives the sequence order when displaying a list of bank statement lines.", default=1)
     account_number = fields.Char(string='Bank Account Number', help="Technical field used to store the bank account number before its creation, upon the line's processing")
     partner_name = fields.Char(
         help="This field is used to record the third party name when importing bank statement in electronic format, "

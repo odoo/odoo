@@ -96,12 +96,12 @@ class Message(models.Model):
         help='Attachments are linked to a document through model / res_id and to the message '
              'through this field.')
     parent_id = fields.Many2one(
-        'mail.message', 'Parent Message', index=True, ondelete='set null',
+        'mail.message', 'Parent Message', index="not null", ondelete='set null',
         help="Initial thread message.")
     child_ids = fields.One2many('mail.message', 'parent_id', 'Child Messages')
     # related document
-    model = fields.Char('Related Document Model', index=True)
-    res_id = fields.Many2oneReference('Related Document ID', index=True, model_field='model')
+    model = fields.Char('Related Document Model')
+    res_id = fields.Many2oneReference('Related Document ID', model_field='model')
     record_name = fields.Char('Message Record Name', help="Name get of the related document.")
     # characteristics
     message_type = fields.Selection([
@@ -161,7 +161,7 @@ class Message(models.Model):
     reply_to_force_new = fields.Boolean(
         'No threading for answers',
         help='If true, answers do not go in the original document discussion thread. Instead, it will check for the reply_to in tracking message-id and redirected accordingly. This has an impact on the generated message-id.')
-    message_id = fields.Char('Message-Id', help='Message unique identifier', index=True, readonly=1, copy=False)
+    message_id = fields.Char('Message-Id', help='Message unique identifier', index='btree', readonly=1, copy=False)
     reply_to = fields.Char('Reply-To', help='Reply email address. Setting the reply_to bypasses the automatic thread creation.')
     mail_server_id = fields.Many2one('ir.mail_server', 'Outgoing mail server')
     # keep notification layout informations to be able to generate mail again

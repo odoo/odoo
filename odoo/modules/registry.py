@@ -457,7 +457,7 @@ class Registry(Mapping):
     def check_indexes(self, cr, model_names):
         """ Create or drop column indexes for the given models. """
         expected = [
-            ("%s_%s_index" % (Model._table, field.name), Model._table, field.name, field.index)
+            ("%s_%s_index" % (Model._table, field.name), Model, field.name, field)
             for model_name in model_names
             for Model in [self.models[model_name]]
             if Model._auto and not Model._abstract
@@ -467,15 +467,30 @@ class Registry(Mapping):
         if not expected:
             return
 
+        trgm = sql.has_pg_trgm(cr)
         cr.execute("SELECT indexname FROM pg_indexes WHERE indexname IN %s",
                    [tuple(row[0] for row in expected)])
         existing = {row[0] for row in cr.fetchall()}
 
-        for indexname, tablename, columnname, index in expected:
-            if index and indexname not in existing:
+        for indexname, model, columnname, field in expected:
+            tablename = model._table
+            index = field.index
+            assert index in ('btree', 'gin', 'not null', True, False)
+            if field.index and indexname not in existing:
+                where = ''
+                method = 'btree'
+                operator = ''
+                if index == 'not null':
+                    where = ' WHERE "%s" IS NOT NULL' % columnname
+                if index == 'gin':
+                    if trgm:
+                        operator = 'gin_trgm_ops'
+                        method = 'gin'
+                    else:
+                        method = "btree"
                 try:
                     with cr.savepoint(flush=False):
-                        sql.create_index(cr, indexname, tablename, ['"%s"' % columnname])
+                        sql.create_index(cr, indexname, tablename, ['"%s" %s' % (columnname, operator)], method, where)
                 except psycopg2.OperationalError:
                     _schema.error("Unable to add index for %s", self)
             elif not index and indexname in existing:

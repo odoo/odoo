@@ -2,7 +2,7 @@
 
 from odoo import api, fields, models, Command, _
 from odoo.exceptions import RedirectWarning, UserError, ValidationError, AccessError
-from odoo.tools import float_compare, date_utils, email_split, email_re, html_escape, is_html_empty
+from odoo.tools import float_compare, date_utils, email_split, email_re, html_escape, is_html_empty, sql
 from odoo.tools.misc import formatLang, format_date, get_lang
 
 from datetime import date, timedelta
@@ -140,7 +140,7 @@ class AccountMove(models.Model):
         return self.env.company.incoterm_id
 
     # ==== Business fields ====
-    name = fields.Char(string='Number', copy=False, compute='_compute_name', readonly=False, store=True, index=True, tracking=True)
+    name = fields.Char(string='Number', copy=False, compute='_compute_name', readonly=False, store=True, index='btree', tracking=True)
     highest_name = fields.Char(compute='_compute_highest_name')
     show_name_warning = fields.Boolean(store=False)
     date = fields.Date(
@@ -220,10 +220,10 @@ class AccountMove(models.Model):
     partner_bank_id = fields.Many2one('res.partner.bank', string='Recipient Bank',
         help='Bank Account Number to which the invoice will be paid. A Company bank account if this is a Customer Invoice or Vendor Credit Note, otherwise a Partner bank account number.',
         check_company=True)
-    payment_reference = fields.Char(string='Payment Reference', index=True, copy=False,
+    payment_reference = fields.Char(string='Payment Reference', index='gin', copy=False,
         help="The payment reference to set on journal items.")
     payment_id = fields.Many2one(
-        index=True,
+        index='not null',
         comodel_name='account.payment',
         string="Payment", copy=False, check_company=True)
     statement_line_id = fields.Many2one(
@@ -377,6 +377,12 @@ class AccountMove(models.Model):
     secure_sequence_number = fields.Integer(string="Inalteralbility No Gap Sequence #", readonly=True, copy=False)
     inalterable_hash = fields.Char(string="Inalterability Hash", readonly=True, copy=False)
     string_to_hash = fields.Char(compute='_compute_string_to_hash', readonly=True)
+
+    # We neeed the btree index for unicity constraint (on field) AND this one for human searches
+    def _auto_init(self):
+        super(AccountMove, self)._auto_init()
+        if sql.has_pg_trgm(self._cr):
+            sql.create_index(self._cr, 'account_move_name_gin_index', self._table, 'name gin_trgm_ops', 'gin')
 
     @api.model
     def _field_will_change(self, record, vals, field_name):
@@ -3471,9 +3477,9 @@ class AccountMoveLine(models.Model):
         index=True, required=True, readonly=True, auto_join=True, ondelete="cascade",
         check_company=True,
         help="The move of this entry line.")
-    move_name = fields.Char(string='Number', related='move_id.name', store=True, index=True)
+    move_name = fields.Char(string='Number', related='move_id.name', store=True, index='gin')
     date = fields.Date(related='move_id.date', store=True, readonly=True, index=True, copy=False, group_operator='min')
-    ref = fields.Char(related='move_id.ref', store=True, copy=False, index=True, readonly=True)
+    ref = fields.Char(related='move_id.ref', store=True, copy=False, index='gin', readonly=True)
     parent_state = fields.Selection(related='move_id.state', store=True, readonly=True)
     journal_id = fields.Many2one(related='move_id.journal_id', store=True, index=True, copy=False)
     company_id = fields.Many2one(related='move_id.company_id', store=True, readonly=True)
@@ -3525,15 +3531,15 @@ class AccountMoveLine(models.Model):
 
     # ==== Origin fields ====
     reconcile_model_id = fields.Many2one('account.reconcile.model', string="Reconciliation Model", copy=False, readonly=True, check_company=True)
-    payment_id = fields.Many2one('account.payment', index=True, store=True,
+    payment_id = fields.Many2one('account.payment', index="not null", store=True,
         string="Originator Payment",
         related='move_id.payment_id',
         help="The payment that created this entry")
-    statement_line_id = fields.Many2one('account.bank.statement.line', index=True, store=True,
+    statement_line_id = fields.Many2one('account.bank.statement.line', index="not null", store=True,
         string="Originator Statement Line",
         related='move_id.statement_line_id',
         help="The statement line that created this entry")
-    statement_id = fields.Many2one(related='statement_line_id.statement_id', store=True, index=True, copy=False,
+    statement_id = fields.Many2one(related='statement_line_id.statement_id', store=True, index="not null", copy=False,
         help="The bank statement used for bank reconciliation")
 
     # ==== Tax fields ====
@@ -3546,7 +3552,7 @@ class AccountMoveLine(models.Model):
     group_tax_id = fields.Many2one(
         comodel_name='account.tax',
         string="Originator Group of Taxes",
-        index=True,
+        index="not null",
         help="The group of taxes that generated this tax line",
     )
     tax_line_id = fields.Many2one('account.tax', string='Originator Tax', ondelete='restrict', store=True,
@@ -3576,7 +3582,7 @@ class AccountMoveLine(models.Model):
     amount_residual_currency = fields.Monetary(string='Residual Amount in Currency', store=True,
         compute='_compute_amount_residual',
         help="The residual amount on a journal item expressed in its currency (possibly not the company currency).")
-    full_reconcile_id = fields.Many2one('account.full.reconcile', string="Matching", copy=False, index=True, readonly=True)
+    full_reconcile_id = fields.Many2one('account.full.reconcile', string="Matching", copy=False, index="not null", readonly=True)
     matched_debit_ids = fields.One2many('account.partial.reconcile', 'credit_move_id', string='Matched Debits',
         help='Debit journal items that are matched with this journal item.', readonly=True)
     matched_credit_ids = fields.One2many('account.partial.reconcile', 'debit_move_id', string='Matched Credits',
@@ -3586,7 +3592,7 @@ class AccountMoveLine(models.Model):
     # ==== Analytic fields ====
     analytic_line_ids = fields.One2many('account.analytic.line', 'move_id', string='Analytic lines')
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account',
-        index=True, compute="_compute_analytic_account_id", store=True, readonly=False, check_company=True, copy=True)
+        index="not null", compute="_compute_analytic_account_id", store=True, readonly=False, check_company=True, copy=True)
     analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags',
         compute="_compute_analytic_tag_ids", store=True, readonly=False, check_company=True, copy=True)
 
