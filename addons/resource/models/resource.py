@@ -1102,7 +1102,7 @@ class ResourceCalendarLeaves(models.Model):
     company_id = fields.Many2one(
         'res.company', string="Company", readonly=True, store=True,
         default=lambda self: self.env.company, compute='_compute_company_id')
-    calendar_id = fields.Many2one('resource.calendar', 'Working Hours', index=True)
+    calendar_id = fields.Many2one('resource.calendar', 'Working Hours', domain="[('company_id', '=', company_id)]", index=True)
     date_from = fields.Datetime('Start Date', required=True)
     date_to = fields.Datetime('End Date', required=True)
     resource_id = fields.Many2one(

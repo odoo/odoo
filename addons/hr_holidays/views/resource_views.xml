@@ -49,10 +49,9 @@
         <field name="res_model">resource.calendar.leaves</field>
         <field name="view_mode">tree</field>
         <field name="view_id" ref="resource_calendar_leaves_tree_inherit"/>
-        <field name="domain">[('resource_id', '=', False)]</field>
+        <field name="domain">['&amp;', ('resource_id', '=', False), ('calendar_id', 'in', (active_id, False))]</field>
         <field name="context">{
             'default_calendar_id': active_id,
-            'search_default_calendar_id': active_id,
             'search_default_filter_date': True}</field>
         <field name="search_view_id" ref="hr_holidays.resource_calendar_leaves_view_search_inherit"/>
     </record>
@@ -64,8 +63,16 @@
         <field name="arch" type="xml">
             <xpath expr="//button[@name='%(resource.resource_calendar_leaves_action_from_calendar)d']" position="before">
                 <button name="%(resource_calendar_global_leaves_action_from_calendar)d" type="action"
-                                string="Public Time Off" icon="fa-sun-o"
-                                class="oe_stat_button"/>
+                                icon="fa-sun-o" class="oe_stat_button">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_text">
+                            <field name="associated_leaves_count"/> Public
+                        </span>
+                        <span class="o_stat_text">
+                            Time Off
+                        </span>
+                    </div>
+                </button>
             </xpath>
         </field>
     </record>
