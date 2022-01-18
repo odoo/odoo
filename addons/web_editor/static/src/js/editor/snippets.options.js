@@ -1004,13 +1004,10 @@ const SelectUserValueWidget = BaseSelectionUserValueWidget.extend({
             return;
         }
 
-        if (this.menuTogglerItemEl) {
-            this.menuTogglerItemEl.remove();
-            this.menuTogglerItemEl = null;
-        }
-
         let textContent = '\u200B'; // Ensures proper height.
         const activeWidget = this._userValueWidgets.find(widget => !widget.isPreviewed() && widget.isActive());
+        const oldTogglerEl = this.menuTogglerItemEl;
+        this.menuTogglerItemEl = null;
         if (activeWidget) {
             const svgTag = activeWidget.el.querySelector('svg'); // useful to avoid searching text content in svg element
             const value = (activeWidget.el.dataset.selectLabel || (!svgTag && activeWidget.el.textContent.replace('\u200B', '').trim()));
@@ -1030,9 +1027,13 @@ const SelectUserValueWidget = BaseSelectionUserValueWidget.extend({
             textContent = "/";
         }
 
-        this.menuTogglerEl.textContent = textContent;
-        if (this.menuTogglerItemEl) {
+        if (!this.menuTogglerItemEl) {
+            this.menuTogglerEl.textContent = textContent;
+        } else if (!oldTogglerEl) {
+            this.menuTogglerEl.textContent = textContent;
             this.menuTogglerEl.appendChild(this.menuTogglerItemEl);
+        } else if (!oldTogglerEl.isEqualNode(this.menuTogglerItemEl)) {
+            this.menuTogglerItemEl = oldTogglerEl.replaceWith(this.menuTogglerItemEl);
         }
     },
     /**
