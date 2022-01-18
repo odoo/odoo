@@ -809,7 +809,7 @@ class Message(models.Model):
         thread._check_can_update_message_content(self)
         self.body = body
         if not attachment_ids:
-            self.attachment_ids.unlink()
+            self.attachment_ids._delete_and_notify()
         else:
             message_values = {
                 'model': self.model,
