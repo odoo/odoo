@@ -37,7 +37,7 @@ class PosConfig(models.Model):
     def _get_group_pos_user(self):
         return self.env.ref('point_of_sale.group_pos_user')
 
-    name = fields.Char(string='Point of Sale', index=True, required=True, help="An internal identification of the point of sale.")
+    name = fields.Char(string='Point of Sale', required=True, help="An internal identification of the point of sale.")
     is_installed_account_accountant = fields.Boolean(string="Is the Full Accounting Installed",
         compute="_compute_is_installed_account_accountant")
     picking_type_id = fields.Many2one(

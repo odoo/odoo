@@ -205,7 +205,7 @@ class Project(models.Model):
     def _read_group_stage_ids(self, stages, domain, order):
         return self.env['project.project.stage'].search([], order=order)
 
-    name = fields.Char("Name", index=True, required=True, tracking=True, translate=True)
+    name = fields.Char("Name", index='gin', required=True, tracking=True, translate=True)
     description = fields.Html()
     active = fields.Boolean(default=True,
         help="If the active field is set to False, it will allow you to hide the project without removing it.")
@@ -913,13 +913,13 @@ class Task(models.Model):
         return stages.search(['|', ('id', 'in', stages.ids), ('user_id', '=', self.env.user.id)])
 
     active = fields.Boolean(default=True)
-    name = fields.Char(string='Title', tracking=True, required=True, index=True)
+    name = fields.Char(string='Title', tracking=True, required=True, index='gin')
     description = fields.Html(string='Description')
     priority = fields.Selection([
         ('0', 'Normal'),
         ('1', 'Important'),
     ], default='0', index=True, string="Starred", tracking=True)
-    sequence = fields.Integer(string='Sequence', index=True, default=10,
+    sequence = fields.Integer(string='Sequence', default=10,
         help="Gives the sequence order when displaying a list of tasks.")
     stage_id = fields.Many2one('project.task.type', string='Stage', compute='_compute_stage_id',
         store=True, readonly=False, ondelete='restrict', tracking=True, index=True,
@@ -932,10 +932,10 @@ class Task(models.Model):
         ('blocked', 'Blocked')], string='Status',
         copy=False, default='normal', required=True)
     kanban_state_label = fields.Char(compute='_compute_kanban_state_label', string='Kanban State Label', tracking=True, task_dependency_tracking=True)
-    create_date = fields.Datetime("Created On", readonly=True, index=True)
-    write_date = fields.Datetime("Last Updated On", readonly=True, index=True)
+    create_date = fields.Datetime("Created On", readonly=True)
+    write_date = fields.Datetime("Last Updated On", readonly=True)
     date_end = fields.Datetime(string='Ending Date', index=True, copy=False)
-    date_assign = fields.Datetime(string='Assigning Date', index=True, copy=False, readonly=True)
+    date_assign = fields.Datetime(string='Assigning Date', copy=False, readonly=True)
     date_deadline = fields.Date(string='Deadline', index=True, copy=False, tracking=True, task_dependency_tracking=True)
     date_last_stage_update = fields.Datetime(string='Last Stage Update',
         index=True,
@@ -1002,7 +1002,7 @@ class Task(models.Model):
     child_text = fields.Char(compute="_compute_child_text")
     allow_subtasks = fields.Boolean(string="Allow Sub-tasks", related="project_id.allow_subtasks", readonly=True)
     subtask_count = fields.Integer("Sub-task Count", compute='_compute_subtask_count')
-    email_from = fields.Char(string='Email From', help="These people will receive email.", index=True,
+    email_from = fields.Char(string='Email From', help="These people will receive email.", index='gin',
         compute='_compute_email_from', recursive=True, store=True, readonly=False)
     project_privacy_visibility = fields.Selection(related='project_id.privacy_visibility', string="Project Visibility")
     # Computed field about working time elapsed between record creation and assignation/closing.

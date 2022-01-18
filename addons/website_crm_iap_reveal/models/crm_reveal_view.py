@@ -12,8 +12,8 @@ class CRMRevealView(models.Model):
     _description = 'CRM Reveal View'
     _order = 'id desc'
 
-    reveal_ip = fields.Char(string='IP Address', index=True)
-    reveal_rule_id = fields.Many2one('crm.reveal.rule', string='Lead Generation Rule', index=True)
+    reveal_ip = fields.Char(string='IP Address')
+    reveal_rule_id = fields.Many2one('crm.reveal.rule', string='Lead Generation Rule', index='not null')
     reveal_state = fields.Selection([('to_process', 'To Process'), ('not_found', 'Not Found')], default='to_process', string="State", index=True)
     create_date = fields.Datetime(index=True)
 

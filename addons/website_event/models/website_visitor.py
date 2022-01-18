@@ -9,7 +9,7 @@ class WebsiteVisitor(models.Model):
     _inherit = ['website.visitor']
 
     parent_id = fields.Many2one(
-        'website.visitor', string="Parent", ondelete='set null',
+        'website.visitor', string="Parent", ondelete='set null', index="not null",
         help="Main identity")
     event_registration_ids = fields.One2many(
         'event.registration', 'visitor_id', string='Event Registrations',

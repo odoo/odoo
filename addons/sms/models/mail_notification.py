@@ -10,7 +10,7 @@ class MailNotification(models.Model):
     notification_type = fields.Selection(selection_add=[
         ('sms', 'SMS')
     ], ondelete={'sms': 'set default'})
-    sms_id = fields.Many2one('sms.sms', string='SMS', index=True, ondelete='set null')
+    sms_id = fields.Many2one('sms.sms', string='SMS', index='not null', ondelete='set null')
     sms_number = fields.Char('SMS Number')
     failure_type = fields.Selection(selection_add=[
         ('sms_number_missing', 'Missing Number'),

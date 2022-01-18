@@ -33,11 +33,11 @@ class Warehouse(models.Model):
         count = self.env['stock.warehouse'].with_context(active_test=False).search_count([('company_id', '=', self.env.company.id)])
         return "%s - warehouse # %s" % (self.env.company.name, count + 1) if count else self.env.company.name
 
-    name = fields.Char('Warehouse', index=True, required=True, default=_default_name)
+    name = fields.Char('Warehouse', required=True, default=_default_name)
     active = fields.Boolean('Active', default=True)
     company_id = fields.Many2one(
         'res.company', 'Company', default=lambda self: self.env.company,
-        index=True, readonly=True, required=True,
+        readonly=True, required=True,
         help='The company is automatically set from your user preferences.')
     partner_id = fields.Many2one('res.partner', 'Address', default=lambda self: self.env.company.partner_id, check_company=True)
     view_location_id = fields.Many2one(
