@@ -2040,3 +2040,49 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
         cogs_aml = amls.filtered(lambda aml: aml.account_id == expense_account)
         self.assertEqual(cogs_aml.debit, 0)
         self.assertEqual(cogs_aml.credit, 20, 'Should be to the value of the returned component')
+
+    def test_kit_margin_and_return_picking(self):
+        """ This test ensure that, when returning the components of a sold kit, the
+        sale order line cost does not change"""
+        kit = self._cls_create_product('Super Kit', self.uom_unit)
+        (kit + self.component_a).categ_id.property_cost_method = 'fifo'
+
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': kit.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+            'bom_line_ids': [(0, 0, {
+                'product_id': self.component_a.id,
+                'product_qty': 1.0,
+            })]
+        })
+
+        self.component_a.standard_price = 10
+        kit.button_bom_cost()
+
+        stock_location = self.company_data['default_warehouse'].lot_stock_id
+        self.env['stock.quant']._update_available_quantity(self.component_a, stock_location, 1)
+
+        so_form = Form(self.env['sale.order'])
+        so_form.partner_id = self.partner_a
+        with so_form.order_line.new() as line:
+            line.product_id = kit
+        so = so_form.save()
+        so.action_confirm()
+
+        line = so.order_line
+        price = line.product_id.with_company(line.company_id)._compute_average_price(0, line.product_uom_qty, line.move_ids)
+        self.assertEqual(price, 10)
+
+        picking = so.picking_ids
+        action = picking.button_validate()
+        wizard = Form(self.env[action['res_model']].with_context(action['context'])).save()
+        wizard.process()
+
+        ctx = {'active_ids':picking.ids, 'active_id': picking.ids[0], 'active_model': 'stock.picking'}
+        return_picking_wizard_form = Form(self.env['stock.return.picking'].with_context(ctx))
+        return_picking_wizard = return_picking_wizard_form.save()
+        return_picking_wizard.create_returns()
+
+        price = line.product_id.with_company(line.company_id)._compute_average_price(0, line.product_uom_qty, line.move_ids)
+        self.assertEqual(price, 10)
