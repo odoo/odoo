@@ -28,3 +28,23 @@ class TestRetryFailures(BaseCase):
 
     def test_retry_failure_log(self):
         _logger.error('Failure')
+
+
+@tagged('-standard', 'test_retry', 'test_retry_success', 'subtest_retry_success')
+class TestRetrySubtest(BaseCase):
+    def test_retry_subtest_success_subtest(self):
+        with self.subTest():
+            tests_run_count = int(os.environ.get('ODOO_TEST_FAILURE_RETRIES', 0)) + 1
+            self.count = getattr(self, 'count', 0) + 1
+            self.assertEqual(tests_run_count, self.count)
+
+
+@tagged('-standard', 'test_retry', 'test_retry_failures', 'subtest_retry_failures')
+class TestRetrySubtestFailures(BaseCase):
+    def test_retry_subtest_failure_assert(self):
+        with self.subTest():
+            self.assertFalse(1 == 1)
+
+    def test_retry_subtest_failure_log(self):
+        with self.subTest():
+            _logger.error('Failure')
