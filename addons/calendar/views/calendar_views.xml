@@ -39,24 +39,20 @@
             <form string="Calendar Alarm">
                 <sheet>
                     <group>
-                        <group>
+                        <group name="left_details">
                             <field name="name" invisible="1"/>
                             <field name="alarm_type"/>
+                            <field name="mail_template_id" context="{'default_model': 'calendar.event'}"
+                                   attrs="{'invisible': [('alarm_type', '!=', 'email')], 'required': [('alarm_type', '=', 'email')]}"/>
+                            <field name="body" attrs="{'invisible': [('alarm_type', '!=', 'notification')]}"/>
                         </group>
-                        <group>
+                        <group name="right_details">
                             <label for="duration"/>
                             <div class="o_row">
                                 <field name="duration"/>
                                 <field name="interval"/>
                             </div>
                         </group>
-                        <group attrs="{'invisible': [('alarm_type','=','notification')]}">
-                            <field name="mail_template_id" attrs="{'invisible': [('alarm_type','!=','email')], 'required': [('alarm_type', '=', 'email')]}"
-                                context="{'default_model': 'calendar.event'}"/>
-                        </group>
-                    </group>
-                    <group attrs="{'invisible': [('alarm_type','!=','notification')]}">
-                        <field name="body"/>
                     </group>
                 </sheet>
             </form>
