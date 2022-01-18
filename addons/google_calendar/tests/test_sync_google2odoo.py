@@ -975,3 +975,75 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         attendee = recurrence.calendar_event_ids.attendee_ids.mapped('state')
         self.assertEqual(attendee, ['declined', 'declined', 'declined'], "All events should be declined")
         self.assertGoogleAPINotCalled()
+
+    @patch_api
+    def test_several_attendee_have_the_same_mail(self):
+        """
+        In google, One mail = One attendee but on Odoo, some partners could share the same mail
+        This test checks that the deletion of such attendee has no harm: all attendee but the given mail are deleted.
+        """
+        partner1 = self.env['res.partner'].create({
+            'name': 'joe',
+            'email': 'dalton@example.com',
+        })
+        partner2 = self.env['res.partner'].create({
+            'name': 'william',
+            'email': 'dalton@example.com',
+        })
+        partner3 = self.env['res.partner'].create({
+            'name': 'jack',
+            'email': 'dalton@example.com',
+        })
+        partner4 = self.env['res.partner'].create({
+            'name': 'averell',
+            'email': 'dalton@example.com',
+        })
+        google_id = "aaaaaaaaaaaaaaaaa"
+        event = self.env['calendar.event'].create({
+            'name': 'coucou',
+            'start': datetime(2020, 1, 13, 16, 0),
+            'stop': datetime(2020, 1, 13, 20),
+            'allday': False,
+            'google_id': google_id,
+            'need_sync': False,
+            'user_id': self.env.user.partner_id.id,
+            'partner_ids': [(6, 0, [self.env.user.partner_id.id, partner1.id, partner2.id, partner3.id, partner4.id],)]
+            # current user is attendee
+        })
+        recurrence = self.env['calendar.recurrence'].create({
+            'google_id': google_id,
+            'rrule': 'FREQ=WEEKLY;COUNT=3;BYDAY=MO',
+            'need_sync': False,
+            'base_event_id': event.id,
+            'calendar_event_ids': [(4, event.id)],
+        })
+        recurrence._apply_recurrence()
+        recurrence.calendar_event_ids.attendee_ids.state = 'accepted'
+        mails = sorted(set(event.attendee_ids.mapped('email')))
+        self.assertEqual(mails, ['dalton@example.com', 'odoobot@example.com'])
+        gevent = GoogleEvent([{
+            'id': google_id,
+            'description': 'coucou',
+            "updated": self.now,
+            'organizer': {'email': 'odoobot@example.com', 'self': True},
+            'summary': False,
+            'visibility': 'public',
+            'attendees': [],
+            'reminders': {'useDefault': True},
+            'extendedProperties': {'shared': {'%s_odoo_id' % self.env.cr.dbname: event.id, }},
+            'recurrence': ['RRULE:FREQ=WEEKLY;COUNT=3;BYDAY=MO'],
+            'start': {
+                'dateTime': '2020-01-13T16:00:00+01:00',
+                'timeZone': 'Europe/Brussels'
+            },
+            'end': {
+                'dateTime': '2020-01-13T20:00:00+01:00',
+                'timeZone': 'Europe/Brussels'
+            },
+        }])
+        self.sync(gevent)
+        # User attendee removed but gevent owner might be added after synch.
+        mails = sorted(set(event.attendee_ids.mapped('email')))
+        self.assertEqual(mails, ['odoobot@example.com'])
+
+        self.assertGoogleAPINotCalled()
