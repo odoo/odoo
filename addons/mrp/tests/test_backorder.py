@@ -266,7 +266,6 @@ class TestMrpProductionBackorder(TestMrpCommon):
             production_form.qty_producing = 1
             production_form.lot_producing_id = serials_final[i]
             active_production = production_form.save()
-
             active_production.button_mark_done()
             if i + 1 != nb_product_todo:  # If last MO, don't make a backorder
                 action = active_production.button_mark_done()
