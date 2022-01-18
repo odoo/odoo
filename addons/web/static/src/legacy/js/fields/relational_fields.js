@@ -3402,9 +3402,9 @@ var FieldSelection = AbstractField.extend({
             var value = _.find(this.values, function (val) {
                 return val[0] === res_id;
             });
-            this._setValue({id: res_id, display_name: value[1]});
+            return this._setValue({id: res_id, display_name: value[1]});
         } else {
-            this._setValue(res_id);
+            return this._setValue(res_id);
         }
     },
 });
