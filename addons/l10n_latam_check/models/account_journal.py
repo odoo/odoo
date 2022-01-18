@@ -20,9 +20,9 @@ class AccountJournal(models.Model):
                 self.env.ref('l10n_latam_check.account_payment_method_in_third_checks')
         return super()._default_inbound_payment_methods()
 
-    @api.depends('outbound_payment_method_line_ids', 'country_code')
+    @api.depends('outbound_payment_method_line_ids', 'company_id.country_id.code')
     def _compute_l10n_latam_use_checkbooks(self):
         for rec in self.filtered(
-                lambda x: x.country_code == 'AR' and
+                lambda x: x.company_id.country_id.code == 'AR' and
                 'check_printing' in x.outbound_payment_method_line_ids.mapped('code')):
             rec.l10n_latam_use_checkbooks = True
