@@ -74,8 +74,8 @@ class TestResConfig(TransactionCase):
         """
         # check that no module should be installed in the first place
         config_fields = self.config._get_classified_fields()
-        for name, module in config_fields['module']:
-            if int(self.config[name]):
+        for module in config_fields['module']:
+            if self.config[f'module_{module.name}']:
                 self.assertTrue(module.state != 'uninstalled',
                                 "All set modules should already be installed.")
         # if we try to install something, raise; so nothing should be installed
@@ -88,8 +88,8 @@ class TestResConfig(TransactionCase):
         """
         config_fields = self.config._get_classified_fields()
         # set the first uninstalled module to install
-        module_to_install = next(filter(lambda m: m[1].state == 'uninstalled', config_fields['module']))
-        self.config[module_to_install[0]] = True
+        module_to_install = next(m for m in config_fields['module'] if m.state == 'uninstalled')
+        self.config[f'module_{module_to_install.name}'] = True
 
         with patch('odoo.addons.base.models.ir_module.Module._button_immediate_function', new=just_raise):
             with self.assertRaisesRegex(Exception, "We should not be here."):
