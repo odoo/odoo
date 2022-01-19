@@ -80,13 +80,13 @@
                         </h3>
                         <t t-set="last_grade" t-value="partner.grade_id.id"/>
                     </t>
-                    <div class="media mt-3">
+                    <div class="d-flex mt-3">
                         <a t-attf-href="/partners/#{slug(partner)}?#{current_grade and 'grade_id=%s&amp;' % current_grade.id}#{current_country and 'country_id=%s' % current_country.id}"
                            t-field="partner.avatar_128"
                            class="mr-3 text-center o_width_128"
                            t-options='{"widget": "image", "qweb_img_responsive": False, "class": "o_image_128_max"}'
                         ></a>
-                        <div class="media-body o_partner_body" style="min-height: 64px;">
+                        <div class="flex-grow-1 o_partner_body" style="min-height: 64px;">
                             <a t-attf-href="/partners/#{slug(partner)}?#{current_grade and 'grade_id=%s&amp;' % current_grade.id}#{current_country and 'country_id=%s' % current_country.id}">
                                 <span t-field="partner.display_name"/>
                             </a>
@@ -161,9 +161,9 @@
 <template id="references_block" name="Partner References Block">
     <t t-if="any(p.website_published for p in partner.implemented_partner_ids)">
         <h3 id="references">References</h3>
-        <div t-foreach="partner.implemented_partner_ids" t-if="reference.website_published" t-as="reference" class="media mt-3">
+        <div t-foreach="partner.implemented_partner_ids" t-if="reference.website_published" t-as="reference" class="d-flex mt-3">
             <span t-field="reference.avatar_128" class="d-block mr-3 text-center o_width_128" t-options='{"widget": "image", "qweb_img_responsive": False, "class": "o_image_128_max"}'/>
-            <div class="media-body" style="min-height: 64px;">
+            <div class="flex-grow-1" style="min-height: 64px;">
                 <span t-field="reference.self"/>
                 <div t-field='reference.website_short_description'/>
             </div>

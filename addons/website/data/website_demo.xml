@@ -243,9 +243,9 @@
                                                     <tr>
                                                         <th colspan="2" class="align-middle">Theme Colors</th>
                                                         <td t-foreach="[1, 2, 3, 4, 5]" t-as="i">
-                                                            <div class="media">
+                                                            <div class="d-flex">
                                                                 <span t-attf-class="border p-3 mr-1 bg-o-color-#{i}"></span>
-                                                                <div class="media-body align-self-center">
+                                                                <div class="flex-grow-1 align-self-center">
                                                                     <h5 class="m-0">o-color-<t t-esc="i"/></h5>
                                                                 </div>
                                                             </div>
@@ -254,9 +254,9 @@
                                                     <tr>
                                                         <th colspan="2" class="align-middle">BTS Base Colors</th>
                                                         <td t-foreach="['primary', 'secondary', 'light', 'dark']" t-as="i">
-                                                            <div class="media">
+                                                            <div class="d-flex">
                                                                 <span t-attf-class="border p-3 mr-1 bg-#{i}"></span>
-                                                                <div class="media-body align-self-center">
+                                                                <div class="flex-grow-1 align-self-center">
                                                                     <h5 class="m-0" t-esc="i"></h5>
                                                                 </div>
                                                             </div>
