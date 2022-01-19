@@ -283,9 +283,9 @@ class CrmLead(models.Model):
     #   DO NOT FORWARD PORT IN MASTER
     #   instead, crm.lead should implement portal.mixin
     #
-    def get_access_action(self, access_uid=None):
+    def _get_access_action(self, access_uid=None, force_website=False):
         """ Instead of the classic form view, redirect to the online document for
-        portal users or if force_website=True in the context. """
+        portal users or if force_website=True. """
         self.ensure_one()
 
         user, record = self.env.user, self
@@ -294,10 +294,10 @@ class CrmLead(models.Model):
                 record.check_access_rights('read')
                 record.check_access_rule("read")
             except AccessError:
-                return super(CrmLead, self).get_access_action(access_uid)
+                return super(CrmLead, self)._get_access_action(access_uid=access_uid, force_website=force_website)
             user = self.env['res.users'].sudo().browse(access_uid)
+        if user.share or force_website:
             record = self.with_user(user)
-        if user.share or self.env.context.get('force_website'):
             try:
                 record.check_access_rights('read')
                 record.check_access_rule('read')
@@ -308,4 +308,4 @@ class CrmLead(models.Model):
                     'type': 'ir.actions.act_url',
                     'url': '/my/opportunity/%s' % record.id,
                 }
-        return super(CrmLead, self).get_access_action(access_uid)
+        return super(CrmLead, self)._get_access_action(access_uid=access_uid, force_website=force_website)

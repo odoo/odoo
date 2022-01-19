@@ -911,9 +911,11 @@ class Post(models.Model):
         self.ensure_one()
         return sql.increment_field_skiplock(self, 'views')
 
-    def get_access_action(self, access_uid=None):
+    def _get_access_action(self, access_uid=None, force_website=False):
         """ Instead of the classic form view, redirect to the post on the website directly """
         self.ensure_one()
+        if not force_website and not self.state == 'active':
+            return super(Post, self)._get_access_action(access_uid=access_uid, force_website=force_website)
         return {
             'type': 'ir.actions.act_url',
             'url': '/forum/%s/%s' % (self.forum_id.id, self.id),
