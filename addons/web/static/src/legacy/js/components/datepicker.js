@@ -84,7 +84,9 @@ odoo.define('web.DatePickerOwl', function (require) {
          * @param {...any} args anything that will be passed to the datetimepicker function.
          */
         _datetimepicker(...args) {
+            this.ignoreBootstrapEvents = true;
             $(this.el).datetimepicker(...args);
+            this.ignoreBootstrapEvents = false;
         }
 
         /**
@@ -123,6 +125,9 @@ odoo.define('web.DatePickerOwl', function (require) {
          * @private
          */
         _onDateTimePickerHide() {
+            if (this.ignoreBootstrapEvents) {
+                return;
+            }
             const date = this._parseInput(this.inputRef.el.value);
             this.state.warning = date.format('YYYY-MM-DD') > moment().format('YYYY-MM-DD');
             this.props.onDateTimeChanged(date);
@@ -135,6 +140,9 @@ odoo.define('web.DatePickerOwl', function (require) {
          * @private
          */
         _onDateTimePickerShow() {
+            if (this.ignoreBootstrapEvents) {
+                return;
+            }
             this.inputRef.el.select();
         }
 
