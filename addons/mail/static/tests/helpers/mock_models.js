@@ -117,6 +117,15 @@ export class MockModels {
                 },
                 records: [],
             },
+            'mail.guest' : {
+                fields: {
+                    active: { string: "Active", type: 'boolean', default: true },
+                    display_name: { string: "Displayed name", type: "char" },
+                    id: { string: "Id", type: 'integer' },
+                    name: { string: "Name", type: 'char' },
+                },
+                records: [],
+            },
             'mail.message': {
                 fields: {
                     attachment_ids: { string: "Attachments", type: 'many2many', relation: 'ir.attachment', default: [] },
@@ -135,6 +144,7 @@ export class MockModels {
                     needaction_partner_ids: { string: "Partners with Need Action", type: 'many2many', relation: 'res.partner' },
                     notification_ids: { string: "Notifications", type: 'one2many', relation: 'mail.notification' },
                     partner_ids: { string: "Recipients", type: 'many2many', relation: 'res.partner' },
+                    reaction_ids: { string: "Reactions", type: 'one2many', relation: 'mail.message.reaction', default: [] },
                     res_id: { string: "Related Document ID", type: 'integer' },
                     // In python, result of a formatter. Here for simplicity.
                     res_model_name: { string: "Res Model Name", type: 'char' },
@@ -142,6 +152,15 @@ export class MockModels {
                     subject: { string: "Subject", type: 'char' },
                     subtype_id: { string: "Subtype id", type: 'many2one', relation: 'mail.message.subtype' },
                     tracking_value_ids: { relation: 'mail.tracking.value', string: "Tracking values", type: 'one2many' },
+                },
+                records: [],
+            },
+            'mail.message.reaction': {
+                fields: {
+                    content: { string: "Content", type: 'text' },
+                    guest_id: { string: "Reacting Guest", type: 'many2one', relation: 'mail.guest' },
+                    message_id: { string: "Message", type: 'many2one', relation: 'mail.message' },
+                    partner_id: { string: "Reacting Partner", type: 'many2one', relation: 'res.partner' },
                 },
                 records: [],
             },

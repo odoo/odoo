@@ -111,6 +111,14 @@ MockServer.include({
             const { min_id, max_id, limit } = args;
             return this._mockRouteMailMessageInbox(min_id, max_id, limit);
         }
+        if (route === '/mail/message/add_reaction') {
+            const { message_id, content } = args;
+            return this._mockRouteMailMessageAddReaction(message_id, content);
+        }
+        if (route === '/mail/message/remove_reaction') {
+            const { message_id, content } = args;
+            return this._mockRouteMailMessageRemoveReaction(message_id, content);
+        }
         if (route === '/mail/starred/messages') {
             const { min_id, max_id, limit } = args;
             return this._mockRouteMailMessageStarredMessages(min_id, max_id, limit);
@@ -1371,6 +1379,87 @@ MockServer.include({
         return this._mockMailMessageMessageFormat(messages.map(message => message.id));
     },
     /**
+     * Simulates the `/mail/message/add_reaction` route.
+     *
+     * @private
+     * @param {integer} message_id
+     * @param {string} content
+     * @returns {Object}
+     */
+    _mockRouteMailMessageAddReaction(message_id, content) {
+        const partner_id = this.currentPartnerId;
+        this._mockMailMessage_MessageAddReaction(message_id, content);
+        const message_reactions = this._getRecords('mail.message.reaction', [
+            ['message_id', '=', message_id],
+            ['content', '=', content],
+        ]);
+        return {
+            id: message_id,
+            messageReactionGroups: [['insert', {
+                'messageId': message_id,
+                'content': content,
+                'count': message_reactions.length,
+                'partners': [['insert-and-replace', [{ id: partner_id }]]],
+            }]],
+        };
+    },
+    /**
+     * Simulates `_message_add_reaction` on `mail.message`.
+     *
+     * @private
+     * @param {integer} message_id
+     * @param {string} content
+     */
+    _mockMailMessage_MessageAddReaction(message_id, content) {
+        const partner_id = this.currentPartnerId;
+        this._mockCreate('mail.message.reaction', {
+            content,
+            message_id,
+            partner_id,
+        });
+    },
+    /**
+     * Simulates `message_remove_reaction` on `mail.message`.
+     *
+     * @private
+     * @param {integer} message_id
+     * @param {string} content
+     * @returns {Object}
+     */
+    _mockRouteMailMessageRemoveReaction(message_id, content) {
+        const partner_id = this.currentPartnerId;
+        this._mockMailMessage_MessageRemoveReaction(message_id, content);
+        const message_reactions = this._getRecords('mail.message.reaction', [
+            ['message_id', '=', message_id],
+            ['content', '=', content],
+        ]);
+        return {
+            id: message_id,
+            messageReactionGroups: [[message_reactions.length > 0 ? 'insert' : 'insert-and-unlink', {
+                'messageId': message_id,
+                'content': content,
+                'count': message_reactions.length,
+                'partners': [['insert-and-unlink', [{ id: partner_id }]]],
+            }]],
+        };
+    },
+    /**
+     * Simulates `_message_remove_reaction` on `mail.message`.
+     *
+     * @private
+     * @param {integer} message_id
+     * @param {string} content
+     */
+    _mockMailMessage_MessageRemoveReaction(message_id, content) {
+        const partner_id = this.currentPartnerId;
+        const message_reaction = this._getRecords('mail.message.reaction', [
+            ['message_id', '=', message_id],
+            ['content', '=', content],
+            ['partner_id', '=', partner_id],
+        ]);
+        this._mockUnlink('mail.message.reaction', [message_reaction[0].id]);
+    },
+    /**
      * Simulates `message_format` on `mail.message`.
      *
      * @private
@@ -1435,10 +1524,31 @@ MockServer.include({
                 'res.partner',
                 [['id', 'in', message.partner_ids]],
             );
+            const message_reactions = this._getRecords('mail.message.reaction', [
+                ['message_id', '=', message.id],
+            ]);
+            const messageReactionGroupsRaw = new Map();
+            for (const reaction of message_reactions) {
+                let messageReactionGroup = messageReactionGroupsRaw.get(reaction.content);
+                if (!messageReactionGroup) {
+                    messageReactionGroup = {
+                        'messageId': reaction.message_id,
+                        'content': reaction.content,
+                        'count': 0,
+                        'partners': reaction.partner_id ? [['insert-and-replace', [{'id': reaction.partner_id, 'name': 'Test Demo'}]]] : [],
+                        'guests': reaction.guest_id ? [['insert-and-replace', [{'id': reaction.guest_id, 'name': 'Demo Guest'}]]] : [],
+                    };
+                    messageReactionGroupsRaw.set(reaction.content, messageReactionGroup);
+                    messageReactionGroup = messageReactionGroupsRaw.get(reaction.content);
+                }
+                messageReactionGroup['count'] += 1;
+            }
+            const messageReactionGroups = [...messageReactionGroupsRaw.values()];
             const response = Object.assign({}, message, {
                 attachment_ids: formattedAttachments,
                 author_id: formattedAuthor,
                 history_partner_ids: historyPartnerIds,
+                messageReactionGroups : [['insert-and-replace', messageReactionGroups]],
                 needaction_partner_ids: needactionPartnerIds,
                 notifications,
                 recipients: partners.map(p => ({ id: p.id, name: p.name })),
