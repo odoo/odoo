@@ -2350,7 +2350,6 @@ class MailThread(models.AbstractModel):
 
         return True
 
-    @api.model
     def _notify_by_email_prepare_rendering_context(self, message, msg_vals=False, model_description=False,
                                                    force_email_company=False, force_email_lang=False):
         """ Prepare rendering context for notification email.
