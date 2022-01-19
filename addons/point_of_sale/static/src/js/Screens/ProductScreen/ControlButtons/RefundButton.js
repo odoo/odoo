@@ -14,7 +14,6 @@ odoo.define('point_of_sale.RefundButton', function (require) {
         _onClick() {
             const partner = this.env.pos.get_order().get_partner();
             const searchDetails = partner ? { fieldName: 'PARTNER', searchTerm: partner.name } : {};
-            this.trigger('close-popup');
             this.showScreen('TicketScreen', {
                 ui: { filter: 'SYNCED', searchDetails },
                 destinationOrder: this.env.pos.get_order(),

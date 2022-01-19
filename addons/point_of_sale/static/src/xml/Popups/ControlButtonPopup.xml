@@ -2,10 +2,10 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="ControlButtonPopup" owl="1">
-        <div role="dialog" class="modal-dialog">
             <Draggable>
                 <div class="popup popup-control-buttons">
-                    <div class="control-buttons">
+                    <!-- When one of the buttons is clicked, close this popup. -->
+                    <div class="control-buttons" t-on-click="cancel">
                         <t t-foreach="controlButtons" t-as="cb" t-key="cb.name">
                             <t t-component="cb.component" t-key="cb.name"/>
                         </t>
@@ -17,7 +17,6 @@
                     </footer>
                 </div>
             </Draggable>
-        </div>
     </t>
 
 </templates>
