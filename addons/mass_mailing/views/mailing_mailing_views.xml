@@ -118,10 +118,26 @@
                             </strong>
                             </button>
                         </div>
+
                         <div class="o_mails_in_queue" invisible="state != 'in_queue'">
-                            <strong>
+                            <strong invisible="next_departure_is_past or schedule_type == 'now'">
                                 <span name="next_departure_text">This mailing is scheduled for </span>
                                 <field name="next_departure" class="oe_inline"/>.
+                            </strong>
+                            <strong invisible="not next_departure_is_past or schedule_type == 'now'" class="d-flex align-items-center">
+                                <field name="next_departure_is_past" invisible="1"/>
+                                <span name="refresh_text">This mailing will be sent as soon as possible.</span>
+                                <button name="action_reload" type="object" class="btn btn-link pe-0">
+                                    <u>Refresh <i class="fa fa-refresh ms-1"/></u>
+                                </button>
+                            </strong>
+                            <strong invisible="schedule_type != 'now'" class="d-flex align-items-center">
+                                <field name="next_departure_is_past" invisible="1"/>
+                                <field name="schedule_type" invisible="1"/>
+                                <span name="mailing_schedule_type_now_text">This mailing will be sent as soon as possible.</span>
+                                <button name="action_reload" type="object" class="btn btn-link pe-0">
+                                    <u>Refresh <i class="fa fa-refresh ms-1"/></u>
+                                </button>
                             </strong>
                         </div>
                         <div invisible="not warning_message">
@@ -193,12 +209,12 @@
                             </div>
                             <label for="mailing_model_id" string="Recipients"/>
                             <div name="mailing_model_id_container">
-                                <div class="d-flex flex-row align-items-baseline flex-wrap">
-                                    <div class="me-5">
+                                <div class="row">
+                                    <div class="col-md-auto">
                                         <field name="mailing_model_id" options="{'no_open': True, 'no_create': True}"
                                             readonly="state in ('sending', 'done')"/>
                                     </div>
-                                    <div invisible="not mailing_on_mailing_list" class="o_mass_mailing_contact_list_ids pt-1">
+                                    <div invisible="not mailing_on_mailing_list" class="o_mass_mailing_contact_list_ids col-md-auto pt-1">
                                         <label for="contact_list_ids" string="Select mailing lists:" class="oe_edit_only"/>
                                         <div class="d-inline-flex flex-row align-items-center">
                                             <field name="contact_list_ids" widget="many2many_tags"
@@ -211,19 +227,17 @@
                                                 name="action_view_mailing_contacts" title="Add Mailing Contacts"/>
                                         </div>
                                     </div>
-                                    <div invisible="mailing_on_mailing_list" class="o_td_label">
-                                        <!-- We don't want to display label in edit mode, unless mailing is in sending or done state (where filter will be readonly) -->
-                                        <label for="mailing_filter_id" string="Filter" class="oe_read_only me-4"
-                                               invisible="state in ('sending', 'done') or not mailing_filter_id"/>
-                                        <label for="mailing_filter_id" string="Filter" class="me-4"
-                                               invisible="state not in ('sending', 'done') or not mailing_filter_id"/>
+                                    <div invisible="mailing_on_mailing_list" class="col-md-auto o_mailing_filter_width">
                                         <field name="mailing_filter_id" placeholder="Reload a favorite filter"
-                                               class="w-auto" widget="mailing_filter"
+                                               class="o_mailing_filter_readonly_width" widget="mailing_filter"
                                                options="{'no_create': 1, 'no_open': 1, 'domain_field': 'mailing_domain', 'model_field': 'mailing_model_id'}"
                                                readonly="state in ('sending', 'done')"/>
                                     </div>
                                     <field name="mailing_filter_count" invisible="1"/>
-                                    <field name="mailing_filter_domain" invisible="1"/>
+                                    <div name="mass_mailing_domain" invisible="mailing_model_name == 'mailing.list'"
+                                        class="col-md-6 d-block">
+                                        <field name="mailing_domain" widget="domain" options="{'model': 'mailing_model_real'}" readonly="state in ('sending', 'done')"/>
+                                    </div>
                                 </div>
 
                                 <field name="mailing_model_name" invisible="1"/>
@@ -399,7 +413,7 @@
                     <attribute name="invisible">state != 'in_queue'</attribute>
                 </xpath>
                 <xpath expr="//div[hasclass('alert-info')]/div[hasclass('o_mails_scheduled')]/button" position="attributes">
-                    <attribute name="invisible">scheduled == 0</attribute>
+                    <attribute name="invisible">not scheduled or next_departure_is_past</attribute>
                 </xpath>
                 <xpath expr="//div[hasclass('alert-info')]/div[hasclass('o_mails_scheduled')]//span[@name='scheduled_text']" position="replace">
                     <span name="scheduled_text">email(s) scheduled for </span>
@@ -409,7 +423,15 @@
                 <xpath expr="//div[hasclass('alert-info')]/div[hasclass('o_mails_in_queue')]/strong/span[@name='next_departure_text']" position="attributes">
                     <attribute name="invisible">scheduled != 0</attribute>
                 </xpath>
+                <xpath expr="//div[hasclass('alert-info')]/div[hasclass('o_mails_in_queue')]/strong/span[@name='refresh_text']" position="attributes">
+                    <attribute name="invisible">scheduled</attribute>
+                </xpath>
+                <xpath expr="//div[hasclass('alert-info')]/div[hasclass('o_mails_in_queue')]/strong/span[@name='mailing_schedule_type_now_text']" position="attributes">
+                    <attribute name="invisible">scheduled</attribute>
+                </xpath>
                 <xpath expr="//div[hasclass('alert-info')]/div[hasclass('o_mails_scheduled')]" position="inside">
+                    <xpath expr="//div[hasclass('alert-info')]/div[hasclass('o_mails_in_queue')]/strong" position="move"/>
+                    <xpath expr="//div[hasclass('alert-info')]/div[hasclass('o_mails_in_queue')]/strong" position="move"/>
                     <xpath expr="//div[hasclass('alert-info')]/div[hasclass('o_mails_in_queue')]/strong" position="move"/>
                 </xpath>
                 <xpath expr="//div[hasclass('alert-info')]/div[hasclass('o_mails_in_queue')]" position="replace"/>
@@ -449,6 +471,9 @@
                             </div>
                         </div>
                     </page>
+                </xpath>
+                <xpath expr="//div[@name='mass_mailing_domain']" position="attributes">
+                    <attribute name="class">col-md-7</attribute>
                 </xpath>
             </field>
         </record>
