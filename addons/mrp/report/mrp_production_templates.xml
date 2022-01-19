@@ -65,48 +65,50 @@
                         </table>
                     </div>
 
-                    <h3 t-if="o.move_raw_ids">
-                        <span t-if="o.state == 'done'">
-                            Consumed Products
-                        </span>
-                        <span t-else="">
-                            Products to Consume
-                        </span>
-                    </h3>
+                    <t t-call="mrp.report_mrp_production_components" t-if="o.move_raw_ids"/>
 
-                    <table class="table table-sm" t-if="o.move_raw_ids">
-                        <t t-set="has_product_barcode" t-value="any(m.product_id.barcode for m in o.move_raw_ids)"/>
-                        <thead>
-                            <tr>
-                                <th>Product</th>
-                                <th t-attf-class="{{ 'text-right' if not has_product_barcode else '' }}">Quantity</th>
-                                <th t-if="has_product_barcode" width="15%" class="text-center">Barcode</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <t t-if="o.move_raw_ids">
-                                <tr t-foreach="o.move_raw_ids" t-as="raw_line">
-                                    <td>
-                                        <span t-field="raw_line.product_id"/>
-                                    </td>
-                                    <td t-attf-class="{{ 'text-right' if not has_product_barcode else '' }}">
-                                        <span t-field="raw_line.product_uom_qty"/>
-                                        <span t-field="raw_line.product_uom" groups="uom.group_uom"/>
-                                    </td>
-                                    <td t-if="has_product_barcode" width="15%" class="text-center">
-                                        <t t-if="raw_line.product_id.barcode">
-                                            <div t-field="o.name" t-options="{'widget': 'barcode', 'width': 600, 'height': 100, 'img_style': 'width:100%;height:35px'}"/>
-                                        </t>
-                                    </td>
-                                </tr>
-                            </t>
-                        </tbody>
-                    </table>
                     <div class="oe_structure"/>
                 </div>
             </t>
         </t>
     </t>
+</template>
+
+<template id="report_mrp_production_components">
+    <h3>
+        <span t-if="o.state == 'done'">
+            Consumed Products
+        </span>
+        <span t-else="">
+            Products to Consume
+        </span>
+    </h3>
+    <table class="table table-sm">
+        <t t-set="has_product_barcode" t-value="any(m.product_id.barcode for m in o.move_raw_ids)"/>
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th t-attf-class="{{ 'text-right' if not has_product_barcode else '' }}">Quantity</th>
+                <th t-if="has_product_barcode" width="15%" class="text-center">Barcode</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr t-foreach="o.move_raw_ids" t-as="raw_line">
+                <td>
+                    <span t-field="raw_line.product_id"/>
+                </td>
+                <td t-attf-class="{{ 'text-right' if not has_product_barcode else '' }}">
+                    <span t-field="raw_line.product_uom_qty"/>
+                    <span t-field="raw_line.product_uom" groups="uom.group_uom"/>
+                </td>
+                <td t-if="has_product_barcode" width="15%" class="text-center">
+                    <t t-if="raw_line.product_id.barcode">
+                        <div t-field="o.name" t-options="{'widget': 'barcode', 'width': 600, 'height': 100, 'img_style': 'width:100%;height:35px'}"/>
+                    </t>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </template>
 
 <template id="label_production_view_pdf">
