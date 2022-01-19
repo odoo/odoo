@@ -654,6 +654,16 @@ $o-form-label-margin-right: 0px;
 
         .tab-content > .tab-pane {
             padding: $o-horizontal-padding 0;
+            .note-editable {
+                border-width: 0;
+                padding: 0;
+                &.oe-odoo-field-style {
+                	border-bottom-width: 1px;
+                }
+            }
+            .oe-bordered-editor>.note-editable {
+                border-width: 1px;
+            }
         }
     }
 
@@ -672,7 +682,7 @@ $o-form-label-margin-right: 0px;
     }
     .o_field_widget, .btn {
         .o_field_widget {
-            margin-bottom: 0px;
+            margin-bottom: 0;
         }
     }
     .o_td_label .o_form_label:not(.o_status), .o_checkbox_optional_field > .o_form_label {
