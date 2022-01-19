@@ -96,8 +96,8 @@ const LazyColumnListRenderer = ListRenderer.extend({
         const res = await this._rpc(
             {
                 model: state.model,
-                method: "read",
-                args: [state.res_ids, lazyColumns],
+                method: "search_read",
+                args: [state.domain, lazyColumns],
             },
             { shadow: true }
         );
