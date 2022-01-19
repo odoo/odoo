@@ -479,6 +479,16 @@ class PosOrder(models.Model):
         currency = self.currency_id
         return currency.round(amount) if currency else amount
 
+    def _get_partner_bank_id(self):
+        bank_partner_id = False
+        has_pay_later = any(not pm.journal_id for pm in self.payment_ids.mapped('payment_method_id'))
+        if has_pay_later:
+            if self.amount_total <= 0 and self.partner_id.bank_ids:
+                bank_partner_id = self.partner_id.bank_ids[0].id
+            elif self.amount_total >= 0 and self.company_id.partner_id.bank_ids:
+                bank_partner_id = self.company_id.partner_id.bank_ids[0].id
+        return bank_partner_id
+
     def _create_invoice(self, move_vals):
         self.ensure_one()
         new_move = self.env['account.move'].sudo().with_company(self.company_id).with_context(default_move_type=move_vals['move_type']).create(move_vals)
@@ -585,6 +595,7 @@ class PosOrder(models.Model):
             'move_type': 'out_invoice' if self.amount_total >= 0 else 'out_refund',
             'ref': self.name,
             'partner_id': self.partner_id.id,
+            'partner_bank_id': self._get_partner_bank_id(),
             # considering partner's sale pricelist's currency
             'currency_id': self.pricelist_id.currency_id.id,
             'invoice_user_id': self.user_id.id,
