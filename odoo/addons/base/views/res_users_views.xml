@@ -65,7 +65,7 @@
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('category_id','ilike',self)]" string="Group"/>
                     <separator orientation="vertical"/>
                     <field name="share"/>
-                    <filter name="no_share" string="Internal Groups" domain="[('share','=',False)]"/>
+                    <filter name="filter_no_share" string="Internal Groups" domain="[('share','=',False)]"/>
                 </search>
             </field>
         </record>
@@ -82,7 +82,7 @@
                     </group>
                     <notebook>
                         <page string="Users" name="users">
-                            <field name="users" context="{'search_default_no_share':1}"/>
+                            <field name="users" context="{'search_default_filter_no_share':1}"/>
                         </page>
                         <page string="Inherited" name="inherit_groups">
                             <label for="implied_ids" string="Users added to this group are automatically added in the following groups."/>
@@ -130,7 +130,7 @@
             <field name="name">Groups</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.groups</field>
-            <field name="context">{'search_default_no_share': 1}</field>
+            <field name="context">{'search_default_filter_no_share': 1}</field>
             <field name="help">A group is a set of functional areas that will be assigned to the user in order to give them access and rights to specific applications and tasks in the system. You can create custom groups or edit the ones existing by default in order to customize the view of the menu that users will be able to see. Whether they can have a read, write, create and delete access right can be managed from here.</field>
         </record>
         <menuitem action="action_res_groups" id="menu_action_res_groups" parent="base.menu_users" groups="base.group_no_one" sequence="3"/>
@@ -347,7 +347,7 @@
             <field name="view_mode">tree,kanban,form</field>
             <field name="view_id" ref="view_users_tree"/>
             <field name="search_view_id" ref="view_users_search"/>
-            <field name="context">{'search_default_no_share': 1}</field>
+            <field name="context">{'search_default_filter_no_share': 1}</field>
             <field name="help">Create and manage users that will connect to the system. Users can be deactivated should there be a period of time during which they will/should not connect to the system. You can assign them groups in order to give them specific access to the applications they need to use in the system.</field>
         </record>
         <record id="action_res_users_view1" model="ir.actions.act_window.view">
