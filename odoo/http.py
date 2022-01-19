@@ -1048,6 +1048,7 @@ class OpenERPSession(sessions.Session):
                 del self[k]
         self._default_values()
         self.rotate = True
+        root.session_store.save(self)
 
     def _default_values(self):
         self.setdefault("db", None)
