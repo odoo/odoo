@@ -54,6 +54,23 @@
             color: $o-main-favorite-color;
         }
     }
+    // Align the model / domain container with subject field in large devices
+    // and provide better tap area to the filter
+    @include media-breakpoint-up(md) {
+        div[name="mailing_model_id_container"] {
+            width: 96%;
+        }
+        .o_mailing_filter_width {
+            max-width: 25%;
+        }
+        .o_readonly_modifier.o_mailing_filter_readonly_width ,
+        &.o_form_readonly .o_mailing_filter_readonly_width {
+            max-width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
 }
 
 .o_xxs_form_view.o_mass_mailing_mailing_form {
@@ -174,5 +191,13 @@
     iframe {
         width: 100%;
         min-height: 55vh;
+    }
+}
+
+.o_mass_mailing_form_full_width.o_form_editable {
+    .o_domain_selector.o_read_mode {
+        .o_domain_tree_header.oe_edit_only {
+            display: none;
+        }
     }
 }
