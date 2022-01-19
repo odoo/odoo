@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 
 <t t-name="hr_org_chart_employee">
-    <div t-attf-class="o_org_chart_entry o_org_chart_entry_#{employee_type} media">
+    <div t-attf-class="o_org_chart_entry o_org_chart_entry_#{employee_type} d-flex">
         <t t-set="is_self" t-value="employee.id == view_employee_id"/>
 
         <div class="o_media_left">
@@ -19,7 +19,7 @@
                 t-att-style="'background-image:url(\'/web/image/hr.employee.public/' + employee.id + '/avatar_1024/\')'"/>
         </div>
 
-        <div class="media-body">
+        <div class="flex-grow-1">
             <span
                     t-if="employee.indirect_sub_count &gt; 0"
                     class="badge badge-pill"
@@ -58,7 +58,7 @@
 
     <div t-if='managers.length &gt; 0' class="o_org_chart_group_up">
         <t t-if='managers_more'>
-            <div class="o_org_chart_entry o_org_chart_more media">
+            <div class="o_org_chart_entry o_org_chart_more d-flex">
                 <div class="o_media_left">
                     <a class="text-center o_employee_more_managers"
                             t-att-data-employee-id="managers[0].id">
@@ -100,7 +100,7 @@
         </t>
 
         <t t-if="(children.length + managers.length) &gt; 19">
-            <div class="o_org_chart_entry o_org_chart_more media">
+            <div class="o_org_chart_entry o_org_chart_more d-flex">
                 <div class="o_media_left">
                     <a href="#"
                         t-att-data-employee-id="self.id"

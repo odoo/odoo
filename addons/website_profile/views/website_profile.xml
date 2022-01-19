@@ -357,7 +357,7 @@
                     <div class="col px-1 mb-2 col-xl-4">
                         <div class="card">
                             <div class="card-body p-2 pr-3">
-                                <div class="media align-items-center">
+                                <div class="d-flex align-items-center">
                                     <img t-if="not badge.badge_id.image_1920 and badge.badge_id.level"
                                         width="38" height="38"
                                         t-attf-src="/website_profile/static/src/img/badge_#{badge.badge_id.level}.svg"
@@ -368,7 +368,7 @@
                                         t-att-src="website.image_url(badge.badge_id, 'image_128')"
                                         class="o_object_fit_cover mr-0"
                                         t-att-alt="badge.badge_id.name"/>
-                                    <div class="media-body col-md-10 p-0">
+                                    <div class="flex-grow-1 col-md-10 p-0">
                                         <h6 class="my-0 pl-1 text-truncate" t-field="badge.badge_id.name"/>
                                     </div>
                                 </div>
@@ -416,9 +416,9 @@
                             <ul class="list-group list-group-flush">
                                 <t t-foreach="ranks" t-as="rank">
                                     <li t-attf-class="list-group-item">
-                                        <div class="media align-items-center">
+                                        <div class="d-flex align-items-center">
                                             <img t-att-src="website.image_url(rank, 'image_128')" class="mr-2 o_image_40_cover" alt="Rank badge"/>
-                                            <div class="media-body">
+                                            <div class="flex-grow-1">
                                                 <h5 class="mt-0 mb-0" t-field="rank.name"/>
                                                 <span class="badge badge-success"><span t-field="rank.karma_min"/></span> point<span t-if="rank.karma_min">s</span>
                                             </div>

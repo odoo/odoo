@@ -119,8 +119,8 @@
                                 </a>
                             </h4>
                         </div>
-                        <div class="media">
-                            <div class="media-body">
+                        <div class="d-flex">
+                            <div class="flex-grow-1">
                                 <div class="card">
                                     <div class="card-body">
                                         <h4 class="card-title d-flex flex-row justify-content-start align-items-center">
@@ -158,8 +158,8 @@
     <template id="messages_short">
         <div>
             <ul class="list-unstyled">
-                <li t-foreach="messages" t-as="message" class="media mt-3">
-                    <div class="media-body o_mg_message mw-100">
+                <li t-foreach="messages" t-as="message" class="d-flex mt-3">
+                    <div class="flex-grow-1 o_mg_message mw-100">
                         <div class="card">
                             <div class="o_mg_ribbon" t-if="message.moderation_status == 'pending_moderation'"><span class="bg-warning">Pending</span></div>
                             <div class="card-body">
