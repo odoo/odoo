@@ -696,14 +696,18 @@ $o-form-label-margin-right: 0px;
 
     // Translate icon
     span.o_field_translate {
-            padding: 0 $o-form-spacing-unit 0 0 !important;
-            vertical-align: top;
-            position: relative;
-            margin-left: -35px;
-            width: 35px !important; // important is usefull for textarea
-            display: inline-block;
-            text-align: right;
-            border: none;  // usefull for textarea
+        padding: 0 $o-form-spacing-unit 0 0 !important;
+        vertical-align: top;
+        position: relative;
+        margin-left: -35px;
+        width: 35px !important; // important is usefull for textarea
+        display: inline-block;
+        text-align: right;
+        border: none;  // usefull for textarea
+        background-color: rgba($o-view-background-color, 0.8); // usefull in code view
+        &:hover {
+            background-color: $o-view-background-color
+        }
     }
     input, textarea {
         &.o_field_translate {

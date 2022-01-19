@@ -530,7 +530,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
         $button.css({
             'font-size': '15px',
             position: 'absolute',
-            right: odoo.debug && this.nodeOptions.codeview ? '40px' : '5px',
+            right: odoo.debug && this.nodeOptions.codeview ? '56px' : '16px',
             top: '5px',
         });
         this.$el.append($button);
