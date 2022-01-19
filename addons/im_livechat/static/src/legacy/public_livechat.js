@@ -253,6 +253,7 @@ var LivechatButton = Widget.extend({
                 channel_id: this.options.channel_id,
                 anonymous_name: this.options.default_username,
                 previous_operator_id: this._get_previous_operator_id(),
+                chatbot_id: this._rule.chatbot_id,
             }, { shadow: true });
         }
         def.then(function (livechatData) {
