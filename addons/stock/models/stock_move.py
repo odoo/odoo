@@ -808,12 +808,15 @@ class StockMove(models.Model):
 
     @api.model
     def _prepare_merge_moves_distinct_fields(self):
-        return [
+        fields = [
             'product_id', 'price_unit', 'procure_method', 'location_id', 'location_dest_id',
             'product_uom', 'restrict_partner_id', 'scrapped', 'origin_returned_move_id',
             'package_level_id', 'propagate_cancel', 'description_picking', 'date_deadline',
             'product_packaging_id',
         ]
+        if self.env['ir.config_parameter'].sudo().get_param('stock.merge_only_same_date'):
+            fields.append('date')
+        return fields
 
     @api.model
     def _prepare_merge_negative_moves_excluded_distinct_fields(self):
