@@ -43,8 +43,6 @@ class Menu(models.Model):
     child_id = fields.One2many('website.menu', 'parent_id', string='Child Menus')
     parent_path = fields.Char(index=True, unaccent=False)
     is_visible = fields.Boolean(compute='_compute_visible', string='Is Visible')
-    group_ids = fields.Many2many('res.groups', string='Visible Groups',
-                                 help="User need to be at least in one of these groups to see the menu")
     is_mega_menu = fields.Boolean(compute=_compute_field_is_mega_menu, inverse=_set_field_is_mega_menu)
     mega_menu_content = fields.Html(translate=html_translate, sanitize=False, prefetch=True)
     mega_menu_classes = fields.Char()
@@ -101,7 +99,7 @@ class Menu(models.Model):
 
     def write(self, values):
         res = super().write(values)
-        if 'website_id' in values or 'group_ids' in values or 'sequence' in values:
+        if 'website_id' in values or 'sequence' in values:
             self.clear_caches()
         return res
 
