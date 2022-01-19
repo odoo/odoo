@@ -93,9 +93,9 @@ class MailController(http.Controller):
             except AccessError:
                 return cls._redirect_to_messaging()
             else:
-                record_action = record_sudo.get_access_action(access_uid=uid)
+                record_action = record_sudo._get_access_action(access_uid=uid)
         else:
-            record_action = record_sudo.get_access_action()
+            record_action = record_sudo._get_access_action()
             if record_action['type'] == 'ir.actions.act_url' and record_action.get('target_type') != 'public':
                 return cls._redirect_to_messaging()
 
