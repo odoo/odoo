@@ -43,8 +43,8 @@ class ReportBomStructure(models.AbstractModel):
                 res['total'] += res['subcontracting']['bom_cost']
         return res
 
-    def _get_sub_lines(self, bom, product_id, line_qty, line_id, level, child_bom_ids, unfolded):
-        res = super()._get_sub_lines(bom, product_id, line_qty, line_id, level, child_bom_ids, unfolded)
+    def _get_sub_lines(self, bom, product_id, line_qty, line_id, level, unfolded_ids, unfolded):
+        res = super()._get_sub_lines(bom, product_id, line_qty, line_id, level, unfolded_ids, unfolded)
         if bom and bom.type == 'subcontract':
             product = self.env['product.product'].browse(product_id)
 

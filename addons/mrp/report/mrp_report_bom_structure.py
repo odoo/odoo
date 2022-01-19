@@ -18,16 +18,16 @@ class ReportBomStructure(models.AbstractModel):
             candidates = variant and self.env['product.product'].browse(variant) or bom.product_id or bom.product_tmpl_id.product_variant_ids
             quantity = float(data.get('quantity', bom.product_qty))
             for product_variant_id in candidates.ids:
-                if data and data.get('childs'):
-                    doc = self._get_pdf_line(bom_id, product_id=product_variant_id, qty=quantity, child_bom_ids=set(json.loads(data.get('childs'))))
+                if data and data.get('unfolded_ids'):
+                    doc = self._get_pdf_line(bom_id, product_id=product_variant_id, qty=quantity, unfolded_ids=set(json.loads(data.get('unfolded_ids'))))
                 else:
                     doc = self._get_pdf_line(bom_id, product_id=product_variant_id, qty=quantity, unfolded=True)
                 doc['report_type'] = 'pdf'
                 doc['report_structure'] = data and data.get('report_type') or 'all'
                 docs.append(doc)
             if not candidates:
-                if data and data.get('childs'):
-                    doc = self._get_pdf_line(bom_id, qty=quantity, child_bom_ids=set(json.loads(data.get('childs'))))
+                if data and data.get('unfolded_ids'):
+                    doc = self._get_pdf_line(bom_id, qty=quantity, unfolded_ids=set(json.loads(data.get('unfolded_ids'))))
                 else:
                     doc = self._get_pdf_line(bom_id, qty=quantity, unfolded=True)
                 doc['report_type'] = 'pdf'
@@ -262,7 +262,7 @@ class ReportBomStructure(models.AbstractModel):
                 price += company.currency_id.round(not_rounded_price)
         return price
 
-    def _get_sub_lines(self, bom, product_id, line_qty, line_id, level, child_bom_ids, unfolded):
+    def _get_sub_lines(self, bom, product_id, line_qty, line_id, level, unfolded_ids, unfolded):
         data = self._get_bom(bom_id=bom.id, product_id=product_id, line_qty=line_qty, line_id=line_id, level=level)
         bom_lines = data['components']
         lines = []
@@ -279,9 +279,9 @@ class ReportBomStructure(models.AbstractModel):
                 'child_bom': bom_line['child_bom'],
                 'prod_id': bom_line['prod_id']
             })
-            if bom_line['child_bom'] and (unfolded or bom_line['child_bom'] in child_bom_ids):
+            if bom_line['child_bom'] and (unfolded or bom_line['child_bom'] in unfolded_ids):
                 line = self.env['mrp.bom.line'].browse(bom_line['line_id'])
-                lines += (self._get_sub_lines(line.child_bom_id, line.product_id.id, bom_line['prod_qty'], line, level + 1, child_bom_ids, unfolded))
+                lines += (self._get_sub_lines(line.child_bom_id, line.product_id.id, bom_line['prod_qty'], line, level + 1, unfolded_ids, unfolded))
         if data['operations']:
             lines.append({
                 'name': _('Operations'),
@@ -292,7 +292,7 @@ class ReportBomStructure(models.AbstractModel):
                 'level': level,
             })
             for operation in data['operations']:
-                if unfolded or 'operation-' + str(bom.id) in child_bom_ids:
+                if unfolded or 'operation-' + str(bom.id) in unfolded_ids:
                     lines.append({
                         'name': operation['name'],
                         'type': 'operation',
@@ -302,35 +302,35 @@ class ReportBomStructure(models.AbstractModel):
                         'level': level + 1,
                     })
         if data['byproducts']:
-                lines.append({
-                    'name': _('Byproducts'),
-                    'type': 'byproduct',
-                    'uom': False,
-                    'quantity': data['byproducts_total'],
-                    'bom_cost': data['byproducts_cost'],
-                    'level': level,
-                })
-                for byproduct in data['byproducts']:
-                    if unfolded or 'byproduct-' + str(bom.id) in child_bom_ids:
-                        lines.append({
-                            'name': byproduct['product_name'],
-                            'type': 'byproduct',
-                            'quantity': byproduct['product_qty'],
-                            'uom': byproduct['product_uom'],
-                            'prod_cost': byproduct['product_cost'],
-                            'bom_cost': byproduct['bom_cost'],
-                            'level': level + 1,
-                        })
+            lines.append({
+                'name': _('Byproducts'),
+                'type': 'byproduct',
+                'uom': False,
+                'quantity': data['byproducts_total'],
+                'bom_cost': data['byproducts_cost'],
+                'level': level,
+            })
+            for byproduct in data['byproducts']:
+                if unfolded or 'byproduct-' + str(bom.id) in unfolded_ids:
+                    lines.append({
+                        'name': byproduct['product_name'],
+                        'type': 'byproduct',
+                        'quantity': byproduct['product_qty'],
+                        'uom': byproduct['product_uom'],
+                        'prod_cost': byproduct['product_cost'],
+                        'bom_cost': byproduct['bom_cost'],
+                        'level': level + 1,
+                    })
         return lines
 
-    def _get_pdf_line(self, bom_id, product_id=False, qty=1, child_bom_ids=None, unfolded=False):
-        if child_bom_ids is None:
-            child_bom_ids = set()
+    def _get_pdf_line(self, bom_id, product_id=False, qty=1, unfolded_ids=None, unfolded=False):
+        if unfolded_ids is None:
+            unfolded_ids = set()
 
         bom = self.env['mrp.bom'].browse(bom_id)
         product_id = product_id or bom.product_id.id or bom.product_tmpl_id.product_variant_id.id
         data = self._get_bom(bom_id=bom_id, product_id=product_id, line_qty=qty, )
-        pdf_lines = self._get_sub_lines(bom, product_id, qty, False, 1, child_bom_ids, unfolded)
+        pdf_lines = self._get_sub_lines(bom, product_id, qty, False, 1, unfolded_ids, unfolded)
         data['components'] = []
         data['lines'] = pdf_lines
         data['extra_column_count'] = self._get_extra_column_count()
