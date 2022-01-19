@@ -685,12 +685,18 @@ QUnit.module("ActionManager", (hooks) => {
             assert.containsN(target, ".o_form_buttons_view button:not([disabled])", 2);
             const actionButton = target.querySelector("button[name=object]");
             const tooltipProm = new Promise((resolve) => {
-                $(document.body).one("shown.bs.tooltip", () => {
-                    $(actionButton).mouseleave();
-                    resolve();
-                });
+                document.body.addEventListener(
+                    "shown.bs.tooltip",
+                    () => {
+                        actionButton.dispatchEvent(new Event("mouseout"));
+                        resolve();
+                    },
+                    {
+                        once: true,
+                    }
+                );
             });
-            $(actionButton).mouseenter();
+            actionButton.dispatchEvent(new Event("mouseover"));
             await tooltipProm;
             assert.containsOnce(document.body, ".tooltip");
             await click(actionButton);

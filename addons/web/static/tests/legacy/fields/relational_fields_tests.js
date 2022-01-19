@@ -2135,7 +2135,7 @@ QUnit.module('Legacy relational_fields', {
         assert.strictEqual(list.$('.o_data_row:eq(3) .o_field_many2manytags .o_m2m_avatar_empty').text().trim(), "+9",
             "should have +9 in o_m2m_avatar_empty");
 
-        list.$('.o_data_row:eq(1) .o_field_many2manytags .o_m2m_avatar_empty').trigger($.Event('mouseenter'));
+        list.$('.o_data_row:eq(1) .o_field_many2manytags .o_m2m_avatar_empty')[0].dispatchEvent(new Event('mouseover'));
         await testUtils.nextTick();
         assert.containsOnce(list, '.popover',
             "should open a popover hover on o_m2m_avatar_empty");
@@ -2241,7 +2241,7 @@ QUnit.module('Legacy relational_fields', {
         assert.strictEqual(kanban.$('.o_kanban_record:eq(3) .o_field_many2manytags .o_m2m_avatar_empty').text().trim(), "9+",
             "should have 9+ in o_m2m_avatar_empty");
 
-        kanban.$('.o_kanban_record:eq(2) .o_field_many2manytags .o_m2m_avatar_empty').trigger($.Event('mouseenter'));
+        kanban.$('.o_kanban_record:eq(2) .o_field_many2manytags .o_m2m_avatar_empty')[0].dispatchEvent(new Event('mouseover'));
         await testUtils.nextTick();
         assert.containsOnce(kanban, '.popover',
             "should open a popover hover on o_m2m_avatar_empty");

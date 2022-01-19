@@ -40,6 +40,9 @@ let serverData;
 let target;
 QUnit.module('LegacyViews', {
     beforeEach: function () {
+        // Avoid animation to not have to wait until the tooltip is removed
+        this.initialTooltipDefaultAnimation = Tooltip.Default.animation;
+        Tooltip.Default.animation = false;
         registry.category("views").remove("list"); // remove new list from registry
         registry.category("views").remove("kanban"); // remove new kanban from registry
         registry.category("views").remove("form"); // remove new form from registry
@@ -149,7 +152,10 @@ QUnit.module('LegacyViews', {
 
         serverData = { models: this.data };
         target = getFixture();
-    }
+    },
+    afterEach: async function () {
+        Tooltip.Default.animation = this.initialTooltipDefaultAnimation;
+    },
 }, function () {
 
     QUnit.module('ListView (legacy)');
@@ -4430,24 +4436,25 @@ QUnit.module('LegacyViews', {
         // 1000 ms. not totally academic, but a short test suite is easier to sell :(
         list.$('th[data-name=foo]').tooltip('show', false);
 
-        list.$('th[data-name=foo]').trigger($.Event('mouseenter'));
+        list.$('th[data-name=foo]')[0].dispatchEvent(new Event('mouseover'));
         assert.strictEqual($('.tooltip .oe_tooltip_string').length, 0, "should not have rendered a tooltip");
 
         odoo.debug = true;
         // it is necessary to rerender the list so tooltips can be properly created
         await list.reload();
         list.$('th[data-name=foo]').tooltip('show', false);
-        list.$('th[data-name=foo]').trigger($.Event('mouseenter'));
+        list.$('th[data-name=foo]')[0].dispatchEvent(new Event('mouseover'));
         assert.strictEqual($('.tooltip .oe_tooltip_string').length, 1, "should have rendered a tooltip");
 
         await list.reload();
         list.$('th[data-name=bar]').tooltip('show', false);
-        list.$('th[data-name=bar]').trigger($.Event('mouseenter'));
+        list.$('th[data-name=bar]')[0].dispatchEvent(new Event('mouseover'));
         assert.containsOnce($, '.oe_tooltip_technical>li[data-item="widget"]',
             'widget should be present for this field');
         assert.strictEqual($('.oe_tooltip_technical>li[data-item="widget"]')[0].lastChild.wholeText.trim(),
             'Button (toggle_button)', "widget description should be correct");
 
+        list.$('th[data-name=bar]')[0].dispatchEvent(new Event('mouseout'));
         odoo.debug = initialDebugMode;
         list.destroy();
     });
