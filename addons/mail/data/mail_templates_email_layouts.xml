@@ -132,7 +132,7 @@
         </template>
 
         <!-- Information on model to use this notification template
-          * if the record has an online access defined in get_access_action, having
+          * if the record has an online access defined in _get_access_action, having
             a _get_share_url methods is required (like sale order and invoice);
           * this template works best with portal-enable models although it is not
             a complete requirement currently;
@@ -144,7 +144,7 @@
     <!-- HEADER -->
     <tr>
         <td align="center" style="min-width: 590px;">
-            <t t-set="access_action" t-value="record.with_context(force_website=True).get_access_action()"/>
+            <t t-set="access_action" t-value="record._get_access_action(force_website=True)"/>
             <t t-set="is_online" t-value="access_action and access_action['type'] == 'ir.actions.act_url'"/>
             <t t-set="base_url" t-value="record.get_base_url()"/>
             <t t-set="share_url" t-value="is_online and record._get_share_url(redirect=True, signup_partner=notification_is_customer, share_token=notification_is_customer)"/>
