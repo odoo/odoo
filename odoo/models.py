@@ -3383,8 +3383,6 @@ Fields:
                 field = self._fields[name]
                 if not field.column_type:
                     field.read(fetched)
-                if field.deprecated:
-                    _logger.warning('Field %s is deprecated: %s', field, field.deprecated)
 
         # possibly raise exception for the records that could not be read
         missing = self - fetched
@@ -3947,10 +3945,6 @@ Fields:
                 continue
             field = self._fields[name]
             assert field.store
-
-            if field.deprecated:
-                _logger.warning('Field %s is deprecated: %s', field, field.deprecated)
-
             assert field.column_type
             columns.append((name, field.column_format, val))
 
@@ -4820,10 +4814,6 @@ Fields:
                     blacklist.update(set(self.env[parent_model]._fields) - whitelist)
                 else:
                     blacklist_given_fields(self.env[parent_model])
-            # blacklist deprecated fields
-            for name, field in model._fields.items():
-                if field.deprecated:
-                    blacklist.add(name)
 
         blacklist_given_fields(self)
 

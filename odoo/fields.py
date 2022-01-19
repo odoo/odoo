@@ -278,7 +278,6 @@ class Field(MetaField('DummyField', (object,), {})):
     states = None                       # set readonly and required depending on state
     groups = None                       # csv list of group xml ids
     change_default = False              # whether the field may trigger a "user-onchange"
-    deprecated = None                   # whether the field is deprecated
 
     related_field = None                # corresponding related field
     group_operator = None               # operator for aggregating values
@@ -455,8 +454,8 @@ class Field(MetaField('DummyField', (object,), {})):
 
         self.__dict__.update(attrs)
 
-        # prefetch only stored, column, non-manual and non-deprecated fields
-        if not (self.store and self.column_type) or self.manual or self.deprecated:
+        # prefetch only stored, column, non-manual fields
+        if not self.store or not self.column_type or self.manual:
             self.prefetch = False
 
         if not self.string and not self.related:
@@ -806,7 +805,6 @@ class Field(MetaField('DummyField', (object,), {})):
     _description_states = property(attrgetter('states'))
     _description_groups = property(attrgetter('groups'))
     _description_change_default = property(attrgetter('change_default'))
-    _description_deprecated = property(attrgetter('deprecated'))
     _description_group_operator = property(attrgetter('group_operator'))
 
     def _description_depends(self, env):
