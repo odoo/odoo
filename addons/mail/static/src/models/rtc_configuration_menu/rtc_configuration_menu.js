@@ -3,7 +3,7 @@
 import { browser } from "@web/core/browser/browser";
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, one2one } from '@mail/model/model_field';
+import { attr, one } from '@mail/model/model_field';
 
 registerModel({
     name: 'RtcConfigurationMenu',
@@ -82,7 +82,7 @@ registerModel({
         isRegisteringKey: attr({
             default: false,
         }),
-        userSetting: one2one('UserSetting', {
+        userSetting: one('UserSetting', {
             inverse: 'rtcConfigurationMenu',
             readonly: true,
         }),

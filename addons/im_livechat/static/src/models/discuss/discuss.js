@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { addFields, patchRecordMethods } from '@mail/model/model_core';
-import { one2one } from '@mail/model/model_field';
+import { one } from '@mail/model/model_field';
 // ensure that the model definition is loaded before the patch
 import '@mail/models/discuss/discuss';
 
@@ -21,7 +21,7 @@ addFields('Discuss', {
     /**
      * Discuss sidebar category for `livechat` channel threads.
      */
-    categoryLivechat: one2one('DiscussSidebarCategory', {
+    categoryLivechat: one('DiscussSidebarCategory', {
         inverse: 'discussAsLivechat',
         isCausal: true,
     }),

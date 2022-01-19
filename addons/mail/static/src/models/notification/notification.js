@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, many2one } from '@mail/model/model_field';
+import { attr, one } from '@mail/model/model_field';
 import { clear, insert, insertAndReplace, unlinkAll } from '@mail/model/model_field_command';
 
 registerModel({
@@ -140,15 +140,15 @@ registerModel({
         isFromCurrentUser: attr({
             compute: '_computeIsFromCurrentUser',
         }),
-        message: many2one('Message', {
+        message: one('Message', {
             inverse: 'notifications',
         }),
-        notificationGroup: many2one('NotificationGroup', {
+        notificationGroup: one('NotificationGroup', {
             compute: '_computeNotificationGroup',
             inverse: 'notifications',
         }),
         notification_status: attr(),
         notification_type: attr(),
-        partner: many2one('Partner'),
+        partner: one('Partner'),
     },
 });

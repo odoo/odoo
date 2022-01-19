@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, one2many, one2one } from '@mail/model/model_field';
+import { attr, many, one } from '@mail/model/model_field';
 import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
 import { OnChange } from '@mail/model/model_onchange';
 
@@ -193,7 +193,7 @@ registerModel({
          * The category item which is active and belongs
          * to the category.
          */
-        activeItem: one2one('DiscussSidebarCategoryItem', {
+        activeItem: one('DiscussSidebarCategoryItem', {
             compute: '_computeActiveItem',
         }),
         /**
@@ -209,7 +209,7 @@ registerModel({
          * Determines the discuss sidebar category items that are displayed by
          * this discuss sidebar category.
          */
-        categoryItems: one2many('DiscussSidebarCategoryItem', {
+        categoryItems: many('DiscussSidebarCategoryItem', {
             inverse: 'category',
             isCausal: true,
             sort: '_sortDefinitionCategoryItems',
@@ -223,11 +223,11 @@ registerModel({
             readonly: true,
             sum: 'categoryItems.categoryCounterContribution',
         }),
-        discussAsChannel: one2one('Discuss', {
+        discussAsChannel: one('Discuss', {
             inverse: 'categoryChannel',
             readonly: true,
         }),
-        discussAsChat: one2one('Discuss', {
+        discussAsChat: one('Discuss', {
             inverse: 'categoryChat',
             readonly: true,
         }),
@@ -235,7 +235,7 @@ registerModel({
          * Determines the filtered and sorted discuss sidebar category items
          * that are displayed by this discuss sidebar category.
          */
-        filteredCategoryItems: one2many('DiscussSidebarCategoryItem', {
+        filteredCategoryItems: many('DiscussSidebarCategoryItem', {
             compute: '_computeFilteredCategoryItems',
             readonly: true,
         }),

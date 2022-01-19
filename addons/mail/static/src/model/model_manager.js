@@ -517,14 +517,11 @@ export class ModelManager {
                     if (!this.models[field.to]) {
                         throw new Error(`Relational field(${fieldName}) on ${Model} targets to unknown model name "${field.to}".`);
                     }
-                    if (field.isCausal && !(['one2many', 'one2one'].includes(field.relationType))) {
-                        throw new Error(`Relational field(${fieldName}) on ${Model} has "isCausal" true with a relation of type "${field.relationType}" but "isCausal" is only supported for "one2many" and "one2one".`);
+                    if (field.required && field.relationType !== 'one') {
+                        throw new Error(`Relational field(${fieldName}) on ${Model} has "required" true with a relation of type "${field.relationType}" but "required" is only supported for "one".`);
                     }
-                    if (field.required && !(['one2one', 'many2one'].includes(field.relationType))) {
-                        throw new Error(`Relational field(${fieldName}) on ${Model} has "required" true with a relation of type "${field.relationType}" but "required" is only supported for "one2one" and "many2one".`);
-                    }
-                    if (field.sort && !(['one2many', 'many2many'].includes(field.relationType))) {
-                        throw new Error(`Relational field "${Model}/${fieldName}" has "sort" with a relation of type "${field.relationType}" but "sort" is only supported for "one2many" and "many2many".`);
+                    if (field.sort && field.relationType !== 'many') {
+                        throw new Error(`Relational field "${Model}/${fieldName}" has "sort" with a relation of type "${field.relationType}" but "sort" is only supported for "many".`);
                     }
                 }
                 // 3. Computed field.
@@ -605,7 +602,7 @@ export class ModelManager {
                 if (!field.relationType) {
                     throw new Error(`${field} on ${Model} must define a relation type in "relationType".`);
                 }
-                if (!(['one2one', 'one2many', 'many2one', 'many2many'].includes(field.relationType))) {
+                if (!(['many', 'one'].includes(field.relationType))) {
                     throw new Error(`${field} on ${Model} has invalid relation type "${field.relationType}".`);
                 }
                 if (!field.inverse) {
@@ -628,14 +625,6 @@ export class ModelManager {
                 if (![Model.name, 'Model'].includes(inverseField.to)) {
                     throw new Error(`${field} on ${Model} has its inverse ${inverseField} on ${RelatedModel} referring to an invalid model (model(${inverseField.to})).`);
                 }
-                if (
-                    (field.relationType === 'many2many' && inverseField.relationType !== 'many2many') ||
-                    (field.relationType === 'one2one' && inverseField.relationType !== 'one2one') ||
-                    (field.relationType === 'one2many' && inverseField.relationType !== 'many2one') ||
-                    (field.relationType === 'many2one' && inverseField.relationType !== 'one2many')
-                ) {
-                    throw new Error(`Mismatched relation types: ${field} on ${Model} (${field.relationType}) and ${inverseField} on ${RelatedModel} (${inverseField.relationType}).`);
-                }
             }
             for (const identifyingField of Model.__identifyingFieldsFlattened) {
                 const field = Model.__fieldMap[identifyingField];
@@ -646,8 +635,8 @@ export class ModelManager {
                     throw new Error(`Identifying field "${identifyingField}" on ${Model} is lacking readonly.`);
                 }
                 if (field.to) {
-                    if (!(['one2one', 'many2one'].includes(field.relationType))) {
-                        throw new Error(`Identifying field "${identifyingField}" on ${Model} has a relation of type "${field.relationType}" but identifying field is only supported for "one2one" and "many2one".`);
+                    if (field.relationType !== 'one') {
+                        throw new Error(`Identifying field "${identifyingField}" on ${Model} has a relation of type "${field.relationType}" but identifying field is only supported for "one".`);
                     }
                     const RelatedModel = this.models[field.to];
                     const inverseField = RelatedModel.__fieldMap[field.inverse];
@@ -697,7 +686,7 @@ export class ModelManager {
         for (const field of Model.__fieldList) {
             record.__values[field.fieldName] = undefined;
             if (field.fieldType === 'relation') {
-                if (['one2many', 'many2many'].includes(field.relationType)) {
+                if (field.relationType === 'many') {
                     record.__values[field.fieldName] = new RelationSet(record, field);
                 }
             }
@@ -1062,18 +1051,9 @@ export class ModelManager {
      * @returns {ModelField}
      */
     _makeInverseRelationField(Model, field) {
-        const relFunc =
-            field.relationType === 'many2many' ? ModelField.many2many
-            : field.relationType === 'many2one' ? ModelField.one2many
-            : field.relationType === 'one2many' ? ModelField.many2one
-            : field.relationType === 'one2one' ? ModelField.one2one
-            : undefined;
-        if (!relFunc) {
-            throw new Error(`Cannot compute inverse Relation of "${Model}/${field.fieldName}".`);
-        }
         const inverseField = new ModelField(Object.assign(
             {},
-            relFunc(Model.name, { inverse: field.fieldName }),
+            ModelField.many(Model.name, { inverse: field.fieldName }),
             {
                 fieldName: `_inverse_${Model}/${field.fieldName}`,
                 // Allows the inverse of an identifying field to be

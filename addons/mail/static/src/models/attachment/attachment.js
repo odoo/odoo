@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, many2many, many2one } from '@mail/model/model_field';
+import { attr, many, one } from '@mail/model/model_field';
 import { clear, insert } from '@mail/model/model_field_command';
 
 registerModel({
@@ -270,20 +270,20 @@ registerModel({
     },
     fields: {
         accessToken: attr(),
-        activities: many2many('Activity', {
+        activities: many('Activity', {
             inverse: 'attachments',
         }),
         /**
          * States the attachment lists that are displaying this attachment.
          */
-        attachmentLists: many2many('AttachmentList', {
+        attachmentLists: many('AttachmentList', {
             inverse: 'attachments',
         }),
         checksum: attr(),
         /**
          * States on which composer this attachment is currently being created.
          */
-        composer: many2one('Composer', {
+        composer: one('Composer', {
             inverse: 'attachments',
         }),
         defaultSource: attr({
@@ -368,18 +368,18 @@ registerModel({
         mediaType: attr({
             compute: '_computeMediaType',
         }),
-        messages: many2many('Message', {
+        messages: many('Message', {
             inverse: 'attachments',
         }),
         mimetype: attr({
             default: '',
         }),
         name: attr(),
-        originThread: many2one('Thread', {
+        originThread: one('Thread', {
             inverse: 'originThreadAttachments',
         }),
         size: attr(),
-        threads: many2many('Thread', {
+        threads: many('Thread', {
             inverse: 'attachments',
         }),
         type: attr(),

@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, one2one } from '@mail/model/model_field';
+import { attr, one } from '@mail/model/model_field';
 import { insert, unlink } from '@mail/model/model_field_command';
 
 registerModel({
@@ -187,7 +187,7 @@ registerModel({
         nameOrDisplayName: attr({
             compute: '_computeNameOrDisplayName',
         }),
-        partner: one2one('Partner', {
+        partner: one('Partner', {
             inverse: 'user',
         }),
         /**

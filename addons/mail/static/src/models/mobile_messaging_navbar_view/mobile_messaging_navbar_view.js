@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, one2one } from '@mail/model/model_field';
+import { attr, one } from '@mail/model/model_field';
 import { clear, replace } from '@mail/model/model_field_command';
 
 registerModel({
@@ -96,11 +96,11 @@ registerModel({
         activeTabId: attr({
             compute: '_computeActiveTabId',
         }),
-        discuss: one2one('Discuss', {
+        discuss: one('Discuss', {
             inverse: 'mobileMessagingNavbarView',
             readonly: true,
         }),
-        messagingMenu: one2one('MessagingMenu', {
+        messagingMenu: one('MessagingMenu', {
             inverse: 'mobileMessagingNavbarView',
             readonly: true,
         }),

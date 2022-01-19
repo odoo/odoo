@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, one2one } from '@mail/model/model_field';
+import { attr, one } from '@mail/model/model_field';
 import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
 
 const { Ref } = owl;
@@ -152,7 +152,7 @@ registerModel({
         /**
          * The record that represents the content inside the popover view.
          */
-        channelInvitationForm: one2one('ChannelInvitationForm', {
+        channelInvitationForm: one('ChannelInvitationForm', {
             compute: '_computeChannelInvitationForm',
             inverse: 'popoverViewOwner',
             isCausal: true,
@@ -165,14 +165,14 @@ registerModel({
         /**
          * If set, this popover view is owned by a composer view.
          */
-        composerViewOwnerAsEmoji: one2one('ComposerView', {
+        composerViewOwnerAsEmoji: one('ComposerView', {
             inverse: 'emojisPopoverView',
             readonly: true,
         }),
         /**
          * Determines the record that is content of this popover view.
          */
-        content: one2one('Model', {
+        content: one('Model', {
             compute: '_computeContent',
             required: true,
         }),
@@ -195,7 +195,7 @@ registerModel({
         /**
          * If set, the content of this popover view is a list of emojis.
          */
-        emojiListView: one2one('EmojiListView', {
+        emojiListView: one('EmojiListView', {
             compute: '_computeEmojiListView',
             inverse: 'popoverViewOwner',
             isCausal: true,
@@ -204,7 +204,7 @@ registerModel({
         /**
          * If set, this popover view is owned by a message action list.
          */
-        messageActionListOwnerAsReaction: one2one('MessageActionList', {
+        messageActionListOwnerAsReaction: one('MessageActionList', {
             inverse: 'reactionPopoverView',
             readonly: true,
         }),
@@ -219,7 +219,7 @@ registerModel({
         /**
          * If set, this popover view is owned by a thread view topbar record.
          */
-        threadViewTopbarOwnerAsInvite: one2one('ThreadViewTopbar', {
+        threadViewTopbarOwnerAsInvite: one('ThreadViewTopbar', {
             inverse: 'invitePopoverView',
             readonly: true,
         }),

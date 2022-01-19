@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, many2many, many2one, one2many, one2one } from '@mail/model/model_field';
+import { attr, many, one } from '@mail/model/model_field';
 import { link, replace, unlink, unlinkAll } from '@mail/model/model_field_command';
 import { OnChange } from '@mail/model/model_onchange';
 
@@ -314,7 +314,7 @@ registerModel({
          * to manage "holes" in message list, while still allowing to display
          * new messages on main cache of thread in real-time.
          */
-        fetchedMessages: many2many('Message', {
+        fetchedMessages: many('Message', {
             compute: '_computeFetchedMessages',
         }),
         /**
@@ -367,16 +367,16 @@ registerModel({
          * cache (@see lastMessage field for that). @see fetchedMessages field
          * for a deeper explanation about "fetched" messages.
          */
-        lastFetchedMessage: many2one('Message', {
+        lastFetchedMessage: one('Message', {
             compute: '_computeLastFetchedMessage',
         }),
-        lastMessage: many2one('Message', {
+        lastMessage: one('Message', {
             compute: '_computeLastMessage',
         }),
         /**
          * List of messages linked to this cache.
          */
-        messages: many2many('Message', {
+        messages: many('Message', {
             compute: '_computeMessages',
         }),
         /**
@@ -386,22 +386,22 @@ registerModel({
          * cache (@see orderedMessages field for that). @see fetchedMessages
          * field for deeper explanation about "fetched" messages.
          */
-        orderedFetchedMessages: many2many('Message', {
+        orderedFetchedMessages: many('Message', {
             compute: '_computeOrderedFetchedMessages',
         }),
         /**
          * Ordered list of messages linked to this cache.
          */
-        orderedMessages: many2many('Message', {
+        orderedMessages: many('Message', {
             compute: '_computeOrderedMessages',
         }),
         /**
          * List of ordered non empty messages linked to this cache.
          */
-        orderedNonEmptyMessages: many2many('Message', {
+        orderedNonEmptyMessages: many('Message', {
             compute: '_computeOrderedNonEmptyMessages',
         }),
-        thread: one2one('Thread', {
+        thread: one('Thread', {
             inverse: 'cache',
             readonly: true,
             required: true,
@@ -409,7 +409,7 @@ registerModel({
         /**
          * States the 'ThreadView' that are currently displaying `this`.
          */
-        threadViews: one2many('ThreadView', {
+        threadViews: many('ThreadView', {
             inverse: 'threadCache',
         }),
     },

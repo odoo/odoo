@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, many2many, many2one, one2one } from '@mail/model/model_field';
+import { attr, many, one } from '@mail/model/model_field';
 import { clear, insertAndReplace, link, replace, unlink, unlinkAll } from '@mail/model/model_field_command';
 import { cleanSearchTerm } from '@mail/utils/utils';
 
@@ -175,7 +175,7 @@ registerModel({
         },
     },
     fields: {
-        chatWindow: one2one('ChatWindow', {
+        chatWindow: one('ChatWindow', {
             inverse: 'channelInvitationForm',
             readonly: true,
         }),
@@ -210,7 +210,7 @@ registerModel({
         /**
          * If set, this channel invitation form is content of related popover view.
          */
-        popoverViewOwner: one2one('PopoverView', {
+        popoverViewOwner: one('PopoverView', {
             inverse: 'channelInvitationForm',
             isCausal: true,
             readonly: true,
@@ -236,15 +236,15 @@ registerModel({
          * States all partners that are potential choices according to this
          * search term.
          */
-        selectablePartners: many2many('Partner'),
+        selectablePartners: many('Partner'),
         /**
          * Determines all partners that are currently selected.
          */
-        selectedPartners: many2many('Partner'),
+        selectedPartners: many('Partner'),
         /**
          * States the thread on which this list operates (if any).
          */
-        thread: many2one('Thread', {
+        thread: one('Thread', {
             compute: '_computeThread',
             readonly: true,
             required: true,

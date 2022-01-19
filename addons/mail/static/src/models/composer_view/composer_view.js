@@ -2,7 +2,7 @@
 
 import { emojis } from '@mail/js/emojis';
 import { registerModel } from '@mail/model/model_core';
-import { attr, many2many, many2one, one2one } from '@mail/model/model_field';
+import { attr, many, one } from '@mail/model/model_field';
 import { clear, insertAndReplace, link, replace, unlink, unlinkAll } from '@mail/model/model_field_command';
 import { OnChange } from '@mail/model/model_onchange';
 import { addLink, escapeAndCompactTextContent, parseAndTransform } from '@mail/js/utils';
@@ -917,13 +917,13 @@ registerModel({
          * is highlighted in the UI and it will be the selected record if the
          * suggestion is confirmed by the user.
          */
-        activeSuggestedRecord: many2one('Model', {
+        activeSuggestedRecord: one('Model', {
             compute: '_computeActiveSuggestedRecord',
         }),
         /**
          * Determines the attachment list that will be used to display the attachments.
          */
-        attachmentList: one2one('AttachmentList', {
+        attachmentList: one('AttachmentList', {
             compute: '_computeAttachmentList',
             inverse: 'composerView',
             isCausal: true,
@@ -936,7 +936,7 @@ registerModel({
         /**
          * States the chatter which this composer allows editing (if any).
          */
-        chatter: one2one('Chatter', {
+        chatter: one('Chatter', {
             inverse: 'composerView',
             readonly: true,
         }),
@@ -947,7 +947,7 @@ registerModel({
         /**
          * States the composer state that is displayed by this composer view.
          */
-        composer: many2one('Composer', {
+        composer: one('Composer', {
             compute: '_computeComposer',
             inverse: 'composerViews',
             required: true,
@@ -959,7 +959,7 @@ registerModel({
         /**
          * Determines the emojis popover that is active on this composer view.
          */
-        emojisPopoverView: one2one('PopoverView', {
+        emojisPopoverView: one('PopoverView', {
             inverse: 'composerViewOwnerAsEmoji',
             isCausal: true,
         }),
@@ -969,10 +969,10 @@ registerModel({
          * process. 2 arbitrary lists can be provided and the second is defined
          * as "extra".
          */
-        extraSuggestedRecords: many2many('Model', {
+        extraSuggestedRecords: many('Model', {
             compute: '_computeExtraSuggestedRecords',
         }),
-        fileUploader: one2one('FileUploader', {
+        fileUploader: one('FileUploader', {
             default: insertAndReplace(),
             inverse: 'composerView',
             isCausal: true,
@@ -1003,13 +1003,13 @@ registerModel({
          * process. 2 arbitrary lists can be provided and the first is defined
          * as "main".
          */
-        mainSuggestedRecords: many2many('Model', {
+        mainSuggestedRecords: many('Model', {
             compute: '_computeMainSuggestedRecords',
         }),
         /**
          * States the message view on which this composer allows editing (if any).
          */
-        messageViewInEditing: one2one('MessageView', {
+        messageViewInEditing: one('MessageView', {
             inverse: 'composerViewInEditing',
             readonly: true,
         }),
@@ -1065,7 +1065,7 @@ registerModel({
         /**
          * States the thread view on which this composer allows editing (if any).
          */
-        threadView: one2one('ThreadView', {
+        threadView: one('ThreadView', {
             inverse: 'composerView',
             readonly: true,
         }),

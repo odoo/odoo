@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, many2many, many2one, one2many, one2one } from '@mail/model/model_field';
+import { attr, many, one } from '@mail/model/model_field';
 import { OnChange } from '@mail/model/model_onchange';
 import { insertAndReplace, link, unlink } from '@mail/model/model_field_command';
 import { makeDeferred } from '@mail/utils/deferred/deferred';
@@ -218,7 +218,7 @@ registerModel({
          * Inverse of the messaging field present on all models. This field
          * therefore contains all existing records.
          */
-        allRecords: one2many('Model', {
+        allRecords: many('Model', {
             inverse: 'messaging',
             isCausal: true,
         }),
@@ -229,23 +229,23 @@ registerModel({
         autofetchPartnerImStatus: attr({
             default: true,
         }),
-        cannedResponses: one2many('CannedResponse'),
-        chatWindowManager: one2one('ChatWindowManager', {
+        cannedResponses: many('CannedResponse'),
+        chatWindowManager: one('ChatWindowManager', {
             default: insertAndReplace(),
             isCausal: true,
             readonly: true,
         }),
-        commands: one2many('ChannelCommand'),
+        commands: many('ChannelCommand'),
         companyName: attr(),
-        currentGuest: one2one('Guest'),
-        currentPartner: one2one('Partner'),
-        currentUser: one2one('User'),
-        device: one2one('Device', {
+        currentGuest: one('Guest'),
+        currentPartner: one('Partner'),
+        currentUser: one('User'),
+        device: one('Device', {
             default: insertAndReplace(),
             isCausal: true,
             readonly: true,
         }),
-        dialogManager: one2one('DialogManager', {
+        dialogManager: one('DialogManager', {
             default: insertAndReplace(),
             isCausal: true,
             readonly: true,
@@ -256,20 +256,20 @@ registerModel({
         disableAnimation: attr({
             default: false,
         }),
-        discuss: one2one('Discuss', {
+        discuss: one('Discuss', {
             default: insertAndReplace(),
             isCausal: true,
             readonly: true,
         }),
-        focusedRtcSession: one2one('RtcSession'),
+        focusedRtcSession: one('RtcSession'),
         /**
          * Mailbox History.
          */
-        history: one2one('Thread'),
+        history: one('Thread'),
         /**
          * Mailbox Inbox.
          */
-        inbox: one2one('Thread'),
+        inbox: one('Thread'),
         /**
          * Promise that will be resolved when messaging is initialized.
          */
@@ -278,7 +278,7 @@ registerModel({
             required: true,
             readonly: true,
         }),
-        initializer: one2one('MessagingInitializer', {
+        initializer: one('MessagingInitializer', {
             default: insertAndReplace(),
             isCausal: true,
             readonly: true,
@@ -305,7 +305,7 @@ registerModel({
         isQUnitTest: attr({
             default: false,
         }),
-        locale: one2one('Locale', {
+        locale: one('Locale', {
             default: insertAndReplace(),
             isCausal: true,
             readonly: true,
@@ -325,12 +325,12 @@ registerModel({
             readonly: true,
             required: true,
         }),
-        messagingMenu: one2one('MessagingMenu', {
+        messagingMenu: one('MessagingMenu', {
             default: insertAndReplace(),
             isCausal: true,
             readonly: true,
         }),
-        notificationHandler: one2one('MessagingNotificationHandler', {
+        notificationHandler: one('MessagingNotificationHandler', {
             default: insertAndReplace(),
             isCausal: true,
             readonly: true,
@@ -338,25 +338,25 @@ registerModel({
         outOfFocusUnreadMessageCounter: attr({
             default: 0,
         }),
-        partnerRoot: many2one('Partner'),
+        partnerRoot: one('Partner'),
         /**
          * Determines which partners should be considered the public partners,
          * which are special partners notably used in livechat.
          */
-        publicPartners: many2many('Partner'),
+        publicPartners: many('Partner'),
         /**
          * Threads for which the current partner has a pending invitation.
          * It is computed from the inverse relation for performance reasons.
          */
-        ringingThreads: one2many('Thread', {
+        ringingThreads: many('Thread', {
             inverse: 'messagingAsRingingThread',
         }),
-        rtc: one2one('Rtc', {
+        rtc: one('Rtc', {
             default: insertAndReplace(),
             isCausal: true,
             readonly: true,
         }),
-        soundEffects: one2one('SoundEffects', {
+        soundEffects: one('SoundEffects', {
             default: insertAndReplace(),
             isCausal: true,
             readonly: true,
@@ -364,14 +364,14 @@ registerModel({
         /**
          * Mailbox Starred.
          */
-        starred: one2one('Thread'),
-        time: one2one('Time', {
+        starred: one('Thread'),
+        time: one('Time', {
             default: insertAndReplace(),
             isCausal: true,
             readonly: true,
             required: true,
         }),
-        userSetting: one2one('UserSetting', {
+        userSetting: one('UserSetting', {
             isCausal: true,
         }),
     },

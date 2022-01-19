@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, many2one, one2one } from '@mail/model/model_field';
+import { attr, one } from '@mail/model/model_field';
 import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
 import { markEventHandled } from '@mail/utils/utils';
 
@@ -144,13 +144,13 @@ registerModel({
         /**
          * States the message on which this action message list operates.
          */
-        message: many2one('Message', {
+        message: one('Message', {
             related: 'messageView.message',
         }),
         /**
          * States the message view that controls this message action list.
          */
-        messageView: one2one('MessageView', {
+        messageView: one('MessageView', {
             inverse: 'messageActionList',
             readonly: true,
             required: true,
@@ -159,7 +159,7 @@ registerModel({
          * Determines the message view that this message action list will use to
          * display this message in this delete confirmation dialog.
          */
-        messageViewForDelete: one2one('MessageView', {
+        messageViewForDelete: one('MessageView', {
             compute: '_computeMessageViewForDelete',
             inverse: 'messageActionListWithDelete',
             isCausal: true,
@@ -167,7 +167,7 @@ registerModel({
         /**
          * Determines the reaction popover that is active on this message action list.
          */
-        reactionPopoverView: one2one('PopoverView', {
+        reactionPopoverView: one('PopoverView', {
             inverse: 'messageActionListOwnerAsReaction',
             isCausal: true,
         }),

@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { attr, one2many, one2one } from '@mail/model/model_field';
+import { attr, many, one } from '@mail/model/model_field';
 import { registerModel } from '@mail/model/model_core';
 
 registerModel({
@@ -32,7 +32,7 @@ registerModel({
         },
     },
     fields: {
-        authoredMessages: one2many('Message', {
+        authoredMessages: many('Message', {
             inverse: 'guestAuthor',
         }),
         avatarUrl: attr({
@@ -43,10 +43,10 @@ registerModel({
             readonly: true,
         }),
         name: attr(),
-        rtcSessions: one2many('RtcSession', {
+        rtcSessions: many('RtcSession', {
             inverse: 'guest',
         }),
-        volumeSetting: one2one('VolumeSetting', {
+        volumeSetting: one('VolumeSetting', {
             inverse: 'guest',
         }),
     },

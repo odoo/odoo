@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, many2one, one2one } from '@mail/model/model_field';
+import { attr, one } from '@mail/model/model_field';
 import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 
 registerModel({
@@ -115,17 +115,17 @@ registerModel({
         /**
          * The channel of the call.
          */
-        channel: many2one('Thread', {
+        channel: one('Thread', {
             required: true,
         }),
         /**
          * If set, this card represents an invitation of this guest to this call.
          */
-        invitedGuest: many2one('Guest'),
+        invitedGuest: one('Guest'),
         /**
          * If set, this card represents an invitation of this partner to this call.
          */
-        invitedPartner: many2one('Partner'),
+        invitedPartner: one('Partner'),
         /**
          * States whether this card is representing a person with a pending
          * invitation.
@@ -164,18 +164,18 @@ registerModel({
         /**
          * The callViewer for which this card is the spotlight.
          */
-        rtcCallViewerOfMainCard: one2one('RtcCallViewer', {
+        rtcCallViewerOfMainCard: one('RtcCallViewer', {
             inverse: 'mainParticipantCard',
         }),
         /**
          * The callViewer for which this card is one of the tiles.
          */
-        rtcCallViewerOfTile: many2one('RtcCallViewer', {
+        rtcCallViewerOfTile: one('RtcCallViewer', {
             inverse: 'tileParticipantCards',
         }),
         /**
          * If set, this card represents a rtcSession.
          */
-        rtcSession: many2one('RtcSession'),
+        rtcSession: one('RtcSession'),
     },
 });

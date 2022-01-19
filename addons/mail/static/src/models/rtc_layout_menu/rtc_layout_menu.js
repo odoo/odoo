@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, one2one } from '@mail/model/model_field';
+import { attr, one } from '@mail/model/model_field';
 import { clear } from '@mail/model/model_field_command';
 
 registerModel({
@@ -42,7 +42,7 @@ registerModel({
     },
     fields: {
         component: attr(),
-        callViewer: one2one('RtcCallViewer', {
+        callViewer: one('RtcCallViewer', {
             inverse: 'rtcLayoutMenu',
             readonly: true,
         }),

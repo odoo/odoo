@@ -3,7 +3,7 @@
 import { browser } from "@web/core/browser/browser";
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, many2one, one2one, one2many } from '@mail/model/model_field';
+import { attr, many, one } from '@mail/model/model_field';
 import { clear } from '@mail/model/model_field_command';
 
 registerModel({
@@ -293,7 +293,7 @@ registerModel({
          * The mail.channel of the session, rtc sessions are part and managed by
          * mail.channel
          */
-        channel: many2one('Thread', {
+        channel: one('Thread', {
             inverse: 'rtcSessions',
         }),
         /**
@@ -303,7 +303,7 @@ registerModel({
         connectionState: attr({
             default: 'Waiting for the peer to send a RTC offer',
         }),
-        guest: many2one('Guest', {
+        guest: one('Guest', {
             inverse: 'rtcSessions',
         }),
         /**
@@ -318,7 +318,7 @@ registerModel({
          * this serves as an explicit inverse as it seems to confuse it with
          * other session-channel relations otherwise.
          */
-        calledChannels: one2many('Thread', {
+        calledChannels: many('Thread', {
             inverse: 'rtcInvitingSession',
         }),
         /**
@@ -390,7 +390,7 @@ registerModel({
          * has open sessions in multiple channels, but only one session per
          * channel is allowed.
          */
-        partner: many2one('Partner', {
+        partner: one('Partner', {
             inverse: 'rtcSessions',
         }),
         /**
@@ -406,7 +406,7 @@ registerModel({
          * sessions from other channels with the same partner (sessions opened from different
          * tabs or devices).
          */
-        rtc: one2one('Rtc', {
+        rtc: one('Rtc', {
             inverse: 'currentRtcSession',
         }),
         /**

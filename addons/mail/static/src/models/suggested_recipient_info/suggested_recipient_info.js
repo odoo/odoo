@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, many2one } from '@mail/model/model_field';
+import { attr, one } from '@mail/model/model_field';
 
 registerModel({
     name: 'SuggestedRecipientInfo',
@@ -65,7 +65,7 @@ registerModel({
         /**
          * Determines the optional `Partner` associated to `this`.
          */
-        partner: many2one('Partner'),
+        partner: one('Partner'),
         /**
          * Determines why `this` is a suggestion for `this.thread`. It serves as
          * visual clue when displaying `this`.
@@ -74,7 +74,7 @@ registerModel({
         /**
          * Determines the `Thread` concerned by `this.`
          */
-        thread: many2one('Thread', {
+        thread: one('Thread', {
             inverse: 'suggestedRecipientInfoList',
             required: true,
         }),

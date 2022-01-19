@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, many2one } from '@mail/model/model_field';
+import { attr, one } from '@mail/model/model_field';
 import { clear, insert, insertAndReplace, replace } from '@mail/model/model_field_command';
 
 registerModel({
@@ -97,14 +97,14 @@ registerModel({
         /**
          * Determines the attachment of this attachment image..
          */
-        attachment: many2one('Attachment', {
+        attachment: one('Attachment', {
             readonly: true,
             required: true,
         }),
         /**
          * States the attachmentList displaying this attachment image.
          */
-        attachmentList: many2one('AttachmentList', {
+        attachmentList: one('AttachmentList', {
             inverse: 'attachmentImages',
             readonly: true,
             required: true,

@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, many2many, many2one, one2many, one2one } from '@mail/model/model_field';
+import { attr, many, one } from '@mail/model/model_field';
 import { clear, replace, unlink } from '@mail/model/model_field_command';
 
 registerModel({
@@ -120,7 +120,7 @@ registerModel({
         },
     },
     fields: {
-        activeThread: many2one('Thread', {
+        activeThread: one('Thread', {
             compute: '_computeActiveThread',
             readonly: true,
             required: true,
@@ -128,14 +128,14 @@ registerModel({
         /**
          * States which attachments are currently being created in this composer.
          */
-        attachments: one2many('Attachment', {
+        attachments: many('Attachment', {
             inverse: 'composer',
         }),
         canPostMessage: attr({
             compute: '_computeCanPostMessage',
             default: false,
         }),
-        composerViews: one2many('ComposerView', {
+        composerViews: many('ComposerView', {
             inverse: 'composer',
             isCausal: true,
         }),
@@ -166,13 +166,13 @@ registerModel({
          * Determines whether a post_message request is currently pending.
          */
         isPostingMessage: attr(),
-        mentionedChannels: many2many('Thread', {
+        mentionedChannels: many('Thread', {
             compute: '_computeMentionedChannels',
         }),
-        mentionedPartners: many2many('Partner', {
+        mentionedPartners: many('Partner', {
             compute: '_computeMentionedPartners',
         }),
-        messageViewInEditing: one2one('MessageView', {
+        messageViewInEditing: one('MessageView', {
             inverse: 'composerForEditing',
             readonly: true,
         }),
@@ -181,7 +181,7 @@ registerModel({
          * that will receive the message being composed by `this`, and that will
          * also be added as follower of `this.activeThread`.
          */
-        recipients: many2many('Partner', {
+        recipients: many('Partner', {
             compute: '_computeRecipients',
         }),
         textInputContent: attr({
@@ -199,7 +199,7 @@ registerModel({
         /**
          * States the thread which this composer represents the state (if any).
          */
-        thread: one2one('Thread', {
+        thread: one('Thread', {
             inverse: 'composer',
             readonly: true,
         }),

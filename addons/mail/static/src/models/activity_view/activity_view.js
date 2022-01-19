@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, many2one, one2one } from '@mail/model/model_field';
+import { attr, one } from '@mail/model/model_field';
 import { clear, insertAndReplace } from '@mail/model/model_field_command';
 
 import { auto_str_to_date, getLangDateFormat, getLangDatetimeFormat } from 'web.time';
@@ -140,17 +140,17 @@ registerModel({
         },
     },
     fields: {
-        activity: many2one('Activity', {
+        activity: one('Activity', {
             inverse: 'activityViews',
             required: true,
             readonly: true,
         }),
-        activityBoxView: many2one('ActivityBoxView', {
+        activityBoxView: one('ActivityBoxView', {
             inverse: 'activityViews',
             readonly: true,
             required: true,
         }),
-        activityMarkDonePopoverView: one2one('ActivityMarkDonePopoverView', {
+        activityMarkDonePopoverView: one('ActivityMarkDonePopoverView', {
             default: insertAndReplace(),
             inverse: 'activityViewOwner',
             isCausal: true,
@@ -173,7 +173,7 @@ registerModel({
         delayLabel: attr({
             compute: '_computeDelayLabel',
         }),
-        fileUploader: one2one('FileUploader', {
+        fileUploader: one('FileUploader', {
             compute: '_computeFileUploader',
             inverse: 'activityView',
             isCausal: true,

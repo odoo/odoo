@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, many2many, many2one, one2many } from '@mail/model/model_field';
+import { attr, many, one } from '@mail/model/model_field';
 import { clear, insert, insertAndReplace, replace, unlinkAll } from '@mail/model/model_field_command';
 import emojis from '@mail/js/emojis';
 import { addLink, htmlToTextContentInline, parseAndTransform, timeFromNow } from '@mail/js/utils';
@@ -551,10 +551,10 @@ registerModel({
         authorName: attr({
             compute: '_computeAuthorName',
         }),
-        attachments: many2many('Attachment', {
+        attachments: many('Attachment', {
             inverse: 'messages',
         }),
-        author: many2one('Partner'),
+        author: one('Partner'),
         /**
          * This value is meant to be returned by the server
          * (and has been sanitized before stored into db).
@@ -594,10 +594,10 @@ registerModel({
             compute: '_computeDateFromNow',
         }),
         email_from: attr(),
-        failureNotifications: one2many('Notification', {
+        failureNotifications: many('Notification', {
             compute: '_computeFailureNotifications',
         }),
-        guestAuthor: many2one('Guest', {
+        guestAuthor: one('Guest', {
             inverse: 'authoredMessages',
         }),
         /**
@@ -723,7 +723,7 @@ registerModel({
          * Groups of reactions per content allowing to know the number of
          * reactions for each.
          */
-        messageReactionGroups: one2many('MessageReactionGroup', {
+        messageReactionGroups: many('MessageReactionGroup', {
             inverse: 'message',
             isCausal: true,
         }),
@@ -731,18 +731,18 @@ registerModel({
         /**
          * States the views that are displaying this message.
          */
-        messageViews: one2many('MessageView', {
+        messageViews: many('MessageView', {
             inverse: 'message',
             isCausal: true,
         }),
-        notifications: one2many('Notification', {
+        notifications: many('Notification', {
             inverse: 'message',
             isCausal: true,
         }),
         /**
          * Origin thread of this message (if any).
          */
-        originThread: many2one('Thread', {
+        originThread: one('Thread', {
             inverse: 'messagesAsOriginThread',
         }),
         /**
@@ -751,7 +751,7 @@ registerModel({
          * (parent_id in python) that should be ignored for the purpose of this
          * feature.
          */
-        parentMessage: many2one('Message'),
+        parentMessage: one('Message'),
         /**
          * This value is meant to be based on field body which is
          * returned by the server (and has been sanitized before stored into db).
@@ -768,7 +768,7 @@ registerModel({
         /**
          * All threads that this message is linked to. This field is read-only.
          */
-        threads: many2many('Thread', {
+        threads: many('Thread', {
             compute: '_computeThreads',
             inverse: 'messages',
         }),

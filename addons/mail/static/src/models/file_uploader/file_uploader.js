@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, many2one, one2one } from '@mail/model/model_field';
+import { attr, one } from '@mail/model/model_field';
 import { clear, replace } from '@mail/model/model_field_command';
 
 import core from 'web.core';
@@ -174,22 +174,22 @@ registerModel({
         },
     },
     fields: {
-        activityView: one2one('ActivityView', {
+        activityView: one('ActivityView', {
             inverse: 'fileUploader',
             readonly: true,
         }),
-        attachmentBoxView: one2one('AttachmentBoxView', {
+        attachmentBoxView: one('AttachmentBoxView', {
             inverse: 'fileUploader',
             readonly: true,
         }),
-        composerView: one2one('ComposerView', {
+        composerView: one('ComposerView', {
             inverse: 'fileUploader',
             readonly: true,
         }),
         fileInput: attr({
             compute: '_computeFileInput',
         }),
-        thread: many2one('Thread', {
+        thread: one('Thread', {
             compute: '_computeThread',
             readonly: true,
             required: true,

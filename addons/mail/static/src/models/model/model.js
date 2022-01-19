@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { RecordDeletedError } from '@mail/model/model_errors';
-import { many2one } from '@mail/model/model_field';
+import { one } from '@mail/model/model_field';
 import { insertAndReplace } from '@mail/model/model_field_command';
 
 /**
@@ -258,7 +258,7 @@ registerModel({
          * States the messaging singleton. Automatically assigned by the model
          * manager at creation.
          */
-        messaging: many2one('Messaging', {
+        messaging: one('Messaging', {
             default: insertAndReplace(),
             inverse: 'allRecords',
             readonly: true,

@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, many2many, many2one } from '@mail/model/model_field';
+import { attr, many, one } from '@mail/model/model_field';
 import { insertAndReplace } from '@mail/model/model_field_command';
 import { markEventHandled } from '@mail/utils/utils';
 
@@ -83,12 +83,12 @@ registerModel({
         /**
          * States the guests that have used this reaction on this message.
          */
-        guests: many2many('Guest'),
+        guests: many('Guest'),
         hasUserReacted: attr({
             compute: '_computeHasUserReacted',
             default: false,
         }),
-        message: many2one('Message', {
+        message: one('Message', {
             compute: '_computeMessage',
             inverse: 'messageReactionGroups',
             readonly: true,
@@ -101,7 +101,7 @@ registerModel({
         /**
          * States the partners that have used this reaction on this message.
          */
-        partners: many2many('Partner'),
+        partners: many('Partner'),
         summary: attr({
             compute: '_computeSummary',
         }),

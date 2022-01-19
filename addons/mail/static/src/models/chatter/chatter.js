@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, many2one, one2one } from '@mail/model/model_field';
+import { attr, one } from '@mail/model/model_field';
 import { clear, insert, insertAndReplace, link, unlink } from '@mail/model/model_field_command';
 import { OnChange } from '@mail/model/model_onchange';
 
@@ -270,19 +270,19 @@ registerModel({
         },
     },
     fields: {
-        activityBoxView: one2one('ActivityBoxView', {
+        activityBoxView: one('ActivityBoxView', {
             compute: '_computeActivityBoxView',
             inverse: 'chatter',
             isCausal: true,
         }),
-        attachmentBoxView: one2one('AttachmentBoxView', {
+        attachmentBoxView: one('AttachmentBoxView', {
             inverse: 'chatter',
             isCausal: true,
         }),
         /**
          * Determines the attachment list that will be used to display the attachments.
          */
-        attachmentList: one2one('AttachmentList', {
+        attachmentList: one('AttachmentList', {
             compute: '_computeAttachmentList',
             inverse: 'chatter',
             isCausal: true,
@@ -295,7 +295,7 @@ registerModel({
         /**
          * Determines the composer view used to post in this chatter (if any).
          */
-        composerView: one2one('ComposerView', {
+        composerView: one('ComposerView', {
             inverse: 'chatter',
             isCausal: true,
         }),
@@ -370,7 +370,7 @@ registerModel({
         /**
          * Determines the `Thread` that should be displayed by `this`.
          */
-        thread: many2one('Thread'),
+        thread: one('Thread'),
         /**
          * Determines the id of the thread that will be displayed by `this`.
          */
@@ -382,13 +382,13 @@ registerModel({
         /**
          * States the `ThreadView` displaying `this.thread`.
          */
-        threadView: one2one('ThreadView', {
+        threadView: one('ThreadView', {
             related: 'threadViewer.threadView',
         }),
         /**
          * Determines the `ThreadViewer` managing the display of `this.thread`.
          */
-        threadViewer: one2one('ThreadViewer', {
+        threadViewer: one('ThreadViewer', {
             compute: '_computeThreadViewer',
             inverse: 'chatter',
             isCausal: true,

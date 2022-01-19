@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { RecordDeletedError } from '@mail/model/model_errors';
-import { attr, many2many, many2one, one2many, one2one } from '@mail/model/model_field';
+import { attr, many, one } from '@mail/model/model_field';
 import { clear, insertAndReplace, link, replace, unlink } from '@mail/model/model_field_command';
 import { OnChange } from '@mail/model/model_onchange';
 
@@ -325,7 +325,7 @@ registerModel({
         componentHintList: attr({
             default: [],
         }),
-        composerView: one2one('ComposerView', {
+        composerView: one('ComposerView', {
             compute: '_computeComposerView',
             inverse: 'threadView',
             isCausal: true,
@@ -403,29 +403,29 @@ registerModel({
         /**
          * Last message in the context of the currently displayed thread cache.
          */
-        lastMessage: many2one('Message', {
+        lastMessage: one('Message', {
             related: 'thread.lastMessage',
         }),
-        lastMessageView: one2one('MessageView', {
+        lastMessageView: one('MessageView', {
             compute: '_computeLastMessageView',
         }),
         /**
          * Most recent message in this ThreadView that has been shown to the
          * current partner in the currently displayed thread cache.
          */
-        lastVisibleMessage: many2one('Message'),
-        messageListView: one2one('MessageListView', {
+        lastVisibleMessage: one('Message'),
+        messageListView: one('MessageListView', {
             compute: '_computeMessageListView',
             inverse: 'threadViewOwner',
             isCausal: true,
         }),
-        messages: many2many('Message', {
+        messages: many('Message', {
             related: 'threadCache.messages',
         }),
         /**
          * States the message views used to display this messages.
          */
-        messageViews: one2many('MessageView', {
+        messageViews: many('MessageView', {
             compute: '_computeMessageViews',
             inverse: 'threadView',
             isCausal: true,
@@ -440,11 +440,11 @@ registerModel({
         /**
          * Determines the message that's currently being replied to.
          */
-        replyingToMessageView: many2one('MessageView'),
+        replyingToMessageView: one('MessageView'),
         /**
          * Determines the Rtc call viewer of this thread.
          */
-        rtcCallViewer: one2one('RtcCallViewer', {
+        rtcCallViewer: one('RtcCallViewer', {
             compute: '_computeRtcCallViewer',
             inverse: 'threadView',
             isCausal: true,
@@ -453,7 +453,7 @@ registerModel({
         /**
          * Determines the `Thread` currently displayed by `this`.
          */
-        thread: many2one('Thread', {
+        thread: one('Thread', {
             inverse: 'threadViews',
             readonly: true,
             related: 'threadViewer.thread',
@@ -461,7 +461,7 @@ registerModel({
         /**
          * States the `ThreadCache` currently displayed by `this`.
          */
-        threadCache: many2one('ThreadCache', {
+        threadCache: one('ThreadCache', {
             inverse: 'threadViews',
             readonly: true,
             related: 'threadViewer.threadCache',
@@ -489,7 +489,7 @@ registerModel({
         /**
          * Determines the `ThreadViewer` currently managing `this`.
          */
-        threadViewer: one2one('ThreadViewer', {
+        threadViewer: one('ThreadViewer', {
             inverse: 'threadView',
             readonly: true,
             required: true,
@@ -497,7 +497,7 @@ registerModel({
         /**
          * Determines the top bar of this thread view, if any.
          */
-        topbar: one2one('ThreadViewTopbar', {
+        topbar: one('ThreadViewTopbar', {
             compute: '_computeTopbar',
             inverse: 'threadView',
             isCausal: true,
