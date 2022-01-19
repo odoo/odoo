@@ -947,6 +947,11 @@ class Module(models.Model):
         self.env.cr.execute("SELECT id FROM ir_module_module WHERE name=%s", (name,))
         return self.env.cr.fetchone()
 
+    @tools.ormcache('name')
+    def _get_cached_values(self, name):
+        model_id = self._get_id(name)
+        return self.sudo().browse(model_id).read()[0] if model_id else {}
+
     @api.model
     @tools.ormcache()
     def _installed(self):

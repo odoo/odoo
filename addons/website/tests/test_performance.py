@@ -101,6 +101,24 @@ class TestWebsitePerformance(UtilPerf):
         # homepage "/" has its own controller
         self.assertEqual(self._get_url_hot_query('/'), 18)
 
+    def test_21_perf_sql_queries_homepage(self):
+        # homepage loaded with a connected user
+        self.authenticate('demo', 'demo')
+        self.assertEqual(self._get_url_hot_query('/'), 21)
+
+    def test_22_perf_sql_queries_homepage(self):
+        # homepage loaded with a publisher access
+        extra_companies_count = self.env['res.company'].search_count([]) - 1
+        self.authenticate('demo', 'demo')
+        self.env.ref('website.group_website_publisher').write({'users': [(4, self.env.ref('base.user_demo').id)]})
+        self.assertEqual(self._get_url_hot_query('/'), 24 + extra_companies_count)
+
+    def test_23_perf_sql_queries_homepage(self):
+        # homepage loaded with an admin access
+        extra_companies_count = self.env['res.company'].search_count([]) - 1
+        self.authenticate('admin', 'admin')
+        self.assertEqual(self._get_url_hot_query('/'), 24 + extra_companies_count)
+
     def test_30_perf_sql_queries_page_no_layout(self):
         # website.page with no call to layout templates
         self.page.arch = '<div>I am a blank page</div>'
