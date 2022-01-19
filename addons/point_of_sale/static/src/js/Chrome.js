@@ -7,7 +7,6 @@ odoo.define('point_of_sale.Chrome', function(require) {
     const BarcodeParser = require('barcodes.BarcodeParser');
     const PosComponent = require('point_of_sale.PosComponent');
     const NumberBuffer = require('point_of_sale.NumberBuffer');
-    const PopupControllerMixin = require('point_of_sale.PopupControllerMixin');
     const Registries = require('point_of_sale.Registries');
     const IndependentToOrderScreen = require('point_of_sale.IndependentToOrderScreen');
     const { identifyError, batched } = require('point_of_sale.utils');
@@ -32,7 +31,7 @@ odoo.define('point_of_sale.Chrome', function(require) {
     /**
      * Chrome is the root component of the PoS App.
      */
-    class Chrome extends PopupControllerMixin(PosComponent) {
+    class Chrome extends PosComponent {
         setup() {
             super.setup();
             useExternalListener(window, 'beforeunload', this._onBeforeUnload);
@@ -249,7 +248,7 @@ odoo.define('point_of_sale.Chrome', function(require) {
 
         openCashControl() {
             if (this.shouldShowCashControl()) {
-                this.showPopup('CashOpeningPopup', { notEscapable: true });
+                this.showPopup('CashOpeningPopup', { cancelKey: false });
             }
         }
 
