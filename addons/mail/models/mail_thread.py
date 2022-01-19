@@ -2663,12 +2663,15 @@ class MailThread(models.AbstractModel):
             'model': kwargs.get('model', self._name),
             'res_id': kwargs.get('res_id', self.ids and self.ids[0] or False),
         }
-        # whitelist accepted parameters: action (deprecated), token (assign), access_token
-        # (view), auth_signup_token and auth_login (for auth_signup support)
+        # keep only accepted parameters:
+        # - action (deprecated), token (assign), access_token (view)
+        # - auth_signup: auth_signup_token and auth_login
+        # - portal: pid, hash
         params.update(dict(
             (key, value)
             for key, value in kwargs.items()
-            if key in ('action', 'token', 'access_token', 'auth_signup_token', 'auth_login')
+            if key in ('action', 'token', 'access_token', 'auth_signup_token',
+                       'auth_login', 'pid', 'hash')
         ))
 
         if link_type in ['view', 'assign', 'follow', 'unfollow']:
