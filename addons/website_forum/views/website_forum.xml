@@ -303,14 +303,14 @@
 
 <template id="display_post">
     <div t-attf-class="#{show_author_avatar and 'mt-2 mb-4' or 'card py-2 px-3'}">
-        <div class="media">
+        <div class="d-flex">
             <div t-if="show_author_avatar">
                 <t t-call="website_forum.author_box">
                     <t t-set="object" t-value="question"/>
                     <t t-set="allow_biography" t-value="True"/>
                 </t>
             </div>
-            <div t-attf-class="media-body #{show_author_avatar and 'pl-2'}">
+            <div t-attf-class="flex-grow-1 #{show_author_avatar and 'pl-2'}">
                 <t t-call="website_forum.display_post_question_block"/>
             </div>
         </div>
