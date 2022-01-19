@@ -4,13 +4,13 @@
     <t t-name="mail.ActivityMarkDonePopover" owl="1">
         <div class="o_ActivityMarkDonePopover" t-attf-class="{{ className }}" t-on-keydown="activityMarkDonePopoverView and activityMarkDonePopoverView.onKeydown" t-ref="root">
             <t t-if="activityMarkDonePopoverView">
-                <textarea class="form-control o_ActivityMarkDonePopover_feedback" rows="3" placeholder="Write Feedback" t-on-blur="activityMarkDonePopoverView.onBlur" t-ref="feedbackTextarea"/>
+                <textarea class="form-control o_ActivityMarkDonePopover_feedback mb-2" rows="3" placeholder="Write Feedback" t-on-blur="activityMarkDonePopoverView.onBlur" t-ref="feedbackTextarea"/>
                 <div class="o_ActivityMarkDonePopover_buttons">
                     <button type="button" class="o_ActivityMarkDonePopover_doneScheduleNextButton btn btn-sm btn-primary" t-on-click="activityMarkDonePopoverView.onClickDoneAndScheduleNext">
                         Done &amp; Schedule Next
                     </button>
                     <t t-if="activityMarkDonePopoverView.activityViewOwner.activity.chaining_type === 'suggest'">
-                        <button type="button" class="o_ActivityMarkDonePopover_doneButton btn btn-sm btn-primary" t-on-click="activityMarkDonePopoverView.onClickDone">
+                        <button type="button" class="o_ActivityMarkDonePopover_doneButton btn btn-sm btn-primary mx-2" t-on-click="activityMarkDonePopoverView.onClickDone">
                             Done
                         </button>
                     </t>
