@@ -9,9 +9,9 @@ $(function() {
     $('body').on('click', '.o_database_action', function (ev) {
         ev.preventDefault();
         var db = $(ev.currentTarget).data('db');
-        var target = $(ev.currentTarget).data('target');
+        var target = $(ev.currentTarget).data('bsTarget');
         $(target).find('input[name=name]').val(db);
-        $(target).modal();
+        $(target).modal("show");
     });
     // close modal on submit
     $('.modal').on('submit', 'form', function (ev) {

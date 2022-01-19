@@ -4,22 +4,15 @@
     <title>Odoo</title>
     <link rel="shortcut icon" href="/web/static/img/favicon.ico" type="image/x-icon" />
     <link rel="stylesheet" href="/web/static/src/libs/fontawesome/css/font-awesome.css" />
-    <link rel="stylesheet" href="/web/static/lib/bootstrap/css/bootstrap.css" />
+    <link rel="stylesheet" href="/web/static/lib/bootstrap/dist/css/bootstrap.css" />
     <script src="/web/static/lib/jquery/jquery.js" ></script>
-    <script src="/web/static/lib/popper/popper.js" ></script>
-    <script src="/web/static/lib/bootstrap/js/index.js" ></script>
-    <script src="/web/static/lib/bootstrap/js/util.js" ></script>
-    <script src="/web/static/lib/bootstrap/js/alert.js" ></script>
-    <script src="/web/static/lib/bootstrap/js/button.js" ></script>
-    <script src="/web/static/lib/bootstrap/js/carousel.js" ></script>
-    <script src="/web/static/lib/bootstrap/js/collapse.js" ></script>
-    <script src="/web/static/lib/bootstrap/js/dropdown.js" ></script>
-    <script src="/web/static/lib/bootstrap/js/modal.js" ></script>
-    <script src="/web/static/lib/bootstrap/js/tooltip.js" ></script>
-    <script src="/web/static/lib/bootstrap/js/popover.js" ></script>
-    <script src="/web/static/lib/bootstrap/js/scrollspy.js" ></script>
-    <script src="/web/static/lib/bootstrap/js/tab.js" ></script>
+    <script src="/web/static/lib/bootstrap/dist/js/bootstrap.bundle.js" ></script>
     <script src="/web/static/src/public/database_manager.js" ></script>
+    <style>
+        a {
+            text-decoration: none;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -52,13 +45,13 @@
                                 </a>
                                 <t t-if="manage">
                                     <div class="btn-group btn-group-sm float-right">
-                                        <button type="button" t-att-data-db="db" data-target=".o_database_backup" class="o_database_action btn btn-primary">
+                                        <button type="button" t-att-data-db="db" data-bs-target=".o_database_backup" class="o_database_action btn btn-primary">
                                             <i class="fa fa-floppy-o fa-fw"></i> Backup
                                         </button>
-                                        <button type="button" t-att-data-db="db" data-target=".o_database_duplicate" class="o_database_action btn btn-secondary">
+                                        <button type="button" t-att-data-db="db" data-bs-target=".o_database_duplicate" class="o_database_action btn btn-secondary">
                                             <i class="fa fa-files-o fa-fw"></i> Duplicate
                                         </button>
-                                        <button type="button" t-att-data-db="db" data-target=".o_database_delete" class="o_database_action btn btn-danger">
+                                        <button type="button" t-att-data-db="db" data-bs-target=".o_database_delete" class="o_database_action btn btn-danger">
                                             <i class="fa fa-trash-o fa-fw"></i> Delete
                                         </button>
                                     </div>
@@ -96,7 +89,7 @@
                     <form role="form" action="/web/database/create" method="post">
                         <div class="modal-header">
                             <h4 class="modal-title">Create Database</h4>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                            <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             <t t-call="create_form" />
@@ -118,7 +111,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title">Restore Database</h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <form id="form_restore_db" role="form" action="/web/database/restore" method="post" enctype="multipart/form-data">
                         <div class="modal-body">
@@ -165,7 +158,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title">Set Master Password</h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <form id="form_change_pwd" role="form" action="/web/database/change_password" method="post">
                         <div class="modal-body">
@@ -194,7 +187,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title">Duplicate Database</h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <form id="form-duplicate-db" role="form" action="/web/database/duplicate" method="post">
                         <div class="modal-body">
@@ -223,7 +216,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title">Delete Database</h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <form id="form_drop_db" role="form" action="/web/database/drop" method="post">
                         <div class="modal-body">
@@ -247,7 +240,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title">Backup Database</h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <form id="form_backup_db" role="form" action="/web/database/backup" method="post">
                         <div class="modal-body">
