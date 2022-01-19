@@ -697,6 +697,40 @@ ColorpickerWidget.mixCssColors = function (cssColor1, cssColor2, weight) {
     return ColorpickerWidget.convertRgbaToCSSColor(r, g, b);
 };
 
+/**
+ * Calculates the actual background color of an element in the DOM.
+ *
+ * @static
+ * @param {DOMElement} el - An element in the DOM
+ * @returns {Object}
+ *          - red [0, 255] (integer)
+ *          - green [0, 255] (integer)
+ *          - blue [0, 255] (integer)
+ *          - opacity [0, 100.0] (float)
+ */
+ColorpickerWidget.getBackgroundRgbaColor = function (el) {
+    let [red, green, blue, alpha] = [0, 0, 0, 0];
+
+    while (alpha < 1 && el.tagName !== 'html') {
+        const cssColor = window.getComputedStyle(el).getPropertyValue('background-color');
+        const color = ColorpickerWidget.convertCSSColorToRgba(cssColor);
+        const opacity = alpha;
+
+        el = el.parentElement;
+
+        if (color.opacity === 0) {
+            continue;
+        }
+
+        alpha = color.opacity * (1.0 - opacity) / 100 + opacity;
+        red = (color.red * color.opacity * (1.0 - opacity) / 100 + red * opacity) / alpha;
+        blue = (color.blue * color.opacity * (1.0 - opacity) / 100 + blue * opacity) / alpha;
+        green = (color.green * color.opacity * (1.0 - opacity) / 100 + green * opacity) / alpha;
+    }
+
+    return {red, green, blue, opacity: alpha * 100};
+};
+
 const ColorpickerDialog = Dialog.extend({
     /**
      * @override

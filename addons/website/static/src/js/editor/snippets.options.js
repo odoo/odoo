@@ -2312,6 +2312,7 @@ options.registry.MobileVisibility = options.Class.extend({
             // toggle and color styling options.
             hoverableEl.classList.add('d-none', `d-md-${display}`);
             hoverableEl.dataset.visible = '1';
+            this._applyColorClasses(hoverableEl);
         }
 
         if (widgetValue) {
@@ -2371,6 +2372,34 @@ options.registry.MobileVisibility = options.Class.extend({
         this.$target[0].appendChild(containerEl);
 
         return hoverableEl;
+    },
+    /**
+     * Returns the preset color class with the background color that differs as
+     * much as possible from the targets background color.
+     *
+     * @private
+     */
+    _applyColorClasses(hoverableEl) {
+        const color = ColorpickerWidget.getBackgroundRgbaColor(this.$target[0]);
+        const editorEl = this.$el[0].closest('we-customizeblock-options');
+        const optionEl = editorEl.querySelector('.snippet-option-Box [data-css-property="background-color"]');
+        const targetEl = optionEl ? hoverableEl.querySelector('.card') : hoverableEl;
+        let previewList;
+
+        previewList = previewList || optionEl && optionEl.querySelectorAll('.o_colorpicker_section[data-name="theme"] button');
+        previewList = previewList || editorEl.querySelectorAll('.snippet-option-ColoredLevelBackground .o_we_cc_preview_wrapper');
+
+        if (targetEl && previewList.length) {
+            const prefix = optionEl ? 'bg-' : 'o_cc';
+            const extraClasses = optionEl ? [] : ['o_colored_level', 'o_cc'];
+            const selectEl = _.max(previewList, function (preview) {
+                const bg = ColorpickerWidget.getBackgroundRgbaColor(preview);
+                const factors = {red: 3 - (bg.red + color.red < 256), green: 4, blue: 2 + (bg.red + color.red < 256)};
+                return _.reduce(color, (sum, v, k) => sum + (factors[k] || 0) * (v - bg[k]) ** 2, 0);
+            }).closest('[data-color]');
+            const className = prefix + selectEl.getAttribute('data-color');
+            targetEl.classList.add(className, ...extraClasses);
+        }
     },
 });
 
