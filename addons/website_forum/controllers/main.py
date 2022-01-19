@@ -77,13 +77,11 @@ class WebsiteForum(WebsiteProfile):
             forum['authorized_group_id'] = forum_privacy_group
         forum_id = request.env['forum.forum'].create(forum)
         if add_menu:
-            group = [int(forum_privacy_group)] if forum_privacy == 'private' else [request.env.ref('base.group_portal').id, request.env.ref('base.group_user').id]
             menu_id = request.env['website.menu'].create({
                 'name': forum_name,
                 'url': "/forum/%s" % slug(forum_id),
                 'parent_id': request.website.menu_id.id,
                 'website_id': request.website.id,
-                'group_ids': [(6, 0, group)]
             })
             forum_id.menu_id = menu_id
         return "/forum/%s" % slug(forum_id)
