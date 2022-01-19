@@ -41,5 +41,16 @@
             <field name="binding_model_id" ref="model_mrp_production"/>
             <field name="binding_type">report</field>
         </record>
+        <record id="action_report_workorder" model="ir.actions.report">
+            <field name="name">Work Order</field>
+            <field name="model">mrp.workorder</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">mrp.report_mrp_workorder</field>
+            <field name="report_file">mrp.report.mrp_workorder</field>
+            <field name="print_report_name">'Work Order - %s' % object.name</field>
+            <field name="binding_model_id" ref="model_mrp_workorder"/>
+            <field name="binding_type">report</field>
+            <field name="multi">True</field>
+        </record>
     </data>
 </odoo>
