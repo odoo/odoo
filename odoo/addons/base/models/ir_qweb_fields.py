@@ -758,6 +758,12 @@ class Contact(models.AbstractModel):
     @api.model
     def value_to_html(self, value, options):
         if not value:
+            if options.get('null_text'):
+                val = {
+                    'options': options,
+                }
+                template_options = options.get('template_options', {})
+                return self.env['ir.qweb']._render('base.no_contact', val, **template_options)
             return ''
 
         opf = options.get('fields') or ["name", "address", "phone", "mobile", "email"]
