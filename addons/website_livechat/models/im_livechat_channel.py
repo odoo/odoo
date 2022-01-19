@@ -7,8 +7,8 @@ from odoo import models, _
 class ImLivechatChannel(models.Model):
     _inherit = 'im_livechat.channel'
 
-    def _get_livechat_mail_channel_vals(self, anonymous_name, operator, user_id=None, country_id=None):
-        mail_channel_vals = super(ImLivechatChannel, self)._get_livechat_mail_channel_vals(anonymous_name, operator, user_id=user_id, country_id=country_id)
+    def _get_livechat_mail_channel_vals(self, anonymous_name, operator, chatbot=None, user_id=None, country_id=None):
+        mail_channel_vals = super(ImLivechatChannel, self)._get_livechat_mail_channel_vals(anonymous_name, operator, chatbot, user_id=user_id, country_id=country_id)
         visitor_sudo = self.env['website.visitor']._get_visitor_from_request()
         if visitor_sudo:
             mail_channel_vals['livechat_visitor_id'] = visitor_sudo.id
