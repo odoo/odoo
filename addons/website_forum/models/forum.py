@@ -206,12 +206,8 @@ class Forum(models.Model):
             elif vals['privacy'] == 'public':
                 # The forum is public, the menu must be also public
                 vals['authorized_group_id'] = False
-                self.menu_id.write({'group_ids': [(5, 0, 0)]})
             elif vals['privacy'] == 'connected':
                 vals['authorized_group_id'] = False
-                self.menu_id.write({'group_ids': [(6, 0, [self.env.ref('base.group_portal').id, self.env.ref('base.group_user').id])]})
-        if 'authorized_group_id' in vals and vals['authorized_group_id']:
-            self.menu_id.write({'group_ids': [(6, 0, [vals['authorized_group_id']])]})
 
         res = super(Forum, self).write(vals)
         if 'active' in vals:
