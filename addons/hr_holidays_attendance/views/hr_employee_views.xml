@@ -35,6 +35,7 @@
         <field name="name">hr.holidays.attendance.employee.view.form.inherit</field>
         <field name="model">hr.employee</field>
         <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="priority" eval="120"/>
         <field name="arch" type="xml">
             <xpath expr="//header" position="inside">
                 <button
@@ -52,20 +53,10 @@
         <field name="name">hr.employee.holidays.attendance.inherit</field>
         <field name="model">hr.employee</field>
         <field name="inherit_id" ref="hr_attendance.view_employee_form_inherit_hr_attendance"/>
+        <field name="priority" eval="125" />
         <field name="arch" type="xml">
-            <!-- Hide Attendance button -->
-            <xpath expr="//button[@id='hr_attendance_button']" position="attributes">
-                <attribute name="attrs">
-                    {'invisible': ['|', '|', '&amp;',
-                        ('hr_presence_state', '=', 'present'),
-                        ('attendance_state', '=', 'checked_out'),
-                        ('is_absent', '=', True),
-                        ('id', '=', False),
-                    ]}
-                </attribute>
-            </xpath>
             <!-- Merge invisible attr of both module -->
-            <xpath expr="//button[@id='hr_presence_button']" position="attributes">
+            <xpath expr="//div[@id='hr_presence_status']" position="attributes">
                 <attribute name="attrs">
                     {'invisible': ['|', '|', '|',
                         ('is_absent', '=', True),

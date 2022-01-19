@@ -62,7 +62,7 @@ class SendSMS(models.TransientModel):
     recipient_single_number_itf = fields.Char(
         'Recipient Number', compute='_compute_recipient_single',
         readonly=False, compute_sudo=False, store=True,
-        help='UX field allowing to edit the recipient number. If changed it will be stored onto the recipient.')
+        help='Phone number of the recipient. If changed, it will be recorded on recipient\'s profile.')
     recipient_single_valid = fields.Boolean("Is valid", compute='_compute_recipient_single_valid', compute_sudo=False)
     number_field_name = fields.Char('Number Field')
     numbers = fields.Char('Recipients (Numbers)')
