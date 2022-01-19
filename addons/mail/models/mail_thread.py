@@ -2446,6 +2446,7 @@ class MailThread(models.AbstractModel):
             'model_description': model_description,
             'record': self,
             'record_name': record_name,
+            'subtitle': False,
             # user / environment
             'company': company,
             'email_add_signature': email_add_signature,
