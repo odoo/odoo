@@ -298,6 +298,9 @@ class AccountMove(models.Model):
         """
         self.ensure_one()
 
+        if not self.partner_bank_id:
+            raise UserError(_("QR-Bill can not be generated on paid invoices. If the invoice is not fully paid, please make sure Recipient Bank field is not empty and try again."))
+
         if not self.partner_bank_id._eligible_for_qr_code('ch_qr', self.partner_id, self.currency_id):
             raise UserError(_("Cannot generate the QR-bill. Please check you have configured the address of your company and debtor. If you are using a QR-IBAN, also check the invoice's payment reference is a QR reference."))
 
