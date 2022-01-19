@@ -237,6 +237,22 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
             from_filter=False,
         )
 
+        # Test the case when the "mail.default.from" contains a full email address and not just the local part
+        # the domain of this default email address can be different than the catchall domain
+        self.env['ir.config_parameter'].sudo().set_param('mail.default.from', 'test@custom_domain.com')
+        self.server_default.from_filter = 'custom_domain.com'
+
+        with self.mock_smtplib_connection():
+            message = self._build_email(mail_from='"Name" <test@unknown_domain.com>')
+            IrMailServer.send_email(message)
+
+        self.assert_email_sent_smtp(
+            smtp_from='test@custom_domain.com',
+            smtp_to_list=['dest@xn--example--i1a.com'],
+            message_from='"Name" <test@custom_domain.com>',
+            from_filter='custom_domain.com',
+        )
+
     @mute_logger('odoo.models.unlink')
     def test_mail_server_send_email_smtp_session(self):
         """Test all the cases when we provide the SMTP session.
