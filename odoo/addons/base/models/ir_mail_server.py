@@ -436,15 +436,19 @@ class IrMailServer(models.Model):
         Used for the "header from" address when no other has been received.
 
         :return str/None:
-            Combines config parameters ``mail.default.from`` and
+            If the config parameter ``mail.default.from`` contains
+            a full email address, return it.
+            Otherwise, combines config parameters ``mail.default.from`` and
             ``mail.catchall.domain`` to generate a default sender address.
 
             If some of those parameters is not defined, it will default to the
             ``--email-from`` CLI/config parameter.
         """
         get_param = self.env['ir.config_parameter'].sudo().get_param
-        domain = get_param('mail.catchall.domain')
         email_from = get_param("mail.default.from")
+        if email_from and "@" in email_from:
+            return email_from
+        domain = get_param("mail.catchall.domain")
         if email_from and domain:
             return "%s@%s" % (email_from, domain)
         return tools.config.get("email_from")
