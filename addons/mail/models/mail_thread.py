@@ -2558,19 +2558,27 @@ class MailThread(models.AbstractModel):
         ``_notify_get_recipients_classify`` method.
         """
         return [
-            (
+            [
                 'user',
                 lambda pdata: pdata['type'] == 'user',
                 {'has_button_access': True}
-            ), (
+            ], [
                 'portal',
                 lambda pdata: pdata['type'] == 'portal',
-                {'has_button_access': False}
-            ), (
+                {'active': False,  # activate only on demand if rights are enabled
+                 'has_button_access': False,
+                }
+            ], [
+                'follower',
+                lambda pdata: pdata['is_follower'],
+                {'active': False,  # activate only on demand if rights are enabled
+                 'has_button_access': False,
+                }
+            ], [
                 'customer',
                 lambda pdata: True,
                 {'has_button_access': False}
-            )
+            ]
         ]
 
     def _notify_get_recipients_classify(self, recipient_data, model_name, msg_vals=None):
@@ -2579,30 +2587,29 @@ class MailThread(models.AbstractModel):
         have access to buttons customers should not have in their emails.
         Module-specific grouping should be done by overriding ``_notify_get_recipients_groups``
         method defined here-under.
-        :param recipient_data:todo xdo UPDATE ME
-        return example:
-        [{
-            'actions': [],
-            'button_access': {'title': 'View Simple Chatter Model',
+
+        :param recipient_data: list of recipients information (based on res.partner
+          records). See ``MailThread._notify_get_recipients()``;
+
+        :return list: list of groups formatted for notification processing like
+            [{'active': True,
+              'actions': [],
+              'button_access': {},
+              'has_button_access': False,
+              'recipients': [11],},
+             {'active': True,
+              'actions': [],
+              'button_access': {'title': 'View Simple Chatter Model',
                                 'url': '/mail/view?model=mail.test.simple&res_id=1497'},
-            'has_button_access': False,
-            'recipients': [11]
-        },
-        {
-            'actions': [],
-            'button_access': {'title': 'View Simple Chatter Model',
-                            'url': '/mail/view?model=mail.test.simple&res_id=1497'},
-            'has_button_access': False,
-            'recipients': [4, 5, 6]
-        },
-        {
-            'actions': [],
-            'button_access': {'title': 'View Simple Chatter Model',
+              'has_button_access': True,
+              'recipients': [4, 5, 6],},
+             {'active': True,
+              'actions': [],
+              'button_access': {'title': 'View Simple Chatter Model',
                                 'url': '/mail/view?model=mail.test.simple&res_id=1497'},
-            'has_button_access': True,
-            'recipients': [10, 11, 12]
-        }]
-        only return groups with recipients
+              'has_button_access': True,
+              'recipients': [10, 11, 12],}
+            ]
         """
         # keep a local copy of msg_vals as it may be modified to include more information about groups or links
         local_msg_vals = dict(msg_vals) if msg_vals else {}
@@ -2616,28 +2623,26 @@ class MailThread(models.AbstractModel):
 
         # fill group_data with default_values if they are not complete
         for group_name, group_func, group_data in groups:
-            group_data.setdefault('notification_group_name', group_name)
-            group_data.setdefault('notification_is_customer', False)
+            group_data.setdefault('active', True)
+            group_data.setdefault('actions', list())
             group_data.setdefault('has_button_access', True)
+            group_data.setdefault('notification_is_customer', False)
+            group_data.setdefault('notification_group_name', group_name)
+            group_data.setdefault('recipients', list())
             group_button_access = group_data.setdefault('button_access', {})
             group_button_access.setdefault('url', access_link)
             group_button_access.setdefault('title', view_title)
-            group_data.setdefault('actions', list())
-            group_data.setdefault('recipients', list())
 
         # classify recipients in each group
         for recipient in recipient_data:
             for group_name, group_func, group_data in groups:
-                if group_func(recipient):
+                if group_data['active'] and group_func(recipient):
                     group_data['recipients'].append(recipient['id'])
                     break
 
-        result = []
-        for group_name, _group_method, group_data in groups:
-            if group_data['recipients']:
-                result.append(group_data)
-
-        return result
+        # filter out groups without recipients
+        return [group_data for _group_name, _group_func, group_data in groups
+                if group_data['recipients']]
 
     @api.model
     def _notify_encode_link(self, base_link, params):

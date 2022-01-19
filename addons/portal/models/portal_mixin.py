@@ -88,6 +88,13 @@ class PortalMixin(models.AbstractModel):
             ]
         else:
             new_group = []
+
+        # enable portal users that should have access through portal (if not access rights
+        # will do their duty)
+        portal_group = next(group for group in groups if group[0] == 'portal')
+        portal_group[2]['active'] = True
+        portal_group[2]['has_button_access'] = True
+
         return new_group + groups
 
     def _get_access_action(self, access_uid=None, force_website=False):
