@@ -164,7 +164,7 @@
                             </group>
                         </page>
                         <page string="Description" name="survey_description">
-                            <field name="description" widget="html"/>
+                            <field name="description" widget="html" options="{'odooFieldStyle': false}"/>
                         </page>
                         <page string="Options" name="options" attrs="{'invisible': [('is_page', '=', True)]}">
                             <group string="Constraints">
