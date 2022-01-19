@@ -21,7 +21,7 @@
 
     <t t-name="CalendarView.event.popover.placeholder">
         <div t-attf-class="o_cw_popover popover card shadow #{typeof color === 'number' ? _.str.sprintf('o_calendar_color_%s', color) : ''}" role="tooltip">
-            <div class="arrow"/>
+            <div class="popover-arrow"/>
             <div class="card-header d-flex justify-content-between py-2 pr-2">
                 <h4 class="p-0 pt-1">
                     <span class="popover-header border-0"/><span t-if="displayLock" class="ml-1"><i class="fa fa-lock"/></span>
@@ -170,7 +170,7 @@
 
     <t t-name="CalendarView.yearEvent.popover.placeholder">
         <div class="popover o_cw_popover" style="position: relative">
-            <div class="arrow"></div>
+            <div class="popover-arrow"></div>
             <div class="popover-header"></div>
             <div style="position: absolute; top: 0; right: 0.5rem;">
                 <span class="o_cw_popover_close"><i class="fa fa-close small"></i></span>
