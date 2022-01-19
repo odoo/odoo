@@ -38,12 +38,9 @@
     <t t-set="empty" t-value="Object.keys(context).length == 2"/>
 
     <div t-attf-class="o_field_x2many_list_row_add #{empty? 'd-block w-100' : 'd-inline float-end'}">
-        <div t-if="empty" class="o_resume_empty_helper o_horizontal_separator text-muted my-0">
-            <em>Resumé empty</em>
-        </div>
         <a href="#"
             role="button"
-            t-attf-class="btn o-kanban-button-new #{empty? 'btn-primary mt-3' : 'btn-secondary btn-sm'}"
+            t-attf-class="btn btn-secondary o-kanban-button-new #{empty? 'btn-primary mt-3' : 'btn-secondary btn-sm'}"
             t-attf-data-context="{{ context }}">
                 <t t-if="empty">CREATE A NEW ENTRY</t>
                 <t t-else="">ADD</t>

@@ -60,7 +60,11 @@
             'hr/static/src/js/m2x_avatar_employee.js',
             'hr/static/src/js/standalone_m2o_avatar_employee.js',
             'hr/static/src/js/user_menu.js',
+            'hr/static/src/js/work_permit_upload.js',
             'hr/static/src/models/*/*.js',
+        ],
+        'web.assets_qweb': [
+            'hr/static/src/xml/*.xml',
         ],
         'web.qunit_suite_tests': [
             'hr/static/tests/helpers/*.js',
