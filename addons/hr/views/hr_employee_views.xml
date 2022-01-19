@@ -53,37 +53,20 @@
                     </header>
                     <sheet>
                         <div name="button_box" class="oe_button_box">
-                            <button
-                                id="hr_presence_button"
-                                class="oe_stat_button"
-                                disabled="1"
-                                attrs="{'invisible': ['|', ('last_activity', '=', False), ('user_id', '=', False)]}">
-                                <div role="img" class="fa fa-fw fa-circle text-success o_button_icon" attrs="{'invisible': [('hr_presence_state', '!=', 'present')]}" aria-label="Available" title="Available"/>
-                                <div role="img" class="fa fa-fw fa-circle text-warning o_button_icon" attrs="{'invisible': [('hr_presence_state', '!=', 'to_define')]}" aria-label="Away" title="Away"/>
-                                <div role="img" class="fa fa-fw fa-circle text-danger o_button_icon" attrs="{'invisible': [('hr_presence_state', '!=', 'absent')]}" aria-label="Not available" title="Not available"/>
-
-                                <div class="o_stat_info" attrs="{'invisible': [('hr_presence_state', '=', 'present')]}">
-                                    <span class="o_stat_text">
-                                        Not Connected
-                                    </span>
-                                </div>
-                                <div class="o_stat_info" attrs="{'invisible': [('hr_presence_state', '!=', 'present')]}">
-                                    <span class="o_stat_value" attrs="{'invisible': [('last_activity_time', '=', False)]}">
-                                        <field name="last_activity_time"/>
-                                    </span>
-                                    <span class="o_stat_value" attrs="{'invisible': [('last_activity_time', '!=', False)]}">
-                                        <field name="last_activity"/>
-                                    </span>
-                                    <span class="o_stat_text">Present Since</span>
-                                </div>
-                            </button>
                         </div>
                         <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name="avatar_128" invisible="1"/>
                         <field name="image_1920" widget='image' class="oe_avatar" options='{"zoom": true, "preview_image":"avatar_128"}'/>
                         <div class="oe_title">
                             <h1 class="d-flex">
-                                <field name="name" placeholder="Employee's Name" required="True"/>
+                                <field name="name" placeholder="Employee's Name" required="True" style="font-size: min(4vw, 2.6rem);" />
+                                <field name="last_activity_time" invisible="1"/>
+                                <field name="last_activity" invisible="1"/>
+                                <div id="hr_presence_status" attrs="{'invisible': ['|', ('last_activity', '=', False), ('user_id', '=', False)]}">
+                                    <div role="img" class="fa fa-fw fa-circle text-success o_button_icon hr_presence" attrs="{'invisible': [('hr_presence_state', '!=', 'present')]}" aria-label="Available" title="Available"/>
+                                    <div role="img" class="fa fa-2xs fa-fw fa-circle text-warning o_button_icon hr_presence" attrs="{'invisible': [('hr_presence_state', '!=', 'to_define')]}" aria-label="Away" title="Away"/>
+                                    <div role="img" class="fa fa-2xs fa-fw fa-circle text-danger o_button_icon hr_presence" attrs="{'invisible': [('hr_presence_state', '!=', 'absent')]}" aria-label="Not available" title="Not available"/>
+                                </div>
                                 <a title="Chat" icon="fa-comments" href="#" class="ml8 o_employee_chat_btn" invisible="not context.get('chat_icon')" attrs="{'invisible': [('user_id','=', False)]}" role="button"><i class="fa fa-comments"/></a>
                             </h1>
                             <h2>
@@ -135,55 +118,72 @@
                             <page name="personal_information" string="Private Information" groups="hr.group_hr_user">
                                 <group>
                                     <group string="Private Contact">
-                                        <field name="address_home_id"
-                                            context="{
-                                                'show_address': 1,
-                                                'default_type': 'private',
-                                                'form_view_ref': 'base.res_partner_view_form_private'}"
-                                            options='{"always_reload": True, "highlight_first_line": True}'/>
-                                        <field name="private_email" string="Email"/>
-                                        <field name="phone" class="o_force_ltr" groups="hr.group_hr_user" string="Phone" readonly="True"/>
+                                        <group>
+                                            <field name="address_home_id"
+                                                context="{
+                                                    'show_address': 1,
+                                                    'default_type': 'private',
+                                                    'form_view_ref': 'base.res_partner_view_form_private'}"
+                                                options='{"always_reload": True, "highlight_first_line": True}'/>
+                                            <field name="private_email" string="Email"/>
+                                            <field name="phone" class="o_force_ltr" groups="hr.group_hr_user" string="Phone" readonly="True"/>
+                                            <field name="bank_account_id" context="{'default_partner_id': address_home_id}"/>
+                                        </group>
+                                        <group col="4" colspan="2">
                                         <field name="lang" string="Language"/>
-                                        <field name="bank_account_id" context="{'default_partner_id': address_home_id}"/>
-                                        <label for="km_home_work"/>
+                                        <label for="km_home_work" />
                                         <div class="o_row" name="div_km_home_work">
                                             <field name="km_home_work" groups="hr.group_hr_user"/>
                                             <span>Km</span>
                                         </div>
-
+                                        </group>
+                                    </group>
+                                    <group>
+                                        <group string="Family Status" colspan="2">
+                                            <field name="marital"/>
+                                            <field name="spouse_complete_name" attrs="{'invisible': [('marital', 'not in', ['married', 'cohabitant'])]}" groups="hr.group_hr_user"/>
+                                            <field name="spouse_birthdate" attrs="{'invisible': [('marital', 'not in', ['married', 'cohabitant'])]}" groups="hr.group_hr_user"/>
+                                            <field name="children"/>
+                                        </group>
+                                        <group string="Emergency" colspan="2">
+                                            <field name="emergency_contact"/>
+                                            <field name="emergency_phone" class="o_force_ltr"/>
+                                        </group>
+                                    </group>
+                                    <group>
+                                        <group string="Education" colspan="2">
+                                            <field name="certificate"/>
+                                            <field name="study_field"/>
+                                            <field name="study_school"/>
+                                        </group>
+                                        <group string="Work Permit" name="has_work_permit" colspan="2">
+                                            <group colspan="2">
+                                                <field name="visa_no"/>
+                                                <field name="permit_no"/>
+                                            </group>
+                                            <group col="4" colspan="2">
+                                                <field name="visa_expire"/>
+                                                <field name="work_permit_expiration_date"/>
+                                            </group>
+                                            <group colspan="2">
+                                                <field name="has_work_permit" widget="work_permit_upload"/>
+                                            </group>
+                                        </group>
                                     </group>
                                     <group string="Citizenship">
-                                        <field name="country_id" options='{"no_open": True, "no_create": True}'/>
-                                        <field name="identification_id" groups="hr.group_hr_user"/>
-                                        <field name="passport_id" groups="hr.group_hr_user"/>
-                                        <field name="gender"/>
-                                        <field name="birthday"/>
-                                        <field name="place_of_birth" groups="hr.group_hr_user"/>
-                                        <field name="country_of_birth" groups="hr.group_hr_user"/>
-                                    </group>
-                                    <group string="Marital Status">
-                                        <field name="marital"/>
-                                        <field name="spouse_complete_name" attrs="{'invisible': [('marital', 'not in', ['married', 'cohabitant'])]}" groups="hr.group_hr_user"/>
-                                        <field name="spouse_birthdate" attrs="{'invisible': [('marital', 'not in', ['married', 'cohabitant'])]}" groups="hr.group_hr_user"/>
-                                    </group>
-                                    <group string="Dependant">
-                                        <field name="children"/>
-                                    </group>
-                                    <group string="Emergency">
-                                        <field name="emergency_contact"/>
-                                        <field name="emergency_phone" class="o_force_ltr"/>
-                                    </group>
-                                    <group string="Work Permit" name="has_work_permit">
-                                        <field name="visa_no"/>
-                                        <field name="permit_no"/>
-                                        <field name="visa_expire"/>
-                                        <field name="work_permit_expiration_date"/>
-                                        <field name="has_work_permit"/>
-                                    </group>
-                                    <group string="Education">
-                                        <field name="certificate"/>
-                                        <field name="study_field"/>
-                                        <field name="study_school"/>
+                                        <group colspan="2">
+                                            <field name="country_id" options='{"no_open": True, "no_create": True}'/>
+                                            <field name="identification_id" groups="hr.group_hr_user"/>
+                                            <field name="passport_id" groups="hr.group_hr_user"/>
+                                        </group>
+                                        <group col="4" colspan="2" name="gender_birthday">
+                                            <field name="gender"/>
+                                            <field name="birthday"/>
+                                        </group>
+                                        <group colspan="2">
+                                            <field name="place_of_birth" groups="hr.group_hr_user"/>
+                                            <field name="country_of_birth" groups="hr.group_hr_user"/>
+                                        </group>
                                     </group>
                                 </group>
                             </page>

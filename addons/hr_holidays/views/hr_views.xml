@@ -154,8 +154,9 @@
         <field name="name">hr.employee.leave.form.inherit</field>
         <field name="model">hr.employee</field>
         <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name = "priority" eval="20" />
         <field name="arch" type="xml">
-            <xpath expr="//button[@id='hr_presence_button']" position="attributes">
+            <xpath expr="//div[@id='hr_presence_status']" position="attributes">
                 <attribute name="attrs">
                     {'invisible': ['|', '|', '|', ('last_activity', '=', False), ('is_absent', '=', True), ('user_id', '=', False), ('id', '=', False)]}
                 </attribute>
@@ -166,7 +167,7 @@
             <xpath expr="//group[@name='managers']" position="attributes">
                 <attribute name="invisible">0</attribute>
             </xpath>
-            <div name="button_box" position="inside">
+            <xpath expr="//div[@name='button_box']" position="inside">
                 <field name="show_leaves" invisible="1"/>
                 <field name="is_absent" invisible="1"/>
                 <field name="hr_icon_display" invisible="1"/>
@@ -210,7 +211,7 @@
                         </span>
                     </div>
                 </button>
-            </div>
+            </xpath>
         </field>
     </record>
 

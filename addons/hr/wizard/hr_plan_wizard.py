@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import fields, models, _
 
 
 class HrPlanWizard(models.TransientModel):
@@ -32,6 +32,9 @@ class HrPlanWizard(models.TransientModel):
                     user_id=responsible.id,
                     date_deadline=date_deadline
                 )
+
+        for plan in self:
+            plan.employee_id.message_post(body=_('The plan %s has been started', plan.plan_id.name))
 
         return {
             'type': 'ir.actions.act_window',
