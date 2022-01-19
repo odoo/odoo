@@ -62,10 +62,7 @@
             </Transition>
 
             <!-- Allow popups to be visible at any state of the ui. -->
-            <div t-if="popup.isShown" class="popups">
-                <t t-component="popup.component" t-props="popupProps"
-                   t-key="popup.name" />
-            </div>
+            <PosPopupController />
 
             <Transition name="'o-fade'" visible="state.notification.isShown" leaveDuration="200" t-slot-scope="transition">
                 <Notification message="state.notification.message" duration="state.notification.duration" className="transition.className"/>
