@@ -3,12 +3,14 @@
 
 from datetime import timedelta
 from itertools import groupby
+from markupsafe import Markup
+
 import json
 
 from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.osv import expression
-from odoo.tools import float_is_zero, html_keep_url, is_html_empty
+from odoo.tools import float_is_zero, format_amount, format_date, html_keep_url, is_html_empty
 
 READONLY_FIELD_STATES = {
     state: [('readonly', True)]
@@ -1090,11 +1092,11 @@ class SaleOrder(models.Model):
             is_tx_pending = self.get_portal_last_transaction().state == 'pending'
             if self.has_to_be_signed(include_draft=True):
                 if self.has_to_be_paid():
-                    access_opt['title'] = _('View Quotation') if is_tx_pending else _('Review, Sign & Pay Quotation')
+                    access_opt['title'] = _('View Quotation') if is_tx_pending else _('Sign & Pay Quotation')
                 else:
-                    access_opt['title'] = _('Review, Accept & Sign Quotation')
+                    access_opt['title'] = _('Accept & Sign Quotation')
             elif self.has_to_be_paid(include_draft=True) and not is_tx_pending:
-                access_opt['title'] = _('Review, Accept & Pay Quotation')
+                access_opt['title'] = _('Accept & Pay Quotation')
             elif self.state in ('draft', 'sent'):
                 access_opt['title'] = _('View Quotation')
 
@@ -1110,6 +1112,22 @@ class SaleOrder(models.Model):
         access_opt['url'] = self._notify_get_action_link('view', **local_msg_vals)
 
         return groups
+
+    def _notify_by_email_prepare_rendering_context(self, message, msg_vals, model_description=False,
+                                                   force_email_company=False, force_email_lang=False):
+        render_context = super()._notify_by_email_prepare_rendering_context(
+            message, msg_vals, model_description=model_description,
+            force_email_company=force_email_company, force_email_lang=force_email_lang
+        )
+        if self.validity_date:
+            amount_txt = _('%(amount)s due %(date)s',
+                           amount=format_amount(self.env, self.amount_total, self.currency_id, lang_code=render_context.get('lang')),
+                           date=format_date(self.env, self.validity_date, date_format='short', lang_code=render_context.get('lang'))
+                          )
+        else:
+            amount_txt = format_amount(self.env, self.amount_total, self.currency_id, lang_code=render_context.get('lang'))
+        render_context['subtitle'] = Markup("<span>%s<br />%s</span>") % (self.name, amount_txt)
+        return render_context
 
     def preview_sale_order(self):
         self.ensure_one()

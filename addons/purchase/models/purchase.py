@@ -10,7 +10,7 @@ from werkzeug.urls import url_encode
 
 from odoo import api, fields, models, _
 from odoo.osv import expression
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, format_amount, formatLang, get_lang, groupby
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, format_amount, format_date, formatLang, get_lang, groupby
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
 from odoo.exceptions import AccessError, UserError, ValidationError
 
@@ -371,6 +371,22 @@ class PurchaseOrder(models.Model):
                 access_opt['url'] = self.get_confirm_url(confirm_type='reception')
 
         return groups
+
+    def _notify_by_email_prepare_rendering_context(self, message, msg_vals, model_description=False,
+                                                   force_email_company=False, force_email_lang=False):
+        render_context = super()._notify_by_email_prepare_rendering_context(
+            message, msg_vals, model_description=model_description,
+            force_email_company=force_email_company, force_email_lang=force_email_lang
+        )
+        if self.date_order:
+            amount_txt = _('%(amount)s due %(date)s',
+                           amount=format_amount(self.env, self.amount_total, self.currency_id, lang_code=render_context.get('lang')),
+                           date=format_date(self.env, self.date_order, date_format='short', lang_code=render_context.get('lang'))
+                          )
+        else:
+            amount_txt = format_amount(self.env, self.amount_total, self.currency_id, lang_code=render_context.get('lang'))
+        render_context['subtitle'] = Markup("<span>%s<br />%s</span>") % (self.name, amount_txt)
+        return render_context
 
     def _track_subtype(self, init_values):
         self.ensure_one()
