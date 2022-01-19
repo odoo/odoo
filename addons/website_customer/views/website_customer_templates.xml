@@ -34,13 +34,13 @@
 
                     <p t-if="not partners">No result found</p>
                     <t t-foreach="partners" t-as="partner">
-                        <div class="media mt-3">
+                        <div class="d-flex mt-3">
                             <a t-attf-href="/customers/#{slug(partner)}"
                                t-field="partner.avatar_128"
                                class="d-block mr-3 text-center o_width_128"
                                t-options='{"widget": "image", "qweb_img_responsive": False, "class": "o_image_128_max"}'
                             ></a>
-                            <div class="media-body" style="min-height: 64px;">
+                            <div class="flex-grow-1" style="min-height: 64px;">
                                 <a t-attf-href="/customers/#{slug(partner)}">
                                     <span t-field="partner.display_name"/>
                                 </a>
@@ -217,12 +217,12 @@
 <template id="references_block" name="Partner References Block">
         <t t-if="any(p.website_published for p in partner.implemented_partner_ids)">
             <h3 id="references">References</h3>
-            <div t-foreach="partner.implemented_partner_ids" t-as="reference" class="media mt-3">
+            <div t-foreach="partner.implemented_partner_ids" t-as="reference" class="d-flex mt-3">
               <t t-if="reference.website_published">
                 <a t-attf-href="/customers/#{slug(reference)}">
                     <span t-field="reference.avatar_128" class="d-block mr-3 text-center o_width_128" t-options='{"widget": "image", "qweb_img_responsive": False, "class": "o_image_128_max"}'/>
                 </a>
-                <div class="media-body" style="min-height: 64px;">
+                <div class="flex-grow-1" style="min-height: 64px;">
                     <a t-attf-href="/customers/#{slug(reference)}">
                         <span t-field="reference.self"/>
                     </a>
@@ -240,7 +240,7 @@
     <xpath expr="//div/span" position="replace">
         <a t-attf-href="/customers/#{slug(reference)}">$0</a>
     </xpath>
-    <xpath expr="//div[hasclass('media-body')]/span" position="replace">
+    <xpath expr="//div[hasclass('flex-grow-1')]/span" position="replace">
         <a t-attf-href="/customers/#{slug(reference)}">$0</a>
     </xpath>
 </template>
