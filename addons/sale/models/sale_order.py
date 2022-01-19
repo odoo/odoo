@@ -1075,12 +1075,17 @@ class SaleOrder(models.Model):
         the document so they don't have the access button. """
         groups = super(SaleOrder, self)._notify_get_recipients_groups(msg_vals=msg_vals)
         if self._context.get('proforma'):
-            for group in [g for g in groups if g[0] in ('portal_customer', 'customer')]:
+            for group in [g for g in groups if g[0] in ('portal_customer', 'portal', 'follower', 'customer')]:
                 group[2]['has_button_access'] = False
             return groups
+        local_msg_vals = dict(msg_vals or {})
 
-        customer_portal_group = next(group for group in groups if group[0] == 'portal_customer')
-        if customer_portal_group:
+        # portal customers have full access (existence not granted, depending on partner_id)
+        try:
+            customer_portal_group = next(group for group in groups if group[0] == 'portal_customer')
+        except StopIteration:
+            pass
+        else:
             access_opt = customer_portal_group[2].setdefault('button_access', {})
             is_tx_pending = self.get_portal_last_transaction().state == 'pending'
             if self.has_to_be_signed(include_draft=True):
@@ -1092,6 +1097,17 @@ class SaleOrder(models.Model):
                 access_opt['title'] = _('Review, Accept & Pay Quotation')
             elif self.state in ('draft', 'sent'):
                 access_opt['title'] = _('View Quotation')
+
+        # enable followers that have access through portal
+        follower_group = next(group for group in groups if group[0] == 'follower')
+        follower_group[2]['active'] = True
+        follower_group[2]['has_button_access'] = True
+        access_opt = follower_group[2].setdefault('button_access', {})
+        if self.state in ('draft', 'sent'):
+            access_opt['title'] = _('View Quotation')
+        else:
+            access_opt['title'] = _('View Order')
+        access_opt['url'] = self._notify_get_action_link('view', **local_msg_vals)
 
         return groups
 
