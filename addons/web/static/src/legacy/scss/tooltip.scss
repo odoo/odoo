@@ -43,7 +43,10 @@
         }
     }
 
-    .arrow {
+    .tooltip-arrow {
+        &::before, &::after {
+            border: $arrow-size solid transparent;
+        }
         &::after {
             content: '';
             position: absolute;
@@ -51,64 +54,54 @@
     }
 
     &.bs-tooltip-bottom {
-        margin-top: $tooltip-arrow-height;
-        .arrow {
+        .tooltip-arrow {
             top: $tooltip-arrow-height;
             &::before {
-                border: $arrow-size solid transparent;
                 border-bottom-color: $o-tooltip-color;
+                bottom: 0;
             }
             &::after {
-                bottom: -1px;
-                border: $arrow-size solid transparent;
                 border-bottom-color: $o-tooltip-title-background-color;
+                bottom: -1px;
             }
         }
     }
     &.bs-tooltip-top {
-        margin-bottom: $tooltip-arrow-height;
-        .arrow {
+        .tooltip-arrow {
             bottom: $tooltip-arrow-height;
             &::before {
-                border: $arrow-size solid transparent;
                 border-top-color: $o-tooltip-color;
+                top: 0;
             }
             &::after {
-                border: $arrow-size solid transparent;
                 border-top-color: $o-tooltip-arrow-color;
-                margin-top: -1px;
+                top: -1px;
             }
         }
     }
-    &.bs-tooltip-left {
-        margin-right: $tooltip-arrow-height;
-        .arrow {
+    &.bs-tooltip-start {
+        .tooltip-arrow {
             right: $tooltip-arrow-height;
             &::before {
-                border: $arrow-size solid transparent;
                 border-left-color: $o-tooltip-color;
+                left: 0;
             }
             &::after {
-                border: $arrow-size solid transparent;
                 border-left-color: $o-tooltip-arrow-color;
-                margin-left: -1px;
+                left: -1px;
             }
         }
     }
-    &.bs-tooltip-right {
-        margin-left: $tooltip-arrow-height;
-        .arrow {
+    &.bs-tooltip-end {
+        .tooltip-arrow {
             left: $tooltip-arrow-height;
-            &::before,
-            &::after {
-                border: $arrow-size solid transparent;
+            &::before {
                 border-right-color: $o-tooltip-color;
+                right: 0;
             }
             &::after {
-                border: $arrow-size solid transparent;
                 border-right-color: $o-tooltip-arrow-color;
-                margin-right: -1px;
-                right: 0px;
+                right: -1px;
             }
         }
     }

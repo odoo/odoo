@@ -35,19 +35,35 @@
 		}
 	}
 
-	&.o-popover--ts .arrow, &.o-popover--bs .arrow {
+	&.o-popover-top, &.o-popover-auto[x-placement^="top"] {
+		margin-bottom: 0.5rem;
+	}
+
+	&.o-popover-right, &.o-popover-auto[x-placement^="right"] {
+		margin-left: 0.5rem;
+	}
+
+	&.o-popover-bottom, &.o-popover-auto[x-placement^="bottom"] {
+		margin-top: 0.5rem;
+	}
+
+	&.o-popover-left, &.o-popover-auto[x-placement^="left"] {
+		margin-right: 0.5rem;
+	}
+
+	&.o-popover--ts .popover-arrow, &.o-popover--bs .popover-arrow {
 		left: $popover-border-radius;
 	}
 
-	&.o-popover--te .arrow, &.o-popover--be .arrow {
+	&.o-popover--te .popover-arrow, &.o-popover--be .popover-arrow {
 		right: $popover-border-radius;
 	}
 
-	&.o-popover--ls .arrow, &.o-popover--rs .arrow {
+	&.o-popover--ls .popover-arrow, &.o-popover--rs .popover-arrow {
 		top: $popover-border-radius;
 	}
 	
-	&.o-popover--le .arrow, &.o-popover--re .arrow {
+	&.o-popover--le .popover-arrow, &.o-popover--re .popover-arrow {
 		bottom: $popover-border-radius;
 	}
 }

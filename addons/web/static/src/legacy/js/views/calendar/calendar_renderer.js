@@ -664,7 +664,7 @@ return AbstractRenderer.extend({
      * @private
      */
     _onPopoverShown: function ($popoverElement, calendarPopover) {
-        var $popover = $($popoverElement.data('bs.popover').tip);
+        const $popover = $(Popover.getInstance($popoverElement[0]).tip);
         $popover.find('.o_cw_popover_close').on('click', this._unselectEvent.bind(this));
         $popover.find('.o_cw_body').replaceWith(calendarPopover.$el);
     },

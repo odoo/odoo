@@ -155,10 +155,11 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         _.each(this.$('.o_wforum_bio_popover'), authorBox => {
             $(authorBox).popover({
                 trigger: 'hover',
-                offset: 10,
+                offset: '10',
                 animation: false,
                 html: true,
-            }).popover('hide').data('bs.popover').tip.classList.add('o_wforum_bio_popover_container');
+                customClass: 'o_wforum_bio_popover_container',
+            });
         });
 
         this.$('#post_reply').on('shown.bs.collapse', function (e) {
