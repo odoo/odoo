@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, many2many, many2one, one2many, one2one } from '@mail/model/model_field';
+import { attr, many, one } from '@mail/model/model_field';
 import { insert, link, unlinkAll } from '@mail/model/model_field_command';
 import { cleanSearchTerm } from '@mail/utils/utils';
 
@@ -406,7 +406,7 @@ registerModel({
         avatarUrl: attr({
             compute: '_computeAvatarUrl',
         }),
-        country: many2one('Country'),
+        country: one('Country'),
         /**
          * Deprecated.
          * States the `display_name` of this partner, as returned by the server.
@@ -439,7 +439,7 @@ registerModel({
         isOnline: attr({
             compute: '_computeIsOnline',
         }),
-        memberThreads: many2many('Thread', {
+        memberThreads: many('Thread', {
             inverse: 'members',
         }),
         model: attr({
@@ -449,13 +449,13 @@ registerModel({
         nameOrDisplayName: attr({
             compute: '_computeNameOrDisplayName',
         }),
-        rtcSessions: one2many('RtcSession', {
+        rtcSessions: many('RtcSession', {
             inverse: 'partner',
         }),
-        user: one2one('User', {
+        user: one('User', {
             inverse: 'partner',
         }),
-        volumeSetting: one2one('VolumeSetting', {
+        volumeSetting: one('VolumeSetting', {
             inverse: 'partner',
         }),
     },

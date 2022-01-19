@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, many2one, one2one } from '@mail/model/model_field';
+import { attr, one } from '@mail/model/model_field';
 import { clear, insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
@@ -564,7 +564,7 @@ registerModel({
          * If set, this is the record of invite button popover that is currently
          * open in the topbar.
          */
-        invitePopoverView: one2one('PopoverView', {
+        invitePopoverView: one('PopoverView', {
             isCausal: true,
             inverse: 'threadViewTopbarOwnerAsInvite',
         }),
@@ -631,7 +631,7 @@ registerModel({
         /**
          * States the thread that is displayed by this top bar.
          */
-        thread: many2one('Thread', {
+        thread: one('Thread', {
             related: 'threadView.thread',
         }),
         /**
@@ -647,7 +647,7 @@ registerModel({
         /**
          * States the thread view managing this top bar.
          */
-        threadView: one2one('ThreadView', {
+        threadView: one('ThreadView', {
             inverse: 'topbar',
             readonly: true,
             required: true,

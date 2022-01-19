@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, many2one, one2many, one2one } from '@mail/model/model_field';
+import { attr, many, one } from '@mail/model/model_field';
 import { insertAndReplace, link, replace, unlink } from '@mail/model/model_field_command';
 
 const BASE_VISUAL = {
@@ -327,16 +327,16 @@ registerModel({
         /**
          * List of ordered chat windows.
          */
-        allOrdered: one2many('ChatWindow', {
+        allOrdered: many('ChatWindow', {
             compute: '_computeAllOrdered',
         }),
-        allOrderedHidden: one2many('ChatWindow', {
+        allOrderedHidden: many('ChatWindow', {
             compute: '_computeAllOrderedHidden',
         }),
-        allOrderedVisible: one2many('ChatWindow', {
+        allOrderedVisible: many('ChatWindow', {
             compute: '_computeAllOrderedVisible',
         }),
-        chatWindows: one2many('ChatWindow', {
+        chatWindows: many('ChatWindow', {
             inverse: 'manager',
             isCausal: true,
         }),
@@ -349,10 +349,10 @@ registerModel({
         isHiddenMenuOpen: attr({
             default: false,
         }),
-        lastVisible: many2one('ChatWindow', {
+        lastVisible: one('ChatWindow', {
             compute: '_computeLastVisible',
         }),
-        newMessageChatWindow: one2one('ChatWindow', {
+        newMessageChatWindow: one('ChatWindow', {
             inverse: 'managerAsNewMessage',
             isCausal: true,
         }),

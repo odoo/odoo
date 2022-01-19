@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { many2many, many2one, one2many, one2one } from '@mail/model/model_field';
+import { many, one } from '@mail/model/model_field';
 import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
 
 registerModel({
@@ -60,14 +60,14 @@ registerModel({
         /**
          * States the attachments to be displayed by this attachment list.
          */
-        attachments: many2many('Attachment', {
+        attachments: many('Attachment', {
             compute: '_computeAttachments',
             inverse: 'attachmentLists',
         }),
         /**
          * States the attachment cards that are displaying this nonImageAttachments.
          */
-        attachmentCards: one2many('AttachmentCard', {
+        attachmentCards: many('AttachmentCard', {
             compute: '_computeAttachmentCards',
             inverse: 'attachmentList',
             isCausal: true,
@@ -75,7 +75,7 @@ registerModel({
         /**
          * States the attachment images that are displaying this imageAttachments.
          */
-        attachmentImages: one2many('AttachmentImage', {
+        attachmentImages: many('AttachmentImage', {
             compute: '_computeAttachmentImages',
             inverse: 'attachmentList',
             isCausal: true,
@@ -83,43 +83,43 @@ registerModel({
         /**
          * Link with a chatter to handle attachments.
          */
-        chatter: one2one('Chatter', {
+        chatter: one('Chatter', {
             inverse: 'attachmentList',
             readonly: true,
         }),
         /**
          * Link with a composer view to handle attachments.
          */
-        composerView: one2one('ComposerView', {
+        composerView: one('ComposerView', {
             inverse: 'attachmentList',
             readonly: true,
         }),
         /**
          * States the attachment that are an image.
          */
-        imageAttachments: many2many('Attachment', {
+        imageAttachments: many('Attachment', {
             compute: '_computeImageAttachments',
         }),
-        message: many2one('Message', {
+        message: one('Message', {
             related: 'messageView.message'
         }),
         /**
          * Link with a message view to handle attachments.
          */
-        messageView: one2one('MessageView', {
+        messageView: one('MessageView', {
             inverse: 'attachmentList',
             readonly: true,
         }),
         /**
          * States the attachment that are not an image.
          */
-        nonImageAttachments: many2many('Attachment', {
+        nonImageAttachments: many('Attachment', {
             compute: '_computeNonImageAttachments',
         }),
         /**
          * States the attachments that can be viewed inside the browser.
          */
-        viewableAttachments: many2many('Attachment', {
+        viewableAttachments: many('Attachment', {
             compute: '_computeViewableAttachments',
         }),
     },

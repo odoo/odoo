@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, many2many, many2one, one2many, one2one } from '@mail/model/model_field';
+import { attr, many, one } from '@mail/model/model_field';
 import { clear, insert, insertAndReplace, link, replace, unlink, unlinkAll } from '@mail/model/model_field_command';
 import { OnChange } from '@mail/model/model_onchange';
 import throttle from '@mail/utils/throttle/throttle';
@@ -1913,10 +1913,10 @@ registerModel({
          * Determines the `mail.activity` that belong to `this`, assuming `this`
          * has activities (@see hasActivities).
          */
-        activities: one2many('Activity', {
+        activities: many('Activity', {
             inverse: 'thread',
         }),
-        allAttachments: many2many('Attachment', {
+        allAttachments: many('Attachment', {
             compute: '_computeAllAttachments',
         }),
         areAttachmentsLoaded: attr({
@@ -1929,7 +1929,7 @@ registerModel({
         areFollowersLoaded: attr({
             default: false,
         }),
-        attachments: many2many('Attachment', {
+        attachments: many('Attachment', {
             inverse: 'threads',
         }),
         /**
@@ -1937,7 +1937,7 @@ registerModel({
          * It only makes sense for channels.
          */
         avatarCacheKey: attr(),
-        cache: one2one('ThreadCache', {
+        cache: one('ThreadCache', {
             default: insertAndReplace(),
             inverse: 'thread',
             isCausal: true,
@@ -1948,26 +1948,26 @@ registerModel({
         /**
          * States the chat window related to this thread (if any).
          */
-        chatWindow: one2one('ChatWindow', {
+        chatWindow: one('ChatWindow', {
             inverse: 'thread',
             isCausal: true,
         }),
         /**
          * Determines the composer state of this thread.
          */
-        composer: one2one('Composer', {
+        composer: one('Composer', {
             compute: '_computeComposer',
             inverse: 'thread',
             isCausal: true,
             readonly: true,
         }),
-        correspondent: many2one('Partner', {
+        correspondent: one('Partner', {
             compute: '_computeCorrespondent',
         }),
         counter: attr({
             default: 0,
         }),
-        creator: many2one('User'),
+        creator: one('User'),
         custom_channel_name: attr(),
         /**
          * Determines the default display mode of this channel. Should contain
@@ -1983,7 +1983,7 @@ registerModel({
          * Determines the discuss sidebar category item that displays this
          * thread (if any). Only applies to channels.
          */
-        discussSidebarCategoryItem: one2one('DiscussSidebarCategoryItem', {
+        discussSidebarCategoryItem: one('DiscussSidebarCategoryItem', {
             compute: '_computeDiscussSidebarCategoryItem',
             inverse: 'channel',
             isCausal: true,
@@ -1998,23 +1998,23 @@ registerModel({
         fetchMessagesUrl: attr({
             compute: '_computeFetchMessagesUrl',
         }),
-        followersPartner: many2many('Partner', {
+        followersPartner: many('Partner', {
             related: 'followers.partner',
         }),
-        followers: one2many('Follower', {
+        followers: many('Follower', {
             inverse: 'followedThread',
         }),
         /**
          * States the `Activity` that belongs to `this` and that are
          * planned in the future (due later than today).
          */
-        futureActivities: one2many('Activity', {
+        futureActivities: many('Activity', {
             compute: '_computeFutureActivities',
         }),
         group_based_subscription: attr({
             default: false,
         }),
-        guestMembers: many2many('Guest'),
+        guestMembers: many('Guest'),
         /**
          * States whether `this` has activities (`mail.activity.mixin` server side).
          */
@@ -2061,11 +2061,11 @@ registerModel({
          * FIXME should be simplified if we have the mail.channel.partner model
          * in which case the two following fields should be a single relation to that model.
          */
-        invitedGuests: many2many('Guest'),
+        invitedGuests: many('Guest'),
         /**
          * List of partners that have been invited to the RTC call of this channel.
          */
-        invitedPartners: many2many('Partner'),
+        invitedPartners: many('Partner'),
         /**
          * Determines whether this description can be changed.
          * Only makes sense for channels.
@@ -2137,25 +2137,25 @@ registerModel({
          * pinning, and new message posted. It is contained as a Date object.
          */
         lastInterestDateTime: attr(),
-        lastCurrentPartnerMessageSeenByEveryone: many2one('Message', {
+        lastCurrentPartnerMessageSeenByEveryone: one('Message', {
             compute: '_computeLastCurrentPartnerMessageSeenByEveryone',
         }),
         /**
          * Last message of the thread, could be a transient one.
          */
-        lastMessage: many2one('Message', {
+        lastMessage: one('Message', {
             compute: '_computeLastMessage',
         }),
         /**
          * States the last known needaction message having this thread as origin.
          */
-        lastNeedactionMessageAsOriginThread: many2one('Message', {
+        lastNeedactionMessageAsOriginThread: one('Message', {
             compute: '_computeLastNeedactionMessageAsOriginThread',
         }),
         /**
          * Last non-transient message.
          */
-        lastNonTransientMessage: many2one('Message', {
+        lastNonTransientMessage: one('Message', {
             compute: '_computeLastNonTransientMessage',
         }),
         /**
@@ -2182,24 +2182,24 @@ registerModel({
          * Only makes sense if this thread is a channel.
          */
         memberCount: attr(),
-        members: many2many('Partner', {
+        members: many('Partner', {
             inverse: 'memberThreads',
         }),
         /**
          * Determines the last mentioned channels of the last composer related
          * to this thread. Useful to sync the composer when re-creating it.
          */
-        mentionedChannelsBackup: many2many('Thread'),
+        mentionedChannelsBackup: many('Thread'),
         /**
          * Determines the last mentioned partners of the last composer related
          * to this thread. Useful to sync the composer when re-creating it.
          */
-        mentionedPartnersBackup: many2many('Partner'),
+        mentionedPartnersBackup: many('Partner'),
         /**
          * Determines the message before which the "new message" separator must
          * be positioned, if any.
          */
-        messageAfterNewMessageSeparator: many2one('Message', {
+        messageAfterNewMessageSeparator: one('Message', {
             compute: '_computeMessageAfterNewMessageSeparator',
         }),
         message_needaction_counter: attr({
@@ -2210,30 +2210,30 @@ registerModel({
          * Note that this field is automatically computed by inverse
          * computed field.
          */
-        messages: many2many('Message', {
+        messages: many('Message', {
             inverse: 'threads',
             readonly: true,
         }),
         /**
          * All messages that have been originally posted in this thread.
          */
-        messagesAsOriginThread: one2many('Message', {
+        messagesAsOriginThread: many('Message', {
             inverse: 'originThread',
             isCausal: true,
         }),
         /**
          * Contains the message fetched/seen indicators for all messages of this thread.
          */
-        messageSeenIndicators: one2many('MessageSeenIndicator', {
+        messageSeenIndicators: many('MessageSeenIndicator', {
             inverse: 'thread',
             isCausal: true,
         }),
-        messagingAsRingingThread: many2one('Messaging', {
+        messagingAsRingingThread: one('Messaging', {
             compute: '_computeMessagingAsRingingThread',
             inverse: 'ringingThreads',
             readonly: true,
         }),
-        messagingMenuAsPinnedAndUnreadChannel: many2one('MessagingMenu', {
+        messagingMenuAsPinnedAndUnreadChannel: one('MessagingMenu', {
             compute: '_computeMessagingMenuAsPinnedAndUnreadChannel',
             inverse: 'pinnedAndUnreadChannels',
             readonly: true,
@@ -2248,38 +2248,38 @@ registerModel({
         /**
          * States all known needaction messages having this thread as origin.
          */
-        needactionMessagesAsOriginThread: many2many('Message', {
+        needactionMessagesAsOriginThread: many('Message', {
             compute: '_computeNeedactionMessagesAsOriginThread',
         }),
         /**
          * All offline members ordered like they are displayed.
          */
-        orderedOfflineMembers: many2many('Partner', {
+        orderedOfflineMembers: many('Partner', {
             compute: '_computeOrderedOfflineMembers',
         }),
         /**
          * All online members ordered like they are displayed.
          */
-        orderedOnlineMembers: many2many('Partner', {
+        orderedOnlineMembers: many('Partner', {
             compute: '_computeOrderedOnlineMembers',
         }),
         /**
          * All messages ordered like they are displayed.
          */
-        orderedMessages: many2many('Message', {
+        orderedMessages: many('Message', {
             compute: '_computeOrderedMessages',
         }),
         /**
          * All messages ordered like they are displayed. This field does not
          * contain transient messages which are not "real" records.
          */
-        orderedNonTransientMessages: many2many('Message', {
+        orderedNonTransientMessages: many('Message', {
             compute: '_computeOrderedNonTransientMessages',
         }),
         /**
          * Ordered typing members on this thread, excluding the current partner.
          */
-        orderedOtherTypingMembers: many2many('Partner', {
+        orderedOtherTypingMembers: many('Partner', {
             compute: '_computeOrderedOtherTypingMembers',
         }),
         /**
@@ -2287,7 +2287,7 @@ registerModel({
          * is currently typing for the longest time. This list includes current
          * partner as typer.
          */
-        orderedTypingMembers: many2many('Partner', {
+        orderedTypingMembers: many('Partner', {
             compute: '_computeOrderedTypingMembers',
         }),
         /**
@@ -2296,7 +2296,7 @@ registerModel({
         orderedTypingMemberLocalIds: attr({
             default: [],
         }),
-        originThreadAttachments: one2many('Attachment', {
+        originThreadAttachments: many('Attachment', {
             inverse: 'originThread',
             isCausal: true,
         }),
@@ -2304,14 +2304,14 @@ registerModel({
          * States the `Activity` that belongs to `this` and that are
          * overdue (due earlier than today).
          */
-        overdueActivities: one2many('Activity', {
+        overdueActivities: many('Activity', {
             compute: '_computeOverdueActivities',
         }),
         /**
          * Contains the seen information for all members of the thread.
          * FIXME This field should be readonly once task-2336946 is done.
          */
-        partnerSeenInfos: one2many('ThreadPartnerSeenInfo', {
+        partnerSeenInfos: many('ThreadPartnerSeenInfo', {
             inverse: 'thread',
             isCausal: true,
         }),
@@ -2325,17 +2325,17 @@ registerModel({
         /**
          * If set, the current thread is the thread that hosts the current RTC call.
          */
-        rtc: one2one('Rtc', {
+        rtc: one('Rtc', {
             inverse: 'channel',
         }),
         /**
          * The session that invited the current user, it is only set when the
          * invitation is still pending.
          */
-        rtcInvitingSession: many2one('RtcSession', {
+        rtcInvitingSession: one('RtcSession', {
             inverse: 'calledChannels',
         }),
-        rtcSessions: one2many('RtcSession', {
+        rtcSessions: many('RtcSession', {
             inverse: 'channel',
             isCausal: true,
         }),
@@ -2358,7 +2358,7 @@ registerModel({
          *
          * @see localMessageUnreadCounter
          */
-        serverLastMessage: many2one('Message'),
+        serverLastMessage: one('Message'),
         /**
          * Message unread counter coming from server.
          *
@@ -2375,7 +2375,7 @@ registerModel({
         /**
          * Determines the `SuggestedRecipientInfo` concerning `this`.
          */
-        suggestedRecipientInfoList: one2many('SuggestedRecipientInfo', {
+        suggestedRecipientInfoList: many('SuggestedRecipientInfo', {
             inverse: 'thread',
             isCausal: true,
         }),
@@ -2407,21 +2407,21 @@ registerModel({
         textInputSelectionDirectionBackup: attr({
             default: "none",
         }),
-        threadViews: one2many('ThreadView', {
+        threadViews: many('ThreadView', {
             inverse: 'thread',
         }),
         /**
          * States the `Activity` that belongs to `this` and that are due
          * specifically today.
          */
-        todayActivities: one2many('Activity', {
+        todayActivities: many('Activity', {
             compute: '_computeTodayActivities',
         }),
-        threadNeedactionPreviewViews: one2many('ThreadNeedactionPreviewView', {
+        threadNeedactionPreviewViews: many('ThreadNeedactionPreviewView', {
             inverse: 'thread',
             isCausal: true,
         }),
-        threadPreviewViews: one2many('ThreadPreviewView', {
+        threadPreviewViews: many('ThreadPreviewView', {
             inverse: 'thread',
             isCausal: true,
         }),
@@ -2429,7 +2429,7 @@ registerModel({
          * Members that are currently typing something in the composer of this
          * thread, including current partner.
          */
-        typingMembers: many2many('Partner'),
+        typingMembers: many('Partner'),
         /**
          * Text that represents the status on this thread about typing members.
          */

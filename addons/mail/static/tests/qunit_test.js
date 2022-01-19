@@ -1,28 +1,28 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { one2one } from '@mail/model/model_field';
+import { one } from '@mail/model/model_field';
 
 registerModel({
     name: 'QUnitTest',
     identifyingFields: [], // singleton acceptable (only one test at a time)
     fields: {
-        composer: one2one('Composer', {
+        composer: one('Composer', {
             isCausal: true,
         }),
-        composerView: one2one('ComposerView', {
+        composerView: one('ComposerView', {
             inverse: 'qunitTest',
             isCausal: true,
         }),
-        messageView: one2one('MessageView', {
+        messageView: one('MessageView', {
             inverse: 'qunitTest',
             isCausal: true,
         }),
-        notificationListView: one2one('NotificationListView', {
+        notificationListView: one('NotificationListView', {
             inverse: 'qunitTestOwner',
             isCausal: true,
         }),
-        threadViewer: one2one('ThreadViewer', {
+        threadViewer: one('ThreadViewer', {
             inverse: 'qunitTest',
             isCausal: true,
         }),

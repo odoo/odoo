@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, many2one, one2one } from '@mail/model/model_field';
+import { attr, one } from '@mail/model/model_field';
 import { clear, insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
@@ -59,11 +59,11 @@ registerModel({
         },
     },
     fields: {
-        chatter: one2one('Chatter', {
+        chatter: one('Chatter', {
             inverse: 'threadViewer',
             readonly: true,
         }),
-        chatWindow: one2one('ChatWindow', {
+        chatWindow: one('ChatWindow', {
             inverse: 'threadViewer',
             readonly: true,
         }),
@@ -73,11 +73,11 @@ registerModel({
         compact: attr({
             default: false,
         }),
-        discuss: one2one('Discuss', {
+        discuss: one('Discuss', {
             inverse: 'threadViewer',
             readonly: true,
         }),
-        discussPublicView: one2one('DiscussPublicView', {
+        discussPublicView: one('DiscussPublicView', {
             inverse: 'threadViewer',
             readonly: true,
         }),
@@ -115,11 +115,11 @@ registerModel({
         /**
          * Determines the `Thread` that should be displayed by `this`.
          */
-        thread: many2one('Thread'),
+        thread: one('Thread'),
         /**
          * States the `ThreadCache` that should be displayed by `this`.
          */
-        threadCache: many2one('ThreadCache', {
+        threadCache: one('ThreadCache', {
             related: 'thread.cache',
         }),
         /**
@@ -144,7 +144,7 @@ registerModel({
         /**
          * States the `ThreadView` currently displayed and managed by `this`.
          */
-        threadView: one2one('ThreadView', {
+        threadView: one('ThreadView', {
             compute: '_computeThreadView',
             inverse: 'threadViewer',
             isCausal: true,

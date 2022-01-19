@@ -3,7 +3,7 @@
 import { browser } from "@web/core/browser/browser";
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, one2one, one2many } from '@mail/model/model_field';
+import { attr, many, one } from '@mail/model/model_field';
 import { OnChange } from '@mail/model/model_onchange';
 import { clear, insert, insertAndReplace, link, unlink } from '@mail/model/model_field_command';
 
@@ -350,14 +350,14 @@ registerModel({
         /**
          * If set, the card to be displayed as the "main/spotlight" card.
          */
-        mainParticipantCard: one2one('RtcCallParticipantCard', {
+        mainParticipantCard: one('RtcCallParticipantCard', {
             compute: '_computeMainParticipantCard',
             inverse: 'rtcCallViewerOfMainCard',
         }),
         /**
          * The model for the controller (buttons).
          */
-        rtcController: one2one('RtcController', {
+        rtcController: one('RtcController', {
             default: insertAndReplace(),
             readonly: true,
             inverse: 'callViewer',
@@ -366,7 +366,7 @@ registerModel({
         /**
          * The model for the menu to control the layout of the viewer.
          */
-        rtcLayoutMenu: one2one('RtcLayoutMenu', {
+        rtcLayoutMenu: one('RtcLayoutMenu', {
             inverse: 'callViewer',
             isCausal: true,
         }),
@@ -385,7 +385,7 @@ registerModel({
         /**
          * ThreadView on which the call viewer is attached.
          */
-        threadView: one2one('ThreadView', {
+        threadView: one('ThreadView', {
             inverse: 'rtcCallViewer',
             readonly: true,
             required: true,
@@ -393,7 +393,7 @@ registerModel({
         /**
          * List of all participant cards (can either be invitations or rtcSessions).
          */
-        tileParticipantCards: one2many('RtcCallParticipantCard', {
+        tileParticipantCards: many('RtcCallParticipantCard', {
             compute: '_computeTileParticipantCards',
             inverse: 'rtcCallViewerOfTile',
         }),

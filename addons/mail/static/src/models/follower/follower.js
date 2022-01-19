@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, many2many, many2one, one2many } from '@mail/model/model_field';
+import { attr, many, one } from '@mail/model/model_field';
 import { clear, insert, insertAndReplace, link, replace, unlink, unlinkAll } from '@mail/model/model_field_command';
 
 registerModel({
@@ -142,7 +142,7 @@ registerModel({
         },
     },
     fields: {
-        followedThread: many2one('Thread', {
+        followedThread: one('Thread', {
             inverse: 'followers',
         }),
         id: attr({
@@ -155,14 +155,14 @@ registerModel({
         isEditable: attr({
             default: false,
         }),
-        partner: many2one('Partner', {
+        partner: one('Partner', {
             required: true,
         }),
-        selectedSubtypes: many2many('FollowerSubtype'),
-        subtypeList: one2many('FollowerSubtypeList', {
+        selectedSubtypes: many('FollowerSubtype'),
+        subtypeList: many('FollowerSubtypeList', {
             inverse: 'follower',
             isCausal: true,
         }),
-        subtypes: many2many('FollowerSubtype'),
+        subtypes: many('FollowerSubtype'),
     },
 });

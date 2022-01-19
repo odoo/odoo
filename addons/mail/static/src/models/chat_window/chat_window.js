@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, many2one, one2one } from '@mail/model/model_field';
+import { attr, one } from '@mail/model/model_field';
 import { clear, insertAndReplace, link, unlink } from '@mail/model/model_field_command';
 import { markEventHandled } from '@mail/utils/utils';
 
@@ -365,7 +365,7 @@ registerModel({
          * Determines the channel invitation form displayed by this chat window
          * (if any). Only makes sense if hasInviteFeature is true.
          */
-        channelInvitationForm: one2one('ChannelInvitationForm', {
+        channelInvitationForm: one('ChannelInvitationForm', {
             inverse: 'chatWindow',
             isCausal: true,
         }),
@@ -438,11 +438,11 @@ registerModel({
         isVisible: attr({
             compute: '_computeIsVisible',
         }),
-        manager: many2one('ChatWindowManager', {
+        manager: one('ChatWindowManager', {
             inverse: 'chatWindows',
             readonly: true,
         }),
-        managerAsNewMessage: one2one('ChatWindowManager', {
+        managerAsNewMessage: one('ChatWindowManager', {
             inverse: 'newMessageChatWindow',
             readonly: true,
         }),
@@ -453,20 +453,20 @@ registerModel({
          * Determines the `Thread` that should be displayed by `this`.
          * If no `Thread` is linked, `this` is considered "new message".
          */
-        thread: one2one('Thread', {
+        thread: one('Thread', {
             inverse: 'chatWindow',
             readonly: true,
         }),
         /**
          * States the `ThreadView` displaying `this.thread`.
          */
-        threadView: one2one('ThreadView', {
+        threadView: one('ThreadView', {
             related: 'threadViewer.threadView',
         }),
         /**
          * Determines the `ThreadViewer` managing the display of `this.thread`.
          */
-        threadViewer: one2one('ThreadViewer', {
+        threadViewer: one('ThreadViewer', {
             compute: '_computeThreadViewer',
             inverse: 'chatWindow',
             isCausal: true,

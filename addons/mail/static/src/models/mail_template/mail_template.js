@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, many2many } from '@mail/model/model_field';
+import { attr, many } from '@mail/model/model_field';
 
 registerModel({
     name: 'MailTemplate',
@@ -47,7 +47,7 @@ registerModel({
         },
     },
     fields: {
-        activities: many2many('Activity', {
+        activities: many('Activity', {
             inverse: 'mailTemplates',
         }),
         id: attr({

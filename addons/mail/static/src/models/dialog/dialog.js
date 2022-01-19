@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, many2one, one2one } from '@mail/model/model_field';
+import { attr, one } from '@mail/model/model_field';
 import { clear, replace } from '@mail/model/model_field_command';
 
 registerModel({
@@ -52,7 +52,7 @@ registerModel({
         },
     },
     fields: {
-        attachmentViewer: one2one('AttachmentViewer', {
+        attachmentViewer: one('AttachmentViewer', {
             isCausal: true,
             inverse: 'dialog',
             readonly: true,
@@ -61,7 +61,7 @@ registerModel({
             compute: '_computeComponentName',
             required: true,
         }),
-        followerSubtypeList: one2one('FollowerSubtypeList', {
+        followerSubtypeList: one('FollowerSubtypeList', {
             isCausal: true,
             inverse: 'dialog',
             readonly: true,
@@ -70,7 +70,7 @@ registerModel({
             compute: '_computeIsCloseable',
             default: true,
         }),
-        manager: many2one('DialogManager', {
+        manager: one('DialogManager', {
             inverse: 'dialogs',
             readonly: true,
         }),
@@ -79,7 +79,7 @@ registerModel({
          * a UI component, such as AttachmentViewer. These records must be
          * created from @see `DialogManager:open()`.
          */
-        record: one2one('Model', {
+        record: one('Model', {
             compute: '_computeRecord',
             isCausal: true,
             readonly: true,

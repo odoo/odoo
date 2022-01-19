@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, many2one, one2many } from '@mail/model/model_field';
+import { attr, many, one } from '@mail/model/model_field';
 import { clear, insert, unlink } from '@mail/model/model_field_command';
 import { OnChange } from '@mail/model/model_onchange';
 
@@ -124,10 +124,10 @@ registerModel({
         notification_type: attr({
             readonly: true,
         }),
-        notifications: one2many('Notification', {
+        notifications: many('Notification', {
             inverse: 'notificationGroup',
         }),
-        notificationGroupViews: one2many('NotificationGroupView', {
+        notificationGroupViews: many('NotificationGroupView', {
             inverse: 'notificationGroup',
             isCausal: true,
         }),
@@ -148,7 +148,7 @@ registerModel({
         /**
          * Related thread when the notification group concerns a single thread.
          */
-        thread: many2one('Thread', {
+        thread: one('Thread', {
             compute: '_computeThread',
         }),
     },

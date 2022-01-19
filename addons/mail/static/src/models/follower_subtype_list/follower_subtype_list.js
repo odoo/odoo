@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, many2one, one2one } from '@mail/model/model_field';
+import { attr, one } from '@mail/model/model_field';
 
 registerModel({
     name: 'FollowerSubtypeList',
@@ -25,12 +25,12 @@ registerModel({
         /**
          * States the dialog displaying this follower subtype list.
          */
-        dialog: one2one('Dialog', {
+        dialog: one('Dialog', {
             inverse: 'followerSubtypeList',
             isCausal: true,
             readonly: true,
         }),
-        follower: many2one('Follower', {
+        follower: one('Follower', {
             inverse: 'subtypeList',
             readonly: true,
             required: true,

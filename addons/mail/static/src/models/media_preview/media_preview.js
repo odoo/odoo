@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { attr, one2one } from '@mail/model/model_field';
+import { attr, one } from '@mail/model/model_field';
 import { registerModel } from '@mail/model/model_core';
 
 registerModel({
@@ -175,7 +175,7 @@ registerModel({
         /**
          * States the welcome view containing this media preview.
          */
-        welcomeView: one2one('WelcomeView', {
+        welcomeView: one('WelcomeView', {
             inverse: 'mediaPreview',
             readonly: true,
         }),

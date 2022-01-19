@@ -3,7 +3,7 @@
 import { browser } from "@web/core/browser/browser";
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, one2many, one2one } from '@mail/model/model_field';
+import { attr, many, one } from '@mail/model/model_field';
 import { clear, insert, unlink } from '@mail/model/model_field_command';
 
 import { monitorAudio } from '@mail/utils/media_monitoring/media_monitoring';
@@ -1201,13 +1201,13 @@ registerModel({
         /**
          * The channel that is hosting the current RTC call.
          */
-        channel: one2one('Thread', {
+        channel: one('Thread', {
             inverse: 'rtc',
         }),
         /**
          * String, peerToken of the current session used to identify him during the peer-to-peer transactions.
          */
-        currentRtcSession: one2one('RtcSession', {
+        currentRtcSession: one('RtcSession', {
             inverse: 'rtc',
         }),
         /**
@@ -1249,7 +1249,7 @@ registerModel({
         logs: attr({
             default: {},
         }),
-        peerNotificationsToSend: one2many('RtcPeerNotification', {
+        peerNotificationsToSend: many('RtcPeerNotification', {
             isCausal: true,
         }),
         /**

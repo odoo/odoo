@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, one2one } from '@mail/model/model_field';
+import { attr, one } from '@mail/model/model_field';
 import { insert, unlink } from '@mail/model/model_field_command';
 
 registerModel({
@@ -161,14 +161,14 @@ registerModel({
         /**
          * Partner related to this employee.
          */
-        partner: one2one('Partner', {
+        partner: one('Partner', {
             inverse: 'employee',
             related: 'user.partner',
         }),
         /**
          * User related to this employee.
          */
-        user: one2one('User', {
+        user: one('User', {
             inverse: 'employee',
         }),
     },

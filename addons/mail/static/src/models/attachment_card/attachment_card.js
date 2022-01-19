@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, many2one } from '@mail/model/model_field';
+import { attr, one } from '@mail/model/model_field';
 import { insert, insertAndReplace, replace } from '@mail/model/model_field_command';
 
 registerModel({
@@ -55,14 +55,14 @@ registerModel({
         /**
          * Determines the attachment of this card.
          */
-        attachment: many2one('Attachment', {
+        attachment: one('Attachment', {
             readonly: true,
             required: true,
         }),
         /**
          * States the attachmentList displaying this card.
          */
-        attachmentList: many2one('AttachmentList', {
+        attachmentList: one('AttachmentList', {
             inverse: 'attachmentCards',
             readonly: true,
             required: true,

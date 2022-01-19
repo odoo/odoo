@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, many2one, one2one } from '@mail/model/model_field';
+import { attr, one } from '@mail/model/model_field';
 import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
 
 registerModel({
@@ -132,7 +132,7 @@ registerModel({
          * Determines the attachment list displaying the attachments of this
          * message (if any).
          */
-        attachmentList: one2one('AttachmentList', {
+        attachmentList: one('AttachmentList', {
             compute: '_computeAttachmentList',
             inverse: 'messageView',
             isCausal: true,
@@ -142,14 +142,14 @@ registerModel({
          * States the component displaying this message view (if any).
          */
         component: attr(),
-        composerForEditing: one2one('Composer', {
+        composerForEditing: one('Composer', {
             inverse: 'messageViewInEditing',
             isCausal: true,
         }),
         /**
         * Determines the composer that is used to edit this message (if any).
         */
-        composerViewInEditing: one2one('ComposerView', {
+        composerViewInEditing: one('ComposerView', {
             inverse: 'messageViewInEditing',
             isCausal: true,
         }),
@@ -183,7 +183,7 @@ registerModel({
         /**
          * Determines the message action list of this message view (if any).
          */
-        messageActionList: one2one('MessageActionList', {
+        messageActionList: one('MessageActionList', {
             compute: '_computeMessageActionList',
             inverse: 'messageView',
             isCausal: true,
@@ -193,7 +193,7 @@ registerModel({
          * States the message action list that is displaying this message view
          * in its delete confirmation view.
          */
-        messageActionListWithDelete: one2one('MessageActionList', {
+        messageActionListWithDelete: one('MessageActionList', {
             inverse: 'messageViewForDelete',
             isCausal: true,
             readonly: true,
@@ -201,7 +201,7 @@ registerModel({
         /**
          * Determines the message that is displayed by this message view.
          */
-        message: many2one('Message', {
+        message: one('Message', {
             inverse: 'messageViews',
             readonly: true,
             required: true,
@@ -210,7 +210,7 @@ registerModel({
          * States the message in reply to view that displays the message of
          * which this message is a reply to (if any).
          */
-        messageInReplyToView: one2one('MessageInReplyToView', {
+        messageInReplyToView: one('MessageInReplyToView', {
             compute: '_computeMessageInReplyToView',
             inverse: 'messageView',
             isCausal: true,
@@ -219,7 +219,7 @@ registerModel({
         /**
          * States the thread view that is displaying this messages (if any).
          */
-        threadView: many2one('ThreadView', {
+        threadView: one('ThreadView', {
             inverse: 'messageViews',
             readonly: true,
         }),
