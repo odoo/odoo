@@ -1,13 +1,13 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, one2many } from '@mail/model/model_field';
+import { attr, many } from '@mail/model/model_field';
 
 registerModel({
     name: 'ActivityType',
     identifyingFields: ['id'],
     fields: {
-        activities: one2many('Activity', {
+        activities: many('Activity', {
             inverse: 'type',
         }),
         displayName: attr(),

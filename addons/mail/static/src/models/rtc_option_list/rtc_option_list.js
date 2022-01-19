@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, one2one } from '@mail/model/model_field';
+import { attr, one } from '@mail/model/model_field';
 
 registerModel({
     name: 'RtcOptionList',
@@ -61,7 +61,7 @@ registerModel({
          * States the OWL component of this option list.
          */
         component: attr(),
-        rtcController: one2one('RtcController', {
+        rtcController: one('RtcController', {
             inverse: 'rtcOptionList',
             readonly: true,
             required: true,

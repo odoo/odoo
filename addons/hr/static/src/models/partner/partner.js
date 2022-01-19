@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { addFields, addRecordMethods, patchRecordMethods } from '@mail/model/model_core';
-import { attr, one2one } from '@mail/model/model_field';
+import { attr, one } from '@mail/model/model_field';
 // ensure that the model definition is loaded before the patch
 import '@mail/models/partner/partner';
 
@@ -45,7 +45,7 @@ addFields('Partner', {
      * Employee related to this partner. It is computed through
      * the inverse relation and should be considered read-only.
      */
-    employee: one2one('Employee', {
+    employee: one('Employee', {
         inverse: 'partner',
     }),
     /**

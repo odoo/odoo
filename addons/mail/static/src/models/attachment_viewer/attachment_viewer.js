@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, many2many, many2one, one2one } from '@mail/model/model_field';
+import { attr, many, one } from '@mail/model/model_field';
 
 registerModel({
     name: 'AttachmentViewer',
@@ -47,12 +47,12 @@ registerModel({
         angle: attr({
             default: 0,
         }),
-        attachment: many2one('Attachment'),
-        attachmentList: many2one('AttachmentList', {
+        attachment: one('Attachment'),
+        attachmentList: one('AttachmentList', {
             readonly: true,
             required: true,
         }),
-        attachments: many2many('Attachment', {
+        attachments: many('Attachment', {
             related: 'attachmentList.viewableAttachments',
         }),
         /**
@@ -62,7 +62,7 @@ registerModel({
         /**
          * Determines the dialog displaying this attachment viewer.
          */
-        dialog: one2one('Dialog', {
+        dialog: one('Dialog', {
             inverse: 'attachmentViewer',
             isCausal: true,
             readonly: true,

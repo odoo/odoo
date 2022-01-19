@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, many2many, one2many, one2one } from '@mail/model/model_field';
+import { attr, many, one } from '@mail/model/model_field';
 import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
 
 registerModel({
@@ -185,40 +185,40 @@ registerModel({
         },
     },
     fields: {
-        discussOwner: one2one('Discuss', {
+        discussOwner: one('Discuss', {
             inverse: 'notificationListView',
             readonly: true,
         }),
         filter: attr({
             compute: '_computeFilter',
         }),
-        filteredThreads: many2many('Thread', {
+        filteredThreads: many('Thread', {
             compute: '_computeFilteredThreads',
         }),
-        messagingMenuOwner: one2one('MessagingMenu', {
+        messagingMenuOwner: one('MessagingMenu', {
             inverse: 'notificationListView',
             readonly: true,
         }),
-        notificationGroupViews: one2many('NotificationGroupView', {
+        notificationGroupViews: many('NotificationGroupView', {
             compute: '_computeNotificationGroupViews',
             inverse: 'notificationListViewOwner',
             isCausal: true,
         }),
-        notificationRequestView: one2one('NotificationRequestView', {
+        notificationRequestView: one('NotificationRequestView', {
             compute: '_computeNotificationRequestView',
             inverse: 'notificationListViewOwner',
             isCausal: true,
         }),
-        notificationViews: one2many('Model', {
+        notificationViews: many('Model', {
             compute: '_computeNotificationViews',
             isCausal: true,
         }),
-        threadNeedactionPreviewViews: one2many('ThreadNeedactionPreviewView', {
+        threadNeedactionPreviewViews: many('ThreadNeedactionPreviewView', {
             compute: '_computeThreadNeedactionPreviewViews',
             inverse: 'notificationListViewOwner',
             isCausal: true,
         }),
-        threadPreviewViews: one2many('ThreadPreviewView', {
+        threadPreviewViews: many('ThreadPreviewView', {
             compute: '_computeThreadPreviewViews',
             inverse: 'notificationListViewOwner',
             isCausal: true,

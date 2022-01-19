@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, one2one } from '@mail/model/model_field';
+import { attr, one } from '@mail/model/model_field';
 import { replace } from '@mail/model/model_field_command';
 import { markEventHandled } from '@mail/utils/utils';
 
@@ -59,7 +59,7 @@ registerModel({
         hasBodyBackLink: attr({
             compute: '_computeHasBodyBackLink',
         }),
-        messageView: one2one('MessageView', {
+        messageView: one('MessageView', {
             inverse: 'messageInReplyToView',
             readonly: true,
             required: true,

@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, one2many, one2one } from '@mail/model/model_field';
+import { attr, many, one } from '@mail/model/model_field';
 import { insertAndReplace, replace } from '@mail/model/model_field_command';
 
 registerModel({
@@ -25,12 +25,12 @@ registerModel({
         },
     },
     fields: {
-        activityViews: one2many('ActivityView', {
+        activityViews: many('ActivityView', {
             compute: '_computeActivityViews',
             inverse: 'activityBoxView',
             isCausal: true,
         }),
-        chatter: one2one('Chatter', {
+        chatter: one('Chatter', {
             inverse: 'activityBoxView',
             readonly: true,
             required: true,

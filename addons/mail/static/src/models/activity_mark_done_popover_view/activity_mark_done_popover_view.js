@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, one2one } from '@mail/model/model_field';
+import { attr, one } from '@mail/model/model_field';
 
 registerModel({
     name: 'ActivityMarkDonePopoverView',
@@ -67,7 +67,7 @@ registerModel({
         },
     },
     fields: {
-        activityViewOwner: one2one('ActivityView', {
+        activityViewOwner: one('ActivityView', {
             inverse: 'activityMarkDonePopoverView',
             readonly: true,
             required: true,

@@ -3,7 +3,7 @@
 import { browser } from "@web/core/browser/browser";
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, one2one, one2many } from '@mail/model/model_field';
+import { attr, many, one } from '@mail/model/model_field';
 import { insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
@@ -251,7 +251,7 @@ registerModel({
         /**
          * Model for the component with the controls for RTC related settings.
          */
-        rtcConfigurationMenu: one2one('RtcConfigurationMenu', {
+        rtcConfigurationMenu: one('RtcConfigurationMenu', {
             default: insertAndReplace(),
             inverse: 'userSetting',
             isCausal: true,
@@ -284,7 +284,7 @@ registerModel({
         /**
          * Determines the volume chosen by the current user for each other user.
          */
-        volumeSettings: one2many('VolumeSetting', {
+        volumeSettings: many('VolumeSetting', {
             inverse: 'userSetting',
             isCausal: true,
         }),

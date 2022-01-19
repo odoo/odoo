@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, many2one, one2many } from '@mail/model/model_field';
+import { attr, many, one } from '@mail/model/model_field';
 import { insert, link, unlink } from '@mail/model/model_field_command';
 
 registerModel({
@@ -93,7 +93,7 @@ registerModel({
         /**
          * Country of the visitor.
          */
-        country: many2one('Country', {
+        country: one('Country', {
             compute: '_computeCountry',
         }),
         /**
@@ -125,11 +125,11 @@ registerModel({
         /**
          * Partner linked to this visitor, if any.
          */
-        partner: many2one('Partner'),
+        partner: one('Partner'),
         /**
          * Threads with this visitor as member
          */
-        threads: one2many('Thread', {
+        threads: many('Thread', {
             inverse: 'visitor',
         }),
         /**

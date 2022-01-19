@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, many2one, one2one } from '@mail/model/model_field';
+import { attr, one } from '@mail/model/model_field';
 import { clear } from '@mail/model/model_field_command';
 
 import Dialog from 'web.Dialog';
@@ -212,7 +212,7 @@ registerModel({
         /**
          * Determines the discuss sidebar category displaying this item.
          */
-        category: many2one('DiscussSidebarCategory', {
+        category: one('DiscussSidebarCategory', {
             inverse: 'categoryItems',
             readonly: true,
             required: true,
@@ -270,7 +270,7 @@ registerModel({
         /**
          * The related channel thread.
          */
-        channel: one2one('Thread', {
+        channel: one('Thread', {
             inverse: 'discussSidebarCategoryItem',
             readonly: true,
             required: true,

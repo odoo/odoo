@@ -1,18 +1,18 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { many2one } from '@mail/model/model_field';
+import { one } from '@mail/model/model_field';
 
 registerModel({
     name: 'ThreadNeedactionPreviewView',
     identifyingFields: ['notificationListViewOwner', 'thread'],
     fields: {
-        notificationListViewOwner: many2one('NotificationListView', {
+        notificationListViewOwner: one('NotificationListView', {
             inverse: 'threadNeedactionPreviewViews',
             readonly: true,
             required: true,
         }),
-        thread: many2one('Thread', {
+        thread: one('Thread', {
             inverse: 'threadNeedactionPreviewViews',
             readonly: true,
             required: true,

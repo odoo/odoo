@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, many2many, many2one, one2many } from '@mail/model/model_field';
+import { attr, many, one } from '@mail/model/model_field';
 import { clear, insert, unlink, unlinkAll } from '@mail/model/model_field_command';
 
 registerModel({
@@ -232,19 +232,19 @@ registerModel({
         },
     },
     fields: {
-        activityViews: one2many('ActivityView', {
+        activityViews: many('ActivityView', {
             inverse: 'activity',
             isCausal: true,
         }),
-        assignee: many2one('User'),
-        attachments: many2many('Attachment', {
+        assignee: one('User'),
+        attachments: many('Attachment', {
             inverse: 'activities',
         }),
         canWrite: attr({
             default: false,
         }),
         category: attr(),
-        creator: many2one('User'),
+        creator: one('User'),
         dateCreate: attr(),
         dateDeadline: attr(),
         /**
@@ -265,7 +265,7 @@ registerModel({
             compute: '_computeIsCurrentPartnerAssignee',
             default: false,
         }),
-        mailTemplates: many2many('MailTemplate', {
+        mailTemplates: many('MailTemplate', {
             inverse: 'activities',
         }),
         /**
@@ -284,17 +284,17 @@ registerModel({
          * Also, be useful when the assigned user is different from the
          * "source" or "requesting" partner.
          */
-        requestingPartner: many2one('Partner'),
+        requestingPartner: one('Partner'),
         state: attr(),
         summary: attr(),
         /**
          * Determines to which "thread" (using `mail.activity.mixin` on the
          * server) `this` belongs to.
          */
-        thread: many2one('Thread', {
+        thread: one('Thread', {
             inverse: 'activities',
         }),
-        type: many2one('ActivityType', {
+        type: one('ActivityType', {
             inverse: 'activities',
         }),
     },

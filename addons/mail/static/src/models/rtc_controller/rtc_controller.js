@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, one2one } from '@mail/model/model_field';
+import { attr, one } from '@mail/model/model_field';
 import { insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
@@ -82,7 +82,7 @@ registerModel({
         },
     },
     fields: {
-        callViewer: one2one('RtcCallViewer', {
+        callViewer: one('RtcCallViewer', {
             inverse: 'rtcController',
             readonly: true,
             required: true,
@@ -90,7 +90,7 @@ registerModel({
         isSmall: attr({
             compute: '_computeIsSmall',
         }),
-        rtcOptionList: one2one('RtcOptionList', {
+        rtcOptionList: one('RtcOptionList', {
             default: insertAndReplace(),
             inverse: 'rtcController',
             isCausal: true,

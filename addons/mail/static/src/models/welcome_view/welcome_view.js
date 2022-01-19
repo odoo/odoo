@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, one2one } from '@mail/model/model_field';
+import { attr, one } from '@mail/model/model_field';
 import { clear, insertAndReplace } from '@mail/model/model_field_command';
 
 const getNextGuestNameInputId = (function () {
@@ -128,14 +128,14 @@ registerModel({
          * States the channel to redirect to once the user clicks on the
          * 'joinButton'.
          */
-        channel: one2one('Thread', {
+        channel: one('Thread', {
             readonly: true,
             required: true,
         }),
         /**
          * States discuss public view on which this welcome view is displayed.
          */
-        discussPublicView: one2one('DiscussPublicView', {
+        discussPublicView: one('DiscussPublicView', {
             inverse: 'welcomeView',
             readonly: true,
             required: true,
@@ -182,7 +182,7 @@ registerModel({
         /**
          * States the media preview embedded in this welcome view.
          */
-        mediaPreview: one2one('MediaPreview', {
+        mediaPreview: one('MediaPreview', {
             compute: '_computeMediaPreview',
             inverse: 'welcomeView',
             isCausal: true,

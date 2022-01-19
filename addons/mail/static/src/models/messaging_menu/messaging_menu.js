@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, one2many, one2one } from '@mail/model/model_field';
+import { attr, many, one } from '@mail/model/model_field';
 import { clear, insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
@@ -94,7 +94,7 @@ registerModel({
         isOpen: attr({
             default: false,
         }),
-        notificationListView: one2one('NotificationListView', {
+        notificationListView: one('NotificationListView', {
             compute: '_computeNotificationListView',
             inverse: 'messagingMenuOwner',
             isCausal: true,
@@ -102,7 +102,7 @@ registerModel({
         /**
          * The navbar view on the messaging menu when in mobile.
          */
-         mobileMessagingNavbarView: one2one('MobileMessagingNavbarView', {
+         mobileMessagingNavbarView: one('MobileMessagingNavbarView', {
             compute: '_computeMobileMessagingNavbarView',
             inverse: 'messagingMenu',
             isCausal: true,
@@ -110,7 +110,7 @@ registerModel({
         /**
          * States all the pinned channels that have unread messages.
          */
-        pinnedAndUnreadChannels: one2many('Thread', {
+        pinnedAndUnreadChannels: many('Thread', {
             inverse: 'messagingMenuAsPinnedAndUnreadChannel',
             readonly: true,
         }),

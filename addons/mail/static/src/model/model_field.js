@@ -87,8 +87,7 @@ export class ModelField {
         /**
          * This prop only makes sense in a relational field. Determine which
          * type of relation there is between current record and other records.
-         * 4 types of relation are supported: 'one2one', 'one2many', 'many2one'
-         * and 'many2many'.
+         * 2 types of relation are supported: 'many', 'one'.
          */
         this.relationType = relationType;
         /**
@@ -146,47 +145,25 @@ export class ModelField {
     }
 
     /**
-     * Define a many2many field.
+     * Define a many field.
      *
      * @param {string} modelName
      * @param {Object} [options]
      * @returns {Object}
      */
-    static many2many(modelName, options) {
-        return ModelField._relation(modelName, Object.assign({}, options, { relationType: 'many2many' }));
+    static many(modelName, options) {
+        return ModelField._relation(modelName, Object.assign({}, options, { relationType: 'many' }));
     }
 
     /**
-     * Define a many2one field.
+     * Define a one field.
      *
      * @param {string} modelName
      * @param {Object} [options]
      * @returns {Object}
      */
-    static many2one(modelName, options) {
-        return ModelField._relation(modelName, Object.assign({}, options, { relationType: 'many2one' }));
-    }
-
-    /**
-     * Define a one2many field.
-     *
-     * @param {string} modelName
-     * @param {Object} [options]
-     * @returns {Object}
-     */
-    static one2many(modelName, options) {
-        return ModelField._relation(modelName, Object.assign({}, options, { relationType: 'one2many' }));
-    }
-
-    /**
-     * Define a one2one field.
-     *
-     * @param {string} modelName
-     * @param {Object} [options]
-     * @returns {Object}
-     */
-    static one2one(modelName, options) {
-        return ModelField._relation(modelName, Object.assign({}, options, { relationType: 'one2one' }));
+    static one(modelName, options) {
+        return ModelField._relation(modelName, Object.assign({}, options, { relationType: 'one' }));
     }
 
     /**
@@ -226,7 +203,7 @@ export class ModelField {
         const [relationName, relatedFieldName] = this.related.split('.');
         const Model = record.constructor;
         const relationField = Model.__fieldMap[relationName];
-        if (['one2many', 'many2many'].includes(relationField.relationType)) {
+        if (relationField.relationType === 'many') {
             const newVal = [];
             for (const otherRecord of record[relationName]) {
                 const otherValue = otherRecord[relatedFieldName];
@@ -302,7 +279,7 @@ export class ModelField {
             return this.read(record);
         }
         if (this.fieldType === 'relation') {
-            if (['one2one', 'many2one'].includes(this.relationType)) {
+            if (this.relationType === 'one') {
                 return this.read(record);
             }
             return [...this.read(record)];
@@ -486,11 +463,12 @@ export class ModelField {
      */
     _insertOtherRecord(record, data) {
         const OtherModel = record.models[this.to];
+        const otherField = OtherModel.__fieldMap[this.inverse];
         const isMulti = typeof data[Symbol.iterator] === 'function';
         const dataList = [];
         for (const recordData of (isMulti ? data : [data])) {
             const recordData2 = { ...recordData };
-            if (['one2one', 'one2many'].includes(this.relationType)) {
+            if (otherField.relationType === 'one') {
                 recordData2[this.inverse] = replace(record);
             } else {
                 recordData2[this.inverse] = link(record);
@@ -577,11 +555,9 @@ export class ModelField {
      */
     _setRelationLink(record, newValue, options) {
         switch (this.relationType) {
-            case 'many2many':
-            case 'one2many':
+            case 'many':
                 return this._setRelationLinkX2Many(record, newValue, options);
-            case 'many2one':
-            case 'one2one':
+            case 'one':
                 return this._setRelationLinkX2One(record, newValue, options);
         }
     }
@@ -672,7 +648,7 @@ export class ModelField {
      * @returns {boolean} whether the value changed for the current field
      */
     _setRelationReplace(record, newValue, options) {
-        if (['one2one', 'many2one'].includes(this.relationType)) {
+        if (this.relationType === 'one') {
             // for x2one replace is just link
             return this._setRelationLinkX2One(record, newValue, options);
         }
@@ -738,11 +714,9 @@ export class ModelField {
      */
     _setRelationUnlink(record, newValue, options) {
         switch (this.relationType) {
-            case 'many2many':
-            case 'one2many':
+            case 'many':
                 return this._setRelationUnlinkX2Many(record, newValue, options);
-            case 'many2one':
-            case 'one2one':
+            case 'one':
                 return this._setRelationUnlinkX2One(record, options);
         }
     }
@@ -867,7 +841,5 @@ export class ModelField {
 }
 
 export const attr = ModelField.attr;
-export const many2many = ModelField.many2many;
-export const many2one = ModelField.many2one;
-export const one2many = ModelField.one2many;
-export const one2one = ModelField.one2one;
+export const many = ModelField.many;
+export const one = ModelField.one;

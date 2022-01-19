@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { attr, one2one } from '@mail/model/model_field';
+import { attr, one } from '@mail/model/model_field';
 import { registerModel } from '@mail/model/model_core';
 import { clear, insertAndReplace, link } from '@mail/model/model_field_command';
 
@@ -54,7 +54,7 @@ registerModel({
         /**
          * States the channel linked to this discuss public view.
          */
-        channel: one2one('Thread', {
+        channel: one('Thread', {
             readonly: true,
             required: true,
         }),
@@ -72,21 +72,21 @@ registerModel({
         /**
          * States the thread view linked to this discuss public view.
          */
-        threadView: one2one('ThreadView', {
+        threadView: one('ThreadView', {
             readonly: true,
             related: 'threadViewer.threadView',
         }),
         /**
          * States the thread viewer linked to this discuss public view.
          */
-        threadViewer: one2one('ThreadViewer', {
+        threadViewer: one('ThreadViewer', {
             inverse: 'discussPublicView',
             isCausal: true,
         }),
         /**
          * States the welcome view linked to this discuss public view.
          */
-        welcomeView: one2one('WelcomeView', {
+        welcomeView: one('WelcomeView', {
             inverse: 'discussPublicView',
             isCausal: true,
         }),

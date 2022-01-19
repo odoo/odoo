@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, many2many, many2one } from '@mail/model/model_field';
+import { attr, many, one } from '@mail/model/model_field';
 import { replace, unlinkAll } from '@mail/model/model_field_command';
 
 registerModel({
@@ -225,20 +225,20 @@ registerModel({
         /**
          * The message concerned by this seen indicator.
          */
-        message: many2one('Message', {
+        message: one('Message', {
             readonly: true,
             required: true,
         }),
-        partnersThatHaveFetched: many2many('Partner', {
+        partnersThatHaveFetched: many('Partner', {
             compute: '_computePartnersThatHaveFetched',
         }),
-        partnersThatHaveSeen: many2many('Partner', {
+        partnersThatHaveSeen: many('Partner', {
             compute: '_computePartnersThatHaveSeen',
         }),
         /**
          * The thread concerned by this seen indicator.
          */
-        thread: many2one('Thread', {
+        thread: one('Thread', {
             inverse: 'messageSeenIndicators',
             readonly: true,
             required: true,

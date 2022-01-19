@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, one2one } from '@mail/model/model_field';
+import { attr, one } from '@mail/model/model_field';
 import { insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
@@ -23,7 +23,7 @@ registerModel({
         },
     },
     fields: {
-        chatter: one2one('Chatter', {
+        chatter: one('Chatter', {
             inverse: 'attachmentBoxView',
             readonly: true,
             required: true,
@@ -32,7 +32,7 @@ registerModel({
          * States the OWL component displaying this attachment box.
          */
         component: attr(),
-        fileUploader: one2one('FileUploader', {
+        fileUploader: one('FileUploader', {
             default: insertAndReplace(),
             inverse: 'attachmentBoxView',
             isCausal: true,

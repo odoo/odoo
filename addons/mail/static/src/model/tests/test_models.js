@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, many2one, one2many, one2one } from '@mail/model/model_field';
+import { attr, many, one } from '@mail/model/model_field';
 import { insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
@@ -13,7 +13,7 @@ registerModel({
             required: true,
         }),
         addressInfo: attr(),
-        contact: one2one('TestContact', {
+        contact: one('TestContact', {
             inverse: 'address',
         }),
     },
@@ -27,19 +27,19 @@ registerModel({
             readonly: true,
             required: true,
         }),
-        address: one2one('TestAddress', {
+        address: one('TestAddress', {
             inverse: 'contact',
         }),
-        favorite: one2one('TestHobby', {
+        favorite: one('TestHobby', {
             default: insertAndReplace({ description: 'football' }),
         }),
-        hobbies: one2many('TestHobby', {
+        hobbies: many('TestHobby', {
             default: insertAndReplace([
                 { description: 'hiking' },
                 { description: 'fishing' },
             ]),
         }),
-        tasks: one2many('TestTask', {
+        tasks: many('TestTask', {
             inverse: 'responsible'
         }),
     },
@@ -68,7 +68,7 @@ registerModel({
         difficulty: attr({
             default: 1,
         }),
-        responsible: many2one('TestContact', {
+        responsible: one('TestContact', {
             inverse: 'tasks'
         }),
     },

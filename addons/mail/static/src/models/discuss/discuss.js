@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, many2one, one2one } from '@mail/model/model_field';
+import { attr, one } from '@mail/model/model_field';
 import { clear, insertAndReplace, link, unlink } from '@mail/model/model_field_command';
 
 registerModel({
@@ -344,14 +344,14 @@ registerModel({
         /**
          * Discuss sidebar category for `channel` type channel threads.
          */
-        categoryChannel: one2one('DiscussSidebarCategory', {
+        categoryChannel: one('DiscussSidebarCategory', {
             inverse: 'discussAsChannel',
             isCausal: true,
         }),
         /**
          * Discuss sidebar category for `chat` type channel threads.
          */
-        categoryChat: one2one('DiscussSidebarCategory', {
+        categoryChat: one('DiscussSidebarCategory', {
             inverse: 'discussAsChat',
             isCausal: true,
         }),
@@ -402,7 +402,7 @@ registerModel({
         menu_id: attr({
             default: null,
         }),
-        notificationListView: one2one('NotificationListView', {
+        notificationListView: one('NotificationListView', {
             compute: '_computeNotificationListView',
             inverse: 'discussOwner',
             isCausal: true,
@@ -411,7 +411,7 @@ registerModel({
          * The navbar view on the discuss app when in mobile and when not
          * replying to a message from inbox.
          */
-        mobileMessagingNavbarView: one2one('MobileMessagingNavbarView', {
+        mobileMessagingNavbarView: one('MobileMessagingNavbarView', {
             compute: '_computeMobileMessagingNavbarView',
             inverse: 'discuss',
             isCausal: true,
@@ -426,19 +426,19 @@ registerModel({
         /**
          * Determines the `Thread` that should be displayed by `this`.
          */
-        thread: many2one('Thread', {
+        thread: one('Thread', {
             compute: '_computeThread',
         }),
         /**
          * States the `ThreadView` displaying `this.thread`.
          */
-        threadView: one2one('ThreadView', {
+        threadView: one('ThreadView', {
             related: 'threadViewer.threadView',
         }),
         /**
          * Determines the `ThreadViewer` managing the display of `this.thread`.
          */
-        threadViewer: one2one('ThreadViewer', {
+        threadViewer: one('ThreadViewer', {
             compute: '_computeThreadViewer',
             inverse: 'discuss',
             isCausal: true,

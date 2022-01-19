@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, one2one, many2one } from '@mail/model/model_field';
+import { attr, one } from '@mail/model/model_field';
 import { OnChange } from '@mail/model/model_onchange';
 
 registerModel({
@@ -28,17 +28,17 @@ registerModel({
         },
     },
     fields: {
-        guest: one2one('Guest', {
+        guest: one('Guest', {
             inverse: 'volumeSetting',
         }),
         id: attr({
             readonly: true,
             required: true,
         }),
-        partner: one2one('Partner', {
+        partner: one('Partner', {
             inverse: 'volumeSetting',
         }),
-        userSetting: many2one('UserSetting', {
+        userSetting: one('UserSetting', {
             inverse: 'volumeSettings',
             required: true,
         }),
