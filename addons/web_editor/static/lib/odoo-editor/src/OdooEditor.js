@@ -1469,7 +1469,6 @@ export class OdooEditor extends EventTarget {
         const result = this._protect(() => this._applyRawCommand(...args));
         this.sanitize();
         this.historyStep();
-        this._handleCommandHint();
         return result;
     }
     /**
