@@ -33,6 +33,7 @@ from . import test_module
 from . import test_orm
 from . import test_ormcache
 from . import test_osv
+from . import test_qweb_field
 from . import test_qweb
 from . import test_res_config
 from . import test_res_lang
