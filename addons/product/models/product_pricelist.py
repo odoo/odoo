@@ -3,7 +3,12 @@
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError, ValidationError
+<<<<<<< HEAD
 from odoo.tools import format_datetime, formatLang, get_lang
+=======
+from odoo.tools import format_datetime
+from odoo.tools.misc import formatLang, get_lang
+>>>>>>> 3b80995dfd5... temp
 
 
 class Pricelist(models.Model):
@@ -464,8 +469,12 @@ class PricelistItem(models.Model):
                 item.name = _("All Products")
 
             if item.compute_price == 'fixed':
+<<<<<<< HEAD
                 item.price = formatLang(
                     item.env, item.fixed_price, monetary=True, dp="Product Price", currency_obj=item.currency_id)
+=======
+                item.price = formatLang(item.env, item.fixed_price, monetary=True, dp="Product Price", currency_obj=item.currency_id)
+>>>>>>> 3b80995dfd5... temp
             elif item.compute_price == 'percentage':
                 item.price = _("%s %% discount", item.percent_price)
             else:
