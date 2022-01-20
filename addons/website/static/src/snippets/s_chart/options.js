@@ -305,6 +305,9 @@ options.registry.InnerChart = options.Class.extend({
         const newEl = document.createElement(tag);
         const contentEl = document.createElement('input');
         contentEl.type = 'text';
+        if (tag === 'td') {
+            contentEl.type = 'number';
+        }
         contentEl.value = value || '';
         if (backgroundColor) {
             contentEl.dataset.backgroundColor = backgroundColor;
