@@ -59,7 +59,8 @@ class TestUBLBE(AccountEdiTestCommon):
         pdf_writer = PdfFileWriter()
         pdf_writer.addBlankPage(42, 42)
         pdf_writer.write(pdf_buffer)
-        self.env.ref('account.account_invoices_without_payment')._postprocess_pdf_report(invoice, pdf_buffer)
+        stream_data = {'stream': pdf_buffer}
+        self.env.ref('account.account_invoices_without_payment')._l10n_be_edi_add_pdf_into_invoice_xml(invoice, stream_data)
         pdf_buffer.close()
 
         attachment = invoice._get_edi_attachment(self.edi_format)
