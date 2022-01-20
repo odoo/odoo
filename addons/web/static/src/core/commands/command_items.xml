@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+  <t t-name="web.DefaultCommandItem" owl="1">
+    <div class="o_command_default">
+      <t t-slot="name"/>
+    </div>
+  </t>
+
+  <t t-name="web.HotkeyCommandItem" owl="1">
+    <div class="o_command_hotkey">
+      <t t-slot="name"/>
+      <span>
+        <t t-foreach="getKeysToPress(props)" t-as="key">
+          <kbd t-esc="key" />
+          <span t-if="!key_last"> + </span>
+        </t>
+      </span>
+    </div>
+  </t>
+
+</templates>

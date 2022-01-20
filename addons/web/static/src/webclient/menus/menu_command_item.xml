@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+  <t t-name="web.AppIconCommand" owl="1">
+    <div class="o_command_default">
+        <t t-slot="name"/>
+        <img t-if="props.webIconData" class="o_app_icon" t-attf-src="{{props.webIconData}}"/>
+        <div t-else="" class="o_app_icon" t-attf-style="background-color:{{props.webIcon.backgroundColor}}" >
+          <i t-att-class="props.webIcon.iconClass" t-attf-style="color:{{props.webIcon.color}}"></i>
+        </div>
+    </div>
+  </t>
+
+</templates>
