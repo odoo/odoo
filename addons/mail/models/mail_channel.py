@@ -804,6 +804,23 @@ class Channel(models.Model):
             channel_infos.append(info)
         return channel_infos
 
+    def channel_info_light(self):
+        """ Light very of 'channel_info'
+            :returns a list of channels values
+            :rtype : list(dict)
+        """
+        if not self:
+            return []
+        channel_infos = []
+        for channel in self:
+            info = {
+                'id': channel.id,
+                'name': channel.name,
+                'uuid': channel.uuid,
+            }
+            channel_infos.append(info)
+        return channel_infos
+
     def _channel_info_format_member(self, partner, partner_info):
         """Returns member information in the context of self channel."""
         self.ensure_one()

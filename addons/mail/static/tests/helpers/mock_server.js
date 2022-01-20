@@ -663,7 +663,7 @@ MockServer.include({
             const message_type = "notification";
             const subtype_xmlid = "mail.mt_comment";
             this._mockMailChannelMessagePost(
-                [channel.id],
+                channel.id,
                 { body, message_type, subtype_xmlid },
             );
         }
@@ -893,6 +893,23 @@ MockServer.include({
                 }];
             }
             return res;
+        });
+    },
+    /**
+     * Simulates `channel_info_light` on `mail.channel`.
+     *
+     * @private
+     * @param {integer[]} ids
+     * @returns {Object[]}
+     */
+     _mockMailChannelChannelInfoLight(ids) {
+        const channels = this._getRecords('mail.channel', [['id', 'in', ids]]);
+        return channels.map(channel => {
+            return {
+                'id': channel.id,
+                'name': channel.name,
+                'uuid': channel.uuid,
+            };
         });
     },
     /**
@@ -2102,7 +2119,7 @@ MockServer.include({
     _mockResUsers_InitMessaging(ids) {
         const user = this._getRecords('res.users', [['id', 'in', ids]])[0];
         return {
-            channels: this._mockMailChannelChannelInfo(this._mockResPartner_GetChannelsAsMember(user.partner_id).map(channel => channel.id)),
+            channels: this._mockMailChannelChannelInfoLight(this._mockResPartner_GetChannelsAsMember(user.partner_id).map(channel => channel.id)),
             current_partner: this._mockResPartnerMailPartnerFormat(user.partner_id).get(user.partner_id),
             current_user_id: this.currentUserId,
             current_user_settings: this._mockResUsersSettings_FindOrCreateForUser(user.id),

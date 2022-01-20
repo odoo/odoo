@@ -80,7 +80,7 @@ class MailGuest(models.Model):
         self.ensure_one()
         partner_root = self.env.ref('base.partner_root')
         return {
-            'channels': self.channel_ids.channel_info(),
+            'channels': self.channel_ids.channel_info_light(),
             'companyName': self.env.company.name,
             'currentGuest': {
                 'id': self.id,
