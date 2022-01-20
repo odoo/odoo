@@ -74,6 +74,13 @@ options.registry.SocialMedia = options.Class.extend({
             // Handle visibility of the link
             anchorEl.classList.toggle('d-none', !entry.selected);
 
+            // Check if the url is valid.
+            const url = entry.display_name;
+            if (url && !/^(([a-zA-Z]+):|\/)/.test(url)) {
+                // We permit every protocol (http:, https:, ftp:, mailto:,...).
+                // If none is explicitly specified, we assume it is a https.
+                entry.display_name = `https://${url}`;
+            }
             const dbField = anchorEl.href.split('/website/social/')[1];
             if (dbField) {
                 // Handle URL change for DB links.
