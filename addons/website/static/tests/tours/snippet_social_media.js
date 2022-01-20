@@ -58,9 +58,8 @@ tour.register('snippet_social_media', {
                  ":has(a:eq(3)[href='/website/social/instagram'])" +
                  ":has(a:eq(4)[href='/website/social/github'])" +
                  ":has(a:eq(5)[href='https://www.youtu.be/y7TlnAv6cto']:has(i.fa-youtube))" +
-                 ":has(a:eq(6)[href='/website/social/facebook'].d-none)" +
-                 ":has(a:eq(7)[href='https://whatever.it/1EdSw9X']:has(i.fa-pencil))" +
-                 ":has(a:eq(8)[href='https://instagr.am/odoo.official/']:has(i.fa-instagram))",
+                 ":has(a:eq(6)[href='https://whatever.it/1EdSw9X']:has(i.fa-pencil))" +
+                 ":has(a:eq(7)[href='https://instagr.am/odoo.official/']:has(i.fa-instagram))",
     },
     // Create a custom link, not officially supported, ensure icon is found.
     {
