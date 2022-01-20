@@ -87,11 +87,14 @@ class AccountChartTemplate(models.Model):
 
     name = fields.Char(required=True)
     parent_id = fields.Many2one('account.chart.template', string='Parent Chart Template')
-    code_digits = fields.Integer(string='# of Digits', required=True, default=6, help="No. of Digits to use for account code")
+    code_digits = fields.Integer(string='# of Digits', help="No. of Digits to use for account code")
+    _code_digits = fields.Integer(compute='_compute_code_digits', recursive=True)
     visible = fields.Boolean(string='Can be Visible?', default=True,
         help="Set this to False if you don't want this template to be used actively in the wizard that generate Chart of Accounts from "
             "templates, this is useful when you want to generate accounts of this template only when loading its child template.")
-    currency_id = fields.Many2one('res.currency', string='Currency', required=True)
+    currency_id = fields.Many2one('res.currency', string='Currency')
+    _currency_id = fields.Many2one('res.currency', compute='_compute_currency_id',
+                                   required=True, recursive=True)
     use_anglo_saxon = fields.Boolean(string="Use Anglo-Saxon accounting", default=False)
     use_storno_accounting = fields.Boolean(string="Use Storno accounting", default=False)
     complete_tax_set = fields.Boolean(string='Complete Set of Taxes', default=True,
@@ -99,15 +102,23 @@ class AccountChartTemplate(models.Model):
             "of taxes. This last choice assumes that the set of tax defined on this template is complete")
     account_ids = fields.One2many('account.account.template', 'chart_template_id', string='Associated Account Templates')
     tax_template_ids = fields.One2many('account.tax.template', 'chart_template_id', string='Tax Template List',
-        help='List of all the taxes that have to be installed by the wizard')
-    bank_account_code_prefix = fields.Char(string='Prefix of the bank accounts', required=True)
-    cash_account_code_prefix = fields.Char(string='Prefix of the main cash accounts', required=True)
-    transfer_account_code_prefix = fields.Char(string='Prefix of the main transfer accounts', required=True)
+                                       help='List of all the taxes that have to be installed by the wizard')
+    bank_account_code_prefix = fields.Char(string='Prefix of the bank accounts')
+    _bank_account_code_prefix = fields.Char(compute='_compute_bank_account_code_prefix', required=True,
+                                            recursive=True)
+    cash_account_code_prefix = fields.Char(string='Prefix of the main cash accounts')
+    _cash_account_code_prefix = fields.Char(compute='_compute_cash_account_code_prefix', required=True,
+                                            recursive=True)
+    transfer_account_code_prefix = fields.Char(string='Prefix of the main transfer accounts')
+    _transfer_account_code_prefix = fields.Char(compute='_compute_transfer_account_code_prefix', required=True,
+                                                recursive=True)
     income_currency_exchange_account_id = fields.Many2one('account.account.template',
         string="Gain Exchange Rate Account", domain=[('internal_type', '=', 'other'), ('deprecated', '=', False)])
     expense_currency_exchange_account_id = fields.Many2one('account.account.template',
         string="Loss Exchange Rate Account", domain=[('internal_type', '=', 'other'), ('deprecated', '=', False)])
-    country_id = fields.Many2one(string="Country", comodel_name='res.country', help="The country this chart of accounts belongs to. None if it's generic.")
+    country_id = fields.Many2one(string="Country", comodel_name='res.country',
+                                 help="The country this chart of accounts belongs to. None if it's generic.")
+    _country_id = fields.Many2one(comodel_name='res.country', compute='_compute_country_id', recursive=True)
 
     account_journal_suspense_account_id = fields.Many2one('account.account.template', string='Journal Suspense Account')
     account_journal_payment_debit_account_id = fields.Many2one('account.account.template', string='Journal Outstanding Receipts Account')
@@ -136,6 +147,55 @@ class AccountChartTemplate(models.Model):
         help="Account that will be set on lines created in cash basis journal entry and used to keep track of the "
              "tax base amount.")
 
+    @api.constrains('parent_id', 'currency_id', 'code_digits', 'bank_account_code_prefix',
+                    'cash_account_code_prefix', 'transfer_account_code_prefix')
+    def _constraints_required_parent(self):
+        for record in self:
+            if not record.parent_id:
+                required_fields = (
+                    record.currency_id,
+                    record.code_digits,
+                    record.bank_account_code_prefix,
+                    record.cash_account_code_prefix,
+                    record.transfer_account_code_prefix
+                )
+                missing_fields = [field for field in required_fields if not field]
+                if missing_fields:
+                    raise ValidationError(_("Missing required fields on %s: ") + ", ".join(missing_fields))
+
+    @api.depends('code_digits', 'parent_id')
+    def _compute_code_digits(self):
+        for record in self:
+            record._code_digits = record.code_digits or record.parent_id._code_digits or 6
+
+    @api.depends('_currency_id', 'parent_id')
+    def _compute_currency_id(self):
+        for record in self:
+            record._currency_id = record.currency_id or record.parent_id._currency_id
+
+    @api.depends('country_id', 'parent_id')
+    def _compute_country_id(self):
+        for record in self:
+            record._country_id = record.country_id or record.parent_id._country_id
+
+    @api.depends('bank_account_code_prefix', 'parent_id')
+    def _compute_bank_account_code_prefix(self):
+        for record in self:
+            record._bank_account_code_prefix = record.bank_account_code_prefix or \
+                                               record.parent_id._bank_account_code_prefix
+
+    @api.depends('cash_account_code_prefix', 'parent_id')
+    def _compute_cash_account_code_prefix(self):
+        for record in self:
+            record._cash_account_code_prefix = record.cash_account_code_prefix or \
+                                               record.parent_id._cash_account_code_prefix
+
+    @api.depends('transfer_account_code_prefix', 'parent_id')
+    def _compute_transfer_account_code_prefix(self):
+        for record in self:
+            record._transfer_account_code_prefix = record.transfer_account_code_prefix or \
+                                                   record.parent_id._transfer_account_code_prefix
+
     @api.model
     def _prepare_transfer_account_template(self, prefix=None):
         ''' Prepare values to create the transfer account that is an intermediary account used when moving money
@@ -143,8 +203,8 @@ class AccountChartTemplate(models.Model):
 
         :return:    A dictionary of values to create a new account.account.
         '''
-        digits = self.code_digits
-        prefix = prefix or self.transfer_account_code_prefix or ''
+        digits = self._code_digits
+        prefix = prefix or self._transfer_account_code_prefix or ''
         # Flatten the hierarchy of chart templates.
         chart_template = self
         chart_templates = self
@@ -258,23 +318,23 @@ class AccountChartTemplate(models.Model):
                     res.with_context(force_delete=True).unlink()
             existing_accounts.unlink()
 
-        company.write({'currency_id': self.currency_id.id,
+        company.write({'currency_id': self._currency_id.id,
                        'anglo_saxon_accounting': self.use_anglo_saxon,
                        'account_storno': self.use_storno_accounting,
-                       'bank_account_code_prefix': self.bank_account_code_prefix,
-                       'cash_account_code_prefix': self.cash_account_code_prefix,
-                       'transfer_account_code_prefix': self.transfer_account_code_prefix,
+                       'bank_account_code_prefix': self._bank_account_code_prefix,
+                       'cash_account_code_prefix': self._cash_account_code_prefix,
+                       'transfer_account_code_prefix': self._transfer_account_code_prefix,
                        'chart_template_id': self.id
         })
 
         #set the coa currency to active
-        self.currency_id.write({'active': True})
+        self._currency_id.write({'active': True})
 
         # When we install the CoA of first company, set the currency to price types and pricelists
         if company.id == 1:
             for reference in ['product.list_price', 'product.standard_price', 'product.list0']:
                 try:
-                    tmp2 = self.env.ref(reference).write({'currency_id': self.currency_id.id})
+                    self.env.ref(reference).write({'currency_id': self._currency_id.id})
                 except ValueError:
                     pass
 
@@ -282,17 +342,19 @@ class AccountChartTemplate(models.Model):
         self._create_tax_templates_from_rates(company.id, sale_tax_rate, purchase_tax_rate)
 
         # Install all the templates objects and generate the real objects
-        acc_template_ref, taxes_ref = self._install_template(company, code_digits=self.code_digits)
+        acc_template_ref = self._install_template(company, code_digits=self._code_digits)[0]
 
         # Set default cash difference account on company
         if not company.account_journal_suspense_account_id:
-            company.account_journal_suspense_account_id = self._create_liquidity_journal_suspense_account(company, self.code_digits)
+            company.account_journal_suspense_account_id = self._create_liquidity_journal_suspense_account(company,
+                                                                                                          self._code_digits)
 
         account_type_current_assets = self.env.ref('account.data_account_type_current_assets')
         if not company.account_journal_payment_debit_account_id:
             company.account_journal_payment_debit_account_id = self.env['account.account'].create({
                 'name': _("Outstanding Receipts"),
-                'code': self.env['account.account']._search_new_account_code(company, self.code_digits, company.bank_account_code_prefix or ''),
+                'code': self.env['account.account']._search_new_account_code(company, self._code_digits,
+                                                                             company.bank_account_code_prefix or ''),
                 'reconcile': True,
                 'user_type_id': account_type_current_assets.id,
                 'company_id': company.id,
@@ -301,7 +363,8 @@ class AccountChartTemplate(models.Model):
         if not company.account_journal_payment_credit_account_id:
             company.account_journal_payment_credit_account_id = self.env['account.account'].create({
                 'name': _("Outstanding Payments"),
-                'code': self.env['account.account']._search_new_account_code(company, self.code_digits, company.bank_account_code_prefix or ''),
+                'code': self.env['account.account']._search_new_account_code(company, self._code_digits,
+                                                                             company.bank_account_code_prefix or ''),
                 'reconcile': True,
                 'user_type_id': account_type_current_assets.id,
                 'company_id': company.id,
@@ -310,7 +373,7 @@ class AccountChartTemplate(models.Model):
         if not company.default_cash_difference_expense_account_id:
             company.default_cash_difference_expense_account_id = self.env['account.account'].create({
                 'name': _('Cash Difference Loss'),
-                'code': self.env['account.account']._search_new_account_code(company, self.code_digits, '999'),
+                'code': self.env['account.account']._search_new_account_code(company, self._code_digits, '999'),
                 'user_type_id': self.env.ref('account.data_account_type_expenses').id,
                 'tag_ids': [(6, 0, self.env.ref('account.account_tag_investing').ids)],
                 'company_id': company.id,
@@ -319,7 +382,7 @@ class AccountChartTemplate(models.Model):
         if not company.default_cash_difference_income_account_id:
             company.default_cash_difference_income_account_id = self.env['account.account'].create({
                 'name': _('Cash Difference Gain'),
-                'code': self.env['account.account']._search_new_account_code(company, self.code_digits, '999'),
+                'code': self.env['account.account']._search_new_account_code(company, self._code_digits, '999'),
                 'user_type_id': self.env.ref('account.data_account_type_revenue').id,
                 'tag_ids': [(6, 0, self.env.ref('account.account_tag_investing').ids)],
                 'company_id': company.id,
@@ -327,7 +390,7 @@ class AccountChartTemplate(models.Model):
 
         # Set the transfer account on the company
         company.transfer_account_id = self.env['account.account'].search([
-            ('code', '=like', self.transfer_account_code_prefix + '%'), ('company_id', '=', company.id)], limit=1)
+            ('code', '=like', self._transfer_account_code_prefix + '%'), ('company_id', '=', company.id)], limit=1)
 
         # Create Bank journals
         self._create_bank_journals(company, acc_template_ref)
@@ -339,9 +402,9 @@ class AccountChartTemplate(models.Model):
         company.account_sale_tax_id = self.env['account.tax'].search([('type_tax_use', 'in', ('sale', 'all')), ('company_id', '=', company.id)], limit=1).id
         company.account_purchase_tax_id = self.env['account.tax'].search([('type_tax_use', 'in', ('purchase', 'all')), ('company_id', '=', company.id)], limit=1).id
 
-        if self.country_id:
+        if self._country_id:
             # If this CoA is made for only one country, set it as the fiscal country of the company.
-            company.account_fiscal_country_id = self.country_id
+            company.account_fiscal_country_id = self._country_id
 
         return {}
 
@@ -568,7 +631,7 @@ class AccountChartTemplate(models.Model):
         if taxes_ref is None:
             taxes_ref = {}
         if not code_digits:
-            code_digits = self.code_digits
+            code_digits = self._code_digits
         AccountTaxObj = self.env['account.tax']
 
         # Generate taxes from templates.
@@ -996,7 +1059,8 @@ class AccountTaxTemplate(models.Model):
         if taxes_in_country:
             return
 
-        templates_to_instantiate = self.env['account.tax.template'].with_context(active_test=False).search([('chart_template_id.country_id', '=', country.id)])
+        templates_to_instantiate = self.env['account.tax.template'].with_context(active_test=False).search([(
+            'chart_template_id._country_id', '=', country.id)])
         default_company_taxes = company.account_sale_tax_id + company.account_purchase_tax_id
         rep_lines_accounts = templates_to_instantiate._generate_tax(company)['account_dict']
 
@@ -1121,8 +1185,8 @@ class AccountTaxTemplate(models.Model):
                 if all(child in tax_template_to_tax for child in template.children_tax_ids):
                     vals = template._get_tax_vals(company, tax_template_to_tax)
 
-                    if self.chart_template_id.country_id:
-                        vals['country_id'] = self.chart_template_id.country_id.id
+                    if self.chart_template_id._country_id:
+                        vals['country_id'] = self.chart_template_id._country_id.id
                     elif company.account_fiscal_country_id:
                         vals['country_id'] = company.account_fiscal_country_id.id
                     else:
