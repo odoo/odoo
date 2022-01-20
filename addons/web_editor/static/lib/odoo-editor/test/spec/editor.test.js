@@ -2248,7 +2248,7 @@ X[]
                         contentAfter: '<p><b>abc</b></p><p>[]<br></p>',
                     });
                 });
-                it.only('should insert line breaks outside the edges of an anchor', async () => {
+                it('should insert line breaks outside the edges of an anchor', async () => {
                     const pressEnter = editor => {
                         editor.document.execCommand('insertParagraph');
                     }
