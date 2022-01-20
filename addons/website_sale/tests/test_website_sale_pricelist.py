@@ -30,10 +30,6 @@ Try to keep one call to `get_pricelist_available` by test method.
 @tagged('post_install', '-at_install')
 class TestWebsitePriceList(TransactionCase):
 
-    # Mock nedded because request.session doesn't exist during test
-    def _get_pricelist_available(self, show_visible=False):
-        return self.get_pl(self.args.get('show'), self.args.get('current_pl'), self.args.get('country'))
-
     def setUp(self):
         super(TestWebsitePriceList, self).setUp()
         self.env.user.partner_id.country_id = False  # Remove country to avoid property pricelist computed.
@@ -110,14 +106,17 @@ class TestWebsitePriceList(TransactionCase):
         patcher.start()
         self.addCleanup(patcher.stop)
 
-    def get_pl(self, show, current_pl, country):
+    # Mock nedded because request.session doesn't exist during test
+    def _get_pricelist_available(self, show_visible=False):
+        return self.get_pl(self.args.get('show'), self.args.get('current_pl'), self.args.get('country'))
+
+    def get_pl(self, show_visible, current_pl_id, country_code):
         self.website.invalidate_cache(['pricelist_ids'], [self.website.id])
         pl_ids = self.website._get_pl_partner_order(
-            country,
-            show,
-            self.website.pricelist_id.id,
-            current_pl,
-            self.website.pricelist_ids
+            country_code,
+            show_visible,
+            current_pl_id=current_pl_id,
+            website_pricelist_ids=tuple(self.website.pricelist_ids.ids),
         )
         return self.env['product.pricelist'].browse(pl_ids)
 
@@ -291,20 +290,6 @@ def simulate_frontend_context(self, website_id=1):
 
 @tagged('post_install', '-at_install')
 class TestWebsitePriceListAvailable(TransactionCase):
-    # This is enough to avoid a mock (request.session/website do not exist during test)
-    def get_pricelist_available(self, show_visible=False, website_id=1, country_code=None, website_sale_current_pl=None):
-        website = self.env['website'].browse(website_id)
-        request = DotDict({
-            'website': website,
-            'session': {
-                'geoip': {
-                    'country_code': country_code,
-                },
-                'website_sale_current_pl': website_sale_current_pl,
-            },
-        })
-        return website._get_pricelist_available(request, show_visible)
-
     def setUp(self):
         super(TestWebsitePriceListAvailable, self).setUp()
         Pricelist = self.env['product.pricelist']
@@ -362,6 +347,8 @@ class TestWebsitePriceListAvailable(TransactionCase):
         })
         existing_pricelists.write({'active': False})
 
+        self.website = self.env['website'].browse(1)
+
         simulate_frontend_context(self)
 
     def test_get_pricelist_available(self):
@@ -369,12 +356,12 @@ class TestWebsitePriceListAvailable(TransactionCase):
 
         # Test get all available pricelists
         pls_to_return = self.generic_pl_select + self.generic_pl_code + self.generic_pl_code_select + self.w1_pl + self.w1_pl_select + self.w1_pl_code + self.w1_pl_code_select
-        pls = self.get_pricelist_available()
+        pls = self.website.get_pricelist_available()
         self.assertEqual(pls, pls_to_return, "Every pricelist having the correct website_id set or (no website_id but a code or selectable) should be returned")
 
         # Test get all available and visible pricelists
         pls_to_return = self.generic_pl_select + self.generic_pl_code_select + self.w1_pl_select + self.w1_pl_code_select
-        pls = self.get_pricelist_available(show_visible=True)
+        pls = self.website.get_pricelist_available(show_visible=True)
         self.assertEqual(pls, pls_to_return, "Only selectable pricelists website compliant (website_id False or current website) should be returned")
 
     def test_property_product_pricelist_for_inactive_partner(self):
@@ -433,19 +420,22 @@ class TestWebsitePriceListAvailableGeoIP(TestWebsitePriceListAvailable):
         # property_product_pricelist will also be returned in the available pricelists
         self.website1_be_pl += self.env.user.partner_id.property_product_pricelist
 
-        pls = self.get_pricelist_available(country_code=self.BE.code)
+        with patch('odoo.addons.website_sale.models.website.Website._get_geoip_country_code', return_value=self.BE.code):
+            pls = self.website.get_pricelist_available()
         self.assertEqual(pls, self.website1_be_pl, "Only pricelists for BE and accessible on website should be returned, and the partner pl")
 
     def test_get_pricelist_available_geoip2(self):
         # Test get all available pricelists with geoip and a partner pricelist (ir.property) not website compliant
         self.env.user.partner_id.property_product_pricelist = self.backend_pl
-        pls = self.get_pricelist_available(country_code=self.BE.code)
+        with patch('odoo.addons.website_sale.models.website.Website._get_geoip_country_code', return_value=self.BE.code):
+            pls = self.website.get_pricelist_available()
         self.assertEqual(pls, self.website1_be_pl, "Only pricelists for BE and accessible on website should be returned as partner pl is not website compliant")
 
     def test_get_pricelist_available_geoip3(self):
         # Test get all available pricelists with geoip and a partner pricelist (ir.property) website compliant (but not geoip compliant)
         self.env.user.partner_id.property_product_pricelist = self.w1_pl_code_select
-        pls = self.get_pricelist_available(country_code=self.BE.code)
+        with patch('odoo.addons.website_sale.models.website.Website._get_geoip_country_code', return_value=self.BE.code):
+            pls = self.website.get_pricelist_available()
         self.assertEqual(pls, self.website1_be_pl, "Only pricelists for BE and accessible on website should be returned, but not the partner pricelist as it is website compliant but not GeoIP compliant.")
 
     def test_get_pricelist_available_geoip4(self):
@@ -455,7 +445,9 @@ class TestWebsitePriceListAvailableGeoIP(TestWebsitePriceListAvailable):
         pls_to_return += self.env.user.partner_id.property_product_pricelist
 
         current_pl = self.w1_pl_code
-        pls = self.get_pricelist_available(country_code=self.BE.code, show_visible=True, website_sale_current_pl=current_pl.id)
+        with patch('odoo.addons.website_sale.models.website.Website._get_geoip_country_code', return_value=self.BE.code), \
+            patch('odoo.addons.website_sale.models.website.Website._get_cached_pricelist_id', return_value=current_pl.id):
+            pls = self.website.get_pricelist_available(show_visible=True)
         self.assertEqual(pls, pls_to_return + current_pl, "Only pricelists for BE, accessible en website and selectable should be returned. It should also return the applied promo pl")
 
 
