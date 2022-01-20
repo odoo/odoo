@@ -65,9 +65,9 @@
                     <span>Oops! This room is currently closed</span><br />
                     Come back between
                     <strong>
-                        <t t-out="sponsor.hour_from" t-options="{'widget': 'float_time'}"/>
+                        <t t-out="sponsor.hour_from" t-options="{'widget': 'time'}"/>
                         -
-                        <t t-out="sponsor.hour_to" t-options="{'widget': 'float_time'}"/>
+                        <t t-out="sponsor.hour_to" t-options="{'widget': 'time'}"/>
                     </strong> (<span t-out="sponsor.event_date_tz"/>)
                     to meet them !
                 </div>
@@ -117,10 +117,10 @@
                     <div t-if="sponsor.hour_from and sponsor.hour_to"
                         t-att-class="'%s' % 'mb-3' if sponsor.hour_from and sponsor.hour_to else ''">
                         Available from
-                        <t t-out="sponsor.hour_from" t-options="{'widget': 'float_time'}"/>
+                        <t t-out="sponsor.hour_from" t-options="{'widget': 'time'}"/>
                         -
-                        <t t-out="sponsor.hour_to" t-options="{'widget': 'float_time'}"/>
-                        <span t-out="sponsor.event_date_tz"/>
+                        <t t-out="sponsor.hour_to" t-options="{'widget': 'time'}"/>
+                        (<span t-out="sponsor.event_date_tz"/>)
                     </div>
                     <div t-if="sponsor.url" class="d-flex text-break align-items-baseline">
                         <i class="fa fa-home mr-2"/><a t-att-href="sponsor.url"><span t-field="sponsor.url"/></a>

@@ -182,6 +182,9 @@
                             <span class="font-weight-bold" t-out="tracks_date"
                                 t-options="{'widget': 'date', 'format': 'YYYY'}"/>
                         </div>
+                        <div class="flex-column align-self-center ml-2">
+                            <span class="small font-weight-light">(<t t-out="event.date_tz"/>)</span>
+                        </div>
                     </div>
                     <div class="d-flex flex-grow-1" t-elif="tracks_header_name">
                         <span class="h1 m-0 font-weight-bold"
@@ -203,7 +206,7 @@
                         t-att-class="'o_wesession_list_item px-2 py-2 event_color_%d' % (track.color)">
                         <!-- Side information in a floating div (desktop only) -->
                         <div t-if="not event.is_done and (not track.date or today_tz &lt;= tracks_date) and option_track_wishlist"
-                            class="float-right d-none d-md-block ml-2">
+                            class="float-right d-none d-md-block ml-2 py-1">
                             <t t-call="website_event_track.track_widget_reminder">
                                 <t t-set="reminder_small" t-value="False"/>
                                 <t t-set="reminder_light" t-value="False"/>
@@ -214,7 +217,7 @@
                             <div class="col-md-7">
                                 <!-- Reminder widget: directly in line to gain space, mobile only -->
                                 <div t-if="not event.is_done and (not track.date or today_tz &lt;= tracks_date) and option_track_wishlist"
-                                    class="float-right d-block d-md-none ml-2">
+                                    class="float-right d-block d-md-none ml-2 py-1">
                                     <t t-call="website_event_track.track_widget_reminder">
                                         <t t-set="reminder_small" t-value="True"/>
                                         <t t-set="reminder_light" t-value="False"/>
@@ -251,7 +254,7 @@
                                             <span t-elif="not track.is_track_done and not track.is_track_soon"
                                                 class="ml-2"
                                                 t-out="track.date"
-                                                t-options="{'widget': 'datetime', 'time_only': True, 'format': 'short'}"/>
+                                                t-options="{'widget': 'datetime', 'time_only': True, 'format': 'short', 'tz_name': track.event_id.date_tz}"/>
                                             <span t-else="" class="badge badge-info ml-2">Finished</span>
                                         </div>
                                         <!-- Duration (desktop only) -->
@@ -265,7 +268,7 @@
                                 </div>
                             </div>
                             <!-- Aside column: date, tags -->
-                            <div class="col-md-5">
+                            <div class="col-md-5 align-self-center">
                                 <!-- Hour: Live > Remaining > Hour: desktop only -->
                                 <div t-if="tracks_date and today_tz &lt;= tracks_date"
                                     class="d-none d-md-block float-right">
@@ -280,7 +283,7 @@
                                     <span t-elif="not track.is_track_done and not track.is_track_soon"
                                         class="ml-2"
                                         t-out="track.date"
-                                        t-options="{'widget': 'datetime', 'time_only': True, 'format': 'short'}"/>
+                                        t-options="{'widget': 'datetime', 'time_only': True, 'format': 'short', 'tz_name': event.date_tz}"/>
                                     <span t-else="" class="badge badge-info ml-2">Finished</span>
                                 </div>
                                 <!-- Tags: desktop only -->

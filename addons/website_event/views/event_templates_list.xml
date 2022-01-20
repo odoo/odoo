@@ -198,8 +198,11 @@
                             </h5>
                             <!-- Start Date & Time -->
                             <time itemprop="startDate" t-att-datetime="event.date_begin">
-                                <span t-field="event.with_context(tz=event.date_tz).date_begin" t-options="{'date_only': 'true', 'format': 'long'}"/> -
-                                <span t-field="event.with_context(tz=event.date_tz).date_begin" t-options="{'time_only': 'true', 'format': 'short'}" class="oe_hide_on_date_edit"/>
+                                <span t-field="event.with_context(tz=event.date_tz).date_begin"
+                                    t-options="{'date_only': 'true', 'format': 'long', 'tz_name': event.date_tz}"/> -
+                                <span t-field="event.with_context(tz=event.date_tz).date_begin" class="oe_hide_on_date_edit"
+                                    t-options="{'time_only': 'true', 'format': 'short', 'tz_name': event.date_tz}"/>
+                                (<span t-field="event.date_tz"/>)
                             </time>
                             <!-- Location -->
                             <div itemprop="location" t-field="event.address_id" t-options="{'widget': 'contact', 'fields': ['city'], 'no_marker': 'true'}"/>
