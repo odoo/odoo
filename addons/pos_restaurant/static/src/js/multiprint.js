@@ -300,13 +300,6 @@ models.Order = models.Order.extend({
     init_from_JSON: function(json){
         _super_order.init_from_JSON.apply(this,arguments);
         this.saved_resume = json.multiprint_resume && JSON.parse(json.multiprint_resume);
-        // Since the order summary structure has changed, we need to remove the old lines
-        // Otherwise, this fix deployment will lead to some errors
-        for (var key in this.saved_resume) {
-            if (this.saved_resume[key].pid == undefined) {
-                delete this.saved_resume[key];
-            }
-        }
     },
 });
 
