@@ -21,8 +21,8 @@
         <field name="model">project.collaborator</field>
         <field name="arch" type="xml">
             <tree string="Project Collaborators" create="0">
-                <field name="project_id" options="{'no_create': True}"/>
                 <field name="partner_id" options="{'no_create': True}"/>
+                <field name="partner_email"/>
             </tree>
         </field>
     </record>

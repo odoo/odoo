@@ -7,12 +7,6 @@
             <field name="groups_id" eval="[Command.link(ref('group_project_user'))]"/>
         </record>
 
-        <!-- Groups : Add subtasks, recurring tasks and task dependencies by default -->
-        <record id="base.group_user" model="res.groups">
-            <field name="implied_ids"
-                   eval="[Command.link(ref('group_subtask_project')), Command.link(ref('group_project_recurring_tasks')), Command.link(ref('group_project_task_dependencies'))]"/>
-        </record>
-
         <!-- Categories -->
         <record id="project_tags_00" model="project.tags">
             <field name="name">Bug</field>
