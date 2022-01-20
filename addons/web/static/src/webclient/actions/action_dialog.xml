@@ -5,7 +5,7 @@
     <xpath expr="//header/h4[contains(concat(' ',normalize-space(@class),' '),' modal-title ')]" position="before">
       <DebugMenu t-if="env.debug" />
     </xpath>
-    <xpath expr="//main[@class='modal-body']" position="attributes">
+    <xpath expr="//main[hasclass('modal-body')]" position="attributes">
       <attribute name="t-att-class">
         {"o_act_window": actionType === "ir.actions.act_window"}
       </attribute>
