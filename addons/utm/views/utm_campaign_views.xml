@@ -121,61 +121,16 @@
         </field>
     </record>
 
-    <!--  CAMPAIGN TAGS !-->
-    <record id="utm_tag_view_tree" model="ir.ui.view">
-        <field name="name">utm.tag.view.tree</field>
-        <field name="model">utm.tag</field>
-        <field name="arch" type="xml">
-            <tree string="Campaign Tags" editable="top">
-                <field name="name"/>
-            </tree>
-        </field>
-    </record>
-
-    <record id="action_view_utm_tag" model="ir.actions.act_window">
-        <field name="name">Campaign Tags</field>
-        <field name="res_model">utm.tag</field>
+    <record id="utm_campaign_action" model="ir.actions.act_window">
+        <field name="name">Campaigns</field>
+        <field name="res_model">utm.campaign</field>
+        <field name="view_mode">tree,kanban,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Create a Tag
-            </p><p>
-                Assign tags to your campaigns to organize, filter and track them.
+                Create a campaign
             </p>
-        </field>
-    </record>
-
-    <!--  CAMPAIGN STAGE !-->
-    <record model="ir.ui.view" id="utm_stage_view_search">
-        <field name="name">utm.stage.view.search</field>
-        <field name="model">utm.stage</field>
-        <field name="arch" type="xml">
-            <search string="Stages">
-                <field name="name"/>
-            </search>
-        </field>
-    </record>
-
-    <record model="ir.ui.view" id="utm_stage_view_tree">
-        <field name="name">utm.stage.view.tree</field>
-        <field name="model">utm.stage</field>
-        <field name="priority">10</field>
-        <field name="arch" type="xml">
-            <tree string="Stages" editable="top">
-                <field name="sequence" widget="handle"/>
-                <field name="name"/>
-            </tree>
-        </field>
-    </record>
-
-    <record id="action_view_utm_stage" model="ir.actions.act_window">
-        <field name="name">UTM Stages</field>
-        <field name="res_model">utm.stage</field>
-        <field name="view_mode">tree,form</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-            Create a stage for your campaigns
-            </p><p>
-            Stages allow you to organize your workflow  (e.g. : plan, design, in progress,  done, …).
+            <p>
+                Campaigns are used to centralize your marketing efforts and track their results.
             </p>
         </field>
     </record>
