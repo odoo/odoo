@@ -2028,6 +2028,7 @@ const ListUserValueWidget = UserValueWidget.extend({
             draggableTdEl.appendChild(draggableEl);
             trEl.appendChild(draggableTdEl);
         }
+        let recordDataSelected = false;
         const inputEl = document.createElement('input');
         inputEl.type = this.el.dataset.inputType || 'text';
         if (value) {
@@ -2037,6 +2038,7 @@ const ListUserValueWidget = UserValueWidget.extend({
             inputEl.name = id;
         }
         if (recordData) {
+            recordDataSelected = recordData.selected;
             if (recordData.placeholder) {
                 inputEl.placeholder = recordData.placeholder;
             }
@@ -2052,17 +2054,19 @@ const ListUserValueWidget = UserValueWidget.extend({
         if (this.hasDefault) {
             const checkboxEl = document.createElement('we-button');
             checkboxEl.classList.add('o_we_user_value_widget', 'o_we_checkbox_wrapper');
-            if (this.selected.includes(id)) {
+            if (this.selected.includes(id) || recordDataSelected) {
                 checkboxEl.classList.add('active');
             }
-            const div = document.createElement('div');
-            const checkbox = document.createElement('we-checkbox');
-            div.appendChild(checkbox);
-            checkboxEl.appendChild(div);
-            checkboxEl.appendChild(checkbox);
-            const checkboxTdEl = document.createElement('td');
-            checkboxTdEl.appendChild(checkboxEl);
-            trEl.appendChild(checkboxTdEl);
+            if (!recordData || !recordData.notToggleable) {
+                const div = document.createElement('div');
+                const checkbox = document.createElement('we-checkbox');
+                div.appendChild(checkbox);
+                checkboxEl.appendChild(div);
+                checkboxEl.appendChild(checkbox);
+                const checkboxTdEl = document.createElement('td');
+                checkboxTdEl.appendChild(checkboxEl);
+                trEl.appendChild(checkboxTdEl);
+            }
         }
         if (!recordData || !recordData.undeletable) {
             const buttonTdEl = document.createElement('td');
@@ -2073,6 +2077,12 @@ const ListUserValueWidget = UserValueWidget.extend({
             trEl.appendChild(buttonTdEl);
         }
         this.listTable.appendChild(trEl);
+    },
+    /**
+     * @override
+     */
+    _getFocusableElement() {
+        return this.listTable.querySelector('input');
     },
     /**
      * @private
@@ -2117,7 +2127,10 @@ const ListUserValueWidget = UserValueWidget.extend({
                 return isNaN(idInt) ? id : idInt;
             });
             values.forEach(v => {
-                v.selected = this.selected.includes(v.id);
+                // Elements not toggleable are considered as always selected.
+                // We have to check that it is equal to the string 'true'
+                // because this information comes from the dataset.
+                v.selected = this.selected.includes(v.id) || v.notToggleable === 'true';
             });
         }
         this._value = JSON.stringify(values);
@@ -2159,14 +2172,19 @@ const ListUserValueWidget = UserValueWidget.extend({
      * @private
      */
     _onAddCustomItemClick() {
-        let id;
+        let id = undefined;
         if (this.el.dataset.generateIdForNewItems) {
-            id = generateHTMLId();
+            id = generateHTMLId(); // TODO remove in master
         }
         if (this.el.dataset.newElementsToggled) {
-            this.selected.push(id);
+            this.selected.push(id); // TODO remove in master
         }
-        this._addItemToTable(id, this.el.dataset.defaultValue);
+
+        const recordData = {};
+        if (this.el.dataset.newElementsNotToggleable) {
+            recordData.notToggleable = true;
+        }
+        this._addItemToTable(id, this.el.dataset.defaultValue, recordData);
         this._notifyCurrentState();
     },
     /**
