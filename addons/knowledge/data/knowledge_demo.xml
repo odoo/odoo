@@ -1,0 +1,147 @@
+<?xml version="1.0"?>
+<odoo noupdate="1">
+    <record id="knowledge_article_demo_data_0" model="knowledge.article">
+        <field name="name">Sales Playbook</field>
+        <field name="body" type="html">
+            <p>
+                <h1>Sales Playbook</h1>
+                <h2>Introduction</h2>
+                <p>
+                    This document is a guide to help you understand the key
+                    concepts and tools you need to use to manage your sales
+                    activities.
+                </p><br />
+                <h2>Company Presentation</h2>
+                <p>
+                    Odoo is a complete ERP and CRM (Customer Relationship
+                    Management) software that enables you to manage your
+                    business operations efficiently and effectively.
+                </p><br />
+                <h2>Qualification Templates</h2>
+                <p>
+                    The first step in the sales process is to qualify your
+                    prospects. This is done by creating a qualification
+                    template. This template will contain the questions that
+                    will be asked to the prospect.
+                </p>
+            </p>
+        </field>
+        <field name="parent_id" eval="False" />
+        <field name="author_ids" eval="[(6, 0, [ref('base.user_admin')])]" />
+        <field name="favourite_user_ids" eval="[(6, 0, [ref('base.user_demo')])]" />
+    </record>
+    <record id="knowledge_article_demo_data_1" model="knowledge.article">
+        <field name="name">How to make a Sale</field>
+        <field name="body" type="html">
+            <p>
+                <h1>How to make a Sale</h1>
+                <i> You can use this document as a template for when you're on the phone with a prospect. </i><br />
+                <h2>Steps</h2>
+                <ul>
+                    <li>
+                        Identify the needs of the prospect.
+                    </li>
+                    <li>
+                        Identify the products that are relevant to the needs of the prospect.
+                    </li>
+                    <li>
+                        Sell.
+                    </li>
+                    <li>
+                        Drink Champagne.
+                    </li>
+                </ul>
+            </p>
+        </field>
+        <field name="parent_id" eval="ref('knowledge_article_demo_data_0')" />
+        <field name="author_ids" eval="[(6, 0, [ref('base.user_demo')])]" />
+        <field name="favourite_user_ids" eval="[(6, 0, [ref('base.user_demo')])]" />
+        <field name="icon">fa-hand-peace-o</field>
+    </record>
+    <record id="knowledge_article_demo_data_2" model="knowledge.article">
+        <field name="name">Best Sauces for French Fries</field>
+        <field name="body" type="html">
+            <p>
+                <h1>Best Sauces for French Fries</h1>
+                In Belgium, we know how to good make <strike>French</strike> Belgian Fries.
+                <br />
+                However, not everyone knows what the best sauces are for French Fries.
+                <br />
+                <br />
+                Here are a few (taken from <a href="https://www.brusselslife.be/en/article/which-sauce-to-choose-with-your-fries">Brussels Life</a>):
+                <br />
+                <br />
+                <h2>'Classic' sauces</h2>
+                <h3>Mayonnaise</h3>
+                The most famous sauce. With <b>egg yolk</b>, <b>oil</b>, <b>vinegar</b> and sometimes a drop of <b>lemon juice</b>.
+                <br />
+                <h3>Ketchup <icon class="fa fa-leaf"/></h3>
+                Here again, a popular condiment, usually made from <b>tomato sauce</b>, <b>vinegar</b> and <b>sugar</b>.
+                <br />
+                <h3>Cocktail <icon class="fa fa-leaf"/></h3>
+                If you're a little lazy, you can just mix mayonnaise and ketchup for a simple cocktail sauce. If not, add <b>tomato paste</b>, <b>Worcestershire sauce</b>, a tablespoon of <b>Whiskey</b> or <b>Cognac</b>, <b>salt</b>, <b>pepper</b> and <b>Tabasco</b>.
+                <br />
+                <h3>Tartare</h3>
+                A mayonnaise to which you add a hint of <b>chilli</b>, <b>chopped chives</b>, <b>parsley</b>, <b>chervil</b>, <b>tarragon</b>, <b>capers</b> and <b>gherkins</b>.
+                <br />
+                <h3>Andalusian</h3>
+                Here is a typical Belgian sauce, based on mayonnaise, <b>tomatoes</b>, various spices, <b>garlic</b>, <b>shallots</b>, <b>peppers</b> and <b>butter</b>.
+                <br />
+                <h3>American</h3>
+                A sauce that would have "americain" than its name since it was invented in France. It is made with onions, <b>tomatoes</b>, <b>white wine</b>, a little <b>cognac</b>, <b>salt</b>, <b>cayenne pepper</b> and <b>butter</b>.
+                <br />
+                <h3>Barbecue <icon class="fa fa-leaf"/></h3>
+                Do you miss the taste of ribs during the winter months? Mix <b>ketchup</b>, some <b>spices</b>, <b>Dijon mustard</b>, a tablespoon of <b>wine vinegar</b>, <b>lemon juice</b>, some <b>honey</b> and you're done.
+                <br />
+                <h2>Exotic</h2>
+                <h3>Samurai</h3>
+                No, this sauce does not come from Japan, it is typically Belgian! It's a mix of mayonnaise, ketchup and harissa.
+                <br />
+                <h3>Pickles <icon class="fa fa-leaf"/></h3>
+                Another specialty of the flat country.
+                There are cauliflower (and yes), small gherkins and onions, honey, white vinegar, spices, flour, mustard, ginger, turmeric and sugar. It is by far the most complete since the beginning of the list!
+                <br />
+                <h3>Hawaii</h3>
+                The little sister of Pickles sauce: mixed with mayonnaise and herbs.
+                <br />
+                <h3>Brazil</h3>
+                And we end with this sauce made from <b>tomatoes</b>, <b>pineapple</b> and a subtle mix of <b>spices</b>.
+
+            </p>
+        </field>
+        <field name="parent_id" eval="False" />
+        <field name="author_ids" eval="[(6, 0, [ref('base.user_root')])]" />
+        <field name="favourite_user_ids" eval="[(6, 0, [ref('base.user_admin')])]" />
+        <field name="icon">fa-cutlery</field>
+        <field name="internal_permission">none</field>
+        <field name="article_member_ids" model="knowledge.article.member"
+               eval="[(0, 0, {'partner_id': ref('base.partner_admin'), 'permission': 'write'})]"/>
+    </record>
+    <record id="knowledge_article_demo_data_3" model="knowledge.article">
+        <field name="name">When to forward a lead</field>
+        <field name="body" type="html">
+            <p>
+                <h1>When to forward a lead</h1>
+                Deciding when to forward a lead is a very important decision.
+                It requires a lot of research and a lot of time, and the mastery of kung fu.
+            </p>
+        </field>
+        <field name="parent_id" eval="ref('knowledge_article_demo_data_0')" />
+        <field name="author_ids" eval="[(6, 0, [ref('base.user_root')])]" />
+        <field name="icon">fa-user</field>
+    </record>
+    <record id="knowledge_article_demo_data_4" model="knowledge.article">
+        <field name="name">Tips for a sustainable business</field>
+        <field name="body" type="html">
+            <p>
+                <h1>Tips for a sustainable business</h1>
+                A sustainable business, or a green business, is an enterprise that has minimal negative impact or
+                potentially a positive effect on the global or local environment, community, society, or economy—a business that strives to meet the triple bottom line.
+                (Source: <a href="https://en.wikipedia.org/wiki/Sustainable_business">Wikipedia</a>)
+            </p>
+        </field>
+        <field name="author_ids" eval="[(6, 0, [ref('base.user_root')])]" />
+        <field name="icon">fa-pagelines</field>
+    </record>
+
+</odoo>
