@@ -38,7 +38,7 @@ class TestPERF(common.TransactionCase):
     @users('admin')
     @warmup
     def test_empty_sale_order_creation_perf(self):
-        with self.assertQueryCount(admin=33):
+        with self.assertQueryCount(admin=34):
             self.env['sale.order'].create({
                 'partner_id': self.partners[0].id,
                 'user_id': self.salesmans[0].id,
@@ -87,7 +87,7 @@ class TestPERF(common.TransactionCase):
     @users('admin')
     @warmup
     def test_light_sales_orders_batch_creation_perf(self):
-        with self.assertQueryCount(admin=68):  # 67 locally, 68 in nightly runbot
+        with self.assertQueryCount(admin=69):  # 68 locally, 69 in nightly runbot
             self.env['sale.order'].create([{
                 'partner_id': self.partners[0].id,
                 'user_id': self.salesmans[0].id,
