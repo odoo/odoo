@@ -153,6 +153,7 @@
                             <h1><field name="name"/></h1>
                         </div>
                         <group>
+                            <field name="move_name" force_save="1"/>
                             <field name="invoice_ids" invisible="1"/>
                             <group name="partner_group" invisible="context.get('active_model') == 'account.move'">
                                 <field name="payment_type" widget="radio"/>

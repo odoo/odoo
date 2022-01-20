@@ -170,6 +170,8 @@ class account_payment(models.Model):
     @api.onchange('journal_id')
     def _onchange_journal(self):
         if self.journal_id:
+            if self._origin and self._origin.journal_id and self.journal_id.type != self._origin.journal_id.type:
+                self.move_name = False
             if self.journal_id.currency_id:
                 self.currency_id = self.journal_id.currency_id
 
