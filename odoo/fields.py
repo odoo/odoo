@@ -2589,7 +2589,8 @@ class Selection(Field):
         if isinstance(selection, str):
             selection = getattr(env[self.model_name], selection)()
         elif callable(selection):
-            selection = selection(env[self.model_name])
+            model = env[self.model_name].with_context(lang=None)
+            selection = selection(model)
         return [value for value, _ in selection]
 
     def convert_to_column(self, value, record, values=None, validate=True):
