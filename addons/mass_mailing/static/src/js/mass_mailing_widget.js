@@ -108,7 +108,7 @@ var MassMailingFieldHtml = FieldHtml.extend({
     /**
      * @override
      */
-     _createWysiwygIntance: async function () {
+     _createWysiwygInstance: async function () {
         await this._super(...arguments);
         // Data is removed on save but we need the mailing and its body to be
         // named so they are handled properly by the snippets menu.
@@ -331,11 +331,11 @@ var MassMailingFieldHtml = FieldHtml.extend({
      * @private
      * @param {boolean} activateSnippets
      */
-    _restartWysiwygIntance: async function (activateSnippets = true) {
+    _restartWysiwygInstance: async function (activateSnippets = true) {
         this.wysiwyg.destroy();
         this.$el.empty();
         this._wysiwygSnippetsActive = activateSnippets;
-        await this._createWysiwygIntance();
+        await this._createWysiwygInstance();
     },
     /**
      * @private
@@ -496,7 +496,7 @@ var MassMailingFieldHtml = FieldHtml.extend({
             const themeParams = themesParams[$(e.currentTarget).index()];
 
             if (themeParams.name === "basic") {
-                await this._restartWysiwygIntance(false);
+                await this._restartWysiwygInstance(false);
             }
             this._switchThemes(themeParams);
             this.$content.closest('body').removeClass("o_force_mail_theme_choice");

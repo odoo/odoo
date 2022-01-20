@@ -168,7 +168,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      * @private
      * @returns {$.Promise}
      */
-    _createWysiwygIntance: async function () {
+    _createWysiwygInstance: async function () {
         this.wysiwyg = await wysiwygLoader.createWysiwyg(this, this._getWysiwygOptions());
         this.wysiwyg.__extraAssetsForIframe = this.__extraAssetsForIframe || [];
         return this.wysiwyg.appendTo(this.$el).then(() => {
@@ -290,9 +290,9 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
 
         if (this.nodeOptions.cssEdit) {
             // must be async because the target must be append in the DOM
-            this._createWysiwygIntance();
+            this._createWysiwygInstance();
         } else {
-            return this._createWysiwygIntance();
+            return this._createWysiwygInstance();
         }
     },
     /**
