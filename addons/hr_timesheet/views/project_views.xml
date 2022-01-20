@@ -131,13 +131,12 @@
                                 <div class="o_td_label">
                                     <label for="planned_hours" string="Allocated Hours" attrs="{'invisible': [('encode_uom_in_days', '=', True)]}"/>
                                     <label for="planned_hours" string="Allocated Days" attrs="{'invisible': [('encode_uom_in_days', '=', False)]}"/>
+                                    <field name="planned_hours" class="oe_inline ml-2" widget="timesheet_uom_no_toggle"/>
+                                    <span attrs="{'invisible': ['|', ('allow_subtasks', '=', False), ('subtask_count', '=', 0)]}">
+                                        (incl. <field name="subtask_planned_hours" nolabel="1" groups="project.group_subtask_project" widget="timesheet_uom_no_toggle"/> on
+                                        <span class="font-weight-bold text-dark"> Sub-tasks</span>)
+                                    </span>
                                 </div>
-                                <field name="planned_hours" widget="timesheet_uom_no_toggle" nolabel="1"/>
-                                <div class="o_td_label" groups="project.group_subtask_project" attrs="{'invisible': ['|', ('allow_subtasks', '=', False), ('subtask_count', '=', 0)]}">
-                                    <label for="subtask_planned_hours" string="Sub-tasks Planned Hours" attrs="{'invisible': [('encode_uom_in_days', '=', True)]}"/>
-                                    <label for="subtask_planned_hours" string="Sub-tasks Planned Days" attrs="{'invisible': [('encode_uom_in_days', '=', False)]}"/>
-                                </div>
-                                <field name="subtask_planned_hours" widget="timesheet_uom_no_toggle" nolabel="1" groups="project.group_subtask_project" attrs="{'invisible': ['|', ('allow_subtasks', '=', False), ('subtask_count', '=', 0)]}"/>
                             </group>
                             <group>
                                 <field name="progress" widget="progressbar"/>
@@ -163,7 +162,6 @@
                         <kanban class="o_kanban_mobile">
                             <field name="date"/>
                             <field name="user_id"/>
-                            <field name="employee_id" widget="many2one_avatar_employee"/>
                             <field name="name"/>
                             <field name="unit_amount" decoration-danger="unit_amount &gt; 24"/>
                             <field name="project_id"/>
@@ -173,6 +171,7 @@
                                     <div t-attf-class="oe_kanban_card oe_kanban_global_click">
                                         <div class="row">
                                             <div class="col-6">
+                                                <field name="employee_id" widget="many2one_avatar_employee"/>
                                                 <strong><span><t t-esc="record.employee_id.value"/></span></strong>
                                             </div>
                                             <div class="col-6 float-end text-right">
@@ -348,6 +347,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//filter[@name='followed_by_me']" position='after'>
                     <filter string="My Team's Tasks" name="my_team_tasks" domain="[('user_ids.employee_parent_id.user_id', '=', uid)]"/>
+                    <filter string="My Department's Tasks" name="my_department" domain="[('user_ids.employee_id.member_of_department', '=', True)]"/>
                 </xpath>
                 <xpath expr="//filter[@name='late']" position='after'>
                     <filter string="Tasks in Overtime" name="overtime" domain="[('overtime', '&gt;', 0)]"/>
@@ -362,6 +362,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//filter[@name='my_favorite_projects']" position='after'>
                     <filter string="My Team's Projects" name="my_teams_projects" domain="[('project_id.user_id.employee_parent_id.user_id', '=', uid)]"/>
+                    <filter string="My Department's Projects" name="my_department" domain="[('manager_id.employee_id.member_of_department', '=', True)]"/>
                 </xpath>
             </field>
         </record>
@@ -373,6 +374,7 @@
             <field name="arch" type="xml">
                 <filter name="followed_by_me" position='before'>
                     <filter string="My Team's Projects" name="my_team_projects"  domain="[('user_id.employee_parent_id.user_id', '=', uid)]"/>
+                    <filter string="My Department" name="my_department" domain="[('user_id.employee_id.member_of_department', '=', True)]"/>
                 </filter>
                 <filter name="late_milestones" position="before">
                     <filter string="Projects in Overtime" name="projects_in_overtime" domain="[('is_project_overtime', '=', True)]"/>

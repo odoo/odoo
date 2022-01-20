@@ -33,7 +33,7 @@
     </template>
 
     <template id="portal_my_tasks_priority_widget_template" name="Priority Widget Template">
-        <span t-attf-class="o_priority_star fa fa-star#{'' if task.priority == '1' else '-o'}"/>
+        <span t-attf-class="o_priority_star fa fa-star#{'' if task.priority == '1' else '-o'}" t-attf-title="Priority: {{'Important' if task.priority == '1' else 'Normal'}}"/>
     </template>
 
     <template id="portal_my_tasks_state_widget_template" name="Status Widget Template">
@@ -114,13 +114,12 @@
                         <t t-set="number_of_header" t-value="7"></t>
                         <!-- Computes the right colspan once and use it everywhere -->
                         <t t-set="grouped_tasks_colspan" t-value="number_of_header - 1 if groupby in group_by_in_header_list else number_of_header"></t>
-                        <th class="text-left">Ref</th>
-                        <th t-if="groupby != 'priority'">Priority</th>
+                        <th t-attf-colspan="{{2 if groupby != 'priority' else 1}}"/>
                         <th>Name</th>
                         <th name="project_portal_assignees">Assignees</th>
-                        <th t-if="groupby != 'status'">Status</th>
+                        <th t-if="groupby != 'status'"/>
                         <th t-if="groupby != 'project'">Project</th>
-                        <th t-if="groupby != 'stage'">Stage</th>
+                        <th t-if="groupby != 'stage'" class="text-right">Stage</th>
                     </tr>
                 </thead>
                 <t t-foreach="grouped_tasks" t-as="tasks">
@@ -144,7 +143,7 @@
                                 <td class="text-left">
                                     #<span t-esc="task.id"/>
                                 </td>
-                                <td t-if="groupby != 'priority'">
+                                <td t-if="groupby != 'priority'" class="text-right">
                                     <t t-call="project.portal_my_tasks_priority_widget_template"/>
                                 </td>
                                 <td>
@@ -152,9 +151,12 @@
                                 </td>
                                 <td name="project_portal_assignees">
                                     <t t-set="assignees" t-value="task.sudo().user_ids"/>
-                                    <span t-if="assignees" t-out="'%s%s' % (assignees[:1].name, ' + %s others' % len(assignees[1:]) if len(assignees.user_ids) > 1 else '')" t-att-title="'\n'.join(assignees[1:].mapped('name'))"/>
+                                    <div t-if="assignees" class="row flex-nowrap pl-3">
+                                        <img class="rounded-circle o_portal_contact_img mr-2" t-attf-src="#{image_data_uri(assignees[:1].avatar_1024)}" alt="User" style="width: 20px; height: 20px;"/>
+                                        <span t-out="'%s%s' % (assignees[:1].name, ' + %s others' % len(assignees[1:]) if len(assignees.user_ids) > 1 else '')" t-att-title="'\n'.join(assignees[1:].mapped('name'))"/>
+                                    </div>
                                 </td>
-                                <td t-if="groupby != 'status'">
+                                <td t-if="groupby != 'status'" align="right">
                                     <t t-call="project.portal_my_tasks_state_widget_template">
                                         <t t-set="path" t-value="'tasks'"/>
                                     </t>
@@ -162,8 +164,8 @@
                                 <td t-if="groupby != 'project'">
                                     <span class="badge badge-pill badge-info mw-100 text-truncate" title="Current project of the task" t-esc="task.project_id.name" />
                                 </td>
-                                <td t-if="groupby != 'stage'">
-                                    <span class="badge badge-pill badge-info" title="Current stage of the task" t-esc="task.stage_id.name" />
+                                <td t-if="groupby != 'stage'" class="text-right">
+                                    <span t-attf-class="badge #{'badge-primary' if task.stage_id.fold else 'badge-light'}" title="Current stage of the task" t-esc="task.stage_id.name"/>
                                 </td>
                             </tr>
                         </t>
