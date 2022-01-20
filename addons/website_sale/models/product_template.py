@@ -156,12 +156,13 @@ class ProductTemplate(models.Model):
 
         return self._get_possible_variants(parent_combination).sorted(_sort_key_variant)
 
-    def _get_sales_prices(self, pricelist, fiscal_position=None):
+    def _get_sales_prices(self, pricelist):
         pricelist.ensure_one()
         partner_sudo = self.env.user.partner_id
 
-        # TODO use geoip fiscal pos (and/or fpos from order if any exist)
-        fiscal_position = self.env['account.fiscal.position'].sudo()._get_fiscal_position(partner_sudo)
+        # Try to fetch geoip based fpos or fallback on partner one
+        fpos_id = self.env['website']._get_current_fiscal_position_id(partner_sudo)
+        fiscal_position = self.env['account.fiscal.position'].sudo().browse(fpos_id)
 
         sales_prices = pricelist._get_products_price(self, 1.0)
         show_discount = pricelist.discount_policy == 'without_discount'
