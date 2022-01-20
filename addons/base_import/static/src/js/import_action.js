@@ -883,7 +883,7 @@ StateMachine.create({
     target: DataImport.prototype,
     events: [
         { name: 'loaded_file',
-          from: ['none', 'file_loaded', 'preview_error', 'preview_success', 'results'],
+          from: ['none', 'file_loaded', 'preview_error', 'preview_success', 'results', 'imported'],
           to: 'file_loaded' },
         { name: 'settings_changed',
           from: ['file_loaded', 'preview_error', 'preview_success', 'results'],
