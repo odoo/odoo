@@ -1598,7 +1598,7 @@ options.registry.Carousel = options.Class.extend({
         this.$controls.removeClass('d-none');
         const $active = $items.filter('.active');
         this.$indicators.append($('<li>', {
-            'data-target': '#' + $active.attr('id'),
+            'data-target': '#' + this.$target.attr('id'),
             'data-slide-to': $items.length,
         }));
         this.$indicators.append(' ');
