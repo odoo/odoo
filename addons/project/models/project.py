@@ -1341,7 +1341,7 @@ class Task(models.Model):
             if recurrence_left == 0:
                 recurrence_title = _('There are no more occurrences.')
             else:
-                recurrence_title = _('Next Occurrences:')
+                recurrence_title = _('A new task will be created on the following dates:')
             task.recurrence_message = '<p><span class="fa fa-check-circle"></span> %s</p><ul>' % recurrence_title
             task.recurrence_message += ''.join(['<li>%s</li>' % date.strftime(date_format) for date in recurring_dates[:5]])
             if task.repeat_type == 'after' and recurrence_left > 5 or task.repeat_type == 'forever' or len(recurring_dates) > 5:

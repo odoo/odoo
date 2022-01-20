@@ -3,7 +3,7 @@
 
 from odoo import fields, models, tools
 
-from odoo.addons.rating.models.rating_data import RATING_LIMIT_MIN
+from odoo.addons.rating.models.rating_data import RATING_LIMIT_MIN, RATING_TEXT
 
 class ReportProjectTaskUser(models.Model):
     _name = "report.project.task.user"
@@ -51,6 +51,18 @@ class ReportProjectTaskUser(models.Model):
         column1='project_task_id', column2='project_tags_id',
         string='Tags', readonly=True)
     parent_id = fields.Many2one('project.task', string='Parent Task', readonly=True)
+    # We are explicitly not using a related field in order to prevent the recomputing caused by the depends as the model is a report.
+    rating_last_text = fields.Selection(RATING_TEXT, string="Rating Last Text", compute="_compute_rating_last_text", search="_search_rating_last_text")
+    personal_stage_type_ids = fields.Many2many('project.task.type', relation='project_task_user_rel',
+        column1='task_id', column2='stage_id',
+        string="Personal Stage", readonly=True)
+
+    def _compute_rating_last_text(self):
+        for task_analysis in self:
+            task_analysis.rating_last_text = task_analysis.task_id.rating_last_text
+
+    def _search_rating_last_text(self, operator, value):
+        return [('task_id.rating_last_text', operator, value)]
 
     def _select(self):
         return """
@@ -109,7 +121,6 @@ class ReportProjectTaskUser(models.Model):
     def _from(self):
         return f"""
                 project_task t
-                    LEFT JOIN project_task_user_rel tu on t.id=tu.task_id
                     LEFT JOIN rating_rating rt ON rt.res_id = t.id
                         AND rt.res_model = 'project.task'
                         AND rt.consumed = True

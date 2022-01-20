@@ -52,15 +52,14 @@
             <attribute name="t-value">8</attribute>
         </xpath>
         <xpath expr="//thead/tr/th[@name='project_portal_assignees']" position="after">
-            <th t-if="is_uom_day">Days Spent</th>
-            <th t-else="">Hours Spent</th>
+            <th t-if="is_uom_day" class="text-right">Days Spent</th>
+            <th t-else="" class="text-right">Hours Spent</th>
         </xpath>
         <xpath expr="//tbody/t/tr/td[@name='project_portal_assignees']" position="after">
-            <td>
+            <td class="text-right">
                 <t t-if="is_uom_day">
                     <t t-out="timesheet_ids._convert_hours_to_days(task.effective_hours)"/>
                     <span t-if="task.planned_hours > 0"> / <t t-out="timesheet_ids._convert_hours_to_days(task.planned_hours)"/></span>
-                    <span> day(s)</span>
                 </t>
                 <t t-else="">
                     <span t-field="task.effective_hours" t-options='{"widget": "float_time"}'/>
@@ -68,7 +67,6 @@
                         /
                         <span t-field="task.planned_hours" t-options='{"widget": "float_time"}'/>
                     </t>
-                    <span> hour(s)</span>
                 </t>
             </td>
         </xpath>

@@ -117,6 +117,16 @@
             </field>
         </record>
 
+        <record id="view_hr_timesheet_line_graph_by_employee" model="ir.ui.view">
+            <field name="name">account.analytic.line.graph.by.employee</field>
+            <field name="model">account.analytic.line</field>
+            <field name="inherit_id" ref="hr_timesheet.view_hr_timesheet_line_graph_all"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <field name="project_id" position="replace"/>
+            </field>
+        </record>
+
         <record id="hr_timesheet_line_form" model="ir.ui.view">
             <field name="name">account.analytic.line.form</field>
             <field name="model">account.analytic.line</field>

@@ -37,6 +37,7 @@ up a management by affair.
         'views/hr_views.xml',
         'data/hr_timesheet_data.xml',
         'views/project_sharing_views.xml',
+        'views/rating_views.xml',
     ],
     'demo': [
         'data/hr_timesheet_demo.xml',

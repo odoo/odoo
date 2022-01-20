@@ -9,6 +9,9 @@
                 <xpath expr="//field[@name='partner_id']" position="after">
                     <field name="sale_order_id"/>
                 </xpath>
+                <xpath expr="//filter[@name='Customer']" position="after">
+                    <filter string="Sales Order Item" name="sale_line_id" context="{'group_by': 'sale_line_id'}"/>
+                </xpath>
              </field>
         </record>
     </data>

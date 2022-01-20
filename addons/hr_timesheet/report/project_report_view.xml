@@ -38,11 +38,13 @@
                 <xpath expr="//filter[@name='late']" position="after">
                     <filter string="Tasks in Overtime" name="overtime" domain="[('overtime', '&gt;', 0)]"/>
                 </xpath>
-                <xpath expr="//filter[@name='my_tasks']" position="before">
+                <xpath expr="//filter[@name='my_favorite_projects']" position="after">
                     <filter string="My Team's Projects" name="my_team_projects"  domain="[('project_id.user_id.employee_id.parent_id.user_id', '=', uid), ('project_id.user_id', '!=', uid), ('user_ids', '!=', uid), ('user_ids', '!=', False)]"/>
+                    <filter string="My Department's Projects" name="my_department" domain="[('project_id.user_id.employee_id.member_of_department', '=', True)]"/>
                 </xpath>
-                <xpath expr="//filter[@name='my_tasks']" position="after">
+                <xpath expr="//filter[@name='followed_by_me']" position="after">
                     <filter string="My Team's Tasks" name="my_team_tasks" domain="[('user_ids.employee_id.parent_id.user_id', '=', uid)]" />
+                    <filter string="My Department's Tasks" name="my_department" domain="[('user_ids.employee_id.member_of_department', '=', True)]"/>
                 </xpath>
              </field>
          </record>
