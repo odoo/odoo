@@ -6,10 +6,13 @@
         <field name="name">survey.user_input.view.search</field>
         <field name="model">survey.user_input</field>
         <field name="arch" type="xml">
-            <search string="Search Survey">
-                <field name="survey_id"/>
-                <field name="email"/>
+            <search string="Search Survey User Inputs">
+                <field name="email" string="Participant" filter_domain="[
+                    '|',
+                    ('partner_id', 'ilike', self),
+                    ('email', 'ilike', self)]"/>
                 <field name="partner_id"/>
+                <field name="survey_id"/>
                 <filter name="completed" string="Completed" domain="[('state', '=', 'done')]"/>
                 <filter string="In Progress" name="in_progress" domain="[('state', '=', 'in_progress')]"/>
                 <filter string="New" name="new" domain="[('state', '=', 'new')]"/>
@@ -39,11 +42,27 @@
                     <field name="state" widget="statusbar"/>
                 </header>
                 <sheet>
-                    <div class="oe_button_box" name="button_box"/>
+                    <field name="attempts_count" invisible="1"/>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_redirect_to_attempts"
+                            type="object"
+                            class="oe_stat_button"
+                            attrs="{'invisible': [('attempts_count', '=', 1)]}"
+                            icon="fa-files-o">
+                            <field string="Attempts" name="attempts_count" widget="statinfo"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Test Entry" bg_color="bg-info"
+                        attrs="{'invisible': [('test_entry', '!=', True)]}"/>
+                    <widget name="web_ribbon" title="Failed" bg_color="bg-danger"
+                        attrs="{'invisible': ['|', '|', ('test_entry', '=', True), ('scoring_type', '=', 'no_scoring'), ('scoring_success', '=', True)]}"/>
+                    <widget name="web_ribbon" title="Passed"
+                        attrs="{'invisible': ['|', '|', ('test_entry', '=', True), ('scoring_type', '=', 'no_scoring'), ('scoring_success', '=', False)]}"/>
                     <group col="2">
                         <group>
                             <field name="survey_id"/>
                             <field name="create_date"/>
+                            <field name="deadline" attrs="{'invisible': [('state', '=', 'done'), ('deadline', '=', False)]}"/>
                             <field name="is_attempts_limited" invisible="1"/>
                             <label for="attempts_number" string="Attempt n°" attrs="{'invisible': ['|', ('is_attempts_limited', '=', False), '|', ('test_entry', '=', True), ('state', '!=', 'done')]}"/>
                             <div attrs="{'invisible': ['|', ('is_attempts_limited', '=', False), '|', ('test_entry', '=', True), ('state', '!=', 'done')]}">
@@ -51,31 +70,44 @@
                                  / 
                                 <field name="attempts_limit" nolabel="1" />
                             </div>
-                            <field name="access_token" groups="base.group_no_one"/>
+                            <field name="test_entry" groups="base.group_no_one"/>
                         </group>
                         <group>
-                            <field name="deadline"/>
+                            <field name="scoring_type" invisible="1"/>
+                            <field name="scoring_success" invisible="1"/>
+                            <label for="scoring_percentage" string="Score" attrs="{'invisible': [('scoring_type', '=', 'no_scoring')]}"/>
+                            <div attrs="{'invisible': [('scoring_type', '=', 'no_scoring')]}">
+                                <field name="scoring_percentage" nolabel="1"/>
+                                <span>%</span>
+                            </div>
                             <field name="partner_id"/>
                             <field name="email" widget="email"/>
-                            <field name="test_entry" groups="base.group_no_one"/>
-                            <field name="scoring_type" invisible="1"/>
-                            <field name="scoring_percentage" attrs="{'invisible': [('scoring_type', '=', 'no_scoring')]}"/>
-                            <field name="scoring_success" attrs="{'invisible': [('scoring_type', '=', 'no_scoring')]}"/>
+                            <field name="access_token" groups="base.group_no_one"/>
                         </group>
                     </group>
-                    <field name="user_input_line_ids" mode="tree" attrs="{'readonly': True}">
-                        <tree>
-                            <field name="question_sequence" invisible="1"/>
-                            <field name="question_id"/>
-                            <field name="page_id"/>
-                            <field name="answer_type"/>
-                            <field name="skipped"/>
-                            <field name="create_date"/>
-                            <field name="answer_is_correct"/>
-                            <field name="answer_score"/>
-                        </tree>
-                    </field>
+                    <notebook>
+                        <page string="Answers">
+                            <field name="user_input_line_ids" mode="tree" attrs="{'readonly': True}" no_label="1">
+                                <tree decoration-muted="skipped == True">
+                                    <field name="question_sequence" invisible="1"/>
+                                    <field name="create_date" optional="hidden"/>
+                                    <field name="page_id" optional="hidden"/>
+                                    <field name="question_id"/>
+                                    <field name="answer_type" optional="hidden"/>
+                                    <field name="skipped" hide="1"/>
+                                    <field name="display_name" string="Answer"/>
+                                    <field name="answer_is_correct"/>
+                                    <field name="answer_score" sum="Score"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
                 </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
             </form>
         </field>
     </record>
@@ -85,16 +117,19 @@
         <field name="model">survey.user_input</field>
         <field name="arch" type="xml">
             <tree string="Survey User inputs" decoration-muted="test_entry == True" create="false">
-                <field name="survey_id"/>
                 <field name="create_date"/>
-                <field name="deadline"/>
+                <field name="survey_id"/>
                 <field name="partner_id"/>
                 <field name="email"/>
                 <field name="attempts_number"/>
-                <field name="state"/>
+                <field name="deadline"/>
                 <field name="test_entry" invisible="True"/>
                 <field name="scoring_success"/>
                 <field name="scoring_percentage"/>
+                <field name="state" widget="badge"
+                    decoration-success="state == 'done'"
+                    decoration-warning="state == 'new'"
+                    decoration-info="state == 'in_progress'"/>
             </tree>
         </field>
     </record>
