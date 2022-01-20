@@ -3479,6 +3479,7 @@ class AccountMoveLine(models.Model):
         check_company=True,
         help="The move of this entry line.")
     move_name = fields.Char(string='Number', related='move_id.name', store=True, index='gin')
+    move_state = fields.Selection(string='Move State', related='move_id.state', help='Technical field for account reports')
     date = fields.Date(related='move_id.date', store=True, readonly=True, index=True, copy=False, group_operator='min')
     ref = fields.Char(related='move_id.ref', store=True, copy=False, index='gin', readonly=True)
     parent_state = fields.Selection(related='move_id.state', store=True, readonly=True)
