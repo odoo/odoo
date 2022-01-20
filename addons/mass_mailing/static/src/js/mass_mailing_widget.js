@@ -72,7 +72,7 @@ var MassMailingFieldHtml = FieldHtml.extend({
             self._isDirty = self.wysiwyg.isDirty();
             self._doAction();
 
-            convertInline.toInline($editable, self.cssRules);
+            convertInline.toInline($editable, self.cssRules, self.wysiwyg.$iframe);
 
             self.trigger_up('field_changed', {
                 dataPointID: self.dataPointID,
