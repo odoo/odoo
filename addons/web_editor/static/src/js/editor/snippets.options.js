@@ -1956,7 +1956,8 @@ const ListUserValueWidget = UserValueWidget.extend({
         'click we-button.o_we_list_add_existing': '_onAddExistingItemClick',
         'click we-select.o_we_user_value_widget.o_we_add_list_item': '_onAddItemSelectClick',
         'click we-button.o_we_checkbox_wrapper': '_onAddItemCheckboxClick',
-        'change table input': '_onListItemChange',
+        'input table input': '_onListItemBlurInput',
+        'blur table input': '_onListItemBlurInput',
     },
 
     /**
@@ -2171,8 +2172,9 @@ const ListUserValueWidget = UserValueWidget.extend({
     },
     /**
      * @private
+     * @param {Boolean} [preview]
      */
-    _notifyCurrentState() {
+    _notifyCurrentState(preview = false) {
         const values = [...this.listTable.querySelectorAll('.o_we_list_record_name input')].map(el => {
             let id = this.isCustom ? el.value : el.name;
             if (this.el.dataset.idMode && this.el.dataset.idMode === "name") {
@@ -2199,7 +2201,11 @@ const ListUserValueWidget = UserValueWidget.extend({
             });
         }
         this._value = JSON.stringify(values);
-        this.notifyValueChange(false);
+        if (preview) {
+            this._onUserValuePreview();
+        } else {
+            this._onUserValueChange();
+        }
         if (!this.createWidget && !this.isCustom) {
             this._reloadSelectDropdown(values);
         }
@@ -2274,9 +2280,19 @@ const ListUserValueWidget = UserValueWidget.extend({
     },
     /**
      * @private
+     * @param {Event} ev
      */
-    _onListItemChange() {
-        this._notifyCurrentState();
+    _onListItemBlurInput(ev) {
+        const preview = ev.type === 'input';
+        if (preview || !this.el.contains(ev.relatedTarget) || this.el.dataset.renderOnInputBlur) {
+            // We call the function below only if the element that recovers the
+            // focus after this blur is not an element of the we-list or if it
+            // is an input event (preview). This allows to use the TAB key to go
+            // from one input to another in the list. This behavior can be
+            // cancelled if the widget has reloadOnInputBlur = "true" in its
+            // dataset.
+            this._notifyCurrentState(preview);
+        }
     },
     /**
      * @private
