@@ -2,16 +2,16 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.AttachmentList" owl="1">
-        <div class="o_AttachmentList" t-attf-class="{{ className }}" t-ref="root">
+        <div class="o_AttachmentList d-flex flex-column justify-content-start" t-attf-class="{{ className }}" t-ref="root">
             <t t-if="attachmentList">
-                <div class="o_AttachmentList_partialList o_AttachmentList_partialListImages">
+                <div class="o_AttachmentList_partialList o_AttachmentList_partialListImages d-flex flex-grow-1 flex-wrap">
                     <t t-foreach="attachmentList.attachmentImages" t-as="attachmentImage" t-key="attachmentImage.localId">
-                        <AttachmentImage className="'o_AttachmentList_attachment'" localId="attachmentImage.localId" onAttachmentRemoved="props.onAttachmentRemoved"/>
+                        <AttachmentImage className="'o_AttachmentList_attachment my-1 me-1 mw-100'" localId="attachmentImage.localId" onAttachmentRemoved="props.onAttachmentRemoved"/>
                     </t>
                 </div>
-                <div class="o_AttachmentList_partialList o_AttachmentList_partialListNonImages">
+                <div class="o_AttachmentList_partialList o_AttachmentList_partialListNonImages d-flex flex-grow-1 flex-wrap justify-content-start m-1">
                     <t t-foreach="attachmentList.attachmentCards" t-as="attachmentCard" t-key="attachmentCard.localId">
-                        <AttachmentCard className="'o_AttachmentList_attachment'" localId="attachmentCard.localId" onAttachmentRemoved="props.onAttachmentRemoved"/>
+                        <AttachmentCard className="'o_AttachmentList_attachment my-1 me-1 mw-100'" localId="attachmentCard.localId" onAttachmentRemoved="props.onAttachmentRemoved"/>
                     </t>
                 </div>
             </t>
