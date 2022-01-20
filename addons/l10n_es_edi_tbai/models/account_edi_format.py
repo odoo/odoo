@@ -9,7 +9,7 @@ from datetime import datetime
 from re import sub as regex_sub
 from uuid import uuid4
 
-from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.primitives import hashes, serialization
 from lxml import etree
 from odoo import _, models
 from odoo.exceptions import UserError
@@ -233,7 +233,7 @@ class AccountEdiFormat(models.Model):
         values.update(self._l10n_es_tbai_get_invoice_values(invoice, cancel))
         values.update(self._l10n_es_tbai_get_trail_values(invoice, cancel))
         xml_str = self.env.ref('l10n_es_edi_tbai.template_invoice_main')._render(values)
-        xml_doc = etree.fromstring(xml_str, etree.XMLParser(compact=True, remove_blank_text=True, remove_comments=True))
+        xml_doc = self.env['l10n_es.edi.tbai.util'].cleanup_xml_content(xml_str, is_string=True)
         self._l10n_es_tbai_sign_invoice(invoice, xml_doc)
 
         return xml_doc
@@ -543,14 +543,20 @@ class AccountEdiFormat(models.Model):
                 'keyinfo-id': kinfo_id,
                 'signature-id': signature_id,
                 'sigpolicy-id': sp_id,
+                'sigpolicy-description': "Política de Firma TicketBAI 1.0",  # í = &#237;
                 'sigpolicy-url': company.get_l10n_es_tbai_url_sigpolicy(),
                 'sigpolicy-digest': company.get_l10n_es_tbai_url_sigpolicy(get_hash=True),
+                'sigcertif-digest': b64encode(cert_public.fingerprint(hashes.SHA256())).decode(),
             }
         }
-        xml_sig = etree.fromstring(self.env.ref('l10n_es_edi_tbai.template_digital_signature')._render(values))
+        xml_sig_str = self.env.ref('l10n_es_edi_tbai.template_digital_signature')._render(values)
+        xml_sig = util.cleanup_xml_content(xml_sig_str, is_string=True, indent_level=1)
+
+        # Complete document with signature template
+        xml_root[-1].tail = "\n  "
         xml_root.append(xml_sig)
 
-        # Compute digest values for references (may be optional)
+        # Compute digest values for references
         util.reference_digests(xml_sig.find("ds:SignedInfo", namespaces=util.NS_MAP))
 
         # Sign (writes into SignatureValue)

@@ -7,7 +7,7 @@ import zipfile
 from base64 import b64decode, b64encode
 from io import BytesIO
 from random import randint
-from re import sub as regex_sub
+import re
 
 import requests
 from cryptography.hazmat.primitives import hashes
@@ -89,7 +89,7 @@ class L10nEsTbaiFillSignXml(models.AbstractModel):
     def zip_files(self, files, fnames, stream):
         with zipfile.ZipFile(stream, 'w', compression=zipfile.ZIP_DEFLATED) as zipf:
             for file, fname in zip(files, fnames):
-                fname = regex_sub("/", "_", fname)  # slashes create directory structure
+                fname = re.sub("/", "_", fname)  # slashes create directory structure
                 zipf.writestr(fname, file)
         return stream
 
@@ -100,15 +100,25 @@ class L10nEsTbaiFillSignXml(models.AbstractModel):
             for pos in range(0, len(string), 64)
         )
 
+    def canonicalize_node(self, node):
+        return etree.tostring(etree.fromstring(node), method="c14n", with_comments=False, exclusive=False)
+
+    def cleanup_xml_content(self, xml_content, is_string=False, indent_level=0):
+        parser = etree.XMLParser(compact=True, remove_blank_text=True, remove_comments=True)
+        xml_str = xml_content.encode("utf-8") if is_string else etree.tostring(xml_content).decode("utf-8")
+        tree = etree.fromstring(xml_str, parser=parser)
+        etree.indent(tree, level=indent_level)
+        tree.tail = "\n"
+        return tree
+
     def get_uri(self, uri, reference):
         node = reference.getroottree()
         if uri == "":
-            return etree.tostring(
-                node,
-                method="c14n",
-                with_comments=False,
-                exclusive=False,
-            )
+            # Empty URI points to whole document (without signature)
+            return self.canonicalize_node(
+                re.sub(r"^[^\n]*<ds:Signature.*<\/ds:Signature>\n", r"",
+                       etree.tostring(node).decode("utf-8"),
+                       flags=re.DOTALL | re.MULTILINE))
 
         if uri.startswith("#"):
             query = "//*[@*[local-name() = '{}' ]=$uri]"
@@ -116,12 +126,10 @@ class L10nEsTbaiFillSignXml(models.AbstractModel):
             for id in ("ID", "Id", "id"):
                 results = node.xpath(query.format(id), uri=uri.lstrip("#"))
                 if len(results) == 1:
-                    return etree.tostring(
-                        results[0],
-                        method="c14n",
-                        with_comments=False,
-                        exclusive=False,
-                    )
+                    return self.canonicalize_node(
+                        # Removing leading spaces seems to be required here (trial and error)
+                        re.sub(r"^\s*", r"", etree.tostring(results[0]).decode("utf-8"),
+                               flags=re.MULTILINE))
                 if len(results) > 1:
                     raise Exception("Ambiguous reference URI {} resolved to {} nodes".format(
                         uri, len(results)))
@@ -174,7 +182,7 @@ class L10nEsTbaiFillSignXml(models.AbstractModel):
 
         signature = private_key.sign(
             signed_info,
-            padding.PSS(mgf=padding.MGF1(hashes.SHA256()), salt_length=padding.PSS.MAX_LENGTH),
+            padding.PKCS1v15(),
             hashes.SHA256()
         )
         node.find("ds:SignatureValue", namespaces=self.NS_MAP).text = self.base64_print(b64encode(signature))
