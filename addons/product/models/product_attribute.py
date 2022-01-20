@@ -502,7 +502,14 @@ class ProductTemplateAttributeValue(models.Model):
                         _("You cannot change the product of the value %s set on product %s.") %
                         (ptav.display_name, ptav.product_tmpl_id.display_name)
                     )
-        return super(ProductTemplateAttributeValue, self).write(values)
+        res = super(ProductTemplateAttributeValue, self).write(values)
+
+        exclude_in_value = 'exclude_for' in values
+        if exclude_in_value:
+            self._unarchive_variants()
+            self._archive_variants_with_exclusion()
+
+        return res
 
     def unlink(self):
         """Override to:
@@ -580,6 +587,31 @@ class ProductTemplateAttributeValue(models.Model):
         if only_active:
             all_values = all_values._only_active()
         return len(all_values) == 1
+
+    def _unarchive_variants(self):
+        """
+        Unarchive all the variants for product_template
+        """
+        variants = self.product_tmpl_id.product_variant_ids.with_context(active_test=False).product_variant_ids
+        for variant in variants:
+            variant.active = True
+
+    def _archive_variants_with_exclusion(self):
+        """
+        Archive the variants for which an exclusion exists.
+
+        Example:
+            product = smartphone
+            attributes = {color: [red, blue], size: [small, xl], stockage: [128, 256]}
+            exclusion: size[small] excludes stockage[256]
+
+            -> variant [[red, small, 256], [blue, small, 256]] will be archived
+        """
+        variants = self.product_tmpl_id.product_variant_ids
+        for variant in variants:
+            is_variant_possible = variant.product_tmpl_id._is_combination_possible(variant.product_template_attribute_value_ids, ignore_no_variant=True)
+            if not is_variant_possible:
+                variant.active = False
 
 
 class ProductTemplateAttributeExclusion(models.Model):
