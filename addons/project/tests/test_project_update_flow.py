@@ -15,6 +15,8 @@ class TestProjectUpdate(TestProjectCommon):
         with Form(self.env['project.milestone'].with_context({'default_project_id': self.project_pigs.id})) as milestone_form:
             milestone_form.name = "Test 1"
             milestone_form.deadline = fields.Date.today()
+        milestone = milestone_form.save()
+        self.assertTrue(milestone, "Check Milestone is created")
 
         try:
             with Form(self.env['project.update'].with_context({'default_project_id': self.project_pigs.id})) as update_form:
