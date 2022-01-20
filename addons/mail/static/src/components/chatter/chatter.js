@@ -3,6 +3,7 @@
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 import { useComponentToModel } from '@mail/component_hooks/use_component_to_model/use_component_to_model';
 import { useUpdate } from '@mail/component_hooks/use_update/use_update';
+import { useRefToModel } from '@mail/component_hooks/use_ref_to_model/use_ref_to_model';
 
 const { Component, useRef } = owl;
 
@@ -15,12 +16,7 @@ export class Chatter extends Component {
         super.setup();
         useUpdate({ func: () => this._update() });
         useComponentToModel({ fieldName: 'component', modelName: 'Chatter' });
-        /**
-         * Reference of the scroll Panel (Real scroll element). Useful to pass the Scroll element to
-         * child component to handle proper scrollable element.
-         */
-        this._scrollPanelRef = useRef('scrollPanel');
-        this.getScrollableElement = this.getScrollableElement.bind(this);
+        useRefToModel({ fieldName: 'scrollPanelRef', modelName: 'Chatter', refName: 'scrollPanel' });
     }
 
     //--------------------------------------------------------------------------
@@ -32,16 +28,6 @@ export class Chatter extends Component {
      */
     get chatter() {
         return this.messaging && this.messaging.models['Chatter'].get(this.props.localId);
-    }
-
-    /**
-     * @returns {Element|undefined} Scrollable Element
-     */
-    getScrollableElement() {
-        if (!this._scrollPanelRef.el) {
-            return;
-        }
-        return this._scrollPanelRef.el;
     }
 
     //--------------------------------------------------------------------------

@@ -368,6 +368,10 @@ registerModel({
             default: false,
         }),
         /**
+         * States the ref to the html node of the chatter scroll panel.
+         */
+        scrollPanelRef: attr(),
+        /**
          * Determines the `Thread` that should be displayed by `this`.
          */
         thread: one('Thread'),

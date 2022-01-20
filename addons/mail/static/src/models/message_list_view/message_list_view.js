@@ -43,6 +43,22 @@ registerModel({
         _computeIsAtTop() {
             return this.scrollTop <= this.endThreshold;
         },
+        /**
+         * @private
+         * @returns {Owl.ref}
+         */
+        _computeScrollableElementRef() {
+            if (
+                this.threadViewOwner.threadViewer &&
+                this.threadViewOwner.threadViewer.chatter &&
+                this.threadViewOwner.threadViewer.chatter.scrollPanelRef
+            ) {
+                return this.threadViewOwner.threadViewer.chatter.scrollPanelRef;
+            }
+            if (this.scrollRef) {
+                return this.scrollRef;
+            }
+        },
     },
     fields: {
         clientHeight: attr(),
@@ -86,6 +102,16 @@ registerModel({
          */
         isAtTop: attr({
             compute: '_computeIsAtTop',
+        }),
+        /**
+         * States the ref to the html node of the message list.
+         */
+        scrollRef: attr(),
+        /**
+         * States the scrollable element for the message list.
+         */
+        scrollableElementRef: attr({
+            compute: '_computeScrollableElementRef',
         }),
         scrollHeight: attr(),
         scrollTop: attr(),
