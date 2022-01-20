@@ -1,12 +1,13 @@
 /** @odoo-module **/
 
-import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
+import { _lt } from "@web/core/l10n/translation";
 import { KeepLast } from "@web/core/utils/concurrency";
+import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { scrollTo } from "@web/core/utils/scrolling";
 import { fuzzyLookup } from "@web/core/utils/search";
 import { debounce } from "@web/core/utils/timing";
-import { _lt } from "@web/core/l10n/translation";
+import { escapeRegExp } from "../utils/strings";
 
 const { Component, onWillStart, useRef, useState } = owl;
 
@@ -57,6 +58,11 @@ function commandsWithinCategory(categoryName, categories) {
         const fallbackCategory = categoryName === "default" && !categories.includes(cmd.category);
         return inCurrentCategory || fallbackCategory;
     };
+}
+
+function splitCommandName(name, searchValue) {
+    const splitName = name.split(new RegExp(`(${escapeRegExp(searchValue)})`, "ig"));
+    return searchValue.length && splitName.length > 1 ? splitName : [name];
 }
 
 export class DefaultCommandItem extends Component {}
@@ -175,11 +181,13 @@ export class CommandPalette extends Component {
         this.state.commands = commands.map((command) => ({
             ...command,
             keyId: this.keyId++,
+            splitName: splitCommandName(command.name, options.searchValue),
         }));
         this.selectCommand(this.state.commands.length ? 0 : -1);
         this.mouseSelectionActive = false;
         this.state.emptyMessage =
             this.emptyMessageByNamespace[namespace] || DEFAULT_EMPTY_MESSAGE.toString();
+        this.clearSearchValue = options.searchValue;
     }
 
     selectCommand(index) {

@@ -1120,3 +1120,91 @@ QUnit.test("navigate in the command palette with an empty list", async (assert) 
     assert.containsNone(target, ".o_command");
     assert.containsOnce(target, ".o_command_palette_listbox_empty");
 });
+
+QUnit.test("bold the searchValue on the commands", async (assert) => {
+    testComponent = await mount(TestComponent, { env, target });
+    const action = () => {};
+    const providers = [
+        {
+            namespace: "@",
+            provide: () => [
+                {
+                    name: "Test",
+                    action,
+                },
+                {
+                    name: "test hello",
+                    action,
+                },
+                {
+                    name: "hello test",
+                    action,
+                },
+                {
+                    name: "hello Test hello",
+                    action,
+                },
+                {
+                    name: "TeSt hello Test hello TEST",
+                    action,
+                },
+            ],
+        },
+    ];
+    const config = {
+        searchValue: "@",
+        providers,
+    };
+    env.services.dialog.add(CommandPaletteDialog, {
+        config,
+    });
+    await nextTick();
+    assert.containsOnce(target, ".o_command_palette");
+    assert.containsN(target, ".o_command", 5);
+    assert.deepEqual(
+        [...target.querySelectorAll(".o_command b")].map((el) => el.textContent),
+        []
+    );
+
+    await editSearchBar("@test");
+    assert.containsN(target, ".o_command", 5);
+    assert.deepEqual(
+        [...target.querySelectorAll(".o_command")].map((command) => {
+            return [...command.querySelectorAll(".o_command_name b")].map((el) => el.textContent);
+        }),
+        [["Test"], ["test"], ["test"], ["Test"], ["TeSt", "Test", "TEST"]]
+    );
+});
+
+QUnit.test("bold the searchValue on the commands with special char", async (assert) => {
+    testComponent = await mount(TestComponent, { env, target });
+    const action = () => {};
+    const providers = [
+        {
+            provide: () => [
+                {
+                    name: "Test&",
+                    action,
+                },
+            ],
+        },
+    ];
+    const config = {
+        searchValue: "&",
+        providers,
+    };
+    env.services.dialog.add(CommandPaletteDialog, {
+        config,
+    });
+    await nextTick();
+    assert.containsOnce(target, ".o_command_palette");
+    assert.containsN(target, ".o_command", 1);
+    assert.deepEqual(
+        [...target.querySelectorAll(".o_command")].map((el) => el.textContent),
+        ["Test&"]
+    );
+    assert.deepEqual(
+        [...target.querySelectorAll(".o_command b")].map((el) => el.textContent),
+        ["&"]
+    );
+});
