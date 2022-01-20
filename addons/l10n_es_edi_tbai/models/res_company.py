@@ -8,7 +8,7 @@ L10N_ES_EDI_TBAI_URLS = {
     'sigpolicy': {
         'araba': (
             'https://ticketbai.araba.eus/tbai/sinadura/',
-            ''),  # TODO find this
+            'd69VEBc4ED4QbwnDtCA2JESgJiw+rwzfutcaSl5gYvM='),
         'bizkaia': (
             'https://www.batuz.eus/fitxategiak/batuz/ticketbai/sinadura_elektronikoaren_zehaztapenak_especificaciones_de_la_firma_electronica_v1_0.pdf',
             'Quzn98x3PMbSHwbUzaj5f5KOpiH0u8bvmwbbbNkO9Es='),
