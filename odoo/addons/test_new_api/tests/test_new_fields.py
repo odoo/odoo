@@ -3150,14 +3150,14 @@ class TestSelectionUpdates(common.TransactionCase):
         related_record = self.env[self.MODEL_BASE].create({'my_selection': 'foo'})
         with self.assertQueryCount(2):  # defaults (readonly related field), INSERT
             record = self.env[self.MODEL_RELATED].create({'selection_id': related_record.id})
-        with self.assertQueryCount(4):
+        with self.assertQueryCount(0):
             record.related_selection = 'bar'
 
     def test_selection_related(self):
         related_record = self.env[self.MODEL_BASE].create({'my_selection': 'foo'})
         with self.assertQueryCount(2):  # defaults (related field), INSERT
             record = self.env[self.MODEL_RELATED_UPDATE].create({'selection_id': related_record.id})
-        with self.assertQueryCount(7):
+        with self.assertQueryCount(3):
             record.related_selection = 'bar'
 
 
