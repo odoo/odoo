@@ -347,13 +347,32 @@ function classToStyle($editable, cssRules) {
  * @param {Object[]} [cssRules] Array<{selector: string;
  *                                   style: {[styleName]: string};
  *                                   specificity: number;}>
+ * @param {JQuery} [$iframe] the iframe containing the editable, if any
  */
-function toInline($editable, cssRules) {
+function toInline($editable, cssRules, $iframe) {
     const doc = $editable[0].ownerDocument;
     cssRules = cssRules || doc._rulesCache;
     if (!cssRules) {
         cssRules = getCSSRules(doc);
         doc._rulesCache = cssRules;
+    }
+
+    // If the editable is not visible, we need to make it visible in order to
+    // retrieve image/icon dimensions. This iterates over ancestors to make them
+    // visible again. We then restore it at the end of this function.
+    const displaysToRestore = [];
+    if (!$editable.is(':visible')) {
+        let $ancestor = $editable;
+        while ($ancestor[0] && !$ancestor.is('html') && !$ancestor.is(':visible')) {
+            if ($ancestor.css('display') === 'none') {
+                displaysToRestore.push([$ancestor, $ancestor[0].style.display]);
+                $ancestor.css('display', 'block');
+            }
+            $ancestor = $ancestor.parent();
+            if ((!$ancestor[0] || $ancestor.is('html')) && $iframe && $iframe[0]) {
+                $ancestor = $iframe;
+            }
+        }
     }
 
     // Fix outlook image rendering bug (this change will be kept in both
@@ -376,6 +395,10 @@ function toInline($editable, cssRules) {
     formatTables($editable);
     normalizeColors($editable);
     normalizeRem($editable);
+
+    for (const displayToRestore of displaysToRestore) {
+        $(displayToRestore[0]).css('display', displayToRestore[1]);
+    }
 }
 /**
  * Convert font icons to images.
@@ -1041,7 +1064,7 @@ FieldHtml.include({
         $odooEditor.removeClass('odoo-editor');
         $editable.html(html);
 
-        toInline($editable, this.cssRules);
+        toInline($editable, this.cssRules, this.wysiwyg.$iframe);
         $odooEditor.addClass('odoo-editor');
 
         this.wysiwyg.setValue($editable.html(), {
