@@ -308,6 +308,7 @@
                     <field name="date_begin" readonly="1" widget="date"/>
                     <field name="date_end" readonly="1" widget="date"/>
                     <field name="stage_id" readonly="1"/>
+                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
                     <field name="seats_expected" string="Expected Attendees" sum="Total" readonly="1"/>
                     <field name="seats_used" sum="Total" readonly="1"/>
                     <field name="seats_max" string="Maximum Seats" sum="Total" readonly="1" optional="hide"/>
