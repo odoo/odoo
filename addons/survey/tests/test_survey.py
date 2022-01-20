@@ -1,12 +1,88 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _
+from freezegun import freeze_time
+
+from odoo import _, fields
 from odoo.addons.survey.tests import common
 from odoo.tests.common import users
 
 
 class TestSurveyInternals(common.TestSurveyCommon):
+
+    def test_answer_attempts_count(self):
+        """ As 'attempts_number' and 'attempts_count' are computed using raw SQL queries, let us
+        test the results. """
+
+        test_survey = self.env['survey.survey'].create({
+            'title': 'Test Survey',
+            'is_attempts_limited': True,
+            'attempts_limit': 4,
+        })
+
+        all_attempts = self.env['survey.user_input']
+        for _i in range(4):
+            all_attempts |= self._add_answer(test_survey, self.survey_user.partner_id, state='done')
+
+        # read both fields at once to allow computing their values in batch
+        attempts_results = all_attempts.read(['attempts_number', 'attempts_count'])
+        first_attempt = attempts_results[0]
+        second_attempt = attempts_results[1]
+        third_attempt = attempts_results[2]
+        fourth_attempt = attempts_results[3]
+
+        self.assertEqual(first_attempt['attempts_number'], 1)
+        self.assertEqual(first_attempt['attempts_count'], 4)
+
+        self.assertEqual(second_attempt['attempts_number'], 2)
+        self.assertEqual(second_attempt['attempts_count'], 4)
+
+        self.assertEqual(third_attempt['attempts_number'], 3)
+        self.assertEqual(third_attempt['attempts_count'], 4)
+
+        self.assertEqual(fourth_attempt['attempts_number'], 4)
+        self.assertEqual(fourth_attempt['attempts_count'], 4)
+
+    @freeze_time("2020-02-15 18:00")
+    def test_answer_display_name(self):
+        """ The "display_name" field in a survey.user_input.line is a computed field that will
+        display the answer label for any type of question.
+        Let us test the various question types. """
+
+        questions = self._create_one_question_per_type()
+        user_input = self._add_answer(self.survey, self.survey_user.partner_id)
+
+        for question in questions:
+            if question.question_type == 'char_box':
+                question_answer = self._add_answer_line(question, user_input, 'Char box answer')
+                self.assertEqual(question_answer.display_name, 'Char box answer')
+            elif question.question_type == 'text_box':
+                question_answer = self._add_answer_line(question, user_input, 'Text box answer')
+                self.assertEqual(question_answer.display_name, 'Text box answer')
+            elif question.question_type == 'numerical_box':
+                question_answer = self._add_answer_line(question, user_input, 7)
+                self.assertEqual(question_answer.display_name, '7.0')
+            elif question.question_type == 'date':
+                question_answer = self._add_answer_line(question, user_input, fields.Datetime.now())
+                self.assertEqual(question_answer.display_name, '2020-02-15')
+            elif question.question_type == 'datetime':
+                question_answer = self._add_answer_line(question, user_input, fields.Datetime.now())
+                self.assertEqual(question_answer.display_name, '2020-02-15 18:00:00')
+            elif question.question_type == 'simple_choice':
+                question_answer = self._add_answer_line(question, user_input, question.suggested_answer_ids[0].id)
+                self.assertEqual(question_answer.display_name, 'SChoice0')
+            elif question.question_type == 'multiple_choice':
+                question_answer_1 = self._add_answer_line(question, user_input, question.suggested_answer_ids[0].id)
+                self.assertEqual(question_answer_1.display_name, 'MChoice0')
+                question_answer_2 = self._add_answer_line(question, user_input, question.suggested_answer_ids[1].id)
+                self.assertEqual(question_answer_2.display_name, 'MChoice1')
+            elif question.question_type == 'matrix':
+                question_answer_1 = self._add_answer_line(question, user_input,
+                    question.suggested_answer_ids[0].id, **{'answer_value_row': question.matrix_row_ids[0].id})
+                self.assertEqual(question_answer_1.display_name, 'Column0: Row0')
+                question_answer_2 = self._add_answer_line(question, user_input,
+                    question.suggested_answer_ids[0].id, **{'answer_value_row': question.matrix_row_ids[1].id})
+                self.assertEqual(question_answer_2.display_name, 'Column0: Row1')
 
     @users('survey_manager')
     def test_answer_validation_mandatory(self):
