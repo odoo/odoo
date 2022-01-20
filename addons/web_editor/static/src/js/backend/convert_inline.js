@@ -955,14 +955,6 @@ FieldHtml.include({
     // Public
     //--------------------------------------------------------------------------
 
-    _createWysiwygIntance: function () {
-        return this._super(...arguments).then(() => {
-            if (this.nodeOptions['style-inline'] && this.mode === "edit") {
-                this.cssRules = getCSSRules(this.wysiwyg.getEditable()[0].ownerDocument);
-            }
-        });
-    },
-
     /**
      * @override
      */
