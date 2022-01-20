@@ -2,8 +2,8 @@
 
 import { _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { computeAppsAndMenuItems } from "@web/webclient/menus/menu_helpers";
 import { fuzzyLookup } from "@web/core/utils/search";
+import { computeAppsAndMenuItems } from "@web/webclient/menus/menu_helpers";
 
 const { Component } = owl;
 

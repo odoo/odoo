@@ -8,7 +8,7 @@ const { Component, xml } = owl;
 class DialogCommand extends Component {}
 DialogCommand.template = xml`
     <div class="o_command_default">
-        <span t-esc="props.name"/>
+        <t t-slot="name"/>
         <span t-if="props.email" t-esc="props.email"/>
     </div>
 `;
