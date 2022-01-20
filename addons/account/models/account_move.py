@@ -382,7 +382,7 @@ class AccountMove(models.Model):
     def _auto_init(self):
         super(AccountMove, self)._auto_init()
         if sql.has_pg_trgm(self._cr):
-            sql.create_index(self._cr, 'account_move_name_gin_index', self._table, 'name gin_trgm_ops', 'gin')
+            sql.create_index(self._cr, 'account_move_name_gin_index', self._table, ['name gin_trgm_ops'], 'gin')
 
     @api.model
     def _field_will_change(self, record, vals, field_name):
