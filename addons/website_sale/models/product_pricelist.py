@@ -23,13 +23,6 @@ class ProductPricelist(models.Model):
     code = fields.Char(string='E-commerce Promotional Code', groups="base.group_user")
     selectable = fields.Boolean(help="Allow the end user to choose this price list")
 
-    def clear_cache(self):
-        # website._get_pl_partner_order() is cached to avoid to recompute at each request the
-        # list of available pricelists. So, we need to invalidate the cache when
-        # we change the config of website price list to force to recompute.
-        website = self.env['website']
-        website._get_pl_partner_order.clear_cache(website)
-
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
@@ -41,20 +34,20 @@ class ProductPricelist(models.Model):
                 # It be set when we actually create the pricelist
                 self = self.with_context(default_company_id=vals['company_id'])
         pricelists = super().create(vals_list)
-        self.clear_cache()
+        pricelists and pricelists.clear_caches()
         return pricelists
 
     def write(self, data):
         res = super(ProductPricelist, self).write(data)
         if data.keys() & {'code', 'active', 'website_id', 'selectable', 'company_id'}:
             self._check_website_pricelist()
-        self.clear_cache()
+        self and self.clear_caches()
         return res
 
     def unlink(self):
         res = super(ProductPricelist, self).unlink()
         self._check_website_pricelist()
-        self.clear_cache()
+        self and self.clear_caches()
         return res
 
     def _get_partner_pricelist_multi_search_domain_hook(self, company_id):
@@ -92,6 +85,12 @@ class ProductPricelist(models.Model):
         if self.company_id and self.company_id != website.company_id:
             return False
         return self.website_id.id == website.id or (not self.website_id and (self.selectable or self.sudo().code))
+
+    def _is_available_in_country(self, country_code):
+        self.ensure_one()
+        if not country_code or not self.country_group_ids:
+            return True
+        return country_code in self.country_group_ids.country_ids.mapped('code')
 
     def _get_website_pricelists_domain(self, website):
         ''' Check above `_is_available_on_website` for explanation.
