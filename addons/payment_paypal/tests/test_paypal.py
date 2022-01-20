@@ -116,6 +116,18 @@ class PaypalTest(PaypalCommon, PaymentHttpCommon):
         total_fee = self.paypal._compute_fees(100, False, False)
         self.assertEqual(round(total_fee, 2), 3.3, 'Wrong computation of the Paypal fees')
 
+    def test_parsing_pdt_validation_response_returns_notification_data(self):
+        """ Test that the notification data are parsed from the content of a validation response."""
+        response_content = 'SUCCESS\nkey1=val1\nkey2=val+2\n'
+        notification_data = PaypalController._parse_pdt_validation_response(response_content)
+        self.assertDictEqual(notification_data, {'key1': 'val1', 'key2': 'val 2'})
+
+    def test_fail_to_parse_pdt_validation_response_if_not_successful(self):
+        """ Test that no notification data are returned from parsing unsuccessful PDT validation."""
+        response_content = 'FAIL\ndoes-not-matter'
+        notification_data = PaypalController._parse_pdt_validation_response(response_content)
+        self.assertIsNone(notification_data)
+
     @mute_logger('odoo.addons.payment_paypal.controllers.main')
     def test_webhook_notification_confirms_transaction(self):
         """ Test the processing of a webhook notification. """
@@ -123,7 +135,7 @@ class PaypalTest(PaypalCommon, PaymentHttpCommon):
         url = self._build_url(PaypalController._webhook_url)
         with patch(
             'odoo.addons.payment_paypal.controllers.main.PaypalController'
-            '._verify_notification_origin'
+            '._verify_webhook_notification_origin'
         ):
             self._make_http_post_request(url, data=self.NOTIFICATION_DATA)
         self.assertEqual(tx.state, 'done')
@@ -135,7 +147,7 @@ class PaypalTest(PaypalCommon, PaymentHttpCommon):
         url = self._build_url(PaypalController._webhook_url)
         with patch(
             'odoo.addons.payment_paypal.controllers.main.PaypalController'
-            '._verify_notification_origin'
+            '._verify_webhook_notification_origin'
         ) as origin_check_mock, patch(
             'odoo.addons.payment.models.payment_transaction.PaymentTransaction'
             '._handle_feedback_data'
