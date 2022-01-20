@@ -38,7 +38,7 @@ options.registry.SocialMedia = options.Class.extend({
                 websiteId = ctx['website_id'];
             },
         });
-        this._rpc({
+        await this._rpc({
             model: 'website',
             method: 'write',
             args: [[websiteId], this.dbSocialValues],
