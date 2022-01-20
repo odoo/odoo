@@ -84,6 +84,9 @@
                     <span class="font-weight-bold" t-out="day"
                         t-options="{'widget': 'date', 'format': 'YYYY'}"/>
                 </div>
+                <div class="flex-column align-self-center ml-2">
+                    <span class="small font-weight-light">(<t t-out="event.date_tz"/>)</span>
+                </div>
             </div>
             <small class="float-right text-muted align-self-end"><t t-out="tracks_by_days[day]"/> tracks</small>
         </div>

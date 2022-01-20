@@ -581,8 +581,8 @@ class EventEvent(models.Model):
             cal_event = cal.add('vevent')
 
             cal_event.add('created').value = fields.Datetime.now().replace(tzinfo=pytz.timezone('UTC'))
-            cal_event.add('dtstart').value = fields.Datetime.from_string(event.date_begin).replace(tzinfo=pytz.timezone('UTC'))
-            cal_event.add('dtend').value = fields.Datetime.from_string(event.date_end).replace(tzinfo=pytz.timezone('UTC'))
+            cal_event.add('dtstart').value = event.date_begin.astimezone(pytz.timezone(event.date_tz))
+            cal_event.add('dtend').value = event.date_end.astimezone(pytz.timezone(event.date_tz))
             cal_event.add('summary').value = event.name
             if event.address_id:
                 cal_event.add('location').value = event.sudo().address_id.contact_address

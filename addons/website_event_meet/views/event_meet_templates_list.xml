@@ -75,6 +75,7 @@
                         <span>This room is not open right now!</span><br />
                         Join us here on the
                         <strong itemprop="startDate" t-field="event.with_context(tz=event.date_tz).date_begin" t-options="{'format': 'medium'}"/>
+                        <strong>(<t t-out="event.date_tz"/>)</strong>
                         to have a chat with us!
                     </t>
                     <t t-else="">
@@ -177,7 +178,11 @@
             <div t-else="" class="d-flex flex-column">
                 <button disabled="disabled" class="btn btn-primary align-self-start">Create a Room</button>
                 Room creation will be available when event starts at 
-                <span class="font-weight-bold" t-field="event.with_context(tz=event.date_tz).date_begin" t-options="{'format': 'medium'}"/>
+                <span>
+                    <span class="font-weight-bold" t-field="event.with_context(tz=event.date_tz).date_begin"
+                        t-options="{'format': 'medium'}"/>
+                    <span class="small">(<t t-out="event.date_tz"/>)</span>
+                </span>
             </div>
         </div>
     </div>

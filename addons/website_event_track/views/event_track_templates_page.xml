@@ -46,7 +46,8 @@
                 <span t-else="">
                     starts on
                     <span t-field="track.event_id.with_context(tz=track.event_id.date_tz).date_begin"
-                        t-options="{'format': 'long', 'tz_name': track.event_id.date_tz, 'hide_seconds': True}"/>
+                        t-options="{'format': 'medium', 'tz_name': track.event_id.date_tz, 'hide_seconds': 'True'}"/>
+                    (<span t-out="track.event_id.date_tz"/>)
                 </span>
             </div>
         </div>
@@ -85,12 +86,12 @@
                 </t>
                 <t t-if="track.date">
                     <span t-field="track.date"
-                        t-options='{"hide_seconds":"True", "format": "short"}'/>
+                        t-options='{"hide_seconds":"True", "format": "short", "tz_name": event.date_tz}'/>
                     -
                     <span t-field="track.date_end"
-                        t-options='{"hide_seconds":"True", "format": "short"}'/>
+                        t-options='{"hide_seconds":"True", "format": "short", "tz_name": event.date_tz}'/>
                     <t t-if="event.date_tz">
-                        (<span t-field="track.date_end" t-options='{"format": "zzz"}'/>)
+                        (<span t-out="event.date_tz"/>)
                     </t>
                 </t>
                 <t t-if="track.duration">
