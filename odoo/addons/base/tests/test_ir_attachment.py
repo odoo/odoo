@@ -23,11 +23,12 @@ class TestIrAttachment(TransactionCase):
         # Blob1
         self.blob1 = b'blob1'
         self.blob1_b64 = base64.b64encode(self.blob1)
-        blob1_hash = hashlib.sha1(self.blob1).hexdigest()
-        self.blob1_fname = blob1_hash[:HASH_SPLIT] + '/' + blob1_hash
+        self.blob1_hash = hashlib.sha1(self.blob1).hexdigest()
+        self.blob1_fname = self.blob1_hash[:HASH_SPLIT] + '/' + self.blob1_hash
 
         # Blob2
         self.blob2 = b'blob2'
+        self.blob2_b64 = base64.b64encode(self.blob2)
 
     def assertApproximately(self, value, expectedSize, delta=1):
         # we don't used bin_size in context, because on write, the cached value is the data and not
@@ -238,3 +239,23 @@ class TestIrAttachment(TransactionCase):
         self.env['ir.config_parameter'].set_param('base.image_autoresize_max_px', '0')
         attach.raw = img_bin
         self.assertApproximately(attach.raw, fullsize)
+
+    def test_11_copy(self):
+        """
+        Copying an attachment preserves the data
+        """
+        document = self.Attachment.create({'name': 'document', 'datas': self.blob2_b64})
+        document2 = document.copy({'name': "document (copy)"})
+        self.assertEqual(document2.name, "document (copy)")
+        self.assertEqual(document2.datas, document.datas)
+        self.assertEqual(document2.db_datas, document.db_datas)
+        self.assertEqual(document2.store_fname, document.store_fname)
+        self.assertEqual(document2.checksum, document.checksum)
+
+        document3 = document.copy({'datas': self.blob1_b64})
+        self.assertEqual(document3.datas, self.blob1_b64)
+        self.assertEqual(document3.raw, self.blob1)
+        self.assertTrue(self.filestore)  # no data in db but has a store_fname
+        self.assertEqual(document3.db_datas, False)
+        self.assertEqual(document3.store_fname, self.blob1_fname)
+        self.assertEqual(document3.checksum, self.blob1_hash)
