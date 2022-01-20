@@ -220,6 +220,7 @@ body.editor_enable.editor_has_snippets {
 
 // SNIPPET PANEL
 #oe_snippets {
+    @include o-input-number-no-arrows();
     @include o-position-absolute(var(--o-we-toolbar-height), 0, 0, auto);
     position: fixed;
     z-index: $o-we-zindex;
@@ -1411,7 +1412,6 @@ body.editor_enable.editor_has_snippets {
                 overflow-y: auto;
 
                 table {
-                    @include o-input-number-no-arrows();
                     table-layout: auto;
                     width: 100%;
                     margin-bottom: $o-we-sidebar-content-field-spacing / 2;
