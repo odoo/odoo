@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
+from collections import defaultdict
 import operator
 import re
 
@@ -93,15 +94,22 @@ class IrUiMenu(models.Model):
 
         # process action menus, check whether their action is allowed
         access = self.env['ir.model.access']
-        MODEL_GETTER = {
-            'ir.actions.act_window': lambda action: action.res_model,
-            'ir.actions.report': lambda action: action.model,
-            'ir.actions.server': lambda action: action.model_id.model,
+        MODEL_BY_TYPE = {
+            'ir.actions.act_window': 'res_model',
+            'ir.actions.report': 'model',
+            'ir.actions.server': 'model_name',
         }
+
+        # performance trick: determine the ids to prefetch by type
+        prefetch_ids = defaultdict(list)
+        for action in action_menus.mapped('action'):
+            prefetch_ids[action._name].append(action.id)
+
         for menu in action_menus:
-            get_model = MODEL_GETTER.get(menu.action._name)
-            if not get_model or not get_model(menu.action) or \
-                    access.check(get_model(menu.action), 'read', False):
+            action = menu.action
+            action = action.with_prefetch(prefetch_ids[action._name])
+            model_name = action._name in MODEL_BY_TYPE and action[MODEL_BY_TYPE[action._name]]
+            if not model_name or access.check(model_name, 'read', False):
                 # make menu visible, and its folder ancestors, too
                 visible += menu
                 menu = menu.parent_id
