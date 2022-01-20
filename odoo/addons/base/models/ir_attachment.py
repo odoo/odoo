@@ -495,7 +495,9 @@ class IrAttachment(models.Model):
 
     def copy(self, default=None):
         self.check('write')
-        default = dict(default or {}, datas=self.datas)
+        if not (default or {}).keys() & {'datas', 'db_datas'}:
+            # ensure the content is kept and recomputes checksum/store_fname
+            default = dict(default or {}, datas=self.datas)
         return super(IrAttachment, self).copy(default)
 
     def unlink(self):
