@@ -231,6 +231,14 @@ class ProductProduct(models.Model):
         ('barcode_uniq', 'unique(barcode)', "A barcode can only be assigned to one product !"),
     ]
 
+    @api.constrains('barcode')
+    def _check_barcode_uniqueness(self):
+        """ With GS1 nomenclature, products and packagins use the same pattern. Therefore, we need
+        to ensure the uniqueness between products' barcodes and packagings' ones"""
+        condition = expression.OR([[('barcode', '=', b)] for b in self.mapped('barcode') if b])
+        if self.env['product.packaging'].search(condition, limit=1):
+            raise ValidationError(_("A packaging already uses the barcode"))
+
     def _get_invoice_policy(self):
         return False
 
@@ -754,8 +762,17 @@ class ProductPackaging(models.Model):
     company_id = fields.Many2one('res.company', 'Company', index=True)
 
     _sql_constraints = [
-        ('positive_qty', 'CHECK(qty > 0)', 'Contained Quantity should be positive.')
+        ('positive_qty', 'CHECK(qty > 0)', 'Contained Quantity should be positive.'),
+        ('barcode_uniq', 'unique(barcode)', 'A barcode can only be assigned to one packaging.'),
     ]
+
+    @api.constrains('barcode')
+    def _check_barcode_uniqueness(self):
+        """ With GS1 nomenclature, products and packagins use the same pattern. Therefore, we need
+        to ensure the uniqueness between products' barcodes and packagings' ones"""
+        condition = expression.OR([[('barcode', '=', b)] for b in self.mapped('barcode') if b])
+        if self.env['product.product'].search(condition, limit=1):
+            raise ValidationError(_("A product already uses the barcode"))
 
     def _check_qty(self, product_qty, uom_id, rounding_method="HALF-UP"):
         """Check if product_qty in given uom is a multiple of the packaging qty.
