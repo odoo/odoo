@@ -598,3 +598,36 @@ class TestUnbuild(TestMrpCommon):
         self.assertEqual(StockQuant._get_available_quantity(finshed_product, self.stock_location), 0, 'Table should not be available in stock')
         self.assertEqual(StockQuant._get_available_quantity(component1, self.stock_location), 1, 'Table head should be available in stock as the picking is transferred')
         self.assertEqual(StockQuant._get_available_quantity(component2, self.stock_location), 1, 'Table stand should be available in stock as the picking is transferred')
+
+    def test_unbuild_decimal_qty(self):
+        """
+        Use case:
+        - decimal accuracy of Product UoM > decimal accuracy of Units
+        - unbuild a product with a decimal quantity of component
+        """
+        self.env['decimal.precision'].search([('name', '=', 'Product Unit of Measure')]).digits = 4
+        self.uom_unit.rounding = 0.001
+
+        self.bom_1.product_qty = 3
+        self.bom_1.bom_line_ids.product_qty = 5
+        self.env['stock.quant']._update_available_quantity(self.product_2, self.stock_location, 3)
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = self.bom_1.product_id
+        mo_form.bom_id = self.bom_1
+        mo = mo_form.save()
+        mo.action_confirm()
+        mo.action_assign()
+
+        mo_form = Form(mo)
+        mo_form.qty_producing = 3
+        mo_form.save()
+        mo.button_mark_done()
+
+        uo_form = Form(self.env['mrp.unbuild'])
+        uo_form.mo_id = mo
+        # Unbuilding one product means a decimal quantity equal to 1 / 3 * 5 for each component
+        uo_form.product_qty = 1
+        uo = uo_form.save()
+        uo.action_unbuild()
+        self.assertEqual(uo.state, 'done')
