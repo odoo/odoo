@@ -39,6 +39,8 @@ models.Orderline = models.Orderline.extend({
       super_order_line_model.init_from_JSON.apply(this, arguments);
       this.sale_order_origin_id = json.sale_order_origin_id;
       this.sale_order_line_id = json.sale_order_line_id;
+      if(this.sale_order_origin_id)
+        this.order.set_to_invoice(true);
       this.down_payment_details = json.down_payment_details && JSON.parse(json.down_payment_details);
   },
   export_as_JSON: function () {

@@ -233,6 +233,7 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
                 }
               }
 
+              currentPOSOrder.set_to_invoice(true);
               currentPOSOrder.trigger('change');
               this.close();
             }
