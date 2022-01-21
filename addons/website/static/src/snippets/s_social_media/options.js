@@ -143,12 +143,12 @@ options.registry.SocialMedia = options.Class.extend({
      */
     _findRelevantSocialMedia(url) {
         const supportedSocialMedia = [
-            ['facebook', /^(https?:\/\/)(www\.)?(facebook|fb|m\.facebook)\.(com|me)\/.+$/gm],
-            ['twitter', /^(https?:\/\/)((www\.)?twitter\.com)\/.+$/gm],
-            ['youtube', /^(https?:\/\/)(www\.)?(youtube.com|youtu.be)\/.+$/gm],
-            ['instagram', /^(https?:\/\/)(www\.)?(instagram.com|instagr.am|instagr.com)\/.+$/gm],
-            ['linkedin', /^(https?:\/\/)((www\.)?linkedin\.com)\/.+$/gm],
-            ['github', /^(https?:\/\/)((www\.)?github\.com)\/.+$/gm],
+            ['facebook', /^(https?:\/\/)(www\.)?(facebook|fb|m\.facebook)\.(com|me)\/?.*$/gm],
+            ['twitter', /^(https?:\/\/)((www\.)?twitter\.com)\/?.*$/gm],
+            ['youtube', /^(https?:\/\/)(www\.)?(youtube.com|youtu.be)\/?.*$/gm],
+            ['instagram', /^(https?:\/\/)(www\.)?(instagram.com|instagr.am|instagr.com)\/?.*$/gm],
+            ['linkedin', /^(https?:\/\/)((www\.)?linkedin\.com)\/?.*$/gm],
+            ['github', /^(https?:\/\/)((www\.)?github\.com)\/?.*$/gm],
         ];
         for (const [socialMedia, regex] of supportedSocialMedia) {
             if (regex.test(url)) {
