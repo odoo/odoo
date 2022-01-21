@@ -6,7 +6,7 @@
          <field name="arch" type="xml">
              <graph string="eLearning Sales Analysis" type="line" sample="1">
                  <field name="date" interval="day"/>
-                 <field name="price_subtotal" type="measure"/>
+                 <field name="price_total" type="measure"/>
              </graph>
          </field>
     </record>
@@ -17,7 +17,7 @@
         <field name="type">ir.actions.act_window</field>
         <field name="view_mode">graph,pivot</field>
         <field name="domain">[("product_id.channel_ids", "!=", False)]</field>
-        <field name="context">{'group_by': ['date', 'product_id']}</field>
+        <field name="context">{'group_by': ['date', 'product_id'], 'pivot_measures': ['price_total']}</field>
         <field name="view_id" ref="sale_report_view_graph_slides"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
