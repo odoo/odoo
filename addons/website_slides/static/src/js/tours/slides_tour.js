@@ -64,7 +64,7 @@ tour.register('slides_tour', {
     position: 'bottom',
     width: 285,
 }, {
-    trigger: 'span.badge-info:contains("New")',
+    trigger: 'span.bg-info:contains("New")',
     content: Markup(_t("Congratulations! Your first lesson is available. Let's see the options available here. The tag \"<b>New</b>\" indicates that this lesson was created less than 7 days ago.")),
     position: 'bottom',
 }, {

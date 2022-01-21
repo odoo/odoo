@@ -217,7 +217,7 @@ const GoogleCalendarRenderer = CalendarRenderer.include({
     _initGooglePillButton: function() {
         // hide the pending button
         this.$calendarSyncContainer.find('#google_sync_pending').hide();
-        const switchBadgeClass = elem => elem.toggleClass(['badge-primary', 'badge-danger']);
+        const switchBadgeClass = elem => elem.toggleClass(['bg-primary', 'bg-danger']);
         this.$('#google_sync_configured').hover(() => {
             switchBadgeClass(this.$calendarSyncContainer.find('#google_sync_configured'));
             this.$calendarSyncContainer.find('#google_check').hide();
