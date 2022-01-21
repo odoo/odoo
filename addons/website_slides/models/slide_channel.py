@@ -178,7 +178,7 @@ class Channel(models.Model):
         ('most_viewed', 'Most Viewed'),
         ('specific', 'Select Manually'),
         ('none', 'None')],
-        string="Featured Content", default='specific', required=False,
+        string="Featured Content", default='latest', required=False,
         help='Defines the content that will be promoted on the course home page',
     )
     promoted_slide_id = fields.Many2one('slide.slide', string='Promoted Slide')
