@@ -120,7 +120,7 @@
                     <div class="container mt-5 mt-md-3 mt-xl-4">
                         <div class="row align-items-end align-items-md-stretch">
                             <!-- ==== Header Left ==== -->
-                            <div class="col-12 col-md-4 col-lg-3">
+                            <div class="col-12 col-md-4 col-lg-3 position-relative">
                                 <div class="d-flex align-items-end justify-content-around h-100">
                                     <div t-if="channel.image_1920" t-field="channel.image_1920" t-options='{"widget": "image", "class": "o_wslides_course_pict d-inline-block mb-2 mt-3 my-md-0"}' class="h-100"/>
                                     <div t-else="" class="h-100">
@@ -183,7 +183,7 @@
                         <div class="col-12 col-md-4 col-lg-3 mt-3 mt-md-0">
                             <t t-call="website_slides.course_sidebar"/>
                         </div>
-                        <div class="col-12 col-md-8 col-lg-9">
+                        <div class="col-12 col-md-8 col-lg-9 position-relative">
                             <ul class="nav nav-tabs o_wslides_nav_tabs flex-nowrap" role="tablist" id="profile_extra_info_tablist">
                                 <li class="nav-item">
                                     <a t-att-class="'nav-link %s' % ('active' if active_tab == 'home' else '')"
