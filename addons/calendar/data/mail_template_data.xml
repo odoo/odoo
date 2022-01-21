@@ -369,7 +369,7 @@
     <t t-set="target_responsible = object.partner_id == object.partner_id" />
     <t t-set="target_customer = object.partner_id == customer" />
     <t t-set="recurrent = object.recurrence_id and not ctx.get('calendar_template_ignore_recurrence'" />
-    <t t-set="mail_tz = ctx.get('mail_tz')" />
+    <t t-set="mail_tz" t-value="object._get_mail_tz() or ctx.get('mail_tz')" />
     <div>
         <table border="0" cellpadding="0" cellspacing="0">
             <tr>
