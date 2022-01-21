@@ -138,7 +138,7 @@ options.registry.SocialMedia = options.Class.extend({
     /**
      * Finds the social network for the given url.
      *
-     * @param  {String} url
+     * @param {String} url
      * @return {String} The social network to which the url leads to.
      */
     _findRelevantSocialMedia(url) {
