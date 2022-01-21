@@ -477,14 +477,16 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      * @param {OdooEvent} ev
      */
     _onReadonlyClickChecklist: function (ev) {
-        var self = this;
+        const self = this;
         if (ev.offsetX > 0) {
             return;
         }
         ev.stopPropagation();
         ev.preventDefault();
-        var checked = $(ev.target).hasClass('o_checked');
-        var checklistId = parseInt($(ev.target).attr('id') || '0');
+        const checked = $(ev.target).hasClass('o_checked');
+        let checklistId = $(ev.target).attr('id');
+        checklistId = checklistId && checklistId.replace('checkId-', '');
+        checklistId = parseInt(checklistId || '0');
 
         this._rpc({
             route: '/web_editor/checklist',
@@ -517,9 +519,11 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
             sib.nodeType === Node.ELEMENT_NODE && sib.classList.contains('fa-star')
         ));
         const shouldToggleOff = node.classList.contains('fa-star') && !nextStars.length;
-        const rating = shouldToggleOff ? 0 : previousStars.length + 1
+        const rating = shouldToggleOff ? 0 : previousStars.length + 1;
 
-        const starsId = parseInt($(node).parent().attr('id') || '0');
+        let starsId = $(node).parent().attr('id');
+        starsId = starsId && starsId.replace('checkId-', '');
+        starsId = parseInt(starsId || '0');
         this._rpc({
             route: '/web_editor/stars',
             params: {

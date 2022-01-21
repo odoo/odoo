@@ -237,6 +237,7 @@ describe('List', () => {
                 describe('Insert', () => {
                     it('should turn an empty paragraph into a checklist', async () => {
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore: '<p>[]<br></p>',
                             stepFunction: toggleCheckList,
                             // JW cAfter: '<ul class="o_checklist"><li>[]<br></li></ul>',
@@ -245,6 +246,7 @@ describe('List', () => {
                     });
                     it('should turn a paragraph into a checklist', async () => {
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore: '<p>ab[]cd</p>',
                             stepFunction: toggleCheckList,
                             // JW cAfter: '<ul class="o_checklist"><li>ab[]cd</li></ul>',
@@ -253,6 +255,7 @@ describe('List', () => {
                     });
                     it('should turn a heading into a checklist', async () => {
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore: '<h1>ab[]cd</h1>',
                             stepFunction: toggleCheckList,
                             // JW cAfter: '<ul class="o_checklist"><li><h1>ab[]cd</h1></li></ul>',
@@ -261,6 +264,7 @@ describe('List', () => {
                     });
                     it('should turn a paragraph in a div into a checklist', async () => {
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore: '<div><p>ab[]cd</p></div>',
                             stepFunction: toggleCheckList,
                             // JW cAfter: '<div><ul class="o_checklist"><li>ab[]cd</li></ul></div>',
@@ -269,6 +273,7 @@ describe('List', () => {
                     });
                     it('should turn a paragraph with formats into a checklist', async () => {
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<p><span><b>ab</b></span> <span><i>cd</i></span> ef[]gh</p>',
                             stepFunction: toggleCheckList,
@@ -279,6 +284,7 @@ describe('List', () => {
                     });
                     it('should turn a paragraph between 2 checklist into a checklist item', async () => {
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li class="o_checked">abc</li></ul><p>d[]ef</p><ul class="o_checklist"><li class="o_checked">ghi</li></ul>',
                             stepFunction: toggleCheckList,
@@ -286,8 +292,9 @@ describe('List', () => {
                                 '<ul class="o_checklist"><li class="o_checked">abc</li><li>d[]ef</li><li class="o_checked">ghi</li></ul>',
                         });
                     });
-                    it('should turn a unordered list into a checklist betweet 2 checklist inside a checklist', async () => {
+                    it('should turn a unordered list into a checklist between 2 checklists inside a checklist', async () => {
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore: unformat(`
                                 <ul class="o_checklist">
                                     <li class="o_checked">abc</li>
@@ -321,6 +328,7 @@ describe('List', () => {
                                 </ul>`),
                         });
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore: unformat(`
                                 <ul class="o_checklist">
                                     <li class="o_checked">abc</li>
@@ -356,6 +364,7 @@ describe('List', () => {
                     });
                     it('should remove the list-style when change the list style', async () => {
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore: unformat(`
                                 <ul>
                                     <li style="list-style: cambodian;">a[]</li>
@@ -365,6 +374,18 @@ describe('List', () => {
                             <ul class="o_checklist">
                                 <li>a[]</li>
                             </ul>`),
+                        });
+                    });
+                    it('should add a unique id on a new checklist', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: '<p>ab[]cd</p>',
+                            stepFunction: editor => {
+                                toggleCheckList(editor);
+                                const id = editor.editable.querySelector('li[id^=checkId-]').getAttribute('id');
+                                window.chai.expect(editor.editable.innerHTML).to.be.equal(
+                                    `<ul class="o_checklist"><li id="${id}">abcd</li></ul>`
+                                );
+                            },
                         });
                     });
                 });
@@ -392,6 +413,7 @@ describe('List', () => {
                     });
                     it('should turn a checklist item into a paragraph', async () => {
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<p>ab</p><ul class="o_checklist"><li>cd</li><li>ef[]gh</li></ul>',
                             stepFunction: toggleCheckList,
@@ -410,6 +432,7 @@ describe('List', () => {
                     });
                     it('should turn nested list items into paragraphs', async () => {
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore: unformat(`
                                 <ul class="o_checklist">
                                     <li class="o_checked">a</li>
@@ -654,6 +677,7 @@ describe('List', () => {
                 describe('Insert', () => {
                     it('should turn a paragraph into a checklist', async () => {
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore: '<p>ab</p><p>cd[ef]gh</p>',
                             stepFunction: toggleCheckList,
                             contentAfter: '<p>ab</p><ul class="o_checklist"><li>cd[ef]gh</li></ul>',
@@ -661,6 +685,7 @@ describe('List', () => {
                     });
                     it('should turn a heading into a checklist', async () => {
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore: '<p>ab</p><h1>cd[ef]gh</h1>',
                             stepFunction: toggleCheckList,
                             contentAfter:
@@ -669,6 +694,7 @@ describe('List', () => {
                     });
                     it('should turn two paragraphs into a checklist with two items', async () => {
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore: '<p>ab</p><p>cd[ef</p><p>gh]ij</p>',
                             stepFunction: toggleCheckList,
                             contentAfter:
@@ -677,6 +703,7 @@ describe('List', () => {
                     });
                     it('should turn two paragraphs in a div into a checklist with two items', async () => {
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore: '<div><p>ab[cd</p><p>ef]gh</p></div>',
                             stepFunction: toggleCheckList,
                             contentAfter:
@@ -685,6 +712,7 @@ describe('List', () => {
                     });
                     it('should turn a paragraph and a checklist item into two list items', async () => {
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<p>a[b</p><ul class="o_checklist"><li class="o_checked">c]d</li><li>ef</li></ul>',
                             stepFunction: toggleCheckList,
@@ -692,6 +720,7 @@ describe('List', () => {
                                 '<ul class="o_checklist"><li>a[b</li><li class="o_checked">c]d</li><li>ef</li></ul>',
                         });
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<p>a[b</p><ul class="o_checklist"><li class="o_checked">c]d</li><li class="o_checked">ef</li></ul>',
                             stepFunction: toggleCheckList,
@@ -701,6 +730,7 @@ describe('List', () => {
                     });
                     it('should turn a checklist item and a paragraph into two list items', async () => {
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li>ab</li><li class="o_checked">c[d</li></ul><p>e]f</p>',
                             stepFunction: toggleCheckList,
@@ -710,6 +740,7 @@ describe('List', () => {
                     });
                     it('should turn a checklist, a paragraph and another list into one list with three list items', async () => {
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li>a[b</li></ul><p>cd</p><ul class="o_checklist"><li class="o_checked">e]f</li></ul>',
                             stepFunction: toggleCheckList,
@@ -719,6 +750,7 @@ describe('List', () => {
                     });
                     it('should turn a checklist item, a paragraph and another list into one list with all three as list items', async () => {
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li class="o_checked">ab<li>c[d</li></ul><p>ef</p><ul class="o_checklist"><li class="o_checked">g]h</li></ul>',
                             stepFunction: toggleCheckList,
@@ -728,6 +760,7 @@ describe('List', () => {
                     });
                     it('should turn a checklist, a paragraph and a checklist item into one list with all three as list items', async () => {
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li class="o_checked">a[b</li></ul><p>cd</p><ul class="o_checklist"><li class="o_checked">e]f</li><li>gh</li></ul>',
                             stepFunction: toggleCheckList,
@@ -763,6 +796,7 @@ describe('List', () => {
                     });
                     it('should turn a checklist item into a paragraph', async () => {
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<p>ab</p><ul class="o_checklist"><li class="o_checked">cd</li><li class="o_checked">ef[gh]ij</li></ul>',
                             stepFunction: toggleCheckList,
@@ -991,6 +1025,7 @@ describe('List', () => {
                 });
                 it('should turn an unordered list into a checklist', async () => {
                     await testEditor(BasicEditor, {
+                        removeCheckIds: true,
                         contentBefore: '<ul><li>a[b]c</li></ul>',
                         stepFunction: toggleCheckList,
                         contentAfter: '<ul class="o_checklist"><li>a[b]c</li></ul>',
@@ -998,6 +1033,7 @@ describe('List', () => {
                 });
                 it('should turn an unordered list into a checklist just after a checklist', async () => {
                     await testEditor(BasicEditor, {
+                        removeCheckIds: true,
                         contentBefore:
                             '<ul class="o_checklist"><li class="o_checked">abc</li></ul><ul><li>d[e]f</li></ul>',
                         stepFunction: toggleCheckList,
@@ -1007,6 +1043,7 @@ describe('List', () => {
                 });
                 it('should turn an unordered list into a checklist just after a checklist and inside a checklist', async () => {
                     await testEditor(BasicEditor, {
+                        removeCheckIds: true,
                         contentBefore: unformat(`
                             <ul class="o_checklist">
                                 <li class="o_checked">title</li>
@@ -1040,7 +1077,8 @@ describe('List', () => {
     describe('toggleChecked', () => {
         it('should do nothing if do not click on the checkbox', async () => {
             await testEditor(BasicEditor, {
-                contentBefore: unformat(`
+                    removeCheckIds: true,
+                    contentBefore: unformat(`
                     <ul class="o_checklist">
                         <li>1</li>
                     </ul>`),
@@ -1059,6 +1097,7 @@ describe('List', () => {
         });
         it('should check a simple item', async () => {
             await testEditor(BasicEditor, {
+                removeCheckIds: true,
                 contentBefore: unformat(`
                     <ul class="o_checklist">
                         <li>1</li>
@@ -1078,6 +1117,7 @@ describe('List', () => {
         });
         it('should uncheck a simple item', async () => {
             await testEditor(BasicEditor, {
+                removeCheckIds: true,
                 contentBefore: unformat(`
                     <ul class="o_checklist">
                         <li class="o_checked">1</li>
@@ -1097,6 +1137,7 @@ describe('List', () => {
         });
         it('should check an empty item', async () => {
             await testEditor(BasicEditor, {
+                removeCheckIds: true,
                 contentBefore: unformat(`
                     <ul class="o_checklist">
                         <li><br></li>
@@ -1116,6 +1157,7 @@ describe('List', () => {
         });
         it('should uncheck an empty item', async () => {
             await testEditor(BasicEditor, {
+                removeCheckIds: true,
                 contentBefore: unformat(`
                     <ul class="o_checklist">
                         <li><br></li>
@@ -1135,6 +1177,7 @@ describe('List', () => {
         });
         it('should check a nested item and the previous checklist item used as title', async () => {
             await testEditor(BasicEditor, {
+                removeCheckIds: true,
                 contentBefore: unformat(`
                 <ul class="o_checklist">
                     <li>2</li>
@@ -1166,6 +1209,7 @@ describe('List', () => {
         });
         it('should uncheck a nested item and the previous checklist item used as title', async () => {
             await testEditor(BasicEditor, {
+                removeCheckIds: true,
                 contentBefore: unformat(`
                 <ul class="o_checklist">
                     <li class="o_checked">2</li>
@@ -1197,6 +1241,7 @@ describe('List', () => {
         });
         it('should check a nested item and the wrapper wrapper title', async () => {
             await testEditor(BasicEditor, {
+                removeCheckIds: true,
                 contentBefore: unformat(`
                     <ul class="o_checklist">
                         <li>3</li>
@@ -1238,6 +1283,7 @@ describe('List', () => {
         });
         it('should uncheck a nested item and the wrapper wrapper title', async () => {
             await testEditor(BasicEditor, {
+                removeCheckIds: true,
                 contentBefore: unformat(`
                     <ul class="o_checklist">
                         <li class="o_checked">3</li>
@@ -1279,6 +1325,7 @@ describe('List', () => {
         });
         it('should check all nested checklist item', async () => {
             await testEditor(BasicEditor, {
+                removeCheckIds: true,
                 contentBefore: unformat(`
                         <ul class="o_checklist">
                             <li>3</li>
@@ -1330,6 +1377,7 @@ describe('List', () => {
         });
         it('should uncheck all nested checklist item', async () => {
             await testEditor(BasicEditor, {
+                removeCheckIds: true,
                 contentBefore: unformat(`
                         <ul class="o_checklist">
                             <li class="o_checked">3</li>
@@ -1381,6 +1429,7 @@ describe('List', () => {
         });
         it('should check all nested checklist item and update wrapper title', async () => {
             await testEditor(BasicEditor, {
+                removeCheckIds: true,
                 contentBefore: unformat(`
                     <ul class="o_checklist">
                         <li>3</li>
@@ -1422,6 +1471,7 @@ describe('List', () => {
         });
         it('should uncheck all nested checklist items and update wrapper title', async () => {
             await testEditor(BasicEditor, {
+                removeCheckIds: true,
                 contentBefore: unformat(`
                     <ul class="o_checklist">
                         <li class="o_checked">3</li>
@@ -1676,6 +1726,7 @@ describe('List', () => {
                     });
                     it('should delete the first character in a checklist item', async () => {
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li class="o_checked">abc</li><li>[]defg</li></ul>',
                             stepFunction: deleteForward,
@@ -1685,6 +1736,7 @@ describe('List', () => {
                     });
                     it('should delete a character within a checklist item', async () => {
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li class="o_checked">abc</li><li>de[]fg</li></ul>',
                             stepFunction: deleteForward,
@@ -1694,6 +1746,7 @@ describe('List', () => {
                     });
                     it('should delete the last character in a checklist item', async () => {
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li class="o_checked">abc</li><li>def[]g</li></ul>',
                             stepFunction: deleteForward,
@@ -1703,6 +1756,7 @@ describe('List', () => {
                     });
                     it('should remove the only character in a checklist', async () => {
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li class="o_checked">[]a</li></ul>',
                             stepFunction: deleteForward,
@@ -1710,6 +1764,7 @@ describe('List', () => {
                                 '<ul class="o_checklist"><li class="o_checked">[]<br></li></ul>',
                         });
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li class="o_checked"><p>[]a</p></li></ul>',
                             stepFunction: deleteForward,
@@ -1720,6 +1775,7 @@ describe('List', () => {
                     });
                     it('should merge a checklist item with its next list item', async () => {
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li class="o_checked">abc[]</li><li>def</li></ul>',
                             stepFunction: deleteForward,
@@ -1728,6 +1784,7 @@ describe('List', () => {
                         });
                         // With another list item before.
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li class="o_checked">abc</li><li>def[]</li><li class="o_checked">ghi</li></ul>',
                             stepFunction: deleteForward,
@@ -1737,6 +1794,7 @@ describe('List', () => {
                         // Where the list item to merge into is empty, with an
                         // empty list item before.
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li><br></li><li>[]<br></li><li>abc</li></ul>',
                             stepFunction: deleteForward,
@@ -1746,6 +1804,7 @@ describe('List', () => {
                     });
                     it('should rejoin sibling lists', async () => {
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li class="o_checked">a[]</li></ul><p>b</p><ul class="o_checklist"><li class="o_checked">c</li></ul>',
                             stepFunction: deleteForward,
@@ -1755,6 +1814,7 @@ describe('List', () => {
                     });
                     it('should rejoin multi-level sibling lists', async () => {
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore: unformat(`
                                     <ul class="o_checklist">
                                         <li class="o_checked">a</li>
@@ -1789,6 +1849,7 @@ describe('List', () => {
                     });
                     it('should only rejoin same-level lists', async () => {
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore: unformat(`
                                     <ul class="o_checklist">
                                         <li class="o_checked">a</li>
@@ -1829,6 +1890,7 @@ describe('List', () => {
                     });
                     it('should not convert mixed lists on rejoin', async () => {
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li class="o_checked">a[]</li></ul><p>b</p><ul><li>c</li></ul>',
                             stepFunction: deleteForward,
@@ -1838,6 +1900,7 @@ describe('List', () => {
                     });
                     it('should not convert mixed multi-level lists on rejoin', async () => {
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore: unformat(`
                                     <ul class="o_checklist">
                                         <li class="o_checked">a</li>
@@ -1912,6 +1975,7 @@ describe('List', () => {
                     });
                     it('should merge an indented list item into a non-indented list item', async () => {
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li>abc[]</li><li class="oe-nested"><ul class="o_checklist"><li>def</li><li class="o_checked">ghi</li></ul></li></ul>',
                             stepFunction: async editor => {
@@ -1924,6 +1988,7 @@ describe('List', () => {
                     });
                     it('should merge the only item in an indented list into a non-indented list item and remove the now empty indented list', async () => {
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li>abc[]</li><li class="oe-nested"><ul class="o_checklist"><li>def</li></ul></li></ul>',
                             stepFunction: async editor => {
@@ -1981,6 +2046,7 @@ describe('List', () => {
                     });
                     it('should merge a checklist item into a paragraph', async () => {
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<p>ab[]cd</p><ul class="o_checklist"><li class="o_checked">ef</li><li class="o_checked">gh</li></ul>',
                             stepFunction: async editor => {
@@ -1995,6 +2061,7 @@ describe('List', () => {
                     });
                     it('should merge a paragraph into a checklist item', async () => {
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li class="o_checked">abc[]</li></ul><p>def</p>',
                             stepFunction: deleteForward,
@@ -2004,6 +2071,7 @@ describe('List', () => {
                     });
                     it('should treat two blocks in a checklist item (checked/unchecked) as two list items and merge them', async () => {
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li class="o_checked"><h1>abc</h1></li><li><h2>def[]</h2><h3>ghi</h3></li><li class="o_checked"><h4>klm</h4></li></ul>',
                             stepFunction: deleteForward,
@@ -2013,6 +2081,7 @@ describe('List', () => {
                                 '<ul class="o_checklist"><li class="o_checked"><h1>abc</h1></li><li><h2>def[]ghi</h2></li><li class="o_checked"><h4>klm</h4></li></ul>',
                         });
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li class="o_checked"><h1>abc</h1></li><li class="o_checked"><h2>def[]</h2><h3>ghi</h3></li><li><h4>klm</h4></li></ul>',
                             stepFunction: deleteForward,
@@ -2024,6 +2093,7 @@ describe('List', () => {
                     });
                     it('should merge a bold list item into a non-formatted list item', async () => {
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li>abc</li><li><b>de</b>fg[]</li><li><b>hij</b>klm</li><li>nop</li></ul>',
                             stepFunction: deleteForward,
@@ -2034,6 +2104,7 @@ describe('List', () => {
                     });
                     it('should merge a bold list item (checked/unchecked) into a non-formatted list item', async () => {
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li class="o_checked">abc</li><li class="o_checked"><b>de</b>fg[]</li><li class="o_checked"><b>hij</b>klm</li><li class="o_checked">nop</li></ul>',
                             stepFunction: deleteForward,
@@ -2042,6 +2113,7 @@ describe('List', () => {
                                 '<ul class="o_checklist"><li class="o_checked">abc</li><li class="o_checked"><b>de</b>fg[]<b>hij</b>klm</li><li class="o_checked">nop</li></ul>',
                         });
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li class="o_checked">abc</li><li class="o_checked"><b>de</b>fg[]</li><li><b>hij</b>klm</li><li class="o_checked">nop</li></ul>',
                             stepFunction: deleteForward,
@@ -2050,6 +2122,7 @@ describe('List', () => {
                                 '<ul class="o_checklist"><li class="o_checked">abc</li><li class="o_checked"><b>de</b>fg[]<b>hij</b>klm</li><li class="o_checked">nop</li></ul>',
                         });
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li>abc</li><li><b>de</b>fg[]</li><li class="o_checked"><b>hij</b>klm</li><li>nop</li></ul>',
                             stepFunction: deleteForward,
@@ -2060,6 +2133,7 @@ describe('List', () => {
                     });
                     it('should merge a paragraph starting with bold text into a checklist item with ending without formatting', async () => {
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li><i>abc</i>def[]</li></ul><p><b>ghi</b>jkl</p>',
                             stepFunction: deleteForward,
@@ -2067,6 +2141,7 @@ describe('List', () => {
                                 '<ul class="o_checklist"><li><i>abc</i>def[]<b>ghi</b>jkl</li></ul>',
                         });
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li class="o_checked"><i>abc</i>def[]</li></ul><p><b>ghi</b>jkl</p>',
                             stepFunction: deleteForward,
@@ -2077,6 +2152,7 @@ describe('List', () => {
                     });
                     it('should merge a paragraph starting with bold text into a checklist item with ending with italic text', async () => {
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li><b>abc</b><i>def[]</i></li></ul><p><b>ghi</b>jkl</p>',
                             stepFunction: deleteForward,
@@ -2084,6 +2160,7 @@ describe('List', () => {
                                 '<ul class="o_checklist"><li><b>abc</b><i>def[]</i><b>ghi</b>jkl</li></ul>',
                         });
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li class="o_checked"><b>abc</b><i>def[]</i></li></ul><p><b>ghi</b>jkl</p>',
                             stepFunction: deleteForward,
@@ -2115,6 +2192,7 @@ describe('List', () => {
                     });
                     it('should merge a bold list item (checked/unchecked) into a non-formatted list item', async () => {
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li class="o_checked"><p>abc</p></li><li><p><b>de</b>fg[]</p><p><b>hij</b>klm</p></li><li class="o_checked"><p>nop</p></li></ul>',
                             stepFunction: deleteForward,
@@ -2126,6 +2204,7 @@ describe('List', () => {
                     });
                     it('should treat two blocks in a checklist item and keep the blocks', async () => {
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li class="o_checked"><p>abc</p></li><li><p>def[]</p><p>ghi</p></li><li class="o_checked"><p>klm</p></li></ul>',
                             stepFunction: deleteForward,
@@ -2133,6 +2212,7 @@ describe('List', () => {
                                 '<ul class="o_checklist"><li class="o_checked"><p>abc</p></li><li><p>def[]ghi</p></li><li class="o_checked"><p>klm</p></li></ul>',
                         });
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li class="o_checked"><h1>abc</h1></li><li class="o_checked"><h2>def[]</h2><h3>ghi</h3></li><li class="o_checked"><h4>klm</h4></li></ul>',
                             stepFunction: deleteForward,
@@ -2142,6 +2222,7 @@ describe('List', () => {
                     });
                     it('should merge a bold list item into a non-formatted list item', async () => {
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<ul><li><p>abc</p></li><li><p><b>de</b>fg[]</p><p><b>hij</b>klm</p></li><li><p>nop</p></li></ul>',
                             stepFunction: deleteForward,
@@ -2342,6 +2423,7 @@ describe('List', () => {
                     it('should delete text within a checklist item', async () => {
                         // Forward selection
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li class="o_checked">ab[cd]ef</li></ul>',
                             stepFunction: deleteForward,
@@ -2349,12 +2431,14 @@ describe('List', () => {
                                 '<ul class="o_checklist"><li class="o_checked">ab[]ef</li></ul>',
                         });
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore: '<ul class="o_checklist"><li>ab[cd]ef</li></ul>',
                             stepFunction: deleteForward,
                             contentAfter: '<ul class="o_checklist"><li>ab[]ef</li></ul>',
                         });
                         // Backward selection
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li class="o_checked">ab]cd[ef</li></ul>',
                             stepFunction: deleteForward,
@@ -2362,6 +2446,7 @@ describe('List', () => {
                                 '<ul class="o_checklist"><li class="o_checked">ab[]ef</li></ul>',
                         });
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore: '<ul class="o_checklist"><li>ab]cd[ef</li></ul>',
                             stepFunction: deleteForward,
                             contentAfter: '<ul class="o_checklist"><li>ab[]ef</li></ul>',
@@ -2370,6 +2455,7 @@ describe('List', () => {
                     it('should delete all the text in a checklist item', async () => {
                         // Forward selection
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li class="o_checked">[abc]</li></ul>',
                             stepFunction: deleteForward,
@@ -2377,12 +2463,14 @@ describe('List', () => {
                                 '<ul class="o_checklist"><li class="o_checked">[]<br></li></ul>',
                         });
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore: '<ul class="o_checklist"><li>[abc]</li></ul>',
                             stepFunction: deleteForward,
                             contentAfter: '<ul class="o_checklist"><li>[]<br></li></ul>',
                         });
                         // Backward selection
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li class="o_checked">]abc[</li></ul>',
                             stepFunction: deleteForward,
@@ -2390,6 +2478,7 @@ describe('List', () => {
                                 '<ul class="o_checklist"><li class="o_checked">[]<br></li></ul>',
                         });
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore: '<ul class="o_checklist"><li>]abc[</li></ul>',
                             stepFunction: deleteForward,
                             contentAfter: '<ul class="o_checklist"><li>[]<br></li></ul>',
@@ -2398,6 +2487,7 @@ describe('List', () => {
                     it('should delete across two list items', async () => {
                         // Forward selection
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li class="o_checked">ab[cd</li><li class="o_checked">ef]gh</li></ul>',
                             stepFunction: deleteForward,
@@ -2405,6 +2495,7 @@ describe('List', () => {
                                 '<ul class="o_checklist"><li class="o_checked">ab[]gh</li></ul>',
                         });
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li class="o_checked">ab[cd</li><li>ef]gh</li></ul>',
                             stepFunction: deleteForward,
@@ -2412,12 +2503,14 @@ describe('List', () => {
                                 '<ul class="o_checklist"><li class="o_checked">ab[]gh</li></ul>',
                         });
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li>ab[cd</li><li class="o_checked">ef]gh</li></ul>',
                             stepFunction: deleteForward,
                             contentAfter: '<ul class="o_checklist"><li>ab[]gh</li></ul>',
                         });
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li>ab[cd</li><li>ef]gh</li></ul>',
                             stepFunction: deleteForward,
@@ -2425,6 +2518,7 @@ describe('List', () => {
                         });
                         // Backward selection
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li class="o_checked">ab]cd</li><li class="o_checked">ef[gh</li></ul>',
                             stepFunction: deleteForward,
@@ -2432,12 +2526,14 @@ describe('List', () => {
                                 '<ul class="o_checklist"><li class="o_checked">ab[]gh</li></ul>',
                         });
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li>ab]cd</li><li class="o_checked">ef[gh</li></ul>',
                             stepFunction: deleteForward,
                             contentAfter: '<ul class="o_checklist"><li>ab[]gh</li></ul>',
                         });
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li class="o_checked">ab]cd</li><li>ef[gh</li></ul>',
                             stepFunction: deleteForward,
@@ -2445,6 +2541,7 @@ describe('List', () => {
                                 '<ul class="o_checklist"><li class="o_checked">ab[]gh</li></ul>',
                         });
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li>ab]cd</li><li>ef[gh</li></ul>',
                             stepFunction: deleteForward,
@@ -2454,6 +2551,7 @@ describe('List', () => {
                     it('should delete across an unindented list item and an indented list item', async () => {
                         // Forward selection
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li class="o_checked">ab[cd</li><li class="oe-nested"><ul class="o_checklist"><li class="o_checked">ef]gh</li></ul></li></ul>',
                             stepFunction: deleteForward,
@@ -2461,6 +2559,7 @@ describe('List', () => {
                                 '<ul class="o_checklist"><li class="o_checked">ab[]gh</li></ul>',
                         });
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li>ab[cd</li><li class="oe-nested"><ul class="o_checklist"><li>ef]gh</li></ul></li></ul>',
                             stepFunction: deleteForward,
@@ -2469,6 +2568,7 @@ describe('List', () => {
                             contentAfter: '<ul class="o_checklist"><li>ab[]gh</li></ul>',
                         });
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li>ab[cd</li><li class="oe-nested"><ul class="o_checklist"><li class="o_checked">ef]gh</li></ul></li></ul>',
                             stepFunction: deleteForward,
@@ -2480,6 +2580,7 @@ describe('List', () => {
                         });
                         // Backward selection
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li class="o_checked">ab]cd</li><li class="oe-nested"><ul class="o_checklist"><li class="o_checked">ef[gh</li></ul></li></ul>',
                             stepFunction: deleteForward,
@@ -2487,6 +2588,7 @@ describe('List', () => {
                                 '<ul class="o_checklist"><li class="o_checked">ab[]gh</li></ul>',
                         });
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li>ab]cd</li><li class="oe-nested"><ul class="o_checklist"><li>ef[gh</li></ul></li></ul>',
                             stepFunction: deleteForward,
@@ -2495,6 +2597,7 @@ describe('List', () => {
                             contentAfter: '<ul class="o_checklist"><li>ab[]gh</li></ul>',
                         });
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li>ab]cd</li><li class="oe-nested"><ul class="o_checklist"><li class="o_checked">ef[gh</li></ul></li></ul>',
                             stepFunction: deleteForward,
@@ -2524,6 +2627,7 @@ describe('List', () => {
                     it('should merge the contents of a checklist item within a block into a heading, and leave the rest of its list as it is', async () => {
                         // Forward selection
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<h1>a[b</h1><p>de</p><custom-block style="display: block;"><ul class="o_checklist"><li class="o_checked">fg</li><li>h]i</li><li class="o_checked">jk</li></ul></custom-block>',
                             stepFunction: deleteForward,
@@ -2531,6 +2635,7 @@ describe('List', () => {
                                 '<h1>a[]i</h1><custom-block style="display: block;"><ul class="o_checklist"><li class="o_checked">jk</li></ul></custom-block>',
                         });
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<h1>a[b</h1><p>de</p><custom-block style="display: block;"><ul class="o_checklist"><li>fg</li><li>h]i</li><li class="o_checked">jk</li></ul></custom-block>',
                             stepFunction: deleteForward,
@@ -2538,6 +2643,7 @@ describe('List', () => {
                                 '<h1>a[]i</h1><custom-block style="display: block;"><ul class="o_checklist"><li class="o_checked">jk</li></ul></custom-block>',
                         });
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<h1>a[b</h1><p>de</p><custom-block style="display: block;"><ul class="o_checklist"><li class="o_checked">fg</li><li>h]i</li><li>jk</li></ul></custom-block>',
                             stepFunction: deleteForward,
@@ -2545,6 +2651,7 @@ describe('List', () => {
                                 '<h1>a[]i</h1><custom-block style="display: block;"><ul class="o_checklist"><li>jk</li></ul></custom-block>',
                         });
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<h1>a[b</h1><p>de</p><custom-block style="display: block;"><ul class="o_checklist"><li>fg</li><li>h]i</li><li>jk</li></ul></custom-block>',
                             stepFunction: deleteForward,
@@ -2553,6 +2660,7 @@ describe('List', () => {
                         });
                         // Backward selection
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<h1>a]b</h1><p>de</p><custom-block style="display: block;"><ul class="o_checklist"><li>fg</li><li class="o_checked">h[i</li><li class="o_checked">jk</li></ul></custom-block>',
                             stepFunction: deleteForward,
@@ -2560,6 +2668,7 @@ describe('List', () => {
                                 '<h1>a[]i</h1><custom-block style="display: block;"><ul class="o_checklist"><li class="o_checked">jk</li></ul></custom-block>',
                         });
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<h1>a]b</h1><p>de</p><custom-block style="display: block;"><ul class="o_checklist"><li>fg</li><li>h[i</li><li class="o_checked">jk</li></ul></custom-block>',
                             stepFunction: deleteForward,
@@ -2567,6 +2676,7 @@ describe('List', () => {
                                 '<h1>a[]i</h1><custom-block style="display: block;"><ul class="o_checklist"><li class="o_checked">jk</li></ul></custom-block>',
                         });
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<h1>a]b</h1><p>de</p><custom-block style="display: block;"><ul class="o_checklist"><li>fg</li><li class="o_checked">h[i</li><li>jk</li></ul></custom-block>',
                             stepFunction: deleteForward,
@@ -2574,6 +2684,7 @@ describe('List', () => {
                                 '<h1>a[]i</h1><custom-block style="display: block;"><ul class="o_checklist"><li>jk</li></ul></custom-block>',
                         });
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<h1>a]b</h1><p>de</p><custom-block style="display: block;"><ul class="o_checklist"><li>fg</li><li>h[i</li><li>jk</li></ul></custom-block>',
                             stepFunction: deleteForward,
@@ -2683,6 +2794,7 @@ describe('List', () => {
                         it('should delete across an checklist list and an unordered list', async () => {
                             // Forward selection
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="o_checked">ab[cd</li></ul><ul><li class="o_checked">ef]gh</li></ul>',
                                 stepFunction: deleteForward,
@@ -2690,12 +2802,14 @@ describe('List', () => {
                                     '<ul class="o_checklist"><li class="o_checked">ab[]gh</li></ul>',
                             });
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li>ab[cd</li></ul><ul><li class="o_checked">ef]gh</li></ul>',
                                 stepFunction: deleteForward,
                                 contentAfter: '<ul class="o_checklist"><li>ab[]gh</li></ul>',
                             });
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="o_checked">ab[cd</li></ul><ul><li>ef]gh</li></ul>',
                                 stepFunction: deleteForward,
@@ -2703,6 +2817,7 @@ describe('List', () => {
                                     '<ul class="o_checklist"><li class="o_checked">ab[]gh</li></ul>',
                             });
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li>ab[cd</li></ul><ul><li>ef]gh</li></ul>',
                                 stepFunction: deleteForward,
@@ -2710,6 +2825,7 @@ describe('List', () => {
                             });
                             // Backward selection
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="o_checked">ab]cd</li></ul><ul><li class="o_checked">ef[gh</li></ul>',
                                 stepFunction: deleteForward,
@@ -2717,12 +2833,14 @@ describe('List', () => {
                                     '<ul class="o_checklist"><li class="o_checked">ab[]gh</li></ul>',
                             });
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li>ab]cd</li></ul><ul><li class="o_checked">ef[gh</li></ul>',
                                 stepFunction: deleteForward,
                                 contentAfter: '<ul class="o_checklist"><li>ab[]gh</li></ul>',
                             });
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="o_checked">ab]cd</li></ul><ul><li>ef[gh</li></ul>',
                                 stepFunction: deleteForward,
@@ -2730,6 +2848,7 @@ describe('List', () => {
                                     '<ul class="o_checklist"><li class="o_checked">ab[]gh</li></ul>',
                             });
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li>ab]cd</li></ul><ul><li>ef[gh</li></ul>',
                                 stepFunction: deleteForward,
@@ -2739,6 +2858,7 @@ describe('List', () => {
                         it('should delete across an checklist list item and an unordered list item within an checklist list', async () => {
                             // Forward selection
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="o_checked">ab[cd</li><li class="oe-nested"><ul><li class="o_checked">ef]gh</li></ul></li></ul>',
                                 stepFunction: deleteForward,
@@ -2746,6 +2866,7 @@ describe('List', () => {
                                     '<ul class="o_checklist"><li class="o_checked">ab[]gh</li></ul>',
                             });
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li>ab[cd</li><li class="oe-nested"><ul><li>ef]gh</li></ul></li></ul>',
                                 stepFunction: deleteForward,
@@ -2753,6 +2874,7 @@ describe('List', () => {
                             });
                             // Backward selection
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="o_checked">ab]cd</li><li class="oe-nested"><ul><li class="o_checked">ef[gh</li></ul></li></ul>',
                                 stepFunction: deleteForward,
@@ -2760,6 +2882,7 @@ describe('List', () => {
                                     '<ul class="o_checklist"><li class="o_checked">ab[]gh</li></ul>',
                             });
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li>ab]cd</li><li class="oe-nested"><ul><li>ef[gh</li></ul></li></ul>',
                                 stepFunction: deleteForward,
@@ -3590,6 +3713,7 @@ describe('List', () => {
                                 contentAfter: '<p>[]<br></p>',
                             });
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="oe-nested"><ul class="o_checklist"><li class="o_checked">[]abc</li></ul></li></ul>',
                                 stepFunction: deleteBackward,
@@ -3599,6 +3723,7 @@ describe('List', () => {
                         });
                         it('should delete the first character in a list item', async () => {
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="o_checked">abc</li><li class="o_checked">d[]efg</li></ul>',
                                 stepFunction: deleteBackward,
@@ -3608,6 +3733,7 @@ describe('List', () => {
                         });
                         it('should delete a character within a list item', async () => {
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="o_checked">abc</li><li class="o_checked">de[]fg</li></ul>',
                                 stepFunction: deleteBackward,
@@ -3617,6 +3743,7 @@ describe('List', () => {
                         });
                         it('should delete the last character in a list item', async () => {
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="o_checked">abc</li><li class="o_checked">defg[]</li></ul>',
                                 stepFunction: deleteBackward,
@@ -3626,6 +3753,7 @@ describe('List', () => {
                         });
                         it('should remove the only character in a list', async () => {
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="o_checked">a[]</li></ul>',
                                 stepFunction: deleteBackward,
@@ -3634,6 +3762,7 @@ describe('List', () => {
                                     '<ul class="o_checklist"><li class="o_checked">[]<br></li></ul>',
                             });
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="o_checked"><p>a[]</p></li></ul>',
                                 stepFunction: deleteBackward,
@@ -3644,6 +3773,7 @@ describe('List', () => {
                         });
                         it('should merge a list item with its previous list item', async () => {
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="o_checked">abc</li><li class="o_checked">[]def</li></ul>',
                                 stepFunction: deleteBackward,
@@ -3651,6 +3781,7 @@ describe('List', () => {
                                     '<ul class="o_checklist"><li class="o_checked">abc[]def</li></ul>',
                             });
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="o_checked">abc</li><li>[]def</li></ul>',
                                 stepFunction: deleteBackward,
@@ -3658,6 +3789,7 @@ describe('List', () => {
                                     '<ul class="o_checklist"><li class="o_checked">abc[]def</li></ul>',
                             });
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li>abc</li><li class="o_checked">[]def</li></ul>',
                                 stepFunction: deleteBackward,
@@ -3665,6 +3797,7 @@ describe('List', () => {
                             });
                             // With another list item after.
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="o_checked">abc</li><li class="o_checked">[]def</li><li class="o_checked">ghi</li></ul>',
                                 stepFunction: deleteBackward,
@@ -3672,6 +3805,7 @@ describe('List', () => {
                                     '<ul class="o_checklist"><li class="o_checked">abc[]def</li><li class="o_checked">ghi</li></ul>',
                             });
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="o_checked">abc</li><li>[]def</li><li>ghi</li></ul>',
                                 stepFunction: deleteBackward,
@@ -3679,6 +3813,7 @@ describe('List', () => {
                                     '<ul class="o_checklist"><li class="o_checked">abc[]def</li><li>ghi</li></ul>',
                             });
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="o_checked">abc</li><li>[]def</li><li class="o_checked">ghi</li></ul>',
                                 stepFunction: deleteBackward,
@@ -3688,6 +3823,7 @@ describe('List', () => {
                             // Where the list item to merge into is empty, with an
                             // empty list item before.
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li><br></li><li><br></li><li class="o_checked">[]abc</li></ul>',
                                 stepFunction: deleteBackward,
@@ -3697,6 +3833,7 @@ describe('List', () => {
                         });
                         it('should rejoin sibling lists', async () => {
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="o_checked">a</li></ul><p>[]b</p><ul class="o_checklist"><li class="o_checked">c</li></ul>',
                                 stepFunction: deleteBackward,
@@ -3706,6 +3843,7 @@ describe('List', () => {
                         });
                         it('should rejoin multi-level sibling lists', async () => {
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore: unformat(`
                                     <ul class="o_checklist">
                                         <li class="o_checked">a</li>
@@ -3738,6 +3876,7 @@ describe('List', () => {
                                     </ul>`),
                             });
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore: unformat(`
                                     <ul class="o_checklist">
                                         <li class="o_checked">a</li>
@@ -3772,6 +3911,7 @@ describe('List', () => {
                         });
                         it('should only rejoin same-level lists', async () => {
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore: unformat(`
                                     <ul class="o_checklist">
                                         <li class="o_checked">a</li>
@@ -3810,6 +3950,7 @@ describe('List', () => {
                                     </ul>`),
                             });
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore: unformat(`
                                     <ul class="o_checklist">
                                         <li class="o_checked">a</li>
@@ -3850,6 +3991,7 @@ describe('List', () => {
                         });
                         it('should not convert mixed lists on rejoin', async () => {
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="o_checked">a</li></ul><p>[]b</p><ul><li>c</li></ul>',
                                 stepFunction: deleteBackward,
@@ -3859,6 +4001,7 @@ describe('List', () => {
                         });
                         it('should not convert mixed multi-level lists on rejoin', async () => {
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore: unformat(`
                                     <ul class="o_checklist">
                                         <li class="o_checked">a</li>
@@ -3901,6 +4044,7 @@ describe('List', () => {
                     describe('Indented', () => {
                         it('should merge an indented list item into a non-indented list item', async () => {
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="o_checked">abc</li><li class="oe-nested"><ul class="o_checklist"><li class="o_checked">[]def</li><li class="o_checked">ghi</li></ul></li></ul>',
                                 stepFunction: async editor => {
@@ -3913,6 +4057,7 @@ describe('List', () => {
                         });
                         it('should merge a non-indented list item into an indented list item', async () => {
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="oe-nested"><ul class="o_checklist"><li class="o_checked">abc</li></ul></li><li class="o_checked">[]def</li></ul>',
                                 stepFunction: deleteBackward,
@@ -3922,6 +4067,7 @@ describe('List', () => {
                         });
                         it('should merge the only item in an indented list into a non-indented list item and remove the now empty indented list', async () => {
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="o_checked">abc</li><li class="oe-nested"><ul class="o_checklist"><li class="o_checked">[]def</li></ul></li></ul>',
                                 stepFunction: async editor => {
@@ -3934,6 +4080,7 @@ describe('List', () => {
                         });
                         it('should outdent a list item', async () => {
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="oe-nested"><ul class="o_checklist"><li class="o_checked">[]abc</li></ul></li></ul>',
                                 stepFunction: deleteBackward,
@@ -3942,6 +4089,7 @@ describe('List', () => {
                             });
                             // With a paragraph before the list:
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<p>abc</p><ul class="o_checklist"><li class="oe-nested"><ul class="o_checklist"><li class="o_checked">[]def</li></ul></li></ul>',
                                 stepFunction: deleteBackward,
@@ -3951,6 +4099,7 @@ describe('List', () => {
                         });
                         it.skip('should outdent while nested within a list item', async () => {
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="o_checked"><div>abc</div></li><li class="o_checked"><div><div>[]def</div></div></li></ul>',
                                 stepFunction: deleteBackward,
@@ -3962,6 +4111,7 @@ describe('List', () => {
                             });
                             // With a div before the list:
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<div>abc</div><ul class="o_checklist"><li class="o_checked"><div><div>[]def</div></div></li></ul>',
                                 stepFunction: deleteBackward,
@@ -3974,6 +4124,7 @@ describe('List', () => {
                         });
                         it('should outdent an empty list item within a list', async () => {
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore: unformat(`
                                     <ul class="o_checklist">
                                         <li>abc</li>
@@ -4001,6 +4152,7 @@ describe('List', () => {
                         });
                         it('should outdent an empty list within a list', async () => {
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li>abc</li><li class="oe-nested"><ul class="o_checklist"><li>[]<br></li></ul></li><li class="o_checked">def</li></ul>',
                                 stepFunction: deleteBackward,
@@ -4010,6 +4162,7 @@ describe('List', () => {
                         });
                         it('should outdent an empty list', async () => {
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="oe-nested"><ul class="o_checklist"><li class="o_checked"><br>[]</li></ul></li></ul>',
                                 stepFunction: deleteBackward,
@@ -4019,12 +4172,14 @@ describe('List', () => {
                         });
                         it("should outdent a list to the point that it's a paragraph", async () => {
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore: '<ul class="o_checklist"><li>[]<br></li></ul>',
                                 stepFunction: deleteBackward,
                                 contentAfter: '<p>[]<br></p>',
                             });
                             // With a paragraph before the list:
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<p><br></p><ul class="o_checklist"><li>[]<br></li></ul>',
                                 stepFunction: deleteBackward,
@@ -4035,6 +4190,7 @@ describe('List', () => {
                     describe('Complex merges', () => {
                         it('should merge a list item into a paragraph', async () => {
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<p>abcd</p><ul class="o_checklist"><li class="o_checked">ef[]gh</li><li class="o_checked">ij</li></ul>',
                                 stepFunction: async editor => {
@@ -4047,6 +4203,7 @@ describe('List', () => {
                                     '<p>abcd[]gh</p><ul class="o_checklist"><li class="o_checked">ij</li></ul>',
                             });
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<p>abcd</p><ul class="o_checklist"><li>ef[]gh</li><li class="o_checked">ij</li></ul>',
                                 stepFunction: async editor => {
@@ -4060,6 +4217,7 @@ describe('List', () => {
                                     '<p>abc[]gh</p><ul class="o_checklist"><li class="o_checked">ij</li></ul>',
                             });
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<p>abcd</p><ul class="o_checklist"><li class="o_checked">ef[]gh</li><li>ij</li></ul>',
                                 stepFunction: async editor => {
@@ -4075,6 +4233,7 @@ describe('List', () => {
                         });
                         it('should merge a paragraph into a list item', async () => {
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="o_checked">abc</li></ul><p>[]def</p>',
                                 stepFunction: deleteBackward,
@@ -4084,6 +4243,7 @@ describe('List', () => {
                         });
                         it('should merge a bold list item into a non-formatted list item', async () => {
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="o_checked">abc</li><li class="o_checked"><b>de</b>fg</li><li class="o_checked"><b>[]hij</b>klm</li><li class="o_checked">nop</li></ul>',
                                 stepFunction: deleteBackward,
@@ -4093,6 +4253,7 @@ describe('List', () => {
                         });
                         it('should merge a paragraph starting with bold text into a list item with ending without formatting', async () => {
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="o_checked"><i>abc</i>def</li></ul><p><b>[]ghi</b>jkl</p>',
                                 stepFunction: deleteBackward,
@@ -4102,6 +4263,7 @@ describe('List', () => {
                         });
                         it('should merge a paragraph starting with bold text into a list item with ending with italic text', async () => {
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="o_checked"><b>abc</b><i>def</i></li></ul><p><b>[]ghi</b>jkl</p>',
                                 stepFunction: deleteBackward,
@@ -4381,6 +4543,7 @@ describe('List', () => {
                         });
                         it('should merge an checklist list item that is in an unordered list item into a non-indented list item', async () => {
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<ul><li>abc</li><li class="oe-nested"><ul class="o_checklist"><li class="o_checked">[]def</li><li class="o_checked">ghi</li></ul></li></ul>',
                                 stepFunction: async editor => {
@@ -4393,6 +4556,7 @@ describe('List', () => {
                         });
                         it('should merge an checklist list item into an unordered list item that is in the same checklist list', async () => {
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="oe-nested"><ul><li>abc</li></ul></li><li>[]def</li></ul>',
                                 stepFunction: deleteBackward,
@@ -4428,6 +4592,7 @@ describe('List', () => {
                         });
                         it('should outdent an empty checklist list item within an unordered list', async () => {
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<ul><li>abc</li><li class="oe-nested"><ul class="o_checklist"><li>[]<br></li><li><br></li></ul></li><li>def</li></ul>',
                                 stepFunction: deleteBackward,
@@ -4455,6 +4620,7 @@ describe('List', () => {
                     describe('Unordered to checklist', () => {
                         it('should merge an unordered list into an checklist list', async () => {
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="o_checked">a</li></ul><ul><li>[]b</li></ul>',
                                 stepFunction: async editor => {
@@ -4465,6 +4631,7 @@ describe('List', () => {
                                     '<ul class="o_checklist"><li class="o_checked">a[]b</li></ul>',
                             });
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="o_checked">a</li></ul><ul><li><p>[]b</p></li></ul>',
                                 stepFunction: async editor => {
@@ -4476,6 +4643,7 @@ describe('List', () => {
                                     '<ul class="o_checklist"><li class="o_checked">a[]b</li></ul>',
                             });
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="o_checked"><p>a</p></li></ul><ul><li>[]b</li></ul>',
                                 stepFunction: async editor => {
@@ -4487,6 +4655,7 @@ describe('List', () => {
                                     '<ul class="o_checklist"><li class="o_checked"><p>a[]b</p></li></ul>',
                             });
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="o_checked"><p>a</p></li></ul><ul><li><p>[]b</p></li></ul>',
                                 stepFunction: async editor => {
@@ -4500,6 +4669,7 @@ describe('List', () => {
                         });
                         it('should merge an unordered list item that is in an checklist list item into a non-indented list item', async () => {
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore: unformat(`
                                     <ul class="o_checklist">
                                         <li class="o_checked">abc</li>
@@ -4527,6 +4697,7 @@ describe('List', () => {
                         });
                         it('should merge an unordered list item into an checklist list item that is in the same unordered list', async () => {
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<ul><li class="oe-nested"><ul class="o_checklist"><li class="o_checked">abc</li></ul></li><li>[]def</li></ul>',
                                 stepFunction: deleteBackward,
@@ -4536,6 +4707,7 @@ describe('List', () => {
                         });
                         it('should merge the only item in an unordered list that is in an checklist list into a checklist item that is in the same checklist list, and remove the now empty unordered list', async () => {
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="o_checked">abc</li><li class="oe-nested"><ul><li>[]def</li></ul></li></ul>',
                                 stepFunction: async editor => {
@@ -4548,6 +4720,7 @@ describe('List', () => {
                         });
                         it('should outdent an unordered list item that is within a checklist list', async () => {
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="oe-nested"><ul><li>[]abc</li></ul></li></ul>',
                                 stepFunction: deleteBackward,
@@ -4555,6 +4728,7 @@ describe('List', () => {
                             });
                             // With a paragraph before the list:
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<p>abc</p><ul class="o_checklist"><li class="oe-nested"><ul><li>[]def</li></ul></li></ul>',
                                 stepFunction: deleteBackward,
@@ -4564,6 +4738,7 @@ describe('List', () => {
                         });
                         it('should outdent an empty unordered list item within an checklist list (o_checked)', async () => {
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="o_checked">abc</li><li class="oe-nested"><ul><li>[]<br></li><li><br></li></ul></li><li class="o_checked">def</li></ul>',
                                 stepFunction: deleteBackward,
@@ -4573,6 +4748,7 @@ describe('List', () => {
                         });
                         it('should outdent an empty unordered list item within an checklist list (unchecked)', async () => {
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li>abc</li><li class="oe-nested"><ul><li>[]<br></li><li><br></li></ul></li><li>def</li></ul>',
                                 stepFunction: deleteBackward,
@@ -4582,6 +4758,7 @@ describe('List', () => {
                         });
                         it('should outdent an empty unordered list within an checklist list (checked)', async () => {
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="o_checked">abc</li><li class="oe-nested"><ul><li>[]<br></li></ul></li><li class="o_checked">def</li></ul>',
                                 stepFunction: deleteBackward,
@@ -4591,6 +4768,7 @@ describe('List', () => {
                         });
                         it('should outdent an empty unordered list within an checklist list (unchecked)', async () => {
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li>abc</li><li class="oe-nested"><ul><li>[]<br></li></ul></li><li>def</li></ul>',
                                 stepFunction: deleteBackward,
@@ -4600,6 +4778,7 @@ describe('List', () => {
                         });
                         it('should outdent an empty unordered list within an otherwise empty checklist list', async () => {
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="oe-nested"><ul><li><br>[]</li></ul></li></ul>',
                                 stepFunction: deleteBackward,
@@ -4671,6 +4850,7 @@ describe('List', () => {
                     });
                     it('should treat two blocks in a list item and keep blocks', async () => {
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li class="o_checked"><p>abc</p></li><li class="o_checked"><p>def</p><p>[]ghi</p></li><li class="o_checked"><p>klm</p></li></ul>',
                             stepFunction: deleteBackward,
@@ -4679,6 +4859,7 @@ describe('List', () => {
                                 '<ul class="o_checklist"><li class="o_checked"><p>abc</p></li><li class="o_checked"><p>def[]ghi</p></li><li class="o_checked"><p>klm</p></li></ul>',
                         });
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li class="o_checked"><h1>abc</h1></li><li class="o_checked"><h2>def</h2><h3>[]ghi</h3></li><li class="o_checked"><h4>klm</h4></li></ul>',
                             stepFunction: deleteBackward,
@@ -4690,6 +4871,7 @@ describe('List', () => {
                     });
                     it('should merge a bold list item into a non-formatted list item', async () => {
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li class="o_checked"><p>abc</p></li><li class="o_checked"><p><b>de</b>fg</p><p><b>[]hij</b>klm</p></li><li class="o_checked"><p>nop</p></li></ul>',
                             stepFunction: deleteBackward,
@@ -4892,6 +5074,7 @@ describe('List', () => {
                     it('should delete text within a checklist item', async () => {
                         // Forward selection
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li class="o_checked">ab[cd]ef</li></ul>',
                             stepFunction: deleteBackward,
@@ -4900,6 +5083,7 @@ describe('List', () => {
                         });
                         // Backward selection
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li class="o_checked">ab]cd[ef</li></ul>',
                             stepFunction: deleteBackward,
@@ -4910,6 +5094,7 @@ describe('List', () => {
                     it('should delete all the text in a checklist item', async () => {
                         // Forward selection
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li class="o_checked">[abc]</li></ul>',
                             stepFunction: deleteBackward,
@@ -4918,6 +5103,7 @@ describe('List', () => {
                         });
                         // Backward selection
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li class="o_checked">]abc[</li></ul>',
                             stepFunction: deleteBackward,
@@ -4928,6 +5114,7 @@ describe('List', () => {
                     it('should delete across two list items', async () => {
                         // Forward selection
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li class="o_checked">ab[cd</li><li class="o_checked">ef]gh</li></ul>',
                             stepFunction: deleteBackward,
@@ -4935,6 +5122,7 @@ describe('List', () => {
                                 '<ul class="o_checklist"><li class="o_checked">ab[]gh</li></ul>',
                         });
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li class="o_checked">ab[cd</li><li>ef]gh</li></ul>',
                             stepFunction: deleteBackward,
@@ -4943,6 +5131,7 @@ describe('List', () => {
                         });
                         // Backward selection
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li class="o_checked">ab]cd</li><li class="o_checked">ef[gh</li></ul>',
                             stepFunction: deleteBackward,
@@ -4950,6 +5139,7 @@ describe('List', () => {
                                 '<ul class="o_checklist"><li class="o_checked">ab[]gh</li></ul>',
                         });
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li class="o_checked">ab]cd</li><li>ef[gh</li></ul>',
                             stepFunction: deleteBackward,
@@ -4960,6 +5150,7 @@ describe('List', () => {
                     it('should delete across an unindented list item and an indented list item', async () => {
                         // Forward selection
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li class="o_checked">ab[cd</li><li class="oe-nested"><ul class="o_checklist"><li class="o_checked">ef]gh</li></ul></li></ul>',
                             stepFunction: deleteBackward,
@@ -4967,6 +5158,7 @@ describe('List', () => {
                                 '<ul class="o_checklist"><li class="o_checked">ab[]gh</li></ul>',
                         });
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li class="o_checked">ab[cd</li><li class="oe-nested"><ul class="o_checklist"><li>ef]gh</li></ul></li></ul>',
                             stepFunction: deleteBackward,
@@ -4980,6 +5172,7 @@ describe('List', () => {
                         });
                         // Backward selection
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li class="o_checked">ab]cd</li><li class="oe-nested"><ul class="o_checklist"><li class="o_checked">ef[gh</li></ul></li></ul>',
                             stepFunction: deleteBackward,
@@ -4987,6 +5180,7 @@ describe('List', () => {
                                 '<ul class="o_checklist"><li class="o_checked">ab[]gh</li></ul>',
                         });
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li class="o_checked">ab]cd</li><li class="oe-nested"><ul class="o_checklist"><li>ef[gh</li></ul></li></ul>',
                             stepFunction: deleteBackward,
@@ -5018,6 +5212,7 @@ describe('List', () => {
                     it('should merge the contents of a checklist item within a block into a heading, and leave the rest of its list as it is', async () => {
                         // Forward selection
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<h1>a[b</h1><p>de</p><custom-block style="display:block;"><ul class="o_checklist"><li class="o_checked">fg</li><li class="o_checked">h]i</li><li class="o_checked">jk</li></ul></custom-block>',
                             stepFunction: deleteBackward,
@@ -5026,6 +5221,7 @@ describe('List', () => {
                         });
                         // Backward selection
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<h1>a]b</h1><p>de</p><custom-block style="display:block;"><ul class="o_checklist"><li class="o_checked">fg</li><li class="o_checked">h[i</li><li class="o_checked">jk</li></ul></custom-block>',
                             stepFunction: deleteBackward,
@@ -5135,6 +5331,7 @@ describe('List', () => {
                         it('should delete across an checklist list and an unordered list', async () => {
                             // Forward selection
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="o_checked">ab[cd</li></ul><ul><li>ef]gh</li></ul>',
                                 stepFunction: deleteBackward,
@@ -5143,6 +5340,7 @@ describe('List', () => {
                             });
                             // Backward selection
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="o_checked">ab]cd</li></ul><ul><li>ef[gh</li></ul>',
                                 stepFunction: deleteBackward,
@@ -5153,6 +5351,7 @@ describe('List', () => {
                         it('should delete across an checklist list item and an unordered list item within an checklist list', async () => {
                             // Forward selection
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="o_checked">ab[cd</li><li class="oe-nested"><ul><li>ef]gh</li></ul></li></ul>',
                                 stepFunction: deleteBackward,
@@ -5161,6 +5360,7 @@ describe('List', () => {
                             });
                             // Backward selection
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="o_checked">ab]cd</li><li class="oe-nested"><ul><li>ef[gh</li></ul></li></ul>',
                                 stepFunction: deleteBackward,
@@ -5629,6 +5829,7 @@ describe('List', () => {
                     describe('Basic', () => {
                         it('should add an empty list item before a checklist item (unchecked)', async () => {
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore: '<ul class="o_checklist"><li>[]abc</li></ul>',
                                 stepFunction: insertParagraphBreak,
                                 contentAfter:
@@ -5637,6 +5838,7 @@ describe('List', () => {
                         });
                         it('should add an empty list item before a checklist item (checked)', async () => {
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore: '<ul class="o_checklist"><li>[]abc</li></ul>',
                                 stepFunction: insertParagraphBreak,
                                 contentAfter:
@@ -5645,6 +5847,7 @@ describe('List', () => {
                         });
                         it('should split a checklist item in two (unchecked)', async () => {
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore: '<ul class="o_checklist"><li>ab[]cd</li></ul>',
                                 stepFunction: insertParagraphBreak,
                                 contentAfter:
@@ -5653,6 +5856,7 @@ describe('List', () => {
                         });
                         it('should split a checklist item in two (checked)', async () => {
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="o_checked">ab[]cd</li></ul>',
                                 stepFunction: insertParagraphBreak,
@@ -5662,6 +5866,7 @@ describe('List', () => {
                         });
                         it('should add an empty list item after a checklist item (unchecked)', async () => {
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="o_checked">abc[]</li></ul>',
                                 stepFunction: insertParagraphBreak,
@@ -5671,6 +5876,7 @@ describe('List', () => {
                         });
                         it('should add an empty list item after a checklist item (checked)', async () => {
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="o_checked">abc[]</li></ul>',
                                 stepFunction: insertParagraphBreak,
@@ -5682,6 +5888,7 @@ describe('List', () => {
                     describe('Removing items', () => {
                         it('should add an empty list item at the end of a checklist, then remove it', async () => {
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="o_checked">abc[]</li></ul>',
                                 stepFunction: async editor => {
@@ -5694,6 +5901,7 @@ describe('List', () => {
                         });
                         it('should add an empty list item at the end of an indented list, then outdent it (checked)', async () => {
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li class="o_checked">abc</li><li class="oe-nested"><ul class="o_checklist"><li class="o_checked">def[]</li></ul></li><li class="o_checked">ghi</li></ul>',
                                 stepFunction: async editor => {
@@ -5706,6 +5914,7 @@ describe('List', () => {
                         });
                         it('should add an empty list item at the end of an indented list, then outdent it (unchecked)', async () => {
                             await testEditor(BasicEditor, {
+                                removeCheckIds: true,
                                 contentBefore:
                                     '<ul class="o_checklist"><li>abc</li><li class="oe-nested"><ul class="o_checklist"><li>def[]</li></ul></li><li class="o_checked">ghi</li></ul>',
                                 stepFunction: async editor => {
@@ -5749,6 +5958,7 @@ describe('List', () => {
                             });
                             it('should add two list items with a class at the end of a checklist', async () => {
                                 await testEditor(BasicEditor, {
+                                    removeCheckIds: true,
                                     contentBefore:
                                         '<ul class="o_checklist"><li class="a">abc[]</li></ul>',
                                     stepFunction: async editor => {
@@ -5762,6 +5972,7 @@ describe('List', () => {
                             });
                             it('should create list items after one with a block in it', async () => {
                                 await testEditor(BasicEditor, {
+                                    removeCheckIds: true,
                                     contentBefore:
                                         '<ul class="o_checklist"><li class="a"><custom-block style="display: block;">abc[]</custom-block></li></ul>',
                                     stepFunction: async editor => {
@@ -5775,6 +5986,7 @@ describe('List', () => {
                                         '<li class="a"><custom-block style="display: block;">[]<br></custom-block></li></ul>',
                                 });
                                 await testEditor(BasicEditor, {
+                                    removeCheckIds: true,
                                     contentBefore:
                                         '<ul class="o_checklist"><li><custom-block class="a" style="display: block;">abc[]</custom-block></li></ul>',
                                     stepFunction: async editor => {
@@ -5790,6 +6002,7 @@ describe('List', () => {
                             });
                             it('should add two list items with a font at the end of a checklist within a checklist', async () => {
                                 await testEditor(BasicEditor, {
+                                    removeCheckIds: true,
                                     contentBefore: unformat(`
                                     <ul class="o_checklist">
                                         <li>ab</li>
@@ -5828,6 +6041,7 @@ describe('List', () => {
                             // `Modifier`).
                             it('should add two list items at the end of a checklist with a class', async () => {
                                 await testEditor(BasicEditor, {
+                                    removeCheckIds: true,
                                     contentBefore:
                                         '<ul class="checklist a"><li class="o_checked">abc[]</li></ul>',
                                     stepFunction: async editor => {
@@ -5841,6 +6055,7 @@ describe('List', () => {
                             });
                             it('should add two list items with a class at the end of a checklist', async () => {
                                 await testEditor(BasicEditor, {
+                                    removeCheckIds: true,
                                     contentBefore:
                                         '<ul class="o_checklist"><li class="a o_checked">abc[]</li></ul>',
                                     stepFunction: async editor => {
@@ -5854,6 +6069,7 @@ describe('List', () => {
                             });
                             it.skip('should add two list items with a class and a div at the end of a checklist', async () => {
                                 await testEditor(BasicEditor, {
+                                    removeCheckIds: true,
                                     contentBefore:
                                         '<ul class="o_checklist"><li class="a o_checked"><div>abc[]</div></li></ul>',
                                     stepFunction: async editor => {
@@ -5867,6 +6083,7 @@ describe('List', () => {
                             });
                             it.skip('should add two list items with a div with a class at the end of a checklist', async () => {
                                 await testEditor(BasicEditor, {
+                                    removeCheckIds: true,
                                     contentBefore:
                                         '<ul class="o_checklist"><li class="o_checked"><div class="a">abc[]</div></li></ul>',
                                     stepFunction: async editor => {
@@ -5880,6 +6097,7 @@ describe('List', () => {
                             });
                             it('should add two list items with a font at the end of a checklist within a checklist', async () => {
                                 await testEditor(BasicEditor, {
+                                    removeCheckIds: true,
                                     contentBefore: unformat(`
                                     <ul class="o_checklist">
                                         <li class="o_checked">ab</li>
@@ -6057,6 +6275,7 @@ describe('List', () => {
             describe('Checklist', () => {
                 it('should indent a checklist', async () => {
                     await testEditor(BasicEditor, {
+                        removeCheckIds: true,
                         contentBefore: unformat(`
                             <ul class="o_checklist">
                                 <li class="o_checked">a[b]c</li>
@@ -6072,6 +6291,7 @@ describe('List', () => {
                             </ul>`),
                     });
                     await testEditor(BasicEditor, {
+                        removeCheckIds: true,
                         contentBefore: unformat(`
                             <ul class="o_checklist">
                                 <li>a[b]c</li>
@@ -6089,6 +6309,7 @@ describe('List', () => {
                 });
                 it('should indent a checklist and previous ligne become the "title"', async () => {
                     await testEditor(BasicEditor, {
+                        removeCheckIds: true,
                         contentBefore: unformat(`
                             <ul class="o_checklist">
                                 <li class="o_checked">abc</li>
@@ -6106,6 +6327,7 @@ describe('List', () => {
                             </ul>`),
                     });
                     await testEditor(BasicEditor, {
+                        removeCheckIds: true,
                         contentBefore: unformat(`
                             <ul class="o_checklist">
                                 <li class="o_checked">abc</li>
@@ -6123,6 +6345,7 @@ describe('List', () => {
                             </ul>`),
                     });
                     await testEditor(BasicEditor, {
+                        removeCheckIds: true,
                         contentBefore: unformat(`
                             <ul class="o_checklist">
                                 <li>abc</li>
@@ -6140,6 +6363,7 @@ describe('List', () => {
                             </ul>`),
                     });
                     await testEditor(BasicEditor, {
+                        removeCheckIds: true,
                         contentBefore: unformat(`
                             <ul class="o_checklist">
                                 <li>abc</li>
@@ -6159,6 +6383,7 @@ describe('List', () => {
                 });
                 it('should indent a checklist and merge it with previous siblings', async () => {
                     await testEditor(BasicEditor, {
+                        removeCheckIds: true,
                         contentBefore: unformat(`
                             <ul class="o_checklist">
                                 <li class="oe-nested">
@@ -6181,6 +6406,7 @@ describe('List', () => {
                     });
 
                     await testEditor(BasicEditor, {
+                        removeCheckIds: true,
                         contentBefore: unformat(`
                             <ul class="o_checklist">
                                 <li>abc</li>
@@ -6204,6 +6430,7 @@ describe('List', () => {
                             </ul>`),
                     });
                     await testEditor(BasicEditor, {
+                        removeCheckIds: true,
                         contentBefore: unformat(`
                             <ul class="o_checklist">
                                 <li class="o_checked">abc</li>
@@ -6229,6 +6456,7 @@ describe('List', () => {
                 });
                 it('should indent a checklist and merge it with next siblings', async () => {
                     await testEditor(BasicEditor, {
+                        removeCheckIds: true,
                         contentBefore: unformat(`
                             <ul class="o_checklist">
                                 <li class="o_checked">abc</li>
@@ -6252,6 +6480,7 @@ describe('List', () => {
                             </ul>`),
                     });
                     await testEditor(BasicEditor, {
+                        removeCheckIds: true,
                         contentBefore: unformat(`
                             <ul class="o_checklist">
                                 <li>abc</li>
@@ -6275,6 +6504,7 @@ describe('List', () => {
                             </ul>`),
                     });
                     await testEditor(BasicEditor, {
+                        removeCheckIds: true,
                         contentBefore: unformat(`
                             <ul class="o_checklist">
                                 <li class="o_checked">abc</li>
@@ -6370,6 +6600,7 @@ describe('List', () => {
             describe('Checklist', () => {
                 it('should outdent a checklist', async () => {
                     await testEditor(BasicEditor, {
+                        removeCheckIds: true,
                         contentBefore: unformat(`
                             <ul class="o_checklist">
                                 <li class="oe-nested">
@@ -6385,6 +6616,7 @@ describe('List', () => {
                         </ul>`),
                     });
                     await testEditor(BasicEditor, {
+                        removeCheckIds: true,
                         contentBefore: unformat(`
                             <ul class="o_checklist">
                                 <li class="oe-nested">
@@ -6402,6 +6634,7 @@ describe('List', () => {
                 });
                 it('should outdent a checklist and previous line as "title"', async () => {
                     await testEditor(BasicEditor, {
+                        removeCheckIds: true,
                         contentBefore: unformat(`
                             <ul class="o_checklist">
                                 <li class="o_checked">abc</li>
@@ -6419,6 +6652,7 @@ describe('List', () => {
                             </ul>`),
                     });
                     await testEditor(BasicEditor, {
+                        removeCheckIds: true,
                         contentBefore: unformat(`
                             <ul class="o_checklist">
                                 <li>abc</li>
