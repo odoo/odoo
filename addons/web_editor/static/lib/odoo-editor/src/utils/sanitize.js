@@ -77,7 +77,16 @@ export function areSimilarElements(node, node2) {
 class Sanitize {
     constructor(root) {
         this.root = root;
+        // Remove unique ids from checklists and stars. These will be renewed
+        // afterwards.
+        for (const node of closestBlock(root).querySelectorAll('[id^=checkId-]')) {
+            node.removeAttribute('id');
+        }
         this.parse(root);
+        // Ensure unique ids on checklists and stars.
+        for (const node of closestBlock(root).querySelectorAll('.o_checklist > li, .o_stars')) {
+            node.setAttribute('id', `checkId-${Math.floor(new Date() * Math.random())}`);
+        }
     }
 
     parse(node) {
@@ -131,12 +140,6 @@ class Sanitize {
             if (node.getAttribute('contenteditable') !== 'false') {
                 node.setAttribute('contenteditable', 'false');
             }
-        }
-
-        // Ensure unique ids on checklists and stars.
-        if (node.nodeName == 'LI' && node.parentElement && node.parentElement.classList.contains('o_checklist') ||
-            node.classList && node.classList.contains('o_stars')) {
-            node.setAttribute('id', Math.floor(new Date() * Math.random()));
         }
 
         // FIXME not parse out of editable zone...

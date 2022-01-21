@@ -326,6 +326,14 @@ export async function testEditor(Editor = OdooEditor, spec) {
 
     if (spec.contentAfter && !firefoxExecCommandError) {
         renderTextualSelection();
+
+        // remove all check-ids (checklists, stars)
+        if (spec.removeCheckIds) {
+            for (const li of document.querySelectorAll('#editor-test-container li[id^=checkId-')) {
+                li.removeAttribute('id');
+            }
+        }
+
         const value = testNode.innerHTML;
         window.chai.expect(value).to.be.equal(spec.contentAfter);
     }

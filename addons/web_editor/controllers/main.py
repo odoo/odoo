@@ -118,7 +118,7 @@ class Web_Editor(http.Controller):
         htmlelem = etree.fromstring("<div>%s</div>" % value, etree.HTMLParser())
         checked = bool(checked)
 
-        li = htmlelem.find(".//li[@id='%s']" % checklistId)
+        li = htmlelem.find(".//li[@id='checkId-%s']" % checklistId)
 
         if li is None:
             return value
@@ -147,7 +147,7 @@ class Web_Editor(http.Controller):
         value = getattr(record, filename, False)
         htmlelem = etree.fromstring("<div>%s</div>" % value, etree.HTMLParser())
 
-        stars_widget = htmlelem.find(".//span[@id='%s']" % starsId)
+        stars_widget = htmlelem.find(".//span[@id='checkId-%s']" % starsId)
 
         if stars_widget is None:
             return value
