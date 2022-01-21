@@ -3,18 +3,20 @@
 # 	* pos_sale
 # 
 # Translators:
-# Martin Trigaux, 2019
-# krnkris, 2019
-# gezza <geza.nagy@oregional.hu>, 2019
-# Kovács Tibor <kovika@gmail.com>, 2019
+# Martin Trigaux, 2021
+# krnkris, 2021
+# Tamás Németh <ntomasz81@gmail.com>, 2021
+# gezza <geza.nagy@oregional.hu>, 2021
+# Kovács Tibor <kovika@gmail.com>, 2021
+# Ákos Nagy <akos.nagy@oregional.hu>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:15+0000\n"
-"PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Kovács Tibor <kovika@gmail.com>, 2019\n"
+"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"PO-Revision-Date: 2020-09-07 08:16+0000\n"
+"Last-Translator: Ákos Nagy <akos.nagy@oregional.hu>, 2021\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,17 +27,44 @@ msgstr ""
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.pos_config_view_form_pos_sale
 msgid "<span class=\"o_form_label\">Sales Team</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">Értékesítési csapat</span>"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order__currency_rate
 msgid "Currency Rate"
-msgstr "Valuta árfolyam"
+msgstr "Árfolyam"
+
+#. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_crm_team__display_name
+#: model:ir.model.fields,field_description:pos_sale.field_pos_config__display_name
+#: model:ir.model.fields,field_description:pos_sale.field_pos_order__display_name
+#: model:ir.model.fields,field_description:pos_sale.field_pos_session__display_name
+#: model:ir.model.fields,field_description:pos_sale.field_sale_report__display_name
+msgid "Display Name"
+msgstr "Név megjelenítése"
+
+#. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_crm_team__id
+#: model:ir.model.fields,field_description:pos_sale.field_pos_config__id
+#: model:ir.model.fields,field_description:pos_sale.field_pos_order__id
+#: model:ir.model.fields,field_description:pos_sale.field_pos_session__id
+#: model:ir.model.fields,field_description:pos_sale.field_sale_report__id
+msgid "ID"
+msgstr "Azonosító"
 
 #. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__invoiced
 msgid "Invoiced"
 msgstr "Számlázva"
+
+#. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_crm_team____last_update
+#: model:ir.model.fields,field_description:pos_sale.field_pos_config____last_update
+#: model:ir.model.fields,field_description:pos_sale.field_pos_order____last_update
+#: model:ir.model.fields,field_description:pos_sale.field_pos_session____last_update
+#: model:ir.model.fields,field_description:pos_sale.field_sale_report____last_update
+msgid "Last Modified on"
+msgstr "Legutóbb módosítva"
 
 #. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__pos_draft
@@ -80,12 +109,12 @@ msgstr "Értékesítési pont"
 #. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__pos_done
 msgid "Posted"
-msgstr "Könyvelt"
+msgstr "Beküldött"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_sale_report
 msgid "Sales Analysis Report"
-msgstr "Értékesítési elemzés kimutatás"
+msgstr "Értékesítési elemzés riport"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.pos_config_view_form_pos_sale

@@ -480,7 +480,9 @@ class Field(MetaField('DummyField', (object,), {})):
 
         # copy attributes from field to self (string, help, etc.)
         for attr, prop in self.related_attrs:
-            if not getattr(self, attr):
+            # check whether 'attr' is explicitly set on self (from its field
+            # definition), and ignore its class-level value (only a default)
+            if attr not in self.__dict__:
                 setattr(self, attr, getattr(field, prop))
 
         for attr, value in field.__dict__.items():
@@ -607,7 +609,7 @@ class Field(MetaField('DummyField', (object,), {})):
         Property._set_multi(self.name, self.model_name, values)
 
     def _search_company_dependent(self, records, operator, value):
-        Property = records.env['ir.property']
+        Property = records.env['ir.property'].sudo()
         return Property.search_multi(self.name, self.model_name, operator, value)
 
     #
@@ -809,6 +811,23 @@ class Field(MetaField('DummyField', (object,), {})):
         self.update_db_column(model, column)
         self.update_db_notnull(model, column)
 
+        # optimization for computing simple related fields like 'foo_id.bar'
+        if (
+            not column
+            and len(self.related or ()) == 2
+            and self.related_field.store and not self.related_field.compute
+            and not (self.related_field.type == 'binary' and self.related_field.attachment)
+            and self.related_field.type not in ('one2many', 'many2many')
+        ):
+            join_field = model._fields[self.related[0]]
+            if (
+                join_field.type == 'many2one'
+                and join_field.store and not join_field.compute
+            ):
+                model.pool.post_init(self.update_db_related, model)
+                # discard the "classical" computation
+                return False
+
         return not column
 
     def update_db_column(self, model, column):
@@ -858,6 +877,22 @@ class Field(MetaField('DummyField', (object,), {})):
 
         elif not self.required and has_notnull:
             sql.drop_not_null(model._cr, model._table, self.name)
+
+    def update_db_related(self, model):
+        """ Compute a stored related field directly in SQL. """
+        comodel = model.env[self.related_field.model_name]
+        model.env.cr.execute("""
+            UPDATE "{model_table}" AS x
+            SET "{model_field}" = y."{comodel_field}"
+            FROM "{comodel_table}" AS y
+            WHERE x."{join_field}" = y.id
+        """.format(
+            model_table=model._table,
+            model_field=self.name,
+            comodel_table=comodel._table,
+            comodel_field=self.related[1],
+            join_field=self.related[0],
+        ))
 
     ############################################################################
     #
@@ -929,20 +964,9 @@ class Field(MetaField('DummyField', (object,), {})):
         # only a single record may be accessed
         record.ensure_one()
 
-        recomputed = False
-        if self.compute and (record.id in env.all.tocompute.get(self, ())) \
-                and not env.is_protected(self, record):
-            # self must be computed on record
-            if self.recursive:
-                recs = record
-            else:
-                ids = expand_ids(record.id, env.all.tocompute[self])
-                recs = record.browse(itertools.islice(ids, PREFETCH_MAX))
-            try:
-                self.compute_value(recs)
-            except (AccessError, MissingError):
-                self.compute_value(record)
-            recomputed = True
+        if self.compute and self.store:
+            # process pending computations
+            self.recompute(record)
 
         try:
             value = env.cache.get(record, self)
@@ -970,8 +994,6 @@ class Field(MetaField('DummyField', (object,), {})):
             if self.store and record.id:
                 # real record: fetch from database
                 recs = record._in_cache_without(self)
-                if recomputed and self.compute_sudo:
-                    recs = recs.sudo()
                 try:
                     recs._fetch_field(self)
                 except AccessError:
@@ -1050,16 +1072,9 @@ class Field(MetaField('DummyField', (object,), {})):
             # not stored in cache
             return list(records._ids)
 
-        if self.compute:
-            # Force the computation of the subset of 'records' to compute. This
-            # is necessary because the values in cache are not valid for the
-            # records to compute. Note that this explicitly prevents an infinite
-            # loop upon recompute, which invokes mapped() on the records, which
-            # fetches record values, which calls flush, which calls recompute.
-            to_compute_ids = records.env.all.tocompute.get(self, ())
-            ids = [id_ for id_ in records._ids if id_ in to_compute_ids]
-            for record in records.browse(ids):
-                self.__get__(record, type(records))
+        if self.compute and self.store:
+            # process pending computations
+            self.recompute(records)
 
         # retrieve values in cache, and fetch missing ones
         vals = records.env.cache.get_until_miss(records, self)
@@ -1097,10 +1112,10 @@ class Field(MetaField('DummyField', (object,), {})):
             # new records: no business logic
             new_records = records.browse(new_ids)
             with records.env.protecting(records.pool.field_computed.get(self, [self]), records):
-                new_records.modified([self.name])
-                self.write(new_records, value)
                 if self.relational:
-                    new_records.modified([self.name])
+                    new_records.modified([self.name], before=True)
+                self.write(new_records, value)
+                new_records.modified([self.name])
 
             if self.inherited:
                 # special case: also assign parent records if they are new
@@ -1118,6 +1133,29 @@ class Field(MetaField('DummyField', (object,), {})):
     # Computation of field values
     #
 
+    def recompute(self, records):
+        """ Process the pending computations of ``self`` on ``records``. This
+        should be called only if ``self`` is computed and stored.
+        """
+        to_compute_ids = records.env.all.tocompute.get(self)
+        if not to_compute_ids:
+            return
+
+        if self.recursive:
+            for record in records:
+                if record.id in to_compute_ids:
+                    self.compute_value(record)
+            return
+
+        for record in records:
+            if record.id in to_compute_ids:
+                ids = expand_ids(record.id, to_compute_ids)
+                recs = record.browse(itertools.islice(ids, PREFETCH_MAX))
+                try:
+                    self.compute_value(recs)
+                except (AccessError, MissingError):
+                    self.compute_value(record)
+
     def compute_value(self, records):
         """ Invoke the compute method on ``records``; the results are in cache. """
         env = records.env
@@ -1131,14 +1169,16 @@ class Field(MetaField('DummyField', (object,), {})):
         # with _read(), which will flush() it. If the field is still to compute,
         # the latter flush() will recursively compute this field!
         for field in fields:
-            env.remove_to_compute(field, records)
+            if field.store:
+                env.remove_to_compute(field, records)
 
         try:
             with records.env.protecting(fields, records):
                 records._compute_field_value(self)
         except Exception:
             for field in fields:
-                env.add_to_compute(field, records)
+                if field.store:
+                    env.add_to_compute(field, records)
             raise
 
     def determine_inverse(self, records):
@@ -1492,7 +1532,7 @@ class _String(Field):
                 update_trans = True
             elif lang != 'en_US' and lang is not None:
                 # update the translations only except if emptying
-                update_column = cache_value is None
+                update_column = not cache_value
                 update_trans = True
             # else: lang = None
 
@@ -1502,7 +1542,7 @@ class _String(Field):
             for rid in real_recs._ids:
                 # cache_value is already in database format
                 towrite[rid][self.name] = cache_value
-            if self.translate is True and cache_value is not None:
+            if self.translate is True and cache_value:
                 tname = "%s,%s" % (records._name, self.name)
                 records.env['ir.translation']._set_source(tname, real_recs._ids, value)
             if self.translate:
@@ -1525,7 +1565,7 @@ class _String(Field):
                     source_recs[self.name] = value
                     source_value = value
                 tname = "%s,%s" % (self.model_name, self.name)
-                if value is None:
+                if not value:
                     records.env['ir.translation'].search([
                         ('name', '=', tname),
                         ('type', '=', 'model'),
@@ -2612,7 +2652,10 @@ class Many2one(_Relational):
             # value is either a pair (id, name), or a tuple of ids
             id_ = value[0] if value else None
         elif isinstance(value, dict):
-            id_ = record.env[self.comodel_name].new(value).id
+            # return a new record (with the given field 'id' as origin)
+            comodel = record.env[self.comodel_name]
+            origin = comodel.browse(value.get('id'))
+            id_ = comodel.new(value, origin=origin).id
         else:
             id_ = None
 
@@ -2940,6 +2983,9 @@ class _RelationalMulti(_Relational):
             value = record.env[self.comodel_name].browse(value)
 
         if isinstance(value, BaseModel) and value._name == self.comodel_name:
+            def get_origin(val):
+                return val._origin if isinstance(val, BaseModel) else val
+
             # make result with new and existing records
             inv_names = {field.name for field in record._field_inverses[self]}
             result = [(6, 0, [])]
@@ -2958,7 +3004,7 @@ class _RelationalMulti(_Relational):
                         values = record._convert_to_write({
                             name: record[name]
                             for name in record._cache
-                            if name not in inv_names and record[name] != origin[name]
+                            if name not in inv_names and get_origin(record[name]) != origin[name]
                         })
                         if values:
                             result.append((1, origin.id, values))
@@ -2980,7 +3026,7 @@ class _RelationalMulti(_Relational):
 
     def _setup_regular_full(self, model):
         super(_RelationalMulti, self)._setup_regular_full(model)
-        if isinstance(self.domain, list):
+        if not self.compute and isinstance(self.domain, list):
             self.depends = tuple(unique(itertools.chain(self.depends, (
                 self.name + '.' + arg[0]
                 for arg in self.domain
@@ -3140,7 +3186,7 @@ class One2many(_RelationalMulti):
             inverse = self.inverse_name
             to_create = []                  # line vals to create
             to_delete = []                  # line ids to delete
-            to_inverse = {}
+            to_link = defaultdict(set)      # {record: line_ids}
             allow_full_delete = not create
 
             def unlink(lines):
@@ -3150,6 +3196,8 @@ class One2many(_RelationalMulti):
                     lines[inverse] = False
 
             def flush():
+                if to_link:
+                    before = {record: record[self.name] for record in to_link}
                 if to_delete:
                     # unlink() will remove the lines from the cache
                     comodel.browse(to_delete).unlink()
@@ -3158,11 +3206,13 @@ class One2many(_RelationalMulti):
                     # create() will add the new lines to the cache of records
                     comodel.create(to_create)
                     to_create.clear()
-                if to_inverse:
-                    for record, inverse_ids in to_inverse.items():
-                        lines = comodel.browse(inverse_ids)
-                        lines = lines.filtered(lambda line: int(line[inverse]) != record.id)
+                if to_link:
+                    for record, line_ids in to_link.items():
+                        lines = comodel.browse(line_ids) - before[record]
+                        # linking missing lines should fail
+                        lines.mapped(inverse)
                         lines[inverse] = record
+                    to_link.clear()
 
             for recs, commands in records_commands_list:
                 for command in (commands or ()):
@@ -3177,7 +3227,7 @@ class One2many(_RelationalMulti):
                     elif command[0] == 3:
                         unlink(comodel.browse(command[1]))
                     elif command[0] == 4:
-                        to_inverse.setdefault(recs[-1], set()).add(command[1])
+                        to_link[recs[-1]].add(command[1])
                         allow_full_delete = False
                     elif command[0] in (5, 6) :
                         # do not try to delete anything in creation mode if nothing has been created before
@@ -3265,11 +3315,14 @@ class One2many(_RelationalMulti):
                         browse([command[1]])[inverse] = False
                     elif command[0] == 4:
                         browse([command[1]])[inverse] = recs[-1]
-                    elif command[0] in (5, 6):
+                    elif command[0] == 5:
+                        cache.update(recs, self, itertools.repeat(()))
+                    elif command[0] == 6:
                         # assign the given lines to the last record only
-                        cache.update(recs, self, [()] * len(recs))
-                        lines = comodel.browse(command[2] if command[0] == 6 else [])
-                        cache.set(recs[-1], self, lines._ids)
+                        cache.update(recs, self, itertools.repeat(()))
+                        last, lines = recs[-1], browse(command[2])
+                        cache.set(last, self, lines._ids)
+                        cache.update(lines, inverse_field, itertools.repeat(last.id))
 
         else:
             def link(record, lines):
@@ -3466,6 +3519,7 @@ class Many2many(_RelationalMulti):
         context.update(self.context)
         comodel = records.env[self.comodel_name].with_context(**context)
         domain = self.get_domain_list(records)
+        comodel._flush_search(domain)
         wquery = comodel._where_calc(domain)
         comodel._apply_ir_rules(wquery, 'read')
         order_by = comodel._generate_order_by(None, wquery)

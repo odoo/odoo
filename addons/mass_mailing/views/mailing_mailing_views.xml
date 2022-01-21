@@ -56,16 +56,16 @@
             <field name="arch" type="xml">
                 <form string="Mailing">
                     <header style="min-height:31px;">
-                        <button name="action_put_in_queue" type="object" attrs="{'invisible': [('state', 'in', ('in_queue', 'done'))]}" class="oe_highlight" string="Send"
+                        <button name="action_put_in_queue" type="object" attrs="{'invisible': [('state', 'in', ('in_queue', 'sending', 'done'))]}" class="oe_highlight" string="Send"
                             confirm="This will send the email to all recipients. Do you still want to proceed ?"/>
-                        <button name="action_schedule" type="object" attrs="{'invisible': [('state', 'in', ('in_queue', 'done'))]}" class="btn-secondary" string="Schedule"/>
+                        <button name="action_schedule" type="object" attrs="{'invisible': [('state', 'in', ('in_queue', 'sending', 'done'))]}" class="btn-secondary" string="Schedule"/>
                         <button name="action_test" type="object" class="btn-secondary" string="Test"/>
                         <button name="action_cancel" type="object" attrs="{'invisible': [('state', '!=', 'in_queue')]}" class="btn-secondary" string="Cancel"/>
                         <button name="action_retry_failed" type="object" attrs="{'invisible': ['|', ('state', '!=', 'done'), ('failed', '=', 0)]}" class="oe_highlight" string="Retry"/>
 
                         <field name="state" readonly="1" widget="statusbar"/>
                     </header>
-                    <div class="alert alert-info text-center" role="alert" attrs="{'invisible': ['|','&amp;','&amp;','&amp;',('state', '!=', 'in_queue'),('sent', '=', 0),('ignored', '=', 0),('scheduled', '=', 0),('failed', '=', 0)]}">
+                    <div class="alert alert-info text-center" role="alert" attrs="{'invisible': ['&amp;','&amp;','&amp;','&amp;',('state', '!=', 'in_queue'),('sent', '=', 0),('ignored', '=', 0),('scheduled', '=', 0),('failed', '=', 0)]}">
                         <div attrs="{'invisible': [('ignored', '=', 0)]}">
                             <button class="btn-link py-0"
                                     name="action_view_traces_ignored"
@@ -157,7 +157,7 @@
                         <group>
                             <field name="active" invisible="1"/>
                             <field name="mailing_type" widget="radio" options="{'horizontal': true}" invisible="1"
-                                attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
+                                attrs="{'readonly': [('state', '!=', 'draft')]}" force_save="1"/>
                             <field name="subject" string="Subject" attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}" widget="char_emojis" placeholder="e.g. New Sale on all T-shirts"/>
                             <field name="preview" string="Preview Text" attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}" widget="char_emojis" placeholder="e.g. Check it out before it's too late!"/>
                             <label for="mailing_model_id" string="Recipients"/>

@@ -88,7 +88,13 @@
 
     <function model="account.tax" name="write" context="{'active_test': False}">
         <value model="account.tax" eval="obj().search([('company_id', '=', ref('company_ri')), ('tax_group_id', 'in',
-            [ref('tax_group_percepcion_iva'), ref('tax_group_percepcion_ganancias'), ref('tax_group_percepcion_iibb'), ref('account.tax_group_taxes')]
+            [ref('tax_group_percepcion_iva'),
+             ref('tax_group_percepcion_ganancias'),
+             ref('tax_group_percepcion_iibb_caba'),
+             ref('tax_group_percepcion_iibb_ba'),
+             ref('tax_group_percepcion_iibb_co'),
+             ref('tax_group_percepcion_iibb_sf'),
+             ref('account.tax_group_taxes')]
         )]).ids"/>
         <value eval="{'amount': 0.1, 'active': True}"/>
     </function>

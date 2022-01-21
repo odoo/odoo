@@ -23,6 +23,32 @@ PaymentForm.include({
     // Private
     //--------------------------------------------------------------------------
 
+     /**
+     * called to create payment method object for credit card/debit card.
+     *
+     * @private
+     * @param {Object} stripe
+     * @param {Object} formData
+     * @param {Object} card
+     * @param {Boolean} addPmEvent
+     * @returns {Promise}
+     */
+    _createPaymentMethod: function (stripe, formData, card, addPmEvent) {
+        if (addPmEvent) {
+            return this._rpc({
+                route: '/payment/stripe/s2s/create_setup_intent',
+                params: {'acquirer_id': formData.acquirer_id}
+            }).then(function(intent_secret) {
+                return stripe.handleCardSetup(intent_secret, card);
+            });
+        } else {
+            return stripe.createPaymentMethod({
+                type: 'card',
+                card: card,
+            });
+        }
+    },
+
     /**
      * called when clicking on pay now or add payment event to create token for credit card/debit card.
      *
@@ -52,20 +78,16 @@ PaymentForm.include({
         if (card._invalid) {
             return;
         }
-        return this._rpc({
-            route: '/payment/stripe/s2s/create_setup_intent',
-            params: {'acquirer_id': formData.acquirer_id}
-        }).then(function(intent_secret){
-            return stripe.handleCardSetup(intent_secret, card);
-        }).then(function(result) {
+        this._createPaymentMethod(stripe, formData, card, addPmEvent).then(function(result) {
             if (result.error) {
                 return Promise.reject({"message": {"data": { "arguments": [result.error.message]}}});
             } else {
-                _.extend(formData, {"payment_method": result.setupIntent.payment_method});
+                const paymentMethod = addPmEvent ? result.setupIntent.payment_method : result.paymentMethod.id;
+                _.extend(formData, {"payment_method": paymentMethod});
                 return self._rpc({
                     route: formData.data_set,
                     params: formData,
-                })
+                });
             }
         }).then(function(result) {
             if (addPmEvent) {

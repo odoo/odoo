@@ -49,7 +49,7 @@ odoo.define('point_of_sale.Gui', function (require) {
         get(target, key) {
             const { component, availableMethods } = target;
             if (!component) throw new Error(`Call 'configureGui' before using Gui.`);
-            const isMounted = component.__owl__.isMounted;
+            const isMounted = component.__owl__.status === 3 /* mounted */;
             if (availableMethods.has(key) && isMounted) {
                 return component[key].bind(component);
             }

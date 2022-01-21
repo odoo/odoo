@@ -52,14 +52,15 @@
 
     <t t-name="CalendarView.sidebar.filter">
         <t t-set="needCollapse" t-value="widget.filters.length > 2 and widget.title"></t>
+        <t t-set="collapseTitle" t-value="widget.title and widget.title.split(' ').join('')"></t>
         <div class="o_calendar_filter">
-            <h5 t-if="needCollapse" type="button" data-toggle="collapse" t-attf-data-target="#o_cw_filter_collapse_#{widget.title}" class="d-flex justify-content-between align-items-center">
+            <h5 t-if="needCollapse" type="button" data-toggle="collapse" t-attf-data-target="#o_cw_filter_collapse_#{collapseTitle}" class="d-flex justify-content-between align-items-center">
                 <t t-esc="widget.title"/><i class="o_cw_filter_collapse_icon fa fa-chevron-down"/>
             </h5>
 
             <h5 t-elif="widget.title" t-esc="widget.title"/>
 
-            <div t-attf-class="o_calendar_filter_items #{needCollapse ? 'collapse show' : 0}" aria-expanded="true" t-attf-id="o_cw_filter_collapse_#{widget.title}">
+            <div t-attf-class="o_calendar_filter_items #{needCollapse ? 'collapse show' : 0}" aria-expanded="true" t-attf-id="o_cw_filter_collapse_#{collapseTitle}">
                 <t t-foreach="widget.filters" t-as="filter" t-if="filter.display == null || filter.display">
                     <t t-set="idForLabel" t-value="_.uniqueId('o_calendar_filter_item_')"/>
                     <t t-set="color" t-value="widget.getColor(filter.color_index)"/>

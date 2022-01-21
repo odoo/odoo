@@ -18,4 +18,5 @@
     'data': [
         'views/mail_templates.xml',
     ],
+    'license': 'LGPL-3',
 }

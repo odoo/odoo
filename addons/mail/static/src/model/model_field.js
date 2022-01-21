@@ -1,7 +1,7 @@
 odoo.define('mail/static/src/model/model_field.js', function (require) {
 'use strict';
 
-const { FieldCommand } = require('mail/static/src/model/model_field_command.js');
+const { clear, FieldCommand } = require('mail/static/src/model/model_field_command.js');
 
 /**
  * Class whose instances represent field on a model.
@@ -295,18 +295,15 @@ class ModelField {
             const OtherModel = otherRecord.constructor;
             const otherField = OtherModel.__fieldMap[relatedFieldName];
             const newVal = otherField.get(otherRecord);
+            if (newVal === undefined) {
+                return clear();
+            }
             if (this.fieldType === 'relation') {
-                if (newVal) {
-                    return [['replace', newVal]];
-                } else {
-                    return [['unlink-all']];
-                }
+                return [['replace', newVal]];
             }
             return newVal;
         }
-        if (this.fieldType === 'relation') {
-            return [];
-        }
+        return clear();
     }
 
     /**
@@ -342,7 +339,7 @@ class ModelField {
             // single command given
             return newVal.execute(this, record, options);
         }
-        if (typeof newVal instanceof Array && newVal[0] instanceof FieldCommand) {
+        if (newVal instanceof Array && newVal[0] instanceof FieldCommand) {
             // multi command given
             let hasChanged = false;
             for (const command of newVal) {
@@ -424,7 +421,7 @@ class ModelField {
                         }
                         break;
                     case 'unlink-all':
-                        if (this._setRelationUnlink(record, currentValue, options)) {
+                        if (this._setRelationUnlink(record, this.get(record), options)) {
                             hasChanged = true;
                         }
                         break;
@@ -742,14 +739,15 @@ class ModelField {
                     // these related fields.
                     continue;
                 }
-                this.env.modelManager._update(
-                    recordToUnlink,
-                    { [this.inverse]: [['unlink', record]] },
-                    { hasToUpdateInverse: false }
-                );
                 // apply causality
                 if (this.isCausal) {
                     this.env.modelManager._delete(recordToUnlink);
+                } else {
+                    this.env.modelManager._update(
+                        recordToUnlink,
+                        { [this.inverse]: [['unlink', record]] },
+                        { hasToUpdateInverse: false }
+                    );
                 }
             }
         }
@@ -785,14 +783,15 @@ class ModelField {
                 // these related fields.
                 return;
             }
-            this.env.modelManager._update(
-                otherRecord,
-                { [this.inverse]: [['unlink', record]] },
-                { hasToUpdateInverse: false }
-            );
             // apply causality
             if (this.isCausal) {
                 this.env.modelManager._delete(otherRecord);
+            } else {
+                this.env.modelManager._update(
+                    otherRecord,
+                    { [this.inverse]: [['unlink', record]] },
+                    { hasToUpdateInverse: false }
+                );
             }
         }
         return true;

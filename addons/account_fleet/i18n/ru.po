@@ -4,9 +4,9 @@
 # 
 # Translators:
 # Martin Trigaux, 2020
-# Ivan Yelizariev <yelizariev@it-projects.info>, 2020
-# ILMIR <karamov@it-projects.info>, 2020
+# Ivan Yelizariev // IEL <yelizariev@itpp.dev>, 2020
 # Irina Fedulova <istartlin@gmail.com>, 2020
+# ILMIR <karamov@it-projects.info>, 2021
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:28+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Irina Fedulova <istartlin@gmail.com>, 2020\n"
+"Last-Translator: ILMIR <karamov@it-projects.info>, 2021\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,7 +35,7 @@ msgstr "Счета"
 #. module: account_fleet
 #: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle__bill_count
 msgid "Bills Count"
-msgstr ""
+msgstr "Количество счетов"
 
 #. module: account_fleet
 #: model:ir.model.fields,field_description:account_fleet.field_account_move__display_name
@@ -71,7 +71,7 @@ msgstr "Последнее изменение"
 #. module: account_fleet
 #: model:ir.model.fields,field_description:account_fleet.field_account_move_line__need_vehicle
 msgid "Need Vehicle"
-msgstr ""
+msgstr "Требуется транспортное средство"
 
 #. module: account_fleet
 #: code:addons/account_fleet/models/account_move.py:0
@@ -80,11 +80,15 @@ msgid ""
 "Service Vendor Bill: <a href=# data-oe-model=account.move data-oe-"
 "id={move_id}>{move_name}</a>"
 msgstr ""
+"Счет поставщика услуг: <a href=# data-oe-model=account.move data-oe-"
+"id={move_id}>{move_name}</a>"
 
 #. module: account_fleet
 #: model:ir.model.fields,help:account_fleet.field_account_move_line__need_vehicle
 msgid "Technical field to decide whether the vehicle_id field is editable"
 msgstr ""
+"Техническое поле для определения того является ли поле vehicle_id "
+"редактируемым. "
 
 #. module: account_fleet
 #: model:ir.model,name:account_fleet.model_fleet_vehicle
@@ -100,4 +104,4 @@ msgstr "Счет от поставщика"
 #. module: account_fleet
 #: model_terms:ir.ui.view,arch_db:account_fleet.fleet_vehicle_view_form
 msgid "show the vendor bills for this vehicle"
-msgstr ""
+msgstr "показать счета продавца на этот автомобиль"

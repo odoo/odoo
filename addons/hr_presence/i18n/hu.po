@@ -3,16 +3,18 @@
 # 	* hr_presence
 # 
 # Translators:
-# Martin Trigaux, 2019
-# krnkris, 2019
+# Martin Trigaux, 2021
+# krnkris, 2021
+# Tamás Németh <ntomasz81@gmail.com>, 2021
+# Ákos Nagy <akos.nagy@oregional.hu>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-13 11:27+0000\n"
-"PO-Revision-Date: 2019-08-26 09:10+0000\n"
-"Last-Translator: krnkris, 2019\n"
+"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"PO-Revision-Date: 2020-09-07 08:13+0000\n"
+"Last-Translator: Ákos Nagy <akos.nagy@oregional.hu>, 2021\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,12 +28,17 @@ msgid ""
 "<?xml version=\"1.0\"?>\n"
 "<div>\n"
 "                    Dear ${object.name},<br/><br/>\n"
-"                    Exception made if there was a mistake of ours, it seems that you are not at your office and there is not request of leaves from you.<br/>\n"
+"                    Exception made if there was a mistake of ours, it seems that you are not at your office and there is not request of time off from you.<br/>\n"
 "                    Please, take appropriate measures in order to carry out this work absence.<br/>\n"
 "                    Do not hesitate to contact your manager or the human resource department.\n"
 "                    <br/>Best Regards,<br/><br/>\n"
 "                </div>\n"
 "            "
+msgstr ""
+
+#. module: hr_presence
+#: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_presence_search
+msgid "Absence/Presence"
 msgstr ""
 
 #. module: hr_presence
@@ -55,7 +62,7 @@ msgstr "Vállalatok"
 #: code:addons/hr_presence/models/hr_employee.py:0
 #, python-format
 msgid "Compose Email"
-msgstr "Email írás"
+msgstr "E-mail írás"
 
 #. module: hr_presence
 #: model:ir.actions.server,name:hr_presence.ir_actions_server_action_open_presence_view
@@ -68,6 +75,13 @@ msgid "Create Uid"
 msgstr ""
 
 #. module: hr_presence
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee_base__display_name
+#: model:ir.model.fields,field_description:hr_presence.field_res_company__display_name
+#: model:ir.model.fields,field_description:hr_presence.field_res_users_log__display_name
+msgid "Display Name"
+msgstr "Név megjelenítése"
+
+#. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee__email_sent
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_base__email_sent
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__email_sent
@@ -77,19 +91,24 @@ msgstr "E-mail elküldve"
 #. module: hr_presence
 #: model:ir.ui.menu,name:hr_presence.menu_hr_presence_view
 msgid "Employee Presence"
-msgstr ""
+msgstr "Alkalmazott jelenlét"
 
 #. module: hr_presence
 #: model:sms.template,name:hr_presence.sms_template_data_hr_presence
 msgid "Employee: Presence Reminder"
-msgstr ""
+msgstr "Alkalmazott: Jelenlét emlékeztető"
+
+#. module: hr_presence
+#: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_presence_search
+msgid "Employees"
+msgstr "Alkalmazottak"
 
 #. module: hr_presence
 #: code:addons/hr_presence/models/hr_employee.py:0
 #: model:sms.template,body:hr_presence.sms_template_data_hr_presence
 #, python-format
 msgid ""
-"Exception made if there was a mistake of ours, it seems that you are not at your office and there is not request of leaves from you.\n"
+"Exception made if there was a mistake of ours, it seems that you are not at your office and there is not request of time off from you.\n"
 "Please, take appropriate measures in order to carry out this work absence.\n"
 "Do not hesitate to contact your manager or the human resource department."
 msgstr ""
@@ -107,6 +126,13 @@ msgid "Hr Presence State Display"
 msgstr ""
 
 #. module: hr_presence
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee_base__id
+#: model:ir.model.fields,field_description:hr_presence.field_res_company__id
+#: model:ir.model.fields,field_description:hr_presence.field_res_users_log__id
+msgid "ID"
+msgstr "Azonosító"
+
+#. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_res_users_log__ip
 msgid "IP Address"
 msgstr "IP cím"
@@ -116,7 +142,14 @@ msgstr "IP cím"
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_base__ip_connected
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__ip_connected
 msgid "Ip Connected"
-msgstr ""
+msgstr "IP kapcsolódva"
+
+#. module: hr_presence
+#: model:ir.model.fields,field_description:hr_presence.field_hr_employee_base____last_update
+#: model:ir.model.fields,field_description:hr_presence.field_res_company____last_update
+#: model:ir.model.fields,field_description:hr_presence.field_res_users_log____last_update
+msgid "Last Modified on"
+msgstr "Legutóbb módosítva"
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
@@ -131,9 +164,10 @@ msgid "Manually Set Present"
 msgstr ""
 
 #. module: hr_presence
+#: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_presence_search
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_search
 msgid "Presence"
-msgstr ""
+msgstr "Jelenlét"
 
 #. module: hr_presence
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee__hr_presence_state_display__present
@@ -145,7 +179,7 @@ msgstr "Jelen van"
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
 msgid "SMS"
-msgstr ""
+msgstr "SMS"
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
@@ -156,18 +190,18 @@ msgstr ""
 #: code:addons/hr_presence/models/hr_employee.py:0
 #, python-format
 msgid "There is no professional email address for this employee."
-msgstr ""
+msgstr "Ennek az alkalmazottnak nincs céges e-mail címe."
 
 #. module: hr_presence
 #: code:addons/hr_presence/models/hr_employee.py:0
 #, python-format
 msgid "There is no professional mobile for this employee."
-msgstr ""
+msgstr "Ennek az alkalmazottnak nincs céges mobilja."
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban
 msgid "Time Off"
-msgstr ""
+msgstr "Szabadság"
 
 #. module: hr_presence
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee__hr_presence_state_display__to_define
@@ -179,12 +213,12 @@ msgstr ""
 #. module: hr_presence
 #: model:mail.template,subject:hr_presence.mail_template_presence
 msgid "Unexpected Absence"
-msgstr ""
+msgstr "Váratlan távollét"
 
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_res_users_log
 msgid "Users Log"
-msgstr ""
+msgstr "Felhasználók naplója"
 
 #. module: hr_presence
 #: code:addons/hr_presence/models/hr_employee.py:0
@@ -193,3 +227,5 @@ msgstr ""
 #, python-format
 msgid "You don't have the right to do this. Please contact an Administrator."
 msgstr ""
+"Önnek nincs megfelelő jogosultsága a művelet elvégzéséhez. Lépjen "
+"kapcsolatba egy adminisztrátorral!"

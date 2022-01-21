@@ -17,15 +17,15 @@
 # Anton Vassilev, 2020
 # aleksandar ivanov, 2020
 # Albena Mincheva <albena_vicheva@abv.bg>, 2020
-# Maria Boyadjieva <marabo2000@gmail.com>, 2020
+# Maria Boyadjieva <marabo2000@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-29 15:48+0000\n"
+"POT-Creation-Date: 2021-02-25 10:30+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Maria Boyadjieva <marabo2000@gmail.com>, 2020\n"
+"Last-Translator: Maria Boyadjieva <marabo2000@gmail.com>, 2021\n"
 "Language-Team: Bulgarian (https://www.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -52,13 +52,6 @@ msgstr "записи"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "# Code editor"
-msgstr ""
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/fields/basic_fields.js:0
-#, python-format
-msgid "${-diffDays} days ago"
 msgstr ""
 
 #. module: web
@@ -105,10 +98,10 @@ msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/notification.xml:0
+#: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
-msgid "&times;"
-msgstr "&times;"
+msgid "%s days ago"
+msgstr ""
 
 #. module: web
 #. openerp-web
@@ -2023,6 +2016,7 @@ msgstr "Зелено"
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/control_panel/groupby_menu.js:0
+#: code:addons/web/static/src/js/views/graph/graph_controller.js:0
 #, python-format
 msgid "Group By"
 msgstr "Групиране по"
@@ -2126,7 +2120,7 @@ msgstr "Изображение"
 #. openerp-web
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
-msgid "In ${diffDays} days"
+msgid "In %s days"
 msgstr ""
 
 #. module: web
@@ -2403,6 +2397,13 @@ msgstr "Mac"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/js/services/crash_manager.js:0
+#, python-format
+msgid "MailDeliveryException"
+msgstr ""
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/base.xml:0
@@ -2479,6 +2480,7 @@ msgstr ""
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/js/views/graph/graph_controller.js:0
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Measures"
@@ -2506,13 +2508,6 @@ msgstr "Метаданни (%s)"
 #, python-format
 msgid "Method:"
 msgstr "Метод:"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/services/crash_manager.js:92
-#, python-format
-msgid "MailDeliveryException"
-msgstr ""
 
 #. module: web
 #. openerp-web
@@ -2614,7 +2609,7 @@ msgstr "Nieuw"
 #. openerp-web
 #: code:addons/web/static/src/js/fields/relational_fields.js:0
 #, python-format
-msgid "New ${this.name}"
+msgid "New %s"
 msgstr ""
 
 #. module: web
@@ -2921,6 +2916,13 @@ msgstr "Само Вие"
 #. openerp-web
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
+msgid "Open Developer Tools"
+msgstr "Отворете инструментите за разработчици"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/debug.xml:0
+#, python-format
 msgid "Open Developer Tools#{widget.debug_mode_help}"
 msgstr ""
 
@@ -2969,6 +2971,13 @@ msgstr "Отворен за изглед на списък"
 #, python-format
 msgid "Open: "
 msgstr "Отворете: "
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/list/list_renderer.js:0
+#, python-format
+msgid "Optional columns"
+msgstr ""
 
 #. module: web
 #. openerp-web
@@ -4419,6 +4428,13 @@ msgstr ""
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "View %s"
+msgstr ""
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
 msgid "View Access Rights"
@@ -5000,13 +5016,6 @@ msgstr ""
 #, python-format
 msgid "or"
 msgstr "или"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/colorpicker.xml:0
-#, python-format
-msgid "p-0 border-0 text-center text-monospace bg-transparent text-white"
-msgstr ""
 
 #. module: web
 #. openerp-web

@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Martin Trigaux, 2020
-# JH CHOI <hwangtog@gmail.com>, 2020
 # Linkup <link-up@naver.com>, 2020
+# JH CHOI <hwangtog@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-29 13:45+0000\n"
 "PO-Revision-Date: 2020-09-07 08:12+0000\n"
-"Last-Translator: Linkup <link-up@naver.com>, 2020\n"
+"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2021\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -145,6 +145,14 @@ msgstr "작성일"
 #, python-format
 msgid "Creating google drive may only be done by one at a time."
 msgstr "Google 드라이브 만들기는 한 번에 하나씩 만 수행 할 수 있습니다."
+
+#. module: google_drive
+#: code:addons/google_drive/models/google_drive.py:161
+#, python-format
+msgid ""
+"The document filter must not include any 'dynamic' part, so it should not be"
+" based on the current time or current user, for example."
+msgstr "문서 필터에는 '동적' 부분이 포함되어서는 안 되므로, 현재 시간 또는 현재 사용자를 기준으로 해서는 안 됩니다."
 
 #. module: google_drive
 #: model:ir.filters,name:google_drive.filter_partner

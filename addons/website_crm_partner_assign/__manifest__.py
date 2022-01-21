@@ -40,4 +40,5 @@ The automatic assignment is figured from the weight of partner levels and the ge
     ],
     'qweb': ['static/src/xml/*.xml'],
     'installable': True,
+    'license': 'LGPL-3',
 }

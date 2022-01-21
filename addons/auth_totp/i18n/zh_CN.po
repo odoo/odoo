@@ -3,26 +3,34 @@
 # 	* auth_totp
 # 
 # Translators:
-# Martin Trigaux, 2020
 # liAnGjiA <liangjia@qq.com>, 2020
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
 # ChinaMaker <liuct@chinamaker.net>, 2020
-# Felix Yang - Elico Corp <felixyangsh@aliyun.com>, 2020
+# Felix Yang <felixyangsh@aliyun.com>, 2020
 # 稀饭~~ <wangwhai@qq.com>, 2020
+# Martin Trigaux, 2021
+# Jeffery CHEN <jeffery9@gmail.com>, 2021
+# 深圳市耀影科技有限公司_QQ1006399173, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:45+0000\n"
+"POT-Creation-Date: 2021-08-19 09:43+0000\n"
 "PO-Revision-Date: 2020-09-07 08:10+0000\n"
-"Last-Translator: 稀饭~~ <wangwhai@qq.com>, 2020\n"
+"Last-Translator: 深圳市耀影科技有限公司_QQ1006399173, 2021\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: auth_totp
+#: code:addons/auth_totp/controllers/home.py:0
+#, python-format
+msgid "%(browser)s on %(platform)s"
+msgstr ""
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
@@ -48,6 +56,13 @@ msgid ""
 msgstr ""
 "<i class=\"fa fa-check-circle\"/>\n"
 "                                启用双重验证"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
+msgid ""
+"<i class=\"fa fa-question-circle text-primary\" title=\"If checked, you "
+"won't be asked for two-factor authentication codes with this device.\"/>"
+msgstr ""
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
@@ -85,6 +100,11 @@ msgstr ""
 "                        </span>"
 
 #. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+msgid "Added On"
+msgstr ""
+
+#. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid ""
 "After scanning the barcode, the app will display a 6-digit code that you\n"
@@ -96,12 +116,20 @@ msgstr ""
 "                                但你不用担心，验证码会在稍长一段时间内有效。"
 
 #. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+msgid ""
+"Are you sure? Two-factor authentication will be required again on all your "
+"devices"
+msgstr ""
+
+#. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
 msgid "Authentication Code (6 digits)"
 msgstr "验证码（6位）"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Cancel"
 msgstr "取消"
@@ -117,6 +145,11 @@ msgid "Created on"
 msgstr "创建时间"
 
 #. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+msgid "Device Name"
+msgstr "设备名称"
+
+#. module: auth_totp
 #: model:ir.actions.server,name:auth_totp.action_disable_totp
 msgid "Disable TOTP on users"
 msgstr "对用户取消双重认证"
@@ -127,6 +160,11 @@ msgstr "对用户取消双重认证"
 #: model:ir.model.fields,field_description:auth_totp.field_res_users__display_name
 msgid "Display Name"
 msgstr "显示名称"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
+msgid "Don't ask again for this device"
+msgstr ""
 
 #. module: auth_totp
 #: code:addons/auth_totp/models/res_users.py:0
@@ -191,6 +229,16 @@ msgid "Qrcode"
 msgstr "QR码"
 
 #. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+msgid "Revoke"
+msgstr "撤销"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+msgid "Revoke All"
+msgstr ""
+
+#. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid ""
 "Scan the image below with the authenticator app on your phone.<br/>\n"
@@ -219,6 +267,17 @@ msgstr "验证码应只包含数字"
 #: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_secret
 msgid "Totp Secret"
 msgstr "Totp密匙"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+msgid "Trusted Device"
+msgstr ""
+
+#. module: auth_totp
+#: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_trusted_device_ids
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+msgid "Trusted Devices"
+msgstr "受信任的设备"
 
 #. module: auth_totp
 #: model:ir.model,name:auth_totp.model_auth_totp_wizard

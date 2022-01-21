@@ -27,8 +27,6 @@ body.editor_enable.editor_has_snippets {
 // Mobile fix for mass mailing
 @include media-breakpoint-down(md) {
     body.editor_enable.editor_has_snippets {
-        padding-right: inherit !important;
-
         #web_editor-top-edit {
             position: initial !important;
             height: initial !important;
@@ -47,9 +45,12 @@ body.editor_enable.editor_has_snippets {
     $-text-tools-gap: 3px;
     $-text-tools-header-height: 35px;
 
-    padding: $-text-tools-header-height $o-we-sidebar-content-padding-base 0 $o-we-sidebar-content-indent;
-    box-shadow: $o-we-item-standup-top rgba($o-we-item-standup-color-light, .2);
     z-index: $o-we-zindex;
+    flex: 1 0 auto;
+    display: flex;
+    padding: $-text-tools-header-height $o-we-sidebar-content-padding-base ($o-we-sidebar-content-padding-base * 3) $o-we-sidebar-content-indent;
+    box-shadow: $o-we-item-standup-top rgba($o-we-item-standup-color-light, .2);
+    overflow-y: auto;
 
     .popover {
         position: static !important;
@@ -134,10 +135,7 @@ body.editor_enable.editor_has_snippets {
             position: static;
         }
         .dropdown-menu { // Drop up
-          top: auto;
-          bottom: 100%;
-          margin-top: 0;
-          margin-bottom: $dropdown-spacer;
+            margin-top: $o-we-dropdown-spacing;
         }
     }
     .note-popover ~ .note-popover,
@@ -400,10 +398,7 @@ body.editor_enable.editor_has_snippets {
                 border-left: $o-we-sidebar-blocks-content-snippet-spacing solid transparent;
                 margin-bottom: $o-we-sidebar-blocks-content-snippet-spacing;
                 user-select: none;
-
-                cursor: pointer;
-                cursor: copy;
-                cursor: grab;
+                @include o-grab-cursor;
 
                 .oe_snippet_thumbnail_title {
                     display: block;
@@ -830,13 +825,17 @@ body.editor_enable.editor_has_snippets {
                 }
             }
             .o_we_pager_next, .o_we_pager_prev {
+                margin: 0.3em;
                 padding: $o-we-sidebar-content-field-label-spacing;
                 cursor: pointer;
+                border: $o-we-item-border-width solid currentColor;
+                border-radius: $o-we-item-border-radius;
             }
             we-select-page {
                 display: none;
                 width: 100%;
-                max-height: 600px;
+                // Cut the last visible option in the list to understand that we can scroll.
+                max-height: 75px * 7.5;
                 overflow-y: auto;
 
                 &.active {
@@ -942,6 +941,7 @@ body.editor_enable.editor_has_snippets {
                 height: $o-we-sidebar-content-field-colorpicker-size;
                 border: $o-we-sidebar-content-field-border-width solid $o-we-sidebar-content-field-border-color;
                 border-radius: 10rem;
+                cursor: pointer;
 
                 &::after {
                     box-shadow: $o-we-sidebar-content-field-colorpicker-shadow;
@@ -1285,6 +1285,10 @@ body.editor_enable.editor_has_snippets {
             }
         }
 
+        .o_we_external_warning {
+            margin-top: $o-we-sidebar-content-field-spacing;
+        }
+
         .o_we_tag {
             padding: ($o-we-sidebar-content-field-label-spacing / 2) $o-we-sidebar-content-field-label-spacing;
             border-radius: 5px;
@@ -1393,6 +1397,21 @@ body.editor_enable.editor_has_snippets {
         @extend %we-generic-button;
     }
     .o_colorpicker_sections {
+        .o_colorpicker_widget {
+            .o_hex_div, .o_rgba_div  {
+                &:focus-within {
+                    border-color: $o-we-sidebar-content-field-input-border-color;
+                }
+            }
+            .o_color_picker_inputs {
+                input {
+                    border: none;
+                    &:focus {
+                        outline: none;
+                    }
+                }
+            }
+        }
 
         .o_we_color_btn, .o_we_color_combination_btn {
             float: left;
@@ -1424,11 +1443,27 @@ body.editor_enable.editor_has_snippets {
             border: 0;
             background-color: transparent;
             background-clip: padding-box;
+
+            // Borders instead of margins so that the user smoothly goes from
+            // one button to another without leaving them.
             border-top: $o-we-sidebar-content-field-spacing solid transparent;
             border-bottom: $o-we-sidebar-content-field-spacing solid transparent;
 
             + .o_we_color_combination_btn {
                 margin-top: $o-we-sidebar-content-field-spacing * -.5;
+            }
+
+            &.selected {
+                > .o_we_cc_preview_wrapper {
+                    box-shadow: 0 0 0 1px $o-we-color-success !important;
+                }
+                .o_we_color_combination_btn_title::before {
+                    content: "\f00c";
+                    margin-right: $o-we-sidebar-content-field-spacing;
+                    font-size: 0.8em;
+                    font-family: FontAwesome;
+                    color: $o-we-color-success;
+                }
             }
 
             .o_we_cc_preview_wrapper:after {
@@ -1734,7 +1769,7 @@ body.editor_enable.editor_has_snippets {
             z-index: auto;
 
             .o_we_overlay_content {
-                cursor: grab;
+                @include o-grab-cursor;
 
                 .o_we_grabbing {
                     cursor: grabbing;

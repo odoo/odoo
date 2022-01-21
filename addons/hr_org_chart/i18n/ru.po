@@ -3,11 +3,12 @@
 # 	* hr_org_chart
 # 
 # Translators:
-# Martin Trigaux, 2020
-# Ivan Yelizariev <yelizariev@itpp.dev>, 2020
+# Ivan Yelizariev // IEL <yelizariev@itpp.dev>, 2020
 # ILMIR <karamov@it-projects.info>, 2020
 # Irina Fedulova <istartlin@gmail.com>, 2020
 # Ekaterina <nawsikaya@bk.ru>, 2020
+# Martin Trigaux, 2021
+# Сергей Шебанин <sergey@shebanin.ru>, 2021
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:29+0000\n"
 "PO-Revision-Date: 2020-09-07 08:13+0000\n"
-"Last-Translator: Ekaterina <nawsikaya@bk.ru>, 2020\n"
+"Last-Translator: Сергей Шебанин <sergey@shebanin.ru>, 2021\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,7 +33,7 @@ msgstr "Сотрудник"
 #: model:ir.model.fields,help:hr_org_chart.field_hr_employee__subordinate_ids
 #: model:ir.model.fields,help:hr_org_chart.field_hr_employee_public__subordinate_ids
 msgid "Direct and indirect subordinates"
-msgstr ""
+msgstr "Прямые и непрямые подчиненные"
 
 #. module: hr_org_chart
 #. openerp-web
@@ -72,7 +73,7 @@ msgstr "Чтобы получить организацию, установите
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_base__child_all_count
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__child_all_count
 msgid "Indirect Subordinates Count"
-msgstr ""
+msgstr "Количество непрямых подчиненных"
 
 #. module: hr_org_chart
 #. openerp-web
@@ -124,10 +125,24 @@ msgid "Redirect"
 msgstr "Перенаправление"
 
 #. module: hr_org_chart
+#. openerp-web
+#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:108
+#, python-format
+msgid "See All"
+msgstr "Все"
+
+#. module: hr_org_chart
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__subordinate_ids
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__subordinate_ids
 msgid "Subordinates"
 msgstr "Подчинённые"
+
+#. module: hr_org_chart
+#. openerp-web
+#: code:addons/hr_org_chart/static/src/js/hr_org_chart.js:181
+#, python-format
+msgid "Team"
+msgstr "Команда"
 
 #. module: hr_org_chart
 #. openerp-web

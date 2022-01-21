@@ -1,6 +1,7 @@
 odoo.define('mail/static/src/components/activity_mark_done_popover/activity_mark_done_popover.js', function (require) {
 'use strict';
 
+const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
 
 const { Component } = owl;
@@ -13,6 +14,7 @@ class ActivityMarkDonePopover extends Component {
      */
     constructor(...args) {
         super(...args);
+        useShouldUpdateBasedOnProps();
         useStore(props => {
             const activity = this.env.models['mail.activity'].get(props.activityLocalId);
             return {
@@ -28,6 +30,9 @@ class ActivityMarkDonePopover extends Component {
 
     mounted() {
         this._feedbackTextareaRef.el.focus();
+        if (this.activity.feedbackBackup) {
+            this._feedbackTextareaRef.el.value = this.activity.feedbackBackup;
+        }
     }
 
     /**
@@ -58,6 +63,15 @@ class ActivityMarkDonePopover extends Component {
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _onBlur() {
+        this.activity.update({
+            feedbackBackup: this._feedbackTextareaRef.el.value,
+        });
+    }
 
     /**
      * @private

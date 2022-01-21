@@ -7,17 +7,19 @@
 # Chris <krystof.reklamy13@gmail.com>, 2020
 # Jaroslav Helemik Nemec <nemec@helemik.cz>, 2020
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2020
-# Michal Veselý <michal@veselyberanek.net>, 2020
 # Martin Trigaux, 2020
-# Jiří Podhorecký, 2020
+# karolína schusterová <karolina.schusterova@vdp.sk>, 2021
+# Michal Veselý <michal@veselyberanek.net>, 2021
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
+# trendspotter, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:45+0000\n"
+"POT-Creation-Date: 2021-01-26 09:10+0000\n"
 "PO-Revision-Date: 2020-09-07 08:16+0000\n"
-"Last-Translator: Jiří Podhorecký, 2020\n"
+"Last-Translator: trendspotter, 2021\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,7 +37,7 @@ msgstr ""
 #: code:addons/pos_restaurant/static/src/xml/Screens/ReceiptScreen/OrderReceipt.xml:0
 #, python-format
 msgid "!props.isBill"
-msgstr ""
+msgstr "!props.jePřijata faktura"
 
 #. module: pos_restaurant
 #: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
@@ -156,7 +158,7 @@ msgstr "Přidat novou tiskárnu pro objednávky v restauraci"
 #: code:addons/pos_restaurant/static/src/xml/Screens/TipScreen.xml:0
 #, python-format
 msgid "Add a tip"
-msgstr ""
+msgstr "Přidat spropitné"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -169,12 +171,12 @@ msgstr "Přidat tlačítko"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
 msgid "Add notes on order lines"
-msgstr ""
+msgstr "Přidat poznámky k řádkům objednávky"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
 msgid "Add tip after payment (North America specific)"
-msgstr ""
+msgstr "Přidat spropitné po zaplacení (pro Severní Ameriku)"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -182,7 +184,7 @@ msgstr ""
 #: code:addons/pos_restaurant/static/src/xml/Screens/PaymentScreen/PaymentScreenElectronicPayment.xml:0
 #, python-format
 msgid "Adjust Amount"
-msgstr ""
+msgstr "Upravit částku"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__set_tip_after_payment
@@ -190,6 +192,8 @@ msgid ""
 "Adjust the amount authorized by payment terminals to add a tip after the "
 "customers left or at the end of the day."
 msgstr ""
+"Upravte částku autorizovanou platebními terminály a přidejte spropitné poté,"
+" co zákazníci odešli, nebo na konci dne."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__iface_orderline_notes
@@ -199,12 +203,12 @@ msgstr "Povolit vlastní poznámky na položkách objednávky."
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
 msgid "Allow to print bill before payment"
-msgstr "Povolit tisk účtu před zaplacením"
+msgstr "Povolit tisk přijaté faktury před zaplacením"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__iface_printbill
 msgid "Allows to print the Bill before payment."
-msgstr "Umožňuje vytisknout účet před zaplacením."
+msgstr "Umožňuje vytisknout přijatou fakturu před zaplacením."
 
 #. module: pos_restaurant
 #. openerp-web
@@ -284,7 +288,7 @@ msgstr "Slaninový burger"
 #: code:addons/pos_restaurant/static/src/xml/Screens/ProductScreen/ControlButtons/PrintBillButton.xml:0
 #, python-format
 msgid "Bill"
-msgstr "Účet"
+msgstr "Přijata faktura"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -292,7 +296,7 @@ msgstr "Účet"
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__iface_printbill
 #, python-format
 msgid "Bill Printing"
-msgstr "Tisk Účtu"
+msgstr "Tisk přijaté faktury"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -346,7 +350,7 @@ msgstr "Zavřít"
 #: code:addons/pos_restaurant/static/src/xml/Screens/PaymentScreen/PaymentScreen.xml:0
 #, python-format
 msgid "Close Tab"
-msgstr ""
+msgstr "Zavřít záložku"
 
 #. module: pos_restaurant
 #: model:product.product,name:pos_restaurant.pos_food_club
@@ -390,7 +394,7 @@ msgstr "Smazat"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
 msgid "Design floors and assign orders to tables"
-msgstr ""
+msgstr "Navrhněte lokál a přiřaďte objednávky stolům"
 
 #. module: pos_restaurant
 #: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
@@ -473,7 +477,7 @@ msgstr "Lokály"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__is_table_management
 msgid "Floors & Tables"
-msgstr ""
+msgstr "Podlahy a stoly"
 
 #. module: pos_restaurant
 #: model:pos.category,name:pos_restaurant.food
@@ -485,7 +489,7 @@ msgstr "Jídlo"
 #: code:addons/pos_restaurant/static/src/xml/Screens/ReceiptScreen/OrderReceipt.xml:0
 #, python-format
 msgid "For convenience, we are providing the following gratuity calculations:"
-msgstr ""
+msgstr "Pro usnadnění uvádíme následující výpočty spropitného:"
 
 #. module: pos_restaurant
 #: model:product.product,name:pos_restaurant.pos_food_funghi
@@ -527,6 +531,13 @@ msgstr "Hosté"
 #, python-format
 msgid "Guests ?"
 msgstr "Hosté ?"
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/Screens/ReceiptScreen/OrderReceipt.xml:0
+#, python-format
+msgid "Guests:"
+msgstr "Hostů:"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__height
@@ -688,7 +699,7 @@ msgstr "POZNÁMKA"
 #: code:addons/pos_restaurant/static/src/xml/Screens/TipScreen.xml:0
 #, python-format
 msgid "No Tip"
-msgstr ""
+msgstr "Žádné spropitné"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -746,6 +757,13 @@ msgstr "Ok"
 
 #. module: pos_restaurant
 #. openerp-web
+#: code:addons/pos_restaurant/static/src/js/Screens/TicketScreen.js:0
+#, python-format
+msgid "Open"
+msgstr "Otevřít"
+
+#. module: pos_restaurant
+#. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
 #: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
 #: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
@@ -779,6 +797,8 @@ msgid ""
 "Order Printers are used by restaurants and bars to print the\n"
 "                order updates in the kitchen/bar when the waiter updates the order."
 msgstr ""
+"Tiskárny objednávek se používají v restauracích a barech k tisku aktualizací"
+" objednávek v kuchyni / baru, když číšník aktualizuje objednávku."
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_printer_form
@@ -834,7 +854,7 @@ msgstr "Objednávky Prodejního místa"
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_pos_payment
 msgid "Point of Sale Payments"
-msgstr ""
+msgstr "Platby v místě prodeje"
 
 #. module: pos_restaurant
 #: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
@@ -878,7 +898,7 @@ msgstr "Tiskárny"
 #: code:addons/pos_restaurant/static/src/js/Screens/TipScreen.js:0
 #, python-format
 msgid "Printing is not supported on some browsers"
-msgstr ""
+msgstr "Tisk není v některých prohlížečích podporován"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -889,6 +909,9 @@ msgid ""
 "protocol is available. It is possible to print your tickets by making use of"
 " an IoT Box."
 msgstr ""
+"Tisk není v některých prohlížečích podporován, protože není k dispozici "
+"žádný výchozí tiskový protokol. Vstupenky je možné vytisknout pomocí IoT "
+"Boxu."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer__proxy_ip
@@ -940,7 +963,7 @@ msgstr "Přejmenovat"
 #: code:addons/pos_restaurant/static/src/xml/Screens/TipScreen.xml:0
 #, python-format
 msgid "Reprint receipts"
-msgstr ""
+msgstr "Opakovaný tisk účtenek"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_restaurant_floor
@@ -975,14 +998,14 @@ msgstr "Stůl restaurace"
 #: code:addons/pos_restaurant/static/src/xml/Screens/PaymentScreen/PaymentScreenElectronicPayment.xml:0
 #, python-format
 msgid "Reverse"
-msgstr ""
+msgstr "Zvrátit"
 
 #. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/Screens/PaymentScreen/PaymentScreenElectronicPayment.xml:0
 #, python-format
 msgid "Reverse Payment"
-msgstr ""
+msgstr "Reverzní platba"
 
 #. module: pos_restaurant
 #: model:ir.model.fields.selection,name:pos_restaurant.selection__restaurant_table__shape__round
@@ -1027,7 +1050,7 @@ msgstr "Obsluhováno od"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__set_tip_after_payment
 msgid "Set Tip After Payment"
-msgstr ""
+msgstr "Nastavení spropitného po zaplacení"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -1142,6 +1165,8 @@ msgid ""
 "The background color of the floor layout, (must be specified in a html-"
 "compatible format)"
 msgstr ""
+"Barva pozadí rozvržení lokálu (musí být zadána ve formátu kompatibilním s "
+"html)."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__seats
@@ -1168,6 +1193,7 @@ msgstr "Stůl, kam je tato objednávka doručena"
 msgid ""
 "The table's color, expressed as a valid 'background' CSS property value"
 msgstr ""
+"Barva tabulky vyjádřená jako platná hodnota vlastnosti CSS \"background\"."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__height
@@ -1179,13 +1205,13 @@ msgstr "Výška stolu v pixelech"
 msgid ""
 "The table's horizontal position from the left side to the table's center, in"
 " pixels"
-msgstr ""
+msgstr "Vodorovná poloha tabulky od levé strany ke středu tabulky v pixelech."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__position_v
 msgid ""
 "The table's vertical position from the top to the table's center, in pixels"
-msgstr ""
+msgstr "Svislá poloha tabulky od horního okraje ke středu tabulky v pixelech."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__width
@@ -1226,6 +1252,13 @@ msgstr "Tip"
 #: code:addons/pos_restaurant/static/src/xml/TipReceipt.xml:0
 #, python-format
 msgid "Tip:"
+msgstr "Spropitné:"
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/js/Screens/TicketScreen.js:0
+#, python-format
+msgid "Tipping"
 msgstr ""
 
 #. module: pos_restaurant
@@ -1391,14 +1424,14 @@ msgstr ""
 #: code:addons/pos_restaurant/static/src/xml/TipReceipt.xml:0
 #, python-format
 msgid "________________________"
-msgstr ""
+msgstr "________________________"
 
 #. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/TipReceipt.xml:0
 #, python-format
 msgid "______________________________________________"
-msgstr ""
+msgstr "______________________________________________"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -1406,6 +1439,13 @@ msgstr ""
 #, python-format
 msgid "at"
 msgstr "at"
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/Screens/ReceiptScreen/OrderReceipt.xml:0
+#, python-format
+msgid "at table"
+msgstr "na stole"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -1426,4 +1466,4 @@ msgstr "sleva"
 #: code:addons/pos_restaurant/static/src/xml/Screens/PaymentScreen/PaymentScreen.xml:0
 #, python-format
 msgid "env.pos.config.set_tip_after_payment and !currentOrder.is_paid()"
-msgstr ""
+msgstr "env.pos.config.set_tip_after_payment and !currentOrder.is_paid()"

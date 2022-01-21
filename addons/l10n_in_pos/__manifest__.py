@@ -20,4 +20,5 @@
         'static/src/xml/pos_receipt.xml',
     ],
     'auto_install': True,
+    'license': 'LGPL-3',
 }

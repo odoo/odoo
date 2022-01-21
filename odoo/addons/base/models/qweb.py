@@ -359,7 +359,7 @@ class QWeb(object):
                 raise e
             except Exception as e:
                 template = options.get('caller_template', template)
-                path = options['last_path_node']
+                path = options.get('last_path_node')
                 raise QWebException("load could not load template", e, path, name=template)
 
         if document is None:
@@ -367,7 +367,7 @@ class QWeb(object):
 
         if isinstance(document, etree._Element):
             element = document
-            document = etree.tostring(document)
+            document = etree.tostring(document, encoding='utf-8')
         elif not document.strip().startswith('<') and os.path.exists(document):
             element = etree.parse(document).getroot()
         else:
@@ -1066,6 +1066,7 @@ class QWeb(object):
             for item in el:
                 # ignore comments & processing instructions
                 if isinstance(item, etree._Comment):
+                    body.extend(self._compile_tail(item))
                     continue
                 body.extend(self._compile_node(item, options))
                 body.extend(self._compile_tail(item))
@@ -1725,14 +1726,5 @@ class QWeb(object):
         ), elts)
 
     def _compile_expr(self, expr):
-        """ Compiles a purported Python expression to ast, and alter its
-        variable references to access values data instead exept for
-        python buildins.
-        This compile method is unsafe!
-        Can be overridden to use a safe eval method.
-        """
-        # string must be stripped otherwise whitespace before the start for
-        # formatting purpose are going to break parse/compile
-        st = ast.parse(expr.strip(), mode='eval')
-        # ast.Expression().body -> expr
-        return Contextifier(builtin_defaults).visit(st).body
+        """This method must be overridden by <ir.qweb> in order to compile the template."""
+        raise NotImplementedError("Templates should use the ir.qweb compile method")

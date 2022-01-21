@@ -169,6 +169,16 @@
     -moz-transform: scale(0.9999); // Smooth the caret on firefox
 }
 
+//-------------------------------------------------------------------
+// Cursor
+//-------------------------------------------------------------------
+
+@mixin o-grab-cursor() {
+    // Use a custom cursor for the open hand icon as "grab" is not properly
+    // working on Chrome Linux (at least)
+    cursor: url(/web/static/src/img/openhand.cur), grab;
+}
+
 // ------------------------------------------------------------------
 // Hovering effects
 // ------------------------------------------------------------------

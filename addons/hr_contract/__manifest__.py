@@ -31,4 +31,5 @@ You can assign several contracts per employee.
     'installable': True,
     'auto_install': False,
     'application': True,
+    'license': 'LGPL-3',
 }

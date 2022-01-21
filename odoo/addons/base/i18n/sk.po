@@ -3,7 +3,7 @@
 # 	* base
 # 
 # Translators:
-# Rastislav Brenčič <rastislav.brencic99@gmail.com>, 2020
+# rastislav Brencic <rastislav.brencic99@gmail.com>, 2020
 # Radoslav Sloboda <rado.sloboda@gmail.com>, 2020
 # Filip Boskovič <filip.boskovic@26house.com>, 2020
 # Robert Kirschner <robertkirschner@yahoo.com>, 2020
@@ -17,7 +17,7 @@
 # Alexandra Brencicova <alexandra.brencicova@gmail.com>, 2020
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2020
 # Damian Brencic <brencicdamian12313@gmail.com>, 2020
-# Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
 # 
 msgid ""
 msgstr ""
@@ -25,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 13:50+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2020\n"
+"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2021\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -507,8 +507,8 @@ msgid ""
 msgstr ""
 "\n"
 "        Účtovné správy pre Nemecko\n"
-"       Obsahuje súvahu, výkazy ziskov a strát, DPH a DPH partnera\n"
-"       Tiež pridá možnosti exportu DATEV do hlavnej knihy\n"
+"       Obsahuje Súvahu, výkaz výnosov a nákladov, DPH a DPH partnera\n"
+"       Tiež pridá možnosti exportu DATEV do obratovej predvahy\n"
 "    "
 
 #. module: base
@@ -523,7 +523,7 @@ msgstr ""
 "\n"
 "        Účtovné správy pre Litvu\n"
 "\n"
-"        Obsahuje súvahu, výkazy ziskov a strát\n"
+"        Obsahuje Súvahu, výkazy ziskov a strát\n"
 "    "
 
 #. module: base
@@ -580,8 +580,8 @@ msgstr ""
 "\n"
 "        Účtovné správy pre Veľkú Britániu\n"
 "\n"
-"        Umožňuje posielať daňové správy cez internet\n"
-"MTD-VAT API pre HMRC.\n"
+"        Umožňuje posielať daňové priznanie cez internet\n"
+"MTD-DPH API pre HMRC.\n"
 "    "
 
 #. module: base
@@ -618,7 +618,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        Nechajte vygenerovať skúšobný zostatok pre konečný záznam.\n"
+"        Nechajte vygenerovať hlavnú knihu pre konečný záznam.\n"
 "\n"
 "      Hovorovo známy ako „13. mesiac\"\n"
 "    "
@@ -663,7 +663,7 @@ msgid ""
 msgstr ""
 "\n"
 "       Prepojovací modul medzi point_of_sale a account_reports,\n"
-"        na daňové hlásenie."
+"        na daňové priznanie."
 
 #. module: base
 #: model:ir.module.module,description:base.module_purchase_intrastat
@@ -1192,7 +1192,8 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        Pri fakturácii časových výkazov, umožňuje fakturovať buď všetky        časové výkazy priradené k objednávke, alebo len overené výkazy"
+"        Pri fakturácii pracovných výkazov, umožňuje fakturovať buď všetky pracovné výkazy\n"
+"priradené k objednávke, alebo len overené pracovné výkazy"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_purchase_product_matrix
@@ -1316,9 +1317,9 @@ msgid ""
 "\n"
 "    Make the lock date irreversible:\n"
 "\n"
-"    * You cannot define stricter conditions on advisors than on users. Then, the lock date on advisor must be set before the lock date for users.\n"
-"    * You cannot lock a period that is not finished yet. Then, the lock date for advisors must be set before the last day of the previous month.\n"
-"    * The new lock date for advisors must be set after the previous lock date.\n"
+"    * You cannot set stricter restrictions on advisors than on users. Therefore, the All Users Lock Date must be anterior (or equal) to the Invoice/Bills Lock Date.\n"
+"    * You cannot lock a period that has not yet ended. Therefore, the All Users Lock Date must be anterior (or equal) to the last day of the previous month.\n"
+"    * Any new All Users Lock Date must be posterior (or equal) to the previous one.\n"
 "    "
 msgstr ""
 
@@ -1428,7 +1429,7 @@ msgstr ""
 "\n"
 "    Tento modul je určený pre všetky írske MSP, ktoré by chceli rýchlo nastaviť svoje účtovníctvo. Modul poskytuje:\n"
 "\n"
-"    -účtovná osnova prispôsobená pre Írsko\n"
+"    -účtová osnova prispôsobená pre Írsko\n"
 "   - Sadzby a štruktúra DPH"
 
 #. module: base
@@ -1483,7 +1484,7 @@ msgid ""
 msgstr ""
 "\n"
 "* Predloženie a potvrdenie časového výkazu\n"
-"* Aktivujte mriežku pre časové rozvrhy\n"
+"* Aktivujte mriežku pre pracovné výkazy\n"
 "    "
 
 #. module: base
@@ -1628,7 +1629,7 @@ msgstr ""
 "\n"
 "Automatické prevody účtov\n"
 "===========================\n"
-"Spravujte automatické prevody medzi svojimi účtami.\n"
+"Spravujte automatické preúčtovania medzi svojimi účtami.\n"
 "    "
 
 #. module: base
@@ -1643,7 +1644,7 @@ msgstr ""
 "\n"
 "Ukážka automatických prevodov účtu\n"
 "================================\n"
-"Demo údaje pre modul automatických prevodov účtu\n"
+"Demo údaje pre modul automatického preúčtovania účtu\n"
 "    "
 
 #. module: base
@@ -2275,7 +2276,7 @@ msgid ""
 "* Cost structure report\n"
 msgstr ""
 "\n"
-"Analytické účtovníctvo v MRP\n"
+"Manažérske účtovníctvo v MRP\n"
 "==========================\n"
 "\n"
 "* Výkaz nákladovej štruktúry\n"
@@ -2343,7 +2344,7 @@ msgstr ""
 "Spravovanie aktív\n"
 "=================\n"
 "Spravujte majetok vo vlastníctve spoločností alebo osoby.\n"
-"Eviduje odpisy, a vytvára zodpovedajúce položky účtovnej knihy."
+"Eviduje odpisy, a vytvára zodpovedajúce interné účtovné doklady."
 
 #. module: base
 #: model:ir.module.module,description:base.module_attachment_indexation
@@ -3234,6 +3235,48 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"EU Mini One Stop Shop (MOSS) DPH za telekomunikačné, vysielacie a elektronické služby\n"
+"=============================================================================================\n"
+"\n"
+"Od 1. januára 2015 telekomunikácie, vysielanie\n"
+"a elektronické služby predávané v rámci Európskej únie\n"
+"musia byť vždy zdanené v krajine, kde je zákazník\n"
+"daňovo registrovaný. Z dôvodu zjednodušenia uplatňovania tejto EÚ\n"
+"smernice, registračná schéma Mini One Stop Shop (MOSS)\n"
+"umožňuje podnikateľom vytvoriť jedinečné daňové priznanie.\n"
+"\n"
+"Tento modul umožňuje pomoc pri tvorbe\n"
+"požadovaných fiškálnych pozícií a daní EÚ, aby\n"
+"automaticky uplatnili a zdanili požadované dane.\n"
+"\n"
+"Tento modul inštaluje sprievodcu, ktorý pomáha nastavovať fiškálne pozície\n"
+"a dane za predaj elektronických služieb v rámci EÚ.\n"
+"\n"
+"Sprievodca vám umožní zvoliť:\n"
+"- krajiny EÚ, do ktorých ich predávate\n"
+"služby\n"
+"- bude zmapovaná vaša národná daň z pridanej hodnoty za služby\n"
+"dane cieľovej krajiny\n"
+"- voliteľne: šablóna fiškálnej pozície v uvedenom poradí\n"
+"kopírovať mapovanie účtu. Mal by byť váš\n"
+"existujúca fiškálna pozícia B2C v rámci EÚ. (predvolené hodnoty\n"
+"k žiadnemu mapovaniu účtu)\n"
+"- voliteľne: účet, ktorý sa použije na zhromažďovanie\n"
+"čiastky dane (predvolené pre účet, ktorý používate\n"
+"vnútroštátna daň z pridanej hodnoty za služby)\n"
+"\n"
+"Vytvára zodpovedajúce fiškálne pozície a dane,\n"
+"automaticky použiteľné pre predaj v EÚ so zákazníkom\n"
+"vo vybraných krajinách.\n"
+"Sprievodcu je možné znova spustiť a pridať ďalšie krajiny.\n"
+"\n"
+"Referencie\n"
+"++++++++++\n"
+"- smernica 2008/8 / ES\n"
+"- Vykonávacie nariadenie Rady (EÚ) č. 1042/2013\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_hr
@@ -3305,7 +3348,7 @@ msgid ""
 "Enable management of UTM trackers: campaign, medium, source.\n"
 msgstr ""
 "\n"
-"Povoliť správu sledovačov UTM: kampaň, médium, zdroj.\n"
+"Povoliť správu trasovania UTM: kampaň, médium, zdroj.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_address_extended
@@ -3368,7 +3411,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Odfiltruje riadky akcií z miniaplikácie zmierenia    "
+"Odfiltruje skladové riadky z miniaplikácie párovania    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_hr_payroll
@@ -4021,10 +4064,10 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"Viesť k lístkom\n"
+"Potenciálny zákazník do požiadaviek\n"
 "===============\n"
 "\n"
-"Prepojiť modul s mapou vedie k lístkom\n"
+"Prepojiť modul aby sa prepojili potenciálni zákazníci do požiadaviek\n"
 "        "
 
 #. module: base
@@ -5857,7 +5900,7 @@ msgstr ""
 "Toto je základný modul pre správu všeobecného účtovnického grafu v Odoo.\n"
 "================================================== ============================\n"
 "\n"
-"Nainštalovať nejaký všeobecný graf účtov."
+"Nainštalovať nejaký všeobecný účtový rozvrh."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_id
@@ -6186,8 +6229,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Tento modul pridáva do filtrovania možnosť filtrovania podľa kontrolného čísla\n"
-"widget.\n"
+"Tento modul pridáva do filtrovania možnosť párovať podľa kontrolného čísla widget.\n"
 "    "
 
 #. module: base
@@ -6592,6 +6634,8 @@ msgid ""
 "\n"
 "This module is used for Online bank synchronization."
 msgstr ""
+"\n"
+"Tento modul sa používa na online synchronizáciu banky."
 
 #. module: base
 #: model:ir.module.module,description:base.module_approvals
@@ -6779,7 +6823,7 @@ msgid ""
 "Time off documents will be automatically integrated to the Document app.\n"
 msgstr ""
 "\n"
-"Dokumenty o voľných dňoch sa automaticky integrujú do aplikácie Dokument.\n"
+"Dokumenty o voľných dňoch sa automaticky integrujú do aplikácie dokument.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_product_expiry
@@ -7121,6 +7165,14 @@ msgid ""
 "module.\n"
 "    "
 msgstr ""
+"\n"
+"Pomocou tohto modulu budú môcť používatelia prepojiť bankové časopisy s ich\n"
+"online bankové účty (pre podporované bankové inštitúcie) a nakonfigurujte\n"
+"pravidelnú a automatickú synchronizáciu ich bankových výpisov.\n"
+"Tento modul bol pridaný na konci roku 2020 a jeho účelom je pracovať pre\n"
+"najnovších poskytovateľov. Malo by sa použiť počas predchádzajúceho účtu account_online_sync\n"
+"modul.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment_sips
@@ -7681,12 +7733,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid ""
 "<span class=\"o_form_label o_td_label\" name=\"address_name\">\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'contact')]}\">Company Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'invoice')]}\">Invoice Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'delivery')]}\">Delivery Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'other')]}\">Other Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'private')]}\">Private Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', False)]}\">Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'contact')]}\">Company Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'invoice')]}\">Invoice Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'delivery')]}\">Delivery Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'other')]}\">Other Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'private')]}\">Private Address</b>\n"
+"                                <b attrs=\"{'invisible': ['&amp;', ('parent_id', '!=', False), ('type', '!=', False)]}\">Address</b>\n"
 "                            </span>"
 msgstr ""
 
@@ -8120,7 +8172,7 @@ msgstr "Modul na testovanie exportu xlsx."
 #. module: base
 #: model:ir.module.module,description:base.module_test_assetsbundle
 msgid "A module to verify the Assets Bundle mechanism."
-msgstr "Modul na overenie Assets Bundle mechanizmu."
+msgstr "Modul na overenie mechanizmu pre zväzok majetku."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_inherits_depends
@@ -8327,12 +8379,12 @@ msgstr "Prístup k neautorizovaným alebo neplatným spoločnostiam."
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_auto_transfer
 msgid "Account Automatic Transfers"
-msgstr "Automatické prevody účtov"
+msgstr "Automatické preúčtovanie účtov"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_generic_auto_transfer_demo
 msgid "Account Automatic Transfers Demo Data"
-msgstr "Demo dáta automatického prevodu z účtu"
+msgstr "Demo dáta automatického preúčtovania z účtu"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_bank_statement_import
@@ -8454,7 +8506,7 @@ msgstr "Účtovné Konzistenčné Testy"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_reports
 msgid "Accounting Reports"
-msgstr "Účtovné Výkazy"
+msgstr "Účtovné výkazy"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_nl
@@ -9116,7 +9168,7 @@ msgstr "Alokujte si voľné dni a sledujte žiadosti o voľné dni"
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_fsm
 msgid "Allow generating fsm tasks from ticket"
-msgstr "Povoliť generovanie úloh fsm z lístka"
+msgstr "Povoliť generovanie úloh z požiadavky"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_payroll_edit_lines
@@ -9299,18 +9351,18 @@ msgstr "Na to, aby find_or_create fungoval, je potrebný e-mail"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_analytic
 msgid "Analytic Accounting"
-msgstr "Analytické účtovníctvo"
+msgstr "Manažérske účtovníctvo"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_analytic_enterprise
 msgid "Analytic Accounting Enterprise"
-msgstr "Analytické účtovníctvo enterprise"
+msgstr "Manažérske účtovníctvo podniku"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_account
 #: model:ir.module.module,summary:base.module_mrp_account_enterprise
 msgid "Analytic accounting in Manufacturing"
-msgstr "Analytické účtovníctvo vo výrobe"
+msgstr "Manažérske účtovníctvo vo výrobe"
 
 #. module: base
 #: model:res.country,name:base.ad
@@ -9571,7 +9623,7 @@ msgstr "Posúďte svojich zamestnancov"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_asset
 msgid "Assets Management"
-msgstr "Správa Aktív"
+msgstr "Správa aktív"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__report_ids
@@ -11266,7 +11318,7 @@ msgstr "Porovnať na zobrazenie"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_timesheet_forecast_sale
 msgid "Compare timesheets and forecast for your projects"
-msgstr "Porovnať časové rozvrhy a prognózy pre svoje projekty"
+msgstr "Porovnať pracovné výkazy a prognózy pre svoje projekty"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project_timesheet_forecast
@@ -11361,7 +11413,7 @@ msgstr "Nastavenie krokov sprievodcu"
 #. module: base
 #: model:ir.actions.server,name:base.action_run_ir_action_todo
 msgid "Config: Run Remaining Action Todo"
-msgstr "Konfigurácia: Spustiť zostávajúcu úlohu"
+msgstr "Konfigurácia: spustiť zostávajúcu úlohu"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_reporting_config
@@ -11581,7 +11633,7 @@ msgstr "Kontakty vyžadujú meno"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
 msgid "Contains In-App Purchases"
-msgstr "Obsahuje nákupy v aplikácii"
+msgstr "Obsahuje nákup v aplikácii"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_filters__context
@@ -11777,7 +11829,7 @@ msgstr "Vytvárajte reporty pracovníkov v teréne"
 #. module: base
 #: model:ir.module.module,summary:base.module_crm_helpdesk
 msgid "Create Tickets from Leads"
-msgstr "Vytvorte lístky z potenciálnych zákazníkov"
+msgstr "Vytvorte požiadavky z potenciálnych zákazníkov"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_menu_create
@@ -12084,12 +12136,12 @@ msgstr "Podrobnosti o vytvorení"
 #: model:ir.model.fields,field_description:base.field_res_partner__credit_limit
 #: model:ir.model.fields,field_description:base.field_res_users__credit_limit
 msgid "Credit Limit"
-msgstr "Úverový Limit"
+msgstr "Úverový limit"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_mercury
 msgid "Credit card support for Point Of Sale"
-msgstr "Podpora platobných kariet pre Predajné Miesto"
+msgstr "Podpora platobných kariet pre miesto predaja"
 
 #. module: base
 #: model:res.country,name:base.hr
@@ -12739,7 +12791,7 @@ msgstr "Cieľový kontakt"
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__res_model
 #: model:ir.model.fields,field_description:base.field_ir_actions_client__res_model
 msgid "Destination Model"
-msgstr "Cieľový Model"
+msgstr "Cieľový model"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
@@ -13645,7 +13697,7 @@ msgstr "Rovníková Guinea"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_maintenance
 msgid "Equipments, Assets, Internal Hardware, Allocation Tracking"
-msgstr "vybavenie, majetok, vlastný hardver, pridelenie sledovnia"
+msgstr "vybavenie, majetok, vlastný hardver, pridelenie sledovania"
 
 #. module: base
 #: model:res.country,name:base.er
@@ -13913,7 +13965,7 @@ msgstr "Názov Exportu"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
 msgid "Export Settings"
-msgstr "Nastavenia Exportu"
+msgstr "Nastavenia exportu"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_wizard_lang_export
@@ -14932,7 +14984,7 @@ msgstr ""
 #: model:ir.ui.menu,name:base.menu_wizard_update_translations
 #: model_terms:ir.ui.view,arch_db:base.wizard_update_translations
 msgid "Generate Missing Terms"
-msgstr "Generuj Chýbajúce Výrazy"
+msgstr "Generuj chýbajúce výrazy"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.form_res_users_key_description
@@ -15549,7 +15601,7 @@ msgid ""
 "quotations, supplier bills, etc..."
 msgstr ""
 "Pomáha vám spravovať vaše nákupné procesy ako sú žiadosti o cenové ponuky, "
-"dodávateľské doklady, atď ..."
+"dodávateľské faktúry, atď ..."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_manufacturing_quality
@@ -16241,7 +16293,7 @@ msgstr "V Aplikáciach"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_iap
 msgid "In-App Purchases"
-msgstr "Nákupy v aplikácii"
+msgstr "Nákup v aplikácii"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_currency_search
@@ -16698,6 +16750,12 @@ msgstr "Neplatný kľúč: pohľad QWeb musí mať kľúč"
 #, python-format
 msgid "Invalid model name %r in action definition."
 msgstr "Neplatný názov modelu% r v definícii akcie."
+
+#. module: base
+#: code:addons/base/models/ir_actions.py:611
+#, python-format
+msgid "many2many fields cannot be evaluated by reference"
+msgstr ""
 
 #. module: base
 #: code:addons/template_inheritance.py:0
@@ -17510,7 +17568,7 @@ msgstr "Vyhodnocovanie iniciatívy"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_helpdesk
 msgid "Lead to Tickets"
-msgstr "Lead to Tickets"
+msgstr "Potenciálny zákazník do požiadaviek"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_view_kanban
@@ -17822,7 +17880,7 @@ msgstr "Luxembourg - Accounting"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lu_reports
 msgid "Luxembourg - Accounting Reports"
-msgstr "Luxembourg - Accounting Reports"
+msgstr "Luxembourg - účtovné reporty"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lu_reports_electronic
@@ -18058,7 +18116,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_work_entry_holidays
 msgid "Manage Time Off in Payslips"
-msgstr "Spravujte si voľno na výplatných páskach"
+msgstr "Spravujte si voľné dni na výplatných páskach"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_forum
@@ -18133,7 +18191,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_account_accountant
 msgid "Manage financial and analytic accounting"
-msgstr "Riadiť finančné a analytické účtovníctvo"
+msgstr "Riadiť finančné a manažérske účtovníctvo"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.res_partner_industry_action
@@ -18276,7 +18334,7 @@ msgstr "Zobrazenie mapy"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product_margin
 msgid "Margins by Products"
-msgstr "Marže podľa produktov"
+msgstr "Produktové marže"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_margin
@@ -18596,7 +18654,7 @@ msgstr "Rôzne"
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_form
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
 msgid "Miscellaneous"
-msgstr "Rôzne"
+msgstr "Účtovné záznamy"
 
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_miss
@@ -18982,7 +19040,7 @@ msgstr "Multi meny"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_multilang
 msgid "Multi Language Chart of Accounts"
-msgstr "Multi jazyková účtovná zostava"
+msgstr "Multi jazykové účtové rozvrhy"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_search
@@ -19102,7 +19160,7 @@ msgstr "Holandsko - účtovníctvo"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_nl_reports
 msgid "Netherlands - Accounting Reports"
-msgstr "Holendsko - účtovné výkazy"
+msgstr "Holandsko - účtovné výkazy"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_nl_intrastat
@@ -19861,6 +19919,98 @@ msgid ""
 "Compare revenues with forecasts and budgets in real time.\n"
 "\n"
 msgstr ""
+"Odoo Human Resources\n"
+"--------------------\n"
+"\n"
+"S Odoo <a href=\"https://www.odoo.com/page/employees\">Ľudské zdroje</a>,\n"
+"spravujte najdôležitejšie aktívum vo vašej spoločnosti: Ľudia\n"
+"\n"
+"Získajte všetky svoje HR operácie ľahko riadené: zdieľanie vedomostí, nábor,\n"
+"odhady, časové rozvrhy, zmluvy, dochádzky, mzdy, atď.\n"
+"\n"
+"Každú potrebu poskytuje konkrétna aplikácia, ktorú aktivujete na požiadanie.\n"
+"\n"
+"Spravujte svojich zamestnancov\n"
+"---------------------\n"
+"\n"
+"Dohliadajte na všetky dôležité informácie vo vašom firemnom adresári. Niektoré\n"
+"informácie sú obmedzené na HR manažérov, iné sú verejné, aby ich bolo možné ľahko vyhľadať\n"
+"kolegovia.\n"
+"\n"
+"Zaznamenávajte zamestnanecké zmluvy a dostanete upozornenia, keď budú musieť byť obnovené.\n"
+"\n"
+"Zefektívnite svoj náborový proces\n"
+"-----------------------------------\n"
+"\n"
+"Obnovenie indexu, sledovanie žiadateľov, hľadanie profilov s 2Odoo HR2.\n"
+"\n"
+"Zverejňujte pracovné ponuky a sledujte každú prijatú žiadosť. Sledujte uchádzačov\n"
+"vo vašom náborovom procese so zobrazením smart kanban.\n"
+"\n"
+"Ušetrite čas automatizáciou určitej komunikácie pomocou e-mailových šablón. Životopisy sú\n"
+"indexované automaticky, čo vám umožňuje ľahké vyhľadanie konkrétnych profilov.\n"
+"\n"
+"Sociálna sieť pre podniky\n"
+"-------------------------\n"
+"\n"
+"Rozobrať informačné silá. Zdieľajte medzi sebou poznatky a najlepšie postupy\n"
+"zamestnancov. Sledujte konkrétnych ľudí alebo dokumenty a pridajte sa ku skupinám záujmov\n"
+"zdieľať odborné znalosti a dokumenty.\n"
+"\n"
+"Komunikujte so svojimi spolupracovníkmi v reálnom čase pomocou živého četu na webe.\n"
+"\n"
+"Sledujte čas a dochádzky\n"
+"--------------------------\n"
+"\n"
+"Sledujte čas strávený projektom, klientom alebo úlohou. Ľahko sa to nahráva\n"
+"časové rozvrhy alebo kontrola dochádzky pre každého zamestnanca. Získajte analytické účtovníctvo\n"
+"zverejnené automaticky na základe času stráveného na vašich projektoch.\n"
+"\n"
+"Správa o voľnom čase\n"
+"-----------------\n"
+"\n"
+"Sledujte dni dovolenky, ktoré nazbieral každý zamestnanec. Zamestnanci vstupujú do svojich\n"
+"- žiadosti (platené voľno, nemocenské voľno atď.), aby manažéri schválili a -\n"
+"potvrdiť. Všetko je hotové iba niekoľkými kliknutiami. Program každého zamestnanca je\n"
+"zodpovedajúcim spôsobom aktualizované.\n"
+"\n"
+"Sledujte výdavky zamestnancov\n"
+"-------------------------------\n"
+"\n"
+"Zbavte sa papierovania a sledujte výdavky zamestnancov priamo v Odoo.\n"
+"Nestrácajte čas ani peniaze riadením celého toku: overenie výdavkov,\n"
+"odmeňovanie zamestnancov, zaúčtovanie v účtovníctve a prefakturácia na\n"
+"zákazníkov.\n"
+"\n"
+"Postupujte podľa pravidelných hodnotení\n"
+"--------------------------\n"
+"\n"
+"Pripravte plány hodnotení alebo prieskumy pre svojich zamestnancov a sledujte ich\n"
+"vývoj. Definujte kroky pre rozhovory a Odoo upozorní manažérov resp\n"
+"podriadení automaticky pripravovať posudky. Sledujte pokrok v službe\n"
+"pravidelne.\n"
+"\n"
+"Zvýšte interakciu s gamifikáciou\n"
+"----------------------------------\n"
+"\n"
+"### Definujte jasný cieľ a poskytnite spätnú väzbu v reálnom čase\n"
+"\n"
+"Inšpirujte úspech úspechmi, cieľmi a odmenami. Definujte jasné ciele\n"
+"a poskytujú spätnú väzbu a hmatateľné výsledky v reálnom čase. Prezentujte hornú časť\n"
+"účinkujúcich na celý kanál a verejne uznávajú dobre vykonanú prácu.\n"
+"\n"
+"### Výsledkové tabuľky\n"
+"\n"
+"Podporujte vodcovské schopnosti a konkurenciu medzi predajným tímom pomocou výkonnostných pomerov.\n"
+"\n"
+"### Osobné ciele\n"
+"\n"
+"Priraďte používateľom jasné ciele, aby ste ich zosúladili s cieľmi spoločnosti.\n"
+"\n"
+"### Ciele tímu\n"
+"\n"
+"Porovnajte výnosy s predpoveďami a rozpočtami v reálnom čase.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp
@@ -20609,6 +20759,16 @@ msgstr ""
 "Operácie s modulmi nie sú v súčasnosti možné, skúste to znova neskôr alebo kontaktujte svojho správcu systému."
 
 #. module: base
+#: code:addons/base/models/ir_actions_report.py:0
+#, python-format
+msgid ""
+"Odoo is unable to merge the PDFs attached to the following records:\n"
+"%s\n"
+"\n"
+"Please exclude them from the selection to continue. It's possible to still retrieve those PDFs by selecting each of the affected records individually, which will avoid merging."
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_odoo_referral
 msgid "Odoo referral program"
 msgstr "Program odporúčaní Odoo"
@@ -20683,6 +20843,12 @@ msgstr ""
 "skúste to prosím znovu po obnovení."
 
 #. module: base
+#: code:addons/base/models/ir_actions_report.py:0
+#, python-format
+msgid "One of the documents, you try to merge is encrypted"
+msgstr ""
+
+#. module: base
 #: code:addons/models.py:0
 #, python-format
 msgid ""
@@ -20721,12 +20887,12 @@ msgstr "Online schôdzka"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_online_synchronization
 msgid "Online Bank Statement Synchronization"
-msgstr ""
+msgstr "Online synchronizácia výpisu z účtu"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_sale
 msgid "Online Event Ticketing"
-msgstr "Online cestovný lístok na udalosti"
+msgstr "Online lístok na udalosť"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_hr_recruitment
@@ -20746,7 +20912,7 @@ msgstr "Online zadanie úlohy"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_helpdesk_form
 msgid "Online Ticket Submission"
-msgstr "Online odoslanie lístka"
+msgstr "Online odoslanie požiadavky"
 
 #. module: base
 #: code:addons/base/models/res_config.py:0
@@ -22262,7 +22428,7 @@ msgstr "Matica nákupu"
 #: model:ir.module.module,summary:base.module_purchase_stock
 msgid "Purchase Orders, Receipts, Vendor Bills for Stock"
 msgstr ""
-"Nákupné objednávky, potvrdenia, účtenky, faktúry a dodávateľské doklady pre "
+"Nákupné objednávky, potvrdenia, účtenky, faktúry a dodávateľské faktury pre "
 "sklad"
 
 #. module: base
@@ -22657,7 +22823,7 @@ msgstr "Nábor"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_recruitment_reports
 msgid "Recruitment Reporting"
-msgstr "Náborové správy"
+msgstr "Náborové reporty"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_hr_recruitment
@@ -22899,7 +23065,7 @@ msgstr "Report xml"
 #: model:ir.module.category,name:base.module_category_accounting_localizations_reporting
 #: model:ir.ui.menu,name:base.reporting_menuitem
 msgid "Reporting"
-msgstr "Reportovanie"
+msgstr "Prehľady"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_ar_reports
@@ -22934,7 +23100,7 @@ msgstr "Sprostredkovatelia"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_partner_commission
 msgid "Resellers Commissions For Subscription"
-msgstr "Provízie za ďalší predaj"
+msgstr "Provízie predajcu za predplatné"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_reset_view_arch_wizard__reset_mode
@@ -23313,7 +23479,7 @@ msgstr "Marža výpredaja"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_subscription_dashboard
 msgid "Sale Subscription Dashboard"
-msgstr "Informačný panel predplatného na predaj"
+msgstr "Kontrolný panel predaj predplatného "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_purchase
@@ -23700,7 +23866,7 @@ msgstr "Predajte časový rozvrh technickej podpory"
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_timesheet
 msgid "Sell based on timesheets"
-msgstr "Predaj založený na časových rozvrhoch"
+msgstr "Predaj založený na pracovných výkazoch"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_digital
@@ -24046,7 +24212,7 @@ msgstr "Sierra Leone"
 #: model:ir.module.category,name:base.module_category_sales_sign
 #: model:ir.module.module,shortdesc:base.module_sign
 msgid "Sign"
-msgstr "E-podpis"
+msgstr "e-podpis"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_contract_salary
@@ -24173,7 +24339,7 @@ msgstr "Social LinkedIn"
 #: model:ir.module.category,name:base.module_category_marketing_social_marketing
 #: model:ir.module.module,shortdesc:base.module_social
 msgid "Social Marketing"
-msgstr "Sociálny marketing"
+msgstr "Marketing sociálnych sieti"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_social_media
@@ -24611,7 +24777,7 @@ msgstr "Predplatné a časový rozvrh"
 #: model:ir.module.category,name:base.module_category_sales_subscriptions
 #: model:ir.module.module,shortdesc:base.module_sale_subscription
 msgid "Subscriptions"
-msgstr "Odbery"
+msgstr "Predplatné"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence__date_range_ids
@@ -25291,6 +25457,12 @@ msgid "The internal user in charge of this contact."
 msgstr "Interný užívateľ, ktorý má na starosti komunikáciu s týmto kontaktom."
 
 #. module: base
+#: code:addons/base/models/res_country.py:106
+#, python-format
+msgid "The layout contains an invalid format key"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,help:base.field_ir_model__inherited_model_ids
 msgid "The list of models that extends the current model."
 msgstr "Zoznam modelov ktoré rozširujú súčasný model."
@@ -25830,6 +26002,11 @@ msgid ""
 "dependencies. Neither we want to add in website module some routes, views and\n"
 "models which only purpose is to run tests."
 msgstr ""
+"Tento modul obsahuje testy týkajúce sa webových stránok. Tie sú\n"
+"prítomný v samostatnom module, keď testujeme inštaláciu / odinštalovanie / aktualizáciu modulu\n"
+"a nechceme zakaždým znova načítať modul webových stránok, vrátane toho, že je to možné\n"
+"závislosti. Nechceme do modulu webových stránok pridať niektoré trasy, zobrazenia a\n"
+"modely, ktorých jediným účelom je spustenie testov."
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_subscription_timesheet
@@ -25927,7 +26104,7 @@ msgstr "Štvrtok"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_helpdesk_livechat
 msgid "Ticketing, Support, Livechat"
-msgstr "Predaj lístkov, podpora, živý chat"
+msgstr "Požiadavky, podpora, živý chat"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_helpdesk_slides
@@ -25990,7 +26167,7 @@ msgstr "Pracovné výkazy"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_timesheet_attendance
 msgid "Timesheets/attendances reporting"
-msgstr "Časové rozvrhy/dochádzky vyhodnotenie"
+msgstr "Pracovné výkazy/dochádzky reporty"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__tz
@@ -27091,7 +27268,7 @@ msgstr "Uzbekistan"
 #: model:res.country,vat_label:base.uk
 #, python-format
 msgid "VAT"
-msgstr "DIČ"
+msgstr "IČ DPH"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_vat
@@ -27677,6 +27854,9 @@ msgid ""
 "If the timezone is not set, UTC (Coordinated Universal Time) is used.\n"
 "Anywhere else, time values are computed according to the time offset of your web client."
 msgstr ""
+"Pri tlači dokumentov a exporte / importe údajov sa časové hodnoty počítajú podľa tohto časového pásma.\n"
+"Ak nie je nastavené časové pásmo, použije sa UTC (Coordinated Universal Time).\n"
+"Kdekoľvek inde sa časové hodnoty počítajú podľa časového posunu vášho webového klienta."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.sequence_view
@@ -27978,8 +28158,8 @@ msgstr "Nemôžte aktivovať superuser používateľa."
 #. module: base
 #: code:addons/base/models/res_partner.py:0
 #, python-format
-msgid "You cannot archive a contact linked to an internal user."
-msgstr "Nemôžete archivovať kontakt prelinkovaný s interným užívateľom."
+msgid "You cannot archive a contact linked to a portal or internal user."
+msgstr ""
 
 #. module: base
 #: code:addons/base/models/res_partner.py:0
@@ -28093,6 +28273,13 @@ msgid ""
 msgstr ""
 "Budete mať možnosť definovať ďalšie prístupové práva úpravou novovytvoreného"
 " užívateľa pod Nastavenia / Používateľské menu."
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.view_currency_form
+msgid ""
+"You won't be able to reduce the number of decimal places of a currency which"
+" has already been used to make accounting entries."
+msgstr ""
 
 #. module: base
 #: code:addons/base/models/ir_mail_server.py:0
@@ -28596,7 +28783,7 @@ msgstr "test xlsx export"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_assetsbundle
 msgid "test-assetsbundle"
-msgstr "test-balík aktív"
+msgstr "test-balík majetku"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_exceptions

@@ -4,6 +4,7 @@ odoo.define('mail/static/src/utils/utils.js', function (require) {
 const { delay } = require('web.concurrency');
 const {
     patch: webUtilsPatch,
+    unaccent,
     unpatch: webUtilsUnpatch,
 } = require('web.utils');
 
@@ -13,6 +14,18 @@ const {
 
 const classPatchMap = new WeakMap();
 const eventHandledWeakMap = new WeakMap();
+
+/**
+ * Returns the given string after cleaning it. The goal of the clean is to give
+ * more convenient results when comparing it to potential search results, on
+ * which the clean should also be called before comparing them.
+ *
+ * @param {string} searchTerm
+ * @returns {string}
+ */
+function cleanSearchTerm(searchTerm) {
+    return unaccent(searchTerm.toLowerCase());
+}
 
 /**
  * Executes the provided functions in order, but with a potential delay between
@@ -166,6 +179,7 @@ function unpatchInstanceMethods(Class, patchName) {
 //------------------------------------------------------------------------------
 
 return {
+    cleanSearchTerm,
     executeGracefully,
     isEventHandled,
     markEventHandled,

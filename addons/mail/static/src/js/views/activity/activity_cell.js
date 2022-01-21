@@ -14,7 +14,7 @@ odoo.define("mail.ActivityCell", function (require) {
         _render() {
             // replace clock by closest deadline
             const $date = $('<div class="o_closest_deadline">');
-            const date = new Date(this.record.data.closest_deadline);
+            const date = moment(this.record.data.closest_deadline).toDate();
             // To remove year only if current year
             if (moment().year() === moment(date).year()) {
                 $date.text(date.toLocaleDateString(moment().locale(), {

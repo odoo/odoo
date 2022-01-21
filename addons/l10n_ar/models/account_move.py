@@ -42,6 +42,19 @@ class AccountMove(models.Model):
         if not_invoices:
             raise ValidationError(_("The selected Journal can't be used in this transaction, please select one that doesn't use documents as these are just for Invoices."))
 
+    @api.constrains('move_type', 'l10n_latam_document_type_id')
+    def _check_invoice_type_document_type(self):
+        """ LATAM module define that we are not able to use debit_note or invoice document types in an invoice refunds,
+        However for Argentinian Document Type's 99 (internal type = invoice) we are able to used in a refund invoices.
+
+        In this method we exclude the argentinian document type 99 from the generic constraint """
+        ar_doctype_99 = self.filtered(
+            lambda x: x.country_code == 'AR' and
+            x.l10n_latam_document_type_id.code == '99' and
+            x.move_type in ['out_refund', 'in_refund'])
+
+        super(AccountMove, self - ar_doctype_99)._check_invoice_type_document_type()
+
     def _get_afip_invoice_concepts(self):
         """ Return the list of values of the selection field. """
         return [('1', 'Products / Definitive export of goods'), ('2', 'Services'), ('3', 'Products and Services'),
@@ -150,11 +163,10 @@ class AccountMove(models.Model):
         for rec in ar_invoices:
             rec.l10n_ar_afip_responsibility_type_id = rec.commercial_partner_id.l10n_ar_afip_responsibility_type_id.id
             if rec.company_id.currency_id == rec.currency_id:
-                l10n_ar_currency_rate = 1.0
-            else:
-                l10n_ar_currency_rate = rec.currency_id._convert(
+                rec.l10n_ar_currency_rate = 1.0
+            elif not rec.l10n_ar_currency_rate:
+                rec.l10n_ar_currency_rate = rec.currency_id._convert(
                     1.0, rec.company_id.currency_id, rec.company_id, rec.invoice_date or fields.Date.today(), round=False)
-            rec.l10n_ar_currency_rate = l10n_ar_currency_rate
 
         # We make validations here and not with a constraint because we want validation before sending electronic
         # data on l10n_ar_edi
@@ -262,11 +274,12 @@ class AccountMove(models.Model):
         for line in self.line_ids:
             if any(tax.tax_group_id.l10n_ar_vat_afip_code and tax.tax_group_id.l10n_ar_vat_afip_code not in ['0', '1', '2'] for tax in line.tax_line_id) and line[amount_field]:
                 vat_taxable |= line
-        for vat in vat_taxable:
-            base_imp = sum(self.invoice_line_ids.filtered(lambda x: x.tax_ids.filtered(lambda y: y.tax_group_id.l10n_ar_vat_afip_code == vat.tax_line_id.tax_group_id.l10n_ar_vat_afip_code)).mapped(amount_field))
-            res += [{'Id': vat.tax_line_id.tax_group_id.l10n_ar_vat_afip_code,
+        for tax_group in vat_taxable.mapped('tax_group_id'):
+            base_imp = sum(self.invoice_line_ids.filtered(lambda x: x.tax_ids.filtered(lambda y: y.tax_group_id.l10n_ar_vat_afip_code == tax_group.l10n_ar_vat_afip_code)).mapped(amount_field))
+            imp = sum(vat_taxable.filtered(lambda x: x.tax_group_id.l10n_ar_vat_afip_code == tax_group.l10n_ar_vat_afip_code).mapped(amount_field))
+            res += [{'Id': tax_group.l10n_ar_vat_afip_code,
                      'BaseImp': sign * base_imp,
-                     'Importe': sign * vat[amount_field]}]
+                     'Importe': sign * imp}]
 
         # Report vat 0%
         vat_base_0 = sign * sum(self.invoice_line_ids.filtered(lambda x: x.tax_ids.filtered(lambda y: y.tax_group_id.l10n_ar_vat_afip_code == '3')).mapped(amount_field))

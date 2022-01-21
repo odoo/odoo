@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from random import randint
+from datetime import datetime
 
 from odoo import fields, tools
 from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
@@ -258,7 +259,12 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
             'is_cash_count': True,
             'cash_journal_id': cls.company_data['default_journal_cash'].id,
         })
-        config.write({'payment_method_ids': [(4, cash_split_pm.id), (4, cash_payment_method.id), (4, bank_payment_method.id)]})
+        bank_split_pm = cls.env['pos.payment.method'].create({
+            'name': 'Split (Bank) PM',
+            'receivable_account_id': cls.pos_receivable_account.id,
+            'split_transactions': True,
+        })
+        config.write({'payment_method_ids': [(4, cash_split_pm.id), (4, bank_split_pm.id), (4, cash_payment_method.id), (4, bank_payment_method.id)]})
         return config
 
     @classmethod
@@ -267,6 +273,7 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
         cls.env['res.currency.rate'].create({
             'rate': 0.5,
             'currency_id': cls.other_currency.id,
+            'name': datetime.today().date(),
         })
         other_cash_journal = cls.env['account.journal'].create({
             'name': 'Cash Other',
@@ -506,6 +513,7 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
             * cash_pm : cash payment method of the session
             * bank_pm : bank payment method of the session
             * cash_split_pm : credit payment method of the session
+            * bank_split_pm : split bank payment method of the session
         """
         self.config.open_session_cb(check_coa=False)
         self.pos_session = self.config.current_session_id
@@ -514,3 +522,4 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
         self.cash_pm = self.pos_session.payment_method_ids.filtered(lambda pm: pm.is_cash_count and not pm.split_transactions)[:1]
         self.bank_pm = self.pos_session.payment_method_ids.filtered(lambda pm: not pm.is_cash_count and not pm.split_transactions)[:1]
         self.cash_split_pm = self.pos_session.payment_method_ids.filtered(lambda pm: pm.is_cash_count and pm.split_transactions)[:1]
+        self.bank_split_pm = self.pos_session.payment_method_ids.filtered(lambda pm: not pm.is_cash_count and pm.split_transactions)[:1]

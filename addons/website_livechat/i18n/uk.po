@@ -5,15 +5,15 @@
 # Translators:
 # Martin Trigaux, 2020
 # ТАрас <tratatuta@i.ua>, 2020
-# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2020
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"POT-Creation-Date: 2020-11-27 14:13+0000\n"
 "PO-Revision-Date: 2020-09-07 08:21+0000\n"
-"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2020\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2021\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,7 +30,7 @@ msgstr "К-сть сесій"
 #: code:addons/website_livechat/models/mail_channel.py:0
 #, python-format
 msgid "%s has left the conversation."
-msgstr ""
+msgstr "%s покинув бесіду."
 
 #. module: website_livechat
 #: code:addons/website_livechat/models/mail_channel.py:0
@@ -39,6 +39,8 @@ msgid ""
 "%s has started a conversation with %s. \n"
 "                        The chat request has been canceled."
 msgstr ""
+"%s почав бесіду з %s. \n"
+"                        Запит на чат скасовано."
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_kanban
@@ -63,6 +65,13 @@ msgstr "<span>Канал чату</span>"
 #: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_search
 msgid "Available"
 msgstr "В наявності"
+
+#. module: website_livechat
+#. openerp-web
+#: code:addons/website_livechat/static/src/components/visitor_banner/visitor_banner.xml:0
+#, python-format
+msgid "Avatar"
+msgstr "Аватар"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
@@ -130,6 +139,13 @@ msgid "Happy face"
 msgstr "Щасливе обличчя"
 
 #. module: website_livechat
+#. openerp-web
+#: code:addons/website_livechat/static/src/components/visitor_banner/visitor_banner.xml:0
+#, python-format
+msgid "History"
+msgstr "Історія"
+
+#. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__id
 #: model:ir.model.fields,field_description:website_livechat.field_ir_http__id
 #: model:ir.model.fields,field_description:website_livechat.field_mail_channel__id
@@ -145,6 +161,13 @@ msgid "Is Published"
 msgstr "Опубліковано"
 
 #. module: website_livechat
+#. openerp-web
+#: code:addons/website_livechat/static/src/components/visitor_banner/visitor_banner.xml:0
+#, python-format
+msgid "Lang"
+msgstr "Мова"
+
+#. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel____last_update
 #: model:ir.model.fields,field_description:website_livechat.field_ir_http____last_update
 #: model:ir.model.fields,field_description:website_livechat.field_mail_channel____last_update
@@ -152,7 +175,7 @@ msgstr "Опубліковано"
 #: model:ir.model.fields,field_description:website_livechat.field_website____last_update
 #: model:ir.model.fields,field_description:website_livechat.field_website_visitor____last_update
 msgid "Last Modified on"
-msgstr "Останні зміни на"
+msgstr "Останні зміни"
 
 #. module: website_livechat
 #: code:addons/website_livechat/models/website.py:0
@@ -211,6 +234,13 @@ msgstr "Ще не оцінено"
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
 msgid "Okay"
 msgstr "Гаразд"
+
+#. module: website_livechat
+#. openerp-web
+#: code:addons/website_livechat/static/src/components/visitor_banner/visitor_banner.xml:0
+#, python-format
+msgid "Online"
+msgstr "Онлайн"
 
 #. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_website_visitor__livechat_operator_name
@@ -305,6 +335,13 @@ msgid "Visitor"
 msgstr "Відвідувач"
 
 #. module: website_livechat
+#. openerp-web
+#: code:addons/website_livechat/static/src/components/visitor_banner/visitor_banner.xml:0
+#, python-format
+msgid "Visitor is online"
+msgstr "Відвідувач онлайн"
+
+#. module: website_livechat
 #: model:ir.actions.act_window,name:website_livechat.website_visitor_livechat_session_action
 msgid "Visitor's Sessions"
 msgstr "Сесії відвідувача"
@@ -320,7 +357,10 @@ msgid "Visitors"
 msgstr "Відвідувачі"
 
 #. module: website_livechat
+#. openerp-web
+#: code:addons/website_livechat/static/src/components/visitor_banner/visitor_banner.xml:0
 #: model:ir.model,name:website_livechat.model_website
+#, python-format
 msgid "Website"
 msgstr "Веб-сайт"
 
@@ -355,7 +395,7 @@ msgstr "Опис сайту"
 #: code:addons/website_livechat/models/mail_channel.py:0
 #, python-format
 msgid "an operator"
-msgstr ""
+msgstr "оператор"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page

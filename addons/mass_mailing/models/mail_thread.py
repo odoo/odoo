@@ -57,7 +57,7 @@ class MailThread(models.AbstractModel):
         if bounced_email:
             three_months_ago = fields.Datetime.to_string(datetime.datetime.now() - datetime.timedelta(weeks=13))
             stats = self.env['mailing.trace'].search(['&', ('bounced', '>', three_months_ago), ('email', '=ilike', bounced_email)]).mapped('bounced')
-            if len(stats) >= BLACKLIST_MAX_BOUNCED_LIMIT and (not bounced_partner or bounced_partner.message_bounce >= BLACKLIST_MAX_BOUNCED_LIMIT):
+            if len(stats) >= BLACKLIST_MAX_BOUNCED_LIMIT and (not bounced_partner or any(p.message_bounce >= BLACKLIST_MAX_BOUNCED_LIMIT for p in bounced_partner)):
                 if max(stats) > min(stats) + datetime.timedelta(weeks=1):
                     blacklist_rec = self.env['mail.blacklist'].sudo()._add(bounced_email)
                     blacklist_rec._message_log(

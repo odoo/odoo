@@ -4,6 +4,9 @@
 # 
 # Translators:
 # Martin Trigaux, 2020
+# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2021
+# Ernesto Tejeda <ernesto.tejeda87@gmail.com>, 2021
+# Alejandro Concepción <alconor23@hotmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -11,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-10-02 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: Martin Trigaux, 2020\n"
+"Last-Translator: Alejandro Concepción <alconor23@hotmail.com>, 2021\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -232,7 +235,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__product_template__purchase_requisition__rfq
 msgid "Create a draft purchase order"
-msgstr "Crear una orden de compra borrador"
+msgstr "Crear un pedido de compra borrador"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_product_product__purchase_requisition
@@ -243,7 +246,7 @@ msgid ""
 " 'purchase_requisition' module is installed and this option is selected, the"
 " system will create a draft call for tender."
 msgstr ""
-"Crea una orden de compra en borrador: Basado en la configuración de su "
+"Crea un pedido de compra en borrador: Basado en la configuración de su "
 "producto, el sistema puede crear una nueva orden. Si el Acuerdo de Compra se"
 " encuentra instalado y está opción es seleccionada, el sistema puede crear "
 "un Acuerdo de Compra automáticamente."
@@ -270,7 +273,7 @@ msgstr "Moneda"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__product_description_variants
 msgid "Custom Description"
-msgstr ""
+msgstr "Descripción personalizada"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
@@ -350,6 +353,9 @@ msgid ""
 "            (e.g. a year) and you order products within this agreement, benefiting\n"
 "            from the negotiated prices."
 msgstr ""
+"Para una orden abierta, puede registrar un acuerdo por un período específico\n"
+"(por ejemplo, un año) y solicita productos dentro de este acuerdo, beneficiándose\n"
+"De los precios negociados."
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -620,7 +626,7 @@ msgstr "Acuerdos de compra"
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_order
 msgid "Purchase Order"
-msgstr "Orden de compra"
+msgstr "Pedido de compra"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_order_line
@@ -674,7 +680,7 @@ msgstr "Cantidades"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__product_qty
 msgid "Quantity"
-msgstr "Cantidad mínima"
+msgstr "Cantidad"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -740,7 +746,7 @@ msgstr "Buscar acuerdos de compra"
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__exclusive__multiple
 msgid "Select multiple RFQ (non-exclusive)"
-msgstr ""
+msgstr "Seleccione varias RFQ (no exclusivas)"
 
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__exclusive__exclusive
@@ -754,6 +760,9 @@ msgid ""
 "\n"
 "                    Select multiple RFQ (non-exclusive): allows multiple purchase orders. On confirmation of a purchase order it does not cancel the remaining orders"
 msgstr ""
+"Seleccione solo una RFQ (exclusivo): cuando se confirma una orden de compra, cancele la orden de compra restante.\n"
+"\n"
+"Seleccionar múltiples RFQ (no exclusivo): permite múltiples órdenes de compra. Tras la confirmación de una orden de compra, no cancela los pedidos restantes."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__sequence
@@ -836,6 +845,8 @@ msgid ""
 "There is already an open blanket order for this supplier. We suggest you "
 "complete this open blanket order, instead of creating a new one."
 msgstr ""
+"Ya hay una orden abierta abierta para este proveedor. Le sugerimos que "
+"complete este pedido general abierto, en lugar de crear uno nuevo."
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter

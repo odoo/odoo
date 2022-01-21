@@ -6,17 +6,17 @@
 # Thijs van Oers <thijsvanoers@yahoo.com>, 2020
 # Martin Trigaux, 2020
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2020
-# Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
+# Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-17 10:35+0000\n"
+"POT-Creation-Date: 2020-11-27 11:24+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2020\n"
+"Last-Translator: Odoo Experts Consultants <consultants@odooexperts.nl>, 2020\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -51,6 +51,7 @@ msgstr ""
 #, python-format
 msgid "An error occurred when sending a letter with Snailmail."
 msgstr ""
+"Er is een fout opgetreden bij het verzenden van een brief met Snailmail."
 
 #. module: snailmail
 #: code:addons/snailmail/models/snailmail_letter.py:0
@@ -63,17 +64,17 @@ msgstr "Er is een onbekende fout opgetreden. Neem contact op met de support."
 #: code:addons/snailmail/static/src/components/snailmail_error_dialog/snailmail_error_dialog.xml:0
 #, python-format
 msgid "An unknown error occurred. Please contact our"
-msgstr ""
+msgstr "Er is een onbekende fout opgetreden. Neem contact op met onze"
 
 #. module: snailmail
 #: code:addons/snailmail/wizard/snailmail_letter_cancel.py:0
 #, python-format
 msgid ""
-"Are you sure you want to discard %s snailmail delivery failures. You won't "
+"Are you sure you want to discard %s snailmail delivery failures? You won't "
 "be able to re-send these letters later!"
 msgstr ""
-"Weet u zeker dat u %s mislukte bezorging via snailmail wilt verwijderen? U "
-"kunt deze brieven later niet opnieuw verzenden!"
+"Weet je zeker dat je mislukte bezorging %s via snailmail wilt verwijderen? "
+"Je kunt deze brieven later niet opnieuw verzenden!"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__attachment_id
@@ -557,7 +558,7 @@ msgstr "Snailmail kredietfout"
 #: code:addons/snailmail/static/src/models/notification_group/notification_group.js:0
 #, python-format
 msgid "Snailmail Failures"
-msgstr ""
+msgstr "Snailmail-fouten"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_format
@@ -683,6 +684,8 @@ msgid ""
 "The country to which you want to send the letter is not supported by our "
 "service."
 msgstr ""
+"Het land waarnaar je de brief wilt sturen, wordt niet ondersteund door onze "
+"service."
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
@@ -707,6 +710,8 @@ msgid ""
 "The letter could not be sent due to insufficient credits on your IAP "
 "account."
 msgstr ""
+"De brief kon niet worden verzonden wegens onvoldoende tegoed op je IAP-"
+"account."
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_mail_mail__message_type
@@ -775,7 +780,7 @@ msgstr ""
 #: code:addons/snailmail/static/src/components/snailmail_error_dialog/snailmail_error_dialog.xml:0
 #, python-format
 msgid "You need credits on your IAP account to send a letter."
-msgstr ""
+msgstr "Je hebt credits op je IAP-account nodig om een brief te verzenden."
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
@@ -798,11 +803,11 @@ msgstr "per post. Weet je zeker dat je door wilt gaan?"
 #: code:addons/snailmail/static/src/components/snailmail_error_dialog/snailmail_error_dialog.xml:0
 #, python-format
 msgid "for further assistance."
-msgstr ""
+msgstr "voor verdere assistentie."
 
 #. module: snailmail
 #. openerp-web
 #: code:addons/snailmail/static/src/components/snailmail_error_dialog/snailmail_error_dialog.xml:0
 #, python-format
 msgid "support"
-msgstr ""
+msgstr "support"

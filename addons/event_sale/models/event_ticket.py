@@ -72,8 +72,6 @@ class EventTemplateTicket(models.Model):
                 'list_price': 0,
                 'standard_price': 0,
                 'type': 'service',
-                'default_code': 'EVENT_REG',
-                'type': 'service',
             }).id
             self.env['ir.model.data'].create({
                 'name': 'product_product_event',

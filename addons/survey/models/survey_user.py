@@ -61,7 +61,9 @@ class SurveyUserInput(models.Model):
             # sum(multi-choice question scores) + sum(simple answer_type scores)
             total_possible_score = 0
             for question in user_input.predefined_question_ids:
-                if question.question_type in ['simple_choice', 'multiple_choice']:
+                if question.question_type == 'simple_choice':
+                    total_possible_score += max([score for score in question.mapped('suggested_answer_ids.answer_score') if score > 0], default=0)
+                elif question.question_type == 'multiple_choice':
                     total_possible_score += sum(score for score in question.mapped('suggested_answer_ids.answer_score') if score > 0)
                 elif question.is_scored_question:
                     total_possible_score += question.answer_score
@@ -75,7 +77,7 @@ class SurveyUserInput(models.Model):
                 score_percentage = (score_total / total_possible_score) * 100
                 user_input.scoring_percentage = round(score_percentage, 2) if score_percentage > 0 else 0
 
-    @api.depends('scoring_percentage', 'survey_id.scoring_success_min')
+    @api.depends('scoring_percentage', 'survey_id')
     def _compute_scoring_success(self):
         for user_input in self:
             user_input.scoring_success = user_input.scoring_percentage >= user_input.survey_id.scoring_success_min
@@ -268,6 +270,12 @@ class SurveyUserInput(models.Model):
     def _save_line_choice(self, question, old_answers, answers, comment):
         if not (isinstance(answers, list)):
             answers = [answers]
+
+        if not answers:
+            # add a False answer to force saving a skipped line
+            # this will make this question correctly considered as skipped in statistics
+            answers = [False]
+
         vals_list = []
 
         if question.question_type == 'simple_choice':
@@ -284,6 +292,11 @@ class SurveyUserInput(models.Model):
 
     def _save_line_matrix(self, question, old_answers, answers, comment):
         vals_list = []
+
+        if not answers and question.matrix_row_ids:
+            # add a False answer to force saving a skipped line
+            # this will make this question correctly considered as skipped in statistics
+            answers = {question.matrix_row_ids[0].id: [False]}
 
         if answers:
             for row_key, row_answer in answers.items():
@@ -529,16 +542,26 @@ class SurveyUserInputLine(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            score_vals = self._get_answer_score_values(vals)
             if not vals.get('answer_score'):
+                score_vals = self._get_answer_score_values(vals)
                 vals.update(score_vals)
         return super(SurveyUserInputLine, self).create(vals_list)
 
     def write(self, vals):
-        score_vals = self._get_answer_score_values(vals, compute_speed_score=False)
-        if not vals.get('answer_score'):
-            vals.update(score_vals)
-        return super(SurveyUserInputLine, self).write(vals)
+        res = True
+        for line in self:
+            vals_copy = {**vals}
+            getter_params = {
+                'user_input_id': line.user_input_id.id,
+                'answer_type': line.answer_type,
+                'question_id': line.question_id.id,
+                **vals_copy
+            }
+            if not vals_copy.get('answer_score'):
+                score_vals = self._get_answer_score_values(getter_params, compute_speed_score=False)
+                vals_copy.update(score_vals)
+            res = super(SurveyUserInputLine, line).write(vals_copy) and res
+        return res
 
     @api.model
     def _get_answer_score_values(self, vals, compute_speed_score=True):

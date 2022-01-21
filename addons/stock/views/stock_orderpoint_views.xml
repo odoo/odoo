@@ -51,6 +51,7 @@
                 <field name="json_lead_days_popover" optional="show" nolabel="1" string="Forecast Description" width="10px" widget="popover_widget" attrs="{'invisible': [('id', '=', False)]}"/>
                 <field name="route_id" options="{'no_create': True, 'no_open': True}"/>
                 <field name="trigger" optional="hide"/>
+                <field name="group_id" optional="hide" groups="stock.group_adv_location"/>
                 <field name="product_min_qty" optional="show"/>
                 <field name="product_max_qty" optional="show"/>
                 <field name="qty_multiple" optional="hide"/>
@@ -58,9 +59,9 @@
                 <field name="product_uom_name" string="UoM" groups="uom.group_uom"/>
                 <field name="company_id" optional="hide" readonly="1" groups="base.group_multi_company"/>
                 <button name="action_replenish" string="Order Once" type="object" class="o_replenish_buttons" icon="fa-truck"
-                    attrs="{'invisible': [('qty_to_order', '&lt;', 1.0)]}"/>
+                    attrs="{'invisible': [('qty_to_order', '&lt;=', 0.0)]}"/>
                 <button name="action_replenish_auto" string="Automate Orders" type="object" class="o_replenish_buttons" icon="fa-refresh"
-                    attrs="{'invisible': ['|', ('qty_to_order', '&lt;', 1.0), ('trigger', '=', 'auto')]}"/>
+                    attrs="{'invisible': ['|', ('qty_to_order', '&lt;=', 0.0), ('trigger', '=', 'auto')]}"/>
                 <button name="%(action_orderpoint_snooze)d" string="Snooze" type="action" class="text-warning" icon="fa-bell-slash"
                     attrs="{'invisible': [('trigger', '!=', 'manual')]}" context="{'default_orderpoint_ids': [id]}"/>
             </tree>
@@ -80,6 +81,7 @@
                 <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
                 <field name="route_id" optional="hide"/>
                 <field name="trigger" optional="hide"/>
+                <field name="group_id" optional="hide" groups="stock.group_adv_location"/>
                 <field name="product_min_qty" optional="show"/>
                 <field name="product_max_qty" optional="show"/>
                 <field name="qty_multiple" optional="show"/>
@@ -99,6 +101,7 @@
                 <field name="product_id"/>
                 <field name="trigger"/>
                 <field name="product_category_id"/>
+                <field name="group_id" groups="stock.group_adv_location"/>
                 <field name="warehouse_id" groups="stock.group_stock_multi_warehouses"/>
                 <field name="location_id" groups="stock.group_stock_multi_locations"/>
                 <filter string="To Reorder" name="filter_to_reorder" domain="[('qty_to_order', '&gt;', 0.0)]"/>
@@ -123,6 +126,7 @@
                 <field name="name" string="Reordering Rule"/>
                 <field name="product_id"/>
                 <field name="trigger"/>
+                <field name="group_id" groups="stock.group_adv_location"/>
                 <field name="warehouse_id" groups="stock.group_stock_multi_warehouses"/>
                 <field name="location_id" groups="stock.group_stock_multi_locations"/>
                 <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
@@ -213,7 +217,7 @@
           <p class="o_view_nocontent_smiling_face">
             No reordering rule found
           </p><p>
-            Define a minimum stock rule so that Odoo creates automatically requests for quotations or draft manufacturing orders to resupply your stock.
+            Define a minimum stock rule so that Odoo creates automatically requests for quotations or confirmed manufacturing orders to resupply your stock.
           </p>
         </field>
     </record>

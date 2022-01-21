@@ -4,16 +4,19 @@
 # 
 # Translators:
 # Martin Trigaux, 2020
-# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2020
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2020
+# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2021
+# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2021
+# Ernesto Tejeda <ernesto.tejeda87@gmail.com>, 2021
+# Juan Rivero <jr@adhoc.com.ar>, 2021
+# Alejandro Concepción <alconor23@hotmail.com>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-16 13:33+0000\n"
+"POT-Creation-Date: 2020-11-27 13:50+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: Pedro M. Baeza <pedro.baeza@gmail.com>, 2020\n"
+"Last-Translator: Alejandro Concepción <alconor23@hotmail.com>, 2021\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -49,6 +52,12 @@ msgstr "# de líneas"
 #: model:mail.template,subject:purchase.email_template_edi_purchase_reminder
 msgid "${object.company_id.name} Order (Ref ${object.name or 'n/a' })"
 msgstr "${object.company_id.name} Pedido (Ref ${object.name or 'n/a' })"
+
+#. module: purchase
+#: code:addons/purchase/models/purchase.py:0
+#, python-format
+msgid "%(name)s confirmed the receipt will take place on %(date)s."
+msgstr "%(name)s Confirmado que la recepción tendrá lugar el %(date)s."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.mail_notification_confirm
@@ -329,7 +338,7 @@ msgstr "<strong class=\"mr16\">Subtotal</strong>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "<strong class=\"text-muted\">Purchase Representative</strong>"
-msgstr "<strong class=\"text-muted\">Representante de compras</strong>"
+msgstr "<strong class=\"text-muted\">Representante de compra</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -366,7 +375,7 @@ msgstr "<strong>Fecha del pedido:</strong>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Purchase Representative:</strong>"
-msgstr "<strong>Representante del Proveedor:</strong>"
+msgstr "<strong>Representante de Compra:</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -474,13 +483,13 @@ msgstr "Alerta de acceso"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__qty_received_method
 msgid ""
-"According to product configuration, the recieved quantity can be automatically computed by mechanism :\n"
+"According to product configuration, the received quantity can be automatically computed by mechanism :\n"
 "  - Manual: the quantity is set manually on the line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
-"Según la configuración del producto, la cantidad recibida se puede calcular automáticamente por uno de estos mecanismos:\n"
+"Según la configuración del producto, la cantidad recibida se puede calcular automáticamente mediante un mecanismo:\n"
 "- Manual: la cantidad se establece manualmente en la línea.\n"
-"- Movimientos de existencias: la cantidad proviene de los albaranes confirmados.\n"
+"- Stock Moves: la cantidad proviene de pickings confirmados\n"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_needaction
@@ -537,7 +546,7 @@ msgstr "Agregue algunos productos o servicios a su presupuesto."
 #. module: purchase
 #: model:res.groups,name:purchase.group_purchase_manager
 msgid "Administrator"
-msgstr "Administradora"
+msgstr "Administrador"
 
 #. module: purchase
 #: code:addons/purchase/controllers/portal.py:0
@@ -575,10 +584,10 @@ msgstr "Todas las SdP en espera"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_config_settings__group_send_reminder
-msgid "Allow automatically send email to reminde your vendor the receipt date"
+msgid "Allow automatically send email to remind your vendor the receipt date"
 msgstr ""
-"Permitir enviar automáticamente un correo a sus proveedores para recordar la"
-" fecha de recepción"
+"Permitir enviar automáticamente un correo electrónico para recordarle a su "
+"proveedor la fecha de recepción"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__res_company__po_lock__edit
@@ -2085,7 +2094,7 @@ msgstr "Estadísticas pedidos de compra"
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_report
 msgid "Purchase Report"
-msgstr "Reporte de Compras"
+msgstr "Informe de Compras"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__user_id
@@ -2094,7 +2103,7 @@ msgstr "Reporte de Compras"
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Purchase Representative"
-msgstr "Representante del Proveedor"
+msgstr "Representante de Compra"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__group_warning_purchase
@@ -2192,7 +2201,7 @@ msgstr "Cantidades facturadas por los proveedores"
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order_update_date
 msgid "Quantity"
-msgstr "Cantidad mínima"
+msgstr "Cantidad"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -2624,6 +2633,12 @@ msgid "Terms and Conditions"
 msgstr "Términos y condiciones"
 
 #. module: purchase
+#: code:addons/purchase/models/purchase.py:0
+#, python-format
+msgid "The order receipt has been acknowledged by %(name)s."
+msgstr "La recepción del pedido ha sido acusada por %(name)s."
+
+#. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
 msgid ""
 "The request for quotation is the first step of the purchases flow. Once\n"
@@ -2706,8 +2721,8 @@ msgstr "Esta factura de proveedor ha sido modificada desde: %s"
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
 msgid "This vendor has no purchase order. Create a new RfQ"
 msgstr ""
-"Este vendedor no tiene ningún pedido de compra. Cree una nueva solicitud de "
-"presupuesto"
+"Este proveedor no tiene ningún pedido de compra. Cree una nueva solicitud de"
+" presupuesto"
 
 #. module: purchase
 #: model:digest.tip,name:purchase.digest_tip_purchase_0
@@ -2883,7 +2898,7 @@ msgstr "Usuario"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_config_settings__company_currency_id
 msgid "Utility field to express amount currency"
-msgstr "Campo útil para expresar importe en divisa"
+msgstr "Campo útil para expresar la moneda del importe"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase

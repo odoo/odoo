@@ -93,7 +93,7 @@
                             <field name="menu_access"/>
                         </page>
                         <page string="Views" name="views">
-                            <field name="view_access"/>
+                            <field name="view_access" groups="base.group_system"/>
                         </page>
                         <page string="Access Rights" name="access_rights">
                             <field name="model_access">
@@ -255,7 +255,7 @@
                                     </group>
                                 </group>
                                 <group name="messaging">
-                                    <field name="signature"/>
+                                    <field name="signature" options="{'style-inline': true}"/>
                                 </group>
                             </page>
                         </notebook>
@@ -453,7 +453,7 @@
                                 </group>
                             </group>
                             <group name="signature">
-                                <field name="signature" readonly="0"/>
+                                <field name="signature" readonly="0" options="{'style-inline': true}"/>
                             </group>
                             <group name="status" string="Status" invisible="1">
                                 <field name="company_id" options="{'no_create': True}" readonly="0"
@@ -468,7 +468,7 @@
                                 </div>
                             </group>
                             <group string="Developer API Keys" help="test">
-                                <a href="https://www.odoo.com/documentation/master/webservices/odoo.html#api-keys" target="_blank">
+                                <a href="https://www.odoo.com/documentation/14.0/developer/webservices/odoo.html#api-keys" target="_blank">
                                     <i class="fa fa-fw o_button_icon fa-arrow-right"></i>
                                     <span>Documentation</span>
                                 </a>

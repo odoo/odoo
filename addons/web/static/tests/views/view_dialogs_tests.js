@@ -433,6 +433,85 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test("Form dialog replaces the context with _createContext method when specified", async function (assert) {
+        assert.expect(5);
+
+        const parent = await createParent({
+            data: this.data,
+            archs: {
+                "partner,false,form":
+                    `<form string="Partner">
+                        <sheet>
+                            <group><field name="foo"/></group>
+                        </sheet>
+                    </form>`,
+            },
+
+            mockRPC: function (route, args) {
+                if (args.method === "create") {
+                    assert.step(JSON.stringify(args.kwargs.context));
+                }
+                return this._super(route, args);
+            },
+        });
+
+        new dialogs.FormViewDialog(parent, {
+            res_model: "partner",
+            context: { answer: 42 },
+            _createContext: () => ({ dolphin: 64 }),
+        }).open();
+        await testUtils.nextTick();
+
+        assert.notOk($(".modal-body button").length,
+            "should not have any button in body");
+        assert.strictEqual($(".modal-footer button").length, 3,
+            "should have 3 buttons in footer");
+
+        await testUtils.dom.click($(".modal-footer button:contains(Save & New)"));
+        await testUtils.dom.click($(".modal-footer button:contains(Save & New)"));
+        assert.verifySteps(['{"answer":42}', '{"dolphin":64}']);
+        parent.destroy();
+    });
+
+    QUnit.test("Form dialog keeps full context when no _createContext is specified", async function (assert) {
+        assert.expect(5);
+
+        const parent = await createParent({
+            data: this.data,
+            archs: {
+                "partner,false,form":
+                    `<form string="Partner">
+                        <sheet>
+                            <group><field name="foo"/></group>
+                        </sheet>
+                    </form>`,
+            },
+
+            mockRPC: function (route, args) {
+                if (args.method === "create") {
+                    assert.step(JSON.stringify(args.kwargs.context));
+                }
+                return this._super(route, args);
+            },
+        });
+
+        new dialogs.FormViewDialog(parent, {
+            res_model: "partner",
+            context: { answer: 42 }
+        }).open();
+        await testUtils.nextTick();
+
+        assert.notOk($(".modal-body button").length,
+            "should not have any button in body");
+        assert.strictEqual($(".modal-footer button").length, 3,
+            "should have 3 buttons in footer");
+
+        await testUtils.dom.click($(".modal-footer button:contains(Save & New)"));
+        await testUtils.dom.click($(".modal-footer button:contains(Save & New)"));
+        assert.verifySteps(['{"answer":42}', '{"answer":42}']);
+        parent.destroy();
+    });
+
     QUnit.test('SelectCreateDialog: save current search', async function (assert) {
         assert.expect(4);
 
@@ -500,6 +579,40 @@ QUnit.module('Views', {
         await cpHelpers.saveFavorite('.modal');
 
         testUtils.mock.unpatch(ListController);
+        parent.destroy();
+    });
+
+    QUnit.test('SelectCreateDialog calls on_selected with every record matching the domain', async function (assert) {
+        assert.expect(1);
+
+        const parent = await createParent({
+            data: this.data,
+            archs: {
+                'partner,false,list':
+                    '<tree limit="2" string="Partner">' +
+                        '<field name="display_name"/>' +
+                        '<field name="foo"/>' +
+                    '</tree>',
+                'partner,false,search':
+                    '<search>' +
+                        '<field name="foo"/>' +
+                    '</search>',
+            },
+            session: {},
+        });
+
+        new dialogs.SelectCreateDialog(parent, {
+            res_model: 'partner',
+            on_selected: function(records) {
+                assert.equal(records.length, 3)
+            }
+        }).open();
+        await testUtils.nextTick();
+
+        await testUtils.dom.click($('thead .o_list_record_selector input'));
+        await testUtils.dom.click($('.o_list_selection_box .o_list_select_domain'));
+        await testUtils.dom.click($('.modal .o_select_button'));
+
         parent.destroy();
     });
 

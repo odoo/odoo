@@ -180,31 +180,51 @@ class Mailing(models.Model):
         self.ensure_one()
         target = self.env[self.mailing_model_real]
 
+        partner_fields = []
         if issubclass(type(target), self.pool['mail.thread.phone']):
             phone_fields = ['phone_sanitized']
         elif issubclass(type(target), self.pool['mail.thread']):
             phone_fields = target._sms_get_number_fields()
+            partner_fields = target._sms_get_partner_fields()
         else:
             phone_fields = []
             if 'mobile' in target._fields:
                 phone_fields.append('mobile')
             if 'phone' in target._fields:
                 phone_fields.append('phone')
-        if not phone_fields:
+        partner_field = next(
+            (fname for fname in partner_fields if target._fields[fname].type == 'many2one'),
+            False
+        )
+        if not phone_fields and not partner_field:
             raise UserError(_("Unsupported %s for mass SMS", self.mailing_model_id.name))
 
         query = """
             SELECT %(select_query)s
               FROM mailing_trace trace
               JOIN %(target_table)s target ON (trace.res_id = target.id)
+              %(join_add_query)s
              WHERE (%(where_query)s)
-             AND trace.mass_mailing_id = %%(mailing_id)s
-             AND trace.model = %%(target_model)s
+               AND trace.mass_mailing_id = %%(mailing_id)s
+               AND trace.model = %%(target_model)s
         """
+        if phone_fields:
+            # phone fields are checked on target mailed model
+            select_query = 'target.id, ' + ', '.join('target.%s' % fname for fname in phone_fields)
+            where_query = ' OR '.join('target.%s IS NOT NULL' % fname for fname in phone_fields)
+            join_add_query = ''
+        else:
+            # phone fields are checked on res.partner model
+            partner_phone_fields = ['mobile', 'phone']
+            select_query = 'target.id, ' + ', '.join('partner.%s' % fname for fname in partner_phone_fields)
+            where_query = ' OR '.join('partner.%s IS NOT NULL' % fname for fname in partner_phone_fields)
+            join_add_query = 'JOIN res_partner partner ON (target.%s = partner.id)' % partner_field
+
         query = query % {
-            'select_query': 'target.id, ' + ', '.join('target.%s' % fname for fname in phone_fields),
-            'where_query': ' OR '.join('target.%s IS NOT NULL' % fname for fname in phone_fields),
-            'target_table': target._table
+            'select_query': select_query,
+            'where_query': where_query,
+            'target_table': target._table,
+            'join_add_query': join_add_query,
         }
         params = {'mailing_id': self.id, 'target_model': self.mailing_model_real}
         self._cr.execute(query, params)

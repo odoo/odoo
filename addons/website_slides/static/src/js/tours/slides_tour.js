@@ -37,12 +37,8 @@ tour.register('slides_tour', {
     content: _t("Congratulations, your course has been created, but there isn't any content yet. First, let's add a <b>Section</b> to give your course a structure."),
     position: 'bottom',
 }, {
-    trigger: 'input[name="name"]',
-    content: _t("A good course has structure and a table of content. Your first section will be the <b>Introduction</b>."),
-    position: 'bottom',
-}, {
     trigger: 'button.btn-primary',
-    content: _t("Click on <b>Save</b> to apply changes."),
+    content: _t("A good course has a structure. Pick a name for your first section and click <b>Save</b> to create it."),
     position: 'bottom',
     width: 260,
 }, {

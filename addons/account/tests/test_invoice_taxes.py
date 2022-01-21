@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from odoo import fields
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged, Form
 
@@ -669,53 +668,46 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
         ], currency_id=self.currency_data['currency'], invoice_payment_term_id=self.pay_terms_a)
         invoice.action_post()
 
-    def test_changing_tax_to_caba_after_create_invoice(self):
-        tax_waiting_account = self.env['account.account'].create({
-            'name': 'TAX_WAIT',
-            'code': 'TWAIT',
-            'user_type_id': self.env.ref('account.data_account_type_current_liabilities').id,
-            'reconcile': True,
-            'company_id': self.company_data['company'].id,
-        })
-        sale_tax = self.company_data['default_tax_sale']
-        invoice = self._create_invoice([
-            (100, sale_tax),
-        ])
-        # turn on cash basis on the same tax that was used
-        self.company_data['company'].tax_exigibility = True
-        sale_tax.write({
-            'tax_exigibility': 'on_payment',
-            'cash_basis_transition_account_id': tax_waiting_account.id,
-        })
-        invoice.action_post()
-
-        tax_lines = invoice.line_ids.filtered('tax_line_id')
-        self.assertEqual(len(tax_lines), 1, 'Should have only 1 tax line')
-        self.assertNotEqual(tax_lines.price_unit, 0.0)
-        self.assertEqual(tax_lines.tax_base_amount, 100.0)
-        self.assertEqual(tax_lines.account_id.name, 'TAX_WAIT')
-
-    def test_recompute_tax_when_change_currency(self):
-        """
-        - In a multi currency company, create an invoice with the domestic
-          currency ($);
-        - Add a product (100$) with taxes;
-        -  Change the currency to a foreign one (€);
-        - The product don't change of amount but only of currency (500€);
-        - Save the invoice, and print it.
-        """
-        invoice = self._create_invoice([
-            (100, self.percent_tax_1),
-        ])
-        tax_line = invoice.line_ids.filtered('tax_line_id')
+    def test_tax_calculation_multi_currency(self):
         self.env['res.currency.rate'].create({
-            'name': fields.Date.to_string(fields.Date.today()),
-            'rate': 4.0,
+            'name': '2018-01-01',
+            'rate': 0.273748,
             'currency_id': self.currency_data['currency'].id,
             'company_id': self.env.company.id,
         })
+        self.currency_data['currency'].rounding = 0.01
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'currency_id': self.currency_data['currency'].id,
+            'invoice_date': '2018-01-01',
+            'date': '2018-01-01',
+            'invoice_line_ids': [(0, 0, {
+                'name': 'xxxx',
+                'quantity': 1,
+                'price_unit': 155.32,
+                'tax_ids': [(6, 0, self.percent_tax_1.ids)],
+            })]
+        })
+
+        self.assertRecordValues(invoice.line_ids.filtered('tax_line_id'), [{
+            'tax_base_amount': 567.38,      # 155.32 * 1 / (1 / 0.273748)
+            'balance': -119.16,             # tax_base_amount * 0.21
+        }])
+
+        self.assertRecordValues(invoice.line_ids.filtered(lambda l: not l.name), [{
+            'balance': 686.54
+        }])
+
         with Form(invoice) as invoice_form:
             invoice_form.currency_id = self.currency_data['currency']
 
-        self.assertEqual(tax_line.tax_base_amount, 25, 'Should convert tax base amount to company currency')
-        self.assertEqual(tax_line.balance, -5.25, 'Should convert balance to company currency')
+        self.assertRecordValues(invoice.line_ids.filtered('tax_line_id'), [{
+            'tax_base_amount': 567.38,
+            'balance': -119.16,
+        }])
+
+        self.assertRecordValues(invoice.line_ids.filtered(lambda l: l.account_id.internal_type == 'receivable'), [{
+            'balance': 686.54
+        }])

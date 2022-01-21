@@ -1,6 +1,8 @@
 odoo.define('web.calendar_tests', function (require) {
 "use strict";
 
+const AbstractField = require('web.AbstractField');
+const fieldRegistry = require('web.field_registry');
 var AbstractStorageService = require('web.AbstractStorageService');
 var CalendarView = require('web.CalendarView');
 var CalendarRenderer = require('web.CalendarRenderer');
@@ -597,6 +599,7 @@ QUnit.module('Views', {
         assert.containsOnce($('body'), '.modal', "there should be only one open modal");
 
         calendar.destroy();
+        testUtils.mock.unpatch(ViewDialogs.FormViewDialog);
     });
 
     QUnit.test('create event with timezone in week mode European locale', async function (assert) {
@@ -2877,7 +2880,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test("drag and drop on month mode", async function (assert) {
-        assert.expect(2);
+        assert.expect(3);
 
         const calendar = await createCalendarView({
             arch:
@@ -2901,6 +2904,14 @@ QUnit.module('Views', {
         await testUtils.fields.editInput($input, "An event");
         await testUtils.dom.click($('.modal button.btn-primary'));
         await testUtils.nextTick();
+
+        await testUtils.dragAndDrop(
+            calendar.$('.fc-event:contains("event 1")'),
+            calendar.$('.fc-day-grid .fc-row:eq(3) .fc-day-top:eq(1)'),
+            { disableDrop: true },
+        );
+        assert.hasClass(calendar.$('.o_calendar_widget > [data-event-id="1"]'), 'dayGridMonth',
+            "should have dayGridMonth class");
 
         // Move event to another day (on 19 december)
         await testUtils.dragAndDrop(
@@ -3818,6 +3829,55 @@ QUnit.module('Views', {
 
         calendar.destroy();
     });
+
+    QUnit.test("fields are added in the right order in popover", async function (assert) {
+        assert.expect(3);
+
+        const def = testUtils.makeTestPromise();
+        const DeferredWidget = AbstractField.extend({
+            async start() {
+                await this._super(...arguments);
+                await def;
+            }
+        });
+        fieldRegistry.add("deferred_widget", DeferredWidget);
+
+        const calendar = await createCalendarView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch:
+                `<calendar
+                    date_start="start"
+                    date_stop="stop"
+                    all_day="allday"
+                    mode="month"
+                >
+                    <field name="user_id" widget="deferred_widget" />
+                    <field name="name" />
+                </calendar>`,
+            archs: archs,
+            viewOptions: {
+                initialDate: initialDate,
+            },
+        });
+
+        await testUtils.dom.click(calendar.$(`[data-event-id="4"]`));
+        assert.containsNone(calendar, ".o_cw_popover");
+
+        def.resolve();
+        await testUtils.nextTick();
+        assert.containsOnce(calendar, ".o_cw_popover");
+
+        assert.strictEqual(
+            calendar.$(".o_cw_popover .o_cw_popover_fields_secondary").text(),
+            "user : name : event 4"
+        );
+
+        calendar.destroy();
+        delete fieldRegistry.map.deferred_widget;
+    });
+
 });
 
 });

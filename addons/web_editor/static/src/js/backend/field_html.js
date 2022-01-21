@@ -108,7 +108,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
         }
         var _super = this._super.bind(this);
         return this.wysiwyg.saveModifiedImages(this.$content).then(function () {
-            return self.wysiwyg.save().then(function (result) {
+            return self.wysiwyg.save(self.nodeOptions).then(function (result) {
                 self._isDirty = result.isDirty;
                 _super();
             });
@@ -225,7 +225,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
                         toolbar.splice(-1, 0, ['view', ['codeview']]);
                     }
                 }
-                if (self.field.sanitize && self.field.sanitize_tags) {
+                if (self.model === "mail.compose.message" || self.model === "mailing.mailing") {
                     options.noVideos = true;
                 }
                 options.prettifyHtml = false;
@@ -327,6 +327,11 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
                         return;
                     }
                     var cwindow = self.$iframe[0].contentWindow;
+                    try {
+                        cwindow.document;
+                    } catch (e) {
+                        return;
+                    }
                     cwindow.document
                         .open("text/html", "replace")
                         .write(
@@ -458,7 +463,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      * @param {OdooEvent} ev
      */
     _onKeydown: function (ev) {
-        if (ev.which === $.ui.keyCode.ENTER && $(ev.target).is('textarea')) {
+        if (ev.which === $.ui.keyCode.ENTER) {
             ev.stopPropagation();
             return;
         }

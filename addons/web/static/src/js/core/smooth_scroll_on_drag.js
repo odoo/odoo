@@ -90,6 +90,7 @@ const SmoothScrollOnDrag = Class.extend(mixins.ParentedMixin, {
      * @param {jQuery} [options.offsetElements.$left] Visible left offset element which width
      *        will be taken into account when triggering scroll at the left side of the
      *        $scrollTarget.
+     * @param {boolean} [options.disableHorizontalScroll = false] Disable horizontal scroll if not needed.
      */
     init(parent, $element, $scrollTarget, options = {}) {
         mixins.ParentedMixin.init.call(this);
@@ -126,6 +127,7 @@ const SmoothScrollOnDrag = Class.extend(mixins.ParentedMixin, {
         };
 
         this.options.jQueryDraggableOptions.scroll = false;
+        this.options.disableHorizontalScroll = this.options.disableHorizontalScroll || false;
         const draggableOptions = Object.assign({}, this.options.jQueryDraggableOptions, {
             start: (ev, ui) => this._onSmoothDragStart(ev, ui, this.options.jQueryDraggableOptions.start),
             drag: (ev, ui) => this._onSmoothDrag(ev, ui, this.options.jQueryDraggableOptions.drag),
@@ -203,10 +205,12 @@ const SmoothScrollOnDrag = Class.extend(mixins.ParentedMixin, {
                     this.$scrollTarget.scrollTop() +
                     this.verticalDelta
                 );
-                this.$scrollTarget.scrollLeft(
-                    this.$scrollTarget.scrollLeft() +
-                    this.horizontalDelta
-                );
+                if (!this.options.disableHorizontalScroll) {
+                    this.$scrollTarget.scrollLeft(
+                        this.$scrollTarget.scrollLeft() +
+                        this.horizontalDelta
+                    );
+                }
             },
             this.options.scrollTimerInterval
         );

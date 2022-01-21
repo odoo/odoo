@@ -60,6 +60,21 @@ var dom = {
         }
     },
     /**
+     * Detects if 2 elements are colliding.
+     *
+     * @param {Element} el1
+     * @param {Element} el2
+     * @returns {boolean}
+     */
+     areColliding(el1, el2) {
+        const el1Rect = el1.getBoundingClientRect();
+        const el2Rect = el2.getBoundingClientRect();
+        return el1Rect.bottom > el2Rect.top
+            && el1Rect.top < el2Rect.bottom
+            && el1Rect.right > el2Rect.left
+            && el1Rect.left < el2Rect.right;
+    },
+    /**
      * Autoresize a $textarea node, by recomputing its height when necessary
      * @param {number} [options.min_height] by default, 50.
      * @param {Widget} [options.parent] if set, autoresize will listen to some
@@ -343,17 +358,35 @@ var dom = {
             // part, the button is disabled without any visual effect.
             $button.addClass('o_debounce_disabled');
             Promise.resolve(dom.DEBOUNCE && concurrency.delay(dom.DEBOUNCE)).then(function () {
-                $button.addClass('disabled').prop('disabled', true);
                 $button.removeClass('o_debounce_disabled');
-
-                return Promise.resolve(result).then(function () {
-                    $button.removeClass('disabled').prop('disabled', false);
-                }).guardedCatch(function () {
-                    $button.removeClass('disabled').prop('disabled', false);
-                });
+                const restore = dom.addButtonLoadingEffect($button[0]);
+                return Promise.resolve(result).then(restore).guardedCatch(restore);
             });
 
             return result;
+        };
+    },
+    /**
+     * Gives the button a loading effect by disabling it and adding a `fa`
+     * spinner icon.
+     * The existing button `fa` icons will be hidden through css.
+     *
+     * @param {HTMLElement} btn - the button to disable/load
+     * @return {function} a callback function that will restore the button
+     *         initial state
+     */
+    addButtonLoadingEffect: function (btn) {
+        const $btn = $(btn);
+        $btn.addClass('o_website_btn_loading disabled');
+        $btn.prop('disabled', true);
+        const $loader = $('<span/>', {
+            class: 'fa fa-refresh fa-spin mr-2',
+        });
+        $btn.prepend($loader);
+        return () => {
+             $btn.removeClass('o_website_btn_loading disabled');
+             $btn.prop('disabled', false);
+             $loader.remove();
         };
     },
     /**
@@ -466,6 +499,9 @@ var dom = {
         }
         if (options && options.prop) {
             $input.prop(options.prop);
+        }
+        if (options && options.role) {
+            $input.attr('role', options.role);
         }
         return $container.append($input, $label);
     },
@@ -593,10 +629,11 @@ var dom = {
         core.bus.on('resize', null, debouncedAdapt);
         _adapt();
 
+        $el.data('dom:autoMoreMenu:adapt', _adapt);
         $el.data('dom:autoMoreMenu:destroy', function () {
             _restore();
             core.bus.off('resize', null, debouncedAdapt);
-            $el.removeData('dom:autoMoreMenu:destroy');
+            $el.removeData(['dom:autoMoreMenu:destroy', 'dom:autoMoreMenu:adapt']);
         });
 
         function _restore() {

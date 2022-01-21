@@ -53,4 +53,5 @@ Sheet, now only Vertical format has been permitted Which is Supported By Odoo.
         'demo/account_payment_demo.xml',
         'demo/account_invoice_demo.xml',
     ],
+    'license': 'LGPL-3',
 }

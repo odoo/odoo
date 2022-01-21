@@ -53,4 +53,5 @@ but you will need set manually account defaults for taxes.
     'demo': [
         'demo/demo_company.xml',
     ],
+    'license': 'LGPL-3',
 }

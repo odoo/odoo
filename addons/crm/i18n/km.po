@@ -7,7 +7,7 @@
 # Sengtha Chay <sengtha@gmail.com>, 2020
 # Chan Nath <channath@gmail.com>, 2020
 # Samkhann Seang <seangsamkhann@gmail.com>, 2020
-# Lux Sok <sok.lux@gmail.com>, 2020
+# Lux Sok <sok.lux@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:11+0000\n"
-"Last-Translator: Lux Sok <sok.lux@gmail.com>, 2020\n"
+"Last-Translator: Lux Sok <sok.lux@gmail.com>, 2021\n"
 "Language-Team: Khmer (https://www.transifex.com/odoo/teams/41243/km/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -169,6 +169,14 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lost_reason_view_form
 msgid "<span class=\"o_stat_text\"> Leads</span>"
+msgstr ""
+
+#. module: crm
+#: code:addons/crm/models/crm_team.py:0
+#, python-format
+msgid ""
+"<p>As you don't belong to any Sales Team, Odoo opens the first one by "
+"default.</p>"
 msgstr ""
 
 #. module: crm
@@ -1262,6 +1270,12 @@ msgid "From %(source_name)s : %(source_subject)s"
 msgstr ""
 
 #. module: crm
+#: code:addons/crm/models/crm_lead.py:0
+#, python-format
+msgid "From %(source_name)s"
+msgstr ""
+
+#. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_my_activities_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
@@ -2092,8 +2106,8 @@ msgid ""
 "Odoo helps you keep track of your sales pipeline to follow\n"
 "                    up potential sales and better forecast your future revenues."
 msgstr ""
-"Odoo ជួយអ្នកក្នុងការតាមដានបំពង់លក់របស់អ្នកដើម្បីធ្វើតាម                     "
-"ការលក់មានសក្តានុពលនិងការព្យាករណ៍ប្រាក់ចំណូលរបស់អ្នកនាពេលអនាគត។"
+"Odoo ជួយអ្នកក្នុងការតាមដានបំពង់លក់របស់អ្នកដើម្បីធ្វើតាម "
+"                    ការលក់មានសក្តានុពលនិងការព្យាករណ៍ប្រាក់ចំណូលរបស់អ្នកនាពេលអនាគត។"
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_2
@@ -2154,6 +2168,12 @@ msgstr ""
 "ការវិភាគតាមឱកាសផ្តល់ឱ្យអ្នកនូវការចូលទៅកាន់ឱកាសរបស់អ្នកភ្លាមៗជាមួយនឹងព័ត៌មានដូចជាប្រាក់ចំណូលដែលបានគ្រោងទុកការចំណាយដែលបានគ្រោងទុកការខកខានពេលវេលាកំណត់ឬចំនួននៃអន្តរកម្មក្នុងមួយឱកាស។"
 " "
 "របាយការណ៍នេះត្រូវបានប្រើប្រាស់យ៉ាងសំខាន់ដោយអ្នកគ្រប់គ្រងផ្នែកលក់ដើម្បីធ្វើការត្រួតពិនិត្យជាទៀងទាត់ជាមួយបណ្តាញចែកចាយ។"
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_res_partner__opportunity_count_ids
+#: model:ir.model.fields,field_description:crm.field_res_users__opportunity_count_ids
+msgid "Opportunities Count"
+msgstr "រាប់ឱកាស"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__opportunities_amount
@@ -2265,6 +2285,7 @@ msgstr ""
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_action_team_overdue_opportunity
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Overdue Opportunities"
 msgstr "ឱកាសត្រូវបានរំលងផុត"
 
@@ -2803,6 +2824,12 @@ msgstr "ធែក"
 #: model:ir.ui.menu,name:crm.sales_team_menu_team_pipeline
 msgid "Teams"
 msgstr "ក្រុម"
+
+#. module: crm
+#: model:ir.model.fields,help:crm.field_res_partner__opportunity_count_ids
+#: model:ir.model.fields,help:crm.field_res_users__opportunity_count_ids
+msgid "Technical field used for stat button"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_id

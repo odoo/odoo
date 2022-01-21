@@ -23,7 +23,7 @@ from lxml import etree
 from contextlib import closing
 from distutils.version import LooseVersion
 from reportlab.graphics.barcode import createBarcodeDrawing
-from PyPDF2 import PdfFileWriter, PdfFileReader
+from PyPDF2 import PdfFileWriter, PdfFileReader, utils
 from collections import OrderedDict
 from collections.abc import Iterable
 from PIL import Image, ImageFile
@@ -248,7 +248,6 @@ class IrActionsReport(models.Model):
         '''
         return wkhtmltopdf_state
 
-    @api.model
     def get_paperformat(self):
         return self.paperformat_id or self.env.company.paperformat_id
 
@@ -502,39 +501,57 @@ class IrActionsReport(models.Model):
         return report_obj.with_context(context).sudo().search(conditions, limit=1)
 
     @api.model
-    def barcode(self, barcode_type, value, width=600, height=100, humanreadable=0, quiet=1, mask=None):
+    def barcode(self, barcode_type, value, **kwargs):
+        defaults = {
+            'width': (600, int),
+            'height': (100, int),
+            'humanreadable': (False, lambda x: bool(int(x))),
+            'quiet': (True, lambda x: bool(int(x))),
+            'mask': (None, lambda x: x),
+            'barBorder': (4, int),
+            # The QR code can have different layouts depending on the Error Correction Level
+            # See: https://en.wikipedia.org/wiki/QR_code#Error_correction
+            # Level 'L' – up to 7% damage   (default)
+            # Level 'M' – up to 15% damage  (i.e. required by l10n_ch QR bill)
+            # Level 'Q' – up to 25% damage
+            # Level 'H' – up to 30% damage
+            'barLevel': ('L', lambda x: x in ('L', 'M', 'Q', 'H') and x or 'L'),
+        }
+        kwargs = {k: validator(kwargs.get(k, v)) for k, (v, validator) in defaults.items()}
+        kwargs['humanReadable'] = kwargs.pop('humanreadable')
+
         if barcode_type == 'UPCA' and len(value) in (11, 12, 13):
             barcode_type = 'EAN13'
             if len(value) in (11, 12):
                 value = '0%s' % value
-        try:
-            width, height, humanreadable, quiet = int(width), int(height), bool(int(humanreadable)), bool(int(quiet))
+        elif barcode_type == 'auto':
+            symbology_guess = {8: 'EAN8', 13: 'EAN13'}
+            barcode_type = symbology_guess.get(len(value), 'Code128')
+        elif barcode_type == 'QR':
             # for `QR` type, `quiet` is not supported. And is simply ignored.
             # But we can use `barBorder` to get a similar behaviour.
-            bar_border = 4
-            if barcode_type == 'QR' and quiet:
-                bar_border = 0
+            if kwargs['quiet']:
+                kwargs['barBorder'] = 0
 
-            barcode = createBarcodeDrawing(
-                barcode_type, value=value, format='png', width=width, height=height,
-                humanReadable=humanreadable, quiet=quiet, barBorder=bar_border
-            )
+        try:
+            barcode = createBarcodeDrawing(barcode_type, value=value, format='png', **kwargs)
 
             # If a mask is asked and it is available, call its function to
             # post-process the generated QR-code image
-            if mask:
+            if kwargs['mask']:
                 available_masks = self.get_available_barcode_masks()
-                mask_to_apply = available_masks.get(mask)
+                mask_to_apply = available_masks.get(kwargs['mask'])
                 if mask_to_apply:
-                    mask_to_apply(width, height, barcode)
+                    mask_to_apply(kwargs['width'], kwargs['height'], barcode)
 
             return barcode.asString('png')
         except (ValueError, AttributeError):
             if barcode_type == 'Code128':
                 raise ValueError("Cannot convert into barcode.")
+            elif barcode_type == 'QR':
+                raise ValueError("Cannot convert into QR code.")
             else:
-                return self.barcode('Code128', value, width=width, height=height,
-                    humanreadable=humanreadable, quiet=quiet)
+                return self.barcode('Code128', value, **kwargs)
 
     @api.model
     def get_available_barcode_masks(self):
@@ -678,11 +695,40 @@ class IrActionsReport(models.Model):
         if len(streams) == 1:
             result = streams[0].getvalue()
         else:
-            result = self._merge_pdfs(streams)
+            try:
+                result = self._merge_pdfs(streams)
+            except utils.PdfReadError:
+                raise UserError(_("One of the documents, you try to merge is encrypted"))
 
         # We have to close the streams after PdfFileWriter's call to write()
         close_streams(streams)
         return result
+
+    def _get_unreadable_pdfs(self, streams):
+        unreadable_streams = []
+
+        for stream in streams:
+            writer = PdfFileWriter()
+            result_stream = io.BytesIO()
+            try:
+                reader = PdfFileReader(stream)
+                writer.appendPagesFromReader(reader)
+                writer.write(result_stream)
+            except utils.PdfReadError:
+                unreadable_streams.append(stream)
+
+        return unreadable_streams
+
+    def _raise_on_unreadable_pdfs(self, streams, stream_record):
+        unreadable_pdfs = self._get_unreadable_pdfs(streams)
+        if unreadable_pdfs:
+            records = [stream_record[s].name for s in unreadable_pdfs if s in stream_record]
+            raise UserError(_(
+                "Odoo is unable to merge the PDFs attached to the following records:\n"
+                "%s\n\n"
+                "Please exclude them from the selection to continue. It's possible to "
+                "still retrieve those PDFs by selecting each of the affected records "
+                "individually, which will avoid merging.") % "\n".join(records))
 
     def _merge_pdfs(self, streams):
         writer = PdfFileWriter()
@@ -699,13 +745,13 @@ class IrActionsReport(models.Model):
             data = {}
         data.setdefault('report_type', 'pdf')
 
-        # access the report details with sudo() but evaluation context as current user
+        # access the report details with sudo() but evaluation context as sudo(False)
         self_sudo = self.sudo()
 
         # In case of test environment without enough workers to perform calls to wkhtmltopdf,
         # fallback to render_html.
         if (tools.config['test_enable'] or tools.config['test_file']) and not self.env.context.get('force_report_rendering'):
-            return self._render_qweb_html(res_ids, data=data)
+            return self_sudo._render_qweb_html(res_ids, data=data)
 
         # As the assets are generated during the same transaction as the rendering of the
         # templates calling them, there is a scenario where the assets are unreachable: when
@@ -735,6 +781,8 @@ class IrActionsReport(models.Model):
             return self_sudo.with_context(context)._render_qweb_html(res_ids, data=data)[0]
 
         save_in_attachment = OrderedDict()
+        # Maps the streams in `save_in_attachment` back to the records they came from
+        stream_record = dict()
         if res_ids:
             # Dispatch the records by ones having an attachment and ones requesting a call to
             # wkhtmltopdf.
@@ -745,7 +793,9 @@ class IrActionsReport(models.Model):
                 for record_id in record_ids:
                     attachment = self_sudo.retrieve_attachment(record_id)
                     if attachment:
-                        save_in_attachment[record_id.id] = self_sudo._retrieve_stream_from_attachment(attachment)
+                        stream = self_sudo._retrieve_stream_from_attachment(attachment)
+                        save_in_attachment[record_id.id] = stream
+                        stream_record[stream] = record_id
                     if not self_sudo.attachment_use or not attachment:
                         wk_record_ids += record_id
             else:
@@ -757,6 +807,7 @@ class IrActionsReport(models.Model):
         # - The report is not fully present in attachments.
         if save_in_attachment and not res_ids:
             _logger.info('The PDF report has been generated from attachments.')
+            self._raise_on_unreadable_pdfs(save_in_attachment.values(), stream_record)
             return self_sudo._post_pdf(save_in_attachment), 'pdf'
 
         if self.get_wkhtmltopdf_state() == 'install':
@@ -786,6 +837,7 @@ class IrActionsReport(models.Model):
             set_viewport_size=context.get('set_viewport_size'),
         )
         if res_ids:
+            self._raise_on_unreadable_pdfs(save_in_attachment.values(), stream_record)
             _logger.info('The PDF report has been generated for model: %s, records %s.' % (self_sudo.model, str(res_ids)))
             return self_sudo._post_pdf(save_in_attachment, pdf_content=pdf_content, res_ids=html_ids), 'pdf'
         return pdf_content, 'pdf'
@@ -796,7 +848,7 @@ class IrActionsReport(models.Model):
             data = {}
         data.setdefault('report_type', 'text')
         data = self._get_rendering_context(docids, data)
-        return self._render_template(self.sudo().report_name, data), 'text'
+        return self._render_template(self.report_name, data), 'text'
 
     @api.model
     def _render_qweb_html(self, docids, data=None):
@@ -806,31 +858,29 @@ class IrActionsReport(models.Model):
             data = {}
         data.setdefault('report_type', 'html')
         data = self._get_rendering_context(docids, data)
-        return self._render_template(self.sudo().report_name, data), 'html'
+        return self._render_template(self.report_name, data), 'html'
 
-    @api.model
     def _get_rendering_context_model(self):
         report_model_name = 'report.%s' % self.report_name
         return self.env.get(report_model_name)
 
-    @api.model
     def _get_rendering_context(self, docids, data):
-        # access the report details with sudo() but evaluation context as current user
-        self_sudo = self.sudo()
-
         # If the report is using a custom model to render its html, we must use it.
         # Otherwise, fallback on the generic html rendering.
-        report_model = self_sudo._get_rendering_context_model()
+        report_model = self._get_rendering_context_model()
 
         data = data and dict(data) or {}
 
         if report_model is not None:
+            # _render_ may be executed in sudo but evaluation context as real user
+            report_model = report_model.sudo(False)
             data.update(report_model._get_report_values(docids, data=data))
         else:
-            docs = self.env[self_sudo.model].browse(docids)
+            # _render_ may be executed in sudo but evaluation context as real user
+            docs = self.env[self.model].sudo(False).browse(docids)
             data.update({
                 'doc_ids': docids,
-                'doc_model': self_sudo.model,
+                'doc_model': self.model,
                 'docs': docs,
             })
         return data

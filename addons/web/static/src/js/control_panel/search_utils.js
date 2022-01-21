@@ -47,6 +47,8 @@ odoo.define('web.searchUtils', function (require) {
         ],
         id: [
             { symbol: "=", description: _lt("is") },
+            { symbol: "<=", description: _lt("less than or equal to")},
+            { symbol: ">", description: _lt("greater than")},
         ],
         number: [
             { symbol: "=", description: _lt("is equal to") },

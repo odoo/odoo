@@ -58,6 +58,9 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
                 return $('#comparelist .o_product_panel_content').html();
             }
         });
+        // We trigger a resize to launch the event that checks if this element hides
+        // a button when the page is loaded.
+        $(window).trigger('resize');
 
         $(document.body).on('click.product_comparaison_widget', '.comparator-popover .o_comparelist_products .o_remove', function (ev) {
             ev.preventDefault();
@@ -287,4 +290,5 @@ publicWidget.registry.ProductComparison = publicWidget.Widget.extend({
         $target.find('.fa-chevron-circle-down, .fa-chevron-circle-right').toggleClass('fa-chevron-circle-down fa-chevron-circle-right');
     },
 });
+return ProductComparison;
 });

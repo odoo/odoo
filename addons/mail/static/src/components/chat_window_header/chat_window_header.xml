@@ -9,7 +9,7 @@
                         <i class="fa fa-arrow-left"/>
                     </div>
                 </t>
-                <t t-if="chatWindow.thread">
+                <t t-if="chatWindow.thread and chatWindow.thread.model === 'mail.channel'">
                     <ThreadIcon
                         class="o_ChatWindowHeader_icon o_ChatWindowHeader_item"
                         threadLocalId="chatWindow.thread.localId"

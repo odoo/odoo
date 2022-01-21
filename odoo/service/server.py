@@ -296,6 +296,7 @@ class FSWatcherInotify(FSWatcherBase):
     def stop(self):
         self.started = False
         self.thread.join()
+        del self.watcher  # ensures inotify watches are freed up before reexec
 
 
 #----------------------------------------------------------
@@ -1239,7 +1240,6 @@ def start(preload=None, stop=False):
     global server
 
     load_server_wide_modules()
-    odoo.service.wsgi_server._patch_xmlrpc_marshaller()
 
     if odoo.evented:
         server = GeventServer(odoo.service.wsgi_server.application)

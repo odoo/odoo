@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.tests import tagged
+from odoo.tests import tagged, Form
 
 
 @tagged('post_install', '-at_install')
@@ -282,3 +282,42 @@ class TestRepair(AccountTestInvoicingCommon):
         repair.action_repair_cancel_draft()
         # Linked invoice should be unlinked
         self.assertEqual(len(repair.invoice_id), 0, "No invoice should be exists for this repair order")
+
+    def test_03_repair_multicompany(self):
+        """ This test ensures that the correct taxes are selected when the user fills in the RO form """
+
+        company01 = self.env.company
+        company02 = self.env['res.company'].create({
+            'name': 'SuperCompany',
+        })
+
+        tax01 = self.env["account.tax"].create({
+            "name": "C01 Tax",
+            "amount": "0.00",
+            "company_id": company01.id
+        })
+        tax02 = self.env["account.tax"].create({
+            "name": "C02 Tax",
+            "amount": "0.00",
+            "company_id": company02.id
+        })
+
+        super_product = self.env['product.template'].create({
+            "name": "SuperProduct",
+            "taxes_id": [(4, tax01.id), (4, tax02.id)],
+        })
+        super_variant = super_product.product_variant_id
+        self.assertEqual(super_variant.taxes_id, tax01 | tax02)
+
+        ro_form = Form(self.env['repair.order'])
+        ro_form.product_id = super_variant
+        ro_form.partner_id = company01.partner_id
+        with ro_form.operations.new() as ro_line:
+            ro_line.product_id = super_variant
+        with ro_form.fees_lines.new() as fee_line:
+            fee_line.product_id = super_variant
+        repair_order = ro_form.save()
+
+        # tax02 should not be present since it belongs to the second company.
+        self.assertEqual(repair_order.operations.tax_id, tax01)
+        self.assertEqual(repair_order.fees_lines.tax_id, tax01)

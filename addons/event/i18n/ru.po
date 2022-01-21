@@ -6,7 +6,6 @@
 # Андрей Гусев <gaussgss@gmail.com>, 2020
 # Vasiliy Korobatov <korobatov@gmail.com>, 2020
 # Ekaterina <nawsikaya@bk.ru>, 2020
-# ILMIR <karamov@it-projects.info>, 2020
 # Константин Коровин <korovin74@gmail.com>, 2020
 # Irina Fedulova <istartlin@gmail.com>, 2020
 # Martin Trigaux, 2020
@@ -14,8 +13,11 @@
 # 6da4f49c4b78e697e34b24b2a66289f5, 2020
 # Артур Чеботарь <artcha.chebotar@gmail.com>, 2020
 # Oleg Kuryan <oleg@ventor.tech>, 2020
-# Сергей Шебанин <sergey@shebanin.ru>, 2020
-# Ivan Yelizariev <yelizariev@itpp.dev>, 2020
+# Ivan Yelizariev // IEL (ellui) <yelizariev@itpp.dev>, 2021
+# Сергей Шебанин <sergey@shebanin.ru>, 2021
+# ILMIR <karamov@it-projects.info>, 2021
+# Диляра Дельтаева <dilya.kz93@gmail.com>, 2021
+# Evgeniia Kotova, 2022
 # 
 msgid ""
 msgstr ""
@@ -23,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:12+0000\n"
-"Last-Translator: Ivan Yelizariev <yelizariev@itpp.dev>, 2020\n"
+"Last-Translator: Evgeniia Kotova, 2022\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,7 +37,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_res_partner__event_count
 #: model:ir.model.fields,field_description:event.field_res_users__event_count
 msgid "# Events"
-msgstr ""
+msgstr "События"
 
 #. module: event
 #: model:mail.template,subject:event.event_reminder
@@ -86,6 +88,7 @@ msgid ""
 "<b>Business Room</b> - To discuss implementation methodologies, best sales "
 "practices, etc."
 msgstr ""
+"<b>Бизнес-комната</b> - Обсуджение методологий, техники продаж и прочее"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -93,6 +96,8 @@ msgid ""
 "<b>Technical Rooms</b> - One dedicated to advanced Odoo developers, one for "
 "new developers."
 msgstr ""
+"<b>Технические комнаты</b> - Для продвинутых разработчиков Odoo и для "
+"начинающих"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -100,6 +105,8 @@ msgid ""
 "<b>The Design Fair is preceded by 2 days of Training Sessions for "
 "experts!</b><br> We propose 3 different training sessions, 2 days each."
 msgstr ""
+"<b>Два дня тренинга для экспертов Дизайн-эвента</b><br> Три разных тренинг-"
+"сессии, длительность каждой два дня"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -122,7 +129,7 @@ msgstr ""
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "<b>Workshop Room</b> - Mainly for developers."
-msgstr ""
+msgstr "<b>Воркшоп-комната</b> - Для девелоперов"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -196,6 +203,8 @@ msgid ""
 "<i class=\"fa fa-info-circle mr-2\"></i>This event and all the conferences "
 "are in <b>English</b>!"
 msgstr ""
+"<i class=\"fa fa-info-circle mr-2\"></i>Этот эвент и все события проходят на"
+" языке:<b>Английский язык</b>!"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
@@ -728,7 +737,7 @@ msgstr "Мероприятие"
 #: model:ir.model.fields,field_description:event.field_event_event__activity_exception_decoration
 #: model:ir.model.fields,field_description:event.field_event_registration__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "Оформление исключения активности"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__activity_state
@@ -740,7 +749,7 @@ msgstr "Статус действия"
 #: model:ir.model.fields,field_description:event.field_event_event__activity_type_icon
 #: model:ir.model.fields,field_description:event.field_event_registration__activity_type_icon
 msgid "Activity Type Icon"
-msgstr ""
+msgstr "Иконка типа действия"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
@@ -764,17 +773,17 @@ msgstr "Добавить событие"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Add a note..."
-msgstr ""
+msgstr "Добавить комментарий..."
 
 #. module: event
 #: model:res.groups,name:event.group_event_manager
 msgid "Administrator"
-msgstr ""
+msgstr "Администратор"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_track_exhibitor
 msgid "Advanced Sponsors"
-msgstr ""
+msgstr "Особые спонсоры"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_type__after_sub
@@ -791,12 +800,12 @@ msgstr "После события "
 #. module: event
 #: model:event.tag.category,name:event.event_tag_category_1
 msgid "Age"
-msgstr ""
+msgstr "Возраст"
 
 #. module: event
 #: model:event.event,name:event.event_6
 msgid "An unpublished event"
-msgstr ""
+msgstr "Неопубликованное событие"
 
 #. module: event
 #: model_terms:event.event,description:event.event_7
@@ -892,11 +901,13 @@ msgid ""
 "Autoconfirm Registrations. Registrations will automatically be confirmed "
 "upon creation."
 msgstr ""
+"Автоматически подтверждать регистрацию. Регистрация будет подтверждена "
+"автоматически после создания."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__auto_confirm
 msgid "Autoconfirmation"
-msgstr ""
+msgstr "Авто-подтверждение"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__auto_confirm
@@ -989,13 +1000,13 @@ msgstr ""
 #. module: event
 #: model:event.stage,name:event.event_stage_booked
 msgid "Booked"
-msgstr ""
+msgstr "Забронировано"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__partner_id
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid "Booked by"
-msgstr ""
+msgstr "Забронировано"
 
 #. module: event
 #: model:event.event,subtitle:event.event_5
@@ -1007,7 +1018,7 @@ msgstr ""
 #. module: event
 #: model:event.event,name:event.event_4
 msgid "Business workshops"
-msgstr ""
+msgstr "Бизнес воркшоп"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__utm_campaign_id
@@ -1123,7 +1134,7 @@ msgstr "Подтвердить"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid "Confirm Attendance"
-msgstr ""
+msgstr "Подтвердить участие"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -1738,7 +1749,7 @@ msgstr "Серая метка Канбан"
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Group By"
-msgstr "Группировать по"
+msgstr "Группировка"
 
 #. module: event
 #: model_terms:res.partner,website_description:event.res_partner_event_1
@@ -1796,7 +1807,7 @@ msgstr "Иконка"
 #: model:ir.model.fields,help:event.field_event_event__activity_exception_icon
 #: model:ir.model.fields,help:event.field_event_registration__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "Значок, обозначающий действие исключения."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__message_needaction
@@ -2568,7 +2579,7 @@ msgstr "Ответственный"
 #: model:ir.model.fields,field_description:event.field_event_event__message_has_sms_error
 #: model:ir.model.fields,field_description:event.field_event_registration__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr ""
+msgstr "Ошибка доставки SMS"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -3018,7 +3029,7 @@ msgstr "Тип"
 #: model:ir.model.fields,help:event.field_event_event__activity_exception_decoration
 #: model:ir.model.fields,help:event.field_event_registration__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "Тип активности исключения в записи."
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_registration__state__draft
@@ -3117,7 +3128,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__address_id
 msgid "Venue"
-msgstr ""
+msgstr "Место проведения"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form

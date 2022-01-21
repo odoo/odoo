@@ -10,8 +10,6 @@
 # Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2020
 # Eloïse Stilmant <est@odoo.com>, 2020
 # Laura Piraux <lap@odoo.com>, 2020
-# Cécile Collart <cco@odoo.com>, 2020
-# Alexandra Jubert <aju@odoo.com>, 2020
 # Olivier ANDRE <frsw194@gmail.com>, 2020
 # Celia Tydgat <cty@odoo.com>, 2020
 # Adrien Heyse <ahe@odoo.com>, 2020
@@ -21,6 +19,12 @@
 # f477e7ae9c75a2428d6113663a8354fe_bcd021c <0ff4ce060a36f446722508a48e99c22a_347081>, 2020
 # guillaume bauer <guillaume.bauer@syentys.fr>, 2020
 # Arnaud Willem <contact@arnaud-willem.eu>, 2020
+# Geoffrey_GMF <gmf@odoo.com>, 2021
+# Alexandra Jubert <aju@odoo.com>, 2021
+# Yann Papouin <ypa@decgroupe.com>, 2021
+# Loïc Le Floch <loic.lefloch@auguria.fr>, 2021
+# Sebastien LANGE, 2021
+# Cécile Collart <cco@odoo.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -28,7 +32,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-29 13:45+0000\n"
 "PO-Revision-Date: 2020-09-07 08:12+0000\n"
-"Last-Translator: Arnaud Willem <contact@arnaud-willem.eu>, 2020\n"
+"Last-Translator: Cécile Collart <cco@odoo.com>, 2021\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -232,13 +236,13 @@ msgstr "Toutes les dépenses"
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_actions_my_all
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_my_expenses_all
 msgid "All My Expenses"
-msgstr ""
+msgstr "Toutes mes notes de frais"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_sheet_all
 msgid "All Reports"
-msgstr ""
+msgstr "Toues les rapports"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__amount_residual
@@ -290,12 +294,14 @@ msgstr "Approuver"
 #. module: hr_expense
 #: model:ir.actions.server,name:hr_expense.hr_expense_sheet_approve_action_server
 msgid "Approve Report"
-msgstr ""
+msgstr "Approuver le rapport"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_to_approve
 msgid "Approve the new expense reports submitted by the employees you manage."
 msgstr ""
+"Approuvez les nouvelles notes de frais soumises par les employés que vous "
+"gérez."
 
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__state__approved
@@ -317,7 +323,7 @@ msgstr "Archivé"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Attach Receipt"
-msgstr ""
+msgstr "Joindre le reçu"
 
 #. module: hr_expense
 #. openerp-web
@@ -434,7 +440,7 @@ msgstr "Créer des notes de frais provenant des emails entrants"
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_all
 msgid "Create new expenses to get statistics."
-msgstr ""
+msgstr "Créez de nouvelles dépenses pour obtenir des statistiques."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__create_uid
@@ -488,12 +494,12 @@ msgstr "Description"
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_all
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_unsubmitted
 msgid "Did you try the mobile app?"
-msgstr ""
+msgstr "Avez-vous essayé l'application mobile ?"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Digitalize your receipts with OCR and Artificial Intelligence"
-msgstr ""
+msgstr "Digitalisez vos reçus avec l'OCR et l'Intelligence Artificielle"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_account_journal__display_name
@@ -519,6 +525,9 @@ msgid ""
 "picture of your receipt and let Odoo digitalizes it for you. The OCR and "
 "Artificial Intelligence will fill the data automatically."
 msgstr ""
+"Ne gardez plus vos notes de frais dans vos poches. Prenez simplement une "
+"photo de votre reçu et laissez Odoo le numériser pour vous. L'OCR et "
+"l'Intelligence Artificielle rempliront les données automatiquement."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
@@ -574,7 +583,7 @@ msgstr "Validation des Notes de Frais"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_employee_tree_inherit_expense
 msgid "Expense Approver"
-msgstr ""
+msgstr "Approbateur des dépenses"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__date
@@ -585,7 +594,7 @@ msgstr "Date de la dépense"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Expense Digitalization (OCR)"
-msgstr ""
+msgstr "Numérisation des dépenses (OCR)"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__journal_id
@@ -691,6 +700,8 @@ msgstr "Note de frais refusée"
 msgid ""
 "Expense reports regroup all the expenses incurred during a specific event."
 msgstr ""
+"Les notes de frais regroupent l'ensemble des dépenses engagées lors d'un "
+"événement précis."
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_account_move_line__expense_id
@@ -773,7 +784,7 @@ msgstr "Notes de frais à traiter"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__is_refused
 msgid "Explicitly Refused by manager or accountant"
-msgstr ""
+msgstr "Refusé explicitement par le manager ou le comptable"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_follower_ids
@@ -1022,7 +1033,7 @@ msgstr "Mes notes de frais"
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_actions_my_unsubmitted
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_my_expenses_to_submit
 msgid "My Expenses to Report"
-msgstr ""
+msgstr "Mes notes de frais à déclarer"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_my_all
@@ -1111,19 +1122,19 @@ msgstr "Pas de données"
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_product
 msgid "No expense products found. Let's create one!"
-msgstr ""
+msgstr "Aucun produit de dépense trouvé. Créons-en un !"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_my_all
 msgid "No expense report found. Let's create one!"
-msgstr ""
+msgstr "Aucun rapport de notes de frais trouvé. Créons-en un !"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_to_approve
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_to_pay
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_to_post
 msgid "No expense reports found"
-msgstr ""
+msgstr "Aucun rapport trouvé"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all
@@ -1403,7 +1414,7 @@ msgstr "Rembourser les notes de frais sur la fiche de paie"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Reimburse expenses in payslips"
-msgstr ""
+msgstr "Rembourser les dépenses dans les fiches de paie"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -1416,6 +1427,8 @@ msgid ""
 "Reimburse the employees who incurred these costs or simply register the "
 "corresponding payments."
 msgstr ""
+"Remboursez les salariés qui ont engagé ces frais ou enregistrez simplement "
+"les versements correspondants."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
@@ -1541,6 +1554,8 @@ msgid ""
 "Snap pictures of your receipts and let Odoo<br> automatically create "
 "expenses for you."
 msgstr ""
+"Prenez vos tickets de caisse en photo et laissez <br>Odoo automatiquement "
+"créer une dépense pour vous."
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_product_product__can_be_expensed
@@ -1617,6 +1632,14 @@ msgstr ""
 #, python-format
 msgid "The current user has no related employee. Please, create one."
 msgstr ""
+"L'utilisateur actuel n'a pas d'employé associé. S'il vous plaît, créez-en "
+"un."
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "The expense reports were successfully approved."
+msgstr "Les rapports des notes de frais ont été approuvés avec succès."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
@@ -1645,10 +1668,16 @@ msgstr ""
 "La méthode de paiement utilisée lorsque la dépense est payée par la société."
 
 #. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "There are no expense reports to approve."
+msgstr ""
+
+#. module: hr_expense
 #: model:digest.tip,name:hr_expense.digest_tip_hr_expense_0
 #: model_terms:digest.tip,tip_description:hr_expense.digest_tip_hr_expense_0
 msgid "Tip: Snap pictures of your receipts with the remote app"
-msgstr ""
+msgstr "Astuce : prenez des photos de vos reçus avec l'application à distance"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
@@ -1658,17 +1687,17 @@ msgstr "À approuver"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
 msgid "To Pay"
-msgstr "A payer"
+msgstr "À payer"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
 msgid "To Post"
-msgstr "A entrer en Comptabilité"
+msgstr "À entrer en Comptabilité"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "To Report"
-msgstr "A rapporter"
+msgstr "À rapporter"
 
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__state__draft
@@ -1934,21 +1963,28 @@ msgstr "km"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "to be reimbursed"
-msgstr ""
+msgstr "Pour remboursement"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "to report"
-msgstr ""
+msgstr "A rapporter"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "under validation"
-msgstr ""
+msgstr "En cours de validation"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "use OCR to fill data from a picture of the bill"
 msgstr ""
+"utiliser l'OCR pour remplir les données à partir d'une image de la facture"
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/account_move.py:0
+#, python-format
+msgid "Payment Cancelled"
+msgstr "Paiement annulé"

@@ -82,6 +82,9 @@ class TestSMSPost(TestMailFullCommon, LinkTrackerMock):
         })
         link = self.env['link.tracker'].search([('url', '=', link)])
         self.assertIn(link.short_url, new_body)
+        # Bugfix: ensure void content convert does not crash
+        new_body = self.env['mail.render.mixin']._shorten_links_text(False, self.tracker_values)
+        self.assertFalse(new_body)
 
     def test_body_link_shorten_wshort(self):
         link = 'https://test.odoo.com/r/RAOUL'
@@ -146,7 +149,7 @@ class TestSMSPost(TestMailFullCommon, LinkTrackerMock):
             self.env['sms.sms'].with_user(self.user_employee).browse(self.sms_all.ids).send()
 
     def test_sms_send_delete_all(self):
-        with self.mockSMSGateway(sim_error='jsonrpc_exception'):
+        with self.mockSMSGateway(sms_allow_unlink=True, sim_error='jsonrpc_exception'):
             self.env['sms.sms'].browse(self.sms_all.ids).send(delete_all=True, raise_exception=False)
         self.assertFalse(len(self.sms_all.exists()))
 

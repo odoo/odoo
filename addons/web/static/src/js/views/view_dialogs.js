@@ -87,6 +87,9 @@ var FormViewDialog = ViewDialog.extend({
      *   well, and in that case, it will be used without loading anything.
      * @param {boolean} [options.shouldSaveLocally] if true, the view dialog
      *   will save locally instead of actually saving (useful for one2manys)
+     * @param {function} [options._createContext] function to get context for name field
+     *   useful for many2many_tags widget where we want to removed default_name field
+     *   context.
      */
     init: function (parent, options) {
         var self = this;
@@ -96,6 +99,7 @@ var FormViewDialog = ViewDialog.extend({
         this.on_saved = options.on_saved || (function () {});
         this.on_remove = options.on_remove || (function () {});
         this.context = options.context;
+        this._createContext = options._createContext;
         this.model = options.model;
         this.parentID = options.parentID;
         this.recordID = options.recordID;
@@ -137,7 +141,12 @@ var FormViewDialog = ViewDialog.extend({
                         classes: "btn-primary",
                         click: function () {
                             self._save()
-                                .then(self.form_view.createRecord.bind(self.form_view, self.parentID))
+                                .then(function () {
+                                    // reset default name field from context when Save & New is clicked, pass additional
+                                    // context so that when getContext is called additional context resets it
+                                    const additionalContext = self._createContext && self._createContext(false);
+                                    self.form_view.createRecord(self.parentID, additionalContext);
+                                })
                                 .then(function () {
                                     if (!self.deletable) {
                                         return;
@@ -452,14 +461,9 @@ var SelectCreateDialog = ViewDialog.extend({
                 classes: 'btn-primary o_select_button',
                 disabled: true,
                 close: true,
-                click: function () {
-                    var records = this.viewController.getSelectedRecords();
-                    var values = _.map(records, function (record) {
-                        return {
-                            id: record.res_id,
-                            display_name: record.data.display_name,
-                        };
-                    });
+                click: async () => {
+                    const resIds = await this.viewController.getSelectedIdsWithDomain();
+                    const values = resIds.map(e => ({id: e}));
                     this.on_selected(values);
                 },
             });

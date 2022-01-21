@@ -206,8 +206,8 @@ class BaseAutomation(models.Model):
         """ Filter the records that satisfy the precondition of action ``self``. """
         self_sudo = self.sudo()
         if self_sudo.filter_pre_domain and records:
-            domain = [('id', 'in', records.ids)] + safe_eval.safe_eval(self_sudo.filter_pre_domain, self._get_eval_context())
-            return records.sudo().search(domain).with_env(records.env)
+            domain = safe_eval.safe_eval(self_sudo.filter_pre_domain, self._get_eval_context())
+            return records.sudo().filtered_domain(domain).with_env(records.env)
         else:
             return records
 
@@ -218,8 +218,8 @@ class BaseAutomation(models.Model):
         """ Filter the records that satisfy the postcondition of action ``self``. """
         self_sudo = self.sudo()
         if self_sudo.filter_domain and records:
-            domain = [('id', 'in', records.ids)] + safe_eval.safe_eval(self_sudo.filter_domain, self._get_eval_context())
-            return records.sudo().search(domain).with_env(records.env), domain
+            domain = safe_eval.safe_eval(self_sudo.filter_domain, self._get_eval_context())
+            return records.sudo().filtered_domain(domain).with_env(records.env), domain
         else:
             return records, None
 
@@ -230,7 +230,7 @@ class BaseAutomation(models.Model):
             e.context['exception_class'] = 'base_automation'
             e.context['base_automation'] = {
                 'id': self.id,
-                'name': self.name,
+                'name': self.sudo().name,
             }
 
     def _process(self, records, domain_post=None):
@@ -256,7 +256,8 @@ class BaseAutomation(models.Model):
             records.write(values)
 
         # execute server actions
-        if self.action_server_id:
+        action_server = self.action_server_id
+        if action_server:
             for record in records:
                 # we process the action if any watched field has been modified
                 if self._check_trigger_fields(record):
@@ -267,7 +268,7 @@ class BaseAutomation(models.Model):
                         'domain_post': domain_post,
                     }
                     try:
-                        self.action_server_id.sudo().with_context(**ctx).run()
+                        action_server.sudo().with_context(**ctx).run()
                     except Exception as e:
                         self._add_postmortem_action(e)
                         raise e
@@ -402,7 +403,12 @@ class BaseAutomation(models.Model):
             def base_automation_onchange(self):
                 action_rule = self.env['base.automation'].browse(action_rule_id)
                 result = {}
-                server_action = action_rule.sudo().action_server_id.with_context(active_model=self._name, onchange_self=self)
+                server_action = action_rule.sudo().action_server_id.with_context(
+                    active_model=self._name,
+                    active_id=self._origin.id,
+                    active_ids=self._origin.ids,
+                    onchange_self=self,
+                )
                 try:
                     res = server_action.run()
                 except Exception as e:

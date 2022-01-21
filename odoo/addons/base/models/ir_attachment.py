@@ -2,17 +2,20 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
 import hashlib
+import io
 import itertools
 import logging
 import mimetypes
 import os
 import re
-from collections import defaultdict
 import uuid
+
+from collections import defaultdict
+from PIL import Image
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import AccessError, ValidationError, MissingError, UserError
-from odoo.tools import config, human_size, ustr, html_escape
+from odoo.tools import config, human_size, ustr, html_escape, ImageProcess, str2bool
 from odoo.tools.mimetypes import guess_mimetype
 
 _logger = logging.getLogger(__name__)
@@ -164,23 +167,26 @@ class IrAttachment(models.Model):
                 fname = "%s/%s" % (dirname, filename)
                 checklist[fname] = os.path.join(dirpath, filename)
 
-        # determine which files to keep among the checklist
-        whitelist = set()
-        for names in cr.split_for_in_conditions(checklist):
-            cr.execute("SELECT store_fname FROM ir_attachment WHERE store_fname IN %s", [names])
-            whitelist.update(row[0] for row in cr.fetchall())
-
-        # remove garbage files, and clean up checklist
+        # Clean up the checklist. The checklist is split in chunks and files are garbage-collected
+        # for each chunk.
         removed = 0
-        for fname, filepath in checklist.items():
-            if fname not in whitelist:
-                try:
-                    os.unlink(self._full_path(fname))
-                    removed += 1
-                except (OSError, IOError):
-                    _logger.info("_file_gc could not unlink %s", self._full_path(fname), exc_info=True)
-            with tools.ignore(OSError):
-                os.unlink(filepath)
+        for names in cr.split_for_in_conditions(checklist):
+            # determine which files to keep among the checklist
+            cr.execute("SELECT store_fname FROM ir_attachment WHERE store_fname IN %s", [names])
+            whitelist = set(row[0] for row in cr.fetchall())
+
+            # remove garbage files, and clean up checklist
+            for fname in names:
+                filepath = checklist[fname]
+                if fname not in whitelist:
+                    try:
+                        os.unlink(self._full_path(fname))
+                        _logger.debug("_file_gc unlinked %s", self._full_path(fname))
+                        removed += 1
+                    except (OSError, IOError):
+                        _logger.info("_file_gc could not unlink %s", self._full_path(fname), exc_info=True)
+                with tools.ignore(OSError):
+                    os.unlink(filepath)
 
         # commit to release the lock
         cr.commit()
@@ -280,6 +286,43 @@ class IrAttachment(models.Model):
                 mimetype = guess_mimetype(raw)
         return mimetype or 'application/octet-stream'
 
+    def _postprocess_contents(self, values):
+        ICP = self.env['ir.config_parameter'].sudo().get_param
+        supported_subtype = ICP('base.image_autoresize_extensions', 'png,jpeg,gif,bmp,tif').split(',')
+
+        mimetype = values['mimetype'] = self._compute_mimetype(values)
+        _type, _subtype = mimetype.split('/')
+        is_image_resizable = _type == 'image' and _subtype in supported_subtype
+        if is_image_resizable and (values.get('datas') or values.get('raw')):
+            is_raw = values.get('raw')
+
+            # Can be set to 0 to skip the resize
+            max_resolution = ICP('base.image_autoresize_max_px', '1920x1920')
+            if str2bool(max_resolution, True):
+                try:
+                    img = fn_quality = False
+                    if is_raw:
+                        img = ImageProcess(False, verify_resolution=False)
+                        img.image = Image.open(io.BytesIO(values['raw']))
+                        img.original_format = (img.image.format or '').upper()
+                        fn_quality = img.image_quality
+                    else:  # datas
+                        img = ImageProcess(values['datas'], verify_resolution=False)
+                        fn_quality = img.image_base64
+
+                    w, h = img.image.size
+                    nw, nh = map(int, max_resolution.split('x'))
+                    if w > nw or h > nh:
+                        img.resize(nw, nh)
+                        quality = int(ICP('base.image_autoresize_quality', 80))
+                        values[is_raw and 'raw' or 'datas'] = fn_quality(quality=quality)
+                except UserError as e:
+                    # Catch error during test where we provide fake image
+                    # raise UserError(_("This file could not be decoded as an image file. Please try with a different file."))
+                    _logger.info('Post processing ignored : %s', e)
+                    pass
+        return values
+
     def _check_contents(self, values):
         mimetype = values['mimetype'] = self._compute_mimetype(values)
         xml_like = 'ht' in mimetype or ( # hta, html, xhtml, etc.
@@ -290,6 +333,8 @@ class IrAttachment(models.Model):
             self.env.context.get('attachments_mime_plainxml')))
         if force_text:
             values['mimetype'] = 'text/plain'
+        if not self.env.context.get('image_no_postprocess'):
+            values = self._postprocess_contents(values)
         return values
 
     @api.model
@@ -417,11 +462,11 @@ class IrAttachment(models.Model):
         """Override read_group to add res_field=False in domain if not present."""
         if not fields:
             raise AccessError(_("Sorry, you must provide fields to read on attachments"))
+        groupby = [groupby] if isinstance(groupby, str) else groupby
         if any('(' in field for field in fields + groupby):
             raise AccessError(_("Sorry, the syntax 'name:agg(field)' is not available for attachments"))
         if not any(item[0] in ('id', 'res_field') for item in domain):
             domain.insert(0, ('res_field', '=', False))
-        groupby = [groupby] if isinstance(groupby, str) else groupby
         allowed_fields = self._read_group_allowed_fields()
         fields_set = set(field.split(':')[0] for field in fields + groupby)
         if not self.env.is_system() and (not fields or fields_set.difference(allowed_fields)):
@@ -432,7 +477,9 @@ class IrAttachment(models.Model):
     def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
         # add res_field=False in domain if not present; the arg[0] trick below
         # works for domain items and '&'/'|'/'!' operators too
+        discard_binary_fields_attachments = False
         if not any(arg[0] in ('id', 'res_field') for arg in args):
+            discard_binary_fields_attachments = True
             args.insert(0, ('res_field', '=', False))
 
         ids = super(IrAttachment, self)._search(args, offset=offset, limit=limit, order=order,
@@ -463,8 +510,8 @@ class IrAttachment(models.Model):
                 continue
             # model_attachments = {res_model: {res_id: set(ids)}}
             model_attachments[row['res_model']][row['res_id']].add(row['id'])
-            # Should not retrieve binary fields attachments
-            if row['res_field']:
+            # Should not retrieve binary fields attachments if not explicitly required
+            if discard_binary_fields_attachments and row['res_field']:
                 binary_fields_attachments.add(row['id'])
 
         if binary_fields_attachments:
@@ -509,14 +556,17 @@ class IrAttachment(models.Model):
     def write(self, vals):
         self.check('write', values=vals)
         # remove computed field depending of datas
-        for field in ('file_size', 'checksum'):
+        for field in ('file_size', 'checksum', 'store_fname'):
             vals.pop(field, False)
-        if 'mimetype' in vals or 'datas' in vals:
+        if 'mimetype' in vals or 'datas' in vals or 'raw' in vals:
             vals = self._check_contents(vals)
         return super(IrAttachment, self).write(vals)
 
     def copy(self, default=None):
         self.check('write')
+        if not (default or {}).keys() & {'datas', 'db_datas', 'raw'}:
+            # ensure the content is kept and recomputes checksum/store_fname
+            default = dict(default or {}, raw=self.raw)
         return super(IrAttachment, self).copy(default)
 
     def unlink(self):
@@ -538,14 +588,27 @@ class IrAttachment(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         record_tuple_set = set()
+
+        # remove computed field depending of datas
+        vals_list = [{
+            key: value
+            for key, value
+            in vals.items()
+            if key not in ('file_size', 'checksum', 'store_fname')
+        } for vals in vals_list]
+
         for values in vals_list:
-            # remove computed field depending of datas
-            for field in ('file_size', 'checksum'):
-                values.pop(field, False)
             values = self._check_contents(values)
-            if 'datas' in values:
-                data = values.pop('datas')
-                values.update(self._get_datas_related_values(base64.b64decode(data or b''), values['mimetype']))
+            raw, datas = values.pop('raw', None), values.pop('datas', None)
+            if raw or datas:
+                if isinstance(raw, str):
+                    # b64decode handles str input but raw needs explicit encoding
+                    raw = raw.encode()
+                values.update(self._get_datas_related_values(
+                    raw or base64.b64decode(datas or b''),
+                    values['mimetype']
+                ))
+
             # 'check()' only uses res_model and res_id from values, and make an exists.
             # We can group the values by model, res_id to make only one query when 
             # creating multiple attachments on a single record.

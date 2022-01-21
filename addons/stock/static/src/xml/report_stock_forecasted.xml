@@ -14,7 +14,7 @@
             data-toggle="dropdown">
             <span class="fa fa-home"/> Warehouse: <t t-esc="active_warehouse['name']"/>
         </button>
-        <div class="dropdown-menu o_filter_menu" role="menu">
+        <div class="dropdown-menu o_dropdown_menu o_filter_menu" role="menu">
             <t t-foreach="warehouses" t-as="wh">
                 <a role="menuitem" class="dropdown-item warehouse_filter"
                     data-filter="warehouses" t-att-data-warehouse-id="wh['id']"

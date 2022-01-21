@@ -15,6 +15,7 @@ from odoo import exceptions, http, fields, _
 from odoo.http import request
 from odoo.osv import expression
 from odoo.tools import is_html_empty, plaintext2html
+from odoo.tools.misc import babel_locale_parse
 
 
 class EventTrackController(http.Controller):
@@ -255,7 +256,7 @@ class EventTrackController(http.Controller):
             :param dt_time: datetime object
             :param lang_code: language code (eg. en_US)
         """
-        locale = babel.Locale.parse(lang_code)
+        locale = babel_locale_parse(lang_code)
         return babel.dates.format_time(dt_time, format='short', locale=locale)
 
     def time_slot_rounder(self, time, rounded_minutes):

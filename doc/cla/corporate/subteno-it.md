@@ -14,3 +14,5 @@ List of contributors:
 
 Christian LECOUFLE christian.lecoufle@subteno-it.fr https://github.com/cle-subteno-it
 Vincent COFFIN vincent.coffin@subteno-it.fr https://github.com/vco-subteno-it
+Jeremy CORMIER jco@subteno.com https://github.com/jco-subteno-it
+Jeremy CORMIER jeremy.cormier@subteno-it.fr https://github.com/jco-subteno-it

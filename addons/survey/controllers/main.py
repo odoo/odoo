@@ -8,7 +8,7 @@ import werkzeug
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
-from odoo import fields, http, _
+from odoo import fields, http, SUPERUSER_ID, _
 from odoo.addons.base.models.ir_ui_view import keep_query
 from odoo.exceptions import UserError
 from odoo.http import request, content_disposition
@@ -265,6 +265,7 @@ class Survey(http.Controller):
 
         if not answer_sudo.is_session_answer and survey_sudo.is_time_limited and answer_sudo.start_datetime:
             data.update({
+                'server_time': fields.Datetime.now(),
                 'timer_start': answer_sudo.start_datetime.isoformat(),
                 'time_limit_minutes': survey_sudo.time_limit
             })
@@ -467,8 +468,8 @@ class Survey(http.Controller):
 
         errors = {}
         # Prepare answers / comment by question, validate and save answers
-        inactive_questions = request.env['survey.question'] if answer_sudo.is_session_answer else answer_sudo._get_inactive_conditional_questions()
         for question in questions:
+            inactive_questions = request.env['survey.question'] if answer_sudo.is_session_answer else answer_sudo._get_inactive_conditional_questions()
             if question in inactive_questions:  # if question is inactive, skip validation and save
                 continue
             answer, comment = self._extract_comment_from_answers(question, post.get(str(question.id)))
@@ -535,7 +536,7 @@ class Survey(http.Controller):
                 if not isinstance(answers, list):
                     answers = [answers]
                 for answer in answers:
-                    if 'comment' in answer:
+                    if isinstance(answer, dict) and 'comment' in answer:
                         comment = answer['comment'].strip()
                     else:
                         answers_no_comment.append(answer)
@@ -639,7 +640,7 @@ class Survey(http.Controller):
         return request.render('survey.survey_page_statistics', template_values)
 
     def _generate_report(self, user_input, download=True):
-        report = request.env.ref('survey.certification_report').sudo()._render_qweb_pdf([user_input.id], data={'report_type': 'pdf'})[0]
+        report = request.env.ref('survey.certification_report').with_user(SUPERUSER_ID)._render_qweb_pdf([user_input.id], data={'report_type': 'pdf'})[0]
 
         report_content_disposition = content_disposition('Certification.pdf')
         if not download:

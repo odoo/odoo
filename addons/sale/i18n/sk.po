@@ -9,7 +9,7 @@
 # palica <pavol.cupka@gmail.com>, 2020
 # Robert Kirschner <robertkirschner@yahoo.com>, 2020
 # Michal Matus <misko.matus@gmail.com>, 2020
-# Rastislav Brenčič <rastislav.brencic99@gmail.com>, 2020
+# rastislav Brencic <rastislav.brencic99@gmail.com>, 2020
 # Peter Dovicovic <dovicovic@gmail.com>, 2020
 # Nicolas Galler <ngaller@gmail.com>, 2020
 # Martin Trigaux, 2020
@@ -18,15 +18,17 @@
 # gebri <gebri@inmail.sk>, 2020
 # Jan Prokop, 2020
 # Alexandra Brencicova <alexandra.brencicova@gmail.com>, 2020
-# Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
+# karolína schusterová <karolina.schusterova@vdp.sk>, 2020
+# Damian Brencic <brencicdamian12313@gmail.com>, 2021
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-29 15:48+0000\n"
+"POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2020\n"
+"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2021\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -68,10 +70,9 @@ msgstr ""
 #: model:mail.template,subject:sale.email_template_edi_sale
 msgid ""
 "${object.company_id.name} ${object.state in ('draft', 'sent') and "
-"'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
+"(ctx.get('proforma') and 'Proforma' or 'Quotation') or 'Order'} (Ref "
+"${object.name or 'n/a' })"
 msgstr ""
-"${object.company_id.name} ${object.state in ('draft', 'sent') and "
-"'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
@@ -83,11 +84,6 @@ msgstr "&amp;nbsp;"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content_totals_table
 msgid "&amp;nbsp;<span>on</span>&amp;nbsp;"
 msgstr "&amp;nbsp;<span>na</span>&amp;nbsp;"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
-msgid "&amp;times;"
-msgstr "&amp;times;"
 
 #. module: sale
 #: model:ir.actions.report,print_report_name:sale.action_report_pro_forma_invoice
@@ -468,7 +464,7 @@ msgstr "<span class=\"o_form_label\">Potvrdzujúci e-mail</span>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Down Payments</span>"
-msgstr "<span class=\"o_form_label\">Akontácie</span>"
+msgstr "<span class=\"o_form_label\">Zálohové platby</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -862,7 +858,7 @@ msgstr "Analytický riadok"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_tag_ids
 msgid "Analytic Tags"
-msgstr "Analytické tagy"
+msgstr "Strediská"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_line_ids
@@ -1010,7 +1006,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_order_confirmation_step
 msgid "Choose between electronic signatures or online payments."
-msgstr ""
+msgstr "Vyberte si medzi elektronickým podpisom alebo online platbami."
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_open_sale_onboarding_payment_acquirer_wizard
@@ -1329,7 +1325,7 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_dhl
-msgid "DHL USA Connector"
+msgid "DHL Express Connector"
 msgstr ""
 
 #. module: sale
@@ -1547,50 +1543,50 @@ msgstr "Hotové"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "Down Payment"
-msgstr "Akontácia"
+msgstr "Zálohová platba"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__amount
 msgid "Down Payment Amount"
-msgstr "Výška akontácie"
+msgstr "Výška zálohy"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__fixed_amount
 msgid "Down Payment Amount (Fixed)"
-msgstr ""
+msgstr "Suma zálohy (pevná)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__product_id
 msgid "Down Payment Product"
-msgstr "Produkt akontácie"
+msgstr "Produkt pre zálohu"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "Down Payment: %s"
-msgstr "Záloha:%s"
+msgstr "Zálohová platba: %s"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "Down Payments"
-msgstr ""
+msgstr "Zálohové platby"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__fixed
 msgid "Down payment (fixed amount)"
-msgstr "Akontácia (pevná čiastka)"
+msgstr "Zálohová faktúra (pevná čiastka)"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__percentage
 msgid "Down payment (percentage)"
-msgstr "Akontácia (percentá)"
+msgstr "Zálohová faktúra (percentá)"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "Down payment of %s%%"
-msgstr "Akontácia %s%%"
+msgstr "Zálohová platba %s%%"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__is_downpayment
@@ -1598,7 +1594,7 @@ msgid ""
 "Down payments are made when creating invoices from a sales order. They are "
 "not copied when duplicating a sales order."
 msgstr ""
-"Akontácie sa tvoria pri fakturácii objednávky. Pri duplikácii objednávky sa "
+"Zálohy sa tvoria pri fakturácii objednávky. Pri duplikácii objednávky sa "
 "nepreberajú."
 
 #. module: sale
@@ -1632,7 +1628,7 @@ msgstr "Upraviť konfiguráciu"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_payment_acquirer_onboarding_wizard__payment_method__digital_signature
 msgid "Electronic signature"
-msgstr ""
+msgstr "Elektronický podpis"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__paypal_email_account
@@ -1723,9 +1719,9 @@ msgid ""
 "customers or sales orders/invoices.The default value comes from the "
 "customer."
 msgstr ""
-"Fiškálne pozície sa používajú na úpravu daní a účtov pre konkrétnych "
-"zákazníkov alebo predajných objednávok / faktúr. Predvolená hodnota pochádza"
-" od zákazníka."
+"Mapovanie daní sa používa na úpravu daní a účtov pre konkrétnych zákazníkov "
+"alebo predajných objednávok / faktúr. Predvolená hodnota pochádza od "
+"zákazníka."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_follower_ids
@@ -2114,7 +2110,7 @@ msgstr "Odberateľ"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__is_downpayment
 msgid "Is a down payment"
-msgstr "Je akontácia"
+msgstr "Je záloha"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__is_expense
@@ -2130,7 +2126,7 @@ msgstr "Je ukončená platnosť"
 #: model:ir.model.fields,help:sale.field_sale_order_line__is_expense
 msgid ""
 "Is true if the sales order line comes from an expense or a vendor bills"
-msgstr "Platí ak položka objednávky je náklad alebo dodávateľský doklad "
+msgstr "Platí ak položka objednávky je náklad alebo dodávateľské faktúry"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
@@ -2238,7 +2234,7 @@ msgstr ""
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Lets keep electronic signature for now."
-msgstr ""
+msgstr "Zachovajme si zatiaľ elektronický podpis."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_auto_done_setting
@@ -2261,7 +2257,7 @@ msgstr "Uzamknuté"
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Looks good. Let's continue."
-msgstr ""
+msgstr "Vyzerá dobre. Pokračujme."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.onboarding_quotation_layout_step
@@ -2325,7 +2321,7 @@ msgstr "Marketing"
 #: model:ir.model.fields,field_description:sale.field_sale_order__medium_id
 #: model:ir.model.fields,field_description:sale.field_sale_report__medium_id
 msgid "Medium"
-msgstr "Stredný"
+msgstr "Médium"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__paypal_seller_account
@@ -2820,7 +2816,7 @@ msgstr "Definujte účtovný denník predaja spoločnosti %s (%s)."
 #: code:addons/sale/static/src/js/sale.js:0
 #, python-format
 msgid "Please enter an integer value"
-msgstr ""
+msgstr "Zadajte celočíselnú hodnotu"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_url
@@ -2947,7 +2943,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Product used for down payments"
-msgstr "Produkt používaný pre akontácie"
+msgstr "Produkt používaný pre zálohy"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.product_template_action
@@ -3151,7 +3147,7 @@ msgstr "Zamietnuť cenovú ponuku"
 #: model:ir.ui.menu,name:sale.menu_sale_report
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Reporting"
-msgstr "Reportovanie"
+msgstr "Prehľady"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__require_signature
@@ -3603,7 +3599,7 @@ msgstr "Zobraziť marže na objednávkach"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Sign &amp; Pay"
-msgstr "Podpisať &amp; Platbu"
+msgstr "Podpisať &amp; Platba"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
@@ -3683,7 +3679,7 @@ msgstr "Štádium"
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Start by checking your company's data."
-msgstr ""
+msgstr "Začnite kontrolou údajov svojej spoločnosti."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_order_confirmation_state
@@ -3928,7 +3924,7 @@ msgid ""
 "The product used to invoice a down payment should be of type 'Service'. "
 "Please use another product or update this product."
 msgstr ""
-"Produkt použitý na fakturáciu akontácie by mal byť typu \"Služba\". Použite "
+"Produkt použitý na fakturáciu zálohy by mal byť typu \"Služba\". Použite "
 "prosím iný produkt alebo aktualizujte tento produkt."
 
 #. module: sale
@@ -3939,9 +3935,9 @@ msgid ""
 " to \"Ordered quantities\". Please update your deposit product to be able to"
 " create a deposit invoice."
 msgstr ""
-"Produkt použitý na fakturáciu akontácie by mal mať postup fakturácie "
-"nastavený na \"Objednané množstvá\". Prosím aktualizujte svoj vkladový "
-"produkt pre možnosť vytvárania faktúry vkladu."
+"Produkt použitý na fakturáciu zálohy by mal mať postup fakturácie nastavený "
+"na \"Objednané množstvá\". Prosím aktualizujte svoj produkt pre možnosť "
+"vytvárania zálohovej faktúry."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__currency_rate
@@ -3954,7 +3950,7 @@ msgstr "Kurz meny ku kurzu meny 1 aplikovateľná na dátum objednávky"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "The value of the down payment amount must be positive."
-msgstr "Hodnota sumy akontácie musí byť kladná."
+msgstr "Suma zálohy musí byť kladná."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
@@ -4112,6 +4108,8 @@ msgid ""
 "To speed up order confirmation, we can activate electronic signatures or "
 "payments."
 msgstr ""
+"Na urýchlenie potvrdenia objednávky môžeme aktivovať elektronické podpisy "
+"alebo platby."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter

@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
+from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
 
@@ -13,11 +14,8 @@ class RecurrenceRule(models.Model):
     _inherit = ['calendar.recurrence', 'google.calendar.sync']
 
 
-    # Don't sync by default. Sync only when the recurrence is applied
-    need_sync = fields.Boolean(default=False)
-
     def _apply_recurrence(self, specific_values_creation=None, no_send_edit=False):
-        events = self.calendar_event_ids
+        events = self.filtered('need_sync').calendar_event_ids
         detached_events = super()._apply_recurrence(specific_values_creation, no_send_edit)
 
         google_service = GoogleCalendarService(self.env['google.service'])
@@ -43,12 +41,6 @@ class RecurrenceRule(models.Model):
                 event.google_id = False
         self.env['calendar.event'].create(vals)
 
-        for recurrence in self:
-            values = recurrence._google_values()
-            if not recurrence.google_id:
-                recurrence._google_insert(google_service, values)
-            else:
-                recurrence._google_patch(google_service, recurrence.google_id, values)
         self.calendar_event_ids.need_sync = False
         return detached_events
 
@@ -70,34 +62,90 @@ class RecurrenceRule(models.Model):
     def _write_events(self, values, dtstart=None):
         values.pop('google_id', False)
         # If only some events are updated, sync those events.
-        # If all events are updated, sync the recurrence instead.
         values['need_sync'] = bool(dtstart)
-        if not dtstart:
-            self.need_sync = True
         return super()._write_events(values, dtstart=dtstart)
+
+    def _cancel(self):
+        self.calendar_event_ids._cancel()
+        super()._cancel()
 
     def _get_google_synced_fields(self):
         return {'rrule'}
 
-    @api.model
-    def _sync_google2odoo(self, *args, **kwargs):
-        synced_recurrences = super()._sync_google2odoo(*args, **kwargs)
-        detached_events = synced_recurrences._apply_recurrence()
-        detached_events.unlink()
-        return synced_recurrences
+    def _write_from_google(self, gevent, vals):
+        current_rrule = self.rrule
+        # event_tz is written on event in Google but on recurrence in Odoo
+        vals['event_tz'] = gevent.start.get('timeZone')
+        super()._write_from_google(gevent, vals)
+
+        base_event_time_fields = ['start', 'stop', 'allday']
+        new_event_values = self.env["calendar.event"]._odoo_values(gevent)
+        old_event_values = self.base_event_id and self.base_event_id.read(base_event_time_fields)[0]
+        if old_event_values and any(new_event_values[key] != old_event_values[key] for key in base_event_time_fields):
+            # we need to recreate the recurrence, time_fields were modified.
+            base_event_id = self.base_event_id
+            # We archive the old events to recompute the recurrence. These events are already deleted on Google side.
+            # We can't call _cancel because events without user_id would not be deleted
+            (self.calendar_event_ids - base_event_id).google_id = False
+            (self.calendar_event_ids - base_event_id).unlink()
+            base_event_id.write(dict(new_event_values, google_id=False, need_sync=False))
+            if self.rrule == current_rrule:
+                # if the rrule has changed, it will be recalculated below
+                # There is no detached event now
+                self._apply_recurrence()
+        else:
+            time_fields = (
+                    self.env["calendar.event"]._get_time_fields()
+                    | self.env["calendar.event"]._get_recurrent_fields()
+            )
+            # We avoid to write time_fields because they are not shared between events.
+            self._write_events(dict({
+                field: value
+                for field, value in new_event_values.items()
+                if field not in time_fields
+                }, need_sync=False)
+            )
+
+        # We apply the rrule check after the time_field check because the google_id are generated according
+        # to base_event start datetime.
+        if self.rrule != current_rrule:
+            detached_events = self._apply_recurrence()
+            detached_events.google_id = False
+            detached_events.unlink()
+
+    def _create_from_google(self, gevents, vals_list):
+        for gevent, vals in zip(gevents, vals_list):
+            base_values = dict(
+                self.env['calendar.event']._odoo_values(gevent),  # FIXME default reminders
+                need_sync=False,
+            )
+            # If we convert a single event into a recurrency on Google, we should reuse this event on Odoo
+            # Google reuse the event google_id to identify the recurrence in that case
+            base_event = self.env['calendar.event'].search([('google_id', '=', vals['google_id'])])
+            if not base_event:
+                base_event = self.env['calendar.event'].create(base_values)
+            else:
+                # We override the base_event values because they could have been changed in Google interface
+                # The event google_id will be recalculated once the recurrence is created
+                base_event.write(dict(base_values, google_id=False))
+            vals['base_event_id'] = base_event.id
+            vals['calendar_event_ids'] = [(4, base_event.id)]
+            # event_tz is written on event in Google but on recurrence in Odoo
+            vals['event_tz'] = gevent.start.get('timeZone')
+        recurrence = super(RecurrenceRule, self.with_context(dont_notify=True))._create_from_google(gevents, vals_list)
+        recurrence.with_context(dont_notify=True)._apply_recurrence()
+        if not recurrence._context.get("dont_notify"):
+            recurrence._notify_attendees()
+        return recurrence
 
     def _get_sync_domain(self):
         return [('calendar_event_ids.user_id', '=', self.env.user.id)]
 
     @api.model
     def _odoo_values(self, google_recurrence, default_reminders=()):
-        base_values = dict(self.env['calendar.event']._odoo_values(google_recurrence, default_reminders), need_sync=False)
-        base_event = self.env['calendar.event'].create(base_values)
         return {
             'rrule': google_recurrence.rrule,
             'google_id': google_recurrence.id,
-            'base_event_id': base_event.id,
-            'calendar_event_ids': [(4, base_event.id)],
         }
 
     def _google_values(self):
@@ -114,10 +162,26 @@ class RecurrenceRule(models.Model):
         # DTSTART is not allowed by Google Calendar API.
         # Event start and end times are specified in the start and end fields.
         rrule = re.sub('DTSTART:[0-9]{8}T[0-9]{1,8}\\n', '', self.rrule)
+        # UNTIL must be in UTC (appending Z)
+        # We want to only add a 'Z' to non UTC UNTIL values and avoid adding a second.
+        # 'RRULE:FREQ=DAILY;UNTIL=20210224T235959;INTERVAL=3 --> match UNTIL=20210224T235959
+        # 'RRULE:FREQ=DAILY;UNTIL=20210224T235959 --> match
+        rrule = re.sub(r"(UNTIL=\d{8}T\d{6})($|;)", r"\1Z\2", rrule)
         values['recurrence'] = ['RRULE:%s' % rrule] if 'RRULE:' not in rrule else [rrule]
+        property_location = 'shared' if event.user_id else 'private'
         values['extendedProperties'] = {
-            'shared': {
+            property_location: {
                 '%s_odoo_id' % self.env.cr.dbname: self.id,
             },
         }
         return values
+
+    def _notify_attendees(self):
+        recurrences = self.filtered(
+            lambda recurrence: recurrence.base_event_id.alarm_ids and (
+                not recurrence.until or recurrence.until >= fields.Date.today() - relativedelta(days=1)
+            ) and (max(recurrence.calendar_event_ids.mapped('stop')) >= fields.Datetime.now())
+        )
+        partners = recurrences.base_event_id.partner_ids
+        if partners:
+            self.env['calendar.alarm_manager']._notify_next_alarm(partners.ids)

@@ -7,8 +7,7 @@ var websiteNavbarData = require('website.navbar');
 var wUtils = require('website.utils');
 var tour = require('web_tour.tour');
 
-var qweb = core.qweb;
-var _t = core._t;
+const {qweb, _t} = core;
 
 var enableFlag = 'enable_new_content';
 
@@ -68,6 +67,7 @@ var NewContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
             );
             this._showMenu();
         }
+        this.$loader = $(qweb.render('website.new_content_loader'));
         return this._super.apply(this, arguments);
     },
 
@@ -184,7 +184,26 @@ var NewContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
             self.$newContentMenuChoices.removeClass('o_hidden');
             $('body').addClass('o_new_content_open');
             self.$('> a').focus();
+
+            wUtils.removeLoader();
         });
+    },
+    /**
+     * Called to add loader element in DOM.
+     *
+     * @param {string} moduleName
+     * @private
+     */
+    _addLoader(moduleName) {
+        const newContentLoaderText = _.str.sprintf(_t("Building your %s"), moduleName);
+        this.$loader.find('#new_content_loader_text').replaceWith(newContentLoaderText);
+        $('body').append(this.$loader);
+    },
+    /**
+     * @private
+     */
+    _removeLoader() {
+        this.$loader.remove();
     },
 
     //--------------------------------------------------------------------------
@@ -295,6 +314,7 @@ var NewContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
                             $p.removeClass('o_uninstalled_module')
                                 .text(_.str.sprintf(self.newContentText.installPleaseWait, name));
                             $el.fadeTo(1000, 1);
+                            self._addLoader(name);
                         });
                     }
 
@@ -302,6 +322,7 @@ var NewContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
                         var origin = window.location.origin;
                         var redirectURL = $el.find('a').data('url') || (window.location.pathname + '?' + enableFlag);
                         window.location.href = origin + redirectURL;
+                        self._removeLoader();
                     }, function () {
                         $i.removeClass()
                             .addClass('fa fa-exclamation-triangle');

@@ -12,8 +12,9 @@
 # ChinaMaker <liuct@chinamaker.net>, 2020
 # Felix Yang - Elico Corp <felixyangsh@aliyun.com>, 2020
 # guohuadeng <guohuadeng@hotmail.com>, 2020
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
 # inspur qiuguodong <qiuguodong@inspur.com>, 2020
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
+# liAnGjiA <liangjia@qq.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -21,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-29 13:46+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: inspur qiuguodong <qiuguodong@inspur.com>, 2020\n"
+"Last-Translator: liAnGjiA <liangjia@qq.com>, 2021\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -105,7 +106,7 @@ msgstr "活动"
 msgid ""
 "Campaigns are used to centralize your marketing efforts and track their "
 "results."
-msgstr ""
+msgstr "营销学的概念：活动，通俗点说，就是搞事情！"
 
 #. module: utm
 #: model:utm.campaign,name:utm.utm_campaign_christmas_special
@@ -140,7 +141,7 @@ msgstr ""
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.utm_campaign_action
 msgid "Create a campaign"
-msgstr ""
+msgstr "创建活动"
 
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.action_view_utm_stage
@@ -234,6 +235,11 @@ msgstr "完成"
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_kanban
 msgid "Dropdown menu"
 msgstr "下拉菜单"
+
+#. module: utm
+#: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_kanban
+msgid "Edit"
+msgstr "编辑"
 
 #. module: utm
 #: model:utm.campaign,name:utm.utm_campaign_email_campaign_products
@@ -356,7 +362,7 @@ msgstr "潜在客户召回"
 #. module: utm
 #: model:ir.ui.menu,name:utm.menu_link_tracker_root
 msgid "Link Tracker"
-msgstr "链接跟踪"
+msgstr "统计"
 
 #. module: utm
 #: model:utm.source,name:utm.utm_source_linkedin
@@ -564,6 +570,13 @@ msgid ""
 msgstr "阶段允许您组织工作流（例如：计划、设计、进行中、完成…）。"
 
 #. module: utm
+#: model:ir.model.fields,help:utm.field_utm_tag__color
+msgid ""
+"Tag color. No color means no display in kanban to distinguish internal tags "
+"from public categorization tags."
+msgstr ""
+
+#. module: utm
 #: model:ir.model.constraint,message:utm.constraint_utm_tag_name_uniq
 msgid "Tag name already exists !"
 msgstr "标签名称已存在!"
@@ -685,4 +698,4 @@ msgstr "使用标签来组织活动，并很容易地筛选它们。"
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_form
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_form_quick_create
 msgid "e.g. Black Friday"
-msgstr ""
+msgstr "例如双十一"

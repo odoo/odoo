@@ -420,11 +420,34 @@ function factory(dependencies) {
         }
 
         /**
+         * The method does not attempt to cover all possible cases of empty
+         * messages, but mostly those that happen with a standard flow. Indeed
+         * it is preferable to be defensive and show an empty message sometimes
+         * instead of hiding a non-empty message.
+         *
+         * The main use case for when a message should become empty is for a
+         * message posted with only an attachment (no body) and then the
+         * attachment is deleted.
+         *
+         * The main use case for being defensive with the check is when
+         * receiving a message that has no textual content but has other
+         * meaningful HTML tags (eg. just an <img/>).
+         *
          * @private
+         * @returns {boolean}
          */
         _computeIsEmpty() {
+            const isBodyEmpty = (
+                !this.body ||
+                [
+                    '',
+                    '<p></p>',
+                    '<p><br></p>',
+                    '<p><br/></p>',
+                ].includes(this.body.replace(/\s/g, ''))
+            );
             return (
-                (!this.body || htmlToTextContentInline(this.body) === '') &&
+                isBodyEmpty &&
                 this.attachments.length === 0 &&
                 this.tracking_value_ids.length === 0 &&
                 !this.subtype_description
@@ -441,6 +464,37 @@ function factory(dependencies) {
                 this.originThread &&
                 this.originThread.isModeratedByCurrentPartner
             );
+        }
+        /**
+         * @private
+         * @returns {boolean}
+         */
+        _computeIsSubjectSimilarToOriginThreadName() {
+            if (
+                !this.subject ||
+                !this.originThread ||
+                !this.originThread.name
+            ) {
+                return false;
+            }
+            const threadName = this.originThread.name.toLowerCase().trim();
+            const prefixList = ['re:', 'fw:', 'fwd:'];
+            let cleanedSubject = this.subject.toLowerCase();
+            let wasSubjectCleaned = true;
+            while (wasSubjectCleaned) {
+                wasSubjectCleaned = false;
+                if (threadName === cleanedSubject) {
+                    return true;
+                }
+                for (const prefix of prefixList) {
+                    if (cleanedSubject.startsWith(prefix)) {
+                        cleanedSubject = cleanedSubject.replace(prefix, '').trim();
+                        wasSubjectCleaned = true;
+                        break;
+                    }
+                }
+            }
+            return false;
         }
 
         /**
@@ -461,6 +515,10 @@ function factory(dependencies) {
          * @returns {string}
          */
         _computePrettyBody() {
+            if (!this.body) {
+                // body null in db, body will be false instead of empty string
+                return clear();
+            }
             let prettyBody;
             for (const emoji of emojis) {
                 const { unicode } = emoji;
@@ -531,9 +589,10 @@ function factory(dependencies) {
         checkedThreadCaches: many2many('mail.thread_cache', {
             inverse: 'checkedMessages',
         }),
-        date: attr({
-            default: moment(),
-        }),
+        /**
+         * Determines the date of the message as a moment object.
+         */
+        date: attr(),
         /**
          * States the time elapsed since date up to now.
          */
@@ -600,6 +659,7 @@ function factory(dependencies) {
             dependencies: [
                 'attachments',
                 'body',
+                'subtype_description',
                 'tracking_value_ids',
             ],
         }),
@@ -610,6 +670,22 @@ function factory(dependencies) {
                 'moderation_status',
                 'originThread',
                 'originThreadIsModeratedByCurrentPartner',
+            ],
+        }),
+        /**
+         * States whether `originThread.name` and `subject` contain similar
+         * values except it contains the extra prefix at the start
+         * of the subject.
+         *
+         * This is necessary to avoid displaying the subject, if
+         * the subject is same as threadname.
+         */
+        isSubjectSimilarToOriginThreadName: attr({
+            compute: '_computeIsSubjectSimilarToOriginThreadName',
+            dependencies: [
+                'originThread',
+                'originThreadName',
+                'subject',
             ],
         }),
         isTemporary: attr({
@@ -687,6 +763,12 @@ function factory(dependencies) {
             related: 'originThread.isModeratedByCurrentPartner',
         }),
         /**
+         * Serves as compute dependency for isSubjectSimilarToOriginThreadName
+         */
+        originThreadName: attr({
+            related: 'originThread.name',
+        }),
+        /**
          * This value is meant to be based on field body which is
          * returned by the server (and has been sanitized before stored into db).
          * Do not use this value in a 't-raw' if the message has been created
@@ -694,6 +776,7 @@ function factory(dependencies) {
          */
         prettyBody: attr({
             compute: '_computePrettyBody',
+            default: "",
             dependencies: ['body'],
         }),
         subject: attr(),

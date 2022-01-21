@@ -9,7 +9,7 @@
 # Martin Trigaux, 2020
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
 # Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2021
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-10-29 15:48+0000\n"
 "PO-Revision-Date: 2020-09-07 08:18+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2020\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2021\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -172,7 +172,7 @@ msgstr ""
 "- Handmatig: het aantal wordt handmatig op de regel ingesteld\n"
 "- Kostenplaats van declaratie: de hoeveelheid is de som van de geboekte declaraties\n"
 "- Urenstaat: de hoeveelheid is de som van de uren die zijn vastgelegd voor taken die aan deze verkoopregel zijn gekoppeld\n"
-"- Voorraadverplaatstingen: de hoeveelheid komt van bevestigde pickings\n"
+"- Voorraadverplaatsingen: de hoeveelheid komt van bevestigde pickings\n"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_profitability_report__other_revenues
@@ -181,8 +181,8 @@ msgid ""
 "All revenues that are not from timesheets and that are linked to the "
 "analytic account of the project."
 msgstr ""
-"Alle inkomsten die niet afkomstig zijn van urenstaten en die zijn gekoppeld "
-"aan de analytische rekening van het project."
+"Alle omzet die niet afkomstig zijn van urenstaten en die zijn gekoppeld aan "
+"de kostenplaats van het project."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:0
@@ -203,8 +203,8 @@ msgid ""
 "selected Sales Order Item on save. Discard to avoid the change."
 msgstr ""
 "Alle urenstaaturen die nog niet zijn gefactureerd, worden bij het opslaan "
-"toegewezen aan het geselecteerde verkooporder-item. Discard om verandering "
-"te voorkomen."
+"toegewezen aan het geselecteerde verkooporder-item. Kies negeren om de "
+"wijziging te voorkomen."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:0
@@ -214,7 +214,7 @@ msgid ""
 "Order on save. Discard to avoid the change."
 msgstr ""
 "Alle urenstaaturen die nog niet zijn gefactureerd, worden bij het opslaan "
-"uit de verkooporder verwijderd. Discard om verandering te voorkomen."
+"uit de verkooporder verwijderd. Kies negeren om de wijziging te voorkomen."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:0
@@ -224,8 +224,8 @@ msgid ""
 "selected Sales Order Item on save. Discard to avoid the change."
 msgstr ""
 "Alle urenstaaturen die nog niet zijn gefactureerd, worden bij het opslaan "
-"verwijderd uit het geselecteerde verkooporder-item. Discard om verandering "
-"te voorkomen."
+"verwijderd uit het geselecteerde verkooporder-item. Kies negeren om de "
+"wijziging te voorkomen."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:0
@@ -235,7 +235,7 @@ msgid ""
 "save. Discard to avoid the change."
 msgstr ""
 "Alle urenstaaturen worden bij het opslaan toegewezen aan het geselecteerde "
-"verkooporder-item. Discard om verandering te voorkomen."
+"verkooporder-item. Kies negeren om de wijziging te voorkomen."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__amount_to_invoice
@@ -494,8 +494,8 @@ msgstr "Klantenservice (pre paid)"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__bill_type
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__bill_type
-msgid "Customer Type"
-msgstr "Klanttype"
+msgid "Invoice Tasks to"
+msgstr "Factureer taak aan"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order__partner_id
@@ -529,7 +529,7 @@ msgstr "Geregistreerde dagen"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
 msgid "Default Sales Order Item"
-msgstr "Standaard verkooporder-artikel"
+msgstr "Standaard verkooporderregel"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
@@ -622,8 +622,8 @@ msgstr "Vaste prijs diensten"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__pricing_type__fixed_rate
-msgid "Fixed rate"
-msgstr "Vast tarief"
+msgid "Project rate"
+msgstr "Projecttarief"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_profitability_report_view_search
@@ -655,7 +655,7 @@ msgstr "Gewerkte uren"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Hours recorded"
-msgstr "Geregistreerde uren"
+msgstr "Geregistreerde tijd"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__id
@@ -736,8 +736,8 @@ msgstr "Factuur"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__bill_type__customer_project
-msgid "Invoice all tasks to a single customer"
-msgstr "Factureer alle taken aan één klant."
+msgid "A unique customer"
+msgstr "Een unieke klant"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_account_analytic_line__timesheet_invoice_id
@@ -746,8 +746,8 @@ msgstr "Factuur aangemaakt van urenstaat"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__bill_type__customer_task
-msgid "Invoice tasks separately to different customers"
-msgstr "Factureer taken afzonderlijk aan verschillende klanten."
+msgid "Different customers"
+msgstr "Verschillende klanten"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_project__allow_billable
@@ -848,6 +848,7 @@ msgid "Last Updated on"
 msgstr "Laatst bijgewerkt op"
 
 #. module: sale_timesheet
+#. openerp-web
 #: code:addons/sale_timesheet/models/project_overview.py:0
 #, python-format
 msgid "Late"
@@ -994,14 +995,14 @@ msgid ""
 "distinction."
 msgstr ""
 "Alleen urenstaten die nog niet zijn gefactureerd (en indien van toepassing "
-"gevalideerd) uit deze periode worden gefactureerd. Als de periode niet is "
-"aangegeven, worden alle nog niet gefactureerde (en gevalideerde, indien van "
+"goedgekeurd) uit deze periode worden gefactureerd. Als de periode niet is "
+"aangegeven, worden alle nog niet gefactureerde (en goedgekeurde, indien van "
 "toepassing) urenstaten zonder onderscheid gefactureerd."
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__product_template__service_policy__ordered_timesheet
-msgid "Ordered quantities"
-msgstr "Bestelde hoeveelheden"
+msgid "Prepaid"
+msgstr "Prepaid"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__expense_cost
@@ -1057,7 +1058,7 @@ msgid ""
 "Product of the sales order item. Must be a service invoiced based on "
 "timesheets on tasks. The existing timesheet will be linked to this product."
 msgstr ""
-"Product van het verkooporder item. Moet een gefactureerde dienst zijn "
+"Product van het verkooporderregel. Moet een gefactureerde dienst zijn "
 "gebaseerd op urenstaten op taken. De bestaande urenstaat wordt gekoppeld aan"
 " dit product."
 
@@ -1182,7 +1183,7 @@ msgstr "Geregistreerde dagen en winstgevendheid."
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Recorded Hours and Profitability"
-msgstr "Geregistreerde uren en winstgevendheid."
+msgstr "Geregistreerde tijd en winstgevendheid."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project_overview.py:0
@@ -1245,7 +1246,7 @@ msgstr "Verkooporder bevestigingsdatum"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task_create_sale_order__sale_line_id
 msgid "Sales Order Item"
-msgstr "Verkooporder item"
+msgstr "Verkooporderregel"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_sale_order_line
@@ -1278,7 +1279,7 @@ msgid ""
 "Select a Service product with which you would like to bill your time spent "
 "on this task."
 msgstr ""
-"Selecteer een serviceproduct waarmee je de tijd die je aan deze taak "
+"Selecteer een diensten-product waarmee je de tijd die je aan deze taak "
 "besteedt wilt factureren."
 
 #. module: sale_timesheet
@@ -1394,7 +1395,7 @@ msgid ""
 "The %s product is required by the Timesheet app and cannot be "
 "archived/deleted."
 msgstr ""
-"Het %s product is vereist voor de Timesheet-app en kan niet worden "
+"Het %s product is vereist voor de Urenstaat-app en kan niet worden "
 "gearchiveerd / verwijderd."
 
 #. module: sale_timesheet
@@ -1428,8 +1429,8 @@ msgstr ""
 "gewerkt uur of dag factureert, ongeacht de medewerker die het heeft "
 "uitgevoerd. Het medewerkerstarief heeft de voorkeur als je medewerkers "
 "dezelfde dienst leveren tegen een ander tarief. Junior en senior consultants"
-" leveren bijvoorbeeld dezelfde service (= consultancy), maar tegen een ander"
-" tarief vanwege hun senioriteitsniveau."
+" leveren bijvoorbeeld dezelfde dienst (= consultancy), maar tegen een ander "
+"tarief vanwege hun senioriteitsniveau."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
@@ -1441,7 +1442,7 @@ msgstr "Het project heeft al een verkooporder."
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
 #, python-format
 msgid "The project is already linked to a sales order item."
-msgstr "Het project is al gekoppeld aan een verkooporder item."
+msgstr "Het project is al gekoppeld aan een verkooporderregel."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
@@ -1470,7 +1471,7 @@ msgstr "De taak heeft al een verkooporder."
 #: code:addons/sale_timesheet/wizard/project_task_create_sale_order.py:0
 #, python-format
 msgid "The task is already linked to a sales order item."
-msgstr "De taak is al gekoppeld aan een verkooporder item."
+msgstr "De taak is al gekoppeld aan een verkooporderregel."
 
 #. module: sale_timesheet
 #: model:ir.model.constraint,message:sale_timesheet.constraint_project_project_timesheet_product_required_if_billable_and_timesheets
@@ -1677,7 +1678,7 @@ msgstr "Prijs"
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order_line__price_unit
 #: model:ir.model.fields,help:sale_timesheet.field_project_task_create_sale_order__price_unit
 msgid "Unit price of the sales order item."
-msgstr "De prijs van het verkooporder item."
+msgstr "De prijs van het verkooporderregel."
 
 #. module: sale_timesheet
 #: model:product.product,uom_name:sale_timesheet.product_service_deliver_manual
@@ -1810,4 +1811,4 @@ msgstr "uren"
 #: code:addons/sale_timesheet/models/project_overview.py:0
 #, python-format
 msgid "in Overtime"
-msgstr "in overuren"
+msgstr "Tijd overschreden"

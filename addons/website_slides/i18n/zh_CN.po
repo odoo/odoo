@@ -17,23 +17,24 @@
 # ChinaMaker <liuct@chinamaker.net>, 2020
 # snow wang <147156565@qq.com>, 2020
 # Youfu Sheng <wdmsyf@sina.com>, 2020
-# Felix Yang - Elico Corp <felixyangsh@aliyun.com>, 2020
+# Felix Yang <felixyangsh@aliyun.com>, 2020
 # Martin Trigaux, 2020
-# liAnGjiA <liangjia@qq.com>, 2020
 # Siyuan Gu <siyuancn@hotmail.com>, 2020
 # fausthuang, 2020
 # 老窦 北京 <2662059195@qq.com>, 2020
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
+# inspur qiuguodong <qiuguodong@inspur.com>, 2020
 # Jeanphy <hzh0292@qq.com>, 2020
 # as co02 <asco02@163.com>, 2020
 # Datasource International <Hennessy@datasourcegroup.com>, 2020
-# mao luo <dooms21day@163.com>, 2020
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
+# GritLuo <dooms21day@163.com>, 2020
 # v2exerer <9010446@qq.com>, 2020
 # Felix Yuen <fyu@odoo.com>, 2020
 # Lisa Zhang <lzh@odoo.com>, 2020
-# inspur qiuguodong <qiuguodong@inspur.com>, 2020
 # 稀饭~~ <wangwhai@qq.com>, 2020
+# Mandy Choy <mnc@odoo.com>, 2021
+# liAnGjiA <liangjia@qq.com>, 2021
+# Jeffery CHEN <jeffery9@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -41,7 +42,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-16 13:33+0000\n"
 "PO-Revision-Date: 2020-09-07 08:22+0000\n"
-"Last-Translator: 稀饭~~ <wangwhai@qq.com>, 2020\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2021\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -368,7 +369,7 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list
 msgid "<i class=\"fa fa-folder-o mr-1\"/><span>Add Section</span>"
-msgstr "<i class=\"fa fa-folder-o mr-1\"/><span>添加章节</span>"
+msgstr "<i class=\"fa fa-folder-o mr-1\"/><span>添加节</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
@@ -590,8 +591,8 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
 msgid ""
-"<span class=\"badge badge-pill badge-success py-1 px-2 mx-auto\" style"
-"=\"font-size: 1em\"><i class=\"fa fa-check\"/> Completed</span>"
+"<span class=\"badge badge-pill badge-success py-1 px-2 mx-auto\" "
+"style=\"font-size: 1em\"><i class=\"fa fa-check\"/> Completed</span>"
 msgstr ""
 
 #. module: website_slides
@@ -658,7 +659,7 @@ msgstr "<span class=\"fa fa-clipboard\"> 复制文字</span>"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_home_user_profile_small
 msgid "<span class=\"font-weight-bold text-muted mr-2\">Current rank:</span>"
-msgstr "<span class=\"font-weight-bold text-muted mr-2\">当前排名：</span>"
+msgstr "<span class=\"font-weight-bold text-muted mr-2\">当前等级：</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_main
@@ -789,6 +790,7 @@ msgstr "<span>经验</span>"
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_course_fullscreen_player.js:0
+#: code:addons/website_slides/static/src/js/slides_share.js:0
 #, python-format
 msgid "<strong>Thank you!</strong> Mail has been sent."
 msgstr "<strong>谢谢！</strong> 邮件已发送。"
@@ -801,6 +803,15 @@ msgstr ""
 #. module: website_slides
 #: model:slide.answer,text_value:website_slides.slide_slide_demo_0_4_question_0_0
 msgid "A fruit"
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
+#, python-format
+msgid ""
+"A good course has a structure. Pick a name for your first section and click "
+"<b>Save</b> to create it."
 msgstr ""
 
 #. module: website_slides
@@ -975,7 +986,7 @@ msgstr "添加评论"
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Add Section"
-msgstr "添加章节"
+msgstr "添加节"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_main
@@ -993,7 +1004,7 @@ msgstr "添加新课程"
 #: code:addons/website_slides/static/src/js/slides_category_add.js:0
 #, python-format
 msgid "Add a section"
-msgstr "添加章节"
+msgstr "添加节"
 
 #. module: website_slides
 #. openerp-web
@@ -1664,12 +1675,12 @@ msgid ""
 "Congratulations! Your first lesson is available. Let's see the options "
 "available here. The tag \"<b>New</b>\" indicates that this lesson was "
 "created less than 7 days ago."
-msgstr ""
+msgstr "偶买噶，你真棒!  第一课可以上啦，现在咱们来看看可用选项吧。 这 \"<b>New</b>\" 标签表示这个课程是在7天前创建的。"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_home_user_profile_small
 msgid "Congratulations, you have reached the last rank!"
-msgstr "恭喜你，你已经达到了最近的排名！"
+msgstr "恭喜你，你已经达到了最近的等级！"
 
 #. module: website_slides
 #. openerp-web
@@ -1886,7 +1897,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__karma_gen_channel_rank
 msgid "Course ranked"
-msgstr "课程排名"
+msgstr "课程已分等级"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__channel_type
@@ -3422,7 +3433,7 @@ msgstr "下一活动类型"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_home_user_profile_small
 msgid "Next rank:"
-msgstr "下一个排名："
+msgstr "下一个等级："
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
@@ -3470,7 +3481,7 @@ msgstr "找不到符合您搜索条件的课程"
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.slide_slide_action_report
 msgid "No data yet!"
-msgstr "还没有数据！"
+msgstr "还没有数据耶！"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.user_profile_content
@@ -4166,20 +4177,20 @@ msgstr "第二次尝试"
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__category_id
 #, python-format
 msgid "Section"
-msgstr "章节"
+msgstr "节"
 
 #. module: website_slides
 #: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_1_4
 #: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_2_1
 msgid "Section Subtitle"
-msgstr "章节子标题"
+msgstr "节子标题"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/slide_management.xml:0
 #, python-format
 msgid "Section name"
-msgstr "章节名称"
+msgstr "节名称"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__access_token
@@ -4226,7 +4237,7 @@ msgstr "发送EMail"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__seo_name
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__seo_name
 msgid "Seo name"
-msgstr ""
+msgstr "Seo 名称"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_answer__sequence
@@ -5432,6 +5443,13 @@ msgid ""
 "e.g. In this video, we'll give you the keys on how Odoo can help you to grow"
 " your business. At the end, we'll propose you a quiz to test your knowledge."
 msgstr "例如: 在本视频中，我们将向您介绍Odoo如何帮助您拓展业务。 最后，我们将为测试您的知识。"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/slide_management.xml:0
+#, python-format
+msgid "e.g. Introduction"
+msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form

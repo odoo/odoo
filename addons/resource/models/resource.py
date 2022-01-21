@@ -617,12 +617,14 @@ class ResourceCalendar(models.Model):
         def interval_dt(interval):
             return interval[1 if match_end else 0]
 
+        tz = resource.tz if resource else self.tz
         if resource is None:
             resource = self.env['resource.resource']
 
         if not dt.tzinfo or search_range and not (search_range[0].tzinfo and search_range[1].tzinfo):
             raise ValueError('Provided datetimes needs to be timezoned')
-        dt = dt.astimezone(timezone(self.tz))
+
+        dt = dt.astimezone(timezone(tz))
 
         if not search_range:
             range_start = dt + relativedelta(hour=0, minute=0, second=0)
@@ -950,6 +952,7 @@ class ResourceResource(models.Model):
             search_range = None
             tz = timezone(resource.tz)
             if calendar_start and start.astimezone(tz).date() == end.astimezone(tz).date():
+                end = end.astimezone(tz)
                 # Make sure to only search end after start
                 search_range = (
                     start,

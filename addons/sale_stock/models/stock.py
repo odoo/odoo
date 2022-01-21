@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
+
 from odoo import api, fields, models, _
+from odoo.tools.sql import column_exists, create_column
 
 
 class StockLocationRoute(models.Model):
@@ -71,6 +74,18 @@ class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
     sale_id = fields.Many2one(related="group_id.sale_id", string="Sales Order", store=True, readonly=False)
+
+    def _auto_init(self):
+        """
+        Create related field here, too slow
+        when computing it afterwards through _compute_related.
+
+        Since group_id.sale_id is created in this module,
+        no need for an UPDATE statement.
+        """
+        if not column_exists(self.env.cr, 'stock_picking', 'sale_id'):
+            create_column(self.env.cr, 'stock_picking', 'sale_id', 'int4')
+        return super()._auto_init()
 
     def _action_done(self):
         res = super()._action_done()
@@ -155,14 +170,13 @@ class ProductionLot(models.Model):
 
     @api.depends('name')
     def _compute_sale_order_ids(self):
+        sale_orders = defaultdict(lambda: self.env['sale.order'])
+        for move_line in self.env['stock.move.line'].search([('lot_id', 'in', self.ids), ('state', '=', 'done')]):
+            move = move_line.move_id
+            if move.picking_id.location_dest_id.usage == 'customer' and move.sale_line_id.order_id:
+                sale_orders[move_line.lot_id.id] |= move.sale_line_id.order_id
         for lot in self:
-            stock_moves = self.env['stock.move.line'].search([
-                ('lot_id', '=', lot.id),
-                ('state', '=', 'done')
-            ]).mapped('move_id')
-            stock_moves = stock_moves.search([('id', 'in', stock_moves.ids)]).filtered(
-                lambda move: move.picking_id.location_dest_id.usage == 'customer' and move.state == 'done')
-            lot.sale_order_ids = stock_moves.mapped('sale_line_id.order_id')
+            lot.sale_order_ids = sale_orders[lot.id]
             lot.sale_order_count = len(lot.sale_order_ids)
 
     def action_view_so(self):

@@ -66,6 +66,16 @@ $bronze: #eea91e;
         p {
             margin-bottom: 0.5rem;
         }
+
+        img {
+            max-width: 100%;
+        }
+
+        &::after {
+            content: "";
+            display: table;
+            clear: both;
+        }
     }
 
     textarea.o_wysiwyg_loader + .note-editor {
@@ -150,10 +160,6 @@ $bronze: #eea91e;
     a.no-decoration {
         cursor: pointer;
         text-decoration: none !important;
-    }
-
-    .forum_answer img, .question-block img {
-        max-width: 100%
     }
 }
 
@@ -251,6 +257,10 @@ img.o_forum_avatar_big {
 
 .website_forum {
     margin-bottom: $spacer;
+}
+
+.popover.o_wforum_bio_popover_container {
+    max-width: 552px;
 }
 
 .o_wforum_forum_card_bg {

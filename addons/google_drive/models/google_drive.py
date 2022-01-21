@@ -165,7 +165,10 @@ class GoogleDrive(models.Model):
                 if config.filter_id.user_id and config.filter_id.user_id.id != self.env.user.id:
                     #Private
                     continue
-                domain = [('id', 'in', [res_id])] + ast.literal_eval(config.filter_id.domain)
+                try:
+                    domain = [('id', 'in', [res_id])] + ast.literal_eval(config.filter_id.domain)
+                except:
+                    raise UserError(_("The document filter must not include any 'dynamic' part, so it should not be based on the current time or current user, for example."))
                 additionnal_context = ast.literal_eval(config.filter_id.context)
                 google_doc_configs = self.env[config.filter_id.model_id].with_context(**additionnal_context).search(domain)
                 if google_doc_configs:
@@ -218,6 +221,9 @@ class GoogleDrive(models.Model):
     def _check_model_id(self):
         if self.filter_id and self.model_id.model != self.filter_id.model_id:
             return False
+        if self.model_id.model and self.filter_id:
+            # force an execution of the filter to verify compatibility
+            self.get_google_drive_config(self.model_id.model, 1)
         return True
 
     def get_google_scope(self):

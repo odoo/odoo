@@ -3,16 +3,17 @@
 # 	* event_sms
 # 
 # Translators:
-# Martin Trigaux, 2019
-# krnkris, 2019
+# Martin Trigaux, 2021
+# Tamás Németh <ntomasz81@gmail.com>, 2021
+# Ákos Nagy <akos.nagy@oregional.hu>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:10+0000\n"
-"Last-Translator: krnkris, 2019\n"
+"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"PO-Revision-Date: 2020-09-07 08:12+0000\n"
+"Last-Translator: Ákos Nagy <akos.nagy@oregional.hu>, 2021\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,6 +29,11 @@ msgid ""
 "${object.event_id.name} event is starting ${object.get_date_range_str()}. We"
 " confirm your registration and hope to meet you there."
 msgstr ""
+"${object.event_id.organizer_id.name or object.event_id.company_id.name or "
+"user.env.company.name}: Örömmel emlékeztetjük Önt, hogy a(z) "
+"${object.event_id.name} esemény kezdési időpontja: "
+"${object.get_date_range_str()} . Egyúttal regisztrációját megerősítjük, és "
+"reméljük, hogy ott találkozunk."
 
 #. module: event_sms
 #: model:sms.template,body:event_sms.sms_template_data_event_registration
@@ -36,48 +42,75 @@ msgid ""
 "user.env.company.name}: We are happy to confirm your registration for the "
 "${object.event_id.name} event."
 msgstr ""
+"${object.event_id.organizer_id.name or object.event_id.company_id.name or "
+"user.env.company.name}: Örömmel erősítjük meg regisztrációját a(z) "
+"${object.event_id.name} eseményre."
+
+#. module: event_sms
+#: model:ir.model.fields,field_description:event_sms.field_event_mail__display_name
+#: model:ir.model.fields,field_description:event_sms.field_event_mail_registration__display_name
+#: model:ir.model.fields,field_description:event_sms.field_event_registration__display_name
+#: model:ir.model.fields,field_description:event_sms.field_event_type_mail__display_name
+msgid "Display Name"
+msgstr "Név megjelenítése"
 
 #. module: event_sms
 #: model:ir.model,name:event_sms.model_event_mail
 msgid "Event Automated Mailing"
-msgstr ""
+msgstr "Esemény automatizált levelezés"
 
 #. module: event_sms
 #: model:ir.model,name:event_sms.model_event_registration
 msgid "Event Registration"
-msgstr "Rendezvény regisztráció"
+msgstr "Esemény regisztráció"
 
 #. module: event_sms
 #: model:sms.template,name:event_sms.sms_template_data_event_registration
 msgid "Event: Registration"
-msgstr ""
+msgstr "Esemény: regisztráció"
 
 #. module: event_sms
 #: model:sms.template,name:event_sms.sms_template_data_event_reminder
 msgid "Event: Reminder"
-msgstr ""
+msgstr "Esemény: emlékeztető"
+
+#. module: event_sms
+#: model:ir.model.fields,field_description:event_sms.field_event_mail__id
+#: model:ir.model.fields,field_description:event_sms.field_event_mail_registration__id
+#: model:ir.model.fields,field_description:event_sms.field_event_registration__id
+#: model:ir.model.fields,field_description:event_sms.field_event_type_mail__id
+msgid "ID"
+msgstr "Azonosító"
+
+#. module: event_sms
+#: model:ir.model.fields,field_description:event_sms.field_event_mail____last_update
+#: model:ir.model.fields,field_description:event_sms.field_event_mail_registration____last_update
+#: model:ir.model.fields,field_description:event_sms.field_event_registration____last_update
+#: model:ir.model.fields,field_description:event_sms.field_event_type_mail____last_update
+msgid "Last Modified on"
+msgstr "Legutóbb módosítva"
 
 #. module: event_sms
 #: model:ir.model,name:event_sms.model_event_type_mail
 msgid "Mail Scheduling on Event Category"
-msgstr ""
+msgstr "Levél ütemezése: esemény kategória"
 
 #. module: event_sms
 #: model:ir.model,name:event_sms.model_event_mail_registration
 msgid "Registration Mail Scheduler"
-msgstr "Regisztráció email ütemezés"
+msgstr "Regisztráció e-mail ütemezés"
 
 #. module: event_sms
 #: model:ir.model.fields.selection,name:event_sms.selection__event_mail__notification_type__sms
 #: model:ir.model.fields.selection,name:event_sms.selection__event_type_mail__notification_type__sms
 msgid "SMS"
-msgstr ""
+msgstr "SMS"
 
 #. module: event_sms
 #: model:ir.model.fields,field_description:event_sms.field_event_mail__sms_template_id
 #: model:ir.model.fields,field_description:event_sms.field_event_type_mail__sms_template_id
 msgid "SMS Template"
-msgstr ""
+msgstr "SMS sablon"
 
 #. module: event_sms
 #: model:ir.model.fields,field_description:event_sms.field_event_mail__notification_type
@@ -91,3 +124,4 @@ msgstr "Küldés"
 msgid ""
 "This field contains the template of the SMS that will be automatically sent"
 msgstr ""
+"Ez a mező tartalmazza azt az SMS sablont, amely automatikusan lesz elküldve"

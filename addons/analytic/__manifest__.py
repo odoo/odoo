@@ -25,4 +25,5 @@ that have no counterpart in the general financial accounts.
     ],
     'installable': True,
     'auto_install': False,
+    'license': 'LGPL-3',
 }

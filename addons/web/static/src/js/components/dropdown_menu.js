@@ -128,8 +128,12 @@ odoo.define('web.DropdownMenu', function (require) {
             ) {
                 if (document.body.classList.contains("modal-open")) {
                     // retrieve the active modal and check if the dropdown is a child of this modal
-                    const modal = document.querySelector('.modal:not(.o_inactive_modal)');
-                    if (!modal.contains(this.el)) {
+                    const modal = document.querySelector('body > .modal:not(.o_inactive_modal)');
+                    if (modal && !modal.contains(this.el)) {
+                        return;
+                    }
+                    const owlModal = document.querySelector('body > .o_dialog > .modal:not(.o_inactive_modal)');
+                    if (owlModal && !owlModal.contains(this.el)) {
                         return;
                     }
                 }

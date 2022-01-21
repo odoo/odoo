@@ -315,3 +315,34 @@ class TestCalendar(SavepointCaseWithUserDemo):
 
         # no more email should be sent
         _test_one_mail_per_attendee(self, partners)
+
+    def test_event_creation_sudo_other_company(self):
+        """ Check Access right issue when create event with sudo
+
+            Create a company, a user in that company
+            Create an event for someone else in another company as sudo
+            Should not failed for acces right check
+        """
+        now = fields.Datetime.context_timestamp(self.partner_demo, fields.Datetime.now())
+
+        web_company = self.env['res.company'].sudo().create({'name': "Website Company"})
+        web_user = self.env['res.users'].with_company(web_company).sudo().create({
+            'name': 'web user',
+            'login': 'web',
+            'company_id': web_company.id
+        })
+        self.CalendarEvent.with_user(web_user).with_company(web_company).sudo().create({
+            'name': "Test",
+            'allday': False,
+            'recurrency': False,
+            'partner_ids': [(6, 0, self.partner_demo.ids)],
+            'alarm_ids': [(0, 0, {
+                'name': 'Alarm',
+                'alarm_type': 'notification',
+                'interval': 'minutes',
+                'duration': 30,
+            })],
+            'user_id': self.user_demo.id,
+            'start': fields.Datetime.to_string(now + timedelta(hours=5)),
+            'stop': fields.Datetime.to_string(now + timedelta(hours=6)),
+        })

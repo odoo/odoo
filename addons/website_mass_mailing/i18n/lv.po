@@ -2,12 +2,19 @@
 # This file contains the translation of the following modules:
 # 	* website_mass_mailing
 # 
+# Translators:
+# Martin Trigaux, 2020
+# Arnis Putniņš <arnis@allegro.lv>, 2020
+# JanisJanis <jbojars@gmail.com>, 2020
+# ievaputnina <ievai.putninai@gmail.com>, 2020
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-17 06:20+0000\n"
+"POT-Creation-Date: 2021-02-25 10:23+0000\n"
 "PO-Revision-Date: 2020-09-07 08:22+0000\n"
+"Last-Translator: ievaputnina <ievai.putninai@gmail.com>, 2020\n"
 "Language-Team: Latvian (https://www.transifex.com/odoo/teams/41243/lv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -18,6 +25,12 @@ msgstr ""
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.newsletter_subscribe_options
 msgid ", .o_newsletter_popup"
+msgstr ""
+
+#. module: website_mass_mailing
+#: code:addons/website_mass_mailing/models/mailing_list.py:0
+#, python-format
+msgid "<p>Thanks for subscribing!</p>"
 msgstr ""
 
 #. module: website_mass_mailing
@@ -65,28 +78,28 @@ msgstr ""
 #: code:addons/website_mass_mailing/static/src/xml/website_mass_mailing.xml:0
 #, python-format
 msgid "Close"
-msgstr ""
+msgstr "Aizvērt"
 
 #. module: website_mass_mailing
 #: model:ir.model,name:website_mass_mailing.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Uzņēmumi"
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_mail_block_footer_social
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_mail_block_footer_social_left
 msgid "Contact"
-msgstr ""
+msgstr "Kontakts"
 
 #. module: website_mass_mailing
 #: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Izveidoja"
 
 #. module: website_mass_mailing
 #: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Izveidots"
 
 #. module: website_mass_mailing
 #. openerp-web
@@ -100,6 +113,15 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_mass_mailing.field_res_company__display_name
 #: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup__display_name
 msgid "Display Name"
+msgstr "Attēlotais nosaukums"
+
+#. module: website_mass_mailing
+#. openerp-web
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:0
+#, python-format
+msgid ""
+"Do you want to install Google reCAPTCHA to secure your newsletter "
+"subscriptions?"
 msgstr ""
 
 #. module: website_mass_mailing
@@ -108,6 +130,15 @@ msgstr ""
 #: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:0
 #, python-format
 msgid "Error"
+msgstr "Kļūda"
+
+#. module: website_mass_mailing
+#. openerp-web
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:0
+#, python-format
+msgid ""
+"Google reCAPTCHA is now installed! You can configure it from your website "
+"settings."
 msgstr ""
 
 #. module: website_mass_mailing
@@ -115,6 +146,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_mass_mailing.field_res_company__id
 #: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup__id
 msgid "ID"
+msgstr "ID"
+
+#. module: website_mass_mailing
+#. openerp-web
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:0
+#, python-format
+msgid "Install now"
 msgstr ""
 
 #. module: website_mass_mailing
@@ -122,17 +160,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_mass_mailing.field_res_company____last_update
 #: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup____last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Pēdējoreiz modificēts"
 
 #. module: website_mass_mailing
 #: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Pēdējoreiz atjaunoja"
 
 #. module: website_mass_mailing
 #: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Pēdējoreiz atjaunots"
 
 #. module: website_mass_mailing
 #: model:ir.model,name:website_mass_mailing.model_mailing_list
@@ -150,7 +188,7 @@ msgstr ""
 #: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:0
 #, python-format
 msgid "Newsletter"
-msgstr ""
+msgstr "Izziņošana"
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.newsletter_subscribe_options
@@ -160,7 +198,7 @@ msgstr ""
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_form
 msgid "Subscribe"
-msgstr ""
+msgstr "Abonēt"
 
 #. module: website_mass_mailing
 #. openerp-web
@@ -188,7 +226,7 @@ msgstr ""
 #. module: website_mass_mailing
 #: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup__website_id
 msgid "Website"
-msgstr ""
+msgstr "Tīkla vietne"
 
 #. module: website_mass_mailing
 #: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup__popup_content
@@ -215,6 +253,13 @@ msgid ""
 msgstr ""
 
 #. module: website_mass_mailing
+#. openerp-web
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:0
+#, python-format
+msgid "Website settings"
+msgstr ""
+
+#. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_form
 msgid "your email..."
-msgstr ""
+msgstr "Jūsu e-pasts..."

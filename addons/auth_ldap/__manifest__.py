@@ -12,5 +12,6 @@
     ],
     'external_dependencies': {
         'python': ['ldap'],
-    }
+    },
+    'license': 'LGPL-3',
 }

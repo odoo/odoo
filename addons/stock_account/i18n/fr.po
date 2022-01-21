@@ -12,11 +12,10 @@
 # Christophe Dubuit <cdubuit@yahoo.com>, 2020
 # Xavier Belmere <Info@cartmeleon.com>, 2020
 # Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2020
-# f5f0a0dac17dde787a1d812a6989680e, 2020
 # Laura Piraux <lap@odoo.com>, 2020
 # e2f Production <e2f_prod@outlook.com>, 2020
 # Cécile Collart <cco@odoo.com>, 2020
-# Rémi CAZENAVE <remi@le-filament.com>, 2020
+# Rémi CAZENAVE, 2020
 # Thomas Dobbelsteyn <tdo@odoo.com>, 2020
 # Marie Willemyns <mwi@odoo.com>, 2020
 # Olivier ANDRE <frsw194@gmail.com>, 2020
@@ -25,6 +24,8 @@
 # Gilles Mangin <gilles.mangin@phidias.fr>, 2020
 # Fernanda Marques <fem@odoo.com>, 2020
 # guillaume bauer <guillaume.bauer@syentys.fr>, 2020
+# Christophe Ricevuto <cri@nalios.be>, 2021
+# Thomas Deleval <thd@odoo.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -32,7 +33,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-10-02 14:11+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: guillaume bauer <guillaume.bauer@syentys.fr>, 2020\n"
+"Last-Translator: Thomas Deleval <thd@odoo.com>, 2021\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,14 +45,14 @@ msgstr ""
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid " Product cost updated from %(previous)s to %(new_cost)s."
-msgstr ""
+msgstr " Coût d'article mis à jour de   %(previous)s à %(new_cost)s."
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "%(user)s changed cost from %(previous)s to %(new_price)s - %(product)s"
-msgstr ""
+msgstr "%(user)scoût changé de%(previous)s à %(new_price)s - %(product)s"
 
 #. module: stock_account
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
@@ -61,6 +62,8 @@ msgid ""
 "%(user)s changed stock valuation from  %(previous)s to %(new_value)s - "
 "%(product)s"
 msgstr ""
+"%(user)s Valorisation changée de  %(previous)s to %(new_value)s - "
+"%(product)s"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
@@ -68,11 +71,13 @@ msgid ""
 ")\n"
 "                            <small class=\"mx-2 font-italic\">Use a negative added value to record a decrease in the product value</small>"
 msgstr ""
+")\n"
+"                            <small class=\"mx-2 font-italic\">Utilisez une valeur ajoutée négative pour enregistrer une diminution de la valeur d'article</small>"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "<b>Set other input/output accounts on specific </b>"
-msgstr ""
+msgstr "<b>Définissez un autre comptre d'entrée/source</b>"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_chart_template
@@ -109,7 +114,7 @@ msgstr "Informations comptables"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
 msgid "Add Manual Valuation"
-msgstr ""
+msgstr "Valeur Ajoutée"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
@@ -122,12 +127,12 @@ msgstr ""
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
 msgid "Added Value"
-msgstr ""
+msgstr "Valeur Ajoutée"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__added_value
 msgid "Added value"
-msgstr ""
+msgstr "Valeur Ajoutée"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_res_config_settings__module_stock_landed_costs
@@ -161,7 +166,7 @@ msgid ""
 "Cannot find a stock input account for the product %s. You must define one on"
 " the product category, or on the location, before processing this operation."
 msgstr ""
-"Impossible de trouver un compte d'entrée en stock pour le produit %s. Vous "
+"Impossible de trouver un compte d'entrée en stock pour l'article %s. Vous "
 "devez en définir un sur la catégorie de produit ou l'emplacement avant "
 "d'effectuer cette opération."
 
@@ -173,8 +178,8 @@ msgid ""
 "on the product category, or on the location, before processing this "
 "operation."
 msgstr ""
-"Impossible de trouver un compte de stock/production pour le produit %s. Vous"
-" devez en définir un dans la catégorie de produit ou l'emplacement avant "
+"Impossible de trouver un compte de stock/production pour l'article %s. Vous "
+"devez en définir un dans la catégorie de produit ou l'emplacement avant "
 "d'effectuer cette opération."
 
 #. module: stock_account
@@ -235,6 +240,11 @@ msgid ""
 "Counterpart journal items for all incoming stock moves will be posted in this account, unless there is a specific valuation account\n"
 "                set on the source location. This is the default value for all products in this category. It can also directly be set on each product."
 msgstr ""
+"Les écritures de contrepartie de tous les mouvements de stock entrants "
+"seront passées sur ce compte, sauf si un compte de valorisation est "
+"spécifiquement précisé pour l'emplacement d'origine. C'est la valeur par "
+"défaut pour tous les articles de cette catégorie. Il est également possible "
+"de la préciser directement sur chaque article."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__create_uid
@@ -258,7 +268,7 @@ msgstr "Devise"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__current_quantity_svl
 msgid "Current Quantity"
-msgstr ""
+msgstr "Quantité Actuelle"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__current_value_svl
@@ -471,13 +481,13 @@ msgstr "Manuel"
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "Manual Stock Valuation: %s."
-msgstr ""
+msgstr "Valorisation manuelle du stock: %s."
 
 #. module: stock_account
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "Manual Stock Valuation: No Reason Given."
-msgstr ""
+msgstr "Valorisation manuelle du stock: Aucune raison"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_valuation
@@ -495,12 +505,12 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__new_value
 msgid "New value"
-msgstr ""
+msgstr "Nouvelle valeur"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__new_value_by_qty
 msgid "New value by quantity"
-msgstr ""
+msgstr "Nouvelle valeur par quantité"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_product_product_replenishment
@@ -545,7 +555,7 @@ msgstr "Mouvements d'article (Ligne de mouvement de stock)"
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
 #, python-format
 msgid "Product Revaluation"
-msgstr ""
+msgstr "Revalorisation de l'article"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_template
@@ -583,12 +593,12 @@ msgstr "Motif"
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_valuation_layer_revaluation__reason
 msgid "Reason of the revaluation"
-msgstr ""
+msgstr "Raison de le revalorisation"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__product_id
 msgid "Related product"
-msgstr ""
+msgstr "Article liée"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__remaining_qty
@@ -614,12 +624,12 @@ msgstr "Ligne de Bon de Retour"
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "Revaluation of %s"
-msgstr ""
+msgstr "Revalorisation de %s"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
 msgid "Revalue"
-msgstr ""
+msgstr "Revaloriser"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_valuation_layer__categ_id
@@ -677,7 +687,7 @@ msgstr "Historique des quantités en stock"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_report_stock_report_product_product_replenishment
 msgid "Stock Replenishment Report"
-msgstr ""
+msgstr "Rapport de Réapprovisionnements de Stock"
 
 #. module: stock_account
 #: model:ir.actions.act_window,name:stock_account.stock_valuation_layer_action
@@ -722,6 +732,8 @@ msgid ""
 "The Stock Input and/or Output accounts cannot be the same as the Stock "
 "Valuation account."
 msgstr ""
+"Les comptes d'entrée et/ou de sortie de stock ne peuvent être les mêmes que "
+"le compte de valorisation d'inventaire."
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
@@ -731,12 +743,14 @@ msgid ""
 "The action leads to the creation of a journal entry, for which you don't "
 "have the access rights."
 msgstr ""
+"L'action entraine la création d'une écriture comptable pour laquelle vous "
+"n'avez pas les droits d'accès"
 
 #. module: stock_account
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "The added value doesn't have any impact on the stock valuation"
-msgstr ""
+msgstr "La valeur ajoutée n'a pas d'impact sur la valorisation du stock"
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock_move.py:0
@@ -861,7 +875,7 @@ msgstr "Valorisation"
 #, python-format
 msgid "Valuation method change for product category %s: from %s to %s."
 msgstr ""
-"La méthode de valorisation de la catégorie de produit %s a changé: de %s à "
+"La méthode de valorisation de la catégorie d'articles %s a changé: de %s à "
 "%s."
 
 #. module: stock_account
@@ -913,19 +927,21 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_valuation_layer_revaluation
 msgid "Wizard model to reavaluate a stock inventory for a product"
-msgstr ""
+msgstr "Modèle d'assistant pour revaloriser un inventaire pour un article"
 
 #. module: stock_account
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "You cannot revalue a product with a standard cost method."
 msgstr ""
+"Vous ne pouvez pas revaloriser un article avec la méthode de cout standard"
 
 #. module: stock_account
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "You cannot revalue a product with an empty or negative stock."
 msgstr ""
+"Vous ne pouvez pas revaloriser un article avec un stock nul ou négatif"
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
@@ -935,6 +951,9 @@ msgid ""
 "to the creation of a journal entry, for which you don't have the access "
 "rights."
 msgstr ""
+"Vous ne pouvez pas modifier le coût d'un article en valorisation automatique"
+"  car cela entraîne une écriture comptable, pour laquelle vous n'avez pas de"
+" droits d'accès"
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
@@ -975,6 +994,7 @@ msgstr ""
 #, python-format
 msgid "You must set a counterpart account on your product category."
 msgstr ""
+"Vous devez définir un compte contrepartie sur votre catégorie d'articles"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
@@ -989,4 +1009,4 @@ msgstr "pour"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "locations"
-msgstr ""
+msgstr "emplacements"

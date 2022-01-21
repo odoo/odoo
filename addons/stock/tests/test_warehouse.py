@@ -508,6 +508,7 @@ class TestWarehouse(TestStockCommon):
 
         # Picking Type
         self.assertFalse(warehouse.in_type_id.active)
+        self.assertFalse(warehouse.in_type_id.show_operations)
         self.assertFalse(warehouse.out_type_id.active)
         self.assertFalse(warehouse.int_type_id.active)
         self.assertFalse(warehouse.pick_type_id.active)
@@ -532,6 +533,7 @@ class TestWarehouse(TestStockCommon):
 
         # Picking Type
         self.assertTrue(warehouse.in_type_id.active)
+        self.assertFalse(warehouse.in_type_id.show_operations)
         self.assertTrue(warehouse.out_type_id.active)
         self.assertTrue(warehouse.int_type_id.active)
         self.assertFalse(warehouse.pick_type_id.active)

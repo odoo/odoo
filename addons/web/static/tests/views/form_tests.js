@@ -1,12 +1,14 @@
 odoo.define('web.form_tests', function (require) {
 "use strict";
 
+const AbstractField = require("web.AbstractField");
 var AbstractStorageService = require('web.AbstractStorageService');
 var BasicModel = require('web.BasicModel');
 var concurrency = require('web.concurrency');
 var core = require('web.core');
 var fieldRegistry = require('web.field_registry');
 const fieldRegistryOwl = require('web.field_registry_owl');
+const FormRenderer = require('web.FormRenderer');
 var FormView = require('web.FormView');
 var mixins = require('web.mixins');
 var NotificationService = require('web.NotificationService');
@@ -873,6 +875,44 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('invisible attrs on notebook page which has only one page', async function (assert) {
+        assert.expect(4);
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<field name="bar"/>' +
+                        '<notebook>' +
+                            '<page string="Foo" attrs=\'{"invisible": [["bar", "!=", false]]}\'>' +
+                                '<field name="foo"/>' +
+                            '</page>' +
+                        '</notebook>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        assert.notOk(form.$('.o_notebook .nav .nav-link:first()').hasClass('active'),
+            'first tab should not be active');
+        assert.ok(form.$('.o_notebook .nav .nav-item:first()').hasClass('o_invisible_modifier'),
+            'first tab should be invisible');
+
+        // enable checkbox
+        await testUtils.dom.click(form.$('.o_field_boolean input'));
+        assert.ok(form.$('.o_notebook .nav .nav-link:first()').hasClass('active'),
+            'first tab should be active');
+        assert.notOk(form.$('.o_notebook .nav .nav-item:first()').hasClass('o_invisible_modifier'),
+            'first tab should be visible');
+
+        form.destroy();
+    });
+
     QUnit.test('first notebook page invisible', async function (assert) {
         assert.expect(2);
 
@@ -983,6 +1023,55 @@ QUnit.module('Views', {
 
         assert.isNotVisible(form.$('div.hello'));
         form.destroy();
+    });
+
+    QUnit.test('reset local state when switching to another view', async function (assert) {
+        assert.expect(3);
+
+        const actionManager = await createActionManager({
+            data: this.data,
+            archs: {
+                'partner,false,form': `<form>
+                        <sheet>
+                            <field name="product_id"/>
+                            <notebook>
+                                <page string="Foo">
+                                    <field name="foo"/>
+                                </page>
+                                <page string="Bar">
+                                    <field name="bar"/>
+                                </page>
+                            </notebook>
+                        </sheet>
+                    </form>`,
+                'partner,false,list': '<tree><field name="foo"/></tree>',
+                'partner,false,search': '<search></search>',
+            },
+            actions: [{
+                id: 1,
+                name: 'Partner',
+                res_model: 'partner',
+                type: 'ir.actions.act_window',
+                views: [[false, 'list'], [false, 'form']],
+            }],
+        });
+
+        await actionManager.doAction(1);
+
+        await testUtils.dom.click(actionManager.$('.o_list_button_add'));
+        assert.containsOnce(actionManager, '.o_form_view');
+
+        // click on second page tab
+        await testUtils.dom.click(actionManager.$('.o_notebook .nav-link:eq(1)'));
+
+        await testUtils.dom.click('.o_control_panel .o_form_button_cancel');
+        assert.containsNone(actionManager, '.o_form_view');
+
+        await testUtils.dom.click(actionManager.$('.o_list_button_add'));
+        // check notebook active page is 0th page
+        assert.hasClass(actionManager.$('.o_notebook .nav-link:eq(0)'), 'active');
+
+        actionManager.destroy();
     });
 
     QUnit.test('rendering stat buttons', async function (assert) {
@@ -1284,6 +1373,60 @@ QUnit.module('Views', {
         await testUtils.dom.click(form.$('.o_field_boolean input'));
         assert.containsOnce(form, 'input[name="foo"]',
             "the foo field widget should have been rerendered to now be editable again");
+
+        form.destroy();
+    });
+
+    QUnit.test('readonly attrs on lines are re-evaluated on field change 2', async function (assert) {
+        assert.expect(4);
+
+        this.data.partner.records[0].product_ids = [37];
+        this.data.partner.records[0].trululu = false;
+        this.data.partner.onchanges = {
+            trululu(record) {
+                // when trululu changes, push another record in product_ids.
+                // only push a second record once.
+                if (record.product_ids.map(command => command[1]).includes(41)) {
+                    return;
+                }
+                // copy the list to force it as different from the original
+                record.product_ids = record.product_ids.slice();
+                record.product_ids.push([4,41,false]);
+            }
+        };
+
+        this.data.product.records[0].name = 'test';
+        // This one is necessary to have a valid, rendered widget
+        this.data.product.fields.int_field = { type:"integer", string: "intField" };
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+            <form>
+                <field name="trululu"/>
+                <field name="product_ids" attrs="{'readonly': [['trululu', '=', False]]}">
+                    <tree editable="top"><field name="int_field" widget="handle" /><field name="name"/></tree>
+                </field>
+            </form>
+            `,
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        for (let value of [true, false, true, false]) {
+            if (value) {
+                await testUtils.fields.many2one.clickOpenDropdown('trululu')
+                await testUtils.fields.many2one.clickHighlightedItem('trululu')
+                assert.notOk($('.o_field_one2many[name="product_ids"]').hasClass("o_readonly_modifier"), 'lines should not be readonly')
+            } else {
+                await testUtils.fields.editAndTrigger(form.$('.o_field_many2one[name="trululu"] input'), '', ['keyup'])
+                assert.ok($('.o_field_one2many[name="product_ids"]').hasClass("o_readonly_modifier"), 'lines should be readonly')
+            }
+        }
 
         form.destroy();
     });
@@ -7372,7 +7515,7 @@ QUnit.module('Views', {
         });
 
         await testUtils.form.clickEdit(form);
-        assert.hasAttrValue(form.$('input[name="display_name"]'), 'autocomplete', 'none',
+        assert.hasAttrValue(form.$('input[name="display_name"]'), 'autocomplete', 'off',
             "attribute autocomplete should be set to none by default");
         form.destroy();
     });
@@ -9666,9 +9809,153 @@ QUnit.module('Views', {
 
         form.destroy();
         delete fieldRegistryOwl.map.custom;
-        
+
         assert.verifySteps(['mounted', 'willUnmount']);
     });
+
+    QUnit.test("attach callbacks with long processing in __renderView", async function (assert) {
+        /**
+         * The main use case of this test is discuss, in which the FormRenderer
+         * __renderView method is overridden to perform asynchronous tasks (the
+         * update of the chatter Component) resulting in a delay between the
+         * appending of the new form content into its element and the
+         * "on_attach_callback" calls. This is the purpose of "__renderView"
+         * which is meant to do all the async work before the content is appended.
+         */
+        assert.expect(11);
+
+        let testPromise = Promise.resolve();
+
+        const Renderer = FormRenderer.extend({
+            on_attach_callback() {
+                assert.step("form.on_attach_callback");
+                this._super(...arguments);
+            },
+            async __renderView() {
+                const _super = this._super.bind(this);
+                await testPromise;
+                return _super();
+            },
+        });
+
+        // Setup custom field widget
+        fieldRegistry.add("customwidget", AbstractField.extend({
+            className: "custom-widget",
+            on_attach_callback() {
+                assert.step("widget.on_attach_callback");
+            },
+        }));
+
+        const form = await createView({
+            arch: `<form><field name="bar" widget="customwidget"/></form>`,
+            data: this.data,
+            model: 'partner',
+            res_id: 1,
+            View: FormView.extend({
+                config: Object.assign({}, FormView.prototype.config, { Renderer }),
+            }),
+        });
+
+        assert.containsOnce(form, ".custom-widget");
+        assert.verifySteps([
+            "form.on_attach_callback", // Form attached
+            "widget.on_attach_callback", // Initial widget attached
+        ]);
+
+        const initialWidget = form.$(".custom-widget")[0];
+        testPromise = testUtils.makeTestPromise();
+
+        await testUtils.form.clickEdit(form);
+
+        assert.containsOnce(form, ".custom-widget");
+        assert.strictEqual(initialWidget, form.$(".custom-widget")[0], "Widgets have yet to be replaced");
+        assert.verifySteps([]);
+
+        testPromise.resolve();
+        await testUtils.nextTick();
+
+        assert.containsOnce(form, ".custom-widget");
+        assert.notStrictEqual(initialWidget, form.$(".custom-widget")[0], "Widgets have been replaced");
+        assert.verifySteps([
+            "widget.on_attach_callback", // New widget attached
+        ]);
+
+        form.destroy();
+
+        delete fieldRegistry.map.customwidget;
+    });
+
+    QUnit.test('field "length" with value 0: can apply onchange', async function (assert) {
+        assert.expect(1);
+
+        this.data.partner.fields.length = {string: 'Length', type: 'float', default: 0 };
+        this.data.partner.fields.foo.default = "foo default";
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form><field name="foo"/><field name="length"/></form>',
+        });
+
+        assert.strictEqual(form.$('input[name=foo]').val(), "foo default",
+                        "should contain input with initial value");
+
+        form.destroy();
+    });
+
+    QUnit.test('field "length" with value 0: readonly fields are not sent when saving', async function (assert) {
+        assert.expect(3);
+
+        this.data.partner.fields.length = {string: 'Length', type: 'float', default: 0 };
+        this.data.partner.fields.foo.default = "foo default";
+
+        // define an onchange on display_name to check that the value of readonly
+        // fields is correctly sent for onchanges
+        this.data.partner.onchanges = {
+            display_name: function () {},
+            p: function () {},
+        };
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `<form string="Partners">
+                    <field name="p">
+                        <tree>
+                            <field name="display_name"/>
+                        </tree>
+                        <form string="Partners">
+                            <field name="length"/>
+                            <field name="display_name"/>
+                            <field name="foo" attrs="{\'readonly\': [[\'display_name\', \'=\', \'readonly\']]}"/>
+                        </form>
+                    </field>
+                </form>`,
+            mockRPC: function (route, args) {
+                if (args.method === 'create') {
+                    assert.deepEqual(args.args[0], {
+                        p: [[0, args.args[0].p[0][1], {length: 0, display_name: 'readonly'}]]
+                    }, "should not have sent the value of the readonly field");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+        assert.containsOnce(document.body, '.modal input.o_field_widget[name=foo]',
+            'foo should be editable');
+        await testUtils.fields.editInput($('.modal .o_field_widget[name=foo]'), 'foo value');
+        await testUtils.fields.editInput($('.modal .o_field_widget[name=display_name]'), 'readonly');
+        assert.containsOnce(document.body, '.modal span.o_field_widget[name=foo]',
+            'foo should be readonly');
+        await testUtils.dom.clickFirst($('.modal-footer .btn-primary'));
+
+        await testUtils.form.clickSave(form); // save the record
+        form.destroy();
+    });
+
 });
 
 });

@@ -15,6 +15,7 @@ import threading
 import zipfile
 
 import requests
+import werkzeug.urls
 
 from docutils import nodes
 from docutils.core import publish_string
@@ -65,7 +66,7 @@ def assert_log_admin_access(method):
     def check_and_log(method, self, *args, **kwargs):
         user = self.env.user
         origin = request.httprequest.remote_addr if request else 'n/a'
-        log_data = (method.__name__, self.sudo().mapped('name'), user.login, user.id, origin)
+        log_data = (method.__name__, self.sudo().mapped('display_name'), user.login, user.id, origin)
         if not self.env.is_admin():
             _logger.warning('DENY access to module.%s on %s to user %s ID #%s via %s', *log_data)
             raise AccessDenied()
@@ -390,9 +391,9 @@ class Module(models.Model):
             module_demo = module.demo or update_demo or any(mod.demo for mod in ready_mods)
             demo = demo or module_demo
 
-            # check dependencies and update module itself
-            self.check_external_dependencies(module.name, newstate)
             if module.state in states_to_update:
+                # check dependencies and update module itself
+                self.check_external_dependencies(module.name, newstate)
                 module.write({'state': newstate, 'demo': module_demo})
 
         return demo
@@ -654,6 +655,8 @@ class Module(models.Model):
 
     @assert_log_admin_access
     def button_upgrade(self):
+        if not self:
+            return
         Dependency = self.env['ir.module.module.dependency']
         self.update_list()
 
@@ -664,15 +667,22 @@ class Module(models.Model):
             i += 1
             if module.state not in ('installed', 'to upgrade'):
                 raise UserError(_("Can not upgrade module '%s'. It is not installed.") % (module.name,))
-            self.check_external_dependencies(module.name, 'to upgrade')
+            if self.get_module_info(module.name).get("installable", True):
+                self.check_external_dependencies(module.name, 'to upgrade')
             for dep in Dependency.search([('name', '=', module.name)]):
-                if dep.module_id.state == 'installed' and dep.module_id not in todo:
+                if (
+                    dep.module_id.state == 'installed'
+                    and dep.module_id not in todo
+                    and dep.module_id.name != 'studio_customization'
+                ):
                     todo.append(dep.module_id)
 
         self.browse(module.id for module in todo).write({'state': 'to upgrade'})
 
         to_install = []
         for module in todo:
+            if not self.get_module_info(module.name).get("installable", True):
+                continue
             for dep in module.dependencies_id:
                 if dep.state == 'unknown':
                     raise UserError(_('You try to upgrade the module %s that depends on the module: %s.\nBut this module is not available in your system.') % (module.name, dep.name,))
@@ -780,7 +790,7 @@ class Module(models.Model):
             _logger.warning(msg)
             raise UserError(msg)
 
-        apps_server = urls.url_parse(self.get_apps_server())
+        apps_server = werkzeug.urls.url_parse(self.get_apps_server())
 
         OPENERP = odoo.release.product_name.lower()
         tmp = tempfile.mkdtemp()
@@ -791,7 +801,7 @@ class Module(models.Model):
                 if not url:
                     continue    # nothing to download, local version is already the last one
 
-                up = urls.url_parse(url)
+                up = werkzeug.urls.url_parse(url)
                 if up.scheme != apps_server.scheme or up.netloc != apps_server.netloc:
                     raise AccessDenied()
 

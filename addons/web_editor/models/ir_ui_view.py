@@ -27,6 +27,31 @@ class IrUiView(models.Model):
 
         return super(IrUiView, self)._render(values=values, engine=engine, minimal_qcontext=minimal_qcontext)
 
+    @api.model
+    def read_template(self, xml_id):
+        """ This method is deprecated
+        """
+        if xml_id == 'web_editor.colorpicker' and self.env.user.has_group('base.group_user'):
+            # TODO this should be handled another way but was required as a
+            # stable fix in 14.0. The views are now private by default: they
+            # can be read thanks to read_template provided they declare a group
+            # that the user has and that the user has read access rights.
+            #
+            # For the case 'read_template web_editor.colorpicker', it works for
+            # website editor users as the view has the base.group_user group
+            # *and they have access rights thanks to publisher/designer groups*.
+            # For mass mailing users, no such group exists though so they simply
+            # do not have the rights to read that template anymore. Seems safer
+            # to force it for this template only while waiting for a better
+            # access rights refactoring.
+            #
+            # Note: using 'render_public_asset' which allows to bypass rights if
+            # the user has the group the view requires was also a solution.
+            # However, that would turn the 'read' into a 'render', which is
+            # a less stable change.
+            self = self.sudo()
+        return super().read_template(xml_id)
+
     #------------------------------------------------------
     # Save from html
     #------------------------------------------------------
@@ -318,7 +343,7 @@ class IrUiView(models.Model):
         full_snippet_key = '%s.%s' % (app_name, snippet_key)
 
         # html to xml to add '/' at the end of self closing tags like br, ...
-        xml_arch = etree.tostring(html.fromstring(arch))
+        xml_arch = etree.tostring(html.fromstring(arch), encoding='utf-8')
         new_snippet_view_values = {
             'name': name,
             'key': full_snippet_key,

@@ -25,10 +25,16 @@
 # Melina Mäntylä <melina.mantyla@web-veistamo.fi>, 2020
 # Retropikzel, 2020
 # Martin Trigaux, 2020
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2020
 # Timo Koukkari <ti.ko@netikka.fi>, 2020
 # Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2020
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2020
+# Mikko Virtanen <mikko.virtanen2013@gmail.com>, 2021
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2021
+# Miika Nissi <miika.nissi@tawasta.fi>, 2021
+# Katja Tuomas-Ahponen, 2021
+# Erno Iipponen <erno.iipponen@web-veistamo.fi>, 2021
+# Antti Oksman <antti.oksman@web-veistamo.fi>, 2021
+# Pekka Ikonen, 2021
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2021
 # 
 msgid ""
 msgstr ""
@@ -36,7 +42,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 13:50+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2020\n"
+"Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2021\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -105,6 +111,19 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"Austrian charts of accounts (Einheitskontenrahmen 2010).\n"
+"==========================================================\n"
+"\n"
+"    * Defines the following chart of account templates:\n"
+"        * Austrian General Chart of accounts 2010\n"
+"    * Defines templates for VAT on sales and purchases\n"
+"    * Defines tax templates\n"
+"    * Defines fiscal positions for Austrian fiscal legislation\n"
+"    * Defines tax reports U1/U30\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_hu
@@ -415,6 +434,9 @@ msgid ""
 "\n"
 "This module adds a custom Sales Team for the Point of Sale. This enables you to view and manage your point of sale sales with more ease.\n"
 msgstr ""
+"\n"
+"\n"
+"Tämä moduuli lisää myyntitiimien mukauttamisen kassapäätteelle. Näin voit tarkastella ja hallita kassapäätteesi myyntiä helpommin.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_restaurant
@@ -1162,9 +1184,9 @@ msgid ""
 "\n"
 "    Make the lock date irreversible:\n"
 "\n"
-"    * You cannot define stricter conditions on advisors than on users. Then, the lock date on advisor must be set before the lock date for users.\n"
-"    * You cannot lock a period that is not finished yet. Then, the lock date for advisors must be set before the last day of the previous month.\n"
-"    * The new lock date for advisors must be set after the previous lock date.\n"
+"    * You cannot set stricter restrictions on advisors than on users. Therefore, the All Users Lock Date must be anterior (or equal) to the Invoice/Bills Lock Date.\n"
+"    * You cannot lock a period that has not yet ended. Therefore, the All Users Lock Date must be anterior (or equal) to the last day of the previous month.\n"
+"    * Any new All Users Lock Date must be posterior (or equal) to the previous one.\n"
 "    "
 msgstr ""
 
@@ -1528,6 +1550,11 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Suomalaiset kirjanpitoraportit\n"
+"================================\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_reports
@@ -3384,6 +3411,25 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Includes the following data for the Chinese localization\n"
+"========================================================\n"
+"\n"
+"Account Type/科目类型\n"
+"\n"
+"State Data/省份数据\n"
+"\n"
+"    科目类型\\会计科目表模板\\增值税\\辅助核算类别\\管理会计凭证簿\\财务会计凭证簿\n"
+"\n"
+"    添加中文省份数据\n"
+"\n"
+"    增加小企业会计科目表\n"
+"\n"
+"    修改小企业会计科目表\n"
+"\n"
+"    修改小企业会计税率\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cn_city
@@ -4543,6 +4589,9 @@ msgid ""
 "Show your company address/partner address on Google Maps. Configure an API key in the Website settings.\n"
 "    "
 msgstr ""
+"\n"
+"Näytä yrityken/kumppanin osoite Google Mapsissa. Aseta API avain verkkosivun asetukissa.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sign
@@ -6458,7 +6507,7 @@ msgstr "%y - Vuosi ilman vuosisataa [00,99]."
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_language_install
 msgid "&amp; Close"
-msgstr ""
+msgstr "&amp; Sulje"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_view_kanban
@@ -6793,12 +6842,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid ""
 "<span class=\"o_form_label o_td_label\" name=\"address_name\">\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'contact')]}\">Company Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'invoice')]}\">Invoice Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'delivery')]}\">Delivery Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'other')]}\">Other Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'private')]}\">Private Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', False)]}\">Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'contact')]}\">Company Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'invoice')]}\">Invoice Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'delivery')]}\">Delivery Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'other')]}\">Other Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'private')]}\">Private Address</b>\n"
+"                                <b attrs=\"{'invisible': ['&amp;', ('parent_id', '!=', False), ('type', '!=', False)]}\">Address</b>\n"
 "                            </span>"
 msgstr ""
 
@@ -7473,7 +7522,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "Account Security"
-msgstr ""
+msgstr "Tilin tietoturva"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_taxcloud
@@ -7751,7 +7800,7 @@ msgstr "Lisää"
 #. module: base
 #: model:ir.actions.act_window,name:base.action_view_base_language_install
 msgid "Add Language"
-msgstr ""
+msgstr "Lisää kieli"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mail_bot
@@ -10184,7 +10233,7 @@ msgstr ""
 #: model_terms:res.partner,website_description:base.res_partner_3
 #: model_terms:res.partner,website_description:base.res_partner_4
 msgid "Come see us live, we hope to meet you !"
-msgstr ""
+msgstr "Tule tapaamaan meitä livenä, toivomme nakevämme sinut!"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__comm10e
@@ -11811,6 +11860,8 @@ msgid ""
 "Determines where the customer/company name should be placed, i.e. after or "
 "before the address."
 msgstr ""
+"Määrittelee minne asiakaan/yrityksen nimi sijoitetaan, esim. ennen tai "
+"jälkeen osoitteen."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
@@ -13693,7 +13744,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.identity_check_wizard
 msgid "Forgot password?"
-msgstr ""
+msgstr "Unohtuiko salasana?"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_window_view__view_mode__form
@@ -15361,7 +15412,7 @@ msgstr "Indonesia - Kirjanpito"
 #. module: base
 #: model:ir.actions.act_window,name:base.res_partner_industry_action
 msgid "Industries"
-msgstr ""
+msgstr "Toimialat"
 
 #. module: base
 #: model:ir.model,name:base.model_res_partner_industry
@@ -15703,6 +15754,12 @@ msgstr ""
 #: code:addons/base/models/ir_actions.py:0
 #, python-format
 msgid "Invalid model name %r in action definition."
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/ir_actions.py:611
+#, python-format
+msgid "many2many fields cannot be evaluated by reference"
 msgstr ""
 
 #. module: base
@@ -17076,7 +17133,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_website_slides
 msgid "Manage and publish an eLearning platform"
-msgstr ""
+msgstr "Alusta verkko-oppimisen hallintaan ja julkaisuihin"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_res_bank_form
@@ -17089,6 +17146,8 @@ msgid ""
 "Manage contact tags to better classify them for tracking and analysis "
 "purposes."
 msgstr ""
+"Hallitse yhteystietojen tunnisteita luokitellaksesi niitä paremmin seuranta-"
+" ja analyysitarkoituksiin."
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_disallowed_expenses
@@ -19585,6 +19644,16 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: code:addons/base/models/ir_actions_report.py:0
+#, python-format
+msgid ""
+"Odoo is unable to merge the PDFs attached to the following records:\n"
+"%s\n"
+"\n"
+"Please exclude them from the selection to continue. It's possible to still retrieve those PDFs by selecting each of the affected records individually, which will avoid merging."
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_odoo_referral
 msgid "Odoo referral program"
 msgstr ""
@@ -19652,6 +19721,12 @@ msgstr ""
 msgid ""
 "One of the documents you are trying to access has been deleted, please try "
 "again after refreshing."
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/ir_actions_report.py:0
+#, python-format
+msgid "One of the documents, you try to merge is encrypted"
 msgstr ""
 
 #. module: base
@@ -20082,7 +20157,7 @@ msgstr "Muu"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__type__other
 msgid "Other Address"
-msgstr ""
+msgstr "Muu osoite"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_extra
@@ -20135,7 +20210,7 @@ msgstr "Lähtevän sähköpostin palvelimet"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_microsoft_calendar
 msgid "Outlook Calendar"
-msgstr ""
+msgstr "Outlook-kalenteri"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__dpi
@@ -20850,7 +20925,7 @@ msgstr "Hinnan täsmällisyys"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__primary_color
 msgid "Primary Color"
-msgstr ""
+msgstr "Pääväri"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_ca_check_printing
@@ -20902,7 +20977,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_stock
 msgid "Product Availability"
-msgstr ""
+msgstr "Tuotteen saatavuus"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_comparison
@@ -22276,7 +22351,7 @@ msgstr "Myynti"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Sales & Purchase"
-msgstr ""
+msgstr "Myynti ja Osto"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_project
@@ -22534,7 +22609,7 @@ msgstr "Turvallisuus"
 #: model_terms:ir.ui.view,arch_db:base.identity_check_wizard
 #, python-format
 msgid "Security Control"
-msgstr ""
+msgstr "Suojaustarkastus"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_mail_server_form
@@ -22960,7 +23035,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_website_google_map
 msgid "Show your company address on Google Maps"
-msgstr ""
+msgstr "Näytä yrityksesi osoite Google Mapsissa"
 
 #. module: base
 #: model:res.country,name:base.sl
@@ -23898,7 +23973,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_website_slides_full
 msgid "Test Full eLearning Flow"
-msgstr ""
+msgstr "Testaa koko verkko-oppimisen polku"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_main_flows
@@ -24207,6 +24282,12 @@ msgstr "Täydellinen maan nimi."
 #: model:ir.model.fields,help:base.field_res_partner__user_id
 #: model:ir.model.fields,help:base.field_res_users__user_id
 msgid "The internal user in charge of this contact."
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/res_country.py:106
+#, python-format
+msgid "The layout contains an invalid format key"
 msgstr ""
 
 #. module: base
@@ -24579,6 +24660,8 @@ msgid ""
 "This is necessary for security-related changes. The authorization will last "
 "for a few minutes."
 msgstr ""
+"Tämä tarvitaan tietoturvallisuuteen liittyviin muutoksiin. Valtuutus kestää "
+"muutaman minuutin."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_report__attachment
@@ -24821,7 +24904,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_timer
 msgid "Timer"
-msgstr ""
+msgstr "Ajastin"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_timer
@@ -25445,7 +25528,7 @@ msgstr "Poista asennus"
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_uninstall
 #, python-format
 msgid "Uninstall module"
-msgstr ""
+msgstr "Poista moduuli"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module__state__uninstallable
@@ -25574,7 +25657,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_unsplash
 msgid "Unsplash Image Library"
-msgstr ""
+msgstr "Unsplash kuvakirjasto"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_translation_search
@@ -25610,12 +25693,12 @@ msgstr "Päivitä moduulien lista"
 #. module: base
 #: model:ir.model,name:base.model_base_update_translations
 msgid "Update Translations"
-msgstr ""
+msgstr "Päivitä käännökset"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__state__object_write
 msgid "Update the Record"
-msgstr ""
+msgstr "Päivitä tietue"
 
 #. module: base
 #: model:ir.actions.client,name:base.modules_updates_act_cl
@@ -25851,7 +25934,7 @@ msgstr "Käyttäjä:"
 #: code:addons/base/models/ir_rule.py:0
 #, python-format
 msgid "User: %s"
-msgstr ""
+msgstr "Käyttäjä: %s"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__smtp_user
@@ -25884,7 +25967,7 @@ msgstr "Käyttäjät ja yritykset"
 #. module: base
 #: model:ir.model,name:base.model_res_users_log
 msgid "Users Log"
-msgstr ""
+msgstr "Käyttäjälogi"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_groups_form
@@ -25939,12 +26022,12 @@ msgstr "VOIP"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_voip_onsip
 msgid "VOIP OnSIP"
-msgstr ""
+msgstr "VOIP OnSIP"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_voip_crm
 msgid "VOIP for crm"
-msgstr ""
+msgstr "VOIP CRM:ssä"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_phone_validation
@@ -26114,7 +26197,7 @@ msgstr "Näkymän ID"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__view_mode
 msgid "View Mode"
-msgstr ""
+msgstr "Näkymätyyppi"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__name
@@ -26136,7 +26219,7 @@ msgstr "Näkymän tyyppi"
 #. module: base
 #: model:ir.module.module,summary:base.module_account_reports
 msgid "View and create reports"
-msgstr ""
+msgstr "Katso ja luo raportteja"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__mode
@@ -26152,7 +26235,7 @@ msgstr ""
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "View: %s"
-msgstr ""
+msgstr "Näkymä: %s"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_ui_view
@@ -26334,22 +26417,22 @@ msgstr "Verkkosivu"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_management
 msgid "Website - Sales Management"
-msgstr ""
+msgstr "Verkkosivun myyntien hallinnointi"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_enterprise
 msgid "Website Enterprise"
-msgstr ""
+msgstr "Verkkosivu Enterpriselle"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_crm_questions
 msgid "Website Event CRM Questions"
-msgstr ""
+msgstr "Verkkosivun tapahtuman CRM-kysymykset"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_crm
 msgid "Website Events CRM"
-msgstr ""
+msgstr "Verkkosivun tapahtuman CRM"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_form
@@ -26359,17 +26442,17 @@ msgstr "Verkkosivuston lomake"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_helpdesk
 msgid "Website Helpdesk"
-msgstr ""
+msgstr "Verkkosivun Helpdesk"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_helpdesk_livechat
 msgid "Website IM Livechat Helpdesk"
-msgstr ""
+msgstr "Verkkosivun IM Livechat Helpdesk"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_jitsi
 msgid "Website Jitsi"
-msgstr ""
+msgstr "Verkkosivun Jitsi"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__website
@@ -26391,7 +26474,7 @@ msgstr "Sähköposti verkkosivulla"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_mail_channel
 msgid "Website Mail Channels"
-msgstr ""
+msgstr "Verkkosivun sähköpostikanavat"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_mail
@@ -26406,37 +26489,37 @@ msgstr "Kumppanit verkkosivuilla"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_payment
 msgid "Website Payment"
-msgstr ""
+msgstr "Verkkosivun maksut"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_product_configurator
 msgid "Website Sale Product Configurator"
-msgstr ""
+msgstr "Verkkosivun myyntituotteen konfiguraattori"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_stock_product_configurator
 msgid "Website Sale Stock Product Configurator"
-msgstr ""
+msgstr "Verkkosivun varastotuotteen konfiguraattori"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_dashboard
 msgid "Website Sales Dashboard"
-msgstr ""
+msgstr "Verkkosivun myynnin työpöytä"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_helpdesk_slides
 msgid "Website Slides Helpdesk"
-msgstr ""
+msgstr "Verkkosivun diojen helpdesk"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_studio
 msgid "Website Studio"
-msgstr ""
+msgstr "Verkkosivun Studio"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_website
 msgid "Website Test"
-msgstr ""
+msgstr "Verkkosivun testaus"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_test_website
@@ -26451,7 +26534,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_profile
 msgid "Website profile"
-msgstr ""
+msgstr "Verkkosivun profiili"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__week_start__3
@@ -26471,7 +26554,7 @@ msgstr "Länsi-Sahara"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.form_res_users_key_description
 msgid "What's this key for?"
-msgstr ""
+msgstr "Mitä varten tämä avain on?"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_server__sequence
@@ -26515,7 +26598,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__store
 msgid "Whether the value is stored in the database."
-msgstr ""
+msgstr "Tallennetaanko arvo tietokantaan."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_module_module_dependency__auto_install_required
@@ -26544,7 +26627,7 @@ msgstr ""
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_G
 msgid "Wholesale/Retail"
-msgstr ""
+msgstr "Tukku/vähittäismyynti"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
@@ -26626,7 +26709,7 @@ msgstr "Kirjoitusoikeus"
 #: model:ir.model.fields,field_description:base.field_ir_model_constraint__write_date
 #: model:ir.model.fields,field_description:base.field_ir_model_relation__write_date
 msgid "Write Date"
-msgstr ""
+msgstr "Kirjoituspäivä"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_server__code
@@ -26654,12 +26737,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_yodlee
 msgid "Yodlee"
-msgstr ""
+msgstr "Yodlee"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_yodlee
 msgid "Yodlee Finance"
-msgstr ""
+msgstr "Yodlee Finance"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_simple_form
@@ -26773,7 +26856,7 @@ msgstr ""
 #. module: base
 #: code:addons/base/models/res_partner.py:0
 #, python-format
-msgid "You cannot archive a contact linked to an internal user."
+msgid "You cannot archive a contact linked to a portal or internal user."
 msgstr ""
 
 #. module: base
@@ -26878,6 +26961,13 @@ msgstr ""
 msgid ""
 "You will be able to define additional access rights by editing the newly "
 "created user under the Settings / Users menu."
+msgstr ""
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.view_currency_form
+msgid ""
+"You won't be able to reduce the number of decimal places of a currency which"
+" has already been used to make accounting entries."
 msgstr ""
 
 #. module: base
@@ -27098,7 +27188,7 @@ msgstr "Verkkokaupan toimitus"
 #: model:ir.module.category,name:base.module_category_website_elearning
 #: model:ir.module.module,shortdesc:base.module_website_slides
 msgid "eLearning"
-msgstr ""
+msgstr "Verkko-oppiminen"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_simple_form
@@ -27160,7 +27250,7 @@ msgstr ""
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "hour"
-msgstr ""
+msgstr "tunti"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__html
@@ -27320,7 +27410,7 @@ msgstr "viite"
 #. module: base
 #: model:ir.model,name:base.model_res_users_apikeys
 msgid "res.users.apikeys"
-msgstr ""
+msgstr "res.users.apikeys"
 
 #. module: base
 #: model:ir.model,name:base.model_res_users_apikeys_description
@@ -27462,7 +27552,7 @@ msgstr "tosi"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_dashboard
 msgid "web_dashboard"
-msgstr ""
+msgstr "web_dashboard"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0

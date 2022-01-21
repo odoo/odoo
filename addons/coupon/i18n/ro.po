@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Martin Trigaux, 2020
-# Foldi Robert <foldirobert@nexterp.ro>, 2020
 # Dorin Hongu <dhongu@gmail.com>, 2020
+# Foldi Robert <foldirobert@nexterp.ro>, 2021
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 11:24+0000\n"
 "PO-Revision-Date: 2020-09-07 08:11+0000\n"
-"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2020\n"
+"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2021\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,13 +25,13 @@ msgstr ""
 #: code:addons/coupon/models/coupon_reward.py:0
 #, python-format
 msgid "%(amount)s %(currency)s discount on total amount"
-msgstr ""
+msgstr "%(amount)s %(currency)s se calculează pe suma totală"
 
 #. module: coupon
 #: code:addons/coupon/models/coupon_reward.py:0
 #, python-format
 msgid "%(percentage)s%% discount on %(product_name)s"
-msgstr ""
+msgstr "%(percentage)s%% reducere la %(product_name)s"
 
 #. module: coupon
 #: code:addons/coupon/models/coupon_reward.py:0
@@ -50,6 +50,12 @@ msgstr "%s%% reducere la produse"
 #, python-format
 msgid "%s%% discount on total amount"
 msgstr "%s%%discount din valoare totală"
+
+#. module: coupon
+#: code:addons/coupon/wizard/coupon_generate.py:0
+#, python-format
+msgid "%s, a coupon has been generated for you"
+msgstr ""
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
@@ -93,23 +99,25 @@ msgstr ""
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "<span>Minimum purchase of</span>"
-msgstr ""
+msgstr "<span>Achiziție minimă de</span>"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "<span>Valid for purchase above</span>"
-msgstr ""
+msgstr "<span>Valabil pentru cumpărare mai sus</span>"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "<span>products</span>"
-msgstr ""
+msgstr "<span>produse</span>"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid ""
 "<strong style=\"font-size: 55px; color: #875A7B\">get free shipping</strong>"
 msgstr ""
+"<strong style=\"font-size: 55px; color: #875A7B\">primiți transport "
+"gratuit</strong>"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.view_coupon_program_kanban
@@ -464,7 +472,7 @@ msgstr "Cod cupon"
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__coupon_count
 msgid "Coupon Count"
-msgstr ""
+msgstr "Nr. Cupoane"
 
 #. module: coupon
 #: model:ir.model,name:coupon.model_coupon_program
@@ -491,7 +499,7 @@ msgstr "Programe cupone"
 #. module: coupon
 #: model:ir.model,name:coupon.model_coupon_reward
 msgid "Coupon Reward"
-msgstr ""
+msgstr "Recompensă Cupon"
 
 #. module: coupon
 #: model:ir.model,name:coupon.model_coupon_rule
@@ -531,7 +539,7 @@ msgstr "Programul cupon va funcționa doar pentru clienții selectați"
 #: model:ir.cron,cron_name:coupon.expire_coupon_cron
 #: model:ir.cron,name:coupon.expire_coupon_cron
 msgid "Coupon: expire coupon based on date"
-msgstr ""
+msgstr "Cupon: expiră cuponul în funcție de dată"
 
 #. module: coupon
 #: model:ir.actions.act_window,name:coupon.coupon_action
@@ -545,12 +553,12 @@ msgstr "Cupoane"
 #. module: coupon
 #: model_terms:ir.actions.act_window,help:coupon.coupon_program_action_coupon_program
 msgid "Create a new coupon program"
-msgstr ""
+msgstr "Creați un nou program de cupoane"
 
 #. module: coupon
 #: model_terms:ir.actions.act_window,help:coupon.coupon_program_action_promo_program
 msgid "Create a new promotion program"
-msgstr ""
+msgstr "Creați un nou program de promovare"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_coupon__create_uid
@@ -615,7 +623,7 @@ msgstr "Reducere aplicată la"
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__discount_max_amount
 #: model:ir.model.fields,field_description:coupon.field_coupon_reward__discount_max_amount
 msgid "Discount Max Amount"
-msgstr ""
+msgstr "Suma maximă de reducere"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__discount_type
@@ -627,7 +635,7 @@ msgstr "Tip discount"
 #: code:addons/coupon/models/coupon_reward.py:0
 #, python-format
 msgid "Discount percentage should be between 1-100"
-msgstr ""
+msgstr "Procentul de reducere ar trebui să fie între 1-100"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_coupon__display_name
@@ -742,7 +750,7 @@ msgstr ""
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "Here is your reward from"
-msgstr ""
+msgstr "Iată recompensa ta de la"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_coupon__id
@@ -825,19 +833,19 @@ msgstr "Cantitatea minimă"
 #: code:addons/coupon/models/coupon_rules.py:0
 #, python-format
 msgid "Minimum purchased amount should be greater than 0"
-msgstr ""
+msgstr "Suma minimă cumpărată trebuie să fie mai mare de 0"
 
 #. module: coupon
 #: code:addons/coupon/models/coupon_rules.py:0
 #, python-format
 msgid "Minimum quantity should be greater than 0"
-msgstr ""
+msgstr "Cantitatea minimă trebuie să fie mai mare de 0"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__rule_minimum_amount
 #: model:ir.model.fields,help:coupon.field_coupon_rule__rule_minimum_amount
 msgid "Minimum required amount to get the reward"
-msgstr ""
+msgstr "Suma minimă necesară pentru a obține recompensa"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__rule_min_quantity
@@ -1018,13 +1026,13 @@ msgstr "Descrierea recompensei"
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__discount_line_product_id
 #: model:ir.model.fields,field_description:coupon.field_coupon_reward__discount_line_product_id
 msgid "Reward Line Product"
-msgstr ""
+msgstr "Produs de linie recompensă"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__reward_product_id
 #: model:ir.model.fields,help:coupon.field_coupon_reward__reward_product_id
 msgid "Reward Product"
-msgstr ""
+msgstr "Produs de recompensă"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__reward_type
@@ -1036,7 +1044,7 @@ msgstr "Tip recompensă"
 #: model:ir.model.fields,help:coupon.field_coupon_program__reward_product_quantity
 #: model:ir.model.fields,help:coupon.field_coupon_reward__reward_product_quantity
 msgid "Reward product quantity"
-msgstr ""
+msgstr "Recompensați cantitatea de produs"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
@@ -1047,7 +1055,7 @@ msgstr "Recompense"
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__rule_minimum_amount
 #: model:ir.model.fields,field_description:coupon.field_coupon_rule__rule_minimum_amount
 msgid "Rule Minimum Amount"
-msgstr ""
+msgstr "Suma minimă a regulii"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__rule_minimum_amount_tax_inclusion
@@ -1063,7 +1071,7 @@ msgstr ""
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
 msgid "Select company"
-msgstr ""
+msgstr "Selectare Companie"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_form
@@ -1088,7 +1096,7 @@ msgstr "Selectați produsul de recompensă"
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_program__promo_applicability__on_next_order
 msgid "Send a Coupon"
-msgstr ""
+msgstr "Trimiteți un Cupon"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_view_form
@@ -1111,6 +1119,7 @@ msgid ""
 "Some selected customers do not have an email address and will not receive "
 "the coupon."
 msgstr ""
+"Unii clienți selectați nu au o adresă de e-mail și nu vor primi cuponul."
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__rule_date_from
@@ -1136,7 +1145,7 @@ msgstr "Taxe incluse"
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "Thank you,"
-msgstr ""
+msgstr "Mulțumesc,"
 
 #. module: coupon
 #: model:ir.model.constraint,message:coupon.constraint_coupon_coupon_unique_coupon_code
@@ -1153,7 +1162,7 @@ msgstr "Reducere în sumă fixă"
 #: model:ir.model.fields,help:coupon.field_coupon_program__discount_percentage
 #: model:ir.model.fields,help:coupon.field_coupon_reward__discount_percentage
 msgid "The discount in percentage, between 1 and 100"
-msgstr ""
+msgstr "Reducerea în procente, între 1 și 100"
 
 #. module: coupon
 #: code:addons/coupon/models/coupon_program.py:0
@@ -1194,7 +1203,7 @@ msgstr "Utilizați acest cod promoțional înainte"
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_coupon__state__used
 msgid "Used"
-msgstr ""
+msgstr "Folosit"
 
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_coupon__state__new
@@ -1247,14 +1256,14 @@ msgstr ""
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "off on some products*"
-msgstr ""
+msgstr "off pentru unele produse *"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "off on the cheapest product"
-msgstr ""
+msgstr "off pe cel mai ieftin produs"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "on your next order"
-msgstr ""
+msgstr "la următoarea comandă"

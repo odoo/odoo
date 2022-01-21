@@ -9,10 +9,11 @@
 # Ekaterina <nawsikaya@bk.ru>, 2020
 # Martin Trigaux, 2020
 # Андрей Гусев <gaussgss@gmail.com>, 2020
-# Ivan Yelizariev <yelizariev@itpp.dev>, 2020
-# ILMIR <karamov@it-projects.info>, 2020
 # Irina Fedulova <istartlin@gmail.com>, 2020
-# Сергей Шебанин <sergey@shebanin.ru>, 2020
+# Ivan Yelizariev // IEL <yelizariev@itpp.dev>, 2021
+# Сергей Шебанин <sergey@shebanin.ru>, 2021
+# ILMIR <karamov@it-projects.info>, 2021
+# Диляра Дельтаева <dilya.kz93@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -20,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-16 13:33+0000\n"
 "PO-Revision-Date: 2020-09-07 08:14+0000\n"
-"Last-Translator: Сергей Шебанин <sergey@shebanin.ru>, 2020\n"
+"Last-Translator: Диляра Дельтаева <dilya.kz93@gmail.com>, 2021\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -279,7 +280,7 @@ msgstr "Действия"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "Оформление исключения активности"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__activity_state
@@ -289,7 +290,7 @@ msgstr "Статус действия"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__activity_type_icon
 msgid "Activity Type Icon"
-msgstr ""
+msgstr "Иконка типа действия"
 
 #. module: lunch
 #. openerp-web
@@ -312,7 +313,7 @@ msgstr "Адрес"
 #. module: lunch
 #: model:res.groups,name:lunch.group_lunch_manager
 msgid "Administrator"
-msgstr ""
+msgstr "Администратор"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__name
@@ -851,7 +852,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_report_view_search
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
 msgid "Group By"
-msgstr "Группировать по"
+msgstr "Группировка"
 
 #. module: lunch
 #: model:lunch.product,description:lunch.product_club
@@ -912,7 +913,7 @@ msgstr "Иконка"
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_supplier__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "Значок, обозначающий действие исключения."
 
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_supplier__message_needaction
@@ -1784,6 +1785,14 @@ msgid ""
 msgstr ""
 
 #. module: lunch
+#: code:addons/lunch/models/lunch_product.py:0
+#, python-format
+msgid ""
+"The product supplier is archived. The user have to unarchive the supplier or"
+" change the supplier of the product."
+msgstr ""
+
+#. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_supplier__responsible_id
 msgid ""
 "The responsible is the person that will order lunch for everyone. It will be"
@@ -1956,7 +1965,7 @@ msgstr ""
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_supplier__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "Тип активности исключения в записи."
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_unread

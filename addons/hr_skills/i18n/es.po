@@ -4,6 +4,8 @@
 # 
 # Translators:
 # Martin Trigaux, 2020
+# José Cabrera Lozano <jose.cabrera@edukative.es>, 2021
+# Daniela Cervantes <dace@odoo.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -11,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:28+0000\n"
 "PO-Revision-Date: 2020-09-07 08:13+0000\n"
-"Last-Translator: Martin Trigaux, 2020\n"
+"Last-Translator: Daniela Cervantes <dace@odoo.com>, 2021\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,7 +26,7 @@ msgstr ""
 #: code:addons/hr_skills/static/src/xml/resume_templates.xml:0
 #, python-format
 msgid "ADD"
-msgstr "AGREGAR"
+msgstr "AGREGAR "
 
 #. module: hr_skills
 #. openerp-web
@@ -68,7 +70,7 @@ msgstr "Actual"
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line__date_end
 msgid "Date End"
-msgstr "Fecha final"
+msgstr "Fecha límite"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line__date_start
@@ -178,7 +180,7 @@ msgstr "Otro"
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill__level_progress
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill_level__level_progress
 msgid "Progress"
-msgstr "En proceso"
+msgstr "Progreso"
 
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.employee_skill_level_view_form
@@ -189,12 +191,12 @@ msgstr "Progreso (%)"
 #: model:ir.model.fields,help:hr_skills.field_hr_employee_skill__level_progress
 #: model:ir.model.fields,help:hr_skills.field_hr_skill_level__level_progress
 msgid "Progress from zero knowledge (0%) to fully mastered (100%)."
-msgstr "Progreso de cero conocimiento (0%) a dominio total (100%)."
+msgstr "Progreso desde cero (0%) a dominio total (100%)."
 
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_employee_public
 msgid "Public Employee"
-msgstr "Empleado Público"
+msgstr "Empleado público"
 
 #. module: hr_skills
 #: model:ir.ui.menu,name:hr_skills.menu_human_resources_configuration_resume
@@ -217,7 +219,7 @@ msgstr "Tipos de líneas de currículum vitae"
 #: code:addons/hr_skills/static/src/xml/resume_templates.xml:0
 #, python-format
 msgid "Resumé empty"
-msgstr "Currículum vacío"
+msgstr "Currículum vitae vacío"
 
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_resume_line
@@ -247,13 +249,13 @@ msgstr "Habilidad"
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill__skill_level_id
 #: model_terms:ir.ui.view,arch_db:hr_skills.employee_skill_level_view_form
 msgid "Skill Level"
-msgstr "Nivel de Habilidad"
+msgstr "Nivel de habilidad"
 
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.employee_skill_level_view_tree
 #: model_terms:ir.ui.view,arch_db:hr_skills.employee_skill_view_tree
 msgid "Skill Levels"
-msgstr "Niveles de Habilidad"
+msgstr "Niveles de habilidad"
 
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_skill_type
@@ -262,13 +264,13 @@ msgstr "Niveles de Habilidad"
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill_level__skill_type_id
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_employee_skill_type_view_form
 msgid "Skill Type"
-msgstr "Tipo de Habilidad"
+msgstr "Tipo de habilidad"
 
 #. module: hr_skills
 #: model:ir.actions.act_window,name:hr_skills.hr_skill_type_action
 #: model_terms:ir.ui.view,arch_db:hr_skills.hr_skill_type_view_tree
 msgid "Skill Types"
-msgstr "Tipos de Habilidad"
+msgstr "Tipos de habilidad"
 
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_employee_skill
@@ -294,18 +296,20 @@ msgstr "Habilidades"
 #: code:addons/hr_skills/models/hr_skills.py:0
 #, python-format
 msgid "The skill %(name)s and skill type %(type)s doesn't match"
-msgstr ""
+msgstr "La habilidad %(name)s y el tipo de habilidad %(type)s no coinciden"
 
 #. module: hr_skills
 #: code:addons/hr_skills/models/hr_skills.py:0
 #, python-format
 msgid "The skill level %(level)s is not valid for skill type: %(type)s"
 msgstr ""
+"El nivel de habilidad %(level)s no es válido para el tipo de habilidad: "
+"%(type)s"
 
 #. module: hr_skills
 #: model:ir.model.constraint,message:hr_skills.constraint_hr_resume_line_date_check
 msgid "The start date must be anterior to the end date."
-msgstr "La fecha de inicio debe ser anterior a la fecha de fin."
+msgstr "La fecha de inicio debe ser anterior a la fecha límite."
 
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.resume_line_view_form

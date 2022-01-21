@@ -95,7 +95,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-6 o_setting_box" id="domain_settings" groups="website.group_multi_website">
+                            <div class="col-12 col-lg-6 o_setting_box" id="domain_settings">
                                 <div class="o_setting_right_pane">
                                     <label string="Domain" for="website_domain"/>
                                     <span class="fa fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
@@ -103,7 +103,7 @@
                                         Display this website when users visit this domain
                                     </div>
                                     <div class="mt8">
-                                        <field name="website_domain" placeholder="www.odoo.com"/>
+                                        <field name="website_domain" placeholder="https://www.odoo.com"/>
                                     </div>
                                     <div groups="base.group_no_one">
                                         <div class="mt8 text-muted" title="You can have 2 websites with same domain AND a condition on country group to select wich website use.">
@@ -290,7 +290,7 @@
                                         </div>
                                     </div>
                                     <div attrs="{'invisible': [('has_google_analytics', '=', False)]}">
-                                        <a href="https://www.odoo.com/documentation/user/14.0/website/optimize/google_analytics.html"
+                                        <a href="https://www.odoo.com/documentation/14.0/applications/websites/website/optimize/google_analytics.html"
                                                 class="oe_link" target="_blank">
                                             <i class="fa fa-arrow-right"/>
                                             How to get my Tracking ID
@@ -343,7 +343,7 @@
                                         </div>
                                     </div>
                                     <div attrs="{'invisible': [('has_google_analytics_dashboard', '=', False)]}">
-                                        <a href="https://www.odoo.com/documentation/user/online/website/optimize/google_analytics_dashboard.html"
+                                        <a href="https://www.odoo.com/documentation/14.0/applications/websites/website/optimize/google_analytics_dashboard.html"
                                             class="oe_link" target="_blank">
                                             <i class="fa fa-arrow-right"/>
                                             How to get my Client ID

@@ -21,26 +21,30 @@
 # Grzegorz Krukar <grzegorzgk1@gmail.com>, 2020
 # Martin Trigaux, 2020
 # Grażyna Grzelak <grazyna.grzelak@openglobe.pl>, 2020
-# Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2020
-# Tomasz Leppich <t.leppich@gmail.com>, 2020
 # Mariusz, 2020
 # Zdzisław Krajewski <zdzichucb@gmail.com>, 2020
 # Piotr Szlązak <szlazakpiotr@gmail.com>, 2020
 # Marcin Młynarczyk <mlynarczyk@gmail.com>, 2020
 # Paweł Michoń <michon.pawel@wp.pl>, 2020
-# Karol Rybak <karolrybak85@gmail.com>, 2020
 # Piotr Cierkosz <piotr.w.cierkosz@gmail.com>, 2020
 # Paweł Wodyński <pw@myodoo.pl>, 2020
 # Maja Stawicka <mjstwck@wp.pl>, 2020
 # Maksym <ms@myodoo.pl>, 2020
+# Tomasz Leppich <t.leppich@gmail.com>, 2021
+# Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2021
+# Piotr Strębski <strebski@gmail.com>, 2021
+# Karol Rybak <karolrybak85@gmail.com>, 2021
+# Daniel Demedziuk <daniel.demedziuk@gmail.com>, 2021
+# Wojciech Warczakowski <w.warczakowski@gmail.com>, 2021
+# Rafał Kozak <rafal.kozak@openglobe.pl>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-29 15:48+0000\n"
+"POT-Creation-Date: 2021-02-25 10:30+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Maksym <ms@myodoo.pl>, 2020\n"
+"Last-Translator: Rafał Kozak <rafal.kozak@openglobe.pl>, 2021\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -68,13 +72,6 @@ msgstr " rekordy"
 #, python-format
 msgid "# Code editor"
 msgstr "# Edytor kodu"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/fields/basic_fields.js:0
-#, python-format
-msgid "${-diffDays} days ago"
-msgstr ""
 
 #. module: web
 #. openerp-web
@@ -120,10 +117,10 @@ msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/notification.xml:0
+#: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
-msgid "&times;"
-msgstr "&times;"
+msgid "%s days ago"
+msgstr ""
 
 #. module: web
 #. openerp-web
@@ -200,7 +197,7 @@ msgstr "(policz)"
 #: code:addons/web/static/src/js/control_panel/search_bar.js:0
 #, python-format
 msgid "(no result)"
-msgstr ""
+msgstr "(brak wyników)"
 
 #. module: web
 #. openerp-web
@@ -259,6 +256,8 @@ msgid ""
 "<span class=\"o_footer_copyright_name mr-2\">Copyright &amp;copy; Company "
 "name</span>"
 msgstr ""
+"<span class=\"o_footer_copyright_name mr-2\">Prawa autorskie &amp;copy; "
+"Nazwa firmy</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -331,7 +330,7 @@ msgstr ""
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span>Amount</span>"
-msgstr ""
+msgstr "<span>Kwota</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -785,14 +784,14 @@ msgstr "Jesteś pewien, że chcesz usunąć ten filtr?"
 #: code:addons/web/static/src/js/views/list/list_controller.js:0
 #, python-format
 msgid "Are you sure you want to delete these records ?"
-msgstr ""
+msgstr "Jesteś pewien, że chcesz usunąć te rekordy?"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/basic/basic_controller.js:0
 #, python-format
 msgid "Are you sure you want to delete these records?"
-msgstr ""
+msgstr "Jesteś pewien, że chcesz usunąć te rekordy?"
 
 #. module: web
 #. openerp-web
@@ -806,7 +805,7 @@ msgstr "Jesteś pewien, że chcesz usunąć ten rekord?"
 #: code:addons/web/static/src/js/views/basic/basic_controller.js:0
 #, python-format
 msgid "Are you sure you want to delete this record?"
-msgstr ""
+msgstr "Jesteś pewien, że chcesz usunąć ten rekord?"
 
 #. module: web
 #. openerp-web
@@ -1069,7 +1068,7 @@ msgstr ""
 #: code:addons/web/static/src/js/widgets/colorpicker.js:0
 #, python-format
 msgid "Choose"
-msgstr ""
+msgstr "Wybierz"
 
 #. module: web
 #. openerp-web
@@ -1154,7 +1153,7 @@ msgstr "Firma"
 #. module: web
 #: model:ir.model,name:web.model_base_document_layout
 msgid "Company Document Layout"
-msgstr ""
+msgstr "Układ dokumentu firmy"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__logo
@@ -1211,7 +1210,7 @@ msgstr "Potwierdzenie"
 #: code:addons/web/static/src/js/chrome/abstract_web_client.js:0
 #, python-format
 msgid "Connection lost. Trying to reconnect..."
-msgstr ""
+msgstr "Utracono połączenie. Próbuję połączyć się ponownie..."
 
 #. module: web
 #. openerp-web
@@ -1402,12 +1401,12 @@ msgstr "Utwórz: %s"
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__create_uid
 msgid "Created by"
-msgstr "Utworzona przez"
+msgstr "Utworzył(a)"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__create_date
 msgid "Created on"
-msgstr "Utworzono"
+msgstr "Data utworzenia"
 
 #. module: web
 #. openerp-web
@@ -1492,7 +1491,7 @@ msgstr ""
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "Decimal"
-msgstr ""
+msgstr "Dziesiętny"
 
 #. module: web
 #. openerp-web
@@ -1611,7 +1610,7 @@ msgstr "Na pewno chcesz usunąć ten filtr z ulubionych ?"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Do you want to create"
-msgstr ""
+msgstr "Czy chcesz utworzyć"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__external_report_layout_id
@@ -1832,7 +1831,7 @@ msgstr "Eksport"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Export All"
-msgstr ""
+msgstr "Eksportuj wszystko"
 
 #. module: web
 #. openerp-web
@@ -2046,6 +2045,7 @@ msgstr "Zielony"
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/control_panel/groupby_menu.js:0
+#: code:addons/web/static/src/js/views/graph/graph_controller.js:0
 #, python-format
 msgid "Group By"
 msgstr "Grupuj wg"
@@ -2149,7 +2149,7 @@ msgstr "Obraz"
 #. openerp-web
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
-msgid "In ${diffDays} days"
+msgid "In %s days"
 msgstr ""
 
 #. module: web
@@ -2207,7 +2207,7 @@ msgstr ""
 #: code:addons/web/static/src/js/widgets/attach_document.js:0
 #, python-format
 msgid "Invalid fields:"
-msgstr ""
+msgstr "Nieprawidłowe pola:"
 
 #. module: web
 #: code:addons/web/controllers/main.py:0
@@ -2426,6 +2426,13 @@ msgstr "Mac"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/js/services/crash_manager.js:0
+#, python-format
+msgid "MailDeliveryException"
+msgstr ""
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/base.xml:0
@@ -2500,6 +2507,7 @@ msgstr "Może powinieneś przeładować aplikację naciskając F5..."
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/js/views/graph/graph_controller.js:0
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Measures"
@@ -2527,13 +2535,6 @@ msgstr "Metadane (%s)"
 #, python-format
 msgid "Method:"
 msgstr "Metoda:"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/services/crash_manager.js:92
-#, python-format
-msgid "MailDeliveryException"
-msgstr ""
 
 #. module: web
 #. openerp-web
@@ -2635,7 +2636,7 @@ msgstr "Nowa"
 #. openerp-web
 #: code:addons/web/static/src/js/fields/relational_fields.js:0
 #, python-format
-msgid "New ${this.name}"
+msgid "New %s"
 msgstr ""
 
 #. module: web
@@ -2942,6 +2943,13 @@ msgstr "Tylko ty"
 #. openerp-web
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
+msgid "Open Developer Tools"
+msgstr "Otwórz narzędzia deweloperskie"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/debug.xml:0
+#, python-format
 msgid "Open Developer Tools#{widget.debug_mode_help}"
 msgstr ""
 
@@ -2990,6 +2998,13 @@ msgstr "Otwórz w widoku listy"
 #, python-format
 msgid "Open: "
 msgstr "Otwórz: "
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/list/list_renderer.js:0
+#, python-format
+msgid "Optional columns"
+msgstr ""
 
 #. module: web
 #. openerp-web
@@ -3176,7 +3191,7 @@ msgstr "Zaktualizuj tłumaczenia:"
 #, python-format
 msgid ""
 "Please use the copy button to report the error to your support service."
-msgstr "Użyj przycisku kopiuj, aby zgłosić błąd do usługi pomocy technicznej."
+msgstr "Użyj przycisku kopiuj, aby zgłosić błąd do pomocy technicznej."
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -3347,7 +3362,7 @@ msgstr "Szybkie dodawanie"
 #: code:addons/web/static/src/js/fields/relational_fields.js:0
 #, python-format
 msgid "Quick search: %s"
-msgstr ""
+msgstr "Szybkie wyszukiwanie: %s"
 
 #. module: web
 #: model:ir.model,name:web.model_ir_qweb_field_image
@@ -3442,7 +3457,7 @@ msgstr "Usuń zdjęcie główne"
 #: code:addons/web/static/src/js/widgets/data_export.js:0
 #, python-format
 msgid "Remove field"
-msgstr ""
+msgstr "Usuń pole"
 
 #. module: web
 #. openerp-web
@@ -3572,7 +3587,7 @@ msgstr "Zapisz rekord"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Save as :"
-msgstr ""
+msgstr "Zapisz jako:"
 
 #. module: web
 #. openerp-web
@@ -3690,14 +3705,14 @@ msgstr "Wybierz widok"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Select all"
-msgstr ""
+msgstr "Wybierz wszystkie"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Select field"
-msgstr ""
+msgstr "Wybierz pole"
 
 #. module: web
 #. openerp-web
@@ -3839,7 +3854,7 @@ msgstr "Ułożone"
 #: code:addons/web/static/src/js/fields/relational_fields.js:0
 #, python-format
 msgid "Start typing..."
-msgstr ""
+msgstr "Zacznij pisać..."
 
 #. module: web
 #. openerp-web
@@ -3896,7 +3911,7 @@ msgstr "Wsparcie"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Switch to this company"
-msgstr ""
+msgstr "Przełącz na tę firmę"
 
 #. module: web
 #. openerp-web
@@ -4080,7 +4095,7 @@ msgstr "Ta domena nie jest obsługiwana."
 #: code:addons/web/static/src/xml/name_and_signature.xml:0
 #, python-format
 msgid "This file is invalid. Please select an image."
-msgstr ""
+msgstr "Ten plik jest nieprawidłowy. Proszę wybrać obraz."
 
 #. module: web
 #. openerp-web
@@ -4436,7 +4451,7 @@ msgstr "Użytkownicy"
 #: code:addons/web/static/src/js/services/crash_manager.js:0
 #, python-format
 msgid "Validation Error"
-msgstr "Błąd zatwierdzania"
+msgstr "Błąd walidacji"
 
 #. module: web
 #. openerp-web
@@ -4451,6 +4466,13 @@ msgstr ""
 #, python-format
 msgid "Variation"
 msgstr "Zmiana"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "View %s"
+msgstr "Widok %s"
 
 #. module: web
 #. openerp-web
@@ -4524,7 +4546,7 @@ msgstr "Testy internetowe"
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__website
 msgid "Website Link"
-msgstr "link strony"
+msgstr "Link do strony WWW"
 
 #. module: web
 #. openerp-web
@@ -4758,7 +4780,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "as a new"
-msgstr ""
+msgstr "jako nowy rekord"
 
 #. module: web
 #. openerp-web
@@ -4811,7 +4833,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "for:"
-msgstr ""
+msgstr "dla:"
 
 #. module: web
 #. openerp-web
@@ -5045,13 +5067,6 @@ msgstr "lub"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/colorpicker.xml:0
-#, python-format
-msgid "p-0 border-0 text-center text-monospace bg-transparent text-white"
-msgstr ""
-
-#. module: web
-#. openerp-web
 #: code:addons/web/static/src/js/widgets/domain_selector.js:0
 #, python-format
 msgid "parent of"
@@ -5083,7 +5098,7 @@ msgstr "pozostało)"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "search"
-msgstr ""
+msgstr "szukaj"
 
 #. module: web
 #. openerp-web
@@ -5091,14 +5106,14 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "selected"
-msgstr ""
+msgstr "wybrane"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "selected records,"
-msgstr ""
+msgstr "wybrane rekordy,"
 
 #. module: web
 #. openerp-web

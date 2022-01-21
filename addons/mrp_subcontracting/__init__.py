@@ -14,6 +14,7 @@ def uninstall_hook(cr, registry):
     # Fail unlink means that the route is used somewhere (e.g. route_id on stock.rule). In this case
     # we don't try to do anything.
     try:
-        subcontracting_routes.unlink()
+        with env.cr.savepoint():
+            subcontracting_routes.unlink()
     except:
         pass

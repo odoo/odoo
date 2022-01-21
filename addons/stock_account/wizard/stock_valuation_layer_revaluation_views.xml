@@ -25,7 +25,7 @@
                         <field name="property_valuation" invisible="1"/>
                         <group>
                             <field name="reason"/>
-                            <field name="account_journal_id" attrs="{'invisible':[('property_valuation', '!=', 'real_time')]}"/>
+                            <field name="account_journal_id" attrs="{'invisible':[('property_valuation', '!=', 'real_time')], 'required': [('property_valuation', '=', 'real_time')]}"/>
                         </group>
                         <group>
                             <field name="account_id" attrs="{'invisible':[('property_valuation', '!=', 'real_time')], 'required': [('property_valuation', '=', 'real_time')]}"/>

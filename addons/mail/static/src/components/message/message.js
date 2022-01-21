@@ -10,10 +10,12 @@ const components = {
     NotificationPopover: require('mail/static/src/components/notification_popover/notification_popover.js'),
     PartnerImStatusIcon: require('mail/static/src/components/partner_im_status_icon/partner_im_status_icon.js'),
 };
+const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
 const useUpdate = require('mail/static/src/component_hooks/use_update/use_update.js');
 
 const { _lt } = require('web.core');
+const { format } = require('web.field_utils');
 const { getLangDatetimeFormat } = require('web.time');
 
 const { Component, useState } = owl;
@@ -43,6 +45,7 @@ class Message extends Component {
              */
             isClicked: false,
         });
+        useShouldUpdateBasedOnProps();
         useStore(props => {
             const message = this.env.models['mail.message'].get(props.messageLocalId);
             const author = message ? message.author : undefined;
@@ -50,28 +53,34 @@ class Message extends Component {
             const originThread = message ? message.originThread : undefined;
             const threadView = this.env.models['mail.thread_view'].get(props.threadViewLocalId);
             const thread = threadView ? threadView.thread : undefined;
-            const threadStringifiedDomain = threadView
-                ? threadView.stringifiedDomain
-                : undefined;
             return {
                 attachments: message
                     ? message.attachments.map(attachment => attachment.__state)
-                    : undefined,
-                author: author ? author.__state : undefined,
+                    : [],
+                author,
+                authorAvatarUrl: author && author.avatarUrl,
+                authorImStatus: author && author.im_status,
+                authorNameOrDisplayName: author && author.nameOrDisplayName,
+                correspondent: thread && thread.correspondent,
                 hasMessageCheckbox: message ? message.hasCheckbox : false,
                 isDeviceMobile: this.env.messaging.device.isMobile,
                 isMessageChecked: message && threadView
-                    ? message.isChecked(thread, threadStringifiedDomain)
+                    ? message.isChecked(thread, threadView.stringifiedDomain)
                     : false,
                 message: message ? message.__state : undefined,
                 notifications: message ? message.notifications.map(notif => notif.__state) : [],
-                originThread: originThread ? originThread.__state : undefined,
-                partnerRoot: partnerRoot ? partnerRoot.__state : undefined,
-                thread: thread ? thread.__state : undefined,
-                threadView: threadView ? threadView.__state : undefined,
+                originThread,
+                originThreadModel: originThread && originThread.model,
+                originThreadName: originThread && originThread.name,
+                originThreadUrl: originThread && originThread.url,
+                partnerRoot,
+                thread,
+                threadHasSeenIndicators: thread && thread.hasSeenIndicators,
+                threadMassMailing: thread && thread.mass_mailing,
             };
         }, {
             compareDepth: {
+                attachments: 1,
                 notifications: 1,
             },
         });
@@ -103,6 +112,21 @@ class Message extends Component {
          * regular time.
          */
         this._intervalId = undefined;
+        /**
+         * States the index of the last "read more" that was inserted.
+         * Useful to remember the state for each "read more" even if their DOM
+         * is re-rendered.
+         */
+        this._lastReadMoreIndex = 0;
+        /**
+         * Determines whether each "read more" is opened or closed. The keys are
+         * index, which is determined by their order of appearance in the DOM.
+         * If body changes so that "read more" count is different, their default
+         * value will be "wrong" at the next render but this is an acceptable
+         * limitation. It's more important to save the state correctly in a
+         * typical non-changing situation.
+         */
+        this._isReadMoreByIndex = new Map();
         this._constructor();
     }
 
@@ -266,24 +290,66 @@ class Message extends Component {
         return this.message.tracking_value_ids.map(trackingValue => {
             const value = Object.assign({}, trackingValue);
             value.changed_field = _.str.sprintf(this.env._t("%s:"), value.changed_field);
-            if (value.field_type === 'datetime') {
-                if (value.old_value) {
-                    value.old_value =
-                        moment.utc(value.old_value).local().format('LLL');
-                }
-                if (value.new_value) {
-                    value.new_value =
-                        moment.utc(value.new_value).local().format('LLL');
-                }
-            } else if (value.field_type === 'date') {
-                if (value.old_value) {
-                    value.old_value =
-                        moment(value.old_value).local().format('LL');
-                }
-                if (value.new_value) {
-                    value.new_value =
-                        moment(value.new_value).local().format('LL');
-                }
+            /**
+             * Maps tracked field type to a JS formatter. Tracking values are
+             * not always stored in the same field type as their origin type.
+             * Field types that are not listed here are not supported by
+             * tracking in Python. Also see `create_tracking_values` in Python.
+             */
+            switch (value.field_type) {
+                case 'boolean':
+                    value.old_value = format.boolean(value.old_value, undefined, { forceString: true });
+                    value.new_value = format.boolean(value.new_value, undefined, { forceString: true });
+                    break;
+                /**
+                 * many2one formatter exists but is expecting id/name_get or data
+                 * object but only the target record name is known in this context.
+                 *
+                 * Selection formatter exists but requires knowing all
+                 * possibilities and they are not given in this context.
+                 */
+                case 'char':
+                case 'many2one':
+                case 'selection':
+                    value.old_value = format.char(value.old_value);
+                    value.new_value = format.char(value.new_value);
+                    break;
+                case 'date':
+                    if (value.old_value) {
+                        value.old_value = moment.utc(value.old_value);
+                    }
+                    if (value.new_value) {
+                        value.new_value = moment.utc(value.new_value);
+                    }
+                    value.old_value = format.date(value.old_value);
+                    value.new_value = format.date(value.new_value);
+                    break;
+                case 'datetime':
+                    if (value.old_value) {
+                        value.old_value = moment.utc(value.old_value);
+                    }
+                    if (value.new_value) {
+                        value.new_value = moment.utc(value.new_value);
+                    }
+                    value.old_value = format.datetime(value.old_value);
+                    value.new_value = format.datetime(value.new_value);
+                    break;
+                case 'float':
+                    value.old_value = format.float(value.old_value);
+                    value.new_value = format.float(value.new_value);
+                    break;
+                case 'integer':
+                    value.old_value = format.integer(value.old_value);
+                    value.new_value = format.integer(value.new_value);
+                    break;
+                case 'monetary':
+                    value.old_value = format.monetary(value.old_value, undefined, { forceString: true });
+                    value.new_value = format.monetary(value.new_value, undefined, { forceString: true });
+                    break;
+                case 'text':
+                    value.old_value = format.text(value.old_value);
+                    value.new_value = format.text(value.new_value);
+                    break;
             }
             return value;
         });
@@ -353,6 +419,7 @@ class Message extends Component {
         }
 
         for (const group of groups) {
+            const index = this._lastReadMoreIndex++;
             // Insert link just before the first node
             const $readMoreLess = $('<a>', {
                 class: 'o_Message_readMoreLess',
@@ -361,16 +428,23 @@ class Message extends Component {
             }).insertBefore(group[0]);
 
             // Toggle All next nodes
-            let isReadMore = true;
-            $readMoreLess.click(e => {
-                e.preventDefault();
-                isReadMore = !isReadMore;
+            if (!this._isReadMoreByIndex.has(index)) {
+                this._isReadMoreByIndex.set(index, true);
+            }
+            const updateFromState = () => {
+                const isReadMore = this._isReadMoreByIndex.get(index);
                 for (const $child of group) {
                     $child.hide();
                     $child.toggle(!isReadMore);
                 }
                 $readMoreLess.text(isReadMore ? READ_MORE : READ_LESS);
+            };
+            $readMoreLess.click(e => {
+                e.preventDefault();
+                this._isReadMoreByIndex.set(index, !this._isReadMoreByIndex.get(index));
+                updateFromState();
             });
+            updateFromState();
         }
     }
 
@@ -392,6 +466,7 @@ class Message extends Component {
             for (const el of [...this._contentRef.el.querySelectorAll(':scope .o_Message_readMoreLess')]) {
                 el.remove();
             }
+            this._lastReadMoreIndex = 0;
             this._insertReadMoreLess($(this._contentRef.el));
             this.env.messagingBus.trigger('o-component-message-read-more-less-inserted', {
                 message: this.message,

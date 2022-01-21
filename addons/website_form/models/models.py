@@ -64,7 +64,7 @@ class website_form_model(models.Model):
         for field in list(fields_get):
             if 'domain' in fields_get[field] and isinstance(fields_get[field]['domain'], str):
                 del fields_get[field]['domain']
-            if fields_get[field]['readonly'] or field in MAGIC_FIELDS or fields_get[field]['type'] == 'many2one_reference':
+            if fields_get[field].get('readonly') or field in MAGIC_FIELDS or fields_get[field]['type'] == 'many2one_reference':
                 del fields_get[field]
 
         return fields_get

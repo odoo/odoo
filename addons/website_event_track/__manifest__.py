@@ -43,4 +43,5 @@
         'data/event_track_demo_description.xml',
         'data/event_track_visitor_demo.xml',
     ],
+    'license': 'LGPL-3',
 }

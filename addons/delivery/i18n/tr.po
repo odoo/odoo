@@ -10,13 +10,14 @@
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2020
 # Ramiz Deniz Öner <deniz@denizoner.com>, 2020
 # Gökay Kıvırcıoğlu <riza.gokay@gmail.com>, 2020
-# Umur Akın <umura@projetgrup.com>, 2020
 # abc Def <hdogan1974@gmail.com>, 2020
 # Tugay Hatıl <tugayh@projetgrup.com>, 2020
 # Murat Durmuş <muratd@projetgrup.com>, 2020
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2020
 # Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2020
 # Ediz Duman <neps1192@gmail.com>, 2020
+# Nadir Gazioglu <nadirgazioglu@gmail.com>, 2021
+# Umur Akın <umura@projetgrup.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -24,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-29 13:45+0000\n"
 "PO-Revision-Date: 2020-09-07 08:11+0000\n"
-"Last-Translator: Ediz Duman <neps1192@gmail.com>, 2020\n"
+"Last-Translator: Umur Akın <umura@projetgrup.com>, 2021\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,6 +38,12 @@ msgstr ""
 #, python-format
 msgid " (Estimated Cost: %s )"
 msgstr " (Tahmini Maliyet: %s )"
+
+#. module: delivery
+#: code:addons/delivery/models/sale_order.py:0
+#, python-format
+msgid "Free Shipping"
+msgstr "Ücretsiz Sevkiyat"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_quant_package_weight_form
@@ -189,6 +196,7 @@ msgstr ""
 "belirtilmiştir."
 
 #. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Archived"
 msgstr "Arşivlendi"
@@ -634,7 +642,7 @@ msgstr "Uzunluk artı (+) değerde olmalıdır"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging__length_uom_name
 msgid "Length unit of measure label"
-msgstr ""
+msgstr "Length unit of measure label"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__debug_logging
@@ -885,6 +893,8 @@ msgid ""
 "Shipment sent to carrier %(carrier_name)s for shipping with tracking number "
 "%(ref)s<br/>Cost: %(price).2f %(currency)s"
 msgstr ""
+"Shipment sent to carrier %(carrier_name)s for shipping with tracking number "
+"%(ref)s<br/>Cost: %(price).2f %(currency)s"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__carrier_price
@@ -1010,11 +1020,14 @@ msgid ""
 "shipping weight specified will default to their products' total weight. This"
 " is the weight used to compute the cost of the shipping."
 msgstr ""
+"Total weight of packages and products not in a package. Packages with no "
+"shipping weight specified will default to their products' total weight. This"
+" is the weight used to compute the cost of the shipping."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_picking__weight_bulk
 msgid "Total weight of products which are not in a package."
-msgstr ""
+msgstr "Total weight of products which are not in a package."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_quant_package__shipping_weight
@@ -1137,6 +1150,16 @@ msgstr "Genişlik"
 #: model:ir.model.constraint,message:delivery.constraint_product_packaging_positive_width
 msgid "Width must be positive"
 msgstr "Genişlik artı (+) değerde olmalıdır"
+
+#. module: delivery
+#: code:addons/delivery/models/sale_order.py:0
+#, python-format
+msgid ""
+"You can not update the shipping costs on an order where it was already invoiced!\n"
+"\n"
+"The following delivery lines (product, invoiced quantity and price) have already been processed:\n"
+"\n"
+msgstr ""
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form

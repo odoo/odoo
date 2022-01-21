@@ -43,6 +43,16 @@ class AccountJournal(models.Model):
 
     def _default_alias_domain(self):
         return self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain")
+    
+    def _default_invoice_reference_model(self):
+        """Get the invoice reference model according to the company's country."""
+        country_code = self.env.company.country_id.code
+        country_code = country_code and country_code.lower()
+        if country_code:
+            for model in self._fields['invoice_reference_model'].get_values(self.env):
+                if model.startswith(country_code):
+                    return model
+        return 'odoo'
 
     name = fields.Char(string='Journal Name', required=True)
     code = fields.Char(string='Short Code', size=5, required=True, help="Shorter name used for display. The journal entries of this journal will also be named using this prefix by default.")
@@ -67,7 +77,7 @@ class AccountJournal(models.Model):
         comodel_name='account.account', check_company=True, copy=False, ondelete='restrict',
         string='Default Account',
         domain="[('deprecated', '=', False), ('company_id', '=', company_id),"
-               "('user_type_id', '=', default_account_type),"
+               "'|', ('user_type_id', '=', default_account_type), ('user_type_id', 'in', type_control_ids),"
                "('user_type_id.type', 'not in', ('receivable', 'payable'))]")
     payment_debit_account_id = fields.Many2one(
         comodel_name='account.account', check_company=True, copy=False, ondelete='restrict',
@@ -100,7 +110,7 @@ class AccountJournal(models.Model):
     sequence = fields.Integer(help='Used to order Journals in the dashboard view', default=10)
 
     invoice_reference_type = fields.Selection(string='Communication Type', required=True, selection=[('none', 'Free'), ('partner', 'Based on Customer'), ('invoice', 'Based on Invoice')], default='invoice', help='You can set here the default communication that will appear on customer invoices, once validated, to help the customer to refer to that particular invoice when making the payment.')
-    invoice_reference_model = fields.Selection(string='Communication Standard', required=True, selection=[('odoo', 'Odoo'),('euro', 'European')], default='odoo', help="You can choose different models for each type of reference. The default one is the Odoo reference.")
+    invoice_reference_model = fields.Selection(string='Communication Standard', required=True, selection=[('odoo', 'Odoo'),('euro', 'European')], default=_default_invoice_reference_model, help="You can choose different models for each type of reference. The default one is the Odoo reference.")
 
     #groups_id = fields.Many2many('res.groups', 'account_journal_group_rel', 'journal_id', 'group_id', string='Groups')
     currency_id = fields.Many2one('res.currency', help='The currency used to enter statement', string="Currency")
@@ -276,6 +286,7 @@ class AccountJournal(models.Model):
             WHERE aml.journal_id in (%s)
             AND EXISTS (SELECT 1 FROM journal_account_control_rel rel WHERE rel.journal_id = aml.journal_id)
             AND NOT EXISTS (SELECT 1 FROM journal_account_control_rel rel WHERE rel.account_id = aml.account_id AND rel.journal_id = aml.journal_id)
+            AND aml.display_type IS NULL
         """, tuple(self.ids))
         if self._cr.fetchone():
             raise ValidationError(_('Some journal items already exist in this journal but with other accounts than the allowed ones.'))
@@ -307,51 +318,27 @@ class AccountJournal(models.Model):
         if self._cr.fetchone():
             raise UserError(_("You can't change the company of your journal since there are some journal entries linked to it."))
 
-    @api.constrains('default_account_id', 'payment_debit_account_id', 'payment_credit_account_id')
-    def _check_journal_not_shared_accounts(self):
-        liquidity_journals = self.filtered(lambda journal: journal.type in ('bank', 'cash'))
-
-        accounts = liquidity_journals.default_account_id \
-                   + liquidity_journals.payment_debit_account_id \
-                   + liquidity_journals.payment_credit_account_id
-
-        if not accounts:
-            return
-
-        self.env['account.journal'].flush([
-            'default_account_id',
-            'payment_debit_account_id',
-            'payment_credit_account_id',
-        ])
-        self._cr.execute('''
-            SELECT
-                account.name,
-                ARRAY_AGG(DISTINCT journal.name) AS journal_names
-            FROM account_account account
-            LEFT JOIN account_journal journal ON
-                journal.default_account_id = account.id
-                OR
-                journal.payment_debit_account_id = account.id
-                OR
-                journal.payment_credit_account_id = account.id
-            WHERE account.id IN %s
-            AND journal.type IN ('bank', 'cash')
-            GROUP BY account.name
-            HAVING COUNT(DISTINCT journal.id) > 1
-        ''', [tuple(accounts.ids)])
-        res = self._cr.fetchone()
-        if res:
-            raise ValidationError(_(
-                "The account %(account_name)s can't be shared between multiple journals: %(journals)s",
-                account_name=res[0],
-                journals=', '.join(res[1])
-            ))
-
     @api.constrains('type', 'default_account_id')
     def _check_type_default_account_id_type(self):
         for journal in self:
             if journal.type in ('sale', 'purchase') and journal.default_account_id.user_type_id.type in ('receivable', 'payable'):
                 raise ValidationError(_("The type of the journal's default credit/debit account shouldn't be 'receivable' or 'payable'."))
+
+    @api.constrains('active')
+    def _check_auto_post_draft_entries(self):
+        # constraint should be tested just after archiving a journal, but shouldn't be raised when unarchiving a journal containing draft entries
+        for journal in self.filtered(lambda j: not j.active):
+            pending_moves = self.env['account.move'].search([
+                ('journal_id', '=', journal.id),
+                ('state', '=', 'draft')
+            ], limit=1)
+
+            if pending_moves:
+                raise ValidationError(_("You can not archive a journal containing draft journal entries.\n\n"
+                                        "To proceed:\n"
+                                        "1/ click on the top-right button 'Journal Entries' from this journal form\n"
+                                        "2/ then filter on 'Draft' entries\n"
+                                        "3/ select them all and post or delete them through the action menu"))
 
     @api.onchange('type')
     def _onchange_type(self):
@@ -444,8 +431,9 @@ class AccountJournal(models.Model):
         result = super(AccountJournal, self).write(vals)
 
         # Ensure the liquidity accounts are sharing the same foreign currency.
-        for journal in self.filtered(lambda journal: journal.type in ('bank', 'cash')):
-            journal.default_account_id.currency_id = journal.currency_id
+        if 'currency_id' in vals:
+            for journal in self.filtered(lambda journal: journal.type in ('bank', 'cash')):
+                journal.default_account_id.currency_id = journal.currency_id
 
         # Create the bank_account_id if necessary
         if 'bank_acc_number' in vals:
@@ -621,7 +609,16 @@ class AccountJournal(models.Model):
         invoices = self.env['account.move']
         for attachment in attachments:
             attachment.write({'res_model': 'mail.compose.message'})
-            invoices += self._create_invoice_from_single_attachment(attachment)
+            decoders = self.env['account.move']._get_create_invoice_from_attachment_decoders()
+            invoice = False
+            for decoder in sorted(decoders, key=lambda d: d[0]):
+                invoice = decoder[1](attachment)
+                if invoice:
+                    break
+            if not invoice:
+                invoice = self.env['account.move'].create({})
+            invoice.with_context(no_new_invoice=True).message_post(attachment_ids=[attachment.id])
+            invoices += invoice
 
         action_vals = {
             'name': _('Generated Documents'),
@@ -640,12 +637,12 @@ class AccountJournal(models.Model):
     def _create_invoice_from_single_attachment(self, attachment):
         """ Creates an invoice and post the attachment. If the related modules
             are installed, it will trigger OCR or the import from the EDI.
+            DEPRECATED : use create_invoice_from_attachment instead
 
             :returns: the created invoice.
         """
-        invoice = self.env['account.move'].create({})
-        invoice.message_post(attachment_ids=[attachment.id])
-        return invoice
+        invoice_action = self.create_invoice_from_attachment(attachment.ids)
+        return self.env['account.move'].browse(invoice_action['res_id'])
 
     def _create_secure_sequence(self, sequence_fields):
         """This function creates a no_gap sequence on each journal in self that will ensure
@@ -680,18 +677,19 @@ class AccountJournal(models.Model):
         a logic based on accounts.
 
         :param domain:  An additional domain to be applied on the account.move.line model.
-        :return:        The balance expressed in the journal's currency.
+        :return:        Tuple having balance expressed in journal's currency
+                        along with the total number of move lines having the same account as of the journal's default account.
         '''
         self.ensure_one()
         self.env['account.move.line'].check_access_rights('read')
 
         if not self.default_account_id:
-            return 0.0
+            return 0.0, 0
 
         domain = (domain or []) + [
             ('account_id', 'in', tuple(self.default_account_id.ids)),
             ('display_type', 'not in', ('line_section', 'line_note')),
-            ('move_id.state', '!=', 'cancel'),
+            ('parent_state', '!=', 'cancel'),
         ]
         query = self.env['account.move.line']._where_calc(domain)
         tables, where_clause, where_params = query.get_sql()
@@ -716,9 +714,6 @@ class AccountJournal(models.Model):
         ''' Get the outstanding payments balance of the current journal by filtering the journal items using the
         journal's accounts.
 
-        /!\ The current journal is not part of the applied domain. This is the expected behavior since we only want
-        a logic based on accounts.
-
         :param domain:  An additional domain to be applied on the account.move.line model.
         :param date:    The date to be used when performing the currency conversions.
         :return:        The balance expressed in the journal's currency.
@@ -739,8 +734,9 @@ class AccountJournal(models.Model):
         domain = (domain or []) + [
             ('account_id', 'in', tuple(accounts.ids)),
             ('display_type', 'not in', ('line_section', 'line_note')),
-            ('move_id.state', '!=', 'cancel'),
+            ('parent_state', '!=', 'cancel'),
             ('reconciled', '=', False),
+            ('journal_id', '=', self.id),
         ]
         query = self.env['account.move.line']._where_calc(domain)
         tables, where_clause, where_params = query.get_sql()

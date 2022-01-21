@@ -10,6 +10,7 @@
 # Pornvibool Tippayawat <pornvibool.t@gmail.com>, 2020
 # gsong <gsong2014@foxmail.com>, 2020
 # Odoo Thaidev <odoothaidev@gmail.com>, 2020
+# Wichanon Jamwutthipreecha, 2021
 # 
 msgid ""
 msgstr ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 11:24+0000\n"
 "PO-Revision-Date: 2020-09-07 08:11+0000\n"
-"Last-Translator: Odoo Thaidev <odoothaidev@gmail.com>, 2020\n"
+"Last-Translator: Wichanon Jamwutthipreecha, 2021\n"
 "Language-Team: Thai (https://www.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -53,6 +54,12 @@ msgstr ""
 #: code:addons/coupon/models/coupon_reward.py:0
 #, python-format
 msgid "%s%% discount on total amount"
+msgstr ""
+
+#. module: coupon
+#: code:addons/coupon/wizard/coupon_generate.py:0
+#, python-format
+msgid "%s, a coupon has been generated for you"
 msgstr ""
 
 #. module: coupon
@@ -355,7 +362,7 @@ msgstr "ยินดีด้วย"
 #. module: coupon
 #: model:ir.model,name:coupon.model_coupon_coupon
 msgid "Coupon"
-msgstr ""
+msgstr "คูปอง"
 
 #. module: coupon
 #: model:ir.actions.report,name:coupon.report_coupon_code
@@ -372,7 +379,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_program__program_type__coupon_program
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
 msgid "Coupon Program"
-msgstr ""
+msgstr "โปรแกรมคูปอง"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_coupon_program_form
@@ -387,12 +394,12 @@ msgstr ""
 #. module: coupon
 #: model:ir.actions.act_window,name:coupon.coupon_program_action_coupon_program
 msgid "Coupon Programs"
-msgstr ""
+msgstr "โปรแกรมคูปอง"
 
 #. module: coupon
 #: model:ir.model,name:coupon.model_coupon_reward
 msgid "Coupon Reward"
-msgstr ""
+msgstr "คูปองรางวัล"
 
 #. module: coupon
 #: model:ir.model,name:coupon.model_coupon_rule
@@ -500,6 +507,9 @@ msgid ""
 "Free Product - Free product will be provide as reward \n"
 "Free Shipping - Free shipping will be provided as reward (Need delivery module)"
 msgstr ""
+"ส่วนลด - ของรางวัลจะถูกจัดให้เป็นส่วนลด\n"
+"สินค้าฟรี - สินค้าฟรีจะถูกให้เป็นรางวัล \n"
+"จัดส่งฟรี - จะมีการจัดส่งฟรีเป็นรางวัล (ต้องการโมดูลการจัดส่ง)"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__discount_apply_on
@@ -539,7 +549,7 @@ msgstr "ชื่อที่ใช้แสดง"
 #. module: coupon
 #: model:ir.model,name:coupon.model_mail_compose_message
 msgid "Email composition wizard"
-msgstr ""
+msgstr "ตัวช่วยการเขียนอีเมล"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__rule_date_to
@@ -556,7 +566,7 @@ msgstr "วันหมดอายุ"
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_coupon__state__expired
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_search
 msgid "Expired"
-msgstr ""
+msgstr "หมดอายุ"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_search
@@ -581,7 +591,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:coupon.field_coupon_reward__reward_product_id
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_reward__reward_type__product
 msgid "Free Product"
-msgstr ""
+msgstr "สินค้าฟรี"
 
 #. module: coupon
 #: code:addons/coupon/models/coupon_reward.py:0
@@ -843,7 +853,7 @@ msgstr ""
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_coupon__program_id
 msgid "Program"
-msgstr ""
+msgstr "โปรแกรม"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__program_type
@@ -858,7 +868,7 @@ msgstr ""
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__promo_code
 msgid "Promotion Code"
-msgstr ""
+msgstr "โค้ดโปรโมชัน"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_form
@@ -873,7 +883,7 @@ msgstr ""
 #. module: coupon
 #: model:ir.actions.act_window,name:coupon.coupon_program_action_promo_program
 msgid "Promotion Programs"
-msgstr ""
+msgstr "โปรแกรมโปรโมชั่น"
 
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_program__program_type__promotion_program
@@ -916,7 +926,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__reward_type
 #: model:ir.model.fields,field_description:coupon.field_coupon_reward__reward_type
 msgid "Reward Type"
-msgstr ""
+msgstr "ประเภทรางวัล"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__reward_product_quantity
@@ -927,7 +937,7 @@ msgstr ""
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
 msgid "Rewards"
-msgstr ""
+msgstr "รางวัล"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__rule_minimum_amount
@@ -1085,7 +1095,7 @@ msgstr "ใช้แล้ว"
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_coupon__state__new
 msgid "Valid"
-msgstr ""
+msgstr "ถูกต้อง"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
@@ -1112,7 +1122,7 @@ msgstr ""
 #. module: coupon
 #: model:mail.template,report_name:coupon.mail_template_sale_coupon
 msgid "Your Coupon Code"
-msgstr ""
+msgstr "โค้ดคูปองของคุณ"
 
 #. module: coupon
 #: model:mail.template,subject:coupon.mail_template_sale_coupon

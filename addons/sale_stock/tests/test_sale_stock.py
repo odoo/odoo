@@ -989,3 +989,61 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         wizard.action_cancel()
         self.assertEqual(inv_1.state, 'posted', 'A posted invoice state should remain posted')
         self.assertEqual(inv_2.state, 'cancel', 'A drafted invoice state should be cancelled')
+
+    def test_15_cancel_delivery(self):
+        """ Suppose the option "Lock Confirmed Sales" enabled and a product with the invoicing
+        policy set to "Delivered quantities". When cancelling the delivery of such a product, the
+        invoice status of the associated SO should be 'Nothing to Invoice'
+        """
+        group_auto_done = self.env['ir.model.data'].xmlid_to_object('sale.group_auto_done_setting')
+        self.env.user.groups_id = [(4, group_auto_done.id)]
+
+        product = self.product_a
+        partner = self.partner_a
+        so = self.env['sale.order'].create({
+            'partner_id': partner.id,
+            'partner_invoice_id': partner.id,
+            'partner_shipping_id': partner.id,
+            'order_line': [(0, 0, {
+                'name': product.name,
+                'product_id': product.id,
+                'product_uom_qty': 2,
+                'product_uom': product.uom_id.id,
+                'price_unit': product.list_price
+            })],
+            'pricelist_id': self.env.ref('product.list0').id,
+        })
+        so.action_confirm()
+        self.assertEqual(so.state, 'done')
+        so.picking_ids.action_cancel()
+
+        self.assertEqual(so.invoice_status, 'no')
+
+    def test_16_multi_uom(self):
+        yards_uom = self.env['uom.uom'].create({
+            'category_id': self.env.ref('uom.uom_categ_length').id,
+            'name': 'Yards',
+            'factor_inv': 0.9144,
+            'uom_type': 'bigger',
+        })
+        product = self.env.ref('product.product_product_11').copy({
+            'uom_id': self.env.ref('uom.product_uom_meter').id,
+            'uom_po_id': yards_uom.id,
+        })
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                (0, 0, {
+                    'name': product.name,
+                    'product_id': product.id,
+                    'product_uom_qty': 4.0,
+                    'product_uom': yards_uom.id,
+                    'price_unit': 1.0,
+                })
+            ],
+        })
+        so.action_confirm()
+        picking = so.picking_ids[0]
+        picking.move_lines.write({'quantity_done': 3.66})
+        picking.button_validate()
+        self.assertEqual(so.order_line.mapped('qty_delivered'), [4.0], 'Sale: no conversion error on delivery in different uom"')

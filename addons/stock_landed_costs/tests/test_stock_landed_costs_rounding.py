@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.stock_landed_costs.tests.common import TestStockLandedCostsCommon
-from odoo.tests import tagged
+from odoo.tests import tagged, Form
 
 
 @tagged('post_install', '-at_install')
@@ -152,3 +152,53 @@ class TestStockLandedCostsRounding(TestStockLandedCostsCommon):
         # I check that the landed cost is now "Closed" and that it has an accounting entry
         self.assertEqual(stock_landed_cost_3.state, 'done')
         self.assertTrue(stock_landed_cost_3.account_move_id)
+
+    def test_stock_landed_costs_rounding_02(self):
+        """ The landed costs should be correctly computed, even when the decimal accuracy
+        of the deciaml price is increased. """
+        self.env.ref("product.decimal_price").digits = 4
+
+        fifo_pc = self.env['product.category'].create({
+            'name': 'Fifo Category',
+            'parent_id': self.env.ref("product.product_category_all").id,
+            'property_valuation': 'real_time',
+            'property_cost_method': 'fifo',
+        })
+
+        products = self.Product.create([{
+            'name': 'Super Product %s' % price,
+            'categ_id': fifo_pc.id,
+            'type': 'product',
+            'standard_price': price,
+        } for price in [0.91, 0.93, 75.17, 20.54]])
+
+        landed_product = self.Product.create({
+            'name': 'Landed Costs',
+            'type': 'service',
+            'landed_cost_ok': True,
+            'split_method_landed_cost': 'by_quantity',
+            'standard_price': 1000.0,
+        })
+
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [(0, 0, {
+                'product_id': product.id,
+                'product_qty': qty,
+                'price_unit': product.standard_price,
+            }) for product, qty in zip(products, [6, 6, 3, 6])]
+        })
+        po.button_confirm()
+
+        res_dict = po.picking_ids.button_validate()
+        validate_wizard = Form(self.env[(res_dict.get('res_model'))].with_context(res_dict.get('context'))).save()
+        validate_wizard.process()
+
+        lc_form = Form(self.LandedCost)
+        lc_form.picking_ids.add(po.picking_ids)
+        with lc_form.cost_lines.new() as line:
+            line.product_id = landed_product
+        lc = lc_form.save()
+        lc.compute_landed_cost()
+
+        self.assertEqual(sum(lc.valuation_adjustment_lines.mapped('additional_landed_cost')), 1000.0)

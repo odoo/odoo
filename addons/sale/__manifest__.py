@@ -42,5 +42,6 @@ This module contains all the common features of Sales Management and eCommerce.
         'data/sale_demo.xml',
     ],
     'installable': True,
-    'auto_install': False
+    'auto_install': False,
+    'license': 'LGPL-3',
 }

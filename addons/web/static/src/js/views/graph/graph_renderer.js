@@ -49,6 +49,9 @@ var FORMAT_OPTIONS = {
 var NO_DATA = [_t('No data')];
 NO_DATA.isNoData = true;
 
+var FAKE_DATA = [""];
+FAKE_DATA.isFakeData = true;
+
 // hide top legend when too many items for device size
 var MAX_LEGEND_LENGTH = 4 * (Math.max(1, config.device.size_class));
 
@@ -720,7 +723,7 @@ return AbstractRenderer.extend({
      * @returns {string}
      */
     _relabelling: function (label, originIndex) {
-        if (label.isNoData) {
+        if (label.isNoData || label.isFakeData) {
             return label[0];
         }
         var i = this.state.comparisonFieldIndex;
@@ -873,7 +876,7 @@ return AbstractRenderer.extend({
             dataset.pointBackgroundColor = dataset.borderColor;
             dataset.pointBorderColor = 'rgba(0,0,0,0.2)';
         });
-        if (data.datasets.length === 1) {
+        if (data.datasets.length === 1 && data.datasets[0].originIndex === 0) {
             const dataset = data.datasets[0];
             dataset.fill = 'origin';
             dataset.backgroundColor = hexToRGBA(COLORS[0], 0.4);
@@ -882,7 +885,7 @@ return AbstractRenderer.extend({
         // center the points in the chart (without that code they are put on the left and the graph seems empty)
         data.labels = data.labels.length > 1 ?
             data.labels :
-            Array.prototype.concat.apply([], [[['']], data.labels, [['']]]);
+            Array.prototype.concat.apply([], [[FAKE_DATA], data.labels, [FAKE_DATA]]);
 
         // prepare options
         var options = this._prepareOptions(data.datasets.length);

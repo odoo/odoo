@@ -21,6 +21,7 @@ import passlib.context
 import pytz
 from lxml import etree
 from lxml.builder import E
+from psycopg2 import sql
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
@@ -948,7 +949,7 @@ class Users(models.Model):
                     "and *might* be a proxy. If your Odoo is behind a proxy, "
                     "it may be mis-configured. Check that you are running "
                     "Odoo in Proxy Mode and that the proxy is properly configured, see "
-                    "https://www.odoo.com/documentation/14.0/setup/deploy.html#https for details.",
+                    "https://www.odoo.com/documentation/14.0/administration/deployment/deploy.html#https for details.",
                     source
                 )
             raise AccessDenied(_("Too many login failures, please wait a bit before trying again."))
@@ -1450,36 +1451,28 @@ class UsersView(models.Model):
 
                 # FIXME: in Accounting, the groups in the selection are not
                 # totally ordered, and their order therefore partially depends
-                # on their name, which is translated!  So we generate all the
-                # possible field names according to the partial order.
-                gs_list = [gs]
+                # on their name, which is translated!  However, the group name
+                # used in the "user groups view" corresponds to the group order
+                # without translations.
+                field_name_gs = gs
                 if app.xml_id == 'base.module_category_accounting_accounting':
-                    # ranks = {0: [A, B], 2: [C], 3: [D]}
-                    ranks = defaultdict(list)
-                    for g in gs:
-                        ranks[len(g.trans_implied_ids & gs)].append(g)
-                    # perms = [[AB, BA], [C], [D]]
-                    perms = [
-                        [Group.concat(*perm) for perm in itertools.permutations(rank)]
-                        for k, rank in sorted(ranks.items())
-                    ]
-                    # gs_list = [ABCD, BACD]
-                    gs_list = [Group.concat(*perm) for perm in itertools.product(*perms)]
+                    # put field_name_gs in the same order as in the user form view
+                    order = {g: len(g.trans_implied_ids & gs) for g in gs}
+                    field_name_gs = gs.with_context(lang=None).sorted('name').sorted(order.get)
 
-                for gs in gs_list:
-                    field_name = name_selection_groups(gs.ids)
-                    if allfields and field_name not in allfields:
-                        continue
-                    # selection group field
-                    tips = ['%s: %s' % (g.name, g.comment) for g in gs if g.comment]
-                    res[field_name] = {
-                        'type': 'selection',
-                        'string': app.name or _('Other'),
-                        'selection': selection_vals + [(g.id, g.name) for g in gs],
-                        'help': '\n'.join(tips),
-                        'exportable': False,
-                        'selectable': False,
-                    }
+                field_name = name_selection_groups(field_name_gs.ids)
+                if allfields and field_name not in allfields:
+                    continue
+                # selection group field
+                tips = ['%s: %s' % (g.name, g.comment) for g in gs if g.comment]
+                res[field_name] = {
+                    'type': 'selection',
+                    'string': app.name or _('Other'),
+                    'selection': selection_vals + [(g.id, g.name) for g in gs],
+                    'help': '\n'.join(tips),
+                    'exportable': False,
+                    'selectable': False,
+                }
             else:
                 # boolean group fields
                 for g in gs:
@@ -1632,7 +1625,7 @@ class APIKeys(models.Model):
 
     def init(self):
         # pylint: disable=sql-injection
-        self.env.cr.execute("""
+        self.env.cr.execute(sql.SQL("""
         CREATE TABLE IF NOT EXISTS {table} (
             id serial primary key,
             name varchar not null,
@@ -1643,10 +1636,23 @@ class APIKeys(models.Model):
             create_date timestamp without time zone DEFAULT (now() at time zone 'utc')
         );
         CREATE INDEX IF NOT EXISTS res_users_apikeys_user_id_index_idx ON {table} (user_id, index);
-        """.format(table=self._table, index_size=INDEX_SIZE))
+        """).format(
+            table=sql.Identifier(self._table),
+            index_size=sql.Placeholder('index_size')
+        ), {
+            'index_size': INDEX_SIZE
+        })
 
     @check_identity
     def remove(self):
+        return self._remove()
+
+    def _remove(self):
+        """Use the remove() method to remove an API Key. This method implement logic,
+        but won't check the identity (mainly used to remove trusted devices)"""
+        if not self:
+            return {'type': 'ir.actions.act_window_close'}
+
         if self.env.is_system() or self.mapped('user_id') == self.env.user:
             ip = request.httprequest.environ['REMOTE_ADDR'] if request else 'n/a'
             _logger.info("API key(s) removed: scope: <%s> for '%s' (#%s) from %s",
@@ -1658,7 +1664,11 @@ class APIKeys(models.Model):
     def _check_credentials(self, *, scope, key):
         assert scope, "scope is required"
         index = key[:INDEX_SIZE]
-        self.env.cr.execute('SELECT user_id, key FROM res_users_apikeys WHERE index = %s AND (scope IS NULL OR scope = %s)', [index, scope])
+        self.env.cr.execute('''
+            SELECT user_id, key
+            FROM res_users_apikeys INNER JOIN res_users u ON (u.id = user_id)
+            WHERE u.active and index = %s AND (scope IS NULL OR scope = %s)
+        ''', [index, scope])
         for user_id, current_key in self.env.cr.fetchall():
             if KEY_CRYPT_CONTEXT.verify(key, current_key):
                 return user_id

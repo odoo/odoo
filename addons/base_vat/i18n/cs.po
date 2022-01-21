@@ -5,9 +5,8 @@
 # Translators:
 # Martin Trigaux, 2020
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2020
-# Michal Veselý <michal@veselyberanek.net>, 2020
-# trendspotter, 2020
-# Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
+# Jiří Podhorecký, 2020
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
 # 
 msgid ""
 msgstr ""
@@ -15,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:28+0000\n"
 "PO-Revision-Date: 2020-09-07 08:11+0000\n"
-"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2020\n"
+"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2021\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,7 +36,7 @@ msgstr ""
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.view_partner_form
 msgid "<span class=\"o_vat_label\">VAT</span>"
-msgstr ""
+msgstr "<span class=\"o_vat_label\">DIČ</span>"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_company
@@ -91,6 +90,8 @@ msgid ""
 "The VAT number [%(vat)s] for partner [%(name)s] does not seem to be valid. \n"
 "Note: the expected format is %(format)s"
 msgstr ""
+"Číslo DPH [%(vat)s] pre partnera [%(name)s] sa nezdá byť platný.\n"
+"Poznámka: očakávaný formát je %(format)s"
 
 #. module: base_vat
 #: code:addons/base_vat/models/res_partner.py:0
@@ -99,6 +100,8 @@ msgid ""
 "The VAT number [%(vat)s] for partner [%(name)s] either failed the VIES VAT "
 "validation check or did not respect the expected format %(format)s."
 msgstr ""
+"DPH číslo [%(vat)s] pre partnera [%(name)s] buď neprešiel kontrolou "
+"platnosti VIES DPH alebo nerešpektoval očakávaný formát %(format)s."
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.company_form_vat
@@ -115,4 +118,4 @@ msgstr "Ověrení DIČ"
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
 msgid "Verify VAT numbers using the European VIES service"
-msgstr "Ověření DIČ prostřednictvím evropské služby VIES"
+msgstr "Ověření DPH prostřednictvím evropské služby VIES"

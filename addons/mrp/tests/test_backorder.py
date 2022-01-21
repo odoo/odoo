@@ -280,6 +280,85 @@ class TestMrpProductionBackorder(TestMrpCommon):
         self.assertEqual(self.env['stock.quant']._get_available_quantity(p_final, self.stock_location), nb_product_todo, f'You should have the {nb_product_todo} final product in stock')
         self.assertEqual(len(production.procurement_group_id.mrp_production_ids), nb_product_todo)
 
+    def test_tracking_backorder_immediate_production_serial_1(self):
+        """ Create a MO to build 2 of a SN tracked product.
+        Build both the starting MO and its backorder as immediate productions
+        (i.e. Mark As Done without setting SN/filling any quantities)
+        """
+        mo, _, p_final, p1, p2 = self.generate_mo(qty_final=2, tracking_final='serial', qty_base_1=2, qty_base_2=2)
+        self.env['stock.quant']._update_available_quantity(p1, self.stock_location_components, 2.0)
+        self.env['stock.quant']._update_available_quantity(p2, self.stock_location_components, 2.0)
+        mo.action_assign()
+        res_dict = mo.button_mark_done()
+        self.assertEqual(res_dict.get('res_model'), 'mrp.immediate.production')
+        immediate_wizard = Form(self.env[res_dict['res_model']].with_context(res_dict['context'])).save()
+        res_dict = immediate_wizard.process()
+        self.assertEqual(res_dict.get('res_model'), 'mrp.production.backorder')
+        backorder_wizard = Form(self.env[res_dict['res_model']].with_context(res_dict['context']))
+
+        # backorder should automatically open
+        action = backorder_wizard.save().action_backorder()
+        self.assertEqual(action.get('res_model'), 'mrp.production')
+        backorder_mo_form = Form(self.env[action['res_model']].with_context(action['context']).browse(action['res_id']))
+        backorder_mo = backorder_mo_form.save()
+        res_dict = backorder_mo.button_mark_done()
+        self.assertEqual(res_dict.get('res_model'), 'mrp.immediate.production')
+        immediate_wizard = Form(self.env[res_dict['res_model']].with_context(res_dict['context'])).save()
+        immediate_wizard.process()
+
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(p_final, self.stock_location), 2, "Incorrect number of final product produced.")
+        self.assertEqual(len(self.env['stock.production.lot'].search([('product_id', '=', p_final.id)])), 2, "Serial Numbers were not correctly produced.")
+
+    def test_backorder_name(self):
+        def produce_one(mo):
+            mo_form = Form(mo)
+            mo_form.qty_producing = 1
+            mo = mo_form.save()
+            action = mo.button_mark_done()
+            backorder = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
+            backorder.save().action_backorder()
+            return mo.procurement_group_id.mrp_production_ids[-1]
+
+        default_picking_type_id = self.env['mrp.production']._get_default_picking_type()
+        default_picking_type = self.env['stock.picking.type'].browse(default_picking_type_id)
+        mo_sequence = default_picking_type.sequence_id
+
+        mo_sequence.prefix = "WH-MO-"
+        initial_mo_name = mo_sequence.prefix + str(mo_sequence.number_next_actual).zfill(mo_sequence.padding)
+
+        production = self.generate_mo(qty_final=5)[0]
+        self.assertEqual(production.name, initial_mo_name)
+
+        backorder = produce_one(production)
+        self.assertEqual(production.name, initial_mo_name + "-001")
+        self.assertEqual(backorder.name, initial_mo_name + "-002")
+
+        backorder.backorder_sequence = 998
+
+        for seq in [998, 999, 1000]:
+            new_backorder = produce_one(backorder)
+            self.assertEqual(backorder.name, initial_mo_name + "-" + str(seq))
+            self.assertEqual(new_backorder.name, initial_mo_name + "-" + str(seq + 1))
+            backorder = new_backorder
+
+    def test_backorder_name_without_procurement_group(self):
+        production = self.generate_mo(qty_final=5)[0]
+        mo_form = Form(production)
+        mo_form.qty_producing = 1
+        mo = mo_form.save()
+
+        # Remove pg to trigger fallback on backorder name
+        mo.procurement_group_id = False
+        action = mo.button_mark_done()
+        backorder_form = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
+        backorder_form.save().action_backorder()
+
+        # The pg is back
+        self.assertTrue(production.procurement_group_id)
+        backorder_ids = production.procurement_group_id.mrp_production_ids[1]
+        self.assertEqual(production.name.split('-')[0], backorder_ids.name.split('-')[0])
+        self.assertEqual(int(production.name.split('-')[1]) + 1, int(backorder_ids.name.split('-')[1]))
+
 
 class TestMrpWorkorderBackorder(SavepointCase):
     @classmethod

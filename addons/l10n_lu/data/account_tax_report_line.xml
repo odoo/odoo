@@ -312,7 +312,7 @@
         <field name="parent_id" ref="account_tax_report_line_1a_total_sale"/>
         <field name="report_id" ref="tax_report"/>
         <field name="code">LUTAX_472</field>
-        <field name="formula">LUTAX_021 + LUTAX_037</field>
+        <field name="formula">LUTAX_021 + LUTAX_037 - LUTAX_456</field>
     </record>
 
     <record id="account_tax_report_line_1a_app_goods_non_bus" model="account.tax.report.line">
@@ -460,6 +460,7 @@
       <field name="sequence">10</field>
       <field name="report_id" ref="tax_report"/>
         <field name="parent_id" ref="account_tax_report_line_2a_breakdown_taxable_turnover_base"/>
+      <field name="code">LUTAX_033</field>
     </record>
 
     <record id="account_tax_report_line_2a_base_17" model="account.tax.report.line">

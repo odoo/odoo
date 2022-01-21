@@ -175,7 +175,8 @@ class account_journal(models.Model):
                 next_date = start_date + timedelta(days=7)
                 query += " UNION ALL ("+select_sql_clause+" and invoice_date_due >= '"+start_date.strftime(DF)+"' and invoice_date_due < '"+next_date.strftime(DF)+"')"
                 start_date = next_date
-
+        # Ensure results returned by postgres match the order of data list
+        query += " ORDER BY aggr_date ASC"
         self.env.cr.execute(query, query_args)
         query_results = self.env.cr.dictfetchall()
         is_sample_data = True
@@ -231,9 +232,9 @@ class account_journal(models.Model):
             last_balance = last_statement.balance_end
             has_at_least_one_statement = bool(last_statement)
             bank_account_balance, nb_lines_bank_account_balance = self._get_journal_bank_account_balance(
-                domain=[('move_id.state', '=', 'posted')])
+                domain=[('parent_state', '=', 'posted')])
             outstanding_pay_account_balance, nb_lines_outstanding_pay_account_balance = self._get_journal_outstanding_payments_account_balance(
-                domain=[('move_id.state', '=', 'posted')])
+                domain=[('parent_state', '=', 'posted')])
 
             self._cr.execute('''
                 SELECT COUNT(st_line.id)
@@ -272,7 +273,7 @@ class account_journal(models.Model):
                     company_id
                 FROM account_move move
                 WHERE journal_id = %s
-                AND date <= %s
+                AND invoice_date_due <= %s
                 AND state = 'posted'
                 AND payment_state in ('not_paid', 'partial')
                 AND move_type IN ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt');
@@ -431,7 +432,7 @@ class account_journal(models.Model):
     def to_check_ids(self):
         self.ensure_one()
         domain = self.env['account.move.line']._get_suspense_moves_domain()
-        domain += [('journal_id', '=', self.id),('statement_line_id.is_reconciled', '=', False)]
+        domain.append(('journal_id', '=', self.id))
         statement_line_ids = self.env['account.move.line'].search(domain).mapped('statement_line_id')
         return statement_line_ids
 
@@ -480,7 +481,7 @@ class account_journal(models.Model):
             if self.type == 'sale':
                 action['domain'] = [(domain_type_field, 'in', ('out_invoice', 'out_refund', 'out_receipt'))]
             elif self.type == 'purchase':
-                action['domain'] = [(domain_type_field, 'in', ('in_invoice', 'in_refund', 'in_receipt'))]
+                action['domain'] = [(domain_type_field, 'in', ('in_invoice', 'in_refund', 'in_receipt', 'entry'))]
 
         return action
 
@@ -518,7 +519,7 @@ class account_journal(models.Model):
         ctx = dict(self.env.context, default_journal_id=self.id)
         if ctx.get('search_default_journal', False):
             ctx.update(search_default_journal_id=self.id)
-            del ctx['search_default_journal']  # otherwise it will do a useless groupby in bank statements
+            ctx['search_default_journal'] = False  # otherwise it will do a useless groupby in bank statements
         ctx.pop('group_by', None)
         action = self.env['ir.actions.act_window']._for_xml_id(f"account.{action_name}")
         action['context'] = ctx

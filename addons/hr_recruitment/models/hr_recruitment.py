@@ -176,7 +176,7 @@ class Applicant(models.Model):
 
     @api.depends('email_from')
     def _compute_application_count(self):
-        application_data = self.env['hr.applicant'].read_group([
+        application_data = self.env['hr.applicant'].with_context(active_test=False).read_group([
             ('email_from', 'in', list(set(self.mapped('email_from'))))], ['email_from'], ['email_from'])
         application_data_mapped = dict((data['email_from'], data['email_from_count']) for data in application_data)
         applicants = self.filtered(lambda applicant: applicant.email_from)
@@ -309,7 +309,7 @@ class Applicant(models.Model):
         return res
 
     def get_empty_list_help(self, help):
-        if 'active_id' in  self.env.context:
+        if 'active_id' in self.env.context and self.env.context.get('active_model') == 'hr.job':
             alias_id = self.env['hr.job'].browse(self.env.context['active_id']).alias_id
         else:
             alias_id = False
@@ -341,6 +341,7 @@ class Applicant(models.Model):
         category = self.env.ref('hr_recruitment.categ_meet_interview')
         res = self.env['ir.actions.act_window']._for_xml_id('calendar.action_calendar_event')
         res['context'] = {
+            'default_applicant_id': self.id,
             'default_partner_ids': partners.ids,
             'default_user_id': self.env.uid,
             'default_name': self.name,
@@ -362,6 +363,9 @@ class Applicant(models.Model):
             'res_model': self._name,
             'view_mode': 'kanban,tree,form,pivot,graph,calendar,activity',
             'domain': [('email_from', 'in', self.mapped('email_from'))],
+            'context': {
+                'active_test': False
+            },
         }
 
     def _track_template(self, changes):
@@ -416,6 +420,9 @@ class Applicant(models.Model):
         # want the gateway user to be responsible if no other responsible is
         # found.
         self = self.with_context(default_user_id=False)
+        stage = False
+        if custom_values and 'job_id' in custom_values:
+            stage = self.env['hr.job'].browse(custom_values['job_id'])._get_first_stage()
         val = msg.get('from').split('<')[0]
         defaults = {
             'name': msg.get('subject') or _("No Subject"),
@@ -425,6 +432,8 @@ class Applicant(models.Model):
         }
         if msg.get('priority'):
             defaults['priority'] = msg.get('priority')
+        if stage and stage.id:
+            defaults['stage_id'] = stage.id
         if custom_values:
             defaults.update(custom_values)
         return super(Applicant, self).message_new(msg, custom_values=defaults)
@@ -474,7 +483,7 @@ class Applicant(models.Model):
                     'default_name': applicant.partner_name or contact_name,
                     'default_job_id': applicant.job_id.id,
                     'default_job_title': applicant.job_id.name,
-                    'address_home_id': address_id,
+                    'default_address_home_id': address_id,
                     'default_department_id': applicant.department_id.id or False,
                     'default_address_id': applicant.company_id and applicant.company_id.partner_id
                             and applicant.company_id.partner_id.id or False,
@@ -512,7 +521,8 @@ class Applicant(models.Model):
                 ], order='sequence asc', limit=1).id
         for applicant in self:
             applicant.write(
-                {'stage_id': default_stage[applicant.job_id.id], 'refuse_reason_id': False})
+                {'stage_id': applicant.job_id.id and default_stage[applicant.job_id.id],
+                 'refuse_reason_id': False})
 
     def toggle_active(self):
         res = super(Applicant, self).toggle_active()

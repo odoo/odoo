@@ -5,10 +5,11 @@
 # Translators:
 # Shunho Kin <s-kin@shonan-innovation.co.jp>, 2020
 # Martin Trigaux, 2020
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2020
+# Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2020
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2020
 # Tim Siu Lai <tl@roomsfor.hk>, 2020
 # Noma Yuki, 2020
+# Ryoko Tsuda <ryoko@quartile.co>, 2021
 # 
 msgid ""
 msgstr ""
@@ -16,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-16 13:33+0000\n"
 "PO-Revision-Date: 2020-09-07 08:21+0000\n"
-"Last-Translator: Noma Yuki, 2020\n"
+"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2021\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,7 +38,7 @@ msgstr ""
 #. module: website_event_track_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_track_exhibitor.exhibitor_card
 msgid "<i class=\"fa fa-ban mr-2\"/>Unpublished"
-msgstr ""
+msgstr "<i class=\"fa fa-ban mr-2\"/>未発表</i>"
 
 #. module: website_event_track_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_track_exhibitor.exhibitors_topbar_country
@@ -112,7 +113,7 @@ msgstr ""
 #. module: website_event_track_exhibitor
 #: model:ir.model.fields,field_description:website_event_track_exhibitor.field_event_sponsor__chat_room_id
 msgid "Chat Room"
-msgstr ""
+msgstr "チャットルーム"
 
 #. module: website_event_track_exhibitor
 #. openerp-web
@@ -139,7 +140,7 @@ msgstr ""
 #. module: website_event_track_exhibitor
 #: model_terms:ir.actions.act_window,help:website_event_track_exhibitor.event_sponsor_action
 msgid "Create a Sponsor / Exhibitor"
-msgstr ""
+msgstr "スポンサー/出展者を作成する"
 
 #. module: website_event_track_exhibitor
 #: model:ir.model.fields,field_description:website_event_track_exhibitor.field_event_sponsor__website_description
@@ -178,7 +179,7 @@ msgstr "イベント"
 #. module: website_event_track_exhibitor
 #: model:ir.model,name:website_event_track_exhibitor.model_event_sponsor
 msgid "Event Sponsor"
-msgstr ""
+msgstr "イベントスポンサー"
 
 #. module: website_event_track_exhibitor
 #: model:ir.actions.act_window,name:website_event_track_exhibitor.event_sponsor_action
@@ -188,7 +189,7 @@ msgstr "イベントスポンサー"
 #. module: website_event_track_exhibitor
 #: model:ir.model,name:website_event_track_exhibitor.model_event_type
 msgid "Event Template"
-msgstr ""
+msgstr "イベントテンプレート"
 
 #. module: website_event_track_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_track_exhibitor.event_sponsor_view_form
@@ -265,12 +266,12 @@ msgstr ""
 #. module: website_event_track_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_track_exhibitor.exhibitor_card
 msgid "Live"
-msgstr ""
+msgstr "住む"
 
 #. module: website_event_track_exhibitor
 #: model:ir.model.fields,field_description:website_event_track_exhibitor.field_event_sponsor__room_max_capacity
 msgid "Max capacity"
-msgstr ""
+msgstr "最大数"
 
 #. module: website_event_track_exhibitor
 #: model:ir.model.fields,help:website_event_track_exhibitor.field_event_sponsor__room_max_participant_reached
@@ -280,7 +281,7 @@ msgstr ""
 #. module: website_event_track_exhibitor
 #: model:ir.model.fields,field_description:website_event_track_exhibitor.field_website_event_menu__menu_type
 msgid "Menu Type"
-msgstr ""
+msgstr "メニュータイプ"
 
 #. module: website_event_track_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_track_exhibitor.exhibitors_main
@@ -300,7 +301,7 @@ msgstr ""
 #. module: website_event_track_exhibitor
 #: model:ir.model.fields,field_description:website_event_track_exhibitor.field_event_sponsor__room_participant_count
 msgid "Participant count"
-msgstr ""
+msgstr "参加者数"
 
 #. module: website_event_track_exhibitor
 #: model:ir.model.fields,field_description:website_event_track_exhibitor.field_event_sponsor__room_max_participant_reached
@@ -320,7 +321,7 @@ msgstr ""
 #. module: website_event_track_exhibitor
 #: model:ir.model.fields,field_description:website_event_track_exhibitor.field_event_sponsor__room_name
 msgid "Room Name"
-msgstr ""
+msgstr "ルーム名"
 
 #. module: website_event_track_exhibitor
 #: model:ir.model.fields,field_description:website_event_track_exhibitor.field_event_event__exhibitor_menu
@@ -339,6 +340,7 @@ msgid ""
 "Sponsors might be advertised on your event pages footer.<br>\n"
 "    Exhibitors might have a dedicated page with chat room for people to connect with them."
 msgstr ""
+"スポンサーは、イベントページのフッターで宣伝される場合があります。<br>出展者は、人々が彼らとつながるためのチャットルームを備えた専用ページを持っているかもしれません。"
 
 #. module: website_event_track_exhibitor
 #: code:addons/website_event_track_exhibitor/controllers/website_event_main.py:0
@@ -371,7 +373,7 @@ msgstr ""
 #. module: website_event_track_exhibitor
 #: model:ir.model,name:website_event_track_exhibitor.model_website_event_menu
 msgid "Website Event Menu"
-msgstr ""
+msgstr "ウェブサイトイベントメニュー"
 
 #. module: website_event_track_exhibitor
 #: model:ir.model.fields,field_description:website_event_track_exhibitor.field_event_sponsor__website_url
@@ -420,7 +422,7 @@ msgstr "分"
 #. module: website_event_track_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_track_exhibitor.exhibitors_main
 msgid "search."
-msgstr ""
+msgstr "探す。"
 
 #. module: website_event_track_exhibitor
 #. openerp-web
@@ -428,7 +430,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event_track_exhibitor.exhibitor_main
 #, python-format
 msgid "starts in"
-msgstr ""
+msgstr "で始まる"
 
 #. module: website_event_track_exhibitor
 #. openerp-web
@@ -436,4 +438,4 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event_track_exhibitor.exhibitor_main
 #, python-format
 msgid "starts on"
-msgstr ""
+msgstr "に始まります"

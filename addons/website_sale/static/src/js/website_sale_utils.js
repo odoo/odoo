@@ -2,6 +2,9 @@ odoo.define('website_sale.utils', function (require) {
 'use strict';
 
 function animateClone($cart, $elem, offsetTop, offsetLeft) {
+    if (!$cart.length) {
+        return Promise.resolve();
+    }
     $cart.find('.o_animate_blink').addClass('o_red_highlight o_shadow_animation').delay(500).queue(function () {
         $(this).removeClass("o_shadow_animation").dequeue();
     }).delay(2000).queue(function () {

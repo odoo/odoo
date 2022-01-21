@@ -6,21 +6,20 @@
 # e2f <projects@e2f.com>, 2020
 # Martin Trigaux, 2020
 # Fabien Pinckaers <fp@openerp.com>, 2020
-# Clo <clo@odoo.com>, 2020
 # Miguel Vidali <mvidali129@gmail.com>, 2020
-# Aurore Lesage, 2020
 # Xavier Belmere <Info@cartmeleon.com>, 2020
 # Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2020
 # Eloïse Stilmant <est@odoo.com>, 2020
 # Laura Piraux <lap@odoo.com>, 2020
 # Bertrand LATOUR <divoir@gmail.com>, 2020
 # Cécile Collart <cco@odoo.com>, 2020
-# Rémi CAZENAVE <remi@le-filament.com>, 2020
 # Thomas Dobbelsteyn <tdo@odoo.com>, 2020
 # Marie Willemyns <mwi@odoo.com>, 2020
 # Celia Tydgat <cty@odoo.com>, 2020
 # omaodoo <oma@odoo.com>, 2020
 # Gilles Mangin <gilles.mangin@phidias.fr>, 2020
+# Arnaud Willem <contact@arnaud-willem.eu>, 2020
+# Thomas Deleval <thd@odoo.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -28,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:29+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Gilles Mangin <gilles.mangin@phidias.fr>, 2020\n"
+"Last-Translator: Thomas Deleval <thd@odoo.com>, 2021\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,12 +43,12 @@ msgstr "<strong>Lot/Numéros de série</strong>"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
 msgid "<strong>Package</strong>"
-msgstr "<strong>Paquet</strong>"
+msgstr "<strong>Colis</strong>"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
 msgid "<strong>Product Barcode</strong>"
-msgstr "Code-barres produit"
+msgstr "<strong>Code-barres article </strong>"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
@@ -69,7 +68,7 @@ msgstr "Activités"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Activité d'exception de décoration"
+msgstr "Décoration d'activité d'exception"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_state
@@ -79,12 +78,12 @@ msgstr "État de l'Activité"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_type_icon
 msgid "Activity Type Icon"
-msgstr ""
+msgstr "Icône de type d'activité"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_to_batch_form
 msgid "Add pickings to"
-msgstr ""
+msgstr "Ajouter les transferts à"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_to_batch_form
@@ -99,7 +98,7 @@ msgstr "Ajouter au lot"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__allowed_picking_ids
 msgid "Allowed Picking"
-msgstr "Opération de manutention autorisée"
+msgstr "Transfert autorisé"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_attachment_count
@@ -109,7 +108,7 @@ msgstr "Nombre de pièces jointes"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
 msgid "Barcode"
-msgstr "Code barre"
+msgstr "Code-barres"
 
 #. module: stock_picking_batch
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
@@ -410,6 +409,8 @@ msgstr "Personne responsable pour ce transfert en lot"
 msgid ""
 "Please add 'Done' quantities to the batch picking to create a new pack."
 msgstr ""
+"Ajoutez les quantités 'faites' au transfert en lot pour créer un nouveau "
+"colis"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
@@ -462,6 +463,10 @@ msgid ""
 "              - If not manually changed and transfers are added/removed/updated then this will be their earliest scheduled date\n"
 "                but this scheduled date will not be set for all transfers in batch."
 msgstr ""
+"Date prévue pour les transferts a effectuer\n"
+"               - Si définie manuellement, alors la date prévue pour tous les transferts de ce batch sera modifiée pour cette date.\n"
+"               - Si elle n'est pas modifiée manuellement et que les transferts son ajoutés/retirés/modifiés, alors ce sera la leur date prévue la  plus tôt\n"
+"                mais cette date prévue ne sera pas appliquée à tous les transferts du lot."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
@@ -487,7 +492,7 @@ msgid ""
 "Some transfers are still waiting for goods. Please check or force their "
 "availability before setting this batch to done."
 msgstr ""
-"Certains transferts attendent toujours des biens. Veuillez vérifier ou "
+"Certains transferts attendent toujours des articles. Veuillez vérifier ou "
 "forcer la disponibilité avant d'indiquer ce lot comme fait."
 
 #. module: stock_picking_batch
@@ -529,17 +534,17 @@ msgstr "Transfert de stock en lot"
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_package_destination
 msgid "Stock Package Destination"
-msgstr "Emplacement de destination du Paquet"
+msgstr "Emplacement de destination du colis"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__move_line_ids
 msgid "Stock move lines"
-msgstr ""
+msgstr "Lignes de mouvement de stock"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__move_ids
 msgid "Stock moves"
-msgstr ""
+msgstr "Mouvements de stock"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
@@ -563,6 +568,9 @@ msgid ""
 "\n"
 "Incompatibilities: %s"
 msgstr ""
+"Les transferts suivants ne peut être ajouter au transfert en lot %s. Veuilléz vérifier leur statut et type d'opération, s'ils ne sont pas des transferts immédiats ou s'ils ne sont pas déjà inclus dans un autre transfert en lot.\n"
+"\n"
+"Incompatibilités: %s"
 
 #. module: stock_picking_batch
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
@@ -581,7 +589,7 @@ msgstr ""
 #: code:addons/stock_picking_batch/wizard/stock_picking_to_batch.py:0
 #, python-format
 msgid "The selected pickings should belong to an unique company."
-msgstr ""
+msgstr "Les transferts sélectionnés doivent appartenir à la même société"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
@@ -651,19 +659,21 @@ msgstr "Historique de communication du site web"
 #, python-format
 msgid "You can only delete draft batch transfers."
 msgstr ""
+"Vous ne pouvez supprimer un transfert en lot que s'il est à l'état de "
+"brouillon"
 
 #. module: stock_picking_batch
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
 msgid "You have to set some pickings to batch."
-msgstr ""
+msgstr "Vous devez assigner des transferts au lot"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_to_batch__mode__new
 msgid "a new batch transfer"
-msgstr ""
+msgstr "un nouveau transfert en lot"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_to_batch__mode__existing
 msgid "an existing batch transfer"
-msgstr ""
+msgstr "un transfert en lot existant"

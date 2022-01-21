@@ -503,7 +503,13 @@ class TestTranslationWrite(TransactionCase):
             {'src': 'None Name', 'value': 'French Name', 'lang': 'fr_FR'},
         ])
 
-    def test_05_remove_multi(self):
+    def test_05_remove_multi_empty_string(self):
+        self._test_05_remove_multi("")
+
+    def test_05_remove_multi_false(self):
+        self._test_05_remove_multi(False)
+
+    def _test_05_remove_multi(self, empty_value):
         self.env['res.lang']._activate_lang('fr_FR')
 
         langs = self.env['res.lang'].get_installed()
@@ -513,39 +519,27 @@ class TestTranslationWrite(TransactionCase):
         belgium = self.env.ref('base.be')
         # vat_label is translatable and not required
         belgium.with_context(lang='en_US').write({'vat_label': 'VAT'})
+        belgium.with_context(lang='fr_FR').write({'vat_label': 'TVA'})
 
-        # create translations if not exists
-        self.env['ir.translation']._upsert_translations([{
-            'type': 'model',
-            'name': 'res.country,vat_label',
-            'lang': 'en_US',
-            'res_id': belgium.id,
-            'src': 'VAT',
-            'value': 'VAT',
-            'state': 'translated',
-        }, {
-            'type': 'model',
-            'name': 'res.country,vat_label',
-            'lang': 'fr_FR',
-            'res_id': belgium.id,
-            'src': 'VAT',
-            'value': 'TVA',
-            'state': 'translated',
-        }])
+        translations = self.env['ir.translation'].search([
+            ('name', '=', 'res.country,vat_label'),
+            ('res_id', '=', belgium.id),
+        ])
+        self.assertEqual(len(translations), 2, "Translations are not created")
 
         # remove the value
-        belgium.with_context(lang='fr_FR').write({'vat_label': False})
+        belgium.with_context(lang='fr_FR').write({'vat_label': empty_value})
         # should recover the initial value from db
-        self.assertEqual(
-            False, belgium.with_context(lang='fr_FR').vat_label,
+        self.assertFalse(
+            belgium.with_context(lang='fr_FR').vat_label,
             "Value was not reset"
         )
-        self.assertEqual(
-            False, belgium.with_context(lang='en_US').vat_label,
+        self.assertFalse(
+            belgium.with_context(lang='en_US').vat_label,
             "Value was not reset in other languages"
         )
-        self.assertEqual(
-            False, belgium.with_context(lang=None).vat_label,
+        self.assertFalse(
+            belgium.with_context(lang=None).vat_label,
             "Value was not reset on the field model"
         )
 

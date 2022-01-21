@@ -19,9 +19,9 @@ class SaleReport(models.Model):
                                             ('pos_done', 'Posted'),
                                             ('invoiced', 'Invoiced')], string='Status', readonly=True)
 
-    def _query(self, with_clause='', fields={}, groupby='', from_clause=''):
-        res = super(SaleReport, self)._query(with_clause, fields, groupby, from_clause)
-
+    def _select_pos(self, fields=None):
+        if not fields:
+            fields = {}
         select_ = '''
             MIN(l.id) AS id,
             l.product_id AS product_id,
@@ -53,14 +53,8 @@ class SaleReport(models.Model):
             partner.country_id AS country_id,
             partner.industry_id AS industry_id,
             partner.commercial_partner_id AS commercial_partner_id,
-            (select sum(t.weight*l.qty/u.factor) from pos_order_line l
-               join product_product p on (l.product_id=p.id)
-               left join product_template t on (p.product_tmpl_id=t.id)
-               left join uom_uom u on (u.id=t.uom_id)) AS weight,
-            (select sum(t.volume*l.qty/u.factor) from pos_order_line l
-               join product_product p on (l.product_id=p.id)
-               left join product_template t on (p.product_tmpl_id=t.id)
-               left join uom_uom u on (u.id=t.uom_id)) AS volume,
+            (sum(t.weight) * l.qty / u.factor) AS weight,
+            (sum(t.volume) * l.qty / u.factor) AS volume,
             l.discount as discount,
             sum((l.price_unit * l.discount * l.qty / 100.0 / CASE COALESCE(pos.currency_rate, 0) WHEN 0 THEN 1.0 ELSE pos.currency_rate END)) as discount_amount,
             NULL as order_id
@@ -68,7 +62,9 @@ class SaleReport(models.Model):
 
         for field in fields.keys():
             select_ += ', NULL AS %s' % (field)
+        return select_
 
+    def _from_pos(self):
         from_ = '''
             pos_order_line l
                   join pos_order pos on (l.order_id=pos.id)
@@ -80,7 +76,9 @@ class SaleReport(models.Model):
                     LEFT JOIN pos_config config ON (config.id = session.config_id)
                 left join product_pricelist pp on (pos.pricelist_id = pp.id)
         '''
+        return from_
 
+    def _group_by_pos(self):
         groupby_ = '''
             l.order_id,
             l.product_id,
@@ -103,6 +101,13 @@ class SaleReport(models.Model):
             u.factor,
             pos.crm_team_id
         '''
-        current = '(SELECT %s FROM %s GROUP BY %s)' % (select_, from_, groupby_)
+        return groupby_
+
+    def _query(self, with_clause='', fields=None, groupby='', from_clause=''):
+        if not fields:
+            fields = {}
+        res = super()._query(with_clause, fields, groupby, from_clause)
+        current = '(SELECT %s FROM %s GROUP BY %s)' % \
+                  (self._select_pos(fields), self._from_pos(), self._group_by_pos())
 
         return '%s UNION ALL %s' % (res, current)

@@ -197,16 +197,19 @@ msgid "AFIP Concept"
 msgstr "Concepto AFIP"
 
 #. module: l10n_ar
+#: model:ir.model.fields,field_description:l10n_ar.field_account_bank_statement_import_journal_creation__l10n_ar_afip_pos_partner_id
 #: model:ir.model.fields,field_description:l10n_ar.field_account_journal__l10n_ar_afip_pos_partner_id
 msgid "AFIP POS Address"
 msgstr "Dirección PdV AFIP"
 
 #. module: l10n_ar
+#: model:ir.model.fields,field_description:l10n_ar.field_account_bank_statement_import_journal_creation__l10n_ar_afip_pos_number
 #: model:ir.model.fields,field_description:l10n_ar.field_account_journal__l10n_ar_afip_pos_number
 msgid "AFIP POS Number"
 msgstr "Número PdV AFIP"
 
 #. module: l10n_ar
+#: model:ir.model.fields,field_description:l10n_ar.field_account_bank_statement_import_journal_creation__l10n_ar_afip_pos_system
 #: model:ir.model.fields,field_description:l10n_ar.field_account_journal__l10n_ar_afip_pos_system
 msgid "AFIP POS System"
 msgstr "Sistema PdV AFIP"
@@ -756,11 +759,6 @@ msgid "IIBB - Sales by jurisdiction"
 msgstr "IIBB - Ventas por Jurisdicción"
 
 #. module: l10n_ar
-#: model:account.tax.group,name:l10n_ar.tax_group_percepcion_iibb
-msgid "IIBB Perceptions"
-msgstr "Percepción de IIBB"
-
-#. module: l10n_ar
 #: model_terms:ir.ui.view,arch_db:l10n_ar.custom_header
 msgid "IIBB:"
 msgstr ""
@@ -1084,6 +1082,12 @@ msgid "Sequence"
 msgstr "Secuencia"
 
 #. module: l10n_ar
+#: model:ir.model.fields,field_description:l10n_ar.field_account_bank_statement_import_journal_creation__l10n_ar_sequence_ids
+#: model:ir.model.fields,field_description:l10n_ar.field_account_journal__l10n_ar_sequence_ids
+msgid "Sequences"
+msgstr "Secuencias"
+
+#. module: l10n_ar
 #: model_terms:ir.ui.view,arch_db:l10n_ar.view_move_form
 msgid "Service Date"
 msgstr "Fecha del Servicio"
@@ -1206,12 +1210,14 @@ msgstr ""
 "Este campo es requerido para poder imprimir las facturas correctamente"
 
 #. module: l10n_ar
+#: model:ir.model.fields,help:l10n_ar.field_account_bank_statement_import_journal_creation__l10n_ar_afip_pos_partner_id
 #: model:ir.model.fields,help:l10n_ar.field_account_journal__l10n_ar_afip_pos_partner_id
 msgid "This is the address used for invoice reports of this POS"
 msgstr ""
 "Esta dirección es la usada para los reportes de facturación de este PdV"
 
 #. module: l10n_ar
+#: model:ir.model.fields,help:l10n_ar.field_account_bank_statement_import_journal_creation__l10n_ar_afip_pos_number
 #: model:ir.model.fields,help:l10n_ar.field_account_journal__l10n_ar_afip_pos_number
 msgid ""
 "This is the point of sale number assigned by AFIP in order to generate "
@@ -1231,6 +1237,7 @@ msgid "Type of gross income: exempt, local, multilateral"
 msgstr "Tipo de ingreso bruto: exento, local, multilateral"
 
 #. module: l10n_ar
+#: model:ir.model.fields,field_description:l10n_ar.field_account_bank_statement_import_journal_creation__l10n_ar_share_sequences
 #: model:ir.model.fields,field_description:l10n_ar.field_account_journal__l10n_ar_share_sequences
 msgid "Unified Book"
 msgstr "Libro Unificado"
@@ -1253,7 +1260,7 @@ msgstr "Libro Unificado"
 #: model:product.template,uom_name:l10n_ar.product_product_tasa_estadistica_product_template
 #: model:product.template,uom_name:l10n_ar.product_product_telefonia_product_template
 msgid "Units"
-msgstr ""
+msgstr "Unidades"
 
 #. module: l10n_ar
 #: model:ir.model.fields.selection,name:l10n_ar.selection__account_tax_group__l10n_ar_vat_afip_code__1
@@ -1272,6 +1279,7 @@ msgid "UpApP"
 msgstr ""
 
 #. module: l10n_ar
+#: model:ir.model.fields,help:l10n_ar.field_account_bank_statement_import_journal_creation__l10n_ar_share_sequences
 #: model:ir.model.fields,help:l10n_ar.field_account_journal__l10n_ar_share_sequences
 msgid "Use same sequence for documents with the same letter"
 msgstr "Usar la misma secuencia para documentos con misma letra"
@@ -1342,6 +1350,12 @@ msgstr "IVA No Gravado"
 #, python-format
 msgid "Warning"
 msgstr "Alerta"
+
+#. module: l10n_ar
+#: code:addons/l10n_ar/models/res_partner.py:0
+#, python-format
+msgid "We were not able to sanitize the identification number"
+msgstr "No pudimos limpiar el número de identificación"
 
 #. module: l10n_ar
 #: model_terms:ir.ui.view,arch_db:l10n_ar.view_account_invoice_report_search_inherit

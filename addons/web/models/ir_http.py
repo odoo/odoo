@@ -27,6 +27,11 @@ class Http(models.AbstractModel):
 
         user_context = request.session.get_context() if request.session.uid else {}
         IrConfigSudo = self.env['ir.config_parameter'].sudo()
+        max_file_upload_size = int(IrConfigSudo.get_param(
+            'web.max_file_upload_size',
+            default=128 * 1024 * 1024,  # 128MiB
+        ))
+
         session_info = {
             "uid": request.session.uid,
             "is_system": user._is_system() if request.session.uid else False,
@@ -42,6 +47,7 @@ class Http(models.AbstractModel):
             "partner_id": user.partner_id.id if request.session.uid and user.partner_id else None,
             "web.base.url": IrConfigSudo.get_param('web.base.url', default=''),
             "active_ids_limit": int(IrConfigSudo.get_param('web.active_ids_limit', default='20000')),
+            "max_file_upload_size": max_file_upload_size,
         }
         if self.env.user.has_group('base.group_user'):
             # the following is only useful in the context of a webclient bootstrapping

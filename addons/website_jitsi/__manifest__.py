@@ -20,4 +20,5 @@
         'security/ir.model.access.csv',
     ],
     'application': False,
+    'license': 'LGPL-3',
 }

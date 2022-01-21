@@ -15,7 +15,7 @@
 
             <div class="orderlines">
                 <t t-foreach="products" t-as="line" t-key="line.product_id">
-                    <div>
+                    <div class="responsive-price">
                         <t t-esc="line.product_name.substr(0,20)" />
                         <span class="pos-receipt-right-align">
                             <t t-esc="Math.round(line.quantity * Math.pow(10, pos.dp['Product Unit of Measure'])) / Math.pow(10, pos.dp['Product Unit of Measure'])" />

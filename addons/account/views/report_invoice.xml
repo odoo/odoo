@@ -132,7 +132,7 @@
                                     </tr>
                                     <t t-foreach="o.amount_by_group" t-as="amount_by_group">
                                         <tr style="">
-                                            <t t-if="len(o.line_ids.filtered(lambda line: line.tax_line_id)) in [0, 1] and o.amount_untaxed == amount_by_group[2]">
+                                            <t t-if="len(o.line_ids.filtered(lambda line: line.tax_line_id)) in [0, 1] and float_compare(o.amount_untaxed, amount_by_group[2], precision_rounding=o.currency_id.rounding) == 0">
                                                 <td><span class="text-nowrap" t-esc="amount_by_group[0]"/></td>
                                                 <td class="text-right o_price_total">
                                                     <span class="text-nowrap" t-esc="amount_by_group[3]" />
@@ -199,7 +199,7 @@
                     <p t-if="o.invoice_incoterm_id" name="incoterm">
                         <strong>Incoterm: </strong><span t-field="o.invoice_incoterm_id.code"/> - <span t-field="o.invoice_incoterm_id.name"/>
                     </p>
-                    <div id="qrcode" t-if="o.display_qr_code">
+                    <div id="qrcode" t-if="o.display_qr_code and o.amount_residual > 0">
                         <p t-if="qr_code_urls.get(o.id)">
                             <strong class="text-center">Scan me with your banking app.</strong><br/><br/>
                             <img class="border border-dark rounded" t-att-src="qr_code_urls[o.id]"/>

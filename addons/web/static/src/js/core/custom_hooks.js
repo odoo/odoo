@@ -16,7 +16,7 @@ odoo.define('web.custom_hooks', function () {
     function useAutofocus(params = {}) {
         const comp = Component.current;
         // Prevent autofocus in mobile
-        if (comp.env.device.isMobile) {
+        if (comp.env.device.isMobileDevice) {
             return () => {};
         }
         const selector = params.selector || '[autofocus]';

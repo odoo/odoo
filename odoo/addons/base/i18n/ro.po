@@ -3,13 +3,13 @@
 # 	* base
 # 
 # Translators:
-# Fekete Mihai <mihai.fekete@forestandbiomass.ro>, 2020
 # Cozmin Candea <office@terrabit.ro>, 2020
 # Martin Trigaux, 2020
 # sharkutz <sharkutz4life@yahoo.com>, 2020
 # Hongu Cosmin <cosmin513@gmail.com>, 2020
-# Dorin Hongu <dhongu@gmail.com>, 2020
-# Foldi Robert <foldirobert@nexterp.ro>, 2020
+# Foldi Robert <foldirobert@nexterp.ro>, 2021
+# Fekete Mihai <mihai.fekete@forestandbiomass.ro>, 2021
+# Dorin Hongu <dhongu@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 13:50+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2020\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2022\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,6 +39,16 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"Rapoarte contabile pentru Austria.\n"
+"================================\n"
+"\n"
+"    * Definește următoarele rapoarte:\n"
+"        * Profit/pierdere (§ 231 UGB Gesamtkostenverfahren)\n"
+"        * Balance Sheet (§ 224 UGB)\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_invoice_bba
@@ -76,6 +86,19 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"Planuri de conturi austriece (Einheitskontenrahmen 2010).\n"
+"==========================================================\n"
+"\n"
+"    * Definește următoarea diagramă a șabloanelor de cont:\n"
+"        * Planul general de conturi austriac 2010\n"
+"    * Definește șabloane pentru TVA la vânzări și achiziții\n"
+"    * Definește șabloane fiscale\n"
+"    * Definește pozițiile fiscale pentru legislația fiscală austriacă\n"
+"    * Definește rapoartele fiscale U1/U30\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_hu
@@ -92,6 +115,17 @@ msgid ""
 " - Hungarian Bank information\n"
 " "
 msgstr ""
+"\n"
+"\n"
+"Modul de bază pentru localizarea maghiară\n"
+"==========================================\n"
+"\n"
+"Acest modul constă din:\n"
+"\n"
+" - Plan de conturi maghiar generic\n"
+" - Taxe maghiare\n"
+" - Hungarian Bank information\n"
+" "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_dk
@@ -339,6 +373,22 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"Prezentare generală:\n"
+"---------\n"
+"\n"
+"* Șablon de plan de conturi și taxe pentru companii din Japonia.\n"
+"* Acest lucru probabil nu acoperă toate conturile necesare pentru o companie. Vă așteptați să adăugați / ștergeți / modificați conturi pe baza acestui șablon.\n"
+"\n"
+"Notă:\n"
+"-----\n"
+"\n"
+"* Pozițile fiscale '内税' și '外税' au fost adăugate pentru a gestiona cerințele speciale care ar putea apărea din implementarea POS. [1]  În circumstanțe normale, este posibil să nu fie nevoie să le folosiți deloc.\n"
+"\n"
+"[1] See https://github.com/odoo/odoo/pull/6470 for detail.\n"
+"\n"
+"    "
 
 #. module: base
 #: code:addons/base/models/res_config.py:0
@@ -359,6 +409,9 @@ msgid ""
 "\n"
 "This module adds a custom Sales Team for the Point of Sale. This enables you to view and manage your point of sale sales with more ease.\n"
 msgstr ""
+"\n"
+"\n"
+"Acest modul adaugă o echipă de vânzări personalizată pentru punctul de vânzare. Acest lucru vă permite să vizualizați și să gestionați vânzările la punctul de vânzare cu mai multă ușurință.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_restaurant
@@ -371,6 +424,13 @@ msgid ""
 "- Kitchen Order Printing: allows you to print orders updates to kitchen or bar printers\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"Acest modul adaugă mai multe caracteristici la punctul de vânzare, care sunt specifice gestionării restaurantelor:\n"
+"- Tipărirea facturilor: vă permite să imprimați o chitanță înainte de a plăti comanda\n"
+"- Împărțirea facturilor: vă permite să împărțiți o comandă în ordine diferite\n"
+"- Imprimarea comenzilor din bucătărie: vă permite să imprimați actualizările comenzilor la imprimantele de bucătărie sau bar\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_discount
@@ -381,6 +441,11 @@ msgid ""
 "discount to a customer.\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"Acest modul permite casierului să acorde rapid o reducere  procentuală\n"
+"unui client.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_loyalty
@@ -392,6 +457,12 @@ msgid ""
 "and get rewards.\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"Acest modul vă permite să definiți un program de fidelizare în\n"
+"punctul de vânzare, unde clienții câștigă puncte de fidelitate\n"
+"și obțin recompense..\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_epson_printer_restaurant
@@ -425,6 +496,10 @@ msgid ""
 "        - Track timesheet for a task from a ticket\n"
 "    "
 msgstr ""
+"\n"
+"        - Permiteți setarea proiectului pentru echipa Helpdesk\n"
+"        - Urmăriți foaia de timp pentru o sarcină dintr-un bilet\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_reports
@@ -457,6 +532,11 @@ msgid ""
 "        Also adds DATEV export options to general ledger\n"
 "    "
 msgstr ""
+"\n"
+"        Rapoarte contabile pentru limba germanăy\n"
+"        Conține bilanț, profit și pierdere, TVA și rapoarte TVA pentru parteneri\n"
+"        De asemenea, adaugă opțiuni de export DATEV la registrul general\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lt_reports
@@ -467,6 +547,11 @@ msgid ""
 "        Contains Balance Sheet, Profit/Loss reports\n"
 "    "
 msgstr ""
+"\n"
+"        Rapoarte contabile pentru Lituania\n"
+"\n"
+"        Conține bilanț, rapoarte de profit / pierdere\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_nl_reports
@@ -522,6 +607,12 @@ msgid ""
 "        MTD-VAT API to HMRC.\n"
 "    "
 msgstr ""
+"\n"
+"        Rapoarte contabile pentru Marea Britanie\n"
+"\n"
+"        Permite trimiterea raportului fiscal prin intermediul\n"
+"        MTD-VAT API către HMRC.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_us_reports
@@ -542,6 +633,10 @@ msgid ""
 "        the questions and answers linked to the registrations.\n"
 "    "
 msgstr ""
+"\n"
+"        Adăugați informații atunci când construim descrierea unui client potențial pentru a include \n"
+"         întrebările și răspunsurile legate de înregistrări.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_mx_reports_closing
@@ -552,6 +647,11 @@ msgid ""
 "        Colloquially known as \"Month 13\"\n"
 "    "
 msgstr ""
+"\n"
+"        Permiteți generarea soldului de încercare pentru intrarea de închidere.\n"
+"\n"
+"        Cunoscut în mod colocvial ca \"Month 13\"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents
@@ -571,6 +671,9 @@ msgid ""
 "        Bill timesheets logged on helpdesk tickets.\n"
 "    "
 msgstr ""
+"\n"
+"        Fișele de timp pentru facturi s-au conectat la biletele helpdesk\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_maintenance
@@ -656,6 +759,17 @@ msgid ""
 "        * Account Tags.\n"
 "    "
 msgstr ""
+"\n"
+"        Model de plan de conturi (COA) pentru contabilitatea Lituaniei.\n"
+"\n"
+"        Acest modul include, de asemenea:\n"
+"\n"
+"        * Lista băncilor disponibile în Lituania.\n"
+"        * Grupuri taxă.\n"
+"        * Cele mai obișnuite Taxe Lituaniene\n"
+"        * Fiscal positions.\n"
+"        * Account Tags.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_helpdesk_fsm
@@ -664,6 +778,9 @@ msgid ""
 "        Convert helpdesk tickets to field service tasks.\n"
 "    "
 msgstr ""
+"\n"
+"        Convertiți biletele de asistență în sarcini de service pe teren..\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_product_unspsc
@@ -673,6 +790,10 @@ msgid ""
 "        UNSPSC code for their products and uoms.  \n"
 "    "
 msgstr ""
+"\n"
+"        Țări precum Columbia, Peru și Mexic trebuie să poată utiliza \n"
+"        UNSPSC pentru produsele și uoms.  \n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_form
@@ -682,6 +803,10 @@ msgid ""
 "        This module adds a new building block in the website builder in order to build new forms from scratch in any website page.\n"
 "    "
 msgstr ""
+"\n"
+"        Personalizați și creați propriile formulare web.\n"
+"        Acest modul adaugă un nou element de construcție în generatorul de site-uri web pentru a crea noi formulare de la zero în orice pagină a site-ului web.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_in_purchase_stock
@@ -702,6 +827,12 @@ msgid ""
 "        useful when you setup the multiple GSTIN units.\n"
 "    "
 msgstr ""
+"\n"
+"        Definiți jurnalul de cumpărare implicit în depozit,\n"
+"        vă ajută să alegeți jurnalul de cumpărare corect pe comanda de cumpărare când\n"
+"        modificați operațiunea de preluare.\n"
+"        util atunci când configurați mai multe unități GSTIN.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_in_sale_stock
@@ -722,6 +853,12 @@ msgid ""
 "        useful when you setup the multiple GSTIN units.\n"
 "    "
 msgstr ""
+"\n"
+"        Definiți jurnal de vânzări implicit din depozit,\n"
+"        vă ajută să alegeți jurnal de vânzări corect pentru comanda de vânzări când\n"
+"        modificați depozitul.\n"
+"        util atunci când configurați mai multe unități GSTIN.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_disallowed_expenses
@@ -1164,9 +1301,9 @@ msgid ""
 "\n"
 "    Make the lock date irreversible:\n"
 "\n"
-"    * You cannot define stricter conditions on advisors than on users. Then, the lock date on advisor must be set before the lock date for users.\n"
-"    * You cannot lock a period that is not finished yet. Then, the lock date for advisors must be set before the last day of the previous month.\n"
-"    * The new lock date for advisors must be set after the previous lock date.\n"
+"    * You cannot set stricter restrictions on advisors than on users. Therefore, the All Users Lock Date must be anterior (or equal) to the Invoice/Bills Lock Date.\n"
+"    * You cannot lock a period that has not yet ended. Therefore, the All Users Lock Date must be anterior (or equal) to the last day of the previous month.\n"
+"    * Any new All Users Lock Date must be posterior (or equal) to the previous one.\n"
 "    "
 msgstr ""
 
@@ -1471,6 +1608,12 @@ msgid ""
 "\n"
 "It assigns manager and user access rights to the Administrator for the accounting application and only user rights to the Demo user.\n"
 msgstr ""
+"\n"
+"Drepturi de acces contabil\n"
+"========================\n"
+"Oferă administratorului acces utilizatorului la toate caracteristicile contabile, cum ar fi articolele din jurnal și planul de conturi.\n"
+"\n"
+"Acesta atribuie administratorului drepturi de acces pentru utilizator pentru aplicația de contabilitate și numai drepturi de utilizator utilizatorului Demo.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_hr_payroll_account
@@ -1521,6 +1664,11 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Rapoarte contabile pentru Finlanda\n"
+"================================\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_reports
@@ -1540,6 +1688,10 @@ msgid ""
 "================================\n"
 "    "
 msgstr ""
+"\n"
+"Rapoarte contabile pentru India\n"
+"================================\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lu_reports
@@ -1787,6 +1939,10 @@ msgid ""
 "-------------------------------------------------------------\n"
 "\n"
 msgstr ""
+"\n"
+"Permiteți clienților să programeze întâlniri prin intermediul site-ului dvs. web\n"
+"-------------------------------------------------------------\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_mercury
@@ -1908,6 +2064,9 @@ msgid ""
 "Allows to use tracking numbers for products sold on Amazon\n"
 "==========================================================\n"
 msgstr ""
+"\n"
+"Permite utilizarea numerelor de urmărire pentru produsele vândute pe Amazon\n"
+"==========================================================\n"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_stock_renting
@@ -1934,6 +2093,10 @@ msgid ""
 "=====================================================\n"
 "        "
 msgstr ""
+"\n"
+"Permite utilizatorilor să trimită facturi prin poștă\n"
+"=====================================================\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_iot
@@ -2287,6 +2450,10 @@ msgid ""
 "=================================\n"
 "    "
 msgstr ""
+"\n"
+"Baza de numerar pentru rapoartele contabile\n"
+"=================================\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_skills_survey
@@ -2555,6 +2722,16 @@ msgid ""
 "sent mails with personal token for the invitation of the survey.\n"
 "    "
 msgstr ""
+"\n"
+"Creați sondaje frumoase și vizualizați răspunsuri\n"
+"==============================================\n"
+"\n"
+"Depinde de răspunsurile sau recenziile unor întrebări de către diferiți utilizatori. Un\n"
+"ondaj poate avea mai multe pagini. Fiecare pagină poate conține mai multe întrebări și\n"
+"fiecare întrebare poate avea mai multe răspunsuri. Utilizatorii diferiți pot da diferit\n"
+"răspunsurile la întrebare și conform sondajului respectiv se finalizează. De asemenea, partenerilor\n"
+" li se trimit mesaje cu jeton personal pentru invitația sondajului\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_coupon
@@ -3313,6 +3490,18 @@ msgid ""
 "    * FBA: A stock location and stock moves allow to monitor your stock in Amazon Fulfilment Centers.\n"
 "    * FBM: Delivery notifications are sent to Amazon for each confirmed picking (partial delivery friendly).\n"
 msgstr ""
+"\n"
+"Importați comenzile dvs. Amazon în Odoo și sincronizați livrările\n"
+"============================================================\n"
+"\n"
+"Caracteristici cheie\n"
+"------------\n"
+"* Importați comenzi din mai multe conturi și piețe.\n"
+"* Comenzile sunt potrivite cu produsele Odoo pe baza referinței lor interne (SKU în Amazon).\n"
+"* Livrările confirmate în Odoo sunt sincronizate în Amazon.\n"
+"* Suport atât pentru îndeplinirea de către Amazon (FBA), cât și pentru îndeplinirea de către comerciant (FBM):\n"
+"* FBA: o locație a stocului și mutarea stocului vă permit să vă monitorizați stocul în centrele de îndeplinire Amazon.\n"
+"* FBM: notificările de livrare sunt trimise către Amazon pentru fiecare alegere confirmată (livrare parțială prietenoasă).\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_debit_note
@@ -3324,6 +3513,12 @@ msgid ""
 "The wizard used is similar as the one for the credit note.\n"
 "    "
 msgstr ""
+"\n"
+"În multe țări, o notă de debit este utilizată ca o creștere a sumelor unei facturi existente \n"
+"sau, în anumite cazuri specifice, pentru anularea unei note de credit.\n"
+"Este ca o factură obișnuită, dar trebuie să ținem evidența legăturii cu factura originală.  \n"
+"Expertul folosit este similar cu cel pentru nota de credit.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cn
@@ -3348,6 +3543,25 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Include următoarele date pentru localizarea chineză\n"
+"========================================================\n"
+"\n"
+"Tip Cont/科目类型\n"
+"\n"
+"Date Stat/省份数据\n"
+"\n"
+"    科目类型\\会计科目表模板\\增值税\\辅助核算类别\\管理会计凭证簿\\财务会计凭证簿\n"
+"\n"
+"    添加中文省份数据\n"
+"\n"
+"    增加小企业会计科目表\n"
+"\n"
+"    修改小企业会计科目表\n"
+"\n"
+"    修改小企业会计税率\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cn_city
@@ -3674,6 +3888,23 @@ msgid ""
 "This module also uses analytic accounting and is compatible with the invoice on timesheet module so that you are able to automatically re-invoice your customers' expenses if your work by project.\n"
 "    "
 msgstr ""
+"\n"
+"Gestionați cheltuielile de către angajați\n"
+"============================\n"
+"\n"
+"Această aplicație vă permite să gestionați cheltuielile zilnice ale angajaților. Vă oferă acces la notele de plată ale angajaților dvs. și vă oferă dreptul de a completa și valida sau refuza notele. După validare, se creează o factură pentru angajat.\n"
+"Angajații își pot codifica propriile cheltuieli, iar fluxul de validare îl introduce automat în contabilitate după validarea de către manageri.\n"
+"\n"
+"\n"
+"Întregul flux este implementat ca:\n"
+"---------------------------------\n"
+"* Proiect de cheltuială\n"
+"* Trimis de angajat managerului său\n"
+"* Aprobat de managerul său\n"
+"* Validarea de către contabil și crearea înregistrărilor contabile\n"
+"\n"
+"Acest modul folosește, de asemenea, contabilitate analitică și este compatibil cu modulul factură pe foaie de timp, astfel încât să puteți re-factura automat cheltuielile clienților dvs. dacă lucrați prin proiect.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_management
@@ -3871,6 +4102,14 @@ msgid ""
 "that have no counterpart in the general financial accounts.\n"
 "    "
 msgstr ""
+"\n"
+"Modul pentru definirea obiectului contabil analitic.\n"
+"===============================================\n"
+"\n"
+"În Odoo, conturile analitice sunt legate de conturile generale, dar sunt tratate\n"
+"total independent. Deci, puteți introduce diverse operații analitice diferite\n"
+"care nu au nici o contrapartidă în conturile financiare generale.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_resource
@@ -4423,6 +4662,9 @@ msgid ""
 "Publish your customers as business references on your website to attract new potential prospects.\n"
 "    "
 msgstr ""
+"\n"
+"Publicați-vă clienții ca referințe comerciale pe site-ul dvs. web pentru a atrage noi potențiali potențiali.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_membership
@@ -4535,6 +4777,9 @@ msgid ""
 "Repair Products from helpdesk tickets\n"
 "    "
 msgstr ""
+"\n"
+"Reparați produse din biletele de asistență\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_fetchmail
@@ -5568,6 +5813,9 @@ msgid ""
 "This module adds an integration with Survey to ask feedbacks to any employee, based on a survey to fill.\n"
 "    "
 msgstr ""
+"\n"
+"Acest modul adaugă o integrare cu Survey pentru a cere feedback-ului oricărui angajat, pe baza unui sondaj de completat.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_portal
@@ -5620,6 +5868,10 @@ msgid ""
 "==================================================================\n"
 "    "
 msgstr ""
+"\n"
+"Acest modul adaugă opțiunea de transfer lot în gestionarea depozitului\n"
+"==================================================================\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_accountant_check_printing
@@ -6073,6 +6325,9 @@ msgid ""
 "This module provides standard tools (account model, context manager and helpers)\n"
 "to support In-App purchases inside Odoo. "
 msgstr ""
+"\n"
+"Acest modul oferă instrumente standard (model de cont, manager de context și asistenți)\n"
+"pentru a sprijini achizițiile în aplicația Odoo."
 
 #. module: base
 #: model:ir.module.module,description:base.module_quality_iot
@@ -6188,6 +6443,19 @@ msgid ""
 "project.\n"
 "        "
 msgstr ""
+"\n"
+"Integrare Transifex\n"
+"=====================\n"
+"Acest modul va adăuga un link către proiectul Transifex în vizualizarea de traducere.\n"
+"Scopul acestui modul este de a accelera traducerile principalelor module.\n"
+"\n"
+"Pentru a funcționa, Odoo folosește fișierele de configurare Transifex `.tx/config` pentru a detecta\n"
+"sursa proiectului. Modulele personalizate nu vor fi traduse (așa cum nu sunt publicate pe\n"
+"proiectul principal Transifex).\n"
+"\n"
+"Limba pe care utilizatorul încearcă să o traducă trebuie să fie activată pe Transifex\n"
+"project.\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_auth_totp
@@ -6383,6 +6651,9 @@ msgid ""
 "Visitors can join public mail channels managed in the Discuss app in order to get regular updates or reach out with your community.\n"
 "    "
 msgstr ""
+"\n"
+"Vizitatorii se pot alătura canalelor de poștă publică gestionate în Discuss App pentru a primi actualizări regulate sau pentru a contacta comunitatea dvs..\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_account
@@ -6813,7 +7084,7 @@ msgstr "3. %y, %Y         ==&gt; 08, 2008"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_appraisal_survey
 msgid "360 Feedback"
-msgstr ""
+msgstr "360 Observație"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
@@ -6977,7 +7248,7 @@ msgstr "<i class=\"fa fa-times\" title=\"Close the onboarding panel\"/>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
 msgid "<span aria-label=\"Close\">×</span>"
-msgstr ""
+msgstr "<span aria-label=\"Close\">×</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.reset_view_arch_wizard_view
@@ -6994,22 +7265,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid ""
 "<span class=\"o_form_label o_td_label\" name=\"address_name\">\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'contact')]}\">Company Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'invoice')]}\">Invoice Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'delivery')]}\">Delivery Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'other')]}\">Other Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'private')]}\">Private Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', False)]}\">Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'contact')]}\">Company Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'invoice')]}\">Invoice Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'delivery')]}\">Delivery Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'other')]}\">Other Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'private')]}\">Private Address</b>\n"
+"                                <b attrs=\"{'invisible': ['&amp;', ('parent_id', '!=', False), ('type', '!=', False)]}\">Address</b>\n"
 "                            </span>"
 msgstr ""
-"<span class=\"o_form_label o_td_label\" name=\"address_name\">\n"
-"<b attrs=\"{'invisible': [('type', '!=', 'contact')]}\">Adresa Companiei</b>\n"
-"<b attrs=\"{'invisible': [('type', '!=', 'invoice')]}\">Adresă de facturare</b>\n"
-"<b attrs=\"{'invisible': [('type', '!=', 'delivery')]}\">Adresă de livrare</b>\n"
-"<b attrs=\"{'invisible': [('type', '!=', 'other')]}\">Altă Adresă</b>\n"
-"<b attrs=\"{'invisible': [('type', '!=', 'private')]}\">Adresă privată</b>\n"
-"<b attrs=\"{'invisible': [('type', '!=', False)]}\">Adresă</b>\n"
-"</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_update
@@ -7717,7 +7980,7 @@ msgstr "Cont TaxCloud"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_account_taxcloud
 msgid "Account TaxCloud - Ecommerce"
-msgstr ""
+msgstr "Cont TaxCloud - Ecommerce"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_account_taxcloud
@@ -8085,7 +8348,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_social_sale
 msgid "Add sale UTM info on social"
-msgstr ""
+msgstr "Adăugați informații UTM de vânzare pe rețelele sociale"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mass_mailing_sale
@@ -8096,7 +8359,7 @@ msgstr ""
 #: model:ir.module.module,summary:base.module_stock_barcode_picking_batch
 msgid "Add the support of batch transfers into the barcode view"
 msgstr ""
-"Adăugați suportul transferurilor în serie în vizualizarea codului de bare"
+"Adăugați suportul transferurilor în lot în vizualizarea codului de bare"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_product_matrix
@@ -8106,7 +8369,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_event_enterprise
 msgid "Add views and tweaks on event"
-msgstr ""
+msgstr "Adăugați vizualizări și modificări la eveniment"
 
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_address_31
@@ -8877,7 +9140,7 @@ msgstr "Aruba"
 #: model_terms:res.partner,website_description:base.res_partner_3
 #: model_terms:res.partner,website_description:base.res_partner_4
 msgid "As a team, we are happy to contribute to this event."
-msgstr ""
+msgstr "Ca echipă, suntem bucuroși să contribuim la acest eveniment."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_appraisal
@@ -9037,7 +9300,7 @@ msgstr "Este necesară instalarea automată"
 #. module: base
 #: model:ir.module.module,summary:base.module_partner_autocomplete
 msgid "Auto-complete partner companies' data"
-msgstr "Completare automată a datele companiilor partenere"
+msgstr "Completați automat datele companiilor partenere"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_automation
@@ -9386,7 +9649,7 @@ msgstr "Vizualizare bază"
 #: model:ir.cron,cron_name:base.autovacuum_job
 #: model:ir.cron,name:base.autovacuum_job
 msgid "Base: Auto-vacuum internal data"
-msgstr ""
+msgstr "Baza: Auto-vid date interne"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_web_grid
@@ -9742,7 +10005,7 @@ msgstr "Brunei Darussalam"
 #: model:ir.module.module,description:base.module_payment_buckaroo
 #: model:ir.module.module,shortdesc:base.module_payment_buckaroo
 msgid "Buckaroo Payment Acquirer"
-msgstr ""
+msgstr "Colector de plăți Buckaroo"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_budget
@@ -9752,7 +10015,7 @@ msgstr "Managementul bugetului"
 #. module: base
 #: model:ir.module.module,summary:base.module_marketing_automation
 msgid "Build automated mailing campaigns"
-msgstr ""
+msgstr "Construiți campanii de mailing automatizate"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_form
@@ -9835,7 +10098,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_enterprise
 msgid "CRM enterprise"
-msgstr ""
+msgstr "Întreprindere CRM"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_social_crm
@@ -10426,7 +10689,7 @@ msgstr "Coloană referitoare la înregistrarea din tabelul de modele"
 #: model_terms:res.partner,website_description:base.res_partner_3
 #: model_terms:res.partner,website_description:base.res_partner_4
 msgid "Come see us live, we hope to meet you !"
-msgstr ""
+msgstr "Vino să ne vezi în direct, sperăm să te întâlnim!"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__comm10e
@@ -10705,7 +10968,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_timesheet_enterprise
 msgid "Configure timesheet invoicing"
-msgstr ""
+msgstr "Configurați facturarea fișei de timp"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_product_configurator
@@ -10883,7 +11146,7 @@ msgstr "Contacte & adrese"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_contacts_enterprise
 msgid "Contacts Enterprise"
-msgstr ""
+msgstr "Contacte Enterprise"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_partner_check_name
@@ -11084,7 +11347,7 @@ msgstr ""
 #: model:ir.module.module,summary:base.module_industry_fsm_report
 #: model:ir.module.module,summary:base.module_industry_fsm_sale_report
 msgid "Create Reports for Field service workers"
-msgstr ""
+msgstr "Creați rapoarte pentru lucrătorii din serviciul de teren"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_crm_helpdesk
@@ -11931,7 +12194,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_demo_failure_wizard__failure_ids
 msgid "Demo Installation Failures"
-msgstr ""
+msgstr "Eșecuri Instalare Demo"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
@@ -12110,7 +12373,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_disallowed_expenses_fleet
 msgid "Disallowed Expenses on Fleets"
-msgstr ""
+msgstr "Cheltuieli nepermise pentru flote"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
@@ -14612,7 +14875,7 @@ msgstr "Gestionați comenzile de prânz ale angajaților dvs."
 #: model_terms:res.partner,website_description:base.res_partner_3
 #: model_terms:res.partner,website_description:base.res_partner_4
 msgid "Happy to be Sponsor"
-msgstr ""
+msgstr "Mă bucur să fiu sponsor"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_escpos
@@ -14960,7 +15223,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_expense_predict_product
 msgid "Hr Expense Predict product"
-msgstr ""
+msgstr "Produsul de predicție a cheltuielilor"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_recruitment_survey
@@ -15787,7 +16050,7 @@ msgstr "Integrează POS-ul tău cu un terminal cu șase plăți"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_adyen
 msgid "Integrate your POS with an Adyen payment terminal"
-msgstr ""
+msgstr "Integrează POS-ul tău cu un terminal de plată Adyen"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_inter_company_rules
@@ -15961,6 +16224,12 @@ msgid "Invalid model name %r in action definition."
 msgstr "Nume model nevalid %r în definiția acțiunii."
 
 #. module: base
+#: code:addons/base/models/ir_actions.py:611
+#, python-format
+msgid "many2many fields cannot be evaluated by reference"
+msgstr ""
+
+#. module: base
 #: code:addons/template_inheritance.py:0
 #, python-format
 msgid "Invalid position attribute: '%s'"
@@ -16049,6 +16318,8 @@ msgid ""
 "Invoice & Delivery addresses are used in sales orders. Private addresses are"
 " only visible by authorized users."
 msgstr ""
+"Adrese de facturare și livrare sunt utilizate în comenzile de vânzare. "
+"Adresele private sunt vizibile numai de către utilizatorii autorizați."
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__type__invoice
@@ -16073,7 +16344,7 @@ msgstr "Facturare"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hw_posbox_homepage
 msgid "IoT Box Homepage"
-msgstr ""
+msgstr "Pagina principală IoT Box"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_workorder_iot
@@ -16926,12 +17197,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_hr
 msgid "Link module between Point of Sale and HR"
-msgstr ""
+msgstr "Modul de legătură între punctul de vânzare și resurse umane"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_sale
 msgid "Link module between Point of Sale and Sales"
-msgstr ""
+msgstr "Modul de legătură între punctul de vânzare și vânzări"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_hr_l10n_be
@@ -16993,7 +17264,7 @@ msgstr "Încarcă o traducere"
 #. module: base
 #: model:ir.actions.act_window,name:base.demo_force_install_action
 msgid "Load demo data"
-msgstr ""
+msgstr "Încărcare date Demonstrative"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__code
@@ -17472,7 +17743,7 @@ msgstr "Gestionați programul angajaților dvs."
 #. module: base
 #: model:ir.module.module,summary:base.module_fleet
 msgid "Manage your fleet and track car costs"
-msgstr ""
+msgstr "Gestionați flota și urmăriți costurile mașinii"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_hr_recruitment
@@ -18540,8 +18811,8 @@ msgid ""
 "No matching record found for %(field_type)s '%(value)s' in field "
 "'%%(field)s'"
 msgstr ""
-"Nu s-a gasit nici o inregistrare care sa se potriveasca cu %(field_type)s "
-"'%(value)s' in campul '%%(field)s'"
+"Nu s-a găsit nici o înregistrare care să se potrivească cu %(field_type)s "
+"'%(value)s' în câmpul '%%(field)s'"
 
 #. module: base
 #: code:addons/base/models/ir_fields.py:0
@@ -19881,6 +20152,16 @@ msgstr ""
 " Operațiunile modulului nu sunt posibile în acest moment, vă rugăm să încercați din nou mai târziu sau să contactați administratorul de sistem."
 
 #. module: base
+#: code:addons/base/models/ir_actions_report.py:0
+#, python-format
+msgid ""
+"Odoo is unable to merge the PDFs attached to the following records:\n"
+"%s\n"
+"\n"
+"Please exclude them from the selection to continue. It's possible to still retrieve those PDFs by selecting each of the affected records individually, which will avoid merging."
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_odoo_referral
 msgid "Odoo referral program"
 msgstr "Programul de recomandare Odoo"
@@ -19953,6 +20234,12 @@ msgid ""
 msgstr ""
 "Unul dintre documentele pe care încercați să le accesați a fost șters, "
 "încercați din nou după reîmprospătare."
+
+#. module: base
+#: code:addons/base/models/ir_actions_report.py:0
+#, python-format
+msgid "One of the documents, you try to merge is encrypted"
+msgstr ""
 
 #. module: base
 #: code:addons/models.py:0
@@ -20443,7 +20730,7 @@ msgstr "Servere Ieșire E-mail-uri"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_microsoft_calendar
 msgid "Outlook Calendar"
-msgstr ""
+msgstr "Calendar Outlook"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__dpi
@@ -21530,7 +21817,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase_stock_enterprise
 msgid "Purchase Stock Enterprise"
-msgstr ""
+msgstr "Achiziționați întreprinderi de stoc"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase_mrp
@@ -21666,7 +21953,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_quotation_builder
 msgid "Quotation Builder"
-msgstr ""
+msgstr "Generator de ofertă"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_expense
@@ -21687,7 +21974,7 @@ msgstr "Câmp Qweb"
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_barcode
 msgid "Qweb Field Barcode"
-msgstr ""
+msgstr "Cod de bare Câmp Qweb"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_contact
@@ -22016,7 +22303,7 @@ msgstr "Nume relație"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__relation_table
 msgid "Relation Table"
-msgstr ""
+msgstr "Tabel Relație"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__relation_field_id
@@ -22392,12 +22679,12 @@ msgstr "Debit direct SEPA"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_payroll_account_sepa
 msgid "SEPA Payments for Payroll"
-msgstr ""
+msgstr "Plăți SEPA pentru salarizare"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mass_mailing_sms
 msgid "SMS Marketing"
-msgstr ""
+msgstr "SMS Marketing"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_marketing_automation_sms
@@ -22824,7 +23111,7 @@ msgstr "Caută module"
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Search tag can only contain one search panel"
-msgstr ""
+msgstr "Eticheta de căutare poate conține un singur panou de căutare"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_config_settings_view_form
@@ -22945,7 +23232,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_timesheet
 msgid "Sell based on timesheets"
-msgstr ""
+msgstr "Vindeți pe baza fișelor de timp"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_digital
@@ -23370,7 +23657,7 @@ msgstr "Omite aceste contacte"
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Slash"
-msgstr ""
+msgstr "Slash"
 
 #. module: base
 #: model:res.country,name:base.sk
@@ -23416,7 +23703,7 @@ msgstr "LinkedIn"
 #: model:ir.module.category,name:base.module_category_marketing_social_marketing
 #: model:ir.module.module,shortdesc:base.module_social
 msgid "Social Marketing"
-msgstr ""
+msgstr "Marketing social"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_social_media
@@ -23838,7 +24125,7 @@ msgstr "Submeniuri"
 #: model:ir.module.module,summary:base.module_hr_expense
 #: model:ir.module.module,summary:base.module_hr_payroll_expense
 msgid "Submit, validate and reinvoice employee expenses"
-msgstr ""
+msgstr "Trimiteți, validați și refacturați cheltuielile angajaților"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_sales_subscription
@@ -23864,7 +24151,7 @@ msgstr "Abonamente"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence__date_range_ids
 msgid "Subsequences"
-msgstr ""
+msgstr "Ulterioare"
 
 #. module: base
 #: model:res.country,name:base.sd
@@ -24217,7 +24504,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_event_full
 msgid "Test Full Event Flow"
-msgstr ""
+msgstr "Testați fluxul complet de evenimente"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_website_slides_full
@@ -24378,6 +24665,8 @@ msgid ""
 "The Tax Identification Number. Complete it if the contact is subjected to "
 "government taxes. Used in some legal statements."
 msgstr ""
+"Numărul de identificare fiscală. Completați-l dacă contactul este supus "
+"taxelor guvernamentale. Folosit în unele declarații juridice."
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_lang_url_code_uniq
@@ -24544,6 +24833,12 @@ msgstr "Numele întreg al țării."
 #: model:ir.model.fields,help:base.field_res_users__user_id
 msgid "The internal user in charge of this contact."
 msgstr "Utilizatorul intern responsabil de acest contact."
+
+#. module: base
+#: code:addons/base/models/res_country.py:106
+#, python-format
+msgid "The layout contains an invalid format key"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model__inherited_model_ids
@@ -25085,6 +25380,8 @@ msgid ""
 "This module ensures that the taxes are computed on the invoice before a payment is created automatically for a subscription.\n"
 "    "
 msgstr ""
+"Acest modul asigură că taxele sunt calculate pe factură înainte ca plata să fie creată automat pentru un abonament.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_taxcloud_delivery
@@ -26073,7 +26370,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_delivery_iot
 msgid "Use IoT devices in delivery operations"
-msgstr ""
+msgstr "Utilizați dispozitivele IoT în operațiunile de livrare"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner__barcode
@@ -26604,7 +26901,7 @@ msgstr "Vizibil"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_account
 msgid "WMS Accounting"
-msgstr ""
+msgstr "Contabilitate WMS"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_landed_costs
@@ -26645,7 +26942,7 @@ msgstr "Atenționări"
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_E
 msgid "Water supply"
-msgstr ""
+msgstr "Alimentare cu apă"
 
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_18
@@ -26681,7 +26978,7 @@ msgstr "Web Editor"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_enterprise
 msgid "Web Enterprise"
-msgstr ""
+msgstr "Web Enterprise"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_gantt
@@ -26780,7 +27077,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner__website
 #: model:ir.model.fields,field_description:base.field_res_users__website
 msgid "Website Link"
-msgstr ""
+msgstr "Website Link"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_livechat
@@ -27196,8 +27493,8 @@ msgstr "Nu puteți activa superutilizatorul."
 #. module: base
 #: code:addons/base/models/res_partner.py:0
 #, python-format
-msgid "You cannot archive a contact linked to an internal user."
-msgstr "Nu puteți arhiva un contact legat de un utilizator intern."
+msgid "You cannot archive a contact linked to a portal or internal user."
+msgstr ""
 
 #. module: base
 #: code:addons/base/models/res_partner.py:0
@@ -27308,6 +27605,13 @@ msgid ""
 msgstr ""
 "Puteți defini drepturi suplimentare de acces prin editarea noului user in "
 "meniul Setări/Utilizatori"
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.view_currency_form
+msgid ""
+"You won't be able to reduce the number of decimal places of a currency which"
+" has already been used to make accounting entries."
+msgstr ""
 
 #. module: base
 #: code:addons/base/models/ir_mail_server.py:0

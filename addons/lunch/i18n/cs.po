@@ -7,9 +7,10 @@
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2020
 # Martin Trigaux, 2020
 # Michal Veselý <michal@veselyberanek.net>, 2020
-# trendspotter, 2020
-# Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2020
+# rastislav Brencic <rastislav.brencic99@gmail.com>, 2021
+# trendspotter, 2021
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
 # 
 msgid ""
 msgstr ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-16 13:33+0000\n"
 "PO-Revision-Date: 2020-09-07 08:14+0000\n"
-"Last-Translator: karolína schusterová <karolina.schusterova@vdp.sk>, 2020\n"
+"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2021\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -406,7 +407,7 @@ msgstr ""
 #. module: lunch
 #: model:lunch.product.category,name:lunch.categ_burger
 msgid "Burger"
-msgstr ""
+msgstr "Burgr"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_search_2
@@ -560,7 +561,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:lunch.lunch_order_action_control_suppliers
 #: model:ir.ui.menu,name:lunch.lunch_order_menu_control_suppliers
 msgid "Control Vendors"
-msgstr ""
+msgstr "Kontrola dodavatelu"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__country_id
@@ -714,7 +715,7 @@ msgstr "Zaměstnanec, který si objednal minulý rok"
 #. module: lunch
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_alert__recipients__everyone
 msgid "Everyone"
-msgstr "Kdokoli"
+msgstr "Každý"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__topping_label_1
@@ -1476,7 +1477,7 @@ msgstr "Telefon"
 #. module: lunch
 #: model:lunch.product.category,name:lunch.categ_pizza
 msgid "Pizza"
-msgstr ""
+msgstr "Pizza"
 
 #. module: lunch
 #: model:lunch.product,name:lunch.product_funghi
@@ -1640,7 +1641,7 @@ msgstr "Losos a avokádo"
 #. module: lunch
 #: model:lunch.product.category,name:lunch.categ_sandwich
 msgid "Sandwich"
-msgstr ""
+msgstr "Sendvič"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__recurrency_saturday
@@ -1771,6 +1772,16 @@ msgid ""
 "The product category is archived. The user have to unarchive the category or"
 " change the category of the product."
 msgstr ""
+"Kategorie produktu je archivována. Uživatel musí zrušit archivaci kategorie "
+"nebo změnit kategorii produktu."
+
+#. module: lunch
+#: code:addons/lunch/models/lunch_product.py:0
+#, python-format
+msgid ""
+"The product supplier is archived. The user have to unarchive the supplier or"
+" change the supplier of the product."
+msgstr ""
 
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_supplier__responsible_id
@@ -1778,6 +1789,8 @@ msgid ""
 "The responsible is the person that will order lunch for everyone. It will be"
 " used as the 'from' when sending the automatic email."
 msgstr ""
+"Odpovědná osoba je osoba, která objedná oběd pro každého. Při odesílání "
+"automatického e-mailu bude použito jako „od“."
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_order_action
@@ -1851,6 +1864,8 @@ msgid ""
 "To see some products, check if your vendors are available today and that you"
 " have configured some products"
 msgstr ""
+"Chcete-li zobrazit některé produkty, zkontrolujte, zda jsou dnes k dispozici"
+" vaši dodavatelé a zda jste některé produkty nakonfigurovali"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_search
@@ -2034,7 +2049,7 @@ msgstr ""
 #: code:addons/lunch/static/src/xml/lunch_templates.xml:0
 #, python-format
 msgid "Your Account"
-msgstr ""
+msgstr "Váš účet"
 
 #. module: lunch
 #. openerp-web
@@ -2051,6 +2066,7 @@ msgstr ""
 #, python-format
 msgid "Your favorite meals will be created based on your last orders."
 msgstr ""
+"Vaše oblíbená jídla budou vytvořena na základě vašich posledních objednávek."
 
 #. module: lunch
 #. openerp-web

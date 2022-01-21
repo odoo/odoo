@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="EditBar" owl="1">
-        <div class="edit-bar">
+        <div class="edit-bar" t-attf-style="top:{{props.floorMapScrollTop}}px;">
             <span class="edit-button" t-on-click.stop="trigger('create-table')">
                 <i class="fa fa-plus" role="img" aria-label="Add" title="Add"></i>
             </span>

@@ -38,7 +38,7 @@
                 <t t-set="checked_in" t-value="widget.employee.attendance_state=='checked_in'"/>
                 <t t-if="widget.employee">
                     <div class="o_hr_attendance_user_badge o_home_menu_background">
-                        <img class="img rounded-circle" t-attf-src="/web/image?model=hr.employee&amp;field=image_128&amp;id=#{widget.employee.id}" t-att-title="widget.employee.name" t-att-alt="widget.employee.name"/>
+                        <img class="img rounded-circle" t-attf-src="/web/image?model=hr.employee.public&amp;field=image_128&amp;id=#{widget.employee.id}" t-att-title="widget.employee.name" t-att-alt="widget.employee.name"/>
                     </div>
                     <h1 class="mb8"><t t-esc="widget.employee.name"/></h1>
                     <h3 class="mt8 mb24"><t t-if="!checked_in">Welcome!</t><t t-else="">Want to check out?</t></h3>
@@ -66,7 +66,7 @@
                 </div>
                 <t t-if="widget.employee_id">
                     <div class="o_hr_attendance_user_badge o_home_menu_background">
-                        <img class="img rounded-circle" t-attf-src="/web/image?model=hr.employee&amp;field=image_128&amp;id=#{widget.employee_id}" t-att-title="widget.employee_name" t-att-alt="widget.employee_name"/>
+                        <img class="img rounded-circle" t-attf-src="/web/image?model=hr.employee.public&amp;field=image_128&amp;id=#{widget.employee_id}" t-att-title="widget.employee_name" t-att-alt="widget.employee_name"/>
                     </div>
                     <h1 class="mb8"><t t-esc="widget.employee_name"/></h1>
                     <h3 class="mt8 mb24"><t t-if="!checked_in">Welcome!</t><t t-else="">Want to check out?</t></h3>
@@ -109,7 +109,7 @@
             <div class="o_hr_attendance_kiosk_mode">
                 <t t-if="widget.attendance">
                     <div class="o_hr_attendance_user_badge o_home_menu_background">
-                        <img class="img rounded-circle" t-attf-src="/web/image?model=hr.employee&amp;field=image_128&amp;id=#{widget.attendance.employee_id[0]}" t-att-title="widget.employee_name" t-att-alt="widget.employee_name"/>
+                        <img class="img rounded-circle" t-attf-src="/web/image?model=hr.employee.public&amp;field=image_128&amp;id=#{widget.attendance.employee_id[0]}" t-att-title="widget.employee_name" t-att-alt="widget.employee_name"/>
                     </div>
                     <t t-if="widget.attendance.check_out">
                         <h1 class="mb0">Goodbye <t t-esc="widget.employee_name"/>!</h1>

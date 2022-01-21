@@ -143,6 +143,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                     res_model: 'forum.post',
                     res_id: +window.location.pathname.split('-').pop(),
                 },
+                disableFullMediaDialog: true,
                 disableResizeImage: true,
             };
             if (!hasFullEdit) {
@@ -154,7 +155,11 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
             wysiwygLoader.load(self, $textarea[0], options).then(wysiwyg => {
                 // float-left class messes up the post layout OPW 769721
                 $form.find('.note-editable').find('img.float-left').removeClass('float-left');
-                $form.on('click', 'button .a-submit', () => {
+                // o_we_selected_image has not always been removed when
+                // saving a post so we need the line below to remove it if it is present.
+                $form.find('.note-editable').find('img.o_we_selected_image').removeClass('o_we_selected_image');
+                $form.on('click', 'button, .a-submit', () => {
+                    $form.find('.note-editable').find('img.o_we_selected_image').removeClass('o_we_selected_image');
                     wysiwyg.save();
                 });
             });
@@ -166,7 +171,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                 offset: 10,
                 animation: false,
                 html: true,
-            });
+            }).popover('hide').data('bs.popover').tip.classList.add('o_wforum_bio_popover_container');
         });
 
         this.$('#post_reply').on('shown.bs.collapse', function (e) {
@@ -582,6 +587,24 @@ publicWidget.registry.websiteForumSpam = publicWidget.Widget.extend({
         }).then(function () {
             window.location.reload();
         });
+    },
+});
+
+publicWidget.registry.WebsiteForumBackButton = publicWidget.Widget.extend({
+    selector: '.o_back_button',
+    events: {
+        'click': '_onBackButtonClick',
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _onBackButtonClick() {
+        window.history.back();
     },
 });
 

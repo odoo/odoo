@@ -8,14 +8,15 @@
 # שהאב חוסיין <shhab89@gmail.com>, 2020
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2020
 # Ofir Blum <ofir.blum@gmail.com>, 2020
+# Lilach Gilliam <lilach.gilliam@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-17 06:16+0000\n"
+"POT-Creation-Date: 2020-11-27 15:41+0000\n"
 "PO-Revision-Date: 2020-09-07 08:20+0000\n"
-"Last-Translator: Ofir Blum <ofir.blum@gmail.com>, 2020\n"
+"Last-Translator: Lilach Gilliam <lilach.gilliam@gmail.com>, 2021\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -78,7 +79,7 @@ msgstr ""
 msgid ""
 "<font style=\"font-size: 62px;\" "
 "class=\"o_default_snippet_text\">Introduction</font>"
-msgstr ""
+msgstr "<font style=\"font-size: 62px;\" class=\"o_default_snippet_text\">מבוא</font>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
@@ -191,7 +192,7 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_topbar
 msgid "<span class=\"navbar-brand h4 my-0 mr-auto\">Events</span>"
-msgstr ""
+msgstr "<span class=\"navbar-brand h4 my-0 mr-auto\">ארועים</span>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.display_timer_widget
@@ -199,6 +200,8 @@ msgid ""
 "<span class=\"o_countdown_remaining o_timer_days pr-1\">0</span><span "
 "class=\"o_countdown_metric pr-1\">days</span>"
 msgstr ""
+"<span class=\"o_countdown_remaining o_timer_days pr-1\">0 </span><span "
+"class=\"o_countdown_metric pr-1\">ימים</span>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.display_timer_widget
@@ -248,11 +251,6 @@ msgid ""
 "                                    <i class=\"fa fa-ban mr-2\"/>Sold Out\n"
 "                                </span>"
 msgstr ""
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
-msgid "<span>&amp;times;</span>"
-msgstr "<span>&amp;times;</span>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_location
@@ -354,7 +352,7 @@ msgstr "לחץ על <em>המשך</em> כדי ליצור את האירוע."
 #. openerp-web
 #: code:addons/website_event/static/src/js/tours/website_event.js:0
 #, python-format
-msgid "Click here to add new content on your website."
+msgid "Click here to add new content to your website."
 msgstr ""
 
 #. module: website_event
@@ -388,14 +386,14 @@ msgstr "סגור"
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
 #, python-format
 msgid "Community"
-msgstr ""
+msgstr "פורום קהילתי"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__community_menu
 #: model:ir.model.fields,field_description:website_event.field_event_type__community_menu
 #: model:ir.model.fields.selection,name:website_event.selection__website_event_menu__menu_type__community
 msgid "Community Menu"
-msgstr ""
+msgstr "תפריט הפורום הקהילתי"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_speaker_bio
@@ -463,7 +461,7 @@ msgstr "הצג תפריט ייעודי באתר"
 #: model:ir.model.fields,help:website_event.field_event_event__community_menu
 #: model:ir.model.fields,help:website_event.field_event_type__community_menu
 msgid "Display community tab on website"
-msgstr ""
+msgstr "הצג את כרטיסיית הקהילה באתר"
 
 #. module: website_event
 #. openerp-web
@@ -498,7 +496,7 @@ msgstr "אירוע"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__community_menu_ids
 msgid "Event Community Menus"
-msgstr ""
+msgstr "תפריט הפורום הקהילתי"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.template_location
@@ -532,14 +530,14 @@ msgstr "הרשמות לאירוע"
 #: code:addons/website_event/static/src/xml/customize_options.xml:0
 #, python-format
 msgid "Event Specific"
-msgstr ""
+msgstr "ארוע ספיציפי"
 
 #. module: website_event
 #. openerp-web
 #: code:addons/website_event/static/src/xml/customize_options.xml:0
 #, python-format
 msgid "Event Sub-menu"
-msgstr ""
+msgstr "תת-תפריט האירוע"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__subtitle
@@ -550,7 +548,7 @@ msgstr "כותרת המשנה לאירוע"
 #. module: website_event
 #: model:ir.model,name:website_event.model_event_type
 msgid "Event Template"
-msgstr ""
+msgstr "תבניות ארוע"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_details
@@ -633,12 +631,12 @@ msgstr "הקדמה"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__is_done
 msgid "Is Done"
-msgstr ""
+msgstr "בוצע"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__is_ongoing
 msgid "Is Ongoing"
-msgstr ""
+msgstr "מתמשך"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__is_participating
@@ -695,7 +693,7 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.website_visitor_view_search
 msgid "Main Contact"
-msgstr ""
+msgstr "איש קשר עיקרי"
 
 #. module: website_event
 #: model:ir.model.fields,help:website_event.field_website_visitor__parent_id
@@ -710,7 +708,7 @@ msgstr "תפריט"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_website_event_menu__menu_type
 msgid "Menu Type"
-msgstr ""
+msgstr "סוג תפריט"
 
 #. module: website_event
 #: model:ir.actions.act_window,name:website_event.website_event_menu_action
@@ -743,7 +741,7 @@ msgstr "לא נמצאו אירועים."
 #. module: website_event
 #: model_terms:ir.actions.act_window,help:website_event.event_registration_action_from_visitor
 msgid "No registration linked to this visitor"
-msgstr ""
+msgstr "אין קישור לרישום למבקר זה"
 
 #. module: website_event
 #. openerp-web
@@ -813,12 +811,12 @@ msgstr "הירשם"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
 msgid "Register Button"
-msgstr ""
+msgstr "הרשמה"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_website_visitor__event_registered_ids
 msgid "Registered Events"
-msgstr ""
+msgstr "אירועים רשומים"
 
 #. module: website_event
 #: code:addons/website_event/controllers/main.py:0
@@ -843,28 +841,28 @@ msgstr "הרשמות"
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "Registrations Closed"
-msgstr ""
+msgstr "אירועים סגורים"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "Registrations are <b>closed</b>"
-msgstr ""
+msgstr "ההרשמות <b>סגורות</b>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "Registrations not yet open"
-msgstr ""
+msgstr "עדיין לא נפתחה ההרשמה"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__start_remaining
 msgid "Remaining before start"
-msgstr ""
+msgstr "הזמן שנותר לפני תחילת הארוע"
 
 #. module: website_event
 #: model:ir.model.fields,help:website_event.field_event_event__start_remaining
 msgid "Remaining time before event starts (minutes)"
-msgstr ""
+msgstr "הזמן שנותר לפני תחילת האירוע (דקות)"
 
 #. module: website_event
 #: model:ir.model.fields,help:website_event.field_event_event__website_id
@@ -894,7 +892,7 @@ msgstr "סיום מכירה ב-"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "Sales start on"
-msgstr ""
+msgstr "תחילת מכירה ב-"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.layout
@@ -963,7 +961,7 @@ msgstr "כרטיס מס' "
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "Ticket Sales starting on"
-msgstr ""
+msgstr "מכירת כרטיסים מתחילה ב-"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
@@ -991,7 +989,7 @@ msgstr "לא פורסם"
 #: model_terms:ir.ui.view,arch_db:website_event.event_time
 #, python-format
 msgid "Upcoming Events"
-msgstr ""
+msgstr "אירועים הבאים"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
@@ -1038,13 +1036,13 @@ msgstr "אתר אינטרנט"
 #: model:ir.model,name:website_event.model_website_event_menu
 #: model_terms:ir.ui.view,arch_db:website_event.website_event_menu_view_form
 msgid "Website Event Menu"
-msgstr ""
+msgstr "תפריט אירועים באתר האינטרנט"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.website_event_menu_view_search
 #: model_terms:ir.ui.view,arch_db:website_event.website_event_menu_view_tree
 msgid "Website Event Menus"
-msgstr ""
+msgstr "תפריטי אירועים באתר האינטרנט"
 
 #. module: website_event
 #: model:ir.actions.act_url,name:website_event.action_open_website
@@ -1060,12 +1058,12 @@ msgstr "תפריט אתר אינטרנט"
 #. module: website_event
 #: model:ir.ui.menu,name:website_event.menu_website_event_menu
 msgid "Website Menus"
-msgstr ""
+msgstr "תפריט אתר אינטרנט"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
 msgid "Website Submenu"
-msgstr ""
+msgstr "תת-תפריט אתר אינטרנט"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__website_url
@@ -1100,7 +1098,7 @@ msgstr "תמונת opengraph של אתר אינטרנט"
 #. module: website_event
 #: model:ir.model.fields,help:website_event.field_event_event__is_ongoing
 msgid "Whether event has begun"
-msgstr ""
+msgstr "האם האירוע התחיל"
 
 #. module: website_event
 #: model:ir.model.fields,help:website_event.field_event_event__is_done
@@ -1118,7 +1116,7 @@ msgstr ""
 #, python-format
 msgid ""
 "With the Edit button, you can <b>customize</b> the web page visitors will "
-"see when registrating."
+"see when registering."
 msgstr ""
 
 #. module: website_event

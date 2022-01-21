@@ -139,7 +139,6 @@
                             <field name="id" invisible="1"/>
                             <field name="use_create_components_lots" invisible="1"/>
                             <field name="show_lot_ids" invisible="1"/>
-                            <field name="allowed_product_ids" invisible="1"/>
                             <field name="product_tracking" invisible="1"/>
                             <field name="product_id" context="{'default_type': 'product'}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             <field name="product_tmpl_id" invisible="1"/>
@@ -213,7 +212,7 @@
                     <notebook>
                         <page string="Components" name="components">
                             <field name="move_raw_ids"
-                                context="{'default_product_uom_qty': 1.0, 'default_date': date_planned_start, 'default_date_deadline': date_deadline, 'default_location_id': location_src_id, 'default_location_dest_id': production_location_id, 'default_state': 'draft', 'default_raw_material_production_id': id, 'default_picking_type_id': picking_type_id, 'default_company_id': company_id}"
+                                context="{'default_date': date_planned_start, 'default_date_deadline': date_deadline, 'default_location_id': location_src_id, 'default_location_dest_id': production_location_id, 'default_state': 'draft', 'default_raw_material_production_id': id, 'default_picking_type_id': picking_type_id, 'default_company_id': company_id}"
                                 attrs="{'readonly': ['|', ('state', '=', 'cancel'), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]}" options="{'delete': [('state', '=', 'draft')]}">
                                 <tree default_order="is_done,sequence" editable="bottom">
                                     <field name="product_id" force_save="1" required="1" context="{'default_type': 'product'}" attrs="{'readonly': ['|', '|', ('has_move_lines', '=', True), ('state', '=', 'cancel'), '&amp;', ('state', '!=', 'draft'), ('additional', '=', False) ]}"/>
@@ -268,21 +267,24 @@
                                         decoration-success="not is_done and (quantity_done - should_consume_qty == 0)"
                                         decoration-warning="not is_done and (quantity_done - should_consume_qty &gt; 0.0001)"
                                         attrs="{'column_invisible': [('parent.state', '=', 'draft')], 'readonly': [('show_details_visible', '=', True)]}"/>
-                                    <field name="product_uom" attrs="{'readonly': [('state', '!=', 'draft')]}" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom"/>
+                                    <field name="product_uom" attrs="{'readonly': [('state', '!=', 'draft'), ('id', '!=', False)]}" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom"/>
                                     <field name="show_details_visible" invisible="1"/>
                                     <field name="lot_ids" widget="many2many_tags"
                                         groups="stock.group_production_lot" optional="hide"
-                                        attrs="{'invisible': ['|', '|', ('show_details_visible', '=', False), ('has_tracking', '!=', 'serial'), ('parent.state', '=', 'draft')], 'column_invisible': [('parent.show_lot_ids', '=',  False)]}"
+                                        attrs="{'invisible': ['|', '|', ('show_details_visible', '=', False), ('has_tracking', '!=', 'serial'), ('parent.state', '=', 'draft')],
+                                                'readonly': ['|', '|', ('show_details_visible', '=', False), ('has_tracking', '!=', 'serial'), ('parent.state', '=', 'draft')],
+                                                'column_invisible': [('parent.show_lot_ids', '=',  False)]}"
                                         options="{'create': [('parent.use_create_components_lots', '!=', False)]}"
                                         context="{'default_company_id': company_id, 'default_product_id': product_id}"
                                         domain="[('product_id','=',product_id)]"
                                     />
+                                    <field name="group_id" invisible="1"/>
                                     <button name="action_show_details" type="object" icon="fa-list" context="{'default_product_uom_qty': 0}" attrs="{'invisible': [('show_details_visible', '=', False)]}" options="{&quot;warn&quot;: true}"/>
                                 </tree>
                             </field>
                         </page>
                         <page string="Work Orders" name="operations" groups="mrp.group_mrp_routings">
-                            <field name="workorder_ids" attrs="{'readonly': [('state', 'in', ['cancel', 'done'])]}" context="{'tree_view_ref': 'mrp.mrp_production_workorder_tree_editable_view', 'form_view_ref': 'mrp.mrp_production_workorder_form_view_inherit', 'default_product_uom_id': product_uom_id, 'default_consumption': consumption, 'default_company_id': company_id}"/>
+                            <field name="workorder_ids" attrs="{'readonly': [('state', 'in', ['cancel', 'done'])]}" context="{'tree_view_ref': 'mrp.mrp_production_workorder_tree_editable_view', 'default_product_uom_id': product_uom_id, 'default_consumption': consumption, 'default_company_id': company_id}"/>
                         </page>
                         <page string="By-Products" name="finished_products" groups="mrp.group_mrp_byproducts">
                             <field name="move_byproduct_ids" context="{'default_date': date_planned_finished, 'default_date_deadline': date_deadline, 'default_location_id': production_location_id, 'default_location_dest_id': location_src_id, 'default_state': 'draft', 'default_production_id': id, 'default_picking_type_id': picking_type_id, 'default_company_id': company_id}" attrs="{'readonly': ['|', ('state', '=', 'cancel'), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]}" options="{'delete': [('state', '=', 'draft')]}">
@@ -483,12 +485,12 @@
                         domain="['|', ('delay_alert_date', '!=', False), '&amp;', ('date_deadline', '&lt;', current_date), ('state', '=', 'confirmed')]"/>
                     <separator/>
                     <filter invisible="1" string="Late Activities" name="activities_overdue"
-                        domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                        domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                         help="Show all records which has next action date is before today"/>
                     <filter invisible="1" string="Today Activities" name="activities_today"
-                        domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                        domain="[('my_activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
                     <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
-                        domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                        domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                     <filter name="filter_date_planned_start" string="Scheduled Date" date="date_planned_start"/>
                     <separator/>
                     <filter string="Warnings" name="activities_exception"

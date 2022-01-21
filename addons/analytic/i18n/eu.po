@@ -1,16 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * analytic
+# 	* analytic
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2021
+# José Miguel Andonegi <jm.andonegi@gmail.com>, 2021
+# oihane <oihanecruce@gmail.com>, 2021
+# ibinka lete <ilete@fpbidasoa.net>, 2021
+# Gorka Toledo <gorka.toledo@gmail.com>, 2021
+# Eneko <eastigarraga@codesyntax.com>, 2021
+# Mikel Lizarralde <mikellizarralde@gmail.com>, 2021
+# 61590936fa9bf290362ee306eeabf363_944dd10 <a8bfd5a0b49b9c8455f33fc521764cc3_680674>, 2021
+# Victor Laskurain <blaskurain@binovo.es>, 2021
+# Miren Maiz <mirenmaizz@gmail.com>, 2021
+# Maialen Rodriguez <maialenrodriguez98@gmail.com>, 2021
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"POT-Creation-Date: 2019-09-09 12:17+0000\n"
+"PO-Revision-Date: 2020-09-07 08:10+0000\n"
+"Last-Translator: Maialen Rodriguez <maialenrodriguez98@gmail.com>, 2021\n"
 "Language-Team: Basque (https://www.transifex.com/odoo/teams/41243/eu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,26 +30,38 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_currency_id
-msgid "Account Currency"
-msgstr ""
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_needaction
+msgid "Action Needed"
+msgstr "Beharrezko ekintza"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_active
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_active
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__active
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__active
 msgid "Active"
+msgstr "Aktiboa"
+
+#. module: analytic
+#: model_terms:ir.actions.act_window,help:analytic.action_account_analytic_account_form
+#: model_terms:ir.actions.act_window,help:analytic.action_analytic_account_form
+msgid "Add a new analytic account"
 msgstr ""
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_amount
+#: model_terms:ir.actions.act_window,help:analytic.account_analytic_tag_action
+msgid "Add a new tag"
+msgstr "Gehitu etiketa berri bat"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__amount
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_form
 msgid "Amount"
-msgstr ""
+msgstr "Kopurua"
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_account
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_name
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_account_id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__name
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution__account_id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__account_id
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
@@ -46,75 +69,116 @@ msgid "Analytic Account"
 msgstr "Kontu analitikoa"
 
 #. module: analytic
+#: model:ir.model,name:analytic.model_account_analytic_distribution
+msgid "Analytic Account Distribution"
+msgstr ""
+
+#. module: analytic
+#: model:ir.actions.act_window,name:analytic.account_analytic_group_action
+#: model_terms:ir.ui.view,arch_db:analytic.account_analytic_group_form_view
+#: model_terms:ir.ui.view,arch_db:analytic.account_analytic_group_tree_view
+msgid "Analytic Account Groups"
+msgstr "Taldearen kontu analitikoa"
+
+#. module: analytic
 #: model:res.groups,name:analytic.group_analytic_accounting
 msgid "Analytic Accounting"
+msgstr "Kontabilitate analitikoa"
+
+#. module: analytic
+#: model:res.groups,name:analytic.group_analytic_tags
+msgid "Analytic Accounting Tags"
 msgstr ""
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.action_account_analytic_account_form
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__analytic_distribution_ids
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
 msgid "Analytic Accounts"
+msgstr "Kontu analitikoak"
+
+#. module: analytic
+#: model:ir.model,name:analytic.model_account_analytic_group
+msgid "Analytic Categories"
 msgstr ""
 
 #. module: analytic
-#: model:ir.actions.act_window,name:analytic.account_analytic_tag_action
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__active_analytic_distribution
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_tag_form_view
-#: model_terms:ir.ui.view,arch_db:analytic.account_analytic_tag_tree_view
-msgid "Analytic Accounts Tags"
-msgstr ""
+msgid "Analytic Distribution"
+msgstr "Banaketa analitikoa"
 
 #. module: analytic
-#: model:ir.actions.act_window,name:analytic.account_analytic_line_action_entries
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_graph
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_pivot
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
 msgid "Analytic Entries"
-msgstr ""
+msgstr "Sarrera analitikoak"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_form
 msgid "Analytic Entry"
-msgstr ""
+msgstr "Sarrera analitikoa"
+
+#. module: analytic
+#: model:ir.actions.act_window,name:analytic.account_analytic_line_action_entries
+msgid "Analytic Items"
+msgstr "Pieza analitikoak."
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_line
 msgid "Analytic Line"
-msgstr ""
+msgstr "Lerro analitikoa"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_line_ids
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__line_ids
 msgid "Analytic Lines"
-msgstr ""
+msgstr "Lerro analitikoak"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_name
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__name
 msgid "Analytic Tag"
-msgstr ""
+msgstr "Analitika etiketak"
 
 #. module: analytic
+#: model:ir.actions.act_window,name:analytic.account_analytic_tag_action
 #: model:ir.model,name:analytic.model_account_analytic_tag
+#: model_terms:ir.ui.view,arch_db:analytic.account_analytic_tag_form_view
+#: model_terms:ir.ui.view,arch_db:analytic.account_analytic_tag_tree_view
 msgid "Analytic Tags"
-msgstr ""
+msgstr "Analitika etiketak"
 
 #. module: analytic
+#: model_terms:ir.ui.view,arch_db:analytic.account_analytic_tag_view_search
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
 msgid "Archived"
-msgstr ""
+msgstr "Artxibatua"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
 msgid "Associated Partner"
-msgstr ""
+msgstr "Lotutako kidea"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_balance
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_attachment_count
+msgid "Attachment Count"
+msgstr "Eranskin kontagailua"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__balance
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
 msgid "Balance"
-msgstr ""
+msgstr "Balantzea"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_kanban
 msgid "Balance:"
-msgstr ""
+msgstr "Balantzea:"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__product_uom_category_id
+msgid "Category"
+msgstr "Kategoria"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.action_analytic_account_form
@@ -122,35 +186,49 @@ msgid "Chart of Analytic Accounts"
 msgstr ""
 
 #. module: analytic
-#: model_terms:ir.actions.act_window,help:analytic.account_analytic_tag_action
-msgid "Click to add a new tag."
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_group__children_ids
+msgid "Childrens"
 msgstr ""
 
 #. module: analytic
-#: model_terms:ir.actions.act_window,help:analytic.action_analytic_account_form
-msgid "Click to add an analytic account."
+#: model_terms:ir.actions.act_window,help:analytic.account_analytic_group_action
+msgid "Click to add a new analytic account group."
 msgstr ""
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_color
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__color
 msgid "Color Index"
-msgstr ""
+msgstr "Koloreen indizea"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_company_id
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_company_id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__company_id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_group__company_id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__company_id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__company_id
 msgid "Company"
 msgstr "Enpresa"
 
 #. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_group__complete_name
+msgid "Complete Name"
+msgstr "Izen osoa"
+
+#. module: analytic
+#: model:ir.model.fields,help:analytic.field_account_analytic_line__product_uom_category_id
+msgid ""
+"Conversion between Units of Measure can only occur if they belong to the "
+"same category. The conversion will be made based on the ratios."
+msgstr ""
+
+#. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
 msgid "Cost/Revenue"
-msgstr ""
+msgstr "Kostua/Diru-sarrera"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.account_analytic_line_action
 msgid "Costs & Revenues"
-msgstr ""
+msgstr "Kostuak & Diru-sarrerak"
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
@@ -159,73 +237,120 @@ msgid ""
 "Costs will be created automatically when you register supplier\n"
 "                invoices, expenses or timesheets."
 msgstr ""
+"Kostua automatikoki sortuko da hornitzailearen\n"
+"faktura, gastuak eta denbora-orriak erregistratzean."
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_create_uid
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_create_uid
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_create_uid
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__create_uid
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution__create_uid
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_group__create_uid
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__create_uid
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__create_uid
 msgid "Created by"
 msgstr "Nork sortua"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_create_date
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_create_date
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_create_date
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__create_date
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution__create_date
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_group__create_date
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__create_date
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__create_date
 msgid "Created on"
-msgstr "Created on"
+msgstr "Noiz sortua"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_credit
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__credit
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
 msgid "Credit"
-msgstr ""
+msgstr "Kreditu"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_currency_id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__currency_id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__currency_id
 msgid "Currency"
 msgstr "Moneta"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_partner_id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__partner_id
 msgid "Customer"
-msgstr "Kidea"
+msgstr "Bezeroa"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_date
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__date
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Date"
-msgstr ""
+msgstr "Data"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_debit
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__debit
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
 msgid "Debit"
-msgstr ""
+msgstr "Zor"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_name
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_group__description
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__name
 msgid "Description"
 msgstr "Deskribapena"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_display_name
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_display_name
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_display_name
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__display_name
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution__display_name
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_group__display_name
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__display_name
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__display_name
 msgid "Display Name"
 msgstr "Izena erakutsi"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_follower_ids
+msgid "Followers"
+msgstr "Followers"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "Jarraitzaileak (kanalak)"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Jarraitzaileak (Lagunak)"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__group_id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__group_id
+msgid "Group"
+msgstr "Taldea"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Group By..."
-msgstr ""
+msgstr "Taldekatu..."
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_id
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_id
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution__id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_group__id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__id
 msgid "ID"
 msgstr "ID"
 
 #. module: analytic
-#: model:ir.model.fields,help:analytic.field_account_analytic_account_active
+#: model:ir.model.fields,help:analytic.field_account_analytic_account__message_needaction
+#: model:ir.model.fields,help:analytic.field_account_analytic_account__message_unread
+msgid "If checked, new messages require your attention."
+msgstr ""
+
+#. module: analytic
+#: model:ir.model.fields,help:analytic.field_account_analytic_account__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr ""
+
+#. module: analytic
+#: model:ir.model.fields,help:analytic.field_account_analytic_account__active
 msgid ""
 "If the active field is set to False, it will allow you to hide the account "
 "without removing it."
@@ -241,51 +366,129 @@ msgid ""
 msgstr ""
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account___last_update
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_line___last_update
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag___last_update
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_is_follower
+msgid "Is Follower"
+msgstr "Jarraitzailea da"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account____last_update
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution____last_update
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_group____last_update
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line____last_update
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag____last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Azken aldaketa"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_write_uid
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_write_uid
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_write_uid
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__write_uid
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution__write_uid
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_group__write_uid
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__write_uid
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__write_uid
 msgid "Last Updated by"
-msgstr "Last Updated by"
+msgstr "Azkenengoz eguneratu zuena"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_write_date
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_write_date
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_write_date
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__write_date
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution__write_date
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_group__write_date
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__write_date
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__write_date
 msgid "Last Updated on"
-msgstr "Last Updated on"
+msgstr "Azken eguneraketa noiz"
 
 #. module: analytic
-#: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
-msgid "No activity yet on this account."
-msgstr ""
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_main_attachment_id
+msgid "Main Attachment"
+msgstr "Eranskin nagusia"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_has_error
+msgid "Message Delivery error"
+msgstr "Mezua igortzean errorea"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_ids
+msgid "Messages"
+msgstr "Mezuak"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution__name
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_group__name
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
+msgid "Name"
+msgstr "Izena"
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
-msgid "No activity yet."
+msgid "No activity yet"
 msgstr ""
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_partner_id
+#: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
+msgid "No activity yet on this account"
+msgstr ""
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Akzio kopurua"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_has_error_counter
+msgid "Number of errors"
+msgstr ""
+
+#. module: analytic
+#: model:ir.model.fields,help:analytic.field_account_analytic_account__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Ekintza bat eskatzen duen mezu kopurua"
+
+#. module: analytic
+#: model:ir.model.fields,help:analytic.field_account_analytic_account__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Bidaltzean errorea eman duten mezu kopurua"
+
+#. module: analytic
+#: model:ir.model.fields,help:analytic.field_account_analytic_account__message_unread_counter
+msgid "Number of unread messages"
+msgstr "Irakurri gabeko mezu kopurua"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_group__parent_id
+msgid "Parent"
+msgstr "Gurasoa"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_group__parent_path
+msgid "Parent Path"
+msgstr ""
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution__tag_id
+msgid "Parent tag"
+msgstr ""
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__partner_id
 msgid "Partner"
 msgstr "Kidea"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_unit_amount
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution__percentage
+msgid "Percentage"
+msgstr "Percentage"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__unit_amount
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
 msgid "Quantity"
 msgstr "Kopurua"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_code
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__code
 msgid "Reference"
-msgstr ""
+msgstr "Erreferentzia"
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
@@ -300,27 +503,40 @@ msgstr ""
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Search Analytic Lines"
+msgstr "Bilatu lerro analitikoak"
+
+#. module: analytic
+#: model_terms:ir.ui.view,arch_db:analytic.account_analytic_tag_view_search
+msgid "Search Analytic Tags"
 msgstr ""
 
 #. module: analytic
-#: model:ir.model.fields,help:analytic.field_account_analytic_tag_active
+#: model:ir.model.fields,help:analytic.field_account_analytic_tag__active
 msgid "Set active to false to hide the Analytic Tag without removing it."
 msgstr ""
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_tag_ids
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_tag_ids
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__tag_ids
 msgid "Tags"
+msgstr "Etiketak"
+
+#. module: analytic
+#: model:ir.model.constraint,message:analytic.constraint_account_analytic_distribution_check_percentage
+msgid ""
+"The percentage of an analytic distribution should be between 0 and 100."
 msgstr ""
 
 #. module: analytic
-#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
-msgid "Tasks Month"
+#: code:addons/analytic/models/analytic_account.py:0
+#, python-format
+msgid ""
+"The selected account belongs to another company than the one you're trying "
+"to create an analytic item for"
 msgstr ""
 
 #. module: analytic
-#: model:ir.model.fields,help:analytic.field_account_analytic_line_currency_id
-msgid "The related account currency if not equal to the company one."
+#: model_terms:ir.actions.act_window,help:analytic.account_analytic_group_action
+msgid "This allows you to classify your analytic accounts."
 msgstr ""
 
 #. module: analytic
@@ -329,9 +545,24 @@ msgid "Total"
 msgstr "Total"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_user_id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__product_uom_id
+msgid "Unit of Measure"
+msgstr "Neurketa unitatea"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_unread
+msgid "Unread Messages"
+msgstr "Irakurri gabeko mezuak"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "Irakurri gabeko mezuen kontagailua"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__user_id
 msgid "User"
-msgstr ""
+msgstr "Erabiltzailea"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form

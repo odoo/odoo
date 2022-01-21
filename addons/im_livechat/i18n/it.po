@@ -10,7 +10,7 @@
 # Paolo Valier, 2020
 # Léonie Bouchat <lbo@odoo.com>, 2020
 # Luigia Cimmino Caserta <lcc@odoo.com>, 2020
-# Sergio Zanchetta <primes2h@gmail.com>, 2020
+# Sergio Zanchetta <primes2h@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 15:41+0000\n"
 "PO-Revision-Date: 2020-09-07 08:13+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2020\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2021\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,7 +44,7 @@ msgstr "N. interlocutori"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "% Happy"
-msgstr "% contenti"
+msgstr "% soddisfatti"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_digest_digest__kpi_livechat_rating
@@ -130,6 +130,8 @@ msgid ""
 "A session is without answer if the operator did not answer. \n"
 "                                       If the visitor is also the operator, the session will always be answered."
 msgstr ""
+"Se l'operatore non risponde la sessione rimane senza risposta. \n"
+"                                       Se il visitatore corrisponde anche all'operatore la sessione avrà sempre una risposta."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__action
@@ -154,14 +156,14 @@ msgstr "Nome anonimo"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__are_you_inside
 msgid "Are you inside the matrix?"
-msgstr "Ti trovi in matrix?"
+msgstr "Ti trovi all'interno di Matrix?"
 
 #. module: im_livechat
 #. openerp-web
 #: code:addons/im_livechat/static/src/legacy/public_livechat.js:0
 #, python-format
 msgid "Ask something ..."
-msgstr "Chiedi qualcosa ..."
+msgstr "Chiedi qualcosa..."
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
@@ -210,7 +212,7 @@ msgstr "Tempo medio per fornire la prima risposta al visitatore"
 #: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
 #, python-format
 msgid "Bad"
-msgstr "Negativo"
+msgstr "Non soddisfatto"
 
 #. module: im_livechat
 #. openerp-web
@@ -218,7 +220,7 @@ msgstr "Negativo"
 #: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
 #, python-format
 msgid "Bounced"
-msgstr "Non recapitate"
+msgstr "Non recapitata"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__button_background_color
@@ -311,14 +313,14 @@ msgstr "Canali"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__input_placeholder
 msgid "Chat Input Placeholder"
-msgstr "Testo inserimento chat"
+msgstr "Testo di suggerimento chat"
 
 #. module: im_livechat
 #. openerp-web
 #: code:addons/im_livechat/static/src/legacy/public_livechat.js:0
 #, python-format
 msgid "Chat with one of our collaborators"
-msgstr "Chat con uno dei nostri collaboratori"
+msgstr "Inizia una chat con un nostro collaboratore"
 
 #. module: im_livechat
 #. openerp-web
@@ -428,7 +430,7 @@ msgstr "Creato da"
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__create_date
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__create_date
 msgid "Created on"
-msgstr "Creato il"
+msgstr "Data creazione"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_search
@@ -591,7 +593,7 @@ msgstr "Errore"
 #: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
 #, python-format
 msgid "Explain your note"
-msgstr "Aggiungi una nota"
+msgstr "Motiva il punto"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -607,15 +609,16 @@ msgid ""
 "Given the order to find a matching rule. If 2 rules are matching for the "
 "given url/country, the one with the lowest sequence will be chosen."
 msgstr ""
-"Fornisce l'ordine di ricerca per una regola che corrisponda; se a un "
-"URL/nazione ne corrispondono 2, viene presa quella con il numero più basso."
+"Fornisce l'ordine per trovare la corrispondenza a una regola; se a un "
+"URL/nazione corrispondono 2 regole, viene scelta quella con la sequenza più "
+"bassa."
 
 #. module: im_livechat
 #. openerp-web
 #: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
 #, python-format
 msgid "Good"
-msgstr "Bello"
+msgstr "Soddisfatto"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
@@ -627,7 +630,7 @@ msgstr "Raggruppa per..."
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "Happy face"
-msgstr "Viso soddisfatto"
+msgstr "Soddisfatto"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__header_background_color
@@ -803,7 +806,7 @@ msgstr "Chat dal vivo"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_search
 msgid "LiveChat Channel Search"
-msgstr ""
+msgstr "Ricerca canale chat dal vivo"
 
 #. module: im_livechat
 #. openerp-web
@@ -844,7 +847,7 @@ msgstr "Conversazione chat dal vivo"
 #. module: im_livechat
 #: model:ir.model.constraint,message:im_livechat.constraint_mail_channel_livechat_operator_id
 msgid "Livechat Operator ID is required for a channel of type livechat."
-msgstr ""
+msgstr "ID operatore obbligatorio per un canale di tipo chat dal vivo."
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_im_livechat_report_channel
@@ -867,7 +870,7 @@ msgstr ""
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_im_livechat_report_operator
 msgid "Livechat Support Operator Report"
-msgstr "Resoconto assistenza operatore chat dal vivo"
+msgstr "Resoconto operatore per supporto chat dal vivo"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_graph
@@ -947,7 +950,7 @@ msgstr "Nome"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "Neutral face"
-msgstr "Faccia neutra"
+msgstr "Indifferente"
 
 #. module: im_livechat
 #. openerp-web
@@ -1072,7 +1075,7 @@ msgstr "Analisi operatore"
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_mail_channel__livechat_operator_id
 msgid "Operator for this specific channel"
-msgstr ""
+msgstr "Operatore per questo specifico canale"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__user_ids
@@ -1177,7 +1180,7 @@ msgstr "Media valutazioni"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_mail_channel__rating_last_feedback
 msgid "Rating Last Feedback"
-msgstr "Opinione ultima valutazione"
+msgstr "Ultimo riscontro valutazione"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_mail_channel__rating_last_image
@@ -1237,7 +1240,7 @@ msgstr "Valutazioni per il canale chat dal vivo"
 #: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
 #, python-format
 msgid "Ready"
-msgstr "Pronto"
+msgstr "Pronta"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_mail_channel__rating_last_feedback
@@ -1249,14 +1252,14 @@ msgstr "Motivo della valutazione"
 #: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
 #, python-format
 msgid "Receive a copy of this conversation"
-msgstr ""
+msgstr "Ricevi una copia della conversazione"
 
 #. module: im_livechat
 #. openerp-web
 #: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
 #, python-format
 msgid "Received by Everyone"
-msgstr "Ricevuto da Tutti"
+msgstr "Ricevuto da tutti"
 
 #. module: im_livechat
 #. openerp-web
@@ -1297,7 +1300,7 @@ msgstr "Ripristina zoom"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Reset to default colors"
-msgstr ""
+msgstr "Ripristina colori predefiniti"
 
 #. module: im_livechat
 #. openerp-web
@@ -1316,7 +1319,7 @@ msgstr "Regole"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "Sad face"
-msgstr "Faccia trista"
+msgstr "Non soddisfatto"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__rating_text
@@ -1333,7 +1336,7 @@ msgstr ""
 #: code:addons/im_livechat/static/src/legacy/public_livechat.js:0
 #, python-format
 msgid "Say something"
-msgstr "Scrivi qualcosa"
+msgstr "Di' qualcosa"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__script_external
@@ -1362,7 +1365,7 @@ msgstr "Vedi ultime 15 pagine visitate"
 #: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
 #, python-format
 msgid "Seen by Everyone"
-msgstr "Visto da Tutti"
+msgstr "Visto da tutti"
 
 #. module: im_livechat
 #. openerp-web
@@ -1377,7 +1380,7 @@ msgstr "Visto da:"
 #: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
 #, python-format
 msgid "Sent"
-msgstr "Inviato"
+msgstr "Inviata"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
@@ -1448,7 +1451,7 @@ msgstr "Data avvio conversazione"
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel__start_hour
 msgid "Start hour of the conversation"
-msgstr ""
+msgstr "Ora avvio conversazione"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__button_text
@@ -1465,7 +1468,7 @@ msgstr "Testo suggerito all'utente per avviare una chat."
 #: code:addons/im_livechat/static/src/legacy/public_livechat.js:0
 #, python-format
 msgid "Thank you for your feedback"
-msgstr ""
+msgstr "Grazie per il suo riscontro"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__channel_id
@@ -1526,7 +1529,7 @@ msgstr ""
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_res_users__livechat_username
 msgid "This username will be used as your name in the livechat channels."
-msgstr ""
+msgstr "Nome utente che verrà utilizzato nei canali di chat dal vivo."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator__time_to_answer
@@ -1552,7 +1555,7 @@ msgstr "Tempo di risposta (sec)"
 #: model:digest.tip,name:im_livechat.digest_tip_im_livechat_0
 #: model_terms:digest.tip,tip_description:im_livechat.digest_tip_im_livechat_0
 msgid "Tip: Use canned responses to chat faster"
-msgstr ""
+msgstr "Consiglio: per conversare più velocemente usa le risposte predefinite"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__title_color
@@ -1811,14 +1814,14 @@ msgstr "da"
 #: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
 #, python-format
 msgid "mail@example.com"
-msgstr ""
+msgstr "mail@example.com"
 
 #. module: im_livechat
 #. openerp-web
 #: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
 #, python-format
 msgid "on"
-msgstr "per"
+msgstr "su"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -1830,7 +1833,7 @@ msgstr "oppure copiare questo URL e inviarlo via e-mail ai clienti/fornitori:"
 #: code:addons/im_livechat/static/src/legacy/public_livechat.js:0
 #, python-format
 msgid "read less"
-msgstr "leggi meno"
+msgstr "leggi di meno"
 
 #. module: im_livechat
 #. openerp-web

@@ -458,6 +458,7 @@ return AbstractModel.extend({
             monthNamesShort: moment.monthsShort(),
             dayNames: moment.weekdays(),
             dayNamesShort: moment.weekdaysShort(),
+            dayNamesMin: moment.weekdaysMin(),
             firstDay: this.week_start,
             slotLabelFormat: _t.database.parameters.time_format.search("%H") !== -1 ? format24Hour : format12Hour,
             allDaySlot: this.mapping.all_day || this.fields[this.mapping.date_start].type === 'date',
@@ -520,7 +521,7 @@ return AbstractModel.extend({
             var fieldName = this.fieldColor;
             _.each(events, function (event) {
                 var value = event.record[fieldName];
-                event.color_index = _.isArray(value) ? value[0] : value;
+                event.color_index = _.isArray(value) ? value[0] % 30 : value % 30;
             });
             this.model_color = this.fields[fieldName].relation || element.model;
         }
@@ -614,6 +615,10 @@ return AbstractModel.extend({
                 return;
             }
 
+            _.each(filter.filters, function (filter) {
+                filter.display = !filter.active;
+            });
+
             var fs = [];
             var undefined_fs = [];
             _.each(events, function (event) {
@@ -626,7 +631,7 @@ return AbstractModel.extend({
                 _.each(data, function (_value) {
                     var value = _.isArray(_value) ? _value[0] : _value;
                     var f = {
-                        'color_index': self.model_color === (field.relation || element.model) ? value : false,
+                        'color_index': self.model_color === (field.relation || element.model) ? value % 30 : false,
                         'value': value,
                         'label': fieldUtils.format[field.type](_value, field) || _t("Undefined"),
                         'avatar_model': field.relation || element.model,

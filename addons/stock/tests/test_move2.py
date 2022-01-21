@@ -9,7 +9,8 @@ from odoo.exceptions import UserError
 from odoo.tests import Form
 from odoo.tools import float_is_zero, float_compare
 
-from odoo.tests.common import Form
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 class TestPickShip(TestStockCommon):
     def create_pick_ship(self):
@@ -123,7 +124,7 @@ class TestPickShip(TestStockCommon):
         picking_client._action_done()  # no new in order to create backorder
 
         backorder = self.env['stock.picking'].search([('backorder_id', '=', picking_client.id)])
-        self.assertEqual(backorder.state, 'waiting', 'Backorder should be waiting for reservation')
+        self.assertEqual(backorder.state, 'assigned', 'Backorder should be started')
 
     def test_mto_moves_transfer(self):
         """
@@ -294,7 +295,7 @@ class TestPickShip(TestStockCommon):
         # create a backorder
         picking_pick._action_done()
         picking_pick_backorder = self.env['stock.picking'].search([('backorder_id', '=', picking_pick.id)])
-        self.assertEqual(picking_pick_backorder.state, 'confirmed')
+        self.assertEqual(picking_pick_backorder.state, 'assigned')
         self.assertEqual(picking_pick_backorder.move_lines.product_qty, 5.0)
 
         self.assertEqual(picking_client.state, 'assigned')
@@ -774,11 +775,8 @@ class TestSinglePicking(TestStockCommon):
         delivery_order.move_lines[0].move_line_ids[0].qty_done = 1
         delivery_order._action_done()
         self.assertNotEqual(delivery_order.date_done, False)
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.productA, pack_location), 1.0)
 
         backorder = self.env['stock.picking'].search([('backorder_id', '=', delivery_order.id)])
-        self.assertEqual(backorder.state, 'confirmed')
-        backorder.action_assign()
         self.assertEqual(backorder.state, 'assigned')
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.productA, pack_location), 0.0)
 
@@ -911,6 +909,64 @@ class TestSinglePicking(TestStockCommon):
         self.assertFalse(backorder)
         self.assertEqual(delivery_order.state, 'done')
         self.assertEqual(delivery_order.move_lines[1].state, 'cancel')
+
+    def test_assign_deadline(self):
+        """ Check if similar items with shorter deadline are prioritized.
+        """
+        delivery_order = self.PickingObj.create({
+            'location_id': self.pack_location,
+            'location_dest_id': self.customer_location,
+            'picking_type_id': self.picking_type_out,
+        })
+        self.MoveObj.create({
+            'name': "move1",
+            'product_id': self.productA.id,
+            'product_uom_qty': 4,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': delivery_order.id,
+            'location_id': self.pack_location,
+            'location_dest_id': self.customer_location,
+            'date_deadline': datetime.now() + relativedelta(days=1)
+        })
+        self.MoveObj.create({
+            'name': "move2",
+            'product_id': self.productA.id,
+            'product_uom_qty': 4,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': delivery_order.id,
+            'location_id': self.pack_location,
+            'location_dest_id': self.customer_location,
+            'date_deadline': datetime.now() + relativedelta(days=2)
+        })
+
+        # make some stock
+        pack_location = self.env['stock.location'].browse(self.pack_location)
+        self.StockQuantObj._update_available_quantity(self.productA, pack_location, 2)
+
+        # assign to partially available
+        delivery_order.action_confirm()
+        delivery_order.action_assign()
+        reservedMove1 = sum([x.reserved_availability for x in delivery_order.move_lines if x.name == "move1"])
+        reservedMove2 = sum([x.reserved_availability for x in delivery_order.move_lines if x.name == "move2"])
+
+        self.assertEqual(reservedMove1, 2, "Earlier deadline should have reserved quantity")
+        self.assertEqual(reservedMove2, 0, "Later deadline should not have reserved quantity")
+
+        delivery_order.move_lines[0].move_line_ids[0].qty_done = 2
+        delivery_order._action_done()
+
+        # add new stock
+        self.StockQuantObj._update_available_quantity(self.productA, pack_location, 2)
+
+        # assign new stock to backorder
+        backorder = delivery_order.backorder_ids
+        backorder.action_assign()
+
+        reservedMove1 = sum([x.reserved_availability for x in backorder.move_lines if x.name == "move1"])
+        reservedMove2 = sum([x.reserved_availability for x in backorder.move_lines if x.name == "move2"])
+
+        self.assertEqual(reservedMove1, 2, "Earlier deadline should have reserved quantity")
+        self.assertEqual(reservedMove2, 0, "Later deadline should not have reserved quantity")
 
     def test_extra_move_1(self):
         """ Check the good behavior of creating an extra move in a delivery order. This usecase
@@ -2433,6 +2489,62 @@ class TestRoutes(TestStockCommon):
 
         pushed_move = move1.move_dest_ids
         self.assertEqual(pushed_move.location_dest_id.id, push_location.id)
+
+    def test_location_dest_update(self):
+        """ Check the location dest of a stock move changed by a push rule
+        with auto field set to transparent is done correctly. The stock_move
+        is create with the move line directly to pass into action_confirm() via
+        action_done(). """
+        self.wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
+        new_loc = self.env['stock.location'].create({
+            'name': 'New_location',
+            'usage': 'internal',
+            'location_id': self.env.ref('stock.stock_location_locations').id,
+        })
+        picking_type = self.env['stock.picking.type'].create({
+            'name': 'new_picking_type',
+            'code': 'internal',
+            'sequence_code': 'NPT',
+            'default_location_src_id': self.env.ref('stock.stock_location_stock').id,
+            'default_location_dest_id': new_loc.id,
+            'warehouse_id': self.wh.id,
+        })
+        route = self.env['stock.location.route'].create({
+            'name': 'new route',
+            'rule_ids': [(0, False, {
+                'name': 'create a move to push location',
+                'location_src_id': self.env.ref('stock.stock_location_stock').id,
+                'location_id': new_loc.id,
+                'company_id': self.env.company.id,
+                'action': 'push',
+                'auto': 'transparent',
+                'picking_type_id': picking_type.id,
+            })],
+        })
+        product = self.env['product.product'].create({
+            'name': 'new_product',
+            'type': 'product',
+            'route_ids': [(4, route.id)]
+        })
+        move1 = self.env['stock.move'].create({
+            'name': 'move with a route',
+            'location_id': self.supplier_location,
+            'location_dest_id': self.env.ref('stock.stock_location_stock').id,
+            'product_id': product.id,
+            'product_uom_qty': 1.0,
+            'product_uom': self.uom_unit.id,
+            'move_line_ids': [(0, 0, {
+                'product_id': product.id,
+                'product_uom_id': self.uom_unit.id,
+                'location_id': self.supplier_location,
+                'location_dest_id': self.env.ref('stock.stock_location_stock').id,
+                'qty_done': 1.00,
+            })],
+        })
+        move1._action_done()
+        self.assertEqual(move1.location_dest_id, new_loc)
+        positive_quant = product.stock_quant_ids.filtered(lambda q: q.quantity > 0)
+        self.assertEqual(positive_quant.location_id, new_loc)
 
     def test_mtso_mto(self):
         """ Run a procurement for 5 products when there are only 4 in stock then

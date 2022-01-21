@@ -3,15 +3,15 @@
 # 	* sale_purchase
 # 
 # Translators:
-# Piia Paurson <piia@avalah.ee>, 2020
-# Triine Aavik <triine@avalah.ee>, 2020
 # Rivo Zängov <eraser@eraser.ee>, 2020
 # Martin Trigaux, 2020
 # Arma Gedonsky <armagedonsky@hot.ee>, 2020
 # Egon Raamat <egon@avalah.ee>, 2020
-# Eneli Õigus <enelioigus@gmail.com>, 2020
 # Martin Aavastik <martin@avalah.ee>, 2020
 # Algo Kärp <algokarp@gmail.com>, 2020
+# Triine Aavik <triine@avalah.ee>, 2020
+# Eneli Õigus <enelioigus@gmail.com>, 2021
+# Piia Paurson <piia@avalah.ee>, 2021
 # 
 msgid ""
 msgstr ""
@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:29+0000\n"
 "PO-Revision-Date: 2020-09-07 08:18+0000\n"
-"Last-Translator: Algo Kärp <algokarp@gmail.com>, 2020\n"
+"Last-Translator: Piia Paurson <piia@avalah.ee>, 2021\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,12 +40,12 @@ msgstr ""
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.sale_order_inherited_form_purchase
 msgid "<span class=\"o_stat_text\">Purchase</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Ost</span>"
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.purchase_order_inherited_form_sale
 msgid "<span class=\"o_stat_text\">Sale</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Müük</span>"
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_product_template__display_name
@@ -59,13 +59,15 @@ msgstr "Kuva nimi"
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_sale_on_purchase_cancellation
 msgid "Exception(s) occurred on the purchase order(s):"
-msgstr "Ostutellimuses(tes) tehti erand(eid)"
+msgstr "Ostutellimuseses ilmnes erand(id):"
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
 msgid "Exception(s) occurred on the sale order(s):"
 msgstr ""
+"Müügitellimuses ilmnes erand(id):\n"
+" "
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation
@@ -77,7 +79,7 @@ msgstr "Muudatus(ed):"
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_sale_order_line__purchase_line_ids
 msgid "Generated Purchase Lines"
-msgstr ""
+msgstr "Genereeritud ostu read"
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_product_template__id
@@ -96,6 +98,9 @@ msgid ""
 "automatically created to buy the product. Tip: don't forget to set a vendor "
 "on the product."
 msgstr ""
+"Kui see on märgitud, luuakse iga kord, kui müüte seda toodet müügitellimuse "
+"kaudu, toote ostmiseks automaatselt hinnapäring. Nõuanne: ärge unustage "
+"tootele tarnijat määrata."
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_product_template____last_update
@@ -114,17 +119,17 @@ msgstr "Võib-olla on vaja teha manuaalseid tegevusi."
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_sale_order__purchase_order_count
 msgid "Number of Purchase Order Generated"
-msgstr ""
+msgstr "Loodud ostutellimuste arv"
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_purchase_order__sale_order_count
 msgid "Number of Source Sale"
-msgstr ""
+msgstr "Algallika müügi arv"
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_sale_order_line__purchase_line_count
 msgid "Number of generated purchase items"
-msgstr ""
+msgstr "Loodud ostutoodete arv"
 
 #. module: sale_purchase
 #: code:addons/sale_purchase/models/sale_order.py:0
@@ -135,7 +140,7 @@ msgstr "Tellitud kogused vähenesid!"
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_purchase_order_line__sale_line_id
 msgid "Origin Sale Item"
-msgstr ""
+msgstr "Esialgne müügi toode"
 
 #. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_product_template
@@ -145,13 +150,13 @@ msgstr "Toote mall"
 #. module: sale_purchase
 #: model:ir.model.constraint,message:sale_purchase.constraint_product_template_service_to_purchase
 msgid "Product that is not a service can not create RFQ."
-msgstr ""
+msgstr "Toode, mis pole teenus, ei saa Hinnapäringut luua."
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_product_product__service_to_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_product_template__service_to_purchase
 msgid "Purchase Automatically"
-msgstr ""
+msgstr "Osta automaatselt"
 
 #. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_purchase_order
@@ -167,7 +172,7 @@ msgstr "Ostutellimuse rida"
 #: code:addons/sale_purchase/models/sale_order.py:0
 #, python-format
 msgid "Purchase Order generated from %s"
-msgstr ""
+msgstr "Ostutellimus on genereeritud %s"
 
 #. module: sale_purchase
 #: model:ir.model.fields,help:sale_purchase.field_sale_order_line__purchase_line_ids
@@ -175,11 +180,13 @@ msgid ""
 "Purchase line generated by this Sales item on order confirmation, or when "
 "the quantity was increased."
 msgstr ""
+"Selle müügiartikli loodud osturida tellimuse kinnitamisel või koguse "
+"suurendamisel."
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.product_template_form_view_inherit
 msgid "Reordering"
-msgstr ""
+msgstr "Kauba tellimine"
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_purchase_order_line__sale_order_id
@@ -200,7 +207,7 @@ msgstr "Müügitellimuse rida"
 #: code:addons/sale_purchase/models/purchase_order.py:0
 #, python-format
 msgid "Sources Sale Orders %s"
-msgstr ""
+msgstr "Müügitellimuste allikad %s"
 
 #. module: sale_purchase
 #: code:addons/sale_purchase/models/sale_order.py:0
@@ -219,6 +226,8 @@ msgid ""
 "You are decreasing the ordered quantity! Do not forget to manually update "
 "the purchase order if needed."
 msgstr ""
+"Vähendate tellitud kogust! Ärge unustage vajadusel ostutellimust käsitsi "
+"värskendada."
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation
@@ -236,4 +245,4 @@ msgstr "punkti"
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
 msgid "ordered instead of"
-msgstr ""
+msgstr "tellitud selle asemel"

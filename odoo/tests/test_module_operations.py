@@ -52,6 +52,9 @@ def parse_args():
         description="Script for testing the install / uninstall / reinstall cycle of Odoo modules")
     parser.add_argument("--database", "-d", type=str, required=True,
         help="The database to test (note: must have only 'base' installed)")
+    parser.add_argument("--data-dir", "-D", dest="data_dir", type=str,
+        help="Directory where to store Odoo data"
+    )
     parser.add_argument("--skip", "-s", type=str,
         help="Comma-separated list of modules to skip (they will only be installed)")
     parser.add_argument("--resume-at", "-r", type=str,
@@ -151,6 +154,8 @@ if __name__ == '__main__':
     # handle paths option
     if args.addons_path:
         odoo.tools.config['addons_path'] = ','.join([args.addons_path, odoo.tools.config['addons_path']])
+        if args.data_dir:
+            odoo.tools.config['data_dir'] = args.data_dir
         odoo.modules.module.initialize_sys_path()
 
     init_logger()

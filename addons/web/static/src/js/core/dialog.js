@@ -72,6 +72,9 @@ var Dialog = Widget.extend({
         this._opened = new Promise(function (resolve) {
             self._openedResolver = resolve;
         });
+        if (this.on_attach_callback) {
+            this._opened = this.opened(this.on_attach_callback);
+        }
         options = _.defaults(options || {}, {
             title: _t('Odoo'), subtitle: '',
             size: 'large',
@@ -192,6 +195,9 @@ var Dialog = Widget.extend({
 
         var self = this;
         this.appendTo($('<div/>')).then(function () {
+            if (self.isDestroyed()) {
+                return;
+            }
             self.$modal.find(".modal-body").replaceWith(self.$el);
             self.$modal.attr('open', true);
             self.$modal.removeAttr("aria-hidden");
@@ -256,6 +262,9 @@ var Dialog = Widget.extend({
 
         $('.tooltip').remove(); //remove open tooltip if any to prevent them staying when modal has disappeared
         if (this.$modal) {
+            if (this.on_detach_callback) {
+                this.on_detach_callback();
+            }
             this.$modal.modal('hide');
             this.$modal.remove();
         }

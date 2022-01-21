@@ -4,16 +4,24 @@ odoo.define('mail/static/src/components/attachment_list/attachment_list.js', fun
 const components = {
     Attachment: require('mail/static/src/components/attachment/attachment.js'),
 };
+
+const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
 
 const { Component } = owl;
 
 class AttachmentList extends Component {
+
     /**
      * @override
      */
     constructor(...args) {
         super(...args);
+        useShouldUpdateBasedOnProps({
+            compareDepth: {
+                attachmentLocalIds: 1,
+            },
+        });
         useStore(props => {
             const attachments = this.env.models['mail.attachment'].all().filter(attachment =>
                 props.attachmentLocalIds.includes(attachment.localId)
@@ -23,6 +31,10 @@ class AttachmentList extends Component {
                     ? attachments.map(attachment => attachment.__state)
                     : undefined,
             };
+        }, {
+            compareDepth: {
+                attachments: 1,
+            },
         });
     }
 

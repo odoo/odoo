@@ -18,22 +18,6 @@ class TestAccountJournal(AccountTestInvoicingCommon):
         with self.assertRaises(ValidationError), self.cr.savepoint():
             journal_bank.default_account_id.currency_id = self.company_data['currency']
 
-    def test_constraint_shared_accounts(self):
-        ''' Ensure the bank/outstanding accounts are not shared between multiple journals. '''
-        journal_bank = self.company_data['default_journal_bank']
-
-        account_fields = (
-            'default_account_id',
-            'payment_debit_account_id',
-            'payment_credit_account_id',
-        )
-        for account_field in account_fields:
-            with self.assertRaises(ValidationError), self.cr.savepoint():
-                journal_bank.copy(default={
-                    'name': 'test_constraint_shared_accounts %s' % account_field,
-                    account_field: journal_bank[account_field].id,
-                })
-
     def test_changing_journal_company(self):
         ''' Ensure you can't change the company of an account.journal if there are some journal entries '''
 

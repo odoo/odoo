@@ -1,0 +1,160 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_ingenico
+# 
+# Translators:
+# Cécile Collart <cco@odoo.com>, 2021
+# Daniela Cervantes <dace@odoo.com>, 2021
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~13.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"PO-Revision-Date: 2020-09-07 08:15+0000\n"
+"Last-Translator: Daniela Cervantes <dace@odoo.com>, 2021\n"
+"Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: es_MX\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: payment_ingenico
+#: code:addons/payment_ingenico/models/payment.py:0
+#, python-format
+msgid "; multiple order found"
+msgstr "; se encontró un pedido múltiple"
+
+#. module: payment_ingenico
+#: code:addons/payment_ingenico/models/payment.py:0
+#, python-format
+msgid "; no order found"
+msgstr "; pedido no encontrado"
+
+#. module: payment_ingenico
+#: model:ir.model.fields,field_description:payment_ingenico.field_payment_acquirer__ogone_userid
+msgid "API User ID"
+msgstr "ID de usuario API"
+
+#. module: payment_ingenico
+#: model:ir.model.fields,field_description:payment_ingenico.field_payment_acquirer__ogone_password
+msgid "API User Password"
+msgstr "Contraseña del usuario API"
+
+#. module: payment_ingenico
+#: model:ir.model.fields,field_description:payment_ingenico.field_payment_acquirer__ogone_alias_usage
+msgid "Alias Usage"
+msgstr "Uso de alias"
+
+#. module: payment_ingenico
+#: model_terms:ir.ui.view,arch_db:payment_ingenico.ogone_s2s_form
+msgid "CVC"
+msgstr "CVC"
+
+#. module: payment_ingenico
+#: model_terms:ir.ui.view,arch_db:payment_ingenico.ogone_s2s_form
+msgid "Card number"
+msgstr "Número de la tarjeta"
+
+#. module: payment_ingenico
+#: model_terms:ir.ui.view,arch_db:payment_ingenico.ogone_s2s_form
+msgid "Cardholder name"
+msgstr "Nombre del titular de la tarjeta"
+
+#. module: payment_ingenico
+#: model:ir.model.fields,field_description:payment_ingenico.field_payment_acquirer__display_name
+#: model:ir.model.fields,field_description:payment_ingenico.field_payment_token__display_name
+#: model:ir.model.fields,field_description:payment_ingenico.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr "Nombre mostrado"
+
+#. module: payment_ingenico
+#: model_terms:ir.ui.view,arch_db:payment_ingenico.ogone_s2s_form
+msgid "Expires (MM / YY)"
+msgstr "Caducidad (MM / AA)"
+
+#. module: payment_ingenico
+#: model:ir.model.fields,field_description:payment_ingenico.field_payment_acquirer__id
+#: model:ir.model.fields,field_description:payment_ingenico.field_payment_token__id
+#: model:ir.model.fields,field_description:payment_ingenico.field_payment_transaction__id
+msgid "ID"
+msgstr "ID"
+
+#. module: payment_ingenico
+#: model:ir.model.fields,help:payment_ingenico.field_payment_acquirer__ogone_alias_usage
+msgid ""
+"If you want to use Ogone Aliases, this default Alias Usage will be presented"
+" to the customer as the reason you want to keep his payment data"
+msgstr ""
+"Si quiere usar un alias de Ogone, este alias predeterminado se presentará al"
+" cliente como la razón por la que deseas mantener sus datos de pago"
+
+#. module: payment_ingenico
+#: model:ir.model.fields.selection,name:payment_ingenico.selection__payment_acquirer__provider__ogone
+msgid "Ingenico"
+msgstr "Ingenico"
+
+#. module: payment_ingenico
+#: model:ir.model.fields,field_description:payment_ingenico.field_payment_acquirer____last_update
+#: model:ir.model.fields,field_description:payment_ingenico.field_payment_token____last_update
+#: model:ir.model.fields,field_description:payment_ingenico.field_payment_transaction____last_update
+msgid "Last Modified on"
+msgstr "Última modificación el"
+
+#. module: payment_ingenico
+#: code:addons/payment_ingenico/models/payment.py:0
+#, python-format
+msgid "Ogone: invalid shasign, received %s, computed %s, for data %s"
+msgstr ""
+"Ogone: shasign no válido, recibido %s, calculado %s, para los datos %s"
+
+#. module: payment_ingenico
+#: code:addons/payment_ingenico/models/payment.py:0
+#, python-format
+msgid "Ogone: received data for reference %s"
+msgstr "Ogone: datos recibidos como referencia %s"
+
+#. module: payment_ingenico
+#: code:addons/payment_ingenico/models/payment.py:0
+#, python-format
+msgid ""
+"Ogone: received data with missing reference (%s) or pay_id (%s) or shasign "
+"(%s)"
+msgstr ""
+"Ogone: datos recibidos sin referencia (%s) or pay_id (%s) o shasign (%s)"
+
+#. module: payment_ingenico
+#: model:ir.model.fields,field_description:payment_ingenico.field_payment_acquirer__ogone_pspid
+msgid "PSPID"
+msgstr "PSPID"
+
+#. module: payment_ingenico
+#: model:ir.model,name:payment_ingenico.model_payment_acquirer
+msgid "Payment Acquirer"
+msgstr "Método de pago"
+
+#. module: payment_ingenico
+#: model:ir.model,name:payment_ingenico.model_payment_token
+msgid "Payment Token"
+msgstr "Token de pago"
+
+#. module: payment_ingenico
+#: model:ir.model,name:payment_ingenico.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Transacción de pago"
+
+#. module: payment_ingenico
+#: model:ir.model.fields,field_description:payment_ingenico.field_payment_acquirer__provider
+msgid "Provider"
+msgstr "Proveedor"
+
+#. module: payment_ingenico
+#: model:ir.model.fields,field_description:payment_ingenico.field_payment_acquirer__ogone_shakey_in
+msgid "SHA Key IN"
+msgstr "Clave de entrada SHA"
+
+#. module: payment_ingenico
+#: model:ir.model.fields,field_description:payment_ingenico.field_payment_acquirer__ogone_shakey_out
+msgid "SHA Key OUT"
+msgstr "Clave de salida SHA"

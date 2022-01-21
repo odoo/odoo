@@ -14,5 +14,8 @@ class ProductTemplate(models.Model):
 
     def get_single_product_variant(self):
         res = super(ProductTemplate, self).get_single_product_variant()
-        res['mode'] = self.product_add_mode
+        if self.has_configurable_attributes:
+            res['mode'] = self.product_add_mode
+        else:
+            res['mode'] = 'configurator'
         return res

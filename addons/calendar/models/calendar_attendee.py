@@ -46,7 +46,9 @@ class Attendee(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for values in vals_list:
-            if values.get('partner_id') == self.env.user.partner_id.id:
+            # by default, if no state is given for the attendee corresponding to the current user
+            # that means he's the event organizer so we can set his state to "accepted"
+            if 'state' not in values and values.get('partner_id') == self.env.user.partner_id.id:
                 values['state'] = 'accepted'
             if not values.get("email") and values.get("common_name"):
                 common_nameval = values.get("common_name").split(':')
@@ -125,16 +127,25 @@ class Attendee(models.Model):
                                 'mimetype': 'text/calendar',
                                 'datas': base64.b64encode(ics_file)})
                     ]
-                body = invitation_template.with_context(rendering_context)._render_field(
-                    'body_html',
-                    attendee.ids,
-                    compute_lang=True,
-                    post_process=True)[attendee.id]
+                try:
+                    body = invitation_template.with_context(rendering_context)._render_field(
+                        'body_html',
+                        attendee.ids,
+                        compute_lang=True,
+                        post_process=True)[attendee.id]
+                except UserError:   #TO BE REMOVED IN MASTER
+                    body = invitation_template.sudo().with_context(rendering_context)._render_field(
+                        'body_html',
+                        attendee.ids,
+                        compute_lang=True,
+                        post_process=True)[attendee.id]
                 subject = invitation_template._render_field(
                     'subject',
                     attendee.ids,
                     compute_lang=True)[attendee.id]
                 attendee.event_id.with_context(no_document=True).message_notify(
+                    email_from=attendee.event_id.user_id.email_formatted or self.env.user.email_formatted,
+                    author_id=attendee.event_id.user_id.partner_id.id or self.env.user.partner_id.id,
                     body=body,
                     subject=subject,
                     partner_ids=attendee.partner_id.ids,

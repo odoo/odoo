@@ -13,6 +13,7 @@ from odoo.exceptions import AccessError, UserError
 from odoo.http import request
 from odoo.osv import expression
 from odoo.tools import groupby
+from odoo.tools.misc import clean_context
 
 _logger = logging.getLogger(__name__)
 _image_dataurl = re.compile(r'(data:image/[a-z]+?);base64,([a-z0-9+/\n]{3,}=*)\n*([\'"])(?: data-filename="([^"]*)")?', re.I)
@@ -80,7 +81,7 @@ class Message(models.Model):
     author_id = fields.Many2one(
         'res.partner', 'Author', index=True, ondelete='set null',
         help="Author of the message. If not set, email_from may hold an email address that did not match any partner.")
-    author_avatar = fields.Binary("Author's avatar", related='author_id.image_128', readonly=False)
+    author_avatar = fields.Binary("Author's avatar", related='author_id.image_128', depends=['author_id'], readonly=False)
     # recipients: include inactive partners (they may have been archived after
     # the message was sent, but they should remain visible in the relation)
     partner_ids = fields.Many2many('res.partner', string='Recipients', context={'active_test': False})
@@ -111,7 +112,7 @@ class Message(models.Model):
     tracking_value_ids = fields.One2many(
         'mail.tracking.value', 'mail_message_id',
         string='Tracking values',
-        groups="base.group_no_one",
+        groups="base.group_system",
         help='Tracked values are stored in a separate model. This field allow to reconstruct '
              'the tracking and to generate statistics on the model.')
     # mail gateway
@@ -367,7 +368,7 @@ class Message(models.Model):
                                     message.id = ANY (%%s)''' % (self._table), ('comment', self.ids,))
             if self._cr.fetchall():
                 raise AccessError(
-                    _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % (self._description, operation)
+                    _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)', self._description, operation)
                     + ' - ({} {}, {} {})'.format(_('Records:'), self.ids[:6], _('User:'), self._uid)
                 )
 
@@ -580,7 +581,7 @@ class Message(models.Model):
         if not self.browse(messages_to_check).exists():
             return
         raise AccessError(
-            _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % (self._description, operation)
+            _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)', self._description, operation)
             + ' - ({} {}, {} {})'.format(_('Records:'), list(messages_to_check)[:6], _('User:'), self._uid)
         )
 
@@ -602,7 +603,7 @@ class Message(models.Model):
                 values['attachment_ids'] = []
             # extract base64 images
             if 'body' in values:
-                Attachments = self.env['ir.attachment']
+                Attachments = self.env['ir.attachment'].with_context(clean_context(self._context))
                 data_to_url = {}
                 def base64_to_boundary(match):
                     key = match.group(2)
@@ -691,6 +692,22 @@ class Message(models.Model):
                 elem._invalidate_documents()
         return super(Message, self).unlink()
 
+    @api.model
+    def _read_group_raw(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
+        if not self.env.is_admin():
+            raise AccessError(_("Only administrators are allowed to use grouped read on message model"))
+
+        return super(Message, self)._read_group_raw(
+            domain=domain, fields=fields, groupby=groupby, offset=offset,
+            limit=limit, orderby=orderby, lazy=lazy,
+        )
+
+    def export_data(self, fields_to_export):
+        if not self.env.is_admin():
+            raise AccessError(_("Only administrators are allowed to export mail message"))
+
+        return super(Message, self).export_data(fields_to_export)
+
     # ------------------------------------------------------
     # DISCUSS API
     # ------------------------------------------------------
@@ -704,17 +721,17 @@ class Message(models.Model):
         notif_domain = [
             ('res_partner_id', '=', partner_id),
             ('is_read', '=', False)]
-
         if domain:
-            messages_ids = self.search(domain).ids  # need sudo?
-            notif_domain = expression.AND([notif_domain, [('mail_message_id', 'in', messages_ids)]])
+            messages = self.search(domain)
+            messages.set_message_done()
+            return messages.ids
 
         notifications = self.env['mail.notification'].sudo().search(notif_domain)
         notifications.write({'is_read': True})
 
         ids = [n['mail_message_id'] for n in notifications.read(['mail_message_id'])]
 
-        notification = {'type': 'mark_as_read', 'message_ids': [id[0] for id in ids]}
+        notification = {'type': 'mark_as_read', 'message_ids': [id[0] for id in ids], 'needaction_inbox_counter': self.env.user.partner_id.get_needaction_count()}
         self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', partner_id), notification)
 
         return ids
@@ -752,7 +769,8 @@ class Message(models.Model):
         notifications.write({'is_read': True})
 
         for (msg_ids, channel_ids) in groups:
-            notification = {'type': 'mark_as_read', 'message_ids': msg_ids, 'channel_ids': [c.id for c in channel_ids]}
+            # channel_ids in result is deprecated and will be removed in a future version
+            notification = {'type': 'mark_as_read', 'message_ids': msg_ids, 'channel_ids': [c.id for c in channel_ids], 'needaction_inbox_counter': self.env.user.partner_id.get_needaction_count()}
             self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', partner_id.id), notification)
 
     @api.model
@@ -948,6 +966,12 @@ class Message(models.Model):
         self.check_access_rule('read')
         vals_list = self._read_format(fnames)
         safari = request and request.httprequest.user_agent.browser == 'safari'
+
+        thread_ids_by_model_name = defaultdict(set)
+        for message in self:
+            if message.model and message.res_id:
+                thread_ids_by_model_name[message.model].add(message.res_id)
+
         for vals in vals_list:
             message_sudo = self.browse(vals['id']).sudo().with_prefetch(self.ids)
 
@@ -987,11 +1011,21 @@ class Message(models.Model):
                         'field_type': tracking.field_type,
                     })
 
+            if message_sudo.model and message_sudo.res_id:
+                record_name = self.env[message_sudo.model] \
+                    .browse(message_sudo.res_id) \
+                    .sudo() \
+                    .with_prefetch(thread_ids_by_model_name[message_sudo.model]) \
+                    .display_name
+            else:
+                record_name = False
+
             vals.update({
                 'author_id': author,
                 'notifications': message_sudo.notification_ids._filtered_for_web_client()._notification_format(),
                 'attachment_ids': attachment_ids,
                 'tracking_value_ids': tracking_value_ids,
+                'record_name': record_name,
             })
 
         return vals_list
@@ -1029,7 +1063,7 @@ class Message(models.Model):
                 ('res_id', 'in', moderated_channel_ids),
                 '|',
                 ('author_id', '=', self.env.user.partner_id.id),
-                ('moderation_status', '=', 'pending_moderation'),
+                ('need_moderation', '=', True),
             ]
             messages |= self.search(moderated_messages_dom, limit=limit)
             # Truncate the results to `limit`

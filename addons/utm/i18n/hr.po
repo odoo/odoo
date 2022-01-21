@@ -3,8 +3,6 @@
 # 	* utm
 # 
 # Translators:
-# Martin Trigaux, 2020
-# Bole <bole@dajmi5.com>, 2020
 # Davor Bojkić <davor.bojkic@storm.hr>, 2020
 # Vladimir Olujić <olujic.vladimir@storm.hr>, 2020
 # Đurđica Žarković <durdica.zarkovic@storm.hr>, 2020
@@ -13,6 +11,9 @@
 # Tina Milas, 2020
 # Stjepan Lovasić <stjepan.lovasic@gmail.com>, 2020
 # Vojislav Opačić <vojislav.opacic@gmail.com>, 2020
+# Martin Trigaux, 2020
+# Hrvoje Sić <hrvoje.sic@gmail.com>, 2021
+# Bole <bole@dajmi5.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -20,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-29 13:46+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Vojislav Opačić <vojislav.opacic@gmail.com>, 2020\n"
+"Last-Translator: Bole <bole@dajmi5.com>, 2021\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -139,7 +140,7 @@ msgstr ""
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.utm_campaign_action
 msgid "Create a campaign"
-msgstr ""
+msgstr "Kreiraj kampanju"
 
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.action_view_utm_stage
@@ -233,6 +234,11 @@ msgstr "Riješeno"
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_kanban
 msgid "Dropdown menu"
 msgstr "Padajući izbornik"
+
+#. module: utm
+#: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_kanban
+msgid "Edit"
+msgstr "Uredi"
 
 #. module: utm
 #: model:utm.campaign,name:utm.utm_campaign_email_campaign_products
@@ -350,7 +356,7 @@ msgstr "Kasnije"
 #. module: utm
 #: model:utm.source,name:utm.utm_source_mailing
 msgid "Lead Recall"
-msgstr ""
+msgstr "Opoziv potencijala"
 
 #. module: utm
 #: model:ir.ui.menu,name:utm.menu_link_tracker_root
@@ -563,6 +569,13 @@ msgid ""
 msgstr ""
 
 #. module: utm
+#: model:ir.model.fields,help:utm.field_utm_tag__color
+msgid ""
+"Tag color. No color means no display in kanban to distinguish internal tags "
+"from public categorization tags."
+msgstr ""
+
+#. module: utm
 #: model:ir.model.constraint,message:utm.constraint_utm_tag_name_uniq
 msgid "Tag name already exists !"
 msgstr "Naziv oznake već postoji !"
@@ -596,7 +609,7 @@ msgstr ""
 #. module: utm
 #: model:ir.model.fields,help:utm.field_utm_mixin__medium_id
 msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
-msgstr ""
+msgstr "Ovo je način isporuke, na pr. Razglednica, e-pošta ili natpisni oglas"
 
 #. module: utm
 #: model:ir.model.fields,help:utm.field_utm_mixin__source_id
@@ -604,6 +617,8 @@ msgid ""
 "This is the source of the link, e.g. Search Engine, another domain, or name "
 "of email list"
 msgstr ""
+"Ovo je izvor poveznice, npr. Tražilica, druga domena ili naziv popisa "
+"e-adresa"
 
 #. module: utm
 #. openerp-web
@@ -630,7 +645,7 @@ msgstr "Twitter"
 #: model:ir.model,name:utm.model_utm_campaign
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_form
 msgid "UTM Campaign"
-msgstr ""
+msgstr "UTM kampanja"
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_tree

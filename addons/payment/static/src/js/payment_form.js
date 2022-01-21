@@ -23,6 +23,11 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
      */
     start: function () {
         this._adaptPayButton();
+        window.addEventListener('pageshow', function (event) {
+            if (event.persisted) {
+                window.location.reload();
+            }
+        });
         var self = this;
         return this._super.apply(this, arguments).then(function () {
             self.options = _.extend(self.$el.data(), self.options);
@@ -284,12 +289,13 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
                             'error_url': self.options.errorUrl,
                             'callback_method': self.options.callbackMethod,
                             'order_id': self.options.orderId,
+                            'invoice_id': self.options.invoiceId,
                         },
                     }).then(function (result) {
                         if (result) {
                             // if the server sent us the html form, we create a form element
                             var newForm = document.createElement('form');
-                            newForm.setAttribute("method", "post"); // set it to post
+                            newForm.setAttribute("method", self._get_redirect_form_method());
                             newForm.setAttribute("provider", checked_radio.dataset.provider);
                             newForm.hidden = true; // hide it
                             newForm.innerHTML = result; // put the html sent by the server inside the form
@@ -316,6 +322,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
                             _t("We are not able to redirect you to the payment form.") + " " +
                                 self._parseError(error)
                         );
+                        self.enableButton(button);
                     });
                 }
                 else {
@@ -340,6 +347,15 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
             );
             this.enableButton(button);
         }
+    },
+    /**
+     * Return the HTTP method to be used by the redirect form.
+     *
+     * @private
+     * @return {string} The HTTP method, "post" by default
+     */
+    _get_redirect_form_method: function () {
+        return "post";
     },
     /**
      * Called when clicking on the button to add a new payment method.
@@ -489,7 +505,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
         ev.stopPropagation();
         ev.preventDefault();
         var self = this;
-        var pm_id = parseInt(ev.target.value);
+        var pm_id = parseInt(ev.currentTarget.value);
 
         var tokenDelete = function () {
             self._rpc({

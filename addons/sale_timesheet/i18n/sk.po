@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2020
-# Rastislav Brenčič <rastislav.brencic99@gmail.com>, 2020
+# rastislav Brencic <rastislav.brencic99@gmail.com>, 2020
 # Martin Trigaux, 2020
 # Matus Krnac <matus.krnac@gmail.com>, 2020
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2020
 # gebri <gebri@inmail.sk>, 2020
 # Jan Prokop, 2020
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2020
-# Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
+# Alexandra Brencicova <alexandra.brencicova@gmail.com>, 2021
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
 # 
 msgid ""
 msgstr ""
@@ -19,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-10-29 15:48+0000\n"
 "PO-Revision-Date: 2020-09-07 08:18+0000\n"
-"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2020\n"
+"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2021\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -111,6 +112,9 @@ msgid ""
 "                                                                Non Billable Timesheets\n"
 "                                                            </span>"
 msgstr ""
+"<span class=\"btn-link\" style=\"font-weight:normal;\">\n"
+"                                                                Neúčtovateľné pracovné výkazy\n"
+"                                                            </span>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
@@ -168,6 +172,8 @@ msgid ""
 "All revenues that are not from timesheets and that are linked to the "
 "analytic account of the project."
 msgstr ""
+"Všetky výnosy, ktoré nie sú z pracovných výkazov a sú spojené s analytickým "
+"účtom projektu."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:0
@@ -184,6 +190,9 @@ msgid ""
 "All timesheet hours that are not yet invoiced will be assigned to the "
 "selected Sales Order Item on save. Discard to avoid the change."
 msgstr ""
+"Všetky hodiny v pracovnom výkaze, ktoré ešte nie sú fakturované, budú pri "
+"uložení priradené k vybranej položke zákazky odberateľa. Zlikvidujte ich, "
+"aby ste sa vyhli zmenám."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:0
@@ -464,7 +473,7 @@ msgstr "Starostlivosť o zákazníka (predplatené hodiny)"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__bill_type
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__bill_type
-msgid "Customer Type"
+msgid "Invoice Tasks to"
 msgstr ""
 
 #. module: sale_timesheet
@@ -592,7 +601,7 @@ msgstr ""
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__pricing_type__fixed_rate
-msgid "Fixed rate"
+msgid "Project rate"
 msgstr ""
 
 #. module: sale_timesheet
@@ -684,6 +693,8 @@ msgid ""
 "Includes the time logged into tasks for which you invoice based on "
 "timesheets on tasks."
 msgstr ""
+"Zahŕňa čas prihlásený do úloh, za ktorý fakturujete, na základe úloh v "
+"pracovných výkazov. "
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__info_invoice
@@ -698,7 +709,7 @@ msgstr "Faktúra"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__bill_type__customer_project
-msgid "Invoice all tasks to a single customer"
+msgid "A unique customer"
 msgstr ""
 
 #. module: sale_timesheet
@@ -708,7 +719,7 @@ msgstr "Faktúra vytvorená z pracovných výkazov"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__bill_type__customer_task
-msgid "Invoice tasks separately to different customers"
+msgid "Different customers"
 msgstr ""
 
 #. module: sale_timesheet
@@ -810,6 +821,7 @@ msgid "Last Updated on"
 msgstr "Naposledy upravované"
 
 #. module: sale_timesheet
+#. openerp-web
 #: code:addons/sale_timesheet/models/project_overview.py:0
 #, python-format
 msgid "Late"
@@ -930,7 +942,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Non billable timesheets"
-msgstr ""
+msgstr "Neúčtovateľné pracovné výkazy"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__non_allow_billable
@@ -955,11 +967,15 @@ msgid ""
 "yet invoiced (and validated, if applicable) will be invoiced without "
 "distinction."
 msgstr ""
+"Fakturované budú iba časové rozvrhy, ktoré ešte neboli fakturované (a "
+"prípadne overené) z tohto obdobia. Ak obdobie nie je uvedené, budú sa "
+"fakturovať všetky časové rozvrhy, ktoré ešte neboli fakturované (a prípadne "
+"overené), a to bez rozdielu."
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__product_template__service_policy__ordered_timesheet
-msgid "Ordered quantities"
-msgstr "Objednané množstvá"
+msgid "Prepaid"
+msgstr ""
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__expense_cost
@@ -1151,12 +1167,12 @@ msgstr "Zostávajuce"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Revenues linked to Timesheets already invoiced."
-msgstr ""
+msgstr "Príjmy spojené s pracovnými výkazmi, ktoré sú už fakturované."
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Revenues linked to Timesheets not yet invoiced."
-msgstr ""
+msgstr "Výnosy spojené s časovými výkazmi, ktoré ešte neboli fakturované."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__sale_order_id
@@ -1250,6 +1266,8 @@ msgid ""
 "Select a billable project to be the skeleton of the new created project when"
 " selling the current product. Its stages and tasks will be duplicated."
 msgstr ""
+"Vyberte zúčtovateľný projekt, ktorý bude kostrou novovytvoreného projektu "
+"pri predaji aktuálneho produktu. Jeho etapy a úlohy budú duplikované."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_sale_order__project_id
@@ -1315,7 +1333,7 @@ msgstr "Požiadavka"
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_task_recurrence
 msgid "Task Recurrence"
-msgstr ""
+msgstr "Opakovanie úloh"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_task_create_sale_order__task_id
@@ -1416,11 +1434,13 @@ msgid ""
 "The timesheet product is required when the task can be billed and timesheets"
 " are allowed."
 msgstr ""
+"Produkt pracovného výkazu sa vyžaduje, keď je možné za úlohu účtovať "
+"poplatky a pracovné výkazy sú povolené."
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "There are no timesheets for now."
-msgstr ""
+msgstr "Zatiaľ neexistujú pracovné výkazy."
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -1459,7 +1479,7 @@ msgid ""
 "        and widgets to help the encoding. All reporting will still be expressed in hours (default value)."
 msgstr ""
 "Nastaví mernú jednotku použitú na zapisovanie do pracovnáho výkazu. Jednoducho poskytne nástroje\n"
-"        a pomôcky na pomoc so zapisovaním. Všetky reporty budú vyjadrené v hodinách (predvolená hodnota)."
+"a pomôcky na pomoc so zapisovaním. Všetky reporty budú vyjadrené v hodinách (predvolená hodnota)."
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -1542,12 +1562,12 @@ msgstr "Pracovné výkazy"
 #. module: sale_timesheet
 #: model:ir.actions.act_window,name:sale_timesheet.timesheet_action_billing_report
 msgid "Timesheets By Billing Type"
-msgstr ""
+msgstr "Pracovné výkazy podľa typu fakturácie"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.sale_advance_payment_inv_timesheet_view_form
 msgid "Timesheets Period"
-msgstr ""
+msgstr "Obdobia pracovných výkazov"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:0
@@ -1690,6 +1710,8 @@ msgstr ""
 #, python-format
 msgid "You can not modify timesheets from different employees"
 msgstr ""
+"You can not modify timesheets from different employees\n"
+" "
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/wizard/project_create_invoice.py:0
@@ -1718,7 +1740,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_task__non_allow_billable
 msgid "Your timesheets linked to this task will not be billed."
-msgstr ""
+msgstr "Vaše pracovné výkazy spojené s touto úlohou nebudú fakturované."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0

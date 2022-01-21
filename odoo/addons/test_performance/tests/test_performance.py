@@ -173,18 +173,18 @@ class TestPerformance(SavepointCaseWithUserDemo):
         self.assertEqual(rec2.line_ids, lines[0])
 
         rec1.invalidate_cache()
-        with self.assertQueryCount(7):
+        with self.assertQueryCount(8):
             rec2.write({'line_ids': [(4, line.id) for line in lines[1:]]})
         self.assertFalse(rec1.line_ids)
         self.assertEqual(rec2.line_ids, lines)
 
         rec1.invalidate_cache()
-        with self.assertQueryCount(5):
+        with self.assertQueryCount(4):
             rec2.write({'line_ids': [(4, line.id) for line in lines[0]]})
         self.assertEqual(rec2.line_ids, lines)
 
         rec1.invalidate_cache()
-        with self.assertQueryCount(5):
+        with self.assertQueryCount(4):
             rec2.write({'line_ids': [(4, line.id) for line in lines[1:]]})
         self.assertEqual(rec2.line_ids, lines)
 

@@ -109,6 +109,11 @@ class SaleOrder(models.Model):
             # 'sale.order.line'.
             price, rule_id = order.pricelist_id.with_context(product_context).get_product_price_rule(product, qty or 1.0, order.partner_id)
             pu, currency = request.env['sale.order.line'].with_context(product_context)._get_real_price_currency(product, rule_id, qty, product.uom_id, order.pricelist_id.id)
+            if order.pricelist_id and order.partner_id:
+                order_line = order._cart_find_product_line(product.id)
+                if order_line:
+                    price = self.env['account.tax']._fix_tax_included_price_company(price, product.taxes_id, order_line[0].tax_id, self.company_id)
+                    pu = self.env['account.tax']._fix_tax_included_price_company(pu, product.taxes_id, order_line[0].tax_id, self.company_id)
             if pu != 0:
                 if order.pricelist_id.currency_id != currency:
                     # we need new_list_price in the same currency as price, which is in the SO's pricelist's currency
@@ -120,6 +125,10 @@ class SaleOrder(models.Model):
                     # but we still want to use the price defined on the pricelist
                     discount = 0
                     pu = price
+            else:
+                # In case the price_unit equal 0 and therefore not able to calculate the discount,
+                # we fallback on the price defined on the pricelist.
+                pu = price
         else:
             pu = product.price
             if order.pricelist_id and order.partner_id:
@@ -148,12 +157,12 @@ class SaleOrder(models.Model):
 
         try:
             if add_qty:
-                add_qty = float(add_qty)
+                add_qty = int(add_qty)
         except ValueError:
             add_qty = 1
         try:
             if set_qty:
-                set_qty = float(set_qty)
+                set_qty = int(set_qty)
         except ValueError:
             set_qty = 0
         quantity = 0
@@ -245,22 +254,16 @@ class SaleOrder(models.Model):
             # update line
             no_variant_attributes_price_extra = [ptav.price_extra for ptav in order_line.product_no_variant_attribute_value_ids]
             values = self.with_context(no_variant_attributes_price_extra=tuple(no_variant_attributes_price_extra))._website_product_id_change(self.id, product_id, qty=quantity)
+            order = self.sudo().browse(self.id)
             if self.pricelist_id.discount_policy == 'with_discount' and not self.env.context.get('fixed_price'):
-                order = self.sudo().browse(self.id)
                 product_context.update({
                     'partner': order.partner_id,
                     'quantity': quantity,
                     'date': order.date_order,
                     'pricelist': order.pricelist_id.id,
                 })
-                product_with_context = self.env['product.product'].with_context(product_context).with_company(order.company_id.id)
-                product = product_with_context.browse(product_id)
-                values['price_unit'] = self.env['account.tax']._fix_tax_included_price_company(
-                    order_line._get_display_price(product),
-                    order_line.product_id.taxes_id,
-                    order_line.tax_id,
-                    self.company_id
-                )
+            product_with_context = self.env['product.product'].with_context(product_context).with_company(order.company_id.id)
+            product = product_with_context.browse(product_id)
 
             order_line.write(values)
 
@@ -348,6 +351,13 @@ class SaleOrder(models.Model):
                 template.send_mail(order.id)
                 sent_orders |= order
         sent_orders.write({'cart_recovery_email_sent': True})
+
+    def action_confirm(self):
+        res = super(SaleOrder, self).action_confirm()
+        for order in self:
+            if not order.transaction_ids and not order.amount_total and self._context.get('send_email'):
+                order._send_order_confirmation_mail()
+        return res
 
 
 class SaleOrderLine(models.Model):

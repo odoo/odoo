@@ -22,6 +22,16 @@ class TestMassMailPerformanceBase(TransactionCase):
             groups='base.group_user,mass_mailing.group_mass_mailing_user',
             name='Martial Marketing', signature='--\nMartial')
 
+        # setup mail gateway
+        self.alias_domain = 'example.com'
+        self.alias_catchall = 'catchall.test'
+        self.alias_bounce = 'bounce.test'
+        self.default_from = 'notifications'
+        self.env['ir.config_parameter'].set_param('mail.bounce.alias', self.alias_bounce)
+        self.env['ir.config_parameter'].set_param('mail.catchall.domain', self.alias_domain)
+        self.env['ir.config_parameter'].set_param('mail.catchall.alias', self.alias_catchall)
+        self.env['ir.config_parameter'].set_param('mail.default.from', self.default_from)
+
         # patch registry to simulate a ready environment
         self.patch(self.env.registry, 'ready', True)
 
@@ -50,8 +60,8 @@ class TestMassMailPerformance(TestMassMailPerformanceBase):
             'mailing_domain': [('id', 'in', self.mm_recs.ids)],
         })
 
-        # runbot needs +50 compared to local
-        with self.assertQueryCount(__system__=1714, marketing=1715):
+        # runbot needs +51 compared to local
+        with self.assertQueryCount(__system__=1718, marketing=1720):  # test_mass_mailing_only: 1665 - 1666
             mailing.action_send_mail()
 
         self.assertEqual(mailing.sent, 50)
@@ -90,8 +100,8 @@ class TestMassMailBlPerformance(TestMassMailPerformanceBase):
             'mailing_domain': [('id', 'in', self.mm_recs.ids)],
         })
 
-        # runbot needs +62 compared to local
-        with self.assertQueryCount(__system__=1993, marketing=1994):
+        # runbot needs +63 compared to local
+        with self.assertQueryCount(__system__=1995, marketing=1997):  # test_mass_mailing only: 1931 - 1932
             mailing.action_send_mail()
 
         self.assertEqual(mailing.sent, 50)

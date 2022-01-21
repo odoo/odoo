@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-extend="Calendar.attendee.status.popover">
+        <t t-jquery=".o_cw_popover_edit" t-operation="after">
+            <a t-if="typeof widget.isMEventSyncedAndArchivable === 'function' and widget.isMEventSyncedAndArchivable() and widget.isEventDetailsVisible()" href="#" class="btn btn-secondary o_cw_popover_archive_m">Archive</a>
+        </t>
+    </t>
+</templates>

@@ -39,9 +39,15 @@ class SipsController(http.Controller):
             self.sips_validate_data(**post)
         return ''
 
-    @http.route('/payment/sips/dpn', type='http', auth="public", methods=['POST'], csrf=False)
+    @http.route('/payment/sips/dpn', type='http', auth="public", methods=['POST'], csrf=False, save_session=False)
     def sips_dpn(self, **post):
-        """ Sips DPN """
+        """ Sips DPN
+        The session cookie created by Odoo has not the attribute SameSite. Most of browsers will force this attribute
+        with the value 'Lax'. After the payment, Sips will perform a POST request on this route. For all these reasons,
+        the cookie won't be added to the request. As a result, if we want to save the session, the server will create
+        a new session cookie. Therefore, the previous session and all related information will be lost, so it will lead
+        to undesirable behaviors. This is the reason why `save_session=False` is needed.
+        """
         try:
             _logger.info('Beginning Sips DPN form_feedback with post data %s', pprint.pformat(post))  # debug
             self.sips_validate_data(**post)

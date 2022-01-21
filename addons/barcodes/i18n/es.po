@@ -4,6 +4,8 @@
 # 
 # Translators:
 # Martin Trigaux, 2020
+# José Cabrera Lozano <jose.cabrera@edukative.es>, 2021
+# Daniela Cervantes <dace@odoo.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -11,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:28+0000\n"
 "PO-Revision-Date: 2020-09-07 08:10+0000\n"
-"Last-Translator: Martin Trigaux, 2020\n"
+"Last-Translator: Daniela Cervantes <dace@odoo.com>, 2021\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,8 +26,7 @@ msgstr ""
 #, python-format
 msgid " '*' is not a valid Regex Barcode Pattern. Did you mean '.*' ?"
 msgstr ""
-"'*' no es un patrón Regex válido para código de barras. ¿Quizás quiso usar "
-"'.*'?"
+"'*' no es un patrón Regex válido para código de barras. ¿Quieres usar '.*'?"
 
 #. module: barcodes
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
@@ -47,13 +48,13 @@ msgid ""
 "A barcode nomenclature defines how the point of sale identify and interprets"
 " barcodes"
 msgstr ""
-"Una nomenclatura de código de barras define cómo identifica e interpreta un "
-"punto de venta los códigos de barras"
+"Una nomenclatura de código de barras define cómo un punto de venta "
+"identifica e interpreta los códigos de barras"
 
 #. module: barcodes
 #: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
 msgid "Add a new barcode nomenclature"
-msgstr "Añadir una nueva nomenclatura de Código de barras"
+msgstr "Añadir una nueva nomenclatura de código de barras"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__alias
@@ -70,7 +71,8 @@ msgstr "Siempre"
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__name
 msgid "An internal identification for this barcode nomenclature rule"
 msgstr ""
-"Un identificador interno para esta regla de nombra de código de barras"
+"Un identificador interno para esta regla de nomenclatura del código de "
+"barras"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__name
@@ -85,7 +87,7 @@ msgstr "Cualquiera"
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_barcodes_barcode_events_mixin
 msgid "Barcode Event Mixin"
-msgstr "Mixin Evento de Código de Barras"
+msgstr "Evento Mixin en el código de barras"
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_barcode_nomenclature
@@ -93,13 +95,13 @@ msgstr "Mixin Evento de Código de Barras"
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__barcode_nomenclature_id
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
 msgid "Barcode Nomenclature"
-msgstr "Nomenclatura de código de barras"
+msgstr "Nomenclatura del código de barras"
 
 #. module: barcodes
 #: model:ir.actions.act_window,name:barcodes.action_barcode_nomenclature_form
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_tree
 msgid "Barcode Nomenclatures"
-msgstr "Nomenclaturas de código de barras"
+msgstr "Nomenclaturas del código de barras"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__pattern
@@ -110,7 +112,7 @@ msgstr "Patrón de código de barras"
 #: model:ir.model,name:barcodes.model_barcode_rule
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_rule_form
 msgid "Barcode Rule"
-msgstr "Regla de código de barras"
+msgstr "Regla del código de barras"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin___barcode_scanned
@@ -120,7 +122,7 @@ msgstr "Código de barras escaneado"
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_res_company
 msgid "Companies"
-msgstr "Compañías"
+msgstr "Empresas"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__create_uid
@@ -170,7 +172,7 @@ msgstr "EAN-8"
 #: code:addons/barcodes/static/src/js/barcode_form_view.js:0
 #, python-format
 msgid "Enable edit mode to modify this document"
-msgstr ""
+msgstr "Habilita el modo de edición para modificar este documento"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__encoding
@@ -189,7 +191,7 @@ msgstr "Ruta HTTP "
 #: model:ir.model.fields,field_description:barcodes.field_ir_http__id
 #: model:ir.model.fields,field_description:barcodes.field_res_company__id
 msgid "ID"
-msgstr "ID"
+msgstr "Identificación"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature____last_update
@@ -220,14 +222,14 @@ msgstr "Nunca"
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_res_company__nomenclature_id
 msgid "Nomenclature"
-msgstr "Denominación"
+msgstr "Nomenclatura"
 
 #. module: barcodes
 #. openerp-web
 #: code:addons/barcodes/static/src/js/barcode_form_view.js:0
 #, python-format
 msgid "Pager unavailable"
-msgstr ""
+msgstr "Número de localizador no disponible"
 
 #. module: barcodes
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
@@ -241,10 +243,10 @@ msgid ""
 msgstr ""
 "Los patrones también pueden definir cómo se codifican valores numéricos, tales como\n"
 "el peso o el precio, en el código de barras. Se indican por <code>{NNN}</code>,\n"
-"donde las Ns definen en qué posición se codifican los números. También se permiten\n"
-"números reales si los decimales se indican con Ds, por ejemplo <code>{NNNDD}</code>.\n"
+"donde las letras N definen en qué posición se codifican los números. También se permiten\n"
+"números reales si los decimales se indican con la letra D, por ejemplo <code>{NNNDD}</code>.\n"
 "En estos casos, el campo de código de barras en los registros asociados <i>debe</i>\n"
-"mostrar ceros en esas posiciones."
+"tener ceros en esas posiciones."
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__name
@@ -261,7 +263,7 @@ msgstr "Reglas"
 #: code:addons/barcodes/static/src/js/barcode_form_view.js:0
 #, python-format
 msgid "Scan a barcode to set the quantity"
-msgstr ""
+msgstr "Escanee un código de barras para establecer la cantidad"
 
 #. module: barcodes
 #. openerp-web
@@ -285,22 +287,22 @@ msgstr "Definir cantidad"
 #. module: barcodes
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
 msgid "Tables"
-msgstr "Mesas"
+msgstr "Gráficas"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__pattern
 msgid "The barcode matching pattern"
-msgstr "El patrón de casado para el código de barras"
+msgstr "Patrón de concordancia para el código de barras"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__rule_ids
 msgid "The list of barcode rules"
-msgstr "La lista de reglas de códigos de barras"
+msgstr "Lista de reglas de códigos de barras"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__alias
 msgid "The matched pattern will alias to this barcode"
-msgstr "El patrón casado será un sobrenombre para este código de barras"
+msgstr "El patrón de concordancia será un alias para este código de barras"
 
 #. module: barcodes
 #: code:addons/barcodes/models/barcodes.py:0
@@ -309,6 +311,8 @@ msgid ""
 "There is a syntax error in the barcode pattern %(pattern)s: a rule can only "
 "contain one pair of braces."
 msgstr ""
+"Hay un error de sintaxis en el patrón del código de barras %(pattern)s: una "
+"regla solo puede contener un par de llaves."
 
 #. module: barcodes
 #: code:addons/barcodes/models/barcodes.py:0
@@ -317,6 +321,8 @@ msgid ""
 "There is a syntax error in the barcode pattern %(pattern)s: braces can only "
 "contain N's followed by D's."
 msgstr ""
+"Hay un error de sintaxis en el patrón del código de barras %(pattern)s: las "
+"llaves solo pueden contener N seguido de D."
 
 #. module: barcodes
 #: code:addons/barcodes/models/barcodes.py:0
@@ -324,6 +330,8 @@ msgstr ""
 msgid ""
 "There is a syntax error in the barcode pattern %(pattern)s: empty braces."
 msgstr ""
+"Hay un error de sintaxis en el patrón del código de barras %(pattern)s: "
+"llaves vacías."
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__encoding
@@ -371,7 +379,7 @@ msgstr "Conversión UPC/EAN"
 #: code:addons/barcodes/static/src/js/barcode_form_view.js:0
 #, python-format
 msgid "Undefined barcode command"
-msgstr ""
+msgstr "Comando de código de barras indefinido"
 
 #. module: barcodes
 #: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__type__product
@@ -383,8 +391,8 @@ msgstr "Unidad de producto"
 msgid ""
 "Used to order rules such that rules with a smaller sequence match first"
 msgstr ""
-"Usado para ordenar reglas. Las reglas con menor secuencia son casadas "
-"primero."
+"Usado para ordenar reglas. Primero se busca una concordancia para reglas con"
+" menor secuencia."
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcodes_barcode_events_mixin___barcode_scanned

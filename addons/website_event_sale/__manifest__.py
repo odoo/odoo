@@ -17,5 +17,6 @@ Sell event tickets through eCommerce app.
         'views/website_sale_templates.xml',
         'security/website_event_sale_security.xml',
     ],
-    'auto_install': True
+    'auto_install': True,
+    'license': 'LGPL-3',
 }

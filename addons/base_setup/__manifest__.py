@@ -29,4 +29,5 @@ Shows you a list of applications features to install from.
     ],
 
     
+    'license': 'LGPL-3',
 }

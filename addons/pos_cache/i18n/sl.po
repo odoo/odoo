@@ -1,13 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * pos_cache
+# 	* pos_cache
+# 
+# Translators:
+# Martin Trigaux, 2021
+# Matjaz Mozetic <m.mozetic@matmoz.si>, 2021
+# Dejan Sraka <dejan.sraka@picolabs.si>, 2021
+# laznikd <laznik@mentis.si>, 2021
+# matjaz k <matjaz@mentis.si>, 2021
+# Tadej Lupšina <tadej@hbs.si>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 9.0\n"
+"Project-Id-Version: Odoo Server saas~13.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:26+0000\n"
-"PO-Revision-Date: 2015-09-29 10:26+0000\n"
+"POT-Creation-Date: 2019-12-16 08:45+0000\n"
+"PO-Revision-Date: 2020-09-07 08:16+0000\n"
+"Last-Translator: Tadej Lupšina <tadej@hbs.si>, 2021\n"
 "Language-Team: Slovenian (https://www.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -16,93 +25,96 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
 
 #. module: pos_cache
-#: model:ir.model.fields,field_description:pos_cache.field_pos_cache_cache
+#: model:ir.model.fields,field_description:pos_cache.field_pos_cache__cache
+#: model:ir.model.fields,field_description:pos_cache.field_pos_config__cache_ids
 msgid "Cache"
-msgstr ""
+msgstr "Predpomnilnik"
 
 #. module: pos_cache
-#: model:ir.model.fields,field_description:pos_cache.field_pos_cache_compute_user_id
+#: model:ir.model.fields,field_description:pos_cache.field_pos_cache__compute_user_id
 msgid "Cache compute user"
 msgstr ""
 
 #. module: pos_cache
-#: model:ir.model.fields,field_description:pos_cache.field_pos_config_cache_ids
-msgid "Cache ids"
-msgstr ""
+#: model:ir.model.fields,field_description:pos_cache.field_pos_cache__config_id
+msgid "Config"
+msgstr "Nastavitve"
 
 #. module: pos_cache
-#: model:ir.model.fields,field_description:pos_cache.field_pos_cache_config_id
-msgid "Config id"
-msgstr ""
-
-#. module: pos_cache
-#: model:ir.model.fields,field_description:pos_cache.field_pos_cache_create_uid
+#: model:ir.model.fields,field_description:pos_cache.field_pos_cache__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Ustvaril"
 
 #. module: pos_cache
-#: model:ir.model.fields,field_description:pos_cache.field_pos_cache_create_date
+#: model:ir.model.fields,field_description:pos_cache.field_pos_cache__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Ustvarjeno"
 
 #. module: pos_cache
-#: model:ir.model.fields,field_description:pos_cache.field_pos_cache_display_name
+#: model:ir.model.fields,field_description:pos_cache.field_pos_cache__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Prikazani naziv"
 
 #. module: pos_cache
-#: model:ir.model.fields,field_description:pos_cache.field_pos_cache_id
+#: model:ir.model.fields,field_description:pos_cache.field_pos_cache__id
 msgid "ID"
+msgstr "ID"
+
+#. module: pos_cache
+#: model_terms:ir.ui.view,arch_db:pos_cache.pos_config_view_form_inherit_pos_cache
+msgid "Invalidate cache"
 msgstr ""
 
 #. module: pos_cache
-#: model:ir.model.fields,field_description:pos_cache.field_pos_cache___last_update
+#: model:ir.model.fields,field_description:pos_cache.field_pos_cache____last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Zadnjič spremenjeno"
 
 #. module: pos_cache
-#: model:ir.model.fields,field_description:pos_cache.field_pos_cache_write_uid
+#: model:ir.model.fields,field_description:pos_cache.field_pos_cache__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Zadnji posodobil"
 
 #. module: pos_cache
-#: model:ir.model.fields,field_description:pos_cache.field_pos_cache_write_date
+#: model:ir.model.fields,field_description:pos_cache.field_pos_cache__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Zadnjič posodobljeno"
 
 #. module: pos_cache
 #. openerp-web
-#: code:addons/pos_cache/static/src/js/pos_cache.js:36
+#: code:addons/pos_cache/static/src/js/pos_cache.js:0
 #, python-format
 msgid "Loading"
-msgstr ""
+msgstr "Nalaganje"
 
 #. module: pos_cache
-#: model:ir.model.fields,field_description:pos_cache.field_pos_config_oldest_cache_time
+#: model:ir.model.fields,field_description:pos_cache.field_pos_config__oldest_cache_time
 msgid "Oldest cache time"
 msgstr ""
 
 #. module: pos_cache
-#: model:ir.model.fields,field_description:pos_cache.field_pos_cache_product_domain
-msgid "Product domain"
-msgstr ""
-
-#. module: pos_cache
-#: model:ir.model.fields,field_description:pos_cache.field_pos_cache_product_fields
-msgid "Product fields"
-msgstr ""
-
-#. module: pos_cache
-#: model_terms:ir.ui.view,arch_db:pos_cache.view_pos_config_form
-msgid "Recompute cache"
-msgstr ""
+#: model:ir.actions.server,name:pos_cache.refresh_pos_cache_cron_ir_actions_server
+#: model:ir.cron,cron_name:pos_cache.refresh_pos_cache_cron
+#: model:ir.cron,name:pos_cache.refresh_pos_cache_cron
+msgid "PoS: refresh cache"
+msgstr "PoS: osvežite predpomnilnik"
 
 #. module: pos_cache
 #: model:ir.model,name:pos_cache.model_pos_cache
-msgid "pos.cache"
-msgstr ""
+msgid "Point of Sale Cache"
+msgstr "Predpomnilnik prodajne točke"
 
 #. module: pos_cache
 #: model:ir.model,name:pos_cache.model_pos_config
-msgid "pos.config"
+msgid "Point of Sale Configuration"
+msgstr "Nastavitve POS-blagajne"
+
+#. module: pos_cache
+#: model:ir.model.fields,field_description:pos_cache.field_pos_cache__product_domain
+msgid "Product Domain"
+msgstr ""
+
+#. module: pos_cache
+#: model:ir.model.fields,field_description:pos_cache.field_pos_cache__product_fields
+msgid "Product Fields"
 msgstr ""

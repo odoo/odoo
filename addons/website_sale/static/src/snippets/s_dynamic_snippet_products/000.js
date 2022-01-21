@@ -19,8 +19,22 @@ const DynamicSnippetProducts = DynamicSnippetCarousel.extend({
      * @override
      * @private
      */
-    _isConfigComplete: function() {
+    _isConfigComplete: function () {
         return this._super.apply(this, arguments) && this.$el.get(0).dataset.productCategoryId !== undefined;
+    },
+    /**
+     *
+     * @override
+     * @private
+     */
+    _mustMessageWarningBeHidden: function() {
+        const isInitialDrop = this.$el.get(0).dataset.templateKey === undefined;
+        // This snippet has default values obtained after the initial start and render after drop.
+        // Because of this there is an initial refresh happening right after.
+        // We want to avoid showing the incomplete config message before this refresh.
+        // Since the refreshed call will always happen with a defined templateKey,
+        // if it is not set yet, we know it is the drop call and we can avoid showing the message.
+        return isInitialDrop || this._super.apply(this, arguments);
     },
     /**
      * Method to be overridden in child components in order to provide a search
@@ -30,7 +44,10 @@ const DynamicSnippetProducts = DynamicSnippetCarousel.extend({
      */
     _getSearchDomain: function () {
         const searchDomain = this._super.apply(this, arguments);
-        searchDomain.push(['public_categ_ids', 'child_of', parseInt(this.$el.get(0).dataset.productCategoryId)]);
+        const productCategoryId = parseInt(this.$el.get(0).dataset.productCategoryId);
+        if (productCategoryId >= 0) {
+            searchDomain.push(['public_categ_ids', 'child_of', productCategoryId]);
+        }
         return searchDomain;
     },
 

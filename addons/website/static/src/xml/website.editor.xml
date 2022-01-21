@@ -12,11 +12,11 @@
     <!-- Editor top bar which contains the summernote tools and save/discard buttons -->
     <t t-name="website.editorbar">
         <div class="o_we_website_top_actions">
-            <div class="o_we_external_history_buttons">
+            <div class="o_we_external_history_buttons d-flex">
                 <button type="button" data-action="undo" class="btn btn-secondary fa fa-undo"/>
                 <button type="button" data-action="redo" class="btn btn-secondary fa fa-repeat"/>
             </div>
-            <form class="ml-auto">
+            <form class="ml-auto d-flex">
                 <button type="button" class="btn btn-secondary" data-action="cancel" accesskey="j">Discard</button>
                 <button type="button" class="btn btn-primary" data-action="save" accesskey="s">Save</button>
             </form>
@@ -35,7 +35,7 @@
         <t t-jquery="#o_link_dialog_url_input" t-operation="after">
             <small class="form-text text-muted">Hint: Type '/' to search an existing page and '#' to link to an anchor.</small>
         </t>
-        <t t-jquery="div.o_url_input" t-operation="after">
+        <t t-jquery="div#o_url_input" t-operation="after">
             <div class="form-group row o_link_dialog_page_anchor d-none">
                 <label class="col-form-label col-md-3" for="o_link_dialog_anchor_input">Page Anchor</label>
                 <div class="col-md-9">
@@ -121,6 +121,8 @@
                            t-att-value="apiKey or ''"
                            placeholder="BSgzTvR5L1GB9jriT451iTN4huVPxHmltG6T6eo"/>
                 </div>
+                <small id="api_key_help" class="text-danger">
+                </small>
                 <div class="small form-text text-muted">
                     Hint: How to use Google Map on your website (Contact Us page and as a snippet)
                     <br/>
@@ -143,4 +145,12 @@
         <div class="mb-2" t-esc="contentText"/>
         <div class="o_ace_editor_container"/>
     </div>
+
+    <t t-name="website.new_content_loader">
+        <div class="o_new_content_loader_container position-fixed fixed-top fixed-left
+            h-100 w-100 d-flex flex-column align-items-center text-white font-weight-bold">
+            <p id="new_content_loader_text"/>
+            <div class="o_new_content_loader"/>
+        </div>
+    </t>
 </templates>

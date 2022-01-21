@@ -109,6 +109,13 @@ CustomizeMenu.include({
             if (!self.__eventOptionsLoaded && self._getEventObject().model === 'event.event') {
                 self.__eventOptionsLoaded = true;
                 self.eventOptions = new EventSpecificOptions(self);
+                // If this is the first customize menu, add the divider at top
+                if (!self.$('.dropdown-divider').length) {
+                    self.$('.dropdown-menu').append($('<div/>', {
+                        class: 'dropdown-divider',
+                        role: 'separator',
+                    }));
+                }
                 self.eventOptions.insertAfter(self.$el.find('.dropdown-divider:first()'));
             }
         });

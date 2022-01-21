@@ -4,6 +4,7 @@
 from odoo import api, fields, models, _
 
 from odoo.tools.safe_eval import safe_eval
+from odoo.tools.sql import column_exists, create_column
 
 
 class SaleOrder(models.Model):
@@ -134,6 +135,21 @@ class SaleOrderLine(models.Model):
             else:
                 super(SaleOrderLine, line)._compute_product_updatable()
 
+    def _auto_init(self):
+        """
+        Create column to stop ORM from computing it himself (too slow)
+        """
+        if not column_exists(self.env.cr, 'sale_order_line', 'is_service'):
+            create_column(self.env.cr, 'sale_order_line', 'is_service', 'bool')
+            self.env.cr.execute("""
+                UPDATE sale_order_line line
+                SET is_service = (pt.type = 'service')
+                FROM product_product pp
+                LEFT JOIN product_template pt ON pt.id = pp.product_tmpl_id
+                WHERE pp.id = line.product_id
+            """)
+        return super()._auto_init()
+
     @api.model_create_multi
     def create(self, vals_list):
         lines = super().create(vals_list)
@@ -155,7 +171,7 @@ class SaleOrderLine(models.Model):
         # of a locked sale order.
         if 'product_uom_qty' in values and not self.env.context.get('no_update_planned_hours', False):
             for line in self:
-                if line.task_id:
+                if line.task_id and line.product_id.type == 'service':
                     planned_hours = line._convert_qty_company_hours(line.task_id.company_id)
                     line.task_id.write({'planned_hours': planned_hours})
         return result

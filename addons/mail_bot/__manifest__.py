@@ -23,4 +23,5 @@
     'qweb': [
         'static/src/bugfix/bugfix.xml',
     ],
+    'license': 'LGPL-3',
 }

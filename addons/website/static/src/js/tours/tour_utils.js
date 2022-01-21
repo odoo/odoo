@@ -108,7 +108,7 @@ function changeOption(optionName, weName = '', optionTooltipLabel = '', position
     const option_block = `we-customizeblock-option[class='snippet-option-${optionName}']`
     return {
         trigger: `${option_block} ${weName}, ${option_block} [title='${weName}']`,
-        content: _t(`<b>Click</b> on this option to change the ${optionTooltipLabel} of the block.`),
+        content: _.str.sprintf(_t("<b>Click</b> on this option to change the %s of the block."), optionTooltipLabel),
         position: position,
         run: "click",
     };
@@ -118,7 +118,7 @@ function selectNested(trigger, optionName, alt_trigger = null, optionTooltipLabe
     const option_block = `we-customizeblock-option[class='snippet-option-${optionName}']`;
     return {
         trigger: trigger,
-        content: _t(`<b>Select</b> a ${optionTooltipLabel}.`),
+        content: _.str.sprintf(_t("<b>Select</b> a %s."), optionTooltipLabel),
         alt_trigger: alt_trigger == null ? undefined : `${option_block} ${alt_trigger}`,
         position: position,
         run: 'click',
@@ -135,7 +135,7 @@ function changePaddingSize(direction) {
     }
     return {
         trigger: `.oe_overlay.ui-draggable.o_we_overlay_sticky.oe_active .o_handle.${paddingDirection}`,
-        content: _t(`<b>Slide</b> this button to change the ${direction} padding`),
+        content: _.str.sprintf(_t("<b>Slide</b> this button to change the %s padding"), direction),
         position: position,
     };
 }
@@ -170,6 +170,7 @@ function clickOnSnippet(snippet, position = "bottom") {
 function clickOnSave(position = "bottom") {
     return {
         trigger: "button[data-action=save]",
+        in_modal: false,
         content: _t("Good job! It's time to <b>Save</b> your work."),
         position: position,
     };
@@ -201,9 +202,11 @@ function dragNDrop(snippet, position = "bottom") {
         trigger: `#oe_snippets .oe_snippet[name="${snippet.name}"] .oe_snippet_thumbnail:not(.o_we_already_dragging)`,
         extra_trigger: "body.editor_enable.editor_has_snippets",
         moveTrigger: '.oe_drop_zone',
-        content: _t(`Drag the <b>${snippet.name}</b> building block and drop it in your page.`),
+        content: _.str.sprintf(_t("Drag the <b>%s</b> building block and drop it at the bottom of the page."), snippet.name),
         position: position,
-        run: "drag_and_drop #wrap",
+        // Normally no main snippet can be dropped in the default footer but
+        // targeting it allows to force "dropping at the end of the page".
+        run: "drag_and_drop #wrapwrap > footer",
     };
 }
 

@@ -145,7 +145,7 @@ FormRenderer.include({
      *
      * @override
      */
-    async _renderView() {
+    async __renderView() {
         await this._super(...arguments);
         if (this._hasChatter()) {
             if (!this._chatterContainerComponent) {

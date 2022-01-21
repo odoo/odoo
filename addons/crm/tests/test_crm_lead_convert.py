@@ -5,6 +5,55 @@ from odoo import SUPERUSER_ID
 from odoo.addons.crm.tests import common as crm_common
 from odoo.fields import Datetime
 from odoo.tests.common import tagged, users
+from odoo.tests.common import Form
+
+@tagged('lead_manage')
+class TestLeadConvertForm(crm_common.TestLeadConvertCommon):
+
+    @users('user_sales_manager')
+    def test_form_action_default(self):
+        """ Test Lead._find_matching_partner() """
+        lead = self.env['crm.lead'].browse(self.lead_1.ids)
+        customer = self.env['res.partner'].create({
+            "name": "Amy Wong",
+            "email": '"Amy, PhD Student, Wong" Tiny <AMY.WONG@test.example.com>'
+        })
+
+        wizard = Form(self.env['crm.lead2opportunity.partner'].with_context({
+            'active_model': 'crm.lead',
+            'active_id': lead.id,
+            'active_ids': lead.ids,
+        }))
+
+        self.assertEqual(wizard.name, 'convert')
+        self.assertEqual(wizard.action, 'exist')
+        self.assertEqual(wizard.partner_id, customer)
+
+    @users('user_sales_manager')
+    def test_form_name_onchange(self):
+        """ Test Lead._find_matching_partner() """
+        lead = self.env['crm.lead'].browse(self.lead_1.ids)
+        lead_dup = lead.copy({'name': 'Duplicate'})
+        customer = self.env['res.partner'].create({
+            "name": "Amy Wong",
+            "email": '"Amy, PhD Student, Wong" Tiny <AMY.WONG@test.example.com>'
+        })
+
+        wizard = Form(self.env['crm.lead2opportunity.partner'].with_context({
+            'active_model': 'crm.lead',
+            'active_id': lead.id,
+            'active_ids': lead.ids,
+        }))
+
+        self.assertEqual(wizard.name, 'merge')
+        self.assertEqual(wizard.action, 'exist')
+        self.assertEqual(wizard.partner_id, customer)
+        self.assertEqual(wizard.duplicated_lead_ids[:], lead + lead_dup)
+
+        wizard.name = 'convert'
+        wizard.action = 'create'
+        self.assertEqual(wizard.action, 'create', 'Should keep user input')
+        self.assertEqual(wizard.name, 'convert', 'Should keep user input')
 
 
 @tagged('lead_manage')
@@ -31,6 +80,7 @@ class TestLeadConvert(crm_common.TestLeadConvertCommon):
     @users('user_sales_manager')
     def test_lead_convert_base(self):
         """ Test base method ``convert_opportunity`` or crm.lead model """
+        self.contact_2.phone = False  # force Falsy to compare with mobile
         self.assertFalse(self.contact_2.phone)
         lead = self.lead_1.with_user(self.env.user)
         lead.write({

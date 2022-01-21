@@ -128,9 +128,8 @@ def redirect_with_hash(*args, **kw):
     return http.redirect_with_hash(*args, **kw)
 
 def abort_and_redirect(url):
-    r = request.httprequest
     response = werkzeug.utils.redirect(url, 302)
-    response = r.app.get_response(r, response, explicit_session=False)
+    response = http.root.get_response(request.httprequest, response, explicit_session=False)
     werkzeug.exceptions.abort(response)
 
 def ensure_db(redirect='/web/database/selector'):
@@ -647,6 +646,10 @@ class HomeStaticTemplateHelpers(object):
     def get_qweb_templates(cls, addons, db=None, debug=False):
         return cls(addons, db, debug=debug)._get_qweb_templates()[0]
 
+# Shared parameters for all login/signup flows
+SIGN_UP_REQUEST_PARAMS = {'db', 'login', 'debug', 'token', 'message', 'error', 'scope', 'mode',
+                          'redirect', 'redirect_hostname', 'email', 'name', 'partner_id',
+                          'password', 'confirm_password', 'city', 'country_id', 'lang'}
 
 class GroupsTreeNode:
     """
@@ -854,13 +857,25 @@ class GroupExportXlsxWriter(ExportXlsxWriter):
 
         label = '%s%s (%s)' % ('    ' * group_depth, label, group.count)
         self.write(row, column, label, self.header_bold_style)
+        if any(f.get('type') == 'monetary' for f in self.fields[1:]):
+
+            decimal_places = [res['decimal_places'] for res in group._model.env['res.currency'].search_read([], ['decimal_places'])]
+            decimal_places = max(decimal_places) if decimal_places else 2
         for field in self.fields[1:]: # No aggregates allowed in the first column because of the group title
             column += 1
             aggregated_value = aggregates.get(field['name'])
-            # Non-stored float fields may not be displayed properly because of float representation
-            # => we force 2 digits
-            if not field.get('store') and isinstance(aggregated_value, float):
-                aggregated_value = float_repr(aggregated_value, 2)
+            # Float fields may not be displayed properly because of float
+            # representation issue with non stored fields or with values
+            # that, even stored, cannot be rounded properly and it is not
+            # acceptable to display useless digits (i.e. monetary)
+            #
+            # non stored field ->  we force 2 digits
+            # stored monetary -> we force max digits of installed currencies
+            if isinstance(aggregated_value, float):
+                if field.get('type') == 'monetary':
+                    aggregated_value = float_repr(aggregated_value, decimal_places)
+                elif not field.get('store'):
+                    aggregated_value = float_repr(aggregated_value, 2)
             self.write(row, column, str(aggregated_value if aggregated_value is not None else ''), self.header_bold_style)
         return row + 1, 0
 
@@ -922,7 +937,7 @@ class Home(http.Controller):
         if not request.uid:
             request.uid = odoo.SUPERUSER_ID
 
-        values = request.params.copy()
+        values = {k: v for k, v in request.params.items() if k in SIGN_UP_REQUEST_PARAMS}
         try:
             values['databases'] = http.db_list()
         except odoo.exceptions.AccessDenied:
@@ -1090,7 +1105,7 @@ class Proxy(http.Controller):
             from werkzeug.wrappers import BaseResponse
             base_url = request.httprequest.base_url
             query_string = request.httprequest.query_string
-            client = Client(request.httprequest.app, BaseResponse)
+            client = Client(http.root, BaseResponse)
             headers = {'X-Openerp-Session-Id': request.session.sid}
             return client.post('/' + path, base_url=base_url, query_string=query_string,
                                headers=headers, data=data)
@@ -1532,7 +1547,10 @@ class Binary(http.Controller):
             if not (width or height):
                 width, height = odoo.tools.image_guess_size_from_field_name(field)
 
-        image_base64 = image_process(image_base64, size=(int(width), int(height)), crop=crop, quality=int(quality))
+        try:
+            image_base64 = image_process(image_base64, size=(int(width), int(height)), crop=crop, quality=int(quality))
+        except Exception:
+            return request.not_found()
 
         content = base64.b64decode(image_base64)
         headers = http.set_safe_image_headers(headers, content)
@@ -1757,7 +1775,7 @@ class Export(http.Controller):
         fields = self.fields_get(model)
         if import_compat:
             if parent_field_type in ['many2one', 'many2many']:
-                rec_name = request.env[model]._rec_name
+                rec_name = request.env[model]._rec_name_fallback()
                 fields = {'id': fields['id'], rec_name: fields[rec_name]}
         else:
             fields['.id'] = {**fields['id']}
@@ -2031,7 +2049,7 @@ class ReportController(http.Controller):
             # Ignore 'lang' here, because the context in data is the one from the webclient *but* if
             # the user explicitely wants to change the lang, this mechanism overwrites it.
             data['context'] = json.loads(data['context'])
-            if data['context'].get('lang'):
+            if data['context'].get('lang') and not data.get('force_context_lang'):
                 del data['context']['lang']
             context.update(data['context'])
         if converter == 'html':
@@ -2052,9 +2070,10 @@ class ReportController(http.Controller):
     # Misc. route utils
     #------------------------------------------------------
     @http.route(['/report/barcode', '/report/barcode/<type>/<path:value>'], type='http', auth="public")
-    def report_barcode(self, type, value, width=600, height=100, humanreadable=0, quiet=1, mask=None):
+    def report_barcode(self, type, value, **kwargs):
         """Contoller able to render barcode images thanks to reportlab.
-        Samples:
+        Samples::
+
             <img t-att-src="'/report/barcode/QR/%s' % o.name"/>
             <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' %
                 ('QR', o.name, 200, 200)"/>
@@ -2062,6 +2081,8 @@ class ReportController(http.Controller):
         :param type: Accepted types: 'Codabar', 'Code11', 'Code128', 'EAN13', 'EAN8', 'Extended39',
         'Extended93', 'FIM', 'I2of5', 'MSI', 'POSTNET', 'QR', 'Standard39', 'Standard93',
         'UPCA', 'USPS_4State'
+        :param width: Pixel width of the barcode
+        :param height: Pixel height of the barcode
         :param humanreadable: Accepted values: 0 (default) or 1. 1 will insert the readable value
         at the bottom of the output image
         :param quiet: Accepted values: 0 (default) or 1. 1 will display white
@@ -2069,10 +2090,11 @@ class ReportController(http.Controller):
         :param mask: The mask code to be used when rendering this QR-code.
                      Masks allow adding elements on top of the generated image,
                      such as the Swiss cross in the center of QR-bill codes.
+        :param barLevel: QR code Error Correction Levels. Default is 'L'.
+        ref: https://hg.reportlab.com/hg-public/reportlab/file/830157489e00/src/reportlab/graphics/barcode/qr.py#l101
         """
         try:
-            barcode = request.env['ir.actions.report'].barcode(type, value, width=width,
-                height=height, humanreadable=humanreadable, quiet=quiet, mask=mask)
+            barcode = request.env['ir.actions.report'].barcode(type, value, **kwargs)
         except (ValueError, AttributeError):
             raise werkzeug.exceptions.HTTPException(description='Cannot convert into barcode.')
 

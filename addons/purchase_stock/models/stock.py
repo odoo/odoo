@@ -2,6 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.tools.float_utils import float_round, float_is_zero
+from odoo.exceptions import UserError
 
 
 class StockPicking(models.Model):
@@ -36,11 +38,14 @@ class StockMove(models.Model):
         """ Returns the unit price for the move"""
         self.ensure_one()
         if self.purchase_line_id and self.product_id.id == self.purchase_line_id.product_id.id:
+            price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
             line = self.purchase_line_id
             order = line.order_id
             price_unit = line.price_unit
             if line.taxes_id:
-                price_unit = line.taxes_id.with_context(round=False).compute_all(price_unit, currency=line.order_id.currency_id, quantity=1.0)['total_void']
+                qty = line.product_qty or 1
+                price_unit = line.taxes_id.with_context(round=False).compute_all(price_unit, currency=line.order_id.currency_id, quantity=qty)['total_void']
+                price_unit = float_round(price_unit / qty, precision_digits=price_unit_prec)
             if line.product_uom.id != line.product_id.uom_id.id:
                 price_unit *= line.product_uom.factor / line.product_id.uom_id.factor
             if order.currency_id != order.company_id.currency_id:
@@ -105,9 +110,30 @@ class StockMove(models.Model):
         rslt += self.mapped('picking_id.purchase_id.invoice_ids').filtered(lambda x: x.state == 'posted')
         return rslt
 
+
     def _get_source_document(self):
         res = super()._get_source_document()
         return self.purchase_line_id.order_id or res
+
+    def _get_valuation_price_and_qty(self, related_aml, to_curr):
+        valuation_price_unit_total = 0
+        valuation_total_qty = 0
+        for val_stock_move in self:
+            # In case val_stock_move is a return move, its valuation entries have been made with the
+            # currency rate corresponding to the original stock move
+            valuation_date = val_stock_move.origin_returned_move_id.date or val_stock_move.date
+            svl = val_stock_move.with_context(active_test=False).mapped('stock_valuation_layer_ids').filtered(
+                lambda l: l.quantity)
+            layers_qty = sum(svl.mapped('quantity'))
+            layers_values = sum(svl.mapped('value'))
+            valuation_price_unit_total += related_aml.company_currency_id._convert(
+                layers_values, to_curr, related_aml.company_id, valuation_date, round=False,
+            )
+            valuation_total_qty += layers_qty
+        if float_is_zero(valuation_total_qty, precision_rounding=related_aml.product_uom_id.rounding or related_aml.product_id.uom_id.rounding):
+            raise UserError(
+                _('Odoo is not able to generate the anglo saxon entries. The total valuation of %s is zero.') % related_aml.product_id.display_name)
+        return valuation_price_unit_total, valuation_total_qty
 
 
 class StockWarehouse(models.Model):

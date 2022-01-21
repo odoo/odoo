@@ -12,4 +12,5 @@ Hides the attendance presence button when an employee is on leave.
     'data': [
         'views/hr_employee_views.xml',
     ],
+    'license': 'LGPL-3',
 }

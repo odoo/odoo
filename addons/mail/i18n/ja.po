@@ -7,19 +7,21 @@
 # kent_ocean <ke.tanabe@gmail.com>, 2020
 # Konno Takatsugu <konno@token-express.com>, 2020
 # Manami Hashi <manami@roomsfor.hk>, 2020
-# NOKA Shigekazu <shigekazu.noka@gmail.com>, 2020
+# Shigekazu N. <shigekazu.noka@gmail.com>, 2020
 # Hau Dao <hau@quartile.co>, 2020
 # SHIMIZU Taku <shimizu.taku@gmail.com>, 2020
 # Tim Siu Lai <tl@roomsfor.hk>, 2020
 # NANIWA Masahiro <naniwa.masahiro@gmail.com>, 2020
 # Kawakami Taro <ratorin@gmail.com>, 2020
 # 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2020
-# Martin Trigaux, 2020
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2020
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2020
 # 江口 和志 <k_eguchi@enzantrades.co.jp>, 2020
 # Shunho Kin <s-kin@shonan-innovation.co.jp>, 2020
-# Noma Yuki, 2020
+# Martin Trigaux, 2021
+# Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2021
+# Kakurai Ai <ai@quartile.co>, 2021
+# Noma Yuki, 2021
+# Ryoko Tsuda <ryoko@quartile.co>, 2021
 # 
 msgid ""
 msgstr ""
@@ -27,7 +29,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 11:23+0000\n"
 "PO-Revision-Date: 2020-09-07 08:14+0000\n"
-"Last-Translator: Noma Yuki, 2020\n"
+"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2021\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -190,7 +192,7 @@ msgid ""
 "<b attrs=\"{'invisible': [('no_record', '=', False)]}\" class=\"text-"
 "warning\">No record for this model</b>"
 msgstr ""
-"<b attrs=\"{'invisible': '('no_record', '=', False)'}\" class=\"text-"
+"<b attrs=\"{'invisible': [('no_record', '=', False)]}\" class=\"text-"
 "warning\">このモデルの記録はありません</b>"
 
 #. module: mail
@@ -203,10 +205,10 @@ msgid ""
 "            Type <b>/command</b> to execute a command.<br>\n"
 "            Type <b>:shortcut</b> to insert a canned response in your message.<br>"
 msgstr ""
-"<br><br><b>@username</b>と入力して誰かに言及し、メンションします。<br> "
-"<b>#channel</b>と入力して、チャネルにメンションします。<br> "
-"<b>/command</b>と<b>入力</b>して、<b>コマンド</b>を実行します。<br> "
-"<b>:shortcut</b>と入力して、返信定型文をメッセージに挿入します。<br>"
+"<br><br>\n"
+"<b>@username</b>と入力して誰かに言及し、メンションします。<br> \n"
+"<b>#channel</b>と入力して、チャネルにメンションします。<br> \n"
+"<b>/command</b>と<b>入力</b>して、<b>コマンド</b>を実行します。<br> <b>:shortcut</b>と入力して、返信定型文をメッセージに挿入します。<br>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
@@ -216,9 +218,9 @@ msgid ""
 "href=\"#\" class=\"o_channel_redirect\" data-oe-"
 "id=\"%(channel_id)s\">#%(channel_name)s</a></div>"
 msgstr ""
-"<div class=\"o_mail_notification\">%(作成者)が%(new_partner)を<a href=\"#\" "
+"<div class=\"o_mail_notification\">%(author)sが%(new_partner)sを<a href=\"#\" "
 "class=\"o_channel_redirect\" data-oe-"
-"id=\"%(channel_id)s\">＃%(channel_name)に</a>招待しました</div>"
+"id=\"%(channel_id)s\">＃%(channel_name)s</a>に招待しました</div>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
@@ -332,8 +334,8 @@ msgid ""
 "                                    If you want to use only selected records please uncheck this selection box :\n"
 "                                </span>"
 msgstr ""
-"<span attrs=\"{'invisible': '('use_active_domain', '=', "
-"True)'}\">検索条件に一致するすべてのレコードに送信する場合は、このボックス</span><span attrs=\"{'invisible':"
+"<span attrs=\"{'invisible': [('use_active_domain', '=', "
+"True)]}\">検索条件に一致するすべてのレコードに送信する場合は、このボックス</span><span attrs=\"{'invisible':"
 " [('use_active_domain', '=', "
 "False)]}\">をオンにします。選択したレコードのみを使用する場合は、この選択ボックスのチェックを外してください。</span>"
 
@@ -644,7 +646,7 @@ msgstr "サイン追加"
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
 msgid "Add a new %(document)s or send an email to %(email_link)s"
-msgstr "新しい%(ドキュメント)を追加するか、%(email_link)にメールを送信します"
+msgstr "新しい%(document)sを追加するか、%(email_link)sにメールを送信します"
 
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_blacklist_action
@@ -1498,7 +1500,7 @@ msgstr "Uidを作成する"
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
 msgid "Create new %(document)s"
-msgstr "新しい%(ドキュメント)を作成する"
+msgstr "新しい%(document)sを作成しましょう"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0
@@ -2527,6 +2529,12 @@ msgid "Following"
 msgstr "フォロー中"
 
 #. module: mail
+#: code:addons/mail/models/mail_channel.py:778
+#, python-format
+msgid "Following invites are invalid as user groups do not match: %s"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__icon
 #: model:ir.model.fields,help:mail.field_mail_activity_mixin__activity_type_icon
 #: model:ir.model.fields,help:mail.field_mail_activity_type__icon
@@ -2547,7 +2555,7 @@ msgstr "フォーマット済Eメール"
 #: model:ir.model.fields,field_description:mail.field_mail_template__email_from
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__email_from
 msgid "From"
-msgstr "移動元"
+msgstr "From"
 
 #. module: mail
 #. openerp-web
@@ -4398,6 +4406,18 @@ msgid "Online"
 msgstr "オンライン"
 
 #. module: mail
+#: code:addons/mail/models/mail_message.py:0
+#, python-format
+msgid "Only administrators are allowed to export mail message"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_message.py:0
+#, python-format
+msgid "Only administrators are allowed to use grouped read on message model"
+msgstr ""
+
+#. module: mail
 #: code:addons/mail/models/mail_channel.py:0
 #, python-format
 msgid ""
@@ -6015,7 +6035,7 @@ msgstr "スレッド画像"
 #: model:ir.model.fields,field_description:mail.field_mail_mail__email_to
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__email_to
 msgid "To"
-msgstr "移動先"
+msgstr "宛先"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__email_to
@@ -6782,7 +6802,7 @@ msgstr "君は:"
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_light
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_paynow
 msgid "Your"
-msgstr "君の"
+msgstr "あなたの"
 
 #. module: mail
 #. openerp-web
@@ -6872,7 +6892,7 @@ msgstr "ボードミーティング"
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 #, python-format
 msgid "by"
-msgstr "により"
+msgstr "by"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
@@ -6895,6 +6915,7 @@ msgstr "日"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0
+#: code:addons/mail/static/src/components/message/message.xml:0
 #, python-format
 msgid "document"
 msgstr "ドキュメント"
@@ -7112,3 +7133,17 @@ msgstr "値"
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_unit__weeks
 msgid "weeks"
 msgstr "週"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/models/follower/follower.js:0
+#, python-format
+msgid "The subscription preferences were successfully applied."
+msgstr ""
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/message/message.xml:0
+#, python-format
+msgid "channel"
+msgstr ""

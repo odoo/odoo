@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.tests.common import SavepointCase
 
 
@@ -221,3 +221,99 @@ class TestRobustness(SavepointCase):
                 'location_dest_id': move2.location_dest_id.id,
             })]})
 
+    def test_unreserve_error(self):
+        self.env['stock.quant']._update_available_quantity(
+            self.product1, self.stock_location, 5)
+
+        move = self.env['stock.move'].create({
+            'name': 'test_lot_id_product_id_mix_move_1',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 5.0,
+        })
+        move._action_confirm()
+        move._action_assign()
+        quant = self.env['stock.quant']._gather(
+            self.product1, self.stock_location, strict=True)
+        self.env.cr.execute("UPDATE stock_quant set reserved_quantity=0 WHERE id=%s", (quant.id,))
+        quant.invalidate_cache()
+        server_action = self.env.ref(
+            'stock.stock_quant_stock_move_line_desynchronization', raise_if_not_found=False)
+        if server_action:
+            with self.assertRaises(RedirectWarning):
+                move._do_unreserve()
+        else:
+            with self.assertRaises(UserError):
+                move._do_unreserve()
+
+    def test_unreserve_fix(self):
+        self.env['stock.quant']._update_available_quantity(
+            self.product1, self.stock_location, 5)
+
+        move = self.env['stock.move'].create({
+            'name': 'test_lot_id_product_id_mix_move_1',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 5.0,
+        })
+
+        move._action_confirm()
+        move._action_assign()
+
+        quant = self.env['stock.quant']._gather(
+            self.product1, self.stock_location, strict=True)
+        self.env.cr.execute(
+            "UPDATE stock_quant set reserved_quantity=0 WHERE id=%s", (quant.id,))
+        quant.invalidate_cache()
+        server_action = self.env.ref(
+            'stock.stock_quant_stock_move_line_desynchronization', raise_if_not_found=False)
+        if not server_action:
+            return
+        server_action.run()
+        self.assertEqual(move.reserved_availability, 0)
+        self.assertEqual(move.state, 'confirmed')
+        self.assertEqual(quant.reserved_quantity, 0)
+
+
+    def test_lot_quantity_remains_unchanged_after_done(self):
+        """ Make sure the method _set_lot_ids does not change the quantities of lots to 1 once they are done.
+        """
+        productA = self.env['product.product'].create({
+            'name': 'ProductA',
+            'type': 'product',
+            'categ_id': self.env.ref('product.product_category_all').id,
+            'tracking': 'lot',
+        })
+        lotA = self.env['stock.production.lot'].create({
+            'name': 'lotA',
+            'product_id': productA.id,
+            'company_id': self.env.company.id,
+
+        })
+        self.env['stock.quant']._update_available_quantity(productA, self.stock_location, 5, lot_id=lotA)
+        moveA = self.env['stock.move'].create({
+            'name': 'TEST_A',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': productA.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 5.0,
+        })
+
+        moveA._action_confirm()
+        moveA.write({'move_line_ids': [(0, 0, {
+            'product_id': productA.id,
+            'product_uom_id': self.uom_unit.id,
+            'qty_done': 5,
+            'lot_id': lotA.id,
+            'location_id': moveA.location_id.id,
+            'location_dest_id': moveA.location_dest_id.id,
+        })]})
+        moveA._action_done()
+        moveA._set_lot_ids()
+
+        self.assertEqual(moveA.quantity_done, 5)

@@ -94,22 +94,24 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
         return this._super.apply(this, arguments).then(function () {
             self.graphData = self.$el.data("graphData");
 
-            switch (self.$el.data("graphType")) {
-                case 'multi_bar':
-                    self.chartConfig = self._getMultibarChartConfig();
-                    break;
-                case 'bar':
-                    self.chartConfig = self._getBarChartConfig();
-                    break;
-                case 'pie':
-                    self.chartConfig = self._getPieChartConfig();
-                    break;
-                case 'doughnut':
-                    self.chartConfig = self._getDoughnutChartConfig();
-                    break;
-            }
+            if (self.graphData && self.graphData.length !== 0) {
+                switch (self.$el.data("graphType")) {
+                    case 'multi_bar':
+                        self.chartConfig = self._getMultibarChartConfig();
+                        break;
+                    case 'bar':
+                        self.chartConfig = self._getBarChartConfig();
+                        break;
+                    case 'pie':
+                        self.chartConfig = self._getPieChartConfig();
+                        break;
+                    case 'doughnut':
+                        self.chartConfig = self._getDoughnutChartConfig();
+                        break;
+                }
 
-            self._loadChart();
+                self._loadChart();
+            }
         });
     },
 

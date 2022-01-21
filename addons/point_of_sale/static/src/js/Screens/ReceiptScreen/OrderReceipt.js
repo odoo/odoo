@@ -30,11 +30,11 @@ odoo.define('point_of_sale.OrderReceipt', function(require) {
         isSimple(line) {
             return (
                 line.discount === 0 &&
-                line.unit_name === 'Units' &&
+                line.is_in_unit &&
                 line.quantity === 1 &&
                 !(
                     line.display_discount_policy == 'without_discount' &&
-                    line.price != line.price_lst
+                    line.price < line.price_lst
                 )
             );
         }

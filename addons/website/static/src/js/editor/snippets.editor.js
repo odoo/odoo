@@ -70,17 +70,45 @@ weSnippetEditor.Class.include({
                 size: 'medium',
                 title: _t("Google Map API Key"),
                 buttons: [
-                    {text: _t("Save"), classes: 'btn-primary', close: true, click: async () => {
-                        const newAPIKey = dialog.$('#api_key_input').val() || false;
-                        await this._rpc({
-                            model: 'website',
-                            method: 'write',
-                            args: [
-                                [websiteId],
-                                {google_maps_api_key: newAPIKey},
-                            ],
-                        });
-                        invalidated = true;
+                    {text: _t("Save"), classes: 'btn-primary', click: async (ev) => {
+                        const $apiKeyInput = dialog.$('#api_key_input');
+                        const valueAPIKey = $apiKeyInput.val();
+                        const $apiKeyHelp = dialog.$('#api_key_help');
+                        if (!valueAPIKey) {
+                            $apiKeyInput.addClass('is-invalid');
+                            $apiKeyHelp.text(_t("Enter an API Key"));
+                            return;
+                        }
+                        const $button = $(ev.currentTarget);
+                        $button.prop('disabled', true);
+                        try {
+                            const response = await fetch(`https://maps.googleapis.com/maps/api/staticmap?center=belgium&size=10x10&key=${valueAPIKey}`);
+                            if (response.status === 200) {
+                                await this._rpc({
+                                    model: 'website',
+                                    method: 'write',
+                                    args: [
+                                        [websiteId],
+                                        {google_maps_api_key: valueAPIKey},
+                                    ],
+                                });
+                                invalidated = true;
+                                dialog.close();
+                            } else {
+                                const text = await response.text();
+                                $apiKeyInput.addClass('is-invalid');
+                                $apiKeyHelp.empty().text(
+                                    _t("Invalid API Key. The following error was returned by Google:")
+                                ).append($('<i/>', {
+                                    text: text,
+                                    class: 'ml-1',
+                                }));
+                            }
+                        } catch (e) {
+                            $apiKeyHelp.text(_t("Check your connection and try again"));
+                        } finally {
+                            $button.prop("disabled", false);
+                        }
                     }},
                     {text: _t("Cancel"), close: true}
                 ],
@@ -154,37 +182,64 @@ weSnippetEditor.Class.include({
      */
     async _onThemeTabClick(ev) {
         // Note: nothing async here but start the loading effect asap
-        this._execWithLoadingEffect(async () => new Promise(resolve => setTimeout(() => resolve(), 0)), false, 0);
+        let releaseLoader;
+        try {
+            const promise = new Promise(resolve => releaseLoader = resolve);
+            this._execWithLoadingEffect(() => promise, false, 0);
+            // loader is added to the DOM synchronously
+            await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+            // ensure loader is rendered: first call asks for the (already done) DOM update,
+            // second call happens only after rendering the first "updates"
 
-        if (!this.topFakeOptionEl) {
-            let el;
-            for (const [elementName, title] of this.optionsTabStructure) {
-                const newEl = document.createElement(elementName);
-                newEl.dataset.name = title;
-                if (el) {
-                    el.appendChild(newEl);
-                } else {
-                    this.topFakeOptionEl = newEl;
+            if (!this.topFakeOptionEl) {
+                let el;
+                for (const [elementName, title] of this.optionsTabStructure) {
+                    const newEl = document.createElement(elementName);
+                    newEl.dataset.name = title;
+                    if (el) {
+                        el.appendChild(newEl);
+                    } else {
+                        this.topFakeOptionEl = newEl;
+                    }
+                    el = newEl;
                 }
-                el = newEl;
+                this.bottomFakeOptionEl = el;
+                this.el.appendChild(this.topFakeOptionEl);
             }
-            this.bottomFakeOptionEl = el;
-            this.el.appendChild(this.topFakeOptionEl);
+
+            // Need all of this in that order so that:
+            // - the element is visible and can be enabled and the onFocus method is
+            //   called each time.
+            // - the element is hidden afterwards so it does not take space in the
+            //   DOM, same as the overlay which may make a scrollbar appear.
+            this.topFakeOptionEl.classList.remove('d-none');
+            const editorPromise = this._activateSnippet($(this.bottomFakeOptionEl));
+            releaseLoader(); // because _activateSnippet uses the same mutex as the loader
+            releaseLoader = undefined;
+            const editor = await editorPromise;
+            this.topFakeOptionEl.classList.add('d-none');
+            editor.toggleOverlay(false);
+
+            this._updateLeftPanelContent({
+                tab: this.tabs.THEME,
+            });
+        } catch (e) {
+            // Normally the loading effect is removed in case of error during the action but here
+            // the actual activity is happening outside of the action, the effect must therefore
+            // be cleared in case of error as well
+            if (releaseLoader) {
+                releaseLoader();
+            }
+            throw e;
         }
-
-        // Need all of this in that order so that:
-        // - the element is visible and can be enabled and the onFocus method is
-        //   called each time.
-        // - the element is hidden afterwards so it does not take space in the
-        //   DOM, same as the overlay which may make a scrollbar appear.
-        this.topFakeOptionEl.classList.remove('d-none');
-        const editor = await this._activateSnippet($(this.bottomFakeOptionEl));
-        this.topFakeOptionEl.classList.add('d-none');
-        editor.toggleOverlay(false);
-
-        this._updateLeftPanelContent({
-            tab: this.tabs.THEME,
-        });
     },
+});
+
+weSnippetEditor.Editor.include({
+    layoutElementsSelector: [
+        weSnippetEditor.Editor.prototype.layoutElementsSelector,
+        '.s_parallax_bg',
+        '.o_bg_video_container',
+    ].join(','),
 });
 });

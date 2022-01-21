@@ -472,8 +472,16 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
      */
     _onClickAdd: function (ev) {
         ev.preventDefault();
-        this.isBuyNow = $(ev.currentTarget).attr('id') === 'buy_now';
-        return this._handleAdd($(ev.currentTarget).closest('form'));
+        var def = () => {
+            this.isBuyNow = $(ev.currentTarget).attr('id') === 'buy_now';
+            return this._handleAdd($(ev.currentTarget).closest('form'));
+        };
+        if ($('.js_add_cart_variants').children().length) {
+            return this._getCombinationInfo(ev).then(() => {
+                return !$(ev.target).closest('.js_product').hasClass("css_not_available") ? def() : Promise.resolve();
+            });
+        }
+        return def();
     },
     /**
      * Initializes the optional products modal

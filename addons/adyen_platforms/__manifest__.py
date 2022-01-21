@@ -21,4 +21,5 @@
         "static/src/xml/adyen_transactions_templates.xml",
     ],
     'installable': True,
+    'license': 'LGPL-3',
 }

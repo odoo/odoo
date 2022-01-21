@@ -163,14 +163,23 @@ class configmanager(object):
                          dest='test_enable',
                          help="Enable unit tests.")
         group.add_option("--test-tags", dest="test_tags",
-                         help="""Comma-separated list of spec to filter which tests to execute. Enable unit tests if set.
-                         A filter spec has the format: [-][tag][/module][:class][.method]
-                         The '-' specifies if we want to include or exclude tests matching this spec.
-                         The tag will match tags added on a class with a @tagged decorator. By default tag value is 'standard' when not
-                         given on include mode. '*' will match all tags. Tag will also match module name (deprecated, use /module)
-                         The module, class, and method will respectively match the module name, test class name and test method name.
-                         examples: :TestClass.test_func,/test_module,external
-                         """)
+                         help="Comma-separated list of specs to filter which tests to execute. Enable unit tests if set. "
+                         "A filter spec has the format: [-][tag][/module][:class][.method] "
+                         "The '-' specifies if we want to include or exclude tests matching this spec. "
+                         "The tag will match tags added on a class with a @tagged decorator "
+                         "(all Test classes have 'standard' and 'at_install' tags "
+                         "until explicitly removed, see the decorator documentation). "
+                         "'*' will match all tags. "
+                         "If tag is omitted on include mode, its value is 'standard'. "
+                         "If tag is omitted on exclude mode, its value is '*'. "
+                         "The module, class, and method will respectively match the module name, test class name and test method name. "
+                         "Example: --test-tags :TestClass.test_func,/test_module,external "
+
+                         "Filtering and executing the tests happens twice: right "
+                         "after each module installation/update and at the end "
+                         "of the modules loading. At each stage tests are filtered "
+                         "by --test-tags specs and additionally by dynamic specs "
+                         "'at_install' and 'post_install' correspondingly.")
 
         group.add_option("--screencasts", dest="screencasts", action="store", my_default=None,
                          metavar='DIR',

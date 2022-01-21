@@ -291,21 +291,26 @@ class ProductTemplate(models.Model):
             product = self.env['product.product'].browse(combination_info['product_id']) or self
 
             tax_display = self.user_has_groups('account.group_show_line_subtotals_tax_excluded') and 'total_excluded' or 'total_included'
-            fpos = self.env['account.fiscal.position'].get_fiscal_position(partner.id).sudo()
+            fpos = self.env['account.fiscal.position'].sudo().get_fiscal_position(partner.id)
             taxes = fpos.map_tax(product.sudo().taxes_id.filtered(lambda x: x.company_id == company_id), product, partner)
 
             # The list_price is always the price of one.
             quantity_1 = 1
+            combination_info['price'] = self.env['account.tax']._fix_tax_included_price_company(combination_info['price'], product.sudo().taxes_id, taxes, company_id)
             price = taxes.compute_all(combination_info['price'], pricelist.currency_id, quantity_1, product, partner)[tax_display]
             if pricelist.discount_policy == 'without_discount':
+                combination_info['list_price'] = self.env['account.tax']._fix_tax_included_price_company(combination_info['list_price'], product.sudo().taxes_id, taxes, company_id)
                 list_price = taxes.compute_all(combination_info['list_price'], pricelist.currency_id, quantity_1, product, partner)[tax_display]
             else:
                 list_price = price
+            combination_info['price_extra'] = self.env['account.tax']._fix_tax_included_price_company(combination_info['price_extra'], product.sudo().taxes_id, taxes, company_id)
+            price_extra = taxes.compute_all(combination_info['price_extra'], pricelist.currency_id, quantity_1, product, partner)[tax_display]
             has_discounted_price = pricelist.currency_id.compare_amounts(list_price, price) == 1
 
             combination_info.update(
                 price=price,
                 list_price=list_price,
+                price_extra=price_extra,
                 has_discounted_price=has_discounted_price,
             )
 
@@ -332,11 +337,11 @@ class ProductTemplate(models.Model):
         :rtype: recordset of 'product.template' or recordset of 'product.product'
         """
         self.ensure_one()
-        if self.image_1920:
+        if self.image_128:
             return self
         variant = self.env['product.product'].browse(self._get_first_possible_variant_id())
         # if the variant has no image anyway, spare some queries by using template
-        return variant if variant.image_variant_1920 else self
+        return variant if variant.image_variant_128 else self
 
     def _get_current_company_fallback(self, **kwargs):
         """Override: if a website is set on the product or given, fallback to

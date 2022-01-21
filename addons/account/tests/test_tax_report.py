@@ -68,6 +68,13 @@ class TaxReportTest(AccountTestInvoicingCommon):
             'sequence': 7,
         })
 
+        cls.tax_report_line_1_6 = cls.env['account.tax.report.line'].create({
+            'name': "[100] Line 100",
+            'tag_name': '100',
+            'report_id': cls.tax_report_1.id,
+            'sequence': 8,
+        })
+
         cls.tax_report_2 = cls.env['account.tax.report'].create({
             'name': "Tax report 2",
             'country_id': cls.test_country_1.id,
@@ -91,6 +98,13 @@ class TaxReportTest(AccountTestInvoicingCommon):
             'tag_name': '42',
             'report_id': cls.tax_report_2.id,
             'sequence': 3,
+        })
+
+        cls.tax_report_line_2_6 = cls.env['account.tax.report.line'].create({
+            'name': "[100] Line 100",
+            'tag_name': '100',
+            'report_id': cls.tax_report_2.id,
+            'sequence': 4,
         })
 
     def _get_tax_tags(self, tag_name=None):
@@ -255,3 +269,17 @@ class TaxReportTest(AccountTestInvoicingCommon):
                 self.assertEqual(line.tag_ids.ids, original_report_2_tags[line.id], "The tax report lines not sharing their tags with any other report should keep the same tags when the country of their report is changed")
             elif line.tag_ids or original_report_2_tags[line.id]:
                 self.assertNotEqual(line.tag_ids.ids, original_report_2_tags[line.id], "The tax report lines sharing their tags with other report should receive new tags when the country of their report is changed")
+
+    def test_unlink_report_line_tags(self):
+        """ Under certain circumstances, unlinking a tax report line should also unlink
+        the tags that are linked to it. We test those cases here.
+        """
+        def check_tags_unlink(tag_name, report_lines, unlinked, error_message):
+            report_lines.unlink()
+            surviving_tags = self._get_tax_tags(tag_name)
+            required_len = 0 if unlinked else 2 # 2 for + and - tag
+            self.assertEqual(len(surviving_tags), required_len, error_message)
+
+        check_tags_unlink('42', self.tax_report_line_2_42, True, "Unlinking one line not sharing its tags should also unlink them")
+        check_tags_unlink('01', self.tax_report_line_1_1, False, "Unlinking one line sharing its tags with others should keep the tags")
+        check_tags_unlink('100', self.tax_report_line_1_6 + self.tax_report_line_2_6, True, "Unlinkink all the lines sharing the same tags should also unlink them")

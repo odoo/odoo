@@ -63,12 +63,17 @@ class MrpProduction(models.Model):
         AccountAnalyticLine = self.env['account.analytic.line'].sudo()
         for wc_line in self.workorder_ids.filtered('workcenter_id.costs_hour_account_id'):
             vals = self._prepare_wc_analytic_line(wc_line)
-            precision_rounding = wc_line.workcenter_id.costs_hour_account_id.currency_id.rounding
+            precision_rounding = (wc_line.workcenter_id.costs_hour_account_id.currency_id or self.company_id.currency_id).rounding
             if not float_is_zero(vals.get('amount', 0.0), precision_rounding=precision_rounding):
                 # we use SUPERUSER_ID as we do not guarantee an mrp user
                 # has access to account analytic lines but still should be
                 # able to produce orders
                 AccountAnalyticLine.create(vals)
+
+    def _get_backorder_mo_vals(self):
+        res = super()._get_backorder_mo_vals()
+        res['extra_cost'] = self.extra_cost
+        return res
 
     def button_mark_done(self):
         res = super(MrpProduction, self).button_mark_done()

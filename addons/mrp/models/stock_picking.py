@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import fields, models, api
 
 
 class StockPickingType(models.Model):
@@ -31,7 +31,7 @@ class StockPickingType(models.Model):
             return
         domains = {
             'count_mo_waiting': [('reservation_state', '=', 'waiting')],
-            'count_mo_todo': [('state', 'in', ('confirmed', 'draft', 'progress'))],
+            'count_mo_todo': [('state', 'in', ('confirmed', 'draft', 'progress', 'to_close'))],
             'count_mo_late': [('date_planned_start', '<', fields.Date.today()), ('state', '=', 'confirmed')],
         }
         for field in domains:
@@ -49,6 +49,12 @@ class StockPickingType(models.Model):
 
     def get_mrp_stock_picking_action_picking_type(self):
         return self._get_action('mrp.mrp_production_action_picking_deshboard')
+
+    @api.onchange('code')
+    def _onchange_code(self):
+        if self.code == 'mrp_operation':
+            self.use_create_lots = True
+            self.use_existing_lots = True
 
 class StockPicking(models.Model):
     _inherit = 'stock.picking'

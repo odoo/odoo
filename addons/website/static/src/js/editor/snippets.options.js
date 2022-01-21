@@ -140,7 +140,9 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
             }
         }
         const activeWidget = this._userValueWidgets.find(widget => !widget.isPreviewed() && widget.isActive());
-        this.menuTogglerEl.classList.add(`o_we_option_font_${activeWidget.el.dataset.font}`);
+        if (activeWidget) {
+            this.menuTogglerEl.classList.add(`o_we_option_font_${activeWidget.el.dataset.font}`);
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -159,7 +161,7 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
                 {
                     text: _t("Save & Reload"),
                     classes: 'btn-primary',
-                    click: () => {
+                    click: async () => {
                         const inputEl = dialog.el.querySelector('.o_input_google_font');
                         // if font page link (what is expected)
                         let m = inputEl.value.match(/\bspecimen\/([\w+]+)/);
@@ -171,6 +173,24 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
                                 return;
                             }
                         }
+
+                        let isValidFamily = false;
+
+                        try {
+                            const result = await fetch("https://fonts.googleapis.com/css?family=" + m[1]+':300,300i,400,400i,700,700i', {method: 'HEAD'});
+                            // Google fonts server returns a 400 status code if family is not valid.
+                            if (result.ok) {
+                                isValidFamily = true;
+                            }
+                        } catch (error) {
+                            console.error(error);
+                        }
+
+                        if (!isValidFamily) {
+                            inputEl.classList.add('is-invalid');
+                            return;
+                        }
+
                         const font = m[1].replace(/\+/g, ' ');
                         this.googleFonts.push(font);
                         this.trigger_up('google_fonts_custo_request', {
@@ -446,6 +466,11 @@ options.Class.include({
                 return weUtils.getCSSVariableValue(params.variable);
             }
             case 'customizeWebsiteColor': {
+                // TODO adapt in master
+                const bugfixedValue = weUtils.getCSSVariableValue(`bugfixed-${params.color}`);
+                if (bugfixedValue) {
+                    return bugfixedValue;
+                }
                 return weUtils.getCSSVariableValue(params.color);
             }
         }
@@ -979,6 +1004,14 @@ options.registry.OptionsTab = options.Class.extend({
         });
         return aceEditor;
     },
+    /**
+     * @override
+     */
+    async _renderCustomXML(uiFragment) {
+        uiFragment.querySelectorAll('we-colorpicker').forEach(el => {
+            el.dataset.lazyPalette = 'true';
+        });
+    },
 });
 
 options.registry.ThemeColors = options.registry.OptionsTab.extend({
@@ -1044,6 +1077,8 @@ options.registry.ThemeColors = options.registry.OptionsTab.extend({
             }
             uiFragment.appendChild(collapseEl);
         }
+
+        await this._super(...arguments);
     },
 });
 
@@ -1653,6 +1688,7 @@ options.registry.collapse = options.Class.extend({
         var self = this;
         this.$target.on('shown.bs.collapse hidden.bs.collapse', '[role="tabpanel"]', function () {
             self.trigger_up('cover_update');
+            self.$target.trigger('content_changed');
         });
         return this._super.apply(this, arguments);
     },
@@ -1666,8 +1702,6 @@ options.registry.collapse = options.Class.extend({
      * @override
      */
     onClone: function () {
-        this.$target.find('[data-toggle="collapse"]').removeAttr('data-target').removeData('target');
-        this.$target.find('.collapse').removeAttr('id');
         this._createIDs();
     },
     /**
@@ -1696,30 +1730,30 @@ options.registry.collapse = options.Class.extend({
      * @private
      */
     _createIDs: function () {
-        var time = new Date().getTime();
-        var $tab = this.$target.find('[data-toggle="collapse"]');
+        let time = new Date().getTime();
+        const $tablist = this.$target.closest('[role="tablist"]');
+        const $tab = this.$target.find('[role="tab"]');
+        const $panel = this.$target.find('[role="tabpanel"]');
 
-        // link to the parent group
-        var $tablist = this.$target.closest('.accordion');
-        var tablist_id = $tablist.attr('id');
-        if (!tablist_id) {
-            tablist_id = 'myCollapse' + time;
-            $tablist.attr('id', tablist_id);
-        }
-        $tab.attr('data-parent', '#' + tablist_id);
-        $tab.data('parent', '#' + tablist_id);
-
-        // link to the collapse
-        var $panel = this.$target.find('.collapse');
-        var panel_id = $panel.attr('id');
-        if (!panel_id) {
-            while ($('#' + (panel_id = 'myCollapseTab' + time)).length) {
-                time++;
+        const setUniqueId = ($elem, label) => {
+            let elemId = $elem.attr('id');
+            if (!elemId || $('[id="' + elemId + '"]').length > 1) {
+                do {
+                    time++;
+                    elemId = label + time;
+                } while ($('#' + elemId).length);
+                $elem.attr('id', elemId);
             }
-            $panel.attr('id', panel_id);
-        }
-        $tab.attr('data-target', '#' + panel_id);
-        $tab.data('target', '#' + panel_id);
+            return elemId;
+        };
+
+        const tablistId = setUniqueId($tablist, 'myCollapse');
+        $panel.attr('data-parent', '#' + tablistId);
+        $panel.data('parent', '#' + tablistId);
+
+        const panelId = setUniqueId($panel, 'myCollapseTab');
+        $tab.attr('data-target', '#' + panelId);
+        $tab.data('target', '#' + panelId);
     },
 });
 
@@ -1949,6 +1983,42 @@ options.registry.topMenuColor = options.Class.extend({
 });
 
 /**
+ * Manage the visibility of snippets on mobile.
+ */
+options.registry.MobileVisibility = options.Class.extend({
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * Allows to show or hide the associated snippet in mobile display mode.
+     *
+     * @see this.selectClass for parameters
+     */
+    showOnMobile(previewMode, widgetValue, params) {
+        const classes = `d-none d-md-${this.$target.css('display')}`;
+        this.$target.toggleClass(classes, !widgetValue);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    async _computeWidgetState(methodName, params) {
+        if (methodName === 'showOnMobile') {
+            const classList = [...this.$target[0].classList];
+            return classList.includes('d-none') &&
+                classList.some(className => className.startsWith('d-md-')) ? '' : 'true';
+        }
+        return await this._super(...arguments);
+    },
+});
+
+/**
  * Hide/show footer in the current page.
  */
 options.registry.HideFooter = VisibilityPageOptionUpdate.extend({
@@ -2102,16 +2172,55 @@ options.registry.Box = options.Class.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * TODO this should be reviewed in master to avoid the need of using the
+     * 'reset' previewMode and having to remember the previous box-shadow value.
+     * We are forced to remember the previous box shadow before applying a new
+     * one as the whole box-shadow value is handled by multiple widgets.
+     *
      * @see this.selectClass for parameters
      */
-    setShadow(previewMode, widgetValue, params) {
-        this.$target.toggleClass(params.shadowClass, !!widgetValue);
-        const defaultShadow = this._getDefaultShadow(widgetValue, params.shadowClass);
-        this.$target[0].style.setProperty('box-shadow', defaultShadow, 'important');
-        if (widgetValue === 'outset') {
-            // In this case, the shadowClass is enough
-            this.$target[0].style.setProperty('box-shadow', '');
+    async setShadow(previewMode, widgetValue, params) {
+        // Check if the currently configured shadow is not using the same shadow
+        // mode, in which case nothing has to be done.
+        const styles = window.getComputedStyle(this.$target[0]);
+        const currentBoxShadow = styles['box-shadow'] || 'none';
+        const currentMode = currentBoxShadow === 'none'
+            ? ''
+            : currentBoxShadow.includes('inset') ? 'inset' : 'outset';
+        if (currentMode === widgetValue) {
+            return;
         }
+
+        if (previewMode === true) {
+            this._prevBoxShadow = currentBoxShadow;
+        }
+
+        // Add/remove the shadow class
+        this.$target.toggleClass(params.shadowClass, !!widgetValue);
+
+        // Change the mode of the old box shadow. If no shadow was currently
+        // set then get the shadow value that is supposed to be set according
+        // to the shadow mode. Try to apply it via the selectStyle method so
+        // that it is either ignored because the shadow class had its effect or
+        // forced (to the shadow value or none) if toggling the class is not
+        // enough (e.g. if the item has a default shadow coming from CSS rules,
+        // removing the shadow class won't be enough to remove the shadow but in
+        // most other cases it will).
+        let shadow = 'none';
+        if (previewMode === 'reset') {
+            shadow = this._prevBoxShadow;
+        } else {
+            if (currentBoxShadow === 'none') {
+                shadow = this._getDefaultShadow(widgetValue, params.shadowClass) || 'none';
+            } else {
+                if (widgetValue === 'outset') {
+                    shadow = currentBoxShadow.replace('inset', '').trim();
+                } else if (widgetValue === 'inset') {
+                    shadow = currentBoxShadow + ' inset';
+                }
+            }
+        }
+        await this.selectStyle(previewMode, shadow, Object.assign({cssProperty: 'box-shadow'}, params));
     },
 
     //--------------------------------------------------------------------------
@@ -2161,7 +2270,7 @@ options.registry.Box = options.Class.extend({
             }
         }
         el.remove();
-        return '';
+        return ''; // TODO in master this should be changed to 'none'
     }
 });
 
@@ -2321,8 +2430,15 @@ options.registry.CoverProperties = options.Class.extend({
     updateUI: async function () {
         await this._super(...arguments);
 
+        // TODO: `o_record_has_cover` should be handled using model field, not
+        // resize_class to avoid all of this.
+        let coverClass = this.$el.find('[data-cover-opt-name="size"] we-button.active').data('selectClass') || '';
+        const bg = this.$image.css('background-image');
+        if (bg && bg !== 'none') {
+            coverClass += " o_record_has_cover";
+        }
         // Update saving dataset
-        this.$target[0].dataset.coverClass = this.$el.find('[data-cover-opt-name="size"] we-button.active').data('selectClass') || '';
+        this.$target[0].dataset.coverClass = coverClass;
         this.$target[0].dataset.textAlignClass = this.$el.find('[data-cover-opt-name="text_align"] we-button.active').data('selectClass') || '';
         this.$target[0].dataset.filterValue = this.$filterValueOpts.filter('.active').data('filterValue') || 0.0;
         let colorPickerWidget = null;
@@ -2451,6 +2567,7 @@ options.registry.SnippetMove = options.Class.extend({
             dom.scrollTo(this.$target[0], {
                 extraOffset: 50,
                 easing: 'linear',
+                duration: 550,
             });
         }
     },
@@ -2496,6 +2613,7 @@ options.registry.ScrollButton = options.Class.extend({
                     'justify-content-center',
                     'mx-auto',
                     'bg-primary',
+                    'o_not_editable',
                 );
                 anchor.href = '#';
                 anchor.contentEditable = "false";

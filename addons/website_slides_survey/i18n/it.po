@@ -7,15 +7,16 @@
 # Paolo Valier, 2020
 # Petra <bop@odoo.com>, 2020
 # Léonie Bouchat <lbo@odoo.com>, 2020
-# Sergio Zanchetta <primes2h@gmail.com>, 2020
+# Sergio Zanchetta <primes2h@gmail.com>, 2021
+# Friederike Fasterling-Nesselbosch, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:46+0000\n"
+"POT-Creation-Date: 2020-11-27 15:29+0000\n"
 "PO-Revision-Date: 2020-09-07 08:22+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2020\n"
+"Last-Translator: Friederike Fasterling-Nesselbosch, 2021\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -43,15 +44,15 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Caro/a ${object.partner_id.name or 'participant'}<br/><br/>\n"
-"        Sfortunatamente non sei riuscito a passare la certificazione e non sei più membro del corso: ${object.slide_partner_id.channel_id.name}.<br/><br/>\n"
-"        Non esitare ad iscriverti ancora!\n"
+"        Gentile ${object.partner_id.name or 'partecipante'}<br/><br/>\n"
+"        purtroppo non hai superato la certificazione e non sei più iscritto al corso: ${object.slide_partner_id.channel_id.name}.<br/><br/>\n"
+"        Non esitare a iscriverti di nuovo!\n"
 "        <div style=\"margin: 16px 0px 16px 0px;\">\n"
 "            <a href=\"${(object.slide_partner_id.channel_id.website_url) | safe}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
 "                Iscriviti ora\n"
 "            </a>\n"
 "        </div>\n"
-"        Grazie per la tua partecipazione.\n"
+"        Grazie per la partecipazione.\n"
 "    </p>\n"
 "</div>\n"
 "            "
@@ -90,14 +91,10 @@ msgid "<i class=\"text-muted\"> awarded users</i>"
 msgstr "<i class=\"text-muted\"> utenti premiati</i>"
 
 #. module: website_slides_survey
-#: model:survey.survey,description:website_slides_survey.furniture_certification
-msgid "<p>Test your furniture knowledge!.</p>"
-msgstr ""
-
-#. module: website_slides_survey
 #: model:survey.question,description:website_slides_survey.furniture_certification_page_1
+#: model:survey.survey,description:website_slides_survey.furniture_certification
 msgid "<p>Test your furniture knowledge!</p>"
-msgstr ""
+msgstr "<p>Metti alla prova la tua conoscenza degli arredi!</p>"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.courses_home_inherit_survey
@@ -142,13 +139,16 @@ msgstr ""
 #. module: website_slides_survey
 #: model:ir.model.constraint,message:website_slides_survey.constraint_slide_slide_check_survey_id
 msgid "A slide of type 'certification' requires a certification."
-msgstr "Una slide di tipo \"certificazione\" richiede una certificazione."
+msgstr ""
+"Per un diapositiva di tipo \"certificazione\" è richiesta una "
+"certificazione."
 
 #. module: website_slides_survey
 #: model:ir.model.constraint,message:website_slides_survey.constraint_slide_slide_check_certification_preview
 msgid "A slide of type certification cannot be previewed."
 msgstr ""
-"Una slide di tipo certificazione non può essere visualizzato in anteprima."
+"Impossibile effettuare un'anteprima di una diapositiva di tipo "
+"certificazione."
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_channel_view_form
@@ -201,22 +201,22 @@ msgstr "Certificazione"
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.badge_content
 msgid "Certification Badges"
-msgstr ""
+msgstr "Riconoscimenti per la certificazione"
 
 #. module: website_slides_survey
 #: model:ir.model.fields,field_description:website_slides_survey.field_survey_survey__slide_channel_ids
 msgid "Certification Courses"
-msgstr ""
+msgstr "Corsi per la certificazione"
 
 #. module: website_slides_survey
 #: model:ir.model.fields,field_description:website_slides_survey.field_survey_survey__slide_ids
 msgid "Certification Slides"
-msgstr ""
+msgstr "Diapositive per la certificazione"
 
 #. module: website_slides_survey
 #: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide_partner__survey_scoring_success
 msgid "Certification Succeeded"
-msgstr ""
+msgstr "Certificazione ottenuta"
 
 #. module: website_slides_survey
 #: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide_partner__user_input_ids
@@ -228,7 +228,7 @@ msgstr "Tentativi di certificazione"
 #: code:addons/website_slides_survey/static/src/js/slides_certification_upload_toast.js:0
 #, python-format
 msgid "Certification created"
-msgstr ""
+msgstr "Certificazione creata"
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.o_wss_certification_icon
@@ -239,7 +239,7 @@ msgstr "Icona di certificazione"
 #: code:addons/website_slides_survey/controllers/slides.py:0
 #, python-format
 msgid "Certification slides are completed when the survey is succeeded."
-msgstr "Le slide di certificazione vengono completate al termine dell'esame."
+msgstr "Le diapositive risultano completate quando il sondaggio ha successo."
 
 #. module: website_slides_survey
 #: model:ir.actions.act_window,name:website_slides_survey.slide_slide_action_certification
@@ -271,7 +271,7 @@ msgstr "Corsi"
 #. module: website_slides_survey
 #: model:ir.model.fields,field_description:website_slides_survey.field_survey_survey__slide_channel_count
 msgid "Courses Count"
-msgstr ""
+msgstr "Numero corsi"
 
 #. module: website_slides_survey
 #: model:slide.slide,name:website_slides_survey.slide_slide_demo_6_0
@@ -314,6 +314,8 @@ msgid ""
 "Follow this link to add questions to your certification. <a href=\"%s\">Edit"
 " certification</a>"
 msgstr ""
+"Segui questo link per aggiungere domande alla tua certificazione. <a "
+"href=\"%s\">Modificare certificazione</a>"
 
 #. module: website_slides_survey
 #: model:survey.question,title:website_slides_survey.furniture_certification_page_1
@@ -336,7 +338,7 @@ msgstr "Ritorna al corso"
 #: code:addons/website_slides_survey/static/src/xml/website_slide_upload.xml:0
 #, python-format
 msgid "How to upload a certification on your course?"
-msgstr ""
+msgstr "Come caricare una certificazione per il corso"
 
 #. module: website_slides_survey
 #: model:ir.model.fields,field_description:website_slides_survey.field_slide_channel__id
@@ -398,7 +400,7 @@ msgstr "Quercia"
 #: code:addons/website_slides_survey/static/src/xml/website_slides_fullscreen.xml:0
 #, python-format
 msgid "Pass Certification"
-msgstr "Prendi Certificazione"
+msgstr "Supera certificazione"
 
 #. module: website_slides_survey
 #: model:ir.model.fields,field_description:website_slides_survey.field_survey_user_input__slide_id
@@ -418,7 +420,7 @@ msgstr "Seleziona tutti gli arredi mostrati nel video"
 #. module: website_slides_survey
 #: model:survey.question.answer,value:website_slides_survey.furniture_certification_page_1_question_2_choice_4
 msgid "Shelf"
-msgstr ""
+msgstr "Scaffale"
 
 #. module: website_slides_survey
 #: model:ir.model,name:website_slides_survey.model_slide_slide_partner
@@ -450,7 +452,7 @@ msgstr "Sondaggio"
 #. module: website_slides_survey
 #: model:ir.model,name:website_slides_survey.model_survey_user_input
 msgid "Survey User Input"
-msgstr "Input degli utenti del sondaggio"
+msgstr "Inserimento utente nel sondaggio"
 
 #. module: website_slides_survey
 #: model:survey.question.answer,value:website_slides_survey.furniture_certification_page_1_question_2_choice_2
@@ -478,6 +480,7 @@ msgstr "La risposta inserita non è valida."
 msgid ""
 "The courses this survey is linked to through the e-learning application"
 msgstr ""
+"Corsi ai quali è collegato il sondaggio tramite l'applicazione e-learning"
 
 #. module: website_slides_survey
 #: model:ir.model.fields,help:website_slides_survey.field_slide_slide__slide_type
@@ -499,6 +502,8 @@ msgstr ""
 #: model:ir.model.fields,help:website_slides_survey.field_survey_survey__slide_ids
 msgid "The slides this survey is linked to through the e-learning application"
 msgstr ""
+"Diapositive alle quali è collegato il sondaggio tramite l'applicazione "
+"e-learning"
 
 #. module: website_slides_survey
 #: model:survey.question,constr_error_msg:website_slides_survey.furniture_certification_page_1
@@ -511,12 +516,12 @@ msgstr "Domanda con risposta obbligatoria."
 #. module: website_slides_survey
 #: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide__slide_type
 msgid "Type"
-msgstr "Tipo"
+msgstr "Tipologia"
 
 #. module: website_slides_survey
 #: model:survey.question,title:website_slides_survey.furniture_certification_page_1_question_3
 msgid "What do you think about the content of the course? (not rated)"
-msgstr "Cosa ne pensi del contenuto del corso? (non valutata)"
+msgstr "Cosa ne pensi del contenuto del corso? (non viene valutata)"
 
 #. module: website_slides_survey
 #: model:survey.question,title:website_slides_survey.furniture_certification_page_1_question_1
@@ -527,13 +532,13 @@ msgstr "Qual'è il legno migliore per gli arredi?"
 #: code:addons/website_slides_survey/controllers/slides.py:0
 #, python-format
 msgid "You are not allowed to create a survey."
-msgstr ""
+msgstr "Nessuna autorizzazione per creare un sondaggio."
 
 #. module: website_slides_survey
 #: code:addons/website_slides_survey/controllers/slides.py:0
 #, python-format
 msgid "You are not allowed to link a certification."
-msgstr ""
+msgstr "Nessuna autorizzazione per collegare una certificazione."
 
 #. module: website_slides_survey
 #. openerp-web
@@ -543,6 +548,9 @@ msgid ""
 "You can create your certification from here or use an existing one. Once "
 "your certification is created, you can still edit it in backend."
 msgstr ""
+"Da qui è possibile caricare una certificazione oppure usarne una esistente. "
+"Dopo la creazione, può essere ancora modificata dall'interfaccia di "
+"amministrazione."
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.badge_content

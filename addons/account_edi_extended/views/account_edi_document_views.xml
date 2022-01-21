@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_tree_account_edi_document_inherit" model="ir.ui.view">
+            <field name="name">Account.edi.document.tree.inherit</field>
+            <field name="model">account.edi.document</field>
+            <field name="inherit_id" ref="account_edi.view_tree_account_edi_document"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="inside">
+                    <field name="blocking_level" invisible="1" />
+                </xpath>
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="decoration-info">blocking_level == 'info'</attribute>
+                    <attribute name="decoration-warning">blocking_level == 'warning'</attribute>
+                    <attribute name="decoration-danger">blocking_level == 'error'</attribute>
+                </xpath>
+                
+            </field>
+        </record>
+    </data>
+</odoo>

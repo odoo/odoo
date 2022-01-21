@@ -24,4 +24,5 @@ on leaves. Project and task can be configured company-wide.
     'installable': True,
     'auto_install': True,
     'post_init_hook': 'post_init',
+    'license': 'LGPL-3',
 }

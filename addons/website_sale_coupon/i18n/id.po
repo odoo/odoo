@@ -6,14 +6,15 @@
 # William Surya Permana <zarambie_game@yahoo.com>, 2020
 # Martin Trigaux, 2020
 # Andhitia Rama <andhitia.r@gmail.com>, 2020
+# Muftiara Syuhada <muftiara.syuhada@falinwa.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"POT-Creation-Date: 2020-11-27 14:13+0000\n"
 "PO-Revision-Date: 2020-09-07 08:22+0000\n"
-"Last-Translator: Andhitia Rama <andhitia.r@gmail.com>, 2020\n"
+"Last-Translator: Muftiara Syuhada <muftiara.syuhada@falinwa.com>, 2021\n"
 "Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,9 +23,14 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_sale_coupon
+#: model:ir.model,name:website_sale_coupon.model_coupon_coupon
+msgid "Coupon"
+msgstr "Kupon"
+
+#. module: website_sale_coupon
 #: model:ir.model,name:website_sale_coupon.model_coupon_program
 msgid "Coupon Program"
-msgstr ""
+msgstr "Program Kupon"
 
 #. module: website_sale_coupon
 #: model:ir.ui.menu,name:website_sale_coupon.menu_coupon_type_config
@@ -43,12 +49,14 @@ msgid "Discounted amount"
 msgstr ""
 
 #. module: website_sale_coupon
+#: model:ir.model.fields,field_description:website_sale_coupon.field_coupon_coupon__display_name
 #: model:ir.model.fields,field_description:website_sale_coupon.field_coupon_program__display_name
 #: model:ir.model.fields,field_description:website_sale_coupon.field_sale_order__display_name
 msgid "Display Name"
 msgstr "Nama Tampilan"
 
 #. module: website_sale_coupon
+#: model:ir.model.fields,field_description:website_sale_coupon.field_coupon_coupon__id
 #: model:ir.model.fields,field_description:website_sale_coupon.field_coupon_program__id
 #: model:ir.model.fields,field_description:website_sale_coupon.field_sale_order__id
 msgid "ID"
@@ -60,6 +68,7 @@ msgid "Invalid or expired promo code."
 msgstr ""
 
 #. module: website_sale_coupon
+#: model:ir.model.fields,field_description:website_sale_coupon.field_coupon_coupon____last_update
 #: model:ir.model.fields,field_description:website_sale_coupon.field_coupon_program____last_update
 #: model:ir.model.fields,field_description:website_sale_coupon.field_sale_order____last_update
 msgid "Last Modified on"

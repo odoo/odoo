@@ -58,21 +58,21 @@
             <div class="row">
                 <div class="mx-3 text-center">
                     <div class="h3">
-                        <t t-esc="docs['quantity_on_hand']"/>
+                        <t t-esc="docs['quantity_on_hand']" t-options='{"widget": "float", "decimal_precision": "Product Unit of Measure"}'/>
                         <t t-esc="docs['uom']" groups="uom.group_uom"/>
                     </div>
                     <div>On Hand</div>
                 </div>
                 <div t-attf-class="mx-3 text-center #{docs['virtual_available'] &lt; 0 and 'text-danger'}">
                     <div class="h3">
-                        <t t-esc="docs['virtual_available']"/>
+                        <t t-esc="docs['virtual_available']" t-options='{"widget": "float", "decimal_precision": "Product Unit of Measure"}'/>
                         <t t-esc="docs['uom']" groups="uom.group_uom"/>
                     </div>
                     <div>Forecasted</div>
                 </div>
                 <div name="pending_forecasted" t-attf-class="mx-3 text-center #{future_virtual_available &lt; 0 and 'text-danger'}">
                     <div class="h3">
-                        <t t-esc="future_virtual_available"/>
+                        <t t-esc="future_virtual_available" t-options='{"widget": "float", "decimal_precision": "Product Unit of Measure"}'/>
                         <t t-esc="docs['uom']" groups="uom.group_uom"/>
                     </div>
                     <div>Forecasted<br/>+ Pending</div>
@@ -129,7 +129,7 @@
                             <td t-esc="line['receipt_date'] or ''"
                                 t-attf-class="#{line['is_late'] and 'o_grid_warning'}"/>
                             <td t-if="docs['multiple_product']" t-esc="line['product']['display_name']"/>
-                            <td class="text-right"><t t-if="not line['replenishment_filled']">- </t><t t-esc="line['quantity']"/></td>
+                            <td class="text-right"><t t-if="not line['replenishment_filled']">- </t><t t-esc="line['quantity']" t-options='{"widget": "float", "decimal_precision": "Product Unit of Measure"}'/></td>
                             <td t-esc="line['uom_id'].name" groups="uom.group_uom"/>
                             <td t-attf-class="#{not line['replenishment_filled'] and 'o_grid_warning'}">
                                 <a t-if="line['document_out']"
@@ -145,26 +145,26 @@
                     <thead>
                         <tr class="o_forecasted_row">
                             <td colspan="2">Forecasted Inventory</td>
-                            <td t-esc="docs['virtual_available']" class="text-right"/>
+                            <td t-esc="docs['virtual_available']" class="text-right" t-options='{"widget": "float", "decimal_precision": "Product Unit of Measure"}'/>
                             <td t-esc="docs['uom']" groups="uom.group_uom"/>
                         </tr>
                     </thead>
-                    <tbody t-if="docs['qty']['in']">
+                    <tbody t-if="docs['qty']['in'] or docs['qty']['out']">
                         <tr t-if="docs['draft_picking_qty']['in']" name="draft_picking_in">
                             <td colspan="2">Incoming Draft Transfer</td>
-                            <td t-esc="docs['draft_picking_qty']['in']" class="text-right"/>
+                            <td t-esc="docs['draft_picking_qty']['in']" class="text-right" t-options='{"widget": "float", "decimal_precision": "Product Unit of Measure"}'/>
                             <td t-esc="docs['uom']" groups="uom.group_uom"/>
                         </tr>
                         <tr t-if="docs['draft_picking_qty']['out']" name="draft_picking_out">
                             <td colspan="2">Outgoing Draft Transfer</td>
-                            <td t-esc="-docs['draft_picking_qty']['out']" class="text-right"/>
+                            <td t-esc="-docs['draft_picking_qty']['out']" class="text-right" t-options='{"widget": "float", "decimal_precision": "Product Unit of Measure"}'/>
                             <td t-esc="docs['uom']" groups="uom.group_uom"/>
                         </tr>
                     </tbody>
                     <thead>
                         <tr class="o_forecasted_row">
                             <td colspan="2">Forecasted with Pending</td>
-                            <td t-esc="future_virtual_available" class="text-right"/>
+                            <td t-esc="future_virtual_available" class="text-right" t-options='{"widget": "float", "decimal_precision": "Product Unit of Measure"}'/>
                             <td t-esc="docs['uom']" groups="uom.group_uom"/>
                         </tr>
                     </thead>

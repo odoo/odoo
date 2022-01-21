@@ -3,7 +3,7 @@
 
 
 from odoo.tests.common import SavepointCase
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, UserError
 
 
 class TestMailSecurity(SavepointCase):
@@ -187,7 +187,7 @@ class TestMailSecurity(SavepointCase):
         self.assertEqual(channel_partners.mapped('partner_id'), self.user_1.partner_id)
 
         # user 1 can not invite user 3 because he's not in the group
-        with self.assertRaises(AccessError):
+        with self.assertRaises(UserError):
             self.group_channel_1.with_user(self.user_1).channel_invite([self.user_3.partner_id.id])
         channel_partners = self.env['mail.channel.partner'].search([('channel_id', '=', self.group_channel_1.id)])
         self.assertEqual(channel_partners.mapped('partner_id'), self.user_1.partner_id)

@@ -89,7 +89,6 @@ class PosPaymentMethod(models.Model):
 
         latest_response = self.sudo().adyen_latest_response
         latest_response = json.loads(latest_response) if latest_response else False
-        self.sudo().adyen_latest_response = ''  # avoid handling old responses multiple times
 
         return {
             'latest_response': latest_response,
@@ -98,6 +97,9 @@ class PosPaymentMethod(models.Model):
 
     def proxy_adyen_request(self, data, operation=False):
         ''' Necessary because Adyen's endpoints don't have CORS enabled '''
+        if data['SaleToPOIRequest']['MessageHeader']['MessageCategory'] == 'Payment': # Clear only if it is a payment request
+            self.sudo().adyen_latest_response = ''  # avoid handling old responses multiple times
+
         if not operation:
             operation = 'terminal_request'
 

@@ -8,7 +8,7 @@ QUnit.module('mail', {}, function () {
 QUnit.module('Mail utils');
 
 QUnit.test('add_link utility function', function (assert) {
-    assert.expect(15);
+    assert.expect(19);
 
     var testInputs = {
         'http://admin:password@example.com:8/%2020': true,
@@ -20,6 +20,8 @@ QUnit.test('add_link utility function', function (assert) {
         'fhttps://test.example.com/test': false,
         "https://www.transifex.com/odoo/odoo-11/translate/#fr/lunch?q=text%3A'La+Tartiflette'": true,
         'https://www.transifex.com/odoo/odoo-11/translate/#fr/$/119303430?q=text%3ATartiflette': true,
+        'https://tenor.com/view/chỗgiặt-dog-smile-gif-13860250': true,
+        'http://www.boîtenoire.be': true,
     };
 
     _.each(testInputs, function (willLinkify, content) {

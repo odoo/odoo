@@ -36,6 +36,28 @@ class TestEventNotifications(SavepointCase):
         self.assertEqual(event.attendee_ids.partner_id, self.partner, "It should be linked to the partner")
         self.assertIn(self.partner, event.message_follower_ids.partner_id, "He should be follower of the event")
 
+    def test_attendee_added_create_with_specific_states(self):
+        """
+        When an event is created from an external calendar account (such as Google) which is not linked to an 
+        Odoo account, attendee info such as email and state are given at sync.
+        In this case, attendee_ids should be created accordingly.
+        """
+        organizer_partner = self.env['res.partner'].create({'name': "orga", "email": "orga@google.com"})
+        event = self.env['calendar.event'].with_user(self.user).create({
+            'name': "Doom's day",
+            'start': datetime(2019, 10, 25, 8, 0),
+            'stop': datetime(2019, 10, 27, 18, 0),
+            'attendee_ids': [
+                (0, 0, {'partner_id': self.partner.id, 'state': 'needsAction'}),
+                (0, 0, {'partner_id': organizer_partner.id, 'state': 'accepted'})
+            ],
+            'partner_ids': [(4, self.partner.id), (4, organizer_partner.id)],
+        })
+        attendees_info = [(a.email, a.state) for a in event.attendee_ids]
+        self.assertEqual(len(event.attendee_ids), 2)
+        self.assertIn((self.partner.email, "needsAction"), attendees_info)
+        self.assertIn((organizer_partner.email, "accepted"), attendees_info)
+
     def test_attendee_added_multi(self):
         event = self.env['calendar.event'].create({
             'name': "Doom's day",
@@ -68,3 +90,44 @@ class TestEventNotifications(SavepointCase):
         self.assertNotIn(self.partner, self.event.attendee_ids.partner_id, "It should have removed the attendee")
         self.assertNotIn(self.partner, self.event.message_follower_ids.partner_id, "It should have unsubscribed the partner")
         self.assertIn(partner_bis, self.event.attendee_ids.partner_id, "It should have left the attendee")
+
+    def test_default_attendee(self):
+        """
+        Check if priority list id correctly followed
+        1) vals_list[0]['attendee_ids']
+        2) vals_list[0]['partner_ids']
+        3) context.get('default_attendee_ids')
+        """
+        partner_bis = self.env['res.partner'].create({'name': "Xavier"})
+        event = self.env['calendar.event'].with_user(
+            self.user
+        ).with_context(
+            default_attendee_ids=[(0, 0, {'partner_id': partner_bis.id})]
+        ).create({
+            'name': "Doom's day",
+            'partner_ids': [(4, self.partner.id)],
+            'start': datetime(2019, 10, 25, 8, 0),
+            'stop': datetime(2019, 10, 27, 18, 0),
+        })
+        self.assertIn(self.partner, event.attendee_ids.partner_id, "Partner should be in attendee")
+        self.assertNotIn(partner_bis, event.attendee_ids.partner_id, "Partner bis should not be in attendee")
+
+    def test_default_attendee_2(self):
+        """
+        Check if priority list id correctly followed
+        1) vals_list[0]['attendee_ids']
+        2) vals_list[0]['partner_ids']
+        3) context.get('default_attendee_ids')
+        """
+        partner_bis = self.env['res.partner'].create({'name': "Xavier"})
+        event = self.env['calendar.event'].with_user(
+            self.user
+        ).with_context(
+            default_attendee_ids=[(0, 0, {'partner_id': partner_bis.id})]
+        ).create({
+            'name': "Doom's day",
+            'start': datetime(2019, 10, 25, 8, 0),
+            'stop': datetime(2019, 10, 27, 18, 0),
+        })
+        self.assertNotIn(self.partner, event.attendee_ids.partner_id, "Partner should not be in attendee")
+        self.assertIn(partner_bis, event.attendee_ids.partner_id, "Partner bis should be in attendee")

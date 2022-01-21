@@ -15,7 +15,7 @@ from werkzeug import urls
 
 from odoo import api, fields, models, _
 from odoo.addons.http_routing.models.ir_http import slug
-from odoo.exceptions import Warning, UserError, AccessError
+from odoo.exceptions import UserError, AccessError
 from odoo.http import request
 from odoo.addons.http_routing.models.ir_http import url_for
 from odoo.tools import sql
@@ -173,7 +173,7 @@ class Slide(models.Model):
     slide_resource_ids = fields.One2many('slide.slide.resource', 'slide_id', string="Additional Resource for this slide")
     slide_resource_downloadable = fields.Boolean('Allow Download', default=True, help="Allow the user to download the content of the slide.")
     mime_type = fields.Char('Mime-type')
-    html_content = fields.Html("HTML Content", help="Custom HTML content for slides of type 'Web Page'.", translate=True, sanitize_form=False)
+    html_content = fields.Html("HTML Content", help="Custom HTML content for slides of type 'Web Page'.", translate=True, sanitize_attributes=False, sanitize_form=False)
     # website
     website_id = fields.Many2one(related='channel_id.website_id', readonly=True)
     date_published = fields.Datetime('Publish Date', readonly=True, tracking=1)
@@ -358,10 +358,10 @@ class Slide(models.Model):
         if self.url:
             res = self._parse_document_url(self.url)
             if res.get('error'):
-                raise Warning(res.get('error'))
+                raise UserError(res.get('error'))
             values = res['values']
             if not values.get('document_id'):
-                raise Warning(_('Please enter valid Youtube or Google Doc URL'))
+                raise UserError(_('Please enter valid Youtube or Google Doc URL'))
             for key, value in values.items():
                 self[key] = value
 
@@ -375,7 +375,11 @@ class Slide(models.Model):
         if self.datas:
             data = base64.b64decode(self.datas)
             if data.startswith(b'%PDF-'):
-                pdf = PyPDF2.PdfFileReader(io.BytesIO(data), overwriteWarnings=False)
+                pdf = PyPDF2.PdfFileReader(io.BytesIO(data), overwriteWarnings=False, strict=False)
+                try:
+                    pdf.getNumPages()
+                except PyPDF2.utils.PdfReadError:
+                    return
                 self.completion_time = (5 * len(pdf.pages)) / 60
             else:
                 self.slide_type = 'infographic'
@@ -505,9 +509,9 @@ class Slide(models.Model):
             }
         return super(Slide, self).get_access_action(access_uid)
 
-    def _notify_get_groups(self):
+    def _notify_get_groups(self, msg_vals=None):
         """ Add access button to everyone if the document is active. """
-        groups = super(Slide, self)._notify_get_groups()
+        groups = super(Slide, self)._notify_get_groups(msg_vals=msg_vals)
 
         if self.website_published:
             for group_name, group_method, group_data in groups:
@@ -707,10 +711,9 @@ class Slide(models.Model):
                 'quiz_attempts_count': 0,  # number of attempts
             }
             slide_partner = slide_partners_map.get(slide.id)
-            if slide.question_ids and slide_partner:
-                if slide_partner.quiz_attempts_count:
-                    result[slide.id]['quiz_karma_gain'] = gains[slide_partner.quiz_attempts_count] if slide_partner.quiz_attempts_count < len(gains) else gains[-1]
-                    result[slide.id]['quiz_attempts_count'] = slide_partner.quiz_attempts_count
+            if slide.question_ids and slide_partner and slide_partner.quiz_attempts_count:
+                result[slide.id]['quiz_karma_gain'] = gains[slide_partner.quiz_attempts_count] if slide_partner.quiz_attempts_count < len(gains) else gains[-1]
+                result[slide.id]['quiz_attempts_count'] = slide_partner.quiz_attempts_count
                 if quiz_done or slide_partner.completed:
                     result[slide.id]['quiz_karma_won'] = gains[slide_partner.quiz_attempts_count-1] if slide_partner.quiz_attempts_count < len(gains) else gains[-1]
         return result
@@ -781,9 +784,10 @@ class Slide(models.Model):
         youtube_duration = youtube_values.get('contentDetails', {}).get('duration')
         if youtube_duration:
             parsed_duration = re.search(r'^PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$', youtube_duration)
-            values['completion_time'] = (int(parsed_duration.group(1) or 0)) + \
-                                        (int(parsed_duration.group(2) or 0) / 60) + \
-                                        (int(parsed_duration.group(3) or 0) / 3600)
+            if parsed_duration:
+                values['completion_time'] = (int(parsed_duration.group(1) or 0)) + \
+                                            (int(parsed_duration.group(2) or 0) / 60) + \
+                                            (int(parsed_duration.group(3) or 0) / 3600)
 
         if youtube_values.get('snippet'):
             snippet = youtube_values['snippet']

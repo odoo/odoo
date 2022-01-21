@@ -8,6 +8,7 @@
                 <form>
                     <field name="account_type" invisible="1"/>
                     <field name="company_id" invisible="1"/>
+                    <field name="move_line_ids" invisible="1"/>
                     <field name="display_currency_helper" invisible="1"/>
                     <div attrs="{'invisible': [('display_currency_helper', '=', False)]}"  class="alert alert-info text-center" role="status">
                         The selected destination account is set to use a specific currency. Every entry transferred to it will be converted into this currency, causing

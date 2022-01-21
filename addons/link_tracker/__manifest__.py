@@ -14,4 +14,5 @@ Shorten URLs and use them to track clicks and UTMs
         'views/utm_campaign_views.xml',
         'security/ir.model.access.csv',
     ],
+    'license': 'LGPL-3',
 }

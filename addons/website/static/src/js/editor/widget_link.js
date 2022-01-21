@@ -50,20 +50,25 @@ weWidgets.LinkDialog.include({
         var $selectMenu = this.$('select[name="link_anchor"]');
         var $anchorsLoading = this.$('.o_anchors_loading');
 
-        $anchorsLoading.removeClass('d-none');
-        $pageAnchor.toggleClass('d-none', !isFromWebsite);
-        $selectMenu.empty();
-        wUtils.loadAnchors(urlInputValue).then(function (anchors) {
-            _.each(anchors, function (anchor) {
-                $selectMenu.append($('<option>', {text: anchor}));
-            });
+        if ($selectMenu.data("anchor-for") !== urlInputValue) { // avoid useless query
+            $anchorsLoading.removeClass('d-none');
+            $pageAnchor.toggleClass('d-none', !isFromWebsite);
+            $selectMenu.empty();
+            wUtils.loadAnchors(urlInputValue).then(function (anchors) {
+                _.each(anchors, function (anchor) {
+                    $selectMenu.append($('<option>', {text: anchor}));
+                });
+                always();
+            }).guardedCatch(always);
+        } else {
             always();
-        }).guardedCatch(always);
+        }
 
         function always() {
             $anchorsLoading.addClass('d-none');
             $selectMenu.prop("selectedIndex", -1);
         }
+        $selectMenu.data("anchor-for", urlInputValue);
     },
 
     //--------------------------------------------------------------------------

@@ -445,7 +445,7 @@ class PaymentAcquirer(models.Model):
                 'partner_zip': partner.zip,
                 'partner_city': partner.city,
                 'partner_address': _partner_format_address(partner.street, partner.street2),
-                'partner_country_id': partner.country_id.id or self.env['res.company']._company_default_get().country_id.id,
+                'partner_country_id': partner.country_id.id or self.env.company.country_id.id,
                 'partner_country': partner.country_id,
                 'partner_phone': partner.phone,
                 'partner_state': partner.state_id,
@@ -680,7 +680,7 @@ class PaymentTransaction(models.Model):
             'amount': self.amount,
             'payment_type': 'inbound' if self.amount > 0 else 'outbound',
             'currency_id': self.currency_id.id,
-            'partner_id': self.partner_id.id,
+            'partner_id': self.partner_id.commercial_partner_id.id,
             'partner_type': 'customer',
             'journal_id': self.acquirer_id.journal_id.id,
             'company_id': self.acquirer_id.company_id.id,
@@ -877,7 +877,7 @@ class PaymentTransaction(models.Model):
             'date': fields.Datetime.now(),
             'state_message': msg,
         })
-        self._log_payment_transaction_received()
+        tx_to_process._log_payment_transaction_received()
 
     def _post_process_after_done(self):
         self._reconcile_after_transaction_done()
@@ -997,7 +997,7 @@ class PaymentTransaction(models.Model):
         custom_method_name = '%s_compute_fees' % acquirer.provider
         if hasattr(acquirer, custom_method_name):
             fees = getattr(acquirer, custom_method_name)(
-                values.get('amount', 0.0), values.get('currency_id'), values['partner_country_id'])
+                values.get('amount', 0.0), values.get('currency_id'), values.get('partner_country_id', self._get_default_partner_country_id()))
             values['fees'] = fees
 
         # custom create

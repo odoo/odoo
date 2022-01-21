@@ -72,16 +72,32 @@ var ColorpickerWidget = Widget.extend({
         this.$opacitySlider = this.$('.o_opacity_slider');
         this.$opacitySliderPointer = this.$('.o_opacity_pointer');
 
-        const resizeObserver = new window.ResizeObserver(() => {
-            this._updateUI();
-        });
-        resizeObserver.observe(this.el);
-
         var defaultColor = this.options.defaultColor || '#FF0000';
         var rgba = ColorpickerWidget.convertCSSColorToRgba(defaultColor);
         if (rgba) {
             this._updateRgba(rgba.red, rgba.green, rgba.blue, rgba.opacity);
         }
+
+        // Pre-fill the inputs. This is because on safari, the baseline for empty
+        // input is not the baseline of where the text would be, but the bottom
+        // of the input itself. (see https://bugs.webkit.org/show_bug.cgi?id=142968)
+        // This will cause the first _updateUI to alter the layout of the colorpicker
+        // which will change its height. Changing the height of an element inside of
+        // the callback to a ResizeObserver observing it will cause an error
+        // (ResizeObserver loop completed with undelivered notifications) that cannot
+        // be caught, which will open the crash manager. Prefilling the inputs sets
+        // the baseline correctly from the start so the layout doesn't change.
+        Object.entries(this.colorComponents).forEach(([component, value]) => {
+            const input = this.el.querySelector(`.o_${component}_input`);
+            if (input) {
+                input.value = value;
+            }
+        });
+        const resizeObserver = new window.ResizeObserver(() => {
+            this._updateUI();
+        });
+        resizeObserver.observe(this.el);
+
         this.previewActive = true;
         return this._super.apply(this, arguments);
     },
@@ -91,6 +107,17 @@ var ColorpickerWidget = Widget.extend({
     destroy: function () {
         this._super.apply(this, arguments);
         $(document).off(`.${this.uniqueId}`);
+    },
+    /**
+     * Sets the currently selected color
+     *
+     * @param {string} color rgb[a]
+     */
+    setSelectedColor: function (color) {
+        var rgba = ColorpickerWidget.convertCSSColorToRgba(color);
+        if (rgba) {
+            this._updateRgba(rgba.red, rgba.green, rgba.blue, rgba.opacity);
+        }
     },
 
     //--------------------------------------------------------------------------

@@ -16,4 +16,5 @@ Partners Geolocation
         'data/data.xml',
     ],
     'installable': True,
+    'license': 'LGPL-3',
 }

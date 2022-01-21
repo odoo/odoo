@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2020
-# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2020
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-29 13:45+0000\n"
 "PO-Revision-Date: 2020-09-07 08:13+0000\n"
-"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2020\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2021\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,6 +27,9 @@ msgid ""
 "    Please answer those questions to help recruitment officers to preprocess your application.\n"
 "</p>"
 msgstr ""
+"<p>\n"
+"    Дайте відповідь на запитання, щоб допомоготи менеджеру рекрутингу попередньо обробити вашу заявку.\n"
+"</p>"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1
@@ -34,6 +37,8 @@ msgid ""
 "<p>Please fill information about you: who you are, what are your education, experience, and activities.\n"
 "    It will help us managing your application.</p>"
 msgstr ""
+"<p>Заповніть інформацію про вас: хто ви, ваша освіта, досвід та вид діяльності.\n"
+"    Це допоможе нам з вашою заявкою.</p>"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q4
@@ -42,6 +47,8 @@ msgid ""
 "<p>Please summarize your education history: schools, location, diplomas, "
 "...</p>"
 msgstr ""
+"<p>Підсумуйте вашу освіту: навчальні заклади, їх місцезнаходження, дипломи, "
+"...</p>"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q7
@@ -49,12 +56,16 @@ msgid ""
 "<p>Please tell us a bit more about yourself: what are your main activities, "
 "...</p>"
 msgstr ""
+"<p>Розкажіть нам  трохи більше про вас: який ваш основний вид діяльності, "
+"...</p>"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q6
 msgid ""
 "<p>What are your main knowledge regarding the job you are applying to ?</p>"
 msgstr ""
+"<p>Ваші основні знання відповідно до вакансії на яку ви залишаєте "
+"заявку?</p>"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
@@ -62,6 +73,8 @@ msgid ""
 "<span class=\"o_stat_text\">Consult</span>\n"
 "                        <span class=\"o_stat_text\">Interview</span>"
 msgstr ""
+"<span class=\"o_stat_text\">Консультація</span>\n"
+"                        <span class=\"o_stat_text\">Інтерв'ю</span>"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
@@ -69,7 +82,7 @@ msgid ""
 "<span class=\"o_stat_text\">Start</span>\n"
 "                        <span class=\"o_stat_text\">Interview</span>"
 msgstr ""
-"<span class=\"o_stat_text\">Початок</span>\n"
+"<span class=\"o_stat_text\">Почати</span>\n"
 "                        <span class=\"o_stat_text\">Інтерв'ю</span>"
 
 #. module: hr_recruitment_survey
@@ -106,7 +119,7 @@ msgstr ""
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
 msgid "Create Interview Form"
-msgstr ""
+msgstr "Створити форму інтерв'ю"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_job_survey_inherit
@@ -143,17 +156,17 @@ msgstr "Отримайте такі переваги, як безкоштовн�
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row1
 msgid "Having a good pay"
-msgstr "Маючи гарну оплату"
+msgstr "Гарна оплата"
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row3
 msgid "Having a nice office environment"
-msgstr "Маючи зручний офіс"
+msgstr "Чудова офісна атмосфера"
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row7
 msgid "Having freebies such as tea, coffee and stationery"
-msgstr "Маючи безкоштовний чай, каву та канцелярські товари"
+msgstr "Безкоштовний чай, кава та канцелярські товари"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant__id
@@ -188,7 +201,7 @@ msgstr "Форма інтерв'ю"
 #: code:addons/hr_recruitment_survey/models/hr_job.py:0
 #, python-format
 msgid "Interview Form : %s"
-msgstr ""
+msgstr "Форма інтерв'ю: %s"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.res_config_settings_view_form
@@ -209,7 +222,7 @@ msgstr "Знання"
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant____last_update
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_job____last_update
 msgid "Last Modified on"
-msgstr "Останні зміни на"
+msgstr "Останні зміни"
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row6
@@ -234,7 +247,7 @@ msgstr "Досвід минулої роботи"
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
 msgid "Preview Interview"
-msgstr ""
+msgstr "Попередній перегляд інтерв'ю"
 
 #. module: hr_recruitment_survey
 #: model:survey.survey,title:hr_recruitment_survey.survey_recruitment_form
@@ -249,7 +262,7 @@ msgstr "Відповідь"
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
 msgid "See interview report"
-msgstr ""
+msgstr "Переглянути звіт інтерв'ю"
 
 #. module: hr_recruitment_survey
 #: code:addons/hr_recruitment_survey/models/hr_job.py:0
@@ -297,7 +310,7 @@ msgstr "Дуже важливий"
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q3
 msgid "Were you referred by an employee?"
-msgstr ""
+msgstr "Куди вас рекомендував співробітник?"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q8

@@ -18,6 +18,7 @@ from . import test_ir_attachment
 from . import test_ir_cron
 from . import test_ir_http
 from . import test_ir_filters
+from . import test_ir_mail_server
 from . import test_ir_model
 from . import test_ir_sequence
 from . import test_ir_sequence_date_range
@@ -42,6 +43,7 @@ from . import test_res_partner
 from . import test_res_partner_bank
 from . import test_res_users
 from . import test_reports
+from . import test_test_suite
 from . import test_tests_tags
 from . import test_form_create
 from . import test_cloc

@@ -9,7 +9,7 @@
 # Léonie Bouchat <lbo@odoo.com>, 2020
 # Petra <bop@odoo.com>, 2020
 # Iacopo Simonelli <lsi@odoo.com>, 2020
-# Sergio Zanchetta <primes2h@gmail.com>, 2020
+# Sergio Zanchetta <primes2h@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-29 13:45+0000\n"
 "PO-Revision-Date: 2020-09-07 08:10+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2020\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2021\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,7 +44,7 @@ msgstr "%d record importati con successo..."
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "%d records tested..."
-msgstr "%d record testati..."
+msgstr "%d record esaminati..."
 
 #. module: base_import
 #. openerp-web
@@ -122,8 +122,8 @@ msgstr "Annulla"
 #, python-format
 msgid "Click 'Resume' to proceed with the import, resuming at line"
 msgstr ""
-"Fai clic su \"Riprendi\" per procedere con l'importazione, riprendendo dalla"
-" riga"
+"Fare clic su \"Riprendi\" per proseguire con l'importazione, continuando "
+"dalla riga"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -157,7 +157,7 @@ msgid ""
 "Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: "
 "%(error)s"
 msgstr ""
-"Impossibile raggiungere l'URL: %(url)s[%(field_name)s: "
+"Impossibile recuperare l'URL: %(url)s[%(field_name)s: "
 "L%(line_number)d]:%(error)s"
 
 #. module: base_import
@@ -207,7 +207,7 @@ msgstr "Creato da"
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child__create_date
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__create_date
 msgid "Created on"
-msgstr "Creato il"
+msgstr "Data creazione"
 
 #. module: base_import
 #. openerp-web
@@ -311,7 +311,8 @@ msgstr "Dt"
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Due to its large size, the file will be imported by batches."
-msgstr "A causa delle grandi dimensioni, il file verrà diviso in gruppi."
+msgstr ""
+"A causa delle grandi dimensioni, il file verrà suddiviso per l'importazione."
 
 #. module: base_import
 #. openerp-web
@@ -377,7 +378,7 @@ msgstr "Dimensione del file superiore alla massima configurata (%s byte)"
 #. module: base_import
 #: model:ir.model.fields,help:base_import.field_base_import_import__file
 msgid "File to check and/or import, raw binary (not base64)"
-msgstr "File da controllare e/o importare, riga binaria (not base64)"
+msgstr "File da controllare e/o importare, binario grezzo (non base64)"
 
 #. module: base_import
 #. openerp-web
@@ -402,15 +403,15 @@ msgid ""
 "Found invalid image data, images should be imported as either URLs or "
 "base64-encoded data."
 msgstr ""
-"Trovati dati immagine non validi, le immagini devono essere importate come "
-"URL o come dati con codifica base64."
+"Trovati dati non validi. Le immagini devono essere importate come URL o dati"
+" con codifica base64."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Here is the start of the file we could not import:"
-msgstr "Questo è l'inizio del file che potrebbe non essere importato:"
+msgstr "Parte iniziale del file che non è possibile importare:"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__id
@@ -445,9 +446,9 @@ msgid ""
 "                simpler especially when the file has many columns."
 msgstr ""
 "Se il file contiene\n"
-"nomi di colonne, Odoo proverà a fare un riconoscimento\n"
-"dei campi corrispondenti alle colonne in questione. Questo rende\n"
-"l'importazione più semplice, specialmente se il file ha molte colonne."
+"                i nomi delle colonne, Odoo può provare ad autorilevare il\n"
+"                campo corrispondente. Viene così semplificata l'importazione,\n"
+"                in particolare quando nel file sono presenti molte colonne."
 
 #. module: base_import
 #. openerp-web
@@ -600,7 +601,7 @@ msgstr "Carica nuovo file"
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Map your columns to import"
-msgstr "Abbinare le colonne da importare"
+msgstr "Mappatura colonne da importare"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__res_model
@@ -642,7 +643,7 @@ msgstr "Altra variabile"
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child__parent_id
 msgid "Parent"
-msgstr "Padre"
+msgstr "Principale"
 
 #. module: base_import
 #. openerp-web
@@ -676,7 +677,7 @@ msgstr "Riga %d%s"
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "See possible values"
-msgstr "Visualizzare tutti i valori possibili"
+msgstr "Vedi valori possibili"
 
 #. module: base_import
 #. openerp-web
@@ -712,7 +713,7 @@ msgstr "Separatore:"
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Show fields of relation fields (advanced)"
-msgstr "Visualizzare i campi di relazione (avanzato)"
+msgstr "Mostra campi dei campi relazione (avanzato)"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__somevalue
@@ -731,7 +732,7 @@ msgstr "Spazio"
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Start at line"
-msgstr "Inizia alla riga"
+msgstr "Riga iniziale"
 
 #. module: base_import
 #. openerp-web
@@ -867,7 +868,7 @@ msgstr "Separatore delle migliaia:"
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Track history during import"
-msgstr "Mantieni uno storico durante l'importazione"
+msgstr "Mantieni cronologia dell'importazione"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -921,8 +922,8 @@ msgid ""
 "Warning: ignores the labels line, empty lines and"
 "                             lines composed only of empty cells"
 msgstr ""
-"Attenzione: ignora la linea delle etichette, le linee vuote e le linee "
-"composte solo da celle vuote"
+"Avviso: vengono ignorate la riga etichette, le righe vuote e le righe "
+"costituite solo da celle vuote"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -931,8 +932,8 @@ msgid ""
 "You can not import images via URL, check with your administrator or support "
 "for the reason."
 msgstr ""
-"Non si possono importare immagini via URL, controlla con il tuo "
-"amministratore o chiedi a Odoo support per le ragioni."
+"Impossibile importare immagini via URL, motivazione da verificare con "
+"l'amministratore o con il supporto."
 
 #. module: base_import
 #. openerp-web
@@ -940,7 +941,7 @@ msgstr ""
 #, python-format
 msgid "You can test or reload your file before resuming the import."
 msgstr ""
-"È possibile testare o ricaricare il file prima di riprendere l'importazione."
+"Prima di riprendere l'importazione è possibile provare o ricaricare il file."
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -953,7 +954,7 @@ msgstr "Deve essere configurato almeno un campo da importare"
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "at %d different rows:"
-msgstr "Alla %d righe diverse:"
+msgstr "in %d righe diverse:"
 
 #. module: base_import
 #. openerp-web

@@ -7,15 +7,16 @@
 # Giovanni Perteghella <giovanni@perteghella.org>, 2020
 # Paolo Valier, 2020
 # Léonie Bouchat <lbo@odoo.com>, 2020
-# Sergio Zanchetta <primes2h@gmail.com>, 2020
+# Sergio Zanchetta <primes2h@gmail.com>, 2021
+# Friederike Fasterling-Nesselbosch, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"POT-Creation-Date: 2020-11-27 11:24+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2020\n"
+"Last-Translator: Friederike Fasterling-Nesselbosch, 2021\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,6 +34,8 @@ msgstr ""
 msgid ""
 "Associated message when posting a review. Mainly used in website addons."
 msgstr ""
+"Messaggio associato quando si pubblica una recensione. Principalmente usato "
+"in addon per siti web."
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating__partner_id
@@ -93,7 +96,7 @@ msgstr "Abilitata se la valutazione è stata effettuata."
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
 msgid "Feel free to write a feedback on your experience:"
-msgstr ""
+msgstr "Non esitare a scrivere un feedback sulla tua esperienza:"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__consumed
@@ -103,7 +106,7 @@ msgstr "Valutazione effettuata"
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_view
 msgid "Go back to the Homepage"
-msgstr ""
+msgstr "Ritorna alla pagina principale"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
@@ -115,6 +118,8 @@ msgstr "Raggruppa per"
 msgid ""
 "Hide to public / portal users, independently from subtype configuration."
 msgstr ""
+"Nascosto agli utenti pubblici / portale, indipendentemente dalla "
+"configurazione del sottotipo."
 
 #. module: rating
 #: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__highly_dissatisfied
@@ -205,7 +210,7 @@ msgstr "Documento principale"
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__parent_res_model
 msgid "Parent Document Model"
-msgstr "Modello documento principale"
+msgstr "Modello documento primario"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__parent_res_name
@@ -215,7 +220,7 @@ msgstr "Nome documento principale"
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_form
 msgid "Parent Holder"
-msgstr ""
+msgstr "Contenitore principale"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__parent_ref
@@ -239,8 +244,9 @@ msgstr "Utente valutato"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__rated_partner_id
-msgid "Rated person"
-msgstr "Persona valutata"
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
+msgid "Rated Operator"
+msgstr ""
 
 #. module: rating
 #: model:ir.model,name:rating.model_rating_rating
@@ -262,7 +268,7 @@ msgstr "Media valutazioni"
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_last_feedback
 msgid "Rating Last Feedback"
-msgstr "Opinione ultima valutazione"
+msgstr "Ultimo riscontro valutazione"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_last_image
@@ -303,13 +309,13 @@ msgstr "Numero valutazioni"
 
 #. module: rating
 #: model:ir.model.constraint,message:rating.constraint_rating_rating_rating_range
-msgid "Rating should be between 0 to 5"
-msgstr ""
+msgid "Rating should be between 0 and 5"
+msgstr "La valutazione dovrebbe essere tra 0 e 5"
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating__rating
 msgid "Rating value: 0=Unhappy, 5=Happy"
-msgstr ""
+msgstr "Valore di valutazione: 0=Infelice, 5=Felice"
 
 #. module: rating
 #: model:ir.actions.act_window,name:rating.rating_rating_view
@@ -329,13 +335,13 @@ msgstr "Motivo della valutazione"
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__res_model_id
 msgid "Related Document Model"
-msgstr "Modello documento collegato"
+msgstr "Modello documento correlato"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_mail_mail__rating_ids
 #: model:ir.model.fields,field_description:rating.field_mail_message__rating_ids
 msgid "Related ratings"
-msgstr "Valutazioni collegate"
+msgstr "Valutazioni correlate"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
@@ -376,12 +382,12 @@ msgstr "Inviata il"
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
 msgid "Thank you for rating our services!"
-msgstr ""
+msgstr "Grazie per aver valutato i nostri servizi!"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_view
 msgid "Thank you, we appreciate your feedback!"
-msgstr ""
+msgstr "Grazie, apprezziamo la sua opinione!"
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating__res_name

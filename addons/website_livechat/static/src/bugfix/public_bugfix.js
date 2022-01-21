@@ -7,4 +7,19 @@
 odoo.define('website_livechat/static/src/bugfix/bugfix.js', function (require) {
 'use strict';
 
+const { LivechatButton } = require('im_livechat.legacy.im_livechat.im_livechat');
+
+LivechatButton.include({
+    className: `${LivechatButton.prototype.className} o_bottom_fixed_element`,
+
+    /**
+     * @override
+     */
+    start() {
+        // We trigger a resize to launch the event that checks if this element hides
+        // a button when the page is loaded.
+        $(window).trigger('resize');
+        return this._super(...arguments);
+    },
+});
 });

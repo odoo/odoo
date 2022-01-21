@@ -700,7 +700,7 @@ odoo.define('website_slides.quiz', function (require) {
                     questions: self._extractQuestionsAndAnswers(),
                     sessionAnswers: slideData.sessionAnswers || [],
                     quizKarmaMax: slideData.quizKarmaMax,
-                    quizKarmaWon: slideData.quizKarmaWon,
+                    quizKarmaWon: slideData.quizKarmaWon || 0,
                     quizKarmaGain: slideData.quizKarmaGain,
                     quizAttemptsCount: slideData.quizAttemptsCount,
                 };

@@ -8,6 +8,8 @@ class AccountMove(models.Model):
     _inherit = 'account.move'
 
     def _get_ubl_values(self):
+        self.ensure_one()
+
         def format_monetary(amount):
             # Format the monetary values to avoid trailing decimals (e.g. 90.85000000000001).
             return float_repr(amount, self.currency_id.decimal_places)

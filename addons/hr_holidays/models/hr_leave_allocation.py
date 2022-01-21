@@ -180,7 +180,12 @@ class HolidaysAllocation(models.Model):
             if holiday.interval_unit == 'years':
                 delta = relativedelta(years=holiday.interval_number)
 
-            values['nextcall'] = (holiday.nextcall if holiday.nextcall else today) + delta
+            if holiday.nextcall:
+                values['nextcall'] = holiday.nextcall + delta
+            else:
+                values['nextcall'] = holiday.date_from
+                while values['nextcall'] <= datetime.combine(today, time(0, 0, 0)):
+                    values['nextcall'] += delta
 
             period_start = datetime.combine(today, time(0, 0, 0)) - delta
             period_end = datetime.combine(today, time(0, 0, 0))
@@ -295,7 +300,7 @@ class HolidaysAllocation(models.Model):
     def _compute_can_approve(self):
         for allocation in self:
             try:
-                if allocation.state == 'confirm' and allocation.validation_type == 'both':
+                if allocation.state == 'confirm' and allocation.holiday_status_id.allocation_type == "fixed_allocation" and allocation.validation_type == 'both':
                     allocation._check_approval_update('validate1')
                 else:
                     allocation._check_approval_update('validate')
@@ -666,18 +671,19 @@ class HolidaysAllocation(models.Model):
             return allocation_notif_subtype_id or self.env.ref('hr_holidays.mt_leave_allocation')
         return super(HolidaysAllocation, self)._track_subtype(init_values)
 
-    def _notify_get_groups(self):
+    def _notify_get_groups(self, msg_vals=None):
         """ Handle HR users and officers recipients that can validate or refuse holidays
         directly from email. """
-        groups = super(HolidaysAllocation, self)._notify_get_groups()
+        groups = super(HolidaysAllocation, self)._notify_get_groups(msg_vals=msg_vals)
+        local_msg_vals = dict(msg_vals or {})
 
         self.ensure_one()
         hr_actions = []
         if self.state == 'confirm':
-            app_action = self._notify_get_action_link('controller', controller='/allocation/validate')
+            app_action = self._notify_get_action_link('controller', controller='/allocation/validate', **local_msg_vals)
             hr_actions += [{'url': app_action, 'title': _('Approve')}]
         if self.state in ['confirm', 'validate', 'validate1']:
-            ref_action = self._notify_get_action_link('controller', controller='/allocation/refuse')
+            ref_action = self._notify_get_action_link('controller', controller='/allocation/refuse', **local_msg_vals)
             hr_actions += [{'url': ref_action, 'title': _('Refuse')}]
 
         holiday_user_group_id = self.env.ref('hr_holidays.group_hr_holidays_user').id

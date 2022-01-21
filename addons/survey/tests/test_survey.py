@@ -11,17 +11,7 @@ class TestSurveyInternals(common.TestSurveyCommon):
     @users('survey_manager')
     def test_answer_validation_mandatory(self):
         """ For each type of question check that mandatory questions correctly check for complete answers """
-        for (question_type, text) in self.env['survey.question']._fields['question_type'].selection:
-            kwargs = {}
-            if question_type == 'multiple_choice':
-                kwargs['labels'] = [{'value': 'MChoice0'}, {'value': 'MChoice1'}]
-            elif question_type == 'simple_choice':
-                kwargs['labels'] = []
-            elif question_type == 'matrix':
-                kwargs['labels'] = [{'value': 'Column0'}, {'value': 'Column1'}]
-                kwargs['labels_2'] = [{'value': 'Row0'}, {'value': 'Row1'}]
-            question = self._add_question(self.page_0, 'Q0', question_type, **kwargs)
-
+        for question in self._create_one_question_per_type():
             self.assertDictEqual(
                 question.validate_question(''),
                 {question.id: 'TestError'}
@@ -113,3 +103,59 @@ class TestSurveyInternals(common.TestSurveyCommon):
             question.validate_question('valid'),
             {}
         )
+
+    def test_partial_scores_simple_choice(self):
+        """" Check that if partial scores are given for partially correct answers, in the case of a multiple
+        choice question with single choice, choosing the answer with max score gives 100% of points. """
+
+        partial_scores_survey = self.env['survey.survey'].create({
+            'title': 'How much do you know about words?',
+            'scoring_type': 'scoring_with_answers',
+            'scoring_success_min': 90.0,
+        })
+        [a_01, a_02, a_03] = self.env['survey.question.answer'].create([{
+            'value': 'A thing full of letters.',
+            'answer_score': 1.0
+        }, {
+            'value': 'A unit of language, [...], carrying a meaning.',
+            'answer_score': 4.0,
+            'is_correct': True
+        }, {
+            'value': '42',
+            'answer_score': -4.0
+        }])
+        q_01 = self.env['survey.question'].create({
+            'survey_id': partial_scores_survey.id,
+            'title': 'What is a word?',
+            'sequence': 1,
+            'question_type': 'simple_choice',
+            'suggested_answer_ids': [(6, 0, (a_01 | a_02 | a_03).ids)]
+        })
+
+        user_input = self.env['survey.user_input'].create({'survey_id': partial_scores_survey.id})
+        self.env['survey.user_input.line'].create({
+            'user_input_id': user_input.id,
+            'question_id': q_01.id,
+            'answer_type': 'suggestion',
+            'suggested_answer_id': a_02.id
+        })
+
+        # Check that scoring is correct and survey is passed
+        self.assertEqual(user_input.scoring_percentage, 100)
+        self.assertTrue(user_input.scoring_success)
+
+    @users('survey_manager')
+    def test_skipped_values(self):
+        """ Create one question per type of questions.
+        Make sure they are correctly registered as 'skipped' after saving an empty answer for each
+        of them. """
+
+        questions = self._create_one_question_per_type()
+        survey_user = self.survey._create_answer(user=self.survey_user)
+
+        for question in questions:
+            answer = '' if question.question_type in ['char_box', 'text_box'] else None
+            survey_user.save_lines(question, answer)
+
+        for question in questions:
+            self._assert_skipped_question(question, survey_user)

@@ -30,7 +30,9 @@
 
 .o_wevent_social_link {
     $o_link_size: 3em;
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     @include size($o_link_size);
     margin: 0 ($spacer * .25) ($spacer * .5) ($spacer * .25);
     line-height: $o_link_size;

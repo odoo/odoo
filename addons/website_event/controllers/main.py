@@ -320,7 +320,7 @@ class WebsiteEventController(http.Controller):
         :param form_details: posted data from frontend registration form, like
             {'1-name': 'r', '1-email': 'r@r.com', '1-phone': '', '1-event_ticket_id': '1'}
         """
-        allowed_fields = {'name', 'phone', 'email', 'mobile', 'event_id', 'partner_id', 'event_ticket_id'}
+        allowed_fields = request.env['event.registration']._get_website_registration_allowed_fields()
         registration_fields = {key: v for key, v in request.env['event.registration']._fields.items() if key in allowed_fields}
         registrations = {}
         global_values = {}

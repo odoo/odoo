@@ -325,6 +325,6 @@ class TestAllFilters(TransactionCase):
                     domain=filter_._get_eval_domain(),
                     fields=[field.split(':')[0] for field in (groupby or [])],
                     groupby=groupby,
-                    order=ast.literal_eval(filter_.sort),
+                    order=','.join(ast.literal_eval(filter_.sort)),
                     context=context,
                 )

@@ -3,16 +3,18 @@
 # 	* payment_alipay
 # 
 # Translators:
-# Martin Trigaux, 2019
-# krnkris, 2019
+# Martin Trigaux, 2021
+# krnkris, 2021
+# Tamás Németh <ntomasz81@gmail.com>, 2021
+# Ákos Nagy <akos.nagy@oregional.hu>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: krnkris, 2019\n"
+"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"PO-Revision-Date: 2020-09-07 08:15+0000\n"
+"Last-Translator: Ákos Nagy <akos.nagy@oregional.hu>, 2021\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -54,12 +56,12 @@ msgstr "; nem talált rendelést"
 #. module: payment_alipay
 #: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer__alipay_payment_method
 msgid "Account"
-msgstr "Főkönyvi számla"
+msgstr "Fiók"
 
 #. module: payment_alipay
 #: model:ir.model.fields.selection,name:payment_alipay.selection__payment_acquirer__provider__alipay
 msgid "Alipay"
-msgstr ""
+msgstr "Alipay"
 
 #. module: payment_alipay
 #: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer__alipay_seller_email
@@ -90,9 +92,27 @@ msgid "Cross-border"
 msgstr ""
 
 #. module: payment_alipay
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer__display_name
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr "Név megjelenítése"
+
+#. module: payment_alipay
 #: model:ir.model.fields.selection,name:payment_alipay.selection__payment_acquirer__alipay_payment_method__express_checkout
 msgid "Express Checkout (only for Chinese Merchant)"
 msgstr ""
+
+#. module: payment_alipay
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer__id
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_transaction__id
+msgid "ID"
+msgstr "Azonosító"
+
+#. module: payment_alipay
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer____last_update
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_transaction____last_update
+msgid "Last Modified on"
+msgstr "Legutóbb módosítva"
 
 #. module: payment_alipay
 #: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer__alipay_md5_signature_key
@@ -107,7 +127,7 @@ msgstr ""
 #. module: payment_alipay
 #: model:ir.model,name:payment_alipay.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr "Fizetést lebonyolító"
+msgstr "Fizetési szolgáltató"
 
 #. module: payment_alipay
 #: model:ir.model,name:payment_alipay.model_payment_transaction

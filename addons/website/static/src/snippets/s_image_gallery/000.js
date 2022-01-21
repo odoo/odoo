@@ -86,7 +86,18 @@ const GallerySliderWidget = publicWidget.Widget.extend({
         this.$prev = this.$indicator.find('li.o_indicators_left').css('visibility', ''); // force visibility as some databases have it hidden
         this.$next = this.$indicator.find('li.o_indicators_right').css('visibility', '');
         var $lis = this.$indicator.find('li[data-slide-to]');
-        var nbPerPage = Math.floor(this.$indicator.width() / $lis.first().outerWidth(true)) - 3; // - navigator - 1 to leave some space
+        let indicatorWidth = this.$indicator.width();
+        if (indicatorWidth === 0) {
+            // An ancestor may be hidden so we try to find it and make it
+            // visible just to take the correct width.
+            const $indicatorParent = this.$indicator.parents().not(':visible').last();
+            if (!$indicatorParent[0].style.display) {
+                $indicatorParent[0].style.display = 'block';
+                indicatorWidth = this.$indicator.width();
+                $indicatorParent[0].style.display = '';
+            }
+        }
+        let nbPerPage = Math.floor(indicatorWidth / $lis.first().outerWidth(true)) - 3; // - navigator - 1 to leave some space
         var realNbPerPage = nbPerPage || 1;
         var nbPages = Math.ceil($lis.length / realNbPerPage);
 
@@ -113,7 +124,8 @@ const GallerySliderWidget = publicWidget.Widget.extend({
         }
 
         function update() {
-            index = $lis.index($lis.filter('.active')) || 0;
+            const active = $lis.filter('.active');
+            index = active.length ? $lis.index(active) : 0;
             page = Math.floor(index / realNbPerPage);
             hide();
         }

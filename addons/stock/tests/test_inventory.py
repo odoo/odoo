@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 from odoo.tests.common import Form, SavepointCase
 
 
@@ -152,10 +152,10 @@ class TestInventory(SavepointCase):
         wizard_warning_lot.action_confirm()
 
         # check
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product2, self.stock_location, lot_id=lot1, strict=True), 1.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product2, self.stock_location, lot_id=lot1, strict=True), 11.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product2, self.stock_location, strict=True), 10.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product2, self.stock_location), 11.0)
-        self.assertEqual(len(self.env['stock.quant']._gather(self.product2, self.stock_location, lot_id=lot1, strict=True)), 1.0)
+        self.assertEqual(len(self.env['stock.quant']._gather(self.product2, self.stock_location, lot_id=lot1, strict=True).filtered(lambda q: q.lot_id)), 1.0)
         self.assertEqual(len(self.env['stock.quant']._gather(self.product2, self.stock_location, strict=True)), 1.0)
         self.assertEqual(len(self.env['stock.quant']._gather(self.product2, self.stock_location)), 2.0)
 
@@ -802,3 +802,24 @@ class TestInventory(SavepointCase):
         self.assertEqual(len(line_ids_loc2), 1)
         self.assertEqual(line_ids_loc1[0].theoretical_qty, 10)
         self.assertEqual(line_ids_loc2[0].theoretical_qty, 0)
+
+    def test_inventory_line_duplicates(self):
+        """ Checks that creating duplicated inventory lines
+        raises a UserError.
+        """
+        inventory = self.env['stock.inventory'].create({
+            'name': 'Existing Inventory',
+            'exhausted': True,
+            'location_ids': [(4, self.stock_location.id)],
+            'product_ids': [(4, self.product1.id)]
+        })
+        inventory.action_start()
+
+        dup_vals = [{
+            'inventory_id': inventory.id,
+            'product_id': self.product1.id,
+            'location_id': self.stock_location.id,
+        }]
+
+        with self.assertRaises(UserError), self.cr.savepoint():
+            self.env['stock.inventory.line'].create(dup_vals)

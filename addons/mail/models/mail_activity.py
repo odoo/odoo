@@ -688,6 +688,10 @@ class MailActivityMixin(models.AbstractModel):
         compute='_compute_activity_date_deadline', search='_search_activity_date_deadline',
         compute_sudo=False, readonly=True, store=False,
         groups="base.group_user")
+    my_activity_date_deadline = fields.Date(
+        'My Activity Deadline',
+        compute='_compute_my_activity_date_deadline', search='_search_my_activity_date_deadline',
+        compute_sudo=False, readonly=True, groups="base.group_user")
     activity_summary = fields.Char(
         'Next Activity Summary',
         related='activity_ids.summary', readonly=False,
@@ -757,6 +761,24 @@ class MailActivityMixin(models.AbstractModel):
     def _search_activity_summary(self, operator, operand):
         return [('activity_ids.summary', operator, operand)]
 
+    @api.depends('activity_ids.date_deadline', 'activity_ids.user_id')
+    @api.depends_context('uid')
+    def _compute_my_activity_date_deadline(self):
+        for record in self:
+            record.my_activity_date_deadline = next((
+                activity.date_deadline
+                for activity in record.activity_ids
+                if activity.user_id.id == record.env.uid
+            ), False)
+
+    def _search_my_activity_date_deadline(self, operator, operand):
+        activity_ids = self.env['mail.activity']._search([
+            ('date_deadline', operator, operand),
+            ('res_model', '=', self._name),
+            ('user_id', '=', self.env.user.id)
+        ])
+        return [('activity_ids', 'in', activity_ids)]
+
     def write(self, vals):
         # Delete activities of archived record.
         if 'active' in vals and vals['active'] is False:
@@ -773,6 +795,76 @@ class MailActivityMixin(models.AbstractModel):
             [('res_model', '=', self._name), ('res_id', 'in', record_ids)]
         ).unlink()
         return result
+
+    def _read_progress_bar(self, domain, group_by, progress_bar):
+        group_by_fname = group_by.partition(':')[0]
+        if not (progress_bar['field'] == 'activity_state' and self._fields[group_by_fname].store):
+            return super()._read_progress_bar(domain, group_by, progress_bar)
+
+        # optimization for 'activity_state'
+
+        # explicitly check access rights, since we bypass the ORM
+        self.check_access_rights('read')
+        self._flush_search(domain, fields=[group_by_fname], order='id')
+        self.env['mail.activity'].flush(['res_model', 'res_id', 'user_id', 'date_deadline'])
+
+        query = self._where_calc(domain)
+        self._apply_ir_rules(query, 'read')
+        gb = group_by.partition(':')[0]
+        annotated_groupbys = [
+            self._read_group_process_groupby(gb, query)
+            for gb in [group_by, 'activity_state']
+        ]
+        groupby_dict = {gb['groupby']: gb for gb in annotated_groupbys}
+        for gb in annotated_groupbys:
+            if gb['field'] == 'activity_state':
+                gb['qualified_field'] = '"_last_activity_state"."activity_state"'
+        groupby_terms, orderby_terms = self._read_group_prepare('activity_state', [], annotated_groupbys, query)
+        select_terms = [
+            '%s as "%s"' % (gb['qualified_field'], gb['groupby'])
+            for gb in annotated_groupbys
+        ]
+        from_clause, where_clause, where_params = query.get_sql()
+        tz = self._context.get('tz') or self.env.user.tz or 'UTC'
+        select_query = """
+            SELECT 1 AS id, count(*) AS "__count", {fields}
+            FROM {from_clause}
+            JOIN (
+                SELECT res_id,
+                CASE
+                    WHEN min(date_deadline - (now() AT TIME ZONE COALESCE(res_partner.tz, %s))::date) > 0 THEN 'planned'
+                    WHEN min(date_deadline - (now() AT TIME ZONE COALESCE(res_partner.tz, %s))::date) < 0 THEN 'overdue'
+                    WHEN min(date_deadline - (now() AT TIME ZONE COALESCE(res_partner.tz, %s))::date) = 0 THEN 'today'
+                    ELSE null
+                END AS activity_state
+                FROM mail_activity
+                JOIN res_users ON (res_users.id = mail_activity.user_id)
+                JOIN res_partner ON (res_partner.id = res_users.partner_id)
+                WHERE res_model = '{model}'
+                GROUP BY res_id
+            ) AS "_last_activity_state" ON ("{table}".id = "_last_activity_state".res_id)
+            WHERE {where_clause}
+            GROUP BY {group_by}
+        """.format(
+            fields=', '.join(select_terms),
+            from_clause=from_clause,
+            model=self._name,
+            table=self._table,
+            where_clause=where_clause or '1=1',
+            group_by=', '.join(groupby_terms),
+        )
+        self.env.cr.execute(select_query, [tz] * 3 + where_params)
+        fetched_data = self.env.cr.dictfetchall()
+        self._read_group_resolve_many2one_fields(fetched_data, annotated_groupbys)
+        data = [
+            {key: self._read_group_prepare_data(key, val, groupby_dict)
+             for key, val in row.items()}
+            for row in fetched_data
+        ]
+        return [
+            self._read_group_format_result(vals, annotated_groupbys, [group_by], domain)
+            for vals in data
+        ]
 
     def toggle_active(self):
         """ Before archiving the record we should also remove its ongoing
@@ -866,9 +958,10 @@ class MailActivityMixin(models.AbstractModel):
                 'date_deadline': date_deadline,
                 'res_model_id': model_id,
                 'res_id': record.id,
-                'user_id': act_values.get('user_id') or activity_type.default_user_id.id or self.env.uid
             }
             create_vals.update(act_values)
+            if not create_vals.get('user_id'):
+                create_vals['user_id'] = activity_type.default_user_id.id or self.env.uid
             activities |= self.env['mail.activity'].create(create_vals)
         return activities
 

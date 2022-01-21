@@ -128,6 +128,20 @@ class TestEventData(TestEventCommon):
         self.assertEqual(event.event_mail_ids.interval_type, 'before_event')
         self.assertEqual(event.event_mail_ids.template_id, self.env.ref('event.event_reminder'))
         self.assertEqual(len(event.event_ticket_ids), 1)
+
+        # update template, unlink from event -> should not impact event
+        event_type.write({'has_seats_limitation': False})
+        self.assertEqual(event_type.seats_max, 0)
+        self.assertTrue(event.seats_limited)
+        self.assertEqual(event.seats_max, 30)  # original template value
+        event.write({'event_type_id': False})
+        self.assertEqual(event.event_type_id, self.env["event.type"])
+
+        # set template back -> update event
+        event.write({'event_type_id': event_type.id})
+        self.assertFalse(event.seats_limited)
+        self.assertEqual(event.seats_max, 0)
+        self.assertEqual(len(event.event_ticket_ids), 1)
         event_ticket1 = event.event_ticket_ids[0]
         self.assertEqual(event_ticket1.name, 'TestRegistration')
 
@@ -298,6 +312,100 @@ class TestEventData(TestEventCommon):
         self.assertEqual(event.seats_expected, 7)
 
 
+class TestEventRegistrationData(TestEventCommon):
+
+    @users('user_eventmanager')
+    def test_registration_partner_sync(self):
+        """ Test registration computed fields about partner """
+        test_email = '"Nibbler In Space" <nibbler@futurama.example.com>'
+        test_phone = '0456001122'
+
+        event = self.env['event.event'].browse(self.event_0.ids)
+        customer = self.env['res.partner'].browse(self.event_customer.id)
+
+        # take all from partner
+        event.write({
+            'registration_ids': [(0, 0, {
+                'partner_id': customer.id,
+            })]
+        })
+        new_reg = event.registration_ids[0]
+        self.assertEqual(new_reg.partner_id, customer)
+        self.assertEqual(new_reg.name, customer.name)
+        self.assertEqual(new_reg.email, customer.email)
+        self.assertEqual(new_reg.phone, customer.phone)
+
+        # partial update
+        event.write({
+            'registration_ids': [(0, 0, {
+                'partner_id': customer.id,
+                'name': 'Nibbler In Space',
+                'email': test_email,
+            })]
+        })
+        new_reg = event.registration_ids.sorted()[0]
+        self.assertEqual(new_reg.partner_id, customer)
+        self.assertEqual(
+            new_reg.name, 'Nibbler In Space',
+            'Registration should take user input over computed partner value')
+        self.assertEqual(
+            new_reg.email, test_email,
+            'Registration should take user input over computed partner value')
+        self.assertEqual(
+            new_reg.phone, customer.phone,
+            'Registration should take partner value if not user input')
+
+        # already filled information should not be updated
+        event.write({
+            'registration_ids': [(0, 0, {
+                'name': 'Nibbler In Space',
+                'phone': test_phone,
+            })]
+        })
+        new_reg = event.registration_ids.sorted()[0]
+        self.assertEqual(new_reg.name, 'Nibbler In Space')
+        self.assertEqual(new_reg.email, False)
+        self.assertEqual(new_reg.phone, test_phone)
+        new_reg.write({'partner_id': customer.id})
+        self.assertEqual(new_reg.partner_id, customer)
+        self.assertEqual(new_reg.name, 'Nibbler In Space')
+        self.assertEqual(new_reg.email, customer.email)
+        self.assertEqual(new_reg.phone, test_phone)
+
+    @users('user_eventmanager')
+    def test_registration_partner_sync_company(self):
+        """ Test synchronization involving companies """
+        event = self.env['event.event'].browse(self.event_0.ids)
+        customer = self.env['res.partner'].browse(self.event_customer.id)
+
+        # create company structure (using sudo as required partner manager group)
+        company = self.env['res.partner'].sudo().create({
+            'name': 'Customer Company',
+            'is_company': True,
+            'type': 'other',
+        })
+        customer.sudo().write({'type': 'invoice', 'parent_id': company.id})
+        contact = self.env['res.partner'].sudo().create({
+            'name': 'ContactName',
+            'parent_id': company.id,
+            'type': 'contact',
+            'email': 'ContactEmail <contact.email@test.example.com>',
+            'phone': '+32456998877',
+        })
+
+        # take all from partner
+        event.write({
+            'registration_ids': [(0, 0, {
+                'partner_id': customer.id,
+            })]
+        })
+        new_reg = event.registration_ids[0]
+        self.assertEqual(new_reg.partner_id, customer)
+        self.assertEqual(new_reg.name, contact.name)
+        self.assertEqual(new_reg.email, contact.email)
+        self.assertEqual(new_reg.phone, contact.phone)
+
+
 class TestEventTicketData(TestEventCommon):
 
     def setUp(self):
@@ -347,6 +455,14 @@ class TestEventTicketData(TestEventCommon):
             'end_sale_date': date(2020, 2, 20),
         })
         self.assertFalse(second_ticket.sale_available)
+        self.assertFalse(second_ticket.is_expired)
+        # sale started today
+        second_ticket.write({
+            'start_sale_date': date(2020, 1, 31),
+            'end_sale_date': date(2020, 2, 20),
+        })
+        self.assertTrue(second_ticket.sale_available)
+        self.assertTrue(second_ticket.is_launched())
         self.assertFalse(second_ticket.is_expired)
         # incoherent dates are invalid
         with self.assertRaises(exceptions.UserError):

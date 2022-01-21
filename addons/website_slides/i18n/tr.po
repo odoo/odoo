@@ -18,12 +18,13 @@
 # Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2020
 # Umur Akın <umura@projetgrup.com>, 2020
 # ANIL TAN SAĞIR <anils@projetgrup.com>, 2020
-# abc Def <hdogan1974@gmail.com>, 2020
 # Martin Trigaux, 2020
 # Murat Kaplan <muratk@projetgrup.com>, 2020
 # Yedigen, 2020
 # Murat Durmuş <muratd@projetgrup.com>, 2020
 # Ediz Duman <neps1192@gmail.com>, 2020
+# Nadir Gazioglu <nadirgazioglu@gmail.com>, 2021
+# abc Def <hdogan1974@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -31,7 +32,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-16 13:33+0000\n"
 "PO-Revision-Date: 2020-09-07 08:22+0000\n"
-"Last-Translator: Ediz Duman <neps1192@gmail.com>, 2020\n"
+"Last-Translator: abc Def <hdogan1974@gmail.com>, 2021\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -580,8 +581,8 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
 msgid ""
-"<span class=\"badge badge-pill badge-success py-1 px-2 mx-auto\" style"
-"=\"font-size: 1em\"><i class=\"fa fa-check\"/> Completed</span>"
+"<span class=\"badge badge-pill badge-success py-1 px-2 mx-auto\" "
+"style=\"font-size: 1em\"><i class=\"fa fa-check\"/> Completed</span>"
 msgstr ""
 
 #. module: website_slides
@@ -781,6 +782,7 @@ msgstr "<span>XP</span>"
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_course_fullscreen_player.js:0
+#: code:addons/website_slides/static/src/js/slides_share.js:0
 #, python-format
 msgid "<strong>Thank you!</strong> Mail has been sent."
 msgstr "<strong>Teşekkür ederim!</strong>Posta gönderildi."
@@ -794,6 +796,15 @@ msgstr "Çağlardan Gelen Güçlü Bir Orman"
 #: model:slide.answer,text_value:website_slides.slide_slide_demo_0_4_question_0_0
 msgid "A fruit"
 msgstr "Meyve"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
+#, python-format
+msgid ""
+"A good course has a structure. Pick a name for your first section and click "
+"<b>Save</b> to create it."
+msgstr ""
 
 #. module: website_slides
 #. openerp-web
@@ -1792,7 +1803,7 @@ msgstr "Bağlantıyı kopyala"
 #: model:slide.answer,comment:website_slides.slide_slide_demo_2_0_question_0_1
 #: model:slide.answer,comment:website_slides.slide_slide_demo_2_0_question_1_1
 msgid "Correct !"
-msgstr ""
+msgstr "Doğru !"
 
 #. module: website_slides
 #: model:slide.answer,comment:website_slides.slide_slide_demo_0_4_question_1_0
@@ -2800,7 +2811,7 @@ msgstr "Görsel 512"
 #: model:slide.answer,comment:website_slides.slide_slide_demo_2_0_question_0_0
 #: model:slide.answer,comment:website_slides.slide_slide_demo_2_0_question_1_0
 msgid "Incorrect !"
-msgstr ""
+msgstr "Doğru değil !"
 
 #. module: website_slides
 #: model:slide.answer,comment:website_slides.slide_slide_demo_0_4_question_0_1
@@ -3487,7 +3498,7 @@ msgstr "Aramanızla eşleşen kurs bulunamadı."
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.slide_slide_action_report
 msgid "No data yet!"
-msgstr ""
+msgstr "Henüz veri yok!"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.user_profile_content
@@ -3707,8 +3718,8 @@ msgid ""
 "Please <a href=\"/web/signup?redirect=%s\">create an account</a> to vote "
 "this lesson"
 msgstr ""
-"Lütfen bu derse oy vermek için bir <a href=\"/web/signup?redirect=%s\"> "
-"hesap oluşturun</a>"
+"Lütfen bu derse oy vermek için bir <a "
+"href=\"/web/signup?redirect=%s\"> hesap oluşturun</a>"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_slide.py:0
@@ -4255,7 +4266,7 @@ msgstr "E-posta Gönder"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__seo_name
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__seo_name
 msgid "Seo name"
-msgstr ""
+msgstr "Seo adı"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_answer__sequence
@@ -4466,7 +4477,7 @@ msgstr "Sıralandır"
 #. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_channel__promote_strategy__specific
 msgid "Specific"
-msgstr ""
+msgstr "Özel"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
@@ -5486,6 +5497,13 @@ msgstr ""
 "için size bir test önereceğiz."
 
 #. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/slide_management.xml:0
+#, python-format
+msgid "e.g. Introduction"
+msgstr ""
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "e.g. https://www.odoo.com"
 msgstr "Örn. https://www.odoo.com"
@@ -5559,7 +5577,7 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.join_course_link
 msgid "to download resources"
-msgstr ""
+msgstr "kaynakları indirmek için"
 
 #. module: website_slides
 #. openerp-web

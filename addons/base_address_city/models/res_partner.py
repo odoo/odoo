@@ -19,10 +19,15 @@ class Partner(models.Model):
             self.city = self.city_id.name
             self.zip = self.city_id.zipcode
             self.state_id = self.city_id.state_id
-        else:
+        elif self._origin:
             self.city = False
             self.zip = False
             self.state_id = False
+
+    @api.model
+    def _address_fields(self):
+        """Returns the list of address fields that are synced from the parent."""
+        return super(Partner, self)._address_fields() + ['city_id',]
 
     @api.model
     def _fields_view_get_address(self, arch):

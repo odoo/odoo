@@ -117,6 +117,7 @@ import collections.abc
 import warnings
 
 import logging
+import reprlib
 import traceback
 from functools import partial
 
@@ -310,7 +311,10 @@ def distribute_not(domain):
             if negate:
                 left, operator, right = token
                 if operator in TERM_OPERATORS_NEGATION:
-                    result.append((left, TERM_OPERATORS_NEGATION[operator], right))
+                    if token in (TRUE_LEAF, FALSE_LEAF):
+                        result.append(FALSE_LEAF if token == TRUE_LEAF else TRUE_LEAF)
+                    else:
+                        result.append((left, TERM_OPERATORS_NEGATION[operator], right))
                 else:
                     result.append(NOT_OPERATOR)
                     result.append(token)
@@ -526,42 +530,52 @@ class expression(object):
             if not ids:
                 return [FALSE_LEAF]
             if left_model._parent_store:
-                doms = OR([
+                domain = OR([
                     [('parent_path', '=like', rec.parent_path + '%')]
                     for rec in left_model.browse(ids)
                 ])
-                if prefix:
-                    return [(left, 'in', left_model._search(doms, order='id'))]
-                return doms
             else:
+                # recursively retrieve all children nodes with sudo(); the
+                # filtering of forbidden records is done by the rest of the
+                # domain
                 parent_name = parent or left_model._parent_name
-                child_ids = set(ids)
-                while ids:
-                    ids = left_model._search([(parent_name, 'in', ids)], order='id')
-                    child_ids.update(ids)
-                return [(left, 'in', list(child_ids))]
+                child_ids = set()
+                records = left_model.sudo().browse(ids)
+                while records:
+                    child_ids.update(records._ids)
+                    records = records.search([(parent_name, 'in', records.ids)], order='id')
+                domain = [('id', 'in', list(child_ids))]
+            if prefix:
+                return [(left, 'in', left_model._search(domain, order='id'))]
+            return domain
 
         def parent_of_domain(left, ids, left_model, parent=None, prefix=''):
             """ Return a domain implementing the parent_of operator for [(left,parent_of,ids)],
                 either as a range using the parent_path tree lookup field
                 (when available), or as an expanded [(left,in,parent_ids)] """
+            if not ids:
+                return [FALSE_LEAF]
             if left_model._parent_store:
                 parent_ids = [
                     int(label)
                     for rec in left_model.browse(ids)
                     for label in rec.parent_path.split('/')[:-1]
                 ]
-                if prefix:
-                    return [(left, 'in', parent_ids)]
-                return [('id', 'in', parent_ids)]
+                domain = [('id', 'in', parent_ids)]
             else:
+                # recursively retrieve all parent nodes with sudo() to avoid
+                # access rights errors; the filtering of forbidden records is
+                # done by the rest of the domain
                 parent_name = parent or left_model._parent_name
                 parent_ids = set()
-                for record in left_model.browse(ids):
-                    while record:
-                        parent_ids.add(record.id)
-                        record = record[parent_name]
-                return [(left, 'in', list(parent_ids))]
+                records = left_model.sudo().browse(ids)
+                while records:
+                    parent_ids.update(records._ids)
+                    records = records[parent_name]
+                domain = [('id', 'in', list(parent_ids))]
+            if prefix:
+                return [(left, 'in', left_model._search(domain, order='id'))]
+            return domain
 
         HIERARCHY_FUNCS = {'child_of': child_of_domain,
                            'parent_of': parent_of_domain}
@@ -746,7 +760,7 @@ class expression(object):
 
                     if isinstance(ids2, Query) and comodel._fields[field.inverse_name].store:
                         op1 = 'not inselect' if operator in NEGATIVE_TERM_OPERATORS else 'inselect'
-                        subquery, subparams = ids2.select('"%s"."%s"' % (comodel._table, field.inverse_name))
+                        subquery, subparams = ids2.subselect('"%s"."%s"' % (comodel._table, field.inverse_name))
                         push(('id', op1, (subquery, subparams)), model, alias, internal=True)
                     elif ids2 and comodel._fields[field.inverse_name].store:
                         op1 = 'not inselect' if operator in NEGATIVE_TERM_OPERATORS else 'inselect'
@@ -809,7 +823,7 @@ class expression(object):
                     if isinstance(ids2, Query):
                         # rewrite condition in terms of ids2
                         subop = 'not inselect' if operator in NEGATIVE_TERM_OPERATORS else 'inselect'
-                        subquery, subparams = ids2.select()
+                        subquery, subparams = ids2.subselect()
                         query = 'SELECT "%s" FROM "%s" WHERE "%s" IN (%s)' % (rel_id1, rel_table, rel_id2, subquery)
                         push(('id', subop, (query, subparams)), model, alias, internal=True)
                     else:
@@ -872,7 +886,7 @@ class expression(object):
                     push(('id', inselect_operator, (subselect, params)), model, alias, internal=True)
                 else:
                     _logger.error("Binary field '%s' stored in attachment: ignore %s %s %s",
-                                  field.string, left, operator, right)
+                                  field.string, left, operator, reprlib.repr(right))
                     push(TRUE_LEAF, model, alias)
 
             # -------------------------------------------------
@@ -905,7 +919,7 @@ class expression(object):
                     sql_operator = {'=like': 'like', '=ilike': 'ilike'}.get(operator, operator)
                     if need_wildcard:
                         right = '%%%s%%' % right
-                    if sql_operator == 'in':
+                    if sql_operator in ('in', 'not in'):
                         right = tuple(right)
 
                     unaccent = self._unaccent if sql_operator.endswith('like') else lambda x: x
@@ -967,7 +981,7 @@ class expression(object):
                     query = '(%s."%s" IS NULL)' % (table_alias, left)
                 params = []
             elif isinstance(right, Query):
-                subquery, subparams = right.select()
+                subquery, subparams = right.subselect()
                 query = '(%s."%s" %s (%s))' % (table_alias, left, operator, subquery)
                 params = subparams
             elif isinstance(right, (list, tuple)):

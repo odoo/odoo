@@ -18,15 +18,15 @@
 # Pernille Kristensen <pernillekristensen1994@gmail.com>, 2020
 # lhmflexerp <lhm@flexerp.dk>, 2020
 # Mads Søndergaard, 2020
-# Mads Søndergaard <mads@vkdata.dk>, 2020
+# Mads Søndergaard, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-16 13:33+0000\n"
+"POT-Creation-Date: 2020-11-27 15:34+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Mads Søndergaard <mads@vkdata.dk>, 2020\n"
+"Last-Translator: Mads Søndergaard, 2021\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -86,11 +86,6 @@ msgstr "%s certificering bestået"
 #, python-format
 msgid "%s challenge certification"
 msgstr "%s udfordring certificering"
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_fill_form
-msgid "&amp;times;"
-msgstr "&amp;times;"
 
 #. module: survey
 #: model:ir.actions.report,print_report_name:survey.certification_report
@@ -783,9 +778,8 @@ msgstr "Der er opstået et problem"
 #. module: survey
 #: code:addons/survey/models/survey_user.py:0
 #, python-format
-msgid "A question is either skipped or answered, not both."
-msgstr ""
-"Et spørgsmål springes enten over, eller besvares, men ikke begge dele."
+msgid "A question can either be skipped or answered, not both."
+msgstr "Et spørgsmål kan enten springes over eller besvares; ikke begge."
 
 #. module: survey
 #: model:survey.question,title:survey.survey_feedback_p2
@@ -4667,6 +4661,26 @@ msgid "You cannot send an invitation for a survey that has no questions."
 msgstr ""
 "Du kan ikke sende en invitation til en undersøgelse, der ikke har nogen "
 "spørgsmål."
+
+#. module: survey
+#: code:addons/survey/models/survey_survey.py:0
+#, python-format
+msgid ""
+"You cannot send an invitation for a \"One page per section\" survey if the "
+"survey has no sections."
+msgstr ""
+"Du kan ikke sende en invitation til en \"En side per sektion\" undersøgelse,"
+" hvis undersøgelsen ikke har nogle sektioner."
+
+#. module: survey
+#: code:addons/survey/models/survey_survey.py:0
+#, python-format
+msgid ""
+"You cannot send an invitation for a \"One page per section\" survey if the "
+"survey only contains empty sections."
+msgstr ""
+"Du kan ikke sende en invitation til en \"En side per sektion\" undersøgelse,"
+" hvis undersøgelsen kun indeholder tomme sektioner."
 
 #. module: survey
 #: code:addons/survey/models/survey_survey.py:0

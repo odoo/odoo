@@ -80,6 +80,41 @@ odoo.define('web.basic_model_tests', function (require) {
     }, function () {
         QUnit.module('BasicModel');
 
+        QUnit.test('context is given when using a resequence', async function (assert) {
+            assert.expect(2);
+            delete this.params["res_id"];
+            this.data.product.fields.sequence = {string: "Sequence", type: "integer"};
+
+            const model = await createModel({
+                Model: BasicModel,
+                data: this.data,
+                mockRPC: function (route, args) {
+                    if (route === '/web/dataset/resequence') {
+                        assert.deepEqual(args.context, { active_field: 2 },
+                            "context should be correct after a resequence");
+                    }
+                    else if (args.method === "read") {
+                        assert.deepEqual(args.kwargs.context, { active_field: 2 },
+                            "context should be correct after a 'read' RPC");
+                    }
+                    return this._super.apply(this, arguments);
+                },
+            });
+            const params = _.extend(this.params, {
+                context: { active_field: 2 },
+                groupedBy: ['product_id'],
+                fieldNames: ['foo'],
+            });
+    
+            model.load(params)
+                .then(function (stateID) {
+                    return model.resequence('product', [41, 37], stateID);
+                })
+                .then(function () {
+                    model.destroy();
+                });
+        });
+
         QUnit.test('can process x2many commands', async function (assert) {
             assert.expect(6);
 
@@ -124,6 +159,42 @@ odoo.define('web.basic_model_tests', function (require) {
             assert.containsOnce(form, '.o_field_x2many_list', 'should have rendered a x2many list');
             assert.containsOnce(form, '.o_data_row', 'should have added 1 record as default');
             assert.containsOnce(form, '.o_field_x2many_list_row_add', 'should have rendered a x2many add row on list');
+            form.destroy();
+        });
+
+        QUnit.test('can process x2many commands (with multiple fields)', async function (assert) {
+            assert.expect(1);
+
+            this.data.partner.fields.product_ids.default = [[0, 0, { category: [] }]];
+
+            const form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: `
+                    <form>
+                        <field name="product_ids"/>
+                    </form>
+                `,
+                archs: {
+                    'product,false,list': `
+                        <tree>
+                            <field name="display_name"/>
+                            <field name="active"/>
+                        </tree>
+                    `,
+                },
+                mockRPC(route, args) {
+                    if (args.method === "create") {
+                        const product_ids = args.args[0].product_ids;
+                        const values = product_ids[0][2];
+                        assert.strictEqual(values.active, true, "active field should be set");
+                    }
+                    return this._super.apply(this, arguments);
+                },
+            });
+
+            await testUtils.form.clickSave(form);
             form.destroy();
         });
 
@@ -1109,7 +1180,7 @@ odoo.define('web.basic_model_tests', function (require) {
                 mockRPC: function (route, args) {
                     if (args.method === 'create') {
                         // has to be done before the call to _super
-                        assert.notOk('product_ids' in args.args[0], "should not have any value");
+                        assert.deepEqual(args.args[0].product_ids, [], "should not have any command");
                         assert.notOk('category' in args.args[0], "should not have other fields");
 
                         assert.strictEqual(args.kwargs.context.active_field, 2,

@@ -50,4 +50,5 @@
         'static/src/bugfix/bugfix.xml',
         'static/src/xml/hr_templates.xml',
     ],
+    'license': 'LGPL-3',
 }

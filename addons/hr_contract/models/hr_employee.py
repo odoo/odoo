@@ -17,10 +17,14 @@ class Employee(models.Model):
     contract_warning = fields.Boolean(string='Contract Warning', store=True, compute='_compute_contract_warning', groups="hr.group_hr_user")
     first_contract_date = fields.Date(compute='_compute_first_contract_date', groups="hr.group_hr_user")
 
-    @api.depends('contract_ids.state')
+    def _get_first_contracts(self):
+        self.ensure_one()
+        return self.sudo().contract_ids.filtered(lambda c: c.state != 'cancel')
+
+    @api.depends('contract_ids.state', 'contract_ids.date_start')
     def _compute_first_contract_date(self):
         for employee in self:
-            contracts = employee.sudo().contract_ids.filtered(lambda c: c.state != 'cancel')
+            contracts = employee._get_first_contracts()
             if contracts:
                 employee.first_contract_date = min(contracts.mapped('date_start'))
             else:

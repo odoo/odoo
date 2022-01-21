@@ -50,7 +50,8 @@ class Lead2OpportunityPartner(models.TransientModel):
     @api.depends('duplicated_lead_ids')
     def _compute_name(self):
         for convert in self:
-            convert.name = 'merge' if convert.duplicated_lead_ids and len(convert.duplicated_lead_ids) >= 2 else 'convert'
+            if not convert.name:
+                convert.name = 'merge' if convert.duplicated_lead_ids and len(convert.duplicated_lead_ids) >= 2 else 'convert'
 
     @api.depends('lead_id')
     def _compute_action(self):
@@ -77,7 +78,7 @@ class Lead2OpportunityPartner(models.TransientModel):
                 convert.lead_id.partner_id.email if convert.lead_id.partner_id.email else convert.lead_id.email_from,
                 include_lost=True).ids
 
-    @api.depends('action')
+    @api.depends('action', 'lead_id')
     def _compute_partner_id(self):
         for convert in self:
             if convert.action == 'exist':

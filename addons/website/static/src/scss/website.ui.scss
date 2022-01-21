@@ -27,6 +27,10 @@ body.o_connected_user {
 
         &.editor_enable.editor_has_snippets {
             padding-right: 0 !important;
+
+            .modal:not(.o_technical_modal) {
+                right: 0;
+            }
         }
         #oe_main_menu_navbar, #web_editor-top-edit {
             transform: translateY(-100%);
@@ -124,6 +128,13 @@ body.o_connected_user {
     &:after {
         transform: rotate(-45deg);
     }
+}
+
+// BLOCKING LOADER
+#o_website_page_loader {
+    @include o-position-absolute(0, 0, 0, 0);
+    z-index: $zindex-modal - 1;
+    background-color: rgba(0, 0, 0, 0.8);
 }
 
 // MODALS

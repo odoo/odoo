@@ -3,17 +3,19 @@
 # 	* purchase_product_matrix
 # 
 # Translators:
-# Martin Trigaux, 2019
-# krnkris, 2019
-# gezza <geza.nagy@oregional.hu>, 2019
+# Martin Trigaux, 2021
+# krnkris, 2021
+# gezza <geza.nagy@oregional.hu>, 2021
+# Ákos Nagy <akos.nagy@oregional.hu>, 2021
+# Tamás Németh <ntomasz81@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:18+0000\n"
-"PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: gezza <geza.nagy@oregional.hu>, 2019\n"
+"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"PO-Revision-Date: 2020-09-07 08:17+0000\n"
+"Last-Translator: Tamás Németh <ntomasz81@gmail.com>, 2021\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,12 +29,18 @@ msgid "Attribute Values"
 msgstr "Tulajdonság értékek"
 
 #. module: purchase_product_matrix
+#: model:ir.model.fields,field_description:purchase_product_matrix.field_purchase_order__display_name
+#: model:ir.model.fields,field_description:purchase_product_matrix.field_purchase_order_line__display_name
+msgid "Display Name"
+msgstr "Név megjelenítése"
+
+#. module: purchase_product_matrix
 #. openerp-web
 #: code:addons/purchase_product_matrix/static/src/js/product_matrix_configurator.js:0
 #: code:addons/purchase_product_matrix/static/src/js/product_matrix_configurator.js:0
 #, python-format
 msgid "Edit Configuration"
-msgstr ""
+msgstr "Konfiguráció szerkesztése"
 
 #. module: purchase_product_matrix
 #. openerp-web
@@ -40,7 +48,7 @@ msgstr ""
 #: code:addons/purchase_product_matrix/static/src/js/product_matrix_configurator.js:0
 #, python-format
 msgid "External Link"
-msgstr ""
+msgstr "Külső hivatkozás"
 
 #. module: purchase_product_matrix
 #: model:ir.model.fields,field_description:purchase_product_matrix.field_purchase_order__grid
@@ -58,6 +66,12 @@ msgid "Grid Update"
 msgstr ""
 
 #. module: purchase_product_matrix
+#: model:ir.model.fields,field_description:purchase_product_matrix.field_purchase_order__id
+#: model:ir.model.fields,field_description:purchase_product_matrix.field_purchase_order_line__id
+msgid "ID"
+msgstr "Azonosító"
+
+#. module: purchase_product_matrix
 #: model:ir.model.fields,help:purchase_product_matrix.field_purchase_order__report_grids
 msgid ""
 "If set, the matrix of configurable products will be shown on the report of "
@@ -67,7 +81,13 @@ msgstr ""
 #. module: purchase_product_matrix
 #: model:ir.model.fields,field_description:purchase_product_matrix.field_purchase_order_line__is_configurable_product
 msgid "Is the product configurable?"
-msgstr ""
+msgstr "A termék konfigurálható?"
+
+#. module: purchase_product_matrix
+#: model:ir.model.fields,field_description:purchase_product_matrix.field_purchase_order____last_update
+#: model:ir.model.fields,field_description:purchase_product_matrix.field_purchase_order_line____last_update
+msgid "Last Modified on"
+msgstr "Legutóbb módosítva"
 
 #. module: purchase_product_matrix
 #: model:ir.model.fields,field_description:purchase_product_matrix.field_purchase_order__report_grids
@@ -87,17 +107,17 @@ msgstr "Terméksablon"
 #. module: purchase_product_matrix
 #: model:ir.model.fields,field_description:purchase_product_matrix.field_purchase_order_line__product_no_variant_attribute_value_ids
 msgid "Product attribute values that do not create variants"
-msgstr ""
+msgstr "Terméktulajdonság értékek, amelyek nem hoznak létre változatokat"
 
 #. module: purchase_product_matrix
 #: model:ir.model,name:purchase_product_matrix.model_purchase_order
 msgid "Purchase Order"
-msgstr "Beszerzési megrendelés"
+msgstr "Beszerzési rendelés"
 
 #. module: purchase_product_matrix
 #: model:ir.model,name:purchase_product_matrix.model_purchase_order_line
 msgid "Purchase Order Line"
-msgstr "Beszállítói megrendelés sor"
+msgstr "Beszerzési rendelés sor"
 
 #. module: purchase_product_matrix
 #: model:ir.model.fields,help:purchase_product_matrix.field_purchase_order__grid_product_tmpl_id
@@ -108,7 +128,7 @@ msgstr ""
 #: model:ir.model.fields,help:purchase_product_matrix.field_purchase_order__grid
 msgid ""
 "Technical storage of grid. \n"
-"If grid_update, will be loaded on the SO. \n"
+"If grid_update, will be loaded on the PO. \n"
 "If not, represents the matrix to open."
 msgstr ""
 

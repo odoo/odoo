@@ -13,11 +13,11 @@ class ResCompany(models.Model):
     def _autorise_lock_date_changes(self, vals):
         '''Check the lock dates for the current companies. This can't be done in a api.constrains because we need
         to perform some comparison between new/old values. This method forces the lock dates to be irreversible.
-        * You cannot define stricter conditions on advisors than on users. Then, the lock date on advisor must be set
-        after the lock date for users.
-        * You cannot lock a period that is not finished yet. Then, the lock date for advisors must be set after the
-        last day of the previous month.
-        * The new lock date for advisors must be set after the previous lock date.
+        * You cannot set stricter restrictions on advisors than on users.
+        Therefore, the All Users Lock Date must be anterior (or equal) to the Invoice/Bills Lock Date.
+        * You cannot lock a period that has not yet ended.
+        Therefore, the All Users Lock Date must be anterior (or equal) to the last day of the previous month.
+        * Any new All Users Lock Date must be posterior (or equal) to the previous one.
         * You cannot delete a tax lock date, lock a period that is not finished yet or the tax lock date must be set after
         the last day of the previous month.
         :param vals: The values passed to the write method.
@@ -46,7 +46,7 @@ class ResCompany(models.Model):
             tax_lock_date = tax_lock_date or old_tax_lock_date
             # The user attempts to set a tax lock date prior to the last day of previous month
             if tax_lock_date and tax_lock_date > previous_month:
-                raise UserError(_('You cannot lock a period that is not finished yet. Please make sure that the tax lock date is not set after the last day of the previous month.'))
+                raise UserError(_('You cannot lock a period that has not yet ended. Therefore, the tax lock date must be anterior (or equal) to the last day of the previous month.'))
 
             # The user attempts to remove the lock date for advisors
             if old_fiscalyear_lock_date and not fiscalyear_lock_date and 'fiscalyear_lock_date' in vals:
@@ -54,7 +54,7 @@ class ResCompany(models.Model):
 
             # The user attempts to set a lock date for advisors prior to the previous one
             if old_fiscalyear_lock_date and fiscalyear_lock_date and fiscalyear_lock_date < old_fiscalyear_lock_date:
-                raise UserError(_('The new lock date for advisors must be set after the previous lock date.'))
+                raise UserError(_('Any new All Users Lock Date must be posterior (or equal) to the previous one.'))
 
             # In case of no new fiscal year in vals, fallback to the oldest
             fiscalyear_lock_date = fiscalyear_lock_date or old_fiscalyear_lock_date
@@ -63,7 +63,7 @@ class ResCompany(models.Model):
 
             # The user attempts to set a lock date for advisors prior to the last day of previous month
             if fiscalyear_lock_date > previous_month:
-                raise UserError(_('You cannot lock a period that is not finished yet. Please make sure that the lock date for advisors is not set after the last day of the previous month.'))
+                raise UserError(_('You cannot lock a period that has not yet ended. Therefore, the All Users Lock Date must be anterior (or equal) to the last day of the previous month.'))
 
             # In case of no new period lock date in vals, fallback to the one defined in the company
             period_lock_date = period_lock_date or old_period_lock_date
@@ -72,7 +72,7 @@ class ResCompany(models.Model):
 
             # The user attempts to set a lock date for advisors prior to the lock date for users
             if period_lock_date < fiscalyear_lock_date:
-                raise UserError(_('You cannot define stricter conditions on advisors than on users. Please make sure that the lock date on advisor is set before the lock date for users.'))
+                raise UserError(_('You cannot set stricter restrictions on advisors than on users. Therefore, the All Users Lock Date must be anterior (or equal) to the Invoice/Bills Lock Date.'))
 
     def write(self, vals):
         # fiscalyear_lock_date can't be set to a prior date

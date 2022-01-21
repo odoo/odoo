@@ -98,7 +98,7 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
             flex: 0 0 auto;
             .o_thread_window_close, .o_thread_window_expand {
                 color: white;
-                padding: 3px;
+                padding: 0px 3px;
                 margin-left: 5px;
                 @include o-hover-opacity(0.7, 1);
             }
@@ -570,6 +570,20 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
         display: none;
     }
 
+    .btn {
+        color: #FFFFFF;
+        background-color: #30908e;
+        border-color: #2d8685;
+        border: 1px solid transparent;
+    }
+
+    .btn-sm {
+        padding: 0.0625rem 0.3125rem;
+        font-size: 0.75rem;
+        line-height: 1.5;
+        border-radius: 0.2rem;
+    }
+
     .o_livechat_rating {
         /* Livechat Rating : feedback smiley */
         flex: 1 1 auto;
@@ -580,7 +594,31 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
         .o_livechat_email {
             font-size: 12px;
             > div {
+                display: flex;
                 padding: 5px 0;
+                input {
+                    display: block;
+                    width: 100%;
+                    height: calc(1.5em + 0.75rem + 2px);
+                    padding: 0.375rem 0.75rem;
+                    font-size: 0.875rem;
+                    font-weight: 400;
+                    line-height: 1.5;
+                    color: #495057;
+                    background-color: #FFFFFF;
+                    background-clip: padding-box;
+                    border: 1px solid #CED4DA;
+                }
+                button {
+                    display: inline-block;
+                    font-weight: 400;
+                    text-align: center;
+                    vertical-align: middle;
+                    user-select: none;
+                    padding: 0.375rem 0.75rem;
+                    font-size: 0.875rem;
+                    line-height: 1.5;
+                }
             }
         }
 
@@ -610,7 +648,7 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
 
         /* feedback reason */
         .o_livechat_rating_reason {
-            margin: 10px 0;
+            margin: 10px 0px 25px 0px;
             display: none; /* hidden by default */
 
             > textarea {
@@ -623,6 +661,10 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
         .o_livechat_rating_reason_button > input {
             float: right;
         }
+    }
+
+    .o_composer_text_field {
+        line-height: 1.3em;
     }
 }
 

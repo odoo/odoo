@@ -45,6 +45,7 @@ function factory(dependencies) {
                     data2.partner = [['unlink-all']];
                 } else {
                     const partnerData = {
+                        display_name: data.display_name,
                         email: data.email,
                         id: data.partner_id,
                         name: data.name,
@@ -158,6 +159,10 @@ function factory(dependencies) {
                     args: [[this.followedThread.id]],
                     kwargs,
                 }));
+                this.env.services['notification'].notify({
+                    type: 'success',
+                    message: this.env._t("The subscription preferences were successfully applied."),
+                });
             }
             this.closeSubtypes();
         }
@@ -235,6 +240,9 @@ function factory(dependencies) {
         }),
         channelName: attr({
             related: 'channel.name',
+        }),
+        displayName: attr({
+            related: 'partner.display_name'
         }),
         followedThread: many2one('mail.thread', {
             inverse: 'followers',

@@ -8,13 +8,13 @@
 # Diogo Fonseca <dsf@thinkopensolutions.pt>, 2020
 # Martin Trigaux, 2020
 # Ricardo Martins <ricardo.nbs.martins@gmail.com>, 2020
-# Manuela Silva <manuelarodsilva@gmail.com>, 2020
+# Manuela Silva <mmsrs@sky.com>, 2020
 # Pedro Castro Silva <pedrocs@exo.pt>, 2020
 # Joao Felix <jrmfelix@gmail.com>, 2020
 # Nuno Silva <nuno.silva@arxi.pt>, 2020
 # Pedro Filipe <pedro2.10@hotmail.com>, 2020
-# Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2020
 # Diogo Duarte <diogocarvalhoduarte@gmail.com>, 2020
+# Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2021
 # 
 msgid ""
 msgstr ""
@@ -22,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-29 13:45+0000\n"
 "PO-Revision-Date: 2020-09-07 08:12+0000\n"
-"Last-Translator: Diogo Duarte <diogocarvalhoduarte@gmail.com>, 2020\n"
+"Last-Translator: Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2021\n"
 "Language-Team: Portuguese (https://www.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1318,7 +1318,7 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Receipts"
-msgstr "Receções"
+msgstr "Recibos"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
@@ -1574,6 +1574,12 @@ msgid "The current user has no related employee. Please, create one."
 msgstr ""
 
 #. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "The expense reports were successfully approved."
+msgstr ""
+
+#. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid ""
 "The first word of the email subject did not correspond to any product code. "
@@ -1593,6 +1599,12 @@ msgstr "O diário utilizado quando a despesa é feita."
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__bank_journal_id
 msgid "The payment method used when the expense is paid by the company."
+msgstr ""
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "There are no expense reports to approve."
 msgstr ""
 
 #. module: hr_expense
@@ -1894,4 +1906,10 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "use OCR to fill data from a picture of the bill"
+msgstr ""
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/account_move.py:0
+#, python-format
+msgid "Payment Cancelled"
 msgstr ""

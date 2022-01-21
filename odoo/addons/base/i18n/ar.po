@@ -11,7 +11,7 @@
 # aymen rahmani <aymen.isims@gmail.com>, 2020
 # Mohammed Ibrahim <m.ibrahim@mussder.com>, 2020
 # Ghaith Gammar <g.gammar@saharaifs.net>, 2020
-# abdullah alsabi <alsabi.abdullah@gmail.com>, 2020
+# Abdullah Alsabi <alsabi.abdullah@gmail.com>, 2020
 # Mohamed Alansari <Mohammad.alansari@outlook.com>, 2020
 # nle_odoo, 2020
 # Zuhair Hammadi <zuhair12@gmail.com>, 2020
@@ -37,6 +37,10 @@
 # Nabil Jabraouti <nabil@bluechipcd.com>, 2020
 # Martin Trigaux, 2020
 # Mustafa Rawi <mustafa@cubexco.com>, 2020
+# Zaid J. Barghouthi <barghouthi.z@gmail.com>, 2021
+# Rachid Al Assir <rachidalassir@gmail.com>, 2021
+# Hussain Hammad, 2021
+# Malaz Abuidris <msea@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -44,7 +48,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 13:50+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>, 2020\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2022\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -457,6 +461,8 @@ msgid ""
 "        Accounting reports for Sweden\n"
 "    "
 msgstr ""
+"\n"
+"التقارير المحاسبية للسويد"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ch_reports
@@ -1125,18 +1131,11 @@ msgid ""
 "\n"
 "    Make the lock date irreversible:\n"
 "\n"
-"    * You cannot define stricter conditions on advisors than on users. Then, the lock date on advisor must be set before the lock date for users.\n"
-"    * You cannot lock a period that is not finished yet. Then, the lock date for advisors must be set before the last day of the previous month.\n"
-"    * The new lock date for advisors must be set after the previous lock date.\n"
+"    * You cannot set stricter restrictions on advisors than on users. Therefore, the All Users Lock Date must be anterior (or equal) to the Invoice/Bills Lock Date.\n"
+"    * You cannot lock a period that has not yet ended. Therefore, the All Users Lock Date must be anterior (or equal) to the last day of the previous month.\n"
+"    * Any new All Users Lock Date must be posterior (or equal) to the previous one.\n"
 "    "
 msgstr ""
-"\n"
-"    جعل تاريخ القفل نهائيًا:\n"
-"\n"
-"    * لا يمكنك وضع شروط أكثر صرامة علي الاستشاريين من المستخدمين. لذا، يجب تعيين تاريخ قفل للاستشاري قبل تاريخ القفل المعين للمستخدمين.\n"
-"    * لا يمكنك قفل مدة لم تنتهِ بعد. لذا، يجب تعيين تاريخ القفل للاستشاريين بحيث لا يجاوز تاريخ آخر أيام الشهر الماضي.\n"
-"    * يجب أن يكون تاريخ القفل الجديد للاستشاريين بعد تاريخ القفل السابق.\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_coupon_taxcloud
@@ -7151,12 +7150,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid ""
 "<span class=\"o_form_label o_td_label\" name=\"address_name\">\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'contact')]}\">Company Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'invoice')]}\">Invoice Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'delivery')]}\">Delivery Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'other')]}\">Other Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'private')]}\">Private Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', False)]}\">Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'contact')]}\">Company Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'invoice')]}\">Invoice Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'delivery')]}\">Delivery Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'other')]}\">Other Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'private')]}\">Private Address</b>\n"
+"                                <b attrs=\"{'invisible': ['&amp;', ('parent_id', '!=', False), ('type', '!=', False)]}\">Address</b>\n"
 "                            </span>"
 msgstr ""
 
@@ -13606,7 +13605,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_industry_fsm_sale
 msgid "Field Service - Sale"
-msgstr ""
+msgstr "خدمة ميدانية - مبيعات"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_industry_fsm_report
@@ -13770,6 +13769,8 @@ msgid ""
 "File from where the view originates.\n"
 "                                                          Useful to (hard) reset broken views or to read arch from file in dev-xml mode."
 msgstr ""
+"قم بالإضافة إلى ملف حيث يتم إنشاء العرض.\n"
+"                                                          يكون مفيداً عندما تقوم بـ (إعادة الضبط حسب إعدادات المصنع) لطرق العرض المعطوبة أو لقراءة البناء من الملف في وضع dev-xml. "
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__filter
@@ -16012,6 +16013,12 @@ msgid "Invalid model name %r in action definition."
 msgstr "اسم كائن غير صالح %r في تعريف الإجراء."
 
 #. module: base
+#: code:addons/base/models/ir_actions.py:611
+#, python-format
+msgid "many2many fields cannot be evaluated by reference"
+msgstr ""
+
+#. module: base
 #: code:addons/template_inheritance.py:0
 #, python-format
 msgid "Invalid position attribute: '%s'"
@@ -18081,7 +18088,7 @@ msgstr "كائنات"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__arch_updated
 msgid "Modified Architecture"
-msgstr ""
+msgstr "أسلوب البناء المحسّن "
 
 #. module: base
 #: model:ir.model,name:base.model_ir_module_module
@@ -19897,6 +19904,16 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: code:addons/base/models/ir_actions_report.py:0
+#, python-format
+msgid ""
+"Odoo is unable to merge the PDFs attached to the following records:\n"
+"%s\n"
+"\n"
+"Please exclude them from the selection to continue. It's possible to still retrieve those PDFs by selecting each of the affected records individually, which will avoid merging."
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_odoo_referral
 msgid "Odoo referral program"
 msgstr ""
@@ -19966,6 +19983,12 @@ msgid ""
 msgstr ""
 "تم حذف إحدى الوثائق التي تحاول الوصول إليها، برجاء المحاولة مجددًا بعد تحديث"
 " الصفحة."
+
+#. module: base
+#: code:addons/base/models/ir_actions_report.py:0
+#, python-format
+msgid "One of the documents, you try to merge is encrypted"
+msgstr ""
 
 #. module: base
 #: code:addons/models.py:0
@@ -21155,7 +21178,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__arch_prev
 msgid "Previous View Architecture"
-msgstr ""
+msgstr "أسلوب بناء العرض السابق "
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_cron__lastcall
@@ -22269,7 +22292,7 @@ msgstr "ملحقات المطعم لنقاط البيع "
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__reset_view_arch_wizard__reset_mode__soft
 msgid "Restore previous version (soft reset)."
-msgstr ""
+msgstr "استعادة النسخة السابقة (إعادة تشغيل). "
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__on_delete__restrict
@@ -23470,7 +23493,7 @@ msgstr ""
 #: code:addons/base/models/ir_attachment.py:0
 #, python-format
 msgid "Sorry, you are not allowed to access these fields on attachments."
-msgstr ""
+msgstr "عذرًا ، لا يُسمح لك بالوصول إلى هذه الحقول في المرفقات."
 
 #. module: base
 #: code:addons/base/models/ir_attachment.py:0
@@ -24541,6 +24564,12 @@ msgid "The internal user in charge of this contact."
 msgstr "المستخدم الداخلي مسئول عن هذا العقد."
 
 #. module: base
+#: code:addons/base/models/res_country.py:106
+#, python-format
+msgid "The layout contains an invalid format key"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,help:base.field_ir_model__inherited_model_ids
 msgid "The list of models that extends the current model."
 msgstr "قائمة الكائنات التي يمتد لها الكائن الحالي."
@@ -24857,7 +24886,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_ui_view__arch_base
 msgid "This field is the same as `arch` field without translations"
-msgstr ""
+msgstr "هذا الحقل هو نفس حقل  `قوس` دون الترجمات "
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_lang__code
@@ -24870,11 +24899,13 @@ msgid ""
 "This field should be used when accessing view arch. It will use translation.\n"
 "                               Note that it will read `arch_db` or `arch_fs` if in dev-xml mode."
 msgstr ""
+"يجب استخدام هذا الحقل عند الوصول إلى أسلوب بناء العرض. سوف يقوم باستخدام الترجمة.\n"
+"                               تذكر أنه سوف تتم قراءة `arch_db` أو `arch_fs` في وضع dev-xml. "
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_ui_view__arch_db
 msgid "This field stores the view arch."
-msgstr ""
+msgstr "يخزن هذا الحقل بناء العرض "
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_ui_view__arch_prev
@@ -24882,6 +24913,8 @@ msgid ""
 "This field will save the current `arch_db` before writing on it.\n"
 "                                                                         Useful to (soft) reset a broken view."
 msgstr ""
+"يحفظ هذا الحقل `arch_db` الحالي قبل الكتابة فيه.\n"
+"                                                                         مفيد عندما تقوم بإعادة تشغيل عرض به خلل. "
 
 #. module: base
 #: code:addons/image.py:0
@@ -25980,7 +26013,7 @@ msgstr "رابط ويب"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_country__image_url
 msgid "Url of static flag image"
-msgstr ""
+msgstr "رابط URL لصورة علم ثابت "
 
 #. module: base
 #: model:res.country,name:base.uy
@@ -27116,8 +27149,8 @@ msgstr "لا يمكنك تفعيل خيار المستخدم الخارق."
 #. module: base
 #: code:addons/base/models/res_partner.py:0
 #, python-format
-msgid "You cannot archive a contact linked to an internal user."
-msgstr "لا يمكنك أرشفة جهة اتصال مرتبطة بمستخدم داخلي."
+msgid "You cannot archive a contact linked to a portal or internal user."
+msgstr ""
 
 #. module: base
 #: code:addons/base/models/res_partner.py:0
@@ -27226,6 +27259,13 @@ msgid ""
 msgstr ""
 "تستطيع تعريف صلاحيات وصول إضافية بتعديل المستخدم المنشأ حديثًا في قائمة "
 "إعدادات>المستخدمون."
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.view_currency_form
+msgid ""
+"You won't be able to reduce the number of decimal places of a currency which"
+" has already been used to make accounting entries."
+msgstr ""
 
 #. module: base
 #: code:addons/base/models/ir_mail_server.py:0

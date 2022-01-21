@@ -171,11 +171,13 @@ class MassMailing(models.Model):
         for key in (
             'scheduled', 'expected', 'ignored', 'sent', 'delivered', 'opened',
             'clicked', 'replied', 'bounced', 'failed', 'received_ratio',
-            'opened_ratio', 'replied_ratio', 'bounced_ratio', 'clicks_ratio',
+            'opened_ratio', 'replied_ratio', 'bounced_ratio',
         ):
             self[key] = False
         if not self.ids:
             return
+        # ensure traces are sent to db
+        self.flush()
         self.env.cr.execute("""
             SELECT
                 m.id as mailing_id,
@@ -200,10 +202,9 @@ class MassMailing(models.Model):
                 m.id
         """, (tuple(self.ids), ))
         for row in self.env.cr.dictfetchall():
-            total = row['expected'] = (row['expected'] - row['ignored']) or 1
+            total = (row['expected'] - row['ignored']) or 1
             row['received_ratio'] = 100.0 * row['delivered'] / total
             row['opened_ratio'] = 100.0 * row['opened'] / total
-            row['clicks_ratio'] = 100.0 * row['clicked'] / total
             row['replied_ratio'] = 100.0 * row['replied'] / total
             row['bounced_ratio'] = 100.0 * row['bounced'] / total
             self.browse(row.pop('mailing_id')).update(row)
@@ -228,12 +229,17 @@ class MassMailing(models.Model):
     @api.depends('mailing_model_id')
     def _compute_model(self):
         for record in self:
-            record.mailing_model_real = (record.mailing_model_name != 'mailing.list') and record.mailing_model_name or 'mailing.contact'
+            record.mailing_model_real = (record.mailing_model_id.model != 'mailing.list') and record.mailing_model_id.model or 'mailing.contact'
 
-    @api.depends('mailing_model_real')
+    @api.depends('mailing_model_id')
     def _compute_reply_to_mode(self):
+        """ For main models not really using chatter to gather answers (contacts
+        and mailing contacts), set reply-to as email-based. Otherwise answers
+        by default go on the original discussion thread (business document). Note
+        that mailing_model being mailing.list means contacting mailing.contact
+        (see mailing_model_name versus mailing_model_real). """
         for mailing in self:
-            if mailing.mailing_model_real in ['res.partner', 'mailing.contact']:
+            if mailing.mailing_model_id.model in ['res.partner', 'mailing.list']:
                 mailing.reply_to_mode = 'email'
             else:
                 mailing.reply_to_mode = 'thread'
@@ -246,10 +252,10 @@ class MassMailing(models.Model):
             elif mailing.reply_to_mode == 'thread':
                 mailing.reply_to = False
 
-    @api.depends('mailing_model_name', 'contact_list_ids')
+    @api.depends('mailing_model_id', 'contact_list_ids', 'mailing_type')
     def _compute_mailing_domain(self):
         for mailing in self:
-            if not mailing.mailing_model_name:
+            if not mailing.mailing_model_id:
                 mailing.mailing_domain = ''
             else:
                 mailing.mailing_domain = repr(mailing._get_default_mailing_domain())
@@ -264,12 +270,20 @@ class MassMailing(models.Model):
             values['name'] = "%s %s" % (values['subject'], datetime.strftime(fields.datetime.now(), tools.DEFAULT_SERVER_DATETIME_FORMAT))
         if values.get('body_html'):
             values['body_html'] = self._convert_inline_images_to_urls(values['body_html'])
-        return super(MassMailing, self).create(values)
+        return super().create(values)\
+            ._fix_attachment_ownership()
 
     def write(self, values):
         if values.get('body_html'):
             values['body_html'] = self._convert_inline_images_to_urls(values['body_html'])
-        return super(MassMailing, self).write(values)
+        super().write(values)
+        self._fix_attachment_ownership()
+        return True
+
+    def _fix_attachment_ownership(self):
+        for record in self:
+            record.attachment_ids.write({'res_model': record._name, 'res_id': record.id})
+        return self
 
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
@@ -570,8 +584,11 @@ class MassMailing(models.Model):
     def action_send_mail(self, res_ids=None):
         author_id = self.env.user.partner_id.id
 
+        # If no recipient is passed, we don't want to use the recipients of the first
+        # mailing for all the others
+        initial_res_ids = res_ids
         for mailing in self:
-            if not res_ids:
+            if not initial_res_ids:
                 res_ids = mailing._get_remaining_recipients()
             if not res_ids:
                 raise UserError(_('There are no recipients selected.'))
@@ -579,7 +596,7 @@ class MassMailing(models.Model):
             composer_values = {
                 'author_id': author_id,
                 'attachment_ids': [(4, attachment.id) for attachment in mailing.attachment_ids],
-                'body': self._prepend_preview(self.body_html, self.preview),
+                'body': mailing._prepend_preview(mailing.body_html, mailing.preview),
                 'subject': mailing.subject,
                 'model': mailing.mailing_model_real,
                 'email_from': mailing.email_from,
@@ -595,7 +612,7 @@ class MassMailing(models.Model):
                 composer_values['reply_to'] = mailing.reply_to
 
             composer = self.env['mail.compose.message'].with_context(active_ids=res_ids).create(composer_values)
-            extra_context = self._get_mass_mailing_context()
+            extra_context = mailing._get_mass_mailing_context()
             composer = composer.with_context(active_ids=res_ids, **extra_context)
             # auto-commit except in testing mode
             auto_commit = not getattr(threading.currentThread(), 'testing', False)
@@ -755,19 +772,9 @@ class MassMailing(models.Model):
     # ------------------------------------------------------
 
     def _get_default_mailing_domain(self):
-        default_mailing_domain = self.default_get(['mailing_domain']).get('mailing_domain')
+        mailing_domain = []
         if self.mailing_model_name == 'mailing.list' and self.contact_list_ids:
             mailing_domain = [('list_ids', 'in', self.contact_list_ids.ids)]
-        elif default_mailing_domain:
-            default_mailing_domain = literal_eval(default_mailing_domain) if isinstance(default_mailing_domain, str) else default_mailing_domain
-            try:
-                self.env[self.mailing_model_real].search(default_mailing_domain, limit=1)
-            except:
-                mailing_domain = []
-            else:
-                mailing_domain = default_mailing_domain
-        else:
-            mailing_domain = []
 
         if self.mailing_type == 'mail' and 'is_blacklisted' in self.env[self.mailing_model_name]._fields:
             mailing_domain = expression.AND([[('is_blacklisted', '=', False)], mailing_domain])

@@ -8,7 +8,7 @@
 # Cas Vissers <casvissers@brahoo.nl>, 2020
 # Cas Vissers <c.vissers@brahoo.nl>, 2020
 # Martin Trigaux, 2020
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2021
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-29 13:46+0000\n"
 "PO-Revision-Date: 2020-09-07 08:18+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2020\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2021\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -130,7 +130,7 @@ msgstr ""
 "- Handmatig: het aantal wordt handmatig op de regel ingesteld\n"
 "- Kostenplaats van declaratie: de hoeveelheid is de som van de geboekte declaraties\n"
 "- Urenstaat: de hoeveelheid is de som van de uren die zijn vastgelegd voor taken die aan deze verkoopregel zijn gekoppeld\n"
-"- Voorraadverplaatstingen: de hoeveelheid komt van bevestigde pickings\n"
+"- Voorraadverplaatsingen: de hoeveelheid komt van bevestigde pickings\n"
 
 #. module: sale_stock
 #: model:ir.ui.menu,name:sale_stock.menu_aftersale
@@ -229,9 +229,9 @@ msgid ""
 "either use the minimum or maximum lead time of the order lines."
 msgstr ""
 "Leveringsdatum die u aan de klant kunt beloven, berekend vanaf de minimale "
-"doorlooptijd van de orderregels in het geval van serviceproducten. In geval "
+"levertijd van de orderregels in het geval van diensten-producten. In geval "
 "van verzending wordt rekening gehouden met het verzendbeleid van de order om"
-" de minimale of maximale doorlooptijd van de orderregels te gebruiken."
+" de minimale of maximale levertijd van de orderregels te gebruiken."
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__group_lot_on_invoice
@@ -389,9 +389,9 @@ msgid ""
 "based on the greatest product lead time. Otherwise, it will be based on the "
 "shortest."
 msgstr ""
-"Als u alle producten in één keer levert, wordt de leveringsorder gepland op "
-"basis van de grootste productdoorlooptijd. Anders zal het gebaseerd zijn op "
-"de kortste."
+"Als u alle producten in één keer levert, wordt de levering gepland op basis "
+"van de langste levertijd van een product. Anders is deze gebaseerd op de "
+"kortste levertijd."
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
@@ -537,14 +537,14 @@ msgstr "Verschuif geplande leverdatum vooruit met"
 #: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
 msgid "No enough future availaibility"
-msgstr "Geen voldoende beschikbaarheid in de toekomst"
+msgstr "Onvoldoende toekomstige beschikbaarheid"
 
 #. module: sale_stock
 #. openerp-web
 #: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
 msgid "No future availaibility"
-msgstr "Geen voldoende toekomstige beschikbaarheid"
+msgstr "Geen toekomstige beschikbaarheid"
 
 #. module: sale_stock
 #. openerp-web
@@ -721,7 +721,7 @@ msgstr "Verzend producten wanneer ze beschikbaar zijn en sta backorders toe"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__picking_policy
 msgid "Shipping Policy"
-msgstr "Behandelwijze"
+msgstr "Leveringsbeleid"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.product_template_view_form_inherit_stock
@@ -740,13 +740,13 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_move
 msgid "Stock Move"
-msgstr "Voorraadverplaatsting"
+msgstr "Voorraadverplaatsing"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__move_ids
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order_line__qty_delivered_method__stock_move
 msgid "Stock Moves"
-msgstr "Voorraadverplaatstingen"
+msgstr "Voorraadverplaatsingen"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_report_stock_report_product_product_replenishment
@@ -853,7 +853,7 @@ msgstr "Waarschuwing!"
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__picking_policy__one
 msgid "When all products are ready"
-msgstr "Wanneer alle producten klaar zijn"
+msgstr "Wanneer alle producten beschikbaar zijn"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -882,8 +882,8 @@ msgid ""
 "You cannot decrease the ordered quantity below the delivered quantity.\n"
 "Create a return first."
 msgstr ""
-"U kan de bestelde hoeveelheid niet verminderen onder de geleverde hoeveelheid.\n"
-"Maak eerst een levering aan."
+"U kunt de bestelde hoeveelheid niet verlagen tot onder de geleverde hoeveelheid.\n"
+"Maak eerst een retourzending aan."
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so

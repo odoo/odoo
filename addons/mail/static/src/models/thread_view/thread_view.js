@@ -45,17 +45,8 @@ function factory(dependencies) {
          * @param {Object} hint
          */
         markComponentHintProcessed(hint) {
-            let filterFun;
-            switch (hint.type) {
-                case 'message-received':
-                    filterFun = h => h.type !== hint.type && h.message !== hint.data.message;
-                    break;
-                default:
-                    filterFun = h => h.type !== hint.type;
-                    break;
-            }
             this.update({
-                componentHintList: this.componentHintList.filter(filterFun),
+                componentHintList: this.componentHintList.filter(h => h !== hint),
             });
             this.env.messagingBus.trigger('o-thread-view-hint-processed', {
                 hint,
@@ -75,6 +66,33 @@ function factory(dependencies) {
         //----------------------------------------------------------------------
         // Private
         //----------------------------------------------------------------------
+
+        /**
+         * @private
+         * @returns {mail.messaging}
+         */
+        _computeMessaging() {
+            return [['link', this.env.messaging]];
+        }
+
+        /**
+         * @private
+         * @returns {string[]}
+         */
+        _computeTextInputSendShortcuts() {
+            if (!this.thread) {
+                return;
+            }
+            const isMailingList = this.thread.model === 'mail.channel' && this.thread.mass_mailing;
+            // Actually in mobile there is a send button, so we need there 'enter' to allow new line.
+            // Hence, we want to use a different shortcut 'ctrl/meta enter' to send for small screen
+            // size with a non-mailing channel.
+            // here send will be done on clicking the button or using the 'ctrl/meta enter' shortcut.
+            if (this.env.messaging.device.isMobile || isMailingList) {
+                return ['ctrl-enter', 'meta-enter'];
+            }
+            return ['enter'];
+        }
 
         /**
          * @private
@@ -143,9 +161,14 @@ function factory(dependencies) {
          * @private
          */
         _onThreadCacheChanged() {
+            // clear obsolete hints
+            this.update({ componentHintList: clear() });
             this.addComponentHint('change-of-thread-cache');
             if (this.threadCache) {
-                this.threadCache.update({ isCacheRefreshRequested: true });
+                this.threadCache.update({
+                    isCacheRefreshRequested: true,
+                    isMarkAllAsReadRequested: true,
+                });
             }
             this.update({ lastVisibleMessage: [['unlink']] });
         }
@@ -203,6 +226,18 @@ function factory(dependencies) {
         composer: many2one('mail.composer', {
             related: 'thread.composer',
         }),
+        /**
+         * Serves as compute dependency.
+         */
+        device: one2one('mail.device', {
+            related: 'messaging.device',
+        }),
+        /**
+         * Serves as compute dependency.
+         */
+        deviceIsMobile: attr({
+            related: 'device.isMobile',
+        }),
         hasComposerFocus: attr({
             related: 'composer.hasFocus',
         }),
@@ -236,7 +271,9 @@ function factory(dependencies) {
          * a new message. Detection of new message is done through the component
          * hint `message-received`.
          */
-        hasAutoScrollOnMessageReceived: attr(),
+        hasAutoScrollOnMessageReceived: attr({
+            default: true,
+        }),
         /**
          * Last message in the context of the currently displayed thread cache.
          */
@@ -256,6 +293,12 @@ function factory(dependencies) {
         lastVisibleMessage: many2one('mail.message'),
         messages: many2many('mail.message', {
             related: 'threadCache.messages',
+        }),
+        /**
+         * Serves as compute dependency.
+         */
+        messaging: many2one('mail.messaging', {
+            compute: '_computeMessaging',
         }),
         nonEmptyMessages: many2many('mail.message', {
             related: 'threadCache.nonEmptyMessages',
@@ -288,6 +331,20 @@ function factory(dependencies) {
          */
         stringifiedDomain: attr({
             related: 'threadViewer.stringifiedDomain',
+        }),
+        /**
+         * Determines the keyboard shortcuts that are available to send a message
+         * from the composer of this thread viewer.
+         */
+        textInputSendShortcuts: attr({
+            compute: '_computeTextInputSendShortcuts',
+            dependencies: [
+                'device',
+                'deviceIsMobile',
+                'thread',
+                'threadMassMailing',
+                'threadModel',
+            ],
         }),
         /**
          * Determines the `mail.thread` currently displayed by `this`.
@@ -336,6 +393,18 @@ function factory(dependencies) {
         threadCacheInitialScrollPositions: attr({
             default: {},
             related: 'threadViewer.threadCacheInitialScrollPositions',
+        }),
+        /**
+         * Serves as compute dependency.
+         */
+        threadMassMailing: attr({
+            related: 'thread.mass_mailing',
+        }),
+        /**
+         * Serves as compute dependency.
+         */
+        threadModel: attr({
+            related: 'thread.model',
         }),
         /**
          * Not a real field, used to trigger `thread.markAsSeen` when one of

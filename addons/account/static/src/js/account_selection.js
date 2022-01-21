@@ -27,7 +27,7 @@ odoo.define('account.hierarchy.selection', function (require) {
                     self.values = _.map(arg, v => [v['id'], v['display_name']])
                     self.hierarchy_groups = [
                         {
-                            'name': _('Balance Sheet'),
+                            'name': _t('Balance Sheet'),
                             'children': [
                                 {'name': _t('Assets'), 'ids': _.map(_.filter(arg, v => v['internal_group'] == 'asset'), v => v['id'])},
                                 {'name': _t('Liabilities'), 'ids': _.map(_.filter(arg, v => v['internal_group'] == 'liability'), v => v['id'])},

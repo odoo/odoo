@@ -348,6 +348,13 @@ class Partner(models.Model):
                 result['value'] = {key: convert(self.parent_id[key]) for key in address_fields}
         return result
 
+    @api.onchange('parent_id')
+    def _onchange_parent_id_for_lang(self):
+        # While creating / updating child contact, take the parent lang by default if any
+        # otherwise, fallback to default context / DB lang
+        if self.parent_id:
+            self.lang = self.parent_id.lang or self.env.context.get('default_lang') or self.env.lang
+
     @api.onchange('country_id')
     def _onchange_country_id(self):
         if self.country_id and self.country_id != self.state_id.country_id:
@@ -517,7 +524,7 @@ class Partner(models.Model):
             self.invalidate_cache(['user_ids'], self._ids)
             for partner in self:
                 if partner.active and partner.user_ids:
-                    raise ValidationError(_('You cannot archive a contact linked to an internal user.'))
+                    raise ValidationError(_('You cannot archive a contact linked to a portal or internal user.'))
         # res.partner must only allow to set the company_id of a partner if it
         # is the same as the company of all users that inherit from this partner
         # (this is to allow the code from res_users to write to the partner!) or
@@ -566,6 +573,9 @@ class Partner(models.Model):
 
         for partner, vals in zip(partners, vals_list):
             partner._fields_sync(vals)
+            # Lang: propagate from parent if no value was given
+            if 'lang' not in vals and partner.parent_id:
+                partner._onchange_parent_id_for_lang()
             partner._handle_first_contact_creation()
         return partners
 
@@ -663,7 +673,8 @@ class Partner(models.Model):
         name = name.replace('\n\n', '\n')
         name = name.replace('\n\n', '\n')
         if self._context.get('address_inline'):
-            name = name.replace('\n', ', ')
+            splitted_names = name.split("\n")
+            name = ", ".join([n for n in splitted_names if n.strip()])
         if self._context.get('show_email') and partner.email:
             name = "%s <%s>" % (name, partner.email)
         if self._context.get('html_format'):
@@ -793,7 +804,7 @@ class Partner(models.Model):
                                vat=unaccent('res_partner.vat'),)
 
             where_clause_params += [search_name]*3  # for email / display_name, reference
-            where_clause_params += [re.sub('[^a-zA-Z0-9]+', '', search_name) or None]  # for vat
+            where_clause_params += [re.sub('[^a-zA-Z0-9\-\.]+', '', search_name) or None]  # for vat
             where_clause_params += [search_name]  # for order by
             if limit:
                 query += ' limit %s'
@@ -941,8 +952,7 @@ class Partner(models.Model):
     def _display_address_depends(self):
         # field dependencies of method _display_address()
         return self._formatting_address_fields() + [
-            'country_id.address_format', 'country_id.code', 'country_id.name',
-            'company_name', 'state_id.code', 'state_id.name',
+            'country_id', 'company_name', 'state_id',
         ]
 
     @api.model

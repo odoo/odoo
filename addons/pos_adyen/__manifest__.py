@@ -18,4 +18,5 @@
     'depends': ['adyen_platforms', 'point_of_sale'],
     'qweb': ['static/src/xml/pos.xml'],
     'installable': True,
+    'license': 'LGPL-3',
 }

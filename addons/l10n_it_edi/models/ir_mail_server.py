@@ -9,7 +9,6 @@ import email
 import email.policy
 import dateutil
 import pytz
-import base64
 
 from lxml import etree
 from datetime import datetime
@@ -17,6 +16,7 @@ from xmlrpc import client as xmlrpclib
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError, UserError
+from odoo.addons.l10n_it_edi.tools.remove_signature import remove_signature
 
 
 _logger = logging.getLogger(__name__)
@@ -27,6 +27,19 @@ class FetchmailServer(models.Model):
 
     l10n_it_is_pec = fields.Boolean('PEC server', help="If PEC Server, only mail from '...@pec.fatturapa.it' will be processed.")
     l10n_it_last_uid = fields.Integer(string='Last message UID', default=1)
+
+    def _search_edi_invoice(self, att_name, send_state=False):
+        """ Search sent l10n_it_edi fatturaPA invoices """
+
+        conditions = [
+            ('move_id', "!=", False),
+            ('edi_format_id.code', '=', 'fattura_pa'),
+            ('attachment_id.name', '=', att_name),
+        ] 
+        if send_state:
+            conditions.append(('move_id.l10n_it_send_state', '=', send_state))
+
+        return self.env['account.edi.document'].search(conditions, limit=1).move_id
 
     @api.constrains('l10n_it_is_pec', 'server_type')
     def _check_pec(self):
@@ -47,7 +60,16 @@ class FetchmailServer(models.Model):
                 imap_server = server.connect()
                 imap_server.select()
 
-                result, data = imap_server.uid('search', None, '(FROM "@pec.fatturapa.it")', '(UID %s:*)' % (server.l10n_it_last_uid))
+                # Only download new emails
+                email_filter = ['(UID %s:*)' % (server.l10n_it_last_uid)]
+
+                # The l10n_it_edi.fatturapa_bypass_incoming_address_filter prevents the sender address check on incoming email.
+                bypass_incoming_address_filter = self.env['ir.config_parameter'].get_param('l10n_it_edi.bypass_incoming_address_filter', False)
+                if not bypass_incoming_address_filter:
+                    email_filter.append('(FROM "@pec.fatturapa.it")')
+
+                data = imap_server.uid('search', None, *email_filter)[1]
+
                 new_max_uid = server.l10n_it_last_uid
                 for uid in data[0].split():
                     if int(uid) <= server.l10n_it_last_uid:
@@ -112,9 +134,23 @@ class FetchmailServer(models.Model):
                 if split_underscore[1] in ['RC', 'NS', 'MC', 'MT', 'EC', 'SE', 'NE', 'DT']:
                     # we have a receipt
                     self._message_receipt_invoice(split_underscore[1], attachment)
-                elif re.search("([A-Z]{2}[A-Za-z0-9]{2,28}_[A-Za-z0-9]{0,5}.(xml.p7m|xml))", attachment.fname):
-                    # we have a new E-invoice
-                    self._create_invoice_from_mail(attachment.content, attachment.fname, from_address)
+                else:
+                    att_filename = attachment.fname
+                    match = re.search("([A-Z]{2}[A-Za-z0-9]{2,28}_[A-Za-z0-9]{0,5}.(xml.p7m|xml))", att_filename)
+                    # If match, we have an invoice.
+                    if match:
+                        # If it's signed, the content has a bytes type and we just remove the signature's envelope
+                        if match.groups()[1] == 'xml.p7m':
+                            att_content_data = remove_signature(attachment.content)
+                            # If the envelope cannot be removed, the remove_signature returns None, so we skip
+                            if not att_content_data:
+                                _logger.warning("E-invoice couldn't be read: %s", att_filename)
+                                continue
+                            att_filename = att_filename.replace('.xml.p7m', '.xml')
+                        else:
+                            # Otherwise, it should be an utf-8 encoded XML string
+                            att_content_data = attachment.content.encode()
+                    self._create_invoice_from_mail(att_content_data, att_filename, from_address)
             else:
                 if split_underscore[1] == 'AT':
                     # Attestazione di avvenuta trasmissione della fattura con impossibilità di recapito
@@ -123,35 +159,56 @@ class FetchmailServer(models.Model):
                     _logger.info('New E-invoice in zip file: %s', attachment.fname)
                     self._create_invoice_from_mail_with_zip(attachment, from_address)
 
-    def _create_invoice_from_mail(self, att_content, att_name, from_address):
-        if self.env['account.move'].search([('l10n_it_einvoice_name', '=', att_name)], limit=1):
-            # invoice already exist
+    def _create_invoice_from_mail(self, att_content_data, att_name, from_address):
+        """ Creates an invoice from the content of an email present in ir.attachments
+
+        :param att_content_data:   The 'utf-8' encoded bytes string representing the content of the attachment.
+        :param att_name:           The attachment's file name.
+        :param from_address:       The sender address of the email.
+        """
+
+        invoices = self.env['account.move']
+
+        # Check if we already imported the email as an attachment
+        existing = self.env['ir.attachment'].search([('name', '=', att_name), ('res_model', '=', 'account.move')])
+        if existing:
             _logger.info('E-invoice already exist: %s', att_name)
-            return
+            return invoices
 
-        invoice_attachment = self.env['ir.attachment'].create({
-                'name': att_name,
-                'datas': base64.encodebytes(att_content),
-                'type': 'binary',
-                })
+        # Create the new attachment for the file
+        attachment = self.env['ir.attachment'].create({
+            'name': att_name,
+            'raw': att_content_data,
+            'res_model': 'account.move',
+            'type': 'binary'})
 
+        # Decode the file.
         try:
-            tree = etree.fromstring(att_content)
+            tree = etree.fromstring(att_content_data)
         except Exception:
-            raise UserError(_('The xml file is badly formatted : {}').format(att_name))
+            _logger.info('The xml file is badly formatted: %s', att_name)
+            return invoices
 
-        invoice = self.env.ref('l10n_it_edi.edi_fatturaPA')._create_invoice_from_xml_tree(att_name, tree)
-        invoice.l10n_it_send_state = "new"
-        invoice.source_email = from_address
+        invoices = self.env.ref('l10n_it_edi.edi_fatturaPA')._create_invoice_from_xml_tree(att_name, tree)
+        if not invoices:
+            _logger.info('E-invoice not found in file: %s', att_name)
+            return invoices
+        invoices.l10n_it_send_state = "new"
+        invoices.invoice_source_email = from_address
+        for invoice in invoices:
+            invoice.with_context(no_new_invoice=True, default_res_id=invoice.id) \
+                    .message_post(body=(_("Original E-invoice XML file")), attachment_ids=[attachment.id])
+
         self._cr.commit()
 
-        _logger.info('New E-invoice: %s', att_name)
-
+        _logger.info('New E-invoices (%s), ids: %s', att_name, [x.id for x in invoices])
+        return invoices
 
     def _create_invoice_from_mail_with_zip(self, attachment_zip, from_address):
         with zipfile.ZipFile(io.BytesIO(attachment_zip.content)) as z:
             for att_name in z.namelist():
-                if self.env['account.move'].search([('l10n_it_einvoice_name', '=', att_name)], limit=1):
+                existing = self.env['ir.attachment'].search([('name', '=', att_name), ('res_model', '=', 'account.move')])
+                if existing:
                     # invoice already exist
                     _logger.info('E-invoice in zip file (%s) already exist: %s', attachment_zip.fname, att_name)
                     continue
@@ -183,8 +240,7 @@ class FetchmailServer(models.Model):
                     else:
                         return
 
-                    related_invoice = self.env['account.move'].search([
-                        ('l10n_it_einvoice_name', '=', filename)])
+                    related_invoice = self._search_edi_invoice(filename)
                     if not related_invoice:
                         _logger.info('Error: invoice not found for receipt file: %s', filename)
                         return
@@ -197,8 +253,9 @@ class FetchmailServer(models.Model):
                     )
 
     def _message_receipt_invoice(self, receipt_type, attachment):
+
         try:
-            tree = etree.fromstring(attachment.content)
+            tree = etree.fromstring(attachment.content.encode())
         except:
             _logger.info('Error in decoding new receipt file: %s', attachment.fname)
             return {}
@@ -213,9 +270,7 @@ class FetchmailServer(models.Model):
             # Delivery receipt
             # This is the receipt sent by the ES to the transmitting subject to communicate
             # delivery of the file to the addressee
-            related_invoice = self.env['account.move'].search([
-                ('l10n_it_einvoice_name', '=', filename),
-                ('l10n_it_send_state', '=', 'sent')])
+            related_invoice = self._search_edi_invoice(filename, 'sent')
             if not related_invoice:
                 _logger.info('Error: invoice not found for receipt file: %s', attachment.fname)
                 return
@@ -229,9 +284,7 @@ class FetchmailServer(models.Model):
             # Rejection notice
             # This is the receipt sent by the ES to the transmitting subject if one or more of
             # the checks carried out by the ES on the file received do not have a successful result.
-            related_invoice = self.env['account.move'].search([
-                ('l10n_it_einvoice_name', '=', filename),
-                ('l10n_it_send_state', '=', 'sent')])
+            related_invoice = self._search_edi_invoice(filename, 'sent')
             if not related_invoice:
                 _logger.info('Error: invoice not found for receipt file: %s', attachment.fname)
                 return
@@ -249,9 +302,7 @@ class FetchmailServer(models.Model):
             # Failed delivery notice
             # This is the receipt sent by the ES to the transmitting subject if the file is not
             # delivered to the addressee.
-            related_invoice = self.env['account.move'].search([
-                ('l10n_it_einvoice_name', '=', filename),
-                ('l10n_it_send_state', '=', 'sent')])
+            related_invoice = self._search_edi_invoice(filename, 'sent')
             if not related_invoice:
                 _logger.info('Error: invoice not found for receipt file: %s', attachment.fname)
                 return
@@ -274,9 +325,7 @@ class FetchmailServer(models.Model):
             # This is the receipt sent by the ES to the invoice sender to communicate the result
             # (acceptance or refusal of the invoice) of the checks carried out on the document by
             # the addressee.
-            related_invoice = self.env['account.move'].search([
-                ('l10n_it_einvoice_name', '=', filename),
-                ('l10n_it_send_state', '=', 'delivered')])
+            related_invoice = self._search_edi_invoice(filename, 'delivered')
             if not related_invoice:
                 _logger.info('Error: invoice not found for receipt file: %s', attachment.fname)
                 return
@@ -316,8 +365,7 @@ class FetchmailServer(models.Model):
             # This is the receipt sent by the ES to both the invoice sender and the invoice
             # addressee to communicate the expiry of the maximum term for communication of
             # acceptance/refusal.
-            related_invoice = self.env['account.move'].search([
-                ('l10n_it_einvoice_name', '=', filename), ('l10n_it_send_state', '=', 'delivered')])
+            related_invoice = self._search_edi_invoice(filename, 'delivered')
             if not related_invoice:
                 _logger.info('Error: invoice not found for receipt file: %s', attachment.fname)
                 return
@@ -359,6 +407,21 @@ class FetchmailServer(models.Model):
 class IrMailServer(models.Model):
     _name = "ir.mail_server"
     _inherit = "ir.mail_server"
+
+    def _get_test_email_addresses(self):
+        self.ensure_one()
+
+        company = self.env["res.company"].search([("l10n_it_mail_pec_server_id", "=", self.id)], limit=1)
+        if not company:
+            # it's not a PEC server
+            return super()._get_test_email_addresses()
+        email_from = self.smtp_user
+        if not email_from:
+            raise UserError(_('Please configure Username for this Server PEC'))
+        email_to = company.l10n_it_address_recipient_fatturapa
+        if not email_to:
+            raise UserError(_('Please configure Government PEC-mail	in company settings'))
+        return email_from, email_to
 
     def build_email(self, email_from, email_to, subject, body, email_cc=None, email_bcc=None, reply_to=False,
                 attachments=None, message_id=None, references=None, object_id=False, subtype='plain', headers=None,

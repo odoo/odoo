@@ -5,6 +5,7 @@ const components = {
     Composer: require('mail/static/src/components/composer/composer.js'),
     MessageList: require('mail/static/src/components/message_list/message_list.js'),
 };
+const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
 const useUpdate = require('mail/static/src/component_hooks/use_update/use_update.js');
 
@@ -18,7 +19,12 @@ class ThreadView extends Component {
      */
     constructor(...args) {
         super(...args);
-        useStore((...args) => this._useStoreSelector(...args));
+        useShouldUpdateBasedOnProps();
+        useStore((...args) => this._useStoreSelector(...args), {
+            compareDepth: {
+                threadTextInputSendShortcuts: 1,
+            },
+        });
         useUpdate({ func: () => this._update() });
         /**
          * Reference of the composer. Useful to set focus on composer when
@@ -121,11 +127,19 @@ class ThreadView extends Component {
         const threadView = this.env.models['mail.thread_view'].get(props.threadViewLocalId);
         const thread = threadView ? threadView.thread : undefined;
         const threadCache = threadView ? threadView.threadCache : undefined;
+        const correspondent = thread && thread.correspondent;
         return {
+            composer: thread && thread.composer,
+            correspondentId: correspondent && correspondent.id,
             isDeviceMobile: this.env.messaging.device.isMobile,
-            thread: thread ? thread.__state : undefined,
-            threadCache: threadCache ? threadCache.__state : undefined,
-            threadView: threadView ? threadView.__state : undefined,
+            thread,
+            threadCacheIsLoaded: threadCache && threadCache.isLoaded,
+            threadIsTemporary: thread && thread.isTemporary,
+            threadMassMailing: thread && thread.mass_mailing,
+            threadModel: thread && thread.model,
+            threadTextInputSendShortcuts: thread && thread.textInputSendShortcuts || [],
+            threadView,
+            threadViewIsLoading: threadView && threadView.isLoading,
         };
     }
 
@@ -140,6 +154,7 @@ Object.assign(ThreadView, {
         hasSquashCloseMessages: false,
         haveMessagesMarkAsReadIcon: false,
         haveMessagesReplyIcon: false,
+        isDoFocus: false,
         order: 'asc',
         showComposerAttachmentsExtensions: true,
         showComposerAttachmentsFilenames: true,
@@ -175,12 +190,24 @@ Object.assign(ThreadView, {
         hasSquashCloseMessages: Boolean,
         haveMessagesMarkAsReadIcon: Boolean,
         haveMessagesReplyIcon: Boolean,
+        /**
+         * Determines whether this should become focused.
+         */
+        isDoFocus: Boolean,
         order: {
             type: String,
             validate: prop => ['asc', 'desc'].includes(prop),
         },
         selectedMessageLocalId: {
             type: String,
+            optional: true,
+        },
+        /**
+         * Function returns the exact scrollable element from the parent
+         * to manage proper scroll heights which affects the load more messages.
+         */
+        getScrollableElement: {
+            type: Function,
             optional: true,
         },
         showComposerAttachmentsExtensions: Boolean,

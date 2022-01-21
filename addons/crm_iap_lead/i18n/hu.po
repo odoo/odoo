@@ -3,19 +3,19 @@
 # 	* crm_iap_lead
 # 
 # Translators:
-# Martin Trigaux, 2019
-# krnkris, 2019
-# gezza <geza.nagy@oregional.hu>, 2019
-# Ákos Nagy <akos.nagy@oregional.hu>, 2019
-# Tamás Belinszky <tamasbelinszky@gmail.com>, 2019
+# Martin Trigaux, 2021
+# krnkris, 2021
+# gezza <geza.nagy@oregional.hu>, 2021
+# Ákos Nagy <akos.nagy@oregional.hu>, 2021
+# Tamás Németh <ntomasz81@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Tamás Belinszky <tamasbelinszky@gmail.com>, 2019\n"
+"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"PO-Revision-Date: 2020-09-07 08:11+0000\n"
+"Last-Translator: Tamás Németh <ntomasz81@gmail.com>, 2021\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,23 +30,8 @@ msgid "%d credits will be consumed to find %d companies."
 msgstr ""
 
 #. module: crm_iap_lead
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.lead_message_template
-msgid "(Time Now)"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.lead_message_template
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.enrich_company
 msgid "<b>Contacts</b>"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.lead_message_template
-msgid "<b>Phone :</b>"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.lead_message_template
-msgid "<b>Timezone : </b>"
 msgstr ""
 
 #. module: crm_iap_lead
@@ -54,7 +39,7 @@ msgstr ""
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p>Dear,</p>\n"
-"    <p>There is no more credits on your IAP Lead Generation account.<br/>\n"
+"    <p>There are no more credits on your IAP Lead Generation account.<br/>\n"
 "    You can charge your IAP Lead Generation account in the settings of the CRM app.<br/></p>\n"
 "    <p>Best regards,</p>\n"
 "    <p>Odoo S.A.</p>\n"
@@ -85,6 +70,11 @@ msgstr ""
 
 #. module: crm_iap_lead
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
+msgid "<span class=\"col-md-6\">Extra contacts per Company</span>"
+msgstr ""
+
+#. module: crm_iap_lead
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
 msgid "<span class=\"o_stat_text\">Leads</span>"
 msgstr ""
 
@@ -111,7 +101,7 @@ msgstr ""
 #. module: crm_iap_lead
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
 msgid "Cancel"
-msgstr "Mégse"
+msgstr "Visszavonás"
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_162
@@ -131,7 +121,6 @@ msgstr ""
 
 #. module: crm_iap_lead
 #: model:ir.model.fields.selection,name:crm_iap_lead.selection__crm_iap_lead_mining_request__search_type__companies
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
 msgid "Companies"
 msgstr "Vállalatok"
 
@@ -171,11 +160,6 @@ msgid "Consumer Staples"
 msgstr ""
 
 #. module: crm_iap_lead
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
-msgid "Contacts"
-msgstr "Kapcsolatok"
-
-#. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__country_ids
 msgid "Countries"
 msgstr "Országok"
@@ -205,13 +189,24 @@ msgid "Created on"
 msgstr "Létrehozva"
 
 #. module: crm_iap_lead
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
+msgid "Default Tags"
+msgstr "Alapértelmezett címkék"
+
+#. module: crm_iap_lead
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__display_lead_label
+msgid "Display Lead Label"
+msgstr ""
+
+#. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_helpers__display_name
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_industry__display_name
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__display_name
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_role__display_name
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_seniority__display_name
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_lead__display_name
 msgid "Display Name"
-msgstr "Megjelenített név"
+msgstr "Név megjelenítése"
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_151
@@ -232,7 +227,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:crm_iap_lead.selection__crm_iap_lead_mining_request__state__done
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_search
 msgid "Done"
-msgstr "Elvégezve"
+msgstr "Kész"
 
 #. module: crm_iap_lead
 #: model:ir.model.fields.selection,name:crm_iap_lead.selection__crm_iap_lead_mining_request__state__draft
@@ -241,7 +236,7 @@ msgid "Draft"
 msgstr "Piszkozat"
 
 #. module: crm_iap_lead
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.lead_message_template
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.enrich_company
 msgid "Email"
 msgstr "E-mail"
 
@@ -280,11 +275,12 @@ msgstr ""
 #. module: crm_iap_lead
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
 msgid "From"
-msgstr "Kezdő dátum"
+msgstr "Forrás"
 
 #. module: crm_iap_lead
 #. openerp-web
 #: code:addons/crm_iap_lead/static/src/xml/leads_tree_generate_leads_views.xml:0
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
 #, python-format
 msgid "Generate Leads"
 msgstr ""
@@ -331,6 +327,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__id
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_role__id
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_seniority__id
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_lead__id
 msgid "ID"
 msgstr "Azonosító"
 
@@ -347,7 +344,7 @@ msgstr ""
 #. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__industry_ids
 msgid "Industries"
-msgstr ""
+msgstr "Iparágak"
 
 #. module: crm_iap_lead
 #: model:ir.model,name:crm_iap_lead.model_crm_iap_lead_industry
@@ -365,8 +362,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request____last_update
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_role____last_update
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_seniority____last_update
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_lead____last_update
 msgid "Last Modified on"
-msgstr "Legutóbb frissítve"
+msgstr "Legutóbb módosítva"
 
 #. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_helpers__write_uid
@@ -387,11 +385,6 @@ msgid "Last Updated on"
 msgstr "Frissítve "
 
 #. module: crm_iap_lead
-#: model:ir.model.fields.selection,name:crm_iap_lead.selection__crm_iap_lead_mining_request__lead_type__lead
-msgid "Lead"
-msgstr "Érdeklődés"
-
-#. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__lead_contacts_credits
 msgid "Lead Contacts Credits"
 msgstr ""
@@ -404,11 +397,6 @@ msgstr ""
 #. module: crm_iap_lead
 #: model:ir.ui.menu,name:crm_iap_lead.crm_menu_lead_generation
 msgid "Lead Generation"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
-msgid "Lead Information"
 msgstr ""
 
 #. module: crm_iap_lead
@@ -434,15 +422,17 @@ msgid "Lead/Opportunity"
 msgstr "Érdeklődés/Lehetőség"
 
 #. module: crm_iap_lead
+#: model:ir.model.fields.selection,name:crm_iap_lead.selection__crm_iap_lead_mining_request__lead_type__lead
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_search
 msgid "Leads"
 msgstr "Érdeklődések"
 
 #. module: crm_iap_lead
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
+#. openerp-web
+#: code:addons/crm_iap_lead/static/src/js/tours/crm_iap_lead.js:0
+#, python-format
 msgid ""
-"Make sure you know if you have to be GDPR compliant for storing personal "
-"data."
+"Looking for more opportunities ?<br>Try the <b>Lead Generation</b> tool."
 msgstr ""
 
 #. module: crm_iap_lead
@@ -453,11 +443,11 @@ msgstr ""
 #. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_86
 msgid "Media"
-msgstr ""
+msgstr "Média"
 
 #. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_seniority__name
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.lead_message_template
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.enrich_company
 msgid "Name"
 msgstr "Név"
 
@@ -476,32 +466,37 @@ msgid "New"
 msgstr "Új"
 
 #. module: crm_iap_lead
+#. openerp-web
+#: code:addons/crm_iap_lead/static/src/js/tours/crm_iap_lead.js:0
+#, python-format
+msgid "Now, just let the magic happen!"
+msgstr ""
+
+#. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__contact_number
 msgid "Number of Contacts"
 msgstr "Ügyfelek száma"
 
 #. module: crm_iap_lead
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__leads_count
+#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__lead_count
 msgid "Number of Generated Leads"
 msgstr ""
 
 #. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__lead_number
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_tree
 msgid "Number of Leads"
 msgstr ""
 
 #. module: crm_iap_lead
+#: model:ir.model.fields.selection,name:crm_iap_lead.selection__crm_iap_lead_mining_request__lead_type__opportunity
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_search
 msgid "Opportunities"
 msgstr "Lehetőségek"
 
 #. module: crm_iap_lead
-#: model:ir.model.fields.selection,name:crm_iap_lead.selection__crm_iap_lead_mining_request__lead_type__opportunity
-msgid "Opportunity"
-msgstr "Lehetőség"
-
-#. module: crm_iap_lead
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.lead_message_template
+#: code:addons/crm_iap_lead/models/crm_iap_lead_mining_request.py:0
+#, python-format
 msgid "Opportunity created by Odoo Lead Generation"
 msgstr ""
 
@@ -526,7 +521,7 @@ msgid "Pharmaceuticals, Biotechnology & Life Sciences"
 msgstr ""
 
 #. module: crm_iap_lead
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.lead_message_template
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.enrich_company
 msgid "Phone"
 msgstr "Telefon"
 
@@ -538,12 +533,7 @@ msgstr ""
 #. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_114
 msgid "Real Estate"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
-msgid "Request"
-msgstr "Kérés"
+msgstr "Ingatlan"
 
 #. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__name
@@ -565,11 +555,6 @@ msgstr "Újra"
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_role__reveal_id
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_seniority__reveal_id
 msgid "Reveal"
-msgstr ""
-
-#. module: crm_iap_lead
-#: model:ir.model.fields,field_description:crm_iap_lead.field_crm_lead__reveal_id
-msgid "Reveal ID"
 msgstr ""
 
 #. module: crm_iap_lead
@@ -661,11 +646,6 @@ msgid "Technology Hardware & Equipment"
 msgstr ""
 
 #. module: crm_iap_lead
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.lead_message_template
-msgid "Technology Used :"
-msgstr ""
-
-#. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_149
 msgid "Telecommunication Services"
 msgstr ""
@@ -677,14 +657,14 @@ msgid "This makes a total of %d credits for this request."
 msgstr ""
 
 #. module: crm_iap_lead
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead.lead_message_template
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.enrich_company
 msgid "Title"
-msgstr "Név"
+msgstr "Megszólítás"
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_136
 msgid "Transportation"
-msgstr ""
+msgstr "Szállítmányozás"
 
 #. module: crm_iap_lead
 #: model:ir.model.fields,field_description:crm_iap_lead.field_crm_iap_lead_mining_request__lead_type
@@ -703,6 +683,18 @@ msgstr ""
 #. module: crm_iap_lead
 #: model:crm.iap.lead.industry,name:crm_iap_lead.crm_iap_lead_industry_138
 msgid "Utilities"
+msgstr ""
+
+#. module: crm_iap_lead
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead.crm_iap_lead_mining_request_form
+msgid "What do you need ?"
+msgstr ""
+
+#. module: crm_iap_lead
+#. openerp-web
+#: code:addons/crm_iap_lead/static/src/js/tours/crm_iap_lead.js:0
+#, python-format
+msgid "Which Industry do you want to target?"
 msgstr ""
 
 #. module: crm_iap_lead
@@ -783,7 +775,7 @@ msgstr ""
 #. module: crm_iap_lead
 #: model:crm.iap.lead.seniority,name:crm_iap_lead.crm_iap_lead_seniority_3
 msgid "manager"
-msgstr ""
+msgstr "menedzser"
 
 #. module: crm_iap_lead
 #: model:crm.iap.lead.role,name:crm_iap_lead.crm_iap_lead_role_13

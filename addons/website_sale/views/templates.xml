@@ -263,7 +263,7 @@
                 <a t-att-href="product_href" class="d-block h-100" itemprop="url">
                     <t t-set="image_holder" t-value="product._get_image_holder()"/>
                     <span t-field="image_holder.image_1920"
-                        t-options="{'widget': 'image', 'preview_image': 'image_1024' if product_image_big else 'image_256'}"
+                        t-options="{'widget': 'image', 'preview_image': 'image_1024' if product_image_big else 'image_256', 'itemprop': 'image'}"
                         class="d-flex h-100 justify-content-center align-items-center"/>
                 </a>
             </div>
@@ -553,7 +553,7 @@
                                     <ul class="nav nav-pills flex-column">
                                         <t t-foreach="a.value_ids" t-as="v">
                                             <li class="nav-item">
-                                                <label style="padding: 0.25rem 0rem; margin: 0" t-attf-class="nav-link#{' active' if v.id in attrib_set else ''}">
+                                                <label style="padding: 0; margin: 0" t-attf-class="nav-link#{' active' if v.id in attrib_set else ''}">
                                                     <input type="checkbox" name="attrib" t-att-value="'%s-%s' % (a.id,v.id)" t-att-checked="'checked' if v.id in attrib_set else None" />
                                                     <span style="font-weight: normal" t-field="v.name" />
                                                 </label>
@@ -729,7 +729,7 @@
         </xpath>
     </template>
 
-    <template id="recently_viewed_products_product" inherit_id="website_sale.product" active="True" customize_show="True" name="Recently Viewed Products" priority="16">
+    <template id="recently_viewed_products_product" inherit_id="website_sale.product" active="False" customize_show="True" name="Recently Viewed Products" priority="16">
         <xpath expr="//div[@t-field='product.website_description']" position="after">
             <t t-snippet-call="website_sale.s_products_recently_viewed"/>
         </xpath>
@@ -925,6 +925,7 @@
                                                 <div style="width: 200px;" class="s_website_form_label"/>
                                                 <a role="button" href="/shop/checkout" class="btn btn-secondary float-left"><span class="fa fa-chevron-left"/> Previous</a>
                                                 <a role="button" class="btn btn-primary float-right s_website_form_send" href="/shop/confirm_order">Next <span class="fa fa-chevron-right" /></a>
+                                                <span id="s_website_form_result"></span>
                                             </div>
                                         </div>
                                     </form>
@@ -1020,7 +1021,7 @@
                         </td>
                         <td class="text-center td-price" name="price">
                             <t t-set="combination" t-value="line.product_id.product_template_attribute_value_ids + line.product_no_variant_attribute_value_ids"/>
-                            <t t-set="combination_info" t-value="line.product_id.product_tmpl_id._get_combination_info(combination)"/>
+                            <t t-set="combination_info" t-value="line.product_id.product_tmpl_id._get_combination_info(combination, pricelist=website_sale_order.pricelist_id)"/>
 
                             <t t-set="list_price_converted" t-value="website.currency_id._convert(combination_info['list_price'], website_sale_order.currency_id, website_sale_order.company_id, date)"/>
                             <t groups="account.group_show_line_subtotals_tax_excluded" t-if="(website_sale_order.pricelist_id.discount_policy == 'without_discount' and website_sale_order.currency_id.compare_amounts(list_price_converted, line.price_reduce_taxexcl) == 1) or website_sale_order.currency_id.compare_amounts(line.price_unit, line.price_reduce) == 1" name="order_line_discount">
@@ -1576,7 +1577,7 @@
         <div class="card">
             <div class="card-body p-xl-0">
                 <div class="toggle_summary d-xl-none">
-                    <b>Your order: </b> <span t-field="website_sale_order.amount_total" t-options='{"widget": "monetary", "display_currency": website_sale_order.pricelist_id.currency_id}'/>
+                    <b>Your order: </b> <span id="amount_total_summary" class="monetary_field" t-field="website_sale_order.amount_total" t-options='{"widget": "monetary", "display_currency": website_sale_order.pricelist_id.currency_id}'/>
                     <span class='fa fa-chevron-down fa-border float-right' role="img" aria-label="Details" title="Details"></span>
                 </div>
                 <div t-if="not website_sale_order or not website_sale_order.website_order_line" class="alert alert-info">
@@ -1782,7 +1783,7 @@
                 </div>
 
                 <div t-if="payment_tx_id.acquirer_id.qr_code and (payment_tx_id.acquirer_id.provider == 'transfer')">
-                    <t t-set="qr_code" t-value="payment_tx_id.acquirer_id.journal_id.bank_account_id.build_qr_code_url(order.amount_total,payment_tx_id.reference, None, payment_tx_id.currency_id, payment_tx_id.partner_id)"/>
+                    <t t-set="qr_code" t-value="payment_tx_id.acquirer_id.journal_id.bank_account_id.build_qr_code_base64(order.amount_total,payment_tx_id.reference, None, payment_tx_id.currency_id, payment_tx_id.partner_id)"/>
                     <div class="card-body" t-if="qr_code">
                         <h3>Or scan me with your banking app.</h3>
                         <img class="border border-dark rounded" t-att-src="qr_code"/>

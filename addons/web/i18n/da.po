@@ -10,24 +10,24 @@
 # jonas jensen <j.jensen@tcomp.dk>, 2020
 # Visti Kristensen <visti@vkdata.dk>, 2020
 # Jarnhold Nattestad <nattestads@gmail.com>, 2020
+# Martin Trigaux, 2020
 # Hans Henrik Gabelgaard <hhg@gabelgaard.org>, 2020
 # Morten Schou <ms@msteknik.dk>, 2020
 # JonathanStein <jstein@image.dk>, 2020
 # Sanne Kristensen <sanne@vkdata.dk>, 2020
 # Ejner Sønniksen <ejner@vkdata.dk>, 2020
-# lhmflexerp <lhm@flexerp.dk>, 2020
 # Mads Søndergaard, 2020
-# Pernille Kristensen <pernillekristensen1994@gmail.com>, 2020
-# Martin Trigaux, 2020
-# Mads Søndergaard <mads@vkdata.dk>, 2020
+# lhmflexerp <lhm@flexerp.dk>, 2021
+# Pernille Kristensen <pernillekristensen1994@gmail.com>, 2021
+# Mads Søndergaard <mads@vkdata.dk>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-29 15:48+0000\n"
+"POT-Creation-Date: 2021-02-25 10:30+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Mads Søndergaard <mads@vkdata.dk>, 2020\n"
+"Last-Translator: Mads Søndergaard <mads@vkdata.dk>, 2021\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -55,13 +55,6 @@ msgstr "posteringer"
 #, python-format
 msgid "# Code editor"
 msgstr "# Kode editor"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/fields/basic_fields.js:0
-#, python-format
-msgid "${-diffDays} days ago"
-msgstr "${-diffDays} dage tilbage"
 
 #. module: web
 #. openerp-web
@@ -107,10 +100,10 @@ msgstr "%s Filer"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/notification.xml:0
+#: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
-msgid "&times;"
-msgstr "&times;"
+msgid "%s days ago"
+msgstr "%s dage siden"
 
 #. module: web
 #. openerp-web
@@ -2057,6 +2050,7 @@ msgstr "Grøn"
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/control_panel/groupby_menu.js:0
+#: code:addons/web/static/src/js/views/graph/graph_controller.js:0
 #, python-format
 msgid "Group By"
 msgstr "Sortér efter"
@@ -2160,8 +2154,8 @@ msgstr "Billede"
 #. openerp-web
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
-msgid "In ${diffDays} days"
-msgstr "Om ${diffDays} dage"
+msgid "In %s days"
+msgstr "Om %s dage"
 
 #. module: web
 #. openerp-web
@@ -2439,6 +2433,13 @@ msgstr "Mac"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/js/services/crash_manager.js:0
+#, python-format
+msgid "MailDeliveryException"
+msgstr "MailDeliveryException"
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/base.xml:0
@@ -2513,6 +2514,7 @@ msgstr "Du bør overveje at genindlæse programmet med tasten F5..."
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/js/views/graph/graph_controller.js:0
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Measures"
@@ -2540,13 +2542,6 @@ msgstr "Metadata (%s)"
 #, python-format
 msgid "Method:"
 msgstr "Metode:"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/services/crash_manager.js:92
-#, python-format
-msgid "MailDeliveryException"
-msgstr "MailDeliveryException"
 
 #. module: web
 #. openerp-web
@@ -2650,8 +2645,8 @@ msgstr "Ny"
 #. openerp-web
 #: code:addons/web/static/src/js/fields/relational_fields.js:0
 #, python-format
-msgid "New ${this.name}"
-msgstr "Ny ${this.name}"
+msgid "New %s"
+msgstr "Ny %s"
 
 #. module: web
 #. openerp-web
@@ -2964,6 +2959,13 @@ msgstr "Kun dig"
 #. openerp-web
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
+msgid "Open Developer Tools"
+msgstr "Åbn udviklings værktøj"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/debug.xml:0
+#, python-format
 msgid "Open Developer Tools#{widget.debug_mode_help}"
 msgstr "Åben Udvikler værktøjer#{widget.debug_mode_help}"
 
@@ -3012,6 +3014,13 @@ msgstr "Åbn op til listevisning"
 #, python-format
 msgid "Open: "
 msgstr "Åbn: "
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/list/list_renderer.js:0
+#, python-format
+msgid "Optional columns"
+msgstr "Valgfrie kolonner"
 
 #. module: web
 #. openerp-web
@@ -4484,6 +4493,13 @@ msgstr "Variation"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "View %s"
+msgstr "Vis %s"
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
 msgid "View Access Rights"
@@ -5073,13 +5089,6 @@ msgstr "af:"
 #, python-format
 msgid "or"
 msgstr "eller"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/colorpicker.xml:0
-#, python-format
-msgid "p-0 border-0 text-center text-monospace bg-transparent text-white"
-msgstr "p-0 border-0 text-center text-monospace bg-transparent text-white"
 
 #. module: web
 #. openerp-web

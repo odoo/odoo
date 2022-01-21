@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Martin Trigaux, 2020
-# JH CHOI <hwangtog@gmail.com>, 2020
 # Linkup <link-up@naver.com>, 2020
+# JH CHOI <hwangtog@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:28+0000\n"
 "PO-Revision-Date: 2020-09-07 08:11+0000\n"
-"Last-Translator: Linkup <link-up@naver.com>, 2020\n"
+"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2021\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,7 +40,7 @@ msgstr "<span class=\"o_vat_label\">부가가치세</span>"
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_company
 msgid "Companies"
-msgstr "회사들"
+msgstr "회사"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_config_settings
@@ -87,6 +87,8 @@ msgid ""
 "The VAT number [%(vat)s] for partner [%(name)s] does not seem to be valid. \n"
 "Note: the expected format is %(format)s"
 msgstr ""
+"협력사 [%(name)s]의 VAT 번호 [%(vat)s]가 유효하지 않은 것 같습니다.\n"
+"참고 : 예상되는 형식은 %(format)s입니다."
 
 #. module: base_vat
 #: code:addons/base_vat/models/res_partner.py:0
@@ -95,6 +97,8 @@ msgid ""
 "The VAT number [%(vat)s] for partner [%(name)s] either failed the VIES VAT "
 "validation check or did not respect the expected format %(format)s."
 msgstr ""
+"파트너 [%(name)s]의 VAT 번호 [%(vat)s]가 VIES VAT 유효성 검사에 실패했거나 예상 형식 %(format)s을 "
+"준수하지 않았습니다."
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.company_form_vat

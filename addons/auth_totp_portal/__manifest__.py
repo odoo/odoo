@@ -7,4 +7,5 @@
         'security/security.xml',
         'views/templates.xml',
     ],
+    'license': 'LGPL-3',
 }

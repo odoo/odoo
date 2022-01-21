@@ -132,13 +132,48 @@ function _getNumericAndUnit(value) {
  * @returns {boolean}
  */
 function _areCssValuesEqual(value1, value2, cssProp, $target) {
-    // If not colors, they will be left untouched
-    value1 = ColorpickerWidget.normalizeCSSColor(value1);
-    value2 = ColorpickerWidget.normalizeCSSColor(value2);
-
     // String comparison first
     if (value1 === value2) {
         return true;
+    }
+
+    // It could be a CSS variable, in that case the actual value has to be
+    // retrieved before comparing.
+    if (value1.startsWith('var(--')) {
+        value1 = _getCSSVariableValue(value1.substring(6, value1.length - 1));
+    }
+    if (value2.startsWith('var(--')) {
+        value2 = _getCSSVariableValue(value2.substring(6, value2.length - 1));
+    }
+    if (value1 === value2) {
+        return true;
+    }
+
+    // They may be colors, normalize then re-compare the resulting string
+    const color1 = ColorpickerWidget.normalizeCSSColor(value1);
+    const color2 = ColorpickerWidget.normalizeCSSColor(value2);
+    if (color1 === color2) {
+        return true;
+    }
+
+    // In case the values are meant as box-shadow, this is difficult to compare.
+    // In this case we use the kinda hacky and probably inneficient but probably
+    // easiest way: applying the value as box-shadow of two fakes elements and
+    // compare their computed value.
+    if (cssProp === 'box-shadow') {
+        const temp1El = document.createElement('div');
+        temp1El.style.boxShadow = value1;
+        document.body.appendChild(temp1El);
+        value1 = getComputedStyle(temp1El).boxShadow;
+        document.body.removeChild(temp1El);
+
+        const temp2El = document.createElement('div');
+        temp2El.style.boxShadow = value2;
+        document.body.appendChild(temp2El);
+        value2 = getComputedStyle(temp2El).boxShadow;
+        document.body.removeChild(temp2El);
+
+        return value1 === value2;
     }
 
     // Convert the second value in the unit of the first one and compare

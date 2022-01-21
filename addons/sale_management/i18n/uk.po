@@ -6,15 +6,15 @@
 # Martin Trigaux, 2020
 # Bohdan Lisnenko, 2020
 # ТАрас <tratatuta@i.ua>, 2020
-# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2020
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:45+0000\n"
+"POT-Creation-Date: 2020-10-29 15:48+0000\n"
 "PO-Revision-Date: 2020-09-07 08:18+0000\n"
-"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2020\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2021\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -154,12 +154,12 @@ msgstr "Створив"
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__create_date
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__create_date
 msgid "Created on"
-msgstr "Створено на"
+msgstr "Створено"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_res_company__sale_order_template_id
 msgid "Default Sale Template"
-msgstr ""
+msgstr "Шаблон продажу за замовчуванням"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_res_config_settings__company_so_template_id
@@ -224,8 +224,8 @@ msgstr "Тип відображення"
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
 msgstr ""
-"Не маєте доступу, пропустіть ці дані для електронного оглядового "
-"повідомлення користувача"
+"Не має доступу, пропустіть ці дані для електронного оглядового повідомлення "
+"користувача"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.res_config_settings_view_form
@@ -293,7 +293,7 @@ msgstr "Kpi усіх значень суми продажу"
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line____last_update
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option____last_update
 msgid "Last Modified on"
-msgstr "Останні зміни на"
+msgstr "Останні зміни"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__write_uid
@@ -436,7 +436,7 @@ msgstr "Функція шаблону комерційної пропозиці�
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__sale_order_template_id
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__sale_order_template_id
 msgid "Quotation Template Reference"
-msgstr "Посилання шаблону комерційної пропозиції"
+msgstr "Референс шаблону комерційної пропозиції"
 
 #. module: sale_management
 #: model:ir.actions.act_window,name:sale_management.sale_order_template_action
@@ -468,7 +468,7 @@ msgid ""
 "Request a online signature to the customer in order to confirm orders "
 "automatically."
 msgstr ""
-"Подавайте запит на онлайн-підпис клієнту у замовленні, щоби підтвердити "
+"Надішліть запит на онлайн-підпис клієнту у замовленні, щоби підтвердити "
 "замовлення автоматично."
 
 #. module: sale_management
@@ -477,7 +477,7 @@ msgid ""
 "Request an online payment to the customer in order to confirm orders "
 "automatically."
 msgstr ""
-"Робіть запит на онлайн-платіж клієнту у замовленні, щоби підтвердити "
+"Надішліть запит на онлайн-платіж клієнту у замовленні, щоби підтвердити "
 "замовлення автоматично."
 
 #. module: sale_management
@@ -528,6 +528,9 @@ msgid ""
 "and populate your orders with multiple quantities of each variant. This "
 "feature also exists in the Purchase application."
 msgstr ""
+"Продавайте один і той же товар у різних розмірах або кольорах? Спробуйте "
+"сітку товарів і заповніть свої замовлення кількома кількостями кожного "
+"варіанту. Ця функція також існує у модулі Купівлі."
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__sequence
@@ -542,6 +545,10 @@ msgid ""
 "to help sales configure a product with different options: colors, size, "
 "capacity, etc. Make sale orders encoding easier and error-proof."
 msgstr ""
+"Боретеся зі складним каталогом товарів? Спробуйте Конфігуратор товару, щоб "
+"допомогти продавцям налаштувати товар з різними параметрами: кольорами, "
+"розміром, місткістю тощо. Зробіть кодування комерційних замовлень простішим "
+"та надійнішим."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template_line__display_type
@@ -585,13 +592,13 @@ msgstr ""
 #: model:digest.tip,name:sale_management.digest_tip_sale1_management_0
 #: model_terms:digest.tip,tip_description:sale_management.digest_tip_sale1_management_0
 msgid "Tip: Odoo supports configurable products"
-msgstr ""
+msgstr "Порада: Odoo підтримує налаштовувані товари"
 
 #. module: sale_management
 #: model:digest.tip,name:sale_management.digest_tip_sale_management_1
 #: model_terms:digest.tip,tip_description:sale_management.digest_tip_sale_management_1
 msgid "Tip: Sell or buy products in bulk with matrixes"
-msgstr ""
+msgstr "Порада: продавайте чи купуйте товари групою за допомогою матриці"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__price_unit
@@ -655,6 +662,8 @@ msgid ""
 "Your quotation contains products from company %(product_company)s whereas your quotation belongs to company %(quote_company)s. \n"
 " Please change the company of your quotation or remove the products from other companies (%(bad_products)s)."
 msgstr ""
+"Ваша комерційна пропозиція містить товари від компанії %(product_company)s у той час, як комерційна пропозиція належить компанії %(quote_company)s. \n"
+" Змініть компанію на комерційній пропозиції або вилучіть товари з іншої компанії (%(bad_products)s)."
 
 #. module: sale_management
 #: code:addons/sale_management/models/sale_order_template.py:0
@@ -669,6 +678,8 @@ msgid ""
 "Your template contains products from company %(product_company)s whereas your template belongs to company %(template_company)s. \n"
 " Please change the company of your template or remove the products from other companies."
 msgstr ""
+"Ваш шаблон містить товари компанії %(product_company)s у той час, як шаблог належить компанії %(template_company)s. \n"
+" Змініть компанію на шаблоні або вилучіть товари іншої компанії."
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form

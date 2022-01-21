@@ -5,8 +5,8 @@
 # Translators:
 # Oleksandr Paziuk <o.paziuk@mobilunity.com>, 2020
 # Bohdan Lisnenko, 2020
-# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2020
 # Martin Trigaux, 2020
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:15+0000\n"
-"Last-Translator: Martin Trigaux, 2020\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2021\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,7 +25,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard___data_fetched
 msgid " Data Fetched"
-msgstr ""
+msgstr "Дані отримано"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__invoice_ids_nbr
@@ -108,7 +108,7 @@ msgstr "<i class=\"fa fa-trash\"/> Видалити"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "<small class=\"text-muted\">(Some fees may apply)</small>"
-msgstr "<small class=\"text-muted\">(Деяка комісія може стягуватися)</small>"
+msgstr "<small class=\"text-muted\">(Може стягуватися комісія)</small>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_kanban
@@ -150,7 +150,7 @@ msgstr ""
 #: code:addons/payment/models/account_invoice.py:0
 #, python-format
 msgid "A journal must be specified for the acquirer %s."
-msgstr ""
+msgstr "Для еквайєру повинен бути визначений журнал %s."
 
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:0
@@ -337,7 +337,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__authorize_implemented
 msgid "Authorize Mechanism Supported"
-msgstr "Механізм авторизації підтримується"
+msgstr "Підтримується механізм авторизації"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__auth_msg
@@ -589,7 +589,7 @@ msgstr "Створив"
 #: model:ir.model.fields,field_description:payment.field_payment_token__create_date
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__create_date
 msgid "Created on"
-msgstr "Створено на"
+msgstr "Створено"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
@@ -624,7 +624,7 @@ msgstr "Кредитна картка (Ingenico)"
 #. module: payment
 #: model:payment.acquirer,display_as:payment.payment_acquirer_odoo_by_adyen
 msgid "Credit Card (powered by Odoo Payments)"
-msgstr ""
+msgstr "Кредитна картка (зроблено Платежами Odoo)"
 
 #. module: payment
 #: model:payment.acquirer,display_as:payment.payment_acquirer_payulatam
@@ -649,7 +649,7 @@ msgstr "Кредитна картка (Stripe)"
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer_onboarding_wizard__payment_method__stripe
 msgid "Credit card (via Stripe)"
-msgstr "Кредитна картка (через Stripe)"
+msgstr "Кредитна картка (via Stripe)"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__currency_id
@@ -751,12 +751,13 @@ msgstr "Ел. пошта"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__qr_code
 msgid "Enable QR Codes"
-msgstr ""
+msgstr "Увімкнути QR коди"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__qr_code
 msgid "Enable the use of QR-codes for payments made on this provider."
 msgstr ""
+"Увімкніть використання QR-кодів для платежів, зроблених на цьому провайдері."
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer__state__enabled
@@ -1032,7 +1033,7 @@ msgstr "Мова"
 #: model:ir.model.fields,field_description:payment.field_res_company____last_update
 #: model:ir.model.fields,field_description:payment.field_res_partner____last_update
 msgid "Last Modified on"
-msgstr "Останні зміни на"
+msgstr "Останні зміни"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__write_uid
@@ -1240,7 +1241,7 @@ msgstr "Модуль Odoo Enterprise"
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_odoo_by_adyen
 msgid "Odoo Payments by Adyen"
-msgstr ""
+msgstr "Odoo платежі через Adyen"
 
 #. module: payment
 #. openerp-web
@@ -1260,6 +1261,7 @@ msgstr "Доступ до цих даних можуть отримати лиш
 #, python-format
 msgid "Only transactions having the authorized status can be captured."
 msgstr ""
+"Лише ті транзакції, які мають авторизований статус, можуть бути додані."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0
@@ -1588,7 +1590,7 @@ msgstr "Пов'язані партнери"
 #: code:addons/payment/models/payment_acquirer.py:0
 #, python-format
 msgid "Required fields not filled: %s"
-msgstr "Опов'язкові поля не заповнені: %s"
+msgstr "Обов'язкові поля не заповнені: %s"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__return_url
@@ -1702,7 +1704,7 @@ msgstr "Статус"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_company__payment_acquirer_onboarding_state
 msgid "State of the onboarding payment acquirer step"
-msgstr "Етап кроку залучення еквайєра платежу "
+msgstr "Статус кроку залучення еквайєра платежу "
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__state
@@ -1718,7 +1720,7 @@ msgstr "Stripe"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__stripe_publishable_key
 msgid "Stripe Publishable Key"
-msgstr "Опублікований ключ Stripe"
+msgstr "Ключ Stripe, що публікується"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__stripe_secret_key
@@ -1824,7 +1826,7 @@ msgstr ""
 #: code:addons/payment/static/src/js/payment_form.js:0
 #, python-format
 msgid "This card is currently linked to the following records:"
-msgstr ""
+msgstr "Ця картка вже пов'язана з наступними записами:"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_icon__image

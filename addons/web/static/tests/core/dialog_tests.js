@@ -124,6 +124,50 @@ QUnit.module('core', {}, function () {
 
         parent.destroy();
     });
+
+    QUnit.test("Ensure on_attach_callback and on_detach_callback are properly called", async function (assert) {
+        assert.expect(4);
+
+        const TestDialog = Dialog.extend({
+            on_attach_callback() {
+                assert.step('on_attach_callback');
+            },
+            on_detach_callback() {
+                assert.step('on_detach_callback');
+            },
+        });
+
+        const parent = await createEmptyParent();
+        const dialog = new TestDialog(parent, {
+            buttons: [
+                {
+                    text: "Close",
+                    classes: 'btn-primary',
+                    close: true,
+                },
+            ],
+            $content: $('<main/>'),
+        }).open();
+
+        await dialog.opened();
+
+        assert.verifySteps(['on_attach_callback']);
+
+        await testUtils.dom.click($('.modal[role="dialog"] .btn-primary'));
+        assert.verifySteps(['on_detach_callback']);
+
+        parent.destroy();
+    });
+
+    QUnit.test("Should not be displayed if parent is destroyed while dialog is being opened", async function (assert) {
+        assert.expect(1);
+        const parent = await createEmptyParent();
+        const dialog = new Dialog(parent);
+        dialog.open();
+        parent.destroy();
+        await testUtils.nextTick();
+        assert.containsNone(document.body, ".modal[role='dialog']");
+    });
 });
 
 });

@@ -512,6 +512,7 @@ return AbstractRenderer.extend({
                 $(self.calendarElement).find(_.str.sprintf('[data-event-id=%s]', mouseLeaveInfo.event.id)).removeClass('o_cw_custom_hover');
             },
             eventDragStart: function (mouseDragInfo) {
+                mouseDragInfo.el.classList.add(mouseDragInfo.view.type);
                 $(self.calendarElement).find(_.str.sprintf('[data-event-id=%s]', mouseDragInfo.event.id)).addClass('o_cw_custom_hover');
                 self._unselectEvent();
             },
@@ -577,7 +578,7 @@ return AbstractRenderer.extend({
                 });
             },
             'showOtherMonths': true,
-            'dayNamesMin' : this.state.fc_options.dayNamesShort.map(x => x[0]),
+            'dayNamesMin': this.state.fc_options.dayNamesMin.map(x => x[0]),
             'monthNames': this.state.fc_options.monthNamesShort,
             'firstDay': this.state.fc_options.firstDay,
         });

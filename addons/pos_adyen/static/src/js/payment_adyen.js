@@ -28,7 +28,7 @@ var PaymentAdyen = PaymentInterface.extend({
     _reset_state: function () {
         this.was_cancelled = false;
         this.last_diagnosis_service_id = false;
-        this.remaining_polls = 2;
+        this.remaining_polls = 4;
         clearTimeout(this.polling);
     },
 
@@ -38,7 +38,7 @@ var PaymentAdyen = PaymentInterface.extend({
         if (line) {
             line.set_payment_status('retry');
         }
-        this._show_error(_('Could not connect to the Odoo server, please check your internet connection and try again.'));
+        this._show_error(_t('Could not connect to the Odoo server, please check your internet connection and try again.'));
 
         return Promise.reject(data); // prevent subsequent onFullFilled's from being called
     },
@@ -112,10 +112,16 @@ var PaymentAdyen = PaymentInterface.extend({
 
     _adyen_pay: function () {
         var self = this;
+        var order = this.pos.get_order();
 
-        if (this.pos.get_order().selected_paymentline.amount < 0) {
-            this._show_error(_('Cannot process transactions with negative amount.'));
+        if (order.selected_paymentline.amount < 0) {
+            this._show_error(_t('Cannot process transactions with negative amount.'));
             return Promise.resolve();
+        }
+
+        if (order === this.poll_error_order) {
+            delete this.poll_error_order;
+            return self._adyen_handle_response({});
         }
 
         var data = this._adyen_pay_data();
@@ -150,7 +156,7 @@ var PaymentAdyen = PaymentInterface.extend({
             // Only valid response is a 200 OK HTTP response which is
             // represented by true.
             if (! ignore_error && data !== "ok") {
-                self._show_error(_('Cancelling the payment failed. Please cancel it manually on the payment terminal.'));
+                self._show_error(_t('Cancelling the payment failed. Please cancel it manually on the payment terminal.'));
             }
         });
     },
@@ -184,8 +190,16 @@ var PaymentAdyen = PaymentInterface.extend({
             timeout: 5000,
             shadow: true,
         }).catch(function (data) {
-            reject();
-            return self._handle_odoo_connection_failure(data);
+            if (self.remaining_polls != 0) {
+                self.remaining_polls--;
+            } else {
+                reject();
+                self.poll_error_order = self.pos.get_order();
+                return self._handle_odoo_connection_failure(data);
+            }
+            // This is to make sure that if 'data' is not an instance of Error (i.e. timeout error),
+            // this promise don't resolve -- that is, it doesn't go to the 'then' clause.
+            return Promise.reject(data);
         }).then(function (status) {
             var notification = status.latest_response;
             var last_diagnosis_service_id = status.last_received_diagnosis_id;
@@ -291,7 +305,7 @@ var PaymentAdyen = PaymentInterface.extend({
 
                 self.polling = setInterval(function () {
                     self._poll_for_response(resolve, reject);
-                }, 3000);
+                }, 5500);
             });
 
             // make sure to stop polling when we're done

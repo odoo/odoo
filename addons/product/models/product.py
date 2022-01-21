@@ -336,11 +336,7 @@ class ProductProduct(models.Model):
         if 'product_template_attribute_value_ids' in values:
             # `_get_variant_id_for_combination` depends on `product_template_attribute_value_ids`
             self.clear_caches()
-        if 'active' in values:
-            # prefetched o2m have to be reloaded (because of active_test)
-            # (eg. product.template: product_variant_ids)
-            self.flush()
-            self.invalidate_cache()
+        elif 'active' in values:
             # `_get_first_possible_variant_id` depends on variants active state
             self.clear_caches()
         return res
@@ -370,6 +366,9 @@ class ProductProduct(models.Model):
         self.clear_caches()
         return res
 
+    def _filter_to_unlink(self, check_access=True):
+        return self
+
     def _unlink_or_archive(self, check_access=True):
         """Unlink or archive products.
         Try in batch as much as possible because it is much faster.
@@ -387,6 +386,10 @@ class ProductProduct(models.Model):
             self.check_access_rights('write')
             self.check_access_rule('write')
             self = self.sudo()
+            to_unlink = self._filter_to_unlink()
+            to_archive = self - to_unlink
+            to_archive.write({'active': False})
+            self = to_unlink
 
         try:
             with self.env.cr.savepoint(), tools.mute_logger('odoo.sql_db'):
@@ -420,6 +423,12 @@ class ProductProduct(models.Model):
         if self._context.get('search_default_categ_id'):
             args.append((('categ_id', 'child_of', self._context['search_default_categ_id'])))
         return super(ProductProduct, self)._search(args, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid)
+
+    @api.depends_context('display_default_code', 'seller_id')
+    def _compute_display_name(self):
+        # `display_name` is calling `name_get()`` which is overidden on product
+        # to depend on `display_default_code` and `seller_id`
+        return super()._compute_display_name()
 
     def name_get(self):
         # TDE: this could be cleaned a bit I think
@@ -466,8 +475,8 @@ class ProductProduct(models.Model):
             variant = product.product_template_attribute_value_ids._get_combination_name()
 
             name = variant and "%s (%s)" % (product.name, variant) or product.name
-            sellers = []
-            if partner_ids:
+            sellers = self.env['product.supplierinfo'].sudo().browse(self.env.context.get('seller_id')) or []
+            if not sellers and partner_ids:
                 product_supplier_info = supplier_info_by_template.get(product.product_tmpl_id, [])
                 sellers = [x for x in product_supplier_info if x.product_id and x.product_id == product]
                 if not sellers:
@@ -584,9 +593,7 @@ class ProductProduct(models.Model):
                 'target': 'new'}
 
     def _prepare_sellers(self, params=False):
-        # This search is made to avoid retrieving seller_ids from the cache.
-        return self.env['product.supplierinfo'].search([('product_tmpl_id', '=', self.product_tmpl_id.id),
-                                                        ('name.active', '=', True)]).sorted(lambda s: (s.sequence, -s.min_qty, s.price, s.id))
+        return self.seller_ids.filtered(lambda s: s.name.active).sorted(lambda s: (s.sequence, -s.min_qty, s.price, s.id))
 
     def _select_seller(self, partner_id=False, quantity=0.0, date=None, uom_id=False, params=False):
         self.ensure_one()
@@ -609,7 +616,7 @@ class ProductProduct(models.Model):
                 continue
             if partner_id and seller.name not in [partner_id, partner_id.parent_id]:
                 continue
-            if float_compare(quantity_uom_seller, seller.min_qty, precision_digits=precision) == -1:
+            if quantity is not None and float_compare(quantity_uom_seller, seller.min_qty, precision_digits=precision) == -1:
                 continue
             if seller.product_id and seller.product_id != self:
                 continue
@@ -720,7 +727,7 @@ class ProductPackaging(models.Model):
 class SupplierInfo(models.Model):
     _name = "product.supplierinfo"
     _description = "Supplier Pricelist"
-    _order = 'sequence, min_qty desc, price'
+    _order = 'sequence, min_qty DESC, price, id'
 
     name = fields.Many2one(
         'res.partner', 'Vendor',

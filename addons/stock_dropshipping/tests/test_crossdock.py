@@ -13,12 +13,12 @@ class TestCrossdock(common.TransactionCase):
         supplier_crossdock = self.env['res.partner'].create({'name': "Crossdocking supplier"})
 
         # I first create a warehouse with pick-pack-ship and reception in 2 steps
-        wh_f = Form(self.env['stock.warehouse'])
-        wh_f.name = 'WareHouse PickPackShip'
-        wh_f.code = 'whpps'
-        wh_f.reception_steps = 'two_steps'
-        wh_f.delivery_steps = 'pick_pack_ship'
-        wh_pps = wh_f.save()
+        wh_pps = self.env['stock.warehouse'].create({
+            'name': 'WareHouse PickPackShip',
+            'code': 'whpps',
+            'reception_steps': 'two_steps',
+            'delivery_steps': 'pick_pack_ship',
+        })
 
         # Check that cross-dock route is active
         self.assertTrue(wh_pps.crossdock_route_id.active,

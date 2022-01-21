@@ -69,7 +69,7 @@ class TestSalesMC(TestSalesCommon):
         cls.company_2 = cls.env['res.company'].create({
             'name': 'New Test Company',
             'email': 'company.2@test.example.com',
-            'country_id': cls.env.ref('base.fr'),
+            'country_id': cls.env.ref('base.fr').id,
         })
         cls.team_c2 = cls.env['crm.team'].create({
             'name': 'C2 Team1',

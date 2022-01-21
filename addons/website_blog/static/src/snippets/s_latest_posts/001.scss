@@ -112,15 +112,16 @@
                 }
             }
             &.s_latest_posts_effect_dexter .s_latest_posts_post {
-                &::before {
-                    content: "";
-                    @include o-position-absolute(0, $grid-gutter-width/2, 0, $grid-gutter-width/2);
-                    background: linear-gradient(to bottom, darken(theme-color('secondary'), 10%) 0%, darken(theme-color('secondary'), 30%) 100%);
-                }
                 .o_record_cover_container {
                     transition: opacity 0.35s;
                 }
                 figcaption {
+                    &::before {
+                        content: "";
+                        @include o-position-absolute(0, 0, 0, 0);
+                        background: linear-gradient(to bottom, darken(theme-color('secondary'), 10%) 0%, darken(theme-color('secondary'), 30%) 100%);
+                        z-index: -1;
+                    }
                     padding: 3em;
                     text-align: left;
                     &:after {

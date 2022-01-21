@@ -4,7 +4,8 @@
 from datetime import timedelta
 
 from odoo import api, fields, models
-from odoo.tools.float_utils import float_compare, float_is_zero
+from odoo.tools.float_utils import float_compare
+from dateutil.relativedelta import relativedelta
 
 
 class StockPicking(models.Model):
@@ -22,19 +23,9 @@ class StockPicking(models.Model):
             if not picking._is_subcontract():
                 picking.display_action_record_components = False
                 continue
-            # Hide if no components are track
-            subcontracted_productions = picking._get_subcontracted_productions()
-            component_sub_moves = subcontracted_productions.mapped('move_raw_ids')
-            if all(subcontracted_move.has_tracking == 'none' for subcontracted_move in component_sub_moves):
-                picking.display_action_record_components = False
-                continue
-            # Hide if all tracked product move line have a lot and all productions are in rigth state
-            tracked_move_line = component_sub_moves.filtered(lambda sm: sm.has_tracking != 'none').move_line_ids
-            if all(sub_mo.state in ('to_close', 'done') for sub_mo in subcontracted_productions)\
-                    and all(sub_sml.lot_id for sub_sml in tracked_move_line):
-                picking.display_action_record_components = False
-                continue
-            picking.display_action_record_components = True
+            # Hide if all tracked product move lines are already recorded.
+            picking.display_action_record_components = any(
+                move._has_components_to_record() for move in picking.move_lines)
 
     # -------------------------------------------------------------------------
     # Action methods
@@ -88,14 +79,8 @@ class StockPicking(models.Model):
     def action_record_components(self):
         self.ensure_one()
         for move in self.move_lines:
-            if not move._has_tracked_subcontract_components():
-                continue
-            productions = move.move_orig_ids.production_id
-            productions_to_done = productions._subcontracting_filter_to_done()
-            production = (productions - productions_to_done)[-1:]
-            if not production:
-                continue
-            return move._action_record_components()
+            if move._has_components_to_record():
+                return move._action_record_components()
 
     # -------------------------------------------------------------------------
     # Subcontract helpers
@@ -105,7 +90,7 @@ class StockPicking(models.Model):
         return self.picking_type_id.code == 'incoming' and any(m.is_subcontract for m in self.move_lines)
 
     def _get_subcontracted_productions(self):
-        return self.move_lines.move_orig_ids.production_id
+        return self.move_lines.filtered(lambda move: move.is_subcontract).move_orig_ids.production_id
 
     def _get_warehouse(self, subcontract_move):
         return subcontract_move.warehouse_id or self.picking_type_id.warehouse_id
@@ -128,7 +113,7 @@ class StockPicking(models.Model):
             'location_dest_id': subcontract_move.picking_id.partner_id.with_company(subcontract_move.company_id).property_stock_subcontractor.id,
             'product_qty': subcontract_move.product_uom_qty,
             'picking_type_id': warehouse.subcontracting_type_id.id,
-            'date_planned_start': subcontract_move.date
+            'date_planned_start': subcontract_move.date - relativedelta(days=product.produce_delay)
         }
         return vals
 
@@ -145,7 +130,3 @@ class StockPicking(models.Model):
             finished_move = mo.move_finished_ids.filtered(lambda m: m.product_id == move.product_id)
             finished_move.write({'move_dest_ids': [(4, move.id, False)]})
             mo.action_assign()
-
-            if move._has_tracked_subcontract_components():
-                mo.qty_producing = move.product_uom_qty
-                mo.with_context(subcontract_move_id=True)._set_qty_producing()

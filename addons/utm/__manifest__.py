@@ -20,4 +20,5 @@ Enable management of UTM trackers: campaign, medium, source.
         'data/utm_demo.xml',
     ],
     'auto_install': False,
+    'license': 'LGPL-3',
 }

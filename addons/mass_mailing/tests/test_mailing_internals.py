@@ -117,7 +117,7 @@ class TestMassMailValues(MassMailCommon):
         ))
         self.assertEqual(
             literal_eval(mailing_form.mailing_domain),
-            ['&', ('is_blacklisted', '=', False), ('email', 'ilike', 'test.example.com')]
+            [('email', 'ilike', 'test.example.com')],
         )
         self.assertEqual(mailing_form.mailing_model_real, 'res.partner')
 
@@ -175,6 +175,79 @@ class TestMassMailFeatures(MassMailCommon):
 
     @users('user_marketing')
     @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_mailing_deletion(self):
+        """ Test deletion in various use case, depending on reply-to """
+        # 1- Keep archives and reply-to set to 'answer = new thread'
+        mailing = self.env['mailing.mailing'].create({
+            'name': 'TestSource',
+            'subject': 'TestDeletion',
+            'body_html': "<div>Hello {object.name}</div>",
+            'mailing_model_id': self.env['ir.model']._get('mailing.list').id,
+            'contact_list_ids': [(6, 0, self.mailing_list_1.ids)],
+            'keep_archives': True,
+            'reply_to_mode': 'email',
+            'reply_to': self.email_reply_to,
+        })
+        self.assertEqual(self.mailing_list_1.contact_ids.message_ids, self.env['mail.message'])
+
+        with self.mock_mail_gateway(mail_unlink_sent=True):
+            mailing.action_send_mail()
+
+        self.assertEqual(len(self._mails), 3)
+        self.assertEqual(len(self._new_mails.exists()), 3)
+        self.assertEqual(len(self.mailing_list_1.contact_ids.message_ids), 3)
+
+        # 2- Keep archives and reply-to set to 'answer = update thread'
+        self.mailing_list_1.contact_ids.message_ids.unlink()
+        mailing = mailing.copy()
+        mailing.write({
+            'reply_to_mode': 'thread',
+        })
+        self.assertEqual(self.mailing_list_1.contact_ids.message_ids, self.env['mail.message'])
+
+        with self.mock_mail_gateway(mail_unlink_sent=True):
+            mailing.action_send_mail()
+
+        self.assertEqual(len(self._mails), 3)
+        self.assertEqual(len(self._new_mails.exists()), 3)
+        self.assertEqual(len(self.mailing_list_1.contact_ids.message_ids), 3)
+
+        # 3- Remove archives and reply-to set to 'answer = new thread'
+        self.mailing_list_1.contact_ids.message_ids.unlink()
+        mailing = mailing.copy()
+        mailing.write({
+            'keep_archives': False,
+            'reply_to_mode': 'email',
+            'reply_to': self.email_reply_to,
+        })
+        self.assertEqual(self.mailing_list_1.contact_ids.message_ids, self.env['mail.message'])
+
+        with self.mock_mail_gateway(mail_unlink_sent=True):
+            mailing.action_send_mail()
+
+        self.assertEqual(len(self._mails), 3)
+        self.assertEqual(len(self._new_mails.exists()), 0)
+        self.assertEqual(self.mailing_list_1.contact_ids.message_ids, self.env['mail.message'])
+
+        # 4- Remove archives and reply-to set to 'answer = update thread'
+        # Imply keeping mail.message for gateway reply)
+        self.mailing_list_1.contact_ids.message_ids.unlink()
+        mailing = mailing.copy()
+        mailing.write({
+            'keep_archives': False,
+            'reply_to_mode': 'thread',
+        })
+        self.assertEqual(self.mailing_list_1.contact_ids.message_ids, self.env['mail.message'])
+
+        with self.mock_mail_gateway(mail_unlink_sent=True):
+            mailing.action_send_mail()
+
+        self.assertEqual(len(self._mails), 3)
+        self.assertEqual(len(self._new_mails.exists()), 0)
+        self.assertEqual(len(self.mailing_list_1.contact_ids.message_ids), 3)
+
+    @users('user_marketing')
+    @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_mailing_on_res_partner(self):
         """ Test mailing on res.partner model: ensure default recipients are
         correctly computed """
@@ -200,9 +273,9 @@ class TestMassMailFeatures(MassMailCommon):
             mailing._process_mass_mailing_queue()
 
         self.assertMailTraces(
-            [{'email': 'test1@example.com'},
-             {'email': 'test2@example.com', 'state': 'ignored'}],
-            mailing, partner_a | partner_b, check_mail=True
+            [{'partner': partner_a},
+             {'partner': partner_b, 'state': 'ignored'}],
+            mailing, partner_a + partner_b, check_mail=True
         )
 
     @users('user_marketing')

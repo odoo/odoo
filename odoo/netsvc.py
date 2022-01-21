@@ -136,6 +136,8 @@ def init_logger():
         'zeep.loader',# zeep using defusedxml.lxml
         'reportlab.lib.rl_safe_eval',# reportlab importing ABC from collections
         'ofxparse',# ofxparse importing ABC from collections
+        'astroid',  # deprecated imp module (fixed in 2.5.1)
+        'requests_toolbelt', # importing ABC from collections (fixed in 0.9)
     ]:
         warnings.filterwarnings('ignore', category=DeprecationWarning, module=module)
 

@@ -4,7 +4,7 @@
 from collections import defaultdict
 
 from odoo import api, models
-from odoo.tools import float_is_zero, format_datetime, format_date
+from odoo.tools import float_is_zero, format_datetime, format_date, float_round
 
 
 class ReplenishmentReport(models.AbstractModel):
@@ -122,10 +122,10 @@ class ReplenishmentReport(models.AbstractModel):
             },
             'replenishment_filled': replenishment_filled,
             'uom_id': product.uom_id,
-            'receipt_date': format_datetime(self.env, move_in.date, timezone, 'medium') if move_in else False,
-            'delivery_date': format_datetime(self.env, move_out.date, timezone, 'medium') if move_out else False,
+            'receipt_date': format_datetime(self.env, move_in.date, timezone, dt_format=False) if move_in else False,
+            'delivery_date': format_datetime(self.env, move_out.date, timezone, dt_format=False) if move_out else False,
             'is_late': is_late,
-            'quantity': quantity,
+            'quantity': float_round(quantity, precision_rounding=product.uom_id.rounding),
             'move_out': move_out,
             'move_in': move_in,
             'reservation': reservation,
@@ -227,7 +227,8 @@ class ReplenishmentReport(models.AbstractModel):
         res['warehouses'] = self.env['stock.warehouse'].search_read(fields=['id', 'name', 'code'])
         res['active_warehouse'] = self.env.context.get('warehouse', False)
         if not res['active_warehouse']:
-            res['active_warehouse'] = self.env.context.get('allowed_company_ids')[0]
+            company_id = self.env.context.get('allowed_company_ids')[0]
+            res['active_warehouse'] = self.env['stock.warehouse'].search([('company_id', '=', company_id)], limit=1).id
         return res
 
 

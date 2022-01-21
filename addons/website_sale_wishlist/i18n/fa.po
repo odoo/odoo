@@ -1,19 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_sale_wishlist
+# 	* website_sale_wishlist
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Hamid Darabi, 2018
-# mohammad azarbara <mohammadazarbara98@gmail.com>, 2018
-# Hamed Mohammadi <hamed@dehongi.com>, 2018
+# Martin Trigaux, 2020
+# Hamid Darabi, 2020
+# Faraz Sadri Alamdari <ifarazir@gmail.com>, 2020
+# Hamed Mohammadi <hamed@dehongi.com>, 2020
+# Mohsen Mohammadi <iammohsen.123@gmail.com>, 2021
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:18+0000\n"
-"PO-Revision-Date: 2018-09-21 13:18+0000\n"
-"Last-Translator: Hamed Mohammadi <hamed@dehongi.com>, 2018\n"
+"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"PO-Revision-Date: 2020-09-07 08:22+0000\n"
+"Last-Translator: Mohsen Mohammadi <iammohsen.123@gmail.com>, 2021\n"
 "Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,16 +24,23 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: website_sale_wishlist
-#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.header
-msgid ""
-"<i class=\"fa fa-heart\"/>\n"
-"                        Wishlist"
-msgstr ""
-
-#. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
 msgid "<small><i class=\"fa fa-trash-o\"/> Remove</small>"
 msgstr "<small><i class=\"fa fa-trash-o\"/> حذف</small>"
+
+#. module: website_sale_wishlist
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.add_to_wishlist
+msgid "<span class=\"fa fa-heart\" role=\"img\" aria-label=\"Add to wishlist\"/>"
+msgstr "<span class=\"fa fa-heart\" role=\"img\" aria-label=\"Add to wishlist\"/>"
+
+#. module: website_sale_wishlist
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_add_to_wishlist
+msgid ""
+"<span class=\"fa fa-heart\" role=\"img\" aria-label=\"Add to wishlist\"/> "
+"Add to wishlist"
+msgstr ""
+"<span class=\"fa fa-heart\" role=\"img\" aria-label=\"Add to wishlist\"/> "
+"افزودن به لیست علایق"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__active
@@ -41,23 +50,19 @@ msgstr "فعال"
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
 msgid "Add <span class=\"d-none d-md-inline\">to Cart</span>"
-msgstr ""
+msgstr "افزودن <span class=\"d-none d-md-inline\">به سبد</span>"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
 msgid "Add product to my cart but keep it in my wishlist"
 msgstr ""
+"محصول را به سبد خرید من اضافه کنید اما آن را در لیست علاقه مندی ها من نگه "
+"دارید"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.add_to_wishlist
-#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_add_to_wishlist
 msgid "Add to Wishlist"
-msgstr ""
-
-#. module: website_sale_wishlist
-#: model:ir.model,name:website_sale_wishlist.model_ir_autovacuum
-msgid "Automatic Vacuum"
-msgstr ""
+msgstr "افزودن به لیست علاقه‌مندی‌ها"
 
 #. module: website_sale_wishlist
 #: model:ir.model,name:website_sale_wishlist.model_res_partner
@@ -67,7 +72,7 @@ msgstr "مخاطب"
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__create_uid
 msgid "Created by"
-msgstr "ایجاد شده توسط"
+msgstr "ایجاد توسط"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__create_date
@@ -80,24 +85,41 @@ msgid "Currency"
 msgstr "ارز"
 
 #. module: website_sale_wishlist
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_product_product__display_name
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_product_template__display_name
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__display_name
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_res_partner__display_name
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_res_users__display_name
 msgid "Display Name"
 msgstr "نام نمایشی"
 
 #. module: website_sale_wishlist
+#: model:ir.model.constraint,message:website_sale_wishlist.constraint_product_wishlist_product_unique_partner_id
+msgid "Duplicated wishlisted product for this partner."
+msgstr ""
+
+#. module: website_sale_wishlist
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_product_product__id
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_product_template__id
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__id
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_res_partner__id
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_res_users__id
 msgid "ID"
 msgstr "شناسه"
 
 #. module: website_sale_wishlist
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_product_product____last_update
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_product_template____last_update
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist____last_update
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_res_partner____last_update
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_res_users____last_update
 msgid "Last Modified on"
 msgstr "آخرین تغییر در"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__write_uid
 msgid "Last Updated by"
-msgstr "آخرین تغییر توسط"
+msgstr "آخرین به روز رسانی توسط"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__write_date
@@ -107,7 +129,7 @@ msgstr "آخرین به روز رسانی در"
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
 msgid "My Wishlist"
-msgstr ""
+msgstr "علاقه‌مندی‌های من"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__partner_id
@@ -122,7 +144,7 @@ msgstr "قیمت"
 #. module: website_sale_wishlist
 #: model:ir.model.fields,help:website_sale_wishlist.field_product_wishlist__price
 msgid "Price of the product when it has been added in the wishlist"
-msgstr ""
+msgstr "قیمت محصول هنگامی که در لیست علاقه‌مندی‌ها اضافه شده است"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__pricelist_id
@@ -132,26 +154,37 @@ msgstr "لیست قیمت"
 #. module: website_sale_wishlist
 #: model:ir.model.fields,help:website_sale_wishlist.field_product_wishlist__pricelist_id
 msgid "Pricelist when added"
-msgstr ""
+msgstr "لیست قیمت وقتی اضافه شد"
 
 #. module: website_sale_wishlist
+#: model:ir.model,name:website_sale_wishlist.model_product_product
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__product_id
 msgid "Product"
 msgstr "محصول"
 
 #. module: website_sale_wishlist
+#: model:ir.model,name:website_sale_wishlist.model_product_template
+msgid "Product Template"
+msgstr "قالب محصول"
+
+#. module: website_sale_wishlist
 #: model:ir.model,name:website_sale_wishlist.model_product_wishlist
 msgid "Product Wishlist"
-msgstr ""
+msgstr "علاقه‌مندی‌های محصول"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
 msgid "Product image"
-msgstr ""
+msgstr "تصویر محصول"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
 msgid "Shop Wishlist"
+msgstr "علاقه‌مندی‌های خرید"
+
+#. module: website_sale_wishlist
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.snippet_options
+msgid "Show Empty Wishlist"
 msgstr ""
 
 #. module: website_sale_wishlist
@@ -162,10 +195,11 @@ msgstr "کاربران"
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__website_id
 msgid "Website"
-msgstr "تارنما"
+msgstr "وبسایت"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_res_partner__wishlist_ids
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_res_users__wishlist_ids
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.header_wishlist_link
 msgid "Wishlist"
-msgstr ""
+msgstr "علاقه‌مندی‌ها"

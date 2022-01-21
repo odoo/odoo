@@ -5,6 +5,7 @@ const components = {
     MessageAuthorPrefix: require('mail/static/src/components/message_author_prefix/message_author_prefix.js'),
     PartnerImStatusIcon: require('mail/static/src/components/partner_im_status_icon/partner_im_status_icon.js'),
 };
+const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
 const mailUtils = require('mail.utils');
 
@@ -18,6 +19,7 @@ class ThreadNeedactionPreview extends Component {
      */
     constructor(...args) {
         super(...args);
+        useShouldUpdateBasedOnProps();
         useStore(props => {
             const thread = this.env.models['mail.thread'].get(props.threadLocalId);
             const mainThreadCache = thread ? thread.mainCache : undefined;
@@ -117,7 +119,6 @@ class ThreadNeedactionPreview extends Component {
             // handled in `_onClickMarkAsRead`
             return;
         }
-        this.thread.markNeedactionMessagesAsOriginThreadAsRead();
         this.thread.open();
         if (!this.env.messaging.device.isMobile) {
             this.env.messaging.messagingMenu.close();
@@ -129,7 +130,10 @@ class ThreadNeedactionPreview extends Component {
      * @param {MouseEvent} ev
      */
     _onClickMarkAsRead(ev) {
-        this.thread.markNeedactionMessagesAsOriginThreadAsRead();
+        this.env.models['mail.message'].markAllAsRead([
+            ['model', '=', this.thread.model],
+            ['res_id', '=', this.thread.id],
+        ]);
     }
 
 }

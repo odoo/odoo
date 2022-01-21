@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2020
 # Kostas Goutoudis <goutoudis@gmail.com>, 2020
+# Alexandros Kapetanios <alexandros@gnugr.org>, 2021
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 11:24+0000\n"
 "PO-Revision-Date: 2020-09-07 08:14+0000\n"
-"Last-Translator: Kostas Goutoudis <goutoudis@gmail.com>, 2020\n"
+"Last-Translator: Alexandros Kapetanios <alexandros@gnugr.org>, 2021\n"
 "Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -89,7 +90,7 @@ msgstr "Client Secret"
 #. module: microsoft_calendar
 #: model:ir.model,name:microsoft_calendar.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Ρυθμίσεις διαμόρφωσης"
 
 #. module: microsoft_calendar
 #. openerp-web
@@ -145,6 +146,16 @@ msgid "Event Recurrence Rule"
 msgstr ""
 
 #. module: microsoft_calendar
+#: code:addons/microsoft_calendar/models/calendar.py:0
+#, python-format
+msgid ""
+"For a correct synchronization between Odoo and Outlook Calendar, all attendees must have an email address. However, some events do not respect this condition. As long as the events are incorrect, the calendars will not be synchronized.\n"
+"Either update the events/attendees or archive these events %s:\n"
+"%s"
+msgstr ""
+
+#. module: microsoft_calendar
+#: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_attendee__id
 #: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_event__id
 #: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_recurrence__id
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__id

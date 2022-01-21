@@ -204,6 +204,7 @@ class MergePartnerAutomatic(models.TransientModel):
             update_records('calendar', src=partner, field_model='model_id.model')
             update_records('ir.attachment', src=partner, field_model='res_model')
             update_records('mail.followers', src=partner, field_model='res_model')
+            update_records('mail.activity', src=partner, field_model='res_model')
             update_records('mail.message', src=partner)
             update_records('ir.model.data', src=partner)
 
@@ -480,7 +481,7 @@ class MergePartnerAutomatic(models.TransientModel):
         model_mapping = self._compute_models()
 
         # group partner query
-        self._cr.execute(query)
+        self._cr.execute(query) # pylint: disable=sql-injection
 
         counter = 0
         for min_id, aggr_ids in self._cr.fetchall():

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, tools
+from odoo import fields, models, tools, api
 
 
 class ReportStockQuantity(models.Model):
@@ -26,23 +26,30 @@ class ReportStockQuantity(models.Model):
         tools.drop_view_if_exists(self._cr, 'report_stock_quantity')
         query = """
 CREATE or REPLACE VIEW report_stock_quantity AS (
-WITH forecast_qty AS (
-    SELECT
+SELECT
+    MIN(id) as id,
+    product_id,
+    state,
+    date,
+    sum(product_qty) as product_qty,
+    company_id,
+    warehouse_id
+FROM (SELECT
         m.id,
         m.product_id,
         CASE
-            WHEN (whs.id IS NOT NULL AND whd.id IS NULL) OR ls.usage = 'transit' THEN 'out'
-            WHEN (whs.id IS NULL AND whd.id IS NOT NULL) OR ld.usage = 'transit' THEN 'in'
+            WHEN whs.id IS NOT NULL AND whd.id IS NULL THEN 'out'
+            WHEN whd.id IS NOT NULL AND whs.id IS NULL THEN 'in'
         END AS state,
         m.date::date AS date,
         CASE
-            WHEN (whs.id IS NOT NULL AND whd.id IS NULL) OR ls.usage = 'transit' THEN -product_qty
-            WHEN (whs.id IS NULL AND whd.id IS NOT NULL) OR ld.usage = 'transit' THEN product_qty
+            WHEN whs.id IS NOT NULL AND whd.id IS NULL THEN -m.product_qty
+            WHEN whd.id IS NOT NULL AND whs.id IS NULL THEN m.product_qty
         END AS product_qty,
         m.company_id,
         CASE
-            WHEN (whs.id IS NOT NULL AND whd.id IS NULL) OR ls.usage = 'transit' THEN whs.id
-            WHEN (whs.id IS NULL AND whd.id IS NOT NULL) OR ld.usage = 'transit' THEN whd.id
+            WHEN whs.id IS NOT NULL AND whd.id IS NULL THEN whs.id
+            WHEN whd.id IS NOT NULL AND whs.id IS NULL THEN whd.id
         END AS warehouse_id
     FROM
         stock_move m
@@ -54,11 +61,11 @@ WITH forecast_qty AS (
     LEFT JOIN product_template pt on pt.id=pp.product_tmpl_id
     WHERE
         pt.type = 'product' AND
-        product_qty != 0 AND
+        m.product_qty != 0 AND
         (whs.id IS NOT NULL OR whd.id IS NOT NULL) AND
         (whs.id IS NULL OR whd.id IS NULL OR whs.id != whd.id) AND
         m.state NOT IN ('cancel', 'draft', 'done')
-    UNION
+    UNION ALL
     SELECT
         -q.id as id,
         q.product_id,
@@ -76,7 +83,7 @@ WITH forecast_qty AS (
     WHERE
         (l.usage = 'internal' AND wh.id IS NOT NULL) OR
         l.usage = 'transit'
-    UNION
+    UNION ALL
     SELECT
         m.id,
         m.product_id,
@@ -91,15 +98,15 @@ WITH forecast_qty AS (
             ELSE m.date::date - interval '1 day'
         END, '1 day'::interval)::date date,
         CASE
-            WHEN ((whs.id IS NOT NULL AND whd.id IS NULL) OR ls.usage = 'transit') AND m.state = 'done' THEN product_qty
-            WHEN ((whs.id IS NULL AND whd.id IS NOT NULL) OR ld.usage = 'transit') AND m.state = 'done' THEN -product_qty
-            WHEN (whs.id IS NOT NULL AND whd.id IS NULL) OR ls.usage = 'transit' THEN -product_qty
-            WHEN (whs.id IS NULL AND whd.id IS NOT NULL) OR ld.usage = 'transit' THEN product_qty
+            WHEN whs.id IS NOT NULL AND whd.id IS NULL AND m.state = 'done' THEN m.product_qty
+            WHEN whd.id IS NOT NULL AND whs.id IS NULL AND m.state = 'done' THEN -m.product_qty
+            WHEN whs.id IS NOT NULL AND whd.id IS NULL THEN -m.product_qty
+            WHEN whd.id IS NOT NULL AND whs.id IS NULL THEN m.product_qty
         END AS product_qty,
         m.company_id,
         CASE
-            WHEN (whs.id IS NOT NULL AND whd.id IS NULL) OR ls.usage = 'transit' THEN whs.id
-            WHEN (whs.id IS NULL AND whd.id IS NOT NULL) OR ld.usage = 'transit' THEN whd.id
+            WHEN whs.id IS NOT NULL AND whd.id IS NULL THEN whs.id
+            WHEN whd.id IS NOT NULL AND whs.id IS NULL THEN whd.id
         END AS warehouse_id
     FROM
         stock_move m
@@ -111,21 +118,21 @@ WITH forecast_qty AS (
     LEFT JOIN product_template pt on pt.id=pp.product_tmpl_id
     WHERE
         pt.type = 'product' AND
-        product_qty != 0 AND
+        m.product_qty != 0 AND
         (whs.id IS NOT NULL OR whd.id IS NOT NULL) AND
         (whs.id IS NULL or whd.id IS NULL OR whs.id != whd.id) AND
-        m.state NOT IN ('cancel', 'draft')
-) -- /forecast_qty
-SELECT
-    MIN(id) as id,
-    product_id,
-    state,
-    date,
-    sum(product_qty) as product_qty,
-    company_id,
-    warehouse_id
-FROM forecast_qty
+        m.state NOT IN ('cancel', 'draft')) AS forecast_qty
 GROUP BY product_id, state, date, company_id, warehouse_id
 );
 """
         self.env.cr.execute(query)
+
+    @api.model
+    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
+        for i in range(len(domain)):
+            if domain[i][0] == 'product_tmpl_id' and domain[i][1] in ('=', 'in'):
+                tmpl = self.env['product.template'].browse(domain[i][2])
+                # Avoid the subquery done for the related, the postgresql will plan better with the SQL view
+                # and then improve a lot the performance for the forecasted report of the product template.
+                domain[i] = ('product_id', 'in', tmpl.with_context(active_test=False).product_variant_ids.ids)
+        return super().read_group(domain, fields, groupby, offset, limit, orderby, lazy)

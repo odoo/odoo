@@ -8,6 +8,7 @@ from odoo.exceptions import AccessError, ValidationError, UserError
 from odoo.tools import mute_logger, formataddr
 
 
+@tagged('mail_channel')
 class TestChannelAccessRights(TestMailCommon):
 
     @classmethod
@@ -107,6 +108,7 @@ class TestChannelAccessRights(TestMailCommon):
                 trigger_read = partner.with_user(self.user_portal).name
 
 
+@tagged('mail_channel')
 class TestChannelFeatures(TestMailCommon):
 
     @classmethod
@@ -256,6 +258,79 @@ class TestChannelFeatures(TestMailCommon):
             "Last message id should stay the same after mark channel as seen with an older message"
         )
 
+    @mute_logger('odoo.models.unlink')
+    def test_channel_auto_unsubscribe_archived_or_deleted_users(self):
+        """Archiving / deleting a user should automatically unsubscribe related partner from private channels"""
+        test_channel_private = self.env['mail.channel'].with_context(self._test_context).create({
+            'name': 'Winden caves',
+            'description': 'Channel to travel through time',
+            'public': 'private',
+        })
+        test_channel_group = self.env['mail.channel'].with_context(self._test_context).create({
+            'name': 'Sic Mundus',
+            'public': 'groups',
+            'group_public_id': self.env.ref('base.group_user').id})
+
+        test_user = self.env['res.users'].create({
+            "login": "adam",
+            "name": "Jonas",
+        })
+        test_partner = test_user.partner_id
+        test_chat = self.env['mail.channel'].with_context(self._test_context).create({
+            'name': 'test',
+            'channel_type': 'chat',
+            'public': 'private',
+            'channel_partner_ids': [(4, self.user_employee.partner_id.id), (4, test_partner.id)],
+        })
+
+        self._join_channel(self.test_channel, self.user_employee.partner_id | test_partner)
+        self._join_channel(test_channel_private, self.user_employee.partner_id | test_partner)
+        self._join_channel(test_channel_group, self.user_employee.partner_id | test_partner)
+
+        # Unsubscribe archived user from the private channels, but not from public channels and not from chat
+        self.user_employee.active = False
+        self.assertEqual(test_channel_private.channel_partner_ids, test_partner)
+        self.assertEqual(test_channel_group.channel_partner_ids, test_partner)
+        self.assertEqual(self.test_channel.channel_partner_ids, self.user_employee.partner_id | test_partner)
+        self.assertEqual(test_chat.channel_partner_ids, self.user_employee.partner_id | test_partner)
+
+        # Unsubscribe deleted user from the private channels, but not from public channels and not from chat
+        test_user.unlink()
+        self.assertEqual(test_channel_private.channel_partner_ids, self.env['res.partner'])
+        self.assertEqual(test_channel_group.channel_partner_ids, self.env['res.partner'])
+        self.assertEqual(self.test_channel.channel_partner_ids, self.user_employee.partner_id | test_partner)
+        self.assertEqual(test_chat.channel_partner_ids, self.user_employee.partner_id | test_partner)
+
+    def test_channel_unfollow_should_also_unsubscribe_the_partner(self):
+        self.test_channel.message_subscribe(self.test_partner.ids)
+        self.test_channel._action_unfollow(self.test_partner)
+
+        self.assertFalse(self.test_channel.message_partner_ids)
+
+    def test_channel_unfollow_should_not_post_message_if_the_partner_has_been_removed(self):
+        '''
+        When a partner leaves a channel, the system will help post a message under
+        that partner's name in the channel to notify others if `email_sent` is set `False`.
+        The message should only be posted when the partner is still a member of the channel
+        before method `_action_unfollow()` is called.
+        If the partner has been removed earlier, no more messages will be posted
+        even if `_action_unfollow()` is called again.
+        '''
+        self.test_channel.write({'email_send': False})
+        self._join_channel(self.test_channel, self.test_partner)
+        self.test_channel.message_subscribe(self.partner_employee.ids)
+
+        # a message should be posted to notify others when a partner is about to leave
+        with self.assertSinglePostNotifications([{'partner': self.partner_employee, 'type': 'inbox'}], {
+            'message_type': 'notification',
+            'subtype': 'mail.mt_comment',
+        }):
+            self.test_channel._action_unfollow(self.test_partner)
+
+        # no more messages should be posted if the partner has been removed before.
+        with self.assertNoNotifications():
+            self.test_channel._action_unfollow(self.test_partner)
+
     def test_multi_company_chat(self):
         company_A = self.env['res.company'].create({'name': 'Company A'})
         company_B = self.env['res.company'].create({'name': 'Company B'})
@@ -274,8 +349,75 @@ class TestChannelFeatures(TestMailCommon):
         initial_channel_info = self.env['mail.channel'].with_user(test_user_1).with_context(allowed_company_ids=company_A.ids).channel_get(test_user_2.partner_id.ids)
         self.assertTrue(initial_channel_info, 'should be able to chat with multi company user')
 
+    def test_multi_company_message_post_notifications(self):
+        company_1 = self.company_admin
+        company_2 = self.env['res.company'].create({'name': 'Company 2'})
 
-@tagged('moderation')
+        # Company 1 and notification_type == "inbox"
+        user_1 = self.user_employee
+
+        # Company 1 and notification_type == "email"
+        user_2 = self.user_admin
+        user_2.notification_type = 'email'
+
+        user_3 = mail_new_test_user(
+            self.env, login='user3', email='user3@example.com', groups='base.group_user',
+            company_id=company_2.id, company_ids=[(6, 0, company_2.ids)],
+            name='user3', notification_type='inbox')
+
+        user_4 = mail_new_test_user(
+            self.env, login='user4', email='user4@example.com', groups='base.group_user',
+            company_id=company_2.id, company_ids=[(6, 0, company_2.ids)],
+            name='user4', notification_type='email')
+
+        partner_without_user = self.env['res.partner'].create({
+            'name': 'Partner',
+            'email': 'partner_test_123@example.com',
+        })
+        mail_channel = self.env['mail.channel'].with_user(user_1).create({
+            'name': 'Channel',
+            'channel_partner_ids': [
+                (4, user_1.partner_id.id),
+                (4, user_2.partner_id.id),
+                (4, user_3.partner_id.id),
+                (4, user_4.partner_id.id),
+                (4, partner_without_user.id),
+            ],
+            'email_send': True,
+        })
+
+        mail_channel.invalidate_cache()
+        (user_1 | user_2 | user_3 | user_4).invalidate_cache()
+
+        with self.mock_mail_gateway():
+            mail_channel.with_user(user_1).with_company(company_1).message_post(
+                body='Test body message 1337',
+                channel_ids=mail_channel.ids,
+            )
+
+        self.assertSentEmail(user_1.partner_id, [user_2.partner_id])
+        self.assertSentEmail(user_1.partner_id, [user_4.partner_id])
+        self.assertEqual(len(self._mails), 3, 'Should have send only 3 emails to user 2, user 4 and the partner')
+
+        self.assertBusNotifications([(self.cr.dbname, 'mail.channel', mail_channel.id)])
+
+        # Should not create mail notifications for user 1 & 3
+        self.assertFalse(self.env['mail.notification'].search([('res_partner_id', '=', user_1.partner_id.id)]))
+        self.assertFalse(self.env['mail.notification'].search([('res_partner_id', '=', user_3.partner_id.id)]))
+
+        # Should create mail notifications for user 2 & 4
+        self.assertTrue(self.env['mail.notification'].search([('res_partner_id', '=', user_2.partner_id.id)]))
+        self.assertTrue(self.env['mail.notification'].search([('res_partner_id', '=', user_4.partner_id.id)]))
+
+        # Check that we did not send a "channel_seen" notifications
+        # for the users which receive the notifications by email
+        notification_seen_user_2 = self.env['bus.bus'].search([('create_uid', '=', user_2.id)])
+        self.assertFalse(notification_seen_user_2, 'Should not have sent a notification as user 2')
+        notification_seen_user_4 = self.env['bus.bus'].search([('create_uid', '=', user_4.id)])
+        self.assertFalse(notification_seen_user_4, 'Should not have sent a notification as user 4')
+
+
+@tagged('moderation', 'mail_channel')
 class TestChannelModeration(TestMailCommon):
 
     @classmethod

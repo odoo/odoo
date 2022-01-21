@@ -132,22 +132,19 @@ models.Order = models.Order.extend({
             if (line.mp_skip) {
                 return;
             }
-            var line_hash = line.get_line_diff_hash();
             var qty  = Number(line.get_quantity());
             var note = line.get_note();
             var product_id = line.get_product().id;
-
-            if (typeof resume[line_hash] === 'undefined') {
-                resume[line_hash] = {
-                    qty: qty,
-                    note: note,
-                    product_id: product_id,
-                    product_name_wrapped: line.generate_wrapped_product_name(),
-                };
-            } else {
-                resume[line_hash].qty += qty;
-            }
-
+            var product_name = line.get_full_product_name();
+            var p_key = product_id + " - " + product_name;
+            var product_resume = p_key in resume ? resume[p_key] : {
+                pid: product_id,
+                product_name_wrapped: line.generate_wrapped_product_name(),
+                qties: {},
+            };
+            if (note in product_resume['qties']) product_resume['qties'][note] += qty;
+            else product_resume['qties'][note] = qty;
+            resume[p_key] = product_resume;
         });
         return resume;
     },
@@ -164,62 +161,57 @@ models.Order = models.Order.extend({
         var json        = this.export_as_JSON();
         var add = [];
         var rem = [];
-        var line_hash;
+        var p_key, note;
 
-        for ( line_hash in current_res) {
-            var curr = current_res[line_hash];
-            var old  = {};
-            var found = false;
-            for(var id in old_res) {
-                if(old_res[id].product_id === curr.product_id){
-                    found = true;
-                    old = old_res[id];
-                    break;
+        for (p_key in current_res) {
+            for (note in current_res[p_key]['qties']) {
+                var curr = current_res[p_key];
+                var old  = old_res[p_key] || {};
+                var pid = curr.pid;
+                var found = p_key in old_res && note in old_res[p_key]['qties'];
+
+                if (!found) {
+                    add.push({
+                        'id':       pid,
+                        'name':     this.pos.db.get_product_by_id(pid).display_name,
+                        'name_wrapped': curr.product_name_wrapped,
+                        'note':     note,
+                        'qty':      curr['qties'][note],
+                    });
+                } else if (old['qties'][note] < curr['qties'][note]) {
+                    add.push({
+                        'id':       pid,
+                        'name':     this.pos.db.get_product_by_id(pid).display_name,
+                        'name_wrapped': curr.product_name_wrapped,
+                        'note':     note,
+                        'qty':      curr['qties'][note] - old['qties'][note],
+                    });
+                } else if (old['qties'][note] > curr['qties'][note]) {
+                    rem.push({
+                        'id':       pid,
+                        'name':     this.pos.db.get_product_by_id(pid).display_name,
+                        'name_wrapped': curr.product_name_wrapped,
+                        'note':     note,
+                        'qty':      old['qties'][note] - curr['qties'][note],
+                    });
                 }
-            }
-
-            if (!found) {
-                add.push({
-                    'id':       curr.product_id,
-                    'name':     this.pos.db.get_product_by_id(curr.product_id).display_name,
-                    'name_wrapped': curr.product_name_wrapped,
-                    'note':     curr.note,
-                    'qty':      curr.qty,
-                });
-            } else if (old.qty < curr.qty) {
-                add.push({
-                    'id':       curr.product_id,
-                    'name':     this.pos.db.get_product_by_id(curr.product_id).display_name,
-                    'name_wrapped': curr.product_name_wrapped,
-                    'note':     curr.note,
-                    'qty':      curr.qty - old.qty,
-                });
-            } else if (old.qty > curr.qty) {
-                rem.push({
-                    'id':       curr.product_id,
-                    'name':     this.pos.db.get_product_by_id(curr.product_id).display_name,
-                    'name_wrapped': curr.product_name_wrapped,
-                    'note':     curr.note,
-                    'qty':      old.qty - curr.qty,
-                });
             }
         }
 
-        for (line_hash in old_res) {
-            var found = false;
-            for(var id in current_res) {
-                if(current_res[id].product_id === old_res[line_hash].product_id)
-                    found = true;
-            }
-            if (!found) {
-                var old = old_res[line_hash];
-                rem.push({
-                    'id':       old.product_id,
-                    'name':     this.pos.db.get_product_by_id(old.product_id).display_name,
-                    'name_wrapped': old.product_name_wrapped,
-                    'note':     old.note,
-                    'qty':      old.qty,
-                });
+        for (p_key in old_res) {
+            for (note in old_res[p_key]['qties']) {
+                var found = p_key in current_res && note in current_res[p_key]['qties'];
+                if (!found) {
+                    var old = old_res[p_key];
+                    var pid = old.pid;
+                    rem.push({
+                        'id':       pid,
+                        'name':     this.pos.db.get_product_by_id(pid).display_name,
+                        'name_wrapped': old.product_name_wrapped,
+                        'note':     note,
+                        'qty':      old['qties'][note],
+                    });
+                }
             }
         }
 
@@ -308,6 +300,13 @@ models.Order = models.Order.extend({
     init_from_JSON: function(json){
         _super_order.init_from_JSON.apply(this,arguments);
         this.saved_resume = json.multiprint_resume && JSON.parse(json.multiprint_resume);
+        // Since the order summary structure has changed, we need to remove the old lines
+        // Otherwise, this fix deployment will lead to some errors
+        for (var key in this.saved_resume) {
+            if (this.saved_resume[key].pid == undefined) {
+                delete this.saved_resume[key];
+            }
+        }
     },
 });
 

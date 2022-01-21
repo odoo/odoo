@@ -3,6 +3,7 @@
 from unittest.mock import patch
 
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo, HttpCaseWithUserPortal
+from odoo.addons.website.tools import MockRequest
 from odoo.tests import tagged
 from odoo.tests.common import HttpCase, TransactionCase
 from odoo.tools import DotDict
@@ -189,6 +190,94 @@ class TestWebsitePriceList(TransactionCase):
             pls = self.get_pl(show, current_pl, country)
             self.assertEqual(len(set(pls.mapped('name')) & set(result)), len(pls), 'Test failed for %s (%s %s vs %s %s)'
                               % (country, len(pls), pls.mapped('name'), len(result), result))
+
+    def test_pricelist_combination(self):
+        product = self.env['product.product'].create({
+            'name': 'Super Product',
+            'list_price': 100,
+            'taxes_id': False,
+        })
+        current_website = self.env['website'].get_current_website()
+        website_pricelist = current_website.get_current_pricelist()
+        website_pricelist.write({
+            'discount_policy': 'with_discount',
+            'item_ids': [(5, 0, 0), (0, 0, {
+                'applied_on': '1_product',
+                'product_tmpl_id': product.product_tmpl_id.id,
+                'min_quantity': 500,
+                'compute_price': 'percentage',
+                'percent_price': 63,
+            })]
+        })
+        promo_pricelist = self.env['product.pricelist'].create({
+            'name': 'Super Pricelist',
+            'discount_policy': 'without_discount',
+            'item_ids': [(0, 0, {
+                'applied_on': '1_product',
+                'product_tmpl_id': product.product_tmpl_id.id,
+                'base': 'pricelist',
+                'base_pricelist_id': website_pricelist.id,
+                'compute_price': 'formula',
+                'price_discount': 25
+            })]
+        })
+        so = self.env['sale.order'].create({
+            'partner_id': self.env.user.partner_id.id,
+            'order_line': [(0, 0, {
+                'name': product.name,
+                'product_id': product.id,
+                'product_uom_qty': 1,
+                'product_uom': product.uom_id.id,
+                'price_unit': product.list_price,
+                'tax_id': False,
+            })]
+        })
+        sol = so.order_line
+        self.assertEqual(sol.price_total, 100.0)
+        so.pricelist_id = promo_pricelist
+        with MockRequest(self.env, website=current_website, sale_order_id=so.id):
+            so._cart_update(product_id=product.id, line_id=sol.id, set_qty=500)
+        self.assertEqual(sol.price_unit, 37.0, 'Both reductions should be applied')
+        self.assertEqual(sol.price_reduce, 27.75, 'Both reductions should be applied')
+        self.assertEqual(sol.price_total, 13875)
+
+    def test_pricelist_with_no_list_price(self):
+        product = self.env['product.product'].create({
+            'name': 'Super Product',
+            'list_price': 0,
+            'taxes_id': False,
+        })
+        current_website = self.env['website'].get_current_website()
+        website_pricelist = current_website.get_current_pricelist()
+        website_pricelist.write({
+            'discount_policy': 'without_discount',
+            'item_ids': [(5, 0, 0), (0, 0, {
+                'applied_on': '1_product',
+                'product_tmpl_id': product.product_tmpl_id.id,
+                'min_quantity': 0,
+                'compute_price': 'fixed',
+                'fixed_price': 10,
+            })]
+        })
+        so = self.env['sale.order'].create({
+            'partner_id': self.env.user.partner_id.id,
+            'order_line': [(0, 0, {
+                'name': product.name,
+                'product_id': product.id,
+                'product_uom_qty': 5,
+                'product_uom': product.uom_id.id,
+                'price_unit': product.list_price,
+                'tax_id': False,
+            })]
+        })
+        sol = so.order_line
+        self.assertEqual(sol.price_total, 0)
+        so.pricelist_id = website_pricelist
+        with MockRequest(self.env, website=current_website, sale_order_id=so.id):
+            so._cart_update(product_id=product.id, line_id=sol.id, set_qty=5)
+        self.assertEqual(sol.price_unit, 10.0, 'Pricelist price should be applied')
+        self.assertEqual(sol.price_reduce, 10.0, 'Pricelist price should be applied')
+        self.assertEqual(sol.price_total, 50.0)
 
 
 def simulate_frontend_context(self, website_id=1):

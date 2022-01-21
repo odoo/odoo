@@ -8,7 +8,7 @@
 # Paolo Valier, 2020
 # Léonie Bouchat <lbo@odoo.com>, 2020
 # Petra <bop@odoo.com>, 2020
-# Sergio Zanchetta <primes2h@gmail.com>, 2020
+# Sergio Zanchetta <primes2h@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:29+0000\n"
 "PO-Revision-Date: 2020-09-07 08:23+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2020\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2021\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50,12 +50,12 @@ msgstr "<strong>URL Callback: </strong>Lasciare vuoto"
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "<strong>Description: </strong> Odoo Twitter Integration"
-msgstr "<strong>Descrizione: </strong> Integrazione di Twitter su Odoo"
+msgstr "<strong>Descrizione: </strong> Integrazione Twitter in Odoo"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "<strong>Name: </strong> Odoo Twitter Integration"
-msgstr "<strong>Nome: </strong> Integrazione di Twitter su Odoo"
+msgstr "<strong>Nome: </strong> Integrazione Twitter in Odoo"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
@@ -72,7 +72,7 @@ msgstr "Chiave API"
 #: model:ir.model.fields,field_description:website_twitter.field_res_config_settings__twitter_api_secret
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "API secret"
-msgstr "API secret"
+msgstr "Chiave privata API"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
@@ -118,7 +118,7 @@ msgstr "Creato da"
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__create_date
 msgid "Created on"
-msgstr "Creato il"
+msgstr "Data creazione"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_res_config_settings__display_name
@@ -161,6 +161,7 @@ msgstr "ID"
 #, python-format
 msgid "Internet connection refused: We failed to reach a twitter server."
 msgstr ""
+"Connessione internet rifiutata: impossibile raggiungere il server Twitter."
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_res_config_settings____last_update
@@ -231,7 +232,7 @@ msgstr ""
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "Switch to the API Keys tab: <br/>"
-msgstr "Vai alla tab delle chiavi API: <br/>"
+msgstr "Passa alla scheda delle chiavi API: <br/>"
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:0
@@ -259,9 +260,8 @@ msgid ""
 "The request is understood, but it has been refused or access is not allowed."
 " Please check your Twitter API Key and Secret."
 msgstr ""
-"La richiesta è andata a buon fine, ma la risposta contiene un rifiuto di "
-"accesso alla risorsa richiesta. Per favore, controlla nuovamete la Twitter "
-"API Key e relativo Secret."
+"La richiesta è stata compresa ma è stata respinta, oppure non è consentito "
+"l'accesso. Controllare la chiave API e la chiave segreta API di Twitter."
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:0
@@ -302,7 +302,7 @@ msgstr "Chiave API Twitter"
 #. module: website_twitter
 #: model:ir.model.fields,help:website_twitter.field_website__twitter_api_secret
 msgid "Twitter API Secret"
-msgstr "Twitter API Secret"
+msgstr "Chiave privata API Twitter"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website__twitter_api_key
@@ -318,13 +318,14 @@ msgstr ""
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website__twitter_api_secret
 msgid "Twitter API secret"
-msgstr "Twitter API secret"
+msgstr "Chiave privata API Twitter"
 
 #. module: website_twitter
 #: model:ir.model.fields,help:website_twitter.field_res_config_settings__twitter_api_secret
 msgid "Twitter API secret you can get it from https://apps.twitter.com/"
 msgstr ""
-"API secret di Twitter, disponibile sulla pagina https://apps.twitter.com/"
+"Chiave privata API di Twitter, disponibile sulla pagina "
+"https://apps.twitter.com/"
 
 #. module: website_twitter
 #. openerp-web
@@ -340,12 +341,14 @@ msgid ""
 "Twitter authorization error! Please double-check your Twitter API Key and "
 "Secret!"
 msgstr ""
+"Errore autorizzazione Twitter, ricontrollare la chiave API e la chiave "
+"privata API."
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:0
 #, python-format
 msgid "Twitter is down or being upgraded."
-msgstr "Twitter è offline o in corso di aggiornamento."
+msgstr "Twitter è giù o in corso di aggiornamento."
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:0
@@ -400,7 +403,7 @@ msgstr "Sito web"
 #. module: website_twitter
 #: model:ir.model,name:website_twitter.model_website_twitter_tweet
 msgid "Website Twitter"
-msgstr "Twitter del sito web"
+msgstr "Twitter sito web"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form

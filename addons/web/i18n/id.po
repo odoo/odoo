@@ -13,23 +13,24 @@
 # Deddy Ddr <deddy.ddr@gmail.com>, 2020
 # Muhammad Syarif <mhdsyarif.ms@gmail.com>, 2020
 # PAS IRVANUS <ipankbiz@gmail.com>, 2020
-# whenweresober <gulmugurzu@yevme.com>, 2020
+# whenwesober <gulmugurzu@yevme.com>, 2020
 # William Surya Permana <zarambie_game@yahoo.com>, 2020
 # Martin Trigaux, 2020
 # Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2020
 # Bonny Useful <bonny.useful@gmail.com>, 2020
 # Edy Kend <edy@azmall.co.id>, 2020
 # Febrasari Almania <febrasari.almania@gmail.com>, 2020
-# Ryanto The <ry.the77@gmail.com>, 2020
 # Ikhsanul Wirsa <iwirsa02@outlook.co.id>, 2020
+# Altela Eleviansyah Pramardhika <altela_pramardhika@yahoo.com>, 2021
+# Ryanto The <ry.the77@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-29 15:48+0000\n"
+"POT-Creation-Date: 2021-02-25 10:30+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Ikhsanul Wirsa <iwirsa02@outlook.co.id>, 2020\n"
+"Last-Translator: Ryanto The <ry.the77@gmail.com>, 2021\n"
 "Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -57,13 +58,6 @@ msgstr "catatan"
 #, python-format
 msgid "# Code editor"
 msgstr "# Penyunting kode"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/fields/basic_fields.js:0
-#, python-format
-msgid "${-diffDays} days ago"
-msgstr ""
 
 #. module: web
 #. openerp-web
@@ -105,14 +99,14 @@ msgstr "%d tahun yang lalu"
 #: code:addons/web/static/src/js/views/file_upload_mixin.js:0
 #, python-format
 msgid "%s Files"
-msgstr ""
+msgstr "%s Berkas"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/notification.xml:0
+#: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
-msgid "&times;"
-msgstr "&times;"
+msgid "%s days ago"
+msgstr "%s hari lalu"
 
 #. module: web
 #. openerp-web
@@ -168,28 +162,28 @@ msgstr "'%s' tidak dapat diubah ke date,datetime maupun time"
 #: code:addons/web/static/src/js/views/file_upload_progress_card.js:0
 #, python-format
 msgid "(%s/%sMb)"
-msgstr ""
+msgstr "(%s/%sMb)"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
 msgid "(change)"
-msgstr ""
+msgstr "(ubah)"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "(count)"
-msgstr ""
+msgstr "(hitung)"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/control_panel/search_bar.js:0
 #, python-format
 msgid "(no result)"
-msgstr ""
+msgstr "(tidak ada hasil yang ditemukan)"
 
 #. module: web
 #. openerp-web
@@ -208,12 +202,12 @@ msgstr "(tidak ada label)"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "07/08/2020"
-msgstr ""
+msgstr "07/08/2020"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "08/07/2020"
-msgstr ""
+msgstr "08/07/2020"
 
 #. module: web
 #. openerp-web
@@ -225,22 +219,22 @@ msgstr "1 catatan"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_background
 msgid "<i class=\"fa fa-at\" role=\"img\" aria-label=\"Email\" title=\"Email\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-at\" role=\"img\" aria-label=\"Email\" title=\"Email\"/>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_background
 msgid "<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"Fiscal number\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"Fiscal number\"/>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_background
 msgid "<i class=\"fa fa-globe\" role=\"img\" aria-label=\"Website\" title=\"Website\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-globe\" role=\"img\" aria-label=\"Website\" title=\"Website\"/>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_background
 msgid "<i class=\"fa fa-phone\" role=\"img\" aria-label=\"Phone\" title=\"Phone\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-phone\" role=\"img\" aria-label=\"Phone\" title=\"Phone\"/>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.frontend_layout
@@ -248,11 +242,13 @@ msgid ""
 "<span class=\"o_footer_copyright_name mr-2\">Copyright &amp;copy; Company "
 "name</span>"
 msgstr ""
+"<span class=\"o_footer_copyright_name mr-2\">Copyright &amp;copy; Company "
+"name</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span class=\"text-nowrap\">$ 18,750.00</span>"
-msgstr ""
+msgstr "<span class=\"text-nowrap\">$ 18,750.00</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -260,6 +256,8 @@ msgid ""
 "<span class=\"text-nowrap\">$ <span class=\"oe_currency_value\">\n"
 "                                                       143,750.00</span></span>"
 msgstr ""
+"<span class=\"text-nowrap\">$ <span class=\"oe_currency_value\">\n"
+"                                                       143,750.00</span></span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -267,6 +265,8 @@ msgid ""
 "<span class=\"text-nowrap\">$ <span "
 "class=\"oe_currency_value\">117,500.00</span></span>"
 msgstr ""
+"<span class=\"text-nowrap\">$ <span "
+"class=\"oe_currency_value\">117,500.00</span></span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -274,21 +274,23 @@ msgid ""
 "<span class=\"text-nowrap\">$ <span "
 "class=\"oe_currency_value\">7,500.00</span></span>"
 msgstr ""
+"<span class=\"text-nowrap\">$ <span "
+"class=\"oe_currency_value\">7,500.00</span></span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span class=\"text-nowrap\">1,500.00</span>"
-msgstr ""
+msgstr "<span class=\"text-nowrap\">1,500.00</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span class=\"text-nowrap\">23,500.00</span>"
-msgstr ""
+msgstr "<span class=\"text-nowrap\">23,500.00</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span class=\"text-nowrap\">Tax 15%</span>"
-msgstr ""
+msgstr "<span class=\"text-nowrap\">Pajak 15%</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -296,31 +298,33 @@ msgid ""
 "<span class=\"w-100 o_force_ltr\" itemprop=\"streetAddress\">77 Santa Barbara\n"
 "                                                   Rd<br/>Pleasant Hill CA 94523<br/>United States</span>"
 msgstr ""
+"<span class=\"w-100 o_force_ltr\" itemprop=\"streetAddress\">77 Santa Barbara\n"
+"                                                   Rd<br/>Pleasant Hill CA 94523<br/>United States</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span id=\"line_tax_ids\">15.00%</span>"
-msgstr ""
+msgstr "<span id=\"line_tax_ids\">15.00%</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span itemprop=\"name\">Deco Addict</span>"
-msgstr ""
+msgstr "<span itemprop=\"name\">Penikmat Dekorasi</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span>$ <span class=\"oe_currency_value\">125,000.00</span></span>"
-msgstr ""
+msgstr "<span>$ <span class=\"oe_currency_value\">125,000.00</span></span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span>5.000</span>"
-msgstr ""
+msgstr "<span>5.000</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span>Amount</span>"
-msgstr ""
+msgstr "<span>Nominal</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -333,11 +337,13 @@ msgid ""
 "<span>Invoice</span>\n"
 "                           <span>INV/2020/07/0003</span>"
 msgstr ""
+"<span>Tagihan</span>\n"
+"                           <span>INV/2020/07/0003</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span>Payment terms: 30 Days</span>"
-msgstr ""
+msgstr "<span>Payment terms: 30 Days</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -360,6 +366,8 @@ msgid ""
 "<span>[FURN_8220] Four Person Desk<br/>\n"
 "                                       Four person modern office workstation</span>"
 msgstr ""
+"<span>[FURN_8220] Four Person Desk<br/>\n"
+"                                       Meja Kerja Modern Untuk Empat Orang</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -367,6 +375,8 @@ msgid ""
 "<span>[FURN_8999] Three-Seat Sofa<br/>\n"
 "                                       Three Seater Sofa with Lounger in Steel Grey Colour</span>"
 msgstr ""
+"<span>[FURN_8999] Sofa Tiga-Kursi<br/>\n"
+"                                       Tiga Kursi Sofa panjang dengan warna abu-baja</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -393,7 +403,7 @@ msgstr "<strong>Total</strong>"
 #: code:addons/web/static/src/js/control_panel/custom_favorite_item.js:0
 #, python-format
 msgid "A name for your favorite filter is required."
-msgstr ""
+msgstr "Beri nama untuk filter favorit anda."
 
 #. module: web
 #. openerp-web
@@ -403,6 +413,8 @@ msgid ""
 "A popup window has been blocked. You may need to change your browser "
 "settings to allow popup windows for this page."
 msgstr ""
+"Jendela pop up terblokir. Anda harus mengubah pengaturan browser untuk "
+"mengizinkan jendela pop up untuk halaman ini."
 
 #. module: web
 #. openerp-web
@@ -412,6 +424,8 @@ msgid ""
 "A popup window with your report was blocked. You may need to change your "
 "browser settings to allow popup windows for this page."
 msgstr ""
+"Jendela pop up untuk report anda terblokir. Anda harus mengubah pengaturan "
+"browser untuk mengizinkan pop up untuk halaman ini."
 
 #. module: web
 #. openerp-web
@@ -458,7 +472,7 @@ msgstr "ID Tindakan:"
 #. module: web
 #: model:ir.model,name:web.model_ir_actions_act_window_view
 msgid "Action Window View"
-msgstr ""
+msgstr "Jendela Tindakan"
 
 #. module: web
 #. openerp-web
@@ -472,7 +486,7 @@ msgstr "Aktifkan Debug Aset"
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
 msgid "Activate Tests Assets Debugging"
-msgstr ""
+msgstr "Aktifkan Tes Debug Aset"
 
 #. module: web
 #. openerp-web
@@ -488,7 +502,7 @@ msgstr "Tambahkan"
 #: code:addons/web/static/src/js/views/calendar/calendar_renderer.js:0
 #, python-format
 msgid "Add %s"
-msgstr ""
+msgstr "Tambahkan %s"
 
 #. module: web
 #. openerp-web
@@ -502,14 +516,14 @@ msgstr "Tambahkan Penyaring Sendiri"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Add Custom Group"
-msgstr ""
+msgstr "Tambahkan Grup Kustom"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/kanban.xml:0
 #, python-format
 msgid "Add a Column"
-msgstr ""
+msgstr "Tambahkan Kolom"
 
 #. module: web
 #. openerp-web
@@ -532,7 +546,7 @@ msgstr "Tambahkan satu baris"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Add branch"
-msgstr ""
+msgstr "Tambahkan Cabang"
 
 #. module: web
 #. openerp-web
@@ -542,7 +556,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/kanban.xml:0
 #, python-format
 msgid "Add column"
-msgstr ""
+msgstr "Tambahkan Kolom"
 
 #. module: web
 #. openerp-web
@@ -564,7 +578,7 @@ msgstr "Tambah nilai baru"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Add node"
-msgstr ""
+msgstr "Tambahkan node"
 
 #. module: web
 #. openerp-web
@@ -572,7 +586,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Add tag"
-msgstr ""
+msgstr "Tambahkan tanda"
 
 #. module: web
 #. openerp-web
@@ -593,14 +607,14 @@ msgstr "Tambahkan: "
 #: code:addons/web/static/src/js/views/signature_dialog.js:0
 #, python-format
 msgid "Adopt Your Signature"
-msgstr ""
+msgstr "Tambahkan Tanda Tangan Anda"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/signature_dialog.js:0
 #, python-format
 msgid "Adopt and Sign"
-msgstr ""
+msgstr "Ambil dan Tandai"
 
 #. module: web
 #. openerp-web
@@ -654,14 +668,14 @@ msgstr "Seluruh pengguna"
 #: code:addons/web/static/src/xml/menu.xml:0
 #, python-format
 msgid "Alt"
-msgstr ""
+msgstr "Alt"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Among the"
-msgstr ""
+msgstr "Diantara"
 
 #. module: web
 #. openerp-web
@@ -679,6 +693,9 @@ msgid ""
 "JavaScript file served from a different origin. (Opening your browser "
 "console might give you a hint on the error.)"
 msgstr ""
+"Terjadi Kesalahan CORS yang tidak diketahui. Kesalahan eror ini mungkin "
+"berasal dari JavaScript file yang berada pada lokasi berbeda. (Membuka "
+"konsol browser mungkin akan membantu anda menunjukkan pesan errornya)."
 
 #. module: web
 #. openerp-web
@@ -701,6 +718,8 @@ msgid ""
 "Appears by default on the top right corner of your printed documents (report"
 " header)."
 msgstr ""
+"Muncul secara standar pada bagian pojok kanan atas dari dokumen yang dicetak"
+" (kop kepala dokumen)."
 
 #. module: web
 #. openerp-web
@@ -723,7 +742,7 @@ msgstr "Arsip"
 #: code:addons/web/static/src/xml/kanban.xml:0
 #, python-format
 msgid "Archive All"
-msgstr ""
+msgstr "Arsipkan Semua"
 
 #. module: web
 #. openerp-web
@@ -731,21 +750,21 @@ msgstr ""
 #, python-format
 msgid ""
 "Are you sure that you want to archive all the records from this column?"
-msgstr ""
+msgstr "Apakah anda yakin ingin mengarsip seluruh rekord dari kolom ini?"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/list/list_controller.js:0
 #, python-format
 msgid "Are you sure that you want to archive all the selected records?"
-msgstr ""
+msgstr "Apakah anda yakin untuk mengarsipkan seluruh rekord terpilih?"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/form/form_controller.js:0
 #, python-format
 msgid "Are you sure that you want to archive this record?"
-msgstr ""
+msgstr "Apakah anda yakin untuk mengarsipkan rekord ini?"
 
 #. module: web
 #. openerp-web
@@ -766,14 +785,14 @@ msgstr "Apakah Anda yakin ingin menghapus penyaring ini?"
 #: code:addons/web/static/src/js/views/list/list_controller.js:0
 #, python-format
 msgid "Are you sure you want to delete these records ?"
-msgstr ""
+msgstr "Apakah anda yakin untuk menghapus rekord ini?"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/basic/basic_controller.js:0
 #, python-format
 msgid "Are you sure you want to delete these records?"
-msgstr ""
+msgstr "Apakah anda yakin untuk menghapus rekord ini?"
 
 #. module: web
 #. openerp-web
@@ -787,14 +806,14 @@ msgstr "Apakah Anda yakin ingin menghapus catatan ini?"
 #: code:addons/web/static/src/js/views/basic/basic_controller.js:0
 #, python-format
 msgid "Are you sure you want to delete this record?"
-msgstr ""
+msgstr "Apakah anda yakin untuk menghapus rekord ini?"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Are you sure you want to perform the following update on those"
-msgstr ""
+msgstr "Apakah anda yakin untuk memperbarui rekord ini?"
 
 #. module: web
 #. openerp-web
@@ -802,7 +821,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Ascending"
-msgstr ""
+msgstr "Urutan Teratas"
 
 #. module: web
 #. openerp-web
@@ -810,7 +829,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Attach"
-msgstr ""
+msgstr "Lampirkan"
 
 #. module: web
 #. openerp-web
@@ -877,7 +896,7 @@ msgstr "Dasar"
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
 msgid "Become Superuser"
-msgstr ""
+msgstr "Ubah Menjadi Akun Superuser"
 
 #. module: web
 #: code:addons/web/controllers/main.py:0
@@ -886,6 +905,8 @@ msgid ""
 "Binary fields can not be exported to Excel unless their content is "
 "base64-encoded. That does not seem to be the case for %s."
 msgstr ""
+"Kolom binary tidak dapat diekspor ke Excel kecuali memiliki konten berbasis "
+"base64. Dalam kasus ini tampaknya tidak demikian %s"
 
 #. module: web
 #. openerp-web
@@ -928,13 +949,17 @@ msgid ""
 "for all purposes when it is used on documents, including legally binding "
 "contracts."
 msgstr ""
+"Dengan mengklik tombol Ambil dan Tandai, Saya setuju bahwa tanda "
+"tangan/inisial akan menjadi representasi elektronik dari tanda "
+"tangan/inisial saya dalam bentuk manual untuk segala hal ketika digunakan "
+"pada dokumen, termasuk kontrak yang mengikat."
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/core/utils.js:0
 #, python-format
 msgid "Bytes|Kb|Mb|Gb|Tb|Pb|Eb|Zb|Yb"
-msgstr ""
+msgstr "Bytes|Kb|Mb|Gb|Tb|Pb|Eb|Zb|Yb"
 
 #. module: web
 #. openerp-web
@@ -948,7 +973,7 @@ msgstr "Kalender"
 #: code:addons/web/static/src/xml/web_calendar.xml:0
 #, python-format
 msgid "Calendar toolbar"
-msgstr ""
+msgstr "Toolbar Kalender"
 
 #. module: web
 #. openerp-web
@@ -982,7 +1007,7 @@ msgstr "Batal"
 #: code:addons/web/static/src/xml/file_upload_progress_bar.xml:0
 #, python-format
 msgid "Cancel Upload"
-msgstr ""
+msgstr "Batalkan Upload"
 
 #. module: web
 #. openerp-web
@@ -996,7 +1021,7 @@ msgstr "Tidak bisa render grafik dengan mode :"
 #: code:addons/web/static/src/js/views/kanban/kanban_record.js:0
 #, python-format
 msgid "Card color: %s"
-msgstr ""
+msgstr "Warna Kartu: %s"
 
 #. module: web
 #. openerp-web
@@ -1021,7 +1046,7 @@ msgstr "Ubah standar:"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Change graph"
-msgstr ""
+msgstr "Ganti grafik"
 
 #. module: web
 #. openerp-web
@@ -1029,28 +1054,28 @@ msgstr ""
 #: code:addons/web/static/src/js/fields/basic_fields_owl.js:0
 #, python-format
 msgid "Checkbox"
-msgstr ""
+msgstr "Kotak centang"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/fields/relational_fields.js:0
 #, python-format
 msgid "Checkboxes"
-msgstr ""
+msgstr "Kotak centang"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/widgets/colorpicker.js:0
 #, python-format
 msgid "Choose"
-msgstr ""
+msgstr "Pilih"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Choose File"
-msgstr ""
+msgstr "Pilih File"
 
 #. module: web
 #. openerp-web
@@ -1077,7 +1102,7 @@ msgstr "Bersihkan Acara"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Clear Signature"
-msgstr ""
+msgstr "Hapus Tanda Tangan"
 
 #. module: web
 #. openerp-web
@@ -1106,7 +1131,7 @@ msgstr "Warna"
 #: code:addons/web/static/src/js/views/kanban/kanban_renderer.js:0
 #, python-format
 msgid "Column %s"
-msgstr ""
+msgstr "Kolom %s"
 
 #. module: web
 #. openerp-web
@@ -1185,14 +1210,14 @@ msgstr "Konfirmasi"
 #: code:addons/web/static/src/js/chrome/abstract_web_client.js:0
 #, python-format
 msgid "Connection lost. Trying to reconnect..."
-msgstr ""
+msgstr "Koneksi terputus. Mencoba untuk terhubung..."
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/chrome/abstract_web_client.js:0
 #, python-format
 msgid "Connection restored. You are back online."
-msgstr ""
+msgstr "Koneksi terhubung. Anda kembali online."
 
 #. module: web
 #. openerp-web
@@ -1222,7 +1247,7 @@ msgstr "Kontrol"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Control panel buttons"
-msgstr ""
+msgstr "Tombol panel kendali"
 
 #. module: web
 #. openerp-web
@@ -1238,7 +1263,7 @@ msgstr "Disalin !"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Copy Text"
-msgstr ""
+msgstr "Salin Teks"
 
 #. module: web
 #. openerp-web
@@ -1253,14 +1278,14 @@ msgstr "Salin semua eror ke clipboard"
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "Copy to Clipboard"
-msgstr ""
+msgstr "Salin ke Clipboard"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/core/ajax.js:0
 #, python-format
 msgid "Could not connect to the server"
-msgstr ""
+msgstr "Tidak dapat terhubung ke server"
 
 #. module: web
 #. openerp-web
@@ -1268,14 +1293,14 @@ msgstr ""
 #: code:addons/web/static/src/js/fields/signature.js:0
 #, python-format
 msgid "Could not display the selected image"
-msgstr ""
+msgstr "Tidak dapat menampilkan gambar yang dipilih"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "Could not display the specified image url."
-msgstr ""
+msgstr "Tidak dapat menampilkan hasil url gambar."
 
 #. module: web
 #. openerp-web
@@ -1292,6 +1317,8 @@ msgid ""
 "Could not set the cover image: incorrect field (\"%s\") is provided in the "
 "view."
 msgstr ""
+"Tidak dapat menentukan cover gambar: field tidak sesuai (\"%s\") pada "
+"tampilan."
 
 #. module: web
 #. openerp-web
@@ -1343,7 +1370,7 @@ msgstr "Buat \"<strong>%s</strong>\""
 #: code:addons/web/static/src/xml/menu.xml:0
 #, python-format
 msgid "Create a new record"
-msgstr ""
+msgstr "Buat rekord baru"
 
 #. module: web
 #. openerp-web
@@ -1371,7 +1398,7 @@ msgstr "Buat: "
 #: code:addons/web/static/src/js/views/calendar/calendar_controller.js:0
 #, python-format
 msgid "Create: %s"
-msgstr ""
+msgstr "Buat: %s"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__create_uid
@@ -1402,7 +1429,7 @@ msgstr "Pengguna Dibuat:"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Current state"
-msgstr ""
+msgstr "Status saat ini"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__custom_colors
@@ -1416,7 +1443,7 @@ msgstr "Warna Kustom"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Dark blue"
-msgstr ""
+msgstr "Biru gelap"
 
 #. module: web
 #. openerp-web
@@ -1425,7 +1452,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Dark purple"
-msgstr ""
+msgstr "Ungu gelap"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login
@@ -1444,7 +1471,7 @@ msgstr "Tanggal"
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "Date & Time"
-msgstr ""
+msgstr "Tanggal & Waktu"
 
 #. module: web
 #. openerp-web
@@ -1460,13 +1487,15 @@ msgstr "Hari"
 msgid ""
 "Debug mode is activated#{debug_mode_help}. Click here to exit debug mode."
 msgstr ""
+"Debug mode diaktifkan#{debug_mode_help}. Klik disini untuk keluar dari debug"
+" mode."
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "Decimal"
-msgstr ""
+msgstr "Desimal"
 
 #. module: web
 #. openerp-web
@@ -1496,7 +1525,7 @@ msgstr "Hapus"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Delete item"
-msgstr ""
+msgstr "Hapus item"
 
 #. module: web
 #. openerp-web
@@ -1504,14 +1533,14 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Delete node"
-msgstr ""
+msgstr "Hapus node"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/list/list_editable_renderer.js:0
 #, python-format
 msgid "Delete row "
-msgstr ""
+msgstr "Hapus baris"
 
 #. module: web
 #. openerp-web
@@ -1519,7 +1548,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Descending"
-msgstr ""
+msgstr "Urutan kebawah"
 
 #. module: web
 #. openerp-web
@@ -1547,7 +1576,7 @@ msgstr "Abaikan"
 #: code:addons/web/static/src/xml/menu.xml:0
 #, python-format
 msgid "Discard a record modification"
-msgstr ""
+msgstr "Buang modifikasi rekord"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__display_name
@@ -1564,7 +1593,7 @@ msgstr "Nama Tampilan"
 #: code:addons/web/static/src/js/views/file_upload_progress_bar.js:0
 #, python-format
 msgid "Do you really want to cancel the upload of %s?"
-msgstr ""
+msgstr "Apakah anda ingin membatalkan unggahan %s? "
 
 #. module: web
 #. openerp-web
@@ -1585,7 +1614,7 @@ msgstr "Apakah Anda yakin ingin menghapus filter ini dari favorit?"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Do you want to create"
-msgstr ""
+msgstr "Apakah anda ingin membuat"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__external_report_layout_id
@@ -1613,21 +1642,21 @@ msgstr "Ruang Lingkup"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Domain node"
-msgstr ""
+msgstr "Node domain"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/widgets/domain_selector.js:0
 #, python-format
 msgid "Domain not properly formed"
-msgstr ""
+msgstr "Domain yang Anda masukkan tidak terbentuk dengan benar"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/widgets/domain_selector.js:0
 #, python-format
 msgid "Domain not supported"
-msgstr ""
+msgstr "Domain tidak didukung"
 
 #. module: web
 #. openerp-web
@@ -1656,7 +1685,7 @@ msgstr "Unduh"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Download xlsx"
-msgstr ""
+msgstr "Unduh xlsx"
 
 #. module: web
 #. openerp-web
@@ -1664,7 +1693,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/name_and_signature.xml:0
 #, python-format
 msgid "Draw"
-msgstr ""
+msgstr "Gambar"
 
 #. module: web
 #. openerp-web
@@ -1712,7 +1741,7 @@ msgstr "Ubah Kolom"
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
 msgid "Edit ControlPanelView"
-msgstr ""
+msgstr "Sunting ControlPanelView"
 
 #. module: web
 #. openerp-web
@@ -1733,14 +1762,14 @@ msgstr "Ubah Tahapan"
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
 msgid "Edit View:"
-msgstr ""
+msgstr "Sunting Tampilan:"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/menu.xml:0
 #, python-format
 msgid "Edit a record"
-msgstr ""
+msgstr "Sunting rekord"
 
 #. module: web
 #. openerp-web
@@ -1769,7 +1798,7 @@ msgstr "Eror, password tidak berubah !"
 #: code:addons/web/static/src/xml/kanban.xml:0
 #, python-format
 msgid "Esc to discard"
-msgstr ""
+msgstr "Tekan esc untuk membatalkan"
 
 #. module: web
 #. openerp-web
@@ -1806,7 +1835,7 @@ msgstr "Ekspor"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Export All"
-msgstr ""
+msgstr "Ekspor Semua"
 
 #. module: web
 #. openerp-web
@@ -1820,13 +1849,13 @@ msgstr "Ekspor Data"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Export Format:"
-msgstr ""
+msgstr "Format Ekspor:"
 
 #. module: web
 #: code:addons/web/controllers/main.py:0
 #, python-format
 msgid "Exporting grouped data to csv is not supported."
-msgstr ""
+msgstr "Mengekspor data yang dipilih kedalam csv tidak dapat dilakukan"
 
 #. module: web
 #. openerp-web
@@ -1849,7 +1878,7 @@ msgstr "External link"
 #: code:addons/web/static/src/js/control_panel/control_panel_model_extension.js:0
 #, python-format
 msgid "Failed to evaluate search context"
-msgstr ""
+msgstr "Gagal mengevaluasi kriteria pencarian"
 
 #. module: web
 #. openerp-web
@@ -1937,12 +1966,12 @@ msgstr "Lipat"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Followed by"
-msgstr ""
+msgstr "Diikuti oleh"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__font
 msgid "Font"
-msgstr ""
+msgstr "Font"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
@@ -1963,6 +1992,9 @@ msgid ""
 "\n"
 "Tip: try to flip axis, filter further or reduce the number of measures."
 msgstr ""
+"Untuk kompatibilitas Excel, data tidak bisa diekspor jika lebih dari 16384 kolom.\n"
+"\n"
+"Tip: coba untuk menukar sumbu, saring lebih jauh atau kurangi jumlah pengukur."
 
 #. module: web
 #. openerp-web
@@ -1976,7 +2008,7 @@ msgstr "Formulir"
 #: code:addons/web/static/src/js/views/qweb/qweb_view.js:0
 #, python-format
 msgid "Freedom View"
-msgstr ""
+msgstr "Tampilan Bebas"
 
 #. module: web
 #. openerp-web
@@ -1992,7 +2024,7 @@ msgstr "Nama lengkap"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Fushia"
-msgstr ""
+msgstr "Fushia"
 
 #. module: web
 #. openerp-web
@@ -2020,6 +2052,7 @@ msgstr "Hijau"
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/control_panel/groupby_menu.js:0
+#: code:addons/web/static/src/js/views/graph/graph_controller.js:0
 #, python-format
 msgid "Group By"
 msgstr "Dikelompokkan berdasarkan"
@@ -2027,28 +2060,28 @@ msgstr "Dikelompokkan berdasarkan"
 #. module: web
 #: model:ir.model,name:web.model_ir_http
 msgid "HTTP Routing"
-msgstr ""
+msgstr "HTTP routing"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "Handle"
-msgstr ""
+msgstr "Handle"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Hide in Kanban"
-msgstr ""
+msgstr "Sembunyikan dalam tampilan kanban"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Hit DOWN to navigate to the list below"
-msgstr ""
+msgstr "Tekan tombol BAWAH untuk menavigasi tampilan berikut"
 
 #. module: web
 #. openerp-web
@@ -2056,28 +2089,28 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Hit ENTER to"
-msgstr ""
+msgstr "Tekan ENTER untuk"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Hit ENTER to CREATE"
-msgstr ""
+msgstr "Tekan ENTER untuk MEMBUAT"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Hit ENTER to SAVE"
-msgstr ""
+msgstr "Tekan ENTER untuk MENYIMPAN"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Hit ESCAPE to DISCARD"
-msgstr ""
+msgstr "Tekan ESCAPE untuk MEMBATALKAN"
 
 #. module: web
 #. openerp-web
@@ -2091,7 +2124,7 @@ msgstr "Saya yakin."
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "I want to update data (import-compatible export)"
-msgstr ""
+msgstr "Saya ingin mengupdate data (Ekspor impor-kompatibel)"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__id
@@ -2123,8 +2156,8 @@ msgstr "Gambar"
 #. openerp-web
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
-msgid "In ${diffDays} days"
-msgstr ""
+msgid "In %s days"
+msgstr "Dalam %s hari"
 
 #. module: web
 #. openerp-web
@@ -2173,6 +2206,8 @@ msgid ""
 "Invalid field chain. You may have used a non-existing field name or followed"
 " a non-relational field."
 msgstr ""
+"Field chain tidak sesuai. Anda dapat menggunakan field dengan nama yang "
+"belum terbuat atau membuat field non-relasional."
 
 #. module: web
 #. openerp-web
@@ -2181,13 +2216,13 @@ msgstr ""
 #: code:addons/web/static/src/js/widgets/attach_document.js:0
 #, python-format
 msgid "Invalid fields:"
-msgstr ""
+msgstr "Field tidak sesuai:"
 
 #. module: web
 #: code:addons/web/controllers/main.py:0
 #, python-format
 msgid "Invalid inherit mode. Module %s and template name %s"
-msgstr ""
+msgstr "Inherit mode tidak sesuai. Modul %s dan nama template %s"
 
 #. module: web
 #. openerp-web
@@ -2201,7 +2236,7 @@ msgstr "Mode untuk grafik tidak sah"
 #: code:addons/web/static/src/js/tools/debug_manager_backend.js:0
 #, python-format
 msgid "JS Mobile Tests"
-msgstr ""
+msgstr "JS Tes Seluler"
 
 #. module: web
 #. openerp-web
@@ -2222,14 +2257,14 @@ msgstr "Kanban"
 #: code:addons/web/static/src/js/views/kanban/kanban_record.js:0
 #, python-format
 msgid "Kanban: no action for type: "
-msgstr ""
+msgstr "Kanban: tidak ada aksi untuk tipe:"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/chrome/user_menu.js:0
 #, python-format
 msgid "Keyboard Shortcuts"
-msgstr ""
+msgstr "Pintasan Keyboard"
 
 #. module: web
 #: code:addons/web/controllers/main.py:0
@@ -2290,7 +2325,7 @@ msgstr "Tinggalkan Alat Pengembang"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Light blue"
-msgstr ""
+msgstr "Biru Cerah"
 
 #. module: web
 #. openerp-web
@@ -2313,7 +2348,7 @@ msgstr "Daftar"
 #: code:addons/web/static/src/xml/name_and_signature.xml:0
 #, python-format
 msgid "Load"
-msgstr ""
+msgstr "Muat"
 
 #. module: web
 #. openerp-web
@@ -2342,7 +2377,7 @@ msgstr "Memuat (%d)"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Loading, please wait..."
-msgstr ""
+msgstr "Memuat, harap tunggu..."
 
 #. module: web
 #. openerp-web
@@ -2362,7 +2397,7 @@ msgstr "Log masuk"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login
 msgid "Log in as superuser"
-msgstr ""
+msgstr "Masuk sebagai superuser"
 
 #. module: web
 #. openerp-web
@@ -2389,14 +2424,21 @@ msgstr "Warna Primer Logo"
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__logo_secondary_color
 msgid "Logo Secondary Color"
-msgstr ""
+msgstr "Warna Sekunder Logo"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/menu.xml:0
 #, python-format
 msgid "Mac"
-msgstr ""
+msgstr "Mac"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/services/crash_manager.js:0
+#, python-format
+msgid "MailDeliveryException"
+msgstr "MailDeliveryException"
 
 #. module: web
 #. openerp-web
@@ -2407,7 +2449,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Main actions"
-msgstr ""
+msgstr "Aksi Utama"
 
 #. module: web
 #. openerp-web
@@ -2415,7 +2457,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
 msgid "Manage Attachments"
-msgstr ""
+msgstr "Kelola Lampiran"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login_layout
@@ -2435,14 +2477,14 @@ msgstr "Mengelola Filter"
 #: code:addons/web/static/src/js/fields/relational_fields.js:0
 #, python-format
 msgid "Many2many"
-msgstr ""
+msgstr "Many2many"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/fields/relational_fields.js:0
 #, python-format
 msgid "Many2one"
-msgstr ""
+msgstr "Many2one"
 
 #. module: web
 #. openerp-web
@@ -2476,6 +2518,7 @@ msgstr ""
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/js/views/graph/graph_controller.js:0
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Measures"
@@ -2488,7 +2531,7 @@ msgstr "Pengukuran"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Medium blue"
-msgstr ""
+msgstr "Biru Medium"
 
 #. module: web
 #. openerp-web
@@ -2503,13 +2546,6 @@ msgstr "Metadata (%s)"
 #, python-format
 msgid "Method:"
 msgstr "Metode:"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/services/crash_manager.js:92
-#, python-format
-msgid "MailDeliveryException"
-msgstr ""
 
 #. module: web
 #. openerp-web
@@ -2530,14 +2566,14 @@ msgstr "Dukungan Mobile"
 #: code:addons/web/static/src/js/tools/debug_manager_backend.js:0
 #, python-format
 msgid "Model Access"
-msgstr ""
+msgstr "Akses Model"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/tools/debug_manager_backend.js:0
 #, python-format
 msgid "Model Record Rules"
-msgstr ""
+msgstr "Aturan Rekord Model"
 
 #. module: web
 #. openerp-web
@@ -2554,6 +2590,8 @@ msgid ""
 "Module %s not loaded or inexistent, or templates of addon being loaded (%s) "
 "are misordered"
 msgstr ""
+"Modul %s tidak dapat memuat atau tidak tersedia, atau templat addon yang "
+"dimuat (%s) tidak terurut"
 
 #. module: web
 #. openerp-web
@@ -2584,7 +2622,7 @@ msgstr "Selengkapnya"
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "Multiline Text"
-msgstr ""
+msgstr "Teks Multiline"
 
 #. module: web
 #. openerp-web
@@ -2611,8 +2649,8 @@ msgstr "Baru"
 #. openerp-web
 #: code:addons/web/static/src/js/fields/relational_fields.js:0
 #, python-format
-msgid "New ${this.name}"
-msgstr ""
+msgid "New %s"
+msgstr "Baru %s"
 
 #. module: web
 #. openerp-web
@@ -2634,7 +2672,7 @@ msgstr "Desain baru"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "New template"
-msgstr ""
+msgstr "Template Baru"
 
 #. module: web
 #. openerp-web
@@ -2665,21 +2703,21 @@ msgstr "Tidak Ada Perbaruan:"
 #: code:addons/web/static/src/js/tools/debug_manager_backend.js:0
 #, python-format
 msgid "No attachment available"
-msgstr ""
+msgstr "Lampiran tidak tersedia"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "No color"
-msgstr ""
+msgstr "Warna tidak ada"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/graph/graph_renderer.js:0
 #, python-format
 msgid "No data"
-msgstr ""
+msgstr "Data tidak ada"
 
 #. module: web
 #. openerp-web
@@ -2693,7 +2731,7 @@ msgstr "Tidak data yang bisa ditampilkan"
 #: code:addons/web/static/src/js/widgets/data_export.js:0
 #, python-format
 msgid "No match found."
-msgstr ""
+msgstr "Tidak ada hasil cocok yang ditemukan"
 
 #. module: web
 #. openerp-web
@@ -2714,7 +2752,7 @@ msgstr "Tidak ada dokumen"
 #: code:addons/web/static/src/js/views/view_dialogs.js:0
 #, python-format
 msgid "No records found!"
-msgstr ""
+msgstr "Tidak ada rekord yang ditemukan!"
 
 #. module: web
 #. openerp-web
@@ -2728,6 +2766,8 @@ msgstr "Tidak ada hasil yang bisa ditampilkan..."
 #, python-format
 msgid "No template found to inherit from. Module %s and template name %s"
 msgstr ""
+"Tidak ada template yang ditemukan untuk digunakan. Modul %s dan nama "
+"template %s"
 
 #. module: web
 #. openerp-web
@@ -2735,7 +2775,7 @@ msgstr ""
 #: code:addons/web/static/src/js/views/list/list_controller.js:0
 #, python-format
 msgid "No valid record to save"
-msgstr ""
+msgstr "Tidak ada rekor yang valid untuk disimpan"
 
 #. module: web
 #. openerp-web
@@ -2756,21 +2796,21 @@ msgstr "Tidak Ada"
 #: code:addons/web/models/models.py:0
 #, python-format
 msgid "Not Set"
-msgstr ""
+msgstr "Tidak Ditentukan"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Not active state"
-msgstr ""
+msgstr "Status tidak aktif"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Not active state, click to change it"
-msgstr ""
+msgstr "Status tidak aktif, klik untuk mengubah"
 
 #. module: web
 #. openerp-web
@@ -2839,7 +2879,7 @@ msgstr "Peringatan Odoo"
 #, python-format
 msgid ""
 "Of the %d records selected, only the first %d have been archived/unarchived."
-msgstr ""
+msgstr "Dari %drekord yang dipilih, hanya %d yang diarsipkan/tidak."
 
 #. module: web
 #. openerp-web
@@ -2875,21 +2915,21 @@ msgstr "Ketika berubah:"
 #: code:addons/web/static/src/js/fields/relational_fields.js:0
 #, python-format
 msgid "One2many"
-msgstr ""
+msgstr "One2many"
 
 #. module: web
 #: code:addons/web/controllers/main.py:0
 #, python-format
 msgid ""
 "Only employees can access this database. Please contact the administrator."
-msgstr ""
+msgstr "Hanya karyawan yang bisa mengakses database. Silahkan hubungi admin."
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/list/list_controller.js:0
 #, python-format
 msgid "Only the first %d records have been deleted (out of %d selected)"
-msgstr ""
+msgstr "Hanya %d rekord yang terhapus (dari total %d yang terpilih)"
 
 #. module: web
 #: code:addons/web/models/models.py:0
@@ -2898,6 +2938,8 @@ msgid ""
 "Only types %(supported_types)s are supported for category (found type "
 "%(field_type)s)"
 msgstr ""
+"Hanya tipe %(supported_types)syang didukung pada kategori (total "
+"sebanyak%(field_type)s yang ditemukan)"
 
 #. module: web
 #: code:addons/web/models/models.py:0
@@ -2906,6 +2948,8 @@ msgid ""
 "Only types %(supported_types)s are supported for filter (found type "
 "%(field_type)s)"
 msgstr ""
+"Hanya tipe %(supported_types)syang didukung untuk disaring (total "
+"sebanyak%(field_type)s yang ditemukan)"
 
 #. module: web
 #. openerp-web
@@ -2918,8 +2962,15 @@ msgstr "Hanya Anda"
 #. openerp-web
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
+msgid "Open Developer Tools"
+msgstr "Alat Pengembang Terbuka"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/debug.xml:0
+#, python-format
 msgid "Open Developer Tools#{widget.debug_mode_help}"
-msgstr ""
+msgstr "Buka Alat Developer#{widget.debug_mode_help}"
 
 #. module: web
 #. openerp-web
@@ -2933,28 +2984,28 @@ msgstr "Buka Tampilan"
 #: code:addons/web/static/src/xml/menu.xml:0
 #, python-format
 msgid "Open the next record"
-msgstr ""
+msgstr "Buka rekord selanjutnya"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/menu.xml:0
 #, python-format
 msgid "Open the previous record"
-msgstr ""
+msgstr "Buka rekord sebelumnya"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/menu.xml:0
 #, python-format
 msgid "Open to kanban view"
-msgstr ""
+msgstr "Buka menu kanban"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/menu.xml:0
 #, python-format
 msgid "Open to list view"
-msgstr ""
+msgstr "Buka untuk menampilkan daftar"
 
 #. module: web
 #. openerp-web
@@ -2969,12 +3020,19 @@ msgstr "Buka : "
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/js/views/list/list_renderer.js:0
+#, python-format
+msgid "Optional columns"
+msgstr ""
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Orange"
-msgstr ""
+msgstr "Jingga"
 
 #. module: web
 #. openerp-web
@@ -2988,14 +3046,14 @@ msgstr "Lainnya"
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "PDF Viewer"
-msgstr ""
+msgstr "Penampil PDF"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "PDF controls"
-msgstr ""
+msgstr "Pengontrol PDF"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_background
@@ -3021,7 +3079,7 @@ msgstr "Halaman: <span class=\"page\"/> / <span class=\"topage\"/>"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Pager"
-msgstr ""
+msgstr "Pager"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__paperformat_id
@@ -3050,7 +3108,7 @@ msgstr "Persentase"
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "Percentage Pie"
-msgstr ""
+msgstr "Persentase Pie"
 
 #. module: web
 #. openerp-web
@@ -3065,7 +3123,7 @@ msgstr "Telepon"
 #: code:addons/web/static/src/js/widgets/colorpicker.js:0
 #, python-format
 msgid "Pick a color"
-msgstr ""
+msgstr "Pilih warna"
 
 #. module: web
 #. openerp-web
@@ -3080,7 +3138,7 @@ msgstr "Grafik Pie"
 #: code:addons/web/static/src/js/views/graph/graph_renderer.js:0
 #, python-format
 msgid "Pie chart cannot mix positive and negative numbers. "
-msgstr ""
+msgstr "Grafik pie tidak bisa menggambungkan angka positif dan negatif."
 
 #. module: web
 #. openerp-web
@@ -3094,7 +3152,7 @@ msgstr "Poros"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Pivot settings"
-msgstr ""
+msgstr "Pengaturan pivot"
 
 #. module: web
 #. openerp-web
@@ -3109,7 +3167,7 @@ msgstr "Silahkan klik tombol 'simpan' terlebih dahulu"
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "Please enter a numerical value"
-msgstr ""
+msgstr "Harap masukkan nilai numerik"
 
 #. module: web
 #. openerp-web
@@ -3123,7 +3181,7 @@ msgstr "Silahkan masukkan simpanan nama daftar kolom"
 #: code:addons/web/static/src/js/widgets/attach_document.js:0
 #, python-format
 msgid "Please save before attaching a file"
-msgstr ""
+msgstr "Mohon simpan sebelum menyertakan dokumen"
 
 #. module: web
 #. openerp-web
@@ -3144,7 +3202,7 @@ msgstr "Silakan pilih kolom untuk menyimpan daftar ekspor..."
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Please update translations of :"
-msgstr ""
+msgstr "Harap perbarui terjemahan dari :"
 
 #. module: web
 #. openerp-web
@@ -3161,11 +3219,13 @@ msgid ""
 "Please use the following communication for your payment : <b><span>\n"
 "                           INV/2020/07/0003</span></b>"
 msgstr ""
+"Harap gunakan nomor berikut untuk proses pembayaran : <b><span>\n"
+"                           INV/2020/07/0003</span></b>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.brand_promotion_message
 msgid "Powered by %s%s"
-msgstr ""
+msgstr "Dipersembahkan oleh %s%s"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login_layout
@@ -3197,7 +3257,7 @@ msgstr "Pratinjau Laporan Internal"
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__preview_logo
 msgid "Preview logo"
-msgstr ""
+msgstr "Pratinjau logo"
 
 #. module: web
 #. openerp-web
@@ -3209,7 +3269,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/web_calendar.xml:0
 #, python-format
 msgid "Previous"
-msgstr ""
+msgstr "Sebelum"
 
 #. module: web
 #. openerp-web
@@ -3223,12 +3283,12 @@ msgstr "Periode Sebelumnya"
 #: code:addons/web/static/src/js/control_panel/search_utils.js:0
 #, python-format
 msgid "Previous Year"
-msgstr ""
+msgstr "Tahun sebelumnya"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__primary_color
 msgid "Primary Color"
-msgstr ""
+msgstr "Warna Primer"
 
 #. module: web
 #. openerp-web
@@ -3252,14 +3312,14 @@ msgstr "Prioritas"
 #: code:addons/web/static/src/xml/file_upload_progress_card.xml:0
 #, python-format
 msgid "Processing..."
-msgstr ""
+msgstr "Memproses..."
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "Progress Bar"
-msgstr ""
+msgstr "Kolom Poses"
 
 #. module: web
 #. openerp-web
@@ -3275,28 +3335,28 @@ msgstr "Ungu"
 #: code:addons/web/static/src/js/control_panel/search_utils.js:0
 #, python-format
 msgid "Q1"
-msgstr ""
+msgstr "Q1"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/control_panel/search_utils.js:0
 #, python-format
 msgid "Q2"
-msgstr ""
+msgstr "Q2"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/control_panel/search_utils.js:0
 #, python-format
 msgid "Q3"
-msgstr ""
+msgstr "Q3"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/control_panel/search_utils.js:0
 #, python-format
 msgid "Q4"
-msgstr ""
+msgstr "Q4"
 
 #. module: web
 #: model:ir.model.fields.selection,name:web.selection__ir_actions_act_window_view__view_mode__qweb
@@ -3317,34 +3377,34 @@ msgstr "Kuartal"
 #: code:addons/web/static/src/xml/kanban.xml:0
 #, python-format
 msgid "Quick add"
-msgstr ""
+msgstr "Tambah Dengan Cepat"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/fields/relational_fields.js:0
 #, python-format
 msgid "Quick search: %s"
-msgstr ""
+msgstr "Pencarian Cepat: %s"
 
 #. module: web
 #: model:ir.model,name:web.model_ir_qweb_field_image
 #: model:ir.model,name:web.model_ir_qweb_field_image_url
 msgid "Qweb Field Image"
-msgstr ""
+msgstr "Kolom Gambar Qweb"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/colorpicker.xml:0
 #, python-format
 msgid "RGB"
-msgstr ""
+msgstr "RGB"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/colorpicker.xml:0
 #, python-format
 msgid "RGBA"
-msgstr ""
+msgstr "RGBA"
 
 #. module: web
 #. openerp-web
@@ -3367,7 +3427,7 @@ msgstr "Merah"
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
 msgid "Regenerate Assets Bundles"
-msgstr ""
+msgstr "Perbarui Bundle Aset"
 
 #. module: web
 #. openerp-web
@@ -3382,7 +3442,7 @@ msgstr "Relasi tidak dibolehkan"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Relation to follow"
-msgstr ""
+msgstr "Relasi yang terkait"
 
 #. module: web
 #. openerp-web
@@ -3419,7 +3479,7 @@ msgstr "Hapus Gambar Cover"
 #: code:addons/web/static/src/js/widgets/data_export.js:0
 #, python-format
 msgid "Remove field"
-msgstr ""
+msgstr "Hapus Field"
 
 #. module: web
 #. openerp-web
@@ -3434,7 +3494,7 @@ msgstr "Hapus dari Favorit"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Remove tag"
-msgstr ""
+msgstr "Hapus Tanda"
 
 #. module: web
 #. openerp-web
@@ -3466,26 +3526,26 @@ msgstr "Layout Pelaporan"
 #: code:addons/web/static/src/js/services/crash_manager.js:0
 #, python-format
 msgid "Request timeout"
-msgstr ""
+msgstr "Waktu Request Habis"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
 msgid "Reset to logo colors"
-msgstr ""
+msgstr "Setel ulang ke warna logo"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
 msgid "Run Click Everywhere Test"
-msgstr ""
+msgstr "Jalankan tes klik-dimanapun"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
 msgid "Run JS Mobile Tests"
-msgstr ""
+msgstr "Jalankan JS Tes Seluler"
 
 #. module: web
 #. openerp-web
@@ -3499,7 +3559,7 @@ msgstr "Jalankan Tes JS"
 #: code:addons/web/static/src/js/fields/signature.js:0
 #, python-format
 msgid "SIGNATURE"
-msgstr ""
+msgstr "TANDA TANGAN"
 
 #. module: web
 #. openerp-web
@@ -3508,7 +3568,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Salmon pink"
-msgstr ""
+msgstr "Pink salmon"
 
 #. module: web
 #. openerp-web
@@ -3528,7 +3588,7 @@ msgstr "Simpan"
 #: code:addons/web/static/src/js/views/view_dialogs.js:0
 #, python-format
 msgid "Save & Close"
-msgstr ""
+msgstr "Simpan & Tutup"
 
 #. module: web
 #. openerp-web
@@ -3542,14 +3602,14 @@ msgstr "Simpan & Buat Baru"
 #: code:addons/web/static/src/xml/menu.xml:0
 #, python-format
 msgid "Save a record"
-msgstr ""
+msgstr "Simpan rekord"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Save as :"
-msgstr ""
+msgstr "Simpan sebagai :"
 
 #. module: web
 #. openerp-web
@@ -3602,7 +3662,7 @@ msgstr "Cari:"
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__secondary_color
 msgid "Secondary Color"
-msgstr ""
+msgstr "Warna Sekunder"
 
 #. module: web
 #. openerp-web
@@ -3616,7 +3676,7 @@ msgstr "Lihat rincian"
 #: code:addons/web/static/src/xml/kanban.xml:0
 #, python-format
 msgid "See examples"
-msgstr ""
+msgstr "Lihat contoh"
 
 #. module: web
 #. openerp-web
@@ -3638,13 +3698,15 @@ msgid ""
 "Select <i class=\"fa fa-database\" role=\"img\" aria-label=\"Database\" "
 "title=\"Database\"/>"
 msgstr ""
+"Pilih <i class=\"fa fa-database\" role=\"img\" aria-label=\"Database\" "
+"title=\"Database\"/>"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Select Signature Style"
-msgstr ""
+msgstr "Pilih Gaya Tanda Tangan"
 
 #. module: web
 #. openerp-web
@@ -3665,14 +3727,14 @@ msgstr "Pilih sebuah tampilan"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Select all"
-msgstr ""
+msgstr "Pilih semua"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Select field"
-msgstr ""
+msgstr "Pilih field"
 
 #. module: web
 #. openerp-web
@@ -3721,7 +3783,7 @@ msgstr "Mengatur gambar sampul"
 #: code:addons/web/static/src/js/fields/special_fields.js:0
 #, python-format
 msgid "Set a timezone on your user"
-msgstr ""
+msgstr "Pilih zona waktu untuk pengguna anda"
 
 #. module: web
 #. openerp-web
@@ -3743,7 +3805,7 @@ msgstr "Bagikan dengan semua pengguna"
 #: code:addons/web/static/src/xml/menu.xml:0
 #, python-format
 msgid "Shortcuts"
-msgstr ""
+msgstr "Jalan pintas"
 
 #. module: web
 #. openerp-web
@@ -3751,7 +3813,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Show sub-fields"
-msgstr ""
+msgstr "Tampilkan sub-fields"
 
 #. module: web
 #. openerp-web
@@ -3785,14 +3847,14 @@ msgstr "Sesuatu yang buruk telah terjadi"
 #: code:addons/web/static/src/js/services/crash_manager.js:0
 #, python-format
 msgid "Something went wrong !"
-msgstr ""
+msgstr "Terjadi kesalahan !"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Sort graph"
-msgstr ""
+msgstr "Sorot grafik"
 
 #. module: web
 #. openerp-web
@@ -3807,14 +3869,14 @@ msgstr "Spesial:"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Stacked"
-msgstr ""
+msgstr "Tertumpuk"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/fields/relational_fields.js:0
 #, python-format
 msgid "Start typing..."
-msgstr ""
+msgstr "Mulai mengetik..."
 
 #. module: web
 #. openerp-web
@@ -3871,7 +3933,7 @@ msgstr "Dukungan"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Switch to this company"
-msgstr ""
+msgstr "Pindah ke perusahaan ini"
 
 #. module: web
 #. openerp-web
@@ -3916,14 +3978,14 @@ msgstr "Tel:"
 #: code:addons/web/controllers/main.py:0
 #, python-format
 msgid "Template %s already exists in module %s"
-msgstr ""
+msgstr "Template %s sudah ada di modul %s"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Template:"
-msgstr ""
+msgstr "Template"
 
 #. module: web
 #. openerp-web
@@ -3938,6 +4000,8 @@ msgid ""
 "The Tax Identification Number. Complete it if the contact is subjected to "
 "government taxes. Used in some legal statements."
 msgstr ""
+"Nomor Pokok Wajib Pajak. Diisi jika perusahaan merupakan Pengusaha Kena "
+"Pajak (PKP)."
 
 #. module: web
 #: code:addons/web/controllers/main.py:0
@@ -3946,13 +4010,15 @@ msgid ""
 "The content of this cell is too long for an XLSX file (more than %s "
 "characters). Please use the CSV format for this export."
 msgstr ""
+"Konten pada kolom ini terlalu panjang untuk file XLSX (lebih dari %s "
+"karakter). Harap gunakan format CSV untuk mengekspor."
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "The field is empty, there's nothing to save."
-msgstr ""
+msgstr "Field kosong, tidak ada yang disimpan."
 
 #. module: web
 #: code:addons/web/controllers/main.py:0
@@ -3976,6 +4042,7 @@ msgid ""
 "The operation was interrupted. This usually means that the current operation"
 " is taking too much time."
 msgstr ""
+"Operasi terganggu. Biasanya terjadi karena terlalu lama memakan waktu."
 
 #. module: web
 #. openerp-web
@@ -4013,13 +4080,15 @@ msgid ""
 "There are too many rows (%s rows, limit: %s) to export as Excel 2007-2013 "
 "(.xlsx) format. Consider splitting the export."
 msgstr ""
+"Terlalu banyak kolom (%s baris, limit: %s) untuk mengekspor file berformat "
+"Excel 2007-2013 (.xlsx). Harap pisahkan expor."
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/kanban.xml:0
 #, python-format
 msgid "There is no available image to be set as cover."
-msgstr ""
+msgstr "Tidak ada gambar yang bisa digunakan sebagai sampul."
 
 #. module: web
 #. openerp-web
@@ -4034,6 +4103,8 @@ msgstr "Ada masalah saat mengunggah berkas Anda"
 #, python-format
 msgid "This date is in the future. Make sure this is what you expect."
 msgstr ""
+"Tanggal ini berada dimasa yang akan datang. Pastikan tanggal ini sesuai "
+"perencanaan."
 
 #. module: web
 #. openerp-web
@@ -4041,20 +4112,22 @@ msgstr ""
 #, python-format
 msgid "This date is on the future. Make sure it is what you expected."
 msgstr ""
+"Tanggal ini berada dimasa yang akan datang. Pastikan tanggal ini sesuai "
+"perencanaan."
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/widgets/domain_selector.js:0
 #, python-format
 msgid "This domain is not supported."
-msgstr ""
+msgstr "Domain tidak didukung"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/name_and_signature.xml:0
 #, python-format
 msgid "This file is invalid. Please select an image."
-msgstr ""
+msgstr "File ini invalid. Harap pilih gambar."
 
 #. module: web
 #. openerp-web
@@ -4080,7 +4153,7 @@ msgstr "Ini adalah contoh laporan internal."
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "This update will only consider the records of the current page."
-msgstr ""
+msgstr "Perbaruan ini hanya memakai record yang ada pada halaman saat ini."
 
 #. module: web
 #. openerp-web
@@ -4097,6 +4170,8 @@ msgid ""
 "Timezone Mismatch : This timezone is different from that of your browser.\n"
 "Please, set the same timezone as your browser's to avoid time discrepancies in your system."
 msgstr ""
+"Zona waktu tidak cocok : Zona waktu ini berbeda dengan browser.\n"
+"Harap samakan zona waktu dengan browser agar mencegah perbedaan waktu pada sistem anda. "
 
 #. module: web
 #. openerp-web
@@ -4111,7 +4186,7 @@ msgstr "Hari Ini"
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "Toggle"
-msgstr ""
+msgstr "Alihkan"
 
 #. module: web
 #. openerp-web
@@ -4131,7 +4206,7 @@ msgstr "Besok"
 #: code:addons/web/models/models.py:0
 #, python-format
 msgid "Too many items to display."
-msgstr ""
+msgstr "Terlalu banyak data untuk ditampilkan."
 
 #. module: web
 #. openerp-web
@@ -4155,7 +4230,7 @@ msgstr "Telusuri Kembali:"
 #: code:addons/web/static/src/js/widgets/translation_dialog.js:0
 #, python-format
 msgid "Translate: "
-msgstr ""
+msgstr "Terjemah:"
 
 #. module: web
 #. openerp-web
@@ -4172,13 +4247,15 @@ msgid ""
 "Try to add some records, or make sure that there is no\n"
 "                active filter in the search bar."
 msgstr ""
+"Cobalah untuk menambah beberapa rekord, atau pastikan tidak ada\n"
+"penyaring yang aktif pada kolom pencarian."
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/graph/graph_renderer.js:0
 #, python-format
 msgid "Try to change your domain to only display positive results"
-msgstr ""
+msgstr "Cobalah untuk mengganti domain agar menampilkan hasil positif"
 
 #. module: web
 #. openerp-web
@@ -4200,7 +4277,7 @@ msgstr "URL"
 #, python-format
 msgid ""
 "Unable to find Wkhtmltopdf on this system. The report will be shown in html."
-msgstr ""
+msgstr "Tidak dapat menemukan Wkhtmltopdf pada sistem. PDF tidak bisa dibuat."
 
 #. module: web
 #. openerp-web
@@ -4215,7 +4292,7 @@ msgstr "Batalkan Pengarsipan"
 #: code:addons/web/static/src/xml/kanban.xml:0
 #, python-format
 msgid "Unarchive All"
-msgstr ""
+msgstr "Batalkan Pengarsipan"
 
 #. module: web
 #. openerp-web
@@ -4259,7 +4336,7 @@ msgstr "Jenis nonliteral tidak diketahui"
 #: code:addons/web/static/src/js/views/list/list_editable_renderer.js:0
 #, python-format
 msgid "Unlink row "
-msgstr ""
+msgstr "Lepaskan koneksi baris"
 
 #. module: web
 #. openerp-web
@@ -4283,7 +4360,7 @@ msgstr "Belum ada judul"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Update to:"
-msgstr ""
+msgstr "Perbarui"
 
 #. module: web
 #. openerp-web
@@ -4297,7 +4374,7 @@ msgstr "Perbarui sekarang"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Upgrade to enterprise"
-msgstr ""
+msgstr "Perbarui ke enterprise"
 
 #. module: web
 #. openerp-web
@@ -4311,14 +4388,14 @@ msgstr "Perbarui ke versi akan datang"
 #: code:addons/web/static/src/js/views/kanban/kanban_record.js:0
 #, python-format
 msgid "Upload and Set"
-msgstr ""
+msgstr "Unggah dan tetapkan"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/file_upload_progress_bar.js:0
 #, python-format
 msgid "Upload cancelled"
-msgstr ""
+msgstr "Proses unggah batal"
 
 #. module: web
 #. openerp-web
@@ -4334,7 +4411,7 @@ msgstr "Unggah berkas Anda"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Uploaded"
-msgstr ""
+msgstr "Berhasil diunggah"
 
 #. module: web
 #. openerp-web
@@ -4364,14 +4441,14 @@ msgstr "Mengunggah..."
 #: code:addons/web/static/src/js/views/file_upload_progress_card.js:0
 #, python-format
 msgid "Uploading... (%s%%)"
-msgstr ""
+msgstr "Mengunggah...(%s%%)"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/kanban/kanban_column_quick_create.js:0
 #, python-format
 msgid "Use This For My Kanban"
-msgstr ""
+msgstr "Gunakan Sebagai Kanban"
 
 #. module: web
 #. openerp-web
@@ -4392,7 +4469,7 @@ msgstr "Pengguna"
 #: code:addons/web/static/src/js/services/crash_manager.js:0
 #, python-format
 msgid "User Error"
-msgstr ""
+msgstr "Pengguna Eror!"
 
 #. module: web
 #. openerp-web
@@ -4414,21 +4491,28 @@ msgstr "Eror Validasi"
 #: code:addons/web/static/src/js/views/basic/basic_renderer.js:0
 #, python-format
 msgid "Values set here are company-specific."
-msgstr ""
+msgstr "Nilai yang digunakan disini berdasarkan perusahaan tertentu."
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/pivot/pivot_model.js:0
 #, python-format
 msgid "Variation"
-msgstr ""
+msgstr "Variasi"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "View %s"
+msgstr "Tampilan %s"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
 msgid "View Access Rights"
-msgstr ""
+msgstr "Lihat Hak Akses"
 
 #. module: web
 #. openerp-web
@@ -4450,19 +4534,19 @@ msgstr "Lihat Metadata"
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
 msgid "View Record Rules"
-msgstr ""
+msgstr "Lihat Aturan Rekord"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_ir_actions_act_window_view__view_mode
 msgid "View Type"
-msgstr ""
+msgstr "Tipe Tampilan"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "View switcher"
-msgstr ""
+msgstr "Lihat pengalih"
 
 #. module: web
 #. openerp-web
@@ -4485,7 +4569,7 @@ msgstr "Standar Ukuran Web"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.qunit_mobile_suite
 msgid "Web Mobile Tests"
-msgstr ""
+msgstr "Tes Web Seluler"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.qunit_suite
@@ -4526,14 +4610,14 @@ msgstr "Widget:"
 #: code:addons/web/static/src/xml/menu.xml:0
 #, python-format
 msgid "Windows/Linux"
-msgstr ""
+msgstr "Windows/Linux"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/fields/special_fields.js:0
 #, python-format
 msgid "Wrap raw html within an iframe"
-msgstr ""
+msgstr "Gabungkan html murni kedalam iframe"
 
 #. module: web
 #: code:addons/web/controllers/main.py:0
@@ -4564,7 +4648,7 @@ msgstr "Tahun"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Yellow"
-msgstr ""
+msgstr "Kuning"
 
 #. module: web
 #. openerp-web
@@ -4610,6 +4694,8 @@ msgid ""
 "You need to save this new record before editing the translation. Do you want"
 " to proceed?"
 msgstr ""
+"Anda harus menyimpan rekord ini sebelum mengaudit translasi. Apakah anda "
+"ingin memproses?"
 
 #. module: web
 #. openerp-web
@@ -4619,6 +4705,8 @@ msgid ""
 "You need to start Odoo with at least two workers to print a pdf version of "
 "the reports."
 msgstr ""
+"Anda harus menjalankan Odoo dengan minimal dua worker untuk mencetak versi "
+"PDF dari laporan ini."
 
 #. module: web
 #. openerp-web
@@ -4629,13 +4717,16 @@ msgid ""
 "to get a correct display of headers and footers as well as support for "
 "table-breaking between pages."
 msgstr ""
+"Anda harus menaikkan Wkhtmltopdf setidak-tidaknya ke versi 0.12.0 untuk "
+"memperoleh tampilan header & footer yang benar, juga untuk mendapatkan fitur"
+" pemisahan tabel per halaman."
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/services/crash_manager.js:0
 #, python-format
 msgid "Your Odoo session expired. The current page is about to be refreshed."
-msgstr ""
+msgstr "Sesi Odoo Anda berakhir. Silakan refresh halaman web saat ini."
 
 #. module: web
 #. openerp-web
@@ -4644,7 +4735,7 @@ msgstr ""
 msgid ""
 "Your installation of Wkhtmltopdf seems to be broken. The report will be "
 "shown in html."
-msgstr ""
+msgstr "Wkhtmltopdf rusak. Laporan akan ditampilkan dalam bentuk html."
 
 #. module: web
 #. openerp-web
@@ -4652,7 +4743,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/name_and_signature.xml:0
 #, python-format
 msgid "Your name"
-msgstr ""
+msgstr "Nama anda"
 
 #. module: web
 #. openerp-web
@@ -4666,7 +4757,7 @@ msgstr "[Tidak ada widget %s]"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "_onItemRemoved"
-msgstr ""
+msgstr "_onItemRemoved"
 
 #. module: web
 #. openerp-web
@@ -4715,21 +4806,21 @@ msgstr "semua dokumen"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "are valid for this update."
-msgstr ""
+msgstr "valid untuk pembaruan ini."
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "as a new"
-msgstr ""
+msgstr "seperti baru"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "at:"
-msgstr ""
+msgstr "pada"
 
 #. module: web
 #. openerp-web
@@ -4751,7 +4842,7 @@ msgstr "mengandung"
 #: code:addons/web/static/src/js/widgets/domain_selector.js:0
 #, python-format
 msgid "does not contain"
-msgstr ""
+msgstr "tidak mengandung"
 
 #. module: web
 #. openerp-web
@@ -4768,14 +4859,14 @@ msgstr "misalnya: Global Business Solutions"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
 msgid "e.g. Opening hours, bank accounts (one per line)"
-msgstr ""
+msgstr "sebagai contoh jam buka akun bank (satu per baris)"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "for:"
-msgstr ""
+msgstr "untuk:"
 
 #. module: web
 #. openerp-web
@@ -4796,7 +4887,7 @@ msgstr "lebih besar atau sama dengan"
 #: code:addons/web/static/src/xml/colorpicker.xml:0
 #, python-format
 msgid "hex"
-msgstr ""
+msgstr "hex"
 
 #. module: web
 #. openerp-web
@@ -4829,7 +4920,7 @@ msgstr "setelah"
 #: code:addons/web/static/src/js/control_panel/search_utils.js:0
 #, python-format
 msgid "is after or equal to"
-msgstr ""
+msgstr "lebih dari atau sama dengan"
 
 #. module: web
 #. openerp-web
@@ -4845,7 +4936,7 @@ msgstr "sebelum"
 #: code:addons/web/static/src/js/control_panel/search_utils.js:0
 #, python-format
 msgid "is before or equal to"
-msgstr ""
+msgstr "kurang dari atau sama dengan"
 
 #. module: web
 #. openerp-web
@@ -4885,7 +4976,7 @@ msgstr "bukan"
 #: code:addons/web/static/src/js/widgets/domain_selector.js:0
 #, python-format
 msgid "is not ="
-msgstr ""
+msgstr "bukan ="
 
 #. module: web
 #. openerp-web
@@ -4961,7 +5052,7 @@ msgstr "lebih kecil atau sama dengan"
 #: code:addons/web/static/src/js/views/file_upload_mixin.js:0
 #, python-format
 msgid "message: %s"
-msgstr ""
+msgstr "pesan: %s"
 
 #. module: web
 #. openerp-web
@@ -5009,13 +5100,6 @@ msgstr "atau"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/colorpicker.xml:0
-#, python-format
-msgid "p-0 border-0 text-center text-monospace bg-transparent text-white"
-msgstr ""
-
-#. module: web
-#. openerp-web
 #: code:addons/web/static/src/js/widgets/domain_selector.js:0
 #, python-format
 msgid "parent of"
@@ -5033,7 +5117,7 @@ msgstr "dokumen"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "records ?"
-msgstr ""
+msgstr "rekord?"
 
 #. module: web
 #. openerp-web
@@ -5047,7 +5131,7 @@ msgstr "tersisa)"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "search"
-msgstr ""
+msgstr "cari"
 
 #. module: web
 #. openerp-web
@@ -5055,14 +5139,14 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "selected"
-msgstr ""
+msgstr "terpilih"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "selected records,"
-msgstr ""
+msgstr "rekord terpilih,"
 
 #. module: web
 #. openerp-web

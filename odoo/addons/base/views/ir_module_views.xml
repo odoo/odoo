@@ -179,7 +179,7 @@
                             </a>
                             <div class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                                 <a type="edit" class="dropdown-item">Module Info</a>
-                                <a t-if="record.website.raw_value" role="menuitem" class="dropdown-item" t-att-href="record.website.raw_value" target="_blank">Learn More</a>
+                                <a t-if="record.website.raw_value" role="menuitem" class="dropdown-item o-hidden-ios" t-att-href="record.website.raw_value" target="_blank">Learn More</a>
                                 <a t-if="installed" name="button_immediate_upgrade" type="object" role="menuitem" class="dropdown-item">Upgrade</a>
                                 <a t-if="installed" name="button_uninstall_wizard" type="object" role="menuitem" class="dropdown-item">Uninstall</a>
                             </div>
@@ -194,7 +194,7 @@
                             <code groups="base.group_no_one"><field name="name"/></code>
                           </p>
                           <div class="oe_module_action">
-                            <a t-att-href="record.website.raw_value" target="_blank" attrs="{'invisible':[('website', '=', '')]}" class="btn btn-sm btn-secondary float-right" role="button">Learn More</a>
+                            <a t-att-href="record.website.raw_value" target="_blank" attrs="{'invisible':[('website', '=', '')]}" class="btn btn-sm btn-secondary float-right o-hidden-ios" role="button">Learn More</a>
                             <a type="edit" class="btn btn-secondary btn-sm float-right" role="button" attrs="{'invisible': [('website', '&lt;&gt;', '')]}">Module Info</a>
                             <button type="object" class="btn btn-primary btn-sm" name="button_immediate_install" states="uninstalled" t-if="! record.to_buy.raw_value">Install</button>
                             <a href="https://odoo.com/pricing?utm_source=db&amp;utm_medium=module#hosting=on_premise" class="btn btn-info btn-sm" states="uninstalled,uninstallable" t-if="record.to_buy.raw_value" role="button">Upgrade</a>

@@ -3,9 +3,7 @@
 # 	* repair
 # 
 # Translators:
-# Marcel Savegnago <marcel.savegnago@gmail.com>, 2020
 # Emanuel Martins <emanuel.breno@gmail.com>, 2020
-# Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2020
 # nle_odoo, 2020
 # Adriel Kotviski <kotviski@gmail.com>, 2020
 # falexandresilva <falexandresilva@gmail.com>, 2020
@@ -24,6 +22,7 @@
 # André Carvalho <and2carvalho@gmail.com>, 2020
 # Luiz Fernando <lfpsgs@outlook.com>, 2020
 # Éder Brito <britoederr@gmail.com>, 2020
+# Marcel Savegnago <marcel.savegnago@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -31,7 +30,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-29 13:45+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: Éder Brito <britoederr@gmail.com>, 2020\n"
+"Last-Translator: Marcel Savegnago <marcel.savegnago@gmail.com>, 2021\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -48,6 +47,7 @@ msgstr "${(object.name or ‘’).replace(‘/‘,’_’)}"
 #: model:mail.template,subject:repair.mail_template_repair_quotation
 msgid "${object.partner_id.name} Repair Orders (Ref ${object.name or 'n/a' })"
 msgstr ""
+"${object.partner_id.name} Ordens de Reparo (Ref ${object.name ou 'n/a' })"
 
 #. module: repair
 #: model:ir.actions.report,print_report_name:repair.action_report_repair_order
@@ -132,17 +132,17 @@ msgstr ""
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Lot/Serial Number:</strong>"
-msgstr ""
+msgstr "<strong>Lote/Número de Série"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Operations</strong>"
-msgstr ""
+msgstr "<strong>Operações</strong>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Parts</strong>"
-msgstr ""
+msgstr "<strong>Partes</strong>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -172,7 +172,7 @@ msgstr "<strong>Total</strong>"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Warranty:</strong>"
-msgstr ""
+msgstr "<strong>Garantia:</strong>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_warn_insufficient_qty_repair_form_view
@@ -263,6 +263,8 @@ msgid ""
 "Choose partner for whom the order will be invoiced and delivered. You can "
 "find a partner by its Name, TIN, Email or Internal Reference."
 msgstr ""
+"Escolha o parceiro para quem o pedido será faturado e entregue. Você pode "
+"encontrar um parceiro por seu Nome, TIN, E-mail ou Referência Interna."
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_tags__color
@@ -324,7 +326,7 @@ msgstr "Criar Fatura"
 #. module: repair
 #: model:ir.model,name:repair.model_repair_order_make_invoice
 msgid "Create Mass Invoice (repair)"
-msgstr ""
+msgstr "Criar Fatura em Massa (reparo)"
 
 #. module: repair
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tag
@@ -373,7 +375,7 @@ msgstr "Cliente"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__default_address_id
 msgid "Default Address"
-msgstr ""
+msgstr "Endereço Padrão"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__address_id
@@ -726,13 +728,13 @@ msgstr "Sem conta definida para o produto \"%s\"."
 #: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0
 #, python-format
 msgid "No pricelist found."
-msgstr ""
+msgstr "Nenhuma lista de preços encontrada."
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "No product defined on fees."
-msgstr ""
+msgstr "Nenhum produto definido em serviços."
 
 #. module: repair
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tree
@@ -743,7 +745,7 @@ msgstr ""
 #: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0
 #, python-format
 msgid "No valid pricelist line found."
-msgstr ""
+msgstr "Nenhuma linha de lista de preços válida foi encontrada."
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -779,7 +781,7 @@ msgstr "Quantidade de mensagens não lidas"
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Only draft repairs can be confirmed."
-msgstr ""
+msgstr "Apenas os reparos podem ser confirmados."
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__fees_lines
@@ -791,7 +793,7 @@ msgstr "Operações"
 #: model:ir.model.fields,field_description:repair.field_repair_order__operations
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Parts"
-msgstr ""
+msgstr "Peças"
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0
@@ -818,7 +820,7 @@ msgstr "Lista de preços do parceiro selecionado."
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Print Quotation"
-msgstr ""
+msgstr "Imprimi Cotações"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__product_id
@@ -836,7 +838,7 @@ msgstr "Quantidade do produto"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__tracking
 msgid "Product Tracking"
-msgstr ""
+msgstr "Rastreamento de Produto"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__product_uom
@@ -912,7 +914,7 @@ msgstr "Remover"
 #: model:ir.model.fields,field_description:repair.field_stock_move__repair_id
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__repair_id
 msgid "Repair"
-msgstr ""
+msgstr "Reparo"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_account_move_line__repair_fee_ids
@@ -922,7 +924,7 @@ msgstr ""
 #. module: repair
 #: model:ir.model,name:repair.model_repair_fee
 msgid "Repair Fees"
-msgstr ""
+msgstr "Serviços de Reparo"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_account_move_line__repair_line_ids
@@ -932,7 +934,7 @@ msgstr "Linha do Reparo"
 #. module: repair
 #: model:ir.model,name:repair.model_repair_line
 msgid "Repair Line (parts)"
-msgstr ""
+msgstr "Linha de Reparo (peças)"
 
 #. module: repair
 #: model:ir.model,name:repair.model_repair_order
@@ -1068,7 +1070,7 @@ msgstr ""
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Send Quotation"
-msgstr ""
+msgstr "Enviar Cotação"
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0
@@ -1172,6 +1174,8 @@ msgid ""
 "The product unit of measure you chose has a different category than the "
 "product unit of measure."
 msgstr ""
+"A unidade de produto de medida escolhida tem uma categoria diferente da "
+"unidade de medida do produto."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_line__state
@@ -1185,7 +1189,7 @@ msgstr ""
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__location_id
 msgid "This is the location where the product to repair is located."
-msgstr ""
+msgstr "Este é o local onde o produto para reparar está localizado."
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__state__2binvoiced
@@ -1270,12 +1274,12 @@ msgstr "Valor sem impostos"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "UoM"
-msgstr "UoM"
+msgstr "UdM"
 
 #. module: repair
 #: model:ir.model,name:repair.model_stock_warn_insufficient_qty_repair
 msgid "Warn Insufficient Repair Quantity"
-msgstr ""
+msgstr "Avisar Quantidade de Reparo Insuficiente"
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0
@@ -1336,8 +1340,9 @@ msgstr ""
 #, python-format
 msgid "You have to select an invoice address in the repair form."
 msgstr ""
+"Você tem que selecionar um endereço de fatura no formulário de reparo."
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_warn_insufficient_qty_repair_form_view
 msgid "from location"
-msgstr ""
+msgstr "do local"

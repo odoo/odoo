@@ -44,7 +44,7 @@ class StockScrap(models.Model):
         'stock.quant.package', 'Package',
         states={'done': [('readonly', True)]}, check_company=True)
     owner_id = fields.Many2one('res.partner', 'Owner', states={'done': [('readonly', True)]}, check_company=True)
-    move_id = fields.Many2one('stock.move', 'Scrap Move', readonly=True, check_company=True)
+    move_id = fields.Many2one('stock.move', 'Scrap Move', readonly=True, check_company=True, copy=False)
     picking_id = fields.Many2one('stock.picking', 'Picking', states={'done': [('readonly', True)]}, check_company=True)
     location_id = fields.Many2one(
         'stock.location', 'Source Location', domain="[('usage', '=', 'internal'), ('company_id', 'in', [company_id, False])]",
@@ -52,7 +52,7 @@ class StockScrap(models.Model):
     scrap_location_id = fields.Many2one(
         'stock.location', 'Scrap Location', default=_get_default_scrap_location_id,
         domain="[('scrap_location', '=', True), ('company_id', 'in', [company_id, False])]", required=True, states={'done': [('readonly', True)]}, check_company=True)
-    scrap_qty = fields.Float('Quantity', default=1.0, required=True, states={'done': [('readonly', True)]})
+    scrap_qty = fields.Float('Quantity', default=1.0, required=True, states={'done': [('readonly', True)]}, digits='Product Unit of Measure')
     state = fields.Selection([
         ('draft', 'Draft'),
         ('done', 'Done')],
@@ -103,9 +103,6 @@ class StockScrap(models.Model):
 
     def _prepare_move_values(self):
         self.ensure_one()
-        location_id = self.location_id.id
-        if self.picking_id and self.picking_id.picking_type_code == 'incoming':
-            location_id = self.picking_id.location_dest_id.id
         return {
             'name': self.name,
             'origin': self.origin or self.picking_id.name or self.name,
@@ -114,13 +111,13 @@ class StockScrap(models.Model):
             'product_uom': self.product_uom_id.id,
             'state': 'draft',
             'product_uom_qty': self.scrap_qty,
-            'location_id': location_id,
+            'location_id': self.location_id.id,
             'scrapped': True,
             'location_dest_id': self.scrap_location_id.id,
             'move_line_ids': [(0, 0, {'product_id': self.product_id.id,
                                            'product_uom_id': self.product_uom_id.id, 
                                            'qty_done': self.scrap_qty,
-                                           'location_id': location_id,
+                                           'location_id': self.location_id.id,
                                            'location_dest_id': self.scrap_location_id.id,
                                            'package_id': self.package_id.id, 
                                            'owner_id': self.owner_id.id,
@@ -155,11 +152,8 @@ class StockScrap(models.Model):
         if self.product_id.type != 'product':
             return self.do_scrap()
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-        location_id = self.location_id
-        if self.picking_id and self.picking_id.picking_type_code == 'incoming':
-            location_id = self.picking_id.location_dest_id
         available_qty = sum(self.env['stock.quant']._gather(self.product_id,
-                                                            location_id,
+                                                            self.location_id,
                                                             self.lot_id,
                                                             self.package_id,
                                                             self.owner_id,

@@ -45,10 +45,10 @@ class Web_Editor(http.Controller):
             :returns PNG image converted from given font
         """
         # Make sure we have at least size=1
-        size = max(1, size)
+        size = max(1, min(size, 512))
         # Initialize font
-        addons_path = http.addons_manifest['web']['addons_path']
-        font_obj = ImageFont.truetype(addons_path + font, size)
+        with tools.file_open(font.lstrip('/'), 'rb') as f:
+            font_obj = ImageFont.truetype(f, size)
 
         # if received character is not a number, keep old behaviour (icon is character)
         icon = chr(int(icon)) if icon.isdigit() else icon
@@ -242,6 +242,10 @@ class Web_Editor(http.Controller):
 
     def _attachment_create(self, name='', data=False, url=False, res_id=False, res_model='ir.ui.view'):
         """Create and return a new attachment."""
+        if name.lower().endswith('.bmp'):
+            # Avoid mismatch between content type and mimetype, see commit msg
+            name = name[:-4]
+
         if not name and url:
             name = url.split("/").pop()
 
@@ -471,10 +475,14 @@ class Web_Editor(http.Controller):
         values = len_args > 1 and args[1] or {}
 
         View = request.env['ir.ui.view']
-        if request.env.user._is_public() \
-                and xmlid in request.env['web_editor.assets']._get_public_asset_xmlids():
-            View = View.sudo()
-        return View._render_template(xmlid, {k: values[k] for k in values if k in trusted_value_keys})
+        if xmlid in request.env['web_editor.assets']._get_public_asset_xmlids():
+            # For white listed assets, bypass access verification
+            # TODO in master this part should be removed and simply use the
+            # public group on the related views instead. And then let the normal
+            # flow handle the rendering.
+            return View.sudo()._render_template(xmlid, {k: values[k] for k in values if k in trusted_value_keys})
+        # Otherwise use normal flow
+        return View.render_public_asset(xmlid, {k: values[k] for k in values if k in trusted_value_keys})
 
     @http.route('/web_editor/modify_image/<model("ir.attachment"):attachment>', type="json", auth="user", website=True)
     def modify_image(self, attachment, res_model=None, res_id=None, name=None, data=None, original_id=None):

@@ -81,6 +81,7 @@ class Event(models.Model):
         elif self.env.user._is_public():
             events = self.env['event.registration'].sudo().search([
                 ('event_id', 'in', self.ids),
+                ('state', '!=', 'cancel'),
                 ('visitor_id', '=', current_visitor.id),
             ]).event_id
         else:
@@ -95,7 +96,7 @@ class Event(models.Model):
             events = self.env['event.registration'].sudo().search(
                 expression.AND([
                     domain,
-                    [('event_id', 'in', self.ids)]
+                    ['&', ('event_id', 'in', self.ids), ('state', '!=', 'cancel')]
                 ])
             ).event_id
 

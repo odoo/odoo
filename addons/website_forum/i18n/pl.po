@@ -7,9 +7,9 @@
 # Mariusz, 2020
 # Karol Rybak <karolrybak85@gmail.com>, 2020
 # Ludwik Trammer <ludwik@gmail.com>, 2020
+# Andrzej Donczew <a.donczew@hadron.eu.com>, 2020
 # Wiktor Kaźmierczak <wik92tor@wp.pl>, 2020
 # Tomasz Leppich <t.leppich@gmail.com>, 2020
-# Andrzej Donczew <a.donczew@hadron.eu.com>, 2020
 # Radosław Biegalski <radoslaw.biegalski@openglobe.pl>, 2020
 # Natalia Gros <nag@odoo.com>, 2020
 # Martin Trigaux, 2020
@@ -22,15 +22,18 @@
 # Marcin Młynarczyk <mlynarczyk@gmail.com>, 2020
 # Piotr Cierkosz <piotr.w.cierkosz@gmail.com>, 2020
 # Paweł Wodyński <pw@myodoo.pl>, 2020
-# Maksym <ms@myodoo.pl>, 2020
+# Piotr Strębski <strebski@gmail.com>, 2021
+# Wojciech Warczakowski <w.warczakowski@gmail.com>, 2021
+# Maksym <ms@myodoo.pl>, 2021
+# Dawid Prus, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-29 15:48+0000\n"
+"POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:21+0000\n"
-"Last-Translator: Maksym <ms@myodoo.pl>, 2020\n"
+"Last-Translator: Dawid Prus, 2021\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -454,7 +457,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar
 msgid "<i class=\"fa fa-check-square-o fa-fw\"/> To Validate"
-msgstr ""
+msgstr "<i class=\"fa fa-check-square-o fa-fw\"/> Do zweryfikowania"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
@@ -582,6 +585,11 @@ msgstr ""
 "                </small>"
 
 #. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "<span aria-label=\"Close\">×</span>"
+msgstr "<span aria-label=\"Zamknij\">×</span>"
+
+#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "<span class=\"badge badge-info\">Closed</span>"
 msgstr ""
@@ -657,11 +665,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_forum.close_post
 msgid "<span class=\"text-muted mx-3\">or</span>"
 msgstr ""
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
-msgid "<span>&amp;times;</span>"
-msgstr "<span>&amp;times;</span>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
@@ -761,6 +764,7 @@ msgstr ""
 "propagowanie treści forum na portalach społecznościowych."
 
 #. module: website_forum
+#. openerp-web
 #: code:addons/website_forum/controllers/main.py:0
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 #, python-format
@@ -1367,14 +1371,14 @@ msgstr "Utworzono tag używany przez 15 pytań"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote__create_uid
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__create_uid
 msgid "Created by"
-msgstr "Utworzona przez"
+msgstr "Utworzył(a)"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__create_date
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_reason__create_date
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__create_date
 msgid "Created on"
-msgstr "Utworzono"
+msgstr "Data utworzenia"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_4
@@ -2920,7 +2924,7 @@ msgstr "Błąd dostarczenia wiadomości SMS"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
 msgid "Save Changes"
-msgstr ""
+msgstr "Zapisz zmiany"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_26
@@ -2990,7 +2994,7 @@ msgstr "Samouk"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__seo_name
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__seo_name
 msgid "Seo name"
-msgstr ""
+msgstr "Nazwa SEO"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__sequence
@@ -3026,7 +3030,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Sign in"
-msgstr "Wejście"
+msgstr "Zaloguj się"
 
 #. module: website_forum
 #. openerp-web

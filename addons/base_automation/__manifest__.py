@@ -21,4 +21,5 @@ trigger an automatic reminder email.
         'data/base_automation_data.xml',
         'views/base_automation_view.xml',
     ],
+    'license': 'LGPL-3',
 }

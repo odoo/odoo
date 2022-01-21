@@ -60,7 +60,8 @@
                                     <span role="separator">View</span>
                                 </div>
                                 <div>
-                                    <a role="menuitem" type="object" name="open_action_with_context" context="{'action_name': 'action_bank_statement_tree', 'search_default_journal': True}">Statements</a>
+                                    <a t-if="journal_type == 'bank'" role="menuitem" type="object" name="open_action_with_context" context="{'action_name': 'action_bank_statement_tree', 'search_default_journal': True}">Statements</a>
+                                    <a t-if="journal_type == 'cash'" role="menuitem" type="object" name="open_action_with_context" context="{'action_name': 'action_view_bank_statement_tree', 'search_default_journal': True}">Statements</a>
                                 </div>
                                 <div>
                                     <a role="menuitem" type="object" name="open_action_with_context" context="{'action_name': 'action_bank_statement_line', 'search_default_journal': True}">Operations</a>

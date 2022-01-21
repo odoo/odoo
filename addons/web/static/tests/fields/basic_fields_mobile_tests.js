@@ -173,6 +173,55 @@ QUnit.module('basic_fields', {
 
         form.destroy();
     });
+
+    QUnit.module('FieldDateRange');
+
+    QUnit.test('date field: toggle daterangepicker then scroll', async function (assert) {
+        assert.expect(4);
+        const scrollEvent = new UIEvent('scroll');
+
+        function scrollAtHeight(height) {
+            window.scrollTo(0, height);
+            document.dispatchEvent(scrollEvent);
+        }
+        this.data.partner.fields.date_end = {string: 'Date End', type: 'date'};
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<field name="date" widget="daterange" options="{\'related_end_date\': \'date_end\'}"/>' +
+                    '<field name="date_end" widget="daterange" options="{\'related_start_date\': \'date\'}"/>' +
+                '</form>',
+            session: {
+                getTZOffset: function () {
+                    return 330;
+                },
+            },
+        });
+
+        // Check date range picker initialization
+        assert.containsN(document.body, '.daterangepicker', 2,
+            "should initialize 2 date range picker");
+
+        // Open date range picker
+        await testUtils.dom.click("input[name=date]");
+        assert.isVisible($('.daterangepicker:first'),
+            "date range picker should be opened");
+
+        // Scroll
+        scrollAtHeight(50);
+        assert.isVisible($('.daterangepicker:first'),
+            "date range picker should be opened");
+
+        // Close picker
+        await testUtils.dom.click($('.daterangepicker:first .cancelBtn'));
+        assert.isNotVisible($('.daterangepicker:first'),
+            "date range picker should be closed");
+
+        form.destroy();
+    });
 });
 });
 });

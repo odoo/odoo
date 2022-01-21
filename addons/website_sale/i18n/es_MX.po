@@ -1,0 +1,3597 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* website_sale
+# 
+# Translators:
+# Cécile Collart <cco@odoo.com>, 2021
+# Braulio D. López Vázquez <bdl@odoo.com>, 2021
+# Lucia Pacheco <lpo@odoo.com>, 2021
+# Jose Carmona <jrcarmona@gmail.com>, 2021
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 14.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-11-16 13:33+0000\n"
+"PO-Revision-Date: 2020-09-07 08:22+0000\n"
+"Last-Translator: Jose Carmona <jrcarmona@gmail.com>, 2021\n"
+"Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: es_MX\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard___data_fetched
+msgid " Data Fetched"
+msgstr " Datos obtenidos"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.products
+msgid "\" category."
+msgstr "\" categoría."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.option_collapse_categories_recursive
+msgid "#{'Unfold' if c.id in category.parents_and_self.ids else 'Fold'}"
+msgstr "#{'Unfold' if c.id in category.parents_and_self.ids else 'Fold'}"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
+#: model_terms:ir.ui.view,arch_db:website_sale.payment
+msgid "&amp; Shipping"
+msgstr "y envío"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.searchbar_input_snippet_options
+msgid ", .s_wsale_products_searchbar_input"
+msgstr ", .s_wsale_products_searchbar_input"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.checkout
+msgid "/shop/checkout"
+msgstr "/shop/checkout"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.extra_info
+msgid "/shop/extra_info"
+msgstr "/shop/extra_info"
+
+#. module: website_sale
+#: model:product.template.attribute.value,name:website_sale.product_1_attribute_3_value_1
+msgid "1 year"
+msgstr "1 año"
+
+#. module: website_sale
+#: model:product.template.attribute.value,name:website_sale.product_1_attribute_3_value_2
+msgid "2 year"
+msgstr "2 años"
+
+#. module: website_sale
+#: model:mail.template,body_html:website_sale.mail_template_sale_cart_recovery
+msgid ""
+"<?xml version=\"1.0\"?>\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    % set company = object.company_id or object.user_id.company_id or user.company_id\n"
+"                    <span style=\"font-size: 10px;\">Your Cart</span><br/>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
+"                        ${object.name}\n"
+"                    </span>\n"
+"                </td><td valign=\"middle\" align=\"right\">\n"
+"                    <img src=\"/logo.png?company=${company.id}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${company.name}\"/>\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                    <h1 style=\"color:#A9A9A9;\">THERE'S SOMETHING IN YOUR CART.</h1>\n"
+"                    Would you like to complete your purchase?<br/><br/>\n"
+"                    % if object.order_line:\n"
+"                        % for line in object.website_order_line:\n"
+"                            <hr/>\n"
+"                            <table width=\"100%\">\n"
+"                                <tr>\n"
+"                                    <td style=\"padding: 10px; width:150px;\">\n"
+"                                        <img src=\"/web/image/product.product/${line.product_id.id}/image_128\" style=\"width: 100px; height: 100px; object-fit: contain;\" alt=\"Product image\"/>\n"
+"                                    </td>\n"
+"                                    <td>\n"
+"                                        <strong>${line.product_id.display_name}</strong><br/>${line.name}\n"
+"                                    </td>\n"
+"                                    <td width=\"100px\" align=\"right\">\n"
+"                                        ${(line.product_uom_qty) | int} ${(line.product_uom.name)}\n"
+"                                    </td>\n"
+"                                </tr>\n"
+"                            </table>\n"
+"                        % endfor\n"
+"                        <hr/>\n"
+"                    % endif\n"
+"                    <div style=\"text-align: center; margin: 16px 0px 16px 0px; font-size: 14px;\">\n"
+"                        <a href=\"${object.get_base_url()}/shop/cart?access_token=${object.access_token}\" target=\"_blank\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                            Resume order\n"
+"                        </a>\n"
+"                    </div>\n"
+"                    <div style=\"text-align: center;\"><strong>Thank you for shopping with ${company.name}!</strong></div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- FOOTER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\" align=\"left\">\n"
+"                    ${company.name}\n"
+"                </td></tr>\n"
+"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
+"                    ${company.phone}\n"
+"                    % if company.email\n"
+"                        | <a href=\"'mailto:%s' % ${company.email}\" style=\"text-decoration:none; color: #454748;\">${company.email}</a>\n"
+"                    % endif\n"
+"                    % if company.website\n"
+"                        | <a href=\"'%s' % ${company.website}\" style=\"text-decoration:none; color: #454748;\">${company.website}</a>\n"
+"                    % endif\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- POWERED BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
+"        Powered by <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=website\" style=\"color: #875A7B;\">Odoo</a>\n"
+"      </td></tr>\n"
+"    </table>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
+msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- ENCABEZADO -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    % set company = object.company_id or object.user_id.company_id or user.company_id\n"
+"                    <span style=\"font-size: 10px;\">Su carrito</span><br/>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
+"                        ${object.name}\n"
+"                    </span>\n"
+"                </td><td valign=\"middle\" align=\"right\">\n"
+"                    <img src=\"/logo.png?company=${company.id}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${company.name}\"/>\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- CONTENIDO -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                    <h1 style=\"color:#A9A9A9;\">CUENTA CON ARTÍCULOS EN SU CARRITO.</h1>\n"
+"                    ¿Desea finalizar su compra?<br/><br/>\n"
+"                    % if object.order_line:\n"
+"                        % for line in object.website_order_line:\n"
+"                            <hr/>\n"
+"                            <table width=\"100%\">\n"
+"                                <tr>\n"
+"                                    <td style=\"padding: 10px; width:150px;\">\n"
+"                                        <img src=\"/web/image/product.product/${line.product_id.id}/image_128\" style=\"width: 100px; height: 100px; object-fit: contain;\" alt=\"Product image\"/>\n"
+"                                    </td>\n"
+"                                    <td>\n"
+"                                        <strong>${line.product_id.display_name}</strong><br/>${line.name}\n"
+"                                    </td>\n"
+"                                    <td width=\"100px\" align=\"right\">\n"
+"                                        ${(line.product_uom_qty) | int} ${(line.product_uom.name)}\n"
+"                                    </td>\n"
+"                                </tr>\n"
+"                            </table>\n"
+"                        % endfor\n"
+"                        <hr/>\n"
+"                    % endif\n"
+"                    <div style=\"text-align: center; margin: 16px 0px 16px 0px; font-size: 14px;\">\n"
+"                        <a href=\"${object.get_base_url()}/shop/cart?access_token=${object.access_token}\" target=\"_blank\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                            Continuar con la orden\n"
+"                        </a>\n"
+"                    </div>\n"
+"                    <div style=\"text-align: center;\"><strong>Gracias por comprar en ${company.name}</strong></div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- PIE DE PÁGINA -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\" align=\"left\">\n"
+"                    ${company.name}\n"
+"                </td></tr>\n"
+"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
+"                    ${company.phone}\n"
+"                    % if company.email\n"
+"                        | <a href=\"'mailto:%s' % ${company.email}\" style=\"text-decoration:none; color: #454748;\">${company.email}</a>\n"
+"                    % endif\n"
+"                    % if company.website\n"
+"                        | <a href=\"'%s' % ${company.website}\" style=\"text-decoration:none; color: #454748;\">${company.website}</a>\n"
+"                    % endif\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- CON TECNOLOGÍA DE -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
+"        Con tecnología de <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=website\" style=\"color: #875A7B;\">Odoo</a>\n"
+"      </td></tr>\n"
+"    </table>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
+msgid "<b>Communication: </b>"
+msgstr "<b>Comunicación: </b>"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
+#: model_terms:ir.ui.view,arch_db:website_sale.payment
+msgid "<b>Shipping: </b>"
+msgstr "<b>Envío:</b>"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart_summary
+msgid "<b>Your order: </b>"
+msgstr "<b>Su orden: </b>"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product_custom_text
+msgid ""
+"<br/>\n"
+"                30-day money-back guarantee<br/>\n"
+"                Shipping: 2-3 Business Days"
+msgstr ""
+"<br/>\n"
+"                Garantía de devolución de 30 días<br/>\n"
+"                Envío: 2-3 días laborales"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.payment
+msgid "<i class=\"fa fa-arrow-right\"/> Add payment acquirers"
+msgstr "<i class=\"fa fa-arrow-right\"/> Añadir métodos de pago"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product_buy_now
+msgid "<i class=\"fa fa-bolt\"/> Buy Now"
+msgstr "<i class=\"fa fa-bolt\"/>Comprar ahora"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address_kanban
+msgid "<i class=\"fa fa-check\"/> Ship to this address"
+msgstr "<i class=\"fa fa-check\"/> Enviar a esta dirección"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid ""
+"<i class=\"fa fa-chevron-left\"/>\n"
+"                                            <span>Back</span>"
+msgstr ""
+"<i class=\"fa fa-chevron-left\"/>\n"
+"                                            <span>Atrás</span>"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.checkout
+msgid ""
+"<i class=\"fa fa-chevron-left\"/>\n"
+"                                    <span>Return to Cart</span>"
+msgstr ""
+"<i class=\"fa fa-chevron-left\"/>\n"
+"<span>Volver al Carrito</span>"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.payment
+msgid "<i class=\"fa fa-edit\"/> Edit"
+msgstr "<i class=\"fa fa-edit\"/> Editar"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.checkout
+msgid ""
+"<i class=\"fa fa-plus-square\"/>\n"
+"                                                        <span>Add an address</span>"
+msgstr ""
+"<i class=\"fa fa-plus-square\"/>\n"
+"                                                        <span>Agregar una dirección</span>"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
+msgid "<i class=\"fa fa-print\"/> Print"
+msgstr "<i class=\"fa fa-print\"/> Imprimir"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product
+msgid "<i class=\"fa fa-shopping-cart\"/> Add to Cart"
+msgstr "<i class=\"fa fa-shopping-cart\"/> Agregar al carrito"
+
+#. module: website_sale
+#: code:addons/website_sale/models/crm_team.py:0
+#, python-format
+msgid ""
+"<p class=\"o_view_nocontent_smiling_face\">\n"
+"                        You can find all abandoned carts here, i.e. the carts generated by your website's visitors from over an hour ago that haven't been confirmed yet.</p>\n"
+"                        <p>You should send an email to the customers to encourage them!</p>\n"
+"                    "
+msgstr ""
+"<p class=\"o_view_nocontent_smiling_face\">\n"
+"                        Aquí puede encontrar todos los carritos abandonados, es decir, los carritos generados por los visitantes de su sitio web desde hace más de una hora y que aún no se han confirmado.</p>\n"
+"                        <p>Debería enviar un correo electrónico a los clientes para alentarlos.</p>\n"
+"                    "
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.terms
+msgid ""
+"<small class=\"text-muted float-right\">Source: "
+"https://termsfeed.com/blog/sample-terms-and-conditions-template</small>"
+msgstr ""
+"<small class=\"text-muted float-right\">Fuente: "
+"https://termsfeed.com/blog/sample-terms-and-conditions-template</small>"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart
+msgid ""
+"<span class=\"\">Process Checkout</span>\n"
+"                                        <span class=\"fa fa-chevron-right\"/>"
+msgstr ""
+"<span class=\"\">Pagar ahora</span>\n"
+"                                        <span class=\"fa fa-chevron-right\"/>"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart
+msgid ""
+"<span class=\"\">Process Checkout</span>\n"
+"                                    <span class=\"fa fa-chevron-right\"/>"
+msgstr ""
+"<span class=\"\">Pagar ahora</span>\n"
+"                                    <span class=\"fa fa-chevron-right\"/>"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart_summary
+msgid ""
+"<span class=\"fa fa-chevron-down fa-border float-right\" role=\"img\" aria-"
+"label=\"Details\" title=\"Details\"/>"
+msgstr ""
+"<span class=\"fa fa-chevron-down fa-border float-right\" role=\"img\" aria-"
+"label=\"Detalles\" title=\"Detalles\"/>"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.shop_product_carousel
+msgid ""
+"<span class=\"fa fa-chevron-left p-2\" role=\"img\" aria-label=\"Previous\" "
+"title=\"Previous\"/>"
+msgstr ""
+"<span class=\"fa fa-chevron-left p-2\" role=\"img\" aria-label=\"Anterior\" "
+"title=\"Anterior\"/>"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart
+msgid ""
+"<span class=\"fa fa-chevron-left\"/>\n"
+"                                        <span class=\"\">Continue Shopping</span>"
+msgstr ""
+"<span class=\"fa fa-chevron-left\"/>\n"
+"                                        <span class=\"\">Seguir comprando</span>"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart
+msgid ""
+"<span class=\"fa fa-chevron-left\"/>\n"
+"                                    Continue<span class=\"d-none d-md-inline\"> Shopping</span>"
+msgstr ""
+"<span class=\"fa fa-chevron-left\"/>\n"
+"                                    Seguir<span class=\"d-none d-md-inline\"> comprando</span>"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.extra_info
+msgid "<span class=\"fa fa-chevron-left\"/> Previous"
+msgstr "<span class=\"fa fa-chevron-left\"/> Anterior"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.shop_product_carousel
+msgid ""
+"<span class=\"fa fa-chevron-right p-2\" role=\"img\" aria-label=\"Next\" "
+"title=\"Next\"/>"
+msgstr ""
+"<span class=\"fa fa-chevron-right p-2\" role=\"img\" aria-"
+"label=\"Siguiente\" title=\"Siguiente\"/>"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid ""
+"<span class=\"o_form_label\">Abandoned Carts</span>\n"
+"                            <span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-specific.\" groups=\"website.group_multi_website\"/>"
+msgstr ""
+"<span class=\"o_form_label\">Carritos abandonados</span>\n"
+"                            <span class=\"fa fa-lg fa-globe\" title=\"Los valores establecidos aquí son específicos del sitio web.\" groups=\"website.group_multi_website\"/>"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid ""
+"<span class=\"o_form_label\">Assignment</span>\n"
+"                            <span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-specific.\" groups=\"website.group_multi_website\"/>"
+msgstr ""
+"<span class=\"o_form_label\">Asignación</span>\n"
+"                            <span class=\"fa fa-lg fa-globe\" title=\"Los valores establecidos aquí son específicos del sitio web.\" groups=\"website.group_multi_website\"/>"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "<span class=\"o_form_label\">Confirmation Email</span>"
+msgstr "<span class=\"o_form_label\">Correo electrónico de confirmación</span>"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "<span class=\"o_form_label\">Invoicing Policy</span>"
+msgstr "<span class=\"o_form_label\">Política de facturación</span>"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.extra_info
+msgid "<span class=\"s_website_form_label_content\">A document to provide</span>"
+msgstr ""
+"<span class=\"s_website_form_label_content\">Un documento que "
+"proporciona</span>"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.extra_info
+msgid "<span class=\"s_website_form_label_content\">Give us your feedback</span>"
+msgstr "<span class=\"s_website_form_label_content\">Denos su opinión</span>"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.extra_info
+msgid "<span class=\"s_website_form_label_content\">Your Reference</span>"
+msgstr "<span class=\"s_website_form_label_content\">Su referencia</span>"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.checkout
+msgid ""
+"<span>Confirm</span>\n"
+"                                    <i class=\"fa fa-chevron-right\"/>"
+msgstr ""
+"<span>Confirmar</span>\n"
+"                                    <i class=\"fa fa-chevron-right\"/>"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
+msgid "<span>Confirmed</span>"
+msgstr "<span>Confirmado</span>"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid ""
+"<span>Next</span>\n"
+"                                            <i class=\"fa fa-chevron-right\"/>"
+msgstr ""
+"<span>Siguiente</span>\n"
+"                                            <i class=\"fa fa-chevron-right\"/>"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
+msgid "<span>Order</span>"
+msgstr "<span>Orden</span>"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.short_cart_summary
+msgid "<span>Process Checkout</span>"
+msgstr "<span>Pagar ahora</span>"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
+msgid "<span>Video Preview</span>"
+msgstr "<span>Vista previa en video</span>"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
+msgid "<span>Your payment has been authorized.</span>"
+msgstr "<span>Su pago ha sido autorizado.</span>"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.suggested_products_list
+msgid "<strong>Add to Cart</strong>"
+msgstr "<strong>Añadir al carrito</strong>"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
+msgid "<strong>Payment Information:</strong>"
+msgstr "<strong>Información del pago:</strong>"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
+#: model_terms:ir.ui.view,arch_db:website_sale.total
+msgid "<strong>Total:</strong>"
+msgstr "<strong>Total:</strong>"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.terms
+msgid ""
+"A <b>Governing Law</b> will inform users which laws govern the agreement. "
+"This should the country in which your company is headquartered or the "
+"country from which you operate your web site and mobile app."
+msgstr ""
+"La <b>ley vigente</b> informará a los usuarios sobre qué leyes rigen el "
+"acuerdo. Debe ser el país en el que su empresa tiene su oficina central o el"
+" país desde el que opera su sitio web y su aplicación móvil."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.terms
+msgid ""
+"A <b>Limit What Users Can Do</b> clause can inform users that by agreeing to"
+" use your service, they’re also agreeing to not do certain things. This can "
+"be part of a very long and thorough list in your Terms and Conditions "
+"agreements so as to encompass the most amount of negative uses."
+msgstr ""
+"Una <b>cláusula de limitación para los usuarios</b> puede indicar a los "
+"usuarios que, al aceptar el uso de su servicio, también se comprometen a no "
+"hacer ciertas cosas. Esto puede formar parte de una lista muy larga y "
+"exhaustiva en sus acuerdos de términos y condiciones para incluir la mayor "
+"cantidad de prácticas negativas."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.terms
+msgid ""
+"A <b>Links To Other Web Sites</b> clause will inform users that you are not "
+"responsible for any third party web sites that you link to. This kind of "
+"clause will generally inform users that they are responsible for reading and"
+" agreeing (or disagreeing) with the Terms and Conditions or Privacy Policies"
+" of these third parties."
+msgstr ""
+"Una cláusula de <b>enlaces a otros sitios web</b> informará a los usuarios "
+"que usted no es responsable de los sitios web de terceros a los que enlaza. "
+"Este tipo de cláusula generalmente informará a los usuarios que ellos son "
+"responsables de leer y acordar (o no estar de acuerdo) con los Términos y "
+"Condiciones o las Políticas de Privacidad de estos terceros."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.terms
+msgid ""
+"A <b>Termination</b> clause will inform that users’ accounts on your website"
+" and mobile app or users’ access to your website and mobile (if users can’t "
+"have an account with you) can be terminated in case of abuses or at your "
+"sole discretion."
+msgstr ""
+"Una cláusula de <b>terminación</b> informará que las cuentas de los usuarios"
+" o su acceso al sitio web y a la aplicación móvil (si los usuarios no pueden"
+" crear una cuenta con usted) se pueden cancelar en caso de mal uso o según "
+"su criterio."
+
+#. module: website_sale
+#: model_terms:ir.actions.act_window,help:website_sale.product_template_action_website
+msgid ""
+"A product can be either a physical product or a service that you sell to "
+"your customers."
+msgstr ""
+"Un producto puede ser un producto físico o un servicio que le ofrece a sus "
+"clientes. "
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product
+msgid "A short description that will also appear on documents."
+msgstr "Una descripción corta que aparecerá también en documentos."
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#, python-format
+msgid "AT A GLANCE"
+msgstr "A SIMPLE VISTA"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
+msgid "Abandoned"
+msgstr "Abandonado"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_sale_order__is_abandoned_cart
+msgid "Abandoned Cart"
+msgstr "Carrito abandonado"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/models/crm_team.py:0
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#: model:ir.actions.act_window,name:website_sale.action_view_abandoned_tree
+#: model:ir.ui.menu,name:website_sale.menu_orders_abandoned_orders
+#, python-format
+msgid "Abandoned Carts"
+msgstr "Carritos abandonados"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.crm_team_salesteams_view_kanban_inherit_website_sale
+msgid "Abandoned Carts to Recover"
+msgstr "Carritos abandonados a recuperar"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__cart_abandoned_delay
+#: model:ir.model.fields,field_description:website_sale.field_website__cart_abandoned_delay
+msgid "Abandoned Delay"
+msgstr "Tiempo de abandono"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid ""
+"Abandoned carts are all carts left unconfirmed by website visitors. You can "
+"find them in *Website > Orders > Abandoned Carts*. From there you can send "
+"recovery emails to visitors who entered their contact details."
+msgstr ""
+"Los carritos abandonados son todos los carritos que los visitantes del sitio"
+" web dejan sin confirmar. Puede encontrarlos en *Sitio web > Órdenes > "
+"Carritos abandonados*. Puede enviar correos electrónicos de recuperación a "
+"los visitantes que hayan introducido sus datos de contacto."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product_image_view_kanban
+msgid "Acceptable file size"
+msgstr "Tamaño de archivo aceptable"
+
+#. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_product_product__accessory_product_ids
+#: model:ir.model.fields,help:website_sale.field_product_template__accessory_product_ids
+msgid ""
+"Accessories show up when the customer reviews the cart before payment "
+"(cross-sell strategy)."
+msgstr ""
+"Los accesorios aparecerán cuando el cliente revise el carrito antes de pagar"
+" (estrategia de venta cruzada)."
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_product__accessory_product_ids
+#: model:ir.model.fields,field_description:website_sale.field_product_template__accessory_product_ids
+msgid "Accessory Products"
+msgstr "Productos de accesorio"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__acc_number
+msgid "Account Number"
+msgstr "Número de cuenta"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
+#: model_terms:ir.ui.view,arch_db:website_sale.product_quantity
+msgid "Add one"
+msgstr "Agregue uno"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale_recently_viewed.xml:0
+#, python-format
+msgid "Add to Cart"
+msgstr "Añadir al carrito"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.wizard_checkout
+msgid "Address"
+msgstr "Dirección"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.products_categories
+msgid "All Products"
+msgstr "Todos los productos"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website__all_pricelist_ids
+msgid "All pricelists"
+msgstr "Todas las listas de precios"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale_utils.xml:0
+#, python-format
+msgid "All results"
+msgstr "Todos los resultados"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Allow shoppers to compare products based on their attributes"
+msgstr ""
+"Permitir que los compradores comparen productos en función de sus atributos"
+
+#. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_product_pricelist__selectable
+msgid "Allow the end user to choose this price list"
+msgstr "Permitir que el usuario escoja esta lista de precios"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_product__alternative_product_ids
+#: model:ir.model.fields,field_description:website_sale.field_product_template__alternative_product_ids
+msgid "Alternative Products"
+msgstr "Productos alternos"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.recommended_products
+msgid "Alternative Products:"
+msgstr "Productos alternos:"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_crm_team__abandoned_carts_amount
+msgid "Amount of Abandoned Carts"
+msgstr "Cantidad de carritos abandonados"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.coupon_form
+msgid "Apply"
+msgstr "Aplicar"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid ""
+"Apply manual discounts on sales order lines or display discounts computed "
+"from pricelists (option to activate in the pricelist configuration)."
+msgstr ""
+"Aplique descuentos de forma manual en las líneas de las órdenes de venta o "
+"muestre los descuentos calculados desde la lista de precios (se activa la "
+"opción en la configuración de la lista)."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Apply specific prices per country, discounts, etc."
+msgstr "Aplicar precios específicos por país, descuentos, etc"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Assignment of online orders"
+msgstr "Asignación de órdenes en línea"
+
+#. module: website_sale
+#: model:ir.ui.menu,name:website_sale.menu_product_attribute_action
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Attributes"
+msgstr "Atributos"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#, python-format
+msgid "Average Order"
+msgstr "Orden promedio"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__journal_name
+msgid "Bank Name"
+msgstr "Nombre del banco"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "Be aware!"
+msgstr "¡Esté atento!"
+
+#. module: website_sale
+#: model:res.country.group,name:website_sale.benelux
+msgid "BeNeLux"
+msgstr "BeNeLux"
+
+#. module: website_sale
+#: model:product.pricelist,name:website_sale.list_benelux
+msgid "Benelux"
+msgstr "Benelux"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#, python-format
+msgid "Best Sellers"
+msgstr "Los más vendidos"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
+#: model_terms:ir.ui.view,arch_db:website_sale.payment
+msgid "Billing"
+msgstr "Facturación"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.checkout
+msgid "Billing Address"
+msgstr "Dirección de facturación"
+
+#. module: website_sale
+#: model:product.public.category,name:website_sale.public_category_bins
+msgid "Bins"
+msgstr "Contenedores"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid ""
+"Boost your sales with two kinds of discount programs: promotions and coupon "
+"codes. Specific conditions can be set (products, customers, minimum purchase"
+" amount, period). Rewards can be discounts (% or amount) or free products."
+msgstr ""
+"Aumente sus ventas con dos tipos de descuentos: promociones y códigos de "
+"cupones. Puede establecer condiciones específicas (productos, clientes, "
+"cantidad mínima de compra, periodo). Las recompensas pueden ser descuentos "
+"(% o cantidad) o productos gratis."
+
+#. module: website_sale
+#: model:product.public.category,name:website_sale.public_category_boxes
+msgid "Boxes"
+msgstr "Cajas"
+
+#. module: website_sale
+#: model:product.public.category,name:website_sale.public_category_cabinets
+msgid "Cabinets"
+msgstr "Archivadores"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#, python-format
+msgid "Campaigns"
+msgstr "Campañas"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_image__can_image_1024_be_zoomed
+msgid "Can Image 1024 be zoomed"
+msgstr "Se puede ampliar la imagen 1024"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_template__can_publish
+msgid "Can Publish"
+msgstr "Puede publicar"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#, python-format
+msgid "Capture order payments when the delivery is completed."
+msgstr "Registrar el pago de las órdenes al finalizar la entrega."
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_sale_order__cart_quantity
+msgid "Cart Quantity"
+msgstr "Cantidad en el carrito"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__cart_recovery_mail_template
+#: model:ir.model.fields,field_description:website_sale.field_website__cart_recovery_mail_template_id
+msgid "Cart Recovery Email"
+msgstr "Correo electrónico de recuperación de carrito"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Cart is abandoned after"
+msgstr "El carrito se abandonó después de"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_sale_order__cart_recovery_email_sent
+msgid "Cart recovery email already sent"
+msgstr "Ya se ha enviado el correo electrónico de recuperación del carrito"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#, python-format
+msgid "Carts"
+msgstr "Carritos"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Carts are flagged as abandoned after this delay."
+msgstr "Los carritos se marcan como abandonados después de este retraso."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.sort
+msgid "Catalog price: High to Low"
+msgstr "Precio de catálogo: Mayor a menor"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.sort
+msgid "Catalog price: Low to High"
+msgstr "Precio de catálogo: Menor a mayor"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
+msgid "Categories"
+msgstr "Categorías"
+
+#. module: website_sale
+#: model_terms:ir.actions.act_window,help:website_sale.product_public_category_action
+msgid ""
+"Categories are used to browse your products through the\n"
+"            touchscreen interface."
+msgstr ""
+"Se utilizan las categorías para explorar los productos a\n"
+"través de la interfaz táctil."
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_public_category__website_description
+msgid "Category Description"
+msgstr "Descripción de categoría"
+
+#. module: website_sale
+#: model:product.public.category,name:website_sale.public_category_furnitures_chairs
+msgid "Chairs"
+msgstr "Sillas"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_public_category__child_id
+msgid "Children Categories"
+msgstr "Categorías hijas"
+
+#. module: website_sale
+#: model:ir.actions.act_window,name:website_sale.action_open_website_sale_onboarding_payment_acquirer_wizard
+msgid "Choose a payment method"
+msgstr "Elija un método de pago"
+
+#. module: website_sale
+#: model:product.pricelist,name:website_sale.list_christmas
+msgid "Christmas"
+msgstr "Navidad"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "City"
+msgstr "Ciudad"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.products
+msgid ""
+"Click <i>'New'</i> in the top-right corner to create your first product."
+msgstr ""
+"Haga clic en <i>'nuevo'</i> en la esquina superior derecha para crear su "
+"primer producto."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart
+msgid "Click here"
+msgstr "Haga clic aquí"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
+#, python-format
+msgid "Click on <em>Continue</em> to create the product."
+msgstr "Haga clic en <em>continuar</em> para crear el producto."
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
+#, python-format
+msgid "Click on this button so your customers can see it."
+msgstr "Haga clic en este botón para que sus clientes puedan verlo."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.s_products_recently_viewed
+msgid "Close"
+msgstr "Cerrar"
+
+#. module: website_sale
+#: model:ir.model,name:website_sale.model_res_company
+msgid "Companies"
+msgstr "Empresas"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address_b2b
+msgid "Company Name"
+msgstr "Nombre de la empresa"
+
+#. module: website_sale
+#: model:product.public.category,name:website_sale.public_category_desks_components
+msgid "Components"
+msgstr "Componentes"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Compute shipping cost and ship with Easypost"
+msgstr "Calcular el gasto de envío y enviar con Easypost"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Compute shipping costs and ship with DHL"
+msgstr "Calcular los gastos de envío y enviar con DHL"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Compute shipping costs and ship with FedEx"
+msgstr "Calcular los gastos de envío y enviar con FedEx"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Compute shipping costs and ship with UPS"
+msgstr "Calcular los gastos de envío y enviar con UPS"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Compute shipping costs and ship with USPS"
+msgstr "Calcular los gastos de envío y enviar con USPS"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Compute shipping costs and ship with bpost"
+msgstr "Calcular los gastos de envío y enviar con bpost"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Compute shipping costs on orders"
+msgstr "Calcular los gastos de envío en órdenes"
+
+#. module: website_sale
+#: model:ir.model,name:website_sale.model_res_config_settings
+msgid "Config Settings"
+msgstr "Ajustes de configuración"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.wizard_checkout
+msgid "Confirm Order"
+msgstr "Confirmar orden"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.payment
+msgid "Confirm Order <span class=\"fa fa-chevron-right\"/>"
+msgstr "Confirmar orden <span class=\"fa fa-chevron-right\"/>"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#, python-format
+msgid "Confirm orders when you get paid."
+msgstr "Confirme órdenes en cuanto reciba el pago."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
+msgid "Confirmed"
+msgstr "Confirmado"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
+msgid "Confirmed Orders"
+msgstr "Órdenes confirmadas"
+
+#. module: website_sale
+#: model:ir.model,name:website_sale.model_res_partner
+msgid "Contact"
+msgstr "Contacto"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#, python-format
+msgid "Conversion"
+msgstr "Conversión"
+
+#. module: website_sale
+#: model:product.public.category,name:website_sale.public_category_furnitures_couches
+msgid "Couches"
+msgstr "Sofás"
+
+#. module: website_sale
+#: model:ir.model,name:website_sale.model_res_country
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "Country"
+msgstr "País"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "Country..."
+msgstr "País..."
+
+#. module: website_sale
+#: model_terms:ir.actions.act_window,help:website_sale.product_template_action_website
+msgid "Create a new product"
+msgstr "Crear nuevo producto"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_image__create_uid
+#: model:ir.model.fields,field_description:website_sale.field_product_public_category__create_uid
+#: model:ir.model.fields,field_description:website_sale.field_product_ribbon__create_uid
+#: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__create_uid
+#: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__create_uid
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_image__create_date
+#: model:ir.model.fields,field_description:website_sale.field_product_public_category__create_date
+#: model:ir.model.fields,field_description:website_sale.field_product_ribbon__create_date
+#: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__create_date
+#: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__create_date
+msgid "Created on"
+msgstr "Creado el"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
+msgid "Creation Date"
+msgstr "Fecha de creación"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Currencies"
+msgstr "Divisas"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
+msgid "Customer"
+msgstr "Cliente"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
+msgid "Customer Country"
+msgstr "País del cliente"
+
+#. module: website_sale
+#: model:ir.ui.menu,name:website_sale.menu_orders_customers
+msgid "Customers"
+msgstr "Clientes"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "DHL Express Connector"
+msgstr "Conector DHL Express"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website__currency_id
+msgid "Default Currency"
+msgstr "Divisa predeterminada"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website__pricelist_id
+msgid "Default Pricelist"
+msgstr "Lista de precios predeterminada"
+
+#. module: website_sale
+#: model_terms:ir.actions.act_window,help:website_sale.product_public_category_action
+msgid "Define a new category"
+msgstr "Defina una nueva categoría"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Delete"
+msgstr "Eliminar"
+
+#. module: website_sale
+#: model:ir.model.fields.selection,name:website_sale.selection__res_config_settings__sale_delivery_settings__internal
+msgid ""
+"Delivery methods are only used internally: the customer doesn't pay for "
+"shipping costs"
+msgstr ""
+"Solo se usan los métodos de envío de manera interna: el cliente no paga por "
+"costos de envío"
+
+#. module: website_sale
+#: model:ir.model.fields.selection,name:website_sale.selection__res_config_settings__sale_delivery_settings__website
+msgid ""
+"Delivery methods are selectable on the website: the customer pays for "
+"shipping costs"
+msgstr ""
+"Se pueden seleccionar los métodos de envío desde el sitio web: el cliente "
+"paga los gastos de envío"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.searchbar_input_snippet_options
+msgid "Description"
+msgstr "Descripción"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_product__website_description
+#: model:ir.model.fields,field_description:website_sale.field_product_template__website_description
+msgid "Description for the website"
+msgstr "Descripción para el sitio web"
+
+#. module: website_sale
+#: model:product.public.category,name:website_sale.public_category_desks
+msgid "Desks"
+msgstr "Escritorios"
+
+#. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_product_product__website_sequence
+#: model:ir.model.fields,help:website_sale.field_product_template__website_sequence
+msgid "Determine the display order in the Website E-commerce"
+msgstr ""
+"Determine el orden de visualización en el sitio web de comercio electrónico"
+
+#. module: website_sale
+#: model:ir.model,name:website_sale.model_digest_digest
+msgid "Digest"
+msgstr "Resumen"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_digital
+msgid "Digital Content"
+msgstr "Contenido digital"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_account_move__display_name
+#: model:ir.model.fields,field_description:website_sale.field_crm_team__display_name
+#: model:ir.model.fields,field_description:website_sale.field_digest_digest__display_name
+#: model:ir.model.fields,field_description:website_sale.field_ir_http__display_name
+#: model:ir.model.fields,field_description:website_sale.field_mail_compose_message__display_name
+#: model:ir.model.fields,field_description:website_sale.field_product_image__display_name
+#: model:ir.model.fields,field_description:website_sale.field_product_pricelist__display_name
+#: model:ir.model.fields,field_description:website_sale.field_product_product__display_name
+#: model:ir.model.fields,field_description:website_sale.field_product_public_category__display_name
+#: model:ir.model.fields,field_description:website_sale.field_product_ribbon__display_name
+#: model:ir.model.fields,field_description:website_sale.field_product_template__display_name
+#: model:ir.model.fields,field_description:website_sale.field_product_template_attribute_line__display_name
+#: model:ir.model.fields,field_description:website_sale.field_res_company__display_name
+#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:website_sale.field_res_country__display_name
+#: model:ir.model.fields,field_description:website_sale.field_res_partner__display_name
+#: model:ir.model.fields,field_description:website_sale.field_sale_order__display_name
+#: model:ir.model.fields,field_description:website_sale.field_sale_order_line__display_name
+#: model:ir.model.fields,field_description:website_sale.field_sale_report__display_name
+#: model:ir.model.fields,field_description:website_sale.field_website__display_name
+#: model:ir.model.fields,field_description:website_sale.field_website_page__display_name
+#: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__display_name
+#: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__display_name
+#: model:ir.model.fields,field_description:website_sale.field_website_snippet_filter__display_name
+#: model:ir.model.fields,field_description:website_sale.field_website_track__display_name
+#: model:ir.model.fields,field_description:website_sale.field_website_visitor__display_name
+msgid "Display Name"
+msgstr "Nombre en pantalla"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Display a prompt with optional products when adding to cart"
+msgstr "Mostrar un aviso con productos opcionales cuando se añade al carrito"
+
+#. module: website_sale
+#: code:addons/website_sale/models/digest.py:0
+#, python-format
+msgid "Do not have access, skip this data for user's digest email"
+msgstr ""
+"No tiene acceso, omita esta información para el correo electrónico del "
+"usuario"
+
+#. module: website_sale
+#: model:ir.model.fields.selection,name:website_sale.selection__res_company__website_sale_onboarding_payment_acquirer_state__done
+msgid "Done"
+msgstr "Hecho"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
+#, python-format
+msgid "Double click here to set an image describing your product."
+msgstr ""
+"Haga doble clic aquí para establecer una imagen que describa su producto."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.products
+msgid "Drag building blocks here to customize the header for \""
+msgstr ""
+"Arrastre los bloques de creación aquí para personalizar el encabezado \""
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
+#, python-format
+msgid "Drag this website block and drop it in your page."
+msgstr "Arrastre este bloque de creación y suéltelo en su página."
+
+#. module: website_sale
+#: model:product.public.category,name:website_sale.public_category_drawers
+msgid "Drawers"
+msgstr "Cajones"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website__shop_extra_field_ids
+msgid "E-Commerce Extra Fields"
+msgstr "Campos adicionales de comercio electrónico"
+
+#. module: website_sale
+#: model:ir.model,name:website_sale.model_website_sale_extra_field
+msgid "E-Commerce Extra Info Shown on product page"
+msgstr ""
+"Información adicional de comercio electrónico que se muestra en la página "
+"del producto"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_pricelist__code
+msgid "E-commerce Promotional Code"
+msgstr "Código promocional de comercio electrónico"
+
+#. module: website_sale
+#: model:product.pricelist,name:website_sale.list_europe
+msgid "EUR"
+msgstr "EUR"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Easypost"
+msgstr "Easypost"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
+msgid "Edit"
+msgstr "Editar"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
+#, python-format
+msgid "Edit the price of this product by clicking on the amount."
+msgstr "Edite el precio de este producto haciendo clic en el importe."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address_kanban
+msgid "Edit this address"
+msgstr "Editar esta dirección"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__paypal_email_account
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "Email"
+msgstr "Correo electrónico"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Email Template"
+msgstr "Plantilla de correo electrónico"
+
+#. module: website_sale
+#: model:ir.model,name:website_sale.model_mail_compose_message
+msgid "Email composition wizard"
+msgstr "Asistente de redacción de correo electrónico"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Email sent to the customer after the checkout"
+msgstr "Correo electrónico enviado al cliente al final del proceso de compra"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_image__embed_code
+msgid "Embed Code"
+msgstr "Insertar código"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
+#, python-format
+msgid "Enter a name for your new product"
+msgstr "Escriba un nombre para su nuevo producto"
+
+#. module: website_sale
+#: code:addons/website_sale/models/product.py:0
+#, python-format
+msgid "Error ! You cannot create recursive categories."
+msgstr "¡Error! No puede crear categorías recursivas."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.extra_info_option
+msgid "Extra Info"
+msgstr "Información adicional"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_product__product_template_image_ids
+#: model:ir.model.fields,field_description:website_sale.field_product_template__product_template_image_ids
+#: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
+msgid "Extra Product Media"
+msgstr "Medios adicionales para el producto"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_product__product_variant_image_ids
+msgid "Extra Variant Images"
+msgstr "Imágenes adicionales para el producto"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product_product_view_form_easy_inherit_website_sale
+msgid "Extra Variant Media"
+msgstr "Medios adicionales para la variante"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "FedEx"
+msgstr "FedEx"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__field_id
+msgid "Field"
+msgstr "Campo"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__label
+msgid "Field Label"
+msgstr "Etiqueta de campo"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__name
+msgid "Field Name"
+msgstr "Nombre de campo"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
+msgid "From Website"
+msgstr "Del sitio web"
+
+#. module: website_sale
+#: model:product.public.category,name:website_sale.public_category_furnitures
+msgid "Furnitures"
+msgstr "Muebles"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#, python-format
+msgid "Generate an invoice from orders ready for invoicing."
+msgstr "Generar una factura a partir de las órdenes listas para facturar."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid ""
+"Generate the invoice automatically when the online payment is confirmed"
+msgstr ""
+"Genera la factura automáticamente una vez que se confirma el pago en línea"
+
+#. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_product_public_category__sequence
+msgid "Gives the sequence order when displaying a list of product categories."
+msgstr ""
+"Proporciona el orden de la secuencia cuando se muestra una lista de "
+"categorías de producto."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Grant discounts on sales order lines"
+msgstr "Ofrecer descuentos en las líneas de órdenes de venta"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.add_grid_or_list_option
+msgid "Grid"
+msgstr "Tabla"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
+#: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
+msgid "Group By"
+msgstr "Agrupar por"
+
+#. module: website_sale
+#: model:ir.model,name:website_sale.model_ir_http
+msgid "HTTP Routing"
+msgstr "Ruta HTTP"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product_image_view_kanban
+msgid "Huge file size. The image should be optimized/reduced."
+msgstr "Tamaño de archivo enorme. Debe optimizar/reducir la imagen."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.payment_sale_note
+msgid "I agree to the"
+msgstr "Estoy de acuerdo con"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.reduction_code
+msgid "I have a promo code"
+msgstr "Tengo un código promocional"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_account_move__id
+#: model:ir.model.fields,field_description:website_sale.field_crm_team__id
+#: model:ir.model.fields,field_description:website_sale.field_digest_digest__id
+#: model:ir.model.fields,field_description:website_sale.field_ir_http__id
+#: model:ir.model.fields,field_description:website_sale.field_mail_compose_message__id
+#: model:ir.model.fields,field_description:website_sale.field_product_image__id
+#: model:ir.model.fields,field_description:website_sale.field_product_pricelist__id
+#: model:ir.model.fields,field_description:website_sale.field_product_product__id
+#: model:ir.model.fields,field_description:website_sale.field_product_public_category__id
+#: model:ir.model.fields,field_description:website_sale.field_product_ribbon__id
+#: model:ir.model.fields,field_description:website_sale.field_product_template__id
+#: model:ir.model.fields,field_description:website_sale.field_product_template_attribute_line__id
+#: model:ir.model.fields,field_description:website_sale.field_res_company__id
+#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__id
+#: model:ir.model.fields,field_description:website_sale.field_res_country__id
+#: model:ir.model.fields,field_description:website_sale.field_res_partner__id
+#: model:ir.model.fields,field_description:website_sale.field_sale_order__id
+#: model:ir.model.fields,field_description:website_sale.field_sale_order_line__id
+#: model:ir.model.fields,field_description:website_sale.field_sale_report__id
+#: model:ir.model.fields,field_description:website_sale.field_website__id
+#: model:ir.model.fields,field_description:website_sale.field_website_page__id
+#: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__id
+#: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__id
+#: model:ir.model.fields,field_description:website_sale.field_website_snippet_filter__id
+#: model:ir.model.fields,field_description:website_sale.field_website_track__id
+#: model:ir.model.fields,field_description:website_sale.field_website_visitor__id
+msgid "ID"
+msgstr "ID"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.terms
+msgid ""
+"If your website or mobile apps allows users to create content and make that "
+"content public to other users, a <b>Content</b> section will inform users "
+"that they own the rights to the content they have created.<br/>The “Content”"
+" clause usually mentions that users must give you (the website or mobile app"
+" developer) a license so that you can share this content on your "
+"website/mobile app and to make it available to other users.<br/>Because the "
+"content created by users is public to other users, a DMCA notice clause (or "
+"Copyright Infringement ) section is helpful to inform users and copyright "
+"authors that, if any content is found to be a copyright infringement, you "
+"will respond to any DMCA take down notices received and you will take down "
+"the content."
+msgstr ""
+"Si su sitio web o aplicaciones móviles permiten que los usuarios creen "
+"contenido y lo hagan público a otros usuarios, la sección <b>Contenido</b> "
+"informará a los usuarios que poseen los derechos sobre el contenido que han "
+"creado.<br/>La cláusula \"Contenido\" suele mencionar que los usuarios deben"
+" otorgarle (al sitio web o desarrollador de aplicaciones) una licencia para "
+"que pueda compartir este contenido en su sitio web / aplicación y ponerlo a "
+"disposición de otros usuarios.<br/>Debido a que el contenido creado por los "
+"usuarios es público para otros usuarios, es recomendable contar con una "
+"sección de notificación de DMCA (Ley de derechos de autor de la era digital,"
+" por sus siglas en inglés) para informar a los usuarios y autores acerca de "
+"los derechos de autor que, si se descubre que algún contenido infringe los "
+"derechos de autor, usted responderá a los avisos de eliminación de la DMCA "
+"que reciba y eliminará el contenido."
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_image__image_1920
+#: model:ir.model.fields,field_description:website_sale.field_product_public_category__image_1920
+#: model_terms:ir.ui.view,arch_db:website_sale.searchbar_input_snippet_options
+msgid "Image"
+msgstr "Imagen"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_image__image_1024
+#: model:ir.model.fields,field_description:website_sale.field_product_public_category__image_1024
+msgid "Image 1024"
+msgstr "Imagen 1024"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_image__image_128
+#: model:ir.model.fields,field_description:website_sale.field_product_public_category__image_128
+msgid "Image 128"
+msgstr "Imagen 128"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_image__image_256
+#: model:ir.model.fields,field_description:website_sale.field_product_public_category__image_256
+msgid "Image 256"
+msgstr "Imagen 256"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_image__image_512
+#: model:ir.model.fields,field_description:website_sale.field_product_public_category__image_512
+msgid "Image 512"
+msgstr "Imagen 512"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
+msgid "Image Name"
+msgstr "Nombre de la imagen"
+
+#. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_res_config_settings__module_website_sale_stock
+msgid "Installs the \"Website Delivery Information\" application"
+msgstr "Instalar la aplicación \"Información de envío en el sitio web\""
+
+#. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "Invalid Email! Please enter a valid email address."
+msgstr "Correo electrónico no válido. Proporcione uno válido."
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_stock
+msgid "Inventory"
+msgstr "Inventario"
+
+#. module: website_sale
+#: model:ir.actions.act_window,name:website_sale.action_invoices_ecommerce
+msgid "Invoices"
+msgstr "Facturas"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_account
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Invoicing"
+msgstr "Facturación"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_template__is_published
+#: model_terms:ir.ui.view,arch_db:website_sale.product_product_website_tree_view
+#: model_terms:ir.ui.view,arch_db:website_sale.product_template_view_tree_website_sale
+msgid "Is Published"
+msgstr "Publicado"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Issue invoices to customers"
+msgstr "Emitir facturas a los clientes"
+
+#. module: website_sale
+#: code:addons/website_sale/models/sale_order.py:0
+#, python-format
+msgid "It is forbidden to modify a sales order which is not in draft status."
+msgstr ""
+"Está prohibido modificar una orden de venta que no se encuentre en estado de"
+" borrador."
+
+#. module: website_sale
+#: model:ir.model,name:website_sale.model_account_move
+msgid "Journal Entry"
+msgstr "Asiento de diario"
+
+#. module: website_sale
+#: model:ir.model.fields.selection,name:website_sale.selection__res_company__website_sale_onboarding_payment_acquirer_state__just_done
+msgid "Just done"
+msgstr "Recién hecho"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_digest_digest__kpi_website_sale_total_value
+msgid "Kpi Website Sale Total Value"
+msgstr "Valor total de los KPI de ventas del sitio web"
+
+#. module: website_sale
+#: model:product.public.category,name:website_sale.public_category_lamps
+msgid "Lamps"
+msgstr "Lámparas"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_account_move____last_update
+#: model:ir.model.fields,field_description:website_sale.field_crm_team____last_update
+#: model:ir.model.fields,field_description:website_sale.field_digest_digest____last_update
+#: model:ir.model.fields,field_description:website_sale.field_ir_http____last_update
+#: model:ir.model.fields,field_description:website_sale.field_mail_compose_message____last_update
+#: model:ir.model.fields,field_description:website_sale.field_product_image____last_update
+#: model:ir.model.fields,field_description:website_sale.field_product_pricelist____last_update
+#: model:ir.model.fields,field_description:website_sale.field_product_product____last_update
+#: model:ir.model.fields,field_description:website_sale.field_product_public_category____last_update
+#: model:ir.model.fields,field_description:website_sale.field_product_ribbon____last_update
+#: model:ir.model.fields,field_description:website_sale.field_product_template____last_update
+#: model:ir.model.fields,field_description:website_sale.field_product_template_attribute_line____last_update
+#: model:ir.model.fields,field_description:website_sale.field_res_company____last_update
+#: model:ir.model.fields,field_description:website_sale.field_res_config_settings____last_update
+#: model:ir.model.fields,field_description:website_sale.field_res_country____last_update
+#: model:ir.model.fields,field_description:website_sale.field_res_partner____last_update
+#: model:ir.model.fields,field_description:website_sale.field_sale_order____last_update
+#: model:ir.model.fields,field_description:website_sale.field_sale_order_line____last_update
+#: model:ir.model.fields,field_description:website_sale.field_sale_report____last_update
+#: model:ir.model.fields,field_description:website_sale.field_website____last_update
+#: model:ir.model.fields,field_description:website_sale.field_website_page____last_update
+#: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field____last_update
+#: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard____last_update
+#: model:ir.model.fields,field_description:website_sale.field_website_snippet_filter____last_update
+#: model:ir.model.fields,field_description:website_sale.field_website_track____last_update
+#: model:ir.model.fields,field_description:website_sale.field_website_visitor____last_update
+msgid "Last Modified on"
+msgstr "Última modificación el"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
+msgid "Last Month"
+msgstr "Mes anterior"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_res_partner__last_website_so_id
+#: model:ir.model.fields,field_description:website_sale.field_res_users__last_website_so_id
+msgid "Last Online Sales Order"
+msgstr "Última orden de venta en línea"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_image__write_uid
+#: model:ir.model.fields,field_description:website_sale.field_product_public_category__write_uid
+#: model:ir.model.fields,field_description:website_sale.field_product_ribbon__write_uid
+#: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__write_uid
+#: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__write_uid
+msgid "Last Updated by"
+msgstr "Última actualización por"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_image__write_date
+#: model:ir.model.fields,field_description:website_sale.field_product_public_category__write_date
+#: model:ir.model.fields,field_description:website_sale.field_product_ribbon__write_date
+#: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__write_date
+#: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__write_date
+msgid "Last Updated on"
+msgstr "Última actualización el"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
+msgid "Last Week"
+msgstr "Semana anterior"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
+msgid "Last Year"
+msgstr "Año anterior"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Left"
+msgstr "Izquierda"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Let returning shoppers save products in a wishlist"
+msgstr "Permita que los clientes guarden sus productos en una lista de deseos"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Let the customer enter a shipping address"
+msgstr "Permitir que el cliente introduzca una dirección de envío"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
+#, python-format
+msgid "Let's create your first product."
+msgstr "Creemos su primer producto."
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
+#, python-format
+msgid ""
+"Let's now take a look at your administration dashboard to get your eCommerce"
+" website ready in no time."
+msgstr ""
+"Ahora vamos a echar un vistazo a su tablero de administración para tener su "
+"sitio web de comercio electrónico listo."
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_sale_order_line__linked_line_id
+msgid "Linked Order Line"
+msgstr "Línea de orden de venta vinculada"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.add_grid_or_list_option
+msgid "List"
+msgstr "Lista"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "Log In"
+msgstr "Iniciar sesión"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Manage availability of products"
+msgstr "Administrar la disponibilidad de los productos"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Manage promotion &amp; coupon programs"
+msgstr "Administrar promociones y programas de cupones"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#, python-format
+msgid "Medium"
+msgstr "Medio"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__paypal_seller_account
+msgid "Merchant Account ID"
+msgstr "ID de la cuenta del vendedor"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__manual_name
+msgid "Method"
+msgstr "Método"
+
+#. module: website_sale
+#: model:product.public.category,name:website_sale.public_category_multimedia
+msgid "Multimedia"
+msgstr "Multimedia"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/js/website_sale.js:0
+#: model_terms:ir.ui.view,arch_db:website_sale.header_cart_link
+#, python-format
+msgid "My Cart"
+msgstr "Mi carrito"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/js/website_sale.editor.js:0
+#: model:ir.model.fields,field_description:website_sale.field_product_image__name
+#: model:ir.model.fields,field_description:website_sale.field_product_public_category__name
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+#, python-format
+msgid "Name"
+msgstr "Nombre"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_sale_order_line__name_short
+msgid "Name Short"
+msgstr "Nombre corto"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.sort
+msgid "Name: A to Z"
+msgstr "Nombre: de la A a la Z"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.sort
+msgid "Name: Z to A"
+msgstr "Nombre: de la Z a A"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/controllers/main.py:0
+#: code:addons/website_sale/static/src/js/website_sale.editor.js:0
+#, python-format
+msgid "New Product"
+msgstr "Nuevo producto"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale_recently_viewed.xml:0
+#, python-format
+msgid "Next"
+msgstr "Siguiente"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.extra_info
+msgid "Next <span class=\"fa fa-chevron-right\"/>"
+msgstr "Siguiente <span class=\"fa fa-chevron-right\"/>"
+
+#. module: website_sale
+#: model_terms:ir.actions.act_window,help:website_sale.action_view_abandoned_tree
+msgid "No abandoned carts found"
+msgstr "No se encontró ningún carrito abandonado"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.products
+msgid "No product defined"
+msgstr "No se definió ningún producto"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.products
+msgid "No product defined in category \""
+msgstr "No hay ningún producto definido en la categoría \""
+
+#. module: website_sale
+#: model_terms:ir.actions.act_window,help:website_sale.website_sale_visitor_product_action
+msgid "No product views yet for this visitor"
+msgstr "Aún no hay vistas del producto para este visitante"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.products
+msgid "No results"
+msgstr "Sin resultados"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.products
+msgid "No results for \""
+msgstr "Sin resultados para \""
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale_utils.xml:0
+#, python-format
+msgid "No results found. Please try another search."
+msgstr "No se han encontrado resultados. Por favor intente otra búsqueda."
+
+#. module: website_sale
+#: model:ir.model.fields.selection,name:website_sale.selection__res_config_settings__sale_delivery_settings__none
+msgid "No shipping management on website"
+msgstr "No hay administración de envíos en el sitio web"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "None"
+msgstr "Ninguno"
+
+#. module: website_sale
+#: model:ir.model.fields.selection,name:website_sale.selection__res_company__website_sale_onboarding_payment_acquirer_state__not_done
+msgid "Not done"
+msgstr "Pendiente"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_crm_team__abandoned_carts_count
+msgid "Number of Abandoned Carts"
+msgstr "Número de carritos abandonados"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Number of Columns"
+msgstr "Número de columnas"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website__shop_ppr
+msgid "Number of grid columns on the shop"
+msgstr "Número de columnas en la tabla de productos de la tienda"
+
+#. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_res_config_settings__cart_abandoned_delay
+msgid "Number of hours after which the cart is considered abandoned."
+msgstr ""
+"Número de horas después de las cuales el carrito se considera como "
+"abandonado."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Number of products"
+msgstr "Número de productos"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website__shop_ppg
+msgid "Number of products in the grid on the shop"
+msgstr "Número de productos por tabla en la tienda"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
+#, python-format
+msgid "Once you click on <b>Save</b>, your product is updated."
+msgstr "Una vez que haga clic en <b>Guardar</b>, se actualizará su producto."
+
+#. module: website_sale
+#: model:ir.ui.menu,name:website_sale.menu_report_sales
+msgid "Online Sales"
+msgstr "Ventas en línea"
+
+#. module: website_sale
+#: model:ir.actions.act_window,name:website_sale.sale_report_action_dashboard
+msgid "Online Sales Analysis"
+msgstr "Análisis de ventas en línea"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_sale_order__only_services
+msgid "Only Services"
+msgstr "Solo servicios"
+
+#. module: website_sale
+#: code:addons/website_sale/models/product.py:0
+#, python-format
+msgid ""
+"Only the company's websites are allowed.\n"
+"Leave the Company field empty or select a website from that company."
+msgstr ""
+"Solo se permiten los sitios web de la empresa.\n"
+"Deje el campo Empresa vacío o seleccione un sitio web de esa empresa."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.brand_promotion
+msgid "Open Source eCommerce"
+msgstr "Comercio electrónico de código abierto"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
+#, python-format
+msgid "Open your website app here."
+msgstr "Abra su aplicación de sitio web aquí."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product_image_view_kanban
+msgid ""
+"Optimization required! Reduce the image size or increase your compression "
+"settings."
+msgstr ""
+"Se requiere optimización. Reduzca el tamaño de la imagen o incremente su "
+"compresión."
+
+#. module: website_sale
+#: code:addons/website_sale/models/sale_order.py:0
+#, python-format
+msgid "Option for: %s"
+msgstr "Opción para: %s"
+
+#. module: website_sale
+#: code:addons/website_sale/models/sale_order.py:0
+#, python-format
+msgid "Option: %s"
+msgstr "Opción: %s"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Optional Products"
+msgstr "Productos opcionales"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_sale_order_line__option_line_ids
+msgid "Options Linked"
+msgstr "Opciones vinculadas"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
+msgid "Or scan me with your banking app."
+msgstr "O escanéeme desde su aplicación bancaria."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
+#: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
+#: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
+#: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_unpaid
+msgid "Order Date"
+msgstr "Fecha de la orden"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_sale_order__website_order_line
+msgid "Order Lines displayed on Website"
+msgstr "Líneas de orden mostradas en el sitio web"
+
+#. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_sale_order__website_order_line
+msgid ""
+"Order Lines to be displayed on the website. They should not be used for "
+"computation purpose."
+msgstr ""
+"Líneas de orden a mostrar en el sitio web. No se deben usar con propósito de"
+" cálculo."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.short_cart_summary
+msgid "Order Total"
+msgstr "Total de la orden"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.searchbar_input_snippet_options
+msgid "Order by"
+msgstr "Ordenar por"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#: model:ir.actions.act_window,name:website_sale.action_orders_ecommerce
+#: model:ir.ui.menu,name:website_sale.menu_orders
+#: model:ir.ui.menu,name:website_sale.menu_orders_orders
+#, python-format
+msgid "Orders"
+msgstr "Órdenes"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Orders Followup"
+msgstr "Seguimiento de órdenes"
+
+#. module: website_sale
+#: model:ir.actions.act_window,name:website_sale.sale_order_action_to_invoice
+msgid "Orders To Invoice"
+msgstr "Órdenes a facturar"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#, python-format
+msgid "Orders to Invoice"
+msgstr "Órdenes a facturar"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#, python-format
+msgid "Orders/Day"
+msgstr "Órdenes/día"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__paypal_pdt_token
+msgid "PDT Identity Token"
+msgstr "Token de identidad PDT"
+
+#. module: website_sale
+#: model:ir.model,name:website_sale.model_website_page
+msgid "Page"
+msgstr "Página"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_public_category__parent_id
+msgid "Parent Category"
+msgstr "Categoría padre"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_public_category__parent_path
+msgid "Parent Path"
+msgstr "Ruta padre"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_public_category__parents_and_self
+msgid "Parents And Self"
+msgstr "Padres y mismo"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.payment
+msgid "Pay Now"
+msgstr "Pagar ahora"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.payment
+msgid "Pay Now <span class=\"fa fa-chevron-right\"/>"
+msgstr "Pagar ahora <span class=\"fa fa-chevron-right\"/>"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.payment
+msgid "Pay with"
+msgstr "Pagar con"
+
+#. module: website_sale
+#: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_acquirers
+msgid "Payment Acquirers"
+msgstr "Métodos de pago"
+
+#. module: website_sale
+#: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_icons
+msgid "Payment Icons"
+msgstr "Iconos de pago"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__manual_post_msg
+msgid "Payment Instructions"
+msgstr "Instrucciones de pago"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__payment_method
+msgid "Payment Method"
+msgstr "Método de pago"
+
+#. module: website_sale
+#: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_transactions
+msgid "Payment Transactions"
+msgstr "Transacciones de pago"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#, python-format
+msgid "Payments to Capture"
+msgstr "Pagos a capturar"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__paypal_user_type
+msgid "Paypal User Type"
+msgstr "Tipo de usuario de Paypal"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "Phone"
+msgstr "Teléfono"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
+msgid "Please enter a valid Video URL."
+msgstr "Por favor introduzca un URL de video válido."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart
+msgid "Please proceed your current cart."
+msgstr "Continúe con su carrito actual."
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale_recently_viewed.xml:0
+#, python-format
+msgid "Previous"
+msgstr "Anterior"
+
+#. module: website_sale
+#: code:addons/website_sale/controllers/backend.py:0
+#, python-format
+msgid "Previous Month"
+msgstr "Mes anterior"
+
+#. module: website_sale
+#: code:addons/website_sale/controllers/backend.py:0
+#, python-format
+msgid "Previous Week"
+msgstr "Semana anterior"
+
+#. module: website_sale
+#: code:addons/website_sale/controllers/backend.py:0
+#, python-format
+msgid "Previous Year"
+msgstr "Año anterior"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
+#: model_terms:ir.ui.view,arch_db:website_sale.cart_summary
+#: model_terms:ir.ui.view,arch_db:website_sale.searchbar_input_snippet_options
+msgid "Price"
+msgstr "Precio"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website__pricelist_ids
+msgid "Price list available for this Ecommerce/Website"
+msgstr "Lista de precios disponible para esta tienda virtual/sitio web"
+
+#. module: website_sale
+#: model:ir.model,name:website_sale.model_product_pricelist
+msgid "Pricelist"
+msgstr "Lista de precios"
+
+#. module: website_sale
+#: model:ir.actions.act_window,name:website_sale.website_product_pricelist3
+#: model:ir.ui.menu,name:website_sale.menu_catalog_pricelists
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Pricelists"
+msgstr "Listas de precios"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Pricing"
+msgstr "Precio"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
+msgid "Print"
+msgstr "Imprimir"
+
+#. module: website_sale
+#: model_terms:ir.actions.act_window,help:website_sale.action_unpaid_orders_ecommerce
+#: model_terms:ir.actions.act_window,help:website_sale.action_view_unpaid_quotation_tree
+msgid "Process the order once the payment is received."
+msgstr "Procesar la orden una vez que se reciba el pago."
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#: model:ir.model,name:website_sale.model_product_product
+#: model:ir.model.fields,field_description:website_sale.field_website_track__product_id
+#: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
+#: model_terms:ir.ui.view,arch_db:website_sale.cart_summary
+#: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
+#: model_terms:ir.ui.view,arch_db:website_sale.website_sale_visitor_page_view_search
+#, python-format
+msgid "Product"
+msgstr "Producto"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_options
+#: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
+msgid "Product Category"
+msgstr "Categoría de producto"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_comparison
+msgid "Product Comparison Tool"
+msgstr "Herramienta de comparación de productos"
+
+#. module: website_sale
+#: model:ir.model,name:website_sale.model_product_image
+msgid "Product Image"
+msgstr "Imagen del producto"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product_image_view_kanban
+#: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
+msgid "Product Images"
+msgstr "Imágenes del producto"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product
+msgid "Product Name"
+msgstr "Nombre del producto"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.view_website_sale_website_form
+msgid "Product Page Extra Fields"
+msgstr "Campos adicionales de la página del producto"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Product Prices"
+msgstr "Precios del producto"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product_public_category_tree_view
+msgid "Product Public Categories"
+msgstr "Categorías públicas del producto"
+
+#. module: website_sale
+#: model:ir.model,name:website_sale.model_product_template
+#: model:ir.model.fields,field_description:website_sale.field_product_image__product_tmpl_id
+msgid "Product Template"
+msgstr "Plantilla de producto"
+
+#. module: website_sale
+#: model:ir.model,name:website_sale.model_product_template_attribute_line
+msgid "Product Template Attribute Line"
+msgstr "Línea de atributos de la plantilla de productos"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_public_category__product_tmpl_ids
+msgid "Product Tmpl"
+msgstr "Plantilla del producto"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_image__product_variant_id
+msgid "Product Variant"
+msgstr "Variante de producto"
+
+#. module: website_sale
+#: model:ir.ui.menu,name:website_sale.product_catalog_variants
+msgid "Product Variants"
+msgstr "Variantes del producto"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website_visitor__visitor_product_count
+msgid "Product Views"
+msgstr "Vistas del producto"
+
+#. module: website_sale
+#: model:ir.actions.act_window,name:website_sale.website_sale_visitor_product_action
+msgid "Product Views History"
+msgstr "Historial de vistas del producto"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Product prices displaying in web catalog"
+msgstr "Precios de producto a mostrar en catálogo del sitio web"
+
+#. module: website_sale
+#: model:ir.model,name:website_sale.model_product_ribbon
+msgid "Product ribbon"
+msgstr "Cinta del producto"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.website_sale_visitor_view_form
+msgid "Product views"
+msgstr "Vistas del producto"
+
+#. module: website_sale
+#: model:ir.actions.act_window,name:website_sale.product_template_action_website
+#: model:ir.ui.menu,name:website_sale.menu_catalog
+#: model:ir.ui.menu,name:website_sale.menu_catalog_products
+#: model:ir.ui.menu,name:website_sale.menu_product_settings
+#: model_terms:ir.ui.view,arch_db:website_sale.product
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:website_sale.website_sale_visitor_page_view_search
+msgid "Products"
+msgstr "Productos"
+
+#. module: website_sale
+#: model:ir.actions.server,name:website_sale.dynamic_snippet_products_action
+msgid "Products Dynamic Snippet"
+msgstr "Snippets dinámicos de productos"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website_visitor__product_count
+msgid "Products Views"
+msgstr "Vistas de productos"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid ""
+"Provide customers with product-specific links or downloadable content in the"
+" confirmation page of the checkout process if the payment gets through. To "
+"do so, attach some files to a product using the new Files button and publish"
+" them."
+msgstr ""
+"Ofrezca enlaces específicos para los productos o contenido descargable que "
+"aparecerá en la página de confirmación de compra si se completa el pago. "
+"Para ello, adjunte algunos archivos a un producto utilizando el botón de "
+"nuevos archivos y publíquelos."
+
+#. module: website_sale
+#: code:addons/website_sale/models/product_image.py:0
+#, python-format
+msgid ""
+"Provided video URL for '%s' is not valid. Please enter a valid video URL."
+msgstr ""
+"URL de video proporcionado para '%s' no es válido. Introduzca uno válido."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product_template_search_view_website
+msgid "Published"
+msgstr "Publicado"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Push down"
+msgstr "Mover uno abajo"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Push to bottom"
+msgstr "Mover al final"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Push to top"
+msgstr "Mover al inicio"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Push up"
+msgstr "Mover uno arriba"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart_popover
+msgid "Qty:"
+msgstr "Ctdad:"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
+#: model_terms:ir.ui.view,arch_db:website_sale.cart_summary
+#, python-format
+msgid "Quantity"
+msgstr "Cantidad"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#, python-format
+msgid "REVENUE BY"
+msgstr "INGRESOS POR"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_template__rating_ids
+msgid "Rating"
+msgstr "Valoración"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_template__rating_avg
+msgid "Rating Average"
+msgstr "Valoración promedio"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_template__rating_last_feedback
+msgid "Rating Last Feedback"
+msgstr "Valoración de la última retroalimentación"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_template__rating_last_image
+msgid "Rating Last Image"
+msgstr "Valoración de la última imagen"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_template__rating_last_value
+msgid "Rating Last Value"
+msgstr "Último valor de valoración"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_template__rating_count
+msgid "Rating count"
+msgstr "Número de valoración "
+
+#. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_product_template__rating_last_feedback
+msgid "Reason of the rating"
+msgstr "Motivo de la valoración"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.s_products_recently_viewed
+msgid "Recently viewed Products"
+msgstr "Productos vistos recientemente"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
+msgid "Recovery Email Sent"
+msgstr "Correo electrónico de recuperación enviado"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
+msgid "Recovery Email to Send"
+msgstr "Correo electrónico de recuperación para enviar"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
+msgid "Remove from cart"
+msgstr "Quitar del carrito"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
+#: model_terms:ir.ui.view,arch_db:website_sale.product_quantity
+msgid "Remove one"
+msgstr "Quitar uno"
+
+#. module: website_sale
+#: model:ir.ui.menu,name:website_sale.menu_reporting
+msgid "Reporting"
+msgstr "Reportes"
+
+#. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_product_product__website_id
+#: model:ir.model.fields,help:website_sale.field_product_public_category__website_id
+#: model:ir.model.fields,help:website_sale.field_product_template__website_id
+msgid "Restrict publishing to this website."
+msgstr "Restringir publicaciones a este sitio web."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.payment
+msgid "Return to Cart"
+msgstr "Volver al carrito"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.wizard_checkout
+msgid "Review Order"
+msgstr "Revisar orden"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_product__website_ribbon_id
+#: model:ir.model.fields,field_description:website_sale.field_product_template__website_ribbon_id
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Ribbon"
+msgstr "Cinta"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_ribbon__bg_color
+msgid "Ribbon background color"
+msgstr "Color de fondo de la cinta"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_ribbon__html_class
+msgid "Ribbon class"
+msgstr "Clase de cinta"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_ribbon__html
+msgid "Ribbon html"
+msgstr "Cinta html"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_ribbon__text_color
+msgid "Ribbon text color"
+msgstr "Color del texto de la cinta"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Right (only on grid view)"
+msgstr "Derecha (solo en la vista de tabla)"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_public_category__is_seo_optimized
+#: model:ir.model.fields,field_description:website_sale.field_product_template__is_seo_optimized
+msgid "SEO optimized"
+msgstr "Optimizado para SEO"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_graph_website
+msgid "Sale Report"
+msgstr "Reporte de venta"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#: model:ir.actions.act_window,name:website_sale.sale_report_action_carts
+#: model_terms:ir.ui.view,arch_db:website_sale.digest_digest_view_form
+#: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
+#, python-format
+msgid "Sales"
+msgstr "Ventas"
+
+#. module: website_sale
+#: model:ir.model,name:website_sale.model_sale_report
+msgid "Sales Analysis Report"
+msgstr "Reporte de análisis de ventas"
+
+#. module: website_sale
+#: model:ir.model,name:website_sale.model_sale_order
+msgid "Sales Order"
+msgstr "Orden de venta"
+
+#. module: website_sale
+#: model:ir.model,name:website_sale.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Línea de la orden de venta"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_pivot_website
+msgid "Sales Report"
+msgstr "Reporte de ventas"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#, python-format
+msgid "Sales Since Last Month"
+msgstr "Ventas desde el mes anterior"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#, python-format
+msgid "Sales Since Last Week"
+msgstr "Ventas desde la semana anterior"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#, python-format
+msgid "Sales Since Last Year"
+msgstr "Ventas desde el año anterior"
+
+#. module: website_sale
+#: model:ir.model,name:website_sale.model_crm_team
+#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__salesteam_id
+#: model:ir.model.fields,field_description:website_sale.field_website__salesteam_id
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Sales Team"
+msgstr "Equipo de ventas"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__salesperson_id
+#: model:ir.model.fields,field_description:website_sale.field_website__salesperson_id
+msgid "Salesperson"
+msgstr "Vendedor"
+
+#. module: website_sale
+#: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_tokens
+msgid "Saved Payment Data"
+msgstr "Información de pago guardada"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
+msgid "Search Abandoned Sales Orders"
+msgstr "Buscar órdenes de venta abandonadas"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.s_products_searchbar
+msgid "Search for a product"
+msgstr "Busque un producto"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
+#, python-format
+msgid ""
+"Select <b>New Product</b> to create it and manage its properties to boost "
+"your sales."
+msgstr ""
+"Seleccione <b>Nuevo producto</b> para crearlo y administrar sus "
+"características con el fin de impulsar sus ventas."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address_kanban
+msgid "Select this address"
+msgstr "Seleccionar esta dirección"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_pricelist__selectable
+msgid "Selectable"
+msgstr "Seleccionable"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Sell content to download or URL links"
+msgstr "Vender contenido descargable o enlaces URL"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Sell in several currencies"
+msgstr "Vender en divisas diferentes"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Sell variants of a product using attributes (size, color, etc.)"
+msgstr ""
+"Vender variantes de un producto usando atributos (tamaño, color, etc.)"
+
+#. module: website_sale
+#: model:ir.actions.server,name:website_sale.ir_actions_server_sale_cart_recovery_email
+msgid "Send a Cart Recovery Email"
+msgstr "Enviar un correo electrónico de recuperación de carrito"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.sale_order_view_form_cart_recovery
+msgid "Send a Recovery Email"
+msgstr "Enviar un correo electrónico de recuperación"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#, python-format
+msgid "Send a recovery email to visitors who haven't completed their order."
+msgstr ""
+"Enviar un correo electrónico de recuperación a visitantes que no han "
+"completado su orden."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Send a recovery email when a cart is abandoned"
+msgstr ""
+"Enviar un correo electrónico de recuperación cuando se abandona un carrito"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_public_category__seo_name
+#: model:ir.model.fields,field_description:website_sale.field_product_template__seo_name
+msgid "Seo name"
+msgstr "Nombre de SEO"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_image__sequence
+#: model:ir.model.fields,field_description:website_sale.field_product_public_category__sequence
+#: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__sequence
+msgid "Sequence"
+msgstr "Secuencia"
+
+#. module: website_sale
+#: model:product.public.category,name:website_sale.services
+msgid "Services"
+msgstr "Servicios"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid ""
+"Ship to the same address\n"
+"                                                    <span class=\"ship_to_other text-muted\" style=\"display: none\">&amp;nbsp;(<i>Your shipping address will be requested later) </i></span>"
+msgstr ""
+"Enviar a la misma dirección\n"
+"                                                    <span class=\"ship_to_other text-muted\" style=\"display: none\">&amp;nbsp;(<i>Se le solicitará su dirección de envío más adelante)</i></span>"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Shipping"
+msgstr "Envío"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__group_delivery_invoice_address
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+#: model_terms:ir.ui.view,arch_db:website_sale.checkout
+msgid "Shipping Address"
+msgstr "Dirección de envío"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Shipping Costs"
+msgstr "Costos de envío"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__sale_delivery_settings
+msgid "Shipping Management"
+msgstr "Gestión de envío"
+
+#. module: website_sale
+#: model:website.menu,name:website_sale.menu_shop
+#: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
+#: model_terms:ir.ui.view,arch_db:website_sale.products
+msgid "Shop"
+msgstr "Tienda"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.checkout
+msgid "Shop - Checkout"
+msgstr "Tienda - Proceso de pago"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
+msgid "Shop - Confirmed"
+msgstr "Tienda - Confirmado"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.payment
+msgid "Shop - Select Payment Acquirer"
+msgstr "Tienda - Seleccione el métodos de pago"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.products_add_to_cart
+msgid "Shopping cart"
+msgstr "Carrito de compras"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Show Empty Cart"
+msgstr "Mostrar carrito vacío"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.products_categories
+msgid "Show categories"
+msgstr "Mostrar categorías"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.products_attributes
+msgid "Show options"
+msgstr "Mostrar opciones"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
+msgid "Sign Up"
+msgstr "Registrarse"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Size"
+msgstr "Tamaño"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_product__website_size_x
+#: model:ir.model.fields,field_description:website_sale.field_product_template__website_size_x
+msgid "Size X"
+msgstr "Tamaño X"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_product__website_size_y
+#: model:ir.model.fields,field_description:website_sale.field_product_template__website_size_y
+msgid "Size Y"
+msgstr "Tamaño Y"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Slanted"
+msgstr "Inclinado"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#, python-format
+msgid "Sold"
+msgstr "Vendido"
+
+#. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "Some required fields are empty."
+msgstr "Algunos campos requeridos están vacíos."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.sort
+msgid "Sort by"
+msgstr "Ordenar por"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.sort
+msgid "Sorting by :"
+msgstr "Ordenado por:"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#, python-format
+msgid "Sources"
+msgstr "Fuentes"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "State / Province"
+msgstr "Estado/Provincia"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "State / Province..."
+msgstr "Estado/Provincia..."
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_res_company__website_sale_onboarding_payment_acquirer_state
+msgid "State of the website sale onboarding payment acquirer step"
+msgstr ""
+"Estado del paso de integración del método de pago de la venta del sitio web"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
+msgid "Status"
+msgstr "Estado"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "Street 2"
+msgstr "Calle 2"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "Street <span class=\"d-none d-md-inline\"> and Number</span>"
+msgstr "Calle <span class=\"d-none d-md-inline\"> y número</span>"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__stripe_publishable_key
+msgid "Stripe Publishable Key"
+msgstr "Clave pública de Stripe"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__stripe_secret_key
+msgid "Stripe Secret Key"
+msgstr "Clave secreta de Stripe"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.total
+msgid "Subtotal:"
+msgstr "Subtotal:"
+
+#. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_product_product__alternative_product_ids
+#: model:ir.model.fields,help:website_sale.field_product_template__alternative_product_ids
+msgid ""
+"Suggest alternatives to your customer (upsell strategy). Those products show"
+" up on the product page."
+msgstr ""
+"Sugiera alternativas a su cliente (estrategia de venta adicional). Esos "
+"productos aparecerán en la página del producto."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.suggested_products_list
+msgid "Suggested Accessories:"
+msgstr "Accesorios sugeridos:"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.searchbar_input_snippet_options
+msgid "Suggestions"
+msgstr "Sugerencias"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address_b2b
+msgid "TIN / VAT"
+msgstr "RFC"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Tag"
+msgstr "Etiqueta"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.total
+msgid "Taxes:"
+msgstr "Impuestos:"
+
+#. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_website__all_pricelist_ids
+msgid "Technical: Used to recompute pricelist_ids"
+msgstr "Técnico: se utiliza para calcular pricelist_ids"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.terms
+msgid "Terms &amp;amp; Conditions"
+msgstr "Términos y condiciones"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product_custom_text
+msgid "Terms and Conditions"
+msgstr "Términos y condiciones"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
+msgid "Thank you for your order."
+msgstr "Gracias por su orden."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.brand_promotion
+msgid "The #1"
+msgstr "El #1"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.terms
+msgid ""
+"The <b>Intellectual Property</b> disclosure will inform users that the "
+"contents, logo and other visual media you created is your property and is "
+"protected by copyright laws."
+msgstr ""
+"La divulgación de la <b>propiedad intelectual</b> informará a los usuarios "
+"de que los contenidos, el logo y otros medios visuales que ha creado son de "
+"su propiedad y están protegidos por las leyes de derechos de autor."
+
+#. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_product_product__website_url
+#: model:ir.model.fields,help:website_sale.field_product_template__website_url
+msgid "The full URL to access the document through the website."
+msgstr "La URL completa para acceder al documento a través del sitio web."
+
+#. module: website_sale
+#: code:addons/website_sale/models/sale_order.py:0
+#, python-format
+msgid ""
+"The given combination does not exist therefore it cannot be added to cart."
+msgstr "Esta combinación no existe, por lo que no se puede añadir al carrito."
+
+#. module: website_sale
+#: code:addons/website_sale/models/sale_order.py:0
+#, python-format
+msgid "The given product does not exist therefore it cannot be added to cart."
+msgstr "Esta producto no existe, por lo que no se puede añadir al carrito."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid ""
+"The mode selected here applies as invoicing policy of any new product "
+"created but not of products already existing."
+msgstr ""
+"El modo seleccionado aquí se aplica como política de facturación de "
+"cualquier producto nuevo creado pero no de los productos ya existentes."
+
+#. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_product_product__public_categ_ids
+#: model:ir.model.fields,help:website_sale.field_product_template__public_categ_ids
+msgid ""
+"The product will be available in each mentioned eCommerce category. Go to "
+"Shop > Customize and enable 'eCommerce categories' to view all eCommerce "
+"categories."
+msgstr ""
+"El producto estará disponible en cada categoría de comercio electrónico "
+"mencionada. Vaya a Tienda > Personalizar y habilite 'Categorías de comercio "
+"electrónico' para ver todas las categorías."
+
+#. module: website_sale
+#: model_terms:ir.actions.act_window,help:website_sale.action_view_abandoned_tree
+msgid "The time to mark a cart as abandoned can be changed in the settings."
+msgstr ""
+"El tiempo transcurrido para marcar un carrito como abandonado puede fijarse "
+"en la configuración."
+
+#. module: website_sale
+#: model_terms:ir.actions.act_window,help:website_sale.action_orders_ecommerce
+msgid "There is no confirmed order from the website"
+msgstr "No hay ninguna orden confirmada de este sitio web."
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#, python-format
+msgid "There is no recent confirmed order."
+msgstr "No hay ninguna orden reciente confirmada."
+
+#. module: website_sale
+#: model_terms:ir.actions.act_window,help:website_sale.action_unpaid_orders_ecommerce
+#: model_terms:ir.actions.act_window,help:website_sale.action_view_unpaid_quotation_tree
+msgid "There is no unpaid order from the website yet"
+msgstr "No hay ninguna orden sin pagar en este sitio web"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#, python-format
+msgid "There isn't any UTM tag detected in orders"
+msgstr "No hay ninguna etiqueta UTM detectada en las órdenes."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "This adds the choice of a currency on pricelists."
+msgstr ""
+"Esto añade la posibilidad de elegir una divisa en las listas de precios."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product
+msgid "This combination does not exist."
+msgstr "Esta combinación no existe."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid ""
+"This email template is suggested by default when you send a recovery email."
+msgstr ""
+"Esta plantilla de correo electrónico se sugiere de forma predeterminada "
+"cuando se envía un correo electrónico de recuperación."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.s_products_recently_viewed
+msgid ""
+"This is a preview of the recently viewed products by the user.<br/>\n"
+"                Once the user has seen at least one product this snippet will be visible."
+msgstr ""
+"Esta es una vista previa de los productos vistos recientemente por el usuario.<br/>\n"
+"                Una vez que el usuario haya visto al menos un producto se mostrará este snippet."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart
+msgid "This is your current cart."
+msgstr "Este es su carrito actual."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product
+msgid "This product has no valid combination."
+msgstr "Este producto no tiene combinaciones válidas."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product
+msgid "This product is no longer available."
+msgstr "Este producto ya no está disponible."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.products_item
+msgid "This product is unpublished."
+msgstr "Este producto no está publicado."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.coupon_form
+msgid "This promo code is not available."
+msgstr "Este código de promoción no está disponible."
+
+#. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_website_visitor__product_count
+msgid "Total number of product viewed"
+msgstr "Número total de productos vistos"
+
+#. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_website_visitor__visitor_product_count
+msgid "Total number of views on products"
+msgstr "Número total de vistas en productos"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "True"
+msgstr "Verdadero"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "UPS"
+msgstr "UPS"
+
+#. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_product_image__video_url
+msgid "URL of a video for showcasing your product."
+msgstr "URL de un video para promocionar su producto."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "USPS"
+msgstr "USPS"
+
+#. module: website_sale
+#: model:product.product,uom_name:website_sale.product_product_1
+#: model:product.product,uom_name:website_sale.product_product_1b
+#: model:product.template,uom_name:website_sale.product_product_1_product_template
+msgid "Units"
+msgstr "Unidades"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
+msgid "Unpaid"
+msgstr "Sin pagar"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#: model:ir.actions.act_window,name:website_sale.action_unpaid_orders_ecommerce
+#: model:ir.actions.act_window,name:website_sale.action_view_unpaid_quotation_tree
+#: model:ir.ui.menu,name:website_sale.menu_orders_unpaid_orders
+#, python-format
+msgid "Unpaid Orders"
+msgstr "Órdenes sin pagar"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.products_item
+msgid "Unpublished"
+msgstr "Sin publicar"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#, python-format
+msgid "Untaxed Total Sold"
+msgstr "Venta total sin impuestos"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
+#, python-format
+msgid "Upload a file from your local library."
+msgstr "Suba un archivo de su biblioteca local."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Validate"
+msgstr "Validar"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_image__video_url
+#: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
+msgid "Video URL"
+msgstr "URL del video"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart_popover
+msgid "View Cart ("
+msgstr "Ver carrito ("
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_template__website_published
+msgid "Visible on current website"
+msgstr "Visible desde este sitio web"
+
+#. module: website_sale
+#: model:ir.model,name:website_sale.model_website_track
+msgid "Visited Pages"
+msgstr "Páginas visitadas"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_website_visitor__product_ids
+#: model_terms:ir.ui.view,arch_db:website_sale.website_sale_visitor_view_kanban
+msgid "Visited Products"
+msgstr "Productos visitados"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.website_sale_visitor_page_view_graph
+msgid "Visitor Product Views"
+msgstr "Vistas del producto del visitante"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.website_sale_visitor_page_view_tree
+msgid "Visitor Product Views History"
+msgstr "Historial de vistas del producto"
+
+#. module: website_sale
+#: model:product.product,name:website_sale.product_product_1
+#: model:product.product,name:website_sale.product_product_1b
+#: model:product.template,name:website_sale.product_product_1_product_template
+msgid "Warranty"
+msgstr "Garantía"
+
+#. module: website_sale
+#: model:product.product,description_sale:website_sale.product_product_1
+#: model:product.product,description_sale:website_sale.product_product_1b
+#: model:product.template,description_sale:website_sale.product_product_1_product_template
+msgid ""
+"Warranty, issued to the purchaser of an article by its manufacturer, "
+"promising to repair or replace it if necessary within a specified period of "
+"time."
+msgstr ""
+"Garantía otorgada al comprador de un artículo por su fabricante, "
+"comprometiéndose a repararlo o sustituirlo, de ser necesario, en un periodo "
+"determinado."
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/js/website_sale_validate.js:0
+#, python-format
+msgid "We are waiting for confirmation from the bank or the payment provider"
+msgstr "Esperamos la confirmación del banco o del proveedor de pagos"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.s_products_searchbar
+msgid "We have amazing products in our shop, check them now !"
+msgstr "Tenemos productos increíbles en nuestra tienda, ¡conózcalos ahora!"
+
+#. module: website_sale
+#: model:ir.model,name:website_sale.model_website
+#: model:ir.model.fields,field_description:website_sale.field_account_bank_statement_line__website_id
+#: model:ir.model.fields,field_description:website_sale.field_account_move__website_id
+#: model:ir.model.fields,field_description:website_sale.field_account_payment__website_id
+#: model:ir.model.fields,field_description:website_sale.field_product_pricelist__website_id
+#: model:ir.model.fields,field_description:website_sale.field_product_product__website_id
+#: model:ir.model.fields,field_description:website_sale.field_product_public_category__website_id
+#: model:ir.model.fields,field_description:website_sale.field_product_template__website_id
+#: model:ir.model.fields,field_description:website_sale.field_sale_order__website_id
+#: model:ir.model.fields,field_description:website_sale.field_sale_report__website_id
+#: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__website_id
+#: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
+#: model_terms:ir.ui.view,arch_db:website_sale.website_sale_pricelist_form_view
+msgid "Website"
+msgstr "Sitio web"
+
+#. module: website_sale
+#: model:ir.model,name:website_sale.model_website_sale_payment_acquirer_onboarding_wizard
+msgid "Website Payment acquire onboarding wizard"
+msgstr "Asistente de incorporación de pago del sitio web"
+
+#. module: website_sale
+#: model:ir.model,name:website_sale.model_product_public_category
+#: model:ir.model.fields,field_description:website_sale.field_product_product__public_categ_ids
+#: model:ir.model.fields,field_description:website_sale.field_product_template__public_categ_ids
+msgid "Website Product Category"
+msgstr "Categoría del producto"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product_public_category_form_view
+msgid "Website Public Categories"
+msgstr "Categorías públicas del sitio web"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_product__website_sequence
+#: model:ir.model.fields,field_description:website_sale.field_product_template__website_sequence
+msgid "Website Sequence"
+msgstr "Secuencia del sitio web"
+
+#. module: website_sale
+#: model:ir.actions.act_url,name:website_sale.action_open_website
+msgid "Website Shop"
+msgstr "Tienda del sitio web"
+
+#. module: website_sale
+#: model:ir.model,name:website_sale.model_website_snippet_filter
+msgid "Website Snippet Filter"
+msgstr "Filtro de snippets del sitio web"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_product__website_url
+#: model:ir.model.fields,field_description:website_sale.field_product_template__website_url
+msgid "Website URL"
+msgstr "URL del sitio web"
+
+#. module: website_sale
+#: model:ir.model,name:website_sale.model_website_visitor
+msgid "Website Visitor"
+msgstr "Visitante del sitio web"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_public_category__website_meta_description
+#: model:ir.model.fields,field_description:website_sale.field_product_template__website_meta_description
+msgid "Website meta description"
+msgstr "Descripción meta del sitio web"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_public_category__website_meta_keywords
+#: model:ir.model.fields,field_description:website_sale.field_product_template__website_meta_keywords
+msgid "Website meta keywords"
+msgstr "Palabras clave meta del sitio web"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_public_category__website_meta_title
+#: model:ir.model.fields,field_description:website_sale.field_product_template__website_meta_title
+msgid "Website meta title"
+msgstr "Título meta del sitio web"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_public_category__website_meta_og_img
+#: model:ir.model.fields,field_description:website_sale.field_product_template__website_meta_og_img
+msgid "Website opengraph image"
+msgstr "Imagen del Open Graph del sitio web"
+
+#. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_account_bank_statement_line__website_id
+#: model:ir.model.fields,help:website_sale.field_account_move__website_id
+#: model:ir.model.fields,help:website_sale.field_account_payment__website_id
+msgid "Website through which this invoice was created."
+msgstr "Sitio web a través del cual se creó esta factura."
+
+#. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_sale_order__website_id
+msgid "Website through which this order was placed."
+msgstr "Sitio web a través del cual se pidió esta orden."
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_crm_team__website_ids
+msgid "Websites"
+msgstr "Sitios web"
+
+#. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_crm_team__website_ids
+msgid "Websites using this Sales Team"
+msgstr "Sitios web que usa este equipo de ventas."
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_wishlist
+msgid "Wishlists"
+msgstr "Listas de deseos"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid ""
+"With the first mode you can set several prices in the product config form "
+"(from Sales tab). With the second one, you set prices and computation rules "
+"from Pricelists."
+msgstr ""
+"Con el primer modo puede establecer varios precios en la configuración del "
+"producto (desde la pestaña de ventas). Con el segundo, se establecen los "
+"precios y las reglas de cálculo desde las listas de precios."
+
+#. module: website_sale
+#: code:addons/website_sale/models/product.py:0
+#, python-format
+msgid "With this action, '%s' website would not have any pricelist available."
+msgstr "Con esta acción, el sitio web '%s' se quedaría sin lista de precios."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid ""
+"You are editing your <b>billing and shipping</b> addresses at the same time!<br/>\n"
+"                                            If you want to modify your shipping address, create a"
+msgstr ""
+"Está editando sus direcciones de <b>facturación y de envío</b> al mismo tiempo.<br/>\n"
+"Si quiere modificar su dirección de envío, cree un"
+
+#. module: website_sale
+#: model_terms:ir.actions.act_window,help:website_sale.sale_report_action_carts
+#: model_terms:ir.actions.act_window,help:website_sale.sale_report_action_dashboard
+msgid "You don't have any order from the website"
+msgstr "No tiene ninguna orden del sitio web"
+
+#. module: website_sale
+#: model_terms:ir.actions.act_window,help:website_sale.sale_order_action_to_invoice
+msgid "You don't have any order to invoice from the website"
+msgstr "No tiene ninguna orden que facturar desde el sitio web"
+
+#. module: website_sale
+#: model:mail.template,subject:website_sale.mail_template_sale_cart_recovery
+msgid "You left items in your cart!"
+msgstr "Dejó artículos en su carrito."
+
+#. module: website_sale
+#: model_terms:ir.actions.act_window,help:website_sale.action_view_abandoned_tree
+msgid ""
+"You'll find here all the carts abandoned by your visitors.\n"
+"                If they completed their address, you should send them a recovery email!"
+msgstr ""
+"Aquí encontrará todos los carritos abandonados por sus visitantes.\n"
+"Si llenaron su dirección de correo electrónico, debería enviarles un correo de recuperación."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "Your Address"
+msgstr "Su dirección"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid ""
+"Your Address\n"
+"                                        <small> or </small>"
+msgstr ""
+"Su dirección\n"
+"                                        <small> o </small>"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
+#: model_terms:ir.ui.view,arch_db:website_sale.cart_popover
+#: model_terms:ir.ui.view,arch_db:website_sale.cart_summary
+msgid "Your cart is empty!"
+msgstr "¡Su carrito está vacío!"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart
+msgid "Your previous cart has already been completed."
+msgstr "Se ha completado su carrito anterior."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "Zip Code"
+msgstr "Código postal"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "bpost"
+msgstr "bpost"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.coupon_form
+msgid "code..."
+msgstr "código..."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.searchbar_input_snippet_options
+msgid "default"
+msgstr "predeterminado"
+
+#. module: website_sale
+#: code:addons/website_sale/models/website.py:0
+#: model:ir.ui.menu,name:website_sale.menu_ecommerce_settings
+#: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
+#, python-format
+msgid "eCommerce"
+msgstr "Comercio electrónico"
+
+#. module: website_sale
+#: model:ir.actions.act_window,name:website_sale.product_public_category_action
+#: model:ir.ui.menu,name:website_sale.menu_catalog_categories
+msgid "eCommerce Categories"
+msgstr "Categorías de comercio electrónico"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_digest_digest__kpi_website_sale_total
+msgid "eCommerce Sales"
+msgstr "Ventas del comercio electrónico"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_delivery
+msgid "eCommerce Shipping Costs"
+msgstr "Costos de envío de comercio electrónico"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.search_count_box
+msgid "found)"
+msgstr "encontrado)"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "hours."
+msgstr "horas"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart
+msgid "if you want to merge your previous cart into current cart."
+msgstr "si desea combinar su carrito anterior con el actual."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart
+msgid ""
+"if you want to restore your previous cart. Your current cart will be "
+"replaced with your previous cart."
+msgstr ""
+"si desea recuperar su carrito anterior. Se reemplazará el actual por el "
+"anterior."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.products
+msgid "in category \""
+msgstr "en la categoría \""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart_popover
+msgid "item(s))"
+msgstr "artículo(s))"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.searchbar_input_snippet_options
+msgid "name (A-Z)"
+msgstr "nombre (A-Z)"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.searchbar_input_snippet_options
+msgid "name (Z-A)"
+msgstr "nombre (Z-A)"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "new address"
+msgstr "nueva dirección"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.searchbar_input_snippet_options
+msgid "price (high to low)"
+msgstr "precio (alto a bajo)"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.searchbar_input_snippet_options
+msgid "price (low to high)"
+msgstr "precio (bajo a alto)"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.searchbar_input_snippet_options
+msgid "products"
+msgstr "productos"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.payment_sale_note
+msgid "terms &amp; conditions"
+msgstr "términos y condiciones"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
+msgid "to follow your order."
+msgstr "para seguir su orden."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "⌙ Background"
+msgstr "⌙ Fondo"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "⌙ Mode"
+msgstr "⌙ Modo"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "⌙ Position"
+msgstr "⌙ Posición"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "⌙ Text"
+msgstr "⌙ Texto"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address_b2b
+msgid ""
+"Changing company name is not allowed once document(s) have been issued for "
+"your account. Please contact us directly for this operation."
+msgstr ""
+"No se permite cambiar el nombre de la empresa una vez que se han emitido los"
+" documentos para su cuenta. Póngase en contacto con nosotros directamente "
+"para esta operación."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address_b2b
+msgid ""
+"Changing VAT number is not allowed once document(s) have been issued for "
+"your account. Please contact us directly for this operation."
+msgstr ""
+"No se permite cambiar el RFC una vez que se han emitido los documentos de su"
+" cuenta. Póngase en contacto con nosotros directamente para esta operación."

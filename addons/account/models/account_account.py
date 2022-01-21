@@ -76,7 +76,7 @@ class AccountAccount(models.Model):
     company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True,
         default=lambda self: self.env.company)
     tag_ids = fields.Many2many('account.account.tag', 'account_account_account_tag', string='Tags', help="Optional tags you may want to assign for custom reporting")
-    group_id = fields.Many2one('account.group', compute='_compute_account_group', store=True, readonly=False)
+    group_id = fields.Many2one('account.group', compute='_compute_account_group', store=True, readonly=True)
     root_id = fields.Many2one('account.root', compute='_compute_account_root', store=True)
     allowed_journal_ids = fields.Many2many('account.journal', string="Allowed Journals", help="Define in which journals this account can be used. If empty, can be used in all journals.")
 
@@ -188,6 +188,32 @@ class AccountAccount(models.Model):
         if self._cr.fetchone():
             raise ValidationError(_("The account is already in use in a 'sale' or 'purchase' journal. This means that the account's type couldn't be 'receivable' or 'payable'."))
 
+    @api.constrains('reconcile')
+    def _check_used_as_journal_default_debit_credit_account(self):
+        accounts = self.filtered(lambda a: not a.reconcile)
+        if not accounts:
+            return
+
+        self.flush(['reconcile'])
+        self._cr.execute('''
+            SELECT journal.id
+            FROM account_journal journal
+            WHERE journal.payment_credit_account_id in %(credit_account)s
+            OR journal.payment_debit_account_id in %(debit_account)s ;
+        ''', {
+            'credit_account': tuple(accounts.ids),
+            'debit_account': tuple(accounts.ids)
+        })
+
+        rows = self._cr.fetchall()
+        if rows:
+            journals = self.env['account.journal'].browse([r[0] for r in rows])
+            raise ValidationError(_(
+                "This account is configured in %(journal_names)s journal(s) (ids %(journal_ids)s) as payment debit or credit account. This means that this account's type should be reconcilable.",
+                journal_names=journals.mapped('display_name'),
+                journal_ids=journals.ids
+            ))
+
     @api.depends('code')
     def _compute_account_root(self):
         # this computes the first 2 digits of the account.
@@ -258,10 +284,12 @@ class AccountAccount(models.Model):
             account.is_off_balance = account.internal_group == "off_balance"
 
     def _set_opening_debit(self):
-        self._set_opening_debit_credit(self.opening_debit, 'debit')
+        for record in self:
+            record._set_opening_debit_credit(record.opening_debit, 'debit')
 
     def _set_opening_credit(self):
-        self._set_opening_debit_credit(self.opening_credit, 'credit')
+        for record in self:
+            record._set_opening_debit_credit(record.opening_credit, 'credit')
 
     def _set_opening_debit_credit(self, amount, field):
         """ Generic function called by both opening_debit and opening_credit's
@@ -587,22 +615,37 @@ class AccountGroup(models.Model):
         The most specific is the one with the longest prefixes and with the starting
         prefix being smaller than the account code and the ending prefix being greater.
         """
-        if not self and not account_ids:
+        company_ids = account_ids.company_id.ids if account_ids else self.company_id.ids
+        account_ids = account_ids.ids if account_ids else []
+        if not company_ids and not account_ids:
             return
-        self.env['account.group'].flush()
-        self.env['account.account'].flush()
-        query = """
-            UPDATE account_account account SET group_id = (
-                SELECT agroup.id FROM account_group agroup
-                WHERE agroup.code_prefix_start <= LEFT(account.code, char_length(agroup.code_prefix_start))
-                AND agroup.code_prefix_end >= LEFT(account.code, char_length(agroup.code_prefix_end))
-                AND agroup.company_id = account.company_id
-                ORDER BY char_length(agroup.code_prefix_start) DESC LIMIT 1
-            ) WHERE account.company_id in %(company_ids)s {where_account};
-        """.format(
-            where_account=account_ids and 'AND account.id IN %(account_ids)s' or ''
-        )
-        self.env.cr.execute(query, {'company_ids': tuple((self.company_id or account_ids.company_id).ids), 'account_ids': account_ids and tuple(account_ids.ids)})
+        self.env['account.group'].flush(self.env['account.group']._fields)
+        self.env['account.account'].flush(self.env['account.account']._fields)
+
+        account_where_clause = ''
+        where_params = [tuple(company_ids)]
+        if account_ids:
+            account_where_clause = 'AND account.id IN %s'
+            where_params.append(tuple(account_ids))
+
+        self._cr.execute(f'''
+            WITH candidates_account_groups AS (
+                SELECT
+                    account.id AS account_id,
+                    ARRAY_AGG(agroup.id ORDER BY char_length(agroup.code_prefix_start) DESC, agroup.id) AS group_ids
+                FROM account_account account
+                LEFT JOIN account_group agroup
+                    ON agroup.code_prefix_start <= LEFT(account.code, char_length(agroup.code_prefix_start))
+                    AND agroup.code_prefix_end >= LEFT(account.code, char_length(agroup.code_prefix_end))
+                    AND agroup.company_id = account.company_id
+                WHERE account.company_id IN %s {account_where_clause}
+                GROUP BY account.id
+            )
+            UPDATE account_account
+            SET group_id = rel.group_ids[1]
+            FROM candidates_account_groups rel
+            WHERE account_account.id = rel.account_id
+        ''', where_params)
         self.env['account.account'].invalidate_cache(fnames=['group_id'])
 
     def _adapt_parent_account_group(self):
@@ -614,21 +657,28 @@ class AccountGroup(models.Model):
         """
         if not self:
             return
-        self.env['account.group'].flush()
+        self.env['account.group'].flush(self.env['account.group']._fields)
         query = """
-            UPDATE account_group agroup SET parent_id = (
-                SELECT parent.id FROM account_group parent
-                WHERE char_length(parent.code_prefix_start) < char_length(agroup.code_prefix_start)
-                AND parent.code_prefix_start <= LEFT(agroup.code_prefix_start, char_length(parent.code_prefix_start))
-                AND parent.code_prefix_end >= LEFT(agroup.code_prefix_end, char_length(parent.code_prefix_end))
-                AND parent.id != agroup.id
-                AND parent.company_id = %(company_id)s
-                ORDER BY char_length(parent.code_prefix_start) DESC LIMIT 1
-            ) WHERE agroup.company_id = %(company_id)s;
+            WITH relation AS (
+       SELECT DISTINCT FIRST_VALUE(parent.id) OVER (PARTITION BY child.id ORDER BY child.id, char_length(parent.code_prefix_start) DESC) AS parent_id,
+                       child.id AS child_id
+                  FROM account_group parent
+                  JOIN account_group child
+                    ON char_length(parent.code_prefix_start) < char_length(child.code_prefix_start)
+                   AND parent.code_prefix_start <= LEFT(child.code_prefix_start, char_length(parent.code_prefix_start))
+                   AND parent.code_prefix_end >= LEFT(child.code_prefix_end, char_length(parent.code_prefix_end))
+                   AND parent.id != child.id
+                   AND parent.company_id = child.company_id
+                 WHERE child.company_id IN %(company_ids)s
+            )
+            UPDATE account_group child
+               SET parent_id = relation.parent_id
+              FROM relation
+             WHERE child.id = relation.child_id;
         """
-        self.env.cr.execute(query, {'company_id': self.company_id.id})
+        self.env.cr.execute(query, {'company_ids': tuple(self.company_id.ids)})
         self.env['account.group'].invalidate_cache(fnames=['parent_id'])
-        self.env['account.group'].search([('company_id', '=', self.company_id.id)])._parent_store_update()
+        self.env['account.group'].search([('company_id', 'in', self.company_id.ids)])._parent_store_update()
 
 
 class AccountRoot(models.Model):

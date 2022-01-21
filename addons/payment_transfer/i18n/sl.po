@@ -1,13 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * payment_transfer
+# 	* payment_transfer
+# 
+# Translators:
+# Martin Trigaux, 2021
+# Matjaz Mozetic <m.mozetic@matmoz.si>, 2021
+# Dejan Sraka <dejan.sraka@picolabs.si>, 2021
+# matjaz k <matjaz@mentis.si>, 2021
+# Jasmina Macur <jasmina@hbs.si>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"PO-Revision-Date: 2020-09-07 08:16+0000\n"
+"Last-Translator: Jasmina Macur <jasmina@hbs.si>, 2021\n"
 "Language-Team: Slovenian (https://www.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -16,19 +24,19 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
 
 #. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:70
+#: code:addons/payment_transfer/models/payment.py:0
 #, python-format
 msgid "; multiple order found"
-msgstr ""
+msgstr "; več najdenih naročil"
 
 #. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:68
+#: code:addons/payment_transfer/models/payment.py:0
 #, python-format
 msgid "; no order found"
-msgstr ""
+msgstr "; nobenega naročila ni bilo najdenega"
 
 #. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:28
+#: code:addons/payment_transfer/models/payment.py:0
 #, python-format
 msgid ""
 "<div>\n"
@@ -39,31 +47,66 @@ msgid ""
 "<p>Please use the order name as communication reference.</p>\n"
 "</div>"
 msgstr ""
+"<div>\n"
+"<h3>Uporabite naslednje podrobnosti transakcije</h3>\n"
+"<h4>%(bank_title)s</h4>\n"
+"%(bank_accounts)s\n"
+"<h4>Komunikacija</h4>\n"
+"<p>Uporabite naziv naloga kot sklic komunikacije.</p>\n"
+"</div>"
 
 #. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:26
+#: code:addons/payment_transfer/models/payment.py:0
 #, python-format
 msgid "Bank Account"
-msgstr ""
+msgstr "Bančni račun"
 
 #. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:26
+#: code:addons/payment_transfer/models/payment.py:0
 #, python-format
 msgid "Bank Accounts"
+msgstr "Bančni računi"
+
+#. module: payment_transfer
+#: model:ir.model.fields,field_description:payment_transfer.field_payment_acquirer__display_name
+#: model:ir.model.fields,field_description:payment_transfer.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr "Prikazani naziv"
+
+#. module: payment_transfer
+#: model:ir.model.fields,field_description:payment_transfer.field_payment_acquirer__id
+#: model:ir.model.fields,field_description:payment_transfer.field_payment_transaction__id
+msgid "ID"
+msgstr "ID"
+
+#. module: payment_transfer
+#: model:ir.model.fields,field_description:payment_transfer.field_payment_acquirer____last_update
+#: model:ir.model.fields,field_description:payment_transfer.field_payment_transaction____last_update
+msgid "Last Modified on"
+msgstr "Zadnjič spremenjeno"
+
+#. module: payment_transfer
+#: model:ir.model.fields.selection,name:payment_transfer.selection__payment_acquirer__provider__transfer
+msgid "Manual Payment"
 msgstr ""
 
 #. module: payment_transfer
 #: model:ir.model,name:payment_transfer.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr ""
+msgstr "Ponudnik plačilne storitve"
 
 #. module: payment_transfer
 #: model:ir.model,name:payment_transfer.model_payment_transaction
 msgid "Payment Transaction"
-msgstr ""
+msgstr "Plačilna transakcija"
 
 #. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:66
+#: model:ir.model.fields,field_description:payment_transfer.field_payment_acquirer__provider
+msgid "Provider"
+msgstr "Ponudnik"
+
+#. module: payment_transfer
+#: code:addons/payment_transfer/models/payment.py:0
 #, python-format
 msgid "received data for reference %s"
 msgstr ""

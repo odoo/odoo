@@ -150,7 +150,7 @@ class PosConfig(models.Model):
     proxy_ip = fields.Char(string='IP Address', size=45,
         help='The hostname or ip address of the hardware proxy, Will be autodetected if left empty.')
     active = fields.Boolean(default=True)
-    uuid = fields.Char(readonly=True, default=lambda self: str(uuid4()),
+    uuid = fields.Char(readonly=True, default=lambda self: str(uuid4()), copy=False,
         help='A globally unique identifier for this pos configuration, used to prevent conflicts in client-generated data.')
     sequence_id = fields.Many2one('ir.sequence', string='Order IDs Sequence', readonly=True,
         help="This sequence is automatically created by Odoo but you can change it "
@@ -390,6 +390,14 @@ class PosConfig(models.Model):
                 _("You must have at least one payment method configured to launch a session.")
             )
 
+    @api.constrains('pricelist_id', 'available_pricelist_ids')
+    def _check_pricelists(self):
+        self._check_companies()
+        self = self.sudo()
+        if self.pricelist_id.company_id and self.pricelist_id.company_id != self.company_id:
+            raise ValidationError(
+                _("The default pricelist must belong to no company or the company of the point of sale."))
+
     @api.constrains('company_id', 'available_pricelist_ids')
     def _check_companies(self):
         if any(self.available_pricelist_ids.mapped(lambda pl: pl.company_id.id not in (False, self.company_id.id))):
@@ -574,6 +582,9 @@ class PosConfig(models.Model):
          }
 
     def _force_http(self):
+        enforce_https = self.env['ir.config_parameter'].sudo().get_param('point_of_sale.enforce_https')
+        if not enforce_https and self.other_devices:
+            return True
         return False
 
     def _get_pos_base_url(self):
@@ -605,6 +616,7 @@ class PosConfig(models.Model):
         """
         self.ensure_one()
         if not self.current_session_id:
+            self._check_pricelists()
             self._check_company_journal()
             self._check_company_invoice_journal()
             self._check_company_payment()
@@ -627,6 +639,7 @@ class PosConfig(models.Model):
         return self._open_session(self.current_session_id.id)
 
     def _open_session(self, session_id):
+        self._check_pricelists()  # The pricelist company might have changed after the first opening of the session
         return {
             'name': _('Session'),
             'view_mode': 'form,tree',

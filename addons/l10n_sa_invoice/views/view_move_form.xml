@@ -1,0 +1,15 @@
+<odoo>
+    <data>
+        <record id="view_move_form" model="ir.ui.view">
+            <field name="name">account.move.deliver_date</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <field name="invoice_date" position="after">
+                    <field name="l10n_sa_show_delivery_date" invisible="1"/>
+                    <field name="l10n_sa_delivery_date" attrs="{'invisible': [('l10n_sa_show_delivery_date', '=', False)], 'required': [('l10n_sa_show_delivery_date', '=', True)]}"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

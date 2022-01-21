@@ -12,13 +12,18 @@
 # Wolfgang Taferner, 2020
 # Henry Mineehen <info@mineehen.de>, 2020
 # Niki Waibel, 2020
-# JEK Odoo <jek@odoo.com>, 2020
+# Jérôme JEK <jek@odoo.com>, 2020
 # Florian Pose <fp@igh.de>, 2020
 # f91684c3ff9ec3e650d5c8461e534581_686eae3 <449b96d9f63071f94d89e129677b83de_366193>, 2020
 # Martin Trigaux, 2020
 # Ermin Trevisan <trevi@twanda.com>, 2020
 # Leon Grill <leg@odoo.com>, 2020
-# Chris Egal <sodaswed@web.de>, 2020
+# EugenBrodskiSAMSAIT <eugen.brodski@samsa-it.de>, 2021
+# Andreas Schmidt <schmigo@gmail.com>, 2021
+# Robert Förster <hello@suppliot.eu>, 2021
+# Chris Egal <sodaswed@web.de>, 2021
+# spilymp <visessa+github@gmail.com>, 2021
+# Friederike Fasterling-Nesselbosch, 2022
 # 
 msgid ""
 msgstr ""
@@ -26,7 +31,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 13:50+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Chris Egal <sodaswed@web.de>, 2020\n"
+"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -109,6 +114,19 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"Österreichische Kontenrahmen (Einheitskontenrahmen 2010).\n"
+"==========================================================\n"
+"\n"
+"* Definiert die folgenden Kontenplan vorlagen:\n"
+"* Österreichischer Einheitskontenrahmen 2010\n"
+"* Definiert Vorlagen für die Umsatzsteuer bei Verkäufen und Einkäufen\n"
+"* Definiert Steuer-Templates\n"
+"* Definiert Steuerpositionen für die österreichische Steuergesetzgebung\n"
+"* Definiert die Steuerberichte U1/U30\n"
+"\n"
+"   "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_hu
@@ -223,6 +241,88 @@ msgid ""
 "Copyright 2018 Odoo House ApS\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"Lokalisierungsmodul für Dänemark\n"
+"===============================\n"
+"\n"
+"Dies ist das Modul zur Verwaltung des **Buchungskreises für Dänemark**. Abdeckung sowohl von Einzelunternehmen als auch von I/S, IVS, ApS und A/S\n"
+"\n"
+"**Das Modul richtet ein:**\n"
+"\n"
+"- **Dänischer Kontenplan**\n"
+"\n"
+"- dänische Mehrwertsteuer\n"
+"- 25% MWST.\n"
+"- Restaurierung Mehrwertsteuer 6,25%\n"
+"- Umgekehrte Ladung\n"
+"\n"
+"- Kontogruppen\n"
+"- EU (Business)\n"
+"- EU (privat)\n"
+"- 3.Länder\n"
+"\n"
+"- Finanz-Reporter\n"
+"- Gewinn- und Verlustrechnung\n"
+"- Bilanz\n"
+"- Mehrwertsteuer-Abrechnung\n"
+"- Abrechnung\n"
+"- Überschriften A, B und C\n"
+"\n"
+"- **Anglosächsische Bilanzierungsmethode**\n"
+"\n"
+".\n"
+"\n"
+"Produkt-Setup:\n"
+"==============\n"
+"\n"
+"**Produkt**\n"
+"\n"
+"**Umsatzsteuer:** Umsatzsteuer 25\n"
+"\n"
+"**Verkaufskonto:** 1010 Verkauf von Waren, ohne MwSt.\n"
+"\n"
+"**Verkaufsumsatzsteuer:** Verkaufsumsatzsteuer 25%\n"
+"\n"
+"**Einkaufskonto:** 2010 Direkte Kosten der Waren, ohne MwSt.\n"
+"\n"
+".\n"
+"\n"
+"**Service**\n"
+"\n"
+"**Verkaufsumsatzsteuer:** Verkaufsumsatzsteuer 25%, Dienstleistungen\n"
+"\n"
+"**Verkaufskonto:** 1011 Verkauf von Dienstleistungen, ohne MwSt.\n"
+"\n"
+"**Verkaufsumsatzsteuer:** Verkaufsumsatzsteuer 25%, Dienstleistungen\n"
+"\n"
+"**Einkaufskonto:** 2011 Direkte Kosten für Dienstleistungen, ohne MwSt.\n"
+"\n"
+".\n"
+"\n"
+"**Rohstoffe mit Reverse Charge**\n"
+"\n"
+"**Umsatzsteuer:** Umkehrung der Steuerschuldnerschaft beim Verkauf\n"
+"\n"
+"**Verkaufskonto:** 1012 Verkauf von Waren, ohne MwSt.\n"
+"\n"
+"**Mehrwertsteuer auf Käufe:** Kauf-Reverse-Charge\n"
+"\n"
+"**Einkaufskonto:** 2012 Direkte Kosten der Waren, ohne MwSt.\n"
+"\n"
+"\n"
+".\n"
+"\n"
+"**Restaurierung**\n"
+"\n"
+"**Einkaufsumsatzsteuer:** Restaurationsumsatzsteuer 6,25%, Kaufumsatzsteuer\n"
+"\n"
+"**Einkaufskonto:** 4010 Restaurationsbesuche\n"
+"\n"
+".\n"
+"\n"
+"Copyright 2018 Odoo House ApS\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_do
@@ -564,6 +664,11 @@ msgid ""
 "        Contains Balance Sheet, Profit/Loss reports\n"
 "    "
 msgstr ""
+"\n"
+"Buchhaltungsberichte für Litauen\n"
+"\n"
+"Enthält Bilanz, Gewinn/Verlust-Berichte\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_nl_reports
@@ -592,6 +697,9 @@ msgid ""
 "        Accounting reports for Sweden\n"
 "    "
 msgstr ""
+"\n"
+"        Buchhaltungsberichte für Schweden\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ch_reports
@@ -613,6 +721,12 @@ msgid ""
 "        MTD-VAT API to HMRC.\n"
 "    "
 msgstr ""
+"\n"
+"        Buchhaltungsberichte für UK\n"
+"\n"
+"Ermöglicht das Senden des Steuerberichts über die\n"
+"MTD-VAT API an HMRC.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_us_reports
@@ -632,6 +746,10 @@ msgid ""
 "        the questions and answers linked to the registrations.\n"
 "    "
 msgstr ""
+"\n"
+"        Fügen Sie Informationen hinzu, wenn wir die Beschreibung eines Leads erstellen, um\n"
+"die Fragen und Antworten, die mit den Registrierungen verknüpft sind.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_mx_reports_closing
@@ -891,6 +1009,28 @@ msgid ""
 "        you have not already sent to the government to reuse its number.\n"
 "    "
 msgstr ""
+"\n"
+"E-Faktur Menü(Indonesien)\n"
+"Format : 010.000-16.00000001\n"
+"* 2 (dua) digit pertama adalah Kode Transaksi\n"
+"* 1 (satu) digit berikutnya adalah Kode Status\n"
+"* 3 (tiga) Stelle berikutnya adalah Kode Cabang\n"
+"* 2 (dua) digit pertama adalah Tahun Penerbitan\n"
+"* 8 (delapan) digit berikutnya adalah Nomor Urut\n"
+"\n"
+"Um Kundenrechnungen als e-Faktur exportieren zu können,\n"
+"müssen Sie die Nummernkreise, die Ihnen\n"
+"von der Regierung in Buchhaltung > Kunden > e-Faktur\n"
+"\n"
+"Wenn Sie eine Rechnung validieren, bei der der Partner das Feld ID PKP\n"
+"angekreuzt hat, wird dieser Rechnung eine Steuernummer zugewiesen.\n"
+"Anschließend können Sie die noch zu exportierenden Rechnungen in der\n"
+"Rechnungen filtern und auf Aktion > Download e-Faktur klicken, um die\n"
+"die csv-Datei herunterzuladen und auf die Website der Regierung hochzuladen.\n"
+"\n"
+"Sie können eine bereits gesendete Rechnung durch eine andere ersetzen, indem Sie\n"
+"Sie können eine bereits gesendete Rechnung durch eine andere ersetzen, indem Sie die ersetzte Rechnung und die neue Rechnung angeben, und Sie können eine Rechnung zurücksetzen\n"
+"die Sie noch nicht an die Regierung gesendet haben, zurücksetzen, um ihre Nummer erneut zu verwenden."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_mx_reports
@@ -926,6 +1066,11 @@ msgid ""
 "        For more information about the SEPA standards : http://www.iso20022.org/ and http://www.europeanpaymentscouncil.eu/\n"
 "    "
 msgstr ""
+"\n"
+"Generieren Sie dank pain.001-Meldungen Zahlungsaufträge, wie sie von der SEPA-Norm empfohlen werden. Unterstützte pain-Versionen (Länder) sind pain.001.001.03 (generisch), pain.001.001.03.ch.02 (Schweiz) und pain.001.003.03 (Deutschland). Die generierte XML-Datei kann dann bei Ihrer Bank hochgeladen werden.\n"
+"\n"
+"Dieses Modul folgt den vom European Payment Council herausgegebenen Implementierungsrichtlinien.\n"
+"Für weitere Informationen über die SEPA-Standards: http://www.iso20022.org/ und http://www.europeanpaymentscouncil.eu/"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_winbooks_import
@@ -1003,6 +1148,8 @@ msgid ""
 "        This bridge module is auto-installed when the modules stock_barcode and mrp_subcontracting are installed.\n"
 "    "
 msgstr ""
+"\n"
+" Dieses Brückenmodul wird automatisch installiert, wenn die Module stock_barcode und mrp_subcontracting installiert sind."
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_barcode_quality_control
@@ -1022,6 +1169,8 @@ msgid ""
 "        This module adds support for SEPA Credit Transfer QR-code generation.\n"
 "    "
 msgstr ""
+"\n"
+"Dieses Modul unterstützt die Erzeugung von QR-Codes für SEPA-Überweisungen."
 
 #. module: base
 #: model:ir.module.module,description:base.module_approvals_purchase
@@ -1119,6 +1268,8 @@ msgid ""
 "        This module implements reCaptchaV3 so that you can prevent bot spam on your public modules.\n"
 "    "
 msgstr ""
+"\n"
+"Dieses Modul implementiert reCaptchaV3, so dass Sie Bot-Spam auf Ihren öffentlichen Modulen verhindern können."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_online_sync
@@ -1333,18 +1484,11 @@ msgid ""
 "\n"
 "    Make the lock date irreversible:\n"
 "\n"
-"    * You cannot define stricter conditions on advisors than on users. Then, the lock date on advisor must be set before the lock date for users.\n"
-"    * You cannot lock a period that is not finished yet. Then, the lock date for advisors must be set before the last day of the previous month.\n"
-"    * The new lock date for advisors must be set after the previous lock date.\n"
+"    * You cannot set stricter restrictions on advisors than on users. Therefore, the All Users Lock Date must be anterior (or equal) to the Invoice/Bills Lock Date.\n"
+"    * You cannot lock a period that has not yet ended. Therefore, the All Users Lock Date must be anterior (or equal) to the last day of the previous month.\n"
+"    * Any new All Users Lock Date must be posterior (or equal) to the previous one.\n"
 "    "
 msgstr ""
-"\n"
-"    Das Sperrdatum unumkehrbar fixieren:\n"
-"\n"
-"    * Sie dürfen die Einschränkungen für Buchhalter nicht strenger fassen als für Anwender. Das Sperrdatum für Buchhalter muss vor dem für Anwender gesetzt werden.\n"
-"    * Sie dürfen eine nicht abgeschlossene Periode nicht sperren. Dann muss das Sperrdatum für Buchhalter vor dem letzten Tag des Vormonats gesetzt werden.\n"
-"    * Das neue Sperrdatum für Buchhalter muss nach dem vorherigen Sperrdatum liegen.\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_coupon_taxcloud
@@ -1745,6 +1889,9 @@ msgid ""
 "=================================\n"
 "    "
 msgstr ""
+"\n"
+"Buchhaltungsberichte für Dänemark\n"
+"================================="
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fi_reports
@@ -1755,6 +1902,9 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Buchhaltungsberichte für Finnland\n"
+"================================="
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_reports
@@ -1848,6 +1998,8 @@ msgid ""
 "Add a dynamic report about recruitment.\n"
 "    "
 msgstr ""
+"\n"
+"Fügen Sie einen dynamischen Bericht über Recruiting hinzu."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_latam_base
@@ -2236,6 +2388,10 @@ msgid ""
 "=============================================\n"
 "This module allows to generate a project/task from sales orders.\n"
 msgstr ""
+"\n"
+"Ermöglicht das Erstellen von Aufgaben aus Ihrem Kundenauftrag\n"
+"=============================================\n"
+"Dieses Modul ermöglicht es, ein Projekt/eine Aufgabe aus Kundenaufträgen zu generieren.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_voip
@@ -2274,6 +2430,9 @@ msgid ""
 "Allows to use in the Point of Sale the devices that are connected to an IoT Box.\n"
 "Supported devices include payment terminals, receipt printers, scales and customer displays.\n"
 msgstr ""
+"\n"
+"Ermöglicht die Verwendung von Geräten, die mit einer IoT-Box verbunden sind, am Point of Sale.\n"
+"Zu den unterstützten Geräten gehören Zahlungsterminals, Bondrucker, Waagen und Kundendisplays.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_amazon_delivery
@@ -2325,6 +2484,8 @@ msgid ""
 "\n"
 "Allows using IoT devices, such as scales and printers, for delivery operations.\n"
 msgstr ""
+"\n"
+"Ermöglicht die Nutzung von IoT-Geräten wie Waagen und Druckern für die Zustellung.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery
@@ -3368,6 +3529,46 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"EU Mini One Stop Shop (MOSS) Mehrwertsteuer für Telekommunikation, Rundfunk und elektronische Dienstleistungen\n"
+"=============================================================================================\n"
+"\n"
+"Ab dem 1. Januar 2015 müssen Telekommunikations-, Rundfunk- und\n"
+"und elektronische Dienstleistungen, die innerhalb der Europäischen Union\n"
+"immer in dem Land versteuert werden, in dem der Kunde ansässig ist.\n"
+"gehört. Um die Anwendung dieser EU-Richtlinie zu vereinfachen\n"
+"Richtlinie zu vereinfachen, ermöglicht das Mini One Stop Shop (MOSS)-Registrierungssystem\n"
+"erlaubt es Unternehmen, eine eindeutige Steuererklärung abzugeben.\n"
+"\n"
+"Dieses Modul macht es möglich, indem es hilft bei der Erstellung\n"
+"der erforderlichen EU-Steuerpositionen und Steuern, um die\n"
+"automatisch die erforderlichen Steuern anzuwenden und zu erfassen.\n"
+"\n"
+"Dieses Modul installiert einen Assistenten, der bei der Einrichtung von Steuerpositionen\n"
+"und Steuern für den Verkauf von elektronischen Dienstleistungen innerhalb der EU.\n"
+"\n"
+"Mit dem Assistenten können Sie wählen:\n"
+"- die EU-Länder, in die Sie diese verkaufen\n"
+"Dienstleistungen\n"
+"- Ihre nationale Mehrwertsteuer für Dienstleistungen, die abgebildet werden soll\n"
+"auf die Steuer des Ziellandes\n"
+"- optional: eine Vorlage für die Steuerposition, um\n"
+"die Kontenzuordnung zu kopieren. Sollte Ihre\n"
+"bestehende B2C-Intra-EU-Steuerposition sein. (Standardmäßig\n"
+"auf keine Kontenzuordnung)\n"
+"- optional: ein Konto, das für die Erfassung der\n"
+"Steuerbeträge (standardmäßig das Konto, das von Ihrer\n"
+"nationalen Umsatzsteuer für Dienstleistungen)\n"
+"\n"
+"Es werden die entsprechenden Steuerpositionen und Steuern erstellt,\n"
+"automatisch anwendbar für EU-Verkäufe mit einem Kunden\n"
+"in den ausgewählten Ländern.\n"
+"Der Assistent kann erneut ausgeführt werden, um weitere Länder hinzuzufügen.\n"
+"\n"
+"Referenzen\n"
+"++++++++++\n"
+"- Richtlinie 2008/8/EG\n"
+"- Durchführungsverordnung (EU) Nr. 1042/2013 des Rates."
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_hr
@@ -3407,6 +3608,8 @@ msgid ""
 "\n"
 "Employee 281.10 and 281.45 forms will be automatically integrated to the Document app.\n"
 msgstr ""
+"\n"
+"Die Formulare 281.10 und 281.45 für Arbeitnehmer werden automatisch in die Dokumenten-App integriert.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_hr_contract
@@ -4854,6 +5057,8 @@ msgid ""
 "\n"
 "Module holding mail improvements for website. It holds the follow widget.\n"
 msgstr ""
+"\n"
+"Modul mit E-Mail-Verbesserungen für die Website. Es enthält das Follow-Widget.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_followup
@@ -6034,6 +6239,9 @@ msgid ""
 "Technical module.\n"
 "    "
 msgstr ""
+"\n"
+"Technisches Modul.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_repair
@@ -6444,6 +6652,13 @@ msgid ""
 "moneda Lempira. -- Adds accounting chart for Honduras. It also includes taxes\n"
 "and the Lempira currency."
 msgstr ""
+"\n"
+"Dies ist das Basismodul, um den Kontenplan für Honduras zu verwalten.\n"
+"====================================================================\n"
+"\n"
+"Agrega una nomenclatura contable para Honduras. También incluye impuestos y la\n"
+"moneda Lempira. -- Adds accounting chart for Honduras. It also includes taxes\n"
+"and the Lempira currency."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lu
@@ -6525,6 +6740,11 @@ msgid ""
 "    - generic Indonesian chart of accounts\n"
 "    - tax structure"
 msgstr ""
+"\n"
+"Dies ist die neueste indonesische Odoo-Lokalisierung, die notwendig ist, um Odoo Buchhaltung für KMUs zu betreiben:\n"
+"=================================================================================================\n"
+"- allgemeiner indonesischer Kontenplan\n"
+"- Steuerstruktur"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_uk
@@ -6884,6 +7104,8 @@ msgid ""
 "This module adds an integration with Survey to ask feedbacks to any employee, based on a survey to fill.\n"
 "    "
 msgstr ""
+"\n"
+"Dieses Modul fügt eine Integration mit Odoo Umfragen hinzu, um jedem Mitarbeiter Feedback zu geben, basierend auf einer auszufüllenden Umfrage."
 
 #. module: base
 #: model:ir.module.module,description:base.module_portal
@@ -6991,6 +7213,8 @@ msgid ""
 "This module allows Employees (and not users) to log in to the Point of Sale application using the fiscal data module\n"
 "    "
 msgstr ""
+"\n"
+"Mit diesem Modul können sich die Mitarbeiter (nicht Benutzer) über das Modul für steuerliche Daten bei der Kassensystemanwendung anmelden."
 
 #. module: base
 #: model:ir.module.module,description:base.module_rating
@@ -7029,6 +7253,8 @@ msgid ""
 "This module allows to configure commissions for resellers.\n"
 "    "
 msgstr ""
+"\n"
+"Dieses Modul ermöglicht die Konfiguration von Provisionen für Händler."
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_automation
@@ -7125,6 +7351,19 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Dieses Modul ermöglicht es, Händler/Partner auf Ihrer Website zu veröffentlichen und eingehende Leads/Opportunities an sie weiterzuleiten.\n"
+"\n"
+"\n"
+"**Partner veröffentlichen**\n"
+"\n"
+"Um einen Partner zu veröffentlichen, geben Sie einen *Level* in seinem Kontaktformular an (im Abschnitt Partnerzuordnung) und klicken auf die Schaltfläche *Veröffentlichen*.\n"
+"\n"
+"**Leads weiterleiten**\n"
+"\n"
+"Die Weiterleitung von Leads kann für einen oder mehrere Leads auf einmal erfolgen. Die Aktion ist im Abschnitt *Zugeordneter Partner* der Lead-/Opportunity-Formularansicht und im Menü *Aktion* der Listenansicht verfügbar.\n"
+"\n"
+"Die automatische Zuordnung ergibt sich aus der Gewichtung der Partnerstufen und der Geolokalisierung. Partner erhalten Leads, die sich in ihrer Umgebung befinden."
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_landed_costs
@@ -7318,6 +7557,11 @@ msgid ""
 "It adds a timer to a view for time recording purpose\n"
 "    "
 msgstr ""
+"\n"
+"Dieses Modul implementiert einen Timer.\n"
+"==========================================\n"
+"\n"
+"Es fügt einen Timer zur Zeiterfassung in eine Ansicht ein"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_timesheet
@@ -7511,6 +7755,9 @@ msgid ""
 "This module provides standard tools (account model, context manager and helpers)\n"
 "to support In-App purchases inside Odoo. "
 msgstr ""
+"\n"
+"Dieses Modul bietet Standardtools (Kontomodell, Kontextmanager und Hilfsfunktionen)\n"
+"zur Unterstützung von In-App-Käufen in Odoo."
 
 #. module: base
 #: model:ir.module.module,description:base.module_quality_iot
@@ -7791,6 +8038,8 @@ msgid ""
 "\n"
 "Use devices connected to an IoT Box to control the quality of your products.\n"
 msgstr ""
+"\n"
+"Verwenden Sie Geräte, die mit einer IoT-Box verbunden sind, um die Qualität Ihrer Produkte zu kontrollieren.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_restaurant_iot
@@ -7807,6 +8056,9 @@ msgid ""
 "=======================================================================\n"
 " "
 msgstr ""
+"\n"
+"Mit dieser Anwendung können Sie Vertriebsteams mit CRM und/oder Sales verwalten\n"
+"======================================================================="
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_vat
@@ -8029,6 +8281,12 @@ msgid ""
 "Other SIPS providers may be compatible, though this is\n"
 "not guaranteed."
 msgstr ""
+"\n"
+"Worldline SIPS Zahlungsanbieter für Online-Zahlungen\n"
+"\n"
+"Implementiert die Worldline SIPS API für Zahlungsanbieter.\n"
+"Andere SIPS-Anbieter können kompatibel sein, dies ist jedoch nicht\n"
+"nicht garantiert."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_crm_livechat
@@ -8225,7 +8483,7 @@ msgstr "%y - Jahr zweistellig [00,99]."
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_language_install
 msgid "&amp; Close"
-msgstr ""
+msgstr "&amp; Schließen"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_view_kanban
@@ -8387,7 +8645,7 @@ msgstr "3. %y, %Y ==> 08, 2008"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_appraisal_survey
 msgid "360 Feedback"
-msgstr ""
+msgstr "360° Feedback"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
@@ -8559,7 +8817,7 @@ msgstr "<i class=\"fa fa-times\" title=\"Close the onboarding panel\"/>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
 msgid "<span aria-label=\"Close\">×</span>"
-msgstr ""
+msgstr "<span aria-label=\"Schließen\">×</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.reset_view_arch_wizard_view
@@ -8568,17 +8826,20 @@ msgid ""
 "                        <span attrs=\"{'invisible': [('reset_mode', '!=', 'hard')]}\">This view is not coming from a file.</span>\n"
 "                        <span attrs=\"{'invisible': [('reset_mode', '!=', 'other_view')]}\">You need two views to compare.</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('reset_mode', '!=', 'soft')]}\">Diese Ansicht hat keine Vorgängerversion.</span>\n"
+"                        <span attrs=\"{'invisible': [('reset_mode', '!=', 'hard')]}\">Diese Ansicht stammt nicht aus einer Datei.</span>\n"
+"                        <span attrs=\"{'invisible': [('reset_mode', '!=', 'other_view')]}\">Sie benötigen zwei Ansichten zum Vergleich.</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid ""
 "<span class=\"o_form_label o_td_label\" name=\"address_name\">\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'contact')]}\">Company Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'invoice')]}\">Invoice Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'delivery')]}\">Delivery Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'other')]}\">Other Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'private')]}\">Private Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', False)]}\">Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'contact')]}\">Company Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'invoice')]}\">Invoice Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'delivery')]}\">Delivery Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'other')]}\">Other Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'private')]}\">Private Address</b>\n"
+"                                <b attrs=\"{'invisible': ['&amp;', ('parent_id', '!=', False), ('type', '!=', False)]}\">Address</b>\n"
 "                            </span>"
 msgstr ""
 
@@ -8732,6 +8993,9 @@ msgid ""
 "                            The key cannot be retrieved later and provides <b>full access</b>\n"
 "                            to your user account, it is very important to store it securely."
 msgstr ""
+"<strong>Wichtig:</strong>\n"
+"                            Der Schlüssel kann später nicht mehr abgerufen werden und bietet <b>vollen Zugang</b>\n"
+"                            zu Ihrem Benutzerkonto. Stellen Sie sicher, dass er sicher verwahrt ist."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -9125,6 +9389,8 @@ msgstr "Ein zum Kontakt verbundener Benutzer"
 #, python-format
 msgid "A valid email is required for find_or_create to work properly."
 msgstr ""
+"Eine gültige E-Mail-Adresse wird benötigt, damit find_or_create "
+"ordnungsgemäß funktioniert."
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__a0
@@ -9189,7 +9455,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__api_key_ids
 msgid "API Keys"
-msgstr ""
+msgstr "API-Schlüssel"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_apikeys_admin
@@ -9277,7 +9543,7 @@ msgstr "Zugriff auf private Adressen"
 #. module: base
 #: model:res.groups,name:base.group_allow_export
 msgid "Access to export feature"
-msgstr ""
+msgstr "Zugang zur Export-Funktion"
 
 #. module: base
 #: code:addons/api.py:0 code:addons/api.py:0
@@ -9325,7 +9591,7 @@ msgstr "Kontoinhaber"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__acc_holder_name
 msgid "Account Holder Name"
-msgstr "Kontoinhaber"
+msgstr "Abweichender Kontoinhaber"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_invoice_extract
@@ -9350,7 +9616,7 @@ msgstr "Die Kontonummer muss eindeutig sein"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "Account Security"
-msgstr ""
+msgstr "Account Sicherheit"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_taxcloud
@@ -9466,7 +9732,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_fleet
 msgid "Accounting/Fleet bridge"
-msgstr ""
+msgstr "Buchhaltung/Fleetbrücke"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window_view__act_window_id
@@ -9628,7 +9894,7 @@ msgstr "Hinzufügen"
 #. module: base
 #: model:ir.actions.act_window,name:base.action_view_base_language_install
 msgid "Add Language"
-msgstr ""
+msgstr "Sprache hinzufügen"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mail_bot
@@ -9675,7 +9941,7 @@ msgstr "Fügen Sie die Funktion zum Barcode-Scannen zur Eventverwaltung hinzu."
 #. module: base
 #: model:ir.module.module,summary:base.module_account_reports_cash_basis
 msgid "Add cash basis functionality for reports"
-msgstr ""
+msgstr "Hinzufügen von Cash-Basis-Funktionalität für Berichte"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_slides_survey
@@ -9712,7 +9978,7 @@ msgstr ""
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Add directional information (not used for digital)"
-msgstr ""
+msgstr "Hinzufügen von Richtungsinformationen (nicht für digital verwendet)"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_base_address_extended
@@ -9730,6 +9996,8 @@ msgid ""
 "Add information of sale order linked to the registration for the creation of"
 " the lead."
 msgstr ""
+"Fügen Sie die Informationen des Verkaufsauftrags hinzu, der mit der "
+"Registrierung für die Erstellung des Leads verbunden ist."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mass_mailing_crm
@@ -9765,12 +10033,12 @@ msgstr "Hinzufügen von Varianten zum Kundenauftrag über einen Gittereintrag."
 #. module: base
 #: model:ir.module.module,summary:base.module_event_enterprise
 msgid "Add views and tweaks on event"
-msgstr ""
+msgstr "Ansichten und Optimierungen zum Event hinzufügen"
 
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_address_31
 msgid "Addison Olson is a mighty sales representative at Deco Addict."
-msgstr ""
+msgstr "Addison Olson ist eine starke Handelsvertreterin bei Deco Addict."
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_address_31
@@ -9779,6 +10047,9 @@ msgid ""
 "    notably for selling mouse traps. With that trick he cut\n"
 "    IT budget by almost half within the last 2 years."
 msgstr ""
+"Addison Olson arbeitet <b>seit 10 Jahren</b> im IT-Sektor. Er ist vor allem bekannt\n"
+" für den Verkauf von Mausefallen. Mit diesem Trick hat er\n"
+"das IT-Budget in den letzten 2 Jahren fast um die Hälfte."
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
@@ -9794,7 +10065,7 @@ msgstr "Adresse"
 #. module: base
 #: model:ir.model,name:base.model_format_address_mixin
 msgid "Address Format"
-msgstr ""
+msgstr "Adressformat "
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__type
@@ -9821,7 +10092,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_contract_salary_payroll
 msgid "Adds a Gross to Net Salary Simulaton"
-msgstr ""
+msgstr "Fügt eine Brutto-Netto-Gehaltssimulation hinzu"
 
 #. module: base
 #: model:ir.module.module,description:base.module_contacts_enterprise
@@ -10042,7 +10313,7 @@ msgstr "Algerien"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_dz
 msgid "Algeria - Accounting"
-msgstr ""
+msgstr "Algerien -Buchhaltung"
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment_alipay
@@ -10135,7 +10406,7 @@ msgstr "zulässige Unternehmen"
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_barcode_mrp_subcontracting
 msgid "Allows the subcontracting process with the barcode views"
-msgstr ""
+msgstr "Ermöglicht die Vergabe von Unteraufträgen mit den Barcode-Ansichten"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_barcode_quality_control
@@ -10272,7 +10543,7 @@ msgstr ""
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid "An email is required for find_or_create to work"
-msgstr ""
+msgstr "Eine E-Mail wird benötigt, damit find_or_create funktioniert"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_analytic
@@ -10394,7 +10665,7 @@ msgstr "Bewertung"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_appraisal_survey
 msgid "Appraisal - Survey"
-msgstr ""
+msgstr "Beurteilung - Umfrage"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources_appraisals
@@ -10544,6 +10815,7 @@ msgstr "Aruba"
 #: model_terms:res.partner,website_description:base.res_partner_4
 msgid "As a team, we are happy to contribute to this event."
 msgstr ""
+"Wir als Team freuen uns, zu dieser Veranstaltung einen Beitrag zu leisten."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_appraisal
@@ -10781,6 +11053,8 @@ msgid ""
 "Azure Interior brings honesty and seriousness to wood industry while helping"
 " customers deal with trees, flowers and fungi."
 msgstr ""
+"Azure Interior bringt Ehrlichkeit und Seriosität in die Holzbranche und "
+"hilft den Kunden im Umgang mit Bäumen, Blumen und Pilzen."
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_B
@@ -11089,6 +11363,8 @@ msgid ""
 "Be aware that editing the architecture of a standard view is not advised, since the changes will be overwritten during future module updates.<br/>\n"
 "                        We recommend applying modifications to standard views through inherited views or customization with Odoo Studio."
 msgstr ""
+"Bitte beachten Sie, dass es nicht ratsam ist, die Architektur einer Standardansicht zu bearbeiten, da die Änderungen bei zukünftigen Modul-Updates überschrieben werden.<br/>\n"
+"Wir empfehlen, Änderungen an Standardansichten über geerbte Ansichten oder Anpassungen mit Odoo Studio vorzunehmen."
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_country__name_position__before
@@ -11312,6 +11588,9 @@ msgid ""
 "                notably for selling mouse traps. With that trick he cut\n"
 "                IT budget by almost half within the last 2 years."
 msgstr ""
+"Brandon arbeitet </b>seit 10 Jahren</b> in der IT-Branche. Er ist vor allem bekannt\n"
+"               für den Verkauf von Mausefallen. Mit diesem Trick hat er\n"
+"                das IT-Budget in zwei Jahren um fast die Hälfte reduziert."
 
 #. module: base
 #: model:res.country,name:base.br
@@ -11380,16 +11659,17 @@ msgstr "Brückenmodul für Projekt und Unternehmen"
 #: model:ir.module.module,summary:base.module_website_event_twitter_wall
 msgid "Bridge module to configure a twitter wall on your event"
 msgstr ""
+"Brückenmodul zur Konfiguration einer Twitter-Wall für Ihre Veranstaltung"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_social
 msgid "Bridge module to push notifications to event attendees"
-msgstr ""
+msgstr "Brückenmodul für Push-Benachrichtigungen an Event-Teilnehmer"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_track_live_quiz
 msgid "Bridge module to support quiz features during \"live\" tracks. "
-msgstr ""
+msgstr "Brückenmodul zur Unterstützung von Quizfunktionen bei \"Live\"-Tracks."
 
 #. module: base
 #: model:res.country,name:base.io
@@ -11483,7 +11763,7 @@ msgstr "Kundenverwaltung"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_data_merge_crm
 msgid "CRM Deduplication"
-msgstr ""
+msgstr "CRM-Deduplizierung"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_gamification_sale_crm
@@ -11570,7 +11850,7 @@ msgstr "Es kann jeweils nur eine Spalte umbenannt werden!"
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Can't compare more than two views."
-msgstr ""
+msgstr "Sie können maximal zwei Ansichten miteinander vergleichen."
 
 #. module: base
 #: model:res.country,name:base.ca
@@ -11647,6 +11927,8 @@ msgstr ""
 #, python-format
 msgid "Cannot deactivate a language that is currently used by contacts."
 msgstr ""
+"Eine Sprache, die derzeit von Kontakten verwendet wird, kann nicht "
+"deaktiviert werden."
 
 #. module: base
 #: code:addons/base/models/res_lang.py:0
@@ -11898,7 +12180,7 @@ msgstr "Chile - Buchhaltungsauswertungen"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_cl_edi
 msgid "Chile - E-invoicing"
-msgstr ""
+msgstr "Chile - E-Invoicing"
 
 #. module: base
 #: model:res.country,name:base.cn
@@ -12036,6 +12318,9 @@ msgid ""
 "                notably for selling mouse traps. With that trick he cut\n"
 "                IT budget by almost half within the last 2 years."
 msgstr ""
+"Colleen Diaz arbeitet <b>seit 10 Jahren</b> im IT-Sektor. Er ist bekannt\n"
+"vor allem für den Verkauf von Mausefallen. Mit diesem Trick hat er das\n"
+"IT-Budget in den letzten 2 Jahren um fast die Hälfte reduziert."
 
 #. module: base
 #: model:res.country,name:base.co
@@ -12045,7 +12330,7 @@ msgstr "Kolumbien"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_co
 msgid "Colombia - Accounting"
-msgstr ""
+msgstr "Kolumbien - Buchhaltung"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_co_reports
@@ -12056,7 +12341,7 @@ msgstr "Kolumbien - Buchhaltungsauswertungen"
 #: model:ir.module.module,description:base.module_l10n_co_pos
 #: model:ir.module.module,shortdesc:base.module_l10n_co_pos
 msgid "Colombian - Point of Sale"
-msgstr ""
+msgstr "Kolumbien - Kassensystem"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_co
@@ -12104,7 +12389,7 @@ msgstr "Spalte, welche sich auf den Datensatz der Modelltabelle bezieht"
 #: model_terms:res.partner,website_description:base.res_partner_3
 #: model_terms:res.partner,website_description:base.res_partner_4
 msgid "Come see us live, we hope to meet you !"
-msgstr ""
+msgstr "Besuchen Sie uns live, wir hoffen, Sie zu treffen!"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__comm10e
@@ -12267,7 +12552,7 @@ msgstr "Vergleichen Sie Stundenzettel und Planungen"
 #. module: base
 #: model:ir.actions.act_window,name:base.reset_view_arch_wizard_action
 msgid "Compare/Reset"
-msgstr ""
+msgstr "Vergleichen/Zurücksetzen"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__contact_address
@@ -12375,7 +12660,7 @@ msgstr "Installationsassistenten"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_twitter_wall
 msgid "Configure a Twitter Wall on your Event"
-msgstr ""
+msgstr "Konfigurieren Sie eine Twitter Wall auf Ihrer Veranstaltung"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_partner_commission
@@ -12411,7 +12696,7 @@ msgstr "Kongo"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_restaurant_iot
 msgid "Connect kitchen printers to your PoS"
-msgstr ""
+msgstr "Verbinden Sie Küchendrucker mit Ihrem PoS"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_drivers
@@ -12462,7 +12747,7 @@ msgstr "Bedingungstyp"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_constraint_search
 msgid "Constraint type"
-msgstr ""
+msgstr "Einschränkungsart"
 
 #. module: base
 #: code:addons/model.py:0
@@ -12546,6 +12831,8 @@ msgstr ""
 #, python-format
 msgid "Contact your administrator to request access if necessary."
 msgstr ""
+"Wenden Sie sich gegebenenfalls an Ihren Administrator, um den Zugang zu "
+"beantragen."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__partner_ids
@@ -12746,7 +13033,7 @@ msgstr "Erstellt am"
 #: model:ir.module.module,description:base.module_website_jitsi
 #: model:ir.module.module,summary:base.module_website_jitsi
 msgid "Create Jitsi room on website."
-msgstr ""
+msgstr "Jitsi-Raum auf der Website erstellen."
 
 #. module: base
 #: model:ir.actions.act_window,name:base.act_menu_create
@@ -12871,7 +13158,7 @@ msgstr "Interessent aus Livechat-Konversation erstellen"
 #. module: base
 #: model:ir.module.module,description:base.module_event_crm
 msgid "Create leads from event registrations."
-msgstr ""
+msgstr "Erstellen Sie Leads aus Veranstaltungsanmeldungen."
 
 #. module: base
 #: model:ir.module.module,description:base.module_crm_livechat
@@ -13309,12 +13596,12 @@ msgstr "DLE 26 110 x 220 mm"
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Dash"
-msgstr ""
+msgstr "Dash"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_fleet_dashboard
 msgid "Dashboard for fleet"
-msgstr ""
+msgstr "Dashboard für Fuhrpark"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_board
@@ -13327,12 +13614,12 @@ msgstr "Dashboards"
 #: model:ir.module.category,name:base.module_category_productivity_data_cleaning
 #: model:ir.module.module,shortdesc:base.module_data_cleaning
 msgid "Data Cleaning"
-msgstr ""
+msgstr "Datenbereinigung"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_data_merge
 msgid "Data Cleaning (merge)"
-msgstr ""
+msgstr "Datenbereinigung (Zusammenführung)"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_convert
@@ -13458,7 +13745,7 @@ msgstr "Tage"
 #: model:ir.module.module,shortdesc:base.module_account_debit_note
 #: model:ir.module.module,summary:base.module_account_debit_note
 msgid "Debit Notes"
-msgstr ""
+msgstr "Lastschriften"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__smtp_debug
@@ -13494,6 +13781,8 @@ msgid ""
 "Deco Addict brings honesty and seriousness to wood industry while helping "
 "customers deal with trees, flowers and fungi."
 msgstr ""
+"Deco Addict bringt Ehrlichkeit und Ernsthaftigkeit in die Holzbranche und "
+"hilft den Kunden beim Umgang mit Bäumen, Blumen und Pilzen."
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_deduplicate
@@ -13643,12 +13932,12 @@ msgstr "Dänemark"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_dk
 msgid "Denmark - Accounting"
-msgstr ""
+msgstr "Dänemark - Buchhaltung"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_dk_reports
 msgid "Denmark - Accounting Reports"
-msgstr ""
+msgstr "Dänemark - Buchführung"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__depends
@@ -13799,7 +14088,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_disallowed_expenses_fleet
 msgid "Disallowed Expenses on Fleets"
-msgstr ""
+msgstr "Nicht anerkannte Ausgaben für Fuhrparks"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
@@ -14109,7 +14398,7 @@ msgstr "Dokumente - Buchhaltung"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_l10n_be_hr_payroll
 msgid "Documents - Belgian Payroll"
-msgstr ""
+msgstr "Dokumente - Belgische Lohnbuchhaltung"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_hr_contract
@@ -14213,12 +14502,12 @@ msgstr "Erledigt"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.form_res_users_key_show
 msgid "Done!"
-msgstr ""
+msgstr "Erledigt!"
 
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_address_3
 msgid "Douglas Fletcher is a mighty functional consultant at Deco Addict"
-msgstr ""
+msgstr "Douglas Fletcher ist ein wichtiger Berater bei Deco Addict"
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_address_3
@@ -14227,6 +14516,9 @@ msgid ""
 "    notably for selling mouse traps. With that trick he cut\n"
 "    IT budget by almost half within the last 2 years."
 msgstr ""
+"Douglas Fletcher arbeitet <b>seit 10 Jahren</b> im IT-Sektor. Er ist bekannt\n"
+"vor allem für den Verkauf von Mausefallen. Mit diesem Trick hat er das\n"
+"IT-Budget in den letzten 2 Jahren um fast die Hälfte reduziert."
 
 #. module: base
 #: model:res.partner.title,shortcut:base.res_partner_title_doctor
@@ -14264,6 +14556,8 @@ msgid ""
 "Due to security restrictions, you are not allowed to create "
 "'%(document_kind)s' (%(document_model)s) records."
 msgstr ""
+"Aufgrund von Sicherheitseinschränkungen sind Sie nicht berechtigt "
+"%(document_kind)s' (%(document_model)s) Datensätze zu erstellen."
 
 #. module: base
 #: code:addons/base/models/ir_rule.py:0
@@ -14272,6 +14566,8 @@ msgid ""
 "Due to security restrictions, you are not allowed to delete "
 "'%(document_kind)s' (%(document_model)s) records."
 msgstr ""
+"Aufgrund von Sicherheitsbeschränkungen dürfen Sie '%(document_kind)s' "
+"(%(document_model)s) Einträge nicht löschen."
 
 #. module: base
 #: code:addons/base/models/ir_rule.py:0
@@ -14280,6 +14576,8 @@ msgid ""
 "Due to security restrictions, you are not allowed to modify "
 "'%(document_kind)s' (%(document_model)s) records."
 msgstr ""
+"Aufgrund von Sicherheitsbeschränkungen dürfen Sie '%(document_kind)s' "
+"(%(document_model)s) Einträge nicht löschen."
 
 #. module: base
 #: code:addons/base/models/res_company.py:0
@@ -14313,12 +14611,12 @@ msgstr "EDI für Mexiko"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_extended
 msgid "EDI for Mexico (Advanced Features)"
-msgstr ""
+msgstr "EDI für Mexiko (Erweiterte Funktionen)"
 
 #. module: base
 #: model:res.country,vat_label:base.us
 msgid "EIN"
-msgstr ""
+msgstr "EIN"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hw_escpos
@@ -14333,7 +14631,7 @@ msgstr "EU Mini One Stop Shop (MOSS)"
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_ir_model_obj_name_uniq
 msgid "Each model must have a unique name."
-msgstr ""
+msgstr "Jedes Modell muss einen eindeutigen Namen haben."
 
 #. module: base
 #: model:ir.module.module,description:base.module_data_cleaning
@@ -14342,6 +14640,8 @@ msgid ""
 "Easily format text data across multiple records. Find duplicate records and "
 "easily merge them."
 msgstr ""
+"Einfaches Formatieren von Textdaten über mehrere Datensätze hinweg. Finden "
+"Sie doppelte Datensätze und führen Sie sie einfach zusammen."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_easypost
@@ -14556,7 +14856,7 @@ msgstr "Personal"
 #: model:ir.module.module,shortdesc:base.module_hr_gantt
 #: model:ir.module.module,summary:base.module_hr_gantt
 msgid "Employees in Gantt"
-msgstr ""
+msgstr "Mitarbeiter Gantt-Ansicht"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_mobile
@@ -14694,6 +14994,9 @@ msgid ""
 "\n"
 "%(error)s"
 msgstr ""
+"Fehler bei der Validierung der Ansicht:\n"
+"\n"
+"%(error)s"
 
 #. module: base
 #: code:addons/base/models/ir_ui_menu.py:0
@@ -14759,17 +15062,17 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_track_exhibitor
 msgid "Event Exhibitors"
-msgstr ""
+msgstr "Aussteller"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_meet
 msgid "Event Meeting / Rooms"
-msgstr ""
+msgstr "Veranstaltung Meeting / Räume"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_meet
 msgid "Event: meeting and chat rooms"
-msgstr ""
+msgstr "Veranstaltung: Besprechungs- und Chaträume"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_track_exhibitor
@@ -15062,7 +15365,7 @@ msgstr "Extra Werkzeuge"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_expense_extract
 msgid "Extract data from expense scans to fill them automatically"
-msgstr ""
+msgstr "Extrahieren von Daten aus Spesenscans, um sie automatisch zu befüllen"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_invoice_extract
@@ -15227,7 +15530,7 @@ msgstr "Feld"
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Field \"%(field_name)s\" does not exist in model \"%(model_name)s\""
-msgstr ""
+msgstr "Feld \"%(field_name)s\" existiert nicht im Modell \"%(model_name)s\""
 
 #. module: base
 #: code:addons/base/models/ir_model.py:0
@@ -15310,7 +15613,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_industry_fsm_sale
 msgid "Field Service - Sale"
-msgstr ""
+msgstr "Außendienst - Vertrieb"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_industry_fsm_report
@@ -15337,7 +15640,7 @@ msgstr "Typfeld-Text"
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Field `%(name)s` does not exist"
-msgstr ""
+msgstr "Feld `%(name)s` existiert nicht"
 
 #. module: base
 #: code:addons/base/models/ir_model.py:0
@@ -15454,7 +15757,7 @@ msgstr "Dateiinhalt (base64)"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__raw
 msgid "File Content (raw)"
-msgstr ""
+msgstr "Dateiinhalt (roh)"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_language_export__format
@@ -15564,7 +15867,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fi
 msgid "Finnish Localization"
-msgstr ""
+msgstr "Finnische Lokalisierung"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__week_start
@@ -15636,7 +15939,7 @@ msgstr "Fahrzeugflotte"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_fleet_dashboard
 msgid "Fleet Dashboard"
-msgstr ""
+msgstr "Fuhrpark Dashboard"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_fleet
@@ -15656,7 +15959,7 @@ msgstr "Textumlauf"
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_address_4
 msgid "Floyd Steward is a mighty analyst at Deco Addict."
-msgstr ""
+msgstr "Floyd Steward ist ein mächtiger Analyst bei Deco Addict."
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_address_4
@@ -15665,6 +15968,9 @@ msgid ""
 "    notably for selling mouse traps. With that trick he cut\n"
 "    IT budget by almost half within the last 2 years."
 msgstr ""
+"Floyd Steward arbeitet <b>seit 10 Jahren</b> im IT-Sektor. Er ist bekannt\n"
+"vor allem für den Verkauf von Mausefallen. Mit diesem Trick hat er das\n"
+"IT-Budget in den letzten 2 Jahren um fast die Hälfte reduziert."
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__folio
@@ -15724,7 +16030,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.identity_check_wizard
 msgid "Forgot password?"
-msgstr ""
+msgstr "Passwort vergessen?"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_window_view__view_mode__form
@@ -15755,7 +16061,7 @@ msgstr "Formatierte Email"
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Formatting: long, short, narrow (not used for digital)"
-msgstr ""
+msgstr "Formatierung: lang, kurz, schmal (wird nicht für digital verwendet)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_forum
@@ -15774,6 +16080,8 @@ msgid ""
 "Found more than 10 errors and more than one error per 10 records, "
 "interrupted to avoid showing too many errors."
 msgstr ""
+"Mehr als 10 Fehler und mehr als ein Fehler pro 10 Datensätze gefunden, "
+"unterbrochen, um nicht zu viele Fehler anzuzeigen."
 
 #. module: base
 #: code:addons/base/models/ir_fields.py:0
@@ -15978,6 +16286,8 @@ msgid ""
 "Gemini Furniture brings honesty and seriousness to wood industry while "
 "helping customers deal with trees, flowers and fungi."
 msgstr ""
+"Gemini Furniture bringt Ehrlichkeit und Ernsthaftigkeit in die Holzindustrie"
+" und hilft den Kunden im Umgang mit Bäumen, Blumen und Pilzen."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
@@ -15999,11 +16309,12 @@ msgstr "Allgemeine Einstellungen"
 #: model:ir.module.module,summary:base.module_crm_iap_lead
 msgid "Generate Leads/Opportunities based on country, industries, size, etc."
 msgstr ""
+"Generieren Sie Leads/Chancen auf der Grundlage von Land, Branche, Größe usw."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_crm_iap_lead_website
 msgid "Generate Leads/Opportunities from your website's traffic"
-msgstr ""
+msgstr "Generieren Sie Leads/Verkaufschancen aus dem Traffic Ihrer Website"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_wizard_update_translations
@@ -16015,7 +16326,7 @@ msgstr "Fehlende Begriffe generieren"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.form_res_users_key_description
 msgid "Generate key"
-msgstr ""
+msgstr "Schlüssel generieren"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_crm
@@ -16108,7 +16419,7 @@ msgstr "Holen Sie sich eine neue Dashboard-Ansicht in der Website-App"
 #. module: base
 #: model:ir.module.module,summary:base.module_social_demo
 msgid "Get demo data for the social module"
-msgstr ""
+msgstr "Demo-Daten für das Social-Modul abrufen"
 
 #. module: base
 #: model:ir.module.module,description:base.module_social_demo
@@ -16213,6 +16524,10 @@ msgid ""
 "                IT budget by almost half within the last 2 years.\n"
 "                Famous Senior Consultant."
 msgstr ""
+"Gordon Owens arbeitet <b>seit 10 Jahren</b> im IT-Sektor. Er ist bekannt\n"
+"vor allem für den Verkauf von Mausefallen. Mit diesem Trick hat er das\n"
+"IT-Budget innerhalb der letzten 2 Jahre um fast die Hälfte reduziert.\n"
+"Berühmter Senior Consultant."
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_window_view__view_mode__graph
@@ -16419,7 +16734,7 @@ msgstr "Mittagessen-Bestellungen ihrer Mitarbeiter bearbeiten"
 #: model_terms:res.partner,website_description:base.res_partner_3
 #: model_terms:res.partner,website_description:base.res_partner_4
 msgid "Happy to be Sponsor"
-msgstr ""
+msgstr "Glücklich, Sponsor zu sein"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_escpos
@@ -16680,6 +16995,8 @@ msgid ""
 "Here is your new API key, use it instead of a password for RPC access.\n"
 "                            Your login is still necessary for interactive usage."
 msgstr ""
+"Hier ist Ihr neuer API-Schlüssel, verwenden Sie ihn anstelle eines Passworts für den RPC-Zugang.\n"
+"Ihr Login ist für die interaktive Nutzung weiterhin erforderlich."
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
@@ -16808,12 +17125,12 @@ msgstr "I GASTGEWERBE/BEHERBERGUNG UND GASTRONOMIE"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_iap_crm
 msgid "IAP / CRM"
-msgstr ""
+msgstr "IAP / CRM"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_iap_mail
 msgid "IAP / Mail"
-msgstr ""
+msgstr "IAP / Mail"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_iban
@@ -17324,7 +17641,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_edi_facturx
 msgid "Import/Export invoices with Factur-X"
-msgstr ""
+msgstr "Rechnungen mit Factur-X importieren/exportieren"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_edi_ubl
@@ -17357,7 +17674,7 @@ msgstr "Inaktive Benutzer"
 #: code:addons/models.py:0
 #, python-format
 msgid "Incompatible companies on records:"
-msgstr ""
+msgstr "Unvereinbare Unternehmen in den Unterlagen:"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__index
@@ -17438,12 +17755,12 @@ msgstr "Indonesien"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_id_efaktur
 msgid "Indonesia E-faktur"
-msgstr ""
+msgstr "Indonesien E-Faktur"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_id
 msgid "Indonesian - Accounting"
-msgstr ""
+msgstr "Indonesian - Buchhaltung"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.res_partner_industry_action
@@ -17798,6 +18115,12 @@ msgid "Invalid model name %r in action definition."
 msgstr "Ungültiger Modulname %r in der Aktionsdefinition."
 
 #. module: base
+#: code:addons/base/models/ir_actions.py:611
+#, python-format
+msgid "many2many fields cannot be evaluated by reference"
+msgstr ""
+
+#. module: base
 #: code:addons/template_inheritance.py:0
 #, python-format
 msgid "Invalid position attribute: '%s'"
@@ -17822,6 +18145,8 @@ msgid ""
 "Invalid server name !\n"
 " %s"
 msgstr ""
+"Ungültiger Servername !\n"
+" %s"
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -17920,17 +18245,17 @@ msgstr "IoT-Funktionen für Arbeitsaufträge"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_iot
 msgid "IoT for Delivery"
-msgstr ""
+msgstr "IoT für Lieferung"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_iot
 msgid "IoT for PoS"
-msgstr ""
+msgstr "IoT für PoS"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_restaurant_iot
 msgid "IoT for restaurants"
-msgstr ""
+msgstr "IoT für Restaurants"
 
 #. module: base
 #: model:res.country,name:base.ir
@@ -17986,7 +18311,7 @@ msgstr "Israel"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_il
 msgid "Israel - Accounting"
-msgstr ""
+msgstr "Israel - Buchhaltung"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.form_res_users_key_description
@@ -17995,6 +18320,9 @@ msgid ""
 "                        and complete, <strong>it will be the only way to\n"
 "                        identify the key once created</strong>."
 msgstr ""
+"Es ist sehr wichtig, dass diese Beschreibung klar \n"
+"und vollständig ist, <strong>sie ist die einzige Möglichkeit, den\n"
+"Schlüssel nach der Erstellung zu identifizieren</strong>."
 
 #. module: base
 #: model:res.country,name:base.it
@@ -18180,6 +18508,9 @@ msgid ""
 "Label tag must contain a \"for\". To match label style without corresponding"
 " field or button, use 'class=\"o_form_label\"'."
 msgstr ""
+"Der Label-Tag muss ein \"for\" enthalten. Um ein Etikett ohne entsprechendes"
+" Feld oder eine Schaltfläche anzupassen, verwenden Sie "
+"'class=\"o_form_label\"'."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_landed_costs
@@ -18608,7 +18939,7 @@ msgstr "Zu Tickets führen"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_view_kanban
 msgid "Learn More"
-msgstr "Lernen Sie mehr"
+msgstr "Mehr erfahren"
 
 #. module: base
 #: model:res.country,name:base.lb
@@ -18656,6 +18987,8 @@ msgid ""
 "Let the system try to select the right account, taxes and/or product for "
 "your vendor bills"
 msgstr ""
+"Lassen Sie das System versuchen, das richtige Konto, die richtigen Steuern "
+"und/oder das richtige Produkt für Ihre Lieferantenrechnungen auszuwählen."
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_referral
@@ -18746,7 +19079,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__link_field_id
 #: model:ir.model.fields,field_description:base.field_ir_cron__link_field_id
 msgid "Link Field"
-msgstr ""
+msgstr "Link-Feld"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_link_tracker
@@ -18798,7 +19131,7 @@ msgstr "Litauen"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lt
 msgid "Lithuania - Accounting"
-msgstr ""
+msgstr "Litauen - Buchhaltung"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_website_live_chat
@@ -18814,7 +19147,7 @@ msgstr "Aktueller Währungswechselkurs"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_track_live
 msgid "Live Event Tracks"
-msgstr ""
+msgstr "Live Event Tracks"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_im_livechat_enterprise
@@ -18942,7 +19275,7 @@ msgstr "MRP II"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_workorder_expiry
 msgid "MRP II - Expiry"
-msgstr ""
+msgstr "MRP II - Ablauf"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_workorder_expiry
@@ -19180,7 +19513,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_work_entry_holidays
 msgid "Manage Time Off in Payslips"
-msgstr ""
+msgstr "Abwesenheiten in Gehaltsabrechnungen verwalten"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_forum
@@ -19190,7 +19523,7 @@ msgstr "Verwalten Sie ein Forum mit häufig gestellten Fragen und Antworten"
 #. module: base
 #: model:ir.module.module,summary:base.module_account_fleet
 msgid "Manage accounting with fleets"
-msgstr ""
+msgstr "Buchhaltung mit Flotten verwalten"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.grant_menu_access
@@ -19234,17 +19567,17 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_account_disallowed_expenses_fleet
 msgid "Manage disallowed expenses with fleets"
-msgstr ""
+msgstr "Verwaltung unzulässiger Ausgaben bei Fuhrparks"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_coupon_taxcloud_delivery
 msgid "Manage discounts in taxclouds computations with delivery."
-msgstr ""
+msgstr "Verwalten Sie Rabatte in Taxclouds-Berechnungen mit Lieferung."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_coupon_taxcloud
 msgid "Manage discounts in taxclouds computations."
-msgstr ""
+msgstr "Verwalten Sie Rabatte in Taxclouds-Berechnungen."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_plm
@@ -19344,7 +19677,7 @@ msgstr "Verwalten Sie Ihren Online-Einstellungsprozess"
 #: model:ir.module.module,description:base.module_social
 #: model:ir.module.module,summary:base.module_social
 msgid "Manage your social media and website visitors"
-msgstr ""
+msgstr "Verwalten Sie Ihre sozialen Medien und Website-Besucher"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_stock
@@ -20233,12 +20566,12 @@ msgstr "Niederländische Intrastat-Erklärung"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_nl_report_intrastat
 msgid "Netherlands Intrastat Declaration Reports"
-msgstr ""
+msgstr "Niederlande Intrastat-Deklaration Berichte"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "New API Key"
-msgstr ""
+msgstr "Neuer API-Schlüssel"
 
 #. module: base
 #: model:res.country,name:base.nc
@@ -20328,6 +20661,8 @@ msgid ""
 "Nicole is <b>author of several books</b>, including Amazon best seller\n"
 "                \"How Azure and Odoo will change the business world!\"."
 msgstr ""
+"Nicole ist <b>Autorin mehrerer Bücher</b>, darunter der Amazon-Bestseller\n"
+"\"Wie Azure und Odoo die Geschäftswelt verändern werden!\"."
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_address_16
@@ -20338,6 +20673,11 @@ msgid ""
 "                from 1 to 55 employees mostly by reselling services on\n"
 "                Odoo."
 msgstr ""
+"Nicole arbeitet <b>seit 20 Jahren im IT-Sektor</b>. Sie\n"
+"entwickelt Software, die bei der Entwicklung von Websites hilft. Sie verkaufte ihre\n"
+"ihre erste Firma im Alter von 30 Jahren und schaffte es, Azure Interior\n"
+"von 1 auf 55 Mitarbeiter zu vergrößern, hauptsächlich durch den Wiederverkauf von Dienstleistungen auf\n"
+"Odoo."
 
 #. module: base
 #: model:res.country,name:base.ne
@@ -20427,12 +20767,14 @@ msgid ""
 "No response received. Check server address and port number.\n"
 " %s"
 msgstr ""
+"Keine Antwort erhalten. Überprüfen Sie die Serveradresse und die Portnummer. \n"
+"%s"
 
 #. module: base
 #: code:addons/base/models/ir_actions.py:0
 #, python-format
 msgid "No spaces allowed in view_mode: %r"
-msgstr ""
+msgstr "Keine Leerzeichen erlaubt in view_mode: %r"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_data__noupdate
@@ -20490,7 +20832,7 @@ msgstr "Nordkorea"
 #. module: base
 #: model:res.country,name:base.mk
 msgid "North Macedonia"
-msgstr ""
+msgstr "Nordmazedonien"
 
 #. module: base
 #: model:res.country,name:base.mp
@@ -20590,7 +20932,7 @@ msgstr "Anzahl der Datensatzregeln, die für den aktuellen Benutzer gelten"
 #. module: base
 #: model:res.country,vat_label:base.pf
 msgid "N° Tahiti"
-msgstr ""
+msgstr "N° Tahiti"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_O
@@ -21672,7 +22014,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,description:base.module_payment_odoo_by_adyen
 msgid "Odoo Payments by Adyen"
-msgstr ""
+msgstr "Odoo-Zahlungen von Adyen"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_odoo_by_adyen
@@ -22211,6 +22553,18 @@ msgid ""
 "Odoo is currently processing a scheduled action.\n"
 "Module operations are not possible at this time, please try again later or contact your system administrator."
 msgstr ""
+"Odoo verarbeitet gerade eine geplante Aktion.\n"
+"Moduloperationen sind zu diesem Zeitpunkt nicht möglich. Bitte versuchen Sie es später noch einmal oder wenden Sie sich an Ihren Systemadministrator."
+
+#. module: base
+#: code:addons/base/models/ir_actions_report.py:0
+#, python-format
+msgid ""
+"Odoo is unable to merge the PDFs attached to the following records:\n"
+"%s\n"
+"\n"
+"Please exclude them from the selection to continue. It's possible to still retrieve those PDFs by selecting each of the affected records individually, which will avoid merging."
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_odoo_referral
@@ -22273,6 +22627,8 @@ msgid ""
 "Once the delivery is validated, update the cost on the SO to have an exact "
 "margin computation."
 msgstr ""
+"Sobald die Lieferung validiert ist, aktualisieren Sie die Kosten auf dem "
+"Kundenauftrag, um eine genaue Berechnung der Marge zu erhalten."
 
 #. module: base
 #: code:addons/models.py:0
@@ -22283,6 +22639,12 @@ msgid ""
 msgstr ""
 "Eines der Dokumente, auf das Sie versuchen zuzugreifen, wurde gelöscht. "
 "Bitte versuchen Sie es erneut nach einer Aktualisierung."
+
+#. module: base
+#: code:addons/base/models/ir_actions_report.py:0
+#, python-format
+msgid "One of the documents, you try to merge is encrypted"
+msgstr "Eines der Dokumente, die Sie zusammenführen wollen, ist verschlüsselt"
 
 #. module: base
 #: code:addons/models.py:0
@@ -22320,7 +22682,7 @@ msgstr "Online-Termin"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_online_synchronization
 msgid "Online Bank Statement Synchronization"
-msgstr ""
+msgstr "Online-Synchronisierung von Kontoauszügen"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_sale
@@ -22387,7 +22749,7 @@ msgstr ""
 #: code:addons/base/models/res_users.py:0
 #, python-format
 msgid "Only internal users can create API keys"
-msgstr ""
+msgstr "Nur interne Nutzer können API-Schlüssel erstellen"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_currency_rate_unique_name_per_day
@@ -22500,7 +22862,7 @@ msgstr "Optionales Passwort für SMTP Authentifizierung"
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Optional timezone name"
-msgstr ""
+msgstr "Optionale Bezeichnung Zeitzone"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_mail_server__smtp_user
@@ -22721,7 +23083,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_project
 msgid "Organize and plan your projects"
-msgstr ""
+msgstr "Organisieren und planen Sie Ihre Projekte"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_note
@@ -22815,7 +23177,7 @@ msgstr "Ausgehende Mail Server"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_microsoft_calendar
 msgid "Outlook Calendar"
-msgstr ""
+msgstr "Outlook-Kalender"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__dpi
@@ -22877,7 +23239,7 @@ msgstr "POS Adyen"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_hr_mobile
 msgid "POS Barcode in Mobile"
-msgstr ""
+msgstr "PoS-Barcode mobil"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_hr_mobile
@@ -23093,7 +23455,7 @@ msgstr "Partner Geolokalisierung"
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid "Partners: %(category)s"
-msgstr ""
+msgstr "Partner: %(category)s"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__smtp_pass
@@ -23350,8 +23712,8 @@ msgid ""
 "Please confirm that you want to <b>irreversibly</b> make this database a "
 "demo database."
 msgstr ""
-"Bitte bestätigen Sie,dass Sie diese Datenbank <b>irreversibly</b> zu einer "
-"Demo-Datenbank machen möchten."
+"Bitte bestätigen Sie,dass Sie diese Datenbank <b>unwiderruflich</b> zu einer"
+" Demo-Datenbank machen möchten."
 
 #. module: base
 #: code:addons/base/models/ir_mail_server.py:0
@@ -23806,11 +24168,13 @@ msgid ""
 "Provide the field used to link the newly created record on the record used "
 "by the server action."
 msgstr ""
+"Geben Sie das Feld an, das zur Verknüpfung des neu erstellten Datensatzes "
+"mit dem von der Serveraktion verwendeten Datensatz verwendet wird."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mail_mobile
 msgid "Provides push notification and redirection to the mobile app."
-msgstr ""
+msgstr "Bietet Push-Benachrichtigung und Weiterleitung zur mobilen App."
 
 #. module: base
 #: model:res.groups,name:base.group_public
@@ -24018,7 +24382,7 @@ msgstr "Fragen über Events"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_meet_quiz
 msgid "Quiz and Meet on community"
-msgstr ""
+msgstr "Quiz und Treffen in der Community"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_meet_quiz
@@ -24033,7 +24397,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_track_quiz
 msgid "Quizzes on Tracks"
-msgstr ""
+msgstr "Quiz zu Tracks"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_track_quiz
@@ -24201,6 +24565,8 @@ msgid ""
 "Ready Mat brings honesty and seriousness to wood industry while helping "
 "customers deal with trees, flowers and fungi."
 msgstr ""
+"Ready Mat bringt Ehrlichkeit und Seriosität in die Holzindustrie und hilft "
+"den Kunden beim Umgang mit Bäumen, Blumen und Pilzen."
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_L
@@ -24286,7 +24652,7 @@ msgstr "Personalbeschaffung"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_recruitment_reports
 msgid "Recruitment Reporting"
-msgstr ""
+msgstr "Rekrutierung Berichterstattung"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_hr_recruitment
@@ -24324,7 +24690,7 @@ msgstr "Referenz"
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Reference date"
-msgstr "Referenz-datum"
+msgstr "Referenzdatum"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources_referrals
@@ -24589,7 +24955,7 @@ msgstr "Assistent zum Zurücksetzen der Ansicht Architektur"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__reset_view_arch_wizard__reset_mode__other_view
 msgid "Reset to another view."
-msgstr ""
+msgstr "Zurücksetzen auf eine andere Ansicht."
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__reset_view_arch_wizard__reset_mode__hard
@@ -24755,7 +25121,7 @@ msgstr "S ANDERE DIENSTLEISTUNGEN"
 #. module: base
 #: model:res.country.group,name:base.sepa_zone
 msgid "SEPA Countries"
-msgstr ""
+msgstr "SEPA Länder"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_sepa
@@ -24874,17 +25240,17 @@ msgstr "St. Vincent und die Grenadinen"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_contract_salary
 msgid "Salary Configurator"
-msgstr ""
+msgstr "Gehaltskonfigurator"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_contract_salary
 msgid "Salary Configurator (Belgium)"
-msgstr ""
+msgstr "Gehaltskonfigurator (Belgien)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_contract_salary_payroll
 msgid "Salary Configurator - Payroll"
-msgstr ""
+msgstr "Gehaltskonfigurator - Lohnabrechnung"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_be_hr_contract_salary
@@ -24979,7 +25345,7 @@ msgstr "Verkauf & Einkauf"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_project
 msgid "Sales - Project"
-msgstr ""
+msgstr "Verkauf - Projekt"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_expense
@@ -25111,7 +25477,7 @@ msgstr "Planung von Mitarbeiterversammlungen"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_social
 msgid "Schedule push notifications on attendees"
-msgstr ""
+msgstr "Planen Sie Push-Benachrichtigungen für Teilnehmer"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project_timesheet_holidays
@@ -25204,7 +25570,7 @@ msgstr "Suche nach Modulen"
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Search tag can only contain one search panel"
-msgstr ""
+msgstr "Such-Tag kann nur ein Suchfeld enthalten"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_config_settings_view_form
@@ -25235,7 +25601,7 @@ msgstr "Sicherheit"
 #: model_terms:ir.ui.view,arch_db:base.identity_check_wizard
 #, python-format
 msgid "Security Control"
-msgstr ""
+msgstr "Sicherheitskontrolle"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_mail_server_form
@@ -25543,6 +25909,8 @@ msgid ""
 "Server replied with following exception:\n"
 " %s"
 msgstr ""
+"Der Server antwortete mit folgender Ausnahme:\n"
+" %s"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_services
@@ -25685,7 +26053,7 @@ msgstr "Unterschreiben"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_contract_salary
 msgid "Sign Employment Contracts"
-msgstr ""
+msgstr "Mitarbeiterverträge unterzeichnen"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_sign
@@ -26287,7 +26655,7 @@ msgstr "Zusätzliche Argumente"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_track_live
 msgid "Support live tracks: streaming, participation, youtube"
-msgstr ""
+msgstr "Unterstützung von Live-Tracks: Streaming, aktive Teilnahme, Youtube"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_quality_control_picking_batch
@@ -26339,7 +26707,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_language_install
 msgid "Switch to"
-msgstr ""
+msgstr "Wechseln zu"
 
 #. module: base
 #: model:res.country,name:base.ch
@@ -26379,7 +26747,7 @@ msgstr "Synchronisation mit externer Zeiterfassungsanwendung"
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_subscription_timesheet
 msgid "Synchronize data between timesheet and subscriptions"
-msgstr ""
+msgstr "Daten zwischen Stundenzettel und Abonnements synchronisieren"
 
 #. module: base
 #: model:res.country,name:base.sy
@@ -26607,7 +26975,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_event_full
 msgid "Test Full Event Flow"
-msgstr ""
+msgstr "Vollständigen Event-Flow testen"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_website_slides_full
@@ -26723,6 +27091,8 @@ msgid ""
 "The Jackson Group brings honesty and seriousness to wood industry while "
 "helping customers deal with trees, flowers and fungi."
 msgstr ""
+"Die Jackson Group bringt Ehrlichkeit und Seriosität in die Holzindustrie und"
+" hilft ihren Kunden im Umgang mit Bäumen, Blumen und Pilzen."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_lang__url_code
@@ -26957,6 +27327,12 @@ msgid "The internal user in charge of this contact."
 msgstr "Der interne Benutzer, der für diesen Kontakt verantwortlich ist."
 
 #. module: base
+#: code:addons/base/models/res_country.py:106
+#, python-format
+msgid "The layout contains an invalid format key"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,help:base.field_ir_model__inherited_model_ids
 msgid "The list of models that extends the current model."
 msgstr "Die Liste der Modelle, die das aktuelle Modell erweitern."
@@ -27003,7 +27379,7 @@ msgstr "Das Datenmodell dem dieses Feld angehört."
 #: code:addons/base/models/ir_actions.py:0
 #, python-format
 msgid "The modes in view_mode must not be duplicated: %s"
-msgstr ""
+msgstr "Die Modi in view_mode dürfen nicht dupliziert werden: %s"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_country_name_uniq
@@ -27058,7 +27434,7 @@ msgstr "Die einzigen vordefinierten Variablen sind"
 #: code:addons/model.py:0
 #, python-format
 msgid "The operation cannot be completed:"
-msgstr "The operation cannot be completed:"
+msgstr "Der gewünschte Vorgang kann nicht ausgeführt werden:"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__domain
@@ -27414,7 +27790,7 @@ msgstr ""
 #: code:addons/base/models/res_users.py:0
 #, python-format
 msgid "This method can only be accessed over HTTP"
-msgstr ""
+msgstr "Auf diese Methode kann nur über HTTP zugegriffen werden"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mail_bot_hr
@@ -27449,6 +27825,8 @@ msgid ""
 "present in a separate module as it contains models used only to perform\n"
 "tests independently to functional aspects of other models. "
 msgstr ""
+"Dieses Modul enthält Tests zum Thema E-Mail. Diese befinden\n"
+"sich in einem separaten Modul, da es Modelle enthält, die nur zur Durchführung von Tests unabhängig von den funktionalen Aspekten der anderen Modelle. benutzt werden."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_mail_enterprise
@@ -27467,6 +27845,9 @@ msgid ""
 "are present in a separate module to use specific test models defined in\n"
 "test_mail. "
 msgstr ""
+"Dieses Modul enthält Tests zum Thema Massenversand. Diese\n"
+"sind in einem separaten Modul vorhanden, um spezifische Testmodelle zu verwenden, die in\n"
+"test_mail definiert sind."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_web_grid
@@ -27475,6 +27856,10 @@ msgid ""
 "present in a separate module as it contains models used only to perform\n"
 "tests independently to functional aspects of other models. "
 msgstr ""
+"Dieses Modul enthält Tests, die sich auf die Web-Grid-Ansicht beziehen. "
+"Diese sind sind in einem separaten Modul enthalten, da es Modelle enthält, "
+"die nur zur Durchführung von Tests unabhängig von den funktionalen Aspekten "
+"der anderen Modelle benutzt werden. "
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_timer
@@ -27492,6 +27877,11 @@ msgid ""
 "contains models used only to perform tests independently to functional aspects of\n"
 "real applications. "
 msgstr ""
+"Dieses Modul enthält Tests, die sich auf verschiedene Mail-Funktionen und "
+"Mail-bezogene Untermodule beziehen. Diese Tests befinden sich in einem "
+"separaten Modul, da es Modelle enthält, die nur zur Durchführung von Tests "
+"verwendet werden, unabhängig von den funktionalen Aspekten der realen "
+"Anwendungen."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_web_cohort
@@ -27543,6 +27933,8 @@ msgid ""
 "This module helps analyzing and organizing event tracks.\n"
 "For that purpose it adds a gantt view on event tracks."
 msgstr ""
+"Dieses Modul hilft beim Analysieren und Organisieren von Event-Tracks.\n"
+"Zu diesem Zweck fügt es eine Gantt-Ansicht auf Event-Tracks hinzu."
 
 #. module: base
 #: model:ir.module.module,description:base.module_event_enterprise
@@ -27555,6 +27947,13 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"Dieses Modul hilft bei der Analyse von Veranstaltungsanmeldungen.\n"
+"Zu diesem Zweck fügt es hinzu\n"
+"\n"
+"* eine Kohortenanalyse über Teilnehmer;\n"
+"* eine Gantt-Ansicht für Veranstaltungen;\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_slides_survey
@@ -27577,6 +27976,8 @@ msgid ""
 "This operation is allowed for the following groups:\n"
 "%(groups_list)s"
 msgstr ""
+"Der Vorgang ist für die folgenden Gruppen erlaubt:\n"
+"%(groups_list)s"
 
 #. module: base
 #: code:addons/base/models/ir_rule.py:0
@@ -27585,6 +27986,8 @@ msgid ""
 "This restriction is due to the following rules:\n"
 "%s"
 msgstr ""
+"Diese Einschränkung ist auf die folgenden Regeln zurückzuführen:\n"
+"%s"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__thousands_sep
@@ -27631,7 +28034,7 @@ msgstr "Zeit aus Gantt"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_timer
 msgid "Timer"
-msgstr ""
+msgstr "Timer"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_timer
@@ -27768,6 +28171,10 @@ msgid ""
 "                IT budget by almost half within the last 2 years.\n"
 "                Famous Managing Partner."
 msgstr ""
+"Toni Rhodes arbeitet <b>seit 10 Jahren</b> im IT-Sektor. Er ist bekannt\n"
+"vor allem für den Verkauf von Mausefallen. Mit diesem Trick hat er das\n"
+"IT-Budget innerhalb der letzten 2 Jahre um fast die Hälfte reduziert.\n"
+"Berühmter Managing Partner."
 
 #. module: base
 #: code:addons/base/models/res_users.py:0
@@ -28022,6 +28429,8 @@ msgid ""
 "Turn emails received in your Outlook mailbox into leads and log their "
 "content as internal notes."
 msgstr ""
+"Machen Sie in Ihrem Outlook-Postfach empfangene E-Mails zu Leads und "
+"protokollieren Sie deren Inhalt als interne Notizen."
 
 #. module: base
 #: model:res.country,name:base.tv
@@ -28119,7 +28528,7 @@ msgstr "Vereinigtes Königreich Buchhaltungsauswertungen"
 #: model:ir.module.module,shortdesc:base.module_product_unspsc
 #: model:ir.module.module,summary:base.module_product_unspsc
 msgid "UNSPSC product codes"
-msgstr ""
+msgstr "UNSPSC product codes"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_ups
@@ -28242,6 +28651,8 @@ msgid ""
 "Unable to order by %s: fields used for ordering must be present on the model"
 " and stored."
 msgstr ""
+"Sortieren nach %s nicht möglich: Die für die Sortierung verwendeten Felder "
+"müssen im Modell vorhanden und gespeichert sein."
 
 #. module: base
 #: code:addons/base/models/ir_module.py:0
@@ -28474,7 +28885,7 @@ msgstr "URL"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_country__image_url
 msgid "Url of static flag image"
-msgstr ""
+msgstr "Url des statischen Flaggenbildes"
 
 #. module: base
 #: model:res.country,name:base.uy
@@ -28484,7 +28895,7 @@ msgstr "Uruguay"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_uy
 msgid "Uruguay - Accounting"
-msgstr ""
+msgstr "Uruguay - Buchhaltung"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_decimal_precision__name
@@ -28503,17 +28914,17 @@ msgstr "Benutzen Sie '1' für Ja und '0' für Nein"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_iot
 msgid "Use IoT Devices in the PoS"
-msgstr ""
+msgstr "Einsatz von IoT-Geräten am PoS"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_delivery_iot
 msgid "Use IoT devices in delivery operations"
-msgstr ""
+msgstr "Einsatz von IoT-Geräten bei der Zustellung"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner__barcode
 msgid "Use a barcode to identify this contact."
-msgstr ""
+msgstr "Benutzen Sie einen Barcode um diesen Kontakt zu identifizieren."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_barcode
@@ -28696,7 +29107,7 @@ msgstr "Benutzer:"
 #: code:addons/base/models/ir_rule.py:0
 #, python-format
 msgid "User: %s"
-msgstr ""
+msgstr "Benutzer: %s"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__smtp_user
@@ -28940,13 +29351,13 @@ msgstr "Ansicht"
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "View '%(name)s' accessible only to groups %(groups)s "
-msgstr ""
+msgstr "Anzeige '%(name)s' nur verfügbar für Gruppen %(groups)s"
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "View '%(name)s' is private"
-msgstr ""
+msgstr "Ansicht '%(name)s' ist privat"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__arch
@@ -29104,6 +29515,10 @@ msgid ""
 "enhancing solutions through the use of advanced software for our clients "
 "worldwide. At Lumber Inc we bring operational experience combined..."
 msgstr ""
+"Wir sind ein Technologie- und Strategieberatungsunternehmen, das durch den "
+"Einsatz fortschrittlicher Software wertsteigernde Lösungen für unsere Kunden"
+" weltweit schafft. Bei Lumber Inc bringen wir operative Erfahrung "
+"kombiniert..."
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_18
@@ -29112,6 +29527,9 @@ msgid ""
 " <br> <br>\n"
 "At Lumber Inc we bring operational experience combined with technological acumen. We understand that any software that supports business operations needs to be designed in such a way that facilitates the execution of critical operational processes, and serves as a tool to the users rather than a barrier. Our approach is focused on the process first, ensuring that it contributes to the goals of the company, we then optimize it, and design the software solutions to best support it."
 msgstr ""
+"Wir sind eine Technologie- und Strategieberatungsfirma, die durch den Einsatz fortschrittlicher Software wertsteigernde Lösungen für unsere Kunden weltweit schafft.\n"
+"<br><br>\n"
+"Bei Lumber Inc bringen wir betriebliche Erfahrung in Kombination mit technologischem Scharfsinn ein. Wir wissen, dass jede Software, die Geschäftsabläufe unterstützt, so konzipiert sein muss, dass sie die Ausführung kritischer betrieblicher Prozesse erleichtert und den Benutzern als Werkzeug dient, statt Hindernis zu sein. Unser Ansatz konzentriert sich zunächst auf den Prozess und stellt sicher, dass er zur Erreichung der Unternehmensziele beiträgt. Wir optimieren ihn und entwickeln die entsprechende Softwarelösung."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web
@@ -29141,7 +29559,7 @@ msgstr "Web Gantt"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_web_grid
 msgid "Web Grid Tests"
-msgstr ""
+msgstr "Web-Grid-Tests"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_test_web_grid
@@ -29198,12 +29616,12 @@ msgstr "Website Enterprise"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_crm_questions
 msgid "Website Event CRM Questions"
-msgstr ""
+msgstr "Website Event CRM Fragen"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_crm
 msgid "Website Events CRM"
-msgstr ""
+msgstr "Website Events CRM"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_form
@@ -29223,7 +29641,7 @@ msgstr "Website-IM-Livechat für Helpdesk"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_jitsi
 msgid "Website Jitsi"
-msgstr ""
+msgstr "Website Jitsi"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__website
@@ -29326,7 +29744,7 @@ msgstr "Westliche Sahara"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.form_res_users_key_description
 msgid "What's this key for?"
-msgstr ""
+msgstr "Wozu dient dieser Schlüssel?"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_server__sequence
@@ -29454,6 +29872,8 @@ msgid ""
 "Wood Corner brings honesty and seriousness to wood industry while helping "
 "customers deal with trees, flowers and fungi."
 msgstr ""
+"Wood Corner bringt Ehrlichkeit und Seriosität in die Holzbranche und hilft "
+"den Kunden beim Umgang mit Bäumen, Blumen und Pilzen."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_work_entry
@@ -29506,7 +29926,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.form_res_users_key_show
 msgid "Write down your key"
-msgstr ""
+msgstr "Notieren Sie Ihre Schlüssel"
 
 #. module: base
 #: model:res.country,name:base.ye
@@ -29540,6 +29960,8 @@ msgid ""
 "You are not allowed to access '%(document_kind)s' (%(document_model)s) "
 "records."
 msgstr ""
+"Sie haben keinen Zugriff auf '%(document_kind)s' (%(document_model)s) "
+"Datensätze."
 
 #. module: base
 #: code:addons/base/models/ir_model.py:0
@@ -29620,6 +30042,8 @@ msgstr "Zwei Benuzter dürfen nicht den gleichen Benutzernamen verwenden!"
 msgid ""
 "You can not remove API keys unless they're yours or you are a system user"
 msgstr ""
+"Sie können einen API-Schlüssel nicht entfernen, es sei denn, sie gehören "
+"Ihnen oder Sie sind ein Systembenutzer"
 
 #. module: base
 #: code:addons/base/models/res_users.py:0
@@ -29650,8 +30074,10 @@ msgstr "Sie können den Superuser nicht aktivieren."
 #. module: base
 #: code:addons/base/models/res_partner.py:0
 #, python-format
-msgid "You cannot archive a contact linked to an internal user."
-msgstr "You cannot archive a contact linked to an internal user."
+msgid "You cannot archive a contact linked to a portal or internal user."
+msgstr ""
+"Sie können einen Kontakt, der mit einem Portal oder einem internen Benutzer "
+"verknüpft ist, nicht archivieren."
 
 #. module: base
 #: code:addons/base/models/res_partner.py:0
@@ -29727,6 +30153,8 @@ msgstr "Sie haben nicht genügend Rechte, um diese Aktion auszuführen."
 msgid ""
 "You don't have the rights to export data. Please contact an Administrator."
 msgstr ""
+"Sie haben nicht die Rechte, um Daten zu exportieren. Bitte wenden Sie sich "
+"an einen Administrator."
 
 #. module: base
 #: code:addons/base/wizard/base_partner_merge.py:0
@@ -29767,6 +30195,15 @@ msgid ""
 msgstr ""
 "Sie können zusätzliche Berechtigungen definieren, indem Sie den neu "
 "angelegten Benutzer im Menü Einstellungen / Benutzer bearbeiten."
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.view_currency_form
+msgid ""
+"You won't be able to reduce the number of decimal places of a currency which"
+" has already been used to make accounting entries."
+msgstr ""
+"Sie können die Anzahl der Dezimalstellen einer Währung, die bereits für "
+"Buchungseinträge verwendet wurde, nicht reduzieren."
 
 #. module: base
 #: code:addons/base/models/ir_mail_server.py:0
@@ -29819,7 +30256,7 @@ msgstr "PLZ"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__zip_required
 msgid "Zip Required"
-msgstr ""
+msgstr "Zip Erforderlich"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_import_language
@@ -29844,7 +30281,7 @@ msgstr "account_ponto"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_qr_code_sepa
 msgid "account_qr_code_sepa"
-msgstr ""
+msgstr "account_qr_code_sepa"
 
 #. module: base
 #: code:addons/models.py:0
@@ -29856,7 +30293,7 @@ msgstr "Erlaubt für Gruppen %s"
 #: code:addons/models.py:0
 #, python-format
 msgid "always forbidden"
-msgstr ""
+msgstr "stets verboten"
 
 #. module: base
 #: code:addons/base/models/res_currency.py:0
@@ -30046,6 +30483,8 @@ msgid ""
 "has been successfully installed.\n"
 "Users can choose his favorite language in their preferences."
 msgstr ""
+"wurde erfolgreich installiert.\n"
+"Die Benutzer können Ihre bevorzugte Sprache in den Einstellungen wählen."
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
@@ -30102,7 +30541,7 @@ msgstr "l10n_es_real_estates"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mail_bot_hr
 msgid "mail_bot_hr"
-msgstr ""
+msgstr "mail_bot_hr"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__many2many
@@ -30123,7 +30562,7 @@ msgstr "many2one_reference"
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "minute"
-msgstr ""
+msgstr "minute"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_failures_dialog
@@ -30171,7 +30610,7 @@ msgstr "One2many"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_account_reports
 msgid "pos_account_reports"
-msgstr ""
+msgstr "pos_account_reports"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_cache
@@ -30221,13 +30660,13 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_res_users_apikeys_show
 msgid "res.users.apikeys.show"
-msgstr ""
+msgstr "res.users.apikeys.show"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "second"
-msgstr ""
+msgstr "sekunde"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__selection
@@ -30242,7 +30681,7 @@ msgstr "snailmail_account"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "test"
-msgstr ""
+msgstr "test"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_mimetypes
@@ -30262,7 +30701,7 @@ msgstr "test read_group"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_xlsx_export
 msgid "test xlsx export"
-msgstr ""
+msgstr "test xlsx export"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_assetsbundle
@@ -30332,7 +30771,7 @@ msgstr "Test Umwandlung"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_search_panel
 msgid "test_search_panel"
-msgstr ""
+msgstr "test_search_panel"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__text
@@ -30365,7 +30804,7 @@ msgstr "Woche"
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "year"
-msgstr ""
+msgstr "jahr"
 
 #. module: base
 #: code:addons/base/models/ir_fields.py:0

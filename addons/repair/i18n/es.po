@@ -6,6 +6,8 @@
 # Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2020
 # Jon Perez <jop@odoo.com>, 2020
 # Martin Trigaux, 2020
+# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2021
+# Abraham Anes <abraham@studio73.es>, 2021
 # 
 msgid ""
 msgstr ""
@@ -13,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-29 13:45+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: Martin Trigaux, 2020\n"
+"Last-Translator: Abraham Anes <abraham@studio73.es>, 2021\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,6 +42,9 @@ msgid ""
 "                object.state == 'draft' and 'Repair Quotation - %s' % (object.name) or\n"
 "                'Repair Order - %s' % (object.name))"
 msgstr ""
+"(\n"
+"                object.state == 'draft' and 'Presupuesto de Reparación - %s' % (object.name) or\n"
+"                'Orden de Reparación - %s' % (object.name))"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -72,7 +77,7 @@ msgstr ""
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid ": Insufficient Quantity To Repair"
-msgstr ""
+msgstr ": Cantidad insuficiente para reparar"
 
 #. module: repair
 #: model:mail.template,body_html:repair.mail_template_repair_quotation
@@ -100,6 +105,28 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px;font-size: 13px;\">\n"
+"        Hola ${object.partner_id.name},<br/>\n"
+"        Aquí está su orden de reparaciónr ${doc_name} <strong>${object.name}</strong>\n"
+"        % if object.origin:\n"
+"            (con referencia: ${object.origin} )\n"
+"        % endif\n"
+"        % if object.invoice_method != 'none':\n"
+"            por el monto de <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}.</strong><br/>\n"
+"        % else:\n"
+"            .<br/>\n"
+"        % endif\n"
+"        Puede responder a este correo electrónico si tiene alguna pregunta.\n"
+"        <br/><br/>\n"
+"        Gracias,\n"
+"        % if user.signature\n"
+"            <br/>\n"
+"            ${user.signature | safe}\n"
+"        % endif\n"
+"    </p>\n"
+"</div>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -163,7 +190,7 @@ msgstr "<strong>Garantía:</strong>"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_warn_insufficient_qty_repair_form_view
 msgid "? This may lead to inconsistencies in your inventory."
-msgstr ""
+msgstr "? Esto puede dar lugar a inconsistencias en su inventario."
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_needaction
@@ -198,12 +225,12 @@ msgstr "Añadir"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Add internal notes."
-msgstr ""
+msgstr "Agrega notas internas."
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Add quotation notes."
-msgstr ""
+msgstr "Agregue notas de cotización."
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__invoice_method__after_repair
@@ -399,7 +426,7 @@ msgstr "Nombre mostrado"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_warn_insufficient_qty_repair_form_view
 msgid "Do you confirm you want to repair"
-msgstr ""
+msgstr "¿Confirma que desea reparar?"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_make_invoice
@@ -421,6 +448,8 @@ msgstr "Borrador"
 msgid ""
 "Draft invoices for this order will be cancelled. Do you confirm the action?"
 msgstr ""
+"Se cancelarán los borradores de las facturas de este pedido. ¿Confirmas la "
+"acción?"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -430,7 +459,7 @@ msgstr "Finalizar reparación"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__tracking
 msgid "Ensure the traceability of a storable product in your warehouse."
-msgstr "Asegure la trazabilidad de un producto almacenable en su almacén"
+msgstr "Asegurar seguimiento de producto almacenable."
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -725,7 +754,7 @@ msgstr "Ningún producto definido en las tarifas."
 #. module: repair
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tree
 msgid "No repair order found. Let's create one!"
-msgstr ""
+msgstr "No se encontró ninguna orden de reparación. ¡Creemos uno!"
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0
@@ -800,7 +829,7 @@ msgstr "Tarifa"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__pricelist_id
 msgid "Pricelist of the selected partner."
-msgstr "Tarifa de la empresa seleccionada"
+msgstr "Lista de Precios del contacto seleccionado."
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -823,7 +852,7 @@ msgstr "Cantidad producto"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__tracking
 msgid "Product Tracking"
-msgstr ""
+msgstr "Seguimiento de productos"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__product_uom
@@ -855,7 +884,7 @@ msgstr "Quant"
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_tree
 msgid "Quantity"
-msgstr "Cantidad mínima"
+msgstr "Cantidad"
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__state__draft
@@ -909,7 +938,7 @@ msgstr "Tarifa de Reparación"
 #. module: repair
 #: model:ir.model,name:repair.model_repair_fee
 msgid "Repair Fees"
-msgstr "Tarifa de reparación "
+msgstr "Tarifas de reparación"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_account_move_line__repair_line_ids
@@ -992,7 +1021,7 @@ msgstr "La reparación debe estar confirmada antes de comenzar la reparación."
 #, python-format
 msgid "Repair must be repaired in order to make the product moves."
 msgstr ""
-"La reparación debe ser terminada para generar los movimientos de productos"
+"La reparación debe ser terminada para generar los movimientos de productos."
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0
@@ -1154,7 +1183,7 @@ msgstr "Impuestos"
 #. module: repair
 #: model:ir.model.constraint,message:repair.constraint_repair_order_name
 msgid "The name of the Repair Order must be unique!"
-msgstr "El nombre de la orden de reparación debe ser único"
+msgstr "¡El nombre de la orden de reparación debe ser único!"
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0
@@ -1299,6 +1328,8 @@ msgid ""
 "You can not delete a repair order once it has been confirmed. You must first"
 " cancel it."
 msgstr ""
+"No puede eliminar una orden de reparación una vez confirmada. Primero debes "
+"cancelarlo."
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0
@@ -1307,6 +1338,8 @@ msgid ""
 "You can not delete a repair order which is linked to an invoice which has "
 "been posted once."
 msgstr ""
+"No puede eliminar una orden de reparación que esté vinculada a una factura "
+"que se haya contabilizado una vez."
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0
@@ -1335,4 +1368,4 @@ msgstr ""
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_warn_insufficient_qty_repair_form_view
 msgid "from location"
-msgstr ""
+msgstr "desde el lugar"

@@ -96,15 +96,11 @@ var MatrixConfiguratorWidget = relationalFields.FieldMany2One.extend({
      * before calling super.
      *
      * @override
-     * @private
      */
-    _onFieldChanged: function (ev) {
-        var self = this;
-
-        this._super.apply(this, arguments);
-
-        if (ev.data.changes && ev.data.changes.product_template_id && ev.data.changes.product_template_id.id) {
-            self._onTemplateChange(ev.data.changes.product_template_id.id, ev.data.dataPointID);
+    reset: async function (record, ev) {
+        await this._super(...arguments);
+        if (ev && ev.target === this && ev.data.changes && ev.data.changes.product_template_id && record.data.product_template_id.data.id) {
+            this._onTemplateChange(record.data.product_template_id.data.id, ev.data.dataPointID);
         }
     },
 

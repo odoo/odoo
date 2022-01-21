@@ -26,7 +26,7 @@
                                 <field name="name"/>
                                 <field name="workcenter_id" context="{'default_company_id': company_id}"/>
                                 <field name="sequence" groups="base.group_no_one"/>
-                                <field name="bom_id" readonly="1"/>
+                                <field name="bom_id" invisible="context.get('bom_id_invisible', False)"/>
                             </group><group name="workorder">
                                 <field name="workorder_count" invisible="1"/>
                                 <field name="time_mode" widget="radio"/>
@@ -73,6 +73,7 @@
                 Each operation is done at a specific Work Center and has a specific duration.
               </p>
             </field>
+            <field name="domain">['|', ('bom_id', '=', False), ('bom_id.active', '=', True)]</field>
         </record>
 
         <menuitem id="menu_mrp_routing_action"

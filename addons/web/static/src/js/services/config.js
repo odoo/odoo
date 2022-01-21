@@ -14,6 +14,11 @@ const bus = new Bus();
  * this file someday.
  */
 
+const maxTouchPoints = navigator.maxTouchPoints || 1;
+const isAndroid = /Android/i.test(navigator.userAgent);
+const isIOS = /(iPad|iPhone|iPod)/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && maxTouchPoints > 1);
+const isOtherMobileDevice = /(webOS|BlackBerry|Windows Phone)/i.test(navigator.userAgent);
+
 var config = {
     device: {
         /**
@@ -38,6 +43,20 @@ var config = {
          */
         size_class: null,
         /**
+         * Mobile OS (Android) device detection using userAgent.
+         * This flag doesn't depend on the size/resolution of the screen.
+         *
+         * @return Boolean
+         */
+        isAndroid: isAndroid,
+        /**
+         * Mobile OS (iOS) device detection using userAgent.
+         * This flag doesn't depend on the size/resolution of the screen.
+         *
+         * @return Boolean
+         */
+        isIOS: isIOS,
+        /**
          * A frequent use case is to have a different render in 'mobile' mode,
          * meaning when the screen is small.  This flag (boolean) is true when
          * the size is XS/VSM/SM. It is also updated dynamically.
@@ -52,13 +71,7 @@ var config = {
          *
          * @return {boolean}
          */
-        isMobileDevice: navigator.userAgent.match(/Android/i) ||
-            navigator.userAgent.match(/webOS/i) ||
-            navigator.userAgent.match(/iPhone/i) ||
-            navigator.userAgent.match(/iPad/i) ||
-            navigator.userAgent.match(/iPod/i) ||
-            navigator.userAgent.match(/BlackBerry/i) ||
-            navigator.userAgent.match(/Windows Phone/i),
+        isMobileDevice: isAndroid || isIOS || isOtherMobileDevice,
         /**
          * Mapping between the numbers 0,1,2,3,4,5,6 and some descriptions
          */

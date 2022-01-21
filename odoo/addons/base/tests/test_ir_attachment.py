@@ -1,11 +1,16 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
+import binascii
 import hashlib
+import io
 import os
+
+from PIL import Image
 
 from odoo.exceptions import AccessError
 from odoo.tests.common import TransactionCase
+from odoo.tools import image_to_base64
 
 HASH_SPLIT = 2      # FIXME: testing implementations detail is not a good idea
 
@@ -19,11 +24,23 @@ class TestIrAttachment(TransactionCase):
         # Blob1
         self.blob1 = b'blob1'
         self.blob1_b64 = base64.b64encode(self.blob1)
-        blob1_hash = hashlib.sha1(self.blob1).hexdigest()
-        self.blob1_fname = blob1_hash[:HASH_SPLIT] + '/' + blob1_hash
+        self.blob1_hash = hashlib.sha1(self.blob1).hexdigest()
+        self.blob1_fname = self.blob1_hash[:HASH_SPLIT] + '/' + self.blob1_hash
 
         # Blob2
         self.blob2 = b'blob2'
+        self.blob2_b64 = base64.b64encode(self.blob2)
+
+    def assertApproximately(self, value, expectedSize, delta=1):
+        # we don't used bin_size in context, because on write, the cached value is the data and not
+        # the size, so we need on each write to invalidate cache if we really want to get the size.
+        try:
+            value = base64.b64decode(value.decode())
+        except UnicodeDecodeError:
+            pass
+        size = len(value) / 1024 # kb
+
+        self.assertAlmostEqual(size, expectedSize, delta=delta)
 
     def test_01_store_in_db(self):
         # force storing in database
@@ -108,6 +125,7 @@ class TestIrAttachment(TransactionCase):
         """
         Tests the consistency of documents' mimetypes
         """
+
         Attachment = self.Attachment.with_user(self.env.ref('base.user_demo').id)
         a2 = Attachment.create({'name': 'a2', 'datas': self.blob1_b64, 'mimetype': 'image/png'})
         self.assertEqual(a2.mimetype, 'image/png', "the new mimetype should be the one given on write")
@@ -136,3 +154,109 @@ class TestIrAttachment(TransactionCase):
         document = self.Attachment.create({'name': 'document', 'datas': self.blob1_b64})
         document.write({'datas': self.blob1_b64, 'mimetype': 'text/xml'})
         self.assertEqual(document.mimetype, 'text/xml', "XML mimetype should not be forced to text, for admin user")
+
+    def test_10_image_autoresize(self):
+        Attachment = self.env['ir.attachment']
+        img_bin = io.BytesIO()
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+        with Image.open(os.path.join(dir_path, 'odoo.jpg'), 'r') as logo:
+            img = Image.new('RGB', (4000, 2000), '#4169E1')
+            img.paste(logo)
+            img.save(img_bin, 'JPEG')
+
+        img_encoded = image_to_base64(img, 'JPEG')
+        img_bin = img_bin.getvalue()
+
+        fullsize = 124.99
+
+        ####################################
+        ### test create/write on 'datas'
+        ####################################
+        attach = Attachment.with_context(image_no_postprocess=True).create({
+            'name': 'image',
+            'datas': img_encoded,
+        })
+        self.assertApproximately(attach.datas, fullsize)  # no resize, no compression
+
+        attach = attach.with_context(image_no_postprocess=False)
+        attach.datas = img_encoded
+        self.assertApproximately(attach.datas, 12.06)  # default resize + default compression
+
+        # resize + default quality (80)
+        self.env['ir.config_parameter'].set_param('base.image_autoresize_max_px', '1024x768')
+        attach.datas = img_encoded
+        self.assertApproximately(attach.datas, 3.71)
+
+        # resize + quality 50
+        self.env['ir.config_parameter'].set_param('base.image_autoresize_quality', '50')
+        attach.datas = img_encoded
+        self.assertApproximately(attach.datas, 3.57)
+
+        # no resize + no quality implicit
+        self.env['ir.config_parameter'].set_param('base.image_autoresize_max_px', '0')
+        attach.datas = img_encoded
+        self.assertApproximately(attach.datas, fullsize)
+
+        # Check that we only compress quality when we resize. We avoid to compress again during a new write.
+        # no resize + quality -> should have no effect
+        self.env['ir.config_parameter'].set_param('base.image_autoresize_max_px', '10000x10000')
+        self.env['ir.config_parameter'].set_param('base.image_autoresize_quality', '50')
+        attach.datas = img_encoded
+        self.assertApproximately(attach.datas, fullsize)
+
+        ####################################
+        ### test create/write on 'raw'
+        ####################################
+
+        # reset default ~ delete
+        self.env['ir.config_parameter'].search([('key', 'ilike', 'base.image_autoresize%')]).unlink()
+
+        attach = Attachment.with_context(image_no_postprocess=True).create({
+            'name': 'image',
+            'raw': img_bin,
+        })
+        self.assertApproximately(attach.raw, fullsize)  # no resize, no compression
+
+        attach = attach.with_context(image_no_postprocess=False)
+        attach.raw = img_bin
+        self.assertApproximately(attach.raw, 12.06)  # default resize + default compression
+
+        # resize + default quality (80)
+        self.env['ir.config_parameter'].set_param('base.image_autoresize_max_px', '1024x768')
+        attach.raw = img_bin
+        self.assertApproximately(attach.raw, 3.71)
+
+        # resize + no quality
+        self.env['ir.config_parameter'].set_param('base.image_autoresize_quality', '0')
+        attach.raw = img_bin
+        self.assertApproximately(attach.raw, 4.09)
+
+        # resize + quality 50
+        self.env['ir.config_parameter'].set_param('base.image_autoresize_quality', '50')
+        attach.raw = img_bin
+        self.assertApproximately(attach.raw, 3.57)
+
+        # no resize + no quality implicit
+        self.env['ir.config_parameter'].set_param('base.image_autoresize_max_px', '0')
+        attach.raw = img_bin
+        self.assertApproximately(attach.raw, fullsize)
+
+    def test_11_copy(self):
+        """
+        Copying an attachment preserves the data
+        """
+        document = self.Attachment.create({'name': 'document', 'datas': self.blob2_b64})
+        document2 = document.copy({'name': "document (copy)"})
+        self.assertEqual(document2.name, "document (copy)")
+        self.assertEqual(document2.datas, document.datas)
+        self.assertEqual(document2.db_datas, document.db_datas)
+        self.assertEqual(document2.store_fname, document.store_fname)
+        self.assertEqual(document2.checksum, document.checksum)
+
+        document3 = document.copy({'datas': self.blob1_b64})
+        self.assertEqual(document3.datas, self.blob1_b64)
+        self.assertEqual(document3.raw, self.blob1)
+        self.assertTrue(self.filestore)  # no data in db but has a store_fname
+        self.assertEqual(document3.db_datas, False)
+        self.assertEqual(document3.store_fname, self.blob1_fname)
+        self.assertEqual(document3.checksum, self.blob1_hash)

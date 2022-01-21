@@ -17,7 +17,8 @@ class MailGroup(http.Controller):
 
     def _get_archives(self, group_id):
         MailMessage = request.env['mail.message']
-        groups = MailMessage._read_group_raw(
+        # use sudo to avoid side-effects due to custom ACLs
+        groups = MailMessage.sudo()._read_group_raw(
             [('model', '=', 'mail.channel'), ('res_id', '=', group_id), ('message_type', '!=', 'notification')],
             ['subject', 'date'],
             groupby=["date"], orderby="date desc")
@@ -44,7 +45,8 @@ class MailGroup(http.Controller):
 
         # compute statistics
         month_date = datetime.today() - relativedelta.relativedelta(months=1)
-        messages = request.env['mail.message'].read_group([
+        # use sudo to avoid side-effects due to custom ACLs
+        messages = request.env['mail.message'].sudo().read_group([
             ('model', '=', 'mail.channel'),
             ('date', '>=', fields.Datetime.to_string(month_date)),
             ('message_type', '!=', 'notification'),
@@ -94,6 +96,9 @@ class MailGroup(http.Controller):
         """
         unsubscribe = subscription == 'on'
         channel = request.env['mail.channel'].browse(int(channel_id))
+        if not channel.exists():
+            return False
+
         partner_ids = []
 
         # search partner_id
