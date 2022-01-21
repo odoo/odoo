@@ -55,8 +55,8 @@ class PaymentAcquirer(models.Model):
                 (k, v) for k, v in values.items()
                 if any(k.upper().startswith(key_prefix) for key_prefix in ('ADD_', 'BRQ_', 'CUST_'))
             ]
-        # Sort parameters by upper-cased key name
-        sorted_items = sorted(items, key=lambda pair: pair[0].upper())
+        # Sort parameters by lower-cased key. Not upper- because ord('A') < ord('_') < ord('a').
+        sorted_items = sorted(items, key=lambda pair: pair[0].lower())
         # Build the signing string by concatenating all parameters
         sign_string = ''.join(f'{k}={v or ""}' for k, v in sorted_items)
         # Append the pre-shared secret key to the signing string
