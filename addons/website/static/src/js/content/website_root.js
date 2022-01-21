@@ -10,6 +10,7 @@ import "web.zoomodoo";
 import { FullscreenIndication } from '@website/js/widgets/fullscreen_indication';
 
 export const WebsiteRoot = publicRootData.PublicRoot.extend(KeyboardNavigationMixin, {
+    // TODO remove KeyboardNavigationMixin in master
     events: _.extend({}, KeyboardNavigationMixin.events, publicRootData.PublicRoot.prototype.events || {}, {
         'click .js_change_lang': '_onLangChangeClick',
         'click .js_publish_management .js_publish_btn': '_onPublishBtnClick',
@@ -30,6 +31,7 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend(KeyboardNavigationMi
         this.isFullscreen = false;
         KeyboardNavigationMixin.init.call(this, {
             autoAccessKeys: false,
+            skipRenderOverlay: true,
         });
         return this._super(...arguments);
     },
