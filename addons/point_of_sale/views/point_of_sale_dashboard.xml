@@ -79,7 +79,7 @@
                                         <div class="badge badge-info o_kanban_inline_block">Closing Control</div>
                                     </t>
                                     <t t-if="record.pos_session_state.raw_value == 'opened' and record.pos_session_duration.raw_value > 1">
-                                        <div t-attf-class="badge badge-#{record.pos_session_duration.raw_value > 3 and 'danger' or 'warning'} o_kanban_inline_block"
+                                        <div t-attf-class="badge bg-#{record.pos_session_duration.raw_value > 3 and 'danger' or 'warning'} o_kanban_inline_block"
                                              title="The session has been opened for an unusually long period. Please consider closing.">
                                              To Close
                                         </div>

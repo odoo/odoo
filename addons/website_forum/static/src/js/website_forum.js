@@ -82,7 +82,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
             },
             formatResult: function (term) {
                 if (term.isNew) {
-                    return '<span class="badge badge-primary">New</span> ' + _.escape(term.text);
+                    return '<span class="badge bg-primary">New</span> ' + _.escape(term.text);
                 } else {
                     return _.escape(term.text);
                 }
@@ -331,8 +331,8 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                     elem.innerText = _t(' Flagged');
                     elem.prepend(child);
                     if (countFlaggedPosts) {
-                        countFlaggedPosts.classList.remove('badge-light');
-                        countFlaggedPosts.classList.add('badge-danger');
+                        countFlaggedPosts.classList.remove('bg-light');
+                        countFlaggedPosts.classList.add('bg-danger');
                         countFlaggedPosts.innerText = parseInt(countFlaggedPosts.innerText, 10) + 1;
                     }
                     $(elem).next('#flag_validator').removeClass('d-none');
@@ -530,7 +530,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         flaggedButton.innerText = _t(' Flag');
         flaggedButton.prepend(child);
         if (count === 0) {
-            countFlaggedPosts.classList.add("badge-light");
+            countFlaggedPosts.classList.add("bg-light");
         }
         countFlaggedPosts.innerText = count;
     },

@@ -216,7 +216,7 @@ const MicrosoftCalendarRenderer = CalendarRenderer.include({
     _initMicrosoftPillButton: function() {
         // hide the pending button
         this.$calendarSyncContainer.find('#microsoft_sync_pending').hide();
-        const switchBadgeClass = elem => elem.toggleClass(['badge-primary', 'badge-danger']);
+        const switchBadgeClass = elem => elem.toggleClass(['bg-primary', 'bg-danger']);
         this.$('#microsoft_sync_configured').hover(() => {
             switchBadgeClass(this.$calendarSyncContainer.find('#microsoft_sync_configured'));
             this.$calendarSyncContainer.find('#microsoft_check').hide();
