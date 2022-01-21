@@ -1,4 +1,5 @@
 # coding: utf-8
+from freezegun import freeze_time
 from lxml import etree
 from odoo.exceptions import UserError
 from odoo.tests import tagged
@@ -41,6 +42,8 @@ class TestEdiXmls(TestEsEdiCommon):
         )
 
     def test_format_cancel(self):
+        self.out_invoice.l10n_es_tbai_registration_date = self.frozen_today  # currently values comes from attachment_edi (None here)
+
         xml_doc = self.edi_format._l10n_es_tbai_get_invoice_xml(self.out_invoice, cancel=True)
 
         # TODO validate for all tax agencies
@@ -55,3 +58,154 @@ class TestEdiXmls(TestEsEdiCommon):
             self.env['l10n_es.edi.tbai.util'].validate_format_xsd(xml_bytes, xsd_name)
         except UserError as e:
             self.fail(str(e))
+
+    def test_xml_tree_post(self):
+        with freeze_time(self.frozen_today):
+            xml_doc = self.edi_format._l10n_es_tbai_get_invoice_xml(self.out_invoice, cancel=False)
+            xml_expected = etree.fromstring("""<?xml version='1.0' encoding='UTF-8'?>
+<T:TicketBai xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" xmlns:T="urn:ticketbai:emision" xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+  <Cabecera>
+    <IDVersionTBAI>1.2</IDVersionTBAI>
+  </Cabecera>
+  <Sujetos>
+    <Emisor>
+      <NIF>___ignore___</NIF>
+      <ApellidosNombreRazonSocial>EUS Company</ApellidosNombreRazonSocial>
+    </Emisor>
+    <Destinatarios>
+      <IDDestinatario>
+        <IDOtro>
+          <IDType>02</IDType>
+          <ID>BE0477472701</ID>
+        </IDOtro>
+        <ApellidosNombreRazonSocial>&amp;@&#224;&#193;$&#163;&#8364;&#232;&#234;&#200;&#202;&#246;&#212;&#199;&#231;&#161;&#8539;&#8482;&#179;</ApellidosNombreRazonSocial>
+        <CodigoPostal>___ignore___</CodigoPostal>
+        <Direccion>___ignore___</Direccion>
+      </IDDestinatario>
+    </Destinatarios>
+    <VariosDestinatarios>N</VariosDestinatarios>
+    <EmitidaPorTercerosODestinatario>D</EmitidaPorTercerosODestinatario>
+  </Sujetos>
+  <Factura>
+    <CabeceraFactura>
+      <SerieFactura>INVTEST</SerieFactura>
+      <NumFactura>01</NumFactura>
+      <FechaExpedicionFactura>01-01-2022</FechaExpedicionFactura>
+      <HoraExpedicionFactura>___ignore___</HoraExpedicionFactura>
+    </CabeceraFactura>
+    <DatosFactura>
+      <DescripcionFactura>manual</DescripcionFactura>
+      <DetallesFactura>
+        <IDDetalleFactura>
+          <DescripcionDetalle>producta</DescripcionDetalle>
+          <Cantidad>5.0</Cantidad>
+          <ImporteUnitario>1000.0</ImporteUnitario>
+          <Descuento>20.0</Descuento>
+          <ImporteTotal>4840.0</ImporteTotal>
+        </IDDetalleFactura>
+      </DetallesFactura>
+      <ImporteTotalFactura>4840.00</ImporteTotalFactura>
+      <Claves>
+        <IDClave>
+          <ClaveRegimenIvaOpTrascendencia>01</ClaveRegimenIvaOpTrascendencia>
+        </IDClave>
+      </Claves>
+    </DatosFactura>
+    <TipoDesglose>
+      <DesgloseTipoOperacion>
+        <Entrega>
+          <Sujeta>
+            <NoExenta>
+              <DetalleNoExenta>
+                <TipoNoExenta>S1</TipoNoExenta>
+                <DesgloseIVA>
+                  <DetalleIVA>
+                    <BaseImponible>4000.0</BaseImponible>
+                    <TipoImpositivo>21.0</TipoImpositivo>
+                    <CuotaImpuesto>840.0</CuotaImpuesto>
+                    <OperacionEnRecargoDeEquivalenciaORegimenSimplificado>N</OperacionEnRecargoDeEquivalenciaORegimenSimplificado>
+                  </DetalleIVA>
+                </DesgloseIVA>
+              </DetalleNoExenta>
+            </NoExenta>
+          </Sujeta>
+        </Entrega>
+      </DesgloseTipoOperacion>
+    </TipoDesglose>
+  </Factura>
+  <HuellaTBAI>
+    <Software>
+      <LicenciaTBAI>___ignore___</LicenciaTBAI>
+      <EntidadDesarrolladora>
+        <NIF>___ignore___</NIF>
+      </EntidadDesarrolladora>
+      <Nombre>___ignore___</Nombre>
+      <Version>___ignore___</Version>
+    </Software>
+    <NumSerieDispositivo>___ignore___</NumSerieDispositivo>
+  </HuellaTBAI>
+  <ds:Signature Id="___ignore___">
+    <ds:SignedInfo>
+      <ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+      <ds:SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/>
+      <ds:Reference URI="">
+        <ds:Transforms>
+          <ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+        </ds:Transforms>
+        <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+        <ds:DigestValue>___ignore___</ds:DigestValue>
+      </ds:Reference>
+      <ds:Reference URI="___ignore___">
+        <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+        <ds:DigestValue>___ignore___</ds:DigestValue>
+      </ds:Reference>
+      <ds:Reference URI="___ignore___">
+        <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+        <ds:DigestValue>___ignore___</ds:DigestValue>
+      </ds:Reference>
+    </ds:SignedInfo>
+    <ds:SignatureValue>___ignore___</ds:SignatureValue>
+    <ds:KeyInfo Id="___ignore___">
+      <ds:X509Data>
+        <ds:X509Certificate>___ignore___</ds:X509Certificate>
+      </ds:X509Data>
+      <ds:KeyValue>
+        <ds:RSAKeyValue>
+          <ds:Modulus>___ignore___</ds:Modulus>
+          <ds:Exponent>AQAB</ds:Exponent>
+        </ds:RSAKeyValue>
+      </ds:KeyValue>
+    </ds:KeyInfo>
+    <ds:Object>
+      <etsi:QualifyingProperties Target="___ignore___">
+        <etsi:SignedProperties Id="___ignore___">
+          <etsi:SignedSignatureProperties>
+            <etsi:SigningTime>___ignore___</etsi:SigningTime>
+            <etsi:SigningCertificateV2>
+              <etsi:Cert>
+                <etsi:CertDigest>
+                  <ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256"/>
+                  <ds:DigestValue>___ignore___</ds:DigestValue>
+                </etsi:CertDigest>
+              </etsi:Cert>
+            </etsi:SigningCertificateV2>
+            <etsi:SignaturePolicyIdentifier>
+              <etsi:SignaturePolicyId>
+                <etsi:SigPolicyId>
+                  <etsi:Identifier>https://www.gipuzkoa.eus/TicketBAI/signature</etsi:Identifier>
+                  <etsi:Description>Pol&#237;tica de Firma TicketBAI 1.0</etsi:Description>
+                </etsi:SigPolicyId>
+                <etsi:SigPolicyHash>
+                  <ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256"/>
+                  <ds:DigestValue>___ignore___</ds:DigestValue>
+                </etsi:SigPolicyHash>
+              </etsi:SignaturePolicyId>
+            </etsi:SignaturePolicyIdentifier>
+          </etsi:SignedSignatureProperties>
+        </etsi:SignedProperties>
+      </etsi:QualifyingProperties>
+    </ds:Object>
+  </ds:Signature>
+</T:TicketBai>
+""".encode("utf-8"))
+            self.assertXmlTreeEqual(xml_doc, xml_expected)

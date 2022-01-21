@@ -2,7 +2,6 @@
 import base64
 from pytz import timezone
 from datetime import datetime
-from random import randint
 
 from odoo.tests import tagged
 from odoo.tools import misc
@@ -30,6 +29,7 @@ class TestEsEdiCommon(AccountEdiTestCommon):
         })
 
         cls.company_data['company'].write({
+            'name': 'EUS Company',
             'country_id': cls.env.ref('base.es').id,
             'state_id': cls.env.ref('base.state_es_ss').id,  # TODO test all
             'l10n_es_tbai_certificate_id': cls.certificate.id,
@@ -41,8 +41,10 @@ class TestEsEdiCommon(AccountEdiTestCommon):
         # ==== Business ====
 
         cls.partner_a.write({
+            'name': "&@àÁ$£€èêÈÊöÔÇç¡⅛™³",  # special characters should be escaped appropriately
             'vat': 'BE0477472701',
             'country_id': cls.env.ref('base.be').id,
+            'zip': 93071,
         })
 
         cls.partner_b.write({
@@ -67,8 +69,8 @@ class TestEsEdiCommon(AccountEdiTestCommon):
         return cls.env['account.move'].with_context(edi_test_mode=True).create({
             'move_type': 'out_invoice',
             'partner_id': cls.partner_a.id,
-            'invoice_date': '2019-01-01',
-            'date': '2019-01-01',
+            'invoice_date': '2022-01-01',
+            'date': '2022-01-01',
             **kwargs,
             'invoice_line_ids': [(0, 0, {
                 'product_id': cls.product_a.id,
