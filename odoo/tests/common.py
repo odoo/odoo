@@ -75,6 +75,10 @@ PORT = odoo.tools.config['http_port']
 # Useless constant, tests are aware of the content of demo data
 ADMIN_USER_ID = odoo.SUPERUSER_ID
 
+CHECK_BROWSER_SLEEP = 0.1 # seconds
+CHECK_BROWSER_ITERATIONS = 100
+BROWSER_WAIT = CHECK_BROWSER_SLEEP * CHECK_BROWSER_ITERATIONS # seconds
+
 
 def get_db_name():
     db = odoo.tools.config['db_name']
@@ -919,40 +923,40 @@ class ChromeBrowser:
                     return bin_
 
         elif system == 'Windows':
-            # TODO: handle windows platform: https://stackoverflow.com/a/40674915
-            pass
+            bins = [
+                '%ProgramFiles%\\Google\\Chrome\\Application\\chrome.exe',
+                '%ProgramFiles(x86)%\\Google\\Chrome\\Application\\chrome.exe',
+                '%LocalAppData%\\Google\\Chrome\\Application\\chrome.exe',
+            ]
+            for bin_ in bins:
+                bin_ = os.path.expandvars(bin_)
+                if os.path.exists(bin_):
+                    return bin_
 
         self._logger.warning("Chrome executable not found")
         raise unittest.SkipTest("Chrome executable not found")
 
     def _spawn_chrome(self, cmd):
-        if os.name != 'posix':
-            return
-
-        pid = os.fork()
-        if pid != 0:
-            port_file = pathlib.Path(self.user_data_dir, 'DevToolsActivePort')
-            for _ in range(100):
-                time.sleep(0.1)
-                if port_file.is_file() and port_file.stat().st_size > 5:
-                    with port_file.open('r', encoding='utf-8') as f:
-                        self.devtools_port = int(f.readline())
-                    break
-            else:
-                raise unittest.SkipTest('Failed to detect chrome devtools port after 2.5s.')
-            return pid
-        else:
-            if platform.system() != 'Darwin':
-                # since the introduction of pointer compression in Chrome 80 (v8 v8.0),
-                # the memory reservation algorithm requires more than 8GiB of virtual mem for alignment
-                # this exceeds our default memory limits.
-                # OSX already reserve huge memory for processes
+        if os.name == 'posix' and platform.system() != 'Darwin':
+            # since the introduction of pointer compression in Chrome 80 (v8 v8.0),
+            # the memory reservation algorithm requires more than 8GiB of
+            # virtual mem for alignment this exceeds our default memory limits.
+            def preexec():
                 import resource
                 resource.setrlimit(resource.RLIMIT_AS, (resource.RLIM_INFINITY, resource.RLIM_INFINITY))
-            # redirect browser stderr to /dev/null
-            with open(os.devnull, 'wb', 0) as stderr_replacement:
-                os.dup2(stderr_replacement.fileno(), sys.stderr.fileno())
-            os.execv(cmd[0], cmd)
+        else:
+            preexec = None
+
+        # pylint: disable=subprocess-popen-preexec-fn
+        proc = subprocess.Popen(cmd, stderr=subprocess.DEVNULL, preexec_fn=preexec)
+        port_file = pathlib.Path(self.user_data_dir, 'DevToolsActivePort')
+        for _ in range(CHECK_BROWSER_ITERATIONS):
+            time.sleep(CHECK_BROWSER_SLEEP)
+            if port_file.is_file() and port_file.stat().st_size > 5:
+                with port_file.open('r', encoding='utf-8') as f:
+                    self.devtools_port = int(f.readline())
+                    return proc.pid
+        raise unittest.SkipTest(f'Failed to detect chrome devtools port after {BROWSER_WAIT :.1f}s.')
 
     def _chrome_start(self):
         if self.chrome_pid is not None:
@@ -1024,7 +1028,7 @@ class ChromeBrowser:
         ``protocol``
             get the full protocol
         """
-        command = os.path.join('json', command).strip('/')
+        command = '/'.join(['json', command]).strip('/')
         url = werkzeug.urls.url_join('http://%s:%s/' % (HOST, self.devtools_port), command)
         self._logger.info("Issuing json command %s", url)
         delay = 0.1
