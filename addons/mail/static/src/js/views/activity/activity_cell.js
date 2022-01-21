@@ -39,7 +39,7 @@ const ActivityCell = KanbanActivity.extend({
         this.$('a').html($date);
         if (this.record.data.activity_ids.res_ids.length > 1) {
             this.$('a').append($('<span>', {
-                class: 'badge badge-light badge-pill border-0 ' + this.record.data.activity_state,
+                class: 'badge bg-light rounded-pill border-0 ' + this.record.data.activity_state,
                 text: this.record.data.activity_ids.res_ids.length,
             }));
         }
