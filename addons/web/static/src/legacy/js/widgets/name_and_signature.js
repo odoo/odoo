@@ -84,11 +84,17 @@ var NameAndSignature = Widget.extend({
      * @override
      */
     willStart: function () {
-        var self = this;
+        /** LPR: in sign module, the web/sign/get_fonts call is cached since
+         * many NameAndSignature widgets are created. This way, we prevent
+         * doing the rpc call if it was already done inside sign
+         */
+        if (this.fonts && this.fonts.length > 0) {
+            return this._super.apply(this, arguments);
+        }
         return Promise.all([
             this._super.apply(this, arguments),
-            this._rpc({route: '/web/sign/get_fonts/' + self.defaultFont}).then(function (data) {
-                self.fonts = data;
+            this._rpc({route: '/web/sign/get_fonts/' + this.defaultFont}).then(data => {
+                this.fonts = data;
             })
         ]);
     },
