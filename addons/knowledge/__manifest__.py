@@ -33,13 +33,15 @@
             'knowledge/static/src/js/knowledge_renderers.js',
             'knowledge/static/src/js/knowledge_views.js',
             'knowledge/static/src/webclient/commands/*.js',
+            'knowledge/static/src/models/*/*.js',
         ],
         'web_editor.assets_wysiwyg': [
             'knowledge/static/src/js/wysiwyg.js',
         ],
         'web.assets_qweb': [
             'knowledge/static/src/xml/knowledge_editor.xml',
-            'knowledge/static/src/xml/knowledge_templates.xml'
-        ]
+            'knowledge/static/src/xml/knowledge_templates.xml',
+            'knowledge/static/src/xml/chatter_topbar.xml',
+        ],
     }
 }
