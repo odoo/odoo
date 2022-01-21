@@ -102,7 +102,7 @@
                     <t t-if="date[3] or (date[0] in ('old','upcoming','all'))">
                         <a t-att-href="keep('/event', date=date[0])" t-attf-class="dropdown-item d-flex align-items-center justify-content-between #{searches.get('date') == date[0] and 'active'}">
                             <t t-out="date[1]"/>
-                            <span t-if="date[3]" t-out="date[3]" class="badge badge-pill badge-primary ml-3"/>
+                            <span t-if="date[3]" t-out="date[3]" t-attf-class="badge badge-pill #{searches.get('date') == date[0] and 'bg-light text-primary' or 'bg-primary'} ml-3"/>
                         </a>
                     </t>
                 </t>
@@ -209,7 +209,7 @@
                             <div class="mt8">
                                 <t t-foreach="event.tag_ids.filtered(lambda tag: tag.category_id.is_published)" t-as="tag">
                                     <span t-if="tag.color"
-                                        t-attf-class="badge mr4 #{'badge-primary' if tag in search_tags else 'badge-light'} #{'o_tag_color_%s' % tag.color if tag.color else ''}">
+                                          t-attf-class="badge mr4 #{'bg-primary' if tag in search_tags else ''} #{'o_tag_color_%s' % tag.color if tag.color else ''}">
                                         <span t-out="tag.name"/>
                                     </span>
                                 </t>

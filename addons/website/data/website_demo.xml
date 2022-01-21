@@ -19,20 +19,20 @@
                                         <div class="col-md">
                                             <h2>Badge</h2>
                                             <t t-foreach="bs_theme_colors" t-as="color">
-                                                <span t-attf-class="badge mb-1 badge-#{color[0]}"><t t-esc="color[1]"/></span>
+                                                <span t-attf-class="badge mb-1 bg-#{color[0]}"><t t-esc="color[1]"/></span>
                                             </t>
                                             <h3 class="mt-2 h6">Pill</h3>
                                             <t t-foreach="bs_theme_colors" t-as="color">
-                                                <span t-attf-class="badge mb-1 badge-pill badge-#{color[0]}"><t t-esc="color[1]"/></span>
+                                                <span t-attf-class="badge mb-1 rounded-pill bg-#{color[0]}"><t t-esc="color[1]"/></span>
                                             </t>
                                             <h3 class="mt-2 h6">Link</h3>
                                             <t t-foreach="bs_theme_colors" t-as="color">
-                                                <a href="#" t-attf-class="badge mb-1 badge-#{color[0]}"><t t-esc="color[1]"/></a>
+                                                <a href="#" t-attf-class="badge mb-1 bg-#{color[0]}"><t t-esc="color[1]"/></a>
                                             </t>
                                             <h3 class="mt-2 h6">Autosizing</h3>
                                             <div class="h3">
                                                 <t t-foreach="bs_theme_colors" t-as="color">
-                                                    <span t-attf-class="badge mb-1 badge-#{color[0]}"><t t-esc="color[1]"/></span>
+                                                    <span t-attf-class="badge mb-1 bg-#{color[0]}"><t t-esc="color[1]"/></span>
                                                 </t>
                                             </div>
 

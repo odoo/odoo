@@ -94,7 +94,7 @@ var AbstractFieldUpgrade = {
         this._super.apply(this, arguments);
         this._insertEnterpriseLabel($("<span>", {
             text: "Enterprise",
-            'class': "badge badge-primary oe_inline o_enterprise_label"
+            'class': "badge bg-primary oe_inline o_enterprise_label"
         }));
     },
     /**
