@@ -718,6 +718,10 @@ class Meeting(models.Model):
     # MAILING
     # ------------------------------------------------------------
 
+    def _get_mail_tz(self):
+        self.ensure_one()
+        return self.event_tz or self.env.user.tz
+
     def _sync_activities(self, fields):
         # update activities
         for event in self:
