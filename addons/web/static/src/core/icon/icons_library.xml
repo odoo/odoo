@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<!-- /// Icons Library -->
+<t t-name="web.oi_odoo" owl="1">
+    <svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMid meet" viewBox="0 0 32 32">
+        <circle fill="transparent" stroke="currentColor" stroke-width="5" cx="16" cy="16" r="10"/>
+    </svg>
+</t>
+
+<t t-name="web.oi_pencil" owl="1">
+    <svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMid meet" viewBox="0 0 32 32">
+        <path fill="currentColor" d="M26.4,11 C27.2,10.2 27.2,9 26.4,8.2 C26.4,8.2 26.4,8.2 26.4,8.2 L22.8,4.6 C22,3.8 20.8,3.8 20,4.6 C20,4.6 20,4.6 20,4.6 L5,19.6 L5,26 L11.4,26 L26.4,11 Z M21.4,6 L25,9.6 L22,12.6 L18.4,9 L21.4,6 Z M7,24 L7,20.4 L17,10.4 L20.6,14 L10.6,24 L7,24 Z"/>
+    </svg>
+</t>
+
+<t t-name="web.oi_bucket" owl="1">
+    <svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMid meet" viewBox="0 0 32 32">
+        <rect t-att-fill="tone" x="4" y="26" width="24" height="4"/>
+        <path fill="currentColor" d="M26,14.54a1,1,0,0,0-.25-.69L17.17,4.33A1.09,1.09,0,0,0,17,4.2V2H15V5L4.32,14.74a1,1,0,0,0-.06,1.41l8.57,9.52a1,1,0,0,0,.69.33h.05a1,1,0,0,0,.68-.26L24,16.8V21a1,1,0,0,0,2,0V14.57S26,14.55,26,14.54Zm-12.35,9-7.23-8L15,7.67V12h2V7.13l6.59,7.33Z"/>
+    </svg>
+</t>
+
+<t t-name="web.oi_list_checked" owl="1">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+        <rect x="16" y="7" width="14" height="4" fill="currentColor">
+            <animate attributeName="x" dur="3s" values="2; 16; 16; 16; 2; 2;" repeatCount="indefinite"/>
+            <animate attributeName="width" dur="3s" values="28; 14; 14; 14; 28; 28;" repeatCount="indefinite"/>
+        </rect>
+        <polygon points="6 10.59 3.41 8 2 9.41 6 13.41 14 5.41 12.59 4 6 10.59" t-att-fill="tone">
+            <animate attributeName="opacity" dur="3s" values="0; 0; 1; 0.5; 0; 0;" repeatCount="indefinite"/>
+        </polygon>
+        <rect x="16" y="21" width="14" height="4" fill="currentColor">
+            <animate attributeName="x" dur="3s" values="2; 16; 16; 16; 2; 2;" repeatCount="indefinite"/>
+            <animate attributeName="width" dur="3s" values="28; 14; 14; 14; 28; 28;" repeatCount="indefinite"/>
+        </rect>
+        <polygon points="6 24.59 3.41 22 2 23.41 6 27.41 14 19.41 12.59 18 6 24.59" t-att-fill="tone">
+            <animate attributeName="opacity" dur="3s" values="0; 0; 1; 0.5; 0; 0;" repeatCount="indefinite"/>
+        </polygon>
+    </svg>
+</t>
+
+<t t-name="web.oi_cube" owl="1">
+    <svg version="1.1" id="L6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+        <rect fill="none" stroke="currentColor" stroke-width="4" x="25" y="25" width="50" height="50">
+            <animateTransform attributeName="transform" dur="0.5s" from="0 50 50" to="180 50 50" type="rotate" id="strokeBox" begin="rectBox.end"/>
+        </rect>
+        <rect x="27" y="27" fill="currentColor" width="46" height="50">
+            <animate attributeName="height" dur="1.3s" from="50" to="0" id="rectBox" fill="freeze" begin="0s;strokeBox.end"/>
+        </rect>
+    </svg>
+</t>
+
+</templates>

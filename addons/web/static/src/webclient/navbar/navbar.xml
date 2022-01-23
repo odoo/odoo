@@ -3,6 +3,62 @@
 
   <t t-name="web.NavBar" owl="1">
     <header>
+    <section>
+      <div class="container py-4 my-4">
+
+        <!-- DEMO  -->
+
+        <h3>General Alignment</h3>
+        <hr/>
+        <div class="row mb-4 pb-4">
+          <div class="col">
+            <h1><Icon name="'pencil'" class="mr-1"/>Heading 1</h1>
+            <h2><Icon name="'pencil'" class="mr-1"/>Heading 2</h2>
+            <h3><Icon name="'pencil'" class="mr-1"/>Heading 3</h3>
+            <h4><Icon name="'pencil'" class="mr-1"/>Heading 4</h4>
+            <h5><Icon name="'pencil'" class="mr-1"/>Heading 5</h5>
+            <h6><Icon name="'pencil'" class="mr-1"/>Heading 6</h6>
+          </div>
+          <div class="col">
+            <p><Icon name="'pencil'"/> Paragraph lorem ipsum dolor sit amet <Icon name="'pencil'"/></p>
+            <button class="btn btn-sm btn-primary mr-2">Button <Icon name="'pencil'"/></button>
+            <button class="btn btn-primary mr-2">Button <Icon name="'pencil'"/></button>
+            <button class="btn btn-lg btn-primary mr-2">Button LG <Icon name="'pencil'"/></button>
+          </div>
+        </div>
+        <h3>Two-tone Icons, eg: <code>&lt;Icon name="'bucket'" tone="'#ff7eb6'"/></code></h3>
+        <hr/>
+        <div class="btn-group mb-4 pb-4" role="group" aria-label="Basic example">
+          <button type="button" class="btn btn-lg btn-secondary">
+            <Icon name="'bucket'" tone="'#000'" class="fa-2x"/>
+          </button>
+          <button type="button" class="btn btn-lg btn-secondary">
+            <Icon name="'bucket'" tone="'#be95ff'" class="fa-2x"/>
+          </button>
+          <button type="button" class="btn btn-lg btn-secondary">
+            <Icon name="'bucket'" tone="'#0bd9d9'" class="fa-2x"/>
+          </button>
+          <button type="button" class="btn btn-lg btn-secondary">
+            <Icon name="'bucket'" tone="'#ff7eb6'" class="fa-2x"/>
+          </button>
+          <button type="button" class="btn btn-lg btn-secondary">
+            <Icon name="'bucket'" tone="'#0f62fe'" class="fa-2x"/>
+          </button>
+          <button type="button" class="btn btn-lg btn-secondary">
+            <Icon name="'bucket'" tone="'#f44336'" class="fa-2x"/>
+          </button>
+        </div>
+        <h3>Animations <small>(triggered on JS events)</small></h3>
+        <hr/>
+        <div class="fa-2x card d-inline-block px-3 mr-4">
+          <Icon name="'list_checked'" tone="'green'" class="fa-2x"/>
+        </div>
+        <div class="fa-2x card d-inline-block px-3">
+          <Icon name="'cube'" tone="'green'" class="fa-2x"/>
+        </div>
+
+      </div>
+    </section>
       <nav
         class="o_main_navbar"
         data-command-category="navbar"

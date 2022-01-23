@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<!-- /// Icon Wrapper -->
+<t t-name="web.Icon" owl="1">
+    <span t-if="iconTemplateName" t-call="{{iconTemplateName}}" class="oi_svg_container"/>
+    <span t-else="" class="bg-warning">No Template</span>
+</t>
+
+</templates>
