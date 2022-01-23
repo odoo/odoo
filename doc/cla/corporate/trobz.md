@@ -16,3 +16,4 @@ Denis Barbot dbarbot@trobz.com https://github.com/dbarbot
 Jean-Charles Drubay jcdrubay@trobz.com https://github.com/jcdrubay
 Bui Ngoc Tu tu@trobz.com https://github.com/tungocbui
 Diep Huu Hoang hoang@trobz.com https://github.com/anothingguy
+Hai Lang hailn@trobz.com https://gitlab.com/hailangvn

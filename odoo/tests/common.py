@@ -493,41 +493,50 @@ class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
                 record_value = record[field_name]
                 field = record._fields[field_name]
                 field_type = field.type
+                expected_value = candidate.get(field_name, None)
+                expected_field = field_name in candidate
                 if field_type == 'monetary':
                     # Compare monetary field.
                     currency_field_name = record._fields[field_name].currency_field
                     record_currency = record[currency_field_name]
-                    if field_name not in candidate:
-                        diff[field_name] = (record_value, None)
+                    if not expected_field:
+                        pass
                     elif record_currency:
-                        if record_currency.compare_amounts(candidate[field_name], record_value):
-                            diff[field_name] = (record_value, record_currency.round(candidate[field_name]))
-                    elif candidate[field_name] != record_value:
-                        diff[field_name] = (record_value, candidate[field_name])
+                        if record_currency.compare_amounts(expected_value, record_value) == 0:
+                            continue
+                        expected_value = record_currency.round(expected_value)
+                    elif expected_value == record_value:
+                        continue
                 elif field_type == 'float' and field.get_digits(record.env):
                     prec = field.get_digits(record.env)[1]
-                    if float_compare(candidate[field_name], record_value, precision_digits=prec) != 0:
-                        diff[field_name] = (record_value, candidate[field_name])
+                    if not expected_field:
+                        pass
+                    elif float_compare(expected_value, record_value, precision_digits=prec) == 0:
+                        continue
                 elif field_type in ('one2many', 'many2many'):
                     # Compare x2many relational fields.
                     # Empty comparison must be an empty list to be True.
-                    if field_name not in candidate:
-                        diff[field_name] = (sorted(record_value.ids), None)
-                    elif set(record_value.ids) != set(candidate[field_name]):
-                        diff[field_name] = (sorted(record_value.ids), sorted(candidate[field_name]))
+                    if expected_field:
+                        if set(record_value.ids) == set(expected_value):
+                            continue
+                        # Only sort when there is expected value
+                        expected_value = sorted(expected_value)
+                    record_value = sorted(record_value.ids)
                 elif field_type == 'many2one':
                     # Compare many2one relational fields.
                     # Every falsy value is allowed to compare with an empty record.
-                    if field_name not in candidate:
-                        diff[field_name] = (record_value.id, None)
-                    elif (record_value or candidate[field_name]) and record_value.id != candidate[field_name]:
-                        diff[field_name] = (record_value.id, candidate[field_name])
+                    if not expected_field:
+                        pass
+                    elif not (record_value or expected_value) or record_value.id == expected_value:
+                        continue
+                    record_value = record_value.id
                 else:
                     # Compare others fields if not both interpreted as falsy values.
-                    if field_name not in candidate:
-                        diff[field_name] = (record_value, None)
-                    elif (candidate[field_name] or record_value) and record_value != candidate[field_name]:
-                        diff[field_name] = (record_value, candidate[field_name])
+                    if not expected_field:
+                        pass
+                    elif not (expected_value or record_value) or record_value == expected_value:
+                        continue
+                diff[field_name] = (record_value, expected_value)
             return diff
 
         # Compare records with candidates.
