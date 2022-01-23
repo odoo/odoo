@@ -5,9 +5,6 @@
         <field name="model">account.journal</field>
         <field name="inherit_id" ref="account_check_printing.view_account_journal_form_inherited"/>
         <field name="arch" type="xml">
-            <group name="check_printing" position="attributes">
-                <attribute name="attrs">{'invisible': ['|', ('l10n_latam_use_checkbooks', '=', True), '|', '!', ('selected_payment_method_codes', 'ilike', ',check_printing,'), ('type', '!=', 'bank')]}</attribute>
-            </group>
             <group name="check_printing" position="before">
                 <group
                     string="Checks Management" name="check_managament"
