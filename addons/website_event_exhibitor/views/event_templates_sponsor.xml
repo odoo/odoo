@@ -3,24 +3,26 @@
 
 <template name="Sponsors" id="event_sponsor" customize_show="True" inherit_id="website_event.layout">
     <xpath expr="//div[@id='wrap']" position="inside">
-        <div class="container mt32 mb16 d-none d-md-block d-print-none" t-if="event.sponsor_ids">
-            <div t-attf-class="d-flex flex-wrap mb-5 #{'' if (len(event.sponsor_ids) > 10) else 'justify-content-md-center'}">
-                <t t-foreach="event.sponsor_ids.sorted(lambda sponsor: not sponsor.website_published)" t-as="sponsor">
-                    <t t-set="popover_content">
-                        <div t-field="sponsor.name" class="h5"/>
-                        <div t-if="sponsor.url" class="d-flex align-items-baseline">
-                            <i class="fa fa-home mr-2"/><a t-att-href="sponsor.url" t-field="sponsor.url" class="text-truncate"/>
-                        </div>
+        <section class="o_wevent_sponsor_wrapper d-none d-md-block d-print-none">
+            <div class="container pt32 pb16" t-if="event.sponsor_ids">
+                <div t-attf-class="d-flex flex-wrap mb-5 #{'' if (len(event.sponsor_ids) > 10) else 'justify-content-md-center'}">
+                    <t t-foreach="event.sponsor_ids.sorted(lambda sponsor: not sponsor.website_published)" t-as="sponsor">
+                        <t t-set="popover_content">
+                            <div t-field="sponsor.name" class="h5"/>
+                            <div t-if="sponsor.url" class="d-flex align-items-baseline">
+                                <i class="fa fa-home mr-2"/><a t-att-href="sponsor.url" t-field="sponsor.url" class="text-truncate"/>
+                            </div>
+                        </t>
+                        <a class="o_wevent_sponsor o_wevent_sponsor_card h-100" tabindex="0" role="button"
+                            t-att-data-publish="'on' if sponsor.website_published else 'off'"
+                            t-att-data-content="popover_content"
+                            data-html="true" data-trigger="focus" data-toggle="popover" data-placement="bottom">
+                            <t t-call="website_event_exhibitor.event_sponsor_thumb_details"/>
+                        </a>
                     </t>
-                    <a class="o_wevent_sponsor o_wevent_sponsor_card h-100" tabindex="0" role="button"
-                        t-att-data-publish="'on' if sponsor.website_published else 'off'"
-                        t-att-data-content="popover_content"
-                        data-html="true" data-trigger="focus" data-toggle="popover" data-placement="bottom">
-                        <t t-call="website_event_exhibitor.event_sponsor_thumb_details"/>
-                    </a>
-                </t>
+                </div>
             </div>
-        </div>
+        </section>
     </xpath>
 </template>
 
