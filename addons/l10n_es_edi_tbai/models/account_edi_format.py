@@ -30,7 +30,8 @@ class AccountEdiFormat(models.Model):
         if self.code != 'es_tbai':
             return super()._is_required_for_invoice(invoice)
 
-        return invoice.l10n_es_tbai_is_required
+        # TODO for Bizkaia, move_type in ('in_invoice', 'in_refund') also yields True
+        return invoice.l10n_es_tbai_is_required and invoice.move_type in ('out_invoice', 'out_refund')
 
     def _needs_web_services(self):
         # OVERRIDE
