@@ -213,6 +213,18 @@ class AssetsBundle(object):
             **self._get_asset_url_values(id=id, unique=unique, extra=extra, name=name, sep=sep, type=type)
         )
 
+    def _unlink_attachments(self, attachments):
+        """ Unlinks attachments without actually calling unlink, so that the ORM cache is not cleared.
+
+        Specifically, if an attachment is generated while a view is rendered, clearing the ORM cache
+        could unload fields loaded with a sudo(), and expected to be readable by the view.
+        Such a view would be website.layout when main_object is an ir.ui.view.
+        """
+        to_delete = set(attach.store_fname for attach in attachments if attach.store_fname)
+        self.env.cr.execute(f"DELETE FROM {attachments._table} WHERE id IN %s", [tuple(attachments.ids)])
+        for file_path in to_delete:
+            attachments._file_delete(file_path)
+
     def clean_attachments(self, type):
         """ Takes care of deleting any outdated ir.attachment records associated to a bundle before
         saving a fresh one.
@@ -238,7 +250,7 @@ class AssetsBundle(object):
         # avoid to invalidate cache if it's already empty (mainly useful for test)
 
         if attachments:
-            attachments.unlink()
+            self._unlink_attachments(attachments)
             # force bundle invalidation on other workers
             self.env['ir.qweb'].clear_caches()
 
@@ -464,7 +476,7 @@ class AssetsBundle(object):
                 compiled = self.run_rtlcss(compiled)
 
             if not self.css_errors and old_attachments:
-                old_attachments.unlink()
+                self._unlink_attachments(old_attachments)
                 old_attachments = None
 
             fragments = self.rx_css_split.split(compiled)
