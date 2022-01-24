@@ -115,8 +115,8 @@ class AccountMove(models.Model):
                             for key, value in xpaths.items():
                                 res[key] = xml.find(value).text
                             return res
-            except zipfile.BadZipFile:
-                print("ZIP: BAD FILE")
+            except zipfile.BadZipFile as e:
+                raise e
         return res
 
     @api.depends('edi_document_ids.attachment_id.raw')
@@ -126,12 +126,10 @@ class AccountMove(models.Model):
             vals_response = record._get_l10n_es_tbai_values_from_zip({
                 'tbai_id': r'.//IdentificadorTBAI'
             }, response=True)
-            print("V1:", vals_response)
             vals = record._get_l10n_es_tbai_values_from_zip({
                 'signature': r'.//{http://www.w3.org/2000/09/xmldsig#}SignatureValue',
                 'registration_date': r'.//CabeceraFactura//FechaExpedicionFactura'
             })
-            print("V2:", vals)
             record.l10n_es_tbai_signature = vals['signature']
             if vals['registration_date']:
                 record.l10n_es_tbai_registration_date = datetime.strptime(vals['registration_date'], '%d-%m-%Y').replace(tzinfo=timezone('Europe/Madrid'))
