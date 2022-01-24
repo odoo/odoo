@@ -243,7 +243,7 @@ class SaleOrderLine(models.Model):
             price_unit = self.env['account.tax'].sudo()._fix_tax_included_price_company(
                 supplierinfo.price, supplier_taxes, taxes, self.company_id)
             if purchase_order.currency_id and supplierinfo.currency_id != purchase_order.currency_id:
-                price_unit = supplierinfo.currency_id._convert(price_unit, purchase_order.currency_id, purchase_order.company_id, fields.datetime.today())
+                price_unit = supplierinfo.currency_id._convert(price_unit, purchase_order.currency_id, purchase_order.company_id, fields.Date.context_today(self))
             product_ctx.update({'seller_id': supplierinfo.id})
         else:
             product_ctx.update({'partner_id': purchase_order.partner_id.id})
