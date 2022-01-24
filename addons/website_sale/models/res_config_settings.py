@@ -19,6 +19,10 @@ class ResConfigSettings(models.TransientModel):
 
     group_delivery_invoice_address = fields.Boolean(string="Shipping Address", implied_group='account.group_delivery_invoice_address', group='base.group_portal,base.group_user,base.group_public')
     group_show_uom_price = fields.Boolean(default=False, string="Base Unit Price", implied_group="website_sale.group_show_uom_price", group='base.group_portal,base.group_user,base.group_public')
+    group_product_price_comparison = fields.Boolean(
+        string="Comparison Price",
+        implied_group="website_sale.group_product_price_comparison",
+        group='base.group_portal,base.group_user,base.group_public')
 
     module_website_sale_digital = fields.Boolean("Digital Content")
     module_website_sale_wishlist = fields.Boolean("Wishlists")

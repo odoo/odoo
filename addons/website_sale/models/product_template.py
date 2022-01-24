@@ -49,6 +49,11 @@ class ProductTemplate(models.Model):
     base_unit_price = fields.Monetary("Price Per Unit", currency_field="currency_id", compute="_compute_base_unit_price")
     base_unit_name = fields.Char(compute='_compute_base_unit_name', help='Displays the custom unit for the products if defined or the selected unit of measure otherwise.')
 
+    compare_list_price = fields.Float(
+        'Compare to Price',
+        digits='Product Price',
+        help="The amount will be displayed strikethroughed on the eCommerce product page")
+
     @api.depends('product_variant_ids', 'product_variant_ids.base_unit_count')
     def _compute_base_unit_count(self):
         self.base_unit_count = 0
