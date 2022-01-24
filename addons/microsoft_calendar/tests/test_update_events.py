@@ -918,14 +918,14 @@ class TestUpdateEvents(TestCommon):
         self.assertEqual(len(new_recurrences), 1)
         self.assertEqual(len(new_events), new_recurrence_event_count)
         self.assertEqual(new_recurrences.ms_organizer_event_id, "REC123_new")
-        self.assertEqual(new_recurrences.ms_accross_calendars_event_id, "REC456_new")
+        self.assertEqual(new_recurrences.ms_universal_event_id, "REC456_new")
 
         for i, e in enumerate(sorted(new_events, key=lambda e: e.id)):
             self.assert_odoo_event(e, {
                 "start": new_rec_first_event_start_date + timedelta(days=i * self.recurrent_event_interval),
                 "stop": new_rec_first_event_end_date + timedelta(days=i * self.recurrent_event_interval),
                 "ms_organizer_event_id": f'REC123_new_{i+1}',
-                "ms_accross_calendars_event_id": f'REC456_new_{i+1}',
+                "ms_universal_event_id": f'REC456_new_{i+1}',
                 "recurrence_id": new_recurrences,
                 "follow_recurrence": True,
             })
@@ -1038,14 +1038,14 @@ class TestUpdateEvents(TestCommon):
         self.assertEqual(len(new_recurrences), 1)
         self.assertEqual(len(new_events), new_recurrence_event_count)
         self.assertEqual(new_recurrences.ms_organizer_event_id, "REC123_new")
-        self.assertEqual(new_recurrences.ms_accross_calendars_event_id, "REC456_new")
+        self.assertEqual(new_recurrences.ms_universal_event_id, "REC456_new")
 
         for i, e in enumerate(sorted(new_events, key=lambda e: e.id)):
             self.assert_odoo_event(e, {
                 "start": new_rec_first_event_start_date + timedelta(days=i * self.recurrent_event_interval),
                 "stop": new_rec_first_event_end_date + timedelta(days=i * self.recurrent_event_interval),
                 "ms_organizer_event_id": f'REC123_new_{i+1}',
-                "ms_accross_calendars_event_id": f'REC456_new_{i+1}',
+                "ms_universal_event_id": f'REC456_new_{i+1}',
                 "recurrence_id": new_recurrences,
                 "follow_recurrence": True,
             })

@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime, timedelta
 from functools import lru_cache
-import itertools
 import logging
 import random
 
-from odoo import models, _
+from odoo import models
 from odoo.tools import populate
-from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 

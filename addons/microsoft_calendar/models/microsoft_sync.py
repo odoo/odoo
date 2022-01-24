@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import json
-
 import logging
 from contextlib import contextmanager
 from functools import wraps
@@ -66,14 +64,14 @@ class MicrosoftSync(models.AbstractModel):
 
     # this event ID is provided by the Microsoft Graph API and identifies the event among all calendars
     # where it is present (contrary to the `organizer_event_id` which is specific to the organizer's calendar)
-    ms_accross_calendars_event_id = fields.Char('Microsoft event Id among all calendars')
+    ms_universal_event_id = fields.Char('Microsoft event Id among all calendars')
 
     # This field helps to know when a microsoft event need to be resynced
     need_sync_m = fields.Boolean(default=True, copy=False)
     active = fields.Boolean(default=True)
 
     def write(self, vals):
-        if 'ms_accross_calendars_event_id' in vals:
+        if 'ms_universal_event_id' in vals:
             self._from_uids.clear_cache(self)
         synced_fields = self._get_microsoft_synced_fields()
         if 'need_sync_m' not in vals and vals.keys() & synced_fields and not self.env.user.microsoft_synchronization_stopped:
@@ -86,7 +84,7 @@ class MicrosoftSync(models.AbstractModel):
         result = super().write(vals)
         need_delete = 'active' in vals.keys() and not vals.get('active')
         for record in self.filtered('need_sync_m'):
-            if record.ms_accross_calendars_event_id:
+            if record.ms_universal_event_id:
                 if need_delete:
                     # We need to delete the event. Cancel is not sufficant. Errors may occurs
                     record._microsoft_delete(record._get_organizer(), record.ms_organizer_event_id, timeout=3)
@@ -118,7 +116,7 @@ class MicrosoftSync(models.AbstractModel):
         """
         Get events already synced with Microsoft Outlook.
         """
-        return self.filtered('ms_accross_calendars_event_id')
+        return self.filtered('ms_universal_event_id')
 
     def unlink(self):
         synced = self._get_synced_events()
@@ -138,7 +136,7 @@ class MicrosoftSync(models.AbstractModel):
     def _from_uids(self, uids):
         if not uids:
             return self.browse()
-        return self.search([('ms_accross_calendars_event_id', 'in', uids)])
+        return self.search([('ms_universal_event_id', 'in', uids)])
 
     def _sync_odoo2microsoft(self):
         if not self:
@@ -170,7 +168,7 @@ class MicrosoftSync(models.AbstractModel):
 
     def _cancel_microsoft(self):
         self.ms_organizer_event_id = False
-        self.ms_accross_calendars_event_id = False
+        self.ms_universal_event_id = False
         self.unlink()
 
     def _sync_recurrence_microsoft2odoo(self, microsoft_events: MicrosoftEvent):
@@ -288,7 +286,7 @@ class MicrosoftSync(models.AbstractModel):
         # remove cancelled events and recurrences
         cancelled_recurrences = self.env['calendar.recurrence'].search([
             '|',
-            ('ms_accross_calendars_event_id', 'in', cancelled.uids),
+            ('ms_universal_event_id', 'in', cancelled.uids),
             ('ms_organizer_event_id', 'in', cancelled.ids),
         ])
         cancelled_events = self.browse([
@@ -386,7 +384,7 @@ class MicrosoftSync(models.AbstractModel):
                 event_id, uid = microsoft_service.insert(values, token=token, timeout=timeout)
                 self.write({
                     'ms_organizer_event_id': event_id,
-                    'ms_accross_calendars_event_id': uid,
+                    'ms_universal_event_id': uid,
                     'need_sync_m': False,
                 })
 
@@ -416,7 +414,7 @@ class MicrosoftSync(models.AbstractModel):
             is_active_clause = (self._active_name, '=', True) if self._active_name else expression.TRUE_LEAF
             domain = expression.AND([domain, [
                 '|',
-                '&', ('ms_accross_calendars_event_id', '=', False), is_active_clause,
+                '&', ('ms_universal_event_id', '=', False), is_active_clause,
                 ('need_sync_m', '=', True),
             ]])
         return self.with_context(active_test=False).search(domain)

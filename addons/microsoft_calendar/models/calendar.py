@@ -32,7 +32,7 @@ class Meeting(models.Model):
     _inherit = ['calendar.event', 'microsoft.calendar.sync']
 
     ms_organizer_event_id = fields.Char('Microsoft Organizer Event Id', copy=False)
-    ms_accross_calendars_event_id = fields.Char('Microsoft event Id among all calendars', copy=False)
+    ms_universal_event_id = fields.Char('Microsoft event Id among all calendars', copy=False)
     microsoft_recurrence_master_id = fields.Char('Microsoft Recurrence Master Id')
 
     def _get_organizer(self):
@@ -157,7 +157,7 @@ class Meeting(models.Model):
 
         if with_ids:
             values['ms_organizer_event_id'] = microsoft_event.id
-            values['ms_accross_calendars_event_id'] = microsoft_event.iCalUId
+            values['ms_universal_event_id'] = microsoft_event.iCalUId
 
         if microsoft_event.is_recurrent():
             values['microsoft_recurrence_master_id'] = microsoft_event.seriesMasterId
@@ -180,7 +180,7 @@ class Meeting(models.Model):
         values = default_values if default_values else {}
         values.update({
             'ms_organizer_event_id': microsoft_event.id,
-            'ms_accross_calendars_event_id': microsoft_event.iCalUId,
+            'ms_universal_event_id': microsoft_event.iCalUId,
             'microsoft_recurrence_master_id': microsoft_event.seriesMasterId,
             'start': start,
             'stop': stop,
@@ -210,7 +210,7 @@ class Meeting(models.Model):
             if email in attendees_by_emails:
                 # Update existing attendees
                 commands_attendee += [(1, attendees_by_emails[email].id, {'state': state})]
-            elif attendee[1]:
+            elif partner:
                 # Create new attendees
                 commands_attendee += [(0, 0, {'state': state, 'partner_id': partner.id})]
                 commands_partner += [(4, partner.id)]

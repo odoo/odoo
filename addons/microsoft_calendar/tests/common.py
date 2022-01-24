@@ -228,7 +228,7 @@ class TestCommon(HttpCase):
             "start": cls.start_date,
             "stop": cls.end_date,
             "user_id": cls.organizer_user,
-            "ms_accross_calendars_event_id": "456",
+            "ms_universal_event_id": "456",
             "ms_organizer_event_id": "123",
             "partner_ids": [cls.organizer_user.partner_id.id, cls.attendee_user.partner_id.id],
         }
@@ -246,7 +246,7 @@ class TestCommon(HttpCase):
             'fri': False,
             'interval': cls.recurrent_event_interval,
             'month_by': 'date',
-            'ms_accross_calendars_event_id': 'REC456',
+            'ms_universal_event_id': 'REC456',
             'ms_organizer_event_id': 'REC123',
             'name': "Every %s Days until %s" % (
                 cls.recurrent_event_interval, cls.recurrence_end_date.strftime("%Y-%m-%d")
@@ -383,7 +383,7 @@ class TestCommon(HttpCase):
                 "stop": self.end_date + timedelta(days=i * self.recurrent_event_interval),
                 "until": self.recurrence_end_date.date(),
                 "microsoft_recurrence_master_id": "REC123",
-                "ms_accross_calendars_event_id": f"REC456_EVENT_{i+1}",
+                "ms_universal_event_id": f"REC456_EVENT_{i+1}",
                 "ms_organizer_event_id": f"REC123_EVENT_{i+1}",
                 "recurrency": True,
                 "follow_recurrence": True,
@@ -408,7 +408,7 @@ class TestCommon(HttpCase):
                 dict(
                     self.simple_event_values,
                     ms_organizer_event_id="123",
-                    ms_accross_calendars_event_id="456",
+                    ms_universal_event_id="456",
                 )
             )
 
@@ -430,12 +430,12 @@ class TestCommon(HttpCase):
         if not already_created:
             self.recurrence.write({
                 "ms_organizer_event_id": "REC123",
-                "ms_accross_calendars_event_id": "REC456",
+                "ms_universal_event_id": "REC456",
             })
             for i, e in enumerate(self.recurrence.calendar_event_ids.sorted(key=lambda r: r.start)):
                 e.write({
                     "ms_organizer_event_id": f"REC123_EVENT_{i+1}",
-                    "ms_accross_calendars_event_id": f"REC456_EVENT_{i+1}",
+                    "ms_universal_event_id": f"REC456_EVENT_{i+1}",
                     "microsoft_recurrence_master_id": "REC123",
                 })
             self.recurrence.invalidate_cache()

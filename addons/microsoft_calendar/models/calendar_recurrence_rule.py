@@ -13,7 +13,7 @@ class RecurrenceRule(models.Model):
     need_sync_m = fields.Boolean(default=False)
 
     ms_organizer_event_id = fields.Char('Microsoft Organizer Event Id', copy=False)
-    ms_accross_calendars_event_id = fields.Char('Microsoft event Id among all calendars', copy=False)
+    ms_universal_event_id = fields.Char('Microsoft event Id among all calendars', copy=False)
 
     def _compute_rrule(self):
         # Note: 'need_sync_m' is set to False to avoid syncing the updated recurrence with
@@ -37,23 +37,23 @@ class RecurrenceRule(models.Model):
 
         # If a synced event becomes a recurrence, the event needs to be deleted from
         # Microsoft since it's now the recurrence which is synced.
-        # Those events are kept in the database and their ms_accross_calendars_event_id is updated
-        # according to the recurrence ms_accross_calendars_event_id, therefore we need to keep an inactive copy
-        # of those events with the original ms_accross_calendars_event_id. The next sync will then correctly
+        # Those events are kept in the database and their ms_universal_event_id is updated
+        # according to the recurrence ms_universal_event_id, therefore we need to keep an inactive copy
+        # of those events with the original ms_universal_event_id. The next sync will then correctly
         # delete those events from Microsoft.
         vals = []
         for event in events._get_synced_events():
-            if event.active and event.ms_accross_calendars_event_id and not event.recurrence_id.ms_accross_calendars_event_id:
+            if event.active and event.ms_universal_event_id and not event.recurrence_id.ms_universal_event_id:
                 vals += [{
                     'name': event.name,
-                    'ms_accross_calendars_event_id': event.ms_accross_calendars_event_id,
+                    'ms_universal_event_id': event.ms_universal_event_id,
                     'start': event.start,
                     'stop': event.stop,
                     'active': False,
                     'need_sync_m': True,
                 }]
                 event._microsoft_delete(event.user_id, event.ms_organizer_event_id)
-                event.ms_accross_calendars_event_id = False
+                event.ms_universal_event_id = False
         self.env['calendar.event'].create(vals)
         self.calendar_event_ids.need_sync_m = False
         return detached_events
@@ -95,10 +95,10 @@ class RecurrenceRule(models.Model):
             # We archive the old events to recompute the recurrence. These events are already deleted on Microsoft side.
             # We can't call _cancel because events without user_id would not be deleted
             (self.calendar_event_ids - base_event_id).ms_organizer_event_id = False
-            (self.calendar_event_ids - base_event_id).ms_accross_calendars_event_id = False
+            (self.calendar_event_ids - base_event_id).ms_universal_event_id = False
             (self.calendar_event_ids - base_event_id).unlink()
             base_event_id.with_context(dont_notify=True).write(dict(
-                new_event_values, ms_organizer_event_id=False, ms_accross_calendars_event_id=False, need_sync_m=False
+                new_event_values, ms_organizer_event_id=False, ms_universal_event_id=False, need_sync_m=False
             ))
             if self.rrule == current_rrule:
                 # if the rrule has changed, it will be recalculated below
@@ -121,7 +121,7 @@ class RecurrenceRule(models.Model):
         if self.rrule != current_rrule:
             detached_events = self._apply_recurrence()
             detached_events.ms_organizer_event_id = False
-            detached_events.ms_accross_calendars_event_id = False
+            detached_events.ms_universal_event_id = False
             detached_events.unlink()
 
     def _get_microsoft_sync_domain(self):
@@ -144,7 +144,7 @@ class RecurrenceRule(models.Model):
             recurrence = {
                 **recurrence,
                 'ms_organizer_event_id': microsoft_recurrence.id,
-                'ms_accross_calendars_event_id': microsoft_recurrence.iCalUId,
+                'ms_universal_event_id': microsoft_recurrence.iCalUId,
             }
 
         return recurrence

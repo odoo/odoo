@@ -23,7 +23,7 @@ class TestAnswerEvents(TestCommon):
                 dict(
                     self.simple_event_values,
                     ms_organizer_event_id="123",
-                    ms_accross_calendars_event_id="456",
+                    ms_universal_event_id="456",
                 )
             )
 

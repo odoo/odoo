@@ -11,7 +11,7 @@ class TestMicrosoftEvent(TestCommon):
 
         # arrange
         event_id = self.simple_event.ms_organizer_event_id
-        event_uid = self.simple_event.ms_accross_calendars_event_id
+        event_uid = self.simple_event.ms_universal_event_id
         events = MicrosoftEvent([{
             "type": "singleInstance",
             "_odoo_id": self.simple_event.id,
@@ -30,7 +30,7 @@ class TestMicrosoftEvent(TestCommon):
 
         # arrange
         event_id = self.simple_event.ms_organizer_event_id
-        event_uid = self.simple_event.ms_accross_calendars_event_id
+        event_uid = self.simple_event.ms_universal_event_id
         events = MicrosoftEvent([{
             "type": "singleInstance",
             "_odoo_id": False,
@@ -72,8 +72,8 @@ class TestMicrosoftEvent(TestCommon):
 
         # arrange
         event_id = self.simple_event.ms_organizer_event_id
-        event_uid = self.simple_event.ms_accross_calendars_event_id
-        self.simple_event.ms_accross_calendars_event_id = False
+        event_uid = self.simple_event.ms_universal_event_id
+        self.simple_event.ms_universal_event_id = False
         events = MicrosoftEvent([{
             "type": "singleInstance",
             "_odoo_id": False,
@@ -87,7 +87,7 @@ class TestMicrosoftEvent(TestCommon):
         # assert
         self.assertEqual(len(mapped._events), 1)
         self.assertEqual(mapped._events[event_id]["_odoo_id"], self.simple_event.id)
-        self.assertEqual(self.simple_event.ms_accross_calendars_event_id, event_uid)
+        self.assertEqual(self.simple_event.ms_universal_event_id, event_uid)
 
     def test_map_an_event_without_uid_using_instance_id_2(self):
         """
@@ -96,7 +96,7 @@ class TestMicrosoftEvent(TestCommon):
 
         # arrange
         event_id = self.simple_event.ms_organizer_event_id
-        self.simple_event.ms_accross_calendars_event_id = False
+        self.simple_event.ms_universal_event_id = False
         events = MicrosoftEvent([{
             "type": "singleInstance",
             "_odoo_id": False,
@@ -110,13 +110,13 @@ class TestMicrosoftEvent(TestCommon):
         # assert
         self.assertEqual(len(mapped._events), 1)
         self.assertEqual(mapped._events[event_id]["_odoo_id"], self.simple_event.id)
-        self.assertEqual(self.simple_event.ms_accross_calendars_event_id, False)
+        self.assertEqual(self.simple_event.ms_universal_event_id, False)
 
     def test_map_a_recurrence_using_global_id(self):
 
         # arrange
         rec_id = self.recurrence.ms_organizer_event_id
-        rec_uid = self.recurrence.ms_accross_calendars_event_id
+        rec_uid = self.recurrence.ms_universal_event_id
         events = MicrosoftEvent([{
             "type": "seriesMaster",
             "_odoo_id": False,
@@ -153,9 +153,9 @@ class TestMicrosoftEvent(TestCommon):
 
         # arrange
         event_id = self.simple_event.ms_organizer_event_id
-        event_uid = self.simple_event.ms_accross_calendars_event_id
+        event_uid = self.simple_event.ms_universal_event_id
         rec_id = self.recurrence.ms_organizer_event_id
-        rec_uid = self.recurrence.ms_accross_calendars_event_id
+        rec_uid = self.recurrence.ms_universal_event_id
 
         events = MicrosoftEvent([
             {
@@ -180,7 +180,7 @@ class TestMicrosoftEvent(TestCommon):
 
         # arrange
         event_id = self.simple_event.ms_organizer_event_id
-        event_uid = self.simple_event.ms_accross_calendars_event_id
+        event_uid = self.simple_event.ms_universal_event_id
         events = MicrosoftEvent([{
             "type": "singleInstance",
             "_odoo_id": False,
@@ -199,7 +199,7 @@ class TestMicrosoftEvent(TestCommon):
 
         # arrange
         rec_id = self.recurrence.ms_organizer_event_id
-        rec_uid = self.recurrence.ms_accross_calendars_event_id
+        rec_uid = self.recurrence.ms_universal_event_id
         events = MicrosoftEvent([{
             "type": "seriesMaster",
             "_odoo_id": False,
@@ -222,7 +222,7 @@ class TestMicrosoftEvent(TestCommon):
         """
         # arrange
         rec_id = self.recurrence.ms_organizer_event_id
-        rec_uid = self.recurrence.ms_accross_calendars_event_id
+        rec_uid = self.recurrence.ms_universal_event_id
         events = MicrosoftEvent([{
             "@removed": {
                 "reason": "deleted",
@@ -243,9 +243,9 @@ class TestMicrosoftEvent(TestCommon):
 
         # arrange
         event_id = self.simple_event.ms_organizer_event_id
-        event_uid = self.simple_event.ms_accross_calendars_event_id
+        event_uid = self.simple_event.ms_universal_event_id
         rec_id = self.recurrence.ms_organizer_event_id
-        rec_uid = self.recurrence.ms_accross_calendars_event_id
+        rec_uid = self.recurrence.ms_universal_event_id
 
         events = MicrosoftEvent([
             {

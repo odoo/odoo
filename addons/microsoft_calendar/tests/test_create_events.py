@@ -49,7 +49,7 @@ class TestCreateEvents(TestCommon):
         mock_insert.assert_called_once()
         self.assert_dict_equal(mock_insert.call_args[0][0], self.simple_event_ms_values)
         self.assertEqual(record.ms_organizer_event_id, event_id)
-        self.assertEqual(record.ms_accross_calendars_event_id, event_iCalUId)
+        self.assertEqual(record.ms_universal_event_id, event_iCalUId)
         self.assertEqual(record.need_sync_m, False)
 
     def test_create_simple_event_without_email(self):
@@ -192,7 +192,7 @@ class TestCreateEvents(TestCommon):
 
         # assert
         self.assertEqual(recurrence.ms_organizer_event_id, event_id)
-        self.assertEqual(recurrence.ms_accross_calendars_event_id, event_iCalUId)
+        self.assertEqual(recurrence.ms_universal_event_id, event_iCalUId)
         self.assertEqual(recurrence.need_sync_m, False)
 
         mock_insert.assert_called_once()
@@ -240,7 +240,7 @@ class TestCreateEvents(TestCommon):
         mock_insert.assert_not_called()
 
         self.assertEqual(recurrence.ms_organizer_event_id, False)
-        self.assertEqual(recurrence.ms_accross_calendars_event_id, False)
+        self.assertEqual(recurrence.ms_universal_event_id, False)
         self.assertEqual(recurrence.need_sync_m, False)
 
     @patch.object(MicrosoftCalendarService, 'get_events')
