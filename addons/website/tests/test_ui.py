@@ -101,9 +101,12 @@ class TestUiHtmlEditor(odoo.tests.HttpCase):
 @odoo.tests.tagged('-at_install', 'post_install')
 class TestUiTranslate(odoo.tests.HttpCase):
     def test_admin_tour_rte_translator(self):
-        fr_BE = self.env.ref('base.lang_fr_BE')
-        fr_BE.active = True
-        self.env.ref('website.default_website').language_ids |= fr_BE
+        self.env['res.lang'].create({
+            'name': 'Parseltongue',
+            'code': 'pa_GB',
+            'iso_code': 'pa_GB',
+            'url_code': 'pa_GB',
+        })
         self.start_tour("/", 'rte_translator', login='admin', timeout=120)
 
 
