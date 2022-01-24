@@ -590,7 +590,7 @@ class SaleOrder(models.Model):
 
     def _compute_field_value(self, field):
         if field.name == 'invoice_status' and not self.env.context.get('mail_activity_automation_skip'):
-            filtered_self = self.filtered(lambda so: (so.user_id or so.partner_id.user_id) and so._origin.invoice_status != 'upselling')
+            filtered_self = self.filtered(lambda so: so.ids and (so.user_id or so.partner_id.user_id) and so._origin.invoice_status != 'upselling')
         super()._compute_field_value(field)
         if field.name != 'invoice_status' or self.env.context.get('mail_activity_automation_skip'):
             return
@@ -633,7 +633,8 @@ class SaleOrder(models.Model):
         return super(SaleOrder, self)._name_search(name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid)
 
     def _create_upsell_activity(self):
-        self and self.activity_unlink(['sale.mail_act_sale_upsell'])
+        if self:
+            self.activity_unlink(['sale.mail_act_sale_upsell'])
         for order in self:
             ref = "<a href='#' data-oe-model='%s' data-oe-id='%d'>%s</a>"
             order_ref = ref % (order._name, order.id, order.name)
