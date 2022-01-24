@@ -1787,7 +1787,9 @@ var BasicModel = AbstractModel.extend({
                         id = rec.id;
                         record._changes[name] = id;
                     }
-                } else {
+                } else if (oldValue !== false) {
+                    // if no value is provided for a m2o,
+                    // we should only consider the field updated if it had a value before
                     record._changes[name] = false;
                 }
             } else if (field.type === 'reference') {
