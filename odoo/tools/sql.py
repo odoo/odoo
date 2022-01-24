@@ -217,14 +217,14 @@ def fix_foreign_key(cr, tablename1, columnname1, tablename2, columnname2, ondele
     if not found:
         return add_foreign_key(cr, tablename1, columnname1, tablename2, columnname2, ondelete)
 
-def has_pg_trgm(cr):
-    cr.execute("select installed_version from pg_available_extensions where name='pg_trgm'")
+def install_pg_trgm(cr):
+    cr.execute("SELECT installed_version FROM pg_available_extensions WHERE name='pg_trgm'")
     version = cr.fetchone()
     if version is None:
         return False
     if version[0]:
         return True
-    cr.execute('select usesuper from pg_user where usename = CURRENT_USER')
+    cr.execute('SELECT usesuper FROM pg_user WHERE usename = CURRENT_USER')
     if not cr.fetchone()[0]:
         return False
     try:

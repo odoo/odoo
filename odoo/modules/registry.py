@@ -468,10 +468,12 @@ class Registry(Mapping):
         if not expected:
             return
 
-        trgm = sql.has_pg_trgm(cr)
         cr.execute("SELECT indexname FROM pg_indexes WHERE indexname IN %s",
                    [tuple(row[0] for row in expected)])
         existing = {row[0] for row in cr.fetchall()}
+
+        if not self.has_trigram and any(row[3] == 'trigram' for row in expected):
+            self.has_trigram = sql.install_pg_trgm(cr)
 
         for indexname, tablename, columnname, index in expected:
             assert index in ('btree', 'btree_not_null', 'trigram', True, False, None)
@@ -481,7 +483,7 @@ class Registry(Mapping):
                 where = ''
                 if index == 'btree_not_null':
                     where = f'"{columnname}" IS NOT NULL'
-                elif index == 'trigram' and trgm:
+                elif index == 'trigram' and self.has_trigram:
                     method = 'gin'
                     operator = 'gin_trgm_ops'
                 try:

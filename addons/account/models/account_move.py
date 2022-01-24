@@ -381,8 +381,8 @@ class AccountMove(models.Model):
     # We neeed the btree index for unicity constraint (on field) AND this one for human searches
     def _auto_init(self):
         super(AccountMove, self)._auto_init()
-        if sql.has_pg_trgm(self._cr):
-            sql.create_index(self._cr, 'account_move_name_gin_index', self._table, ['name gin_trgm_ops'], 'gin')
+        if sql.install_pg_trgm(self._cr):
+            sql.create_index(self._cr, 'account_move_name_trigram_index', self._table, ['"name" gin_trgm_ops'], 'gin')
 
     @api.model
     def _field_will_change(self, record, vals, field_name):
