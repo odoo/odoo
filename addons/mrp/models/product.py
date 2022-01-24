@@ -20,6 +20,13 @@ class ProductTemplate(models.Model):
     produce_delay = fields.Float(
         'Manufacturing Lead Time', default=0.0,
         help="Average lead time in days to manufacture this product. In the case of multi-level BOM, the manufacturing lead times of the components will be added.")
+    used_in_phantom_bom = fields.Boolean('Is used in Kit Bom',
+        compute="_compute_in_phantom_bom", store=False)
+
+    @api.depends('bom_ids')
+    def _compute_in_phantom_bom(self):
+        for product in self:
+            product.used_in_phantom_bom = any([bl.type == 'phantom' for bl in product.bom_ids])
 
     def _compute_bom_count(self):
         for product in self:

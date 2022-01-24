@@ -154,7 +154,9 @@
                     <field name="type"/>
                 </xpath>
                 <xpath expr="//div[@name='product_lst_price']" position="after">
-                    <div t-if="record.type.raw_value == 'product'">On hand: <field name="qty_available"/> <field name="uom_id"/></div>
+                    <div t-if="record.type.raw_value == 'product'" name="product_kanban_qty_available">
+                        On hand: <field name="qty_available"/> <field name="uom_id"/>
+                    </div>
                 </xpath>
             </field>
         </record>

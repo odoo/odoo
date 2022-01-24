@@ -134,5 +134,59 @@
                 </xpath>
             </field>
         </record>
+
+        <record model="ir.ui.view" id="product_template_kanban_mrp_view">
+            <field name="name">Product Template MRP Stock</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="stock.product_template_kanban_stock_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='product_kanban_qty_available']" position="replace">
+                    <field name="used_in_phantom_bom" invisible="1"/>
+                    <div t-if="record.type.raw_value == 'product' and !(record.used_in_phantom_bom.raw_value and record.product_variant_count.raw_value &gt; 1)">
+                        On hand: <field name="qty_available"/> <field name="uom_id"/>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="product_template_form_view_mrp_button">
+            <field name="name">product.template_procurement_mrp</field>
+            <field name="model">product.template</field>
+            <field name="groups_id" eval="[(4, ref('stock.group_stock_user'))]"/>
+            <field name="inherit_id" ref="stock.product_template_form_view_procurement_button"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_open_quants']" position="replace">
+                    <field name="used_in_phantom_bom" invisible="1"/>
+                    <button type="object"
+                            name="action_open_quants"
+                            attrs="{'invisible':['|', ('type', '!=', 'product'), '&amp;', ('used_in_phantom_bom', '=', True), ('product_variant_count', '&gt;', 1)]}"
+                            class="oe_stat_button" icon="fa-cubes">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value" widget="statinfo">
+                                    <field name="qty_available" widget="statinfo" nolabel="1" class="mr4"/>
+                                    <field name="uom_name"/>
+                                </span>
+                                <span class="o_stat_text">On Hand</span>
+                            </div>
+                        </button>
+                </xpath>
+                <xpath expr="//button[@name='action_product_tmpl_forecast_report']" position="replace">
+                    <field name="used_in_phantom_bom" invisible="1"/>
+                    <button type="object"
+                            name="action_product_tmpl_forecast_report"
+                            attrs="{'invisible':['|', ('type', '!=', 'product'), '&amp;', ('used_in_phantom_bom', '=', True), ('product_variant_count', '&gt;', 1)]}"
+                            context="{'default_product_tmpl_id': id}"
+                            class="oe_stat_button" icon="fa-cubes">
+                        <div class="o_field_widget o_stat_info">
+                            <span class="o_stat_value">
+                                <field name="virtual_available" widget="statinfo" nolabel="1" class="mr4"/>
+                                <field name="uom_name"/>
+                            </span>
+                            <span class="o_stat_text">Forecasted</span>
+                        </div>
+                    </button>
+                </xpath>
+            </field>
+        </record>
     </data>
 </odoo>
