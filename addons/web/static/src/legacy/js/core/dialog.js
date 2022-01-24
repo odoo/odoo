@@ -276,7 +276,7 @@ var Dialog = Widget.extend({
             this.$modal.remove();
         }
 
-        var modals = $('.modal[role="dialog"]').filter(':visible');
+        const modals = $('.modal[role="dialog"]').filter(':visible').filter(this._isBlocking);
         if (modals.length) {
             if (!isFocusSet) {
                 modals.last().focus();
@@ -340,6 +340,19 @@ var Dialog = Widget.extend({
             }
         });
     },
+    /**
+     * Returns false for non-"blocking" dialogs.
+     * This is intended to be overridden by subclasses.
+     *
+     * @private
+     * @param {int} index
+     * @param {element} el The element of a dialog.
+     * @returns {boolean}
+     */
+    _isBlocking(index, el) {
+        return true;
+    },
+
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
