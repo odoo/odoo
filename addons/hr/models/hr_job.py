@@ -11,7 +11,7 @@ class Job(models.Model):
     _inherit = ['mail.thread']
     _order = 'sequence'
 
-    name = fields.Char(string='Job Position', required=True, index='gin', translate=True)
+    name = fields.Char(string='Job Position', required=True, index='trigram', translate=True)
     sequence = fields.Integer(default=10)
     expected_employees = fields.Integer(compute='_compute_employees', string='Total Forecasted Employees', store=True,
         help='Expected number of employees for this job position after new recruitment.')

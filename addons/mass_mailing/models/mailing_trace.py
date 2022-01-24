@@ -54,13 +54,13 @@ class MailingTrace(models.Model):
     trace_type = fields.Selection([('mail', 'Email')], string='Type', default='mail', required=True)
     display_name = fields.Char(compute='_compute_display_name')
     # mail data
-    mail_mail_id = fields.Many2one('mail.mail', string='Mail', index="not null")
+    mail_mail_id = fields.Many2one('mail.mail', string='Mail', index='btree_not_null')
     mail_mail_id_int = fields.Integer(
         string='Mail ID (tech)',
         help='ID of the related mail_mail. This field is an integer field because '
              'the related mail_mail can be deleted separately from its statistics. '
              'However the ID is needed for several action and controllers.',
-        index="not null",
+        index='btree_not_null',
     )
     email = fields.Char(string="Email", help="Normalized email address")
     message_id = fields.Char(string='Message-ID', help="Technical field for the email Message-ID (RFC 2392)")
@@ -74,7 +74,7 @@ class MailingTrace(models.Model):
     campaign_id = fields.Many2one(
         related='mass_mailing_id.campaign_id',
         string='Campaign',
-        store=True, readonly=True, index="not null")
+        store=True, readonly=True, index='btree_not_null')
     # Status
     sent_datetime = fields.Datetime('Sent On')
     open_datetime = fields.Datetime('Opened On')

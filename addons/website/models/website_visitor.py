@@ -34,7 +34,7 @@ class WebsiteVisitor(models.Model):
     access_token = fields.Char(required=True, default=lambda x: uuid.uuid4().hex, copy=False, groups='website.group_website_publisher')
     active = fields.Boolean('Active', default=True)
     website_id = fields.Many2one('website', "Website", readonly=True)
-    partner_id = fields.Many2one('res.partner', string="Contact", help="Partner of the last logged in user.", index="not null")
+    partner_id = fields.Many2one('res.partner', string="Contact", help="Partner of the last logged in user.", index='btree_not_null')
     partner_image = fields.Binary(related='partner_id.image_1920')
 
     # localisation and info

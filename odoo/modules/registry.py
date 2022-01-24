@@ -458,7 +458,7 @@ class Registry(Mapping):
     def check_indexes(self, cr, model_names):
         """ Create or drop column indexes for the given models. """
         expected = [
-            ("%s_%s_index" % (Model._table, field.name), Model, field.name, field)
+            (f"{Model._table}_{field.name}_index", Model._table, field.name, field.index)
             for model_name in model_names
             for Model in [self.models[model_name]]
             if Model._auto and not Model._abstract
@@ -473,25 +473,21 @@ class Registry(Mapping):
                    [tuple(row[0] for row in expected)])
         existing = {row[0] for row in cr.fetchall()}
 
-        for indexname, model, columnname, field in expected:
-            tablename = model._table
-            index = field.index
-            assert index in ('btree', 'gin', 'not null', True, False)
-            if field.index and indexname not in existing:
-                where = ''
+        for indexname, tablename, columnname, index in expected:
+            assert index in ('btree', 'btree_not_null', 'trigram', True, False, None)
+            if index and indexname not in existing:
                 method = 'btree'
                 operator = ''
-                if index == 'not null':
-                    where = ' WHERE "%s" IS NOT NULL' % columnname
-                if index == 'gin':
-                    if trgm:
-                        operator = 'gin_trgm_ops'
-                        method = 'gin'
-                    else:
-                        method = "btree"
+                where = ''
+                if index == 'btree_not_null':
+                    where = f'"{columnname}" IS NOT NULL'
+                elif index == 'trigram' and trgm:
+                    method = 'gin'
+                    operator = 'gin_trgm_ops'
                 try:
                     with cr.savepoint(flush=False):
-                        sql.create_index(cr, indexname, tablename, ['"%s" %s' % (columnname, operator)], method, where)
+                        expression = f'"{columnname}" {operator}'
+                        sql.create_index(cr, indexname, tablename, [expression], method, where)
                 except psycopg2.OperationalError:
                     _schema.error("Unable to add index for %s", self)
             elif not index and indexname in existing:

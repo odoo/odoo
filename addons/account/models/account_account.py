@@ -55,7 +55,7 @@ class AccountAccount(models.Model):
                                                            ('user_type_id', '=', data_unaffected_earnings.id)])
                 raise ValidationError(_('You cannot have more than one account with "Current Year Earnings" as type. (accounts: %s)', [a.code for a in account_unaffected_earnings]))
 
-    name = fields.Char(string="Account Name", required=True, index='gin', tracking=True)
+    name = fields.Char(string="Account Name", required=True, index='trigram', tracking=True)
     currency_id = fields.Many2one('res.currency', string='Account Currency',
         help="Forces all moves for this account to have this account currency.", tracking=True)
     code = fields.Char(size=64, required=True, index=True, tracking=True)

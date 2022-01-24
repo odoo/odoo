@@ -248,7 +248,7 @@ class PosOrder(models.Model):
     company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True)
     pricelist_id = fields.Many2one('product.pricelist', string='Pricelist', required=True, states={
                                    'draft': [('readonly', False)]}, readonly=True)
-    partner_id = fields.Many2one('res.partner', string='Customer', change_default=True, index='not null', states={'draft': [('readonly', False)], 'paid': [('readonly', False)]})
+    partner_id = fields.Many2one('res.partner', string='Customer', change_default=True, index='btree_not_null', states={'draft': [('readonly', False)], 'paid': [('readonly', False)]})
     sequence_number = fields.Integer(string='Sequence Number', help='A session-unique sequence number for the order', default=1)
 
     session_id = fields.Many2one(

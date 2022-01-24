@@ -16,4 +16,4 @@ class AccountMoveLine(models.Model):
         return super()._auto_init()
 
     l10n_latam_document_type_id = fields.Many2one(
-        related='move_id.l10n_latam_document_type_id', auto_join=True, store=True, index='not null')
+        related='move_id.l10n_latam_document_type_id', auto_join=True, store=True, index='btree_not_null')

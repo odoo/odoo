@@ -259,15 +259,15 @@ class Picking(models.Model):
 
     name = fields.Char(
         'Reference', default='/',
-        copy=False, index='gin', readonly=True)
+        copy=False, index='trigram', readonly=True)
     origin = fields.Char(
-        'Source Document', index='gin',
+        'Source Document', index='trigram',
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         help="Reference of the document")
     note = fields.Html('Notes')
     backorder_id = fields.Many2one(
         'stock.picking', 'Back Order of',
-        copy=False, index='not null', readonly=True,
+        copy=False, index='btree_not_null', readonly=True,
         check_company=True,
         help="If this shipment was split, then this field links to the shipment which contains the already processed part.")
     backorder_ids = fields.One2many('stock.picking', 'backorder_id', 'Back Orders')

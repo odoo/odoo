@@ -205,7 +205,7 @@ class Project(models.Model):
     def _read_group_stage_ids(self, stages, domain, order):
         return self.env['project.project.stage'].search([], order=order)
 
-    name = fields.Char("Name", index='gin', required=True, tracking=True, translate=True)
+    name = fields.Char("Name", index='trigram', required=True, tracking=True, translate=True)
     description = fields.Html()
     active = fields.Boolean(default=True,
         help="If the active field is set to False, it will allow you to hide the project without removing it.")
@@ -913,7 +913,7 @@ class Task(models.Model):
         return stages.search(['|', ('id', 'in', stages.ids), ('user_id', '=', self.env.user.id)])
 
     active = fields.Boolean(default=True)
-    name = fields.Char(string='Title', tracking=True, required=True, index='gin')
+    name = fields.Char(string='Title', tracking=True, required=True, index='trigram')
     description = fields.Html(string='Description')
     priority = fields.Selection([
         ('0', 'Normal'),
@@ -1002,7 +1002,7 @@ class Task(models.Model):
     child_text = fields.Char(compute="_compute_child_text")
     allow_subtasks = fields.Boolean(string="Allow Sub-tasks", related="project_id.allow_subtasks", readonly=True)
     subtask_count = fields.Integer("Sub-task Count", compute='_compute_subtask_count')
-    email_from = fields.Char(string='Email From', help="These people will receive email.", index='gin',
+    email_from = fields.Char(string='Email From', help="These people will receive email.", index='trigram',
         compute='_compute_email_from', recursive=True, store=True, readonly=False)
     project_privacy_visibility = fields.Selection(related='project_id.privacy_visibility', string="Project Visibility")
     # Computed field about working time elapsed between record creation and assignation/closing.

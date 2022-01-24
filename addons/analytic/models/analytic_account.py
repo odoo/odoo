@@ -25,7 +25,7 @@ class AccountAnalyticDistribution(models.Model):
 class AccountAnalyticTag(models.Model):
     _name = 'account.analytic.tag'
     _description = 'Analytic Tags'
-    name = fields.Char(string='Analytic Tag', index='gin', required=True)
+    name = fields.Char(string='Analytic Tag', index='trigram', required=True)
     color = fields.Integer('Color Index')
     active = fields.Boolean(default=True, help="Set active to false to hide the Analytic Tag without removing it.")
     active_analytic_distribution = fields.Boolean('Analytic Distribution')
@@ -123,7 +123,7 @@ class AccountAnalyticAccount(models.Model):
             account.credit = data_credit.get(account.id, 0.0)
             account.balance = account.credit - account.debit
 
-    name = fields.Char(string='Analytic Account', index='gin', required=True, tracking=True)
+    name = fields.Char(string='Analytic Account', index='trigram', required=True, tracking=True)
     code = fields.Char(string='Reference', index='btree', tracking=True)
     active = fields.Boolean('Active', help="If the active field is set to False, it will allow you to hide the account without removing it.", default=True)
 

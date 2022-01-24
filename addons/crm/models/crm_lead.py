@@ -101,7 +101,7 @@ class Lead(models.Model):
 
     # Description
     name = fields.Char(
-        'Opportunity', index='gin', required=True,
+        'Opportunity', index='trigram', required=True,
         compute='_compute_name', readonly=False, store=True)
     user_id = fields.Many2one(
         'res.users', string='Salesperson', default=lambda self: self.env.user,
@@ -180,7 +180,7 @@ class Lead(models.Model):
     function = fields.Char('Job Position', compute='_compute_function', readonly=False, store=True)
     title = fields.Many2one('res.partner.title', string='Title', compute='_compute_title', readonly=False, store=True)
     email_from = fields.Char(
-        'Email', tracking=40, index='gin',
+        'Email', tracking=40, index='trigram',
         compute='_compute_email_from', inverse='_inverse_email_from', readonly=False, store=True)
     phone = fields.Char(
         'Phone', tracking=50,
