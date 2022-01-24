@@ -11,8 +11,7 @@
     'website': 'https://www.odoo.com/app/events',
     'description': "",
     'depends': [
-        'website_event',
-        'website_jitsi',
+        'website_event_jitsi',
     ],
     'demo': ['data/website_event_meet_demo.xml'],
     'data': [
