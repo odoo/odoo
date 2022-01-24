@@ -470,8 +470,11 @@ var SnippetEditor = Widget.extend({
             // body. If the editable has options, we do not want to show them.
             parent = $(parent).closest('body');
         }
-        this.trigger_up('activate_snippet', {
-            $snippet: $(previousSibling || nextSibling || parent)
+        const activateSnippetProm = new Promise(resolve => {
+            this.trigger_up('activate_snippet', {
+                $snippet: $(previousSibling || nextSibling || parent),
+                onSuccess: resolve,
+            });
         });
 
         // Actually remove the snippet and its option UI.
@@ -523,7 +526,11 @@ var SnippetEditor = Widget.extend({
         this.$body.find('.o_table_handler').remove();
 
         this.trigger_up('snippet_removed');
-        this.destroy();
+        // FIXME that whole Promise should be awaited before the DOM removal etc
+        // as explained above where it is defined. However, it is critical to at
+        // least await it before destroying the snippet editor instance
+        // otherwise the logic of activateSnippet gets messed up.
+        activateSnippetProm.then(() => this.destroy());
         $parent.trigger('content_changed');
 
         // TODO Page content changed, some elements may need to be adapted

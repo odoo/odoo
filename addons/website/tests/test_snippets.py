@@ -38,3 +38,6 @@ class TestSnippets(HttpCase):
             'https://instagram.com/odoo.official/',
             'Social media should have been updated'
         )
+
+    def test_06_snippet_popup_add_remove(self):
+        self.start_tour('/?enable_editor=1', 'snippet_popup_add_remove', login='admin')
