@@ -76,7 +76,7 @@ class AccountMove(models.Model):
                         record.l10n_es_tbai_signature[:13],
                         ''  # CRC
                     ])
-                    record.l10n_es_tbai_id = tbai_id_no_crc + self.env['l10n_es.edi.tbai.util'].crc8(tbai_id_no_crc)
+                    record.l10n_es_tbai_id = tbai_id_no_crc + self.env['l10n_es.edi.tbai.util']._crc8(tbai_id_no_crc)
             else:
                 record.l10n_es_tbai_id = ''  # record
 
@@ -91,7 +91,7 @@ class AccountMove(models.Model):
                     'nf=' + record.l10n_es_tbai_number,
                     'i=' + record._get_l10n_es_tbai_values_from_zip({'importe': r'.//ImporteTotalFactura'})['importe']
                 ])
-                record.l10n_es_tbai_qr = tbai_qr_no_crc + '&cr=' + self.env['l10n_es.edi.tbai.util'].crc8(tbai_qr_no_crc)
+                record.l10n_es_tbai_qr = tbai_qr_no_crc + '&cr=' + self.env['l10n_es.edi.tbai.util']._crc8(tbai_qr_no_crc)
             else:
                 record.l10n_es_tbai_qr = ''
 

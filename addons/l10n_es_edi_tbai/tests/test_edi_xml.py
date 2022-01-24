@@ -55,7 +55,7 @@ class TestEdiXmls(TestEsEdiCommon):
     def _validate_format_xsd(self, xml_doc, xsd_name):
         xml_bytes = etree.tostring(xml_doc, encoding="UTF-8")
         try:
-            self.env['l10n_es.edi.tbai.util'].validate_format_xsd(xml_bytes, xsd_name)
+            self.env['l10n_es.edi.tbai.util']._validate_format_xsd(xml_bytes, xsd_name)
         except UserError as e:
             self.fail(str(e))
 

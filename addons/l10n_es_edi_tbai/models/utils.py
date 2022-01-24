@@ -71,13 +71,13 @@ class L10nEsTbaiFillSignXml(models.AbstractModel):
 
     NS_MAP = {"ds": "http://www.w3.org/2000/09/xmldsig#"}
 
-    def post(self, *args, **kwargs):
+    def _post(self, *args, **kwargs):
         session = requests.Session()
         session.cert = kwargs.pop('pkcs12_data')
         session.mount("https://", PatchedHTTPAdapter())
         return session.request('post', *args, **kwargs)
 
-    def get_response_values(self, xml_res):
+    def _get_response_values(self, xml_res):
         tbai_id_node = xml_res.find(r'.//IdentificadorTBAI')
         tbai_id = '' if tbai_id_node is None else tbai_id_node.text
         messages = ''
@@ -86,24 +86,24 @@ class L10nEsTbaiFillSignXml(models.AbstractModel):
             messages += xml_res_node.find('Codigo').text + ": " + xml_res_node.find(node_name).text + "\n"
         return messages, tbai_id
 
-    def zip_files(self, files, fnames, stream):
+    def _zip_files(self, files, fnames, stream):
         with zipfile.ZipFile(stream, 'w', compression=zipfile.ZIP_DEFLATED) as zipf:
             for file, fname in zip(files, fnames):
                 fname = re.sub("/", "_", fname)  # slashes create directory structure
                 zipf.writestr(fname, file)
         return stream
 
-    def base64_print(self, string):
+    def _base64_print(self, string):
         string = str(string, "utf8")
         return "\n".join(
             string[pos: pos + 64]  # noqa: E203
             for pos in range(0, len(string), 64)
         )
 
-    def canonicalize_node(self, node):
+    def _canonicalize_node(self, node):
         return etree.tostring(etree.fromstring(node), method="c14n", with_comments=False, exclusive=False)
 
-    def cleanup_xml_content(self, xml_content, is_string=False, indent_level=0):
+    def _cleanup_xml_content(self, xml_content, is_string=False, indent_level=0):
         parser = etree.XMLParser(compact=True, remove_blank_text=True, remove_comments=True)
         xml_str = xml_content.encode("utf-8") if is_string else etree.tostring(xml_content).decode("utf-8")
         tree = etree.fromstring(xml_str, parser=parser)
@@ -111,11 +111,11 @@ class L10nEsTbaiFillSignXml(models.AbstractModel):
         tree.tail = "\n"
         return tree
 
-    def get_uri(self, uri, reference):
+    def _get_uri(self, uri, reference):
         node = reference.getroottree()
         if uri == "":
             # Empty URI points to whole document (without signature)
-            return self.canonicalize_node(
+            return self._canonicalize_node(
                 re.sub(r"^[^\n]*<ds:Signature.*<\/ds:Signature>\n", r"",
                        etree.tostring(node).decode("utf-8"),
                        flags=re.DOTALL | re.MULTILINE))
@@ -126,7 +126,7 @@ class L10nEsTbaiFillSignXml(models.AbstractModel):
             for id in ("ID", "Id", "id"):
                 results = node.xpath(query.format(id), uri=uri.lstrip("#"))
                 if len(results) == 1:
-                    return self.canonicalize_node(
+                    return self._canonicalize_node(
                         # Removing leading spaces seems to be required here (trial and error)
                         re.sub(r"^\s*", r"", etree.tostring(results[0]).decode("utf-8"),
                                flags=re.MULTILINE))
@@ -136,14 +136,14 @@ class L10nEsTbaiFillSignXml(models.AbstractModel):
 
         raise Exception('URI "' + uri + '" cannot be read')
 
-    def reference_digests(self, node):
+    def _reference_digests(self, node):
         for reference in node.findall("ds:Reference", namespaces=self.NS_MAP):
-            ref_node = self.get_uri(reference.get("URI", ""), reference)
+            ref_node = self._get_uri(reference.get("URI", ""), reference)
             lib = hashlib.new("sha256")
             lib.update(ref_node)
             reference.find("ds:DigestValue", namespaces=self.NS_MAP).text = b64encode(lib.digest())
 
-    def long_to_bytes(self, n, blocksize=0):
+    def _long_to_bytes(self, n, blocksize=0):
         """
         Convert a long integer to a byte string.
         If optional blocksize is given and greater than zero, pad the front of the
@@ -170,7 +170,7 @@ class L10nEsTbaiFillSignXml(models.AbstractModel):
             s = (blocksize - len(s) % blocksize) * b"\000" + s
         return s
 
-    def fill_signature(self, node, private_key):
+    def _fill_signature(self, node, private_key):
         signed_info_xml = node.find("ds:SignedInfo", namespaces=self.NS_MAP)
 
         signed_info = etree.tostring(
@@ -185,9 +185,9 @@ class L10nEsTbaiFillSignXml(models.AbstractModel):
             padding.PKCS1v15(),
             hashes.SHA256()
         )
-        node.find("ds:SignatureValue", namespaces=self.NS_MAP).text = self.base64_print(b64encode(signature))
+        node.find("ds:SignatureValue", namespaces=self.NS_MAP).text = self._base64_print(b64encode(signature))
 
-    def validate_format_xsd(self, xml_bytes, xsd_id):
+    def _validate_format_xsd(self, xml_bytes, xsd_id):
         """
         Checks that the xml file represented by xml_bytes respects the xsd schema with ID xsd_id.
         In case of validation failure, throws back the UserError thrown by _check_with_xsd.
@@ -224,7 +224,7 @@ class L10nEsTbaiFillSignXml(models.AbstractModel):
         0xDE, 0xD9, 0xD0, 0xD7, 0xC2, 0xC5, 0xCC, 0xCB, 0xE6, 0xE1, 0xE8, 0xEF, 0xFA, 0xFD, 0xF4, 0xF3
     ]
 
-    def crc8(self, data):
+    def _crc8(self, data):
         crc = 0x0
         for c in data:
             crc = self.CRC8_TABLE[(crc ^ ord(c)) & 0xFF]
@@ -234,7 +234,7 @@ class L10nEsTbaiFillSignXml(models.AbstractModel):
     # MISC
     # -------------------------------------------------------------------------
 
-    def random_vat(self, force_new=False):
+    def _random_vat(self, force_new=False):
         if not force_new and self.env['res.company'].l10n_es_tbai_last_posted_id:
             return self.company_id.vat
         else:
