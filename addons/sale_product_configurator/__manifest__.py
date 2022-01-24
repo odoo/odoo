@@ -7,7 +7,7 @@
     'summary': "Configure your products",
 
     'description': """
-Technical module installed when the user checks the "module_sale_product_configurator" setting.
+Technical module:
 The main purpose is to override the sale_order view to allow configuring products in the SO form.
 
 It also enables the "optional products" feature.
@@ -39,5 +39,6 @@ It also enables the "optional products" feature.
             'sale_product_configurator/static/tests/product_configurator.test.js',
         ],
     },
+    'auto_install': True,
     'license': 'LGPL-3',
 }
