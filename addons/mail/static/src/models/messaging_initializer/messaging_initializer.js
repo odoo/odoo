@@ -40,7 +40,7 @@ registerModel({
                 route: '/mail/init_messaging',
             }, { shadow: true }));
             await this.async(() => this._init(data));
-            if (discuss.isOpen) {
+            if (discuss.discussView) {
                 discuss.openInitThread();
             }
             if (this.messaging.autofetchPartnerImStatus) {

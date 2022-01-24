@@ -942,7 +942,7 @@ registerModel({
             const discuss = this.messaging.discuss;
             // check if thread must be opened in form view
             if (!['mail.box', 'mail.channel'].includes(this.model)) {
-                if (expanded || discuss.isOpen) {
+                if (expanded || discuss.discussView) {
                     // Close chat window because having the same thread opened
                     // both in chat window and as main document does not look
                     // good.
@@ -957,7 +957,7 @@ registerModel({
             // check if thread must be opened in discuss
             const device = this.messaging.device;
             if (
-                (!device.isMobile && (discuss.isOpen || expanded)) ||
+                (!device.isMobile && (discuss.discussView || expanded)) ||
                 this.model === 'mail.box'
             ) {
                 return discuss.openThread(this, {

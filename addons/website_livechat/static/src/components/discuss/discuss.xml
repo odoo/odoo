@@ -2,9 +2,9 @@
 <templates xml:space="preserve">
     <t t-inherit="mail.Discuss.content" t-inherit-mode="extension">
         <xpath expr="//*[@name='beforeThread']" position="before">
-            <t t-if="discuss.thread.visitor">
+            <t t-if="discussView.discuss.thread.visitor">
                 <VisitorBanner
-                    visitorLocalId="discuss.thread.visitor.localId"
+                    visitorLocalId="discussView.discuss.thread.visitor.localId"
                 />
             </t>
         </xpath>
