@@ -18,10 +18,6 @@
             <t t-set="has_hs_code" t-value="o.move_lines.filtered(lambda l: l.product_id.hs_code)"/>
         </xpath>
 
-        <xpath expr="//table[@name='stock_move_table']/thead/tr" position="inside">
-            <th t-if="has_hs_code"><strong>HS Code</strong></th>
-        </xpath>
-
         <xpath expr="//table[@name='stock_move_line_table']/thead/tr" position="inside">
             <th t-if="has_hs_code"><strong>HS Code</strong></th>
         </xpath>
