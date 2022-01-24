@@ -708,7 +708,7 @@
     function buildContext(tree, ctx, fromIdx) {
         if (!ctx) {
             const children = new Array(tree.info.filter((v) => v.type === "child").length);
-            ctx = { collectors: [], locations: [], children, cbRefs: [], refN: tree.refN, refList: [] };
+            ctx = { collectors: [], locations: [], children, cbRefs: [], refN: tree.refN };
             fromIdx = 0;
         }
         if (tree.refN) {
@@ -810,11 +810,11 @@
                     break;
                 }
                 case "ref":
-                    const index = ctx.cbRefs.push(info.idx) - 1;
+                    ctx.cbRefs.push(info.idx);
                     ctx.locations.push({
                         idx: info.idx,
                         refIdx: info.refIdx,
-                        setData: makeRefSetter(index, ctx.refList),
+                        setData: setRef,
                         updateData: NO_OP$1,
                     });
             }
@@ -826,21 +826,12 @@
     function buildBlock(template, ctx) {
         let B = createBlockClass(template, ctx);
         if (ctx.cbRefs.length) {
-            const cbRefs = ctx.cbRefs;
-            const refList = ctx.refList;
-            let cbRefsNumber = cbRefs.length;
+            const refs = ctx.cbRefs;
             B = class extends B {
-                mount(parent, afterNode) {
-                    refList.push(new Array(cbRefsNumber));
-                    super.mount(parent, afterNode);
-                    for (let cbRef of refList.pop()) {
-                        cbRef();
-                    }
-                }
                 remove() {
                     super.remove();
-                    for (let cbRef of cbRefs) {
-                        let fn = this.data[cbRef];
+                    for (let ref of refs) {
+                        let fn = this.data[ref];
                         fn(null);
                     }
                 }
@@ -876,7 +867,7 @@
         const nodeCloneNode = nodeProto$2.cloneNode;
         const nodeInsertBefore = nodeProto$2.insertBefore;
         const elementRemove = elementProto.remove;
-        class Block {
+        return class Block {
             constructor(data) {
                 this.data = data;
             }
@@ -891,56 +882,44 @@
                 const target = other ? other.el : afterNode;
                 nodeInsertBefore.call(this.parentEl, this.el, target);
             }
-            toString() {
-                const div = document.createElement("div");
-                this.mount(div, null);
-                return div.innerHTML;
-            }
             mount(parent, afterNode) {
                 const el = nodeCloneNode.call(template, true);
                 nodeInsertBefore.call(parent, el, afterNode);
-                this.el = el;
-                this.parentEl = parent;
-            }
-            patch(other, withBeforeRemove) { }
-        }
-        if (isDynamic) {
-            Block.prototype.mount = function mount(parent, afterNode) {
-                const el = nodeCloneNode.call(template, true);
-                // collecting references
-                const refs = new Array(refN);
-                this.refs = refs;
-                refs[0] = el;
-                for (let i = 0; i < colN; i++) {
-                    const w = collectors[i];
-                    refs[w.idx] = w.getVal.call(refs[w.prevIdx]);
-                }
-                // applying data to all update points
-                if (locN) {
-                    const data = this.data;
-                    for (let i = 0; i < locN; i++) {
-                        const loc = locations[i];
-                        loc.setData.call(refs[loc.refIdx], data[i]);
+                if (isDynamic) {
+                    // collecting references
+                    const refs = new Array(refN);
+                    this.refs = refs;
+                    refs[0] = el;
+                    for (let i = 0; i < colN; i++) {
+                        const w = collectors[i];
+                        refs[w.idx] = w.getVal.call(refs[w.prevIdx]);
                     }
-                }
-                nodeInsertBefore.call(parent, el, afterNode);
-                // preparing all children
-                if (childN) {
-                    const children = this.children;
-                    for (let i = 0; i < childN; i++) {
-                        const child = children[i];
-                        if (child) {
-                            const loc = childrenLocs[i];
-                            const afterNode = loc.afterRefIdx ? refs[loc.afterRefIdx] : null;
-                            child.isOnlyChild = loc.isOnlyChild;
-                            child.mount(refs[loc.parentRefIdx], afterNode);
+                    // applying data to all update points
+                    if (locN) {
+                        const data = this.data;
+                        for (let i = 0; i < locN; i++) {
+                            const loc = locations[i];
+                            loc.setData.call(refs[loc.refIdx], data[i]);
+                        }
+                    }
+                    // preparing all children
+                    if (childN) {
+                        const children = this.children;
+                        for (let i = 0; i < childN; i++) {
+                            const child = children[i];
+                            if (child) {
+                                const loc = childrenLocs[i];
+                                const afterNode = loc.afterRefIdx ? refs[loc.afterRefIdx] : null;
+                                child.isOnlyChild = loc.isOnlyChild;
+                                child.mount(refs[loc.parentRefIdx], afterNode);
+                            }
                         }
                     }
                 }
                 this.el = el;
                 this.parentEl = parent;
-            };
-            Block.prototype.patch = function patch(other, withBeforeRemove) {
+            }
+            patch(other, withBeforeRemove) {
                 if (this === other) {
                     return;
                 }
@@ -986,17 +965,19 @@
                         }
                     }
                 }
-            };
-        }
-        return Block;
+            }
+            toString() {
+                const div = document.createElement("div");
+                this.mount(div, null);
+                return div.innerHTML;
+            }
+        };
     }
     function setText(value) {
         characterDataSetData.call(this, toText(value));
     }
-    function makeRefSetter(index, refs) {
-        return function setRef(fn) {
-            refs[refs.length - 1][index] = () => fn(this);
-        };
+    function setRef(fn) {
+        fn(this);
     }
 
     const getDescriptor = (o, p) => Object.getOwnPropertyDescriptor(o, p);
@@ -1334,23 +1315,14 @@
             return;
         }
         applyDefaultProps(props, ComponentClass);
-        const defaultProps = ComponentClass.defaultProps || {};
         let propsDef = getPropDescription(ComponentClass.props);
         const allowAdditionalProps = "*" in propsDef;
         for (let propName in propsDef) {
             if (propName === "*") {
                 continue;
             }
-            const propDef = propsDef[propName];
-            let isMandatory = !!propDef;
-            if (typeof propDef === "object" && "optional" in propDef) {
-                isMandatory = !propDef.optional;
-            }
-            if (isMandatory && propName in defaultProps) {
-                throw new Error(`A default value cannot be defined for a mandatory prop (name: '${propName}', component: ${ComponentClass.name})`);
-            }
             if (props[propName] === undefined) {
-                if (isMandatory) {
+                if (propsDef[propName] && !propsDef[propName].optional) {
                     throw new Error(`Missing props '${propName}' (component '${ComponentClass.name}')`);
                 }
                 else {
@@ -1359,7 +1331,7 @@
             }
             let isValid;
             try {
-                isValid = isValidProp(props[propName], propDef);
+                isValid = isValidProp(props[propName], propsDef[propName]);
             }
             catch (e) {
                 e.message = `Invalid prop '${propName}' in component ${ComponentClass.name} (${e.message})`;
@@ -1501,6 +1473,210 @@
         return new Markup(value);
     }
 
+    // Allows to get the target of a Reactive (used for making a new Reactive from the underlying object)
+    const TARGET = Symbol("Target");
+    // Escape hatch to prevent reactivity system to turn something into a reactive
+    const SKIP = Symbol("Skip");
+    // Special key to subscribe to, to be notified of key creation/deletion
+    const KEYCHANGES = Symbol("Key changes");
+    const objectToString = Object.prototype.toString;
+    /**
+     * Checks whether a given value can be made into a reactive object.
+     *
+     * @param value the value to check
+     * @returns whether the value can be made reactive
+     */
+    function canBeMadeReactive(value) {
+        if (typeof value !== "object") {
+            return false;
+        }
+        // extract "RawType" from strings like "[object RawType]" => this lets us
+        // ignore many native objects such as Promise (whose toString is [object Promise])
+        // or Date ([object Date]).
+        const rawType = objectToString.call(value).slice(8, -1);
+        return rawType === "Object" || rawType === "Array";
+    }
+    /**
+     * Mark an object or array so that it is ignored by the reactivity system
+     *
+     * @param value the value to mark
+     * @returns the object itself
+     */
+    function markRaw(value) {
+        value[SKIP] = true;
+        return value;
+    }
+    /**
+     * Given a reactive objet, return the raw (non reactive) underlying object
+     *
+     * @param value a reactive value
+     * @returns the underlying value
+     */
+    function toRaw(value) {
+        return value[TARGET];
+    }
+    const targetToKeysToCallbacks = new WeakMap();
+    /**
+     * Observes a given key on a target with an callback. The callback will be
+     * called when the given key changes on the target.
+     *
+     * @param target the target whose key should be observed
+     * @param key the key to observe (or Symbol(KEYCHANGES) for key creation
+     *  or deletion)
+     * @param callback the function to call when the key changes
+     */
+    function observeTargetKey(target, key, callback) {
+        if (!targetToKeysToCallbacks.get(target)) {
+            targetToKeysToCallbacks.set(target, new Map());
+        }
+        const keyToCallbacks = targetToKeysToCallbacks.get(target);
+        if (!keyToCallbacks.get(key)) {
+            keyToCallbacks.set(key, new Set());
+        }
+        keyToCallbacks.get(key).add(callback);
+        if (!callbacksToTargets.has(callback)) {
+            callbacksToTargets.set(callback, new Set());
+        }
+        callbacksToTargets.get(callback).add(target);
+    }
+    /**
+     * Notify Reactives that are observing a given target that a key has changed on
+     * the target.
+     *
+     * @param target target whose Reactives should be notified that the target was
+     *  changed.
+     * @param key the key that changed (or Symbol `KEYCHANGES` if a key was created
+     *   or deleted)
+     */
+    function notifyReactives(target, key) {
+        const keyToCallbacks = targetToKeysToCallbacks.get(target);
+        if (!keyToCallbacks) {
+            return;
+        }
+        const callbacks = keyToCallbacks.get(key);
+        if (!callbacks) {
+            return;
+        }
+        // Loop on copy because clearReactivesForCallback will modify the set in place
+        for (const callback of [...callbacks]) {
+            clearReactivesForCallback(callback);
+            callback();
+        }
+    }
+    const callbacksToTargets = new WeakMap();
+    /**
+     * Clears all subscriptions of the Reactives associated with a given callback.
+     *
+     * @param callback the callback for which the reactives need to be cleared
+     */
+    function clearReactivesForCallback(callback) {
+        const targetsToClear = callbacksToTargets.get(callback);
+        if (!targetsToClear) {
+            return;
+        }
+        for (const target of targetsToClear) {
+            const observedKeys = targetToKeysToCallbacks.get(target);
+            if (!observedKeys) {
+                continue;
+            }
+            for (const callbacks of observedKeys.values()) {
+                callbacks.delete(callback);
+            }
+        }
+        targetsToClear.clear();
+    }
+    const reactiveCache = new WeakMap();
+    /**
+     * Creates a reactive proxy for an object. Reading data on the reactive object
+     * subscribes to changes to the data. Writing data on the object will cause the
+     * notify callback to be called if there are suscriptions to that data. Nested
+     * objects and arrays are automatically made reactive as well.
+     *
+     * Whenever you are notified of a change, all subscriptions are cleared, and if
+     * you would like to be notified of any further changes, you should go read
+     * the underlying data again. We assume that if you don't go read it again after
+     * being notified, it means that you are no longer interested in that data.
+     *
+     * Subscriptions:
+     * + Reading a property on an object will subscribe you to changes in the value
+     *    of that property.
+     * + Accessing an object keys (eg with Object.keys or with `for..in`) will
+     *    subscribe you to the creation/deletion of keys. Checking the presence of a
+     *    key on the object with 'in' has the same effect.
+     * - getOwnPropertyDescriptor does not currently subscribe you to the property.
+     *    This is a choice that was made because changing a key's value will trigger
+     *    this trap and we do not want to subscribe by writes. This also means that
+     *    Object.hasOwnProperty doesn't subscribe as it goes through this trap.
+     *
+     * @param target the object for which to create a reactive proxy
+     * @param callback the function to call when an observed property of the
+     *  reactive has changed
+     * @returns a proxy that tracks changes to it
+     */
+    function reactive(target, callback = () => { }) {
+        if (!canBeMadeReactive(target)) {
+            throw new Error(`Cannot make the given value reactive`);
+        }
+        if (SKIP in target) {
+            return target;
+        }
+        const originalTarget = target[TARGET];
+        if (originalTarget) {
+            return reactive(originalTarget, callback);
+        }
+        if (!reactiveCache.has(target)) {
+            reactiveCache.set(target, new Map());
+        }
+        const reactivesForTarget = reactiveCache.get(target);
+        if (!reactivesForTarget.has(callback)) {
+            const proxy = new Proxy(target, {
+                get(target, key, proxy) {
+                    if (key === TARGET) {
+                        return target;
+                    }
+                    observeTargetKey(target, key, callback);
+                    const value = Reflect.get(target, key, proxy);
+                    if (!canBeMadeReactive(value)) {
+                        return value;
+                    }
+                    return reactive(value, callback);
+                },
+                set(target, key, value, proxy) {
+                    const isNewKey = !Object.hasOwnProperty.call(target, key);
+                    const originalValue = Reflect.get(target, key, proxy);
+                    const ret = Reflect.set(target, key, value, proxy);
+                    if (isNewKey) {
+                        notifyReactives(target, KEYCHANGES);
+                    }
+                    // While Array length may trigger the set trap, it's not actually set by this
+                    // method but is updated behind the scenes, and the trap is not called with the
+                    // new value. We disable the "same-value-optimization" for it because of that.
+                    if (originalValue !== value || (Array.isArray(target) && key === "length")) {
+                        notifyReactives(target, key);
+                    }
+                    return ret;
+                },
+                deleteProperty(target, key) {
+                    const ret = Reflect.deleteProperty(target, key);
+                    notifyReactives(target, KEYCHANGES);
+                    notifyReactives(target, key);
+                    return ret;
+                },
+                ownKeys(target) {
+                    observeTargetKey(target, KEYCHANGES, callback);
+                    return Reflect.ownKeys(target);
+                },
+                has(target, key) {
+                    // TODO: this observes all key changes instead of only the presence of the argument key
+                    observeTargetKey(target, KEYCHANGES, callback);
+                    return Reflect.has(target, key);
+                },
+            });
+            reactivesForTarget.set(callback, proxy);
+        }
+        return reactivesForTarget.get(callback);
+    }
+
     /**
      * This file contains utility functions that will be injected in each template,
      * to perform various useful tasks in the compiled code.
@@ -1510,7 +1686,8 @@
     }
     function callSlot(ctx, parent, key, name, dynamic, extra, defaultContent) {
         key = key + "__slot_" + name;
-        const slots = (ctx.props && ctx.props.slots) || {};
+        const nonReactiveProps = ctx.props && ctx.props[TARGET];
+        const slots = nonReactiveProps ? nonReactiveProps.slots || {} : {};
         const { __render, __ctx, __scope } = slots[name] || {};
         const slotScope = Object.create(__ctx || {});
         if (__scope) {
@@ -1614,7 +1791,7 @@
             safeKey = `lazy_value`;
             block = value.evaluate();
         }
-        else if (value instanceof String || typeof value === "string") {
+        else if (typeof value === "string") {
             safeKey = "string_unsafe";
             block = text(value);
         }
@@ -1784,7 +1961,7 @@
         }
         return new Fiber(node, parent);
     }
-    function makeRootFiber(node) {
+    function makeRootFiber(node, force) {
         let current = node.fiber;
         if (current) {
             let root = current.root;
@@ -1792,6 +1969,7 @@
             current.children = [];
             root.counter++;
             current.bdom = null;
+            current.force = force;
             if (fibersInError.has(current)) {
                 fibersInError.delete(current);
                 fibersInError.delete(root);
@@ -1806,6 +1984,7 @@
         if (node.patched.length) {
             fiber.patched.push(fiber);
         }
+        fiber.force = force;
         return fiber;
     }
     /**
@@ -1828,9 +2007,11 @@
             this.bdom = null;
             this.children = [];
             this.appliedToDom = false;
+            this.force = false;
             this.node = node;
             this.parent = parent;
             if (parent) {
+                this.force = parent.force;
                 const root = parent.root;
                 root.counter++;
                 this.root = root;
@@ -1873,7 +2054,7 @@
                 }
                 current = undefined;
                 // Step 2: patching the dom
-                node.patch();
+                node._patch();
                 this.locked = false;
                 // Step 4: calling all mounted lifecycle hooks
                 let mountedFibers = this.mounted;
@@ -1911,8 +2092,8 @@
         complete() {
             let current = this;
             try {
+                // validateTarget(this.target); NXOWL
                 const node = this.node;
-                node.app.constructor.validateTarget(this.target);
                 if (node.bdom) {
                     // this is a complicated situation: if we mount a fiber with an existing
                     // bdom, this means that this same fiber was already completed, mounted,
@@ -1960,6 +2141,39 @@
     function useComponent() {
         return currentNode.component;
     }
+    // -----------------------------------------------------------------------------
+    // Integration with reactivity system (useState)
+    // -----------------------------------------------------------------------------
+    const batchedRenderFunctions = new WeakMap();
+    /**
+     * Creates a reactive object that will be observed by the current component.
+     * Reading data from the returned object (eg during rendering) will cause the
+     * component to subscribe to that data and be rerendered when it changes.
+     *
+     * @param state the state to observe
+     * @returns a reactive object that will cause the component to re-render on
+     *  relevant changes
+     * @see reactive
+     */
+    function useState(state) {
+        const node = currentNode;
+        let render = batchedRenderFunctions.get(node);
+        if (!render) {
+            render = batched(node.render.bind(node));
+            batchedRenderFunctions.set(node, render);
+            // manual implementation of onWillDestroy to break cyclic dependency
+            node.willDestroy.push(clearReactivesForCallback.bind(null, render));
+        }
+        return reactive(state, render);
+    }
+    function arePropsDifferent(props1, props2) {
+        for (let k in props1) {
+            if (props1[k] !== props2[k]) {
+                return true;
+            }
+        }
+        return Object.keys(props1).length !== Object.keys(props2).length;
+    }
     function component(name, props, key, ctx, parent) {
         let node = ctx.children[key];
         let isDynamic = typeof name !== "string";
@@ -1977,7 +2191,10 @@
         }
         const parentFiber = ctx.fiber;
         if (node) {
-            node.updateAndRender(props, parentFiber);
+            const currentProps = node.component.props[TARGET];
+            if (parentFiber.force || arePropsDifferent(currentProps, props)) {
+                node.updateAndRender(props, parentFiber);
+            }
         }
         else {
             // new component
@@ -2019,6 +2236,7 @@
             applyDefaultProps(props, C);
             const env = (parent && parent.childEnv) || app.env;
             this.childEnv = env;
+            props = useState(props);
             this.component = new C(props, env, this);
             this.renderFn = app.getTemplate(C.template).bind(this.component, this.component, this);
             this.component.setup();
@@ -2046,7 +2264,7 @@
                 this._render(fiber);
             }
         }
-        async render() {
+        async render(force = false) {
             let current = this.fiber;
             if (current && current.root.locked) {
                 await Promise.resolve();
@@ -2054,12 +2272,14 @@
                 current = this.fiber;
             }
             if (current && !current.bdom && !fibersInError.has(current)) {
-                return;
+                if (current.force || force === false) {
+                    return;
+                }
             }
             if (!this.bdom && !current) {
                 return;
             }
-            const fiber = makeRootFiber(this);
+            const fiber = makeRootFiber(this, force);
             this.fiber = fiber;
             this.app.scheduler.addFiber(fiber);
             await Promise.resolve();
@@ -2118,6 +2338,8 @@
             this.fiber = fiber;
             const component = this.component;
             applyDefaultProps(props, component.constructor);
+            currentNode = this;
+            props = useState(props);
             const prom = Promise.all(this.willUpdateProps.map((f) => f.call(component, props)));
             await prom;
             if (fiber !== this.fiber) {
@@ -2177,6 +2399,14 @@
             this.bdom.moveBefore(other ? other.bdom : null, afterNode);
         }
         patch() {
+            if (this.fiber && this.fiber.parent) {
+                // we only patch here renderings coming from above. renderings initiated
+                // by the component will be patched independently in the appropriate
+                // fiber.complete
+                this._patch();
+            }
+        }
+        _patch() {
             const hasChildren = Object.keys(this.children).length > 0;
             this.bdom.patch(this.fiber.bdom, hasChildren);
             if (hasChildren) {
@@ -2697,22 +2927,10 @@
             this.isDebug = false;
             this.targets = [];
             this.target = new CodeTarget("template");
-            this.translatableAttributes = TRANSLATABLE_ATTRS;
             this.staticCalls = [];
             this.helpers = new Set();
             this.translateFn = options.translateFn || ((s) => s);
-            if (options.translatableAttributes) {
-                const attrs = new Set(TRANSLATABLE_ATTRS);
-                for (let attr of options.translatableAttributes) {
-                    if (attr.startsWith("-")) {
-                        attrs.delete(attr.slice(1));
-                    }
-                    else {
-                        attrs.add(attr);
-                    }
-                }
-                this.translatableAttributes = [...attrs];
-            }
+            this.translatableAttributes = options.translatableAttributes || TRANSLATABLE_ATTRS;
             this.hasSafeContext = options.hasSafeContext || false;
             this.dev = options.dev || false;
             this.ast = ast;
@@ -2859,16 +3077,16 @@
             const mapping = new Map();
             return tokens
                 .map((tok) => {
-                    if (tok.varName && !tok.isLocal) {
-                        if (!mapping.has(tok.varName)) {
-                            const varId = this.generateId("v");
-                            mapping.set(tok.varName, varId);
-                            this.addLine(`const ${varId} = ${tok.value};`);
-                        }
-                        tok.value = mapping.get(tok.varName);
+                if (tok.varName && !tok.isLocal) {
+                    if (!mapping.has(tok.varName)) {
+                        const varId = this.generateId("v");
+                        mapping.set(tok.varName, varId);
+                        this.addLine(`const ${varId} = ${tok.value};`);
                     }
-                    return tok.value;
-                })
+                    tok.value = mapping.get(tok.varName);
+                }
+                return tok.value;
+            })
                 .join("");
         }
         compileAST(ast, ctx) {
@@ -2979,11 +3197,11 @@
                 .split(".")
                 .slice(1)
                 .map((m) => {
-                    if (!MODS.has(m)) {
-                        throw new Error(`Unknown event modifier: '${m}'`);
-                    }
-                    return `"${m}"`;
-                });
+                if (!MODS.has(m)) {
+                    throw new Error(`Unknown event modifier: '${m}'`);
+                }
+                return `"${m}"`;
+            });
             let modifiersCode = "";
             if (modifiers.length) {
                 modifiersCode = `${modifiers.join(",")}, `;
@@ -3478,48 +3696,29 @@
             }
             return parts.join("__");
         }
-        /**
-         * Formats a prop name and value into a string suitable to be inserted in the
-         * generated code. For example:
-         *
-         * Name              Value            Result
-         * ---------------------------------------------------------
-         * "number"          "state"          "number: ctx['state']"
-         * "something"       ""               "something: undefined"
-         * "some-prop"       "state"          "'some-prop': ctx['state']"
-         * "onClick.bind"    "onClick"        "onClick: bind(ctx, ctx['onClick'])"
-         */
-        formatProp(name, value) {
-            value = this.captureExpression(value);
-            if (name.includes(".")) {
-                let [_name, suffix] = name.split(".");
-                if (suffix === "bind") {
-                    this.helpers.add("bind");
-                    name = _name;
-                    value = `bind(ctx, ${value || undefined})`;
-                }
-                else {
-                    throw new Error("Invalid prop suffix");
-                }
-            }
-            name = /^[a-z_]+$/i.test(name) ? name : `'${name}'`;
-            return `${name}: ${value || undefined}`;
-        }
-        formatPropObject(obj) {
-            const params = [];
-            for (const [n, v] of Object.entries(obj)) {
-                params.push(this.formatProp(n, v));
-            }
-            return params.join(", ");
-        }
         compileComponent(ast, ctx) {
             let { block } = ctx;
             // props
-            const hasSlotsProp = "slots" in ast.props;
             const props = [];
-            const propExpr = this.formatPropObject(ast.props);
-            if (propExpr) {
-                props.push(propExpr);
+            let hasSlotsProp = false;
+            for (let propName in ast.props) {
+                let propValue = this.captureExpression(ast.props[propName]) || undefined;
+                if (propName.includes(".")) {
+                    let [name, suffix] = propName.split(".");
+                    if (suffix === "bind") {
+                        this.helpers.add("bind");
+                        propName = name;
+                        propValue = `bind(ctx, ${propValue})`;
+                    }
+                    else {
+                        throw new Error("Invalid prop suffix");
+                    }
+                }
+                propName = /^[a-z_]+$/i.test(propName) ? propName : `'${propName}'`;
+                props.push(`${propName}: ${propValue}`);
+                if (propName === "slots") {
+                    hasSlotsProp = true;
+                }
             }
             // slots
             const hasSlot = !!Object.keys(ast.slots).length;
@@ -3541,7 +3740,9 @@
                         params.push(`__scope: "${scope}"`);
                     }
                     if (ast.slots[slotName].attrs) {
-                        params.push(this.formatPropObject(ast.slots[slotName].attrs));
+                        for (const [n, v] of Object.entries(ast.slots[slotName].attrs)) {
+                            params.push(`${n}: ${compileExpr(v) || undefined}`);
+                        }
                     }
                     const slotInfo = `{${params.join(", ")}}`;
                     slotStr.push(`'${slotName}': ${slotInfo}`);
@@ -3549,17 +3750,13 @@
                 slotDef = `{${slotStr.join(", ")}}`;
             }
             if (slotDef && !(ast.dynamicProps || hasSlotsProp)) {
-                props.push(`slots: ${slotDef}`);
+                this.helpers.add("markRaw");
+                props.push(`slots: markRaw(${slotDef})`);
             }
             const propStr = `{${props.join(",")}}`;
             let propString = propStr;
             if (ast.dynamicProps) {
-                if (!props.length) {
-                    propString = `Object.assign({}, ${compileExpr(ast.dynamicProps)})`;
-                }
-                else {
-                    propString = `Object.assign({}, ${compileExpr(ast.dynamicProps)}, ${propStr})`;
-                }
+                propString = `Object.assign({}, ${compileExpr(ast.dynamicProps)}${props.length ? ", " + propStr : ""})`;
             }
             let propVar;
             if ((slotDef && (ast.dynamicProps || hasSlotsProp)) || this.dev) {
@@ -3568,7 +3765,8 @@
                 propString = propVar;
             }
             if (slotDef && (ast.dynamicProps || hasSlotsProp)) {
-                this.addLine(`${propVar}.slots = Object.assign(${slotDef}, ${propVar}.slots)`);
+                this.helpers.add("markRaw");
+                this.addLine(`${propVar}.slots = markRaw(Object.assign(${slotDef}, ${propVar}.slots))`);
             }
             // cmap key
             const key = this.generateComponentKey();
@@ -3612,7 +3810,14 @@
             else {
                 slotName = "'" + ast.name + "'";
             }
-            const scope = ast.attrs ? `{${this.formatPropObject(ast.attrs)}}` : null;
+            let scope = null;
+            if (ast.attrs) {
+                const params = [];
+                for (const [n, v] of Object.entries(ast.attrs)) {
+                    params.push(`${n}: ${compileExpr(v) || undefined}`);
+                }
+                scope = `{${params.join(", ")}}`;
+            }
             if (ast.defaultContent) {
                 const name = this.compileInNewTarget("defaultContent", ast.defaultContent, ctx);
                 blockString = `callSlot(ctx, node, key, ${slotName}, ${dynamic}, ${scope}, ${name})`;
@@ -4102,8 +4307,6 @@
         }
         const dynamicProps = node.getAttribute("t-props");
         node.removeAttribute("t-props");
-        const defaultSlotScope = node.getAttribute("t-slot-scope");
-        node.removeAttribute("t-slot-scope");
         const props = {};
         for (let name of node.getAttributeNames()) {
             const value = node.getAttribute(name);
@@ -4163,9 +4366,6 @@
             const defaultContent = parseChildNodes(clone, ctx);
             if (defaultContent) {
                 slots.default = { content: defaultContent };
-                if (defaultSlotScope) {
-                    slots.default.scope = defaultSlotScope;
-                }
             }
         }
         return { type: 11 /* TComponent */, name, isDynamic, dynamicProps, props, slots };
@@ -4357,7 +4557,7 @@
                         if (line[columnIndex]) {
                             msg +=
                                 `\nThe error might be located at xml line ${lineNumber} column ${columnIndex}\n` +
-                                `${line}\n${"-".repeat(columnIndex - 1)}^`;
+                                    `${line}\n${"-".repeat(columnIndex - 1)}^`;
                         }
                     }
                 }
@@ -4402,7 +4602,7 @@
                         if (line[columnIndex]) {
                             msg +=
                                 `\nThe error might be located at xml line ${lineNumber} column ${columnIndex}\n` +
-                                `${line}\n${"-".repeat(columnIndex - 1)}^`;
+                                    `${line}\n${"-".repeat(columnIndex - 1)}^`;
                         }
                     }
                 }
@@ -4491,8 +4691,8 @@
             this.__owl__ = node;
         }
         setup() { }
-        render() {
-            this.__owl__.render();
+        render(force = false) {
+            this.__owl__.render(force);
         }
     }
     Component.template = "";
@@ -4553,7 +4753,7 @@
             });
         }
     }
-    Portal.template = xml`<t t-slot="default"/>`;
+    Portal.template = xml `<t t-slot="default"/>`;
     Portal.props = {
         target: {
             type: String,
@@ -4647,7 +4847,7 @@ See https://github.com/odoo/owl/blob/master/doc/reference/config.md#mode for mor
             this.props = config.props || {};
         }
         mount(target, options) {
-            App.validateTarget(target);
+            validateTarget(target);
             const node = this.makeNode(this.Root, this.props);
             const prom = this.mountNode(node, target, options);
             this.root = node;
@@ -4690,7 +4890,6 @@ See https://github.com/odoo/owl/blob/master/doc/reference/config.md#mode for mor
             }
         }
     }
-    App.validateTarget = validateTarget;
     async function mount(C, target, config = {}) {
         return new App(C, config).mount(target, config);
     }
@@ -4732,7 +4931,7 @@ See https://github.com/odoo/owl/blob/master/doc/reference/config.md#mode for mor
             };
         }
     }
-    Memo.template = xml`<t t-slot="default"/>`;
+    Memo.template = xml `<t t-slot="default"/>`;
     /**
      * we assume that each object have the same set of keys
      */
@@ -4743,231 +4942,6 @@ See https://github.com/odoo/owl/blob/master/doc/reference/config.md#mode for mor
             }
         }
         return true;
-    }
-
-    // Allows to get the target of a Reactive (used for making a new Reactive from the underlying object)
-    const TARGET = Symbol("Target");
-    // Escape hatch to prevent reactivity system to turn something into a reactive
-    const SKIP = Symbol("Skip");
-    // Special key to subscribe to, to be notified of key creation/deletion
-    const KEYCHANGES = Symbol("Key changes");
-    const objectToString = Object.prototype.toString;
-    /**
-     * Checks whether a given value can be made into a reactive object.
-     *
-     * @param value the value to check
-     * @returns whether the value can be made reactive
-     */
-    function canBeMadeReactive(value) {
-        if (typeof value !== "object") {
-            return false;
-        }
-        // extract "RawType" from strings like "[object RawType]" => this lets us
-        // ignore many native objects such as Promise (whose toString is [object Promise])
-        // or Date ([object Date]).
-        const rawType = objectToString.call(value).slice(8, -1);
-        return rawType === "Object" || rawType === "Array";
-    }
-    /**
-     * Mark an object or array so that it is ignored by the reactivity system
-     *
-     * @param value the value to mark
-     * @returns the object itself
-     */
-    function markRaw(value) {
-        value[SKIP] = true;
-        return value;
-    }
-    /**
-     * Given a reactive objet, return the raw (non reactive) underlying object
-     *
-     * @param value a reactive value
-     * @returns the underlying value
-     */
-    function toRaw(value) {
-        return value[TARGET];
-    }
-    const targetToKeysToCallbacks = new WeakMap();
-    /**
-     * Observes a given key on a target with an callback. The callback will be
-     * called when the given key changes on the target.
-     *
-     * @param target the target whose key should be observed
-     * @param key the key to observe (or Symbol(KEYCHANGES) for key creation
-     *  or deletion)
-     * @param callback the function to call when the key changes
-     */
-    function observeTargetKey(target, key, callback) {
-        if (!targetToKeysToCallbacks.get(target)) {
-            targetToKeysToCallbacks.set(target, new Map());
-        }
-        const keyToCallbacks = targetToKeysToCallbacks.get(target);
-        if (!keyToCallbacks.get(key)) {
-            keyToCallbacks.set(key, new Set());
-        }
-        keyToCallbacks.get(key).add(callback);
-        if (!callbacksToTargets.has(callback)) {
-            callbacksToTargets.set(callback, new Set());
-        }
-        callbacksToTargets.get(callback).add(target);
-    }
-    /**
-     * Notify Reactives that are observing a given target that a key has changed on
-     * the target.
-     *
-     * @param target target whose Reactives should be notified that the target was
-     *  changed.
-     * @param key the key that changed (or Symbol `KEYCHANGES` if a key was created
-     *   or deleted)
-     */
-    function notifyReactives(target, key) {
-        const keyToCallbacks = targetToKeysToCallbacks.get(target);
-        if (!keyToCallbacks) {
-            return;
-        }
-        const callbacks = keyToCallbacks.get(key);
-        if (!callbacks) {
-            return;
-        }
-        // Loop on copy because clearReactivesForCallback will modify the set in place
-        for (const callback of [...callbacks]) {
-            clearReactivesForCallback(callback);
-            callback();
-        }
-    }
-    const callbacksToTargets = new WeakMap();
-    /**
-     * Clears all subscriptions of the Reactives associated with a given callback.
-     *
-     * @param callback the callback for which the reactives need to be cleared
-     */
-    function clearReactivesForCallback(callback) {
-        const targetsToClear = callbacksToTargets.get(callback);
-        if (!targetsToClear) {
-            return;
-        }
-        for (const target of targetsToClear) {
-            const observedKeys = targetToKeysToCallbacks.get(target);
-            if (!observedKeys) {
-                continue;
-            }
-            for (const callbacks of observedKeys.values()) {
-                callbacks.delete(callback);
-            }
-        }
-        targetsToClear.clear();
-    }
-    const reactiveCache = new WeakMap();
-    /**
-     * Creates a reactive proxy for an object. Reading data on the reactive object
-     * subscribes to changes to the data. Writing data on the object will cause the
-     * notify callback to be called if there are suscriptions to that data. Nested
-     * objects and arrays are automatically made reactive as well.
-     *
-     * Whenever you are notified of a change, all subscriptions are cleared, and if
-     * you would like to be notified of any further changes, you should go read
-     * the underlying data again. We assume that if you don't go read it again after
-     * being notified, it means that you are no longer interested in that data.
-     *
-     * Subscriptions:
-     * + Reading a property on an object will subscribe you to changes in the value
-     *    of that property.
-     * + Accessing an object keys (eg with Object.keys or with `for..in`) will
-     *    subscribe you to the creation/deletion of keys. Checking the presence of a
-     *    key on the object with 'in' has the same effect.
-     * - getOwnPropertyDescriptor does not currently subscribe you to the property.
-     *    This is a choice that was made because changing a key's value will trigger
-     *    this trap and we do not want to subscribe by writes. This also means that
-     *    Object.hasOwnProperty doesn't subscribe as it goes through this trap.
-     *
-     * @param target the object for which to create a reactive proxy
-     * @param callback the function to call when an observed property of the
-     *  reactive has changed
-     * @returns a proxy that tracks changes to it
-     */
-    function reactive(target, callback = () => { }) {
-        if (!canBeMadeReactive(target)) {
-            throw new Error(`Cannot make the given value reactive`);
-        }
-        if (SKIP in target) {
-            return target;
-        }
-        const originalTarget = target[TARGET];
-        if (originalTarget) {
-            return reactive(originalTarget, callback);
-        }
-        if (!reactiveCache.has(target)) {
-            reactiveCache.set(target, new Map());
-        }
-        const reactivesForTarget = reactiveCache.get(target);
-        if (!reactivesForTarget.has(callback)) {
-            const proxy = new Proxy(target, {
-                get(target, key, proxy) {
-                    if (key === TARGET) {
-                        return target;
-                    }
-                    observeTargetKey(target, key, callback);
-                    const value = Reflect.get(target, key, proxy);
-                    if (!canBeMadeReactive(value)) {
-                        return value;
-                    }
-                    return reactive(value, callback);
-                },
-                set(target, key, value, proxy) {
-                    const isNewKey = !Object.hasOwnProperty.call(target, key);
-                    const originalValue = Reflect.get(target, key, proxy);
-                    const ret = Reflect.set(target, key, value, proxy);
-                    if (isNewKey) {
-                        notifyReactives(target, KEYCHANGES);
-                    }
-                    // While Array length may trigger the set trap, it's not actually set by this
-                    // method but is updated behind the scenes, and the trap is not called with the
-                    // new value. We disable the "same-value-optimization" for it because of that.
-                    if (originalValue !== value || (Array.isArray(target) && key === "length")) {
-                        notifyReactives(target, key);
-                    }
-                    return ret;
-                },
-                deleteProperty(target, key) {
-                    const ret = Reflect.deleteProperty(target, key);
-                    notifyReactives(target, KEYCHANGES);
-                    notifyReactives(target, key);
-                    return ret;
-                },
-                ownKeys(target) {
-                    observeTargetKey(target, KEYCHANGES, callback);
-                    return Reflect.ownKeys(target);
-                },
-                has(target, key) {
-                    // TODO: this observes all key changes instead of only the presence of the argument key
-                    observeTargetKey(target, KEYCHANGES, callback);
-                    return Reflect.has(target, key);
-                },
-            });
-            reactivesForTarget.set(callback, proxy);
-        }
-        return reactivesForTarget.get(callback);
-    }
-    const batchedRenderFunctions = new WeakMap();
-    /**
-     * Creates a reactive object that will be observed by the current component.
-     * Reading data from the returned object (eg during rendering) will cause the
-     * component to subscribe to that data and be rerendered when it changes.
-     *
-     * @param state the state to observe
-     * @returns a reactive object that will cause the component to re-render on
-     *  relevant changes
-     * @see reactive
-     */
-    function useState(state) {
-        const node = getCurrent();
-        if (!batchedRenderFunctions.has(node)) {
-            batchedRenderFunctions.set(node, batched(() => node.render()));
-            onWillDestroy(() => clearReactivesForCallback(render));
-        }
-        const render = batchedRenderFunctions.get(node);
-        const reactiveState = reactive(state, render);
-        return reactiveState;
     }
 
     // -----------------------------------------------------------------------------
@@ -5075,6 +5049,7 @@ See https://github.com/odoo/owl/blob/master/doc/reference/config.md#mode for mor
     config.shouldNormalizeDom = false;
     config.mainEventHandler = mainEventHandler;
     UTILS.Portal = Portal;
+    UTILS.markRaw = markRaw;
     const blockDom = {
         config,
         // bdom entry points
@@ -5100,6 +5075,7 @@ See https://github.com/odoo/owl/blob/master/doc/reference/config.md#mode for mor
     exports.blockDom = blockDom;
     exports.loadFile = loadFile;
     exports.markRaw = markRaw;
+    exports.batched = batched;
     exports.markup = markup;
     exports.mount = mount;
     exports.onError = onError;
@@ -5125,13 +5101,14 @@ See https://github.com/odoo/owl/blob/master/doc/reference/config.md#mode for mor
     exports.useSubEnv = useSubEnv;
     exports.whenReady = whenReady;
     exports.xml = xml;
+    exports.batched = batched;
 
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '2.0.0-alpha.1';
-    __info__.date = '2022-02-09T09:24:08.644Z';
-    __info__.hash = '67fe89f';
+    __info__.version = '2.0.0-alpha1';
+    __info__.date = '2022-01-31T07:57:34.379Z';
+    __info__.hash = '490734d';
     __info__.url = 'https://github.com/odoo/owl';
 
 
