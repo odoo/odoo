@@ -333,7 +333,7 @@ class Project(models.Model):
                 #We only want to consider hours and days for this calculation, and eventually units if the service policy is not based on milestones
                 if sol.product_uom.category_id == self.env.company.timesheet_encode_uom_id.category_id or (sol.product_uom == product_uom_unit and sol.product_id.service_policy != 'delivered_manual'):
                     sold_items['total_sold'] += product_uom_qty
-                    sold_items['effective_sold'] += sol.product_uom._compute_quantity(qty_delivered, self.env.company.timesheet_encode_uom_id, raise_if_failure=False)
+                    sold_items['effective_sold'] += qty_delivered
         remaining = sold_items['total_sold'] - sold_items['effective_sold']
         sold_items['remaining'] = {
             'value': remaining,
