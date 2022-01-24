@@ -82,7 +82,7 @@ class AccountEdiFormat(models.Model):
 
         # Get TicketBai response
         res_xml = res[invoice]['response']
-        message, tbai_id = self.env['l10n_es.edi.tbai.util'].get_response_values(res_xml)
+        message, tbai_id = self.env['l10n_es.edi.tbai.util']._get_response_values(res_xml)
 
         # SUCCESS
         if res.get(invoice, {}).get('success'):
@@ -94,7 +94,7 @@ class AccountEdiFormat(models.Model):
             with io.BytesIO() as stream:
                 raw1 = etree.tostring(inv_xml, pretty_print=True, xml_declaration=True, encoding='UTF-8')
                 raw2 = etree.tostring(res_xml, pretty_print=True, xml_declaration=True, encoding='UTF-8')
-                stream = self.env['l10n_es.edi.tbai.util'].zip_files(
+                stream = self.env['l10n_es.edi.tbai.util']._zip_files(
                     [raw1, raw2],
                     [invoice.name + ".xml", invoice.name + "_response.xml"],
                     stream
@@ -175,7 +175,7 @@ class AccountEdiFormat(models.Model):
 
         # Get TicketBai response
         res_xml = res[invoice]['response']
-        message, tbai_id = self.env['l10n_es.edi.tbai.util'].get_response_values(res_xml)
+        message, tbai_id = self.env['l10n_es.edi.tbai.util']._get_response_values(res_xml)
 
         # SUCCESS
         # if res.get(invoice, {}).get('success'): # TODO uncomment (but any error means we lose the exchange -> log ?)
@@ -184,7 +184,7 @@ class AccountEdiFormat(models.Model):
         with io.BytesIO() as stream:
             raw1 = etree.tostring(cancel_xml, pretty_print=True, xml_declaration=True, encoding='UTF-8')
             raw2 = etree.tostring(res_xml, pretty_print=True, xml_declaration=True, encoding='UTF-8')
-            stream = self.env['l10n_es.edi.tbai.util'].zip_files(
+            stream = self.env['l10n_es.edi.tbai.util']._zip_files(
                 [raw1, raw2],
                 [invoice.name + "_cancel.xml", invoice.name + "_cancel_response.xml"],
                 stream
@@ -211,7 +211,7 @@ class AccountEdiFormat(models.Model):
         xsd_attachment = self.env.ref(xsd_id, False)
         if xsd_attachment:
             try:
-                self.env['l10n_es.edi.tbai.util'].validate_format_xsd(xml, xsd_id)
+                self.env['l10n_es.edi.tbai.util']._validate_format_xsd(xml, xsd_id)
             except UserError as e:
                 return {
                     'error': str(e).split('\\n'),
@@ -233,7 +233,7 @@ class AccountEdiFormat(models.Model):
         values.update(self._l10n_es_tbai_get_invoice_values(invoice, cancel))
         values.update(self._l10n_es_tbai_get_trail_values(invoice, cancel))
         xml_str = self.env.ref('l10n_es_edi_tbai.template_invoice_main')._render(values)
-        xml_doc = self.env['l10n_es.edi.tbai.util'].cleanup_xml_content(xml_str, is_string=True)
+        xml_doc = self.env['l10n_es.edi.tbai.util']._cleanup_xml_content(xml_str, is_string=True)
         self._l10n_es_tbai_sign_invoice(invoice, xml_doc)
 
         return xml_doc
@@ -536,9 +536,9 @@ class AccountEdiFormat(models.Model):
         values = {
             'dsig': {
                 'document-id': doc_id,
-                'x509-certificate': util.base64_print(b64encode(cert_public.public_bytes(encoding=serialization.Encoding.DER))),
-                'public-modulus': util.base64_print(b64encode(util.long_to_bytes(public_key.public_numbers().n))),
-                'public-exponent': util.base64_print(b64encode(util.long_to_bytes(public_key.public_numbers().e))),
+                'x509-certificate': util._base64_print(b64encode(cert_public.public_bytes(encoding=serialization.Encoding.DER))),
+                'public-modulus': util._base64_print(b64encode(util._long_to_bytes(public_key.public_numbers().n))),
+                'public-exponent': util._base64_print(b64encode(util._long_to_bytes(public_key.public_numbers().e))),
                 'iso-now': datetime.now().isoformat(),
                 'keyinfo-id': kinfo_id,
                 'signature-id': signature_id,
@@ -550,17 +550,17 @@ class AccountEdiFormat(models.Model):
             }
         }
         xml_sig_str = self.env.ref('l10n_es_edi_tbai.template_digital_signature')._render(values)
-        xml_sig = util.cleanup_xml_content(xml_sig_str, is_string=True, indent_level=1)
+        xml_sig = util._cleanup_xml_content(xml_sig_str, is_string=True, indent_level=1)
 
         # Complete document with signature template
         xml_root[-1].tail = "\n  "
         xml_root.append(xml_sig)
 
         # Compute digest values for references
-        util.reference_digests(xml_sig.find("ds:SignedInfo", namespaces=util.NS_MAP))
+        util._reference_digests(xml_sig.find("ds:SignedInfo", namespaces=util.NS_MAP))
 
         # Sign (writes into SignatureValue)
-        util.fill_signature(xml_sig, cert_private)
+        util._fill_signature(xml_sig, cert_private)
         signature_value = xml_sig.find("ds:SignatureValue", namespaces=util.NS_MAP).text
 
         # RFC2045 - Base64 Content-Transfer-Encoding (page 25)
@@ -585,12 +585,12 @@ class AccountEdiFormat(models.Model):
         cert_file = company.l10n_es_tbai_certificate_id
 
         # Post and retrieve response
-        response = util.post(url=url, data=xml_str, headers=header, pkcs12_data=cert_file, timeout=30)
+        response = util._post(url=url, data=xml_str, headers=header, pkcs12_data=cert_file, timeout=30)
         data = response.content.decode(response.encoding)
 
         # Error management
         response_xml = etree.fromstring(bytes(data, 'utf-8'))
-        message, tbai_id = self.env['l10n_es.edi.tbai.util'].get_response_values(response_xml)
+        message, tbai_id = self.env['l10n_es.edi.tbai.util']._get_response_values(response_xml)
         state = int(response_xml.find(r'.//Estado').text)
         if state == 0:
             # SUCCESS
