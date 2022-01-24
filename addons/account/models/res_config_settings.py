@@ -92,8 +92,8 @@ class ResConfigSettings(models.TransientModel):
     group_show_purchase_receipts = fields.Boolean(string='Purchase Receipt',
         implied_group='account.group_purchase_receipts')
     show_line_subtotals_tax_selection = fields.Selection([
-        ('tax_excluded', 'Tax-Excluded'),
-        ('tax_included', 'Tax-Included')], string="Line Subtotals Tax Display",
+        ('tax_excluded', 'Tax Excluded'),
+        ('tax_included', 'Tax Included')], string="Line Subtotals Tax Display",
         required=True, default='tax_excluded',
         config_parameter='account.show_line_subtotals_tax_selection')
     module_account_budget = fields.Boolean(string='Budget Management')
