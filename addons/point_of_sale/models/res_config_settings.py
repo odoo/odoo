@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import api, fields, models
+from odoo import fields, models
 
 
 class ResConfigSettings(models.TransientModel):
@@ -18,6 +18,6 @@ class ResConfigSettings(models.TransientModel):
     def set_values(self):
         super(ResConfigSettings, self).set_values()
         if not self.group_product_pricelist:
-            configs = self.env['pos.config'].search([('use_pricelist', '=', True)])
-            for config in configs:
-                config.use_pricelist = False
+            self.env['pos.config'].search([
+                ('use_pricelist', '=', True)
+            ]).use_pricelist = False

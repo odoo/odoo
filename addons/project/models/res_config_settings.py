@@ -68,4 +68,4 @@ class ResConfigSettings(models.TransientModel):
         if project_stage_change_mail_type.hidden == self['group_project_stages']:
             project_stage_change_mail_type.hidden = not self['group_project_stages']
 
-        super(ResConfigSettings, self).set_values()
+        super().set_values()
