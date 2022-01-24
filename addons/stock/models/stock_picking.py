@@ -355,7 +355,9 @@ class Picking(models.Model):
         default=lambda self: self.env.user)
     move_line_ids = fields.One2many('stock.move.line', 'picking_id', 'Operations')
     move_line_ids_without_package = fields.One2many('stock.move.line', 'picking_id', 'Operations without package', domain=['|',('package_level_id', '=', False), ('picking_type_entire_packs', '=', False)])
-    move_line_nosuggest_ids = fields.One2many('stock.move.line', 'picking_id', domain=[('reserved_qty', '=', 0.0)])
+    move_line_nosuggest_ids = fields.One2many(
+        'stock.move.line', 'picking_id',
+        domain=['|', ('reserved_qty', '=', 0.0), '&', ('reserved_qty', '!=', 0.0), ('qty_done', '!=', 0.0)])
     move_line_exist = fields.Boolean(
         'Has Pack Operations', compute='_compute_move_line_exist',
         help='Check the existence of pack operation on the picking')
