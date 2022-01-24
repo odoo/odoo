@@ -47,27 +47,36 @@ class AccountEdiFormat(models.Model):
     def _get_invoice_edi_content(self, invoice):
         pass  # TODO ?
 
+    def _check_configuration_is_complete(self, invoice):
+        # Ensure a certificate is available.
+        certificate = invoice.company_id.l10n_es_tbai_certificate_id
+        if not certificate:
+            return {
+                'error': _("Please configure the certificate for TicketBAI."),
+                'blocking_level': 'error',
+            }
+
+        # Ensure a tax agency is available.
+        tax_agency = invoice.company_id.mapped('l10n_es_tbai_tax_agency')[0]
+        if not tax_agency:
+            return {
+                'error': _("Please specify a tax agency on your company for TicketBAI."),
+                'blocking_level': 'error',
+                'success': False
+            }
+
+        return None
+
     def _post_invoice_edi(self, invoice):
         # OVERRIDE
         if self.code != 'es_tbai':
             return super()._post_invoice_edi(invoice)
 
-        # Ensure a certificate is available.
-        certificate = invoice.company_id.l10n_es_tbai_certificate_id
-        if not certificate:
-            return {inv: {
-                'error': _("Please configure the certificate for TicketBAI."),
-                'blocking_level': 'error',
-            } for inv in invoice}
-
-        # Ensure a tax agency is available.
-        tax_agency = invoice.company_id.mapped('l10n_es_tbai_tax_agency')[0]
-        if not tax_agency:
-            return {inv: {
-                'error': _("Please specify a tax agency on your company for TicketBAI."),
-                'blocking_level': 'error',
-                'success': False
-            } for inv in invoice}
+        # Configuration check
+        error_dict = self._check_configuration_is_complete(invoice)
+        if error_dict is not None:
+            return {inv: error_dict
+                    for inv in invoice}
 
         # Generate the XML values.
         inv_xml = self._l10n_es_tbai_get_invoice_xml(invoice)
@@ -146,21 +155,11 @@ class AccountEdiFormat(models.Model):
         if self.code != 'es_tbai':
             return super()._post_invoice_edi(invoice)
 
-        # Ensure a certificate is available.
-        certificate = invoice.company_id.l10n_es_tbai_certificate_id
-        if not certificate:
-            return {inv: {
-                'error': _("Please configure the certificate for TicketBAI."),
-                'blocking_level': 'error',
-            } for inv in invoice}
-
-        # Ensure a tax agency is available.
-        tax_agency = invoice.company_id.mapped('l10n_es_tbai_tax_agency')[0]
-        if not tax_agency:
-            return {invoice: {
-                'error': _("Please specify a tax agency on your company for TicketBAI."),
-                'blocking_level': 'error',
-            }}
+        # Configuration check
+        error_dict = self._check_configuration_is_complete(invoice)
+        if error_dict is not None:
+            return {inv: error_dict
+                    for inv in invoice}
 
         # Generate the XML values.
         cancel_xml = self._l10n_es_tbai_get_invoice_xml(invoice, cancel=True)
