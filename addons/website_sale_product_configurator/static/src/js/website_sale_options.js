@@ -26,6 +26,7 @@ publicWidget.registry.WebsiteSale.include({
             cancelButtonText: _t('Continue Shopping'),
             title: _t('Add to cart'),
             context: this._getContext(),
+            forceDialog: this.forceDialog,
         }).open();
 
         this.optionalProductsModal.on('options_empty', null, this._submitForm.bind(this));

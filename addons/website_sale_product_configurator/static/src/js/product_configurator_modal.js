@@ -23,6 +23,7 @@ OptionalProductsModal.include({
     init: function (parent, params) {
         this._super.apply(this, arguments);
         this.isWebsite = params.isWebsite;
+        this.forceDialog = params.forceDialog;
 
         this.dialogClass = 'oe_advanced_configurator_modal' + (params.isWebsite ? ' oe_website_sale' : '');
     },

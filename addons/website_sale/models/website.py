@@ -61,7 +61,20 @@ class Website(models.Model):
 
     shop_extra_field_ids = fields.One2many('website.sale.extra.field', 'website_id', string='E-Commerce Extra Fields')
 
-    cart_add_on_page = fields.Boolean("Stay on page after adding to cart", default=True)
+    add_to_cart_action = fields.Selection(
+        selection=[
+            ('stay', 'Stay on Product Page'),
+            ('go_to_cart', 'Go to cart'),
+        ],
+        default='stay')
+    account_on_checkout = fields.Selection(
+        string="Customer Accounts",
+        selection=[
+            ('optional', 'Optional'),
+            ('disabled', 'Disabled (buy as guest)'),
+            ('mandatory', 'Mandatory (no guest checkout)'),
+        ],
+        default='optional')
 
     @api.depends('all_pricelist_ids')
     def _compute_pricelist_ids(self):
