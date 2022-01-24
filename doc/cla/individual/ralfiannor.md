@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-Rizal Alfiannor ralfiannor@gmail.com https://github.com/ralfiannor
+Rizal Alfiannor rizal.alfiannor@mbiz.co.id https://github.com/ralfiannor
