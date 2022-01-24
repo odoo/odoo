@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models, fields
+from odoo import api, models, fields, _
 
 
 class ResConfigSettings(models.TransientModel):
@@ -44,6 +44,17 @@ class ResConfigSettings(models.TransientModel):
     group_product_pricelist = fields.Boolean(
         compute='_compute_group_product_pricelist', store=True, readonly=False)
 
+    enabled_extra_checkout_step = fields.Boolean(string="Extra Step During Checkout")
+    enabled_buy_now_button = fields.Boolean(string="Buy Now")
+
+    account_on_checkout = fields.Selection(related='website_id.account_on_checkout', readonly=False)
+
+    @api.onchange('account_on_checkout')
+    def _onchange_auth_signup_uninvited(self):
+        for config in self:
+            if config.account_on_checkout == 'mandatory':
+                config.auth_signup_uninvited = 'b2c'
+
     @api.depends('website_id')
     def _compute_terms_url(self):
         for record in self:
@@ -61,8 +72,19 @@ class ResConfigSettings(models.TransientModel):
 
         res.update(
             sale_delivery_settings=sale_delivery_settings,
+            enabled_extra_checkout_step=self.env.ref('website_sale.extra_info_option').active,
+            enabled_buy_now_button=self.env.ref('website_sale.product_buy_now').active,
         )
         return res
+
+    def set_values(self):
+        super().set_values()
+        extra_step_view = self.env.ref('website_sale.extra_info_option')
+        if extra_step_view.active != self.enabled_extra_checkout_step:
+            extra_step_view.active = self.enabled_extra_checkout_step
+        buy_now_view = self.env.ref('website_sale.product_buy_now')
+        if buy_now_view.active != self.enabled_buy_now_button:
+            buy_now_view.active = self.enabled_buy_now_button
 
     @api.depends('sale_delivery_settings')
     def _compute_module_delivery(self):
@@ -82,4 +104,22 @@ class ResConfigSettings(models.TransientModel):
             'type': 'ir.actions.act_url',
             'url': '/terms?enable_editor=1',
             'target': 'self',
+        }
+
+    def action_open_extra_info(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_url',
+            'url': '/shop/extra_info?enable_editor=1',
+            'target': 'self',
+        }
+
+    def action_open_sale_mail_templates(self):
+        return {
+            'name': _('Customize Email Templates'),
+            'type': 'ir.actions.act_window',
+            'domain': [('model', '=', 'sale.order')],
+            'res_model': 'mail.template',
+            'view_id': False,
+            'view_mode': 'tree,form',
         }

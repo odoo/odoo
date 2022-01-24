@@ -244,8 +244,8 @@ odoo.define('website_sale_tour.tour', function (require) {
         run: function () {}, // it's a check
     },
     {
-        content: "Click on Login Button",
-        trigger: '.oe_cart a.btn:contains("Log In")',
+        content: "Click on Sign in Button",
+        trigger: '.oe_cart a:contains(" Sign in")',
     },
     {
         content: "Submit login",
