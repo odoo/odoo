@@ -18,8 +18,8 @@ class PosOrderInherit(models.Model):
     _description = "inherit pos.order"
 
     #point_of_sale.view_pos_pos_form
-    x_ext_order_ref = fields.Char("Order Ref")
-    x_ext_source = fields.Char("Source")
+    x_ext_order_ref = fields.Char("External Order Ref")
+    x_ext_source = fields.Char("Channel")
 
 
     x_receipt_note = fields.Char("Receipt Note")
