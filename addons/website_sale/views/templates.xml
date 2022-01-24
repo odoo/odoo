@@ -1410,9 +1410,10 @@
                         <div class="col-12 col-xl order-xl-1 oe_cart">
                             <div>
                                 <t t-if="mode == ('new', 'billing')">
-                                    <h2 class="o_page_header mt8">Your Address
-                                        <small> or </small>
-                                        <a role="button" href='/web/login?redirect=/shop/checkout' class='btn btn-primary' style="margin-top: -11px">Log In</a>
+                                    <h2 class="o_page_header mt8">
+                                        <span t-if="account_on_checkout != 'mandatory'">Your Address</span>
+                                        <small t-if="account_on_checkout == 'optional'"> or </small>
+                                        <a t-if="account_on_checkout != 'disabled'" role="button" href='/web/login?redirect=/shop/checkout' class='btn btn-primary' style="margin-top: -11px">Log In</a>
                                     </h2>
                                 </t>
                                 <t t-if="mode == ('edit', 'billing')">
@@ -1433,7 +1434,7 @@
                                 <t t-if="error" t-foreach="error.get('error_message', [])" t-as="err">
                                     <h5 class="text-danger" t-esc="err" />
                                 </t>
-                                <form action="/shop/address" method="post" class="checkout_autoformat">
+                                <form t-if="account_on_checkout != 'mandatory'" action="/shop/address" method="post" class="checkout_autoformat">
                                     <div class="form-row">
                                         <div t-attf-class="form-group #{error.get('name') and 'o_has_error' or ''} col-lg-12 div_name">
                                             <label class="col-form-label" for="name">Name</label>

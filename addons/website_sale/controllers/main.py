@@ -858,6 +858,7 @@ class WebsiteSale(http.Controller):
             'error': errors,
             'callback': kw.get('callback'),
             'only_services': order and order.only_services,
+            'account_on_checkout': request.website.account_on_checkout,
         }
         render_values.update(self._get_country_related_render_values(kw, render_values))
         return request.render("website_sale.address", render_values)
