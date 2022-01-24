@@ -31,3 +31,6 @@ class TestSnippets(odoo.tests.HttpCase):
 
     def test_04_countdown_preview(self):
         self.start_tour("/?enable_editor=1", "snippet_countdown", login='admin')
+
+    def test_05_snippet_popup_add_remove(self):
+        self.start_tour('/?enable_editor=1', 'snippet_popup_add_remove', login='admin')
