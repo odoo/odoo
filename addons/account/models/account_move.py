@@ -3489,6 +3489,7 @@ class AccountMoveLine(models.Model):
         help='Utility field to express amount currency')
     account_id = fields.Many2one('account.account', string='Account',
         index=True, ondelete="cascade",
+        auto_join=True,
         domain="[('deprecated', '=', False), ('company_id', '=', 'company_id'),('is_off_balance', '=', False)]",
         check_company=True,
         tracking=True)
