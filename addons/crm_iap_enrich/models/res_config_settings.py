@@ -15,7 +15,7 @@ class ResConfigSettings(models.TransientModel):
         return values
 
     def set_values(self):
-        super(ResConfigSettings, self).set_values()
+        super().set_values()
         cron = self.sudo().with_context(active_test=False).env.ref('crm_iap_enrich.ir_cron_lead_enrichment', raise_if_not_found=False)
-        if cron:
+        if cron and cron.active != self.lead_enrich_auto == 'auto':
             cron.active = self.lead_enrich_auto == 'auto'

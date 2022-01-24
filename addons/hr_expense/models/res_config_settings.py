@@ -6,8 +6,11 @@ from odoo import api, fields, models
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
-    expense_alias_prefix = fields.Char('Default Alias Name for Expenses', compute='_compute_expense_alias_prefix',
-        store=True, readonly=False)
+    expense_alias_prefix = fields.Char(
+        'Default Alias Name for Expenses',
+        compute='_compute_expense_alias_prefix',
+        store=True,
+        readonly=False)
     use_mailgateway = fields.Boolean(string='Let your employees record expenses by email',
                                      config_parameter='hr_expense.use_mailgateway')
 
@@ -24,8 +27,10 @@ class ResConfigSettings(models.TransientModel):
         return res
 
     def set_values(self):
-        super(ResConfigSettings, self).set_values()
-        self.env.ref('hr_expense.mail_alias_expense').write({'alias_name': self.expense_alias_prefix})
+        super().set_values()
+        alias = self.env.ref('hr_expense.mail_alias_expense', raise_if_not_found=False)
+        if alias and alias.alias_name != self.expense_alias_prefix:
+            alias.alias_name = self.expense_alias_prefix
 
     @api.depends('use_mailgateway')
     def _compute_expense_alias_prefix(self):

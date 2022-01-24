@@ -39,6 +39,10 @@ class ResConfigSettings(models.TransientModel):
             self.po_lead = 0.0
 
     def set_values(self):
-        super(ResConfigSettings, self).set_values()
-        self.po_lock = 'lock' if self.lock_confirmed_po else 'edit'
-        self.po_double_validation = 'two_step' if self.po_order_approval else 'one_step'
+        super().set_values()
+        po_lock = 'lock' if self.lock_confirmed_po else 'edit'
+        po_double_validation = 'two_step' if self.po_order_approval else 'one_step'
+        if self.po_lock != po_lock:
+            self.po_lock = po_lock
+        if self.po_double_validation != po_double_validation:
+            self.po_double_validation = po_double_validation
