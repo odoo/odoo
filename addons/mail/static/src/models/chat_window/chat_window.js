@@ -19,7 +19,7 @@ registerModel({
             if (notifyServer === undefined) {
                 notifyServer = !this.messaging.device.isMobile;
             }
-            if (this.messaging.device.isMobile && !this.messaging.discuss.isOpen) {
+            if (this.messaging.device.isMobile && !this.messaging.discuss.discussView) {
                 // If we are in mobile and discuss is not open, it means the
                 // chat window was opened from the messaging menu. In that
                 // case it should be re-opened to simulate it was always

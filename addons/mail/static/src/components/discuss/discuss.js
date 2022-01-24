@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
-import { registerMessagingComponent } from '@mail/utils/messaging_component';
 import { useUpdate } from '@mail/component_hooks/use_update/use_update';
+import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
-const { Component, onWillUnmount } = owl;
+const { Component } = owl;
 
 export class Discuss extends Component {
 
@@ -17,37 +17,29 @@ export class Discuss extends Component {
         this._onMobileAddItemHeaderInputSelect = this._onMobileAddItemHeaderInputSelect.bind(this);
         this._onMobileAddItemHeaderInputSource = this._onMobileAddItemHeaderInputSource.bind(this);
         useUpdate({ func: () => this._update() });
-        onWillUnmount(() => this._willUnmount());
         this._onHideMobileAddItemHeader = this._onHideMobileAddItemHeader.bind(this);
     }
 
     _update() {
-        if (!this.discuss) {
+        if (!this.discussView) {
             return;
         }
-        this.discuss.update({ isOpen: true });
-        if (this.discuss.thread) {
+        if (this.discussView.discuss.thread) {
             this.trigger('o-push-state-action-manager');
-        } else if (!this._activeThreadCache && this.discuss.messaging.isInitialized) {
-            this.discuss.openInitThread();
+        } else if (!this._activeThreadCache) {
+            this.discussView.discuss.openInitThread();
         }
         if (
-            this.discuss.thread &&
-            this.discuss.thread === this.messaging.inbox &&
-            this.discuss.threadView &&
-            this._lastThreadCache === this.discuss.threadView.threadCache.localId &&
-            this._lastThreadCounter > 0 && this.discuss.thread.counter === 0
+            this.discussView.discuss.thread &&
+            this.discussView.discuss.thread === this.messaging.inbox &&
+            this.discussView.discuss.threadView &&
+            this._lastThreadCache === this.discussView.discuss.threadView.threadCache.localId &&
+            this._lastThreadCounter > 0 && this.discussView.discuss.thread.counter === 0
         ) {
             this.trigger('o-show-rainbow-man');
         }
-        this._activeThreadCache = this.discuss.threadView && this.discuss.threadView.threadCache;
+        this._activeThreadCache = this.discussView.discuss.threadView && this.discussView.discuss.threadView.threadCache;
         this._updateLocalStoreProps();
-    }
-
-    _willUnmount() {
-        if (this.discuss) {
-            this.discuss.close();
-        }
     }
 
     //--------------------------------------------------------------------------
@@ -69,10 +61,10 @@ export class Discuss extends Component {
     }
 
     /**
-     * @returns {Discuss}
+     * @returns {DiscussView}
      */
-    get discuss() {
-        return this.messaging && this.messaging.discuss;
+    get discussView() {
+        return this.messaging && this.messaging.models['DiscussView'].get(this.props.localId);
     }
 
     //--------------------------------------------------------------------------
@@ -83,7 +75,7 @@ export class Discuss extends Component {
      * @private
      */
     _updateLocalStoreProps() {
-        if (!this.discuss) {
+        if (!this.discussView) {
             return;
         }
         /**
@@ -92,17 +84,17 @@ export class Discuss extends Component {
          * rainbox man on inbox.
          */
         this._lastThreadCache = (
-            this.discuss.threadView &&
-            this.discuss.threadView.threadCache &&
-            this.discuss.threadView.threadCache.localId
+            this.discussView.discuss.threadView &&
+            this.discussView.discuss.threadView.threadCache &&
+            this.discussView.discuss.threadView.threadCache.localId
         );
         /**
          * Locally tracked store props `threadCounter`.
          * Useful to display the rainbow man on inbox.
          */
         this._lastThreadCounter = (
-            this.discuss.thread &&
-            this.discuss.thread.counter
+            this.discussView.discuss.thread &&
+            this.discussView.discuss.thread.counter
         );
     }
 
@@ -114,7 +106,10 @@ export class Discuss extends Component {
      * @private
      */
     _onHideMobileAddItemHeader() {
-        this.discuss.clearIsAddingItem();
+        if (!this.discussView) {
+            return;
+        }
+        this.discussView.discuss.clearIsAddingItem();
     }
 
     /**
@@ -125,7 +120,10 @@ export class Discuss extends Component {
      * @param {integer} ui.item.id
      */
     _onMobileAddItemHeaderInputSelect(ev, ui) {
-        const discuss = this.discuss;
+        if (!this.discussView) {
+            return;
+        }
+        const discuss = this.discussView.discuss;
         if (discuss.isAddingChannel) {
             discuss.handleAddChannelAutocompleteSelect(ev, ui);
         } else {
@@ -140,17 +138,20 @@ export class Discuss extends Component {
      * @param {function} res
      */
     _onMobileAddItemHeaderInputSource(req, res) {
-        if (this.discuss.isAddingChannel) {
-            this.discuss.handleAddChannelAutocompleteSource(req, res);
+        if (!this.discussView) {
+            return;
+        }
+        if (this.discussView.discuss.isAddingChannel) {
+            this.discussView.discuss.handleAddChannelAutocompleteSource(req, res);
         } else {
-            this.discuss.handleAddChatAutocompleteSource(req, res);
+            this.discussView.discuss.handleAddChatAutocompleteSource(req, res);
         }
     }
 
 }
 
 Object.assign(Discuss, {
-    props: {},
+    props: { localId: String },
     template: 'mail.Discuss',
 });
 

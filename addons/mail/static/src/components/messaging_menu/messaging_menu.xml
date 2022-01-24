@@ -34,7 +34,7 @@
                                 <t t-call="mail.MessagingMenu.newMessageButton"/>
                             </t>
                             <div class="o-autogrow"/>
-                            <t t-if="!messaging.device.isMobile and !messaging.discuss.isOpen">
+                            <t t-if="!messaging.device.isMobile and !messaging.discuss.discussView">
                                 <t t-call="mail.MessagingMenu.newMessageButton"/>
                             </t>
                             <t t-if="messaging.device.isMobile and messagingMenu.isMobileNewMessageToggled">

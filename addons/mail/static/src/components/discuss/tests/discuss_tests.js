@@ -49,7 +49,7 @@ QUnit.test('messaging not created', async function (assert) {
         messagingBeforeCreationDeferred,
         waitUntilMessagingCondition: 'none'
     });
-    assert.containsOnce(document.body, '.o_Discuss_messagingNotInitialized', "should display messaging not initialized");
+    assert.containsOnce(document.body, '.o_DiscussContainer_spinner', "should display messaging not initialized");
     messagingBeforeCreationDeferred.resolve();
 });
 
@@ -64,7 +64,7 @@ QUnit.test('discuss should be marked as opened if the component is already rende
 
     await afterNextRender(() => messagingBeforeCreationDeferred.resolve());
     assert.ok(
-        this.messaging.discuss.isOpen,
+        this.messaging.discuss.discussView,
         "discuss should be marked as opened if the component is already rendered and messaging becomes created afterwards"
     );
 });
@@ -76,7 +76,7 @@ QUnit.test('discuss should be marked as closed when the component is unmounted',
 
     await afterNextRender(() => widget.destroy());
     assert.notOk(
-        this.messaging.discuss.isOpen,
+        this.messaging.discuss.discussView,
         "discuss should be marked as closed when the component is unmounted"
     );
 });
@@ -95,7 +95,7 @@ QUnit.test('messaging not initialized', async function (assert) {
         waitUntilMessagingCondition: 'created',
     });
     assert.strictEqual(
-        document.querySelectorAll('.o_Discuss_messagingNotInitialized').length,
+        document.querySelectorAll('.o_DiscussContainer_spinner').length,
         1,
         "should display messaging not initialized"
     );
@@ -117,14 +117,14 @@ QUnit.test('messaging becomes initialized', async function (assert) {
         waitUntilMessagingCondition: 'created',
     });
     assert.strictEqual(
-        document.querySelectorAll('.o_Discuss_messagingNotInitialized').length,
+        document.querySelectorAll('.o_DiscussContainer_spinner').length,
         1,
         "should display messaging not initialized"
     );
 
     await afterNextRender(() => messagingInitializedProm.resolve());
     assert.strictEqual(
-        document.querySelectorAll('.o_Discuss_messagingNotInitialized').length,
+        document.querySelectorAll('.o_DiscussContainer_spinner').length,
         0,
         "should no longer display messaging not initialized"
     );

@@ -25,10 +25,10 @@ export class DiscussSidebar extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * @returns {Discuss}
+     * @returns {DiscussView}
      */
-    get discuss() {
-        return this.messaging && this.messaging.models['Discuss'].get(this.props.localId);
+    get discussView() {
+        return this.messaging && this.messaging.models['DiscussView'].get(this.props.localId);
     }
 
     //--------------------------------------------------------------------------
@@ -39,11 +39,11 @@ export class DiscussSidebar extends Component {
      * @private
      */
     _update() {
-        if (!this.discuss) {
+        if (!this.discussView) {
             return;
         }
         if (this._quickSearchInputRef.el) {
-            this._quickSearchInputRef.el.value = this.discuss.sidebarQuickSearchValue;
+            this._quickSearchInputRef.el.value = this.discussView.discuss.sidebarQuickSearchValue;
         }
     }
 
@@ -57,7 +57,7 @@ export class DiscussSidebar extends Component {
      */
     _onInputQuickSearch(ev) {
         ev.stopPropagation();
-        this.discuss.onInputQuickSearch(this._quickSearchInputRef.el.value);
+        this.discussView.discuss.onInputQuickSearch(this._quickSearchInputRef.el.value);
     }
 
 }

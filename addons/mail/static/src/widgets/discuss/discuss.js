@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { getMessagingComponent } from "@mail/utils/messaging_component";
+import { DiscussContainer } from "@mail/components/discuss_container/discuss_container";
 
 import AbstractAction from 'web.AbstractAction';
 
@@ -63,8 +63,7 @@ export const DiscussWidget = AbstractAction.extend({
             // prevent twice call to on_attach_callback (FIXME)
             return;
         }
-        const DiscussComponent = getMessagingComponent("Discuss");
-        this.component = new DiscussComponent();
+        this.component = new DiscussContainer();
         this._pushStateActionManagerEventListener = ev => {
             ev.stopPropagation();
             if (this._lastPushStateActiveThread === this.discuss.thread) {

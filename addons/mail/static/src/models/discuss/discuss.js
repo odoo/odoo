@@ -21,7 +21,7 @@ registerModel({
          * Close the discuss app. Should reset its internal state.
          */
         close() {
-            this.update({ isOpen: false });
+            this.update({ discussView: clear() });
         },
         focus() {
             if (this.threadView && this.threadView.composerView) {
@@ -158,6 +158,9 @@ registerModel({
             }
             this.threadView.topbar.openInvitePopoverView();
         },
+        open() {
+            this.update({ discussView: insertAndReplace() });
+        },
         /**
          * Open thread from init active id. `initActiveId` is used to refer to
          * a thread that we may not have full data yet, such as when messaging
@@ -193,7 +196,7 @@ registerModel({
             if (focus !== undefined ? focus : !this.messaging.device.isMobileDevice) {
                 this.focus();
             }
-            if (!this.isOpen) {
+            if (!this.discussView) {
                 this.env.bus.trigger('do-action', {
                     action: 'mail.action_discuss',
                     options: {
@@ -237,7 +240,7 @@ registerModel({
          * @returns {string}
          */
         _computeAddingChannelValue() {
-            if (!this.isOpen) {
+            if (!this.discussView) {
                 return "";
             }
             return this.addingChannelValue;
@@ -247,7 +250,7 @@ registerModel({
          * @returns {boolean}
          */
         _computeHasThreadView() {
-            if (!this.thread || !this.isOpen) {
+            if (!this.thread || !this.discussView) {
                 return false;
             }
             if (
@@ -266,7 +269,7 @@ registerModel({
          * @returns {boolean}
          */
         _computeIsAddingChannel() {
-            if (!this.isOpen) {
+            if (!this.discussView) {
                 return false;
             }
             return this.isAddingChannel;
@@ -276,7 +279,7 @@ registerModel({
          * @returns {boolean}
          */
         _computeIsAddingChat() {
-            if (!this.isOpen) {
+            if (!this.discussView) {
                 return false;
             }
             return this.isAddingChat;
@@ -357,6 +360,10 @@ registerModel({
             inverse: 'discussAsChat',
             isCausal: true,
         }),
+        discussView: one('DiscussView', {
+            inverse: 'discuss',
+            isCausal: true,
+        }),
         /**
          * Determines whether `this.thread` should be displayed.
          */
@@ -388,13 +395,6 @@ registerModel({
          */
         isAddingChat: attr({
             compute: '_computeIsAddingChat',
-            default: false,
-        }),
-        /**
-         * Whether the discuss app is open or not. Useful to determine
-         * whether the discuss or chat window logic should be applied.
-         */
-        isOpen: attr({
             default: false,
         }),
         /**
