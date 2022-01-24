@@ -31,7 +31,7 @@ class ResConfigSettings(models.TransientModel):
         return res
 
     def set_values(self):
-        super(ResConfigSettings, self).set_values()
+        super().set_values()
         company = self.env.company
         # Done this way to have all the values written at the same time,
         # to avoid recomputing the overtimes several times with

@@ -152,9 +152,11 @@ class ResConfigSettings(models.TransientModel):
     group_sale_delivery_address = fields.Boolean("Customer Addresses", implied_group='account.group_delivery_invoice_address')
 
     def set_values(self):
-        super(ResConfigSettings, self).set_values()
+        super().set_values()
         # install a chart of accounts for the given company (if required)
-        if self.env.company == self.company_id and self.chart_template_id and self.chart_template_id != self.company_id.chart_template_id:
+        if self.env.company == self.company_id \
+                and self.chart_template_id \
+                and self.chart_template_id != self.company_id.chart_template_id:
             self.chart_template_id._load(15.0, 15.0, self.env.company)
 
     @api.depends('company_id')

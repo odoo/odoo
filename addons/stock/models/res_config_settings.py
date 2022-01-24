@@ -69,26 +69,29 @@ class ResConfigSettings(models.TransientModel):
         warehouse_grp = self.env.ref('stock.group_stock_multi_warehouses')
         location_grp = self.env.ref('stock.group_stock_multi_locations')
         base_user = self.env.ref('base.group_user')
-        if not self.group_stock_multi_locations and location_grp in base_user.implied_ids and warehouse_grp in base_user.implied_ids:
+        base_user_implied_ids = base_user.implied_ids
+        if not self.group_stock_multi_locations and location_grp in base_user_implied_ids and warehouse_grp in base_user_implied_ids:
             raise UserError(_("You can't desactivate the multi-location if you have more than once warehouse by company"))
 
         # Deactivate putaway rules with storage category when not in storage category
         # group. Otherwise, active them.
         storage_cate_grp = self.env.ref('stock.group_stock_storage_categories')
         PutawayRule = self.env['stock.putaway.rule']
-        if self.group_stock_storage_categories and storage_cate_grp not in base_user.implied_ids:
+        if self.group_stock_storage_categories and storage_cate_grp not in base_user_implied_ids:
             putaway_rules = PutawayRule.search([
                 ('active', '=', False),
                 ('storage_category_id', '!=', False)
             ])
-            putaway_rules.write({'active': True})
-        elif not self.group_stock_storage_categories and storage_cate_grp in base_user.implied_ids:
+            if putaway_rules:
+                putaway_rules.active = True
+        elif not self.group_stock_storage_categories and storage_cate_grp in base_user_implied_ids:
             putaway_rules = PutawayRule.search([('storage_category_id', '!=', False)])
-            putaway_rules.write({'active': False})
+            if putaway_rules:
+                putaway_rules.active = False
 
         previous_group = self.default_get(['group_stock_multi_locations', 'group_stock_production_lot', 'group_stock_tracking_lot'])
         was_operations_showed = self.env['stock.picking.type'].with_user(SUPERUSER_ID)._default_show_operations()
-        res = super(ResConfigSettings, self).set_values()
+        super().set_values()
 
         if not self.user_has_groups('stock.group_stock_manager'):
             return
@@ -99,18 +102,17 @@ class ResConfigSettings(models.TransientModel):
         warehouse_obj = self.env['stock.warehouse']
         if self.group_stock_multi_locations and not previous_group.get('group_stock_multi_locations'):
             # override active_test that is false in set_values
-            warehouse_obj.with_context(active_test=True).search([]).mapped('int_type_id').write({'active': True})
+            warehouse_obj.with_context(active_test=True).search([]).int_type_id.active = True
         elif not self.group_stock_multi_locations and previous_group.get('group_stock_multi_locations'):
             warehouse_obj.search([
                 ('reception_steps', '=', 'one_step'),
-                ('delivery_steps', '=', 'ship_only')]
-            ).mapped('int_type_id').write({'active': False})
+                ('delivery_steps', '=', 'ship_only')
+            ]).int_type_id.active = False
 
         if not was_operations_showed and self.env['stock.picking.type'].with_user(SUPERUSER_ID)._default_show_operations():
-            picking_types = self.env['stock.picking.type'].with_context(active_test=False).search([
+            self.env['stock.picking.type'].with_context(active_test=False).sudo().search([
                 ('code', '!=', 'incoming'),
                 ('show_operations', '=', False)
-            ])
-            picking_types.sudo().write({'show_operations': True})
+            ]).show_operations = True
 
-        return res
+        return
