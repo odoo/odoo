@@ -138,7 +138,7 @@ class SaleOrder(models.Model):
 
     name = fields.Char(
         string='Order Reference', required=True, copy=False, readonly=True,
-        states={'draft': [('readonly', False)]}, index='gin', default=lambda self: _('New'))
+        states={'draft': [('readonly', False)]}, index='trigram', default=lambda self: _('New'))
     origin = fields.Char(string='Source Document', help="Reference of the document that generated this sales order request.")
     client_order_ref = fields.Char(string='Customer Reference', copy=False)
     reference = fields.Char(string='Payment Ref.', copy=False,

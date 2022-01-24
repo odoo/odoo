@@ -112,14 +112,15 @@ class Field(MetaField('DummyField', (object,), {})):
 
     :param bool required: whether the value of the field is required (default: ``False``)
 
-    :param bool index: whether the field is indexed in database. Note: no effect
-        on non-stored and virtual fields. (default: ``False``) Possible attributes:
+    :param str index: whether the field is indexed in database, and the kind of index.
+        Note: this has no effect on non-stored and virtual fields.
+        The possible values are:
 
-        * ``True``: auto-detect (currently set to btree)
-        * ``btree``: standard index, good for many2one
-        * ``not null``: btree without indexing NULL values (usefull when 90% of values are NULL)
-        * ``gin``: Generalized Inverted Indexes (GIN). Better for full-text search.
-        * ``False``: no index (default)
+        * ``"btree"`` or ``True``: standard index, good for many2one
+        * ``"btree_not_null"``: BTREE index without NULL values (useful when most
+                                values are NULL, or when NULL is never searched for)
+        * ``"trigram"``: Generalized Inverted Index (GIN) with trigrams (good for full-text search)
+        * ``None`` or ``False``: no index (default)
 
     :param default: the default value for the field; this is either a static
         value, or a function taking a recordset and returning a value; use
@@ -261,7 +262,7 @@ class Field(MetaField('DummyField', (object,), {})):
     comodel_name = None                 # name of the model of values (if relational)
 
     store = True                        # whether the field is stored in database
-    index = False                       # whether the field is indexed in database
+    index = None                        # how the field is indexed in database
     manual = False                      # whether the field is a custom field
     copy = True                         # whether the field is copied over by BaseModel.copy()
     _depends = None                     # collection of field dependencies

@@ -247,7 +247,9 @@ def create_index(cr, indexname, tablename, expressions, method='btree', where=''
     if index_exists(cr, indexname):
         return
     args = ', '.join(expressions)
-    cr.execute('CREATE INDEX "{}" ON "{}" USING {} ({}) {}'.format(indexname, tablename, method, args, where))
+    if where:
+        where = f' WHERE {where}'
+    cr.execute(f'CREATE INDEX "{indexname}" ON "{tablename}" USING {method} ({args}){where}')
     _schema.debug("Table %r: created index %r (%s)", tablename, indexname, args)
 
 def create_unique_index(cr, indexname, tablename, expressions):
