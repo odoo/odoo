@@ -30,7 +30,7 @@ class ResConfigSettings(models.TransientModel):
                                                   related='website_id.cart_recovery_mail_template_id', readonly=False)
     cart_abandoned_delay = fields.Float("Abandoned Delay", help="Number of hours after which the cart is considered abandoned.",
                                         related='website_id.cart_abandoned_delay', readonly=False)
-    cart_add_on_page = fields.Boolean("Stay on page after adding to cart", related='website_id.cart_add_on_page', readonly=False)
+    add_to_cart_action = fields.Selection(related='website_id.add_to_cart_action', readonly=False)
     terms_url = fields.Char(compute='_compute_terms_url', string="URL", help="A preview will be available at this URL.")
 
     module_delivery = fields.Boolean(
