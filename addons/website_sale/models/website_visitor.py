@@ -8,7 +8,7 @@ from odoo import fields, models, api
 class WebsiteTrack(models.Model):
     _inherit = 'website.track'
 
-    product_id = fields.Many2one('product.product', ondelete='cascade', readonly=True, index="not null")
+    product_id = fields.Many2one('product.product', ondelete='cascade', readonly=True, index='btree_not_null')
 
 
 class WebsiteVisitor(models.Model):

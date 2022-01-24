@@ -18,7 +18,7 @@ class StockMove(models.Model):
     _inherit = 'stock.move'
 
     purchase_line_id = fields.Many2one('purchase.order.line',
-        'Purchase Order Line', ondelete='set null', index='not null', readonly=True)
+        'Purchase Order Line', ondelete='set null', index='btree_not_null', readonly=True)
     created_purchase_line_id = fields.Many2one('purchase.order.line',
         'Created Purchase Order Line', ondelete='set null', readonly=True, copy=False)
 

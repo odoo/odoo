@@ -12,7 +12,7 @@ from odoo.http import request
 class WebsiteVisitor(models.Model):
     _inherit = 'website.visitor'
 
-    livechat_operator_id = fields.Many2one('res.partner', compute='_compute_livechat_operator_id', store=True, string='Speaking with', index="not null")
+    livechat_operator_id = fields.Many2one('res.partner', compute='_compute_livechat_operator_id', store=True, string='Speaking with', index='btree_not_null')
     livechat_operator_name = fields.Char('Operator Name', related="livechat_operator_id.name")
     mail_channel_ids = fields.One2many('mail.channel', 'livechat_visitor_id',
                                        string="Visitor's livechat channels", readonly=True)

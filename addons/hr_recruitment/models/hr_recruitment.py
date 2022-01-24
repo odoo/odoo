@@ -112,7 +112,7 @@ class Applicant(models.Model):
     _inherit = ['mail.thread.cc', 'mail.activity.mixin', 'utm.mixin']
     _mailing_enabled = True
 
-    name = fields.Char("Subject / Application Name", required=True, help="Email subject for applications sent via email", index='gin')
+    name = fields.Char("Subject / Application Name", required=True, help="Email subject for applications sent via email", index='trigram')
     active = fields.Boolean("Active", default=True, help="If the active field is set to false, it will allow you to hide the case without removing it.")
     description = fields.Html("Description")
     email_from = fields.Char("Email", size=128, help="Applicant email", compute='_compute_partner_phone_email',

@@ -24,7 +24,7 @@ class Repair(models.Model):
 
     name = fields.Char(
         'Repair Reference',
-        default='New', index='gin',
+        default='New', index='trigram',
         copy=False, required=True,
         readonly=True)
     description = fields.Char('Repair Description')

@@ -1040,7 +1040,7 @@ class QuantPackage(models.Model):
     _order = 'name'
 
     name = fields.Char(
-        'Package Reference', copy=False, index='gin',
+        'Package Reference', copy=False, index='trigram',
         default=lambda self: self.env['ir.sequence'].next_by_code('stock.quant.package') or _('Unknown Pack'))
     quant_ids = fields.One2many('stock.quant', 'package_id', 'Bulk Content', readonly=True,
         domain=['|', ('quantity', '!=', 0), ('reserved_quantity', '!=', 0)])
@@ -1054,7 +1054,7 @@ class QuantPackage(models.Model):
         index=True, readonly=True, store=True)
     owner_id = fields.Many2one(
         'res.partner', 'Owner', compute='_compute_package_info', search='_search_owner',
-        index='not null', readonly=True, compute_sudo=True)
+        index='btree_not_null', readonly=True, compute_sudo=True)
     package_use = fields.Selection([
         ('disposable', 'Disposable Box'),
         ('reusable', 'Reusable Box'),

@@ -43,7 +43,7 @@ class AccountMove(models.Model):
 
     l10n_latam_available_document_type_ids = fields.Many2many('l10n_latam.document.type', compute='_compute_l10n_latam_available_document_types')
     l10n_latam_document_type_id = fields.Many2one(
-        'l10n_latam.document.type', string='Document Type', readonly=False, auto_join=True, index='not null',
+        'l10n_latam.document.type', string='Document Type', readonly=False, auto_join=True, index='btree_not_null',
         states={'posted': [('readonly', True)]}, compute='_compute_l10n_latam_document_type', store=True)
     l10n_latam_document_number = fields.Char(
         compute='_compute_l10n_latam_document_number', inverse='_inverse_l10n_latam_document_number',

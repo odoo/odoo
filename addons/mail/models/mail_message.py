@@ -96,7 +96,7 @@ class Message(models.Model):
         help='Attachments are linked to a document through model / res_id and to the message '
              'through this field.')
     parent_id = fields.Many2one(
-        'mail.message', 'Parent Message', index="not null", ondelete='set null',
+        'mail.message', 'Parent Message', index='btree_not_null', ondelete='set null',
         help="Initial thread message.")
     child_ids = fields.One2many('mail.message', 'parent_id', 'Child Messages')
     # related document
