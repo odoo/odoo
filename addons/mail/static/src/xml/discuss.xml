@@ -343,6 +343,25 @@
                         </t>
                         <t t-esc="preview.body"/>
                     </t>
+                    <t t-elif="preview.tracking_description">
+                        <t t-if="preview.isMyselfAuthor">
+                            <span class="fa fa-mail-reply" role="img" aria-label="Reply"/> You:
+                        </t>
+                        <t t-elif="preview.author">
+                            <t t-esc="preview.author"/>:
+                        </t>
+                        <t t-esc="preview.tracking_description"/>
+                        <t t-foreach='preview.tracking_data' t-as='value'>
+                                <t t-esc="value.changed_field"/>:
+                                <t t-if="value.old_value">
+                                    <span> <t t-esc="value.old_value || ((value.field_type !== 'boolean') and '')"/> </span>
+                                    <span t-if="value.old_value !== value.new_value" class="fa fa-long-arrow-right" role="img" aria-label="Changed" title="Changed"/>
+                                </t>
+                                <span t-if="value.old_value !== value.new_value">
+                                    <t t-esc="value.new_value || ((value.field_type !== 'boolean') and '')"/>
+                                </span>
+                        </t>
+                    </t>
                 </div>
                 <span title="Mark as Read" class="o_discuss_icon o_mail_preview_mark_as_read fa fa-check" t-if="preview.unreadCounter"/>
             </div>

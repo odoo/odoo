@@ -251,6 +251,8 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
             title = this.hasSubject() ? this.getSubject() : this.getDisplayedAuthor();
         }
         return {
+            tracking_description: this._subtypeDescription || this.getSubtypeDescription(),
+            tracking_data: this.getTrackingValues(),
             author: this.getDisplayedAuthor(),
             body: mailUtils.htmlToTextContentInline(this.getBody()),
             date: this.getDate(),
