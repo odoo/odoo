@@ -5,9 +5,10 @@ from collections import defaultdict
 from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.addons.resource.models.resource import datetime_to_string, string_to_datetime, Intervals
 from odoo.osv import expression
+from odoo.exceptions import UserError
 
 import pytz
 
@@ -178,6 +179,11 @@ class HrContract(models.Model):
         return contract_vals
 
     def _generate_work_entries(self, date_start, date_stop, force=False):
+        canceled_contracts = self.filtered(lambda c: c.state == 'cancel')
+        if canceled_contracts:
+            raise UserError(
+                _("Sorry, generating work entries from cancelled contracts is not allowed.") + '\n%s' % (
+                    ', '.join(canceled_contracts.mapped('name'))))
         vals_list = []
         date_start = fields.Datetime.to_datetime(date_start)
         date_stop = datetime.combine(fields.Datetime.to_datetime(date_stop), datetime.max.time())
