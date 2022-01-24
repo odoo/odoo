@@ -92,6 +92,15 @@
         <field name="model">product.template</field>
         <field name="inherit_id" ref="product.product_template_only_form_view"/>
         <field name="arch" type="xml">
+            <div name="pricing" position="after">
+                <label for="compare_list_price" groups="website_sale.group_product_price_comparison"/>
+                <div class="o_row" groups="website_sale.group_product_price_comparison">
+                    <del class="oe_read_only">
+                        <field name="compare_list_price" nolabel="1" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}"/>
+                    </del>
+                    <field name="compare_list_price" nolabel="1" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" class="oe_edit_only"/>
+                </div>
+            </div>
             <xpath expr="//field[@name='uom_id']" position="after">
                 <label for="base_unit_count" groups="website_sale.group_show_uom_price"/>
                 <div name="base_unit_price" groups="website_sale.group_show_uom_price" class="o_row">

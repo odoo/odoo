@@ -840,6 +840,14 @@
               <span t-attf-class="text-danger oe_default_price ml-1 h5 {{'' if combination_info['has_discounted_price'] else 'd-none'}}" style="text-decoration: line-through; white-space: nowrap;"
                   t-esc="combination_info['list_price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
               />
+                <del t-if="product.compare_list_price">
+                    <span t-field="product.compare_list_price"
+                        groups="website_sale.group_product_price_comparison"
+                        t-options='{
+                           "widget": "monetary",
+                           "display_currency": product.currency_id,
+                       }'/>
+                </del>
           </h3>
           <h3 class="css_non_editable_mode_hidden decimal_precision" t-att-data-precision="str(website.currency_id.decimal_places)">
             <span t-field="product.list_price"
@@ -847,6 +855,14 @@
                    "widget": "monetary",
                    "display_currency": product.currency_id,
                }'/>
+            <del t-if="product.compare_list_price">
+                <span t-field="product.compare_list_price"
+                    groups="website_sale.group_product_price_comparison"
+                    t-options='{
+                       "widget": "monetary",
+                       "display_currency": product.currency_id,
+                   }'/>
+            </del>
           </h3>
       </div>
     </template>
