@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-
 {
     'name': 'Event Exhibitors',
     'category': 'Marketing/Events',
@@ -11,8 +10,7 @@
     'website': 'https://www.odoo.com/app/events',
     'description': "",
     'depends': [
-        'website_event',
-        'website_jitsi',
+        'website_event_jitsi',
     ],
     'data': [
         'security/security.xml',
