@@ -631,17 +631,26 @@ function getCSSRules(doc) {
             if (i > j && cssRules[i].selector === cssRules[j].selector) {
                 // Styles of "later" selector override styles of "earlier" one.
                 const importantJStyles = {};
-                for (const [key, value] of Object.entries(cssRules[j].style)) {
-                    if (value.endsWith('!important')) {
-                        importantJStyles[key] = value;
+
+                const previousStyle = cssRules[j].style;
+                const previousStyleKey = Object.keys(previousStyle);
+                const sameKeys = Object.keys(cssRules[i].style).filter(x => previousStyleKey.includes(x));
+
+                for (const key of sameKeys) {
+                    if (previousStyle[key].endsWith('!important')) {
+                        importantJStyles[key] = previousStyle[key];
                     }
+                    delete previousStyle[key];
                 }
-                cssRules[i].style = {...cssRules[j].style, ...cssRules[i].style};
+
                 for (const [key, value] of Object.entries(importantJStyles)) {
                     cssRules[i].style[key] = value;
                 }
-                cssRules.splice(j, 1);
-                i--;
+
+                if (!Object.keys(previousStyleKey).length) {
+                    cssRules.splice(j, 1);
+                    i--;
+                }
             }
         }
     }
