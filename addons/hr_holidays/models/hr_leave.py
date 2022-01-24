@@ -719,7 +719,7 @@ class HolidaysRequest(models.Model):
             leave_days = mapped_days[holiday.employee_id.id][holiday.holiday_status_id.id]
             if float_compare(leave_days['remaining_leaves'], 0, precision_digits=2) == -1 or float_compare(leave_days['virtual_remaining_leaves'], 0, precision_digits=2) == -1:
                 raise ValidationError(_('The number of remaining time off is not sufficient for this time off type.\n'
-                                        'Please also check the time off waiting for validation.'))
+                                        'Please also check the time off waiting for validation.') + '\n- %s' % holiday.display_name)
 
     @api.constrains('date_from', 'date_to', 'employee_id')
     def _check_date_state(self):
@@ -859,7 +859,7 @@ class HolidaysRequest(models.Model):
                 raise ValidationError(_(
                     'Could not find an allocation of type %(leave_type)s for the requested time period.',
                     leave_type=leave.holiday_status_id.display_name,
-                ))
+                ) + '\n- %s' % (leave.employee_id.name))
 
     @api.constrains('holiday_allocation_id', 'date_to', 'date_from')
     def _check_leave_type_validity(self):
