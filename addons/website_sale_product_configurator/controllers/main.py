@@ -18,8 +18,9 @@ class WebsiteSaleProductConfiguratorController(ProductConfiguratorController):
         product = request.env['product.product'].browse(int(product_id))
         combination = request.env['product.template.attribute.value'].browse(variant_values)
         has_optional_products = product.optional_product_ids.filtered(lambda p: p._is_add_to_cart_possible(combination))
+        force_dialog = kw.get('force_dialog')
 
-        if not has_optional_products and (product.product_variant_count <= 1 or variant_values):
+        if not force_dialog and not has_optional_products and (product.product_variant_count <= 1 or variant_values):
             # The modal is not shown if there are no optional products and
             # the main product either has no variants or is already configured
             return False
