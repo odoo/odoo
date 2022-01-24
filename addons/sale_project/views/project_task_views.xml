@@ -18,7 +18,7 @@
         <field name="inherit_id" ref="project.view_project"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='partner_id']" position="after">
-                <field name="sale_line_id" optional="hide" widget="sale_order_many2one" readonly="1"/>
+                <field name="sale_line_id" optional="hide" readonly="1"/>
             </xpath>
         </field>
     </record>
