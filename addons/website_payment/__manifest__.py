@@ -16,6 +16,7 @@ This is a bridge module that adds multi-website support for payment acquirers.
     'data': [
         'data/donation_data.xml',
         'views/payment_acquirer.xml',
+        'views/res_config_settings_views.xml',
         'views/donation_templates.xml',
         'views/snippets/snippets.xml',
         'views/snippets/s_donation.xml',

@@ -37,10 +37,8 @@ BaseSettingController.include({
      * @override
      */
     _onButtonClicked: function (ev) {
-        if (ev.data.attrs.name === 'website_go_to'
-                || ev.data.attrs.name === 'action_open_robots'
-                || ev.data.attrs.name === 'action_ping_sitemap'
-                || ev.data.attrs.name === 'install_theme_on_current_website') {
+        if (ev.data.attrs.name === 'action_open_robots'
+                || ev.data.attrs.name === 'action_ping_sitemap') {
             FormController.prototype._onButtonClicked.apply(this, arguments);
         } else {
             this._super.apply(this, arguments);

@@ -1427,9 +1427,9 @@
                             <div>
                                 <t t-if="mode == ('new', 'billing')">
                                     <h2 class="o_page_header mt8">
-                                        <span t-if="account_on_checkout != 'mandatory'">Your Address</span>
-                                        <small t-if="account_on_checkout == 'optional'"> or </small>
-                                        <a t-if="account_on_checkout != 'disabled'" role="button" href='/web/login?redirect=/shop/checkout' class='btn btn-primary' style="margin-top: -11px">Log In</a>
+                                        <span t-if="account_on_checkout != 'mandatory'">Fill in your address</span>
+                                        <small class="text-muted" t-if="account_on_checkout == 'optional'"> or </small>
+                                        <a t-if="account_on_checkout != 'disabled'" role="button" href='/web/login?redirect=/shop/checkout'  style="margin-top: -11px"> Sign in</a>
                                     </h2>
                                 </t>
                                 <t t-if="mode == ('edit', 'billing')">
