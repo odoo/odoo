@@ -135,11 +135,18 @@ class PosOrder(models.Model):
     def _export_for_ui(self, order):
         fields = super(PosOrder, self)._export_for_ui(order)
         fields.update({
-           'x_receipt_note': order.x_receipt_note
+            'x_receipt_note': order.x_receipt_note,
+            'x_ext_source': order.x_ext_source
         })
         return fields
 
-
+    @api.model
+    def _order_fields(self, order):
+        fields = super(PosOrder, self)._order_fields(order)
+        fields.update({
+            'x_ext_source': order.get('x_ext_source', False)
+        })
+        return fields
 
 class PosOrderLineInherit(models.Model):
     _inherit = "pos.order.line"
