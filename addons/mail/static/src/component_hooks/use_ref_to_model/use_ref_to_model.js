@@ -24,10 +24,10 @@ export function useRefToModel({ fieldName, modelName, refName }) {
     }
     onWillUpdateProps(nextProps => {
         const currentRecord = modelManager.models[modelName].get(component.props.localId);
-        if (currentRecord) {
+        const nextRecord = modelManager.models[modelName].get(nextProps.localId);
+        if (currentRecord && currentRecord !== nextRecord) {
             currentRecord.update({ [fieldName]: clear() });
         }
-        const nextRecord = modelManager.models[modelName].get(nextProps.localId);
         if (nextRecord) {
             nextRecord.update({ [fieldName]: ref });
         }
