@@ -1063,6 +1063,7 @@ class PaymentTransaction(models.Model):
     # --------------------------------------------------
 
     def s2s_do_transaction(self, **kwargs):
+        self.flush()
         custom_method_name = '%s_s2s_do_transaction' % self.acquirer_id.provider
         for trans in self:
             trans._log_payment_transaction_sent()
@@ -1070,22 +1071,26 @@ class PaymentTransaction(models.Model):
                 return getattr(trans, custom_method_name)(**kwargs)
 
     def s2s_do_refund(self, **kwargs):
+        self.flush()
         custom_method_name = '%s_s2s_do_refund' % self.acquirer_id.provider
         if hasattr(self, custom_method_name):
             return getattr(self, custom_method_name)(**kwargs)
 
     def s2s_capture_transaction(self, **kwargs):
+        self.flush()
         custom_method_name = '%s_s2s_capture_transaction' % self.acquirer_id.provider
         if hasattr(self, custom_method_name):
             return getattr(self, custom_method_name)(**kwargs)
 
     def s2s_void_transaction(self, **kwargs):
+        self.flush()
         custom_method_name = '%s_s2s_void_transaction' % self.acquirer_id.provider
         if hasattr(self, custom_method_name):
             return getattr(self, custom_method_name)(**kwargs)
 
     def s2s_get_tx_status(self):
         """ Get the tx status. """
+        self.flush()
         invalid_param_method_name = '_%s_s2s_get_tx_status' % self.acquirer_id.provider
         if hasattr(self, invalid_param_method_name):
             return getattr(self, invalid_param_method_name)()
