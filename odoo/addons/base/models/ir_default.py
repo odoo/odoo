@@ -80,7 +80,9 @@ class IrDefault(models.Model):
             ('condition', '=', condition),
         ])
         if default:
-            default.write({'json_value': json_value})
+            # Avoid clearing the cache if nothing changes
+            if default.json_value != json_value:
+                default.write({'json_value': json_value})
         else:
             self.create({
                 'field_id': field.id,
