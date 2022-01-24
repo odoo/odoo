@@ -41,7 +41,8 @@ class LoadMenusTests(HttpCase):
                 "name": "root",
                 "webIcon": None,
                 "webIconData": None,
-                "xmlid": ""
+                "xmlid": "",
+                "backgroundImage": None,
             }
         }
 
