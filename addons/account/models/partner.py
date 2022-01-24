@@ -215,8 +215,15 @@ class AccountFiscalPosition(models.Model):
         if not partner:
             return self.env['account.fiscal.position']
 
-        # if no delivery use invoicing
-        if not delivery:
+        company = self.env.company
+        intra_eu = vat_exclusion = False
+        if company.vat and partner.vat:
+            eu_country_codes = set(self.env.ref('base.europe').country_ids.mapped('code'))
+            intra_eu = company.vat[:2] in eu_country_codes and partner.vat[:2] in eu_country_codes
+            vat_exclusion = company.vat[:2] == partner.vat[:2]
+
+        # If company and partner have the same vat prefix (and are both within the EU), use invoicing
+        if not delivery or (intra_eu and vat_exclusion):
             delivery = partner
 
         # partner manually set fiscal position always win
