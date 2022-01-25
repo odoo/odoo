@@ -15,11 +15,30 @@ class PortugalQRCodeTest(AccountTestInvoicingCommon):
         cls.company_data['company'].write({
             'city': 'Lisboa',
             'zip': '1234-789',
-            'vat': '123456789',
+            'vat': 'PT123456789',
             'company_registry': '123456',
             'phone': '+47 11 11 11 11',
             'country_id': cls.env.ref('base.pt').id,
         })
+
+        cls.tax23 = cls.env['account.tax'].search([('company_id', '=', cls.company_data['company'].id), ('name', '=', 'IVA23')])
+        cls.tax13 = cls.env['account.tax'].search([('company_id', '=', cls.company_data['company'].id), ('name', '=', 'IVA13')])
+        cls.tax6 = cls.env['account.tax'].search([('company_id', '=', cls.company_data['company'].id), ('name', '=', 'IVA6')])
+        cls.tax0 = cls.env['account.tax'].search([('company_id', '=', cls.company_data['company'].id), ('name', '=', 'IVA0')])
+
+        cls.product1 = cls.env['product.product'].create({'name': 'product1', 'standard_price': 100.0, 'lst_price': 100.0})
+        cls.product2 = cls.env['product.product'].create({'name': 'product2', 'standard_price': 100.0, 'lst_price': 100.0})
+        cls.product3 = cls.env['product.product'].create({'name': 'product3', 'standard_price': 100.0, 'lst_price': 100.0})
+        cls.product4 = cls.env['product.product'].create({'name': 'product4', 'standard_price': 100.0, 'lst_price': 100.0})
+
+        cls.partner_be = cls.env['res.partner'].create({
+            'name': 'Partner BE',
+            'country_id': cls.env.ref('base.be').id,
+            'vat': 'BE0477472701',
+        })
+
+        line_taxes = [{'taxes': []}, {'taxes': [cls.tax6]}, {'taxes': [cls.tax23, cls.tax13]}]
+        # cls.inv1 = cls._post_invoice(line_taxes)
 
     def test_multiple_taxes(self):
         pass
