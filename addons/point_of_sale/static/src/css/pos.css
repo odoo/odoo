@@ -3640,6 +3640,10 @@ td {
 
 /** CashMovePopup **/
 
+.cash-move-popup {
+    top: 20% !important;
+}
+
 .cash-move {
     display: flex;
     flex-flow: column;
@@ -3671,6 +3675,12 @@ td {
     color: white !important;
 }
 
+.cash-move .input-amount .red-highlight {
+    background: #bd2222 !important;
+    border: solid 1px #bd2222 !important;
+    color: white !important;
+}
+
 .cash-move .input-amount input {
     width: 200px;
     min-height: auto;
@@ -3684,6 +3694,7 @@ td {
 }
 
 .cash-move textarea {
+    resize: none;
     margin-top: 10px;
     margin-bottom: 10px;
 }
@@ -3692,6 +3703,20 @@ td {
     color: rgb(197, 52, 0);
     text-align: left;
     padding-left: 5px;
+}
+
+.pos .popup footer.cash-move {
+    display: block;
+    width: calc(100% - 36px);
+    padding: 10px 18px 10px 18px;
+}
+
+.pos .popup .footer.cash-move .button.confirm {
+    float: left;
+}
+
+.pos .popup .footer.cash-move .button.cancel {
+    margin-right: 0;
 }
 
 /* For LoadingScreen */
