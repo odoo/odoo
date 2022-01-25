@@ -169,7 +169,6 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      */
     _createWysiwygIntance: async function () {
         this.wysiwyg = await wysiwygLoader.createWysiwyg(this, this._getWysiwygOptions());
-        this.wysiwyg.__extraAssetsForIframe = this.__extraAssetsForIframe || [];
         return this.wysiwyg.appendTo(this.$el).then(() => {
             this.$content = this.wysiwyg.$editable;
             this._onLoadWysiwyg();
