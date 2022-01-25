@@ -204,11 +204,12 @@ class AccountEdiFormat(models.Model):
     # Import methods to override based on EDI Format
     ####################################################
 
-    def _create_invoice_from_xml_tree(self, filename, tree):
+    def _create_invoice_from_xml_tree(self, filename, tree, journal=None):
         """ Create a new invoice with the data inside the xml.
 
         :param filename: The name of the xml.
         :param tree:     The tree of the xml to import.
+        :param journal:  The journal on which importing the invoice.
         :returns:        The created invoice.
         """
         # TO OVERRIDE
@@ -461,90 +462,101 @@ class AccountEdiFormat(models.Model):
         element = xml_element.xpath(xpath, namespaces=namespaces)
         return element[0].text if element else None
 
+    @api.model
+    def _retrieve_partner_with_vat(self, vat, extra_domain):
+        if not vat:
+            return None
+
+        # Sometimes, the vat is specified with some whitespaces.
+        normalized_vat = vat.replace(' ', '')
+        country_prefix = re.match('^[a-zA-Z]{2}|^', vat).group()
+
+        partner = self.env['res.partner'].search(extra_domain + [('vat', 'in', (normalized_vat, vat))], limit=1)
+
+        # Try to remove the country code prefix from the vat.
+        if not partner and country_prefix:
+            partner = self.env['res.partner'].search(extra_domain + [
+                ('vat', 'in', (normalized_vat[2:], vat[2:])),
+                ('country_id.code', '=', country_prefix.upper()),
+            ], limit=1)
+
+            # The country could be not specified on the partner.
+            if not partner:
+                partner = self.env['res.partner'].search(extra_domain + [
+                    ('vat', 'in', (normalized_vat[2:], vat[2:])),
+                    ('country_id', '=', False),
+                ], limit=1)
+
+            # The vat could be a string of alphanumeric values without country code but with missing zeros at the
+            # beginning.
+        if not partner:
+            try:
+                vat_only_numeric = str(int(re.sub(r'^\D{2}', '', normalized_vat) or 0))
+            except ValueError:
+                vat_only_numeric = None
+
+            if vat_only_numeric:
+                query = self.env['res.partner']._where_calc(extra_domain + [('active', '=', True)])
+                tables, where_clause, where_params = query.get_sql()
+
+                if country_prefix:
+                    vat_prefix_regex = f'({country_prefix})?'
+                else:
+                    vat_prefix_regex = '([A-z]{2})?'
+
+                self._cr.execute(f'''
+                    SELECT res_partner.id
+                    FROM {tables}
+                    WHERE {where_clause}
+                    AND res_partner.vat ~ %s
+                    LIMIT 1
+                ''', where_params + ['^%s0*%s$' % (vat_prefix_regex, vat_only_numeric)])
+                partner_row = self._cr.fetchone()
+                if partner_row:
+                    partner = self.env['res.partner'].browse(partner_row[0])
+
+        return partner
+
+    @api.model
+    def _retrieve_partner_with_phone_mail(self, phone, mail, extra_domain):
+        domains = []
+        if phone:
+            domains.append([('phone', '=', phone)])
+            domains.append([('mobile', '=', phone)])
+        if mail:
+            domains.append([('email', '=', mail)])
+
+        if not domains:
+            return None
+
+        domain = expression.OR(domains)
+        if extra_domain:
+            domain = expression.AND([domain, extra_domain])
+        return self.env['res.partner'].search(domain, limit=1)
+
+    @api.model
+    def _retrieve_partner_with_name(self, name, extra_domain):
+        if not name:
+            return None
+        return self.env['res.partner'].search([('name', 'ilike', name)] + extra_domain, limit=1)
+
     def _retrieve_partner(self, name=None, phone=None, mail=None, vat=None, domain=None):
         '''Search all partners and find one that matches one of the parameters.
-
         :param name:    The name of the partner.
         :param phone:   The phone or mobile of the partner.
         :param mail:    The mail of the partner.
         :param vat:     The vat number of the partner.
         :returns:       A partner or an empty recordset if not found.
         '''
+
         def search_with_vat(extra_domain):
-            if not vat:
-                return None
-
-            # Sometimes, the vat is specified with some whitespaces.
-            normalized_vat = vat.replace(' ', '')
-            country_prefix = re.match('^[A-Z]{2}|^', vat, re.I).group()
-
-            partner = self.env['res.partner'].search(extra_domain + [('vat', 'in', (normalized_vat, vat))], limit=1)
-
-            # Try to remove the country code prefix from the vat.
-            if not partner and country_prefix:
-                partner = self.env['res.partner'].search(extra_domain + [
-                    ('vat', 'in', (normalized_vat[2:], vat[2:])),
-                    ('country_id.code', '=', country_prefix.upper()),
-                ], limit=1)
-
-                # The country could be not specified on the partner.
-                if not partner:
-                    partner = self.env['res.partner'].search(extra_domain + [
-                        ('vat', 'in', (normalized_vat[2:], vat[2:])),
-                        ('country_id', '=', False),
-                    ], limit=1)
-
-            # The vat could be a string of alphanumeric values without country code but with missing zeros at the
-            # beginning.
-            if not partner:
-                try:
-                    vat_only_numeric = str(int(re.sub(r'^\D{2}', '', normalized_vat) or 0))
-                except ValueError:
-                    vat_only_numeric = None
-
-                if vat_only_numeric:
-                    self.env['res.partner'].flush_model()
-                    query = self.env['res.partner']._where_calc(extra_domain + [('active', '=', True)])
-                    tables, where_clause, where_params = query.get_sql()
-
-                    if country_prefix:
-                        vat_prefix_regex = f'({country_prefix})?'
-                    else:
-                        vat_prefix_regex = '([A-Z]{2})?'
-
-                    self._cr.execute(f'''
-                        SELECT res_partner.id
-                        FROM {tables}
-                        WHERE {where_clause}
-                        AND res_partner.vat ~* %s
-                        LIMIT 1
-                    ''', where_params + ['^%s0*%s$' % (vat_prefix_regex, vat_only_numeric)])
-                    partner_row = self._cr.fetchone()
-                    if partner_row:
-                        partner = self.env['res.partner'].browse(partner_row[0])
-
-            return partner
+            return self._retrieve_partner_with_vat(vat, extra_domain)
 
         def search_with_phone_mail(extra_domain):
-            domains = []
-            if phone:
-                domains.append([('phone', '=', phone)])
-                domains.append([('mobile', '=', phone)])
-            if mail:
-                domains.append([('email', '=', mail)])
-
-            if not domains:
-                return None
-
-            domain = expression.OR(domains)
-            if extra_domain:
-                domain = expression.AND([domain, extra_domain])
-            return self.env['res.partner'].search(domain, limit=1)
+            return self._retrieve_partner_with_phone_mail(phone, mail, extra_domain)
 
         def search_with_name(extra_domain):
-            if not name:
-                return None
-            return self.env['res.partner'].search([('name', 'ilike', name)] + extra_domain, limit=1)
+            return self._retrieve_partner_with_name(name, extra_domain)
 
         def search_with_domain(extra_domain):
             if not domain:
@@ -556,7 +568,6 @@ class AccountEdiFormat(models.Model):
                 partner = search_method(extra_domain)
                 if partner:
                     return partner
-
         return self.env['res.partner']
 
     def _retrieve_product(self, name=None, default_code=None, barcode=None):
@@ -623,3 +634,6 @@ class AccountEdiFormat(models.Model):
     def _format_error_message(self, error_title, errors):
         bullet_list_msg = ''.join('<li>%s</li>' % html_escape(msg) for msg in errors)
         return '%s<ul>%s</ul>' % (error_title, bullet_list_msg)
+
+    def _is_account_edi_ubl_cii_available(self):
+        return hasattr(self, '_infer_xml_builder_from_tree')
