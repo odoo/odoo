@@ -418,12 +418,34 @@ function getClick({ afterNextRender }) {
     };
 }
 
-function getCreateChatterContainerComponent({ components, env, widget }) {
-    return async function createChatterContainerComponent(props) {
-        return await createRootMessagingComponent({ components, env }, "ChatterContainer", {
-            props,
-            target: widget.el,
-        });
+function getCreateChatterContainerComponent({ afterEvent, components, env, widget }) {
+    return async function createChatterContainerComponent(props, { waitUntilMessagesLoaded = true } = {}) {
+        let chatterContainerComponent;
+        async function func() {
+            chatterContainerComponent = await createRootMessagingComponent({ components, env }, "ChatterContainer", {
+                props,
+                target: widget.el,
+            });
+        }
+        if (waitUntilMessagesLoaded) {
+            await afterNextRender(() => afterEvent({
+                eventName: 'o-thread-view-hint-processed',
+                func,
+                message: "should wait until chatter loaded messages after creating chatter container component",
+                predicate: ({ hint, threadViewer }) => {
+                    return (
+                        hint.type === 'messages-loaded' &&
+                        threadViewer &&
+                        threadViewer.chatter &&
+                        threadViewer.chatter.threadModel === props.threadModel &&
+                        threadViewer.chatter.threadId === props.threadId
+                    );
+                },
+            }));
+        } else {
+            await func();
+        }
+        return chatterContainerComponent;
     };
 }
 
@@ -840,13 +862,14 @@ async function start(param0 = {}) {
         ...result,
         afterNextRender,
         click: getClick({ afterNextRender }),
-        createChatterContainerComponent: getCreateChatterContainerComponent({ components, env: testEnv, widget }),
+        createChatterContainerComponent: getCreateChatterContainerComponent({ afterEvent, components, env: testEnv, widget }),
         createComposerComponent: getCreateComposerComponent({ components, env: testEnv, modelManager, widget }),
         createComposerSuggestionComponent: getCreateComposerSuggestionComponent({ components, env: testEnv, modelManager, widget }),
         createMessageComponent: getCreateMessageComponent({ components, env: testEnv, modelManager, widget }),
         createMessagingMenuComponent: getCreateMessagingMenuComponent({ components, env: testEnv, widget }),
         createNotificationListComponent: getCreateNotificationListComponent({ components, env: testEnv, modelManager, widget }),
         createThreadViewComponent: getCreateThreadViewComponent({ afterEvent, components, env: testEnv, widget }),
+        messaging: modelManager.messaging,
         openDiscuss,
     };
 }

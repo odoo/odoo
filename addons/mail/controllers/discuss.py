@@ -387,27 +387,16 @@ class DiscussController(http.Controller):
     # Chatter API
     # --------------------------------------------------------------------------
 
-    @http.route('/mail/thread/messages', methods=['POST'], type='json', auth='user')
-    def mail_thread_messages(self, thread_model, thread_id, max_id=None, min_id=None, limit=30, **kwargs):
-        return request.env['mail.message']._message_fetch(domain=[
-            ('res_id', '=', int(thread_id)),
-            ('model', '=', thread_model),
-            ('message_type', '!=', 'user_notification'),
-        ], max_id=max_id, min_id=min_id, limit=limit)
-
-    @http.route('/mail/read_followers', methods=['POST'], type='json', auth='user')
-    def read_followers(self, res_model, res_id):
-        request.env['mail.followers'].check_access_rights("read")
-        request.env[res_model].check_access_rights("read")
-        request.env[res_model].browse(res_id).check_access_rule("read")
-        follower_recs = request.env['mail.followers'].search([('res_model', '=', res_model), ('res_id', '=', res_id)])
-
-        followers = []
-        follower_id = None
-        for follower in follower_recs:
-            if follower.partner_id == request.env.user.partner_id:
-                follower_id = follower.id
-            followers.append({
+    @http.route('/mail/thread/data', methods=['POST'], type='json', auth='user')
+    def mail_thread_data(self, thread_model, thread_id, request_list, **kwargs):
+        res = {}
+        thread = request.env[thread_model].search([('id', '=', thread_id)])
+        if 'activities' in request_list:
+            res['activities'] = thread.activity_ids.activity_format()
+        if 'attachments' in request_list:
+            res['attachments'] = thread.env['ir.attachment'].search([('res_id', '=', thread.id), ('res_model', '=', thread._name)], order='id desc')._attachment_format(commands=True)
+        if 'followers' in request_list:
+            res['followers'] = [{
                 'id': follower.id,
                 'partner_id': follower.partner_id.id,
                 'name': follower.name,
@@ -418,11 +407,18 @@ class DiscussController(http.Controller):
                 # should be always be displayed and not only when "debug" mode is activated.
                 'is_editable': True,
                 'partner': follower.partner_id.mail_partner_format()[follower.partner_id],
-            })
-        return {
-            'followers': followers,
-            'subtypes': self.read_subscription_data(follower_id) if follower_id else None
-        }
+            } for follower in thread.message_follower_ids]
+        if 'suggestedRecipients' in request_list:
+            res['suggestedRecipients'] = thread._message_get_suggested_recipients()[thread.id]
+        return res
+
+    @http.route('/mail/thread/messages', methods=['POST'], type='json', auth='user')
+    def mail_thread_messages(self, thread_model, thread_id, max_id=None, min_id=None, limit=30, **kwargs):
+        return request.env['mail.message']._message_fetch(domain=[
+            ('res_id', '=', int(thread_id)),
+            ('model', '=', thread_model),
+            ('message_type', '!=', 'user_notification'),
+        ], max_id=max_id, min_id=min_id, limit=limit)
 
     @http.route('/mail/read_subscription_data', methods=['POST'], type='json', auth='user')
     def read_subscription_data(self, follower_id):
@@ -452,16 +448,6 @@ class DiscussController(http.Controller):
         } for subtype in subtypes]
         return sorted(subtypes_list,
                       key=lambda it: (it['parent_model'] or '', it['res_model'] or '', it['internal'], it['sequence']))
-
-    @http.route('/mail/get_suggested_recipients', methods=['POST'], type='json', auth='user')
-    def message_get_suggested_recipients(self, model, res_ids):
-        records = request.env[model].browse(res_ids)
-        try:
-            records.check_access_rule('read')
-            records.check_access_rights('read')
-        except Exception:
-            return {}
-        return records._message_get_suggested_recipients()
 
     # --------------------------------------------------------------------------
     # RTC API TODO move check logic in routes.

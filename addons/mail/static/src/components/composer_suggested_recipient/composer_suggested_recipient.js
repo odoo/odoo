@@ -128,7 +128,7 @@ export class ComposerSuggestedRecipient extends Component {
         if (!thread) {
             return;
         }
-        thread.fetchAndUpdateSuggestedRecipients();
+        thread.fetchData(['suggestedRecipients']);
     }
 }
 

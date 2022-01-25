@@ -68,7 +68,7 @@ registerModel({
             }));
             const followedThread = this.followedThread;
             this.delete();
-            followedThread.fetchAndUpdateSuggestedRecipients();
+            followedThread.fetchData(['suggestedRecipients']);
         },
         /**
          * @param {FollowerSubtype} subtype

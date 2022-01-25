@@ -521,41 +521,6 @@ registerModel({
             );
         },
         /**
-         * Performs RPC on the route `/mail/get_suggested_recipients`.
-         *
-         * @param {Object} param0
-         * @param {string} param0.model
-         * @param {integer[]} param0.res_id
-         */
-        async performRpcMailGetSuggestedRecipients({ model, res_ids }) {
-            const data = await this.env.services.rpc({
-                route: '/mail/get_suggested_recipients',
-                params: {
-                    model,
-                    res_ids,
-                },
-            }, { shadow: true });
-            for (const id in data) {
-                const recipientInfoList = data[id].map(recipientInfoData => {
-                    const [partner_id, emailInfo, lang, reason] = recipientInfoData;
-                    const [name, email] = emailInfo && mailUtils.parseEmail(emailInfo);
-                    return {
-                        email,
-                        id: getSuggestedRecipientInfoNextTemporaryId(),
-                        name,
-                        lang,
-                        partner: partner_id ? insert({ id: partner_id }) : unlink(),
-                        reason,
-                    };
-                });
-                this.insert({
-                    id: parseInt(id),
-                    model,
-                    suggestedRecipientInfoList: insertAndReplace(recipientInfoList),
-                });
-            }
-        },
-        /**
          * Search for thread matching `searchTerm`.
          *
          * @param {Object} param0
@@ -645,36 +610,80 @@ registerModel({
             });
         },
         /**
-         * Fetches suggested recipients.
+         * Requests the given `requestList` data from the server.
+         *
+         * @param {string[]} requestList
          */
-        async fetchAndUpdateSuggestedRecipients() {
+        async fetchData(requestList) {
             if (this.isTemporary) {
                 return;
             }
-            return this.messaging.models['Thread'].performRpcMailGetSuggestedRecipients({
-                model: this.model,
-                res_ids: [this.id],
-            });
-        },
-        /**
-         * Fetch attachments linked to a record. Useful for populating the store
-         * with these attachments, which are used by attachment box in the chatter.
-         */
-        async fetchAttachments() {
-            const attachmentsData = await this.async(() => this.env.services.rpc({
-                model: 'ir.attachment',
-                method: 'search_read',
-                domain: [
-                    ['res_id', '=', this.id],
-                    ['res_model', '=', this.model],
-                ],
-                fields: ['id', 'name', 'mimetype'],
-                orderBy: [{ name: 'id', asc: false }],
-            }, { shadow: true }));
-            this.update({
-                originThreadAttachments: insertAndReplace(attachmentsData),
-            });
-            this.update({ areAttachmentsLoaded: true });
+            const requestSet = new Set(requestList);
+            if (!this.hasActivities) {
+                requestSet.delete('activities');
+            }
+            if (requestSet.has('attachments')) {
+                this.update({ isLoadingAttachments: true });
+            }
+            if (requestSet.has('messages')) {
+                this.cache.loadNewMessages();
+            }
+            const {
+                activities: activitiesData,
+                attachments: attachmentsData,
+                followers: followersData,
+                suggestedRecipients: suggestedRecipientsData,
+            } = await this.env.services.rpc({
+                route: '/mail/thread/data',
+                params: {
+                    request_list: [...requestSet],
+                    thread_id: this.id,
+                    thread_model: this.model,
+                },
+            }, { shadow: true });
+            if (!this.exists()) {
+                return;
+            }
+            const values = {};
+            if (activitiesData) {
+                Object.assign(values, {
+                    activities: insertAndReplace(activitiesData.map(activityData =>
+                        this.messaging.models['Activity'].convertData(activityData)
+                    )),
+                });
+            }
+            if (attachmentsData) {
+                Object.assign(values, {
+                    areAttachmentsLoaded: true,
+                    isLoadingAttachments: false,
+                    originThreadAttachments: insertAndReplace(attachmentsData),
+                });
+            }
+            if (followersData) {
+                Object.assign(values, {
+                    followers: insertAndReplace(followersData.map(followerData =>
+                        this.messaging.models['Follower'].convertData(followerData)
+                    )),
+                });
+            }
+            if (suggestedRecipientsData) {
+                const recipientInfoList = suggestedRecipientsData.map(recipientInfoData => {
+                    const [partner_id, emailInfo, lang, reason] = recipientInfoData;
+                    const [name, email] = emailInfo && mailUtils.parseEmail(emailInfo);
+                    return {
+                        email,
+                        id: getSuggestedRecipientInfoNextTemporaryId(),
+                        name,
+                        lang,
+                        partner: partner_id ? insert({ id: partner_id }) : unlink(),
+                        reason,
+                    };
+                });
+                Object.assign(values, {
+                    suggestedRecipientInfoList: insertAndReplace(recipientInfoList),
+                });
+            }
+            this.update(values);
         },
         /**
          * Add current user to provided thread's followers.
@@ -688,8 +697,7 @@ registerModel({
                     partner_ids: [this.messaging.currentPartner.id],
                 },
             }));
-            this.refreshFollowers();
-            this.fetchAndUpdateSuggestedRecipients();
+            this.fetchData(['followers', 'suggestedRecipients']);
         },
         /**
          * Performs the rpc to leave the rtc call of the channel.
@@ -825,12 +833,6 @@ registerModel({
                 method: 'action_unfollow',
                 args: [[this.id]],
             });
-        },
-        /**
-         * Load new messages on the main cache of this thread.
-         */
-        loadNewMessages() {
-            this.cache.loadNewMessages();
         },
         /**
          * Mark the specified conversation as fetched.
@@ -991,66 +993,6 @@ registerModel({
          */
         promptAddPartnerFollower() {
             this._promptAddFollower();
-        },
-        async refresh() {
-            if (this.isTemporary) {
-                return;
-            }
-            this.loadNewMessages();
-            this.update({ isLoadingAttachments: true });
-            await this.async(() => this.fetchAttachments());
-            this.update({ isLoadingAttachments: false });
-        },
-        async refreshActivities() {
-            if (!this.hasActivities) {
-                return;
-            }
-            if (this.isTemporary) {
-                return;
-            }
-            // A bit "extreme", may be improved
-            const [{ activity_ids: newActivityIds }] = await this.async(() => this.env.services.rpc({
-                model: this.model,
-                method: 'read',
-                args: [this.id, ['activity_ids']]
-            }, { shadow: true }));
-            const activitiesData = await this.async(() => this.env.services.rpc({
-                model: 'mail.activity',
-                method: 'activity_format',
-                args: [newActivityIds]
-            }, { shadow: true }));
-            const activities = this.messaging.models['Activity'].insert(activitiesData.map(
-                activityData => this.messaging.models['Activity'].convertData(activityData)
-            ));
-            this.update({ activities: replace(activities) });
-        },
-        /**
-         * Refresh followers information from server.
-         */
-        async refreshFollowers() {
-            if (this.isTemporary) {
-                this.update({ followers: unlinkAll() });
-                return;
-            }
-            const { followers } = await this.async(() => this.env.services.rpc({
-                route: '/mail/read_followers',
-                params: {
-                    res_id: this.id,
-                    res_model: this.model,
-                },
-            }, { shadow: true }));
-            this.update({ areFollowersLoaded: true });
-            if (followers.length > 0) {
-                this.update({
-                    followers: insertAndReplace(followers.map(data =>
-                        this.messaging.models['Follower'].convertData(data))
-                    ),
-                });
-            } else {
-                this.update({
-                    followers: unlinkAll(),
-                });
-            }
         },
         /**
          * Refresh the typing status of the current partner.
@@ -1833,7 +1775,7 @@ registerModel({
                 action,
                 options: {
                     on_close: async () => {
-                       await this.async(() => this.refreshFollowers());
+                       await this.async(() => this.fetchData(['followers']));
                        this.env.bus.trigger('Thread:promptAddFollower-closed');
                     },
                 },
@@ -1920,13 +1862,6 @@ registerModel({
             compute: '_computeAllAttachments',
         }),
         areAttachmentsLoaded: attr({
-            default: false,
-        }),
-        /**
-         * States whether followers have been loaded at least once for this
-         * thread.
-         */
-        areFollowersLoaded: attr({
             default: false,
         }),
         attachments: many('Attachment', {
