@@ -1977,54 +1977,16 @@ class MrpProduction(models.Model):
     def _check_sn_uniqueness(self):
         """ Alert the user if the serial number as already been consumed/produced """
         if self.product_tracking == 'serial' and self.lot_producing_id:
-            sml = self.env['stock.move.line'].search_count([
-                ('lot_id', '=', self.lot_producing_id.id),
-                ('location_id.usage', '=', 'production'),
-                ('qty_done', '=', 1),
-                ('state', '=', 'done')
-            ])
-            if sml:
+            if self._is_finished_sn_already_produced(self.lot_producing_id):
                 raise UserError(_('This serial number for product %s has already been produced', self.product_id.name))
 
         for move in self.move_finished_ids:
             if move.has_tracking != 'serial' or move.product_id == self.product_id:
                 continue
             for move_line in move.move_line_ids:
-                domain = [
-                    ('lot_id', '=', move_line.lot_id.id),
-                    ('qty_done', '=', 1),
-                    ('state', '=', 'done')
-                ]
-                message = _('The serial number %(number)s used for byproduct %(product_name)s has already been produced',
-                    number=move_line.lot_id.name,
-                    product_name=move_line.product_id.name)
-                co_prod_move_lines = self.move_finished_ids.move_line_ids.filtered(lambda ml: ml.product_id != self.product_id)
-                domain_unbuild = domain + [
-                    ('production_id', '=', False),
-                    ('location_dest_id.usage', '=', 'production')
-                ]
-
-                # Check presence of same sn in previous productions
-                duplicates = self.env['stock.move.line'].search_count(domain + [
-                    ('location_id.usage', '=', 'production')
-                ])
-                if duplicates:
-                    # Maybe some move lines have been compensated by unbuild
-                    duplicates_unbuild = self.env['stock.move.line'].search_count(domain_unbuild + [
-                        ('move_id.unbuild_id', '!=', False)
-                    ])
-                    removed = self.env['stock.move.line'].search_count([
-                        ('lot_id', '=', move_line.lot_id.id),
-                        ('state', '=', 'done'),
-                        ('location_dest_id.scrap_location', '=', True)
-                    ])
-                    # Either removed or unbuild
-                    if not ((duplicates_unbuild or removed) and duplicates - duplicates_unbuild - removed == 0):
-                        raise UserError(message)
-                # Check presence of same sn in current production
-                duplicates = co_prod_move_lines.filtered(lambda ml: ml.qty_done and ml.lot_id == move_line.lot_id) - move_line
-                if duplicates:
-                    raise UserError(message)
+                if self._is_finished_sn_already_produced(move_line.lot_id, excluded_sml=move_line):
+                    raise UserError(_('The serial number %(number)s used for byproduct %(product_name)s has already been produced',
+                                      number=move_line.lot_id.name, product_name=move_line.product_id.name))
 
         for move in self.move_raw_ids:
             if move.has_tracking != 'serial':
@@ -2059,6 +2021,39 @@ class MrpProduction(models.Model):
                 duplicates = co_prod_move_lines.filtered(lambda ml: ml.qty_done and ml.lot_id == move_line.lot_id) - move_line
                 if duplicates:
                     raise UserError(message)
+
+    def _is_finished_sn_already_produced(self, lot, excluded_sml=None):
+        excluded_sml = excluded_sml or self.env['stock.move.line']
+        domain = [
+            ('lot_id', '=', lot.id),
+            ('qty_done', '=', 1),
+            ('state', '=', 'done')
+        ]
+        co_prod_move_lines = self.move_finished_ids.move_line_ids - excluded_sml
+        domain_unbuild = domain + [
+            ('production_id', '=', False),
+            ('location_dest_id.usage', '=', 'production')
+        ]
+        # Check presence of same sn in previous productions
+        duplicates = self.env['stock.move.line'].search_count(domain + [
+            ('location_id.usage', '=', 'production')
+        ])
+        if duplicates:
+            # Maybe some move lines have been compensated by unbuild
+            duplicates_unbuild = self.env['stock.move.line'].search_count(domain_unbuild + [
+                ('move_id.unbuild_id', '!=', False)
+            ])
+            removed = self.env['stock.move.line'].search_count([
+                ('lot_id', '=', lot.id),
+                ('state', '=', 'done'),
+                ('location_dest_id.scrap_location', '=', True)
+            ])
+            # Either removed or unbuild
+            if not ((duplicates_unbuild or removed) and duplicates - duplicates_unbuild - removed == 0):
+                return True
+        # Check presence of same sn in current production
+        duplicates = co_prod_move_lines.filtered(lambda ml: ml.qty_done and ml.lot_id == lot)
+        return bool(duplicates)
 
     def _check_immediate(self):
         immediate_productions = self.browse()
