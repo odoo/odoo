@@ -2,11 +2,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
+import logging
+
 from odoo import api, models, Command
 from odoo.tools import email_normalize
 
 from odoo.addons.google_calendar.utils.google_calendar import GoogleCalendarService
 
+_logger = logging.getLogger(__name__)
 
 class RecurrenceRule(models.Model):
     _name = 'calendar.recurrence'
@@ -117,6 +120,13 @@ class RecurrenceRule(models.Model):
         if old_event_values and any(new_event_values[key] != old_event_values[key] for key in base_event_time_fields):
             # we need to recreate the recurrence, time_fields were modified.
             base_event_id = self.base_event_id
+            non_equal_values = [
+                (key, old_event_values[key] and old_event_values[key].strftime('%m/%d/%Y, %H:%M:%S'), '-->',
+                      new_event_values[key] and new_event_values[key].strftime('%m/%d/%Y, %H:%M:%S')
+                 ) for key in ['start', 'stop'] if new_event_values[key] != old_event_values[key]
+            ]
+            log_msg = f"Recurrence {self.id} {self.rrule} has all events ({len(self.calendar_event_ids.ids)})  deleted because of base event value change: {non_equal_values}"
+            _logger.info(log_msg)
             # We archive the old events to recompute the recurrence. These events are already deleted on Google side.
             # We can't call _cancel because events without user_id would not be deleted
             (self.calendar_event_ids - base_event_id).google_id = False
@@ -144,6 +154,8 @@ class RecurrenceRule(models.Model):
         if self.rrule != current_rrule:
             detached_events = self._apply_recurrence()
             detached_events.google_id = False
+            log_msg = f"Recurrence #{self.id} | current rule: {current_rrule} | new rule: {self.rrule} | remaining: {len(self.calendar_event_ids)} | removed: {len(detached_events)}"
+            _logger.info(log_msg)
             detached_events.unlink()
 
     def _create_from_google(self, gevents, vals_list):
