@@ -204,10 +204,11 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
                 noVideos: 'noVideos' in this.nodeOptions ? this.nodeOptions.noVideos : true,
             },
             linkForceNewWindow: true,
-
             tabsize: 0,
-            height: this.nodeOptions.height || 110,
-            resizable: 'resizable' in this.nodeOptions ? this.nodeOptions.resizable : true,
+            height: this.nodeOptions.height,
+            minHeight: this.nodeOptions.minHeight,
+            maxHeight: this.nodeOptions.maxHeight,
+            resizable: 'resizable' in this.nodeOptions ? this.nodeOptions.resizable : false,
             editorPlugins: [QWebPlugin],
         });
     },
