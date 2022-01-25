@@ -557,7 +557,15 @@ const Wysiwyg = Widget.extend({
     renderElement: function () {
         this.$editable = this.options.editable || $('<div class="note-editable">');
         this.$root = this.$editable;
-
+        if (this.options.height) {
+            this.$editable.height(this.options.height);
+        }
+        if (this.options.minHeight) {
+            this.$editable.css('min-height', this.options.minHeight);
+        }
+        if (this.options.maxHeight && this.options.maxHeight > 10) {
+            this.$editable.css('max-height', this.options.maxHeight);
+        }
         if (this.options.resizable && !device.isMobile) {
             const $wrapper = $('<div class="o_wysiwyg_wrapper odoo-editor">');
             this.$root = $wrapper;
