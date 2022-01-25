@@ -161,7 +161,7 @@ QUnit.test('chat window new message: focused on open [REQUIRE FOCUS]', async fun
         document.querySelector(`.o_ChatWindow`).classList.contains('o-focused'),
         "chat window should be focused"
     );
-    assert.ok(
+    assert.strictEqual(
         document.activeElement,
         document.querySelector(`.o_ChatWindow_newMessageFormInput`),
         "chat window focused = selection input focused"
