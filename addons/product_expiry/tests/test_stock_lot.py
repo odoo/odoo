@@ -23,8 +23,8 @@ class TestStockLot(TestStockCommon):
             'use_expiration_date': True,
             'expiration_time': 10,
             'use_time': 5,
-            'removal_time': 8,
-            'alert_time': 4,
+            'removal_time': 2,
+            'alert_time': 6,
         })
 
     def test_00_stock_production_lot(self):
@@ -244,13 +244,13 @@ class TestStockLot(TestStockCommon):
             today_date + timedelta(days=self.apple_product.expiration_time),
             apple_lot.expiration_date, delta=time_gap)
         self.assertAlmostEqual(
-            today_date + timedelta(days=self.apple_product.use_time),
+            apple_lot.expiration_date - timedelta(days=self.apple_product.use_time),
             apple_lot.use_date, delta=time_gap)
         self.assertAlmostEqual(
-            today_date + timedelta(days=self.apple_product.removal_time),
+            apple_lot.expiration_date - timedelta(days=self.apple_product.removal_time),
             apple_lot.removal_date, delta=time_gap)
         self.assertAlmostEqual(
-            today_date + timedelta(days=self.apple_product.alert_time),
+            apple_lot.expiration_date - timedelta(days=self.apple_product.alert_time),
             apple_lot.alert_date, delta=time_gap)
 
         difference = timedelta(days=20)
@@ -359,12 +359,12 @@ class TestStockLot(TestStockCommon):
             apple_lot.expiration_date, expiration_date, delta=time_gap,
             msg="Must be define even if the product's `expiration_time` isn't set.")
         self.assertAlmostEqual(
-            apple_lot.use_date, expiration_date + timedelta(days=5), delta=time_gap)
+            apple_lot.use_date, expiration_date - timedelta(days=self.apple_product.use_time), delta=time_gap)
         self.assertEqual(
             apple_lot.removal_date, False,
             "Must be false as the `removal_time` isn't set on product.")
         self.assertAlmostEqual(
-            apple_lot.alert_date, expiration_date + timedelta(days=4), delta=time_gap)
+            apple_lot.alert_date, expiration_date - timedelta(days=self.apple_product.alert_time), delta=time_gap)
 
     def test_05_confirmation_on_delivery(self):
         """ Test when user tries to delivery expired lot, he/she gets a
