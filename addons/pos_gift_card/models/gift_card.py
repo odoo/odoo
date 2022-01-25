@@ -41,7 +41,4 @@ class GiftCard(models.Model):
 
     def can_be_used_in_pos(self):
         # expired state are computed once a day, so can be not synchro
-        return self.state == 'valid' and self.balance > 0 and self.expired_date >= fields.Date.today() and self.buy_pos_order_line_id
-
-    def can_be_used(self):
-        return super(GiftCard, self).can_be_used() and not self.buy_pos_order_line_id
+        return self.state == 'valid' and self.balance > 0 and self.expired_date >= fields.Date.today()
