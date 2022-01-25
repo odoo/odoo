@@ -8,7 +8,11 @@ Electronic invoicing module
 ===========================
 
 Allows to export and import formats: E-FFF, UBL Bis 3, EHF3, NLCIUS, Factur-X (CII), XRechnung (UBL).
+<<<<<<< HEAD
 When generating the PDF on the invoice, the PDF will be embedded inside the xml for all UBL formats. This allows the 
+=======
+When generating the PDF on the invoice, the PDF will be embedded inside the xml for all UBL formats. This allows the
+>>>>>>> 3f492199955... temp
 receiver to retrieve the PDF with only the xml file. Note that **EHF3 is fully implemented by UBL Bis 3** (`reference 
 <https://anskaffelser.dev/postaward/g3/spec/current/billing-3.0/norway/#_implementation>`_).
 
@@ -19,7 +23,11 @@ respectively. UBL Bis 3 is only available for companies which country is present
 <https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/>`_.
 
 Note also that you need to activate PDF A in order to be able to submit a Factur-X pdf on Chorus Pro: 
+<<<<<<< HEAD
 go to Settings > Technical (debug mode) > System Parameters > select/create one with Key: edi.use_pdfa, Value: true.
+=======
+go to Settings > Technical (debug mode) > System Parameters > select/create one with Key: edi.use_pdfa, Value: true. 
+>>>>>>> 3f492199955... temp
 With this setting, Chorus Pro will automatically detect the "PDF/A-3 (Factur-X)" format.
     """,
     'depends': ['account_edi'],
@@ -31,6 +39,10 @@ With this setting, Chorus Pro will automatically detect the "PDF/A-3 (Factur-X)"
     ],
     'installable': True,
     'application': False,
+<<<<<<< HEAD
     'auto_install': True,
+=======
+    'auto_install': False,
+>>>>>>> 3f492199955... temp
     'license': 'LGPL-3',
 }

@@ -9,8 +9,17 @@ class TestUBLNL(TestUBLCommon):
     @classmethod
     def setUpClass(cls,
                    chart_template_ref="l10n_nl.l10nnl_chart_template",
+<<<<<<< HEAD
                    edi_format_ref="account_edi_ubl_cii.edi_nlcius_1",
                    ):
+=======
+                   edi_format_ref="l10n_nl_edi.edi_nlcius_1",
+                   ):
+        """
+            this test will fail if l10n_nl_edi is not installed. In order not to duplicate the
+            account.edi.format already installed, we use the existing ones (comprising l10n_nl_edi.nlcius_1).
+        """
+>>>>>>> 3f492199955... temp
         super().setUpClass(chart_template_ref=chart_template_ref, edi_format_ref=edi_format_ref)
 
         cls.partner_1 = cls.env['res.partner'].create({

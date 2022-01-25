@@ -16,8 +16,15 @@ FORMAT_CODES = [
     'nlcius_1',
     'efff_1',
     'ubl_2_1',
+<<<<<<< HEAD
 ]
 
+=======
+    'ehf_3',
+]
+
+
+>>>>>>> 3f492199955... temp
 class AccountEdiFormat(models.Model):
     _inherit = 'account.edi.format'
 
@@ -51,7 +58,10 @@ class AccountEdiFormat(models.Model):
         if self.code == 'facturx_1_0_05':
             return self.env['account.edi.xml.cii']
         # if the company's country is not in the EAS mapping, nothing is generated
+<<<<<<< HEAD
         # 'NO' has to be present in COUNTRY_EAS
+=======
+>>>>>>> 3f492199955... temp
         if self.code == 'ubl_bis3' and company.country_id.code in COUNTRY_EAS:
             return self.env['account.edi.xml.ubl_bis3']
         # the EDI option will only appear on the journal of dutch companies
@@ -60,6 +70,10 @@ class AccountEdiFormat(models.Model):
         # the EDI option will only appear on the journal of german companies
         if self.code == 'ubl_de' and company.country_id.code == 'DE':
             return self.env['account.edi.xml.ubl_de']
+<<<<<<< HEAD
+=======
+        # the EDI option will only appear on the journal of belgian companies
+>>>>>>> 3f492199955... temp
         if self.code == 'efff_1' and company.country_id.code == 'BE':
             return self.env['account.edi.xml.ubl_efff']
 

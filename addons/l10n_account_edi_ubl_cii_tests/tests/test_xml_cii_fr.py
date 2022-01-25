@@ -9,8 +9,18 @@ class TestCIIFR(TestUBLCommon):
     @classmethod
     def setUpClass(cls,
                    chart_template_ref="l10n_fr.l10n_fr_pcg_chart_template",
+<<<<<<< HEAD
                    edi_format_ref="account_edi_ubl_cii.edi_facturx_1_0_05",
                    ):
+=======
+                   edi_format_ref="account_edi_facturx.edi_facturx_1_0_05",
+                   ):
+        """
+            this test will fail if account_edi_facturx is not installed. In order not to duplicate the
+            account.edi.format already installed, we use the existing ones (comprising
+            account_edi_facturx.facturx_1_0_05).
+        """
+>>>>>>> 3f492199955... temp
         super().setUpClass(chart_template_ref=chart_template_ref, edi_format_ref=edi_format_ref)
 
         cls.partner_1 = cls.env['res.partner'].create({
