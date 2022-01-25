@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from collections import defaultdict
 from odoo.addons.account.tests.account_test_savepoint import AccountTestInvoicingCommon
 from odoo.tests.common import Form
 from odoo.tests import tagged
@@ -1297,6 +1298,101 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'ref': 'Reversal of: %s, %s' % (self.invoice.name, move_reversal.reason),
             'invoice_payment_state': 'paid',
         })
+
+    def test_in_invoice_reverse_move_tags_and_accoounts(self):
+        def get_tags(name):
+            tags = defaultdict(dict)
+            for line_type, repartition_type in [(l, r) for l in ('invoice', 'refund') for r in ('base', 'tax')]:
+                tags[line_type][repartition_type] = self.env['account.account.tag'].create({
+                    'name': '%s %s %s' % (name, line_type, repartition_type),
+                    'applicability': 'taxes',
+                    'country_id': self.env.ref('base.us').id,
+                })
+            return tags
+
+        def get_tax(name, tags, invoice_tax_account, refund_tax_account):
+            return self.env['account.tax'].create({
+                'type_tax_use': 'purchase',
+                'name': name,
+                'amount': 10.0,
+                'invoice_repartition_line_ids': [
+                    (0, 0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'base',
+                        'tag_ids': [(6, 0, tags['invoice']['base'].ids)],
+                    }),
+                    (0, 0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'tax',
+                        'tag_ids': [(6, 0, tags['invoice']['tax'].ids)],
+                        'account_id': invoice_tax_account.id,
+                    }),
+                ],
+                'refund_repartition_line_ids': [
+                    (0, 0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'base',
+                        'tag_ids': [(6, 0, tags['refund']['base'].ids)],
+                    }),
+                    (0, 0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'tax',
+                        'tag_ids': [(6, 0, tags['refund']['tax'].ids)],
+                        'account_id': refund_tax_account.id,
+                    }),
+                ],
+            })
+
+        invoice_tax_account = self.company_data['default_account_tax_sale']
+        refund_tax_account = invoice_tax_account.copy()
+        tax_1_tags = get_tags('tax 1 tags')
+        tax_2_tags = get_tags('tax 2 tags')
+        tax_1 = get_tax('tax 1', tax_1_tags, invoice_tax_account, refund_tax_account)
+        tax_2 = get_tax('tax 2', tax_2_tags, invoice_tax_account, refund_tax_account)
+
+        bill = self.env['account.move'].create({
+            'type': 'in_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': fields.Date.from_string('2019-01-01'),
+            'invoice_payment_term_id': self.pay_terms_a.id,
+            'invoice_line_ids': [
+                (0, 0, {
+                    'product_id': self.product_a.id,
+                    'price_unit': 1000.0,
+                    'tax_ids': [(6, 0, (tax_1 + tax_2).ids)],
+                }),
+            ]
+        })
+
+        self.assertRecordValues(bill.line_ids.sorted('tax_line_id'), [
+            # Product line
+            {'tax_line_id': False,      'tax_ids': (tax_1 + tax_2).ids,   'tag_ids': (tax_1_tags['invoice']['base'] + tax_2_tags['invoice']['base']).ids,   'account_id':self.company_data['default_account_expense'].id},
+            # Receivable line
+            {'tax_line_id': False,      'tax_ids': [],                    'tag_ids': [],                                                                    'account_id': self.company_data['default_account_payable'].id},
+            # Tax lines
+            {'tax_line_id': tax_1.id,   'tax_ids': [],                    'tag_ids': tax_1_tags['invoice']['tax'].ids,                                      'account_id': invoice_tax_account.id},
+            {'tax_line_id': tax_2.id,   'tax_ids': [],                    'tag_ids': tax_2_tags['invoice']['tax'].ids,                                      'account_id': invoice_tax_account.id},
+        ])
+        refund = bill._reverse_moves(cancel=True)
+        self.assertRecordValues(refund.line_ids.sorted('tax_line_id'), [
+            # Product line
+            {'tax_line_id': False,      'tax_ids': (tax_1 + tax_2).ids,   'tag_ids': (tax_1_tags['refund']['base'] + tax_2_tags['refund']['base']).ids,   'account_id':self.company_data['default_account_expense'].id},
+            # Receivable line
+            {'tax_line_id': False,      'tax_ids': [],                     'tag_ids': [],                                                                 'account_id': self.company_data['default_account_payable'].id},
+            # Tax lines
+            {'tax_line_id': tax_1.id,   'tax_ids': [],                     'tag_ids': tax_1_tags['refund']['tax'].ids,                                    'account_id': refund_tax_account.id},
+            {'tax_line_id': tax_2.id,   'tax_ids': [],                     'tag_ids': tax_2_tags['refund']['tax'].ids,                                    'account_id': refund_tax_account.id},
+        ])
+        refund = bill._reverse_moves(cancel=False)
+        self.assertRecordValues(refund.line_ids.sorted('tax_line_id'), [
+            # Product line
+            {'tax_line_id': False,      'tax_ids': (tax_1 + tax_2).ids,   'tag_ids': (tax_1_tags['refund']['base'] + tax_2_tags['refund']['base']).ids,   'account_id':self.company_data['default_account_expense'].id},
+            # Receivable line
+            {'tax_line_id': False,      'tax_ids': [],                     'tag_ids': [],                                                                 'account_id': self.company_data['default_account_payable'].id},
+            # Tax lines
+            {'tax_line_id': tax_1.id,   'tax_ids': [],                     'tag_ids': tax_1_tags['refund']['tax'].ids,                                    'account_id': refund_tax_account.id},
+            {'tax_line_id': tax_2.id,   'tax_ids': [],                     'tag_ids': tax_2_tags['refund']['tax'].ids,                                    'account_id': refund_tax_account.id},
+        ])
 
     def test_in_invoice_create_refund_multi_currency(self):
         ''' Test the account.move.reversal takes care about the currency rates when setting

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from collections import defaultdict
 from odoo.addons.account.tests.account_test_savepoint import AccountTestInvoicingCommon
 from odoo.tests import tagged, new_test_user
 from odoo.tests.common import Form
@@ -485,3 +486,138 @@ class TestAccountMove(AccountTestInvoicingCommon):
         # You can remove journal items if the related journal entry is draft.
         self.test_move.button_draft()
         self.test_move.line_ids.unlink()
+
+    def test_invoice_like_entry_reverse(self):
+        """ Reverse entries of entries with invoice like structure (balance, tax), must have its
+        tax tags set accordingly to repartition lines same as invoices.
+        """
+        def get_tags(name):
+            tags = defaultdict(dict)
+            for line_type, repartition_type in [(l, r) for l in ('invoice', 'refund') for r in ('base', 'tax')]:
+                tags[line_type][repartition_type] = self.env['account.account.tag'].create({
+                    'name': '%s %s %s' % (name, line_type, repartition_type),
+                    'applicability': 'taxes',
+                    'country_id': self.env.ref('base.us').id,
+                })
+            return tags
+
+        def get_tax(name, tags, invoice_tax_account, refund_tax_account):
+            return self.env['account.tax'].create({
+                'name': name,
+                'amount': 10.0,
+                'invoice_repartition_line_ids': [
+                    (0, 0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'base',
+                        'tag_ids': [(6, 0, tags['invoice']['base'].ids)],
+                    }),
+                    (0, 0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'tax',
+                        'tag_ids': [(6, 0, tags['invoice']['tax'].ids)],
+                        'account_id': invoice_tax_account.id,
+                    }),
+                ],
+                'refund_repartition_line_ids': [
+                    (0, 0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'base',
+                        'tag_ids': [(6, 0, tags['refund']['base'].ids)],
+                    }),
+                    (0, 0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'tax',
+                        'tag_ids': [(6, 0, tags['refund']['tax'].ids)],
+                        'account_id': refund_tax_account.id,
+                    }),
+                ],
+            })
+
+        def get_entry(tax_1, tax_2, tax_1_tags, tax_2_tags, invoice_tax_account):
+            tax_repartition_lines = (tax_1 + tax_2).invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax')
+            return self.env['account.move'].create({
+                'type': 'entry',
+                'date': fields.Date.from_string('2016-01-01'),
+                'line_ids': [
+                    (0, None, {
+                        'name': 'revenue line',
+                        'account_id': self.company_data['default_account_revenue'].id,
+                        'debit': 0.0,
+                        'credit': 1000.0,
+                        'tax_ids': [(6, 0, (tax_1 + tax_2).ids)],
+                        'tag_ids': [(6, 0, (tax_1_tags['invoice']['base'] + tax_2_tags['invoice']['base']).ids)],
+                    }),
+                    (0, None, {
+                        'name': 'tax line 1',
+                        'account_id': invoice_tax_account.id,
+                        'debit': 0.0,
+                        'credit': 100.0,
+                        'tag_ids': [(6, 0, tax_1_tags['invoice']['tax'].ids)],
+                        'tax_repartition_line_id': tax_repartition_lines[0].id,
+                    }),
+                    (0, None, {
+                        'name': 'tax line 2',
+                        'account_id': invoice_tax_account.id,
+                        'debit': 0.0,
+                        'credit': 100.0,
+                        'tag_ids': [(6, 0, tax_2_tags['invoice']['tax'].ids)],
+                        'tax_repartition_line_id': tax_repartition_lines[1].id,
+                    }),
+                    (0, None, {
+                        'name': 'counterpart line',
+                        'account_id': self.company_data['default_account_expense'].id,
+                        'debit': 1200.0,
+                        'credit': 0.0,
+                    }),
+                ]
+            })
+        invoice_tax_account = self.company_data['default_account_tax_sale']
+        refund_tax_account = invoice_tax_account.copy()
+        tax_1_tags = get_tags('tax 1 tags')
+        tax_2_tags = get_tags('tax 2 tags')
+        tax_1 = get_tax('tax 1', tax_1_tags, invoice_tax_account, refund_tax_account)
+        tax_2 = get_tax('tax 2', tax_2_tags, invoice_tax_account, refund_tax_account)
+        entry = get_entry(tax_1, tax_2, tax_1_tags, tax_2_tags, invoice_tax_account)
+
+        self.assertRecordValues(entry.line_ids.sorted('tax_line_id'), [
+            # Product line
+            {'tax_line_id': False,      'tax_ids': (tax_1 + tax_2).ids,   'tag_ids': (tax_1_tags['invoice']['base'] + tax_2_tags['invoice']['base']).ids,   'account_id':self.company_data['default_account_revenue'].id},
+            # Receivable line
+            {'tax_line_id': False,      'tax_ids': [],                    'tag_ids': [],                                                                    'account_id': self.company_data['default_account_expense'].id},
+            # Tax lines
+            {'tax_line_id': tax_1.id,   'tax_ids': [],                    'tag_ids': tax_1_tags['invoice']['tax'].ids,                                      'account_id': invoice_tax_account.id},
+            {'tax_line_id': tax_2.id,   'tax_ids': [],                    'tag_ids': tax_2_tags['invoice']['tax'].ids,                                      'account_id': invoice_tax_account.id},
+        ])
+        refund = entry._reverse_moves()
+        self.assertRecordValues(refund.line_ids.sorted('tax_line_id'), [
+            # Product line
+            {'tax_line_id': False,      'tax_ids': (tax_1 + tax_2).ids,   'tag_ids': (tax_1_tags['refund']['base'] + tax_2_tags['refund']['base']).ids,   'account_id':self.company_data['default_account_revenue'].id},
+            # Receivable line
+            {'tax_line_id': False,      'tax_ids': [],                     'tag_ids': [],                                                                 'account_id': self.company_data['default_account_expense'].id},
+            # Tax lines
+            {'tax_line_id': tax_1.id,   'tax_ids': [],                     'tag_ids': tax_1_tags['refund']['tax'].ids,                                    'account_id': refund_tax_account.id},
+            {'tax_line_id': tax_2.id,   'tax_ids': [],                     'tag_ids': tax_2_tags['refund']['tax'].ids,                                    'account_id': refund_tax_account.id},
+        ])
+
+        # test CABA entry
+        (tax_1 + tax_2).update({'tax_exigibility': 'on_payment'})
+        caba_entry = get_entry(tax_1, tax_2, tax_1_tags, tax_2_tags, invoice_tax_account)
+        self.assertRecordValues(entry.line_ids.sorted('tax_line_id'), [
+            # Product line
+            {'tax_line_id': False,      'tax_ids': (tax_1 + tax_2).ids,   'tag_ids': (tax_1_tags['invoice']['base'] + tax_2_tags['invoice']['base']).ids,   'account_id':self.company_data['default_account_revenue'].id},
+            # Receivable line
+            {'tax_line_id': False,      'tax_ids': [],                    'tag_ids': [],                                                                    'account_id': self.company_data['default_account_expense'].id},
+            # Tax lines
+            {'tax_line_id': tax_1.id,   'tax_ids': [],                    'tag_ids': tax_1_tags['invoice']['tax'].ids,                                      'account_id': invoice_tax_account.id},
+            {'tax_line_id': tax_2.id,   'tax_ids': [],                    'tag_ids': tax_2_tags['invoice']['tax'].ids,                                      'account_id': invoice_tax_account.id},
+        ])
+        refund = entry._reverse_moves()
+        self.assertRecordValues(refund.line_ids.sorted('tax_line_id'), [
+            # Product line
+            {'tax_line_id': False,      'tax_ids': (tax_1 + tax_2).ids,   'tag_ids': (tax_1_tags['refund']['base'] + tax_2_tags['refund']['base']).ids,   'account_id':self.company_data['default_account_revenue'].id},
+            # Receivable line
+            {'tax_line_id': False,      'tax_ids': [],                     'tag_ids': [],                                                                 'account_id': self.company_data['default_account_expense'].id},
+            # Tax lines
+            {'tax_line_id': tax_1.id,   'tax_ids': [],                     'tag_ids': tax_1_tags['refund']['tax'].ids,                                    'account_id': invoice_tax_account.id},
+            {'tax_line_id': tax_2.id,   'tax_ids': [],                     'tag_ids': tax_2_tags['refund']['tax'].ids,                                    'account_id': invoice_tax_account.id},
+        ])

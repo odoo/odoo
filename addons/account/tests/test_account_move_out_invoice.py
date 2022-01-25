@@ -2532,13 +2532,16 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'amount_untaxed' : self.move_vals['amount_untaxed'],
         })
 
-    def test_out_invoice_reverse_move_tags(self):
+    def test_out_invoice_reverse_move_tags_and_accoounts(self):
         country = self.env.ref('base.us')
         tags = self.env['account.account.tag'].create([{
             'name': "Test tag %s" % i,
             'applicability': 'taxes',
             'country_id': country.id,
         } for i in range(8)])
+
+        sale_tax_account = self.company_data['default_account_tax_sale']
+        refund_account = sale_tax_account.copy()
 
         taxes = self.env['account.tax'].create([{
             'name': "Test tax include_base_amount = %s" % include_base_amount,
@@ -2554,6 +2557,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'tag_ids': [(6, 0, tags[(i * 4) + 1].ids)],
+                        'account_id': sale_tax_account.id,
                 }),
             ],
             'refund_repartition_line_ids': [
@@ -2566,6 +2570,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                     'factor_percent': 100,
                     'repartition_type': 'tax',
                     'tag_ids': [(6, 0, tags[(i * 4) + 3].ids)],
+                        'account_id': refund_account.id,
                 }),
             ],
         } for i, include_base_amount in enumerate((True, False))])
@@ -2586,24 +2591,36 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
 
         self.assertRecordValues(invoice.line_ids.sorted('tax_line_id'), [
             # Product line
-            {'tax_line_id': False,          'tax_ids': taxes.ids,       'tag_ids': (tags[0] + tags[4]).ids},
+            {'tax_line_id': False,          'tax_ids': taxes.ids,       'tag_ids': (tags[0] + tags[4]).ids,    'account_id':self.company_data['default_account_revenue'].id},
             # Receivable line
-            {'tax_line_id': False,          'tax_ids': [],              'tag_ids': []},
+            {'tax_line_id': False,          'tax_ids': [],              'tag_ids': [],                         'account_id':self.company_data['default_account_receivable'].id},
             # Tax lines
-            {'tax_line_id': taxes[0].id,    'tax_ids': taxes[1].ids,    'tag_ids': (tags[1] + tags[4]).ids},
-            {'tax_line_id': taxes[1].id,    'tax_ids': [],              'tag_ids': tags[5].ids},
+            {'tax_line_id': taxes[0].id,    'tax_ids': taxes[1].ids,    'tag_ids': (tags[1] + tags[4]).ids,    'account_id':sale_tax_account.id},
+            {'tax_line_id': taxes[1].id,    'tax_ids': [],              'tag_ids': tags[5].ids,                'account_id':sale_tax_account.id},
         ])
 
         refund = invoice._reverse_moves(cancel=True)
 
         self.assertRecordValues(refund.line_ids.sorted('tax_line_id'), [
             # Product line
-            {'tax_line_id': False,          'tax_ids': taxes.ids,       'tag_ids': (tags[2] + tags[6]).ids},
+            {'tax_line_id': False,          'tax_ids': taxes.ids,       'tag_ids': (tags[2] + tags[6]).ids,    'account_id':self.company_data['default_account_revenue'].id},
             # Receivable line
-            {'tax_line_id': False,          'tax_ids': [],              'tag_ids': []},
+            {'tax_line_id': False,          'tax_ids': [],              'tag_ids': [],                         'account_id':self.company_data['default_account_receivable'].id},
             # Tax lines
-            {'tax_line_id': taxes[0].id,    'tax_ids': taxes[1].ids,    'tag_ids': (tags[3] + tags[6]).ids},
-            {'tax_line_id': taxes[1].id,    'tax_ids': [],              'tag_ids': tags[7].ids},
+            {'tax_line_id': taxes[0].id,    'tax_ids': taxes[1].ids,    'tag_ids': (tags[3] + tags[6]).ids,    'account_id':refund_account.id},
+            {'tax_line_id': taxes[1].id,    'tax_ids': [],              'tag_ids': tags[7].ids,                'account_id':refund_account.id},
+        ])
+
+        refund = invoice._reverse_moves(cancel=False)
+
+        self.assertRecordValues(refund.line_ids.sorted('tax_line_id'), [
+            # Product line
+            {'tax_line_id': False,          'tax_ids': taxes.ids,       'tag_ids': (tags[2] + tags[6]).ids,    'account_id':self.company_data['default_account_revenue'].id},
+            # Receivable line
+            {'tax_line_id': False,          'tax_ids': [],              'tag_ids': [],                         'account_id':self.company_data['default_account_receivable'].id},
+            # Tax lines
+            {'tax_line_id': taxes[0].id,    'tax_ids': taxes[1].ids,    'tag_ids': (tags[3] + tags[6]).ids,    'account_id':refund_account.id},
+            {'tax_line_id': taxes[1].id,    'tax_ids': [],              'tag_ids': tags[7].ids,                'account_id':refund_account.id},
         ])
 
     def test_out_invoice_change_period_accrual_1(self):

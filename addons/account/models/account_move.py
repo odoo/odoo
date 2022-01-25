@@ -2131,7 +2131,8 @@ class AccountMove(models.Model):
                 refund_repartition_line = tax_repartition_lines_mapping[invoice_repartition_line]
 
                 # Find the right account.
-                if cancel:
+                if invoice_repartition_line.tax_id.tax_exigibility == 'on_payment':
+                    # keep same account on CABA entries
                     account_id = line_vals['account_id']
                 else:
                     account_id = self.env['account.move.line']._get_default_tax_account(refund_repartition_line).id
