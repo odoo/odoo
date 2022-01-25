@@ -5,6 +5,7 @@ from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_c
 from odoo.tests import common, Form
 from odoo.exceptions import UserError
 from odoo.tools import mute_logger, float_compare
+from odoo.addons.stock_account.tests.test_stockvaluation import _create_accounting_data
 
 
 # these tests create accounting entries, and therefore need a chart of accounts
@@ -1942,3 +1943,146 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
         so.action_draft()
         so.action_confirm()
         self.assertEqual(len(so.picking_ids), 1, "The product was already delivered, no need to re-create a delivery order")
+
+    def test_anglo_saxo_return_and_credit_note(self):
+        """
+        When posting a credit note for a returned kit, the value of the anglo-saxo lines
+        should be based on the returned component's value
+        """
+        stock_input_account, stock_output_account, stock_valuation_account, expense_account, stock_journal = _create_accounting_data(self.env)
+        fifo = self.env['product.category'].create({
+            'name': 'FIFO',
+            'property_valuation': 'real_time',
+            'property_cost_method': 'fifo',
+            'property_stock_account_input_categ_id': stock_input_account.id,
+            'property_stock_account_output_categ_id': stock_output_account.id,
+            'property_stock_valuation_account_id': stock_valuation_account.id,
+            'property_stock_journal': stock_journal.id,
+        })
+
+        kit = self._create_product('Simple Kit', self.uom_unit)
+        (kit + self.component_a).categ_id = fifo
+        kit.property_account_expense_id = expense_account
+
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': kit.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+            'bom_line_ids': [(0, 0, {'product_id': self.component_a.id, 'product_qty': 1.0})]
+        })
+
+        # Receive 3 components: one @10, one @20 and one @60
+        in_moves = self.env['stock.move'].create([{
+            'name': 'IN move @%s' % p,
+            'product_id': self.component_a.id,
+            'location_id': self.env.ref('stock.stock_location_suppliers').id,
+            'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
+            'product_uom': self.component_a.uom_id.id,
+            'product_uom_qty': 1,
+            'price_unit': p,
+        } for p in [10, 20, 60]])
+        in_moves._action_confirm()
+        in_moves.quantity_done = 1
+        in_moves._action_done()
+
+        # Sell 3 kits
+        so = self.env['sale.order'].create({
+            'partner_id': self.env.ref('base.res_partner_1').id,
+            'order_line': [
+                (0, 0, {
+                    'name': kit.name,
+                    'product_id': kit.id,
+                    'product_uom_qty': 3.0,
+                    'product_uom': kit.uom_id.id,
+                    'price_unit': 100,
+                    'tax_id': False,
+                })],
+        })
+        so.action_confirm()
+
+        # Deliver the components: 1@10, then 1@20 and then 1@60
+        pickings = []
+        picking = so.picking_ids
+        while picking:
+            pickings.append(picking)
+            picking.move_lines.quantity_done = 1
+            action = picking.button_validate()
+            if isinstance(action, dict):
+                wizard = Form(self.env[action['res_model']].with_context(action['context'])).save()
+                wizard.process()
+            picking = picking.backorder_ids
+
+        invoice = so._create_invoices()
+        invoice.action_post()
+
+        # Return the second picking (i.e. one component @20)
+        ctx = {'active_id': pickings[1].id, 'active_model': 'stock.picking'}
+        return_wizard = Form(self.env['stock.return.picking'].with_context(ctx)).save()
+        return_picking_id, dummy = return_wizard._create_returns()
+        return_picking = self.env['stock.picking'].browse(return_picking_id)
+        return_picking.move_lines.quantity_done = 1
+        return_picking.button_validate()
+
+        # Add a credit note for the returned kit
+        ctx = {'active_model': 'account.move', 'active_ids': invoice.ids}
+        refund_wizard = self.env['account.move.reversal'].with_context(ctx).create({'refund_method': 'refund'})
+        action = refund_wizard.reverse_moves()
+        reverse_invoice = self.env['account.move'].browse(action['res_id'])
+        with Form(reverse_invoice) as reverse_invoice_form:
+            with reverse_invoice_form.invoice_line_ids.edit(0) as line:
+                line.quantity = 1
+        reverse_invoice.action_post()
+
+        amls = reverse_invoice.line_ids
+        stock_out_aml = amls.filtered(lambda aml: aml.account_id == stock_output_account)
+        self.assertEqual(stock_out_aml.debit, 20, 'Should be to the value of the returned component')
+        self.assertEqual(stock_out_aml.credit, 0)
+        cogs_aml = amls.filtered(lambda aml: aml.account_id == expense_account)
+        self.assertEqual(cogs_aml.debit, 0)
+        self.assertEqual(cogs_aml.credit, 20, 'Should be to the value of the returned component')
+
+    def test_kit_margin_and_return_picking(self):
+        """ This test ensure that, when returning the components of a sold kit, the
+        sale order line cost does not change"""
+        kit = self._cls_create_product('Super Kit', self.uom_unit)
+        (kit + self.component_a).categ_id.property_cost_method = 'fifo'
+
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': kit.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+            'bom_line_ids': [(0, 0, {
+                'product_id': self.component_a.id,
+                'product_qty': 1.0,
+            })]
+        })
+
+        self.component_a.standard_price = 10
+        kit.button_bom_cost()
+
+        stock_location = self.company_data['default_warehouse'].lot_stock_id
+        self.env['stock.quant']._update_available_quantity(self.component_a, stock_location, 1)
+
+        so_form = Form(self.env['sale.order'])
+        so_form.partner_id = self.partner_a
+        with so_form.order_line.new() as line:
+            line.product_id = kit
+        so = so_form.save()
+        so.action_confirm()
+
+        line = so.order_line
+        price = line.product_id.with_company(line.company_id)._compute_average_price(0, line.product_uom_qty, line.move_ids)
+        self.assertEqual(price, 10)
+
+        picking = so.picking_ids
+        action = picking.button_validate()
+        wizard = Form(self.env[action['res_model']].with_context(action['context'])).save()
+        wizard.process()
+
+        ctx = {'active_ids':picking.ids, 'active_id': picking.ids[0], 'active_model': 'stock.picking'}
+        return_picking_wizard_form = Form(self.env['stock.return.picking'].with_context(ctx))
+        return_picking_wizard = return_picking_wizard_form.save()
+        return_picking_wizard.create_returns()
+
+        price = line.product_id.with_company(line.company_id)._compute_average_price(0, line.product_uom_qty, line.move_ids)
+        self.assertEqual(price, 10)

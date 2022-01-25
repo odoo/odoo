@@ -136,7 +136,7 @@ class AccountEdiFormat(models.Model):
             })
             invoice.l10n_it_edi_attachment_id = attachment
 
-            if len(invoice.commercial_partner_id.l10n_it_pa_index or '') == 6:
+            if invoice._is_commercial_partner_pa():
                 invoice.message_post(
                     body=(_("Invoices for PA are not managed by Odoo, you can download the document and send it on your own."))
                 )
@@ -223,7 +223,10 @@ class AccountEdiFormat(models.Model):
             xml = proxy_user._decrypt_data(response['file'], response['key'])
             response_tree = etree.fromstring(xml)
             if state == 'ricevutaConsegna':
-                to_return[invoice] = {'error': _('The invoice has been succesfully transmitted. The addressee has 15 days to accept or reject it.')}
+                if invoice._is_commercial_partner_pa():
+                    to_return[invoice] = {'error': _('The invoice has been succesfully transmitted. The addressee has 15 days to accept or reject it.')}
+                else:
+                    to_return[invoice] = {'attachment': invoice.l10n_it_edi_attachment_id, 'success': True}
             elif state == 'notificaScarto':
                 errors = [element.find('Descrizione').text for element in response_tree.xpath('//Errore')]
                 to_return[invoice] = {'error': self._format_error_message(_('The invoice has been refused by the Exchange System'), errors), 'blocking_level': 'error'}

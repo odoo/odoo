@@ -49,13 +49,7 @@ class AccountMove(models.Model):
         addr = self.partner_id.address_get(['delivery'])
         self.partner_shipping_id = addr and addr.get('delivery')
 
-        res = super(AccountMove, self)._onchange_partner_id()
-
-        # Recompute 'narration' based on 'company.invoice_terms'.
-        if self.move_type == 'out_invoice':
-            self.narration = self.company_id.with_context(lang=self.partner_id.lang or self.env.lang).invoice_terms
-
-        return res
+        return super(AccountMove, self)._onchange_partner_id()
 
     @api.onchange('invoice_user_id')
     def onchange_user_id(self):
@@ -81,7 +75,7 @@ class AccountMove(models.Model):
         posted = super()._post(soft)
 
         for invoice in posted.filtered(lambda move: move.is_invoice()):
-            payments = invoice.mapped('transaction_ids.payment_id')
+            payments = invoice.mapped('transaction_ids.payment_id').filtered(lambda p: p.state == 'posted')
             move_lines = payments.line_ids.filtered(lambda line: line.account_internal_type in ('receivable', 'payable') and not line.reconciled)
             for line in move_lines:
                 invoice.js_assign_outstanding_line(line.id)

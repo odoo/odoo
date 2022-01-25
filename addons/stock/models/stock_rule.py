@@ -544,6 +544,9 @@ class ProcurementGroup(models.Model):
                 self = self.with_env(self.env(cr=cr))  # TDE FIXME
 
             self._run_scheduler_tasks(use_new_cursor=use_new_cursor, company_id=company_id)
+        except Exception:
+            _logger.error("Error during stock scheduler", exc_info=True)
+            raise
         finally:
             if use_new_cursor:
                 try:

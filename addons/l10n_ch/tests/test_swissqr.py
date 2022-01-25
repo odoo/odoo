@@ -112,28 +112,28 @@ class TestSwissQR(AccountTestInvoicingCommon):
         unstr_msg = (unstr_msg or invoice.number).replace('/', '%2F')
 
         payload = (
-            "SPC%0A"
-            "0200%0A"
-            "1%0A"
-            "{iban}%0A"
-            "K%0A"
-            "company_1_data%0A"
-            "Route+de+Berne+88%0A"
-            "2000+Neuch%C3%A2tel%0A"
-            "%0A%0A"
-            "CH%0A"
-            "%0A%0A%0A%0A%0A%0A%0A"
-            "42.00%0A"
-            "CHF%0A"
-            "K%0A"
-            "Partner%0A"
-            "Route+de+Berne+41%0A"
-            "1000+Lausanne%0A"
-            "%0A%0A"
-            "CH%0A"
-            "{ref_type}%0A"
-            "{struct_ref}%0A"
-            "{unstr_msg}%0A"
+            "SPC\n"
+            "0200\n"
+            "1\n"
+            "{iban}\n"
+            "K\n"
+            "company_1_data\n"
+            "Route de Berne 88\n"
+            "2000 Neuchâtel\n"
+            "\n\n"
+            "CH\n"
+            "\n\n\n\n\n\n\n"
+            "42.00\n"
+            "CHF\n"
+            "K\n"
+            "Partner\n"
+            "Route de Berne 41\n"
+            "1000 Lausanne\n"
+            "\n\n"
+            "CH\n"
+            "{ref_type}\n"
+            "{struct_ref}\n"
+            "{unstr_msg}\n"
             "EPD"
         ).format(
             iban=invoice.partner_bank_id.sanitized_acc_number,
@@ -142,11 +142,21 @@ class TestSwissQR(AccountTestInvoicingCommon):
             unstr_msg=unstr_msg,
         )
 
-        expected_url = ("/report/barcode/?type=QR&value={}"
-                        "&width=256&height=256&quiet=1&mask=ch_cross").format(payload)
+        expected_params = {
+            'barcode_type': 'QR',
+            'barLevel': 'M',
+            'width': 256,
+            'height': 256,
+            'quiet': 1,
+            'mask': 'ch_cross',
+            'value': payload,
+        }
 
-        url = invoice.generate_qr_code()
-        self.assertEqual(url, expected_url)
+        params = invoice.partner_bank_id._get_qr_code_generation_params(
+            'ch_qr', 42.0, invoice.currency_id, invoice.partner_id, unstr_msg, struct_ref
+        )
+
+        self.assertEqual(params, expected_params)
 
     def test_swissQR_missing_bank(self):
         # Let us test the generation of a SwissQR for an invoice, first by showing an
