@@ -166,7 +166,7 @@ class MailRenderMixin(models.AbstractModel):
             r"""( # Group 1: element up to url in style
                 <[^>]+\bstyle=" # Element with a style attribute
                 [^"]+\burl\( # Style attribute contains "url(" style
-                (?:&\#34;|')?) # url style may start with (escaped) quote: capture it
+                (?:&\#34;|'|&quot;)?) # url style may start with (escaped) quote: capture it
             ( # Group 2: url itself
                 /(?:[^'")]|(?!&\#34;))+ # stop at the first closing quote
         )""", re.VERBOSE), _sub_relative2absolute, html)
