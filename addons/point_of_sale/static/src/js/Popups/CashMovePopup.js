@@ -32,9 +32,35 @@ odoo.define('point_of_sale.CashMovePopup', function (require) {
                 this.errorMessage = this.env._t('Select either Cash In or Cash Out before confirming.');
                 return;
             }
+            if (this.state.inputType === 'out' && this.state.inputAmount > 0) {
+                this.state.inputHasError = true;
+                this.errorMessage = this.env._t('Insert a negative amount with the Cash Out option.');
+                return;
+            }
+            if (this.state.inputType === 'in' && this.state.inputAmount < 0) {
+                this.state.inputHasError = true;
+                this.errorMessage = this.env._t('Insert a positive amount with the Cash In option.');
+                return;
+            }
+            if (this.state.inputAmount < 0) {
+                this.state.inputAmount = this.state.inputAmount.substring(1);
+            }
             return super.confirm();
         }
+        _onAmountKeypress(event) {
+            if (event.key === '-') {
+                event.preventDefault();
+                this.state.inputAmount = this.state.inputType === 'out' ? this.state.inputAmount.substring(1) : `-${this.state.inputAmount}`;
+                this.state.inputType = this.state.inputType === 'out' ? 'in' : 'out';
+            }
+        }
         onClickButton(type) {
+            let amount = this.state.inputAmount;
+            if (type === 'in') {
+                this.state.inputAmount = amount.charAt(0) === '-' ? amount.substring(1) : amount;
+            } else {
+                this.state.inputAmount = amount.charAt(0) === '-' ? amount : `-${amount}`;
+            }
             this.state.inputType = type;
             this.state.inputHasError = false;
             this.inputAmountRef.el && this.inputAmountRef.el.focus();
