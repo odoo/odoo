@@ -97,11 +97,6 @@ MockServer.include({
             const context = args.context;
             return this._mockRouteMailChatPost(uuid, message_content, context);
         }
-        if (route === '/mail/get_suggested_recipients') {
-            const model = args.model;
-            const res_ids = args.res_ids;
-            return this._mockRouteMailGetSuggestedRecipient(model, res_ids);
-        }
         if (route === '/mail/init_messaging') {
             return this._mockRouteMailInitMessaging();
         }
@@ -117,12 +112,12 @@ MockServer.include({
             const { min_id, max_id, limit } = args;
             return this._mockRouteMailMessageStarredMessages(min_id, max_id, limit);
         }
-        if (route === '/mail/read_followers') {
-            return this._mockRouteMailReadFollowers(args);
-        }
         if (route === '/mail/read_subscription_data') {
             const follower_id = args.follower_id;
             return this._mockRouteMailReadSubscriptionData(follower_id);
+        }
+        if (route === '/mail/thread/data') {
+            return this._mockRouteMailThreadData(args.thread_model, args.thread_id, args.request_list);
         }
         if (route === '/mail/thread/messages') {
             const { min_id, max_id, limit, thread_model, thread_id } = args;
@@ -137,8 +132,8 @@ MockServer.include({
         }
         // mail.activity methods
         if (args.model === 'mail.activity' && args.method === 'activity_format') {
-
-            return this._mockMailActivityActivityFormat(args);
+            const ids = args.args[0];
+            return this._mockMailActivityActivityFormat(ids);
         }
         if (args.model === 'mail.activity' && args.method === 'get_activity_data') {
             const res_model = args.args[0] || args.kwargs.res_model;
@@ -303,11 +298,11 @@ MockServer.include({
      * Simulates `activity_format` on `mail.activity`.
      *
      * @private
-     * @param {Object} args
+     * @param {number[]} ids
      * @returns {Object[]}
      */
-    _mockMailActivityActivityFormat(args) {
-        let res = this._mockRead(args.model, args.args, args.kwargs);
+    _mockMailActivityActivityFormat(ids) {
+        let res = this._mockRead('mail.activity', [ids]);
         res = res.map(record => {
             if (record.mail_template_ids) {
                 record.mail_template_ids = record.mail_template_ids.map(template_id => {
@@ -402,20 +397,6 @@ MockServer.include({
         );
     },
     /**
-     * Simulates `/mail/get_suggested_recipients` route.
-     *
-     * @private
-     * @returns {string} model
-     * @returns {integer[]} res_ids
-     * @returns {Object}
-     */
-    _mockRouteMailGetSuggestedRecipient(model, res_ids) {
-        if (model === 'res.fake') {
-            return this._mockResFake_MessageGetSuggestedRecipients(model, res_ids);
-        }
-        return this._mockMailThread_MessageGetSuggestedRecipients(model, res_ids);
-    },
-    /**
      * Simulates the `/mail/init_messaging` route.
      *
      * @private
@@ -455,23 +436,6 @@ MockServer.include({
         return this._mockMailMessage_MessageFetch(domain, max_id, min_id, limit);
     },
     /**
-     * Simulates the `/mail/read_followers` route.
-     *
-     * @private
-     * @param {integer[]} follower_ids
-     * @returns {Object} one key for list of followers and one for subtypes
-     */
-    async _mockRouteMailReadFollowers(args) {
-        const res_id = args.res_id; // id of record to read the followers
-        const res_model = args.res_model; // model of record to read the followers
-        const followers = this._getRecords('mail.followers', [['res_id', '=', res_id], ['res_model', '=', res_model]]);
-        const currentPartnerFollower = followers.find(follower => follower.id === this.currentPartnerId);
-        const subtypes = currentPartnerFollower
-            ? this._mockRouteMailReadSubscriptionData(currentPartnerFollower.id)
-            : false;
-        return { followers, subtypes };
-    },
-    /**
      * Simulates the `/mail/read_subscription_data` route.
      *
      * @private
@@ -505,7 +469,52 @@ MockServer.include({
         // NOTE: server is also doing a sort here, not reproduced for simplicity
         return subtypes_list;
     },
-
+    /**
+     * Simulates the `/mail/thread/data` route.
+     *
+     * @param {string} thread_model
+     * @param {integer} thread_mid
+     * @param {string[]} request_list
+     * @returns {Object}
+     */
+    async _mockRouteMailThreadData(thread_model, thread_id, request_list) {
+        const res = {};
+        const thread = this._mockSearchRead(thread_model, [[['id', '=', thread_id]]], {})[0];
+        if (!thread) {
+            console.warn(`mock server: reading data "${request_list}" from invalid thread "${thread_model}_${thread_id}"`);
+            return res;
+        }
+        if (request_list.includes('activities')) {
+            const activities = this._mockSearchRead('mail.activity', [[
+                '|',
+                    ['id', 'in', thread.activity_ids || []],
+                    '&',
+                        ['res_id', '=', thread.id],
+                        ['res_model', '=', thread_model],
+            ]], {});
+            res['activities'] = this._mockMailActivityActivityFormat(activities.map(activity => activity.id));
+        }
+        if (request_list.includes('attachments')) {
+            const attachments = this._mockSearchRead('ir.attachment', [
+                [['res_id', '=', thread.id], ['res_model', '=', thread_model]],
+            ], {}); // order not done for simplicity
+            res['attachments'] = this._mockIrAttachment_attachmentFormat(attachments.map(attachment => attachment.id), true);
+        }
+        if (request_list.includes('followers')) {
+            const followers = this._mockSearchRead('mail.followers', [[
+                '|',
+                    ['id', 'in', thread.message_follower_ids || []],
+                    '&',
+                        ['res_id', '=', thread.id],
+                        ['res_model', '=', thread_model],
+            ]], {});
+            res['followers'] = followers;
+        }
+        if (request_list.includes('suggestedRecipients')) {
+            res['suggestedRecipients'] = this._mockMailThread_MessageGetSuggestedRecipients(thread_model, [thread.id])[thread_id];
+        }
+        return res;
+    },
     /**
      * Simulates the `/mail/thread/messages` route.
      *
@@ -530,6 +539,38 @@ MockServer.include({
     // Private Mocked Methods
     //--------------------------------------------------------------------------
 
+    /**
+     * Simulates `_attachment_format` on `ir.attachment`.
+     *
+     * @private
+     * @param {string} res_model
+     * @param {string} domain
+     * @returns {Object}
+     */
+    _mockIrAttachment_attachmentFormat(ids, commands = false) {
+        const attachments = this._mockRead('ir.attachment', [ids]);
+        return attachments.map(attachment => {
+            const res = {
+                'checksum': attachment.checksum,
+                'filename': attachment.name,
+                'id': attachment.id,
+                'mimetype': attachment.mimetype,
+                'name': attachment.name,
+            };
+            if (commands) {
+                res['originThread'] = [['insert', {
+                    'id': attachment.res_id,
+                    'model': attachment.res_model,
+                }]];
+            } else {
+                Object.assign(res, {
+                    'res_id': attachment.res_id,
+                    'res_model': attachment.res_model,
+                });
+            }
+            return res;
+        });
+    },
     /**
      * Simulates `get_activity_data` on `mail.activity`.
      *
@@ -1384,6 +1425,7 @@ MockServer.include({
                 history_partner_ids: historyPartnerIds,
                 needaction_partner_ids: needactionPartnerIds,
                 notifications,
+                record_name: thread && (thread.name !== undefined ? thread.name : thread.display_name),
                 tracking_value_ids: trackingValueIds,
             });
             if (message.subtype_id) {
@@ -1631,6 +1673,9 @@ MockServer.include({
      * @returns {Object}
      */
     _mockMailThread_MessageGetSuggestedRecipients(model, ids) {
+        if (model === 'res.fake') {
+            return this._mockResFake_MessageGetSuggestedRecipients(model, ids);
+        }
         const result = ids.reduce((result, id) => result[id] = [], {});
         const records = this._getRecords(model, [['id', 'in', ids]]);
         for (const record in records) {

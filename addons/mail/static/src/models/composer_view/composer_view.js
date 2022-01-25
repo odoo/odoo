@@ -293,7 +293,7 @@ registerModel({
                     }
                     composer._reset();
                     if (composer.activeThread) {
-                        composer.activeThread.loadNewMessages();
+                        composer.activeThread.fetchData(['messages']);
                     }
                 },
             };
@@ -375,8 +375,7 @@ registerModel({
                         this.delete();
                     }
                     if (chatterThread.exists()) {
-                        chatterThread.refreshFollowers();
-                        chatterThread.fetchAndUpdateSuggestedRecipients();
+                        chatterThread.fetchData(['followers', 'suggestedRecipients']);
                     }
                 }
                 if (threadViewThread) {

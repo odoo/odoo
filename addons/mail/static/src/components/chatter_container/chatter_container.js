@@ -65,6 +65,21 @@ export class ChatterContainer extends Component {
             values.threadId = clear();
         }
         this.chatter = messaging.models['Chatter'].insert(values);
+        /**
+         * Refresh the chatter when the parent view is (re)loaded.
+         * This serves mainly at loading initial data, but also on reload there
+         * might be new message, new attachment, ...
+         *
+         * For example in approvals this is currently necessary to fetch the
+         * newly added attachment when using the "Attach Document" button. And
+         * in sales it is necessary to see the email when using the "Send email"
+         * button.
+         *
+         * NOTE: this assumes props are actually changed when a reload of parent
+         * happens which is true so far because of the OWL compatibility layer
+         * calling the props change method but it is in general not a good
+         * assumption to make.
+         */
         this.chatter.refresh();
         this.render();
     }

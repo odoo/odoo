@@ -233,6 +233,7 @@ QUnit.test('click on "add followers" button', async function (assert) {
 QUnit.test('click on remove follower', async function (assert) {
     assert.expect(6);
 
+    this.data['res.partner'].records.push({ id: 100 });
     const self = this;
     await this.start({
         async mockRPC(route, args) {

@@ -137,7 +137,7 @@ registerModel({
                 model: 'mail.message',
                 method: 'mark_all_as_read',
                 kwargs: { domain },
-            });
+            }, { shadow: true });
         },
         /**
          * Mark provided messages as read. Messages that have been marked as

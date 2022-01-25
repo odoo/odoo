@@ -1,11 +1,9 @@
 /** @odoo-module **/
 
-import { insert } from '@mail/model/model_field_command';
 import {
     afterEach,
     afterNextRender,
     beforeEach,
-    createRootMessagingComponent,
     dragenterFiles,
     dropFiles,
     start,
@@ -21,23 +19,6 @@ QUnit.module('attachment_box', {}, function () {
 QUnit.module('attachment_box_tests.js', {
     beforeEach() {
         beforeEach(this);
-
-        this.createAttachmentBoxComponent = async (thread, otherProps) => {
-            const chatter = this.messaging.models['Chatter'].insert({
-                id: 1,
-                isAttachmentBoxVisibleInitially: true,
-                threadId: thread.id,
-                threadModel: thread.model,
-            });
-            const props = {
-                localId: chatter.attachmentBoxView.localId,
-                ...otherProps,
-            };
-            return await createRootMessagingComponent(this, "AttachmentBox", {
-                props,
-                target: this.widget.el,
-            });
-        };
 
         this.start = async params => {
             const res = await start(Object.assign({}, params, {
@@ -57,12 +38,12 @@ QUnit.test('base empty rendering', async function (assert) {
     assert.expect(4);
 
     this.data['res.partner'].records.push({ id: 100 });
-    await this.start();
-    const thread = this.messaging.models['Thread'].create({
-        id: 100,
-        model: 'res.partner',
+    const { createChatterContainerComponent } = await this.start();
+    const chatterContainerComponent = await createChatterContainerComponent({
+        isAttachmentBoxVisibleInitially: true,
+        threadId: 100,
+        threadModel: 'res.partner',
     });
-    const attachmentBoxComponent = await this.createAttachmentBoxComponent(thread);
     assert.strictEqual(
         document.querySelectorAll(`.o_AttachmentBox`).length,
         1,
@@ -74,7 +55,7 @@ QUnit.test('base empty rendering', async function (assert) {
         "should have a button add"
     );
     assert.ok(
-        attachmentBoxComponent.attachmentBoxView.fileUploader,
+        chatterContainerComponent.chatter.attachmentBoxView.fileUploader,
         "should have a file uploader"
     );
     assert.strictEqual(
@@ -85,7 +66,7 @@ QUnit.test('base empty rendering', async function (assert) {
 });
 
 QUnit.test('base non-empty rendering', async function (assert) {
-    assert.expect(6);
+    assert.expect(4);
 
     this.data['res.partner'].records.push({ id: 100 });
     this.data['ir.attachment'].records.push(
@@ -102,23 +83,12 @@ QUnit.test('base non-empty rendering', async function (assert) {
             res_model: 'res.partner',
         }
     );
-    await this.start({
-        async mockRPC(route, args) {
-            if (route.includes('ir.attachment/search_read')) {
-                assert.step('ir.attachment/search_read');
-            }
-            return this._super(...arguments);
-        },
+    const { createChatterContainerComponent } = await this.start();
+    const chatterContainerComponent = await createChatterContainerComponent({
+        isAttachmentBoxVisibleInitially: true,
+        threadId: 100,
+        threadModel: 'res.partner',
     });
-    const thread = this.messaging.models['Thread'].create({
-        id: 100,
-        model: 'res.partner',
-    });
-    const attachmentBoxComponent = await this.createAttachmentBoxComponent(thread);
-    assert.verifySteps(
-        ['ir.attachment/search_read'],
-        "should have fetched attachments"
-    );
     assert.strictEqual(
         document.querySelectorAll(`.o_AttachmentBox`).length,
         1,
@@ -130,7 +100,7 @@ QUnit.test('base non-empty rendering', async function (assert) {
         "should have a button add"
     );
     assert.ok(
-        attachmentBoxComponent.attachmentBoxView.fileUploader,
+        chatterContainerComponent.chatter.attachmentBoxView.fileUploader,
         "should have a file uploader"
     );
     assert.strictEqual(
@@ -144,13 +114,12 @@ QUnit.test('attachment box: drop attachments', async function (assert) {
     assert.expect(5);
 
     this.data['res.partner'].records.push({ id: 100 });
-    await this.start();
-    const thread = this.messaging.models['Thread'].create({
-        id: 100,
-        model: 'res.partner',
+    const { createChatterContainerComponent } = await this.start();
+    await createChatterContainerComponent({
+        isAttachmentBoxVisibleInitially: true,
+        threadId: 100,
+        threadModel: 'res.partner',
     });
-    await thread.fetchAttachments();
-    await this.createAttachmentBoxComponent(thread);
     const files = [
         await createFile({
             content: 'hello, world',
@@ -220,27 +189,31 @@ QUnit.test('view attachments', async function (assert) {
     assert.expect(7);
 
     this.data['res.partner'].records.push({ id: 100 });
-    await this.start({
+    this.data['ir.attachment'].records.push(
+        {
+            id: 143,
+            mimetype: 'text/plain',
+            name: 'Blah.txt',
+            res_id: 100,
+            res_model: 'res.partner',
+        },
+        {
+            id: 144,
+            mimetype: 'text/plain',
+            name: 'Blu.txt',
+            res_id: 100,
+            res_model: 'res.partner',
+        },
+    );
+    const { createChatterContainerComponent, messaging } = await this.start({
         hasDialog: true,
     });
-    const thread = this.messaging.models['Thread'].create({
-        attachments: [
-            insert({
-                id: 143,
-                mimetype: 'text/plain',
-                name: 'Blah.txt'
-            }),
-            insert({
-                id: 144,
-                mimetype: 'text/plain',
-                name: 'Blu.txt'
-            })
-        ],
-        id: 100,
-        model: 'res.partner',
+    await createChatterContainerComponent({
+        isAttachmentBoxVisibleInitially: true,
+        threadId: 100,
+        threadModel: 'res.partner',
     });
-    const firstAttachment = this.messaging.models['Attachment'].findFromIdentifyingData({ id: 143 });
-    await this.createAttachmentBoxComponent(thread);
+    const firstAttachment = messaging.models['Attachment'].findFromIdentifyingData({ id: 143 });
 
     await afterNextRender(() =>
         document.querySelector(`
@@ -297,17 +270,19 @@ QUnit.test('remove attachment should ask for confirmation', async function (asse
     assert.expect(5);
 
     this.data['res.partner'].records.push({ id: 100 });
-    await this.start();
-    const thread = this.messaging.models['Thread'].create({
-        attachments: insert({
-            id: 143,
-            mimetype: 'text/plain',
-            name: 'Blah.txt',
-        }),
-        id: 100,
-        model: 'res.partner',
+    this.data['ir.attachment'].records.push({
+        id: 143,
+        mimetype: 'text/plain',
+        name: 'Blah.txt',
+        res_id: 100,
+        res_model: 'res.partner',
     });
-    await this.createAttachmentBoxComponent(thread);
+    const { createChatterContainerComponent } = await this.start();
+    await createChatterContainerComponent({
+        isAttachmentBoxVisibleInitially: true,
+        threadId: 100,
+        threadModel: 'res.partner',
+    });
     assert.containsOnce(
         document.body,
         '.o_AttachmentCard',

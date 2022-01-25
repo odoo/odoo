@@ -615,7 +615,7 @@ QUnit.test('read more/less links are not duplicated when switching from read to 
         `,
         id: 1000,
         model: 'res.partner',
-        res_id: 2,
+        res_id: 100,
     });
     this.data['res.partner'].records.push({
         display_name: "Someone",
@@ -627,7 +627,7 @@ QUnit.test('read more/less links are not duplicated when switching from read to 
         // View params
         View: FormView,
         model: 'res.partner',
-        res_id: 2,
+        res_id: 100,
         arch: `
             <form string="Partners">
                 <sheet>
@@ -704,7 +704,7 @@ QUnit.test('read more links becomes read less after being clicked', async functi
         `,
         id: 1000,
         model: 'res.partner',
-        res_id: 2,
+        res_id: 100,
     }];
     this.data['res.partner'].records.push({
         display_name: "Someone",
@@ -716,7 +716,7 @@ QUnit.test('read more links becomes read less after being clicked', async functi
         // View params
         View: FormView,
         model: 'res.partner',
-        res_id: 2,
+        res_id: 100,
         arch: `
             <form string="Partners">
                 <sheet>
@@ -1001,7 +1001,7 @@ QUnit.test('[TECHNICAL] unfolded read more/less links should not fold on message
         `,
         id: 1000,
         model: 'res.partner',
-        res_id: 2,
+        res_id: 100,
     });
     this.data['res.partner'].records.push({
         display_name: "Someone",
@@ -1013,7 +1013,7 @@ QUnit.test('[TECHNICAL] unfolded read more/less links should not fold on message
         // View params
         View: FormView,
         model: 'res.partner',
-        res_id: 2,
+        res_id: 100,
         arch: `
             <form string="Partners">
                 <sheet>

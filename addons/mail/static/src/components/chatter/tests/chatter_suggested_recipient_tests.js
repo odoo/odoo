@@ -1,12 +1,6 @@
 /** @odoo-module **/
 
-import {
-    afterEach,
-    afterNextRender,
-    beforeEach,
-    createRootMessagingComponent,
-    start,
-} from '@mail/utils/test_utils';
+import { afterEach, afterNextRender, beforeEach, start } from '@mail/utils/test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -15,20 +9,14 @@ QUnit.module('chatter_suggested_recipients_tests.js', {
     beforeEach() {
         beforeEach(this);
 
-        this.createChatterComponent = async ({ chatter }, otherProps) => {
-            const props = Object.assign({ localId: chatter.localId }, otherProps);
-            await createRootMessagingComponent(this, "Chatter", {
-                props,
-                target: this.widget.el,
-            });
-        };
-
         this.start = async params => {
-            const { env, widget } = await start(Object.assign({}, params, {
+            const res = await start(Object.assign({}, params, {
                 data: this.data,
             }));
+            const { env, widget } = res;
             this.env = env;
             this.widget = widget;
+            return res;
         };
     },
     afterEach() {
@@ -49,13 +37,11 @@ QUnit.test("suggest recipient on 'Send message' composer", async function (asser
         email_cc: "john@test.be",
         partner_ids: [100],
     });
-    await this.start ();
-    const chatter = this.messaging.models['Chatter'].create({
-        id: 11,
+    const { createChatterContainerComponent } = await this.start ();
+    await createChatterContainerComponent({
         threadId: 10,
         threadModel: 'res.fake',
     });
-    await this.createChatterComponent({ chatter });
     await afterNextRender(() =>
         document.querySelector(`.o_ChatterTopbar_buttonSendMessage`).click()
     );
@@ -79,13 +65,11 @@ QUnit.test("with 3 or less suggested recipients: no 'show more' button", async f
         email_cc: "john@test.be",
         partner_ids: [100],
     });
-    await this.start ();
-    const chatter = this.messaging.models['Chatter'].create({
-        id: 11,
+    const { createChatterContainerComponent } = await this.start ();
+    await createChatterContainerComponent({
         threadId: 10,
         threadModel: 'res.fake',
     });
-    await this.createChatterComponent({ chatter });
     await afterNextRender(() =>
         document.querySelector(`.o_ChatterTopbar_buttonSendMessage`).click()
     );
@@ -108,13 +92,11 @@ QUnit.test("display reason for suggested recipient on mouse over", async functio
         id: 10,
         partner_ids: [100],
     });
-    await this.start();
-    const chatter = this.messaging.models['Chatter'].create({
-        id: 11,
+    const { createChatterContainerComponent } = await this.start();
+    await createChatterContainerComponent({
         threadId: 10,
         threadModel: 'res.fake',
     });
-    await this.createChatterComponent({ chatter });
     await afterNextRender(() =>
         document.querySelector(`.o_ChatterTopbar_buttonSendMessage`).click()
     );
@@ -133,13 +115,11 @@ QUnit.test("suggested recipient without partner are unchecked by default", async
         id: 10,
         email_cc: "john@test.be",
     });
-    await this.start();
-    const chatter = this.messaging.models['Chatter'].create({
-        id: 11,
+    const { createChatterContainerComponent } = await this.start();
+    await createChatterContainerComponent({
         threadId: 10,
         threadModel: 'res.fake',
     });
-    await this.createChatterComponent({ chatter });
     await afterNextRender(() =>
         document.querySelector(`.o_ChatterTopbar_buttonSendMessage`).click()
     );
@@ -162,13 +142,11 @@ QUnit.test("suggested recipient with partner are checked by default", async func
         id: 10,
         partner_ids: [100],
     });
-    await this.start();
-    const chatter = this.messaging.models['Chatter'].create({
-        id: 11,
+    const { createChatterContainerComponent } = await this.start();
+    await createChatterContainerComponent({
         threadId: 10,
         threadModel: 'res.fake',
     });
-    await this.createChatterComponent({ chatter });
     await afterNextRender(() =>
         document.querySelector(`.o_ChatterTopbar_buttonSendMessage`).click()
     );
@@ -206,13 +184,11 @@ QUnit.test("more than 3 suggested recipients: display only 3 and 'show more' but
         id: 10,
         partner_ids: [100, 1000, 1001, 1002],
     });
-    await this.start ();
-    const chatter = this.messaging.models['Chatter'].create({
-        id: 11,
+    const { createChatterContainerComponent } = await this.start ();
+    await createChatterContainerComponent({
         threadId: 10,
         threadModel: 'res.fake',
     });
-    await this.createChatterComponent({ chatter });
 
     await afterNextRender(() =>
         document.querySelector(`.o_ChatterTopbar_buttonSendMessage`).click()
@@ -251,13 +227,11 @@ QUnit.test("more than 3 suggested recipients: show all of them on click 'show mo
         id: 10,
         partner_ids: [100, 1000, 1001, 1002],
     });
-    await this.start ();
-    const chatter = this.messaging.models['Chatter'].create({
-        id: 11,
+    const { createChatterContainerComponent } = await this.start ();
+    await createChatterContainerComponent({
         threadId: 10,
         threadModel: 'res.fake',
     });
-    await this.createChatterComponent({ chatter });
 
     await afterNextRender(() =>
         document.querySelector(`.o_ChatterTopbar_buttonSendMessage`).click()
@@ -300,13 +274,11 @@ QUnit.test("more than 3 suggested recipients -> click 'show more' -> 'show less'
         id: 10,
         partner_ids: [100, 1000, 1001, 1002],
     });
-    await this.start ();
-    const chatter = this.messaging.models['Chatter'].create({
-        id: 11,
+    const { createChatterContainerComponent } = await this.start ();
+    await createChatterContainerComponent({
         threadId: 10,
         threadModel: 'res.fake',
     });
-    await this.createChatterComponent({ chatter });
 
     await afterNextRender(() =>
         document.querySelector(`.o_ChatterTopbar_buttonSendMessage`).click()
@@ -348,13 +320,11 @@ QUnit.test("suggested recipients list display 3 suggested recipient and 'show mo
         id: 10,
         partner_ids: [100, 1000, 1001, 1002],
     });
-    await this.start ();
-    const chatter = this.messaging.models['Chatter'].create({
-        id: 11,
+    const { createChatterContainerComponent } = await this.start ();
+    await createChatterContainerComponent({
         threadId: 10,
         threadModel: 'res.fake',
     });
-    await this.createChatterComponent({ chatter });
 
     await afterNextRender(() =>
         document.querySelector(`.o_ChatterTopbar_buttonSendMessage`).click()
@@ -390,7 +360,7 @@ QUnit.test("suggested recipients should not be notified when posting an internal
         id: 10,
         partner_ids: [100],
     });
-    await this.start({
+    const { createChatterContainerComponent } = await this.start({
         async mockRPC(route, args) {
             if (route === '/mail/message/post') {
                 assert.strictEqual(
@@ -402,12 +372,10 @@ QUnit.test("suggested recipients should not be notified when posting an internal
             return this._super(...arguments);
         },
     });
-    const chatter = this.messaging.models['Chatter'].create({
-        id: 11,
+    await createChatterContainerComponent({
         threadId: 10,
         threadModel: 'res.fake',
     });
-    await this.createChatterComponent({ chatter });
     await afterNextRender(() =>
         document.querySelector(`.o_ChatterTopbar_buttonLogNote`).click()
     );

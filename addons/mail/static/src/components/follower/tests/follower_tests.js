@@ -225,7 +225,7 @@ QUnit.test('click on edit follower', async function (assert) {
         id: 100,
         model: 'res.partner',
     });
-    await thread.refreshFollowers();
+    await thread.fetchData(['followers']);
     await this.createFollowerComponent(thread.followers[0]);
     assert.containsOnce(
         document.body,

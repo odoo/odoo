@@ -1,13 +1,6 @@
 /** @odoo-module **/
 
-import {
-    afterEach,
-    afterNextRender,
-    beforeEach,
-    createRootMessagingComponent,
-    nextAnimationFrame,
-    start,
-} from '@mail/utils/test_utils';
+import { afterEach, afterNextRender, beforeEach, nextAnimationFrame, start } from '@mail/utils/test_utils';
 
 import { makeTestPromise } from 'web.test_utils';
 
@@ -18,20 +11,14 @@ QUnit.module('chatter_topbar_tests.js', {
     beforeEach() {
         beforeEach(this);
 
-        this.createChatterTopbarComponent = async (chatter, otherProps) => {
-            const props = Object.assign({ chatterLocalId: chatter.localId }, otherProps);
-            await createRootMessagingComponent(this, "ChatterTopbar", {
-                props,
-                target: this.widget.el,
-            });
-        };
-
         this.start = async params => {
-            const { env, widget } = await start(Object.assign({}, params, {
+            const res = await start(Object.assign({}, params, {
                 data: this.data,
             }));
+            const { env, widget } = res;
             this.env = env;
             this.widget = widget;
+            return res;
         };
     },
     afterEach() {
@@ -43,13 +30,11 @@ QUnit.test('base rendering', async function (assert) {
     assert.expect(8);
 
     this.data['res.partner'].records.push({ id: 100 });
-    await this.start();
-    const chatter = this.messaging.models['Chatter'].create({
-        id: 11,
+    const { createChatterContainerComponent } = await this.start();
+    await createChatterContainerComponent({
         threadId: 100,
         threadModel: 'res.partner',
     });
-    await this.createChatterTopbarComponent(chatter);
 
     assert.strictEqual(
         document.querySelectorAll(`.o_ChatterTopbar`).length,
@@ -96,12 +81,10 @@ QUnit.test('base rendering', async function (assert) {
 QUnit.test('base disabled rendering', async function (assert) {
     assert.expect(8);
 
-    await this.start();
-    const chatter = this.messaging.models['Chatter'].create({
-        id: 11,
+    const { createChatterContainerComponent } = await this.start();
+    await createChatterContainerComponent({
         threadModel: 'res.partner',
-    });
-    await this.createChatterTopbarComponent(chatter);
+    }, { waitUntilMessagesLoaded: false });
     assert.strictEqual(
         document.querySelectorAll(`.o_ChatterTopbar`).length,
         1,
@@ -144,22 +127,20 @@ QUnit.test('attachment loading is delayed', async function (assert) {
     assert.expect(4);
 
     this.data['res.partner'].records.push({ id: 100 });
-    await this.start({
+    const { createChatterContainerComponent } = await this.start({
         hasTimeControl: true,
         loadingBaseDelayDuration: 100,
         async mockRPC(route) {
-            if (route.includes('ir.attachment/search_read')) {
+            if (route.includes('/mail/thread/data')) {
                 await makeTestPromise(); // simulate long loading
             }
             return this._super(...arguments);
         }
     });
-    const chatter = this.messaging.models['Chatter'].create({
-        id: 11,
+    await createChatterContainerComponent({
         threadId: 100,
         threadModel: 'res.partner',
     });
-    await this.createChatterTopbarComponent(chatter);
 
     assert.strictEqual(
         document.querySelectorAll(`.o_ChatterTopbar`).length,
@@ -189,20 +170,18 @@ QUnit.test('attachment counter while loading attachments', async function (asser
     assert.expect(4);
 
     this.data['res.partner'].records.push({ id: 100 });
-    await this.start({
+    const { createChatterContainerComponent } = await this.start({
         async mockRPC(route) {
-            if (route.includes('ir.attachment/search_read')) {
+            if (route.includes('/mail/thread/data')) {
                 await makeTestPromise(); // simulate long loading
             }
             return this._super(...arguments);
         }
     });
-    const chatter = this.messaging.models['Chatter'].create({
-        id: 11,
+    await createChatterContainerComponent({
         threadId: 100,
         threadModel: 'res.partner',
     });
-    await this.createChatterTopbarComponent(chatter);
 
     assert.strictEqual(
         document.querySelectorAll(`.o_ChatterTopbar`).length,
@@ -231,21 +210,19 @@ QUnit.test('attachment counter transition when attachments become loaded)', asyn
 
     this.data['res.partner'].records.push({ id: 100 });
     const attachmentPromise = makeTestPromise();
-    await this.start({
+    const { createChatterContainerComponent } = await this.start({
         async mockRPC(route) {
             const _super = this._super.bind(this, ...arguments); // limitation of class.js
-            if (route.includes('ir.attachment/search_read')) {
+            if (route.includes('/mail/thread/data')) {
                 await attachmentPromise;
             }
             return _super();
         },
     });
-    const chatter = this.messaging.models['Chatter'].create({
-        id: 11,
+    await createChatterContainerComponent({
         threadId: 100,
         threadModel: 'res.partner',
     });
-    await this.createChatterTopbarComponent(chatter);
 
     assert.strictEqual(
         document.querySelectorAll(`.o_ChatterTopbar`).length,
@@ -290,13 +267,11 @@ QUnit.test('attachment counter without attachments', async function (assert) {
     assert.expect(4);
 
     this.data['res.partner'].records.push({ id: 100 });
-    await this.start();
-    const chatter = this.messaging.models['Chatter'].create({
-        id: 11,
+    const { createChatterContainerComponent } = await this.start();
+    await createChatterContainerComponent({
         threadId: 100,
         threadModel: 'res.partner',
     });
-    await this.createChatterTopbarComponent(chatter);
 
     assert.strictEqual(
         document.querySelectorAll(`.o_ChatterTopbar`).length,
@@ -338,13 +313,11 @@ QUnit.test('attachment counter with attachments', async function (assert) {
             res_model: 'res.partner',
         }
     );
-    await this.start();
-    const chatter = this.messaging.models['Chatter'].create({
-        id: 11,
+    const { createChatterContainerComponent } = await this.start();
+    await createChatterContainerComponent({
         threadId: 100,
         threadModel: 'res.partner',
     });
-    await this.createChatterTopbarComponent(chatter);
 
     assert.strictEqual(
         document.querySelectorAll(`.o_ChatterTopbar`).length,
@@ -372,13 +345,11 @@ QUnit.test('composer state conserved when clicking on another topbar button', as
     assert.expect(8);
 
     this.data['res.partner'].records.push({ id: 100 });
-    await this.start();
-    const chatter = this.messaging.models['Chatter'].create({
-        id: 11,
+    const { createChatterContainerComponent } = await this.start();
+    await createChatterContainerComponent({
         threadId: 100,
         threadModel: 'res.partner',
     });
-    await this.createChatterTopbarComponent(chatter);
 
     assert.containsOnce(
         document.body,
@@ -432,7 +403,6 @@ QUnit.test('composer state conserved when clicking on another topbar button', as
 QUnit.test('rendering with multiple partner followers', async function (assert) {
     assert.expect(7);
 
-    await this.start();
     this.data['res.partner'].records.push({
         id: 100,
         message_follower_ids: [1, 2],
@@ -454,12 +424,11 @@ QUnit.test('rendering with multiple partner followers', async function (assert) 
             res_model: 'res.partner',
         },
     );
-    const chatter = this.messaging.models['Chatter'].create({
-        id: 11,
+    const { createChatterContainerComponent } = await this.start();
+    await createChatterContainerComponent({
         threadId: 100,
         threadModel: 'res.partner',
     });
-    await this.createChatterTopbarComponent(chatter);
 
     assert.containsOnce(
         document.body,
@@ -508,13 +477,11 @@ QUnit.test('log note/send message switching', async function (assert) {
     assert.expect(8);
 
     this.data['res.partner'].records.push({ id: 100 });
-    await this.start();
-    const chatter = this.messaging.models['Chatter'].create({
-        id: 11,
+    const { createChatterContainerComponent } = await this.start();
+    await createChatterContainerComponent({
         threadId: 100,
         threadModel: 'res.partner',
     });
-    await this.createChatterTopbarComponent(chatter);
     assert.containsOnce(
         document.body,
         '.o_ChatterTopbar_buttonSendMessage',
@@ -569,13 +536,11 @@ QUnit.test('log note toggling', async function (assert) {
     assert.expect(4);
 
     this.data['res.partner'].records.push({ id: 100 });
-    await this.start();
-    const chatter = this.messaging.models['Chatter'].create({
-        id: 11,
+    const { createChatterContainerComponent } = await this.start();
+    await createChatterContainerComponent({
         threadId: 100,
         threadModel: 'res.partner',
     });
-    await this.createChatterTopbarComponent(chatter);
     assert.containsOnce(
         document.body,
         '.o_ChatterTopbar_buttonLogNote',
@@ -610,13 +575,11 @@ QUnit.test('send message toggling', async function (assert) {
     assert.expect(4);
 
     this.data['res.partner'].records.push({ id: 100 });
-    await this.start();
-    const chatter = this.messaging.models['Chatter'].create({
-        id: 11,
+    const { createChatterContainerComponent } = await this.start();
+    await createChatterContainerComponent({
         threadId: 100,
         threadModel: 'res.partner',
     });
-    await this.createChatterTopbarComponent(chatter);
     assert.containsOnce(
         document.body,
         '.o_ChatterTopbar_buttonSendMessage',

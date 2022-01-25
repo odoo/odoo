@@ -153,8 +153,7 @@ registerModel({
             } else {
                 shouldDelete = true;
             }
-            this.thread.refreshActivities();
-            this.thread.refresh();
+            this.thread.fetchData(['activities', 'attachments', 'messages']);
             if (shouldDelete) {
                 this.delete();
             }
@@ -175,7 +174,7 @@ registerModel({
                     feedback,
                 },
             }));
-            this.thread.refresh();
+            this.thread.fetchData(['attachments', 'messages']);
             this.delete();
         },
         /**
@@ -190,18 +189,17 @@ registerModel({
                 args: [[this.id]],
                 kwargs: { feedback },
             }));
-            this.thread.refresh();
+            this.thread.fetchData(['activities', 'attachments', 'messages']);
             const thread = this.thread;
             this.delete();
             if (!action) {
-                thread.refreshActivities();
                 return;
             }
             this.env.bus.trigger('do-action', {
                 action,
                 options: {
                     on_close: () => {
-                        thread.refreshActivities();
+                        thread.fetchData(['activities']);
                     },
                 },
             });
