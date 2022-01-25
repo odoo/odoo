@@ -523,6 +523,7 @@ class TestAccountMoveOutRefundOnchanges(AccountTestInvoicingCommon):
         })
 
     def test_out_refund_line_onchange_cash_rounding_1(self):
+        # Test 'add_invoice_line' rounding
         move_form = Form(self.invoice)
         # Add a cash rounding having 'add_invoice_line'.
         move_form.invoice_cash_rounding_id = self.cash_rounding_a
@@ -576,22 +577,69 @@ class TestAccountMoveOutRefundOnchanges(AccountTestInvoicingCommon):
             self.term_line_vals_1,
         ], self.move_vals)
 
-        move_form = Form(self.invoice)
-        # Change the cash rounding to one having 'biggest_tax'.
-        move_form.invoice_cash_rounding_id = self.cash_rounding_b
-        move_form.save()
+        # Test 'biggest_tax' rounding
 
-        self.assertInvoiceValues(self.invoice, [
+        self.company_data['company'].country_id = self.env.ref('base.us')
+
+        # Add a tag to product_a's default tax
+        tax_line_tag = self.env['account.account.tag'].create({
+            'name': "Tax tag",
+            'applicability': 'taxes',
+            'country_id': self.company_data['company'].country_id.id,
+        })
+
+        repartition_line = self.tax_sale_a.refund_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax')
+        repartition_line.write({'tag_ids': [(4, tax_line_tag.id, 0)]})
+
+        # Create the invoice
+        biggest_tax_invoice = self.env['account.move'].create({
+            'type': 'out_refund',
+            'invoice_date': '2019-01-01',
+            'partner_id': self.partner_a.id,
+            'invoice_cash_rounding_id': self.cash_rounding_b.id,
+            'invoice_payment_term_id': self.pay_terms_a.id,
+            'invoice_line_ids': [
+                (0, 0, {
+                    'product_id': self.product_a.id,
+                    'price_unit': 999.99,
+                    'tax_ids': [(6, 0, self.product_a.taxes_id.ids)],
+                    'product_uom_id':  self.product_a.uom_id.id,
+                }),
+
+                (0, 0, {
+                    'product_id': self.product_b.id,
+                    'price_unit': self.product_b.lst_price,
+                    'tax_ids': [(6, 0, self.product_b.taxes_id.ids)],
+                    'product_uom_id':  self.product_b.uom_id.id,
+                }),
+            ],
+        })
+
+        self.assertInvoiceValues(biggest_tax_invoice, [
             {
                 **self.product_line_vals_1,
                 'price_unit': 999.99,
                 'price_subtotal': 999.99,
                 'price_total': 1149.99,
                 'debit': 999.99,
+                'tax_repartition_line_id': None,
+                'tag_ids': [],
             },
-            self.product_line_vals_2,
-            self.tax_line_vals_1,
-            self.tax_line_vals_2,
+            {
+                **self.product_line_vals_2,
+                'tax_repartition_line_id': None,
+                'tag_ids': [],
+            },
+            {
+                **self.tax_line_vals_1,
+                'tax_repartition_line_id': repartition_line.id,
+                'tag_ids': tax_line_tag.ids,
+            },
+            {
+                **self.tax_line_vals_2,
+                'tax_repartition_line_id': self.tax_sale_b.refund_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax').id,
+                'tag_ids': [],
+            },
             {
                 'name': '%s (rounding)' % self.tax_sale_a.name,
                 'product_id': False,
@@ -605,6 +653,8 @@ class TestAccountMoveOutRefundOnchanges(AccountTestInvoicingCommon):
                 'price_total': -0.04,
                 'tax_ids': [],
                 'tax_line_id': self.tax_sale_a.id,
+                'tax_repartition_line_id': repartition_line.id,
+                'tag_ids': tax_line_tag.ids,
                 'currency_id': False,
                 'amount_currency': 0.0,
                 'debit': 0.0,
@@ -618,6 +668,8 @@ class TestAccountMoveOutRefundOnchanges(AccountTestInvoicingCommon):
                 'price_subtotal': -1409.95,
                 'price_total': -1409.95,
                 'credit': 1409.95,
+                'tax_repartition_line_id': None,
+                'tag_ids': [],
             },
         ], {
             **self.move_vals,

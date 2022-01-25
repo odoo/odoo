@@ -270,6 +270,10 @@ msgid ""
 "                        <p>You should send an email to the customers to encourage them!</p>\n"
 "                    "
 msgstr ""
+"<p class=\"o_view_nocontent_smiling_face\">\n"
+"                        คุณสามารถค้นหารถเข็นที่ถูกละทิ้งทั้งหมดได้ที่นี่ เช่น รถเข็นที่สร้างขึ้นโดยผู้เยี่ยมชมเว็บไซต์ของคุณเมื่อกว่าหนึ่งชั่วโมงที่แล้วที่ยังไม่ได้รับการยืนยัน</p>\n"
+"                        <p>คุณควรส่งอีเมลถึงลูกค้าเพื่อสนับสนุนพวกเขา!</p>\n"
+"                    "
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.terms
@@ -527,6 +531,10 @@ msgid ""
 "find them in *Website > Orders > Abandoned Carts*. From there you can send "
 "recovery emails to visitors who entered their contact details."
 msgstr ""
+"รถเข็นที่ถูกละทิ้งคือรถเข็นทั้งหมดที่ไม่ได้รับการยืนยันจากผู้เยี่ยมชมเว็บไซต์"
+" คุณสามารถค้นหาได้ใน *เว็บไซต์ > คำสั่งซื้อ > รถเข็นที่ถูกละทิ้ง* จากที่นั่น"
+" "
+"คุณสามารถส่งอีเมลการกู้คืนไปยังผู้เยี่ยมชมที่ป้อนรายละเอียดการติดต่อของพวกเขา"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_image_view_kanban
@@ -540,12 +548,14 @@ msgid ""
 "Accessories show up when the customer reviews the cart before payment "
 "(cross-sell strategy)."
 msgstr ""
+"อุปกรณ์เสริมจะปรากฏขึ้นเมื่อลูกค้าตรวจสอบรถเข็นก่อนชำระเงิน "
+"(กลยุทธ์การขายต่อเนื่อง)"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__accessory_product_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_template__accessory_product_ids
 msgid "Accessory Products"
-msgstr ""
+msgstr "สินค้าเสริม"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__acc_number
@@ -666,24 +676,24 @@ msgstr "ชื่อธนาคาร"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Be aware!"
-msgstr ""
+msgstr "ระวัง!"
 
 #. module: website_sale
 #: model:res.country.group,name:website_sale.benelux
 msgid "BeNeLux"
-msgstr ""
+msgstr "BeNeLux"
 
 #. module: website_sale
 #: model:product.pricelist,name:website_sale.list_benelux
 msgid "Benelux"
-msgstr ""
+msgstr "Benelux"
 
 #. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #, python-format
 msgid "Best Sellers"
-msgstr ""
+msgstr "ขายดีที่สุด"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
@@ -694,12 +704,12 @@ msgstr "Billing"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout
 msgid "Billing Address"
-msgstr ""
+msgstr "ที่อยู่เรียกเก็บเงิน"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_bins
 msgid "Bins"
-msgstr ""
+msgstr "ถังขยะ"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -708,6 +718,9 @@ msgid ""
 "codes. Specific conditions can be set (products, customers, minimum purchase"
 " amount, period). Rewards can be discounts (% or amount) or free products."
 msgstr ""
+"เพิ่มยอดขายของคุณด้วยโปรแกรมส่วนลดสองประเภท: โปรโมชั่นและรหัสคูปอง "
+"สามารถกำหนดเงื่อนไขเฉพาะได้ (สินค้า ลูกค้า ยอดซื้อขั้นต่ำ ระยะเวลา) "
+"รางวัลอาจเป็นส่วนลด (% หรือจำนวน) หรือผลิตภัณฑ์ฟรี"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_boxes
@@ -717,7 +730,7 @@ msgstr "กล่อง"
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_cabinets
 msgid "Cabinets"
-msgstr ""
+msgstr "ตู้เก็บของ"
 
 #. module: website_sale
 #. openerp-web
@@ -794,6 +807,8 @@ msgid ""
 "Categories are used to browse your products through the\n"
 "            touchscreen interface."
 msgstr ""
+"หมวดหมู่ที่ใช้เพื่อเรียกดูผลิตภัณฑ์ของคุณผ่านทาง\n"
+"          อินเตอร์เฟซหน้าจอสัมผัส"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__website_description
@@ -803,17 +818,17 @@ msgstr "คำอธิบายหมวดหมู่"
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_chairs
 msgid "Chairs"
-msgstr ""
+msgstr "เก้าอี้"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__child_id
 msgid "Children Categories"
-msgstr ""
+msgstr "หมวดหมู่เด็ก"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.action_open_website_sale_onboarding_payment_acquirer_wizard
 msgid "Choose a payment method"
-msgstr ""
+msgstr "เลือกวิธีการชำระเงิน"
 
 #. module: website_sale
 #. openerp-web
@@ -832,7 +847,7 @@ msgstr ""
 #. module: website_sale
 #: model:product.pricelist,name:website_sale.list_christmas
 msgid "Christmas"
-msgstr ""
+msgstr "คริสต์มาส"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -843,7 +858,7 @@ msgstr "เขต / อำเภอ"
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid ""
 "Click <i>'New'</i> in the top-right corner to create your first product."
-msgstr ""
+msgstr "คลิก <i>'ใหม่'</i> ที่มุมบนขวาเพื่อสร้างสินค้าชิ้นแรกของคุณ"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
@@ -1074,13 +1089,13 @@ msgstr "รายละเอียดสำหรับเว็บไซต์
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_desks
 msgid "Desks"
-msgstr ""
+msgstr "โต๊ะ"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__website_sequence
 #: model:ir.model.fields,help:website_sale.field_product_template__website_sequence
 msgid "Determine the display order in the Website E-commerce"
-msgstr ""
+msgstr "กำหนดลำดับการแสดงผลในเว็บไซต์อีคอมเมิร์ซ"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_digest_digest
@@ -1090,7 +1105,7 @@ msgstr "จัดระเบียบ"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_digital
 msgid "Digital Content"
-msgstr ""
+msgstr "เนื้อหาดิจิทัล"
 
 #. module: website_sale
 #. openerp-web
@@ -1111,7 +1126,7 @@ msgstr "ชื่อที่ใช้แสดง"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Display a prompt with optional products when adding to cart"
-msgstr ""
+msgstr "แสดงข้อความแจ้งพร้อมสินค้าเสริมเมื่อหยิบใส่รถเข็น"
 
 #. module: website_sale
 #. openerp-web
@@ -1138,24 +1153,24 @@ msgstr "เสร็จสิ้น"
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 #, python-format
 msgid "Double click here to set an image describing your product."
-msgstr ""
+msgstr "ดับเบิลคลิกที่นี้เพื่อกำหนดรูปภาพที่อธิบายผลิตภัณฑ์ของคุณ"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "Drag building blocks here to customize the header for \""
-msgstr ""
+msgstr "ลากบล็อกสำเร็จรูปมาที่นี้เพื่อปรับแต่งส่วนหัวสำหรับ \""
 
 #. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 #, python-format
 msgid "Drag this website block and drop it in your page."
-msgstr ""
+msgstr "ลากบล็อกเว็บไซต์นี้แล้ววางลงในหน้าเว็บของคุณ"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_drawers
 msgid "Drawers"
-msgstr ""
+msgstr "ลิ้นชัก"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_pricelist__code
@@ -1206,12 +1221,12 @@ msgstr "แม่แบบอีเมล"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_mail_compose_message
 msgid "Email composition wizard"
-msgstr ""
+msgstr "ตัวช่วยการเขียนอีเมล"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Email sent to the customer after the checkout"
-msgstr ""
+msgstr "อีเมลที่ส่งถึงลูกค้าหลังการชำระเงิน"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__embed_code
@@ -1223,13 +1238,13 @@ msgstr "ฝังโค้ด"
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 #, python-format
 msgid "Enter a name for your new product"
-msgstr ""
+msgstr "ใส่ชื่อสำหรับสินค้าใหม่ของคุณ"
 
 #. module: website_sale
 #: code:addons/website_sale/models/product.py:0
 #, python-format
 msgid "Error ! You cannot create recursive categories."
-msgstr ""
+msgstr "ข้อผิดพลาด ! คุณไม่สามารถสร้างหมวดหมู่แบบเรียกซ้ำได้"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info_option
@@ -1241,40 +1256,40 @@ msgstr "ข้อมูลเพิ่มเติม"
 #: model:ir.model.fields,field_description:website_sale.field_product_template__product_template_image_ids
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "Extra Product Media"
-msgstr ""
+msgstr "สื่อสินค้าเสริม"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__product_variant_image_ids
 msgid "Extra Variant Images"
-msgstr ""
+msgstr "สื่อสินค้าพิเศษ"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_product_view_form_easy_inherit_website_sale
 msgid "Extra Variant Media"
-msgstr ""
+msgstr "สื่อตัวแปรพิเศษ"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "FedEx"
-msgstr ""
+msgstr "FedEx"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
 msgid "From Website"
-msgstr ""
+msgstr "จากเว็บไซต์"
 
 #. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #, python-format
 msgid "Generate an invoice from orders ready for invoicing."
-msgstr ""
+msgstr "สร้างใบแจ้งหนี้จากคำสั่งซื้อที่พร้อมสำหรับการออกใบแจ้งหนี้"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid ""
 "Generate the invoice automatically when the online payment is confirmed"
-msgstr ""
+msgstr "สร้างใบแจ้งหนี้โดยอัตโนมัติเมื่อยืนยันการชำระเงินออนไลน์"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
@@ -1284,12 +1299,12 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_public_category__sequence
 msgid "Gives the sequence order when displaying a list of product categories."
-msgstr ""
+msgstr "ให้ลำดับการเรียงลำดับเมื่อแสดงรายการประเภทผลิตภัณฑ์"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Grant discounts on sales order lines"
-msgstr ""
+msgstr "ให้ส่วนลดในรายการใบสั่งขาย"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.add_grid_or_list_option
@@ -1315,17 +1330,17 @@ msgstr "See http://openerp.com"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_image_view_kanban
 msgid "Huge file size. The image should be optimized/reduced."
-msgstr ""
+msgstr "ขนาดไฟล์ใหญ่. รูปภาพควรได้รับการปรับให้เหมาะสม/ลดขนาด"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment_sale_note
 msgid "I agree to the"
-msgstr ""
+msgstr "ฉันเห็นด้วย"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.reduction_code
 msgid "I have a promo code"
-msgstr ""
+msgstr "ฉันมีรหัสโปรโมชั่น"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__id
@@ -1384,7 +1399,7 @@ msgstr "รูปภาพ 512"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
 msgid "Image Name"
-msgstr ""
+msgstr "ชื่อรูปภาพ"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_res_config_settings__module_website_sale_stock
@@ -1395,7 +1410,7 @@ msgstr ""
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
 msgid "Invalid Email! Please enter a valid email address."
-msgstr ""
+msgstr "อีเมลไม่ถูกต้อง! กรุณาใส่อีเมล์ที่ถูกต้อง."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_stock
@@ -1416,13 +1431,13 @@ msgstr "การแจ้งหนี้"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Issue invoices to customers"
-msgstr ""
+msgstr "ออกใบแจ้งหนี้ให้กับลูกค้า"
 
 #. module: website_sale
 #: code:addons/website_sale/models/sale_order.py:0
 #, python-format
 msgid "It is forbidden to modify a sales order which is not in draft status."
-msgstr ""
+msgstr "ห้ามแก้ไขใบสั่งขายที่ไม่อยู่ในสถานะร่าง"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_account_move
@@ -1437,12 +1452,12 @@ msgstr "ทําสําเร็จ"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_digest_digest__kpi_website_sale_total_value
 msgid "Kpi Website Sale Total Value"
-msgstr ""
+msgstr "ยอดขายเว็บไซต์ Kpi มูลค่ารวม"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_lamps
 msgid "Lamps"
-msgstr ""
+msgstr "โคมไฟ"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image____last_update
@@ -1456,7 +1471,7 @@ msgstr "แก้ไขครั้งสุดท้ายเมื่อ"
 #: model:ir.model.fields,field_description:website_sale.field_res_partner__last_website_so_id
 #: model:ir.model.fields,field_description:website_sale.field_res_users__last_website_so_id
 msgid "Last Online Sales Order"
-msgstr ""
+msgstr "คำสั่งขายออนไลน์ล่าสุด"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__write_uid
@@ -1477,19 +1492,19 @@ msgstr "อัพเดทครั้งสุดท้ายเมื่อ"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Let returning shoppers save products in a wishlist"
-msgstr ""
+msgstr "ให้นักช้อปกลับมาบันทึกสินค้าในรายการสิ่งที่อยากได้"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Let the customer enter a shipping address"
-msgstr ""
+msgstr "ให้ลูกค้ากรอกที่อยู่สำหรับจัดส่ง"
 
 #. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 #, python-format
 msgid "Let's create your first product."
-msgstr ""
+msgstr "เริ่มสร้างสินค้าแรกของคุณ"
 
 #. module: website_sale
 #. openerp-web
@@ -1499,11 +1514,12 @@ msgid ""
 "Let's now take a look at your administration dashboard to get your eCommerce"
 " website ready in no time."
 msgstr ""
+"มาดูแดชบอร์ดการดูแลระบบของคุณเพื่อเตรียมเว็บไซต์อีคอมเมิร์ซของคุณให้พร้อมในเวลาไม่นาน"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order_line__linked_line_id
 msgid "Linked Order Line"
-msgstr ""
+msgstr "เชื่อมโยงไลน์คำสั่ง"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.add_grid_or_list_option
@@ -1513,7 +1529,7 @@ msgstr "รายการ"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Log In"
-msgstr ""
+msgstr "ลงชื่อเข้าใช้"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1523,7 +1539,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Manage promotion &amp; coupon programs"
-msgstr ""
+msgstr "จัดการโปรโมชั่นและโปรแกรมคูปอง"
 
 #. module: website_sale
 #. openerp-web
@@ -1542,7 +1558,7 @@ msgstr "ปานกลาง"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__paypal_seller_account
 msgid "Merchant Account ID"
-msgstr ""
+msgstr "ไอดีบัญชีการค้า"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__manual_name
@@ -1559,7 +1575,7 @@ msgstr "มัลติมีเดีย"
 #: code:addons/website_sale/static/src/js/website_sale.js:0
 #, python-format
 msgid "My Cart"
-msgstr ""
+msgstr "รถเข็นของฉัน"
 
 #. module: website_sale
 #. openerp-web
@@ -1575,7 +1591,7 @@ msgstr "ชื่อ"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order_line__name_short
 msgid "Name Short"
-msgstr ""
+msgstr "ชื่อสั้น"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sort
@@ -1605,38 +1621,38 @@ msgstr "ต่อไป"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
 msgid "Next <span class=\"fa fa-chevron-right\"/>"
-msgstr ""
+msgstr "ต่อไป <span class=\"fa fa-chevron-right\"/>"
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.action_abandoned_orders_ecommerce
 #: model_terms:ir.actions.act_window,help:website_sale.action_view_abandoned_tree
 msgid "No abandoned carts found"
-msgstr ""
+msgstr "ไม่พบรถเข็นที่ถูกทอดทิ้ง"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "No product defined"
-msgstr ""
+msgstr "ไม่ได้กำหนดสินค้าไว้"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "No product defined in category \""
-msgstr ""
+msgstr "ไม่มีการกำหนดสินค้าในหมวดหมู่ \""
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.website_sale_visitor_product_action
 msgid "No product views yet for this visitor"
-msgstr ""
+msgstr "ยังไม่มีการดูสินค้าสำหรับผู้เยี่ยมชมรายนี้"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "No results"
-msgstr ""
+msgstr "ไม่มีผลลัพธ์"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "No results for \""
-msgstr ""
+msgstr "ไม่พบผลลัพธ์สำหรับ \" "
 
 #. module: website_sale
 #. openerp-web
@@ -1648,7 +1664,7 @@ msgstr "ไม่พบผลลัพธ์โปรดลองค้นหา
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__res_config_settings__sale_delivery_settings__none
 msgid "No shipping management on website"
-msgstr ""
+msgstr "ไม่มีการจัดการการจัดส่งบนเว็บไซต์"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__res_company__website_sale_onboarding_payment_acquirer_state__not_done
@@ -1658,17 +1674,17 @@ msgstr "ยังไม่เสร็จ"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_crm_team__abandoned_carts_count
 msgid "Number of Abandoned Carts"
-msgstr ""
+msgstr "จำนวนรถเข็นที่ถูกละทิ้ง"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__shop_ppr
 msgid "Number of grid columns on the shop"
-msgstr ""
+msgstr "จำนวนคอลัมน์ตารางในร้านค้า"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_res_config_settings__cart_abandoned_delay
 msgid "Number of hours after which the cart is considered abandoned."
-msgstr ""
+msgstr "จำนวนชั่วโมงหลังจากที่รถเข็นถูกละทิ้ง"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__shop_ppg
@@ -1687,7 +1703,7 @@ msgstr "ตกลง"
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 #, python-format
 msgid "Once you click on <b>Save</b>, your product is updated."
-msgstr ""
+msgstr "เมื่อคุณคลิกที่ <b>บันทึก</b> สินค้าของคุณจะได้รับการอัปเดต"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_report_sales
@@ -1715,7 +1731,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.brand_promotion
 msgid "Open Source eCommerce"
-msgstr ""
+msgstr "โอเพ่นซอร์สอีคอมเมิร์ซ"
 
 #. module: website_sale
 #. openerp-web
@@ -1777,7 +1793,7 @@ msgstr "รายการสั่งซื้อที่แสดงบนเ
 msgid ""
 "Order Lines to be displayed on the website. They should not be used for "
 "computation purpose."
-msgstr ""
+msgstr "ไลน์คำสั่งที่จะแสดงบนเว็บไซต์ ไม่ควรใช้เพื่อวัตถุประสงค์ในการคำนวณ"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.short_cart_summary
@@ -1826,12 +1842,12 @@ msgstr "คำสั่งขาย"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Orders Followup"
-msgstr ""
+msgstr "ติดตามคำสั่งซื้อ"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.sale_order_action_to_invoice
 msgid "Orders To Invoice"
-msgstr ""
+msgstr "คำสั่งซื้อเป็นใบแจ้งหนี้"
 
 #. module: website_sale
 #. openerp-web
@@ -1851,7 +1867,7 @@ msgstr "คำสั่ง/วันที่"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__paypal_pdt_token
 msgid "PDT Identity Token"
-msgstr ""
+msgstr "โทเคน PDT Identity"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__parent_id
@@ -1866,7 +1882,7 @@ msgstr "Path"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__parents_and_self
 msgid "Parents And Self"
-msgstr ""
+msgstr "หลักและของตัวเอง"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment
@@ -1913,7 +1929,7 @@ msgstr "ธุรกรรมการชำระเงิน"
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #, python-format
 msgid "Payments to Capture"
-msgstr ""
+msgstr "การชำระเงินเพื่อจับ"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__paypal_user_type
@@ -2023,7 +2039,7 @@ msgstr "หมวดสินค้า"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_comparison
 msgid "Product Comparison Tool"
-msgstr ""
+msgstr "เครื่องมือเปรียบเทียบสินค้า"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_image
@@ -2034,7 +2050,7 @@ msgstr "รูปภาพสินค้า"
 #: model_terms:ir.ui.view,arch_db:website_sale.product_image_view_kanban
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
 msgid "Product Images"
-msgstr ""
+msgstr "รูปภาพสินค้า"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -2044,12 +2060,12 @@ msgstr "ชื่อสินค้า"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Product Prices"
-msgstr ""
+msgstr "ราคาสินค้า"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_public_category_tree_view
 msgid "Product Public Categories"
-msgstr ""
+msgstr "หมวดหมู่สินค้าสาธารณะ"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_style
@@ -2070,7 +2086,7 @@ msgstr "ไลน์คุณลักษณะเทมเพลตผลิต
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__product_tmpl_ids
 msgid "Product Tmpl"
-msgstr ""
+msgstr "เทมเพลตสินค้า"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__product_variant_id
@@ -2085,12 +2101,12 @@ msgstr "แบบที่ต่างกันของสินค้า"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_visitor__visitor_product_count
 msgid "Product Views"
-msgstr ""
+msgstr "ดูสินค้า"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.website_sale_visitor_product_action
 msgid "Product Views History"
-msgstr ""
+msgstr "ประวัตืการดูสินค้า"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.404
@@ -2100,7 +2116,7 @@ msgstr "ไม่พบสินค้า"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Product prices displaying in web catalog"
-msgstr ""
+msgstr "ราคาสินค้าที่แสดงในเว็บแค็ตตาล็อก"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.website_sale_visitor_view_form
@@ -2128,7 +2144,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_visitor__product_count
 msgid "Products Views"
-msgstr ""
+msgstr "ดูสินค้า"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -2143,6 +2159,9 @@ msgid ""
 "do so, attach some files to a product using the new Files button and publish"
 " them."
 msgstr ""
+"ให้ลิงก์เฉพาะผลิตภัณฑ์หรือเนื้อหาที่ดาวน์โหลดได้แก่ลูกค้าในหน้ายืนยันของกระบวนการเช็คเอาต์หากการชำระเงินผ่าน"
+" ในการดำเนินการดังกล่าว ให้แนบไฟล์บางไฟล์กับผลิตภัณฑ์โดยใช้ปุ่ม \"ไฟล์\" "
+"ใหม่และเผยแพร่"
 
 #. module: website_sale
 #: code:addons/website_sale/models/product_image.py:0
@@ -2150,6 +2169,7 @@ msgstr ""
 msgid ""
 "Provided video URL for '%s' is not valid. Please enter a valid video URL."
 msgstr ""
+"URL วิดีโอที่ระบุสำหรับ '%s' ไม่ถูกต้อง โปรดป้อน URL ของวิดีโอที่ถูกต้อง"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_search_view_website
@@ -2159,22 +2179,22 @@ msgstr "เผยแพร่"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Push down"
-msgstr ""
+msgstr "ดันลง"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Push to bottom"
-msgstr ""
+msgstr "ดันลงไปด้านล่าง"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Push to top"
-msgstr ""
+msgstr "ดันขึ้นไปด้านบน"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Push up"
-msgstr ""
+msgstr "ดันขึ้น"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_popover
@@ -2195,7 +2215,7 @@ msgstr "จำนวน"
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #, python-format
 msgid "REVENUE BY"
-msgstr ""
+msgstr "รายได้โดย"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_products_recently_viewed
@@ -2205,23 +2225,23 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
 msgid "Recovery Email Sent"
-msgstr ""
+msgstr "อีเมลกู้คืนถูกส่งแล้ว"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
 msgid "Recovery Email to Send"
-msgstr ""
+msgstr "กู้คืนอีเมลที่จะส่ง"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
 msgid "Remove from cart"
-msgstr ""
+msgstr "นำออกจากรถเข็น"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
 #: model_terms:ir.ui.view,arch_db:website_sale.product_quantity
 msgid "Remove one"
-msgstr ""
+msgstr "นำออกหนึ่ง"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_reporting
@@ -2247,7 +2267,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.wizard_checkout
 msgid "Review Order"
-msgstr ""
+msgstr "รีวิวคำสั่งซื้อ"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__is_seo_optimized
@@ -2333,7 +2353,7 @@ msgstr "ข้อมูลการชำระเงินที่บันท
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
 msgid "Search Abandoned Sales Orders"
-msgstr ""
+msgstr "ค้นหาใบสั่งขายที่ถูกละทิ้ง"
 
 #. module: website_sale
 #. openerp-web
@@ -2355,11 +2375,12 @@ msgid ""
 "Select <b>New Product</b> to create it and manage its properties to boost "
 "your sales."
 msgstr ""
+"เลือก <b>สินค้าใหม่</b>เพื่อสร้างและจัดการคุณสมบัติเพื่อเพิ่มยอดขายของคุณ"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_kanban
 msgid "Select this address"
-msgstr ""
+msgstr "เลือกที่อยู่นี้"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_pricelist__selectable
@@ -2369,7 +2390,7 @@ msgstr "Selectable"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Sell content to download or URL links"
-msgstr ""
+msgstr "ขายเนื้อหาเพื่อดาวน์โหลดหรือลิงก์ URL"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2379,29 +2400,29 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Sell variants of a product using attributes (size, color, etc.)"
-msgstr ""
+msgstr "ขายสินค้าที่มีคัวเลือกหลากหลาย โดยใช้คุณลักษณะ (ขนาด สี ต่าง ๆ )"
 
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.ir_actions_server_sale_cart_recovery_email
 msgid "Send a Cart Recovery Email"
-msgstr ""
+msgstr "ส่งอีเมลการกู้คืนรถเข็น"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_order_view_form_cart_recovery
 msgid "Send a Recovery Email"
-msgstr ""
+msgstr "ส่งอีเมลการกู้คืน"
 
 #. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #, python-format
 msgid "Send a recovery email to visitors who haven't completed their order."
-msgstr ""
+msgstr "ส่งอีเมลการกู้คืนไปยังผู้เข้าชมที่ยังไม่ได้ดำเนินการสั่งซื้อ"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Send a recovery email when a cart is abandoned"
-msgstr ""
+msgstr "ส่งอีเมลสำรองเมื่อรถเข็นถูกละทิ้ง"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__sequence
@@ -2420,6 +2441,8 @@ msgid ""
 "Ship to the same address\n"
 "                                                    <span class=\"ship_to_other text-muted\" style=\"display: none\">&amp;nbsp;(<i>Your shipping address will be requested later) </i></span>"
 msgstr ""
+"จัดส่งไปยังที่อยู่เดียวกัน\n"
+"                                                    <span class=\"ship_to_other text-muted\" style=\"display: none\">&amp;nbsp;(<i>ที่อยู่จัดส่งของคุณจะถูกร้องขอในภายหลัง) </i></span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2431,7 +2454,7 @@ msgstr "ส่งสินค้า"
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout
 msgid "Shipping Address"
-msgstr ""
+msgstr "ที่อยู่สำหรับจัดส่ง"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2441,7 +2464,7 @@ msgstr "ค่าใช้จ่ายการจัดส่ง"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__sale_delivery_settings
 msgid "Shipping Management"
-msgstr ""
+msgstr "การจัดการจัดส่งสินค้า"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
@@ -2453,37 +2476,37 @@ msgstr "ร้านค้า"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout
 msgid "Shop - Checkout"
-msgstr ""
+msgstr "ร้านค้า - ชำระเงิน"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "Shop - Confirmed"
-msgstr ""
+msgstr "ร้านค้า - ยืนยันแล้ว"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment
 msgid "Shop - Select Payment Acquirer"
-msgstr ""
+msgstr "ร้านค้า - เลือกผู้รับการชำระเงิน"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products_add_to_cart
 msgid "Shopping cart"
-msgstr ""
+msgstr "รถเข็นสินค้า"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products_categories
 msgid "Show categories"
-msgstr ""
+msgstr "แสดงหมวดหมู่"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products_attributes
 msgid "Show options"
-msgstr ""
+msgstr "แสดงตัวเลือก"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "Sign Up"
-msgstr ""
+msgstr "ลงชื่อ"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -2494,13 +2517,13 @@ msgstr "ขนาด"
 #: model:ir.model.fields,field_description:website_sale.field_product_product__website_size_x
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_size_x
 msgid "Size X"
-msgstr ""
+msgstr "ไซส์ X"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__website_size_y
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_size_y
 msgid "Size Y"
-msgstr ""
+msgstr "ไซส์ Y"
 
 #. module: website_sale
 #. openerp-web
@@ -2508,13 +2531,13 @@ msgstr ""
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #, python-format
 msgid "Sold"
-msgstr ""
+msgstr "ขาย"
 
 #. module: website_sale
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
 msgid "Some required fields are empty."
-msgstr ""
+msgstr "ช่องที่ต้องกรอกบางช่องว่างเปล่า"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.404
@@ -2536,7 +2559,7 @@ msgstr ""
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #, python-format
 msgid "Sources"
-msgstr ""
+msgstr "แหล่งที่มา"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -2551,7 +2574,7 @@ msgstr "รัฐ / จังหวัด..."
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_company__website_sale_onboarding_payment_acquirer_state
 msgid "State of the website sale onboarding payment acquirer step"
-msgstr ""
+msgstr "สถานะของการขายเว็บไซต์ในขั้นตอนการรับการชำระเงิน"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
@@ -2561,22 +2584,22 @@ msgstr "สถานะ"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Street 2"
-msgstr ""
+msgstr "ถนน 2"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Street <span class=\"d-none d-md-inline\"> and Number</span>"
-msgstr ""
+msgstr "ถนน <span class=\"d-none d-md-inline\"> และเลขที่</span>"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__stripe_publishable_key
 msgid "Stripe Publishable Key"
-msgstr ""
+msgstr "คีย์ของ Stripe ที่เผยแพร่ได้"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__stripe_secret_key
 msgid "Stripe Secret Key"
-msgstr ""
+msgstr "Stripe Secret Key"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_style__name
@@ -2602,16 +2625,18 @@ msgid ""
 "Suggest alternatives to your customer (upsell strategy). Those products show"
 " up on the product page."
 msgstr ""
+"เสนอทางเลือกอื่นให้กับลูกค้าของคุณ (กลยุทธ์การขายต่อยอด) "
+"ผลิตภัณฑ์เหล่านั้นจะปรากฏบนหน้าสินค้า"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.suggested_products_list
 msgid "Suggested Accessories:"
-msgstr ""
+msgstr "แนะนำอุปกรณ์เสริม:"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_b2b
 msgid "TIN / VAT"
-msgstr ""
+msgstr "TIN / VAT"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.total
@@ -2621,7 +2646,7 @@ msgstr "ภาษี :"
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_website__all_pricelist_ids
 msgid "Technical: Used to recompute pricelist_ids"
-msgstr ""
+msgstr "เทคนิค: ใช้เพื่อคำนวณ pricelist_ids"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.terms
@@ -2631,12 +2656,12 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "Thank you for your order."
-msgstr ""
+msgstr "ขอบคุณสำหรับการสั่งซื้อของคุณ"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.brand_promotion
 msgid "The #1"
-msgstr ""
+msgstr "อันดับ #1"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.terms
@@ -2661,13 +2686,13 @@ msgstr "The full URL to access the document through the website."
 #, python-format
 msgid ""
 "The given combination does not exist therefore it cannot be added to cart."
-msgstr ""
+msgstr "ไม่มีชุดค่าผสมที่ระบุ จึงไม่สามารถเพิ่มลงในรถเข็นได้"
 
 #. module: website_sale
 #: code:addons/website_sale/models/sale_order.py:0
 #, python-format
 msgid "The given product does not exist therefore it cannot be added to cart."
-msgstr ""
+msgstr "ไม่มีสินค้าที่ระบุ จึงไม่สามารถหยิบใส่ตะกร้าได้"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2675,6 +2700,8 @@ msgid ""
 "The mode selected here applies as invoicing policy of any new product "
 "created but not of products already existing."
 msgstr ""
+"โหมดที่เลือกที่นี่จะนำไปใช้เป็นนโยบายการออกใบแจ้งหนี้ของผลิตภัณฑ์ใหม่ใดๆ "
+"ที่สร้างขึ้นแต่ไม่ใช่ของผลิตภัณฑ์ที่มีอยู่แล้ว"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__public_categ_ids
@@ -2684,17 +2711,19 @@ msgid ""
 "Shop > Customize and enable 'eCommerce categories' to view all eCommerce "
 "categories."
 msgstr ""
+"สินค้าจะมีจำหน่ายในแต่ละหมวดอีคอมเมิร์ซที่กล่าวถึง ไปที่ร้านค้า > ปรับแต่ง "
+"และเปิดใช้งาน 'หมวดหมู่อีคอมเมิร์ซ' เพื่อดูหมวดหมู่อีคอมเมิร์ซทั้งหมด"
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.action_abandoned_orders_ecommerce
 #: model_terms:ir.actions.act_window,help:website_sale.action_view_abandoned_tree
 msgid "The time to mark a cart as abandoned can be changed in the settings."
-msgstr ""
+msgstr "เวลาในการทำเครื่องหมายรถเข็นว่าละทิ้งสามารถเปลี่ยนแปลงได้ในการตั้งค่า"
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.action_orders_ecommerce
 msgid "There is no confirmed order from the website"
-msgstr ""
+msgstr "ไม่มีการยืนยันคำสั่งซื้อจากเว็บไซต์"
 
 #. module: website_sale
 #. openerp-web
@@ -2724,7 +2753,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "This combination does not exist."
-msgstr ""
+msgstr "ไม่มีชุดค่าผสมนี้"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2747,7 +2776,7 @@ msgstr "นี่คือรถเข็นปัจจุบันของค
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "This product has no valid combination."
-msgstr ""
+msgstr "ผลิตภัณฑ์นี้ไม่มีการรวมกันที่ถูกต้อง"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -2777,7 +2806,7 @@ msgstr "ยอดเข้าชมสินค้าทั้งหมด"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_popover
 msgid "True"
-msgstr ""
+msgstr "จริง"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2833,7 +2862,7 @@ msgstr "ยอดขายทั้งหมดไม่รวมภาษี"
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 #, python-format
 msgid "Upload a file from your local library."
-msgstr ""
+msgstr "อัปโหลดไฟล์จากห้องสมุดท้องถิ่นของคุณ"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__video_url
@@ -3001,12 +3030,14 @@ msgid ""
 "(from Sales tab). With the second one, you set prices and computation rules "
 "from Pricelists."
 msgstr ""
+"ด้วยโหมดแรก คุณสามารถกำหนดราคาได้หลายแบบในแบบฟอร์มการกำหนดค่าผลิตภัณฑ์ "
+"(จากแท็บการขาย) ในอันที่สอง คุณจะตั้งราคาและกฎการคำนวณจากรายการราคา"
 
 #. module: website_sale
 #: code:addons/website_sale/models/product.py:0
 #, python-format
 msgid "With this action, '%s' website would not have any pricelist available."
-msgstr ""
+msgstr "ด้วยการกระทำนี้ '%s' เว็บไซต์จะไม่มีรายการราคาใด ๆ"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -3014,6 +3045,8 @@ msgid ""
 "You are editing your <b>billing and shipping</b> addresses at the same time!<br/>\n"
 "                                            If you want to modify your shipping address, create a"
 msgstr ""
+"คุณกำลังแก้ไขที่อยู่ <b>สำหรับการเรียกเก็บเงินและที่อยู่สำหรับจัดส่ง</b> ในเวลาเดียวกัน!<br/>\n"
+"                                            หากคุณต้องการแก้ไขที่อยู่สำหรับจัดส่ง ให้สร้าง"
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.sale_report_action_carts
@@ -3038,6 +3071,8 @@ msgid ""
 "You'll find here all the carts abandoned by your visitors.\n"
 "                If they completed their address, you should send them a recovery email!"
 msgstr ""
+"คุณจะพบรถเข็นทั้งหมดที่ผู้เยี่ยมชมของคุณละทิ้งที่นี่\n"
+"               หากพวกเขากรอกที่อยู่เสร็จแล้ว คุณควรส่งอีเมลสำรองให้พวกเขา!"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -3217,6 +3252,8 @@ msgid ""
 "Changing company name is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
 msgstr ""
+"ไม่อนุญาตให้เปลี่ยนชื่อบริษัทเมื่อมีการออกเอกสารสำหรับบัญชีของคุณแล้ว "
+"โปรดติดต่อเราโดยตรงสำหรับการดำเนินการนี้"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_b2b
@@ -3224,3 +3261,5 @@ msgid ""
 "Changing VAT number is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
 msgstr ""
+"ไม่อนุญาตให้เปลี่ยนหมายเลข VAT เมื่อออกเอกสารสำหรับบัญชีของคุณแล้ว "
+"โปรดติดต่อเราโดยตรงสำหรับการดำเนินการนี้"

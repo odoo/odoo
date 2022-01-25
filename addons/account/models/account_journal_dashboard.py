@@ -169,7 +169,8 @@ class account_journal(models.Model):
                 next_date = start_date + timedelta(days=7)
                 query += " UNION ALL ("+select_sql_clause+" and invoice_date_due >= '"+start_date.strftime(DF)+"' and invoice_date_due < '"+next_date.strftime(DF)+"')"
                 start_date = next_date
-
+        # Ensure results returned by postgres match the order of data list
+        query += " ORDER BY aggr_date ASC"
         self.env.cr.execute(query, query_args)
         query_results = self.env.cr.dictfetchall()
         is_sample_data = True

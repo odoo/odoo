@@ -46,7 +46,7 @@ class StockPickingType(models.Model):
 
     @api.model
     def create(self, vals):
-        company = self.env['res.company'].browse(vals['company_id'])
+        company = self.env['res.company'].browse(vals.get('company_id', False)) or self.env.company
         if 'l10n_it_ddt_sequence_id' not in vals or not vals['l10n_it_ddt_sequence_id'] and vals['code'] == 'outgoing' \
                 and company.country_id.code == 'IT':
             ir_seq_name, ir_seq_prefix = self._get_dtt_ir_seq_vals(vals.get('warehouse_id'), vals['sequence_code'])
@@ -54,7 +54,7 @@ class StockPickingType(models.Model):
                     'name': ir_seq_name,
                     'prefix': ir_seq_prefix,
                     'padding': 5,
-                    'company_id': vals['company_id'],
+                    'company_id': company.id,
                     'implementation': 'no_gap',
                 }).id
         return super(StockPickingType, self).create(vals)

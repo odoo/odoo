@@ -1010,7 +1010,7 @@
                                 <group id="other_tab_entry_group">
                                     <group name="misc_group">
                                         <field name="auto_post"
-                                               attrs="{'invisible': [('type', '!=', 'entry')], 'readonly': [('reversed_entry_id', '!=', False)]}"/>
+                                               attrs="{'invisible': [('type', '!=', 'entry')]}"/>
                                         <field name="reversed_entry_id"
                                                attrs="{'invisible': ['|', ('reversed_entry_id', '=', False), ('type', '!=', 'entry')]}"/>
                                         <field name="to_check"

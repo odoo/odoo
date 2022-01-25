@@ -81,7 +81,7 @@ class ChangeProductionQty(models.TransientModel):
             operation_bom_qty = {}
             for bom, bom_data in boms:
                 for operation in bom.routing_id.operation_ids:
-                    operation_bom_qty[operation.id] = bom_data['qty']
+                    operation_bom_qty[operation.id] = bom.product_qty * bom_data['qty']
             finished_moves_modification = self._update_finished_moves(production, production.product_qty - qty_produced, old_production_qty)
             production._log_downside_manufactured_quantity(finished_moves_modification)
             moves = production.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel'))

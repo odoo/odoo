@@ -18,6 +18,7 @@
 # Odoo Thaidev <odoothaidev@gmail.com>, 2021
 # Wasin Th, 2021
 # Amin Cheloh <nineamin@hotmail.com>, 2021
+# Krisa C, 2021
 # Wichanon Jamwutthipreecha, 2021
 # 
 msgid ""
@@ -42,7 +43,7 @@ msgstr "# ของรายการ"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_transaction__sale_order_ids_nbr
 msgid "# of Sales Orders"
-msgstr ""
+msgstr "# ของคำสั่งขาย"
 
 #. module: sale
 #: model:mail.template,report_name:sale.email_template_edi_sale
@@ -84,7 +85,7 @@ msgstr "&amp;times;"
 #. module: sale
 #: model:ir.actions.report,print_report_name:sale.action_report_pro_forma_invoice
 msgid "'PRO-FORMA - %s' % (object.name)"
-msgstr ""
+msgstr "'PRO-FORMA - %s' % (object.name)"
 
 #. module: sale
 #: model:ir.actions.report,print_report_name:sale.action_report_saleorder
@@ -92,13 +93,15 @@ msgid ""
 "(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or "
 "'Order - %s' % (object.name)"
 msgstr ""
+"(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or "
+"'Order - %s' % (object.name)"
 
 #. module: sale
 #: model:product.product,description_sale:sale.product_product_4e
 #: model:product.product,description_sale:sale.product_product_4f
 #: model:product.template,description_sale:sale.product_product_4e_product_template
 msgid "160x80cm, with large legs."
-msgstr ""
+msgstr "160x80ซม ขาใหญ่"
 
 #. module: sale
 #: model:mail.template,body_html:sale.mail_template_sale_confirmation
@@ -305,17 +308,17 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<i class=\"fa fa-comment\"/> Contact us to get a new quotation."
-msgstr ""
+msgstr "<i class=\"fa fa-comment\"/> ติดต่อเราเพื่อรับใบเสนอราคาใหม่"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<i class=\"fa fa-comment\"/> Feedback"
-msgstr ""
+msgstr "<i class=\"fa fa-comment\"/> ผลตอบรับ"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<i class=\"fa fa-comment\"/> Send message"
-msgstr ""
+msgstr "<i class=\"fa fa-comment\"/> ส่งข้อความ"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -326,26 +329,28 @@ msgstr "<i class=\"fa fa-download\"/> ดาวน์โหลด"
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid "<i class=\"fa fa-fw fa-check\" role=\"img\" aria-label=\"Done\" title=\"Done\"/>Done"
 msgstr ""
+"<i class=\"fa fa-fw fa-check\" role=\"img\" aria-label=\"เสร็จสิ้น\" "
+"title=\"Done\"/>เสร็จสิ้น"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<i class=\"fa fa-fw fa-check\"/> <b>Paid</b>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-check\"/> <b>ชำระแล้ว</b>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<i class=\"fa fa-fw fa-clock-o\"/> <b>Waiting Payment</b>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/> <b>รอการชำระเงิน</b>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 msgid "<i class=\"fa fa-fw fa-clock-o\"/> Expired"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/>หมดอายุ"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 msgid "<i class=\"fa fa-fw fa-remove\"/> Cancelled"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-remove\"/>ยกเลิกแล้ว"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.crm_lead_partner_kanban_view
@@ -353,6 +358,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-usd\" role=\"img\" aria-label=\"Sale orders\" "
 "title=\"Sales orders\"/>"
 msgstr ""
+"<i class=\"fa fa-fw fa-usd\" role=\"img\" aria-label=\"คำสั่งขาย\" "
+"title=\"คำสั่งขาย\"/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -362,7 +369,7 @@ msgstr "<i class=\"fa fa-print\"/> พิมพ์"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<i class=\"fa fa-times\"/> Reject"
-msgstr ""
+msgstr "<i class=\"fa fa-times\"/> ปฏิเสธ"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -372,7 +379,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<small><b class=\"text-muted\">Your advantage</b></small>"
-msgstr ""
+msgstr "<small><b class=\"text-muted\">ประโยชน์ของคุณ</b></small>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
@@ -380,6 +387,8 @@ msgid ""
 "<span class=\"d-none d-md-inline\">Sales Order #</span>\n"
 "                            <span class=\"d-block d-md-none\">Ref.</span>"
 msgstr ""
+"<span class=\"d-none d-md-inline\">คำสั่งขาย #</span>\n"
+"                            <span class=\"d-block d-md-none\">อ้างอิง</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -409,7 +418,7 @@ msgstr "<span class=\"o_form_label\">การยืนยันอีเมล�
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Down Payments</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">เงินดาว์น</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -417,12 +426,14 @@ msgid ""
 "<span class=\"o_stat_text\">Customer</span>\n"
 "                                <span class=\"o_stat_text\">Preview</span>"
 msgstr ""
+"<span class=\"o_stat_text\">มุมมอง</span>\n"
+"                                <span class=\"o_stat_text\">ลูกค้า</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
 msgid "<span class=\"o_stat_text\">Sold</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">ขายแล้ว</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -430,21 +441,23 @@ msgid ""
 "<span groups=\"account.group_show_line_subtotals_tax_excluded\">Amount</span>\n"
 "                                <span groups=\"account.group_show_line_subtotals_tax_included\">Total Price</span>"
 msgstr ""
+"<span groups=\"account.group_show_line_subtotals_tax_excluded\">จำนวน</span>\n"
+"                                <span groups=\"account.group_show_line_subtotals_tax_included\">ราคารวม</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<span>Accepted on the behalf of:</span>"
-msgstr ""
+msgstr "<span>ยอมรับในนามของ:</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<span>By paying this proposal, I agree to the following terms:</span>"
-msgstr ""
+msgstr "<span>เมื่อชำระเงินตามข้อเสนอนี้ ฉันยอมรับเงื่อนไขต่อไปนี้:</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<span>By signing this proposal, I agree to the following terms:</span>"
-msgstr ""
+msgstr "<span>โดยการลงนามในข้อเสนอนี้ ฉันยอมรับเงื่อนไขต่อไปนี้:</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -455,7 +468,7 @@ msgstr "<span>ส่วนลด(%)</span>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<span>For an amount of:</span>"
-msgstr ""
+msgstr "<span>สำหรับจำนวนของ:</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -470,17 +483,17 @@ msgstr "<span>ภาษี</span>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<span>With payment terms:</span>"
-msgstr ""
+msgstr "<span>ด้วยเงื่อนไขการชําระเงิน:</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<strong class=\"d-block mb-1\">Invoices</strong>"
-msgstr ""
+msgstr "<strong class=\"d-block mb-1\">ใบแจ้งหนี้</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<strong class=\"d-block mb-1\">Shipping Address:</strong>"
-msgstr ""
+msgstr "<strong class=\"d-block mb-1\">ที่อยู่สำหรับจัดส่ง:</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -501,7 +514,7 @@ msgstr "<strong>วันสิ้นสุด:</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Expiration:</strong>"
-msgstr ""
+msgstr "<strong>สิ้นสุด:</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -546,17 +559,17 @@ msgstr "<strong>ยอดรวม</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<strong>Thank You!</strong><br/>"
-msgstr ""
+msgstr "<strong>ขอบคุณ!</strong><br/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<strong>This offer expired!</strong>"
-msgstr ""
+msgstr "<strong>ข้อเสนอนี้สิ้นสุดแล้ว!</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<strong>This quotation has been canceled.</strong>"
-msgstr ""
+msgstr "<strong>ใบเสนอราคานี้ถูกยกเลิกแล้ว</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -573,7 +586,7 @@ msgstr "<strong>เอกสารอ้างอิง</strong>"
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_date_order_conditional_required
 msgid "A confirmed sales order requires a confirmation date."
-msgstr ""
+msgstr "ใบสั่งขายที่ยืนยันแล้วต้องมีวันที่ยืนยัน"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
@@ -594,6 +607,8 @@ msgid ""
 "         according to their invoicing policy (based on ordered or delivered "
 "quantity)."
 msgstr ""
+"ใบแจ้งหนี้มาตรฐานจะออกพร้อมกับรายการใบสั่งทั้งหมดที่พร้อมสำหรับการออกใบแจ้งหนี้ตามนโยบายการออกใบแจ้งหนี้"
+" (ตามปริมาณที่สั่งซื้อหรือที่จัดส่ง)"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
@@ -620,7 +635,7 @@ msgstr ""
 #. module: sale
 #: model:res.groups,name:sale.group_warning_sale
 msgid "A warning can be set on a product or a customer (Sale)"
-msgstr ""
+msgstr "สามารถตั้งเตือนบนสินค้าหรือลูกค้าได้ (ขาย)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -628,11 +643,12 @@ msgid ""
 "Ability to select a package type in sales orders and to force a quantity "
 "that is a multiple of the number of units per package."
 msgstr ""
+"ความสามารถในการเลือกประเภทแพ็คเกจในใบสั่งขายและบังคับปริมาณที่หลายหน่วยต่อหนึ่งแพ็คเกจ"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Accept &amp; Pay"
-msgstr ""
+msgstr "ยอมรับและชำระ"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
@@ -642,7 +658,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Accept &amp; Sign"
-msgstr ""
+msgstr "ยอมรับและเซ็น"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
@@ -723,7 +739,7 @@ msgstr "เพิ่มรายการบันทึก"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Add several variants to an order from a grid"
-msgstr ""
+msgstr "เพิ่มตัวเลือกสินค้าหลายรายการในคำสั่งซื้อจากตาราง"
 
 #. module: sale
 #: model:res.groups,name:sale.group_delivery_invoice_address
@@ -739,7 +755,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Allows you to send Pro-Forma Invoice to your customers"
-msgstr ""
+msgstr "ช่วยให้คุณสามารถส่งใบแจ้งหนี้ Pro-Forma ให้กับลูกค้าของคุณ"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__group_proforma_sales
@@ -749,7 +765,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_amazon
 msgid "Amazon Sync"
-msgstr ""
+msgstr "การซิงค์ Amazon "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -759,18 +775,18 @@ msgstr "จำนวน"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_undiscounted
 msgid "Amount Before Discount"
-msgstr ""
+msgstr "จำนวนก่อนลด"
 
 #. module: sale
 #: code:addons/sale/models/payment.py:0
 #, python-format
 msgid "Amount Mismatch (%s)"
-msgstr ""
+msgstr "จำนวนที่ไม่ตรงกัน (%s)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__quotations_amount
 msgid "Amount of quotations to invoice"
-msgstr ""
+msgstr "ปริมาณใบเสนอราคาที่จะออกใบแจ้งหนี้"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales__analytic_account_id
@@ -782,7 +798,7 @@ msgstr "บัญชีวิเคราะห์"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__qty_delivered_method__analytic
 msgid "Analytic From Expenses"
-msgstr ""
+msgstr "วิเคราะห์จากค่าใช้จ่าย"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_analytic_line
@@ -814,6 +830,8 @@ msgid ""
 "Are you sure you want to void the authorized transaction? This action can't "
 "be undone."
 msgstr ""
+"คุณแน่ใจหรือไม่ว่าต้องการยกเลิกธุรกรรมที่ได้รับอนุญาต "
+"การดำเนินการนี้ไม่สามารถยกเลิกได้"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__cost
@@ -829,7 +847,7 @@ msgstr "จำนวนไฟล์แนบ"
 #: model:ir.model,name:sale.model_product_attribute_value
 #: model:ir.model.fields,field_description:sale.field_product_attribute_custom_value__custom_product_template_attribute_value_id
 msgid "Attribute Value"
-msgstr ""
+msgstr "ค่าคุณลักษณะ"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -839,17 +857,17 @@ msgstr "คุณลักษณะ"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__authorized_transaction_ids
 msgid "Authorized Transactions"
-msgstr ""
+msgstr "ธุรกรรมที่ได้รับอนุญาต"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__automatic_invoice
 msgid "Automatic Invoice"
-msgstr ""
+msgstr "ใบแจ้งหนี้อัตโนมัติ"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Automatic email sent after the customer has signed or paid online"
-msgstr ""
+msgstr "อีเมลอัตโนมัติที่ส่งหลังจากที่ลูกค้าได้ลงนามหรือชำระเงินออนไลน์แล้ว"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__journal_name
@@ -859,12 +877,12 @@ msgstr "ชื่อธนาคาร"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__payment_acquirer__so_reference_type__partner
 msgid "Based on Customer ID"
-msgstr ""
+msgstr "อิงตามไอดีลูกค้า"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__payment_acquirer__so_reference_type__so_name
 msgid "Based on Document Reference"
-msgstr ""
+msgstr "อิงจากเอกสารอ้างอิง"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__sale_line_warn__block
@@ -879,6 +897,9 @@ msgid ""
 "codes. Specific conditions can be set (products, customers, minimum purchase"
 " amount, period). Rewards can be discounts (% or amount) or free products."
 msgstr ""
+"เพิ่มยอดขายของคุณด้วยโปรแกรมส่วนลดสองประเภท: โปรโมชั่นและรหัสคูปอง "
+"สามารถกำหนดเงื่อนไขเฉพาะได้ (สินค้า ลูกค้า ยอดซื้อขั้นต่ำ ระยะเวลา) "
+"รางวัลอาจเป็นส่วนลด (% หรือจำนวน) หรือผลิตภัณฑ์ฟรี"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__campaign_id
@@ -889,7 +910,7 @@ msgstr "แคมเปญ"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_updatable
 msgid "Can Edit Product"
-msgstr ""
+msgstr "สามารถแก้ไขสินค้า"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -907,7 +928,7 @@ msgstr "ถูกยกเลิก"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Capture Transaction"
-msgstr ""
+msgstr "จับการทำธุรกรรม"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_uom_category_id
@@ -920,11 +941,12 @@ msgid ""
 "Check this box if you send quotations to your customers rather than "
 "confirming orders straight away."
 msgstr ""
+"เลือกช่องนี้หากคุณส่งใบเสนอราคาให้กับลูกค้าแทนที่จะยืนยันคำสั่งซื้อทันที"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_open_sale_onboarding_payment_acquirer_wizard
 msgid "Choose how to confirm quotations"
-msgstr ""
+msgstr "เลือกวิธีการยืนยันใบเสนอราคา"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_order_confirmation_step
@@ -936,12 +958,12 @@ msgstr ""
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Click here to add some products or services to your quotation."
-msgstr ""
+msgstr "คลิกที่นี่เพื่อเพิ่มผลิตภัณฑ์หรือบริการบางอย่างในใบเสนอราคาของคุณ"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 msgid "Click to define an invoicing target"
-msgstr ""
+msgstr "คลิกเพื่อกำหนดเป้าหมายการออกใบแจ้งหนี้"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -1037,7 +1059,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Connectors"
-msgstr ""
+msgstr "ตัวเชื่อม"
 
 #. module: sale
 #: model:ir.model,name:sale.model_res_partner
@@ -1057,7 +1079,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_coupon
 msgid "Coupons & Promotions"
-msgstr ""
+msgstr "คูปองและโปรโมชั้น"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
@@ -1085,12 +1107,12 @@ msgstr "สร้างสินค้าใหม่"
 #: model_terms:ir.actions.act_window,help:sale.action_quotations_salesteams
 #: model_terms:ir.actions.act_window,help:sale.action_quotations_with_onboarding
 msgid "Create a new quotation, the first step of a new sale!"
-msgstr ""
+msgstr "สร้างใบเสนอราคาใหม่ ขั้นตอนแรกของการขายใหม่!"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "Create and View Invoice"
-msgstr ""
+msgstr "สร้างและดูใบแจ้งหนี้"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_view_sale_advance_payment_inv
@@ -1125,11 +1147,13 @@ msgid ""
 "Creation date of draft/sent orders,\n"
 "Confirmation date of confirmed orders."
 msgstr ""
+"วันที่สร้างร่าง/ส่งคำสั่ง\n"
+"วันที่ยืนยันการสั่งซื้อที่ได้รับการยืนยัน"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_payment_acquirer_onboarding_wizard__payment_method__stripe
 msgid "Credit card (via Stripe)"
-msgstr ""
+msgstr "บัตรเครดิต (ผ่าน Stripe)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__currency_id
@@ -1182,7 +1206,7 @@ msgstr "บัญชีของลูกค้า"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_sale_delivery_address
 msgid "Customer Addresses"
-msgstr ""
+msgstr "ที่อยู่ลูกค้า"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__country_id
@@ -1193,13 +1217,13 @@ msgstr "ประเทศของลูกค้า"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__commercial_partner_id
 msgid "Customer Entity"
-msgstr ""
+msgstr "นิติบุคคลลูกค้า"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__industry_id
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Customer Industry"
-msgstr ""
+msgstr "อุตสาหกรรมลูกค้า"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__access_url
@@ -1214,7 +1238,7 @@ msgstr "เลขที่เอกสารของลูกค้า"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Customer Signature"
-msgstr ""
+msgstr "ลายมือชื่อลูกค้า"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__deposit_taxes_id
@@ -1241,7 +1265,7 @@ msgstr "ปรับแต่ง"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.onboarding_quotation_layout_step
 msgid "Customize the look of your quotations."
-msgstr ""
+msgstr "ปรับแต่งรูปลักษณ์ของใบเสนอราคาของคุณ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_dhl
@@ -1261,12 +1285,12 @@ msgstr "วันที่สั่งซื้อ"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__signed_on
 msgid "Date of the signature."
-msgstr ""
+msgstr "วันที่ลงลายมือชื่อ"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__create_date
 msgid "Date on which sales order is created."
-msgstr ""
+msgstr "วันที่สร้างใบสั่งขาย"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -1276,33 +1300,33 @@ msgstr "วันที่:"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__deduct_down_payments
 msgid "Deduct down payments"
-msgstr ""
+msgstr "หักเงินดาวน์"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Default Limit:"
-msgstr ""
+msgstr "ขีดจำกัดเริ่มต้น:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__use_quotation_validity_days
 msgid "Default Quotation Validity"
-msgstr ""
+msgstr "ความถูกต้องของใบเสนอราคาเริ่มต้น"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__quotation_validity_days
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__quotation_validity_days
 msgid "Default Quotation Validity (Days)"
-msgstr ""
+msgstr "ความถูกต้องของใบเสนอราคาเริ่มต้น (วัน)"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__deposit_default_product_id
 msgid "Default product used for payment advances"
-msgstr ""
+msgstr "สินค้าเริ่มต้นที่ใช้สำหรับการชำระเงินล่วงหน้า"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Deliver Content by Email"
-msgstr ""
+msgstr "ส่งเนื้อหาทางอีเมล"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -1312,14 +1336,14 @@ msgstr "ส่งมอบแล้ว"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_delivered_manual
 msgid "Delivered Manually"
-msgstr ""
+msgstr "ส่งด้วยตนเอง"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_delivered
 #, python-format
 msgid "Delivered Quantity"
-msgstr ""
+msgstr "จำนวนที่ถูกส่งมอบ"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__invoice_policy__delivery
@@ -1336,12 +1360,12 @@ msgstr "ที่อยู่จัดส่ง"
 #: model:ir.model.fields,field_description:sale.field_sale_order__commitment_date
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Delivery Date"
-msgstr ""
+msgstr "วันที่ส่งมอบ"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_move__partner_shipping_id
 msgid "Delivery address for current invoice."
-msgstr ""
+msgstr "ที่อยู่จัดส่งสำหรับใบแจ้งหนี้ปัจจุบัน"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__expected_date
@@ -1373,7 +1397,7 @@ msgstr "รายละเอียด"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_website_sale_digital
 msgid "Digital Content"
-msgstr ""
+msgstr "เนื้อหาดิจิทัล"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -1383,7 +1407,7 @@ msgstr "ส่วนลด%"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__discount
 msgid "Discount %"
-msgstr ""
+msgstr "ส่วนลด %"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__discount
@@ -1393,7 +1417,7 @@ msgstr "ส่วนลด(%)"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__discount_amount
 msgid "Discount Amount"
-msgstr ""
+msgstr "จำนวนส่วนลด"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_attribute_custom_value__display_name
@@ -1426,12 +1450,12 @@ msgstr "เสร็จสิ้น"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "Down Payment"
-msgstr ""
+msgstr "เงินดาวน์"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__amount
 msgid "Down Payment Amount"
-msgstr ""
+msgstr "จำนวนเงินดาวน์"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__fixed_amount
@@ -1441,29 +1465,29 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__product_id
 msgid "Down Payment Product"
-msgstr ""
+msgstr "เงินดาวน์สินค้า"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "Down Payment: %s"
-msgstr ""
+msgstr "เงินดาวน์: %s"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__fixed
 msgid "Down payment (fixed amount)"
-msgstr ""
+msgstr "จำนวนเงินดาวน์ (จำนวนคงที่)"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__percentage
 msgid "Down payment (percentage)"
-msgstr ""
+msgstr "เงินดาวน์ (เปอร์เซ็นต์)"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "Down payment of %s%%"
-msgstr ""
+msgstr "เงินดาวน์ของ %s%%"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__is_downpayment
@@ -1471,6 +1495,8 @@ msgid ""
 "Down payments are made when creating invoices from a sales order. They are "
 "not copied when duplicating a sales order."
 msgstr ""
+"มีการชำระเงินดาวน์เมื่อสร้างใบแจ้งหนี้จากใบสั่งขาย "
+"พวกเขาจะไม่ถูกคัดลอกเมื่อทำซ้ำใบสั่งขาย"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -1493,7 +1519,7 @@ msgstr "Easypost Connector"
 #: code:addons/sale/static/src/js/product_configurator_widget.js:0
 #, python-format
 msgid "Edit Configuration"
-msgstr ""
+msgstr "แก้ไขการกำหนดค่า"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__paypal_email_account
@@ -1509,7 +1535,7 @@ msgstr "แม่แบบอีเมล"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__confirmation_template_id
 msgid "Email sent to the customer once the order is paid."
-msgstr ""
+msgstr "อีเมลที่ส่งถึงลูกค้าเมื่อชำระเงินแล้ว"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__expected_date
@@ -1519,7 +1545,7 @@ msgstr "วันที่คาดหวัง"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Expected:"
-msgstr ""
+msgstr "คาดหวัง:"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product__expense_policy
@@ -1529,11 +1555,14 @@ msgid ""
 " a validated expense can be re-invoice to a customer at its cost or sales "
 "price."
 msgstr ""
+"ค่าใช้จ่ายและใบเรียกเก็บเงินของผู้จัดจำหน่ายสามารถออกใบแจ้งหนี้ให้กับลูกค้าได้อีกครั้ง"
+" ด้วยตัวเลือกนี้ "
+"ค่าใช้จ่ายที่ตรวจสอบแล้วสามารถออกใบแจ้งหนี้ใหม่ให้กับลูกค้าได้ในราคาต้นทุนหรือราคาขาย"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__validity_date
 msgid "Expiration"
-msgstr ""
+msgstr "สิ้นสุด"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -1546,7 +1575,7 @@ msgstr "Extended Filters"
 #: code:addons/sale/static/src/js/product_configurator_widget.js:0
 #, python-format
 msgid "External Link"
-msgstr ""
+msgstr "ลิงก์ภายนอก"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_no_variant_attribute_value_ids
@@ -1562,7 +1591,7 @@ msgstr "Extra line with %s "
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_fedex
 msgid "FedEx Connector"
-msgstr ""
+msgstr "ตัวเชื่อม FedEx "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__fiscal_position_id
@@ -1609,6 +1638,9 @@ msgid ""
 "customer. The search tool can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
 msgstr ""
+"จากรายงานนี้ คุณจะมีภาพรวมของจำนวนเงินที่ออกใบแจ้งหนี้ให้กับลูกค้าของคุณได้ "
+"เครื่องมือค้นหายังสามารถใช้เพื่อปรับเปลี่ยนรายงานใบแจ้งหนี้ในแบบของคุณ "
+"และเพื่อให้ตรงกับการวิเคราะห์นี้กับความต้องการของคุณ"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__invoice_status__invoiced
@@ -1624,28 +1656,28 @@ msgstr "กิจกรรมในอนาคต"
 #. module: sale
 #: model:ir.model,name:sale.model_payment_link_wizard
 msgid "Generate Sales Payment Link"
-msgstr ""
+msgstr "สร้างลิงก์การชำระเงินสำหรับการขาย"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_order_generate_link
 msgid "Generate a Payment Link"
-msgstr ""
+msgstr "สร้างลิงก์การชำระเงิน"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid ""
 "Generate the invoice automatically when the online payment is confirmed"
-msgstr ""
+msgstr "สร้างใบแจ้งหนี้โดยอัตโนมัติเมื่อยืนยันการชำระเงินออนไลน์"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Get warnings in orders for products or customers"
-msgstr ""
+msgstr "รับคำเตือนในคำสั่งสำหรับสินค้าหรือลูกค้า"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Grant discounts on sales order lines"
-msgstr ""
+msgstr "ให้ส่วนลดในรายการใบสั่งขาย"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__weight
@@ -1667,7 +1699,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__has_down_payments
 msgid "Has down payments"
-msgstr ""
+msgstr "มีเงินดาวน์"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_attribute_value__html_color
@@ -1830,6 +1862,9 @@ msgid ""
 "has invoiced this month. It is used to compute the progression ratio of the "
 "current and target revenue on the kanban view."
 msgstr ""
+"รายได้ใบแจ้งหนี้สำหรับเดือนปัจจุบัน "
+"นี่คือจำนวนเงินที่ช่องทางการขายได้ออกใบแจ้งหนี้ในเดือนนี้ "
+"ใช้เพื่อคำนวณอัตราส่วนความคืบหน้าของรายได้ปัจจุบันและเป้าหมายในมุมมองคัมบัง"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_config_settings__default_invoice_policy__delivery
@@ -1895,7 +1930,7 @@ msgstr "การแจ้งหนี้"
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Invoicing Address:"
-msgstr ""
+msgstr "ที่อยู่ใบแจ้งหนี้:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__invoice_policy
@@ -1913,7 +1948,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Invoicing and Shipping Address:"
-msgstr ""
+msgstr "ที่อยู่สำหรับจัดส่งและแจ้งหนี้:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_is_follower
@@ -1939,7 +1974,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__is_expired
 msgid "Is expired"
-msgstr ""
+msgstr "สิ้นสุดแล้ว"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__is_expense
@@ -2061,7 +2096,7 @@ msgstr "ไฟล์แนบหลัก"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Manage promotion &amp; coupon programs"
-msgstr ""
+msgstr "จัดการโปรโมชั่นและโปรแกรมคูปอง"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__qty_delivered_method__manual
@@ -2107,7 +2142,7 @@ msgstr "การตลาด"
 #: code:addons/sale/static/src/xml/account_reconciliation.xml:0
 #, python-format
 msgid "Match with a sale order"
-msgstr ""
+msgstr "ตรงกับใบสั่งขาย"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__medium_id
@@ -2118,7 +2153,7 @@ msgstr "ปานกลาง"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__paypal_seller_account
 msgid "Merchant Account ID"
-msgstr ""
+msgstr "ไอดีบัญชีการค้า"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_has_error
@@ -2165,12 +2200,12 @@ msgstr "คำสั่งขายของฉัน"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 msgid "My Quotations"
-msgstr ""
+msgstr "ใบเสนอราคาของฉัน"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "My Sales Order Lines"
-msgstr ""
+msgstr "ไลน์คำสั่งขายของฉัน"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_attribute_custom_value__name
@@ -2180,7 +2215,7 @@ msgstr "ชื่อ"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__signed_by
 msgid "Name of the person that signed the SO."
-msgstr ""
+msgstr "Name of the person that signed the SO."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0 code:addons/sale/models/sale.py:0
@@ -2223,12 +2258,12 @@ msgstr "ไม่มีข้อความ"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "No longer edit orders once confirmed"
-msgstr ""
+msgstr "ไม่แก้ไขคำสั่งซื้อเมื่อได้รับการยืนยันแล้ว"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_to_invoice
 msgid "No orders to invoice found"
-msgstr ""
+msgstr "ไม่พบคำสั่งในใบแจ้งหนี้"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_upselling
@@ -2271,7 +2306,7 @@ msgstr "จำนวนกิจกรรม"
 msgid ""
 "Number of days between the order confirmation and the shipping of the "
 "products to the customer"
-msgstr ""
+msgstr "จำนวนวันระหว่างการยืนยันคำสั่งซื้อและการจัดส่งสินค้าไปยังลูกค้า"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_has_error_counter
@@ -2291,12 +2326,12 @@ msgstr "จํานวนข้อความที่มีข้อผิด
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__quotations_count
 msgid "Number of quotations to invoice"
-msgstr ""
+msgstr "จำนวนใบเสนอราคาเป็นใบแจ้งหนี้"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__sales_to_invoice_count
 msgid "Number of sales to invoice"
-msgstr ""
+msgstr "จำนวนการขายที่จะออกใบแจ้งหนี้"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_unread_counter
@@ -2318,6 +2353,8 @@ msgid ""
 "Once the quotation is confirmed by the customer, it becomes a sales "
 "order.<br> You will be able to create an invoice and collect the payment."
 msgstr ""
+"เมื่อลูกค้ายืนยันใบเสนอราคาแล้ว จะกลายเป็นใบสั่งขาย<br> "
+"คุณจะสามารถสร้างใบแจ้งหนี้และเรียกเก็บเงินได้"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders
@@ -2325,6 +2362,8 @@ msgid ""
 "Once the quotation is confirmed, it becomes a sales order.<br> You will be "
 "able to create an invoice and collect the payment."
 msgstr ""
+"เมื่อยืนยันใบเสนอราคาแล้ว จะกลายเป็นใบสั่งขาย<br> "
+"คุณจะสามารถสร้างใบแจ้งหนี้และเรียกเก็บเงินได้"
 
 #. module: sale
 #. openerp-web
@@ -2364,12 +2403,14 @@ msgstr "ค่าควรจำนวนเต็มเท่านั้นท
 #, python-format
 msgid "Only draft orders can be marked as sent directly."
 msgstr ""
+"เฉพาะคำสั่งซื้อที่ยังไม่ชำระเงินเท่านั้นที่สามารถทำเครื่องหมายว่าส่งได้โดยตรง"
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_product_attribute_custom_value_sol_custom_value_unique
 msgid ""
 "Only one Custom Value is allowed per Attribute Value per Sales Order Line."
 msgstr ""
+"อนุญาตให้ใช้ค่าที่กำหนดเองได้เพียงค่าเดียวต่อมูลค่าแอตทริบิวต์ต่อบรรทัดใบสั่งขาย"
 
 #. module: sale
 #. openerp-web
@@ -2377,7 +2418,7 @@ msgstr ""
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Open Sales app to send your first quotation in a few clicks."
-msgstr ""
+msgstr "เปิดแอปการขายเพื่อส่งใบเสนอราคาแรกของคุณในไม่กี่คลิก"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -2394,7 +2435,7 @@ msgstr "คำสั่ง #"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__count
 msgid "Order Count"
-msgstr ""
+msgstr "จำนวนคำสั่ง"
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:0
@@ -2438,18 +2479,18 @@ msgstr "Order Status"
 #. module: sale
 #: model:mail.activity.type,name:sale.mail_act_sale_upsell
 msgid "Order Upsell"
-msgstr ""
+msgstr "คำสั่งเพิ่มยอด"
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "Order signed by %s"
-msgstr ""
+msgstr "คำสั่งเซ็นโดย %s"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 msgid "Order to Invoice"
-msgstr ""
+msgstr "คำสั่งเพื่ออกใบแจ้งหนี้"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
@@ -2487,7 +2528,7 @@ msgstr "คำสั่งขายรอใบแจ้งหนี้"
 #: model:ir.actions.act_window,name:sale.action_orders_upselling
 #: model:ir.ui.menu,name:sale.menu_sale_order_upselling
 msgid "Orders to Upsell"
-msgstr ""
+msgstr "คำสั่งเพื่อเพิ่มยอด"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -2502,7 +2543,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__paypal_pdt_token
 msgid "PDT Identity Token"
-msgstr ""
+msgstr "โทเคน PDT Identity"
 
 #. module: sale
 #: model:ir.actions.report,name:sale.action_report_pro_forma_invoice
@@ -2545,7 +2586,7 @@ msgstr "ชำระด้วย"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__other
 msgid "Pay with another payment acquirer"
-msgstr ""
+msgstr "ชำระเงินด้วยผู้รับการชำระเงินรายอื่น"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__paypal
@@ -2576,7 +2617,7 @@ msgstr "วิธีการจ่ายเงิน"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__reference
 msgid "Payment Ref."
-msgstr ""
+msgstr "อ้างอิงการชำระเงิน"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__payment_term_id
@@ -2596,7 +2637,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Payment terms"
-msgstr ""
+msgstr "เงื่อนไขการชําระเงิน"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__paypal_user_type
@@ -2607,7 +2648,7 @@ msgstr "ประเภทผู้ใช้ Paypal"
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "Please define an accounting sales journal for the company %s (%s)."
-msgstr ""
+msgstr "โปรดกำหนดสมุดการขายรายวันทางบัญชีสำหรับบริษัท %s (%s)."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_url
@@ -2622,17 +2663,17 @@ msgstr "ราคาลด"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_reduce_taxexcl
 msgid "Price Reduce Tax excl"
-msgstr ""
+msgstr "ราคาที่ลดไม่รวมภาษี"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_reduce_taxinc
 msgid "Price Reduce Tax inc"
-msgstr ""
+msgstr "ราคาที่ลดรวมภาษี"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales__price_subtotal
 msgid "Price Subtotal"
-msgstr ""
+msgstr "ยอดรวมราคาย่อย"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales__pricelist_id
@@ -2804,7 +2845,7 @@ msgstr "ใบเสนอราคา"
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Quotation #"
-msgstr ""
+msgstr "ใบเสนอราคา #"
 
 #. module: sale
 #: model:ir.actions.report,name:sale.action_report_saleorder
@@ -2814,7 +2855,7 @@ msgstr "ใบเสนอราคา / สั่งซื้อ"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__quotation_count
 msgid "Quotation Count"
-msgstr ""
+msgstr "จำนวนใบเสนอราคา"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -2825,7 +2866,7 @@ msgstr "วันที่เสนอราคา:"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.onboarding_quotation_layout_step
 msgid "Quotation Layout"
-msgstr ""
+msgstr "เลย์เอาท์ใบเสนอราคา"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_quotation_tree
@@ -2841,7 +2882,7 @@ msgstr "ส่งใบเสนอราคาแล้ว"
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_res_company_check_quotation_validity_days
 msgid "Quotation Validity is required and must be greater than 0."
-msgstr ""
+msgstr "ต้องมีความถูกต้องของใบเสนอราคาและต้องมากกว่า 0"
 
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_confirmed
@@ -2859,7 +2900,7 @@ msgstr "ส่งใบเสนอราคาเรียบร้อยแล
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "Quotation viewed by customer %s"
-msgstr ""
+msgstr "ใบเสนอราคาที่ดูโดยลูกค้า %s"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_quotations
@@ -2886,7 +2927,7 @@ msgstr "ใบเสนอราคา &amp; คำสั่งขาย"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_quotation_salesteam
 msgid "Quotations Analysis"
-msgstr ""
+msgstr "การวิเคราะห์ใบเสนอราคา"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
@@ -2920,7 +2961,7 @@ msgstr "อ้างอิง"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__origin
 msgid "Reference of the document that generated this sales order request."
-msgstr ""
+msgstr "การอ้างอิงของเอกสารที่สร้างคำขอใบสั่งขายนี้"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__delivered
@@ -2948,24 +2989,24 @@ msgstr "การรายงาน"
 msgid ""
 "Request a online signature to the customer in order to confirm orders "
 "automatically."
-msgstr ""
+msgstr "ขอลายเซ็นออนไลน์ให้กับลูกค้าเพื่อยืนยันคำสั่งซื้อโดยอัตโนมัติ"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Request an online payment to confirm orders"
-msgstr ""
+msgstr "ขอชำระเงินออนไลน์เพื่อยืนยันการสั่งซื้อ"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__require_payment
 msgid ""
 "Request an online payment to the customer in order to confirm orders "
 "automatically."
-msgstr ""
+msgstr "ขอชำระเงินออนไลน์ให้กับลูกค้าเพื่อยืนยันการสั่งซื้อโดยอัตโนมัติ"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Request an online signature to confirm orders"
-msgstr ""
+msgstr "ขอลายเซ็นออนไลน์เพื่อยืนยันคำสั่ง"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
@@ -2983,6 +3024,8 @@ msgstr "ผู้ใช้ที่รับผิดชอบ"
 msgid ""
 "Revenue target for the current month (untaxed total of confirmed invoices)."
 msgstr ""
+"เป้าหมายรายได้สำหรับเดือนปัจจุบัน "
+"(ยอดรวมที่ไม่มีภาษีของใบแจ้งหนี้ที่ยืนยันแล้ว)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_form
@@ -2993,7 +3036,7 @@ msgstr "รายได้"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__invoiced_amount
 msgid "Revenues generated by the campaign"
-msgstr ""
+msgstr "รายได้จากแคมเปญ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_has_sms_error
@@ -3006,25 +3049,27 @@ msgstr "ข้อผิดพลาดในการส่ง SMS"
 #: code:addons/sale/static/src/xml/account_reconciliation.xml:0
 #, python-format
 msgid "Sale Order"
-msgstr ""
+msgstr "คำสั่งขาย"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_partner__sale_order_count
 #: model:ir.model.fields,field_description:sale.field_res_users__sale_order_count
 msgid "Sale Order Count"
-msgstr ""
+msgstr "จำนวนคำสั่งขาย"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_warning_sale
 msgid "Sale Order Warnings"
 msgstr ""
+"คำเตือน \n"
+"ขาย"
 
 #. module: sale
 #. openerp-web
 #: code:addons/sale/static/src/js/account_reconciliation.js:0
 #, python-format
 msgid "Sale Orders"
-msgstr ""
+msgstr "คำสั่งขาย"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_payment_acquirer_onboarding_wizard
@@ -3034,17 +3079,17 @@ msgstr ""
 #. module: sale
 #: model:utm.source,name:sale.utm_source_sale_order_0
 msgid "Sale Promotion 1"
-msgstr ""
+msgstr "โปรโมชั่นการขาย 1"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sale Warnings"
-msgstr ""
+msgstr "คำเตือนการขาย"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_payment_method
 msgid "Sale onboarding selected payment method"
-msgstr ""
+msgstr "การขายเริ่มต้นวิธีการชำระเงินที่เลือก"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_report_product_all
@@ -3059,7 +3104,7 @@ msgstr "การขาย"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_advance_payment_inv
 msgid "Sales Advance Payment Invoice"
-msgstr ""
+msgstr "ใบแจ้งหนี้การชำระเงินล่วงหน้าการขาย"
 
 #. module: sale
 #: code:addons/sale/models/sales_team.py:0
@@ -3098,13 +3143,13 @@ msgstr "ใบสั่งขาย"
 #: model:mail.message.subtype,name:sale.mt_order_confirmed
 #: model:mail.message.subtype,name:sale.mt_salesteam_order_confirmed
 msgid "Sales Order Confirmed"
-msgstr ""
+msgstr "ยืนยันคำสั่งขาย"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_analytic_line__so_line
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_line_view_form_readonly
 msgid "Sales Order Item"
-msgstr ""
+msgstr "รายการคำสั่งขาย"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line
@@ -3124,19 +3169,19 @@ msgstr "รายการคำสั่งขาย"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Sales Order Lines ready to be invoiced"
-msgstr ""
+msgstr "ไลน์ใบสั่งขายพร้อมออกใบแจ้งหนี้"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Sales Order Lines related to a Sales Order of mine"
-msgstr ""
+msgstr "ไลน์ใบสั่งขายที่เกี่ยวข้องกับใบสั่งขายของฉัน"
 
 #. module: sale
 #: code:addons/sale/models/payment.py:0
 #: model_terms:ir.ui.view,arch_db:sale.transaction_form_inherit_sale
 #, python-format
 msgid "Sales Order(s)"
-msgstr ""
+msgstr "คำสั่งขาย"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders
@@ -3182,23 +3227,23 @@ msgstr "ทีมขาย"
 #: model:ir.model.fields,field_description:sale.field_res_partner__sale_warn
 #: model:ir.model.fields,field_description:sale.field_res_users__sale_warn
 msgid "Sales Warnings"
-msgstr ""
+msgstr "คำเตือนการขาย"
 
 #. module: sale
 #: model:ir.model,name:sale.model_report_all_channels_sales
 msgid "Sales by Channel (All in One)"
-msgstr ""
+msgstr "ยอดขายตามช่องทาง (All in One)"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__sales_price
 msgid "Sales price"
-msgstr ""
+msgstr "ราคาขาย"
 
 #. module: sale
 #: code:addons/sale/models/sales_team.py:0
 #, python-format
 msgid "Sales: Untaxed Total"
-msgstr ""
+msgstr "ขาย: ยอดทั้งหมดไม่รวมภาษี"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales__user_id
@@ -3269,7 +3314,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Select specific invoice and delivery addresses"
-msgstr ""
+msgstr "เลือกใบแจ้งหนี้และที่อยู่ในการจัดส่งที่เฉพาะเจาะจง"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product__sale_line_warn
@@ -3298,7 +3343,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell variants of a product using attributes (size, color, etc.)"
-msgstr ""
+msgstr "ขายสินค้าที่มีคัวเลือกหลากหลาย โดยใช้คุณลักษณะ (ขนาด สี ต่าง ๆ )"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3404,7 +3449,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Sign &amp; Pay"
-msgstr ""
+msgstr "เซ็นและชำระ"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
@@ -3414,7 +3459,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__digital_signature
 msgid "Sign online"
-msgstr ""
+msgstr "เซ็นออนไลน์"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__signature
@@ -3426,17 +3471,17 @@ msgstr "ลายเซ็นต์"
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "Signature is missing."
-msgstr ""
+msgstr "ลายเซ็นหายไป"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__signature
 msgid "Signature received through the portal."
-msgstr ""
+msgstr "ลายเซ็นที่ได้รับผ่านพอร์ทัล"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__signed_by
 msgid "Signed By"
-msgstr ""
+msgstr "เซ็นโดย"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__signed_on
@@ -3447,13 +3492,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_product_product__sales_count
 #: model:ir.model.fields,field_description:sale.field_product_template__sales_count
 msgid "Sold"
-msgstr ""
+msgstr "ขาย"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
 msgid "Sold in the last 365 days"
-msgstr ""
+msgstr "ขายใน 365 วันที่ผ่านมา"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__source_id
@@ -3469,7 +3514,7 @@ msgstr "เอกสารที่มา"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_product_email_template
 msgid "Specific Email"
-msgstr ""
+msgstr "อีเมลเฉพาะ"
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:0
@@ -3481,12 +3526,12 @@ msgstr "สถานะ"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_order_confirmation_state
 msgid "State of the onboarding confirmation order step"
-msgstr ""
+msgstr "สถานะของขั้นตอนคำสั่งยืนยันการเริ่มต้นใช้งาน"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_sample_quotation_state
 msgid "State of the onboarding sample quotation step"
-msgstr ""
+msgstr "สถานะของขั้นตอนใบเสนอราคาตัวอย่างการเริ่มต้นใช้งาน"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_quotation_onboarding_state
@@ -3521,12 +3566,12 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__stripe_publishable_key
 msgid "Stripe Publishable Key"
-msgstr ""
+msgstr "คีย์ของ Stripe ที่เผยแพร่ได้"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__stripe_secret_key
 msgid "Stripe Secret Key"
-msgstr ""
+msgstr "Stripe Secret Key"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_subtotal
@@ -3537,7 +3582,7 @@ msgstr "รวม"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_tree
 #: model_terms:ir.ui.view,arch_db:sale.view_quotation_tree
 msgid "Tax Total"
-msgstr ""
+msgstr "ภาษี่ทั้งหมด"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_by_group
@@ -3554,7 +3599,7 @@ msgstr "ภาษี"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__deposit_taxes_id
 msgid "Taxes used for deposits"
-msgstr ""
+msgstr "ภาษีที่ใช้สำหรับเงินฝาก"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__display_type
@@ -3567,11 +3612,13 @@ msgid ""
 "Tell us why you are refusing this quotation, this will help us improve our "
 "services."
 msgstr ""
+"บอกเราว่าเหตุใดคุณจึงปฏิเสธใบเสนอราคานี้ "
+"ซึ่งจะช่วยให้เราปรับปรุงบริการของเราได้"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Terms &amp; Conditions"
-msgstr ""
+msgstr "เงื่อนไขและข้อกำหนด"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__note
@@ -3581,7 +3628,7 @@ msgstr "เงื่อนไขและข้อกำหนด"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Terms and conditions..."
-msgstr ""
+msgstr "เงื่อนไขและข้อกำหนด..."
 
 #. module: sale
 #: code:addons/sale/models/account_move.py:0
@@ -3611,7 +3658,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__analytic_account_id
 msgid "The analytic account related to a sales order."
-msgstr ""
+msgstr "บัญชีการวิเคราะห์ที่เกี่ยวข้องกับใบสั่งขาย"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
@@ -3620,6 +3667,7 @@ msgid ""
 "The delivery date is sooner than the expected date.You may be unable to "
 "honor the delivery date."
 msgstr ""
+"วันที่จัดส่งเร็วกว่าวันที่คาดไว้ คุณอาจไม่สามารถปฏิบัติตามวันที่จัดส่งได้"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_attribute__display_type
@@ -3631,7 +3679,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__fixed_amount
 msgid "The fixed amount to be invoiced in advance, taxes excluded."
-msgstr ""
+msgstr "จำนวนเงินคงที่ที่จะออกใบแจ้งหนี้ล่วงหน้า ไม่รวมภาษี"
 
 #. module: sale
 #: code:addons/sale/models/product_template.py:0
@@ -3641,6 +3689,9 @@ msgid ""
 "%s\n"
 "You can archive these products and recreate them with your company restriction instead, or leave them as shared product."
 msgstr ""
+"ผลิตภัณฑ์ต่อไปนี้ไม่สามารถจำกัดให้อยู่ในบริษัท %s ได้ เนื่องจากมีการใช้แล้วในใบเสนอราคาหรือใบสั่งขายในบริษัทอื่น:\n"
+"%s\n"
+"คุณสามารถเก็บถาวรผลิตภัณฑ์เหล่านี้และสร้างใหม่โดยมีข้อจำกัดของบริษัทของคุณแทน หรือปล่อยให้เป็นผลิตภัณฑ์ที่ใช้ร่วมกัน"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__automatic_invoice
@@ -3649,6 +3700,9 @@ msgid ""
 "The invoice is marked as paid and the payment is registered in the payment journal defined in the configuration of the payment acquirer.\n"
 "This mode is advised if you issue the final invoice at the order and not after the delivery."
 msgstr ""
+"ใบแจ้งหนี้จะถูกสร้างขึ้นโดยอัตโนมัติและพร้อมใช้งานในพอร์ทัลลูกค้าเมื่อธุรกรรมได้รับการยืนยันโดยผู้รับการชำระเงิน\n"
+"ใบแจ้งหนี้ถูกทำเครื่องหมายว่าชำระแล้ว และการชำระเงินได้รับการลงทะเบียนในสมุดรายวันการชำระเงินที่กำหนดไว้ในการกำหนดค่าของผู้ได้รับการชำระเงิน\n"
+"แนะนำให้ใช้โหมดนี้หากคุณออกใบแจ้งหนี้ขั้นสุดท้ายที่คำสั่งซื้อ ไม่ใช่หลังจากจัดส่ง"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3656,12 +3710,13 @@ msgid ""
 "The margin is computed as the sum of product sales prices minus the cost set"
 " in their detail form."
 msgstr ""
+"กำไรจะคำนวณเป็นผลรวมของราคาขายของผลิตภัณฑ์ลบด้วยต้นทุนที่กำหนดไว้ในแบบฟอร์มรายละเอียด"
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "The order is not in a state requiring customer signature."
-msgstr ""
+msgstr "คำสั่งซื้อไม่อยู่ในสถานะที่ต้องการลายเซ็นของลูกค้า"
 
 #. module: sale
 #: code:addons/sale/models/payment.py:0
@@ -3680,12 +3735,12 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__reference
 msgid "The payment communication of this sale order."
-msgstr ""
+msgstr "การสื่อสารการชำระเงินของใบสั่งขายนี้"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__amount
 msgid "The percentage of amount to be invoiced in advance, taxes excluded."
-msgstr ""
+msgstr "เปอร์เซ็นต์ของจำนวนเงินที่จะออกใบแจ้งหนี้ล่วงหน้า ไม่รวมภาษี"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
@@ -3703,6 +3758,9 @@ msgid ""
 " to \"Ordered quantities\". Please update your deposit product to be able to"
 " create a deposit invoice."
 msgstr ""
+"ผลิตภัณฑ์ที่ใช้ในการออกใบแจ้งหนี้การชำระเงินดาวน์ควรมีการกำหนดนโยบายใบแจ้งหนี้เป็น"
+" \"ปริมาณที่สั่งซื้อ\" "
+"โปรดอัปเดตผลิตภัณฑ์เงินฝากของคุณเพื่อให้สามารถสร้างใบแจ้งหนี้เงินฝากได้"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__currency_rate
@@ -3715,7 +3773,7 @@ msgstr ""
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "The value of the down payment amount must be positive."
-msgstr ""
+msgstr "มูลค่าของจำนวนเงินดาวน์ต้องเป็นค่าบวก"
 
 #. module: sale
 #. openerp-web
@@ -3757,6 +3815,8 @@ msgid ""
 "This is a name that helps you keep track of your different campaign efforts,"
 " e.g. Fall_Drive, Christmas_Special"
 msgstr ""
+"ชื่อนี้ช่วยให้คุณติดตามความพยายามของแคมเปญต่างๆ เช่น Fall_Drive, "
+"Christmas_Special"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__commitment_date
@@ -3764,11 +3824,13 @@ msgid ""
 "This is the delivery date promised to the customer. If set, the delivery "
 "order will be scheduled based on this date rather than product lead times."
 msgstr ""
+"นี่คือวันที่ส่งมอบที่สัญญาไว้กับลูกค้า หากกำหนดไว้ "
+"ใบสั่งจัดส่งจะถูกกำหนดเวลาตามวันที่นี้แทนที่จะเป็นเวลารอคอยสินค้า"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__medium_id
 msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
-msgstr ""
+msgstr "นี้เป็นวิธีการจัดส่งเช่น โปสการ์ด อีเมล หรือแบนเนอร์โฆษณา"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__source_id
@@ -3776,6 +3838,7 @@ msgid ""
 "This is the source of the link, e.g. Search Engine, another domain, or name "
 "of email list"
 msgstr ""
+"นี่เป็นที่มาของลิงก์ เช่น เครื่องมือค้นหา โดเมนอื่น หรือชื่อรายการอีเมล"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_all
@@ -3786,6 +3849,12 @@ msgid ""
 "having invoiced yet. If you want to analyse your turnover, you should use "
 "the Invoice Analysis report in the Accounting application."
 msgstr ""
+"รายงานนี้ทำการวิเคราะห์ใบเสนอราคาและใบสั่งขายของคุณ "
+"การวิเคราะห์ตรวจสอบรายได้จากการขายของคุณและจัดเรียงตามเกณฑ์กลุ่มต่างๆ "
+"(พนักงานขาย คู่ค้า ผลิตภัณฑ์ ฯลฯ) "
+"ใช้รายงานนี้เพื่อวิเคราะห์ยอดขายที่ยังไม่ได้ออกใบแจ้งหนี้ "
+"หากคุณต้องการวิเคราะห์การหมุนเวียนของคุณ "
+"คุณควรใช้รายงานการวิเคราะห์ใบแจ้งหนี้ในแอปพลิเคชันการบัญชี"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_quotation_salesteam
@@ -3796,6 +3865,12 @@ msgid ""
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
 msgstr ""
+"รายงานนี้ทำการวิเคราะห์ใบเสนอราคาของคุณ "
+"การวิเคราะห์ตรวจสอบรายได้จากการขายของคุณและจัดเรียงตามเกณฑ์กลุ่มต่างๆ "
+"(พนักงานขาย คู่ค้า ผลิตภัณฑ์ ฯลฯ) "
+"ใช้รายงานนี้เพื่อวิเคราะห์ยอดขายที่ยังไม่ได้ออกใบแจ้งหนี้ "
+"หากคุณต้องการวิเคราะห์การหมุนเวียนของคุณ "
+"คุณควรใช้รายงานการวิเคราะห์ใบแจ้งหนี้ในแอปพลิเคชันการบัญชี"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_so_salesteam
@@ -3806,6 +3881,12 @@ msgid ""
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
 msgstr ""
+"รายงานนี้ทำการวิเคราะห์ใบสั่งขายของคุณ "
+"การวิเคราะห์ตรวจสอบรายได้จากการขายของคุณและจัดเรียงตามเกณฑ์กลุ่มต่างๆ "
+"(พนักงานขาย คู่ค้า ผลิตภัณฑ์ ฯลฯ) "
+"ใช้รายงานนี้เพื่อวิเคราะห์ยอดขายที่ยังไม่ได้ออกใบแจ้งหนี้ "
+"หากคุณต้องการวิเคราะห์การหมุนเวียนของคุณ "
+"คุณควรใช้รายงานการวิเคราะห์ใบแจ้งหนี้ในแอปพลิเคชันการบัญชี"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__invoice_status__to_invoice
@@ -3824,7 +3905,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
 msgid "To Upsell"
-msgstr ""
+msgstr "เพื่อเพิ่มยอด"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3867,7 +3948,7 @@ msgstr "ภาษีทั้งหมด"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_tree
 #: model_terms:ir.ui.view,arch_db:sale.view_quotation_tree
 msgid "Total Tax Excluded"
-msgstr ""
+msgstr "ทั้งหมดไม่รวมภาษี"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_tree
@@ -3879,7 +3960,7 @@ msgstr "ทั้งหมดรวมภาษี"
 #: model:ir.model.fields,field_description:sale.field_product_product__service_type
 #: model:ir.model.fields,field_description:sale.field_product_template__service_type
 msgid "Track Service"
-msgstr ""
+msgstr "ติดตามบริการ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__transaction_ids
@@ -3909,7 +3990,7 @@ msgstr "ตัวเชื่อมต่อ USPS"
 #. module: sale
 #: model:ir.model,name:sale.model_utm_campaign
 msgid "UTM Campaign"
-msgstr ""
+msgstr "แคมเปญ UTM "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_unit
@@ -3974,18 +4055,18 @@ msgstr "จำนวนเงินไม่รวมภาษี"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__untaxed_amount_invoiced
 msgid "Untaxed Amount Invoiced"
-msgstr ""
+msgstr "จำนวนเงินที่ไม่ได้หักภาษีในใบแจ้งหนี้"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__untaxed_amount_to_invoice
 #: model:ir.model.fields,field_description:sale.field_sale_report__untaxed_amount_to_invoice
 msgid "Untaxed Amount To Invoice"
-msgstr ""
+msgstr "จำนวนเงินที่ไม่ได้หักภาษีในใบแจ้งหนี้"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__untaxed_amount_invoiced
 msgid "Untaxed Invoiced Amount"
-msgstr ""
+msgstr "จำนวนเงินที่ยังไม่ได้หักภาษี"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__price_subtotal
@@ -4070,13 +4151,13 @@ msgstr "Warning for %s"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
 msgid "Warning on the Sales Order"
-msgstr ""
+msgstr "คำเตือนเกี่ยวกับคำสั่งขาย"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
 msgid "Warning when Selling this Product"
-msgstr ""
+msgstr "คำเตือนเมื่อขายสินค้านี้"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__website_message_ids
@@ -4111,6 +4192,7 @@ msgid ""
 "You can not delete a sent quotation or a confirmed sales order. You must "
 "first cancel it."
 msgstr ""
+"คุณไม่สามารถลบใบเสนอราคาที่ส่งหรือใบสั่งขายที่ยืนยันแล้ว คุณต้องยกเลิกก่อน"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
@@ -4119,6 +4201,8 @@ msgid ""
 "You can not remove an order line once the sales order is confirmed.\n"
 "You should rather set the quantity to 0."
 msgstr ""
+"คุณไม่สามารถลบรายการใบสั่งได้เมื่อใบสั่งขายได้รับการยืนยันแล้ว\n"
+"คุณควรตั้งค่าปริมาณเป็น 0"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_to_invoice
@@ -4134,6 +4218,8 @@ msgid ""
 " communication will be given to the customer when they choose the payment "
 "method."
 msgstr ""
+"คุณสามารถตั้งค่าประเภทการสื่อสารที่จะปรากฏในใบสั่งขายได้ที่นี่ "
+"การสื่อสารจะได้รับให้กับลูกค้าเมื่อพวกเขาเลือกวิธีการชำระเงิน"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_upselling
@@ -4150,6 +4236,8 @@ msgid ""
 "You cannot change the type of a sale order line. Instead you should delete "
 "the current line and create a new line of the proper type."
 msgstr ""
+"คุณไม่สามารถเปลี่ยนชนิดของไลน์ใบสั่งขาย "
+"คุณควรลบไลน์ปัจจุบันและสร้างไลน์ใหม่ในประเภทที่เหมาะสมแทน"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.product_template_action
@@ -4226,7 +4314,7 @@ msgstr ""
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "sale order"
-msgstr ""
+msgstr "ใบสั่งขาย"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__amount_by_group

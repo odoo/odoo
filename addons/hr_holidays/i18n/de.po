@@ -2486,6 +2486,10 @@ msgid ""
 "The status is 'Refused', when time off request is refused by manager.\n"
 "The status is 'Approved', when time off request is approved by manager."
 msgstr ""
+"Der Status wird auf \"Einreichen\" gesetzt, wenn ein Antrag auf Freizeitausgleich erstellt wird.\n"
+"Der Status ist \"Zu genehmigen\", wenn der Freizeitantrag vom Benutzer bestätigt wird.\n"
+"Der Status lautet \"Abgelehnt\", wenn der Antrag auf Freistellung vom Vorgesetzten abgelehnt wird.\n"
+"Der Status lautet \"Genehmigt\", wenn der Manager den Antrag auf Freistellung genehmigt hat."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__state
@@ -3070,7 +3074,7 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "You cannot delete a time off which is in %s state"
-msgstr ""
+msgstr "Sie können keine Abwesenheit löschen, die sich im Status %s befindet"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
@@ -3104,6 +3108,8 @@ msgstr ""
 msgid ""
 "You must be either %s's manager or time off manager to approve this time off"
 msgstr ""
+"Sie müssen entweder der Vorgesetzte von %s oder der Urlaubsmanager sein, um "
+"diese Abwesenheit zu genehmigen."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -3112,6 +3118,8 @@ msgid ""
 "You must have manager rights to modify/validate a time off that already "
 "begun"
 msgstr ""
+"Sie müssen über Managerrechte verfügen, um einen bereits begonnenen Urlaub "
+"zu ändern/zu validieren"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0

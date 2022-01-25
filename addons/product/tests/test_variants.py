@@ -4,6 +4,8 @@
 import base64
 from collections import OrderedDict
 import io
+import unittest.mock
+
 from PIL import Image
 
 from . import common
@@ -1179,3 +1181,52 @@ class TestVariantsArchive(common.TestProductCommon):
         variants = variants or self.template.product_variant_ids
         self.assertEqual(len(variants), 1)
         self.assertFalse(variants[0].product_template_attribute_value_ids)
+
+
+class TestVariantWrite(TransactionCase):
+
+    def test_active_one2many(self):
+        template = self.env['product.template'].create({'name': 'Foo', 'description': 'Foo'})
+        self.assertEqual(len(template.product_variant_ids), 1)
+
+        # check the consistency of one2many field product_variant_ids w.r.t. active variants
+        variant1 = template.product_variant_ids
+        variant2 = self.env['product.product'].create({'product_tmpl_id': template.id})
+        self.assertEqual(template.product_variant_ids, variant1 + variant2)
+
+        variant2.active = False
+        self.assertEqual(template.product_variant_ids, variant1)
+
+        variant2.active = True
+        self.assertEqual(template.product_variant_ids, variant1 + variant2)
+
+        variant1.active = False
+        self.assertEqual(template.product_variant_ids, variant2)
+
+    def test_write_inherited_field(self):
+        product = self.env['product.product'].create({'name': 'Foo', 'description': 'Foo'})
+        self.assertEqual(product.name, 'Foo')
+        self.assertEqual(product.description, 'Foo')
+
+        self.env['product.pricelist'].create({
+            'name': 'Foo',
+            'item_ids': [(0, 0, {'product_id': product.id, 'fixed_price': 1})],
+        })
+
+        # patch template.write to modify pricelist items, which causes some
+        # cache invalidation
+        Template = self.registry['product.template']
+        Template_write = Template.write
+
+        def write(self, vals):
+            result = Template_write(self, vals)
+            items = self.env['product.pricelist.item'].search([('product_id', '=', product.id)])
+            items.fixed_price = 2
+            return result
+
+        with unittest.mock.patch.object(Template, 'write', write):
+            # change both 'name' and 'description': due to some programmed cache
+            # invalidation, the second field may not be properly assigned
+            product.write({'name': 'Bar', 'description': 'Bar'})
+            self.assertEqual(product.name, 'Bar')
+            self.assertEqual(product.description, 'Bar')

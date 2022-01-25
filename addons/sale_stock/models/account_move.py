@@ -29,8 +29,9 @@ class AccountMove(models.Model):
         if self.state == 'draft':
             return []
 
-        sale_orders = self.mapped('invoice_line_ids.sale_line_ids.order_id')
-        stock_move_lines = sale_orders.mapped('picking_ids.move_lines.move_line_ids')
+        sale_lines = self.invoice_line_ids.sale_line_ids
+        sale_orders = sale_lines.order_id
+        stock_move_lines = sale_lines.move_ids.filtered(lambda r: r.state == 'done').move_line_ids
 
         # Get the other customer invoices and refunds.
         ordered_invoice_ids = sale_orders.mapped('invoice_ids')\
@@ -46,27 +47,33 @@ class AccountMove(models.Model):
                 break
             i += 1
 
-        # Get the previous invoice if any.
+        # Get the previous invoices if any.
         previous_invoices = ordered_invoice_ids[:self_index]
-        last_invoice = previous_invoices[-1] if len(previous_invoices) else None
 
-        # Get the incoming and outgoing sml between self.invoice_date and the previous invoice (if any).
+        # Get the incoming and outgoing sml between self.invoice_date and the previous invoice (if any) of the related product.
         write_dates = [wd for wd in self.invoice_line_ids.mapped('write_date') if wd]
         self_datetime = max(write_dates) if write_dates else None
-        last_write_dates = last_invoice and [wd for wd in last_invoice.invoice_line_ids.mapped('write_date') if wd]
-        last_invoice_datetime = max(last_write_dates) if last_write_dates else None
+        last_invoice_datetime = dict()
+        for product in self.invoice_line_ids.product_id:
+            last_invoice = previous_invoices.filtered(lambda inv: product in inv.invoice_line_ids.product_id)
+            last_invoice = last_invoice[-1] if len(last_invoice) else None
+            last_write_dates = last_invoice and [wd for wd in last_invoice.invoice_line_ids.mapped('write_date') if wd]
+            last_invoice_datetime[product] = max(last_write_dates) if last_write_dates else None
+
         def _filter_incoming_sml(ml):
             if ml.state == 'done' and ml.location_id.usage == 'customer' and ml.lot_id:
-                if last_invoice_datetime:
-                    return last_invoice_datetime <= ml.date <= self_datetime
+                last_date = last_invoice_datetime.get(ml.product_id)
+                if last_date:
+                    return last_date <= ml.date <= self_datetime
                 else:
                     return ml.date <= self_datetime
             return False
 
         def _filter_outgoing_sml(ml):
             if ml.state == 'done' and ml.location_dest_id.usage == 'customer' and ml.lot_id:
-                if last_invoice_datetime:
-                    return last_invoice_datetime <= ml.date <= self_datetime
+                last_date = last_invoice_datetime.get(ml.product_id)
+                if last_date:
+                    return last_date <= ml.date <= self_datetime
                 else:
                     return ml.date <= self_datetime
             return False
@@ -115,10 +122,12 @@ class AccountMoveLine(models.Model):
 
         so_line = self.sale_line_ids and self.sale_line_ids[-1] or False
         if so_line:
+            is_line_reversing = bool(self.move_id.reversed_entry_id)
             qty_to_invoice = self.product_uom_id._compute_quantity(self.quantity, self.product_id.uom_id)
-            qty_invoiced = sum([x.product_uom_id._compute_quantity(x.quantity, x.product_id.uom_id) for x in so_line.invoice_lines if x.move_id.state == 'posted'])
-            average_price_unit = self.product_id.with_context(force_company=self.company_id.id)._compute_average_price(qty_invoiced, qty_to_invoice, so_line.move_ids)
+            posted_invoice_lines = so_line.invoice_lines.filtered(lambda l: l.move_id.state == 'posted' and bool(l.move_id.reversed_entry_id) == is_line_reversing)
+            qty_invoiced = sum([x.product_uom_id._compute_quantity(x.quantity, x.product_id.uom_id) for x in posted_invoice_lines])
 
+            average_price_unit = self.product_id.with_context(force_company=self.company_id.id, is_returned=is_line_reversing)._compute_average_price(qty_invoiced, qty_to_invoice, so_line.move_ids)
             price_unit = average_price_unit or price_unit
             price_unit = self.product_id.uom_id.with_context(force_company=self.company_id.id)._compute_price(price_unit, self.product_uom_id)
         return price_unit

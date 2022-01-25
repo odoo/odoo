@@ -1302,6 +1302,33 @@ class TestWorkOrderProcess(TestMrpCommon):
         self.assertEqual(line3.product_id, self.product_1)
         self.assertEqual(line3.qty_done, 4)
 
+    def test_change_production_qty(self):
+        """
+        This test checks the expected duration of a work order after the user has changed
+        the production quantity
+        """
+        factor = 2
+        self.bom_1.routing_id.operation_ids[1:].unlink()
+        self.bom_1.routing_id.operation_ids.workcenter_id.write({
+            'capacity': 1,
+            'time_start': 0,
+            'time_stop': 0,
+            'time_efficiency': 100,
+        })
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = self.bom_1.product_id
+        mo = mo_form.save()
+        mo.action_confirm()
+        mo.button_plan()
+
+        wizard = Form(self.env['change.production.qty'].with_context(default_mo_id=mo.id)).save()
+        wizard.product_qty = self.bom_1.product_qty * factor
+        wizard.change_prod_qty()
+
+        duration_expected = self.bom_1.routing_id.operation_ids.time_cycle_manual * self.bom_1.product_qty * factor
+        self.assertEqual(mo.workorder_ids.duration_expected, duration_expected)
+
 
 class TestRoutingAndKits(SavepointCase):
     @classmethod

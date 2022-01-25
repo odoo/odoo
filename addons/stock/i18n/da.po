@@ -147,7 +147,7 @@ msgstr "%s: Transit Lager"
 msgid ""
 "'Delivery Slip - %s - %s' % (object.partner_id.name or '', object.name)"
 msgstr ""
-"'Leveringsseddel - %s - %s' % (object.partner_id.name or \", object.name)"
+"'Leveringsseddel - %s - %s' % (object.partner_id.name or '', object.name)"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_inventory
@@ -174,7 +174,7 @@ msgstr "'Operationstype - %s' % object.name"
 msgid ""
 "'Picking Operations - %s - %s' % (object.partner_id.name or '', object.name)"
 msgstr ""
-"'Pluk operationer - %s - %s' % (object.partner_id.name or \", object.name)"
+"'Pluk operationer - %s - %s' % (object.partner_id.name or '', object.name)"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__state
@@ -1649,7 +1649,7 @@ msgstr "Kunde lagre"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
 msgid "DHL Express Connector"
-msgstr ""
+msgstr "DHL Express Connector"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__date
@@ -3045,6 +3045,9 @@ msgid ""
 "stock.The correction could unreserve some operations with problematics "
 "products."
 msgstr ""
+"Det er ikke muligt at afreservere flere produkter tilhørende %s end du har "
+"på lager. Rettelsen ville kunne afreservere visse operationer med "
+"problematiske produkter."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -3053,12 +3056,14 @@ msgid ""
 "It is not possible to unreserve more products of %s than you have in stock. "
 "Contact an administrator."
 msgstr ""
+"Det er ikke muligt at afreservere flere produkter fra %s end du har på "
+"lager. Kontakt en administrator."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Try our automated action to fix it"
-msgstr ""
+msgstr "Prøv vores automatiserede handlign for at ordne det"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__move_type
