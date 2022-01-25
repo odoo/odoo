@@ -49,6 +49,18 @@ class ProductTemplate(models.Model):
     base_unit_price = fields.Monetary("Price Per Unit", currency_field="currency_id", compute="_compute_base_unit_price")
     base_unit_name = fields.Char(compute='_compute_base_unit_name', help='Displays the custom unit for the products if defined or the selected unit of measure otherwise.')
 
+    @api.onchange('website_published')
+    def _onchange_website_published(self):
+        if self.website_published:
+            order_lines = self.env['sale.order.line'].search([('product_id', 'in', self.product_variant_ids.ids)])
+            sale_orders = order_lines.order_id.filtered(lambda so: so.website_id and so.state == 'draft')
+            if sale_orders:
+                warning = {'title': _('Warning'),
+                           'message': _("This product is currently used in the following carts : %s.\n"
+                                        "If you wish to remove the item from those cart, you will need to do it manually.") % sale_orders.ids}
+                return {'warning': warning}
+        return
+
     @api.depends('product_variant_ids', 'product_variant_ids.base_unit_count')
     def _compute_base_unit_count(self):
         self.base_unit_count = 0

@@ -638,10 +638,9 @@ class Website(Home):
         Model = request.env[object]
         record = Model.browse(int(id))
 
-        values = {}
         if 'website_published' in Model._fields:
-            values['website_published'] = not record.website_published
-            record.write(values)
+            # browse single int so no ensure_one needed
+            record.website_publish_button()
             return bool(record.website_published)
         return False
 
