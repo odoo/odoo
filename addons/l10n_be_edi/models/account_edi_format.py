@@ -35,27 +35,27 @@ class AccountEdiFormat(models.Model):
     # Account.edi.format override
     ####################################################
 
-    def _create_invoice_from_xml_tree(self, filename, tree):
+    def _create_invoice_from_xml_tree(self, filename, tree, journal=None):
         self.ensure_one()
-        if self.code == 'efff_1' and self._is_ubl(filename, tree):
+        if self.code == 'efff_1' and self._is_ubl(filename, tree) and not self._is_account_edi_ubl_cii_available():
             return self._create_invoice_from_ubl(tree)
-        return super()._create_invoice_from_xml_tree(filename, tree)
+        return super()._create_invoice_from_xml_tree(filename, tree, journal=journal)
 
     def _update_invoice_from_xml_tree(self, filename, tree, invoice):
         self.ensure_one()
-        if self.code == 'efff_1' and self._is_ubl(filename, tree):
+        if self.code == 'efff_1' and self._is_ubl(filename, tree) and not self._is_account_edi_ubl_cii_available():
             return self._update_invoice_from_ubl(tree, invoice)
         return super()._update_invoice_from_xml_tree(filename, tree, invoice)
 
     def _is_compatible_with_journal(self, journal):
         self.ensure_one()
-        if self.code != 'efff_1':
+        if self.code != 'efff_1' or self._is_account_edi_ubl_cii_available():
             return super()._is_compatible_with_journal(journal)
         return journal.type == 'sale' and journal.country_code == 'BE'
 
     def _post_invoice_edi(self, invoices):
         self.ensure_one()
-        if self.code != 'efff_1':
+        if self.code != 'efff_1' or self._is_account_edi_ubl_cii_available():
             return super()._post_invoice_edi(invoices)
         res = {}
         for invoice in invoices:
