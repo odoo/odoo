@@ -29,7 +29,7 @@ registerModel({
                 action,
                 options: {
                     on_close: () => {
-                        activity.thread.refresh();
+                        activity.thread.fetchData(['attachments', 'messages']);
                     },
                 },
             });
@@ -43,7 +43,7 @@ registerModel({
                 method: 'activity_send_mail',
                 args: [[activity.thread.id], this.id],
             }));
-            activity.thread.refresh();
+            activity.thread.fetchData(['attachments', 'messages']);
         },
     },
     fields: {

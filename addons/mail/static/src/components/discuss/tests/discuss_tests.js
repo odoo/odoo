@@ -2917,14 +2917,17 @@ QUnit.test('rendering of inbox message', async function (assert) {
     // AKU TODO: kinda message specific test
     assert.expect(8);
 
+    this.data['res.partner'].records.push({
+        id: 20,
+        name: "Refactoring",
+    });
     this.data['mail.message'].records.push({
         body: "not empty",
         id: 100,
-        model: 'res.partner', // random existing model
+        model: 'res.partner',
         needaction: true,
         needaction_partner_ids: [this.data.currentPartnerId], // for consistency
-        record_name: 'Refactoring', // random name, will be asserted in the test
-        res_id: 20, // random related id
+        res_id: 20,
     });
     this.data['mail.notification'].records.push({
         mail_message_id: 100,
@@ -3189,6 +3192,10 @@ QUnit.test('receive new needaction messages', async function (assert) {
 QUnit.test('reply to message from inbox (message linked to document)', async function (assert) {
     assert.expect(19);
 
+    this.data['res.partner'].records.push({
+        id: 20,
+        name: "Refactoring",
+    });
     // message that is expected to be found in Inbox
     this.data['mail.message'].records.push({
         body: "<p>Test</p>",
@@ -3197,7 +3204,6 @@ QUnit.test('reply to message from inbox (message linked to document)', async fun
         message_type: 'comment',
         needaction: true,
         model: 'res.partner',
-        record_name: 'Refactoring',
         res_id: 20,
     });
     // notification to have message in Inbox

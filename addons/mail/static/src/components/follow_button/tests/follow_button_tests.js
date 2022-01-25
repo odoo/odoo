@@ -155,7 +155,7 @@ QUnit.test('hover following button', async function (assert) {
 });
 
 QUnit.test('click on "follow" button', async function (assert) {
-    assert.expect(7);
+    assert.expect(6);
 
     this.data['res.partner'].records.push({ id: 100, message_follower_ids: [1] });
     this.data['mail.followers'].records.push({
@@ -170,8 +170,6 @@ QUnit.test('click on "follow" button', async function (assert) {
         async mockRPC(route, args) {
             if (route.includes('message_subscribe')) {
                 assert.step('rpc:message_subscribe');
-            } else if (route.includes('mail/read_followers')) {
-                assert.step('rpc:mail/read_followers');
             }
             return this._super(...arguments);
         },
@@ -197,7 +195,6 @@ QUnit.test('click on "follow" button', async function (assert) {
     });
     assert.verifySteps([
         'rpc:message_subscribe',
-        'rpc:mail/read_followers',
     ]);
     assert.containsNone(
         document.body,

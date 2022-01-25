@@ -134,7 +134,6 @@ export class MockModels {
                     needaction_partner_ids: { string: "Partners with Need Action", type: 'many2many', relation: 'res.partner' },
                     notification_ids: { string: "Notifications", type: 'one2many', relation: 'mail.notification' },
                     partner_ids: { string: "Recipients", type: 'many2many', relation: 'res.partner' },
-                    record_name: { string: "Name", type: 'char' },
                     res_id: { string: "Related Document ID", type: 'integer' },
                     // In python, result of a formatter. Here for simplicity.
                     res_model_name: { string: "Res Model Name", type: 'char' },

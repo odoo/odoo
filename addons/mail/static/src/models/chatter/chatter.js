@@ -117,16 +117,11 @@ registerModel({
             this.threadView.messageListView.component.onScroll(ev);
         },
         async refresh() {
-            if (this.hasActivities) {
-                this.thread.refreshActivities();
-            }
-            if (this.hasFollowers) {
-                this.thread.refreshFollowers();
-                this.thread.fetchAndUpdateSuggestedRecipients();
-            }
+            const requestData = ['activities', 'followers', 'suggestedRecipients'];
             if (this.hasMessageList) {
-                this.thread.refresh();
+                requestData.push('attachments', 'messages');
             }
+            this.thread.fetchData(requestData);
         },
         reloadParentView() {
             if (this.component) {
@@ -205,16 +200,6 @@ registerModel({
                         model: this.threadModel,
                     }),
                 });
-                if (this.hasActivities) {
-                    this.thread.refreshActivities();
-                }
-                if (this.hasFollowers) {
-                    this.thread.refreshFollowers();
-                    this.thread.fetchAndUpdateSuggestedRecipients();
-                }
-                if (this.hasMessageList) {
-                    this.thread.refresh();
-                }
             } else if (!this.thread || !this.thread.isTemporary) {
                 const currentPartner = this.messaging.currentPartner;
                 const message = this.messaging.models['Message'].create({

@@ -1,13 +1,6 @@
 /** @odoo-module **/
 
-import {
-    afterEach,
-    afterNextRender,
-    beforeEach,
-    createRootMessagingComponent,
-    nextAnimationFrame,
-    start,
-} from '@mail/utils/test_utils';
+import { afterEach, afterNextRender, beforeEach, nextAnimationFrame, start } from '@mail/utils/test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -15,14 +8,6 @@ QUnit.module('chatter', {}, function () {
 QUnit.module('chatter_tests.js', {
     beforeEach() {
         beforeEach(this);
-
-        this.createChatterComponent = async ({ chatter }, otherProps) => {
-            const props = Object.assign({ localId: chatter.localId }, otherProps);
-            await createRootMessagingComponent(this, "Chatter", {
-                props,
-                target: this.widget.el,
-            });
-        };
 
         this.start = async params => {
             const res = await start({ ...params, data: this.data });
@@ -48,13 +33,11 @@ QUnit.test('base rendering when chatter has no attachment', async function (asse
             res_id: 100,
         });
     }
-    await this.start();
-    const chatter = this.messaging.models['Chatter'].create({
-        id: 11,
+    const { createChatterContainerComponent } = await this.start();
+    await createChatterContainerComponent({
         threadId: 100,
         threadModel: 'res.partner',
     });
-    await this.createChatterComponent({ chatter });
     assert.strictEqual(
         document.querySelectorAll(`.o_Chatter`).length,
         1,
@@ -93,12 +76,10 @@ QUnit.test('base rendering when chatter has no attachment', async function (asse
 QUnit.test('base rendering when chatter has no record', async function (assert) {
     assert.expect(10);
 
-    await this.start();
-    const chatter = this.messaging.models['Chatter'].create({
-        id: 11,
+    const { createChatterContainerComponent } = await this.start();
+    const chatterContainerComponent = await createChatterContainerComponent({
         threadModel: 'res.partner',
-    });
-    await this.createChatterComponent({ chatter });
+    }, { waitUntilMessagesLoaded: false });
     assert.strictEqual(
         document.querySelectorAll(`.o_Chatter`).length,
         1,
@@ -120,7 +101,7 @@ QUnit.test('base rendering when chatter has no record', async function (assert) 
         "should have a thread in the chatter"
     );
     assert.ok(
-        chatter.thread.isTemporary,
+        chatterContainerComponent.chatter.thread.isTemporary,
         "thread should have a temporary thread linked to chatter"
     );
     assert.strictEqual(
@@ -172,13 +153,11 @@ QUnit.test('base rendering when chatter has attachments', async function (assert
             res_model: 'res.partner',
         }
     );
-    await this.start();
-    const chatter = this.messaging.models['Chatter'].create({
-        id: 11,
+    const { createChatterContainerComponent } = await this.start();
+    await createChatterContainerComponent({
         threadId: 100,
         threadModel: 'res.partner',
     });
-    await this.createChatterComponent({ chatter });
     assert.strictEqual(
         document.querySelectorAll(`.o_Chatter`).length,
         1,
@@ -214,13 +193,11 @@ QUnit.test('show attachment box', async function (assert) {
             res_model: 'res.partner',
         }
     );
-    await this.start();
-    const chatter = this.messaging.models['Chatter'].create({
-        id: 11,
+    const { createChatterContainerComponent } = await this.start();
+    await createChatterContainerComponent({
         threadId: 100,
         threadModel: 'res.partner',
     });
-    await this.createChatterComponent({ chatter });
     assert.strictEqual(
         document.querySelectorAll(`.o_Chatter`).length,
         1,
@@ -261,13 +238,11 @@ QUnit.test('composer show/hide on log note/send message [REQUIRE FOCUS]', async 
     assert.expect(10);
 
     this.data['res.partner'].records.push({ id: 100 });
-    await this.start();
-    const chatter = this.messaging.models['Chatter'].create({
-        id: 11,
+    const { createChatterContainerComponent } = await this.start();
+    await createChatterContainerComponent({
         threadId: 100,
         threadModel: 'res.partner',
     });
-    await this.createChatterComponent({ chatter });
     assert.strictEqual(
         document.querySelectorAll(`.o_ChatterTopbar_buttonSendMessage`).length,
         1,
@@ -350,18 +325,11 @@ QUnit.test('should display subject when subject is not the same as the thread na
         res_id: 100,
         subject: "Salutations, voyageur",
     });
-    await this.start();
-    this.messaging.models['Thread'].create({
-        id: 100,
-        model: 'res.partner',
-        name: "voyageur",
-    });
-    const chatter = this.messaging.models['Chatter'].create({
-        id: 11,
+    const { createChatterContainerComponent } = await this.start();
+    await createChatterContainerComponent({
         threadId: 100,
         threadModel: 'res.partner',
     });
-    await this.createChatterComponent({ chatter });
 
     assert.containsOnce(
         document.body,
@@ -378,25 +346,21 @@ QUnit.test('should display subject when subject is not the same as the thread na
 QUnit.test('should not display subject when subject is the same as the thread name', async function (assert) {
     assert.expect(1);
 
-    this.data['res.partner'].records.push({ id: 100 });
+    this.data['res.partner'].records.push({
+        id: 100,
+        name: "Salutations, voyageur",
+    });
     this.data['mail.message'].records.push({
         body: "not empty",
         model: 'res.partner',
         res_id: 100,
         subject: "Salutations, voyageur",
     });
-    await this.start();
-    this.messaging.models['Thread'].create({
-        id: 100,
-        model: 'res.partner',
-        name: "Salutations, voyageur",
-    });
-    const chatter = this.messaging.models['Chatter'].create({
-        id: 11,
+    const { createChatterContainerComponent } = await this.start();
+    await createChatterContainerComponent({
         threadId: 100,
         threadModel: 'res.partner',
     });
-    await this.createChatterComponent({ chatter });
 
     assert.containsNone(
         document.body,
@@ -415,13 +379,11 @@ QUnit.test('should not display user notification messages in chatter', async fun
         model: 'res.partner',
         res_id: 100,
     });
-    await this.start();
-    const chatter = this.messaging.models['Chatter'].create({
-        id: 11,
+    const { createChatterContainerComponent } = await this.start();
+    await createChatterContainerComponent({
         threadId: 100,
         threadModel: 'res.partner',
     });
-    await this.createChatterComponent({ chatter });
 
     assert.containsNone(
         document.body,
@@ -434,13 +396,11 @@ QUnit.test('post message with "CTRL-Enter" keyboard shortcut', async function (a
     assert.expect(2);
 
     this.data['res.partner'].records.push({ id: 100 });
-    await this.start();
-    const chatter = this.messaging.models['Chatter'].create({
-        id: 11,
+    const { createChatterContainerComponent } = await this.start();
+    await createChatterContainerComponent({
         threadId: 100,
         threadModel: 'res.partner',
     });
-    await this.createChatterComponent({ chatter });
     assert.containsNone(
         document.body,
         '.o_Message',
@@ -469,13 +429,11 @@ QUnit.test('post message with "META-Enter" keyboard shortcut', async function (a
     assert.expect(2);
 
     this.data['res.partner'].records.push({ id: 100 });
-    await this.start();
-    const chatter = this.messaging.models['Chatter'].create({
-        id: 11,
+    const { createChatterContainerComponent } = await this.start();
+    await createChatterContainerComponent({
         threadId: 100,
         threadModel: 'res.partner',
     });
-    await this.createChatterComponent({ chatter });
     assert.containsNone(
         document.body,
         '.o_Message',
@@ -507,13 +465,11 @@ QUnit.test('do not post message with "Enter" keyboard shortcut', async function 
     assert.expect(2);
 
     this.data['res.partner'].records.push({ id: 100 });
-    await this.start();
-    const chatter = this.messaging.models['Chatter'].create({
-        id: 11,
+    const { createChatterContainerComponent } = await this.start();
+    await createChatterContainerComponent({
         threadId: 100,
         threadModel: 'res.partner',
     });
-    await this.createChatterComponent({ chatter });
     assert.containsNone(
         document.body,
         '.o_Message',
