@@ -224,7 +224,6 @@ This module provides the core of the Odoo Web Client.
 
             'web/static/src/legacy/scss/base_frontend.scss',
             'web/static/src/legacy/scss/lazyloader.scss',
-            'web/static/src/legacy/scss/navbar_mobile.scss',
 
             ('include', 'web.assets_frontend_minimal'),
 
