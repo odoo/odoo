@@ -245,11 +245,11 @@ class AccountEdiFormat(models.Model):
     def _is_fattura_pa(self, filename, tree):
         return self.code == 'fattura_pa' and self._check_filename_is_fattura_pa(filename)
 
-    def _create_invoice_from_xml_tree(self, filename, tree):
+    def _create_invoice_from_xml_tree(self, filename, tree, journal=None):
         self.ensure_one()
         if self._is_fattura_pa(filename, tree):
             return self._import_fattura_pa(tree, self.env['account.move'])
-        return super()._create_invoice_from_xml_tree(filename, tree)
+        return super()._create_invoice_from_xml_tree(filename, tree, journal=journal)
 
     def _update_invoice_from_xml_tree(self, filename, tree, invoice):
         self.ensure_one()
