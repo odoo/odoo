@@ -4,6 +4,9 @@
 from odoo.tests import Form, tagged
 from odoo.addons.mrp.tests.common import TestMrpCommon
 import uuid
+import logging
+
+_logger = logging.getLogger(__name__)
 
 
 @tagged('post_install', '-at_install')
@@ -449,3 +452,48 @@ class TestTraceability(TestMrpCommon):
         mo = produce_one(finished, component)
         self.assertEqual(mo.state, 'done')
         self.assertEqual(mo.move_raw_ids.lot_ids, sn_lot)
+
+    def test_reuse_unbuilt_usn(self):
+        """
+        Produce a SN product
+        Unbuilt it
+        Produce a new SN product with same lot
+        """
+        mo, bom, p_final, p1, p2 = self.generate_mo(qty_base_1=1, qty_base_2=1, qty_final=1, tracking_final='serial')
+        stock_location = self.env.ref('stock.stock_location_stock')
+        self.env['stock.quant']._update_available_quantity(p1, stock_location, 1)
+        self.env['stock.quant']._update_available_quantity(p2, stock_location, 1)
+        mo.action_assign()
+
+        lot = self.env['stock.production.lot'].create({
+            'name': 'lot1',
+            'product_id': p_final.id,
+            'company_id': self.env.company.id,
+        })
+
+        mo_form = Form(mo)
+        mo_form.qty_producing = 1.0
+        mo_form.lot_producing_id = lot
+        mo = mo_form.save()
+        mo.button_mark_done()
+
+        unbuild_form = Form(self.env['mrp.unbuild'])
+        unbuild_form.mo_id = mo
+        unbuild_form.lot_id = lot
+        unbuild_form.save().action_unbuild()
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = bom
+        mo = mo_form.save()
+        mo.action_confirm()
+
+        with self.assertLogs(level="WARNING") as log_catcher:
+            mo_form = Form(mo)
+            mo_form.qty_producing = 1.0
+            mo_form.lot_producing_id = lot
+            mo = mo_form.save()
+            _logger.warning('Dummy')
+        self.assertEqual(len(log_catcher.output), 1, "Useless warnings: \n%s" % "\n".join(log_catcher.output[:-1]))
+
+        mo.button_mark_done()
+        self.assertEqual(mo.state, 'done')
