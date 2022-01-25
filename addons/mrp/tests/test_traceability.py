@@ -3,6 +3,9 @@
 
 from odoo.tests import Form
 from odoo.addons.mrp.tests.common import TestMrpCommon
+import logging
+
+_logger = logging.getLogger(__name__)
 
 
 class TestTraceability(TestMrpCommon):
@@ -319,3 +322,48 @@ class TestTraceability(TestMrpCommon):
         self.assertEqual(byproduct_move_line_2_lot_1.consume_line_ids.filtered(lambda l: l.qty_done), raw_line_raw_1_lot_1 | raw_line_raw_2_lot_1)
         byproduct_move_line_2_lot_2 = finished_move_lines.filtered(lambda ml: ml.lot_id.name == 'Byproduct_2_lot_2')
         self.assertEqual(byproduct_move_line_2_lot_2.consume_line_ids, raw_line_raw_1_lot_2 | raw_line_raw_2_lot_2)
+
+    def test_reuse_unbuilt_usn(self):
+        """
+        Produce a SN product
+        Unbuilt it
+        Produce a new SN product with same lot
+        """
+        mo, bom, p_final, p1, p2 = self.generate_mo(qty_base_1=1, qty_base_2=1, qty_final=1, tracking_final='serial')
+        stock_location = self.env.ref('stock.stock_location_stock')
+        self.env['stock.quant']._update_available_quantity(p1, stock_location, 1)
+        self.env['stock.quant']._update_available_quantity(p2, stock_location, 1)
+        mo.action_assign()
+
+        lot = self.env['stock.lot'].create({
+            'name': 'lot1',
+            'product_id': p_final.id,
+            'company_id': self.env.company.id,
+        })
+
+        mo_form = Form(mo)
+        mo_form.qty_producing = 1.0
+        mo_form.lot_producing_id = lot
+        mo = mo_form.save()
+        mo.button_mark_done()
+
+        unbuild_form = Form(self.env['mrp.unbuild'])
+        unbuild_form.mo_id = mo
+        unbuild_form.lot_id = lot
+        unbuild_form.save().action_unbuild()
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = bom
+        mo = mo_form.save()
+        mo.action_confirm()
+
+        with self.assertLogs(level="WARNING") as log_catcher:
+            mo_form = Form(mo)
+            mo_form.qty_producing = 1.0
+            mo_form.lot_producing_id = lot
+            mo = mo_form.save()
+            _logger.warning('Dummy')
+        self.assertEqual(len(log_catcher.output), 1, "Useless warnings: \n%s" % "\n".join(log_catcher.output[:-1]))
+
+        mo.button_mark_done()
+        self.assertEqual(mo.state, 'done')
