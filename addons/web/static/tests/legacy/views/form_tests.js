@@ -1933,7 +1933,7 @@ QUnit.module('Views', {
             res_id: 1,
         });
 
-        assert.containsOnce(form, 'span.o_required_modifier', form);
+        assert.containsOnce(form, 'span.o_required_modifier');
 
         await testUtils.form.clickEdit(form);
         assert.containsOnce(form, 'input.o_required_modifier',
