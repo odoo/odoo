@@ -21,7 +21,7 @@ class AccountEdiFormat(models.Model):
 
     def _post_invoice_edi(self, invoices):
         self.ensure_one()
-        if self.code != 'facturx_1_0_05':
+        if self.code != 'facturx_1_0_05' or self._is_account_edi_ubl_cii_available():
             return super()._post_invoice_edi(invoices)
         res = {}
         for invoice in invoices:
@@ -31,7 +31,7 @@ class AccountEdiFormat(models.Model):
 
     def _prepare_invoice_report(self, pdf_writer, edi_document):
         self.ensure_one()
-        if self.code != 'facturx_1_0_05':
+        if self.code != 'facturx_1_0_05' or self._is_account_edi_ubl_cii_available():
             return super()._prepare_invoice_report(pdf_writer, edi_document)
         if not edi_document.attachment_id:
             return
@@ -95,15 +95,15 @@ class AccountEdiFormat(models.Model):
     def _is_facturx(self, filename, tree):
         return self.code == 'facturx_1_0_05' and tree.tag == '{urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100}CrossIndustryInvoice'
 
-    def _create_invoice_from_xml_tree(self, filename, tree):
+    def _create_invoice_from_xml_tree(self, filename, tree, journal=None):
         self.ensure_one()
-        if self._is_facturx(filename, tree):
+        if self._is_facturx(filename, tree) and not self._is_account_edi_ubl_cii_available():
             return self._import_facturx(tree, self.env['account.move'])
-        return super()._create_invoice_from_xml_tree(filename, tree)
+        return super()._create_invoice_from_xml_tree(filename, tree, journal=journal)
 
     def _update_invoice_from_xml_tree(self, filename, tree, invoice):
         self.ensure_one()
-        if self._is_facturx(filename, tree):
+        if self._is_facturx(filename, tree) and not self._is_account_edi_ubl_cii_available():
             return self._import_facturx(tree, invoice)
         return super()._update_invoice_from_xml_tree(filename, tree, invoice)
 
