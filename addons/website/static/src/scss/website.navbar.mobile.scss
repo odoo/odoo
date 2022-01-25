@@ -16,13 +16,17 @@
         $-font-size-lg: 18px;
         $-entry-hover-bg: rgba(invert($-color), .08);
 
-        // = Invalidate top-menu native 'grid' layout
+
+        // = Invalidate top-menu native 'flex' layout
         // --------------------------------------------------------------------
-        &, .o_menu_sections li, .dropdown-menu.show {
-            display: block;
+        display: block !important;
+
+        .o_menu_toggle {
+            display: inline !important;
         }
 
         .o_menu_sections li, .dropdown-menu.show {
+            display: block;
             position: relative;
             width: 100%;
             height: auto;
@@ -89,7 +93,9 @@
             height: 100%;
 
             .o_menu_sections {
-                display: block;
+                display: block !important;
+                height: 100%;
+                width: 100%;
             }
 
             .o_mobile_menu_toggle:before {
