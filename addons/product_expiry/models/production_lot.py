@@ -9,13 +9,14 @@ class StockLot(models.Model):
 
     use_expiration_date = fields.Boolean(
         string='Use Expiration Date', related='product_id.use_expiration_date')
-    expiration_date = fields.Datetime(string='Expiration Date',
+    expiration_date = fields.Datetime(
+        string='Expiration Date', compute='_compute_expiration_date', store=True, readonly=False,
         help='This is the date on which the goods with this Serial Number may become dangerous and must not be consumed.')
-    use_date = fields.Datetime(string='Best before Date',
+    use_date = fields.Datetime(string='Best before Date', compute='_compute_dates', store=True, readonly=False,
         help='This is the date on which the goods with this Serial Number start deteriorating, without being dangerous yet.')
-    removal_date = fields.Datetime(string='Removal Date',
+    removal_date = fields.Datetime(string='Removal Date', compute='_compute_dates', store=True, readonly=False,
         help='This is the date on which the goods with this Serial Number should be removed from the stock. This date will be used in FEFO removal strategy.')
-    alert_date = fields.Datetime(string='Alert Date',
+    alert_date = fields.Datetime(string='Alert Date', compute='_compute_dates', store=True, readonly=False,
         help='Date to determine the expired lots and serial numbers using the filter "Expiration Alerts".')
     product_expiry_alert = fields.Boolean(compute='_compute_product_expiry_alert', help="The Expiration Date has been reached.")
     product_expiry_reminded = fields.Boolean(string="Expiry has been reminded")
@@ -29,51 +30,35 @@ class StockLot(models.Model):
             else:
                 lot.product_expiry_alert = False
 
-    def _get_dates(self, product_id=None):
-        """Returns dates based on number of days configured in current lot's product."""
-        mapped_fields = {
-            'expiration_date': 'expiration_time',
-            'use_date': 'use_time',
-            'removal_date': 'removal_time',
-            'alert_date': 'alert_time'
-        }
-        res = dict.fromkeys(mapped_fields, False)
-        product = self.env['product.product'].browse(product_id) or self.product_id
-        if product:
-            for field in mapped_fields:
-                duration = getattr(product, mapped_fields[field])
-                if duration:
-                    date = datetime.datetime.now() + datetime.timedelta(days=duration)
-                    res[field] = fields.Datetime.to_string(date)
-        return res
+    @api.depends('product_id')
+    def _compute_expiration_date(self):
+        self.expiration_date = False
+        for lot in self:
+            if lot.product_id.use_expiration_date and not lot.expiration_date:
+                duration = lot.product_id.product_tmpl_id.expiration_time
+                lot.expiration_date = datetime.datetime.now() + datetime.timedelta(days=duration)
 
-    # Assign dates according to products data
-    @api.model_create_multi
-    def create(self, vals_list):
-        for vals in vals_list:
-            dates = self._get_dates(vals.get('product_id') or self.env.context.get('default_product_id'))
-            for d in dates:
-                if not vals.get(d):
-                    vals[d] = dates[d]
-        return super().create(vals_list)
-
-    @api.onchange('expiration_date')
-    def _onchange_expiration_date(self):
-        if not self._origin or not (self.expiration_date and self._origin.expiration_date):
-            return
-        time_delta = self.expiration_date - self._origin.expiration_date
-        # As we compare expiration_date with _origin.expiration_date, we need to
-        # use `_get_date_values` with _origin to keep a stability in the values.
-        # Otherwise it will recompute from the updated values if the user calls
-        # this onchange multiple times without save between each onchange.
-        vals = self._origin._get_date_values(time_delta)
-        self.update(vals)
-
-    @api.onchange('product_id')
-    def _onchange_product(self):
-        dates_dict = self._get_dates()
-        for field, value in dates_dict.items():
-            setattr(self, field, value)
+    @api.depends('product_id', 'expiration_date')
+    def _compute_dates(self):
+        for lot in self:
+            if not lot.product_id.use_expiration_date:
+                lot.use_date = False
+                lot.removal_date = False
+                lot.alert_date = False
+            elif lot.expiration_date:
+                # when create
+                if lot.product_id != lot._origin.product_id or\
+                   (not lot.use_date and not lot.removal_date and not lot.alert_date):
+                    product_tmpl = lot.product_id.product_tmpl_id
+                    lot.use_date = product_tmpl.use_time and lot.expiration_date - datetime.timedelta(days=product_tmpl.use_time)
+                    lot.removal_date = product_tmpl.removal_time and lot.expiration_date - datetime.timedelta(days=product_tmpl.removal_time)
+                    lot.alert_date = product_tmpl.alert_time and lot.expiration_date - datetime.timedelta(days=product_tmpl.alert_time)
+                # when change
+                elif lot._origin.expiration_date:
+                    time_delta = lot.expiration_date - lot._origin.expiration_date
+                    lot.use_date = lot.use_date and lot.use_date + time_delta
+                    lot.removal_date = lot.removal_date and lot.removal_date + time_delta
+                    lot.alert_date = lot.alert_date and lot.alert_date + time_delta
 
     @api.model
     def _alert_date_exceeded(self):
@@ -101,26 +86,6 @@ class StockLot(models.Model):
         alert_lots.write({
             'product_expiry_reminded': True
         })
-
-    def _update_date_values(self, new_date):
-        if new_date:
-            time_delta = new_date - (self.expiration_date or fields.Datetime.now())
-            vals = self._get_date_values(time_delta)
-            vals['expiration_date'] = new_date
-            self.write(vals)
-
-    def _get_date_values(self, time_delta):
-        ''' Return a dict with different date values updated depending of the
-        time_delta. Used in the onchange of `expiration_date` and when user
-        defines a date at the receipt. '''
-        vals = {}
-        if self.use_date:
-            vals['use_date'] = self.use_date + time_delta
-        if self.removal_date:
-            vals['removal_date'] = self.removal_date + time_delta
-        if self.alert_date:
-            vals['alert_date'] = self.alert_date + time_delta
-        return vals
 
 
 class ProcurementGroup(models.Model):
