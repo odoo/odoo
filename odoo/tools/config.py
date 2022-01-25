@@ -309,6 +309,9 @@ class configmanager(object):
                          help="Try to enable the unaccent extension when creating new databases.")
         group.add_option("--geoip-db", dest="geoip_database", my_default='/usr/share/GeoIP/GeoLite2-City.mmdb',
                          help="Absolute path to the GeoIP database file.")
+        group.add_option("--xaccel", dest="xaccel", my_default=False,
+                         help="Enable X-Accel-Redirect content serving from NGINX instead of from Odoo workers.")
+
         parser.add_option_group(group)
 
         if os.name == 'posix':
@@ -448,7 +451,7 @@ class configmanager(object):
                 'db_maxconn', 'import_partial', 'addons_path', 'upgrade_path',
                 'syslog', 'without_demo', 'screencasts', 'screenshots',
                 'dbfilter', 'log_level', 'log_db',
-                'log_db_level', 'geoip_database', 'dev_mode', 'shell_interface'
+                'log_db_level', 'geoip_database', 'dev_mode', 'shell_interface', 'xaccel'
         ]
 
         for arg in keys:

@@ -10,7 +10,7 @@ class Http(models.AbstractModel):
     def binary_content(self, xmlid=None, model='ir.attachment', id=None, field='datas',
                        unique=False, filename=None, filename_field='name', download=False,
                        mimetype=None, default_mimetype='application/octet-stream',
-                       access_token=None):
+                       access_token=None, allow_xaccel=True):
         obj = None
         if xmlid:
             obj = self._xmlid_to_obj(self.env, xmlid)
@@ -24,4 +24,4 @@ class Http(models.AbstractModel):
         return super(Http, self).binary_content(
             xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename,
             filename_field=filename_field, download=download, mimetype=mimetype,
-            default_mimetype=default_mimetype, access_token=access_token)
+            default_mimetype=default_mimetype, access_token=access_token, allow_xaccel=allow_xaccel)

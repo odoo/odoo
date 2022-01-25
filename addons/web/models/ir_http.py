@@ -12,8 +12,6 @@ from odoo.tools import file_open, image_process, ustr
 
 from odoo.addons.web.controllers.main import HomeStaticTemplateHelpers
 
-from odoo.tools.mimetypes import guess_mimetype
-
 
 class Http(models.AbstractModel):
     _inherit = 'ir.http'
@@ -148,31 +146,29 @@ class Http(models.AbstractModel):
             else:
                 return self._response_by_status(status, headers, content)
 
-        content_base64 = placeholder_content or base64.b64decode(content)
-        headers.append(('Content-Length', len(content_base64)))
-        content_type = guess_mimetype(content_base64)
-        if content_type == 'video/mp4':
-            '''
-            Setting CSP required in order to play same origin videos as BG videos.
-            It presents no additional security risk when set to 'self', for more info
-            check https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/media-src.
-            '''
-            try:
-                previous_csp = headers.index(('Content-Security-Policy', "default-src 'none'"))
-                headers[previous_csp] = ('Content-Security-Policy', "media-src 'self'")
-            except ValueError:
-                headers.append(('Content-Security-Policy', "media-src 'self'"))
-        response = request.make_response(content_base64, headers)
+        content = placeholder_content or (content if not isinstance(content, tuple) else "")
+        headers.append(('Content-Length', len(content)))
+
+        # Setting CSP required in order to play same origin videos as BG videos.
+        # It presents no additional security risk when set to 'self', for more info
+        # check https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/media-src.
+        previous_csp = [header for header in headers if 'Content-Security-Policy' in header]
+        if previous_csp:
+            headers[headers.index(previous_csp[0])] = ('Content-Security-Policy', headers[headers.index(previous_csp[0])][1] + ";media-src 'self'")
+        else:
+            headers.append(('Content-Security-Policy', "media-src 'self'"))
+        response = request.make_response(content, headers)
         return response
 
     @api.model
     def _content_image(self, xmlid=None, model='ir.attachment', res_id=None, field='raw',
             filename_field='name', unique=None, filename=None, mimetype=None, download=None,
             width=0, height=0, crop=False, quality=0, access_token=None, **kwargs):
+        allow_xaccel = not(width or height or crop or quality)
         status, headers, image = self.binary_content(
             xmlid=xmlid, model=model, id=res_id, field=field, unique=unique, filename=filename,
             filename_field=filename_field, download=download, mimetype=mimetype,
-            default_mimetype='image/png', access_token=access_token
+            default_mimetype='image/png', access_token=access_token, allow_xaccel=allow_xaccel
         )
         return self._content_image_get_response(
             status, headers, image, model=model, field=field, download=download,

@@ -383,22 +383,22 @@ class IrHttp(models.AbstractModel):
         field_def = record._fields[field]
         if field_def.type == 'binary' and field_def.attachment and not field_def.related:
             if model != 'ir.attachment':
-                field_attachment = self.env['ir.attachment'].sudo().search_read(domain=[('res_model', '=', model), ('res_id', '=', record.id), ('res_field', '=', field)], fields=['raw', 'mimetype', 'checksum'], limit=1)
+                field_attachment = self.env['ir.attachment'].sudo().search_read(domain=[('res_model', '=', model), ('res_id', '=', record.id), ('res_field', '=', field)], fields=['mimetype', 'checksum'] + ([] if xaccel_header else ['raw']), limit=1)
                 if field_attachment:
                     mimetype = field_attachment[0]['mimetype']
-                    content = field_attachment[0]['raw']
+                    content = xaccel_header or field_attachment[0]['raw']
                     filehash = field_attachment[0]['checksum']
             else:
                 mimetype = record['mimetype']
-                content = record['raw']
+                content = xaccel_header or record['raw']
                 filehash = record['checksum']
 
         if not content:
             if model == 'ir.attachment':
-                content = record.raw
+                content = xaccel_header or record.raw
             else:
                 data = record[field] or b''
-                content = base64.b64decode(data)
+                content = xaccel_header or base64.b64decode(data)
                 filehash = '"%s"' % hashlib.md5(str(content).encode('utf-8')).hexdigest()
 
         # filename
@@ -410,7 +410,7 @@ class IrHttp(models.AbstractModel):
                 default_filename = True
                 filename = "%s-%s-%s" % (record._name, record.id, field)
 
-        if not mimetype:
+        if not mimetype and not xaccel_header:
             mimetype = guess_mimetype(content, default=default_mimetype)
 
         # extension
@@ -420,7 +420,7 @@ class IrHttp(models.AbstractModel):
             if extension:
                 filename = "%s%s" % (filename, extension)
 
-        if not filehash:
+        if not filehash and not xaccel_header:
             filehash = '"%s"' % hashlib.md5(str(base64.b64encode(content)).encode('utf-8')).hexdigest()
 
         status = 200 if content else 404
@@ -448,7 +448,7 @@ class IrHttp(models.AbstractModel):
     def binary_content(self, xmlid=None, model='ir.attachment', id=None, field='raw',
                        unique=False, filename=None, filename_field='name', download=False,
                        mimetype=None, default_mimetype='application/octet-stream',
-                       access_token=None):
+                       access_token=None, allow_xaccel=True):
         """ Get file, attachment or downloadable content
 
         If the ``xmlid`` and ``id`` parameter is omitted, fetches the default value for the
@@ -477,11 +477,12 @@ class IrHttp(models.AbstractModel):
         xaccel_header = None
 
         if not record:
-            return (status or 404, [], None)
+            return status or 404, [], None
 
         if odoo.tools.config['xaccel'] and allow_xaccel and hasattr(record, "store_fname") and record.store_fname:
-            # Uses NGINX location /xaccel/ to serve files through NGINX instead of reading them
-            xaccel_header = ('X-Accel-Redirect', f"/xaccel/{record.store_fname}")
+            # Uses NGINX location /protected_odoo_filestore/ to serve files through NGINX
+            # instead of reading the binaries using Odoo workers
+            xaccel_header = ('X-Accel-Redirect', f"/protected_odoo_filestore/{record.store_fname}")
 
         content, headers, status = None, [], None
 
@@ -490,10 +491,10 @@ class IrHttp(models.AbstractModel):
         if not content:
             status, content, filename, mimetype, filehash = self._binary_record_content(
                 record, field=field, filename=filename, filename_field=filename_field,
-                default_mimetype='application/octet-stream')
+                default_mimetype='application/octet-stream', xaccel_header=xaccel_header)
 
         status, headers = self._binary_set_headers(
-            status, filename, mimetype, unique, filehash=filehash, download=download)
+            status, filename, mimetype, unique, filehash=filehash, download=download, xaccel_header=xaccel_header)
 
         return status, headers, content
 
