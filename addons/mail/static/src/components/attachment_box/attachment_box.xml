@@ -18,10 +18,10 @@
                             onDropzoneFilesDropped="_onDropZoneFilesDropped"
                         />
                     </t>
-                    <t t-if="attachmentBoxView.chatter.attachmentList">
+                    <t t-if="attachmentBoxView.attachmentList">
                         <AttachmentList
                             className="'o_attachmentBox_attachmentList'"
-                            localId="attachmentBoxView.chatter.attachmentList.localId"
+                            localId="attachmentBoxView.attachmentList.localId"
                             onAttachmentRemoved="attachmentBoxView.onAttachmentRemoved"
                         />
                     </t>

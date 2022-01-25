@@ -6,7 +6,7 @@ import { clear, insertAndReplace, replace } from '@mail/model/model_field_comman
 
 registerModel({
     name: 'AttachmentList',
-    identifyingFields: [['composerView', 'messageView', 'chatter']],
+    identifyingFields: [['composerView', 'messageView', 'attachmentBoxViewOwner']],
     recordMethods: {
         _computeAttachmentImages() {
             return insertAndReplace(this.imageAttachments.map(attachment => {
@@ -29,8 +29,8 @@ registerModel({
             if (this.message) {
                 return replace(this.message.attachments);
             }
-            if (this.chatter && this.chatter.thread) {
-                return replace(this.chatter.thread.allAttachments);
+            if (this.attachmentBoxViewOwner) {
+                return replace(this.attachmentBoxViewOwner.chatter.thread.allAttachments);
             }
             if (this.composerView && this.composerView.composer) {
                 return replace(this.composerView.composer.attachments);
@@ -58,11 +58,11 @@ registerModel({
     },
     fields: {
         /**
-         * States the attachments to be displayed by this attachment list.
+         * Link with a AttachmentBoxView to handle attachments.
          */
-        attachments: many('Attachment', {
-            compute: '_computeAttachments',
-            inverse: 'attachmentLists',
+        attachmentBoxViewOwner: one('AttachmentBoxView', {
+            inverse: 'attachmentList',
+            readonly: true,
         }),
         /**
          * States the attachment cards that are displaying this nonImageAttachments.
@@ -81,11 +81,11 @@ registerModel({
             isCausal: true,
         }),
         /**
-         * Link with a chatter to handle attachments.
+         * States the attachments to be displayed by this attachment list.
          */
-        chatter: one('Chatter', {
-            inverse: 'attachmentList',
-            readonly: true,
+        attachments: many('Attachment', {
+            compute: '_computeAttachments',
+            inverse: 'attachmentLists',
         }),
         /**
          * Link with a composer view to handle attachments.

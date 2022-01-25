@@ -152,15 +152,6 @@ registerModel({
          * @private
          * @returns {boolean}
          */
-        _computeAttachmentList() {
-            return (this.thread && this.thread.allAttachments.length > 0)
-                ? insertAndReplace()
-                : clear();
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
         _computeHasThreadView() {
             return Boolean(this.thread && this.hasMessageList);
         },
@@ -263,15 +254,6 @@ registerModel({
         attachmentBoxView: one('AttachmentBoxView', {
             inverse: 'chatter',
             isCausal: true,
-        }),
-        /**
-         * Determines the attachment list that will be used to display the attachments.
-         */
-        attachmentList: one('AttachmentList', {
-            compute: '_computeAttachmentList',
-            inverse: 'chatter',
-            isCausal: true,
-            readonly: true,
         }),
         /**
          * States the OWL Chatter component of this chatter.

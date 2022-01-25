@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { insertAndReplace } from '@mail/model/model_field_command';
+import { clear, insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'AttachmentBoxView',
@@ -21,8 +21,26 @@ registerModel({
         onClickAddAttachment() {
             this.fileUploader.openBrowserFileUploader();
         },
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
+        _computeAttachmentList() {
+            return (this.chatter.thread && this.chatter.thread.allAttachments.length > 0)
+                ? insertAndReplace()
+                : clear();
+        },
     },
     fields: {
+        /**
+         * Determines the attachment list that will be used to display the attachments.
+         */
+        attachmentList: one('AttachmentList', {
+            compute: '_computeAttachmentList',
+            inverse: 'attachmentBoxViewOwner',
+            isCausal: true,
+            readonly: true,
+        }),
         chatter: one('Chatter', {
             inverse: 'attachmentBoxView',
             readonly: true,
