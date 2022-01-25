@@ -61,7 +61,7 @@ registerModel({
             if (this.attachmentList.composerView) {
                 return 50;
             }
-            if (this.attachmentList.chatter) {
+            if (this.attachmentList.attachmentBoxViewOwner) {
                 return 160;
             }
             if (this.attachmentList.message) {
