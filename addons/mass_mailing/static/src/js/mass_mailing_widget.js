@@ -35,11 +35,6 @@ var MassMailingFieldHtml = FieldHtml.extend({
         if (!this.nodeOptions.snippets) {
             this.nodeOptions.snippets = 'mass_mailing.email_designer_snippets';
         }
-
-        // All the code related to this __extraAssetsForIframe variable is an
-        // ugly hack to restore mass mailing options in stable versions. The
-        // whole logic has to be refactored as soon as possible...
-        this.__extraAssetsForIframe = [{jsLibs: []}];
     },
 
     //--------------------------------------------------------------------------
