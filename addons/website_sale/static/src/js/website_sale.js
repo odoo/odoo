@@ -380,10 +380,10 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
                 var cart_alert = $('.oe_cart').parent().find('#data_warning');
                 if (cart_alert.length === 0) {
                     $('.oe_cart').prepend('<div class="alert alert-danger alert-dismissable" role="alert" id="data_warning">'+
-                            '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button> ' + data.warning + '</div>');
+                            '<button type="button" class="btn-close" data-dismiss="alert" aria-hidden="true"></button> ' + data.warning + '</div>');
                 }
                 else {
-                    cart_alert.html('<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button> ' + data.warning);
+                    cart_alert.html('<button type="button" class="btn-close" data-dismiss="alert" aria-hidden="true"></button> ' + data.warning);
                 }
                 $input.val(data.quantity);
             }
