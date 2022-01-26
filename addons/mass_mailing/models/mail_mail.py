@@ -21,7 +21,7 @@ class MailMail(models.Model):
         mails = super(MailMail, self).create(values_list)
         for mail, values in zip(mails, values_list):
             if values.get('mailing_trace_ids'):
-                mail.mailing_trace_ids.write({'message_id': mail.message_id})
+                mail.mailing_trace_ids.write({'message_id': mail.message_id, 'email': mail.email_to if mail.email_to else mail.mailing_trace_ids.email})
         return mails
 
     def _get_tracking_url(self):

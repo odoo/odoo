@@ -3,6 +3,7 @@
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import AccessError, UserError
+from odoo.tools import email_re
 
 
 class MailBlackListMixin(models.AbstractModel):
@@ -47,7 +48,18 @@ class MailBlackListMixin(models.AbstractModel):
     def _compute_email_normalized(self):
         self._assert_primary_email()
         for record in self:
-            record.email_normalized = tools.email_normalize(record[self._primary_email])
+            if not record[self._primary_email]:
+                record.email_normalized = False
+            else:
+                emails = email_re.findall(record[self._primary_email])
+                if not emails and tools.email_normalize(record[self._primary_email]):
+                    emails = [tools.email_normalize(record[self._primary_email])]
+
+                record.email_normalized = ",".join([
+                    tools.email_normalize(email)
+                    for email in emails
+                    if tools.email_normalize(email)
+                ]) if emails else False
 
     @api.model
     def _search_is_blacklisted(self, operator, value):

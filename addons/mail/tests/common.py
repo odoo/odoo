@@ -19,7 +19,7 @@ from odoo.addons.mail.models.mail_mail import MailMail
 from odoo.addons.mail.models.mail_message import Message
 from odoo.addons.mail.models.mail_notification import MailNotification
 from odoo.tests import common, new_test_user
-from odoo.tools import formataddr, pycompat
+from odoo.tools import formataddr, pycompat, email_re
 
 mail_new_test_user = partial(new_test_user, context={'mail_create_nolog': True, 'mail_create_nosubscribe': True, 'mail_notrack': True, 'no_reset_password': True})
 
@@ -450,7 +450,10 @@ class MockEmail(common.BaseCase):
             if isinstance(email_to, self.env['res.partner'].__class__):
                 email_to_list.append(formataddr((email_to.name, email_to.email)))
             else:
-                email_to_list.append(email_to)
+                email_to_list.extend([
+                    email
+                    for email in email_re.findall(email_to)
+                ])
         expected['email_to'] = email_to_list
 
         sent_mail = next(

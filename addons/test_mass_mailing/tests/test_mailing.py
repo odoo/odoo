@@ -341,3 +341,63 @@ class TestMassMailing(TestMassMailCommon):
             check_mail=True
         )
         self.assertEqual(mailing.canceled, 2)
+
+    def test_mailing_mailing_list_with_multiple_emails_contact(self):
+        """ Test mailing list model specific optout behavior """
+        mailing_contact_1 = self.env['mailing.contact'].create({'name': 'testMultipleMailsA', 'email': 'test@test.com,test@test.example.com'})
+        mailing_contact_2 = self.env['mailing.contact'].create({'name': 'testMultipleMailsB', 'email': 'test@test.com,tes@test.example.com'})
+        mailing_contact_3 = self.env['mailing.contact'].create({'name': 'test 3', 'email': 'test3@test.example.com'})
+        mailing_contact_4 = self.env['mailing.contact'].create({'name': 'test 4', 'email': 'test4@test.example.com'})
+        mailing_contact_5 = self.env['mailing.contact'].create({'name': 'test 5', 'email': 'test5@test.example.com'})
+
+        # create mailing list record
+        mailing_list_1 = self.env['mailing.list'].create({
+            'name': 'A',
+            'contact_ids': [
+                (4, mailing_contact_1.id),
+                (4, mailing_contact_2.id),
+                (4, mailing_contact_3.id),
+                (4, mailing_contact_5.id),
+            ]
+        })
+        mailing_list_2 = self.env['mailing.list'].create({
+            'name': 'B',
+            'contact_ids': [
+                (4, mailing_contact_3.id),
+                (4, mailing_contact_4.id),
+            ]
+        })
+
+        subs = self.env['mailing.contact.subscription'].search([
+            '|', '|',
+            '&', ('contact_id', '=', mailing_contact_1.id), ('list_id', '=', mailing_list_1.id),
+            '&', ('contact_id', '=', mailing_contact_3.id), ('list_id', '=', mailing_list_1.id),
+            '&', ('contact_id', '=', mailing_contact_5.id), ('list_id', '=', mailing_list_1.id)
+        ])
+        subs.write({'opt_out': True})
+
+        # create mass mailing record
+        mailing = self.env['mailing.mailing'].create({
+            'name': 'SourceName',
+            'subject': 'MailingSubject',
+            'body_html': '<p>Hello <t t-out="object.name"/></p>',
+            'mailing_model_id': self.env['ir.model']._get('mailing.list').id,
+            'contact_list_ids': [(4, ml.id) for ml in mailing_list_1 | mailing_list_2],
+        })
+        mailing.action_put_in_queue()
+        with self.mock_mail_gateway(mail_unlink_sent=False):
+            mailing._process_mass_mailing_queue()
+
+        self.assertMailTraces(
+            [
+                {'email': 'test@test.com,test@test.example.com', 'trace_status': 'sent'},
+                {'email': 'test@test.com,tes@test.example.com', 'trace_status': 'sent'},
+                {'email': 'test3@test.example.com'},
+                {'email': 'test4@test.example.com'},
+                {'email': 'test5@test.example.com', 'trace_status': 'cancel', 'failure_type': 'mail_optout'},
+             ],
+            mailing,
+            mailing_contact_1 + mailing_contact_2 + mailing_contact_3 + mailing_contact_4 + mailing_contact_5,
+            check_mail=True
+        )
+        self.assertEqual(mailing.canceled, 1)

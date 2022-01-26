@@ -452,8 +452,9 @@ class MailComposer(models.TransientModel):
                     mail_to.append(mail_values['email_to'])
             # add email from recipients (res.partner)
             mail_to += [
-                recipient_emails[recipient_command[1]]
+                email
                 for recipient_command in mail_values.get('recipient_ids') or []
+                for email in email_re.findall(recipient_emails[recipient_command[1]])
                 if recipient_command[1]
             ]
             mail_to = list(set(mail_to))

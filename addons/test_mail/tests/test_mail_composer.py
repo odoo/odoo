@@ -81,6 +81,24 @@ class TestMailComposer(TestMailCommon, TestRecipients):
             'auto_delete': True,
         })
 
+        cls.user_with_multiple_emails = mail_new_test_user(cls.env, login="test_user_emails", groups="base.group_user", email="testmail1@test.com,testmail2@test.com")
+
+        cls.partner_with_multiple_emails = cls.user_with_multiple_emails.partner_id
+
+        cls.multiple_emails_test_record = cls.env['mail.test.ticket'].create({
+            'name': 'MultipleEmailTestRecord',
+            'customer_id': cls.partner_with_multiple_emails.id,
+            'user_id': cls.user_employee_2.id,
+        })
+
+        cls.multiple_emails_test_record_2 = cls.env['mail.test.ticket'].create({
+            'name': 'MultipleEmailTestRecord2',
+            'customer_id': cls.partner_with_multiple_emails.id,
+            'user_id': cls.user_employee_2.id,
+        })
+
+        cls.multiple_emails_records = cls.multiple_emails_test_record | cls.multiple_emails_test_record_2
+
     def _generate_attachments_data(self, count, res_model=None, res_id=None):
         # attachment visibility depends on what they are attached to
         if res_model is None:
@@ -659,6 +677,24 @@ class TestComposerResultsComment(TestMailComposer):
         self.assertEqual(set(message.attachment_ids.mapped('res_id')), set(self.test_record.ids))
         self.assertTrue(all(attach not in message.attachment_ids for attach in attachs), 'Should have copied attachments')
 
+    @users('employee2')
+    def test_mail_comment_mode_compose_with_multiple_emails(self):
+        """ Test email sending to a contact with multiple emails separated with comma (e.g. test@test.com,test2@test.com) """
+        composer_form = Form(self.env['mail.compose.message'].with_context(
+            self._get_web_context(self.multiple_emails_test_record, add_web=True,
+                                  default_template_id=self.template.id)
+        ))
+        composer = composer_form.save()
+
+        with self.mock_mail_gateway(mail_unlink_sent=False):
+            composer._action_send_mail()
+
+        message = self.multiple_emails_test_record.message_ids[0]
+
+        self.assertMailMail(self.partner_with_multiple_emails, 'sent',
+                            mail_message=message,
+                            author=self.partner_employee_2)
+
 
 @tagged('mail_composer')
 class TestComposerResultsMass(TestMailComposer):
@@ -895,3 +931,22 @@ class TestComposerResultsMass(TestMailComposer):
         composer = composer_form.save()
         with self.mock_mail_gateway(mail_unlink_sent=False), self.assertRaises(ValueError):
             composer._action_send_mail()
+
+    @users('employee2')
+    def test_mail_mass_mode_compose_with_multiple_emails(self):
+        """ Test email sending to a contact with multiple emails separated with comma (e.g. test@test.com,test2@test.com) """
+        composer_form = Form(self.env['mail.compose.message'].with_context(
+            self._get_web_context(self.multiple_emails_records, add_web=True,
+                                  default_template_id=self.template.id)
+        ))
+        composer = composer_form.save()
+
+        with self.mock_mail_gateway(mail_unlink_sent=False):
+            composer._action_send_mail()
+
+        for record in self.multiple_emails_records:
+            message = record.message_ids[0]
+
+            self.assertMailMail(self.partner_with_multiple_emails, 'sent',
+                                mail_message=message,
+                                author=self.partner_employee_2)
