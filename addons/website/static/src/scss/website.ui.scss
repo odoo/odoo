@@ -3,6 +3,51 @@
 /// and the UI components rules.
 ///
 
+.o_frontend_to_backend_nav {
+    @include o-position-absolute(0, auto, auto, 0);
+    position: fixed;
+    z-index: $zindex-modal;
+    display: flex;
+    opacity: 0.8;
+
+    &:hover {
+        opacity: 1.0;
+    }
+
+    > * {
+        position: relative;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        &:hover {
+            background-image: radial-gradient(rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.15));
+        }
+    }
+}
+.o_frontend_to_backend_apps_btn {
+    background-color: $o-brand-odoo;
+    color: white;
+
+    &:hover {
+        color: white;
+    }
+}
+.o_frontend_to_backend_edit_btn {
+    background-color: $o-white;
+    color: $o-brand-primary;
+    padding-top: 1px;
+    padding-left: 1px;
+    border-right: 1px solid $o-brand-secondary;
+    border-bottom: 1px solid $o-brand-secondary;
+
+    &:hover {
+        color: $o-brand-primary;
+    }
+}
+
 // LAYOUTING
 body {
     // Set frontend direction that will be flipped with
