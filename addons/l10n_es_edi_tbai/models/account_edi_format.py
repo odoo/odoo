@@ -295,8 +295,7 @@ class AccountEdiFormat(models.Model):
 
         values.update({
             'recipients': xml_recipients,
-            'multiple_recipients': "N",  # Odoo supports only one recipient
-            'thirdparty_or_recipient': "D",  # TODO for Bizkaia this might be "T" (if "in" invoice)
+            'thirdparty_or_recipient': "D",  # TODO for Bizkaia this can be "T" (if "in" invoice)
         })
         return values
 
@@ -311,8 +310,9 @@ class AccountEdiFormat(models.Model):
         # === CREDIT NOTE (RECTIFICATIVA) ===
         is_refund = invoice.move_type == 'out_refund'  # TODO also in_refund for Bizkaia
         values['is_refund'] = is_refund
-        is_simplified = False  # TODO add field to res_partner ?
+        is_simplified = False  # TODO create simplified_partner and use it as recipient for simplified invoices
         if is_refund:
+            # TODO check refund codes are legal ? Force use of R5 when is_simplified ?
             values['credit_note_code'] = invoice.l10n_es_tbai_refund_reason or ('R5' if is_simplified else 'R1')
             values['credit_note_invoices'] = [  # uses a list because TicketBai supports issuing multiple credit notes
                 invoice.reversed_entry_id

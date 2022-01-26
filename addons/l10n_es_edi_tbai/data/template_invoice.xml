@@ -62,7 +62,7 @@
                     <Direccion t-out="', '.join(filter(lambda x: x, [partner.street, partner.street2, partner.city]))"/>
                 </IDDestinatario>
             </Destinatarios>
-            <VariosDestinatarios t-if="not cancel" t-out="multiple_recipients"/>
+            <VariosDestinatarios t-if="not cancel">N</VariosDestinatarios> <!-- Odoo does not support multi-recipient invoices-->
             <EmitidaPorTercerosODestinatario t-if="not cancel" t-out="thirdparty_or_recipient"/>
         </template>
 
