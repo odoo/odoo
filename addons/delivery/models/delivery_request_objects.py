@@ -3,9 +3,12 @@
 
 class DeliveryPackage:
     """ Each provider need similar information about its packages. """
-    def __init__(self, commodities, weight, package_type, name=None, total_cost=0, currency=None):
+    def __init__(self, commodities, weight, package_type, name=None, total_cost=0, currency=None, picking=False, order=False):
         """ The UOMs are based on the config parameters, which is very convenient:
         we do not need to keep those stored."""
+        self.picking_id = picking
+        self.order_id = order
+        self.company_id = order and order.company_id or picking and picking.company_id
         self.commodities = commodities or []  # list of DeliveryCommodity objects
         self.weight = weight
         self.dimension = {
