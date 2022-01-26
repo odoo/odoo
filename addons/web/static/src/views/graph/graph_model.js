@@ -501,9 +501,9 @@ export class GraphModel extends Model {
         const processedGroupBy = [];
         for (const gb of groupBy) {
             const { fieldName, interval } = gb;
-            const { store, type } = fields[fieldName];
+            const { sortable, type } = fields[fieldName];
             if (
-                !store ||
+                !sortable ||
                 ["id", "__count"].includes(fieldName) ||
                 !GROUPABLE_TYPES.includes(type)
             ) {
