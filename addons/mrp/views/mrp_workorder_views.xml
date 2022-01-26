@@ -190,13 +190,12 @@
                     </field>
                 </page>
                 <page string="Time Tracking" name="time_tracking" groups="mrp.group_mrp_manager">
-                    <group>
                         <field name="time_ids" nolabel="1" context="{'default_workcenter_id': workcenter_id, 'default_workorder_id': id}">
                             <tree editable="bottom">
+                                <field name="user_id"/>
+                                <field name="duration" widget="float_time" sum="Total duration"/>
                                 <field name="date_start"/>
                                 <field name="date_end"/>
-                                <field name="duration" widget="float_time" sum="Total duration"/>
-                                <field name="user_id"/>
                                 <field name="workcenter_id" invisible="1"/>
                                 <field name="company_id" invisible="1"/>
                                 <field name="loss_id" string="Productivity" optional="hide"/>
@@ -218,7 +217,6 @@
                                 </group>
                             </form>
                         </field>
-                    </group>
                 </page>
                 <page string="Work Instruction" name="workorder_page_work_instruction" attrs="{'invisible': [('worksheet', '=', False), ('worksheet_google_slide', '=', False), ('operation_note', '=', False)]}">
                     <field name="worksheet_type" invisible="1"/>
@@ -405,15 +403,21 @@
                 <field name="workcenter_id"/>
                 <field name="product_id"/>
                 <field name="qty_remaining"/>
+                <field name="qty_production"/>
+                <field name="date_planned_start"/>
+                <field name="production_date"/>
                 <field name="product_uom_id" force_save="1"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click">
                             <div class="o_kanban_card_header o_kanban_record_top">
-                                <div class="o_kanban_record_headings o_kanban_card_header_title">
-                                    <strong class="o_primary">
-                                        <span t-out="record.production_id.value"/> - <span t-out="record.name.value"/>
-                                    </strong>
+                                <div class="o_kanban_workorder_title">
+                                    <h4 class="o_primary">
+                                        <span><t t-out="record.production_id.value"/></span> - <span><t t-out="record.name.value"/></span>
+                                    </h4>
+                                </div>
+                                <div class="o_kanban_workorder_date">
+                                    <h5><span class="d-flex" t-esc="record.date_planned_start.value or record.production_date.value"/></h5>
                                 </div>
                                 <div class="o_kanban_manage_button_section">
                                     <h2 class="ml8">
@@ -425,15 +429,19 @@
                             </div>
                             <div class="o_kanban_record_bottom">
                                 <h5 class="oe_kanban_bottom_left">
-                                    <span t-out="record.product_id.value"/>, <span t-out="record.qty_remaining.value"/> <span t-out="record.product_uom_id.value"/>
+                                    <span><t t-out="record.product_id.value"/>, </span> <span><t t-out="record.qty_production.value"/> <t t-out="record.product_uom_id.value"/></span>
                                 </h5>
-                                <div class="oe_kanban_bottom_right" t-if="record.state.raw_value == 'progress'">
-                                    <span t-if="record.working_state.raw_value != 'blocked' and record.working_user_ids.raw_value.length > 0"><i class="fa fa-play" role="img" aria-label="Run" title="Run"/></span>
-                                    <span t-if="record.working_state.raw_value != 'blocked' and record.working_user_ids.raw_value.length == 0 and record.last_working_user_id.raw_value"><i class="fa fa-pause" role="img" aria-label="Pause" title="Pause"/></span>
-                                    <span t-if="record.working_state.raw_value == 'blocked' and (record.working_user_ids.raw_value.length == 0 or record.last_working_user_id.raw_value)"><i class="fa fa-stop" role="img" aria-label="Stop" title="Stop"/></span>
-                                    <t t-if="record.last_working_user_id.raw_value">
-                                        <img t-att-src="kanban_image('res.users', 'avatar_128', record.last_working_user_id.raw_value)" class="oe_kanban_avatar" alt="Avatar"/>
-                                    </t>
+                                <div class="o_kanban_workorder_status">
+                                    <div class="o_kanban_record_bottom">
+                                        <div class="oe_kanban_bottom_right" t-if="record.state.raw_value == 'progress'">
+                                            <span t-if="record.working_state.raw_value != 'blocked' and record.working_user_ids.raw_value.length > 0"><i class="fa fa-play" role="img" aria-label="Run" title="Run"/></span>
+                                            <span t-if="record.working_state.raw_value != 'blocked' and record.working_user_ids.raw_value.length == 0 and record.last_working_user_id.raw_value"><i class="fa fa-pause" role="img" aria-label="Pause" title="Pause"/></span>
+                                            <span t-if="record.working_state.raw_value == 'blocked' and (record.working_user_ids.raw_value.length == 0 or record.last_working_user_id.raw_value)"><i class="fa fa-stop" role="img" aria-label="Stop" title="Stop"/></span>
+                                            <t name="user_avatar" t-if="record.last_working_user_id.raw_value">
+                                                <img t-att-src="kanban_image('res.users', 'avatar_128', record.last_working_user_id.raw_value)" class="oe_kanban_avatar" alt="Avatar"/>
+                                            </t>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
