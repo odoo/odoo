@@ -333,20 +333,18 @@ QUnit.module('convert_inline', {}, function () {
         document.body.append($editable[0]);
         convertInline.normalizeRem($editable);
         assert.strictEqual($editable.html(),
-            `<div style="font-size: 24px;">` +
-                `<div class="a" style="color: #000000; padding: 30px" width="100%">` +
-                    `<p style="border: 14.4px #aaaaaa solid; margin: 45.48px;">Test</p>` +
+            `<div style="font-size: 32px;">` +
+                `<div class="a" style="color: #000000; padding: 40px" width="100%">` +
+                    `<p style="border: 19.2px #aaaaaa solid; margin: 60.64px;">Test</p>` +
                 `</div>` +
             `</div>`,
             "should have converted several rem sizes to px using the default rem size"
         );
         $editable.remove();
 
-        const html = document.createElement('html');
-        html.style.setProperty('font-size', '20px');
         $editable = $(`<div>${testDom}</div>`);
-        html.append($editable[0]);
-        convertInline.normalizeRem($editable);
+        document.body.append($editable[0]);
+        convertInline.normalizeRem($editable, 20);
         assert.strictEqual($editable.html(),
             `<div style="font-size: 40px;">` +
                 `<div class="a" style="color: #000000; padding: 50px" width="100%">` +
