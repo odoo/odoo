@@ -494,38 +494,6 @@ class Project(models.Model):
         )
         return profitability_items
 
-    def _get_profitability_common(self):
-        # FIXME: used in project update model
-        self.ensure_one()
-        result = {
-            'costs': 0.0,
-            'margin': 0.0,
-            'revenues': 0.0
-        }
-
-        profitability = self.env['project.profitability.report']._read_group(
-            [('project_id', '=', self.id)],
-            ['project_id',
-                'amount_untaxed_to_invoice',
-                'amount_untaxed_invoiced',
-                'expense_amount_untaxed_to_invoice',
-                'expense_amount_untaxed_invoiced',
-                'other_revenues',
-                'expense_cost',
-                'timesheet_cost',
-                'margin'],
-            ['project_id'], limit=1)
-        if profitability:
-            profitability = profitability[0]
-            result.update({
-                'costs': profitability['timesheet_cost'] + profitability['expense_cost'],
-                'margin': profitability['margin'],
-                'revenues': (profitability['amount_untaxed_invoiced'] + profitability['amount_untaxed_to_invoice'] +
-                                profitability['expense_amount_untaxed_invoiced'] + profitability['expense_amount_untaxed_to_invoice'] +
-                                profitability['other_revenues']),
-            })
-        return result
-
     def _get_service_policy_to_invoice_type(self):
         return {
             **super()._get_service_policy_to_invoice_type(),

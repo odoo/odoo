@@ -69,14 +69,19 @@ class ProjectUpdate(models.Model):
         costs_revenues = project.analytic_account_id and project.allow_billable
         if not (self.user_has_groups('project.group_project_manager') and costs_revenues):
             return {}
-        profitability = project._get_profitability_common()
+        profitability_items = project._get_profitability_items(False)
+        costs = sum(profitability_items['costs']['total'].values())
+        revenues = sum(profitability_items['revenues']['total'].values())
+        margin = revenues + costs
         return {
             'analytic_account_id': project.analytic_account_id,
-            'costs': format_amount(self.env, -profitability['costs'], self.env.company.currency_id),
-            'revenues': format_amount(self.env, profitability['revenues'], self.env.company.currency_id),
-            'margin': profitability['margin'],
-            'margin_formatted': format_amount(self.env, profitability['margin'], self.env.company.currency_id),
+            'costs': costs,
+            'costs_formatted': format_amount(self.env, -costs, project.currency_id),
+            'revenues': revenues,
+            'revenues_formatted': format_amount(self.env, revenues, project.currency_id),
+            'margin': margin,
+            'margin_formatted': format_amount(self.env, margin, project.currency_id),
             'margin_percentage': formatLang(self.env,
-                                            not float_utils.float_is_zero(profitability['costs'], precision_digits=2) and -(profitability['margin'] / profitability['costs']) * 100 or 0.0,
+                                            not float_utils.float_is_zero(costs, precision_digits=2) and (margin / -costs) * 100 or 0.0,
                                             digits=0),
         }
