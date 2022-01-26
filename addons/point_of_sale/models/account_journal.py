@@ -11,6 +11,6 @@ class AccountJournal(models.Model):
 
     @api.constrains('type')
     def _check_type(self):
-        methods = self.env['pos.payment.method'].sudo().search([("journal_id", "=", self.id)])
+        methods = self.env['pos.payment.method'].sudo().search([("journal_id", "in", self.ids)])
         if methods:
             raise ValidationError(_("This journal is associated with a payment method. You cannot modify its type"))
