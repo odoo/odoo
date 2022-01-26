@@ -111,6 +111,41 @@ class TestMessagePost(BaseFunctionalTest, TestRecipients, MockEmails):
         self.assertNotIn('body', emp_info['button_access']['url'])
         self.assertNotIn('subject', emp_info['button_access']['url'])
 
+        # test when notifying on non-records (e.g. MailThread._message_notify())
+        for model, res_id in ((self.test_record._name, False),
+                              (self.test_record._name, 0),  # browse(0) does not return a valid recordset
+                              (False, self.test_record.id),
+                              (False, False),
+                              ('mail.thread', False),
+                              ('mail.thread', self.test_record.id)):
+            msg_vals.update({
+                'model': model,
+                'res_id': res_id,
+            })
+            # note that msg_vals wins over record on which method is called
+            notify_msg_vals = dict(msg_vals, **link_vals)
+            classify_res = self.test_record._notify_classify_recipients(
+                pdata, 'Test', msg_vals=notify_msg_vals)
+            # find back information for partner
+            partner_info = next(item for item in classify_res if item['recipients'] == self.partner_1.ids)
+            emp_info = next(item for item in classify_res if item['recipients'] == self.partner_employee.ids)
+            # check there is no access button
+            self.assertFalse(partner_info['has_button_access'])
+            self.assertFalse(emp_info['has_button_access'])
+
+            # test on falsy records (False model cannot be browsed, skipped)
+            if model:
+                record_falsy = self.env[model].browse(res_id)
+                classify_res = record_falsy._notify_classify_recipients(
+                    pdata, 'Test', msg_vals=notify_msg_vals)
+                # find back information for partner
+                partner_info = next(item for item in classify_res if item['recipients'] == self.partner_1.ids)
+                emp_info = next(item for item in classify_res if item['recipients'] == self.partner_employee.ids)
+                # check there is no access button
+                self.assertFalse(partner_info['has_button_access'])
+                self.assertFalse(emp_info['has_button_access'])
+
+
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_post_needaction(self):
         (self.user_employee | self.user_admin).write({'notification_type': 'inbox'})
