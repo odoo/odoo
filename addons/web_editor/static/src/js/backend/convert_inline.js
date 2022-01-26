@@ -289,13 +289,14 @@ function cardToTable($editable) {
  * @param {Object} cssRules
  */
 function classToStyle($editable, cssRules) {
+    const writes = [];
     _applyOverDescendants($editable[0], function (node) {
         const $target = $(node);
         const css = _getMatchedCSSRules(node, cssRules);
         // Flexbox
         for (const styleName of node.style) {
             if (styleName.includes('flex') || `${node.style[styleName]}`.includes('flex')) {
-                node.style[styleName] = '';
+                writes.push(()=> { node.style[styleName] = ''; });
             }
         }
         // Ignore font-family (mail-safe font declared in <head>)
@@ -313,30 +314,32 @@ function classToStyle($editable, cssRules) {
             }
         };
         if (_.isEmpty(style)) {
-            $target.removeAttr('style');
+            writes.push(()=> { $target.removeAttr('style'); });
         } else {
-            $target.attr('style', style);
+            writes.push(()=> { $target.attr('style', style); });
         }
         if ($target.get(0).style.width) {
-            $target.attr('width', $target.css('width')); // Widths need to be applied as attributes as well.
+            const width = $target.css('width');
+            writes.push(()=> { $target.attr('width', width); });
         }
 
         // Media list images should not have an inline height
         if (node.nodeName === 'IMG' && $target.hasClass('s_media_list_img')) {
-            $target.css('height', '');
+            writes.push(()=> { $target.css('height', ''); });
         }
         // Apple Mail
         if (node.nodeName === 'TD' && !node.childNodes.length) {
-            $(node).append('&nbsp;');
+            writes.push(()=> { $(node).append('&nbsp;'); });
         }
         // Outlook
         if (node.nodeName === 'A' && $target.hasClass('btn') && !$target.hasClass('btn-link') && !$target.children().length) {
-            $target.prepend(`<!--[if mso]><i style="letter-spacing: 25px; mso-font-width: -100%; mso-text-raise: 30pt;">&nbsp;</i><![endif]-->`);
-            $target.append(`<!--[if mso]><i style="letter-spacing: 25px; mso-font-width: -100%;">&nbsp;</i><![endif]-->`);
+            writes.push(()=> { $target.prepend(`<!--[if mso]><i style="letter-spacing: 25px; mso-font-width: -100%; mso-text-raise: 30pt;">&nbsp;</i><![endif]-->`); });
+            writes.push(()=> { $target.append(`<!--[if mso]><i style="letter-spacing: 25px; mso-font-width: -100%;">&nbsp;</i><![endif]-->`); });
         } else if (node.nodeName === 'IMG' && $target.is('.mx-auto.d-block')) {
-            $target.wrap('<p class="o_outlook_hack" style="text-align:center;margin:0"/>');
+            writes.push(()=> { $target.wrap('<p class="o_outlook_hack" style="text-align:center;margin:0"/>'); });
         }
     });
+    writes.forEach(fn => fn());
 }
 /**
  * Convert the contents of an editable area (as a JQuery element) into content
