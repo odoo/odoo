@@ -16,8 +16,8 @@ odoo.define('web.searchUtils', function (require) {
             { symbol: "=", description: _lt("is not set"), value: false },
         ],
         boolean: [
-            { symbol: "=", description: _lt("is true"), value: true },
-            { symbol: "!=", description: _lt("is false"), value: true },
+            { symbol: "=", description: _lt("is Yes"), value: true },
+            { symbol: "!=", description: _lt("is No"), value: true },
         ],
         char: [
             { symbol: "ilike", description: _lt("contains") },
