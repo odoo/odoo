@@ -42,29 +42,32 @@ const TABLE_STYLES = {
 function addTables($editable) {
     for (const snippet of $editable.find('.o_mail_snippet_general, .o_layout')) {
         // Convert all snippets and the mailing itself into table > tr > td
-        const $table = _createTable(snippet.attributes);
-        const $row = $('<tr/>');
-        const $col = $('<td/>');
-        $row.append($col);
-        $table.append($row);
+        const table = _createTable(snippet.attributes);
+
+        const row = document.createElement('tr');
+        const col = document.createElement('td');
+        row.appendChild(col);
+        table.appendChild(row);
+
         for (const child of [...snippet.childNodes]) {
-            $col.append(child);
+            col.appendChild(child);
         }
-        $(snippet).before($table);
-        $(snippet).remove();
+        snippet.before(table);
+        snippet.remove();
 
         // If snippet doesn't have a table as child, wrap its contents in one.
-        if (!$col.children().filter('table').length) {
-            const $tableB = _createTable();
-            $tableB[0].style.width
-            const $rowB = $('<tr/>');
-            const $colB = $('<td/>');
-            $rowB.append($colB);
-            $tableB.append($rowB);
-            for (const child of [...$col[0].childNodes]) {
-                $colB.append(child);
+        const childTable = [...col.children].find((child)=>child.querySelector('table'));
+        if (!childTable) {
+            const tableB = _createTable();
+            const rowB = document.createElement('tr');
+            const colB = document.createElement('td');
+
+            rowB.appendChild(colB);
+            tableB.appendChild(rowB);
+            for (const child of [...col.childNodes]) {
+                colB.appendChild(child);
             }
-            $col.append($tableB);
+            col.appendChild(tableB);
         }
     }
 }
@@ -78,7 +81,7 @@ function addTables($editable) {
 function attachmentThumbnailToLinkImg($editable) {
     $editable.find('a[href*="/web/content/"][data-mimetype]').filter(':empty, :containsExact( )').each(function () {
         var $link = $(this);
-        var $img = $('<img/>')
+        var $img = $(document.createElement('img'))
             .attr('src', $link.css('background-image').replace(/(^url\(['"])|(['"]\)$)/g, ''))
             .css('height', Math.max(1, $link.height()) + 'px')
             .css('width', Math.max(1, $link.width()) + 'px');
@@ -114,7 +117,7 @@ function bootstrapToTable($editable) {
 
 
         // TABLE
-        const $table = _createTable(container.attributes);
+        const $table = $(_createTable(container.attributes));
         for (const child of [...container.childNodes]) {
             $table.append(child);
         }
@@ -133,7 +136,7 @@ function bootstrapToTable($editable) {
         const $bootstrapRows = $table.children().filter('.row');
         for (const bootstrapRow of $bootstrapRows) {
             const $bootstrapRow = $(bootstrapRow);
-            const $row = $('<tr/>');
+            const $row = $(document.createElement('tr'));
             for (const attr of bootstrapRow.attributes) {
                 $row.attr(attr.name, attr.value);
             }
@@ -247,10 +250,10 @@ function bootstrapToTable($editable) {
 function cardToTable($editable) {
     for (const card of $editable.find('.card')) {
         const $card = $(card);
-        const $table = _createTable(card.attributes);
+        const $table = $(_createTable(card.attributes));
         for (const child of [...card.childNodes]) {
-            const $row = $('<tr/>');
-            const $col = $('<td/>');
+            const $row = $(document.createElement('tr'));
+            const $col = $(document.createElement('td'));
             if (child.nodeName === 'IMG') {
                 $col.append(child);
             } else if (child.nodeType === Node.TEXT_NODE) {
@@ -268,9 +271,9 @@ function cardToTable($editable) {
                 }
                 $(child).remove();
             }
-            const $subTable = _createTable();
-            const $superRow = $('<tr/>');
-            const $superCol = $('<td/>');
+            const $subTable = $(_createTable());
+            const $superRow = $(document.createElement('tr'));
+            const $superCol = $(document.createElement('td'));
             $row.append($col);
             $subTable.append($row);
             $superCol.append($subTable);
@@ -495,10 +498,11 @@ function formatTables($editable) {
     const writes = [];
     for (const table of $editable.find('table.o_mail_snippet_general, .o_mail_snippet_general table')) {
         const $table = $(table);
-        const tablePaddingTop = parseFloat($table.css('padding-top').match(RE_PADDING)[1]);
-        const tablePaddingRight = parseFloat($table.css('padding-right').match(RE_PADDING)[1]);
-        const tablePaddingBottom = parseFloat($table.css('padding-bottom').match(RE_PADDING)[1]);
-        const tablePaddingLeft = parseFloat($table.css('padding-left').match(RE_PADDING)[1]);
+        const computedStyle = getComputedStyle(table);
+        const tablePaddingTop = parseFloat(computedStyle.paddingTop.match(RE_PADDING)[1]);
+        const tablePaddingRight = parseFloat(computedStyle.paddingRight.match(RE_PADDING)[1]);
+        const tablePaddingBottom = parseFloat(computedStyle.paddingBottom.match(RE_PADDING)[1]);
+        const tablePaddingLeft = parseFloat(computedStyle.paddingLeft.match(RE_PADDING)[1]);
         const $rows = $table.find('tr').filter((i, tr) => $(tr).closest('table').is($table));
         const $columns = $table.find('td').filter((i, td) => $(td).closest('table').is($table));
         for (const column of $columns) {
@@ -506,25 +510,27 @@ function formatTables($editable) {
             const $columnsInRow = $column.closest('tr').find('td').filter((i, td) => $(td).closest('table').is($table));
             const columnIndex = $columnsInRow.toArray().findIndex(col => $(col).is($column));
             const rowIndex = $rows.toArray().findIndex(row => $(row).is($column.closest('tr')));
+            const computedStyleColumn = getComputedStyle(column);
+
             if (!rowIndex) {
-                const match = $column.css('padding-top').match(RE_PADDING);
+                const match = computedStyleColumn.paddingTop.match(RE_PADDING);
                 const columnPaddingTop = match ? parseFloat(match[1]) : 0;
-                writes.push(() => { $column.css('padding-top', columnPaddingTop + tablePaddingTop); });
+                writes.push(() => {column.style['padding-top'] = `${columnPaddingTop + tablePaddingTop}px`; });
             }
             if (columnIndex === $columnsInRow.length - 1) {
-                const match = $column.css('padding-right').match(RE_PADDING);
+                const match = computedStyleColumn.paddingRight.match(RE_PADDING);
                 const columnPaddingRight = match ? parseFloat(match[1]) : 0;
-                writes.push(() => { $column.css('padding-right', columnPaddingRight + tablePaddingRight); });
+                writes.push(() => {column.style['padding-right'] = `${columnPaddingRight + tablePaddingRight}px`; });
             }
             if (rowIndex === $rows.length - 1) {
-                const match = $column.css('padding-bottom').match(RE_PADDING);
+                const match = computedStyleColumn.paddingBottom.match(RE_PADDING);
                 const columnPaddingBottom = match ? parseFloat(match[1]) : 0;
-                writes.push(() => { $column.css('padding-bottom', columnPaddingBottom + tablePaddingBottom); });
+                writes.push(() => {column.style['padding-bottom'] = `${columnPaddingBottom + tablePaddingBottom}px`; });
             }
             if (!columnIndex) {
-                const match = $column.css('padding-left').match(RE_PADDING);
+                const match = computedStyleColumn.paddingLeft.match(RE_PADDING);
                 const columnPaddingLeft = match ? parseFloat(match[1]) : 0;
-                writes.push(() => { $column.css('padding-left', columnPaddingLeft + tablePaddingLeft); });
+                writes.push(() => {column.style['padding-left'] = `${columnPaddingLeft + tablePaddingLeft}px`; });
             }
         }
         writes.push(() => { $table.css('padding', ''); });
@@ -700,7 +706,7 @@ function listGroupToTable($editable) {
         const $listGroup = $(listGroup);
         let $table;
         if ($listGroup.find('.list-group-item').length) {
-            $table = _createTable(listGroup.attributes);
+            $table = $(_createTable(listGroup.attributes));
         } else {
             $table = $(listGroup.cloneNode());
             for (const attr of $listGroup.attributes) {
@@ -712,8 +718,8 @@ function listGroupToTable($editable) {
             if ($child.hasClass('list-group-item')) {
                 // List groups are <ul>s that render like tables. Their
                 // li.list-group-item children should translate to tr > td.
-                const $row = $('<tr/>');
-                const $col = $('<td/>');
+                const $row = $(document.createElement('tr'));
+                const $col = $(document.createElement('td'));
                 for (const attr of child.attributes) {
                     $col.attr(attr.name, attr.value);
                 }
@@ -847,7 +853,7 @@ function _computeSpecificity(selector) {
  * @returns {JQuery[]}
  */
 function _createColumnGrid() {
-    return new Array(12).fill().map(() => $('<td/>'));
+    return new Array(12).fill().map(() => $(document.createElement('td')));
 }
 /**
  * Return a table as a JQuery element, with its default styles and attributes,
@@ -859,29 +865,30 @@ function _createColumnGrid() {
  * @returns {JQuery}
  */
 function _createTable(attributes = []) {
-    const $table = $('<table/>');
-    $table.attr(TABLE_ATTRIBUTES);
-    $table[0].style.setProperty('width', '100%', 'important');
+    const table = document.createElement('table');
+    Object.entries(TABLE_ATTRIBUTES).forEach(([att, value]) => table.setAttribute(att, value));
+    // $table.attr(TABLE_ATTRIBUTES);
+    table.style.setProperty('width', '100%', 'important');
     for (const attr of attributes) {
         if (!(attr.name === 'width' && attr.value === '100%')) {
-            $table.attr(attr.name, attr.value);
+            table.setAttribute(attr.name, attr.value);
         }
     }
-    if ($table.hasClass('o_layout')) {
+    if (table.classList.contains('o_layout')) {
         // The top mailing element inherits the body's font size and line-height
         // and should keep them.
         const layoutStyles = {...TABLE_STYLES};
         delete layoutStyles['font-size'];
         delete layoutStyles['line-height'];
-        $table.css(layoutStyles);
+        Object.entries(layoutStyles).forEach(([att, value]) => table.style[att] = value)
     } else {
         for (const styleName in TABLE_STYLES) {
             if (!('style' in attributes && attributes.style.value.includes(styleName + ':'))) {
-                $table.css(styleName, TABLE_STYLES[styleName]);
+                table.style[styleName] = TABLE_STYLES[styleName];
             }
         }
     }
-    return $table;
+    return table;
 }
 /**
  * Take a Bootstrap grid column element and return its size, computed by using
