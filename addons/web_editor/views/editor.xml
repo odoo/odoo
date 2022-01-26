@@ -2,9 +2,8 @@
 <odoo>
 
 <template id="wysiwyg_iframe_editor_assets" name="Editor assets for wysiwyg iframe content" groups="base.group_user">
-    <t t-call-assets="web.assets_common"/>
-    <t t-call-assets="web.assets_frontend" t-js="false"/>
-    <t t-call-assets="web_editor.assets_wysiwyg"/>
+    <t t-call-assets="web.assets_common" t-css="false" />
+    <t t-call-assets="web_editor.assets_wysiwyg" t-css="false" />
 </template>
 
 <template id="compiled_assets_wysiwyg" name="Wysiwyg Editor" groups="base.group_public,base.group_portal,base.group_user">
