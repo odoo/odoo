@@ -40,7 +40,6 @@
         <field name="name">Disable TOTP on users</field>
         <field name="model_id" ref="base.model_res_users"/>
         <field name="binding_model_id" ref="base.model_res_users"/>
-        <field name="binding_view_types">list</field>
         <field name="state">code</field>
         <field name="code">
             action = records.totp_disable()
