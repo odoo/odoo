@@ -174,6 +174,10 @@ class DiscussController(http.Controller):
             return guest.sudo()._init_messaging()
         raise NotFound()
 
+    @http.route('/mail/load_message_failures', methods=['POST'], type='json', auth='user')
+    def mail_load_message_failures(self, **kwargs):
+        return request.env.user.partner_id._message_fetch_failed()
+ 
     # --------------------------------------------------------------------------
     # Mailbox
     # --------------------------------------------------------------------------
