@@ -2827,7 +2827,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             }).id,
         })
         wizard_res = wizard.do_action()
-        wizard_res
 
         for date, move, ref in zip(dates, moves, ['INV/2017/01/0001', 'INV/2017/01/0002', 'INV/2017/02/0001']):
             self.assertInvoiceValues(move, [
