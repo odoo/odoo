@@ -11,8 +11,10 @@ class TestProjectUpdateSaleTimesheet(TestProjectUpdate):
     def test_project_update_description_profitability(self):
         self.project_pigs.allow_billable = True
         template_values = self.env['project.update']._get_template_values(self.project_pigs)
-        self.assertEqual(template_values['profitability']['costs'], "$\xa00.00", "Project costs used in the template should be well defined")
-        self.assertEqual(template_values['profitability']['revenues'], "$\xa00.00", "Project revenues used in the template should be well defined")
+        self.assertEqual(template_values['profitability']['costs'], 0.0, "Project costs used in the template should be well defined")
+        self.assertEqual(template_values['profitability']['costs_formatted'], "$\xa00.00", "Project costs used in the template should be well defined")
+        self.assertEqual(template_values['profitability']['revenues'], 0.0, "Project revenues used in the template should be well defined")
+        self.assertEqual(template_values['profitability']['revenues_formatted'], "$\xa00.00", "Project revenues used in the template should be well defined")
         self.assertEqual(template_values['profitability']['margin'], 0, "Margin used in the template should be well defined")
         self.assertEqual(template_values['profitability']['margin_formatted'], "$\xa00.00", "Margin formatted used in the template should be well defined")
         self.assertEqual(template_values['profitability']['margin_percentage'], "0", "Margin percentage used in the template should be well defined")
