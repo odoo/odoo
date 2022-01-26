@@ -136,7 +136,7 @@
                 <Exenta t-if="su.get('Exenta')">
                     <DetalleExenta t-foreach="su['Exenta']['DetalleExenta']" t-as="ex">
                         <CausaExencion t-out="ex['CausaExencion']"/>
-                        <BaseImponible t-out="ex['BaseImponible']"/>
+                        <BaseImponible t-out="float_repr(ex['BaseImponible'])"/>
                     </DetalleExenta>
                 </Exenta>
                 <NoExenta t-if="su.get('NoExenta')">
@@ -145,9 +145,9 @@
                         <TipoNoExenta t-out="nex['TipoNoExenta']"/>
                         <DesgloseIVA>
                             <DetalleIVA t-foreach="nex['DesgloseIVA']['DetalleIVA']" t-as="det">
-                                <BaseImponible t-out="det['BaseImponible']"/>
-                                <TipoImpositivo t-out="det['TipoImpositivo']"/>
-                                <CuotaImpuesto t-out="det['CuotaRepercutida']"/>
+                                <BaseImponible t-out="float_repr(det['BaseImponible'])"/>
+                                <TipoImpositivo t-out="float_repr(det['TipoImpositivo'])"/>
+                                <CuotaImpuesto t-out="float_repr(det['CuotaRepercutida'])"/>
                                 <!-- TODO investigate the Y option below -->
                                 <OperacionEnRecargoDeEquivalenciaORegimenSimplificado>N</OperacionEnRecargoDeEquivalenciaORegimenSimplificado>
                             </DetalleIVA>
