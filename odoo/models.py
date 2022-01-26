@@ -4380,6 +4380,14 @@ Fields:
                 to_create.append(data)
                 continue
             d_id, d_module, d_name, d_model, d_res_id, d_noupdate, r_id = row
+            if self._name != d_model:
+                _logger.warning((
+                    "For external id %s "
+                    "when trying to create/update a record of model %s "
+                    "found record of different model %s (%s)"
+                    "\nUpdating record %s of target model %s"),
+                    xml_id, self._name, d_model, d_id, d_id, self._name
+                )
             record = self.browse(d_res_id)
             if r_id:
                 data['record'] = record
