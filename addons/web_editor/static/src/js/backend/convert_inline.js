@@ -492,6 +492,7 @@ function fontToImg($editable) {
  * @param {JQuery} $editable
  */
 function formatTables($editable) {
+    const writes = [];
     for (const table of $editable.find('table.o_mail_snippet_general, .o_mail_snippet_general table')) {
         const $table = $(table);
         const tablePaddingTop = parseFloat($table.css('padding-top').match(RE_PADDING)[1]);
@@ -508,26 +509,27 @@ function formatTables($editable) {
             if (!rowIndex) {
                 const match = $column.css('padding-top').match(RE_PADDING);
                 const columnPaddingTop = match ? parseFloat(match[1]) : 0;
-                $column.css('padding-top', columnPaddingTop + tablePaddingTop);
+                writes.push(() => { $column.css('padding-top', columnPaddingTop + tablePaddingTop); });
             }
             if (columnIndex === $columnsInRow.length - 1) {
                 const match = $column.css('padding-right').match(RE_PADDING);
                 const columnPaddingRight = match ? parseFloat(match[1]) : 0;
-                $column.css('padding-right', columnPaddingRight + tablePaddingRight);
+                writes.push(() => { $column.css('padding-right', columnPaddingRight + tablePaddingRight); });
             }
             if (rowIndex === $rows.length - 1) {
                 const match = $column.css('padding-bottom').match(RE_PADDING);
                 const columnPaddingBottom = match ? parseFloat(match[1]) : 0;
-                $column.css('padding-bottom', columnPaddingBottom + tablePaddingBottom);
+                writes.push(() => { $column.css('padding-bottom', columnPaddingBottom + tablePaddingBottom); });
             }
             if (!columnIndex) {
                 const match = $column.css('padding-left').match(RE_PADDING);
                 const columnPaddingLeft = match ? parseFloat(match[1]) : 0;
-                $column.css('padding-left', columnPaddingLeft + tablePaddingLeft);
+                writes.push(() => { $column.css('padding-left', columnPaddingLeft + tablePaddingLeft); });
             }
         }
-        $table.css('padding', '');
+        writes.push(() => { $table.css('padding', ''); });
     }
+    writes.forEach((fn) => fn());
     // Ensure a tbody in every table and cancel its default style.
     for (const table of $editable.find('table:not(:has(tbody))')) {
         const $contents = $(table).contents();
