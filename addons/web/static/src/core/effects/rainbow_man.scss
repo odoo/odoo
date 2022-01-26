@@ -46,8 +46,8 @@
 
   .o_reward_rainbow {
     path {
-      stroke-dasharray: 600;
-      stroke-dashoffset: 0;
+      stroke-dasharray: 600 600;
+      stroke-dashoffset: -600;
       fill: none;
       stroke-linecap: round;
       stroke-width: 21px;
@@ -211,17 +211,17 @@
 }
 
 @keyframes reward-rainbow {
-  0% {
-    stroke-dashoffset: -500;
-  }
   to {
     stroke-dashoffset: 0;
   }
 }
 
 @keyframes reward-rainbow-reverse {
+  from {
+    stroke-dashoffset: 0;
+  }
   to {
-    stroke-dashoffset: -500;
+    stroke-dashoffset: -600;
   }
 }
 
