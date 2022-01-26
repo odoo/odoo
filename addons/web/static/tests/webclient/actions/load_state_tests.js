@@ -997,7 +997,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.verifySteps(["clientAction setup"]);
         await nextTick();
         assert.containsOnce(target, ".o_dialog_error");
-        await click(target, ".modal-header .close");
+        await click(target, ".modal-header .btn-close");
         assert.containsNone(target, ".o_dialog_error");
         await click(target, "nav .o_navbar_apps_menu .dropdown-toggle ");
         assert.containsN(target, ".dropdown-item.o_app", 3);

@@ -255,7 +255,7 @@
                                 <t t-esc="props.title"/>
                                 <span t-if="props.subtitle" class="o_subtitle text-muted small" t-esc="props.subtitle"/>
                             </h4>
-                            <button type="button" class="close" aria-label="Close" tabindex="-1" t-on-click="_close">×</button>
+                            <button type="button" class="btn-close" aria-label="Close" tabindex="-1" t-on-click="_close"></button>
                         </header>
                         <main class="modal-body">
                             <t t-slot="default"/>
@@ -1513,9 +1513,7 @@
 
 <t t-name="notification-box">
     <div t-attf-class="o_notification_box mb0 alert alert-dismissible alert-{{type}}" role="alertdialog">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span class="fa fa-times"></span>
-        </button>
+        <button type="button" class="btn-close" aria-label="Close"></button>
     </div>
 </t>
 

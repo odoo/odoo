@@ -112,7 +112,7 @@ QUnit.module("Components", (hooks) => {
         Parent.components = { Dialog };
         parent = await mount(Parent, target, { env });
         assert.containsOnce(target, ".o_dialog");
-        await click(target, ".o_dialog header button.close");
+        await click(target, ".o_dialog header button.btn-close");
         assert.verifySteps(["close"]);
     });
 

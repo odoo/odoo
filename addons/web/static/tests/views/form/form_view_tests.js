@@ -6625,7 +6625,7 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector(".o_external_button"));
 
         // Close modal
-        await click(target, '.modal-dialog button[class="close"]');
+        await click(target, '.modal-dialog button[class="btn-close"]');
         assert.notStrictEqual(
             $(".o_content").scrollTop(),
             0,
