@@ -204,11 +204,12 @@ var Dialog = Widget.extend({
             if (self.$parentNode) {
                 self.$modal.appendTo(self.$parentNode);
             }
-            self.$modal.modal({
-                show: true,
+            const modalNode = self.$modal[0];
+            const modal = new Modal(modalNode, {
                 backdrop: self.backdrop,
                 keyboard: false,
             });
+            modal.show();
             self._openedResolver();
             if (options && options.shouldFocusButtons) {
                 self._onFocusControlButton();

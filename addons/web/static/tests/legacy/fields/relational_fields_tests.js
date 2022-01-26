@@ -339,7 +339,7 @@ QUnit.module('Legacy relational_fields', {
         assert.ok($('body').hasClass('modal-open'), 'Modal is said opened');
 
         // Close second modal
-        await testUtils.dom.click($modals.last().find('button[class="close"]'));
+        await testUtils.dom.click($modals.last().find('button[class="btn-close"]'));
         var $modal = $('.modal');
         $focusedModal = $(document.activeElement).closest('.modal');
 
@@ -349,7 +349,7 @@ QUnit.module('Legacy relational_fields', {
         assert.ok($('body').hasClass('modal-open'), 'Modal is said opened');
 
         // Close first modal
-        await testUtils.dom.click($modal.find('button[class="close"]'));
+        await testUtils.dom.click($modal.find('button[class="btn-close"]'));
         $modal = $('.modal-dialog.modal-lg');
 
         assert.equal($modal.length, 0, 'There should be no modal');

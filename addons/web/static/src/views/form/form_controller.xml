@@ -58,9 +58,7 @@
             <t t-foreach="Array.from(this.translateAlertData[this.model.root.resId])" t-as="field" t-key="field.name">
                 <strong><a class="o_field_translate" t-att-name="field.name" href="#"><t t-esc="field.string"/><t t-if="!field_last">, </t></a></strong>
             </t>
-            <button t-on-click="() => this.closeTranslateAlert()" type="button" class="close" aria-label="Close">
-                <span class="fa fa-times"></span>
-            </button>
+            <button t-on-click="() => this.closeTranslateAlert()" type="button" class="btn-close" aria-label="Close"></button>
         </div>
     </t>
 
