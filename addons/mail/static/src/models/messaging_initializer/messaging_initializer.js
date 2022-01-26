@@ -46,6 +46,9 @@ registerModel({
             if (this.messaging.autofetchPartnerImStatus) {
                 this.messaging.models['mail.partner'].startLoopFetchImStatus();
             }
+            if (this.messaging.currentUser) {
+                this._loadMessageFailures();
+            }
         },
         /**
          * @private
@@ -55,7 +58,7 @@ registerModel({
          * @param {Object} param0.current_partner
          * @param {integer} param0.current_user_id
          * @param {Object} param0.current_user_settings
-         * @param {Object} [param0.mail_failures={}]
+         * @param {Object} [param0.mail_failures=[]]
          * @param {integer} [param0.needaction_inbox_counter=0]
          * @param {Object} param0.partner_root
          * @param {Object[]} param0.public_partners
@@ -70,7 +73,7 @@ registerModel({
             currentGuest,
             current_user_id,
             current_user_settings,
-            mail_failures = {},
+            mail_failures = [],
             menu_id,
             needaction_inbox_counter = 0,
             partner_root,
@@ -197,7 +200,7 @@ registerModel({
         },
         /**
          * @private
-         * @param {Object} mailFailuresData
+         * @param {Object[]} mailFailuresData
          */
         async _initMailFailures(mailFailuresData) {
             await executeGracefully(mailFailuresData.map(messageData => () => {
@@ -298,6 +301,15 @@ registerModel({
                     publicPartner => this.messaging.models['mail.partner'].convertData(publicPartner)
                 )),
             });
+        },
+        /**
+         * @private
+         */
+        async _loadMessageFailures() {
+            const data = await this.env.services.rpc({
+                route: '/mail/load_message_failures',
+            }, { shadow: true });
+            this._initMailFailures(data);
         },
     },
 });
