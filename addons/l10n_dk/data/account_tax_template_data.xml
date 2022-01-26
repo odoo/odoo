@@ -323,13 +323,19 @@
             }),
         ]"/>
     </record>
+    <!-- 25% deduction on VAT (which is 25% of the base amount) -->
+    <!-- Use case: 100 price include -->
+    <!-- base = 95 = 80 (base) + 15 (Vat not deduced) -->
+    <!-- tax = 5 = 80 * 25% * 25% -->
+    <!-- https://skat.dk/data.aspx?oid=2244623 -->
     <record id="tax450" model="account.tax.template">
         <field name="chart_template_id" ref="dk_chart_template"/>
         <field name="sequence">450</field>
         <field name="name">Restaurationsmoms 6,25%, købsmoms</field>
-        <field name="description">6,25%</field>
-        <field name="amount">6.25</field>
-        <field name="amount_type">percent</field>
+        <field name="description">25% deduction of 25% VAT</field>
+        <field name="amount">5.00</field>
+        <field name="price_include" eval="True"/>
+        <field name="amount_type">division</field>
         <field name="type_tax_use">purchase</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
