@@ -98,10 +98,10 @@ class TestEdiXmls(TestEsEdiCommon):
       <DetallesFactura>
         <IDDetalleFactura>
           <DescripcionDetalle>producta</DescripcionDetalle>
-          <Cantidad>5.0</Cantidad>
-          <ImporteUnitario>1000.0</ImporteUnitario>
-          <Descuento>20.0</Descuento>
-          <ImporteTotal>4840.0</ImporteTotal>
+          <Cantidad>5.00</Cantidad>
+          <ImporteUnitario>1000.00</ImporteUnitario>
+          <Descuento>20.00</Descuento>
+          <ImporteTotal>4840.00</ImporteTotal>
         </IDDetalleFactura>
       </DetallesFactura>
       <ImporteTotalFactura>4840.00</ImporteTotalFactura>
@@ -120,9 +120,9 @@ class TestEdiXmls(TestEsEdiCommon):
                 <TipoNoExenta>S1</TipoNoExenta>
                 <DesgloseIVA>
                   <DetalleIVA>
-                    <BaseImponible>4000.0</BaseImponible>
-                    <TipoImpositivo>21.0</TipoImpositivo>
-                    <CuotaImpuesto>840.0</CuotaImpuesto>
+                    <BaseImponible>4000.00</BaseImponible>
+                    <TipoImpositivo>21.00</TipoImpositivo>
+                    <CuotaImpuesto>840.00</CuotaImpuesto>
                     <OperacionEnRecargoDeEquivalenciaORegimenSimplificado>N</OperacionEnRecargoDeEquivalenciaORegimenSimplificado>
                   </DetalleIVA>
                 </DesgloseIVA>
