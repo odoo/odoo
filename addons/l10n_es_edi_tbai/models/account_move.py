@@ -46,6 +46,7 @@ class AccountMove(models.Model):
         string="Invoice Refund Reason Code",
         help="BOE-A-1992-28740. Ley 37/1992, de 28 de diciembre, del Impuesto sobre el "
         "Valor Añadido. Artículo 80. Modificación de la base imponible.",
+        copy=False,
     )
 
     # -------------------------------------------------------------------------
