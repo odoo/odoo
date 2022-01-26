@@ -195,20 +195,7 @@ class StockMoveLine(models.Model):
         mls = super().create(vals_list)
 
         def create_move(move_line):
-            new_move = self.env['stock.move'].create({
-                'name': _('New Move:') + move_line.product_id.display_name,
-                'product_id': move_line.product_id.id,
-                'product_uom_qty': 0 if move_line.picking_id and move_line.picking_id.state != 'done' else move_line.qty_done,
-                'product_uom': move_line.product_uom_id.id,
-                'description_picking': move_line.description_picking,
-                'location_id': move_line.picking_id.location_id.id,
-                'location_dest_id': move_line.picking_id.location_dest_id.id,
-                'picking_id': move_line.picking_id.id,
-                'state': move_line.picking_id.state,
-                'picking_type_id': move_line.picking_id.picking_type_id.id,
-                'restrict_partner_id': move_line.picking_id.owner_id.id,
-                'company_id': move_line.picking_id.company_id.id,
-            })
+            new_move = self.env['stock.move'].create(move_line._prepare_stock_move_vals())
             move_line.move_id = new_move.id
 
         # If the move line is directly create on the picking view.
@@ -689,3 +676,21 @@ class StockMoveLine(models.Model):
     def _compute_sale_price(self):
         # To Override
         pass
+
+    @api.model
+    def _prepare_stock_move_vals(self):
+        self.ensure_one()
+        return {
+            'name': _('New Move:') + self.product_id.display_name,
+            'product_id': self.product_id.id,
+            'product_uom_qty': 0 if self.picking_id and self.picking_id.state != 'done' else self.qty_done,
+            'product_uom': self.product_uom_id.id,
+            'description_picking': self.description_picking,
+            'location_id': self.picking_id.location_id.id,
+            'location_dest_id': self.picking_id.location_dest_id.id,
+            'picking_id': self.picking_id.id,
+            'state': self.picking_id.state,
+            'picking_type_id': self.picking_id.picking_type_id.id,
+            'restrict_partner_id': self.picking_id.owner_id.id,
+            'company_id': self.picking_id.company_id.id,
+        }
