@@ -267,6 +267,7 @@ This module provides the core of the Odoo Web Client.
 
             'base/static/src/css/description.css',
             'web/static/src/libs/fontawesome/css/font-awesome.css',
+            'web/static/lib/odoo_ui_icons/*',
             'web/static/fonts/fonts.scss',
             'web/static/src/legacy/scss/report.scss',
             'web/static/src/legacy/scss/layout_standard.scss',
@@ -329,6 +330,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/lib/tempusdominus/tempusdominus.scss',
             'web/static/lib/jquery.ui/jquery-ui.css',
             'web/static/src/libs/fontawesome/css/font-awesome.css',
+            'web/static/lib/odoo_ui_icons/*',
             'web/static/lib/select2/select2.css',
             'web/static/lib/select2-bootstrap-css/select2-bootstrap.css',
             'web/static/lib/daterangepicker/daterangepicker.css',
