@@ -151,10 +151,12 @@
                                                 <t t-if="value.old_value">
                                                     <div class="o_Message_trackingValueOldValue o_Message_trackingValueItem" t-esc="value.old_value"/>
                                                 </t>
+                                                <i t-else="" class="mr-2">None</i>
                                                 <div class="o_Message_trackingValueSeparator o_Message_trackingValueItem fa fa-long-arrow-right" title="Changed" role="img"/>
                                                 <t t-if="value.new_value">
                                                     <div class="o_Message_trackingValueNewValue o_Message_trackingValueItem" t-esc="value.new_value"/>
                                                 </t>
+                                                <i t-else="">None</i>
                                             </div>
                                         </li>
                                     </t>
