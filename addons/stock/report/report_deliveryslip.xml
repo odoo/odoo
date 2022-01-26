@@ -129,18 +129,16 @@
                                 </t>
                                 <!-- Make sure we do another section for package-less products if they exist -->
                                 <t t-set="move_lines" t-value="o.move_line_ids.filtered(lambda l: not l.result_package_id)"/>
-                                <t t-if="move_lines" name="no_package_move_lines">
+                                <t t-set="aggregated_lines" t-value="o.move_line_ids._get_aggregated_product_quantities(except_package=True)"/>
+                                <t t-if="move_lines or aggregated_lines" name="no_package_move_lines">
                                     <t t-call="stock.stock_report_delivery_no_package_section_line" name="no_package_section"/>
                                     <t t-if="has_serial_number">
                                         <tr t-foreach="move_lines" t-as="move_line">
                                             <t t-call="stock.stock_report_delivery_has_serial_move_line"/>
                                         </tr>
                                     </t>
-                                    <t t-else="">
-                                        <t t-set="aggregated_lines" t-value="move_lines._get_aggregated_product_quantities()"/>
-                                        <t t-if="aggregated_lines">
-                                            <t t-call="stock.stock_report_delivery_aggregated_move_lines"/>
-                                        </t>
+                                    <t t-elif="aggregated_lines">
+                                        <t t-call="stock.stock_report_delivery_aggregated_move_lines"/>
                                     </t>
                                 </t>
                             </t>
