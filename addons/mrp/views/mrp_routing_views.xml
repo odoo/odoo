@@ -13,7 +13,7 @@
                     <field name="time_mode" optional="show"/>
                     <field name="time_computed_on" optional="hide"/>
                     <field name="time_cycle" widget="float_time" string="Duration (minutes)" width="1.5"/>
-                    <field name="company_id" optional="show" groups="base.group_multi_company"/>
+                    <field name="company_id" optional="hide" groups="base.group_multi_company"/>
                     <field name="possible_bom_product_template_attribute_value_ids" invisible="1"/>
                     <field name="bom_product_template_attribute_value_ids" optional="hide" widget="many2many_tags" options="{'no_create': True}" groups="product.group_product_variant"/>
                     <field name="blocked_by_operation_ids" widget="many2many_tags" optional="hide" groups="mrp.group_mrp_workorder_dependencies"/>
