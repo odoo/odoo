@@ -233,12 +233,20 @@ class MassMailing(models.Model):
             values['body_html'] = self._convert_inline_images_to_urls(values['body_html'])
         if 'medium_id' not in values and values.get('mailing_type', 'mail') == 'mail':
             values['medium_id'] = self.env.ref('utm.utm_medium_email').id
-        return super(MassMailing, self).create(values)
+        return super().create(values)\
+            ._fix_attachment_ownership()
 
     def write(self, values):
         if values.get('body_html'):
             values['body_html'] = self._convert_inline_images_to_urls(values['body_html'])
-        return super(MassMailing, self).write(values)
+        super().write(values)
+        self._fix_attachment_ownership()
+        return True
+
+    def _fix_attachment_ownership(self):
+        for record in self:
+            record.attachment_ids.write({'res_model': record._name, 'res_id': record.id})
+        return self
 
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):

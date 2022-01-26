@@ -52,6 +52,9 @@ msgid ""
 "${object.company_id.name} ${(object.get_portal_last_transaction().state == "
 "'pending') and 'Pending Order' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
+"${object.company_id.name} ${(object.get_portal_last_transaction().state == "
+"'pending') and 'Comanda pendent' or 'Comanda'} (Ref ${object.name or 'n/d' "
+"})"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
@@ -90,6 +93,8 @@ msgid ""
 "(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or "
 "'Order - %s' % (object.name)"
 msgstr ""
+"(object.state in ('draft', 'sent') and 'Pressupost - %s' % (object.name)) or"
+" 'Comanda - %s' % (object.name)"
 
 #. module: sale
 #: model:product.product,description_sale:sale.product_product_4e
@@ -626,6 +631,9 @@ msgid ""
 "                when you want to sell extra hours because the initial\n"
 "                hours have already been used."
 msgstr ""
+"Un exemple típic són les hores prepagades de servei,\n"
+"               quan voleu vendre hores addicionals perquè les\n"
+"                inicials ja s'han consumit."
 
 #. module: sale
 #: model:res.groups,name:sale.group_warning_sale
@@ -1276,7 +1284,7 @@ msgstr "Personalitzeu l'aspecte dels pressupostos."
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_dhl
 msgid "DHL Express Connector"
-msgstr ""
+msgstr "Connector DHL Express"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -2174,7 +2182,7 @@ msgstr "Màrqueting"
 #: code:addons/sale/static/src/xml/account_reconciliation.xml:0
 #, python-format
 msgid "Match with a sale order"
-msgstr ""
+msgstr "Coincideix amb una comada de venda"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__medium_id
@@ -2439,6 +2447,7 @@ msgstr "Només es vàlid un valor sencer."
 #, python-format
 msgid "Only draft orders can be marked as sent directly."
 msgstr ""
+"Només les comandes esborrany es poden marcar com a enviades directament."
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_product_attribute_custom_value_sol_custom_value_unique
@@ -2666,7 +2675,7 @@ msgstr "Transacció de pagament"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_order_confirmation_step
 msgid "Payment method"
-msgstr ""
+msgstr "Mètode de pagament"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -3012,7 +3021,7 @@ msgstr "Rebutjar aquest pressupost"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__remaining_validity_days
 msgid "Remaining Days Before Expiration"
-msgstr ""
+msgstr "Dies que falten per a la caducitat"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_report

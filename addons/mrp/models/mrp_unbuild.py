@@ -3,7 +3,7 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import AccessError, UserError
-from odoo.tools import float_compare
+from odoo.tools import float_compare, float_round
 
 
 class MrpUnbuild(models.Model):
@@ -175,7 +175,7 @@ class MrpUnbuild(models.Model):
                         })
                         needed_quantity -= taken_quantity
             else:
-                move.quantity_done = move.product_uom_qty
+                move.quantity_done = float_round(move.product_uom_qty, precision_rounding=move.product_uom.rounding)
 
         finished_moves._action_done()
         consume_moves._action_done()

@@ -406,8 +406,11 @@ class StockQuant(models.Model):
         if lot_id and quantity > 0:
             quants = quants.filtered(lambda q: q.lot_id)
 
-        incoming_dates = [d for d in quants.mapped('in_date') if d]
-        incoming_dates = [fields.Datetime.from_string(incoming_date) for incoming_date in incoming_dates]
+        if location_id.should_bypass_reservation():
+            incoming_dates = []
+        else:
+            incoming_dates = [quant.in_date for quant in quants if quant.in_date and
+                              float_compare(quant.quantity, 0, precision_rounding=quant.product_uom_id.rounding) > 0]
         if in_date:
             incoming_dates += [in_date]
         # If multiple incoming dates are available for a given lot_id/package_id/owner_id, we
@@ -733,7 +736,7 @@ class QuantPackage(models.Model):
         else:
             packs = self.search([('quant_ids', operator, value)])
         if packs:
-            return [('id', 'parent_of', packs.ids)]
+            return [('id', 'in', packs.ids)]
         else:
             return [('id', '=', False)]
 

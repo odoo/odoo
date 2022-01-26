@@ -487,7 +487,7 @@ class IrAttachment(models.Model):
     def write(self, vals):
         self.check('write', values=vals)
         # remove computed field depending of datas
-        for field in ('file_size', 'checksum'):
+        for field in ('file_size', 'checksum', 'store_fname'):
             vals.pop(field, False)
         if 'mimetype' in vals or 'datas' in vals:
             vals = self._check_contents(vals)
@@ -495,6 +495,9 @@ class IrAttachment(models.Model):
 
     def copy(self, default=None):
         self.check('write')
+        if not (default or {}).keys() & {'datas', 'db_datas'}:
+            # ensure the content is kept and recomputes checksum/store_fname
+            default = dict(default or {}, datas=self.datas)
         return super(IrAttachment, self).copy(default)
 
     def unlink(self):
@@ -516,10 +519,16 @@ class IrAttachment(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         record_tuple_set = set()
+
+        # remove computed field depending of datas
+        vals_list = [{
+            key: value
+            for key, value
+            in vals.items()
+            if key not in ('file_size', 'checksum', 'store_fname')
+        } for vals in vals_list]
+
         for values in vals_list:
-            # remove computed field depending of datas
-            for field in ('file_size', 'checksum'):
-                values.pop(field, False)
             values = self._check_contents(values)
             if 'datas' in values:
                 values.update(self._get_datas_related_values(values.pop('datas'), values['mimetype']))

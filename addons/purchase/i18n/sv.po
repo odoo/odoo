@@ -18,8 +18,8 @@
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2021
 # STefan Rundgren <stefanrundgren@cellglas.com>, 2021
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2021
-# Simon S, 2021
 # Kim Asplund <kim.asplund@gmail.com>, 2021
+# Simon S, 2021
 # 
 msgid ""
 msgstr ""
@@ -27,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Kim Asplund <kim.asplund@gmail.com>, 2021\n"
+"Last-Translator: Simon S, 2021\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -121,6 +121,24 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Hej ${object.partner_id.name}\n"
+"        % if object.partner_id.parent_id:\n"
+"            (${object.partner_id.parent_id.name})\n"
+"        % endif\n"
+"        <br/><br/>\n"
+"        Som bilaga bifogas en offertförfrågan <strong>${object.name}</strong>\n"
+"        % if object.partner_ref:\n"
+"            med referens: ${object.partner_ref}\n"
+"        % endif\n"
+"        från ${object.company_id.name}.\n"
+"        <br/><br/>\n"
+"        Tveka inte att kontakta oss om ni har några frågor.\n"
+"        <br/><br/>\n"
+"        Vänliga hälsningar,\n"
+"    </p>\n"
+"</div>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_partner_kanban_view

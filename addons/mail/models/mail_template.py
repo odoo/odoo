@@ -194,6 +194,21 @@ class MailTemplate(models.Model):
             self.sub_model_object_field = False
             self.null_value = False
 
+    def _fix_attachment_ownership(self):
+        for record in self:
+            record.attachment_ids.write({'res_model': record._name, 'res_id': record.id})
+        return self
+
+    @api.model_create_multi
+    def create(self, values_list):
+        return super().create(values_list)\
+            ._fix_attachment_ownership()
+
+    def write(self, vals):
+        super().write(vals)
+        self._fix_attachment_ownership()
+        return True
+
     def unlink(self):
         self.unlink_action()
         return super(MailTemplate, self).unlink()

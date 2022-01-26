@@ -13,8 +13,6 @@ import re
 import smtplib
 import threading
 
-import html2text
-
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import except_orm, UserError
 from odoo.tools import ustr, pycompat, encapsulate_email, email_domain_extract
@@ -379,7 +377,7 @@ class IrMailServer(models.Model):
 
         if subtype == 'html' and not body_alternative:
             # Always provide alternative text body ourselves if possible.
-            text = html2text.html2text(email_body)
+            text = tools.html2plaintext(email_body)
             alternative_part = MIMEMultipart(_subtype="alternative")
             alternative_part.attach(MIMEText(text, _charset='utf-8', _subtype='plain'))
             alternative_part.attach(email_text_part)

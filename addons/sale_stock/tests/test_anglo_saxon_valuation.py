@@ -1188,3 +1188,80 @@ class TestAngloSaxonValuation(SavepointCase):
         income_aml_2 = amls_2.filtered(lambda aml: aml.account_id == self.income_account)
         self.assertEqual(income_aml_2.debit, 0)
         self.assertEqual(income_aml_2.credit, 12)
+
+    def test_fifo_return_and_credit_note(self):
+        """
+        When posting a credit note for a returned product, the value of the anglo-saxo lines
+        should be based on the returned product's value
+        """
+        self.product.categ_id.property_cost_method = 'fifo'
+        
+        # Receive one @10, one @20 and one @30
+        in_moves = self.env['stock.move'].create([{
+            'name': 'IN move @%s' % p,
+            'product_id': self.product.id,
+            'location_id': self.env.ref('stock.stock_location_suppliers').id,
+            'location_dest_id': self.stock_location.id,
+            'product_uom': self.product.uom_id.id,
+            'product_uom_qty': 1,
+            'price_unit': p,
+        } for p in [10, 20, 30]])
+        in_moves._action_confirm()
+        in_moves.quantity_done = 1
+        in_moves._action_done()
+
+        # Sell 3 units
+        so = self.env['sale.order'].create({
+            'partner_id': self.customer.id,
+            'order_line': [
+                (0, 0, {
+                    'name': self.product.name,
+                    'product_id': self.product.id,
+                    'product_uom_qty': 3.0,
+                    'product_uom': self.product.uom_id.id,
+                    'price_unit': 100,
+                    'tax_id': False,
+                })],
+        })
+        so.action_confirm()
+
+        # Deliver 1@10, then 1@20 and then 1@30
+        pickings = []
+        picking = so.picking_ids
+        while picking:
+            pickings.append(picking)
+            picking.move_lines.quantity_done = 1
+            action = picking.button_validate()
+            if action:
+                wizard = self.env['stock.backorder.confirmation'].browse(action['res_id'])
+                wizard.process()
+            picking = picking.backorder_ids
+
+        invoice = so.with_context(default_journal_id=self.journal_sale.id)._create_invoices()
+        invoice.post()
+
+        # Return the second picking (i.e. 1@20)
+        ctx = {'active_id': pickings[1].id, 'active_model': 'stock.picking'}
+        return_wizard = Form(self.env['stock.return.picking'].with_context(ctx)).save()
+        return_picking_id, dummy = return_wizard._create_returns()
+        return_picking = self.env['stock.picking'].browse(return_picking_id)
+        return_picking.move_lines.quantity_done = 1
+        return_picking.button_validate()
+
+        # Add a credit note for the returned product
+        ctx = {'active_model': 'account.move', 'active_ids': invoice.ids}
+        refund_wizard = self.env['account.move.reversal'].with_context(ctx).create({'refund_method': 'refund'})
+        action = refund_wizard.reverse_moves()
+        reverse_invoice = self.env['account.move'].browse(action['res_id'])
+        with Form(reverse_invoice) as reverse_invoice_form:
+            with reverse_invoice_form.invoice_line_ids.edit(0) as line:
+                line.quantity = 1
+        reverse_invoice.post()
+
+        amls = reverse_invoice.line_ids
+        stock_out_aml = amls.filtered(lambda aml: aml.account_id == self.stock_output_account)
+        self.assertEqual(stock_out_aml.debit, 20, 'Should be to the value of the returned product')
+        self.assertEqual(stock_out_aml.credit, 0)
+        cogs_aml = amls.filtered(lambda aml: aml.account_id == self.expense_account)
+        self.assertEqual(cogs_aml.debit, 0)
+        self.assertEqual(cogs_aml.credit, 20, 'Should be to the value of the returned product')

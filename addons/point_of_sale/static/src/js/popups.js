@@ -174,10 +174,10 @@ var SelectionPopupWidget = PopupWidget.extend({
     show: function(options){
         var self = this;
         options = options || {};
-        this._super(options);
-
         this.list = options.list || [];
         this.is_selected = options.is_selected || function (item) { return false; };
+
+        this._super(options);
         this.renderElement();
     },
     click_item : function(event) {
