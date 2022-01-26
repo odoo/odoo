@@ -152,19 +152,21 @@ QUnit.module("Views", (hooks) => {
                 foo: {
                     fields: {
                         id: { string: "Id", type: "integer" },
-                        foo: { string: "Foo", type: "integer", store: true, group_operator: "sum" },
-                        bar: { string: "bar", type: "boolean", store: true },
+                        foo: { string: "Foo", type: "integer", store: true, group_operator: "sum", sortable: true },
+                        bar: { string: "bar", type: "boolean", store: true, sortable: true },
                         product_id: {
                             string: "Product",
                             type: "many2one",
                             relation: "product",
                             store: true,
+                            sortable: true
                         },
                         color_id: {
                             string: "Color",
                             type: "many2one",
                             relation: "color",
                             store: true,
+                            sortable: true
                         },
                         date: { string: "Date", type: "date", store: true, sortable: true },
                         revenue: {
@@ -172,6 +174,7 @@ QUnit.module("Views", (hooks) => {
                             type: "float",
                             store: true,
                             group_operator: "sum",
+                            sortable: true
                         },
                     },
                     records: [
@@ -3635,4 +3638,22 @@ QUnit.module("Views", (hooks) => {
             "backgroundColor": undefined,
         });
     });
+
+    QUnit.test("group by a non stored, sortable field", async function (assert) {
+        assert.expect(1);
+        // When a field is non-stored but sortable it's inherited
+        // from a stored field, so it can be sortable
+        serverData.models.foo.fields.date.store = false;
+        const graph = await makeView({
+            serverData,
+            type: "graph",
+            resModel: "foo",
+            groupBy: ["date:month"],
+            arch: `<graph type="line"/>`,
+            config: {
+                views: [[false, "search"]],
+            },
+        });
+        checkLabels(assert, graph, ["January 2016", "March 2016", "May 2016", "April 2016"]);
+    })
 });
