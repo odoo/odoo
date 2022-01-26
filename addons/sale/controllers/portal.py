@@ -358,10 +358,12 @@ class PaymentPortal(payment_portal.PaymentPortal):
                 'partner_id': order_sudo.partner_id.id,
                 'company_id': order_sudo.company_id.id,
                 'sale_order_id': sale_order_id,
+                'sale_order_state': order_sudo.state,
             })
         return super().payment_pay(*args, amount=amount, access_token=access_token, **kwargs)
 
-    def _get_custom_rendering_context_values(self, sale_order_id=None, **kwargs):
+    def _get_custom_rendering_context_values(self, sale_order_id=None, sale_order_state=None,
+                                             **kwargs):
         """ Override of payment to add the sale order id in the custom rendering context values.
 
         :param int sale_order_id: The sale order for which a payment id made, as a `sale.order` id
@@ -371,6 +373,8 @@ class PaymentPortal(payment_portal.PaymentPortal):
         rendering_context_values = super()._get_custom_rendering_context_values(**kwargs)
         if sale_order_id:
             rendering_context_values['sale_order_id'] = sale_order_id
+        if sale_order_state:
+            rendering_context_values['sale_order_state'] = sale_order_state
         return rendering_context_values
 
     def _create_transaction(self, *args, sale_order_id=None, custom_create_values=None, **kwargs):

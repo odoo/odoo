@@ -126,6 +126,9 @@ class PaymentPortal(portal.CustomerPortal):
         # Generate a new access token in case the partner id or the currency id was updated
         access_token = payment_utils.generate_access_token(partner_sudo.id, amount, currency.id)
 
+        # The invoice status is required to warn the user/customer about cancelled invoices
+        invoice_state = request.env["account.move"].sudo().browse(invoice_id).state
+
         rendering_context = {
             'acquirers': acquirers_sudo,
             'tokens': payment_tokens,
@@ -140,6 +143,7 @@ class PaymentPortal(portal.CustomerPortal):
             'landing_route': '/payment/confirmation',
             'partner_is_different': partner_is_different,
             'invoice_id': invoice_id,
+            'invoice_state': invoice_state,
             **self._get_custom_rendering_context_values(**kwargs),
         }
         return request.render(self._get_payment_page_template_xmlid(**kwargs), rendering_context)

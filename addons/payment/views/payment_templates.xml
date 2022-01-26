@@ -43,6 +43,14 @@
             <t t-set="footer_template_id"
                t-value="footer_template_id or 'payment.footer'"/>
 
+            <t t-if="invoice_state=='cancel'">
+                <div class="alert alert-danger" role="alert">
+                    <strong>
+                        Attention: this invoice has been cancelled.
+                    </strong>
+                </div>
+            </t>
+
             <div class="card">
                 <!-- === Acquirers === -->
                 <t t-foreach="acquirers" t-as="acquirer">
