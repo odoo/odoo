@@ -507,6 +507,14 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
         }
 
         function exec() {
+            if (!tip.widget.$anchor[0].ownerDocument.contains(tip.widget.$anchor[0])) {
+                // Trigger removed from document, run the same step again.
+                // console.error("NOT IN DOCUMENT");
+                self._deactivate_tip(self.active_tooltips[tour_name]);
+                self._to_next_step(tour_name, 0);
+                self.update();
+                return;
+            }
             var action_helper = new RunningTourActionHelper(tip.widget);
             do_before_unload(self._consume_tip.bind(self, tip, tour_name));
 
