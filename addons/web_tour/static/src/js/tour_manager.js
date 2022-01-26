@@ -500,6 +500,15 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
         }
 
         function exec() {
+            const anchorIsInDocument = tip.widget.$anchor[0].ownerDocument.contains(tip.widget.$anchor[0]);
+            const uiIsBlocked = $('body').hasClass('o_ui_blocked');
+            if (!anchorIsInDocument || uiIsBlocked) {
+                // trigger is no longer in the DOM, or UI is now blocked, so run the same step again
+                self._deactivate_tip(self.active_tooltips[tour_name]);
+                self._to_next_step(tour_name, 0);
+                self.update();
+                return;
+            }
             var action_helper = new RunningTourActionHelper(tip.widget);
             do_before_unload(self._consume_tip.bind(self, tip, tour_name));
 
