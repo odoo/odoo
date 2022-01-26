@@ -693,6 +693,21 @@ class Picking(models.Model):
         self.write({'is_locked': True})
         return True
 
+    def _prepare_stock_move_vals(self, line, picking):
+        return {
+            'name': _('New Move:') + line.product_id.display_name,
+            'product_id': line.product_id.id,
+            'product_uom_qty': line.qty_done,
+            'product_uom': line.product_uom_id.id,
+            'description_picking': line.description_picking,
+            'location_id': picking.location_id.id,
+            'location_dest_id': picking.location_dest_id.id,
+            'picking_id': picking.id,
+            'picking_type_id': picking.picking_type_id.id,
+            'restrict_partner_id': picking.owner_id.id,
+            'company_id': picking.company_id.id,
+        }
+
     def action_done(self):
         """Changes picking state to done by processing the Stock Moves of the Picking
 
@@ -731,19 +746,7 @@ class Picking(models.Model):
                 if moves:
                     ops.move_id = moves[0].id
                 else:
-                    new_move = self.env['stock.move'].create({
-                                                    'name': _('New Move:') + ops.product_id.display_name,
-                                                    'product_id': ops.product_id.id,
-                                                    'product_uom_qty': ops.qty_done,
-                                                    'product_uom': ops.product_uom_id.id,
-                                                    'description_picking': ops.description_picking,
-                                                    'location_id': pick.location_id.id,
-                                                    'location_dest_id': pick.location_dest_id.id,
-                                                    'picking_id': pick.id,
-                                                    'picking_type_id': pick.picking_type_id.id,
-                                                    'restrict_partner_id': pick.owner_id.id,
-                                                    'company_id': pick.company_id.id,
-                                                   })
+                    new_move = self.env['stock.move'].create(self._prepare_stock_move_vals(ops, pick))
                     ops.move_id = new_move.id
                     new_move = new_move._action_confirm()
                     todo_moves |= new_move
