@@ -211,7 +211,7 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
                     const preFilters = args[0];
                     const preFilter = preFilters[0];
                     assert.strictEqual(preFilter.type, 'filter');
-                    assert.strictEqual(preFilter.description, 'Boolean Field is true');
+                    assert.strictEqual(preFilter.description, 'Boolean Field is Yes');
                     assert.strictEqual(preFilter.domain, '[["boolean_field","=",True]]');
                 }
             }
@@ -557,7 +557,7 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
                             type: "filter",
                         },
                         {
-                            description: 'Boolean Field is false',
+                            description: 'Boolean Field is No',
                             domain: '[["boolean_field","!=",True]]',
                             type: "filter",
                         },
