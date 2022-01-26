@@ -174,6 +174,14 @@ class DiscussController(http.Controller):
             return guest.sudo()._init_messaging()
         raise NotFound()
 
+    @http.route('/mail/init_messaging_mail_failures', methods=['POST'], type='json', auth='public')
+    def mail_init_messaging_mail_failures(self, **kwargs):
+        if not request.env.user.sudo()._is_public():
+            return {
+                'mail_failures': request.env.user.partner_id._message_fetch_failed(),
+            }
+        raise NotFound()
+
     # --------------------------------------------------------------------------
     # Mailbox
     # --------------------------------------------------------------------------

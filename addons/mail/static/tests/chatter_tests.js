@@ -103,7 +103,7 @@ QUnit.module('Chatter', {
 });
 
 QUnit.test('list activity widget with no activity', async function (assert) {
-    assert.expect(5);
+    assert.expect(4);
 
     const { widget: list } = await start({
         hasView: true,
@@ -112,7 +112,9 @@ QUnit.test('list activity widget with no activity', async function (assert) {
         data: this.data,
         arch: '<list><field name="activity_ids" widget="list_activity"/></list>',
         mockRPC: function (route) {
-            assert.step(route);
+            if (['/web/dataset/search_read', '/mail/init_messaging'].includes(route)) {
+                assert.step(route);
+            }
             return this._super(...arguments);
         },
         session: { uid: 2 },
@@ -158,7 +160,9 @@ QUnit.test('list activity widget with activities', async function (assert) {
         data: this.data,
         arch: '<list><field name="activity_ids" widget="list_activity"/></list>',
         mockRPC: function (route) {
-            assert.step(route);
+            if (['/web/dataset/search_read', '/mail/init_messaging'].includes(route)) {
+                assert.step(route);
+            }
             return this._super(...arguments);
         },
     });
@@ -201,7 +205,9 @@ QUnit.test('list activity widget with exception', async function (assert) {
         data: this.data,
         arch: '<list><field name="activity_ids" widget="list_activity"/></list>',
         mockRPC: function (route) {
-            assert.step(route);
+            if (['/web/dataset/search_read', '/mail/init_messaging'].includes(route)) {
+                assert.step(route);
+            }
             return this._super(...arguments);
         },
     });
@@ -263,6 +269,12 @@ QUnit.test('list activity widget: open dropdown', async function (assert) {
                 <field name="activity_ids" widget="list_activity"/>
             </list>`,
         mockRPC: function (route, args) {
+            if (['/web/dataset/search_read', '/mail/init_messaging'].includes(route)) {
+                assert.step(route);
+            }
+            if (['switch_view', 'open dropdown', 'activity_format', 'action_feedback', 'read',].includes(args.method)) {
+                assert.step(args.method);
+            }
             assert.step(args.method || route);
             if (args.method === 'action_feedback') {
                 const currentUser = this.data['res.users'].records.find(user =>
