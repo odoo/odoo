@@ -214,7 +214,7 @@ class TestProductAttributeValueConfig(TestProductAttributeValueCommon):
     def test_product_filtered_exclude_for(self):
         """
             Super Computer has 18 variants total (2 ssd * 3 ram * 3 hdd)
-            RAM 16 excudes HDD 1, that matches 2 variants:
+            RAM 16 excludes HDD 1, that matches 2 variants:
             - SSD 256 RAM 16 HDD 1
             - SSD 512 RAM 16 HDD 1
 
@@ -230,8 +230,8 @@ class TestProductAttributeValueConfig(TestProductAttributeValueCommon):
         self._add_ram_exclude_for()
         self.assertEqual(len(self.computer._get_possible_variants()), 16)
         self.assertTrue(self.computer._get_variant_for_combination(computer_ssd_256 + computer_ram_8 + computer_hdd_1)._is_variant_possible())
-        self.assertFalse(self.computer._get_variant_for_combination(computer_ssd_256 + computer_ram_16 + computer_hdd_1)._is_variant_possible())
-        self.assertFalse(self.computer._get_variant_for_combination(computer_ssd_512 + computer_ram_16 + computer_hdd_1)._is_variant_possible())
+        self.assertFalse(self.computer._get_variant_for_combination(computer_ssd_256 + computer_ram_16 + computer_hdd_1))
+        self.assertFalse(self.computer._get_variant_for_combination(computer_ssd_512 + computer_ram_16 + computer_hdd_1))
 
     def test_children_product_filtered_exclude_for(self):
         """
@@ -387,8 +387,26 @@ class TestProductAttributeValueConfig(TestProductAttributeValueCommon):
         self._add_exclude(computer_ram_32, computer_ssd_256)
         self.assertEqual(self.computer._get_first_possible_combination(), computer_ssd_512 + computer_ram_32 + computer_hdd_4)
 
-        # No possible combination (test helper and iterator)
-        self._add_exclude(computer_ram_32, computer_hdd_4)
+        # Not possible to add an exclusion when only one variant is left -> it deletes the product template associated to it
+        with self.assertRaises(UserError), self.cr.savepoint():
+            self._add_exclude(computer_ram_32, computer_hdd_4)
+
+        # If an exclusion rule deletes all variants at once it does not delete the template.
+        # Here we can test `_get_first_possible_combination` with a product template with no variants
+        # Deletes all exclusions
+        for exclusion in computer_ram_32.exclude_for:
+            computer_ram_32.write({
+                'exclude_for': [(2, exclusion.id, 0)]
+            })
+
+        # Activates all exclusions at once
+        computer_ram_32.write({
+            'exclude_for': [(0, computer_ram_32.exclude_for.id, {
+                'product_tmpl_id': self.computer.id,
+                'value_ids': [(6, 0, [computer_hdd_1.id, computer_hdd_2.id, computer_hdd_4.id, computer_ssd_256.id, computer_ssd_512.id])]
+            })]
+        })
+
         self.assertEqual(self.computer._get_first_possible_combination(), self.env['product.template.attribute.value'])
         gen = self.computer._get_possible_combinations()
         self.assertIsNone(next(gen, None))
