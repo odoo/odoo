@@ -282,8 +282,8 @@ export class Message extends Component {
              */
             switch (value.field_type) {
                 case 'boolean':
-                    value.old_value = format.boolean(value.old_value, undefined, { forceString: true });
-                    value.new_value = format.boolean(value.new_value, undefined, { forceString: true });
+                    value.old_value = value.old_value ? _lt('Yes') : _lt('No');
+                    value.new_value = value.new_value ? _lt('Yes') : _lt('No');
                     break;
                 /**
                  * many2one formatter exists but is expecting id/name_get or data

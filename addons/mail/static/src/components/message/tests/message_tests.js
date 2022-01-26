@@ -1153,7 +1153,7 @@ QUnit.test('rendering of tracked field of type boolean: from true to false', asy
     await createMessageComponent(message);
     assert.strictEqual(
         document.querySelector('.o_Message_trackingValue').textContent,
-        "Is Ready:TrueFalse",
+        "Is Ready:YesNo",
         "should display the correct content of tracked field of type boolean: from true to false (Is Ready: True -> False)"
     );
 });
@@ -1175,7 +1175,7 @@ QUnit.test('rendering of tracked field of type boolean: from false to true', asy
     await createMessageComponent(message);
     assert.strictEqual(
         document.querySelector('.o_Message_trackingValue').textContent,
-        "Is Ready:FalseTrue",
+        "Is Ready:NoYes",
         "should display the correct content of tracked field of type boolean: from false to true (Is Ready: False -> True)"
     );
 });
@@ -1197,8 +1197,8 @@ QUnit.test('rendering of tracked field of type char: from a string to empty stri
     await createMessageComponent(message);
     assert.strictEqual(
         document.querySelector('.o_Message_trackingValue').textContent,
-        "Name:Marc",
-        "should display the correct content of tracked field of type char: from a string to empty string (Name: Marc ->)"
+        "Name:MarcNone",
+        "should display the correct content of tracked field of type char: from a string to empty string (Name: Marc -> None)"
     );
 });
 
@@ -1219,8 +1219,8 @@ QUnit.test('rendering of tracked field of type char: from empty string to a stri
     await createMessageComponent(message);
     assert.strictEqual(
         document.querySelector('.o_Message_trackingValue').textContent,
-        "Name:Marc",
-        "should display the correct content of tracked field of type char: from empty string to a string (Name: -> Marc)"
+        "Name:NoneMarc",
+        "should display the correct content of tracked field of type char: from empty string to a string (Name: None -> Marc)"
     );
 });
 
@@ -1241,8 +1241,8 @@ QUnit.test('rendering of tracked field of type date: from no date to a set date'
     await createMessageComponent(message);
     assert.strictEqual(
         document.querySelector('.o_Message_trackingValue').textContent,
-        "Deadline:12/14/2018",
-        "should display the correct content of tracked field of type date: from no date to a set date (Deadline: -> 12/14/2018)"
+        "Deadline:None12/14/2018",
+        "should display the correct content of tracked field of type date: from no date to a set date (Deadline: None -> 12/14/2018)"
     );
 });
 
@@ -1263,8 +1263,8 @@ QUnit.test('rendering of tracked field of type date: from a set date to no date'
     await createMessageComponent(message);
     assert.strictEqual(
         document.querySelector('.o_Message_trackingValue').textContent,
-        "Deadline:12/14/2018",
-        "should display the correct content of tracked field of type date: from a set date to no date (Deadline: 12/14/2018 ->)"
+        "Deadline:12/14/2018None",
+        "should display the correct content of tracked field of type date: from a set date to no date (Deadline: 12/14/2018 -> None)"
     );
 });
 
@@ -1285,8 +1285,8 @@ QUnit.test('rendering of tracked field of type datetime: from no date and time t
     await createMessageComponent(message);
     assert.strictEqual(
         document.querySelector('.o_Message_trackingValue').textContent,
-        "Deadline:12/14/2018 13:42:28",
-        "should display the correct content of tracked field of type datetime: from no date and time to a set date and time (Deadline: -> 12/14/2018 13:42:28)"
+        "Deadline:None12/14/2018 13:42:28",
+        "should display the correct content of tracked field of type datetime: from no date and time to a set date and time (Deadline: None -> 12/14/2018 13:42:28)"
     );
 });
 
@@ -1307,8 +1307,8 @@ QUnit.test('rendering of tracked field of type datetime: from a set date and tim
     await createMessageComponent(message);
     assert.strictEqual(
         document.querySelector('.o_Message_trackingValue').textContent,
-        "Deadline:12/14/2018 13:42:28",
-        "should display the correct content of tracked field of type datetime: from a set date and time to no date and time (Deadline: 12/14/2018 13:42:28 ->)"
+        "Deadline:12/14/2018 13:42:28None",
+        "should display the correct content of tracked field of type datetime: from a set date and time to no date and time (Deadline: 12/14/2018 13:42:28 -> None)"
     );
 });
 
@@ -1329,8 +1329,8 @@ QUnit.test('rendering of tracked field of type text: from some text to empty', a
     await createMessageComponent(message);
     assert.strictEqual(
         document.querySelector('.o_Message_trackingValue').textContent,
-        "Name:Marc",
-        "should display the correct content of tracked field of type text: from some text to empty (Name: Marc ->)"
+        "Name:MarcNone",
+        "should display the correct content of tracked field of type text: from some text to empty (Name: Marc -> None)"
     );
 });
 
@@ -1351,8 +1351,8 @@ QUnit.test('rendering of tracked field of type text: from empty to some text', a
     await createMessageComponent(message);
     assert.strictEqual(
         document.querySelector('.o_Message_trackingValue').textContent,
-        "Name:Marc",
-        "should display the correct content of tracked field of type text: from empty to some text (Name: -> Marc)"
+        "Name:NoneMarc",
+        "should display the correct content of tracked field of type text: from empty to some text (Name: None -> Marc)"
     );
 });
 
@@ -1373,8 +1373,8 @@ QUnit.test('rendering of tracked field of type selection: from a selection to no
     await createMessageComponent(message);
     assert.strictEqual(
         document.querySelector('.o_Message_trackingValue').textContent,
-        "State:ok",
-        "should display the correct content of tracked field of type selection: from a selection to no selection (State: ok ->)"
+        "State:okNone",
+        "should display the correct content of tracked field of type selection: from a selection to no selection (State: ok -> None)"
     );
 });
 
@@ -1395,8 +1395,8 @@ QUnit.test('rendering of tracked field of type selection: from no selection to a
     await createMessageComponent(message);
     assert.strictEqual(
         document.querySelector('.o_Message_trackingValue').textContent,
-        "State:ok",
-        "should display the correct content of tracked field of type selection: from no selection to a selection (State: -> ok)"
+        "State:Noneok",
+        "should display the correct content of tracked field of type selection: from no selection to a selection (State: None -> ok)"
     );
 });
 
@@ -1417,8 +1417,8 @@ QUnit.test('rendering of tracked field of type many2one: from having a related r
     await createMessageComponent(message);
     assert.strictEqual(
         document.querySelector('.o_Message_trackingValue').textContent,
-        "Author:Marc",
-        "should display the correct content of tracked field of type many2one: from having a related record to no related record (Author: Marc ->)"
+        "Author:MarcNone",
+        "should display the correct content of tracked field of type many2one: from having a related record to no related record (Author: Marc -> None)"
     );
 });
 
@@ -1439,8 +1439,8 @@ QUnit.test('rendering of tracked field of type many2one: from no related record 
     await createMessageComponent(message);
     assert.strictEqual(
         document.querySelector('.o_Message_trackingValue').textContent,
-        "Author:Marc",
-        "should display the correct content of tracked field of type many2one: from no related record to having a related record (Author: -> Marc)"
+        "Author:NoneMarc",
+        "should display the correct content of tracked field of type many2one: from no related record to having a related record (Author: None -> Marc)"
     );
 });
 
