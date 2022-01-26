@@ -45,30 +45,27 @@ class TestDatabaseOperations(BaseCase):
 
         # monkey-patch db-filter
         self.addCleanup(operator.setitem, config, 'dbfilter', config['dbfilter'])
-        config['dbfilter'] = self.db_name + '-.*'
+        config['dbfilter'] = self.db_name + '.*'
 
-        self.base_databases = self.list_dbs()
+        self.base_databases = self.list_dbs_filtered()
         self.session = requests.Session()
         self.session.get(self.url('/web/database/manager'))
 
     def tearDown(self):
         self.assertEqual(
-            self.list_dbs(),
+            self.list_dbs_filtered(),
             self.base_databases,
             'No database should have been created or removed at the end of this test',
         )
 
-    def list_dbs(self):
-        return set(odoo.service.db.list_dbs(True))
-
     def list_dbs_filtered(self):
-        return set(db for db in self.list_dbs() if re.match(db, config['dbfilter']))
+        return set(db for db in odoo.service.db.list_dbs(True) if re.match(config['dbfilter'], db))
 
     def url(self, path):
         return HttpCase.base_url() + path
 
     def assertDbs(self, dbs):
-        self.assertEqual(self.list_dbs() - self.base_databases, set(dbs))
+        self.assertEqual(self.list_dbs_filtered() - self.base_databases, set(dbs))
 
     def test_database_creation(self):
         # check verify_admin_password patch
