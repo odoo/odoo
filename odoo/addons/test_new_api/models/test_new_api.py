@@ -1176,6 +1176,33 @@ class SelectionBaseNullImplicit(models.Model):
     ])
 
 
+class SelectionRelated(models.Model):
+    _name = 'test_new_api.model_selection_related'
+    _description = "Model with a related selection field"
+
+    selection_id = fields.Many2one(
+        comodel_name='test_new_api.model_selection_base',
+        required=True,
+    )
+    related_selection = fields.Selection(
+        related='selection_id.my_selection',
+    )
+
+
+class SelectionRelatedUpdatable(models.Model):
+    _name = 'test_new_api.model_selection_related_updatable'
+    _description = "Model with an updatable related selection field"
+
+    selection_id = fields.Many2one(
+        comodel_name='test_new_api.model_selection_base',
+        required=True,
+    )
+    related_selection = fields.Selection(
+        related='selection_id.my_selection',
+        readonly=False,
+    )
+
+
 class SelectionRequired(models.Model):
     _name = 'test_new_api.model_selection_required'
     _description = "Model with a required selection field"
