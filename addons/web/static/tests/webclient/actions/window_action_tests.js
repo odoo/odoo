@@ -1954,7 +1954,7 @@ QUnit.module("ActionManager", (hooks) => {
                 "Warning modal should be opened"
             );
 
-            await click(document.querySelector(".modal.o_technical_modal button.close"));
+            await click(document.querySelector(".modal.o_technical_modal button.btn-close"));
             assert.containsNone(
                 document.body,
                 ".modal.o_technical_modal",

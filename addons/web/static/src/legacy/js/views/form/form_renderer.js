@@ -18,7 +18,7 @@ var FormRenderer = BasicRenderer.extend({
     className: "o_form_view",
     events: _.extend({}, BasicRenderer.prototype.events, {
         'click .o_notification_box .oe_field_translate': '_onTranslate',
-        'click .o_notification_box .close': '_onTranslateNotificationClose',
+        'click .o_notification_box .btn-close': '_onTranslateNotificationClose',
         'shown.bs.tab a[data-toggle="tab"]': '_onNotebookTabChanged',
         'click .o_form_label': '_onFieldLabelClicked',
     }),
@@ -1367,6 +1367,8 @@ var FormRenderer = BasicRenderer.extend({
      * @param {MouseEvent} ev
      */
     _onTranslateNotificationClose: function(ev) {
+        const notificationElement = this.el.querySelector('.o_notification_box');
+        Alert.getOrCreateInstance(notificationElement).close();
         delete this.alertFields[this.state.res_id];
     },
 });

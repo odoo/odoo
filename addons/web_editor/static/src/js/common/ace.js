@@ -163,7 +163,7 @@ var ViewEditor = Widget.extend({
         'click button[data-action=reset]': '_onResetClick',
         'click button[data-action=format]': '_onFormatClick',
         'click button[data-action=close]': '_onCloseClick',
-        'click #ace-view-id > .alert-warning .close': '_onCloseWarningClick'
+        'click #ace-view-id > .alert-warning .btn-close': '_onCloseWarningClick'
     },
 
     /**
