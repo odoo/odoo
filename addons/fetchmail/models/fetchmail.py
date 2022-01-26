@@ -100,13 +100,14 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
 
     def connect(self):
         self.ensure_one()
-        if self.server_type == 'imap':
+        connection_type = self._get_connection_type()
+        if connection_type == 'imap':
             if self.is_ssl:
                 connection = IMAP4_SSL(self.server, int(self.port))
             else:
                 connection = IMAP4(self.server, int(self.port))
             self._imap_login(connection)
-        elif self.server_type == 'pop':
+        elif connection_type == 'pop':
             if self.is_ssl:
                 connection = POP3_SSL(self.server, int(self.port))
             else:
@@ -148,9 +149,10 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
             finally:
                 try:
                     if connection:
-                        if server.server_type == 'imap':
+                        connection_type = server._get_connection_type()
+                        if connection_type == 'imap':
                             connection.close()
-                        elif server.server_type == 'pop':
+                        elif connection_type == 'pop':
                             connection.quit()
                 except Exception:
                     # ignored, just a consequence of the previous exception
@@ -160,7 +162,7 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
     @api.model
     def _fetch_mails(self):
         """ Method called by cron to fetch mails from servers """
-        return self.search([('state', '=', 'done'), ('server_type', 'in', ['pop', 'imap'])]).fetch_mail()
+        return self.search([('state', '=', 'done'), ('server_type', '!=', 'local')]).fetch_mail()
 
     def fetch_mail(self):
         """ WARNING: meant for cron usage only - will commit() after each email! """
@@ -174,7 +176,8 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
             count, failed = 0, 0
             imap_server = None
             pop_server = None
-            if server.server_type == 'imap':
+            connection_type = server._get_connection_type()
+            if connection_type == 'imap':
                 try:
                     imap_server = server.connect()
                     imap_server.select()
@@ -198,7 +201,7 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
                     if imap_server:
                         imap_server.close()
                         imap_server.logout()
-            elif server.server_type == 'pop':
+            elif connection_type == 'pop':
                 try:
                     while True:
                         failed_in_loop = 0
@@ -231,6 +234,14 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
             server.write({'date': fields.Datetime.now()})
         return True
 
+    def _get_connection_type(self):
+        """Return which connection must be used for this mail server (IMAP or POP).
+        Can be overridden in sub-module to define which connection to use for a specific
+        "server_type" (e.g. Gmail server).
+        """
+        self.ensure_one()
+        return self.server_type
+
     @api.model
     def _update_cron(self):
         if self.env.context.get('fetchmail_cron_running'):
@@ -238,6 +249,6 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
         try:
             # Enabled/Disable cron based on the number of 'done' server of type pop or imap
             cron = self.env.ref('fetchmail.ir_cron_mail_gateway_action')
-            cron.toggle(model=self._name, domain=[('state', '=', 'done'), ('server_type', 'in', ['pop', 'imap'])])
+            cron.toggle(model=self._name, domain=[('state', '=', 'done'), ('server_type', '!=', 'local')])
         except ValueError:
             pass

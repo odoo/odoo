@@ -5,26 +5,25 @@
         <field name="model">ir.mail_server</field>
         <field name="inherit_id" ref="base.ir_mail_server_form"/>
         <field name="arch" type="xml">
-            <field name="smtp_host" position="before">
-                <field name="use_google_gmail_service" string="Gmail"/>
-            </field>
             <field name="smtp_user" position="after">
                 <field string="Authorization Code" name="google_gmail_authorization_code" password="True"
-                    attrs="{'required': [('use_google_gmail_service', '=', True)], 'invisible': [('use_google_gmail_service', '=', False)]}"
-                    style="word-break: break-word;"/>
+                    attrs="{'required': [('smtp_authentication', '=', 'gmail')], 'invisible': [('smtp_authentication', '!=', 'gmail')]}"/>
                 <field name="google_gmail_uri"
                     class="fa fa-arrow-right oe_edit_only"
                     widget="url"
                     text=" Get an Authorization Code"
-                    attrs="{'invisible': ['|', ('use_google_gmail_service', '=', False), ('google_gmail_uri', '=', False)]}"
+                    attrs="{'invisible': ['|', ('smtp_authentication', '!=', 'gmail'), ('google_gmail_uri', '=', False)]}"
                     nolabel="1"/>
                 <div class="alert alert-warning" role="alert"
-                    attrs="{'invisible': ['|', ('use_google_gmail_service', '=', False), ('google_gmail_uri', '!=', False)]}">
-                    Setup your Gmail API credentials in the general settings to link a Gmail account.
+                    attrs="{'invisible': ['|', ('smtp_authentication', '!=', 'gmail'), ('google_gmail_uri', '!=', False)]}">
+                    Setup your Gmail API credentials to link a Gmail account.
                 </div>
             </field>
+            <field name="smtp_user" position="attributes">
+                <attribute name="attrs">{'invisible' : [('smtp_authentication', '!=', 'login'), ('smtp_authentication', '!=', 'gmail')]}</attribute>
+            </field>
             <field name="smtp_pass" position="attributes">
-                <attribute name="attrs">{'invisible' : [('use_google_gmail_service', '=', True)]}</attribute>
+                <attribute name="attrs">{'invisible' : [('smtp_authentication', '=', 'gmail')]}</attribute>
             </field>
         </field>
     </record>
