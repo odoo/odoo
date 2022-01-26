@@ -4,7 +4,6 @@ import { FieldOne2Many } from 'web.relational_fields';
 import ListRenderer from 'web.ListRenderer';
 import fieldRegistry from 'web.field_registry';
 import {_t} from 'web.core';
-
 //----------------------------------------------------
 
 var MrpFieldOne2ManyWithCopyListRenderer = ListRenderer.extend({
@@ -18,6 +17,22 @@ var MrpFieldOne2ManyWithCopyListRenderer = ListRenderer.extend({
             string: parent.nodeOptions.copy_text,
             context: '',
         });
+    },
+    
+    _renderChildren: function (node, record) {
+        let $field = this._renderFieldWidget(node, record);
+        const newText = [' (', $field.text(), ')'].join();
+        $field.html(newText);
+        $field.addClass('ml-1');
+        return $field;
+    },
+
+    _renderButton: function (record, node) {
+        let $button = this._super(...arguments);
+        $button.append(node.children.map(
+            child_node => this._renderChildren(child_node, record)
+        ));
+        return $button;
     },
 });
 
