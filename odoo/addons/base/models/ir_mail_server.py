@@ -233,12 +233,12 @@ class IrMailServer(models.Model):
         if mail_server:
             smtp_server = mail_server.smtp_host
             smtp_port = mail_server.smtp_port
-            if mail_server.smtp_authentication == "login":
-                smtp_user = mail_server.smtp_user
-                smtp_password = mail_server.smtp_pass
-            else:
+            if mail_server.smtp_authentication == "certificate":
                 smtp_user = None
                 smtp_password = None
+            else:
+                smtp_user = mail_server.smtp_user
+                smtp_password = mail_server.smtp_pass
             smtp_encryption = mail_server.smtp_encryption
             smtp_debug = smtp_debug or mail_server.smtp_debug
             from_filter = mail_server.from_filter

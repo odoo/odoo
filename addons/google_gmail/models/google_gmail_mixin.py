@@ -16,7 +16,6 @@ class GoogleGmailMixin(models.AbstractModel):
 
     _SERVICE_SCOPE = 'https://mail.google.com/'
 
-    use_google_gmail_service = fields.Boolean('Gmail Authentication')
     google_gmail_authorization_code = fields.Char(string='Authorization Code', groups='base.group_system')
     google_gmail_refresh_token = fields.Char(string='Refresh Token', groups='base.group_system')
     google_gmail_access_token = fields.Char(string='Access Token', groups='base.group_system')
