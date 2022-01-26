@@ -4461,6 +4461,12 @@ Fields:
                 to_create.append(data)
                 continue
             d_id, d_module, d_name, d_model, d_res_id, d_noupdate, r_id = row
+            if self._name != d_model:
+                raise ValidationError(
+                    f"For external id {xml_id} "
+                    f"when trying to create/update a record of model {self._name} "
+                    f"found record of different model {d_model} ({d_id})"
+                )
             record = self.browse(d_res_id)
             if r_id:
                 data['record'] = record
