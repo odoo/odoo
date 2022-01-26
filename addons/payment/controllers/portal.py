@@ -103,6 +103,15 @@ class PaymentPortal(portal.CustomerPortal):
         company = request.env['res.company'].sudo().browse(company_id)
         currency_id = currency_id or company.currency_id.id
 
+        if invoice_id:
+            invoice_sudo = request.env['account.move'].sudo().browse(invoice_id).exists()
+            if not invoice_sudo:
+                raise ValidationError(_("The provided parameters are invalid."))
+
+            # Interrupt the payment flow if the invoice has been canceled.
+            if invoice_sudo.state == 'cancel':
+                amount = 0.0
+
         # Make sure that the company passed as parameter matches the partner's company.
         PaymentPortal._ensure_matching_companies(partner_sudo, company)
 

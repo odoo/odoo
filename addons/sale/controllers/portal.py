@@ -354,6 +354,11 @@ class PaymentPortal(payment_portal.PaymentPortal):
         rendering_context_values = super()._get_custom_rendering_context_values(**kwargs)
         if sale_order_id:
             rendering_context_values['sale_order_id'] = sale_order_id
+
+            # Interrupt the payment flow if the sales order has been canceled.
+            order_sudo = request.env['sale.order'].sudo().browse(sale_order_id)
+            if order_sudo.state == 'cancel':
+                rendering_context_values['amount'] = 0.0
         return rendering_context_values
 
     def _create_transaction(self, *args, sale_order_id=None, custom_create_values=None, **kwargs):
