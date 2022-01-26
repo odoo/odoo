@@ -6,6 +6,7 @@ import math
 from base64 import b64encode
 from collections import defaultdict
 from datetime import datetime
+from functools import partial
 from re import sub as regex_sub
 from uuid import uuid4
 
@@ -13,6 +14,7 @@ from cryptography.hazmat.primitives import hashes, serialization
 from lxml import etree
 from odoo import _, models
 from odoo.exceptions import UserError
+from odoo.tools.float_utils import float_repr
 from pytz import timezone
 
 from .res_company import L10N_ES_EDI_TBAI_VERSION
@@ -226,7 +228,12 @@ class AccountEdiFormat(models.Model):
 
     def _l10n_es_tbai_get_invoice_xml(self, invoice, cancel=False):
         values = {
-            "Emision": not cancel,
+            "cancel": cancel,
+            "datetime_now": datetime.now(tz=timezone('Europe/Madrid')),
+            "datetime_strftime": datetime.strftime,
+            "timezone_eus": timezone,
+            "regex_sub": regex_sub,
+            "float_repr": partial(float_repr, precision_digits=2),
         }
         values.update(self._l10n_es_tbai_get_header_values(invoice))
         values.update(self._l10n_es_tbai_get_subject_values(invoice, cancel))
@@ -240,126 +247,95 @@ class AccountEdiFormat(models.Model):
 
     def _l10n_es_tbai_get_header_values(self, invoice):
         return {
-            'IDVersionTBAI': L10N_ES_EDI_TBAI_VERSION
+            'tbai_version': L10N_ES_EDI_TBAI_VERSION
         }
 
     def _l10n_es_tbai_get_subject_values(self, invoice, cancel):
-        # === SENDER ===
+        # === SENDER (EMISOR) ===
         sender = invoice.company_id if invoice.is_sale_document() else invoice.commercial_partner_id
         values = {
-            'Emisor': sender,
-            'EmisorVAT': sender.vat[2:] if sender.vat.startswith('ES') else sender.vat,
+            'sender': sender,
         }
         if cancel:
             return values
 
-        # === PARTNERS ===
+        # === RECIPIENTS (DESTINATARIOS) ===
         xml_recipients = []
-        # TODO TBAI accepts up to 100 recipients (but Odoo only supports one)
+        # TicketBAI accepts up to 100 recipients (but Odoo only supports one)
         for dest in (1,):
             eu_country_codes = set(self.env.ref('base.europe').country_ids.mapped('code'))
             partner = invoice.commercial_partner_id if invoice.is_sale_document() else invoice.company_id
 
-            NIF = False
-            IDOtro_Code = False
-            IDOtro_ID = partner.vat or 'NO_DISPONIBLE'
-            IDOtro_Type = ""
+            nif = False
+            alt_id_country = False
+            alt_id_number = partner.vat or 'NO_DISPONIBLE'
+            alt_id_type = ""
             if (not partner.country_id or partner.country_id.code == 'ES') and partner.vat:
                 # ES partner with VAT.
-                NIF = partner.vat[2:] if partner.vat.startswith('ES') else partner.vat
+                nif = partner.vat[2:] if partner.vat.startswith('ES') else partner.vat
             elif partner.country_id.code in eu_country_codes:
                 # European partner
-                IDOtro_Type = '02'
+                alt_id_type = '02'
             else:
                 if partner.vat:
-                    IDOtro_Type = '04'
+                    alt_id_type = '04'
                 else:
-                    IDOtro_Type = '06'
+                    alt_id_type = '06'
                 if partner.country_id:
-                    IDOtro_Code = partner.country_id.code
+                    alt_id_country = partner.country_id.code
 
             values_dest = {
-                'NIF': NIF,
-                'IDOtro_CodigoPais': IDOtro_Code,
-                'IDOtro_ID': IDOtro_ID,
-                'IDOtro_IDType': IDOtro_Type,
-                'ApellidosNombreRazonSocial': partner.name,
-                'CodigoPostal': partner.zip,
-                'Direccion': ", ".join(filter(lambda x: x, [partner.street, partner.street2, partner.city]))
+                'nif': nif,
+                'alt_id_country': alt_id_country,
+                'alt_id_number': alt_id_number,
+                'alt_id_type': alt_id_type,
+                'partner': partner,
             }
             xml_recipients.append(values_dest)
 
         values.update({
-            'Destinatarios': xml_recipients,
-            'VariosDestinatarios': "N",  # Odoo supports only one recipient
-            'TerceroODestinatario': "D",  # TODO for Bizkaia this might be "T" (if "in" invoice)
+            'recipients': xml_recipients,
+            'multiple_recipients': "N",  # Odoo supports only one recipient
+            'thirdparty_or_recipient': "D",  # TODO for Bizkaia this might be "T" (if "in" invoice)
         })
         return values
 
     def _l10n_es_tbai_get_invoice_values(self, invoice, cancel):
         eu_country_codes = set(self.env.ref('base.europe').country_ids.mapped('code'))
 
-        # simplified_partner = self.env.ref("l10n_es_edi_tbai.partner_simplified")
-
-        values = {}
-
-        # === CABECERA===
-        values['SerieFactura'] = invoice.l10n_es_tbai_sequence
-        values['NumFactura'] = invoice.l10n_es_tbai_number
+        # === HEADER (CABECERA) ===
+        values = {'invoice': invoice}
         if cancel:
-            values['FechaExpedicionFactura'] = datetime.strftime(invoice.l10n_es_tbai_registration_date, '%d-%m-%Y')
             return values
 
-        values['FechaExpedicionFactura'] = datetime.strftime(datetime.now(tz=timezone('Europe/Madrid')), '%d-%m-%Y')
-        values['HoraExpedicionFactura'] = datetime.strftime(datetime.now(tz=timezone('Europe/Madrid')), '%H:%M:%S')
+        # === CREDIT NOTE (RECTIFICATIVA) ===
+        is_refund = invoice.move_type == 'out_refund'  # TODO also in_refund for Bizkaia
+        values['is_refund'] = is_refund
+        is_simplified = False  # TODO add field to res_partner ?
+        if is_refund:
+            values['credit_note_code'] = invoice.l10n_es_tbai_refund_reason or ('R5' if is_simplified else 'R1')
+            values['credit_note_invoices'] = [  # uses a list because TicketBai supports issuing multiple credit notes
+                invoice.reversed_entry_id
+            ]
 
-        # === RECTIFICATIVA ===
-        refund = invoice.move_type == 'out_refund'
-        if refund:
-            values['CodigoRectificativa'] = invoice.l10n_es_tbai_refund_reason or 'R1'
-            values['FacturasRectificadasSustituidas'] = [{
-                'SerieFactura': invoice.reversed_entry_id.l10n_es_tbai_sequence,
-                'NumFactura': invoice.reversed_entry_id.l10n_es_tbai_number,
-                'FechaExpedicionFactura': datetime.strftime(invoice.reversed_entry_id.l10n_es_tbai_registration_date, '%d-%m-%Y')
-            }]
+        # === LINES (DETALLES) ===
+        values['invoice_lines'] = [line for line in invoice.invoice_line_ids.filtered(lambda line: not line.display_type)]
 
-        # TODO simplified & rectified invoices (if simplified => refund code always R5)
-        # is_simplified = invoice.partner_id == simplified_partner
-        # if invoice.move_type == 'out_invoice':
-        #     invoice_node['TipoFactura'] = 'F2' if is_simplified else 'F1'
-        # elif invoice.move_type == 'out_refund':
-        #     invoice_node['TipoFactura'] = 'R5' if is_simplified else 'R1'
-        #     invoice_node['TipoRectificativa'] = 'I'
-
-        # === DATOS FACTURA ===
-        values['DescripcionFactura'] = invoice.invoice_origin or 'manual'
-        detalles = []
-        # tax_details = self._l10n_es_tbai_get_invoice_tax_details_values(invoice)
-        for line in invoice.invoice_line_ids.filtered(lambda line: not line.display_type):
-            # line_details = tax_details['tax_details']['invoice_line_tax_details'][line]
-            detalles.append({
-                "DescripcionDetalle": regex_sub(r"[^0-9a-zA-Z ]", "", line.name)[:250],
-                "Cantidad": line.quantity,
-                "ImporteUnitario": line.price_unit * (-1 if refund else 1),
-                "Descuento": line.discount or "0.00",
-                "ImporteTotal": line.price_total * (-1 if refund else 1),
-            })
-        values['DetallesFactura'] = detalles
-
-        # Claves: TODO there's 15 more codes to implement, also there can be up to 3 in total
+        # CODES (CLAVES): TODO there's 15 more codes to implement, also there can be up to 3 in total
+        # See https://www.gipuzkoa.eus/documents/2456431/13761128/Anexo+I.pdf/2ab0116c-25b4-f16a-440e-c299952d683d
         com_partner = invoice.commercial_partner_id
         if not com_partner.country_id or com_partner.country_id.code in eu_country_codes:
-            values['ClaveRegimenIvaOpTrascendencia'] = '01'
+            values['vat_regime_code'] = '01'
         else:
-            values['ClaveRegimenIvaOpTrascendencia'] = '02'
+            values['vat_regime_code'] = '02'
 
-        # === TIPO DESGLOSE ===
+        # === BREAKDOWN TYPE (TIPO DESGLOSE) ===
         if com_partner.country_id.code in ('ES', False) and not (com_partner.vat or '').startswith("ESN"):
             tax_details_info_vals = self._l10n_es_tbai_get_invoice_tax_details_values(invoice)
-            values['DesgloseFactura'] = tax_details_info_vals['tax_details_info']
-            values['ImporteTotalFactura'] = '{:.2f}'.format(round(-1 * (tax_details_info_vals['tax_details']['base_amount']
-                                                                        + tax_details_info_vals['tax_details']['tax_amount']
-                                                                        - tax_details_info_vals['tax_amount_retention']), 2))
+            values['invoice_breakdown'] = tax_details_info_vals['tax_details_info']
+            values['invoice_total'] = round(-1 * (tax_details_info_vals['tax_details']['base_amount']
+                                                  + tax_details_info_vals['tax_details']['tax_amount']
+                                                  - tax_details_info_vals['tax_amount_retention']), 2)
 
         else:
             tax_details_info_service_vals = self._l10n_es_tbai_get_invoice_tax_details_values(
@@ -372,17 +348,17 @@ class AccountEdiFormat(models.Model):
             )
 
             if tax_details_info_service_vals['tax_details_info']:
-                values['PrestacionServicios'] = tax_details_info_service_vals['tax_details_info']
+                values['services_provision'] = tax_details_info_service_vals['tax_details_info']
             if tax_details_info_consu_vals['tax_details_info']:
-                values['EntregaBienes'] = tax_details_info_consu_vals['tax_details_info']
+                values['goods_delivery'] = tax_details_info_consu_vals['tax_details_info']
 
-            values['ImporteTotalFactura'] = '{:.2f}'.format(round(-1 * (
+            values['invoice_total'] = round(-1 * (
                 tax_details_info_service_vals['tax_details']['base_amount']
                 + tax_details_info_service_vals['tax_details']['tax_amount']
                 - tax_details_info_service_vals['tax_amount_retention']
                 + tax_details_info_consu_vals['tax_details']['base_amount']
                 + tax_details_info_consu_vals['tax_details']['tax_amount']
-                - tax_details_info_consu_vals['tax_amount_retention']), 2))
+                - tax_details_info_consu_vals['tax_amount_retention']), 2)
 
         return values
 
@@ -509,16 +485,10 @@ class AccountEdiFormat(models.Model):
         prev_invoice = invoice.company_id.l10n_es_tbai_last_posted_id
         if prev_invoice and not cancel:
             return {
-                'EncadenamientoFacturaAnterior': True,
-                'SerieFacturaAnterior': prev_invoice.l10n_es_tbai_sequence,
-                'NumFacturaAnterior': prev_invoice.l10n_es_tbai_number,
-                'FechaExpedicionFacturaAnterior': datetime.strftime(prev_invoice.l10n_es_tbai_registration_date, '%d-%m-%Y'),
-                'FirmaFacturaAnterior': prev_invoice.l10n_es_tbai_signature[:100]
+                'chain_prev_invoice': prev_invoice
             }
         else:
-            return {
-                'EncadenamientoFacturaAnterior': False
-            }
+            return {}
 
     def _l10n_es_tbai_sign_invoice(self, invoice, xml_root):
         util = self.env['l10n_es.edi.tbai.util']
@@ -535,18 +505,18 @@ class AccountEdiFormat(models.Model):
         # Render digital signature scaffold from QWeb
         values = {
             'dsig': {
-                'document-id': doc_id,
-                'x509-certificate': util._base64_print(b64encode(cert_public.public_bytes(encoding=serialization.Encoding.DER))),
-                'public-modulus': util._base64_print(b64encode(util._long_to_bytes(public_key.public_numbers().n))),
-                'public-exponent': util._base64_print(b64encode(util._long_to_bytes(public_key.public_numbers().e))),
-                'iso-now': datetime.now().isoformat(),
-                'keyinfo-id': kinfo_id,
-                'signature-id': signature_id,
-                'sigpolicy-id': sp_id,
-                'sigpolicy-description': "Política de Firma TicketBAI 1.0",  # í = &#237;
-                'sigpolicy-url': company.get_l10n_es_tbai_url_sigpolicy(),
-                'sigpolicy-digest': company.get_l10n_es_tbai_url_sigpolicy(get_hash=True),
-                'sigcertif-digest': b64encode(cert_public.fingerprint(hashes.SHA256())).decode(),
+                'document_id': doc_id,
+                'x509_certificate': util._base64_print(b64encode(cert_public.public_bytes(encoding=serialization.Encoding.DER))),
+                'public_modulus': util._base64_print(b64encode(util._long_to_bytes(public_key.public_numbers().n))),
+                'public_exponent': util._base64_print(b64encode(util._long_to_bytes(public_key.public_numbers().e))),
+                'iso_now': datetime.now().isoformat(),
+                'keyinfo_id': kinfo_id,
+                'signature_id': signature_id,
+                'sigpolicy_id': sp_id,
+                'sigpolicy_description': "Política de Firma TicketBAI 1.0",  # í = &#237;
+                'sigpolicy_url': company.get_l10n_es_tbai_url_sigpolicy(),
+                'sigpolicy_digest': company.get_l10n_es_tbai_url_sigpolicy(get_hash=True),
+                'sigcertif_digest': b64encode(cert_public.fingerprint(hashes.SHA256())).decode(),
             }
         }
         xml_sig_str = self.env.ref('l10n_es_edi_tbai.template_digital_signature')._render(values)
