@@ -8,6 +8,7 @@
     'depends': ['google_account', 'calendar'],
     'data': [
         'data/google_calendar_data.xml',
+        'security/google_calendar_security.xml',
         'security/ir.model.access.csv',
         'wizard/reset_account_views.xml',
         'views/res_config_settings_views.xml',

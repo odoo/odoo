@@ -20,10 +20,10 @@ class GoogleCredentials(models.Model):
     _description = 'Google Calendar Account Data'
 
     user_ids = fields.One2many('res.users', 'google_cal_account_id', required=True)
-    calendar_rtoken = fields.Char('Refresh Token', copy=False, groups="base.group_system")
-    calendar_token = fields.Char('User token', copy=False, groups="base.group_system")
-    calendar_token_validity = fields.Datetime('Token Validity', copy=False, groups="base.group_system")
-    calendar_sync_token = fields.Char('Next Sync Token', copy=False, groups="base.group_system")
+    calendar_rtoken = fields.Char('Refresh Token', copy=False)
+    calendar_token = fields.Char('User token', copy=False)
+    calendar_token_validity = fields.Datetime('Token Validity', copy=False)
+    calendar_sync_token = fields.Char('Next Sync Token', copy=False)
     calendar_cal_id = fields.Char('Calendar ID', copy=False, help='Last Calendar ID who has been synchronized. If it is changed, we remove all links between GoogleID and Odoo Google Internal ID')
     synchronization_stopped = fields.Boolean('Google Synchronization stopped', copy=False)
 
