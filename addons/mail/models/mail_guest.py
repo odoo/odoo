@@ -89,7 +89,6 @@ class MailGuest(models.Model):
             'current_partner': False,
             'current_user_id': False,
             'current_user_settings': False,
-            'mail_failures': [],
             'menu_id': False,
             'needaction_inbox_counter': False,
             'partner_root': {
