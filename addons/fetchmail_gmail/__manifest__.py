@@ -3,7 +3,7 @@
 
 {
     "name": "Fetchmail Gmail",
-    "version": "1.0",
+    "version": "1.1",
     "category": "Hidden",
     "description": "Google authentication for incoming mail server",
     "depends": [

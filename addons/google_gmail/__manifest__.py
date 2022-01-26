@@ -3,7 +3,7 @@
 
 {
     "name": "Google Gmail",
-    "version": "1.0",
+    "version": "1.1",
     "category": "Hidden",
     "description": "Gmail support for incoming / outgoing mail servers",
     "depends": [
