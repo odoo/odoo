@@ -13,13 +13,21 @@ odoo.define('fg_custom.FgChannelButton', function (require) {
         }
         async onClick() {
             const { confirmed, payload } = await this.showPopup('FgChannelPopup');
-            const { x_ext_source  } = payload;
-            if (confirmed && x_ext_source !== '') {
+            var x_ext_source = '';
+            if(payload!=null){
+                 x_ext_source  = payload.x_ext_source;
+            }
+            if (confirmed) {
                 const order = this.env.pos.get_order();
                 order.x_ext_source = x_ext_source;
                 order.trigger('change', order); // needed so that export_to_JSON gets triggered
                 this.render();
-                document.getElementById('channelDiv').innerHTML  = x_ext_source;
+                if(x_ext_source!=''){
+                    document.getElementById('channelDiv').innerHTML  = x_ext_source;
+                }else{
+                    document.getElementById('channelDiv').innerHTML  = 'Select Channel';
+                }
+
             }
         }
     }
