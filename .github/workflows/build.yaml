@@ -23,7 +23,7 @@ jobs:
       shell: bash
       run: |
         echo "BRANCH_NAME=$(echo ${GITHUB_REF} | sed 's/refs\/heads\///'  | sed 's/refs\/tags\///' | sed 's/\//_/g')" >> $GITHUB_ENV
-        echo "SHORT_REV=$(echo ${{ github.sha }} | cut -c1-8)" >> $GITHUB_ENV
+        echo "SHORT_REV=$(echo ${{ github.sha }})" >> $GITHUB_ENV
 
     - name: Login to registry to use the cache for the build
       uses: docker/login-action@v1
