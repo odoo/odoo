@@ -2,11 +2,14 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { clear, replace } from '@mail/model/model_field_command';
+import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'Dialog',
-    identifyingFields: ['manager', ['attachmentViewer', 'followerSubtypeList']],
+    identifyingFields: [[
+        'attachmentListOwnerAsAttachmentView',
+        'followerOwnerAsSubtypeList',
+    ]],
     recordMethods: {
         /**
          * @param {Element} element
@@ -15,6 +18,40 @@ registerModel({
         hasElementInContent(element) {
             return Boolean(this.record && this.record.containsElement(element));
         },
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
+        _computeAttachmentViewer() {
+            if (this.attachmentListOwnerAsAttachmentView) {
+                return insertAndReplace();
+            }
+            return clear();
+        },
+        /**
+         * @private
+         * @returns {string|FieldCommand}
+         */
+        _computeComponentName() {
+            if (this.attachmentViewer) {
+                return 'AttachmentViewer';
+            }
+            if (this.followerSubtypeList) {
+                return 'FollowerSubtypeList';
+            }
+            return clear();
+        },
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
+        _computeFollowerSubtypeList() {
+            if (this.followerOwnerAsSubtypeList) {
+                return insertAndReplace();
+            }
+            return clear();
+        },
+        /**
         /**
          * @private
          * @returns {boolean}
@@ -33,6 +70,16 @@ registerModel({
          * @private
          * @returns {FieldCommand}
          */
+        _computeManager() {
+            if (this.messaging.dialogManager) {
+                return replace(this.messaging.dialogManager);
+            }
+            return clear();
+        },
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
         _computeRecord() {
             if (this.attachmentViewer) {
                 return replace(this.attachmentViewer);
@@ -41,36 +88,36 @@ registerModel({
                 return replace(this.followerSubtypeList);
             }
         },
-        _computeComponentName() {
-            if (this.attachmentViewer) {
-                return 'AttachmentViewer';
-            }
-            if (this.followerSubtypeList) {
-                return 'FollowerSubtypeList';
-            }
-            return clear();
-        },
     },
     fields: {
-        attachmentViewer: one('AttachmentViewer', {
-            isCausal: true,
-            inverse: 'dialog',
+        attachmentListOwnerAsAttachmentView: one('AttachmentList', {
+            inverse: 'attachmentListViewDialog',
             readonly: true,
+        }),
+        attachmentViewer: one('AttachmentViewer', {
+            compute: '_computeAttachmentViewer',
+            inverse: 'dialogOwner',
+            isCausal: true,
         }),
         componentName: attr({
             compute: '_computeComponentName',
             required: true,
         }),
-        followerSubtypeList: one('FollowerSubtypeList', {
-            isCausal: true,
-            inverse: 'dialog',
+        followerOwnerAsSubtypeList: one('Follower', {
+            inverse: 'followerSubtypeListDialog',
             readonly: true,
+        }),
+        followerSubtypeList: one('FollowerSubtypeList', {
+            compute: '_computeFollowerSubtypeList',
+            inverse: 'dialogOwner',
+            isCausal: true,
         }),
         isCloseable: attr({
             compute: '_computeIsCloseable',
             default: true,
         }),
         manager: one('DialogManager', {
+            compute: '_computeManager',
             inverse: 'dialogs',
             readonly: true,
         }),
