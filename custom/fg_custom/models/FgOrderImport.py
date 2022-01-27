@@ -558,7 +558,18 @@ class FgImportOrders(models.TransientModel):
         # process payment
         processPayment = self.env['pos.order']._process_payment_lines(orderHeader, savedOrder, session, False)
         savedOrder.write({'state': 'paid'})
-        print(orderHeader)
+
+        try:
+            savedOrder.action_pos_order_paid()
+        except savedOrder.DatabaseError:
+            # do not hide transactional errors, the order(s) won't be saved!
+            raise
+        except Exception as e:
+            raise ValidationError(e);
+        savedOrder._create_order_picking()
+        savedOrder._compute_total_cost_in_real_time()
+
+
         return paymentList
 
     @api.model
