@@ -253,7 +253,7 @@ class SaleOrderLine(models.Model):
     tax_id = fields.Many2many(
         'account.tax', string='Taxes',
         compute='_compute_tax_id', store=True, readonly=False, precompute=True,
-        domain=['|', ('active', '=', False), ('active', '=', True)])
+        context={'active_test': False})
 
     discount = fields.Float(
         string='Discount (%)', digits='Discount',
