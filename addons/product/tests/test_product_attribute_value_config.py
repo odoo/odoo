@@ -505,8 +505,16 @@ class TestProductAttributeValueConfig(TestProductAttributeValueSetup):
         # It should be about instantaneous, 0.5 to avoid false positives
         self.assertLess(elapsed, 0.5)
 
+    def test_check_encoding_barcode(self):
+        self.assertTrue(self.env['product.product'].check_encoding('90311017', 'ean8'))
+        self.assertFalse(self.env['product.product'].check_encoding('90311011', 'ean8'))
 
+        self.assertTrue(self.env['product.product'].check_encoding('725272730706', 'upca'))
+        self.assertFalse(self.env['product.product'].check_encoding('725272730700', 'upca'))
 
+        self.assertTrue(self.env['product.product'].check_encoding('2234567890004', 'ean13'))
+        self.assertTrue(self.env['product.product'].check_encoding('2109876543210', 'ean13'))
+        self.assertFalse(self.env['product.product'].check_encoding('2234567890000', 'ean13'))
 
     def test_get_closest_possible_combinations(self):
         computer_ssd_256 = self._get_product_template_attribute_value(self.ssd_256)
