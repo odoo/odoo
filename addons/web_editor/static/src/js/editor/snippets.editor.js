@@ -463,8 +463,14 @@ var SnippetEditor = Widget.extend({
         // check if this has always been like this or not and this should be
         // unit tested.
         let parent = this.$target[0].parentElement;
-        const nextSibling = this.$target[0].nextElementSibling;
-        const previousSibling = this.$target[0].previousElementSibling;
+        let nextSibling = this.$target[0].nextElementSibling;
+        while (nextSibling && nextSibling.matches('.o_snippet_invisible')) {
+            nextSibling = nextSibling.nextElementSibling;
+        }
+        let previousSibling = this.$target[0].previousElementSibling;
+        while (previousSibling && previousSibling.matches('.o_snippet_invisible')) {
+            previousSibling = previousSibling.previousElementSibling;
+        }
         if ($(parent).is('.o_editable:not(body)')) {
             // If we target the editable, we want to reset the selection to the
             // body. If the editable has options, we do not want to show them.
@@ -1941,14 +1947,15 @@ var SnippetsMenu = Widget.extend({
      *        If no element is given, all the editors are destroyed.
      */
     _destroyEditors: async function ($el) {
-        const proms = _.map(this.snippetEditors, async function (snippetEditor) {
-            if ($el && !$el.has(snippetEditor.$target).length) {
-                return;
-            }
-            await snippetEditor.cleanForSave();
-            snippetEditor.destroy();
+        const aliveEditors = this.snippetEditors.filter((snippetEditor) => {
+            return !$el || $el.has(snippetEditor.$target).length;
         });
-        await Promise.all(proms);
+        const cleanForSavePromises = aliveEditors.map((snippetEditor) => snippetEditor.cleanForSave());
+        await Promise.all(cleanForSavePromises);
+
+        for (const snippetEditor of aliveEditors) {
+            snippetEditor.destroy();
+        }
         this.snippetEditors.splice(0);
     },
     /**

@@ -1517,12 +1517,23 @@ class MrpProduction(models.Model):
         # So those move lines are duplicated.
         backorders.move_raw_ids.move_line_ids.filtered(lambda ml: ml.product_id.tracking == 'serial' and ml.product_qty == 0).unlink()
 
+        wo_to_cancel = self.env['mrp.workorder']
+        wo_to_update = self.env['mrp.workorder']
         for old_wo, wo in zip(self.workorder_ids, backorders.workorder_ids):
+            if old_wo.qty_remaining == 0:
+                wo_to_cancel += wo
+                continue
+            if not wo_to_update or wo_to_update[-1].production_id != wo.production_id:
+                wo_to_update += wo
             wo.qty_produced = max(old_wo.qty_produced - old_wo.qty_producing, 0)
             if wo.product_tracking == 'serial':
                 wo.qty_producing = 1
             else:
                 wo.qty_producing = wo.qty_remaining
+        wo_to_cancel.action_cancel()
+        for wo in wo_to_update:
+            wo.state = 'ready' if wo.next_work_order_id.production_availability == 'assigned' else 'waiting'
+
         return backorders
 
     def _split_productions(self, amounts=False, cancel_remaning_qty=False, set_consumed_qty=False):
