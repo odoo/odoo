@@ -6,7 +6,7 @@ import Dialog from 'web.OwlDialog';
 
 const { Component, escape } = owl;
 
-export class AttachmentDeleteConfirmDialog extends Component {
+export class AttachmentDeleteConfirm extends Component {
 
     //--------------------------------------------------------------------------
     // Public
@@ -62,7 +62,7 @@ export class AttachmentDeleteConfirmDialog extends Component {
 
 }
 
-Object.assign(AttachmentDeleteConfirmDialog, {
+Object.assign(AttachmentDeleteConfirm, {
     components: { Dialog },
     props: {
         attachmentLocalId: String,
@@ -75,7 +75,7 @@ Object.assign(AttachmentDeleteConfirmDialog, {
             optional: true,
         }
     },
-    template: 'mail.AttachmentDeleteConfirmDialog',
+    template: 'mail.AttachmentDeleteConfirm',
 });
 
-registerMessagingComponent(AttachmentDeleteConfirmDialog);
+registerMessagingComponent(AttachmentDeleteConfirm);

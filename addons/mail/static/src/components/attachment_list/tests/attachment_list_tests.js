@@ -299,9 +299,9 @@ QUnit.test('clicking on the delete attachment button multiple times should do th
     });
 
     await afterNextRender(() => {
-        document.querySelector('.o_AttachmentDeleteConfirmDialog_confirmButton').click();
-        document.querySelector('.o_AttachmentDeleteConfirmDialog_confirmButton').click();
-        document.querySelector('.o_AttachmentDeleteConfirmDialog_confirmButton').click();
+        document.querySelector('.o_AttachmentDeleteConfirm_confirmButton').click();
+        document.querySelector('.o_AttachmentDeleteConfirm_confirmButton').click();
+        document.querySelector('.o_AttachmentDeleteConfirm_confirmButton').click();
     });
     assert.verifySteps(
         ['attachment_unlink'],

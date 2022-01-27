@@ -6,7 +6,7 @@ import Dialog from 'web.OwlDialog';
 
 const { Component } = owl;
 
-export class DeleteMessageConfirmDialog extends Component {
+export class DeleteMessageConfirm extends Component {
 
     /**
      * @override
@@ -24,14 +24,14 @@ export class DeleteMessageConfirmDialog extends Component {
     }
 }
 
-Object.assign(DeleteMessageConfirmDialog, {
+Object.assign(DeleteMessageConfirm, {
     components: {
         Dialog,
     },
     props: {
         localId: String,
     },
-    template: 'mail.DeleteMessageConfirmDialog',
+    template: 'mail.DeleteMessageConfirm',
 });
 
-registerMessagingComponent(DeleteMessageConfirmDialog);
+registerMessagingComponent(DeleteMessageConfirm);
