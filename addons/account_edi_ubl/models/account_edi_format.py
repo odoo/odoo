@@ -57,7 +57,7 @@ class AccountEdiFormat(models.Model):
         def _find_value(xpath, element=tree):
             return self._find_value(xpath, element, namespaces)
 
-        with Form(invoice.with_context(account_predictive_bills_disable_prediction=True)) as invoice_form:
+        with Form(invoice) as invoice_form:
             self_ctx = self.with_company(invoice.company_id.id)
 
             # Reference
