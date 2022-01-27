@@ -1,6 +1,7 @@
 # -*- encoding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import logging
 import operator
 import re
 import secrets
@@ -9,9 +10,12 @@ from unittest.mock import patch
 import requests
 
 import odoo
-from odoo.tests.common import BaseCase, HttpCase, tagged
-from odoo.tools import config
+from odoo import http
+from odoo.tests.common import BaseCase, HttpCase, tagged, _wait_remaining_requests
+from odoo.tools import config, mute_logger
 
+
+_logger = logging.getLogger(__name__)
 
 class TestDatabaseManager(HttpCase):
     def test_database_manager(self):
@@ -108,6 +112,22 @@ class TestDatabaseOperations(BaseCase):
         self.assertIn('/web/database/manager', res.headers['Location'])
         self.assertDbs([test_db_name])
 
+        # create a new session to this database
+        # this will be usefull to check that other users/sessions are logout when trying to access dropped database
+        other_session = requests.Session()
+        res = other_session.get(self.url(f'/web?db={test_db_name}'))
+        token = self._find_csrf_token(res.text)
+        other_session.post(self.url('/web/login'), data={
+            'login': 'admin',
+            'password': 'admin',
+            'csrf_token': token,
+        })
+        session_id = other_session.cookies['session_id']
+        session = http.root.session_store.get(session_id)
+        self.assertEqual(session['db'], test_db_name)
+        self.assertEqual(session['login'], 'admin')
+        self.assertTrue(session['uid'])
+
         # delete the created database
         res = self.session.post(self.url('/web/database/drop'), data={
             'master_pwd': self.password,
@@ -116,3 +136,26 @@ class TestDatabaseOperations(BaseCase):
         self.assertEqual(res.status_code, 303)
         self.assertIn('/web/database/manager', res.headers['Location'])
         self.assertDbs([])
+
+        # check if user is automatically logout after trying to access a deleted database.
+        # NOTE: the current behaviour is that the next request will crash, returning
+        # a response 500, but will also logout the user.
+        # If this changes and all sessions are cleaned with the database, we could remove
+        # the request on /web before checking the session content
+
+        # request /web to invalidate the session on a dropped database
+        with mute_logger('werkzeug'):
+            other_session.get(self.url('/web'))
+            #self._logger = logging.getLogger(__name__)  # pylint: disable=attribute-defined-outside-init
+            # the raised OperationalError will reach werkzeug and may be logged after the end of the request,
+            # outside the mute logger. We need to wait for remaining request to avoid that
+            _wait_remaining_requests(_logger)
+
+
+        # in any case, session should have been invalidated to avoid being stuck, logged in a dropped database
+        session = http.root.session_store.get(session_id)
+        self.assertEqual(
+            (session.get('db'), session.get('login'), session.get('uid')),
+            (None, None, None),
+            "The user should have been logout from a dropped database"
+        )

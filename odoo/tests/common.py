@@ -181,6 +181,29 @@ class RecordCapturer:
             return self._model.search(self._domain) - self._before
         return self._after
 
+
+def _wait_remaining_requests(logger=None, timeout=10):
+    logger = logger or _logger
+
+    def get_http_request_threads():
+        return [t for t in threading.enumerate() if t.name.startswith('odoo.service.http.request.')]
+
+    start_time = time.time()
+    request_threads = get_http_request_threads()
+    logger.info('waiting for threads: %s', request_threads)
+
+    for thread in request_threads:
+        thread.join(timeout - (time.time() - start_time))
+
+    request_threads = get_http_request_threads()
+    for thread in request_threads:
+        logger.info("Stop waiting for thread %s handling request for url %s",
+                    thread.name, getattr(thread, 'url', '<UNKNOWN>'))
+
+    if request_threads:
+        logger.info('remaining requests')
+        odoo.tools.misc.dumpstacks()
+
 # ------------------------------------------------------------
 # Main classes
 # ------------------------------------------------------------
@@ -371,6 +394,10 @@ class BaseCase(unittest.TestCase, metaclass=MetaCase):
                 super().run(result)
             if not failure:
                 break
+
+    @classmethod
+    def setUpClass(cls):
+        cls._logger = logging.getLogger('%s.%s' % (cls.__module__, cls.__name__))
 
     def shortDescription(self):
         return None
@@ -714,6 +741,10 @@ class BaseCase(unittest.TestCase, metaclass=MetaCase):
             db=self.env.cr.dbname,
             profile_session=self.profile_session,
             **kwargs)
+
+    def _find_csrf_token(self, text):
+        csrf_token_regex = "(input.+csrf_token.+value=\")([a-f0-9]{40}o[0-9]*)"
+        return re.search(csrf_token_regex, text, re.MULTILINE).groups()[1]
 
 savepoint_seq = itertools.count()
 
@@ -1495,7 +1526,6 @@ class HttpCase(TransactionCase):
         ICP.flush()
         # v8 api with correct xmlrpc exception handling.
         cls.xmlrpc_url = f'http://{HOST}:{odoo.tools.config["http_port"]:d}/xmlrpc/2/'
-        cls._logger = logging.getLogger('%s.%s' % (cls.__module__, cls.__name__))
 
     def setUp(self):
         super().setUp()
@@ -1530,27 +1560,6 @@ class HttpCase(TransactionCase):
         if data or files:
             return self.opener.post(url, data=data, files=files, timeout=timeout, headers=headers, allow_redirects=allow_redirects)
         return self.opener.get(url, timeout=timeout, headers=headers, allow_redirects=allow_redirects)
-
-    def _wait_remaining_requests(self, timeout=10):
-
-        def get_http_request_threads():
-            return [t for t in threading.enumerate() if t.name.startswith('odoo.service.http.request.')]
-
-        start_time = time.time()
-        request_threads = get_http_request_threads()
-        self._logger.info('waiting for threads: %s', request_threads)
-
-        for thread in request_threads:
-            thread.join(timeout - (time.time() - start_time))
-
-        request_threads = get_http_request_threads()
-        for thread in request_threads:
-            self._logger.info("Stop waiting for thread %s handling request for url %s",
-                                    thread.name, getattr(thread, 'url', '<UNKNOWN>'))
-
-        if request_threads:
-            self._logger.info('remaining requests')
-            odoo.tools.misc.dumpstacks()
 
     def logout(self, keep_db=True):
         self.session.logout(keep_db=True)
@@ -1657,7 +1666,7 @@ class HttpCase(TransactionCase):
             # the method several times in a test method
             self.browser.delete_cookie('session_id', domain=HOST)
             self.browser.clear()
-            self._wait_remaining_requests()
+            _wait_remaining_requests(self._logger)
 
     @classmethod
     def base_url(cls):
