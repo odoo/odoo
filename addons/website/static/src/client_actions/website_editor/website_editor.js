@@ -31,13 +31,14 @@ export class WebsiteEditorClientAction extends Component {
                 this.currentUrl = this.iframe.el.contentDocument.location.href;
                 history.pushState({}, this.props.action.display_name, this.currentUrl);
 
-                const { object, id, isPublished, canPublish } = this.iframe.el.contentDocument.documentElement.dataset;
+                const { object, id, isPublished, canPublish, editableInBackend } = this.iframe.el.contentDocument.documentElement.dataset;
                 this.websiteService.currentMetadata = {
                     path: this.currentUrl,
                     object,
-                    id,
+                    id: parseInt(id, 10),
                     isPublished: isPublished === 'True',
                     canPublish: canPublish === 'True',
+                    editableInBackend: editableInBackend === 'True',
                 };
 
                 this.iframe.el.contentWindow.addEventListener('beforeunload', () => {

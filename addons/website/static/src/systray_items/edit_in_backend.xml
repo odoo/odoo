@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+<t t-name="website.EditInBackendSystray" owl="1">
+    <Dropdown class="'o_menu_systray_item o_website_edit_in_backend'" togglerClass="'p-2'">
+        <t t-set-slot="toggler"><i class="fa fa-caret-down"/></t>
+        <t t-foreach="getElements()" t-as="element" t-key="element_index">
+            <DropdownItem
+                t-esc="element.title"
+                onSelected="element.callback"
+            />
+        </t>
+    </Dropdown>
+</t>
+</templates>

@@ -36,6 +36,7 @@
 
 <template id="layout" name="Main layout" inherit_id="portal.frontend_layout">
     <xpath expr="//html" position="before">
+        <t t-set="editable_in_backend" t-value="edit_in_backend or ('website_published' in main_object.fields_get() and main_object._name != 'website.page')"/>
         <t t-set="html_data" t-value="{
             'lang': lang and lang.replace('_', '-'),
             'data-website-id': website.id if website else None,
@@ -51,6 +52,7 @@
             'data-can-publish': 'can_publish' in main_object.fields_get() and main_object.can_publish,
             'data-object': main_object._name,
             'data-id': main_object.id,
+            'data-editable-in-backend': editable_in_backend,
         }"/>
     </xpath>
     <xpath expr="//head" position="before">
