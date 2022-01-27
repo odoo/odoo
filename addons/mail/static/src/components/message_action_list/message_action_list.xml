@@ -14,7 +14,7 @@
                 <span t-if="messageActionList.hasMarkAsReadIcon" class="o_MessageActionList_action o_MessageActionList_actionMarkRead p-2 fa fa-lg fa-check" title="Mark as Read" t-on-click="messageActionList.onClickMarkAsRead"/>
                 <span t-if="messageActionList.message.canBeDeleted" class="o_MessageActionList_action o_MessageActionList_actionEdit p-2 fa fa-lg fa-pencil" title="Edit" t-on-click="messageActionList.onClickEdit"/>
                 <span t-if="messageActionList.message.canBeDeleted" class="o_MessageActionList_action o_MessageActionList_actionDelete p-2 fa fa-lg fa-trash" title="Delete" t-on-click="messageActionList.onClickDelete"/>
-                <DeleteMessageConfirmDialog t-if="messageActionList.showDeleteConfirm" localId="messageActionList.localId"/>
+                <DeleteMessageConfirm t-if="messageActionList.showDeleteConfirm" localId="messageActionList.localId"/>
             </t>
         </div>
     </t>
