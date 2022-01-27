@@ -1,19 +1,23 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from werkzeug.exceptions import NotFound
+
 from odoo import http, _
 from odoo.exceptions import AccessError, MissingError
 from odoo.http import request
 from odoo.osv import expression
 
-from odoo.addons.account.controllers import portal
+from odoo.addons.account.controllers.portal import PortalAccount
 from odoo.addons.hr_timesheet.controllers.portal import TimesheetCustomerPortal
+from odoo.addons.portal.controllers.portal import pager as portal_pager
+from odoo.addons.project.controllers.portal import ProjectCustomerPortal
 
 
-class PortalAccount(portal.PortalAccount):
+class PortalProjectAccount(PortalAccount, ProjectCustomerPortal):
 
     def _invoice_get_page_view_values(self, invoice, access_token, **kwargs):
-        values = super(PortalAccount, self)._invoice_get_page_view_values(invoice, access_token, **kwargs)
+        values = super()._invoice_get_page_view_values(invoice, access_token, **kwargs)
         domain = request.env['account.analytic.line']._timesheet_get_portal_domain()
         domain = expression.AND([
             domain,
@@ -25,6 +29,33 @@ class PortalAccount(portal.PortalAccount):
         values['timesheets'] = request.env['account.analytic.line'].sudo().search(domain)
         values['is_uom_day'] = request.env['account.analytic.line'].sudo()._is_timesheet_encode_uom_day()
         return values
+
+    @http.route([
+        '/my/tasks/<task_id>/orders/invoices',
+        '/my/tasks/<task_id>/orders/invoices/page/<int:page>'],
+        type='http', auth="user", website=True)
+    def portal_my_tasks_invoices(self, task_id=None, page=1, date_begin=None, date_end=None, sortby=None, filterby=None, **kw):
+        task = request.env['project.task'].search([('id', '=', task_id)])
+        if not task.exists():
+            return NotFound()
+
+        domain = [('id', 'in', task.sale_order_id.invoice_ids.ids)]
+        values = self._prepare_my_invoices_values(page, date_begin, date_end, sortby, filterby, domain=domain)
+
+        # pager
+        pager = portal_pager(**values['pager'])
+
+        # content according to pager and archive selected
+        invoices = values['invoices'](pager['offset'])
+        request.session['my_invoices_history'] = invoices.ids[:100]
+
+        values.update({
+            'invoices': invoices,
+            'pager': pager,
+        })
+
+        return request.render("account.portal_my_invoices", values)
+
 
 class SaleTimesheetCustomerPortal(TimesheetCustomerPortal):
 
@@ -76,16 +107,28 @@ class SaleTimesheetCustomerPortal(TimesheetCustomerPortal):
         try:
             if task.sale_order_id and self._document_check_access('sale.order', task.sale_order_id.id):
                 values['so_accessible'] = True
+                title = _('Quotation') if task.sale_order_id.state in ['draft', 'sent'] else _('Sales Order')
+                values['task_link_section'].append({
+                    'access_url': task.sale_order_id.get_portal_url(),
+                    'title': title,
+                })
         except (AccessError, MissingError):
             pass
 
-        values['invoices_accessible'] = []
-        for invoice in task.sale_order_id.invoice_ids:
-            try:
-                if self._document_check_access('account.move', invoice.id):
-                    values['invoices_accessible'].append(invoice.id)
-            except (AccessError, MissingError):
-                pass
+        if task.sale_order_id.invoice_ids:
+            moves = request.env['account.move'].search([('id', 'in', task.sale_order_id.invoice_ids.ids)])
+            values['invoices_accessible'] = moves.ids
+            if moves:
+                if len(moves) == 1:
+                    task_invoice_url = moves.get_portal_url()
+                    title = _('Invoice')
+                else:
+                    task_invoice_url = f'/my/tasks/{task.id}/orders/invoices'
+                    title = _('Invoices')
+                values['task_link_section'].append({
+                    'access_url': task_invoice_url,
+                    'title': title,
+                })
         return values
 
     @http.route(['/my/timesheets', '/my/timesheets/page/<int:page>'], type='http', auth="user", website=True)
