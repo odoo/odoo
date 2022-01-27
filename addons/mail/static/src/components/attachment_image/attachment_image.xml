@@ -32,7 +32,7 @@
                         </div>
                     </div>
                     <t t-if="attachmentImage.hasDeleteConfirmDialog">
-                        <AttachmentDeleteConfirmDialog
+                        <AttachmentDeleteConfirm
                             attachmentLocalId="attachmentImage.attachment.localId"
                             onAttachmentRemoved="props.onAttachmentRemoved"
                             onClosed="attachmentImage.onDeleteConfirmDialogClosed"
