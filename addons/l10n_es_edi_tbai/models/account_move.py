@@ -21,6 +21,13 @@ class AccountMove(models.Model):
         compute='_compute_l10n_es_tbai_is_required'
     )
 
+    # Relations
+    l10n_es_tbai_temp_xml = fields.Many2one(
+        comodel_name='ir.attachment',
+        string="Temp XML (awaiting response)",
+        help="Stores the posted XML while no answer has been received from the govt (avoids loss of info in case of timeouts)."
+    )
+
     # Non-stored fields
     l10n_es_tbai_sequence = fields.Char(string="TicketBAI sequence", compute="_compute_l10n_es_tbai_sequence")
     l10n_es_tbai_number = fields.Char(string="TicketBAI number", compute="_compute_l10n_es_tbai_number")
@@ -90,7 +97,7 @@ class AccountMove(models.Model):
                     'id=' + record.l10n_es_tbai_id,
                     's=' + record.l10n_es_tbai_sequence,
                     'nf=' + record.l10n_es_tbai_number,
-                    'i=' + record._get_l10n_es_tbai_values_from_zip({'importe': r'.//ImporteTotalFactura'})['importe']
+                    'i=' + record._get_l10n_es_tbai_values_from_xml({'importe': r'.//ImporteTotalFactura'})['importe']
                 ])
                 record.l10n_es_tbai_qr = tbai_qr_no_crc + '&cr=' + self.env['l10n_es.edi.tbai.util']._crc8(tbai_qr_no_crc)
             else:
@@ -101,33 +108,22 @@ class AccountMove(models.Model):
         for record in self:
             record.l10n_es_tbai_qr_escaped = url_quote(record.l10n_es_tbai_qr)
 
-    def _get_l10n_es_tbai_values_from_zip(self, xpaths, response=False):
+    def _get_l10n_es_tbai_values_from_xml(self, xpaths):
         res = {key: '' for key in xpaths.keys()}
         for doc in self.env['ir.attachment'].search([
             ('res_model', '=', 'account.move'),
             ('res_id', '=', self.id)
         ]):
-            zip = io.BytesIO(doc.with_context(bin_size=False).raw)  # Without bin_size=False, size is returned instead of content
-            try:
-                with zipfile.ZipFile(zip, 'r', compression=zipfile.ZIP_DEFLATED) as zipf:
-                    for file in zipf.infolist():
-                        if file.filename.endswith('_response.xml') == response:
-                            xml = etree.fromstring(zipf.read(file))
-                            for key, value in xpaths.items():
-                                res[key] = xml.find(value).text
-                            return res
-            except zipfile.BadZipFile as e:
-                raise e
+            doc_xml = etree.fromstring(doc.with_context(bin_size=False).raw)  # Without bin_size=False, size is returned instead of content
+            for key, value in xpaths.items():
+                res[key] = doc_xml.find(value).text
+            return res
         return res
 
     @api.depends('edi_document_ids.attachment_id.raw')
     def _compute_l10n_es_tbai_values(self):
         for record in self:
-
-            vals_response = record._get_l10n_es_tbai_values_from_zip({
-                'tbai_id': r'.//IdentificadorTBAI'
-            }, response=True)
-            vals = record._get_l10n_es_tbai_values_from_zip({
+            vals = record._get_l10n_es_tbai_values_from_xml({
                 'signature': r'.//{http://www.w3.org/2000/09/xmldsig#}SignatureValue',
                 'registration_date': r'.//CabeceraFactura//FechaExpedicionFactura'
             })

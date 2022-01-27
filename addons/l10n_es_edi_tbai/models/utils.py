@@ -81,10 +81,14 @@ class L10nEsTbaiFillSignXml(models.AbstractModel):
         tbai_id_node = xml_res.find(r'.//IdentificadorTBAI')
         tbai_id = '' if tbai_id_node is None else tbai_id_node.text
         messages = ''
+        already_received = False
         node_name = 'Azalpena' if get_lang(self.env).code == 'eu_ES' else 'Descripcion'
         for xml_res_node in xml_res.findall(r'.//ResultadosValidacion'):
-            messages += xml_res_node.find('Codigo').text + ": " + xml_res_node.find(node_name).text + "\n"
-        return messages, tbai_id
+            message_code = xml_res_node.find('Codigo').text
+            messages += message_code + ": " + xml_res_node.find(node_name).text + "\n"
+            if message_code in ('005', '019'):
+                already_received = True  # error codes 5/19 mean invoice/cancelation was already received
+        return messages, already_received, tbai_id
 
     def _zip_files(self, files, fnames, stream):
         with zipfile.ZipFile(stream, 'w', compression=zipfile.ZIP_DEFLATED) as zipf:

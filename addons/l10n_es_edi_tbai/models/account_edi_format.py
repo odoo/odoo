@@ -16,6 +16,7 @@ from odoo import _, models
 from odoo.exceptions import UserError
 from odoo.tools.float_utils import float_repr
 from pytz import timezone
+from requests.exceptions import Timeout
 
 from .res_company import L10N_ES_EDI_TBAI_VERSION
 
@@ -89,66 +90,44 @@ class AccountEdiFormat(models.Model):
         if 'error' in res[invoice]:
             return res
 
+        # Store the XML as attachment to ensure it is never lost (even in case of timeour error)
+        invoice.l10n_es_tbai_temp_xml = self.env['ir.attachment'].create({
+            'type': 'binary',
+            'name': invoice.name + '.xml',
+            'raw': etree.tostring(inv_xml, encoding='UTF-8'),
+            'mimetype': 'application/xml',
+        })
+
         # Call the web service and get response
         res.update(self._l10n_es_tbai_post_to_web_service(invoice, inv_xml))
-
-        # Get TicketBai response
         res_xml = res[invoice]['response']
-        message, tbai_id = self.env['l10n_es.edi.tbai.util']._get_response_values(res_xml)
+
+        # TIMEOUT: success is undetermined
+        if res_xml is None:
+            pass
 
         # SUCCESS
-        if res.get(invoice, {}).get('success'):
+        elif res[invoice].get('success'):
 
             # Track head of chain (last posted invoice)
             invoice.company_id.write({'l10n_es_tbai_last_posted_id': invoice})
 
-            # Zip together invoice & response
-            with io.BytesIO() as stream:
-                raw1 = etree.tostring(inv_xml, pretty_print=True, xml_declaration=True, encoding='UTF-8')
-                raw2 = etree.tostring(res_xml, pretty_print=True, xml_declaration=True, encoding='UTF-8')
-                stream = self.env['l10n_es.edi.tbai.util']._zip_files(
-                    [raw1, raw2],
-                    [invoice.name + ".xml", invoice.name + "_response.xml"],
-                    stream
-                )
+            # Create and save edi attachment, remove temp XML
+            attachment = invoice.l10n_es_tbai_temp_xml
+            invoice.l10n_es_tbai_temp_xml = False
 
-                # Create attachment & post to chatter
-                attachment = self.env['ir.attachment'].create({
-                    'type': 'binary',
-                    'name': invoice.name + ".zip",
-                    'raw': stream.getvalue(),
-                    'mimetype': 'application/zip',
-                    'res_id': invoice.id,
-                    'res_model': 'account.move',
-                })
-                invoice.with_context(no_new_invoice=True).message_post(
-                    body="<pre>TicketBAI: submitted XML and response\n" + message + "</pre>",
-                    attachment_ids=attachment.ids)
-                res[invoice]['attachment'] = attachment  # save zip as EDI document
+            attachment.update({
+                'res_id': invoice.id,
+                'res_model': 'account.move',
+            })  # those extra fields allow to read values from xml (it becomes "official")
+            invoice.with_context(no_new_invoice=True).message_post(
+                body="<pre>TicketBAI: posted XML\n" + res[invoice]['message'] + "</pre>",
+                attachment_ids=attachment.ids)
+            res[invoice]['attachment'] = attachment  # save attachment as EDI document
 
-        # ERROR (TODO remove -> but any error means we lose the exchange -> log ?)
+        # FAILURE
         else:
-            # Put sent XML in chatter
-            attachment = self.env['ir.attachment'].create({
-                'type': 'binary',
-                'name': invoice.name + '.xml',
-                'raw': etree.tostring(inv_xml, pretty_print=True, xml_declaration=True, encoding='UTF-8'),
-                'mimetype': 'application/xml',
-            })
-            invoice.with_context(no_new_invoice=True).message_post(
-                body="TicketBAI: invoice XML (TODO remove)",
-                attachment_ids=attachment.ids)
-
-            # Put response + any warning/error in chatter (TODO remove)
-            attachment = self.env['ir.attachment'].create({
-                'type': 'binary',
-                'name': invoice.name + '_response.xml',
-                'raw': etree.tostring(res_xml, pretty_print=True, xml_declaration=True, encoding='UTF-8'),
-                'mimetype': 'application/xml',
-            })
-            invoice.with_context(no_new_invoice=True).message_post(
-                body="<pre>TicketBAI: response\n" + message + '</pre>',
-                attachment_ids=attachment.ids)
+            invoice.l10n_es_tbai_temp_xml = False  # will need to be re-created
 
         return res
 
@@ -172,36 +151,39 @@ class AccountEdiFormat(models.Model):
         if 'error' in res[invoice]:
             return res
 
+        # Store the XML as attachment to ensure it is never lost (even in case of timeour error)
+        invoice.l10n_es_tbai_temp_xml = self.env['ir.attachment'].create({
+            'type': 'binary',
+            'name': invoice.name + '.xml',
+            'raw': etree.tostring(cancel_xml, encoding='UTF-8'),
+            'mimetype': 'application/xml',
+        })
+
         # Call the web service and get response
         res.update(self._l10n_es_tbai_post_to_web_service(invoice, cancel_xml, cancel=True))
-
-        # Get TicketBai response
         res_xml = res[invoice]['response']
-        message, tbai_id = self.env['l10n_es.edi.tbai.util']._get_response_values(res_xml)
+
+        # TIMEOUT: success is undetermined
+        if res_xml is None:
+            pass
 
         # SUCCESS
-        # if res.get(invoice, {}).get('success'): # TODO uncomment (but any error means we lose the exchange -> log ?)
+        elif res[invoice].get('success'):
 
-        # Zip together invoice & response
-        with io.BytesIO() as stream:
-            raw1 = etree.tostring(cancel_xml, pretty_print=True, xml_declaration=True, encoding='UTF-8')
-            raw2 = etree.tostring(res_xml, pretty_print=True, xml_declaration=True, encoding='UTF-8')
-            stream = self.env['l10n_es.edi.tbai.util']._zip_files(
-                [raw1, raw2],
-                [invoice.name + "_cancel.xml", invoice.name + "_cancel_response.xml"],
-                stream
-            )
+            # Track head of chain (last posted invoice)
+            invoice.company_id.write({'l10n_es_tbai_last_posted_id': invoice})
 
-            # Create attachment & post to chatter
-            attachment = self.env['ir.attachment'].create({
-                'type': 'binary',
-                'name': invoice.name + "_cancel.zip",
-                'raw': stream.getvalue(),
-                'mimetype': 'application/zip'
-            })
+            # Create and save edi attachment, remove temp XML
+            attachment = invoice.l10n_es_tbai_temp_xml
+            invoice.l10n_es_tbai_temp_xml = False
+
             invoice.with_context(no_new_invoice=True).message_post(
-                body="<pre>TicketBAI: cancel request and response\n" + message + '</pre>',
+                body="<pre>TicketBAI: posted cancelation XML\n" + res[invoice]['message'] + "</pre>",
                 attachment_ids=attachment.ids)
+
+        # FAILURE
+        else:
+            invoice.l10n_es_tbai_temp_xml = False  # will need to be re-created
 
         return res
 
@@ -227,6 +209,11 @@ class AccountEdiFormat(models.Model):
     # -------------------------------------------------------------------------
 
     def _l10n_es_tbai_get_invoice_xml(self, invoice, cancel=False):
+        # Peviously generated XML was posted but without a response (timeout) => try again
+        if invoice.l10n_es_tbai_temp_xml:
+            return etree.fromstring(invoice.l10n_es_tbai_temp_xml.with_context(bin_size=False).raw)
+
+        # Otherwise, generate a new XML
         values = {
             "cancel": cancel,
             "datetime_now": datetime.now(tz=timezone('Europe/Madrid')),
@@ -555,16 +542,28 @@ class AccountEdiFormat(models.Model):
         cert_file = company.l10n_es_tbai_certificate_id
 
         # Post and retrieve response
-        response = util._post(url=url, data=xml_str, headers=header, pkcs12_data=cert_file, timeout=30)
+        try:
+            response = util._post(url=url, data=xml_str, headers=header, pkcs12_data=cert_file, timeout=10)
+        except Timeout as e:
+            return {invoices: {
+                'success': False, 'error': _(str(e)), 'blocking_level': 'error', 'response': None
+            }}
+
         data = response.content.decode(response.encoding)
 
         # Error management
         response_xml = etree.fromstring(bytes(data, 'utf-8'))
-        message, tbai_id = self.env['l10n_es.edi.tbai.util']._get_response_values(response_xml)
+        message, already_received, tbai_id = self.env['l10n_es.edi.tbai.util']._get_response_values(response_xml)
+
+        # TODO log warning if tbai_id provided in response does not match our own computed tbai_id ?
+        # when already_received is True, tbai_id is '' (the response does not include it)
+
         state = int(response_xml.find(r'.//Estado').text)
-        if state == 0:
+        if state == 0 or already_received:
             # SUCCESS
-            return {invoices: {'success': True, 'response': response_xml}}
+            return {invoices: {
+                'success': True, 'message': _(message),
+                'response': response_xml}}
         else:
             # ERROR
             return {invoices: {
