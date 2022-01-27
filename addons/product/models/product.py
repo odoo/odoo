@@ -223,9 +223,21 @@ class ProductProduct(models.Model):
         self.env.cr.execute("CREATE UNIQUE INDEX IF NOT EXISTS product_product_combination_unique ON %s (product_tmpl_id, combination_indices) WHERE active is true"
             % self._table)
 
-    _sql_constraints = [
-        ('barcode_uniq', 'unique(barcode)', "A barcode can only be assigned to one product !"),
-    ]
+    @api.constrains("barcode")
+    def _check_barcode_unique(self):
+        other = self.env['product.product'].sudo().search([
+                ('barcode', '=', self.barcode),
+            ]) - self
+        if other:
+            other = other[0]
+            base_url = self.env['ir.config_parameter'].get_param('web.base.url')
+            product = f'web#id={other[0].id}&view_type=form&model={self._name}'
+            link = "<a href={base_url}/{product}>{product_name}</a>".format(
+                base_url=base_url, product=product, product_name=other.name
+            )
+
+            raise ValidationError(_("Another product already has barcode value \"{barcode}\":\n\n"
+                                    "{link}".format(barcode=self.barcode, link=link)))
 
     def _get_invoice_policy(self):
         return False
