@@ -24,7 +24,7 @@ class Coupon(models.Model):
          """
         return str(random.getrandbits(64))
 
-    code = fields.Char(default=_generate_code, required=True, readonly=True)
+    code = fields.Char(default=lambda self: self._generate_code(), required=True, readonly=True)
     expiration_date = fields.Date('Expiration Date', compute='_compute_expiration_date')
     state = fields.Selection([
         ('reserved', 'Pending'),
