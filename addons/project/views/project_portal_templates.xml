@@ -195,7 +195,7 @@
         <xpath expr="//div[hasclass('o_portal_sidebar')]" position="inside">
             <t t-set="o_portal_fullwidth_alert" groups="project.group_project_user">
                 <t t-call="portal.portal_back_in_edit_mode">
-                    <t t-set="backend_url" t-value="'/web#model=project.task&amp;id=%s&amp;view_type=form' % (task.id)"/>
+                    <t t-set="backend_url" t-value="'/web#model=project.task&amp;id=%s&amp;action=%s&amp;view_type=form' % (task.id, task.env.ref('project.action_view_all_task').id)"/>
                 </t>
             </t>
 
@@ -219,16 +219,30 @@
                                     </li>
                                 </ul>
                             </li>
+                            <li id="task-links" t-if="task_link_section" class="list-group-item pl-0 flex-grow-1" t-ignore="true" role="complementary">
+                                <ul class="nav flex-column">
+                                    <t t-foreach="task_link_section" t-as="task_link">
+                                        <li class="nav-item">
+                                            <a class="nav-link pl-3" t-att-href="task_link['access_url']">
+                                                <t t-out="task_link['title']"/>
+                                            </a>
+                                        </li>
+                                    </t>
+                                </ul>
+                            </li>
 
                             <li t-if="task.user_ids or task.partner_id" class="list-group-item flex-grow-1 pl-0">
                                 <div class="col-12 col-md-12 pb-2" t-if="task.user_ids">
                                     <strong>Assignees</strong>
                                     <t t-foreach="task.user_ids" t-as="user">
-                                        <div class="row pl-3 flex-nowrap">
+                                        <div class="row pl-3 mb-3 flex-nowrap">
                                             <img class="rounded-circle mt-1 o_portal_contact_img" t-att-src="image_data_uri(user.avatar_1024)" alt="Contact"/>
                                             <div class="ml-2">
                                                 <div t-esc="user" t-options='{"widget": "contact", "fields": ["name"]}'/>
                                                 <a t-attf-href="tel:{{user.phone}}" t-if="user.phone"><div t-esc="user" t-options='{"widget": "contact", "fields": ["phone"]}'/></a>
+                                                <a t-if="user.email" class="text-break" t-attf-href="mailto:{{user.email}}">
+                                                    <div t-out="user" t-options='{"widget": "contact", "fields": ["email"]}'/>
+                                                </a>
                                             </div>
                                         </div>
                                     </t>
@@ -240,6 +254,9 @@
                                         <div class="ml-2">
                                             <div t-field="task.partner_id" t-options='{"widget": "contact", "fields": ["name"]}'/>
                                             <a t-attf-href="tel:{{task.partner_id.phone}}" t-if="task.partner_id.phone"><div t-field="task.partner_id" t-options='{"widget": "contact", "fields": ["phone"]}'/></a>
+                                            <a t-if="task.partner_id.email" class="text-break" t-attf-href="mailto:{{task.partner_id.email}}">
+                                                <div t-field="task.partner_id" t-options='{"widget": "contact", "fields": ["email"]}'/>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
@@ -272,7 +289,7 @@
                                     <t t-set="path" t-value="'task'"/>
                                 </t>
                             </div>
-                            <div class="row mb-4">
+                            <div class="row mb-4 container">
                                 <div class="col-12 col-md-6">
                                     <div t-if="project_accessible"><strong>Project:</strong> <a t-attf-href="/my/projects/#{task.project_id.id}" t-field="task.project_id"/></div>
                                     <div t-else=""><strong>Project:</strong> <a t-field="task.project_id"/></div>

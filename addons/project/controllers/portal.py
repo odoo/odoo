@@ -242,6 +242,7 @@ class ProjectCustomerPortal(CustomerPortal):
             'task': task,
             'user': request.env.user,
             'project_accessible': project_accessible,
+            'task_link_section': [],
         }
         return self._get_page_view_values(task, access_token, values, history, False, **kwargs)
 
