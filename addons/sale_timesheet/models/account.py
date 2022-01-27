@@ -19,7 +19,7 @@ class AccountAnalyticLine(models.Model):
         ('billable_fixed', 'Billed at a Fixed price'),
         ('non_billable', 'Non Billable Tasks'),
         ('non_billable_project', 'No task found')], string="Billable Type", compute='_compute_timesheet_invoice_type', compute_sudo=True, store=True, readonly=True)
-    timesheet_invoice_id = fields.Many2one('account.move', string="Invoice", readonly=True, copy=False, help="Invoice created from the timesheet")
+    timesheet_invoice_id = fields.Many2one('account.move', string="Invoice", readonly=True, copy=False, help="Invoice created from the timesheet", index=True)
     so_line = fields.Many2one(compute="_compute_so_line", store=True, readonly=False)
     # we needed to store it only in order to be able to groupby in the portal
     order_id = fields.Many2one(related='so_line.order_id', store=True, readonly=False)
