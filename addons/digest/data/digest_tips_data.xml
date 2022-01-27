@@ -8,6 +8,7 @@
             <field name="next_run_date" eval="DateTime.now().strftime('%Y-%m-%d')"/>
             <field name="kpi_res_users_connected">True</field>
             <field name="kpi_mail_message_total">True</field>
+            <field name="company_id" eval="None"/>
         </record>
 
         <record id="digest_tip_digest_0" model="digest.tip">

@@ -125,6 +125,8 @@ class Digest(models.Model):
             digest.next_run_date = digest._get_next_run_date()
 
     def _action_send_to_user(self, user, tips_count=1, consum_tips=True):
+        company = self.company_id or user.company_id
+
         rendered_body = self.env['mail.render.mixin']._render_template(
             'digest.digest_mail_main',
             'digest.digest',
@@ -134,15 +136,15 @@ class Digest(models.Model):
                 'title': self.name,
                 'top_button_label': _('Connect'),
                 'top_button_url': self.get_base_url(),
-                'company': user.company_id,
+                'company': company,
                 'user': user,
                 'unsubscribe_token': self._get_unsubscribe_token(user.id),
                 'tips_count': tips_count,
                 'formatted_date': datetime.today().strftime('%B %d, %Y'),
                 'display_mobile_banner': True,
-                'kpi_data': self._compute_kpis(user.company_id, user),
-                'tips': self._compute_tips(user.company_id, user, tips_count=tips_count, consumed=consum_tips),
-                'preferences': self._compute_preferences(user.company_id, user),
+                'kpi_data': self._compute_kpis(company, user),
+                'tips': self._compute_tips(company, user, tips_count=tips_count, consumed=consum_tips),
+                'preferences': self._compute_preferences(company, user),
             },
             post_process=True,
             options={'preserve_comments': True}
@@ -151,7 +153,7 @@ class Digest(models.Model):
             'digest.digest_mail_layout',
             rendered_body,
             add_context={
-                'company': user.company_id,
+                'company': company,
                 'user': user,
             },
         )
@@ -159,11 +161,11 @@ class Digest(models.Model):
         mail_values = {
             'auto_delete': True,
             'author_id': self.env.user.partner_id.id,
-            'email_from': self.company_id.partner_id.email_formatted if self.company_id else self.env.user.email_formatted,
+            'email_from': company.partner_id.email_formatted if company else self.env.user.email_formatted,
             'email_to': user.email_formatted,
             'body_html': full_mail,
             'state': 'outgoing',
-            'subject': '%s: %s' % (user.company_id.name, self.name),
+            'subject': '%s: %s' % (company.name, self.name),
         }
         self.env['mail.mail'].sudo().create(mail_values)
         return True
