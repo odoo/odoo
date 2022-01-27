@@ -73,7 +73,8 @@
                 <FechaExpedicionFactura t-if="cancel" t-out="datetime_strftime(invoice.l10n_es_tbai_registration_date, '%d-%m-%Y')"/>
                 <FechaExpedicionFactura t-if="not cancel" t-out="datetime_strftime(datetime_now, '%d-%m-%Y')"/>
                 <HoraExpedicionFactura t-if="not cancel" t-out="datetime_strftime(datetime_now, '%H:%M:%S')"/>
-                <!-- TODO factura simplificada / en sustitucion de simplificada ? -->
+                <FacturaSimplificada t-if="is_simplified" t-out="'S' if is_simplified else 'N'"/>
+                <!-- TODO <FacturaEmitidaSustitucionSimplificada/> -->
                 <FacturaRectificativa t-if="credit_note_invoices">
                     <Codigo t-out="credit_note_code"/>
                     <Tipo>I</Tipo>

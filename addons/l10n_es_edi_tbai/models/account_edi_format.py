@@ -259,13 +259,18 @@ class AccountEdiFormat(models.Model):
             alt_id_country = False
             alt_id_number = partner.vat or 'NO_DISPONIBLE'
             alt_id_type = ""
-            if (not partner.country_id or partner.country_id.code == 'ES') and partner.vat:
+            if partner == self.env.ref("l10n_es_edi_tbai.partner_simplified"):
+                # Simplified partner (TODO check id_type and id_country are legal in this case)
+                alt_id_country = 'ES'
+                alt_id_type = '03'
+            elif (not partner.country_id or partner.country_id.code == 'ES') and partner.vat:
                 # ES partner with VAT.
                 nif = partner.vat[2:] if partner.vat.startswith('ES') else partner.vat
             elif partner.country_id.code in eu_country_codes:
                 # European partner
                 alt_id_type = '02'
             else:
+                # Non-european partner
                 if partner.vat:
                     alt_id_type = '04'
                 else:
@@ -297,15 +302,17 @@ class AccountEdiFormat(models.Model):
             return values
 
         # === CREDIT NOTE (RECTIFICATIVA) ===
-        is_refund = invoice.move_type == 'out_refund'  # TODO also in_refund for Bizkaia
+        is_refund = invoice.move_type == 'out_refund'  # TODO also in_refund (for Bizkaia)
         values['is_refund'] = is_refund
-        is_simplified = False  # TODO create simplified_partner and use it as recipient for simplified invoices
+        is_simplified = invoice.partner_id == self.env.ref("l10n_es_edi_tbai.partner_simplified")
         if is_refund:
-            # TODO check refund codes are legal ? Force use of R5 when is_simplified ?
+            # TODO check refund codes are legal before sending ?
             values['credit_note_code'] = invoice.l10n_es_tbai_refund_reason or ('R5' if is_simplified else 'R1')
             values['credit_note_invoices'] = [  # uses a list because TicketBai supports issuing multiple credit notes
                 invoice.reversed_entry_id
             ]
+        else:
+            values['is_simplified'] = is_simplified  # TODO may not apply to in_invoice (for Bizkaia)
 
         # === LINES (DETALLES) ===
         values['invoice_lines'] = [line for line in invoice.invoice_line_ids.filtered(lambda line: not line.display_type)]
