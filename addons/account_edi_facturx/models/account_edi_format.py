@@ -164,8 +164,7 @@ class AccountEdiFormat(models.Model):
         invoice.move_type = default_move_type
 
         # self could be a single record (editing) or be empty (new).
-        with Form(invoice.with_context(default_move_type=default_move_type,
-                                       account_predictive_bills_disable_prediction=True)) as invoice_form:
+        with Form(invoice.with_context(default_move_type=default_move_type)) as invoice_form:
             partner_type = invoice_form.journal_id.type == 'purchase' and 'SellerTradeParty' or 'BuyerTradeParty'
             invoice_form.partner_id = self._retrieve_partner(
                 name=_find_value(f"//ram:{partner_type}/ram:Name"),
