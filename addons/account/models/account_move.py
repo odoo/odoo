@@ -46,6 +46,8 @@ class AccountMove(models.Model):
             CREATE INDEX IF NOT EXISTS account_move_payment_idx
             ON account_move(journal_id, state, payment_state, move_type, date);
         """)
+        # Create an index for journal dashboard sql query in get_line_graph_datas()
+        self.env.cr.execute("CREATE INDEX IF NOT EXISTS account_move_journal_date_desc_idx ON account_move (journal_id, date DESC)")
 
     @property
     def _sequence_monthly_regex(self):
