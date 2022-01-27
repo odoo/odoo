@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { clear, insert, insertAndReplace, replace } from '@mail/model/model_field_command';
+import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'AttachmentImage',
@@ -15,13 +15,9 @@ registerModel({
             if (!this.attachment || !this.attachment.isViewable) {
                 return;
             }
-            this.messaging.dialogManager.update({
-                dialogs: insert({
-                    attachmentViewer: insertAndReplace({
-                        attachment: replace(this.attachment),
-                        attachmentList: replace(this.attachmentList),
-                    }),
-                }),
+            this.attachmentList.update({
+                attachmentListViewDialog: insertAndReplace(),
+                selectedAttachment: replace(this.attachment),
             });
         },
         /**

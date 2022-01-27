@@ -114,7 +114,7 @@ export class AttachmentViewer extends Component {
      * @private
      */
     _close() {
-        this.attachmentViewer.close();
+        this.attachmentViewer.delete();
     }
 
     /**
@@ -163,14 +163,10 @@ export class AttachmentViewer extends Component {
      * @private
      */
     _next() {
-        const attachmentViewer = this.attachmentViewer;
-        const index = attachmentViewer.attachments.findIndex(attachment =>
-            attachment === attachmentViewer.attachment
-        );
-        const nextIndex = (index + 1) % attachmentViewer.attachments.length;
-        attachmentViewer.update({
-            attachment: link(attachmentViewer.attachments[nextIndex]),
-        });
+        if (!this.attachmentViewer.dialogOwner || !this.attachmentViewer.dialogOwner.attachmentListOwnerAsAttachmentView) {
+            return;
+        }
+        this.attachmentViewer.dialogOwner.attachmentListOwnerAsAttachmentView.selectNextAttachment();
     }
 
     /**
@@ -179,16 +175,10 @@ export class AttachmentViewer extends Component {
      * @private
      */
     _previous() {
-        const attachmentViewer = this.attachmentViewer;
-        const index = attachmentViewer.attachments.findIndex(attachment =>
-            attachment === attachmentViewer.attachment
-        );
-        const nextIndex = index === 0
-            ? attachmentViewer.attachments.length - 1
-            : index - 1;
-        attachmentViewer.update({
-            attachment: link(attachmentViewer.attachments[nextIndex]),
-        });
+        if (!this.attachmentViewer.dialogOwner || !this.attachmentViewer.dialogOwner.attachmentListOwnerAsAttachmentView) {
+            return;
+        }
+        this.attachmentViewer.dialogOwner.attachmentListOwnerAsAttachmentView.selectPreviousAttachment();
     }
 
     /**
