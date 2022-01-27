@@ -38,13 +38,13 @@ RUN wget -O /tmp/wkhtmltox.deb https://github.com/wkhtmltopdf/wkhtmltopdf/releas
     && rm -rf /tmp/wkhtmltox.deb
 
 # ghostscript
-RUN wget -O /tmp/ghostscript-9.54.0-linux-x86_64.tgz https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs9540/ghostscript-9.54.0-linux-x86_64.tgz \
-    && tar -xzf /tmp/ghostscript-9.54.0-linux-x86_64.tgz -C /tmp \
-    && mv /tmp/ghostscript-9.54.0-linux-x86_64/gs-9540-linux-x86_64 /usr/local/bin/ghostscript \
+RUN wget -O /tmp/ghostscript-9.55.0-linux-x86_64.tgz https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs9550/ghostscript-9.55.0-linux-x86_64.tgz \
+    && tar -xzf /tmp/ghostscript-9.55.0-linux-x86_64.tgz -C /tmp \
+    && mv /tmp/ghostscript-9.55.0-linux-x86_64/gs-9550-linux-x86_64 /usr/local/bin/ghostscript \
     && ln -s /usr/local/bin/ghostscript /usr/local/bin/gs \
     && chmod 755 /usr/local/bin/ghostscript \
     && chmod 755 /usr/local/bin/gs \
-    && rm -rf /tmp/ghostscript-9.54.0-linux-x86_64.tgz /tmp/ghostscript-9.54.0-linux-x86_64
+    && rm -rf /tmp/ghostscript-9.55.0-linux-x86_64.tgz /tmp/ghostscript-9.55.0-linux-x86_64
 
 # odoo directories
 RUN mkdir --parents /opt/odoo/tests \
