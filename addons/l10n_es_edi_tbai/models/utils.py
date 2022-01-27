@@ -2,12 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import hashlib
+import re
 import struct
-import zipfile
 from base64 import b64decode, b64encode
 from io import BytesIO
 from random import randint
-import re
 
 import requests
 from cryptography.hazmat.primitives import hashes
@@ -90,13 +89,6 @@ class L10nEsTbaiFillSignXml(models.AbstractModel):
                 already_received = True  # error codes 5/19 mean invoice/cancelation was already received
         return messages, already_received, tbai_id
 
-    def _base64_print(self, string):
-        string = str(string, "utf8")
-        return "\n".join(
-            string[pos: pos + 64]  # noqa: E203
-            for pos in range(0, len(string), 64)
-        )
-
     def _canonicalize_node(self, node, is_string=False):
         node = etree.fromstring(node) if is_string else node
         return etree.tostring(node, method="c14n", with_comments=False, exclusive=False)
@@ -137,6 +129,30 @@ class L10nEsTbaiFillSignXml(models.AbstractModel):
             lib.update(ref_node)
             reference.find("ds:DigestValue", namespaces=self.NS_MAP).text = b64encode(lib.digest())
 
+    def _fill_signature(self, node, private_key):
+        signed_info_xml = node.find("ds:SignedInfo", namespaces=self.NS_MAP)
+
+        signature = private_key.sign(
+            self._canonicalize_node(signed_info_xml),
+            padding.PKCS1v15(),
+            hashes.SHA256()
+        )
+        node.find("ds:SignatureValue", namespaces=self.NS_MAP).text = self._base64_print(b64encode(signature))
+
+    def _validate_format_xsd(self, xml_bytes, xsd_id):
+        """
+        Checks that the xml file represented by xml_bytes respects the xsd schema with ID xsd_id.
+        In case of validation failure, throws back the UserError thrown by _check_with_xsd.
+        """
+        xsd_attachment = self.env.ref(xsd_id, False)
+        xsd_datas = b64decode(xsd_attachment.datas) if xsd_attachment else None
+        with BytesIO(xsd_datas) as xsd:
+            _check_with_xsd(
+                xml_bytes,
+                xsd,
+                self.env  # allows function to find reference to local xsd (for imports, see schemaLocation in xsd)
+            )
+
     def _long_to_bytes(self, n, blocksize=0):
         """
         Convert a long integer to a byte string.
@@ -163,29 +179,12 @@ class L10nEsTbaiFillSignXml(models.AbstractModel):
             s = (blocksize - len(s) % blocksize) * b"\000" + s
         return s
 
-    def _fill_signature(self, node, private_key):
-        signed_info_xml = node.find("ds:SignedInfo", namespaces=self.NS_MAP)
-
-        signature = private_key.sign(
-            self._canonicalize_node(signed_info_xml),
-            padding.PKCS1v15(),
-            hashes.SHA256()
+    def _base64_print(self, string):
+        string = str(string, "utf8")
+        return "\n".join(
+            string[pos: pos + 64]  # noqa: E203
+            for pos in range(0, len(string), 64)
         )
-        node.find("ds:SignatureValue", namespaces=self.NS_MAP).text = self._base64_print(b64encode(signature))
-
-    def _validate_format_xsd(self, xml_bytes, xsd_id):
-        """
-        Checks that the xml file represented by xml_bytes respects the xsd schema with ID xsd_id.
-        In case of validation failure, throws back the UserError thrown by _check_with_xsd.
-        """
-        xsd_attachment = self.env.ref(xsd_id, False)
-        xsd_datas = b64decode(xsd_attachment.datas) if xsd_attachment else None
-        with BytesIO(xsd_datas) as xsd:
-            _check_with_xsd(
-                xml_bytes,
-                xsd,
-                self.env  # allows function to find reference to local xsd (for imports, see schemaLocation in xsd)
-            )
 
     # -------------------------------------------------------------------------
     # CRC-8

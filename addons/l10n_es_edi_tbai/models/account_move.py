@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import io
-import zipfile
 from datetime import datetime
 from re import sub as regex_sub
 
@@ -23,7 +21,7 @@ class AccountMove(models.Model):
 
     # Relations
     l10n_es_tbai_temp_xml = fields.Many2one(
-        comodel_name='ir.attachment',
+        comodel_name='ir.attachment', readonly=True,
         string="Temp XML (awaiting response)",
         help="Stores the posted XML while no answer has been received from the govt (avoids loss of info in case of timeouts)."
     )
