@@ -44,7 +44,7 @@
             'website_blog/static/src/js/website_blog.js',
         ],
         'web.assets_backend': [
-            'website_blog/static/src/js/systray_items/new_content.js',
+            'website_blog/static/src/js/systray_items/*.js',
         ],
     },
     'license': 'LGPL-3',
