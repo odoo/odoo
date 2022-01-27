@@ -5,17 +5,8 @@ import { attr, many, one } from '@mail/model/model_field';
 
 registerModel({
     name: 'AttachmentViewer',
-    identifyingFields: ['attachmentList'],
+    identifyingFields: ['dialogOwner'],
     recordMethods: {
-        /**
-         * Close the attachment viewer by closing its linked dialog.
-         */
-        close() {
-            const dialog = this.messaging.models['Dialog'].find(dialog => dialog.record === this);
-            if (dialog) {
-                dialog.delete();
-            }
-        },
         /**
          * Returns whether the given html element is inside this attachment viewer.
          *
@@ -47,9 +38,11 @@ registerModel({
         angle: attr({
             default: 0,
         }),
-        attachment: one('Attachment'),
+        attachment: one('Attachment', {
+            related: 'attachmentList.selectedAttachment',
+        }),
         attachmentList: one('AttachmentList', {
-            readonly: true,
+            related: 'dialogOwner.attachmentListOwnerAsAttachmentView',
             required: true,
         }),
         attachments: many('Attachment', {
@@ -62,7 +55,7 @@ registerModel({
         /**
          * Determines the dialog displaying this attachment viewer.
          */
-        dialog: one('Dialog', {
+        dialogOwner: one('Dialog', {
             inverse: 'attachmentViewer',
             isCausal: true,
             readonly: true,

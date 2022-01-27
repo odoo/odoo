@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear, insert, insertAndReplace, link, replace, unlink, unlinkAll } from '@mail/model/model_field_command';
+import { clear, insert, insertAndReplace, link, unlink, unlinkAll } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'Follower',
@@ -47,7 +47,7 @@ registerModel({
          *  Close subtypes dialog
          */
         closeSubtypes() {
-            this.update({ subtypeList: clear() });
+            this.update({ followerSubtypeListDialog: clear() });
         },
         /**
          * Opens the most appropriate view that is a profile for this follower.
@@ -98,13 +98,7 @@ registerModel({
                     this.update({ selectedSubtypes: unlink(subtype) });
                 }
             }
-            this.messaging.dialogManager.update({
-                dialogs: insert({
-                    followerSubtypeList: insertAndReplace({
-                        follower: replace(this),
-                    }),
-                }),
-            });
+            this.update({ followerSubtypeListDialog: insertAndReplace() });
         },
         /**
          * @param {FollowerSubtype} subtype
@@ -145,6 +139,10 @@ registerModel({
         followedThread: one('Thread', {
             inverse: 'followers',
         }),
+        followerSubtypeListDialog: one('Dialog', {
+            inverse: 'followerOwnerAsSubtypeList',
+            isCausal: true,
+        }),
         id: attr({
             readonly: true,
             required: true,
@@ -159,10 +157,6 @@ registerModel({
             required: true,
         }),
         selectedSubtypes: many('FollowerSubtype'),
-        subtypeList: many('FollowerSubtypeList', {
-            inverse: 'follower',
-            isCausal: true,
-        }),
         subtypes: many('FollowerSubtype'),
     },
 });

@@ -8,6 +8,22 @@ registerModel({
     name: 'AttachmentList',
     identifyingFields: [['composerView', 'messageView', 'attachmentBoxViewOwner']],
     recordMethods: {
+        /**
+         * Select the next attachment.
+         */
+        selectNextAttachment() {
+            const index = this.attachments.findIndex(attachment => attachment === this.selectedAttachment);
+            const nextIndex = index === this.attachments.length - 1 ? 0 : index + 1;
+            this.update({ selectedAttachment: replace(this.attachments[nextIndex]) });
+        },
+        /**
+         * Select the previous attachment.
+         */
+        selectPreviousAttachment() {
+            const index = this.attachments.findIndex(attachment => attachment === this.selectedAttachment);
+            const prevIndex = index === 0 ? this.attachments.length - 1 : index - 1;
+            this.update({ selectedAttachment: replace(this.attachments[prevIndex]) });
+        },
         _computeAttachmentImages() {
             return insertAndReplace(this.imageAttachments.map(attachment => {
                 return {
@@ -80,6 +96,10 @@ registerModel({
             inverse: 'attachmentList',
             isCausal: true,
         }),
+        attachmentListViewDialog: one('Dialog', {
+            inverse: 'attachmentListOwnerAsAttachmentView',
+            isCausal: true,
+        }),
         /**
          * States the attachments to be displayed by this attachment list.
          */
@@ -116,6 +136,7 @@ registerModel({
         nonImageAttachments: many('Attachment', {
             compute: '_computeNonImageAttachments',
         }),
+        selectedAttachment: one('Attachment'),
         /**
          * States the attachments that can be viewed inside the browser.
          */
