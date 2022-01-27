@@ -41,12 +41,6 @@
                     <field name="l10n_latam_check_warning_msg" nolabel="1"/>
                 </div>
             </sheet>
-            <button name="print_checks" position="attributes">
-                <attribute name="attrs">{'invisible': ['|', '|', '|', ('payment_method_code', '!=', 'check_printing'), ('state', '!=', 'posted'), ('is_move_sent', '=', True), ('l10n_latam_checkbook_id', '!=', False)]}</attribute>
-            </button>
-            <button name="print_checks" position="after">
-                <button name="action_mark_sent" class="oe_highlight" attrs="{'invisible': ['|', '|', '|', ('payment_method_code', '!=', 'check_printing'), ('state', '!=', 'posted'), ('is_move_sent', '=', True), ('l10n_latam_checkbook_id', '=', False)]}" string="Mark Sent" type="object"/>
-            </button>
             <field name="check_number" position="attributes">
                 <attribute name="attrs">{'invisible': ['|', ('payment_method_code', '!=', 'check_printing'), ('check_number', '=', False), ('l10n_latam_checkbook_id', '=', False)], 'readonly': ['|', ('state', '!=', 'draft'), ('l10n_latam_checkbook_id', '=', False)], 'required': [('l10n_latam_checkbook_id', '!=', False)]}</attribute>
             </field>
