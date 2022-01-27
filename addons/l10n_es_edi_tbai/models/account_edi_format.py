@@ -546,7 +546,7 @@ class AccountEdiFormat(models.Model):
             response = util._post(url=url, data=xml_str, headers=header, pkcs12_data=cert_file, timeout=10)
         except Timeout as e:
             return {invoices: {
-                'success': False, 'error': _(str(e)), 'blocking_level': 'error', 'response': None
+                'success': False, 'error': str(e), 'blocking_level': 'error', 'response': None
             }}
 
         data = response.content.decode(response.encoding)
@@ -562,10 +562,10 @@ class AccountEdiFormat(models.Model):
         if state == 0 or already_received:
             # SUCCESS
             return {invoices: {
-                'success': True, 'message': _(message),
+                'success': True, 'message': message,
                 'response': response_xml}}
         else:
             # ERROR
             return {invoices: {
-                'success': False, 'error': _(message), 'blocking_level': 'error',
+                'success': False, 'error': message, 'blocking_level': 'error',
                 'response': response_xml}}
