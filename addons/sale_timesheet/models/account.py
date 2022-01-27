@@ -20,7 +20,7 @@ class AccountAnalyticLine(models.Model):
         ('non_billable', 'Non Billable Tasks'),
         ('non_billable_timesheet', 'Non Billable Timesheet'),
         ('non_billable_project', 'No task found')], string="Billable Type", compute='_compute_timesheet_invoice_type', compute_sudo=True, store=True, readonly=True)
-    timesheet_invoice_id = fields.Many2one('account.move', string="Invoice", readonly=True, copy=False, help="Invoice created from the timesheet")
+    timesheet_invoice_id = fields.Many2one('account.move', string="Invoice", readonly=True, copy=False, help="Invoice created from the timesheet", index=True)
     non_allow_billable = fields.Boolean("Non-Billable", help="Your timesheet will not be billed.")
     so_line = fields.Many2one(compute="_compute_so_line", store=True, readonly=False)
 
