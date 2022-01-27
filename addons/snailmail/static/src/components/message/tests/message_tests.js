@@ -324,26 +324,26 @@ QUnit.test('No Price Available', async function (assert) {
     });
     assert.containsOnce(
         document.body,
-        '.o_SnailmailErrorDialog',
+        '.o_SnailmailError',
         "error dialog should be open"
     );
     assert.containsOnce(
         document.body,
-        '.o_SnailmailErrorDialog_contentPrice',
+        '.o_SnailmailError_contentPrice',
         "error dialog should have the 'no price' content"
     );
     assert.containsOnce(
         document.body,
-        '.o_SnailmailErrorDialog_cancelLetterButton',
+        '.o_SnailmailError_cancelLetterButton',
         "dialog should have a 'Cancel letter' button"
     );
 
     await afterNextRender(() => {
-        document.querySelector('.o_SnailmailErrorDialog_cancelLetterButton').click();
+        document.querySelector('.o_SnailmailError_cancelLetterButton').click();
     });
     assert.containsNone(
         document.body,
-        '.o_SnailmailErrorDialog',
+        '.o_SnailmailError',
         "dialog should be closed after click on 'Cancel letter'"
     );
     assert.verifySteps(
@@ -416,31 +416,31 @@ QUnit.test('Credit Error', async function (assert) {
     });
     assert.containsOnce(
         document.body,
-        '.o_SnailmailErrorDialog',
+        '.o_SnailmailError',
         "error dialog should be open"
     );
     assert.containsOnce(
         document.body,
-        '.o_SnailmailErrorDialog_contentCredit',
+        '.o_SnailmailError_contentCredit',
         "error dialog should have the 'credit' content"
     );
     assert.containsOnce(
         document.body,
-        '.o_SnailmailErrorDialog_resendLetterButton',
+        '.o_SnailmailError_resendLetterButton',
         "dialog should have a 'Re-send letter' button"
     );
     assert.containsOnce(
         document.body,
-        '.o_SnailmailErrorDialog_cancelLetterButton',
+        '.o_SnailmailError_cancelLetterButton',
         "dialog should have a 'Cancel letter' button"
     );
 
     await afterNextRender(() => {
-        document.querySelector('.o_SnailmailErrorDialog_resendLetterButton').click();
+        document.querySelector('.o_SnailmailError_resendLetterButton').click();
     });
     assert.containsNone(
         document.body,
-        '.o_SnailmailErrorDialog',
+        '.o_SnailmailError',
         "dialog should be closed after click on 'Re-send letter'"
     );
     assert.verifySteps(
@@ -513,31 +513,31 @@ QUnit.test('Trial Error', async function (assert) {
     });
     assert.containsOnce(
         document.body,
-        '.o_SnailmailErrorDialog',
+        '.o_SnailmailError',
         "error dialog should be open"
     );
     assert.containsOnce(
         document.body,
-        '.o_SnailmailErrorDialog_contentTrial',
+        '.o_SnailmailError_contentTrial',
         "error dialog should have the 'trial' content"
     );
     assert.containsOnce(
         document.body,
-        '.o_SnailmailErrorDialog_resendLetterButton',
+        '.o_SnailmailError_resendLetterButton',
         "dialog should have a 'Re-send letter' button"
     );
     assert.containsOnce(
         document.body,
-        '.o_SnailmailErrorDialog_cancelLetterButton',
+        '.o_SnailmailError_cancelLetterButton',
         "dialog should have a 'Cancel letter' button"
     );
 
     await afterNextRender(() => {
-        document.querySelector('.o_SnailmailErrorDialog_resendLetterButton').click();
+        document.querySelector('.o_SnailmailError_resendLetterButton').click();
     });
     assert.containsNone(
         document.body,
-        '.o_SnailmailErrorDialog',
+        '.o_SnailmailError',
         "dialog should be closed after click on 'Re-send letter'"
     );
     assert.verifySteps(

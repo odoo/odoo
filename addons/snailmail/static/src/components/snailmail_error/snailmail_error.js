@@ -6,7 +6,7 @@ import Dialog from 'web.OwlDialog';
 
 const { Component } = owl;
 
-class SnailmailErrorDialog extends Component {
+class SnailmailError extends Component {
 
     //--------------------------------------------------------------------------
     // Public
@@ -73,7 +73,7 @@ class SnailmailErrorDialog extends Component {
 
 }
 
-Object.assign(SnailmailErrorDialog, {
+Object.assign(SnailmailError, {
     components: { Dialog },
     props: {
         messageLocalId: String,
@@ -82,9 +82,9 @@ Object.assign(SnailmailErrorDialog, {
             optional: true,
         },
     },
-    template: 'snailmail.SnailmailErrorDialog',
+    template: 'snailmail.SnailmailError',
 });
 
-registerMessagingComponent(SnailmailErrorDialog);
+registerMessagingComponent(SnailmailError);
 
-export default SnailmailErrorDialog;
+export default SnailmailError;
