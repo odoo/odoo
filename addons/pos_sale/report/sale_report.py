@@ -24,7 +24,7 @@ class SaleReport(models.Model):
 
     def _select_pos(self):
         select_ = """
-            MIN(l.id) AS id,
+            -MIN(l.id) AS id,
             l.product_id AS product_id,
             t.uom_id AS product_uom,
             SUM(l.qty) AS product_uom_qty,
