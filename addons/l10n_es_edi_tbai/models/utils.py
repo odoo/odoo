@@ -90,13 +90,6 @@ class L10nEsTbaiFillSignXml(models.AbstractModel):
                 already_received = True  # error codes 5/19 mean invoice/cancelation was already received
         return messages, already_received, tbai_id
 
-    def _zip_files(self, files, fnames, stream):
-        with zipfile.ZipFile(stream, 'w', compression=zipfile.ZIP_DEFLATED) as zipf:
-            for file, fname in zip(files, fnames):
-                fname = re.sub("/", "_", fname)  # slashes create directory structure
-                zipf.writestr(fname, file)
-        return stream
-
     def _base64_print(self, string):
         string = str(string, "utf8")
         return "\n".join(
@@ -104,8 +97,9 @@ class L10nEsTbaiFillSignXml(models.AbstractModel):
             for pos in range(0, len(string), 64)
         )
 
-    def _canonicalize_node(self, node):
-        return etree.tostring(etree.fromstring(node), method="c14n", with_comments=False, exclusive=False)
+    def _canonicalize_node(self, node, is_string=False):
+        node = etree.fromstring(node) if is_string else node
+        return etree.tostring(node, method="c14n", with_comments=False, exclusive=False)
 
     def _cleanup_xml_content(self, xml_content, is_string=False, indent_level=0):
         parser = etree.XMLParser(compact=True, remove_blank_text=True, remove_comments=True)
@@ -122,23 +116,19 @@ class L10nEsTbaiFillSignXml(models.AbstractModel):
             return self._canonicalize_node(
                 re.sub(r"^[^\n]*<ds:Signature.*<\/ds:Signature>\n", r"",
                        etree.tostring(node).decode("utf-8"),
-                       flags=re.DOTALL | re.MULTILINE))
+                       flags=re.DOTALL | re.MULTILINE),
+                is_string=True)
 
         if uri.startswith("#"):
             query = "//*[@*[local-name() = '{}' ]=$uri]"
-            results = []
-            for id in ("ID", "Id", "id"):
-                results = node.xpath(query.format(id), uri=uri.lstrip("#"))
-                if len(results) == 1:
-                    return self._canonicalize_node(
-                        # Removing leading spaces seems to be required here (trial and error)
-                        re.sub(r"^\s*", r"", etree.tostring(results[0]).decode("utf-8"),
-                               flags=re.MULTILINE))
-                if len(results) > 1:
-                    raise Exception("Ambiguous reference URI {} resolved to {} nodes".format(
-                        uri, len(results)))
+            results = node.xpath(query.format("Id"), uri=uri.lstrip("#"))  # case-sensitive 'Id'
+            if len(results) == 1:
+                return self._canonicalize_node(results[0])
+            if len(results) > 1:
+                raise Exception("Ambiguous reference URI {} resolved to {} nodes".format(
+                    uri, len(results)))
 
-        raise Exception('URI "' + uri + '" cannot be read')
+        raise Exception('URI "' + uri + '" not found')
 
     def _reference_digests(self, node):
         for reference in node.findall("ds:Reference", namespaces=self.NS_MAP):
@@ -156,16 +146,15 @@ class L10nEsTbaiFillSignXml(models.AbstractModel):
         """
         # convert to byte string
         s = b""
-        pack = struct.pack
         while n > 0:
-            s = pack(b">I", n & 0xFFFFFFFF) + s
+            s = struct.pack(b">I", n & 0xFFFFFFFF) + s
             n = n >> 32
         # strip off leading zeros
         for i in range(len(s)):
             if s[i] != b"\000"[0]:
                 break
+        # special case: n == 0
         else:
-            # only happens when n == 0
             s = b"\000"
             i = 0
         s = s[i:]
@@ -177,15 +166,8 @@ class L10nEsTbaiFillSignXml(models.AbstractModel):
     def _fill_signature(self, node, private_key):
         signed_info_xml = node.find("ds:SignedInfo", namespaces=self.NS_MAP)
 
-        signed_info = etree.tostring(
-            signed_info_xml,
-            method="c14n",
-            with_comments=False,
-            exclusive=False,
-        )
-
         signature = private_key.sign(
-            signed_info,
+            self._canonicalize_node(signed_info_xml),
             padding.PKCS1v15(),
             hashes.SHA256()
         )
