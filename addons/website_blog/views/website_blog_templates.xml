@@ -457,19 +457,6 @@ list of filtered posts (by date or tag).
 
 <!-- ======   Technical Templates   ============================================
 ============================================================================ -->
-<!-- Duplicate post Action -->
-<template id="blog_edit_options" inherit_id="website.user_navbar" name="Edit Blog Options">
-    <xpath expr="//a[@id='edit-in-backend']" position="after">
-        <t groups="website.group_website_designer" t-if="main_object._name == 'blog.post'">
-            <form class="duplicate d-none" action="/blog/post_duplicate" method="POST">
-                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                <input name="blog_post_id" t-att-value="blog_post.id if blog_post else None"/>
-            </form>
-            <a href="#" class="duplicate dropdown-item" onclick="$(this).prev('form').submit()">Duplicate</a>
-        </t>
-    </xpath>
-</template>
-
 <!-- User Navbar -->
 <template id="user_navbar_inherit_website_blog" inherit_id="website.user_navbar">
     <xpath expr="//div[@id='o_new_content_menu_choices']//div[@name='module_website_blog']" position="attributes">

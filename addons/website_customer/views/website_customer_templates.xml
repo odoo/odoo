@@ -142,12 +142,6 @@
     </xpath>
 </template>
 
-<template id="contact_edit_options" inherit_id="website.user_navbar" name="Edit Customer Options">
-    <xpath expr="//div[@id='edit-page-menu']" position="after">
-        <t t-if="main_object._name == 'res.partner'" t-set="action" t-value="'contacts.action_contacts'"/>
-    </xpath>
-</template>
-
 <template id="details" name="Customer Detail">
   <t t-call="website.layout">
     <div id="wrap">

@@ -49,7 +49,6 @@
                     <div t-if="editable" class="dropdown" id="content-menu">
                         <a id="content-menu-button" class="dropdown-toggle o-no-caret waves" data-toggle="dropdown" data-display="static" href="#">Pages</a>
                         <div class="dropdown-menu" role="menu">
-                            <a role="menuitem" data-action="edit_menu" href="#" title="Edit Top Menu" class="dropdown-item">Edit Menu</a>
                             <a role="menuitem" href="/website/pages" title="Manage Your Website Pages" class="dropdown-item">Manage Pages</a>
                             <div t-if="deletable" role="separator" class="dropdown-divider"/>
                             <a role="menuitem" href="#" data-action="page_properties" class="dropdown-item" t-if="deletable">Page Properties</a>
@@ -147,15 +146,6 @@
                     </div>
                     <div t-if="not translatable" id="edit-page-menu" class="o_menu_systray_item">
                         <a data-action="edit" href="#" accesskey="a"><span class="fa fa-pencil mr-1"/>Edit</a>
-                    </div>
-                    <div t-if="edit_in_backend or ('website_published' in main_object.fields_get() and main_object._name != 'website.page')" class="o_menu_systray_item">
-                        <a role="button" class="btn pl-0 rounded-0 dropdown-toggle css_edit_dynamic" data-toggle="dropdown" href="#">
-                            <span class="sr-only">Toggle Dropdown</span>
-                        </a>
-                        <div class="dropdown-menu" role="menu">
-                            <a role="menuitem" style="text-align: left;" t-attf-href="/web#view_type=form&amp;model=#{main_object._name}&amp;id=#{main_object.id}&amp;action=#{action}&amp;menu_id=#{backend_menu_id}"
-                                   class="dropdown-item" title='Edit in backend' id="edit-in-backend">Edit in backend</a>
-                        </div>
                     </div>
                     <div t-if="translatable">
                         <a data-action="translate" href="#">TRANSLATE</a>

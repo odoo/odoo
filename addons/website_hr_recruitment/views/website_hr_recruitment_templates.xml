@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-<template id="job_edit_options" inherit_id="website.user_navbar" name="Edit Job Options">
-    <xpath expr="//div[@id='edit-page-menu']" position="after">
-        <t t-if="main_object._name == 'hr.job'" t-set="action" t-value="'hr_recruitment.action_hr_job'"/>
-    </xpath>
-</template>
-
 <template id="index" name="Jobs">
     <t t-call="website.layout">
         <div id="wrap" class="o_website_hr_recruitment_jobs_list bg-100">

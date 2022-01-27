@@ -324,4 +324,4 @@ class WebsiteBlog(http.Controller):
         :return redirect to the new blog created
         """
         new_blog_post = request.env['blog.post'].with_context(mail_create_nosubscribe=True).browse(int(blog_post_id)).copy()
-        return request.redirect("/blog/%s/%s?enable_editor=1" % (slug(new_blog_post.blog_id), slug(new_blog_post)))
+        return "/blog/%s/%s?enable_editor=1" % (slug(new_blog_post.blog_id), slug(new_blog_post))
