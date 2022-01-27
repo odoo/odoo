@@ -47,7 +47,10 @@ class AccountEdiFormat(models.Model):
         return journal.country_code == 'ES'
 
     def _get_invoice_edi_content(self, invoice):
-        pass  # TODO ?
+        # OVERRIDE
+        if self.code != 'es_tbai':
+            return super()._get_invoice_edi_content(invoice)
+        return self._l10n_es_tbai_get_invoice_xml(invoice)
 
     def _check_configuration_is_complete(self, invoice):
         # Ensure a certificate is available.
