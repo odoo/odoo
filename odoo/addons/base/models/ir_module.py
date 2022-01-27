@@ -689,6 +689,15 @@ class Module(models.Model):
                 if dep.state == 'uninstalled':
                     to_install += self.search([('name', '=', dep.name)]).ids
 
+        if 'base' in self.mapped('name'):
+            # If an installed module is only present in the dependency graph through
+            # a new, uninstalled dependency, it will not have been selected yet.
+            # An update of 'base' should also update these modules, and as a consequence,
+            # install the new dependency.
+            orphaned = self.search([('state', '=', 'installed'), ('name', '!=', 'studio_customization')])
+            if orphaned:
+                _logger.info('Selecting orphaned modules %s for upgrade', orphaned.mapped('name'))
+                orphaned.button_upgrade()
         self.browse(to_install).button_install()
         return dict(ACTION_DICT, name=_('Apply Schedule Upgrade'))
 
