@@ -13,7 +13,8 @@ class GiftCard(models.Model):
 
     @api.model
     def _generate_code(self):
-        return '044' + str(uuid4())[4:-8][3:]
+        # 044 is used for the barcode scanner.
+        return '044' + str(uuid4())[7:-8]
 
     name = fields.Char(compute='_compute_name')
     code = fields.Char(default=lambda x: x._generate_code(), required=True, readonly=True, copy=False)
