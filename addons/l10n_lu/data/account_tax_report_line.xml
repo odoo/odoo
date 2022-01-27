@@ -22,7 +22,6 @@
       <field name="country_id" ref="base.lu"/>
     </record>
 
-
     <record id="account_tax_report_line_2b_base_exempt" model="account.tax.report.line">
       <field name="name">II.B. base exempt (194)</field>
       <field name="tag_name">II.B. base exempt (194)</field>
@@ -51,6 +50,15 @@
       <field name="name">II.B. base 8% (715)</field>
       <field name="tag_name">II.B. base 8% (715)</field>
       <field name="sequence">8</field>
+      <field name="parent_id" ref="account_tax_report_line_2b_intra_community_acqui_of_goods_base"/>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2b_manufactured_tobacco" model="account.tax.report.line">
+      <field name="name">II.B. 719 - of manufactured tobacco (VAT is collected at the exit of the tax warehouse with excise duties)</field>
+      <field name="tag_name">719</field>
+      <field name="sequence">10</field>
+      <field name="code">LUTAX_719</field>
       <field name="parent_id" ref="account_tax_report_line_2b_intra_community_acqui_of_goods_base"/>
       <field name="country_id" ref="base.lu"/>
     </record>
@@ -90,6 +98,15 @@
       <field name="name">II.D.1. for business purposes: base 8% (725)</field>
       <field name="tag_name">II.D.1. for business purposes: base 8% (725)</field>
       <field name="sequence">5</field>
+      <field name="parent_id" ref="account_tax_report_line_2d_importation_of_goods_base"/>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2d_1_manufactured_tobacco" model="account.tax.report.line">
+      <field name="name">II.D. 729 - of manufactured tobacco (VAT is collected at the exit of the tax warehouse with excise duties)</field>
+      <field name="tag_name">729</field>
+      <field name="sequence">8</field>
+      <field name="code">LUTAX_729</field>
       <field name="parent_id" ref="account_tax_report_line_2d_importation_of_goods_base"/>
       <field name="country_id" ref="base.lu"/>
     </record>
@@ -309,7 +326,7 @@
         <field name="sequence" eval="2"/>
         <field name="parent_id" ref="account_tax_report_line_1a_total_sale"/>
         <field name="country_id" ref="base.lu"/>
-        <field name="formula">LUTAX_021 + LUTAX_037 - LUTAX_456</field>
+        <field name="formula">LUTAX_021 + LUTAX_037 - LUTAX_456 - LUTAX_455 - LUTAX_471</field>
     </record>
 
     <record id="account_tax_report_line_1a_app_goods_non_bus" model="account.tax.report.line">
@@ -870,6 +887,7 @@
 
     <record id="account_tax_report_line_3b1_rel_trans" model="account.tax.report.line">
       <field name="name">III.B.1. relating to transactions which are exempt pursuant to articles 44 and 56quater (094)</field>
+      <field name="tag_name">094</field>
       <field name="sequence">1</field>
       <field name="parent_id" ref="account_tax_report_line_3b_total_input_tax_nd"/>
       <field name="code">LUTAX_094</field>
@@ -878,9 +896,19 @@
 
     <record id="account_tax_report_line_3b2_ded_prop" model="account.tax.report.line">
       <field name="name">III.B.2. where the deductible proportion determined in accordance to article 50 is applied (095)</field>
+      <field name="tag_name">095</field>
       <field name="sequence">2</field>
       <field name="parent_id" ref="account_tax_report_line_3b_total_input_tax_nd"/>
       <field name="code">LUTAX_095</field>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_3b2_input_tax_margin" model="account.tax.report.line">
+      <field name="name">III.B.3 096 - Non recoverable input tax in accordance with Art. 56ter-1(7) and 56ter-2(7) (when applying the margin scheme)</field>
+      <field name="tag_name">096</field>
+      <field name="sequence">3</field>
+      <field name="code">LUTAX_096</field>
+      <field name="parent_id" ref="account_tax_report_line_3b_total_input_tax_nd"/>
       <field name="country_id" ref="base.lu"/>
     </record>
 

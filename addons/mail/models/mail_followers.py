@@ -171,11 +171,13 @@ ORDER BY pid, cid, notif
                 query_pid = """
 SELECT DISTINCT ON (partner.id) partner.id as pid, NULL::int AS cid,
     partner.active as active, partner.partner_share as pshare, NULL as ctype,
-    users.notification_type AS notif, NULL AS groups
+    users.notification_type AS notif,
+    array_agg(groups_rel.gid) FILTER (WHERE groups_rel.gid IS NOT NULL) AS groups
 FROM res_partner partner
-LEFT JOIN res_users users ON users.partner_id = partner.id AND users.active
+    LEFT JOIN res_users users ON users.partner_id = partner.id AND users.active
+    LEFT JOIN res_groups_users_rel groups_rel ON groups_rel.uid = users.id
 WHERE partner.id IN %s
-ORDER BY partner.id, users.notification_type"""
+GROUP BY partner.id, users.notification_type"""
                 params.append(tuple(pids))
             if cids:
                 query_cid = """
@@ -185,6 +187,7 @@ SELECT NULL::int AS pid, channel.id AS cid,
 FROM mail_channel channel WHERE channel.id IN %s """
                 params.append(tuple(cids))
             query = ' UNION'.join(x for x in [query_pid, query_cid] if x)
+            query = 'SELECT DISTINCT ON(pid, cid) * FROM (%s) AS x ORDER BY pid, cid, notif' % query
             self.env.cr.execute(query, tuple(params))
             res = self.env.cr.fetchall()
         else:
