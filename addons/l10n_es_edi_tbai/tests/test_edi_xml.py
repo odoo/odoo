@@ -1,4 +1,6 @@
-# coding: utf-8
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from freezegun import freeze_time
 from lxml import etree
 from odoo.exceptions import UserError

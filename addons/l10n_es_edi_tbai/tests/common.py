@@ -1,11 +1,13 @@
-# coding: utf-8
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import base64
-from pytz import timezone
 from datetime import datetime
 
+from odoo.addons.account_edi.tests.common import AccountEdiTestCommon
 from odoo.tests import tagged
 from odoo.tools import misc
-from odoo.addons.account_edi.tests.common import AccountEdiTestCommon
+from pytz import timezone
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')

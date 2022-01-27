@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import io
 import math
 from base64 import b64encode
 from collections import defaultdict
@@ -154,7 +153,7 @@ class AccountEdiFormat(models.Model):
         # Store the XML as attachment to ensure it is never lost (even in case of timeour error)
         invoice.l10n_es_tbai_temp_xml = self.env['ir.attachment'].create({
             'type': 'binary',
-            'name': invoice.name + '.xml',
+            'name': invoice.name + '_cancel.xml',
             'raw': etree.tostring(cancel_xml, encoding='UTF-8'),
             'mimetype': 'application/xml',
         })

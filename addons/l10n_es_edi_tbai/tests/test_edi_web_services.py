@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from datetime import datetime
 
-from odoo.tests import tagged
 from odoo import fields
+from odoo.tests import tagged
+
 from .common import TestEsEdiCommon
 
 
