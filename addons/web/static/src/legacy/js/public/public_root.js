@@ -25,6 +25,8 @@ import { ComponentAdapter } from "web.OwlCompatibility";
 import { loadBundleTemplates } from "@web/core/assets";
 import { makeEnv, startServices } from "@web/env";
 import { MainComponentsContainer } from "@web/core/main_components_container";
+import { browser } from '@web/core/browser/browser';
+import { jsonrpc } from '@web/core/network/rpc_service';
 const serviceRegistry = registry.category("services");
 
 // Load localizations outside the PublicRoot to not wait for DOM ready (but
@@ -377,6 +379,29 @@ export async function createPublicRoot(RootWidget) {
     serviceRegistry.add("legacy_dialog_mapping", makeLegacyDialogMappingService(legacyEnv));
     serviceRegistry.add("legacy_rainbowman_service", makeLegacyRainbowManService(legacyEnv));
     await Promise.all([owl.utils.whenReady(), session.is_bound]);
+
+    // Patch browser.fetch and the rpc service to use the correct base url when
+    // embeded in an external page
+    const baseUrl = session.prefix;
+    const { fetch } = browser;
+    browser.fetch = function(url, ...args) {
+        if (!url.match(/^(?:https?:)?\/\//)) {
+            url = baseUrl + url;
+        }
+        return fetch(url, ...args);
+    }
+    serviceRegistry.add("rpc", {
+        async: true,
+        start(env) {
+            let rpcId = 0;
+            return function rpc(route, params = {}, settings) {
+                if (!route.match(/^(?:https?:)?\/\//)) {
+                    route = baseUrl + route;
+                }
+                return jsonrpc(env, rpcId++, route, params, settings);
+            };
+        },
+    }, { force: true });
 
     const wowlEnv = makeEnv();
     wowlEnv.qweb.addTemplates(await loadBundleTemplates("web.assets_frontend"));

@@ -986,7 +986,7 @@ class WebClient(http.Controller):
         return {"modules": translations_per_module,
                 "lang_parameters": None}
 
-    @http.route('/web/webclient/translations/<string:unique>', type='http', auth="public")
+    @http.route('/web/webclient/translations/<string:unique>', type='http', auth="public", cors="*")
     def translations(self, unique, mods=None, lang=None):
         """
         Load the translations for the specified language and modules
