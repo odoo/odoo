@@ -718,8 +718,8 @@ var ListRenderer = BasicRenderer.extend({
         const groupByFieldName = groupBy.split(':')[0];
         const groupByField = group.fields[groupByFieldName];
         const name = groupByField.type === "boolean"
-            ? (group.value === undefined ? _t('Undefined') : group.value)
-            : (group.value === undefined || group.value === false ? _t('Undefined') : group.value);
+            ? (group.value === undefined ? _t('None') : (group.value ? _t('Yes') : _t('No')))
+            : (group.value === undefined || group.value === false ? _t('None') : group.value);
         var $th = $('<th>')
             .addClass('o_group_name')
             .attr('tabindex', -1)
