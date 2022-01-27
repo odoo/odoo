@@ -44,6 +44,7 @@ registry
     .add('CopyClipboardText', basic_fields.TextCopyClipboard)
     .add('CopyClipboardChar', basic_fields.CharCopyClipboard)
     .add('CopyClipboardURL', basic_fields.URLCopyClipboard)
+    .add('CopyClipboardButton', basic_fields.ButtonCopyClipboard)
     .add('image', basic_fields.FieldBinaryImage)
     .add('image_url', basic_fields.CharImageUrl)
     .add('kanban.image', basic_fields.KanbanFieldBinaryImage)

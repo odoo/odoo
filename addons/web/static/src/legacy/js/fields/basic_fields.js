@@ -1622,7 +1622,7 @@ var FieldText = InputField.extend(TranslatableFieldMixin, {
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
-    
+
     /**
      * @private
      * @override
@@ -1930,6 +1930,11 @@ var CharCopyClipboard = FieldChar.extend(CopyClipboard, {
     description: _lt("Copy to Clipboard"),
     clipboardTemplate: 'CopyClipboardChar',
     className: 'o_field_copy o_text_overflow',
+});
+
+var ButtonCopyClipboard = AbstractField.extend(CopyClipboard, {
+    description: _lt("Copy to Clipboard"),
+    clipboardTemplate: 'CopyClipboardButton',
 });
 
 var URLCopyClipboard = FieldChar.extend(CopyClipboard, {
@@ -4193,6 +4198,7 @@ return {
     TextCopyClipboard: TextCopyClipboard,
     CharCopyClipboard: CharCopyClipboard,
     URLCopyClipboard: URLCopyClipboard,
+    ButtonCopyClipboard: ButtonCopyClipboard,
     JournalDashboardGraph: JournalDashboardGraph,
     AceEditor: AceEditor,
     FieldColor: FieldColor,
