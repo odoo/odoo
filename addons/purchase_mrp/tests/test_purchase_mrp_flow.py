@@ -430,3 +430,35 @@ class TestSaleMrpFlow(TransactionCase):
         self.assertEqual(self.po.picking_ids.move_ids_without_package[0].product_uom_qty,4, "The amount of the kit components must be updated when changing the quantity of the kit.")
         self.assertEqual(self.po.picking_ids.move_ids_without_package[1].product_uom_qty,2, "The amount of the kit components must be updated when changing the quantity of the kit.")
         self.assertEqual(self.po.picking_ids.move_ids_without_package[2].product_uom_qty,6, "The amount of the kit components must be updated when changing the quantity of the kit.")
+
+    def test_kit_and_inter_company(self):
+        """
+        In a multi-company environment, this test ensures that when receiving a kit from
+        the other company, the delivered quantity on the related PO is correctly computed
+        """
+        transit_location = self.env.company.internal_transit_location_id
+
+        second_company = self.env['res.company'].create({'name': 'Company B'})
+        partner = second_company.partner_id
+        partner.write({
+            'property_stock_customer': transit_location.id,
+            'property_stock_supplier': transit_location.id,
+        })
+
+        wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        wh.delivery_route_id.rule_ids.location_id = transit_location
+
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = partner
+        with po_form.order_line.new() as line:
+            line.product_id = self.kit_1
+        po = po_form.save()
+        po.button_confirm()
+
+        picking = po.picking_ids
+        picking.move_lines.filtered(lambda l: l.product_id == self.component_a).quantity_done = 2
+        picking.move_lines.filtered(lambda l: l.product_id == self.component_b).quantity_done = 1
+        picking.move_lines.filtered(lambda l: l.product_id == self.component_c).quantity_done = 3
+        action = picking.button_validate()
+
+        self.assertEqual(po.order_line.qty_received, 1)

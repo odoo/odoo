@@ -1848,3 +1848,38 @@ class TestSaleMrpFlow(common.SavepointCase):
         cogs_aml = amls.filtered(lambda aml: aml.account_id == expense_account)
         self.assertEqual(cogs_aml.debit, 0)
         self.assertEqual(cogs_aml.credit, 20, 'Should be to the value of the returned component')
+
+    def test_kit_and_inter_company(self):
+        """
+        In a multi-company environment, this test ensures that when delivering a kit
+        to the other company, the delivered quantity on the related SO is correctly computed
+        """
+        transit_location = self.env.company.internal_transit_location_id
+        stock_location = self.env.ref('stock.stock_location_stock')
+        self.env['stock.quant']._update_available_quantity(self.component_a, stock_location, 2)
+        self.env['stock.quant']._update_available_quantity(self.component_b, stock_location, 1)
+        self.env['stock.quant']._update_available_quantity(self.component_c, stock_location, 3)
+
+        second_company = self.env['res.company'].create({'name': 'Company B'})
+        partner = second_company.partner_id
+        partner.write({
+            'property_stock_customer': transit_location.id,
+            'property_stock_supplier': transit_location.id,
+        })
+
+        wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        wh.delivery_route_id.rule_ids.location_id = transit_location
+
+        so_form = Form(self.env['sale.order'])
+        so_form.partner_id = partner
+        with so_form.order_line.new() as line:
+            line.product_id = self.kit_1
+        so = so_form.save()
+        so.action_confirm()
+
+        picking = so.picking_ids
+        action = so.picking_ids.button_validate()
+        wizard = self.env[action['res_model']].browse(action['res_id'])
+        wizard.process()
+
+        self.assertEqual(so.order_line.qty_delivered, 1)

@@ -27,6 +27,18 @@ class StockMove(models.Model):
         keys_sorted.append(move.sale_line_id.id)
         return keys_sorted
 
+    @api.model
+    def _in_and_out_filters_for_sale(self, reverse=False):
+        in_key = 'incoming_moves'
+        out_key = 'outgoing_moves'
+        if reverse:
+            in_key, out_key = out_key, in_key
+        return {
+            in_key: lambda m: m.location_dest_id.usage not in ("customer", "transit") and m.to_refund,
+            out_key: lambda m: m.location_dest_id.usage in ("customer", "transit")
+                               and (not m.origin_returned_move_id or (m.origin_returned_move_id and m.to_refund)),
+        }
+
     def _get_related_invoices(self):
         """ Overridden from stock_account to return the customer invoices
         related to this stock move.

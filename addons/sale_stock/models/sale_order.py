@@ -453,13 +453,11 @@ class SaleOrderLine(models.Model):
     def _get_outgoing_incoming_moves(self):
         outgoing_moves = self.env['stock.move']
         incoming_moves = self.env['stock.move']
+        filters = self.env['stock.move']._in_and_out_filters_for_sale()
 
-        for move in self.move_ids.filtered(lambda r: r.state != 'cancel' and not r.scrapped and self.product_id == r.product_id):
-            if move.location_dest_id.usage == "customer":
-                if not move.origin_returned_move_id or (move.origin_returned_move_id and move.to_refund):
-                    outgoing_moves |= move
-            elif move.location_dest_id.usage != "customer" and move.to_refund:
-                incoming_moves |= move
+        moves = self.move_ids.filtered(lambda r: r.state != 'cancel' and not r.scrapped and self.product_id == r.product_id)
+        outgoing_moves = moves.filtered(filters['outgoing_moves'])
+        incoming_moves = moves.filtered(filters['incoming_moves'])
 
         return outgoing_moves, incoming_moves
 

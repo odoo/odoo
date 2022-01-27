@@ -794,3 +794,33 @@ class TestSaleStock(TestSale):
         picking.move_lines.write({'quantity_done': 3.66})
         picking.button_validate()
         self.assertEqual(so.order_line.mapped('qty_delivered'), [4.0], 'Sale: no conversion error on delivery in different uom"')
+
+    def test_15_inter_company(self):
+        """
+        In a multi-company environment, this test ensures that when delivering a product
+        to the other company, the delivered quantity on the related SO is correctly computed
+        """
+        transit_location = self.env.company.internal_transit_location_id
+
+        second_company = self.env['res.company'].create({'name': 'Company B'})
+        partner = second_company.partner_id
+        partner.write({
+            'property_stock_customer': transit_location.id,
+            'property_stock_supplier': transit_location.id,
+        })
+
+        wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        wh.delivery_route_id.rule_ids.location_id = transit_location
+
+        so_form = Form(self.env['sale.order'])
+        so_form.partner_id = partner
+        with so_form.order_line.new() as line:
+            line.product_id = self.products['prod_order']
+        so = so_form.save()
+        so.action_confirm()
+
+        picking = so.picking_ids
+        picking.move_lines.quantity_done = 1
+        picking.button_validate()
+
+        self.assertEqual(so.order_line.qty_delivered, 1)

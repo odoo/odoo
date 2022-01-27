@@ -48,10 +48,7 @@ class SaleOrderLine(models.Model):
                             order_line.qty_delivered = 0.0
                         continue
                     moves = order_line.move_ids.filtered(lambda m: m.state == 'done' and not m.scrapped)
-                    filters = {
-                        'incoming_moves': lambda m: m.location_dest_id.usage == 'customer' and (not m.origin_returned_move_id or (m.origin_returned_move_id and m.to_refund)),
-                        'outgoing_moves': lambda m: m.location_dest_id.usage != 'customer' and m.to_refund
-                    }
+                    filters = self.env['stock.move']._in_and_out_filters_for_sale(reverse=True)
                     order_qty = order_line.product_uom._compute_quantity(order_line.product_uom_qty, relevant_bom.product_uom_id)
                     qty_delivered = moves._compute_kit_quantities(order_line.product_id, order_qty, relevant_bom, filters)
                     order_line.qty_delivered = relevant_bom.product_uom_id._compute_quantity(qty_delivered, order_line.product_uom)

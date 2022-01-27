@@ -34,6 +34,18 @@ class StockMove(models.Model):
         keys_sorted += [move.purchase_line_id.id, move.created_purchase_line_id.id]
         return keys_sorted
 
+    @api.model
+    def _in_and_out_filters_for_purchase(self, reverse=False):
+        in_key = 'incoming_moves'
+        out_key = 'outgoing_moves'
+        if reverse:
+            in_key, out_key = out_key, in_key
+        return {
+            in_key: lambda m: m.location_id.usage in ('supplier', 'transit')
+                              and (not m.origin_returned_move_id or (m.origin_returned_move_id and m.to_refund)),
+            out_key: lambda m: m.location_id.usage not in ('supplier', 'transit') and m.to_refund
+        }
+
     def _get_price_unit(self):
         """ Returns the unit price for the move"""
         self.ensure_one()
