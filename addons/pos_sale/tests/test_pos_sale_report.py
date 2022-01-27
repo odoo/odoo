@@ -31,8 +31,8 @@ class TestPoSSaleReport(TestPoSCommon):
 
         session.action_pos_session_closing_control()
 
-        # Orders are reversed, so reports[0] will correspond to the second order
-        reports = self.env['sale.report'].sudo().search([('product_id', '=', self.product0.id)], order='id desc', limit=2)
+        # PoS Orders have negative IDs to avoid conflict, so reports[0] will correspond to the newest order
+        reports = self.env['sale.report'].sudo().search([('product_id', '=', self.product0.id)], order='id', limit=2)
         self.assertEqual(reports[0].weight, 3)
         self.assertEqual(reports[0].volume, 4)
         self.assertEqual(reports[1].weight, 18)
