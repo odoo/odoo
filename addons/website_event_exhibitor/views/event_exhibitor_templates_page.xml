@@ -99,13 +99,13 @@
         </div>
         <hr class="my-0"/>
         <div class="ms-3 clearfix">
-            <div class="float-start pt-3">
+            <div t-if="sponsor.image_128 or sponsor.partner_id.image_128" class="float-start pt-3 pe-3">
                 <span t-if="sponsor.image_128" t-field="sponsor.image_128" class="o_wevent_online_page_avatar"
                     t-options="{'widget': 'image', 'filename-field': 'partner_name'}"/>
                 <span t-elif="sponsor.partner_id.image_128" t-field="sponsor.partner_id.image_128" class="o_wevent_online_page_avatar"
                     t-options="{'widget': 'image', 'filename-field': 'partner_name'}"/>
             </div>
-            <div class="o_wevent_sponsor px-3 pt-3 d-flex flex-row justify-content-between position-relative">
+            <div class="o_wevent_sponsor pt-3 d-flex flex-row justify-content-between position-relative">
                 <div class="d-flex flex-column">
                     <div class="d-flex align-items-center">
                         <span t-field="sponsor.name" class="h4 mb-0"/>
@@ -145,7 +145,20 @@
                 </a>
             </div>
         </div>
-        <div t-field="sponsor.website_description" class="my-2 mx-3 oe_no_empty"/>
+        <!-- Website description -->
+        <div t-if="not is_html_empty(sponsor.website_description)" t-field="sponsor.website_description"
+             class="my-2 mx-3 oe_no_empty"/>
+        <t t-elif="env.user.has_group('event.group_event_user')">
+            <div t-field="sponsor.website_description" class="my-2 mx-3"
+                 placeholder="e.g. &quot;Openwood specializes in home decoration...&quot;"/>
+            <div class="alert alert-info mx-3 mt-3 o_wesponsor_exhibitor_main_empty_website_descr_warning">
+                The sponsor website description is missing.
+                <a t-attf-href="?{{ keep_query('*', enable_editor=1) }}">
+                    <i class="fa fa-fw fa-arrow-right"></i>
+                    Write one.
+                </a>
+            </div>
+        </t>
     </div>
 </template>
 

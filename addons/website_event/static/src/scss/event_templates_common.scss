@@ -130,10 +130,7 @@
             // Main panel
             .o_wevent_online_page_main {
                 border: 1px solid $border-color;
-
-                @include media-breakpoint-up(md) {
-                    border-top-width: 0;
-                }
+                margin-top: map-get($spacers, 3);
 
                 .o_wevent_online_page_avatar {
                     min-width: 64px;
@@ -150,10 +147,7 @@
                 // Left panel: content display
                 .o_wevent_online_page_aside_content {
                     border: 1px solid $border-color;
-
-                    @include media-breakpoint-up(md) {
-                        border-top-width: 0;
-                    }
+                    margin-top: map-get($spacers, 3);
 
                     li:not(.nav-item) {
                         border-bottom: 1px solid $border-color;
