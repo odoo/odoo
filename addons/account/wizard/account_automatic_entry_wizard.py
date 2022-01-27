@@ -92,7 +92,7 @@ class AutomaticEntryWizard(models.TransientModel):
         for record in self:
             total = (sum(record.move_line_ids.mapped('balance')) or record.total_amount)
             if total != 0:
-                record.percentage = (record.total_amount / total) * 100
+                record.percentage = min((record.total_amount / total) * 100, 100)  # min() to avoid value being slightly over 100 due to rounding error
             else:
                 record.percentage = 100
 
@@ -321,22 +321,31 @@ class AutomaticEntryWizard(models.TransientModel):
         created_moves._post()
 
         destination_move = created_moves[0]
+        destination_move_offset = 0
         destination_messages = []
+        accrual_move_messages = defaultdict(lambda: [])
+        accrual_move_offsets = defaultdict(int)
         for move in self.move_line_ids.move_id:
             amount = sum((self.move_line_ids._origin & move.line_ids).mapped('balance'))
             accrual_move = created_moves[1:].filtered(lambda m: m.date == move.date)
 
             if accrual_account.reconcile:
-                to_reconcile = (accrual_move + destination_move).mapped('line_ids').filtered(lambda line: line.account_id == accrual_account)
-                to_reconcile.reconcile()
+                destination_move_lines = destination_move.mapped('line_ids').filtered(lambda line: line.account_id == accrual_account)[destination_move_offset:destination_move_offset+2]
+                destination_move_offset += 2
+                accrual_move_lines = accrual_move.mapped('line_ids').filtered(lambda line: line.account_id == accrual_account)[accrual_move_offsets[accrual_move]:accrual_move_offsets[accrual_move]+2]
+                accrual_move_offsets[accrual_move] += 2
+                (accrual_move_lines + destination_move_lines).reconcile()
             move.message_post(body=self._format_strings(_('Adjusting Entries have been created for this invoice:<ul><li>%(link1)s cancelling '
                                                           '{percent:f}%% of {amount}</li><li>%(link0)s postponing it to {new_date}</li></ul>',
                                                           link0=self._format_move_link(destination_move),
                                                           link1=self._format_move_link(accrual_move),
                                                           ), move, amount))
             destination_messages += [self._format_strings(_('Adjusting Entry {link}: {percent:f}% of {amount} recognized from {date}'), move, amount)]
-            accrual_move.message_post(body=self._format_strings(_('Adjusting Entry for {link}: {percent:f}% of {amount} recognized on {new_date}'), move, amount))
+            accrual_move_messages[accrual_move] += [self._format_strings(_('Adjusting Entry for {link}: {percent:f}% of {amount} recognized on {new_date}'), move, amount)]
+
         destination_move.message_post(body='<br/>\n'.join(destination_messages))
+        for accrual_move, messages in accrual_move_messages.items():
+            accrual_move.message_post(body='<br/>\n'.join(messages))
 
         # open the generated entries
         action = {
