@@ -174,13 +174,13 @@
                     <div class="d-flex flex-grow-1" t-if="tracks_date">
                         <span class="h1 m-0 fw-bold" t-out="tracks_date"
                             t-options="{'widget': 'date', 'format': 'EEEE dd'}"/>
-                        <div class="d-flex flex-column ms-2">
+                        <div class="d-flex ms-3 me-2 flex-column">
                             <span class="fw-bold" t-out="tracks_date"
                                 t-options="{'widget': 'date', 'format': 'MMMM'}"/>
                             <span class="fw-bold" t-out="tracks_date"
                                 t-options="{'widget': 'date', 'format': 'YYYY'}"/>
                         </div>
-                        <div class="flex-column align-self-center ms-2">
+                        <div class="flex-column align-self-center ms-2 d-none d-sm-block">
                             <span class="small fw-light">(<t t-out="event.date_tz"/>)</span>
                         </div>
                     </div>

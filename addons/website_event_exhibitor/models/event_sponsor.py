@@ -30,7 +30,7 @@ class Sponsor(models.Model):
 
     event_id = fields.Many2one('event.event', 'Event', required=True)
     sponsor_type_id = fields.Many2one(
-        'event.sponsor.type', 'Sponsoring Level',
+        'event.sponsor.type', 'Sponsorship Level',
         default=lambda self: self._default_sponsor_type_id(), required=True, auto_join=True)
     url = fields.Char('Sponsor Website', compute='_compute_url', readonly=False, store=True)
     sequence = fields.Integer('Sequence')
@@ -38,7 +38,7 @@ class Sponsor(models.Model):
     # description
     subtitle = fields.Char('Slogan')
     exhibitor_type = fields.Selection(
-        [('sponsor', 'Sponsor'), ('exhibitor', 'Exhibitor'), ('online', 'Online Exhibitor')],
+        [('sponsor', 'Footer Logo Only'), ('exhibitor', 'Exhibitor'), ('online', 'Online Exhibitor')],
         string="Sponsor Type", default="sponsor")
     website_description = fields.Html(
         'Description', compute='_compute_website_description',

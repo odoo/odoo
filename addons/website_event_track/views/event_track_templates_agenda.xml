@@ -4,7 +4,20 @@
 <!-- Revamped agenda : Will need to replace agenda_online from website_event_track in master -->
 <template id="agenda_online" name="Track Online: Agenda">
     <t t-call="website_event.layout">
-        <div class="o_wevent_online o_weagenda_index">
+        <!-- No tracks -->
+        <div t-if="not tracks_by_days" class="container">
+            <div class="h2 mb-3">No track found.</div>
+            <div t-if="search_key" class="alert alert-info text-center">
+                <p class="m-0">We did not find any track matching your <strong t-out="search_key"/> search.</p>
+            </div>
+            <div t-else="" class="alert alert-info text-center" groups="event.group_event_user">
+                <a target="_blank" t-att-href="'/web?#action=website_event_track.action_event_track_from_event&amp;active_id=%s' % event.id">
+                    <p class="m-0">Schedule some tracks to get started</p>
+                </a>
+            </div>
+        </div>
+
+        <div t-else="" class="o_wevent_online o_weagenda_index">
             <!-- Options -->
             <t t-set="option_track_wishlist" t-value="not event.is_done and is_view_active('website_event_track.agenda_topbar_wishlist')"/>
             <!-- Topbar -->
@@ -58,20 +71,7 @@
 
 <!-- Agenda Main Display -->
 <template id="agenda_main" name="Tracks: Main Display">
-    <!-- No tracks -->
-    <div class="col-12" t-if="not tracks_by_days">
-        <div class="h2 mb-3">No track found.</div>
-        <div t-if="search_key" class="alert alert-info text-center">
-            <p class="m-0">We did not find any track matching your <strong t-out="search_key"/> search.</p>
-        </div>
-        <div t-else="" class="alert alert-info text-center" groups="event.group_event_user">
-            <a target="_blank" t-att-href="'/web?#action=website_event_track.action_event_track_from_event&amp;active_id=%s' % event.id">
-                <p class="m-0">Schedule some tracks to get started</p>
-            </a>
-        </div>
-    </div>
-
-    <section t-else="" class="col-12" t-foreach="days" t-as="day">
+    <section t-foreach="days" t-as="day" class="col-12">
         <!-- DAY HEADER -->
         <div class="o_we_track_day_header mt-3 w-100 d-flex justify-content-between align-items-center">
             <div class="d-flex">

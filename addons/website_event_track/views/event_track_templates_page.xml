@@ -28,6 +28,24 @@
 <!-- CONTENT: MAIN TEMPLATES -->
 <!-- ============================================================ -->
 
+<template id="event_track_content_partner_info">
+    <div class="mb-1 align-items-baseline text-break" t-if="track.partner_function">
+        <i class="fa fa-briefcase me-2"/><span t-out="track.partner_function"/>
+        <t t-if="track.partner_company_name">
+            <span> at </span><span t-out="track.partner_company_name"/>
+        </t>
+    </div>
+    <div class="mb-1 align-items-baseline text-break" t-if="track.partner_id.website">
+        <i class="fa fa-home me-2"/><a t-att-href="track.partner_id.website"><span t-field="track.partner_id.website"/></a>
+    </div>
+    <div class="mb-1 align-items-baseline text-break" t-if="track.partner_email">
+        <i class="fa fa-envelope me-2"/><a t-att-mailto="track.partner_email"><span t-field="track.partner_email"/></a>
+    </div>
+    <div class="mb-1 align-items-baseline text-break" t-if="track.partner_phone">
+        <i class="fa fa-phone me-2"/><span t-field="track.partner_phone"/>
+    </div>
+</template>
+
 <template id="event_track_content" name="Track: Main Description">
     <div name="o_wesession_track_main"
          t-att-class="'col-12 o_wevent_online_page_main o_wesession_track_main bg-white p-0 %s' % ('col-md-9 col-lg-10' if option_widescreen else 'col-md-8 col-lg-9')">
@@ -99,37 +117,46 @@
                         t-options='{"widget": "duration", "unit": "hour", "round": "minute"}'/>)
                 </t>
             </div>
-            
+
             <hr class="mt-2 mb-0"/>
 
             <!-- ABOUT AUTHOR -->
-            <div class="mx-3">
-                <div class="mt-2 d-flex">
-                    <span t-if="track.image" t-field="track.image" class="o_wevent_online_page_avatar"
-                        t-options="{'widget': 'image', 'class': 'rounded-circle', 'max_width': '96'}"/>
-                    <div class="ps-2 pe-0 pe-md-2 d-flex flex-column">
-                        <span t-field="track.partner_name" class="fw-bold mb-2"/>
-                        <span class="mb-1 d-flex align-items-baseline text-break" t-if="track.partner_function">
-                            <i class="fa fa-briefcase me-2"/><span t-out="track.partner_function"/>
-                            <t t-if="track.partner_company_name">
-                                <span>&amp;nbsp;at&amp;nbsp;</span><span t-out="track.partner_company_name"/>
-                            </t>
-                        </span>
-                        <span class="mb-1 d-flex align-items-baseline text-break" t-if="track.partner_id.website">
-                            <i class="fa fa-home me-2"/><a t-att-href="track.partner_id.website"><span t-field="track.partner_id.website"/></a>
-                        </span>
-                        <span class="mb-1 d-flex align-items-baseline text-break" t-if="track.partner_email">
-                            <i class="fa fa-envelope me-2"/><a t-att-mailto="track.partner_email"><span t-field="track.partner_email"/></a>
-                        </span>
-                        <span class="mb-1 d-flex align-items-baseline text-break" t-if="track.partner_phone">
-                            <i class="fa fa-phone me-2"/><span t-field="track.partner_phone"/>
-                        </span>
+            <t t-set="track_fields" t-value="['image', 'partner_name', 'partner_function', 'partner_email', 'partner_phone']"/>
+            <!-- Avoid rendering a section for track information if we don't have anything to display -->
+            <t t-if="any(track[track_field] for track_field in track_fields) or track.partner_id.website or not is_html_empty(track.partner_biography)">
+                <div class="mx-3">
+                    <div class="mt-2 mb-2 d-flex">
+                        <div t-if="track.image" t-field="track.image"
+                             t-options="{'widget': 'image', 'class': 'rounded-circle me-2', 'max_width': '96'}"/>
+                        <div class="ps-2 pe-0 pe-md-2 d-flex flex-grow-1 flex-column">
+                            <div t-if="track.partner_name" t-field="track.partner_name" class="fw-bold mb-2"/>
+                            <div class="d-none d-lg-block">
+                                <t t-call="website_event_track.event_track_content_partner_info"/>
+                            </div>
+                        </div>
                     </div>
+                    <div class="d-block d-lg-none mt-3 mb-3">
+                        <t t-call="website_event_track.event_track_content_partner_info"/>
+                    </div>
+                    <div t-if="not is_html_empty(track.partner_biography)" t-field="track.partner_biography"
+                         class="oe_no_empty"/>
+                    <hr t-if="not is_html_empty(track.description)" class="mt-2 pb-1 mb-1"/>
                 </div>
-                <div t-field="track.partner_biography" class="oe_no_empty"/>
-                <hr t-if="not is_html_empty(track.description)" class="mt-2 pb-1 mb-1"/>
-            </div>
-            <div t-field="track.description" class="my-2 mx-3 oe_no_empty"/>
+            </t>
+
+            <!-- Description -->
+            <div t-if="not is_html_empty(track.description)" t-field="track.description" class="my-2 mx-3 oe_no_empty"/>
+            <t t-elif="env.user.has_group('event.group_event_user')">
+                <div t-field="track.description" class="my-2 mx-3"
+                     placeholder="e.g. &quot;This talk will be about...&quot;"/>
+                <div class="alert alert-info mx-3 mt-3 o_wesession_track_main_empty_descr_warning">
+                    This track does not have a description.
+                    <a t-attf-href="?{{ keep_query('*', enable_editor=1) }}">
+                        <i class="fa fa-fw fa-arrow-right"></i>
+                        Write one.
+                    </a>
+                </div>
+            </t>
         </div>
     </div>
 </template>
