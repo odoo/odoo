@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
+
 from odoo import api, fields, models, _
 from odoo.tools.sql import column_exists, create_column
 
@@ -131,17 +133,13 @@ class ProductionLot(models.Model):
 
     @api.depends('name')
     def _compute_sale_order_ids(self):
+        sale_orders = defaultdict(lambda: self.env['sale.order'])
+        for move_line in self.env['stock.move.line'].search([('lot_id', 'in', self.ids), ('state', '=', 'done')]):
+            move = move_line.move_id
+            if move.picking_id.location_dest_id.usage == 'customer' and move.sudo().sale_line_id.order_id:
+                sale_orders[move_line.lot_id.id] |= move.sudo().sale_line_id.order_id
         for lot in self:
-            stock_moves = self.env['stock.move.line'].search([
-                ('lot_id', '=', lot.id),
-                ('state', '=', 'done')
-            ]).mapped('move_id')
-            stock_moves = stock_moves.search([('id', 'in', stock_moves.ids)]).filtered(
-                lambda move: move.picking_id.location_dest_id.usage == 'customer' and move.state == 'done')
-            if self.env.user.has_group('stock.group_stock_user'):
-                lot.sale_order_ids = stock_moves.sudo().mapped('sale_line_id.order_id')
-            else:
-                lot.sale_order_ids = stock_moves.mapped('sale_line_id.order_id')
+            lot.sale_order_ids = sale_orders[lot.id]
             lot.sale_order_count = len(lot.sale_order_ids)
 
     def action_view_so(self):
