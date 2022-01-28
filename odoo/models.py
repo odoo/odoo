@@ -5727,7 +5727,7 @@ Fields:
     #
 
     @api.model
-    def new(self, values={}, origin=None, ref=None):
+    def new(self, values=None, origin=None, ref=None):
         """ new([values], [origin], [ref]) -> record
 
         Return a new record instance attached to the current environment and
@@ -5741,6 +5741,8 @@ Fields:
         One can also pass a ``ref`` value to identify the record among other new
         records. The reference is encapsulated in the ``id`` of the record.
         """
+        if values is None:
+            values = {}
         if origin is not None:
             origin = origin.id
         record = self.browse([NewId(origin, ref)])
