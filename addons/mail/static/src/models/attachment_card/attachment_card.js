@@ -30,7 +30,7 @@ registerModel({
             if (!this.attachment) {
                 return;
             }
-            if (this.attachmentList.composerView) {
+            if (this.attachmentList.composerViewOwner) {
                 this.component.trigger('o-attachment-removed', { attachmentLocalId: this.attachment.localId });
                 this.attachment.remove();
             } else {

@@ -143,7 +143,7 @@ registerModel({
          */
         attachmentList: one('AttachmentList', {
             compute: '_computeAttachmentList',
-            inverse: 'messageView',
+            inverse: 'messageViewOwner',
             isCausal: true,
             readonly: true,
         }),
