@@ -1126,18 +1126,25 @@ class StockMove(models.Model):
                 'qty_done': origin_move_line.qty_done or 1,
             })
 
+        lots = self.env['stock.lot'].create([{
+            'company_id': self.company_id.id,
+            'name': lot_name,
+            'product_id': self.product_id.id,
+        } for lot_name in lot_names])
+
         move_lines_commands = []
-        for lot_name in lot_names:
+        for lot in lots:
             # We write the lot name on an existing move line (if we have still one)...
             if move_lines:
                 move_lines_commands.append((1, move_lines[0].id, {
-                    'lot_name': lot_name,
+                    'lot_name': lot.name,
+                    'lot_id': lot.id,
                     'qty_done': 1,
                 }))
                 move_lines = move_lines[1:]
             # ... or create a new move line with the serial name.
             else:
-                move_line_cmd = dict(move_line_vals, lot_name=lot_name)
+                move_line_cmd = dict(move_line_vals, lot_name=lot.name, lot_id=lot.id)
                 move_lines_commands.append((0, 0, move_line_cmd))
         return move_lines_commands
 
