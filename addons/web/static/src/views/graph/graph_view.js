@@ -153,7 +153,7 @@ GraphView.props = {
 GraphView.type = "graph";
 
 GraphView.display_name = _lt("Graph");
-GraphView.icon = "fa-bar-chart";
+GraphView.icon = "oi oi-chart--line-smooth";
 GraphView.multiRecord = true;
 
 GraphView.Model = GraphModel;

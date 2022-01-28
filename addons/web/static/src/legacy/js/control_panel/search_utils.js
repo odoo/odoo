@@ -179,10 +179,10 @@ odoo.define('web.searchUtils', function (require) {
     };
     // Search bar
     const FACET_ICONS = {
-        filter: 'fa fa-filter',
-        groupBy: 'fa fa-bars',
-        favorite: 'fa fa-star',
-        comparison: 'fa fa-adjust',
+        filter: 'oi oi-small oi-filter',
+        groupBy: 'oi oi-small oi-layers',
+        favorite: 'oi oi-small oi-star',
+        comparison: 'oi oi-small oi-contrast',
     };
 
     //-------------------------------------------------------------------------

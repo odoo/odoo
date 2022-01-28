@@ -54,7 +54,7 @@ odoo.define('web.comparison_menu_tests', function (require) {
             await cpHelpers.toggleMenuItem(controlPanel, "Birthday");
             await cpHelpers.toggleMenuItemOption(controlPanel, "Birthday", "January");
 
-            assert.containsOnce(controlPanel, 'div.o_comparison_menu > button i.fa.fa-adjust');
+            assert.containsOnce(controlPanel, 'div.o_comparison_menu > button i.oi.oi-contrast');
             assert.strictEqual(controlPanel.el.querySelector('div.o_comparison_menu > button span').innerText.trim(), "Comparison");
 
             await cpHelpers.toggleComparisonMenu(controlPanel);

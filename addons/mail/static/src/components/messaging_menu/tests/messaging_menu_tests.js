@@ -153,7 +153,7 @@ QUnit.test('basic rendering', async function (assert) {
         "should have icon on clickable element in messaging menu"
     );
     assert.ok(
-        document.querySelector(`.o_MessagingMenu_icon`).classList.contains('fa-comments'),
+        document.querySelector(`.o_MessagingMenu_icon`).classList.contains('oi-discuss'),
         "should have 'comments' icon on clickable element in messaging menu"
     );
     assert.strictEqual(
