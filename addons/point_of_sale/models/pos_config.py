@@ -503,7 +503,7 @@ class PosConfig(models.Model):
         # determine modules to install
         expected = [
             fname[7:]           # 'module_account' -> 'account'
-            for fname in self.fields_get_keys()
+            for fname in self._fields
             if fname.startswith('module_')
             if any(pos_config[fname] for pos_config in self)
         ]
@@ -519,7 +519,7 @@ class PosConfig(models.Model):
 
     def _check_groups_implied(self):
         for pos_config in self:
-            for field_name in [f for f in pos_config.fields_get_keys() if f.startswith('group_')]:
+            for field_name in [f for f in pos_config._fields if f.startswith('group_')]:
                 field = pos_config._fields[field_name]
                 if field.type in ('boolean', 'selection') and hasattr(field, 'implied_group'):
                     field_group_xmlids = getattr(field, 'group', 'base.group_user').split(',')
