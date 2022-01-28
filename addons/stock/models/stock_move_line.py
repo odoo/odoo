@@ -777,6 +777,8 @@ class StockMoveLine(models.Model):
 
         # Does the same for empty move line to retrieve the ordered qty. for partially done moves
         # (as they are splitted when the transfer is done and empty moves don't have move lines).
+        if kwargs.get('strict'):
+            return aggregated_move_lines
         pickings = (self.picking_id | backorders)
         for empty_move in pickings.move_lines.filtered(
             lambda m: m.state == "cancel" and m.product_uom_qty
