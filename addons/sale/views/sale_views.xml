@@ -735,7 +735,7 @@
             <field name="arch" type="xml">
                 <search string="Search Sales Order">
                     <field name="name" string="Order" filter_domain="['|', '|', ('name', 'ilike', self), ('client_order_ref', 'ilike', self), ('partner_id', 'child_of', self)]"/>
-                    <field name="partner_id" operator="child_of"/>
+                    <field name="partner_id" operator="child_of" context="{'active_test': False}"/>
                     <field name="user_id"/>
                     <field name="team_id" string="Sales Team"/>
                     <field name="order_line" string="Product" filter_domain="[('order_line.product_id', 'ilike', self)]"/>
