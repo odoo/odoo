@@ -6,7 +6,7 @@ import operator
 from odoo import api, fields, models, tools
 from odoo.addons.rating.models import rating_data
 from odoo.osv import expression
-from odoo.tools.float_utils import float_compare
+from odoo.tools.float_utils import float_compare, float_round
 
 
 class RatingMixin(models.AbstractModel):
@@ -224,17 +224,19 @@ class RatingMixin(models.AbstractModel):
         base_domain = expression.AND([self._rating_domain(), [('rating', '>=', 1)]])
         if domain:
             base_domain += domain
-        data = self.env['rating.rating'].read_group(base_domain, ['rating'], ['rating', 'res_id'])
+        rg_data = self.env['rating.rating'].read_group(base_domain, ['rating'], ['rating', 'res_id'])
         # init dict with all posible rate value, except 0 (no value for the rating)
         values = dict.fromkeys(range(1, 6), 0)
-        values.update((d['rating'], d['rating_count']) for d in data)
+        for rating_rg in rg_data:
+            rating_val_round = float_round(rating_rg['rating'], precision_digits=1)
+            values[rating_val_round] = values.get(rating_val_round, 0) + rating_rg['rating_count']
         # add other stats
         if add_stats:
             rating_number = sum(values.values())
             result = {
                 'repartition': values,
                 'avg': sum(float(key * values[key]) for key in values) / rating_number if rating_number > 0 else 0,
-                'total': sum(it['rating_count'] for it in data),
+                'total': sum(it['rating_count'] for it in rg_data),
             }
             return result
         return values
