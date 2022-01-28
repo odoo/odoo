@@ -95,7 +95,7 @@ class AccountMove(models.Model):
             :param values (dict): the values already selected for the record.
             :return list: list of ORM create commands for the field line_ids
             """
-            def get_line(account, label, balance=None, balance_sign=False, exclude_from_invoice_tab=False):
+            def get_line(account, label, balance=None, balance_sign=False, line_type=False):
                 company_currency = account.company_id.currency_id
                 currency = self.env['res.currency'].browse(currency_id)
                 balance = balance or balance_sign * round(random.uniform(0, 1000))
@@ -108,7 +108,7 @@ class AccountMove(models.Model):
                     'partner_id': partner_id,
                     'currency_id': currency_id,
                     'amount_currency': amount_currency,
-                    'exclude_from_invoice_tab': exclude_from_invoice_tab,
+                    'line_type': line_type,
                 })
             move_type = values['move_type']
             date = values['date']
@@ -149,7 +149,7 @@ class AccountMove(models.Model):
                 account=random.choice(balance_account_ids),
                 balance=sum(l[2]['credit'] - l[2]['debit'] for l in lines),
                 label='balance',
-                exclude_from_invoice_tab=move_type in self.get_invoice_types(include_receipts=True),
+                line_type=False if move_type in self.get_invoice_types(include_receipts=True) else 'invl',
             )]
 
             return lines

@@ -117,8 +117,8 @@ class TestSaleToInvoice(TestSaleCommon):
         self.assertEqual(len(self.sale_order.invoice_ids), 3, 'Invoice should be created for the SO')
 
         invoice = max(self.sale_order.invoice_ids)
-        self.assertEqual(len(invoice.invoice_line_ids.filtered(lambda l: not (l.display_type == 'line_section' and l.name == "Down Payments"))), len(self.sale_order.order_line), 'All lines should be invoiced')
-        self.assertEqual(len(invoice.invoice_line_ids.filtered(lambda l: l.display_type == 'line_section' and l.name == "Down Payments")), 1, 'A single section for downpayments should be present')
+        self.assertEqual(len(invoice.invoice_line_ids.filtered(lambda l: not (l.line_type == 'invl_section' and l.name == "Down Payments"))), len(self.sale_order.order_line), 'All lines should be invoiced')
+        self.assertEqual(len(invoice.invoice_line_ids.filtered(lambda l: l.line_type == 'invl_section' and l.name == "Down Payments")), 1, 'A single section for downpayments should be present')
         self.assertEqual(invoice.amount_total, self.sale_order.amount_total - sum(downpayment_line.mapped('price_unit')), 'Downpayment should be applied')
 
     def test_downpayment_percentage_tax_icl(self):
@@ -145,7 +145,7 @@ class TestSaleToInvoice(TestSaleCommon):
         self.assertEqual(downpayment_line.price_unit, self.sale_order.amount_total/2, 'downpayment should have the correct amount')
 
         invoice = self.sale_order.invoice_ids[0]
-        downpayment_aml = invoice.line_ids.filtered(lambda l: not (l.display_type == 'line_section' and l.name == "Down Payments"))[0]
+        downpayment_aml = invoice.line_ids.filtered(lambda l: not (l.line_type == 'invl_section' and l.name == "Down Payments"))[0]
         self.assertEqual(downpayment_aml.price_total, self.sale_order.amount_total/2, 'downpayment should have the correct amount')
         self.assertEqual(downpayment_aml.price_unit, self.sale_order.amount_total/2, 'downpayment should have the correct amount')
         invoice.action_post()
@@ -311,7 +311,7 @@ class TestSaleToInvoice(TestSaleCommon):
 
         invoice = sale_order.invoice_ids[0]
 
-        self.assertEqual(invoice.line_ids[0].display_type, 'line_section')
+        self.assertEqual(invoice.line_ids[0].line_type, 'invl_section')
 
     def test_qty_invoiced(self):
         """Verify uom rounding is correctly considered during qty_invoiced compute"""

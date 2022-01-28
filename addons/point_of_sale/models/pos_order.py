@@ -208,12 +208,12 @@ class PosOrder(models.Model):
                     'name': _('Price discount from %s -> %s',
                               float_repr(line.product_id.lst_price, self.currency_id.decimal_places),
                               float_repr(line.price_unit, self.currency_id.decimal_places)),
-                    'display_type': 'line_note',
+                    'line_type': 'invl_note',
                 }))
             if line.customer_note:
                 invoice_lines.append((0, None, {
                     'name': line.customer_note,
-                    'display_type': 'line_note',
+                    'line_type': 'invl_note',
                 }))
 
 
@@ -501,7 +501,7 @@ class PosOrder(models.Model):
         if self.config_id.cash_rounding:
             rounding_applied = float_round(self.amount_paid - self.amount_total,
                                            precision_rounding=new_move.currency_id.rounding)
-            rounding_line = new_move.line_ids.filtered(lambda line: line.is_rounding_line)
+            rounding_line = new_move.line_ids.filtered(lambda line: line.line_type in ['invl_cash_rounding', 'inv_tax_cash_rounding'])
             if rounding_line and rounding_line.debit > 0:
                 rounding_line_difference = rounding_line.debit + rounding_applied
             elif rounding_line and rounding_line.credit > 0:
@@ -533,7 +533,7 @@ class PosOrder(models.Model):
                         'currency_id': new_move.currency_id if new_move.currency_id != new_move.company_id.currency_id else False,
                         'company_id': new_move.company_id.id,
                         'company_currency_id': new_move.company_id.currency_id.id,
-                        'is_rounding_line': True,
+                        'line_type': 'invl_cash_rounding',
                         'sequence': 9999,
                         'name': new_move.invoice_cash_rounding_id.name,
                         'account_id': account_id,

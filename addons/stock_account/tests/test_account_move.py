@@ -66,7 +66,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
         self.assertAlmostEqual(self.product_A.lst_price * rate, invoice.amount_total)
         self.assertAlmostEqual(self.product_A.lst_price * rate, invoice.amount_residual)
         self.assertEqual(len(invoice.mapped("line_ids")), 4)
-        self.assertEqual(len(invoice.mapped("line_ids").filtered("is_anglo_saxon_line")), 2)
+        self.assertEqual(len(invoice.mapped("line_ids").filtered(lambda l: l.line_type == 'anglo_saxon_line')), 2)
         self.assertEqual(len(invoice.mapped("line_ids.currency_id")), 2)
 
     def test_fifo_perpetual_01_mc_01(self):
@@ -91,7 +91,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
         self.assertAlmostEqual(self.product_A.lst_price * rate, invoice.amount_total)
         self.assertAlmostEqual(self.product_A.lst_price * rate, invoice.amount_residual)
         self.assertEqual(len(invoice.mapped("line_ids")), 4)
-        self.assertEqual(len(invoice.mapped("line_ids").filtered("is_anglo_saxon_line")), 2)
+        self.assertEqual(len(invoice.mapped("line_ids").filtered(lambda l: l.line_type == 'anglo_saxon_line')), 2)
         self.assertEqual(len(invoice.mapped("line_ids.currency_id")), 2)
 
     def test_average_perpetual_01_mc_01(self):
@@ -116,5 +116,5 @@ class TestAccountMove(AccountTestInvoicingCommon):
         self.assertAlmostEqual(self.product_A.lst_price * rate, invoice.amount_total)
         self.assertAlmostEqual(self.product_A.lst_price * rate, invoice.amount_residual)
         self.assertEqual(len(invoice.mapped("line_ids")), 4)
-        self.assertEqual(len(invoice.mapped("line_ids").filtered("is_anglo_saxon_line")), 2)
+        self.assertEqual(len(invoice.mapped("line_ids").filtered(lambda l: l.line_type == 'anglo_saxon_line')), 2)
         self.assertEqual(len(invoice.mapped("line_ids.currency_id")), 2)

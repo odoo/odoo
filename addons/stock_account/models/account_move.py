@@ -15,14 +15,14 @@ class AccountMove(models.Model):
 
     def _get_lines_onchange_currency(self):
         # OVERRIDE
-        return self.line_ids.filtered(lambda l: not l.is_anglo_saxon_line)
+        return self.line_ids.filtered(lambda l: l.line_type != 'anglo_saxon_line')
 
     def _reverse_move_vals(self, default_values, cancel=True):
         # OVERRIDE
         # Don't keep anglo-saxon lines if not cancelling an existing invoice.
         move_vals = super(AccountMove, self)._reverse_move_vals(default_values, cancel=cancel)
         if not cancel:
-            move_vals['line_ids'] = [vals for vals in move_vals['line_ids'] if not vals[2]['is_anglo_saxon_line']]
+            move_vals['line_ids'] = [vals for vals in move_vals['line_ids'] if vals[2].get('line_type') != 'anglo_saxon_line']
         return move_vals
 
     def copy_data(self, default=None):
@@ -34,7 +34,7 @@ class AccountMove(models.Model):
             for copy_vals in res:
                 if 'line_ids' in copy_vals:
                     copy_vals['line_ids'] = [line_vals for line_vals in copy_vals['line_ids']
-                                             if line_vals[0] != 0 or not line_vals[2].get('is_anglo_saxon_line')]
+                                             if line_vals[0] != 0 or line_vals[2].get('type') != 'anglo_saxon_line']
 
         return res
 
@@ -59,7 +59,7 @@ class AccountMove(models.Model):
         res = super(AccountMove, self).button_draft()
 
         # Unlink the COGS lines generated during the 'post' method.
-        self.mapped('line_ids').filtered(lambda line: line.is_anglo_saxon_line).unlink()
+        self.mapped('line_ids').filtered(lambda line: line.line_type == 'anglo_saxon_line').unlink()
         return res
 
     def button_cancel(self):
@@ -69,7 +69,7 @@ class AccountMove(models.Model):
         # Unlink the COGS lines generated during the 'post' method.
         # In most cases it shouldn't be necessary since they should be unlinked with 'button_draft'.
         # However, since it can be called in RPC, better be safe.
-        self.mapped('line_ids').filtered(lambda line: line.is_anglo_saxon_line).unlink()
+        self.mapped('line_ids').filtered(lambda line: line.line_type == 'anglo_saxon_line').unlink()
         return res
 
     # -------------------------------------------------------------------------
@@ -142,8 +142,7 @@ class AccountMove(models.Model):
                     'debit': balance < 0.0 and -balance or 0.0,
                     'credit': balance > 0.0 and balance or 0.0,
                     'account_id': debit_interim_account.id,
-                    'exclude_from_invoice_tab': True,
-                    'is_anglo_saxon_line': True,
+                    'line_type': 'anglo_saxon_line',
                 })
 
                 # Add expense account line.
@@ -160,8 +159,7 @@ class AccountMove(models.Model):
                     'account_id': credit_expense_account.id,
                     'analytic_account_id': line.analytic_account_id.id,
                     'analytic_tag_ids': [(6, 0, line.analytic_tag_ids.ids)],
-                    'exclude_from_invoice_tab': True,
-                    'is_anglo_saxon_line': True,
+                    'line_type': 'anglo_saxon_line',
                 })
         return lines_vals_list
 
@@ -218,7 +216,7 @@ class AccountMove(models.Model):
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
 
-    is_anglo_saxon_line = fields.Boolean(help="Technical field used to retrieve the anglo-saxon lines.")
+    line_type = fields.Selection(selection_add=[('anglo_saxon_line', 'Anglo-saxon line')])
 
     def _get_computed_account(self):
         # OVERRIDE to use the stock input account by default on vendor bills when dealing
@@ -242,7 +240,7 @@ class AccountMoveLine(models.Model):
         self.ensure_one()
         if not self.product_id:
             return self.price_unit
-        original_line = self.move_id.reversed_entry_id.line_ids.filtered(lambda l: l.is_anglo_saxon_line
+        original_line = self.move_id.reversed_entry_id.line_ids.filtered(lambda l: l.line_type == 'anglo_saxon_line'
             and l.product_id == self.product_id and l.product_uom_id == self.product_uom_id and l.price_unit >= 0)
         original_line = original_line and original_line[0]
         return original_line.price_unit if original_line \

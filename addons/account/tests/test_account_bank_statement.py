@@ -733,12 +733,14 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
                 'credit': 0,
                 'account_id': self.bank_journal_2.default_account_id.id,
                 'move_id': st_line.move_id.id,
+                'line_type': 'bank_statement_liquidity_line',
             },
             {
                 'debit': 0,
                 'credit': 1.0,
                 'account_id': self.company_data['default_account_revenue'].id,
                 'move_id': st_line.move_id.id,
+                'line_type': 'bank_statement_suspense_line',
             },
         ]
         with self.assertRaises(UserError), self.cr.savepoint():

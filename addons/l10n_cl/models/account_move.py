@@ -135,8 +135,8 @@ class AccountMove(models.Model):
         self.ensure_one()
         include_sii = self._l10n_cl_include_sii()
 
-        base_lines = self.line_ids.filtered(lambda x: not x.display_type and not x.exclude_from_invoice_tab)
-        tax_lines = self.line_ids.filtered(lambda x: not x.display_type and x.tax_repartition_line_id)
+        base_lines = self.line_ids.filtered(lambda x: x.is_invoice_line(with_display_line_check=True))
+        tax_lines = self.line_ids.filtered(lambda x: not x.is_display_line() and x.tax_repartition_line_id)
 
         base_line_vals_list = [x._convert_to_tax_base_line_dict() for x in base_lines]
         if include_sii:

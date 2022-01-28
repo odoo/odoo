@@ -71,7 +71,7 @@ class AccountMove(models.Model):
     def _get_concept(self):
         """ Method to get the concept of the invoice considering the type of the products on the invoice """
         self.ensure_one()
-        invoice_lines = self.invoice_line_ids.filtered(lambda x: not x.display_type)
+        invoice_lines = self.invoice_line_ids.filtered(lambda x: not x.is_display_line())
         product_types = set([x.product_id.type for x in invoice_lines if x.product_id])
         consumable = set(['consu', 'product'])
         service = set(['service'])
@@ -114,7 +114,7 @@ class AccountMove(models.Model):
             # we require a single vat on each invoice line except from some purchase documents
             if inv.move_type in ['in_invoice', 'in_refund'] and inv.l10n_latam_document_type_id.purchase_aliquots == 'zero':
                 purchase_aliquots = 'zero'
-            for line in inv.mapped('invoice_line_ids').filtered(lambda x: x.display_type not in ('line_section', 'line_note')):
+            for line in inv.mapped('invoice_line_ids').filtered(lambda x: not x.is_display_line()):
                 vat_taxes = line.tax_ids.filtered(lambda x: x.tax_group_id.l10n_ar_vat_afip_code)
                 if len(vat_taxes) != 1:
                     raise UserError(_('There must be one and only one VAT tax per line. Check line "%s"', line.name))
@@ -321,8 +321,8 @@ class AccountMove(models.Model):
     def _l10n_ar_get_invoice_totals_for_report(self):
         self.ensure_one()
         include_vat = self._l10n_ar_include_vat()
-        base_lines = self.line_ids.filtered(lambda x: not x.display_type and not x.exclude_from_invoice_tab)
-        tax_lines = self.line_ids.filtered(lambda x: not x.display_type and x.tax_repartition_line_id)
+        base_lines = self.line_ids.filtered(lambda x: x.is_invoice_line(with_display_line_check=True))
+        tax_lines = self.line_ids.filtered(lambda x: not x.is_display_line() and x.tax_repartition_line_id)
 
         # Base lines.
         base_line_vals_list = [x._convert_to_tax_base_line_dict() for x in base_lines]

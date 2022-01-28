@@ -99,12 +99,6 @@ class AccountPayment(models.Model):
         domain="['|', ('parent_id','=', False), ('is_company','=', True)]",
         tracking=True,
         check_company=True)
-    outstanding_account_id = fields.Many2one(
-        comodel_name='account.account',
-        string="Outstanding Account",
-        store=True,
-        compute='_compute_outstanding_account_id',
-        check_company=True)
     destination_account_id = fields.Many2one(
         comodel_name='account.account',
         string='Destination Account',
@@ -183,24 +177,14 @@ class AccountPayment(models.Model):
         writeoff_lines = self.env['account.move.line']
 
         for line in self.move_id.line_ids:
-            if line.account_id in self._get_valid_liquidity_accounts():
+            if line.line_type == 'pay_liquidity_line':
                 liquidity_lines += line
-            elif line.account_id.internal_type in ('receivable', 'payable') or line.partner_id == line.company_id.partner_id:
+            elif line.line_type == 'pay_counterpart_line':
                 counterpart_lines += line
             else:
                 writeoff_lines += line
 
         return liquidity_lines, counterpart_lines, writeoff_lines
-
-    def _get_valid_liquidity_accounts(self):
-        return (
-            self.journal_id.default_account_id,
-            self.payment_method_line_id.payment_account_id,
-            self.journal_id.company_id.account_journal_payment_debit_account_id,
-            self.journal_id.company_id.account_journal_payment_credit_account_id,
-            self.journal_id.inbound_payment_method_line_ids.payment_account_id,
-            self.journal_id.outbound_payment_method_line_ids.payment_account_id,
-        )
 
     def _prepare_payment_display_name(self):
         '''
@@ -225,7 +209,8 @@ class AccountPayment(models.Model):
         self.ensure_one()
         write_off_line_vals = write_off_line_vals or {}
 
-        if not self.outstanding_account_id:
+        outsanding_account_id = self._get_outstanding_account_id()
+        if not outsanding_account_id:
             raise UserError(_(
                 "You can't create a new payment without an outstanding payments/receipts account set either on the company or the %s payment method in the %s journal.",
                 self.payment_method_line_id.name, self.journal_id.display_name))
@@ -289,7 +274,8 @@ class AccountPayment(models.Model):
                 'debit': liquidity_balance if liquidity_balance > 0.0 else 0.0,
                 'credit': -liquidity_balance if liquidity_balance < 0.0 else 0.0,
                 'partner_id': self.partner_id.id,
-                'account_id': self.outstanding_account_id.id,
+                'account_id': outsanding_account_id.id,
+                'line_type': 'pay_liquidity_line',
             },
             # Receivable / Payable.
             {
@@ -301,6 +287,7 @@ class AccountPayment(models.Model):
                 'credit': -counterpart_balance if counterpart_balance < 0.0 else 0.0,
                 'partner_id': self.partner_id.id,
                 'account_id': self.destination_account_id.id,
+                'line_type': 'pay_counterpart_line',
             },
         ]
         if not self.currency_id.is_zero(write_off_amount_currency):
@@ -468,17 +455,14 @@ class AccountPayment(models.Model):
             else:
                 pay.partner_id = pay.partner_id
 
-    @api.depends('journal_id', 'payment_type', 'payment_method_line_id')
-    def _compute_outstanding_account_id(self):
-        for pay in self:
-            if pay.payment_type == 'inbound':
-                pay.outstanding_account_id = (pay.payment_method_line_id.payment_account_id
-                                              or pay.journal_id.company_id.account_journal_payment_debit_account_id)
-            elif pay.payment_type == 'outbound':
-                pay.outstanding_account_id = (pay.payment_method_line_id.payment_account_id
-                                              or pay.journal_id.company_id.account_journal_payment_credit_account_id)
-            else:
-                pay.outstanding_account_id = False
+    def _get_outstanding_account_id(self):
+        self.ensure_one()
+        if self.payment_type == 'inbound':
+            return self.payment_method_line_id.payment_account_id or self.journal_id.company_id.account_journal_payment_debit_account_id
+        elif self.payment_type == 'outbound':
+            return self.payment_method_line_id.payment_account_id or self.journal_id.company_id.account_journal_payment_credit_account_id
+        else:
+            return False
 
     @api.depends('journal_id', 'partner_id', 'partner_type', 'is_internal_transfer')
     def _compute_destination_account_id(self):
@@ -590,6 +574,10 @@ class AccountPayment(models.Model):
                 pay.reconciled_bill_ids += self.env['account.move'].browse(res.get('invoice_ids', []))
                 pay.reconciled_bills_count = len(res.get('invoice_ids', []))
 
+        outstanding_account_ids = []
+        for pay in self:
+            outstanding_account_ids.append(pay._get_outstanding_account_id().id)
+
         self._cr.execute('''
             SELECT
                 payment.id,
@@ -607,13 +595,14 @@ class AccountPayment(models.Model):
                 part.debit_move_id = counterpart_line.id
                 OR
                 part.credit_move_id = counterpart_line.id
-            WHERE account.id = payment.outstanding_account_id
+            WHERE account.id IN %(outstanding_account_ids)s
                 AND payment.id IN %(payment_ids)s
                 AND line.id != counterpart_line.id
                 AND counterpart_line.statement_id IS NOT NULL
             GROUP BY payment.id
         ''', {
-            'payment_ids': tuple(stored_payments.ids)
+            'payment_ids': tuple(stored_payments.ids),
+            'outstanding_account_ids': tuple(outstanding_account_ids),
         })
         query_res = dict((payment_id, statement_ids) for payment_id, statement_ids in self._cr.fetchall())
 

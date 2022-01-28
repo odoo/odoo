@@ -408,7 +408,7 @@ class TestSaleOrder(TestSaleCommon):
         invoice = self.sale_order._create_invoices()
 
         # check note from SO has been pushed in invoice
-        self.assertEqual(len(invoice.invoice_line_ids.filtered(lambda line: line.display_type == 'line_note')), 1, 'Note SO line should have been pushed to the invoice')
+        self.assertEqual(len(invoice.invoice_line_ids.filtered(lambda line: line.line_type == 'invl_note')), 1, 'Note SO line should have been pushed to the invoice')
 
     def test_multi_currency_discount(self):
         """Verify the currency used for pricelist price & discount computation."""

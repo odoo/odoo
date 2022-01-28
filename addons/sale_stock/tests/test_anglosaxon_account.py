@@ -29,7 +29,7 @@ class TestAngloSaxonAccounting(TestValuationReconciliation):
         company_a_invoice.with_context(allowed_company_ids=companies_with_b_first.ids).action_post()
 
         # check cost used for anglo_saxon_line is from company A
-        anglo_saxon_lines = company_a_invoice.line_ids.filtered('is_anglo_saxon_line')
+        anglo_saxon_lines = company_a_invoice.line_ids.filtered(lambda l: l.line_type == 'anglo_saxon_line')
         self.assertRecordValues(anglo_saxon_lines, [
             {'debit': 0.0, 'credit': company_a_standard_price},
             {'debit': company_a_standard_price, 'credit': 0.0},

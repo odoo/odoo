@@ -676,8 +676,8 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
         self.invoice = move_form.save()
         self.invoice.action_post()
         aml = self.invoice.line_ids
-        aml_expense = aml.filtered(lambda l: l.is_anglo_saxon_line and l.debit > 0)
-        aml_output = aml.filtered(lambda l: l.is_anglo_saxon_line and l.credit > 0)
+        aml_expense = aml.filtered(lambda l: l.line_type == 'anglo_saxon_line' and l.debit > 0)
+        aml_output = aml.filtered(lambda l: l.line_type == 'anglo_saxon_line' and l.credit > 0)
         # Check that the cost of Good Sold entries are equal to 2* (2 * 20 + 1 * 10) = 100
         self.assertEqual(aml_expense.debit, 100, "Cost of Good Sold entry missing or mismatching")
         self.assertEqual(aml_output.credit, 100, "Cost of Good Sold entry missing or mismatching")
@@ -1747,8 +1747,8 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
 
         def check_cogs_entry_values(invoice, expected_value):
             aml = invoice.line_ids
-            aml_expense = aml.filtered(lambda l: l.is_anglo_saxon_line and l.debit > 0)
-            aml_output = aml.filtered(lambda l: l.is_anglo_saxon_line and l.credit > 0)
+            aml_expense = aml.filtered(lambda l: l.line_type == 'anglo_saxon_line' and l.debit > 0)
+            aml_output = aml.filtered(lambda l: l.line_type == 'anglo_saxon_line' and l.credit > 0)
             self.assertEqual(aml_expense.debit, expected_value, "Cost of Good Sold entry missing or mismatching for variant")
             self.assertEqual(aml_output.credit, expected_value, "Cost of Good Sold entry missing or mismatching for variant")
 

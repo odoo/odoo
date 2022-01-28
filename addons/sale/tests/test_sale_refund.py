@@ -346,8 +346,8 @@ class TestSaleToInvoice(TestSaleCommon):
         payment.create_invoices()
 
         so_invoice = max(sale_order_refund.invoice_ids)
-        self.assertEqual(len(so_invoice.invoice_line_ids.filtered(lambda l: not (l.display_type == 'line_section' and l.name == "Down Payments"))), len(sale_order_refund.order_line), 'All lines should be invoiced')
-        self.assertEqual(len(so_invoice.invoice_line_ids.filtered(lambda l: l.display_type == 'line_section' and l.name == "Down Payments")), 1, 'A single section for downpayments should be present')
+        self.assertEqual(len(so_invoice.invoice_line_ids.filtered(lambda l: not (l.line_type == 'invl_section' and l.name == "Down Payments"))), len(sale_order_refund.order_line), 'All lines should be invoiced')
+        self.assertEqual(len(so_invoice.invoice_line_ids.filtered(lambda l: l.line_type == 'invl_section' and l.name == "Down Payments")), 1, 'A single section for downpayments should be present')
         self.assertEqual(so_invoice.amount_total, sale_order_refund.amount_total - sol_downpayment.price_unit, 'Downpayment should be applied')
         so_invoice.action_post()
 

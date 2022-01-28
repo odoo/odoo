@@ -510,7 +510,11 @@ class TestAccountMove(AccountTestInvoicingCommon):
             'invoice_date': fields.Date.from_string('2019-01-01'),
             'currency_id': self.currency_data['currency'].id,
             'invoice_payment_term_id': self.pay_terms_a.id,
-            'invoice_line_ids': [{}]
+            'invoice_line_ids': [(0, 0, {
+                'name': 'Product',
+                'quantity': 26,
+                'price_unit': 2391.0,
+            })]
         })
 
         move.currency_id.active = False

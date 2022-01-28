@@ -1326,8 +1326,8 @@ class PurchaseOrderLine(models.Model):
         self.ensure_one()
         aml_currency = move and move.currency_id or self.currency_id
         date = move and move.date or fields.Date.today()
+        display_type_map = {'line_section': 'invl_section', 'line_note': 'invl_note'}
         res = {
-            'display_type': self.display_type,
             'sequence': self.sequence,
             'name': '%s: %s' % (self.order_id.name, self.name),
             'product_id': self.product_id.id,
@@ -1338,6 +1338,7 @@ class PurchaseOrderLine(models.Model):
             'analytic_account_id': self.account_analytic_id.id,
             'analytic_tag_ids': [(6, 0, self.analytic_tag_ids.ids)],
             'purchase_line_id': self.id,
+            'line_type': display_type_map.get(self.display_type, 'invl'),
         }
         if not move:
             return res

@@ -114,7 +114,7 @@ class AccountEdiFormat(models.Model):
 
         # <2.2.1>
         for invoice_line in invoice.invoice_line_ids:
-            if not invoice_line.display_type and len(invoice_line.tax_ids) != 1:
+            if not invoice_line.is_display_line() and len(invoice_line.tax_ids) != 1:
                 raise UserError(_("You must select one and only one tax by line."))
 
         if any(line.quantity < 0 for line in invoice.invoice_line_ids):

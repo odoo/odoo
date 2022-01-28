@@ -655,7 +655,7 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
                 'currency_id': expense.currency_id.id,
                 'expense_id': expense.id,
                 'partner_id': partner_id,
-                'exclude_from_invoice_tab': True,
+                'line_type': False,
             }
             move_line_values.append(move_line_dst)
 

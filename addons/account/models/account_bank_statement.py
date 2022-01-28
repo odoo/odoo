@@ -567,9 +567,9 @@ class AccountBankStatementLine(models.Model):
         other_lines = self.env['account.move.line']
 
         for line in self.move_id.line_ids:
-            if line.account_id == self.journal_id.default_account_id:
+            if line.line_type == 'bank_statement_liquidity_line':
                 liquidity_lines += line
-            elif line.account_id == self.journal_id.suspense_account_id:
+            elif line.line_type == 'bank_statement_suspense_line':
                 suspense_lines += line
             else:
                 other_lines += line
@@ -618,6 +618,7 @@ class AccountBankStatementLine(models.Model):
             'debit': balance > 0 and balance or 0.0,
             'credit': balance < 0 and -balance or 0.0,
             'amount_currency': amount_currency,
+            'line_type': 'bank_statement_liquidity_line',
         }
 
     @api.model
@@ -732,8 +733,10 @@ class AccountBankStatementLine(models.Model):
         '''
         self.ensure_one()
 
+        line_type = False
         if not counterpart_account_id:
             counterpart_account_id = self.journal_id.suspense_account_id.id
+            line_type = 'bank_statement_suspense_line'
 
         if not counterpart_account_id:
             raise UserError(_(
@@ -752,6 +755,7 @@ class AccountBankStatementLine(models.Model):
             'name': self.payment_ref,
             'account_id': counterpart_account_id,
             'amount_residual': liquidity_line_vals['debit'] - liquidity_line_vals['credit'],
+            'line_type': line_type,
         }
 
         if self.foreign_currency_id and self.foreign_currency_id != self.company_currency_id:
