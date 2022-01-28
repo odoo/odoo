@@ -19,7 +19,7 @@
         <field name="inherit_id" ref="project.edit_project"/>
         <field name="arch" type="xml">
             <div class="oe_button_box" position="inside">
-                <button class="d-none d-md-inline oe_stat_button" 
+                <button class="oe_stat_button"
                     type="object" name="action_view_so" icon="fa-dollar" 
                     attrs="{'invisible': [('sale_order_id', '=', False)]}" 
                     groups="sales_team.group_sale_salesman"
