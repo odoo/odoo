@@ -3,41 +3,42 @@
 
   <t t-name="web.CommandPalette" owl="1">
     <div>
-      <div class="o_command_palette_search">
-        <span t-if="state.namespace !== 'default'" class="o_namespace" t-esc="state.namespace"/>
-        <input type="text" t-att-value="state.searchValue"  t-ref="autofocus" t-att-placeholder="state.placeholder" t-on-input="onSearchInput" t-on-keydown="onKeyDown"/>
-        <i  t-att-title="state.placeholder" role="img"  t-att-aria-label="state.placeholder" class="fa fa-search"></i>
+      <div class="o_command_palette_search input-group mb-2 px-4 py-3 border-bottom">
+        <span t-if="state.namespace !== 'default'" class="o_namespace d-flex align-items-center mr-1" t-out="state.namespace"/>
+        <input class="form-control border-0 p-0" type="text" t-att-value="state.searchValue" t-ref="autofocus" t-att-placeholder="state.placeholder" t-on-input="onSearchInput" t-on-keydown="onKeyDown"/>
+        <span class="input-group-append">
+          <div class="input-group-text border-0 bg-transparent">
+              <i t-att-title="state.placeholder" role="img"  t-att-aria-label="state.placeholder" class="oi oi-search"/>
+          </div>
+        </span>
       </div>
 
-      <div t-ref="listbox" class="o_command_palette_listbox o_cursor_default">
-        <div t-if="!state.commands.length" class="o_command_palette_listbox_empty" t-esc="state.emptyMessage"/>
-        <t t-if="!isFuzzySearch">
-          <t t-foreach="commandsByCategory" t-as="category" t-key="category.keyId">
-            <div class="o_command_category">
-              <t t-foreach="category.commands" t-as="command"  t-key="command.keyId">
-                <t t-set="commandIndex" t-value="state.commands.indexOf(command)" />
-                <div t-attf-id="o_command_{{commandIndex}}" class="o_command" t-att-class="{ focused: state.selectedCommand === command }" t-on-click="() => this.onCommandClicked(commandIndex)" t-on-mouseenter="() => this.onCommandMouseEnter(commandIndex)" t-on-close="() => this.props.closeMe()">
-                  <t t-component="command.Component || DefaultCommandItem" name="command.name" searchValue="state.searchValue" t-props="command.props" executeCommand="() => this.executeCommand(command)">
-                    <t t-set-slot="name">
-                        <span class="o_command_name">
-                          <t t-foreach="command.splitName" t-as="name" t-key="name_index">
-                            <b t-if="name_index % 2" t-esc="name"/>
-                            <t t-else="" t-esc="name"/>
-                          </t>
-                        </span>
-                    </t>
+      <div t-ref="listbox" class="o_command_palette_listbox position-relative overflow-auto">
+        <div t-if="!state.commands.length" class="o_command_palette_listbox_empty px-4 py-3 font-italic" t-out="state.emptyMessage"/>
+        <t t-if="!isFuzzySearch" t-foreach="commandsByCategory" t-as="category" t-key="category.keyId">
+          <div class="o_command_category px-0">
+            <t t-foreach="category.commands" t-as="command" t-key="command.keyId">
+              <t t-set="commandIndex" t-value="state.commands.indexOf(command)"/>
+              <div t-attf-id="o_command_{{commandIndex}}" class="o_command" t-att-class="{ focused: state.selectedCommand === command }" t-on-click="() => this.onCommandClicked(commandIndex)" t-on-mouseenter="() => this.onCommandMouseEnter(commandIndex)" t-on-close="() => this.props.closeMe()">
+                <t t-component="command.Component || DefaultCommandItem" name="command.name" searchValue="state.searchValue" t-props="command.props" executeCommand="() => this.executeCommand(command)">
+                  <t t-set-slot="name">
+                    <span class="o_command_name">
+                      <t t-foreach="command.splitName" t-as="name" t-key="name_index">
+                        <b t-if="name_index % 2" t-out="name" class="text-primary"/>
+                        <t t-else="" t-out="name"/>
+                      </t>
+                    </span>
                   </t>
-                </div>
-              </t>
-            </div>
+                </t>
+              </div>
+            </t>
+          </div>
 
-            <hr t-if="!category_last" />
-
-          </t>
+          <hr class="my-2 mx-0" t-if="!category_last" />
         </t>
       </div>
 
-      <div t-if="state.FooterComponent" class="o_command_palette_footer">
+      <div t-if="state.FooterComponent" class="o_command_palette_footer mt-2 px-4 py-2 border-top bg-100 text-muted">
         <t t-component="state.FooterComponent" switchNamespace="(namespace) => this.debounceSearch(namespace.concat(this.state.searchValue))"/>
       </div>
 
