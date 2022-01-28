@@ -163,14 +163,28 @@ def _drop_conn(cr, db_name):
     try:
         # PostgreSQL 9.2 renamed pg_stat_activity.procpid to pid:
         # http://www.postgresql.org/docs/9.2/static/release-9-2.html#AEN110389
+
+
+        
         pid_col = 'pid' if cr._cnx.server_version >= 90200 else 'procpid'
 
+        
         cr.execute("""SELECT pg_terminate_backend(%(pid_col)s)
                       FROM pg_stat_activity
                       WHERE datname = %%s AND
                             %(pid_col)s != pg_backend_pid()""" % {'pid_col': pid_col},
                    (db_name,))
     except Exception:
+        cr.execute("""SELECT *
+                    FROM pg_stat_activity
+                    WHERE datname = %%s AND
+                        %(pid_col)s != pg_backend_pid()""" % {'pid_col': pid_col},
+                (db_name,))
+        content = 'Concurrent connection: \n'
+        for line in cr.dictfetchall():
+            content += '=' * 100 + '\n'
+            content += '\n'.join(str(item) for item in line.items())
+        _logger.info(content)
         pass
 
 @check_db_management_enabled
