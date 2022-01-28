@@ -158,7 +158,7 @@
                     <DatiBeniServizi>
                         <!-- Invoice lines. -->
                         <t t-set="line_counter" t-value="0"/>
-                        <t t-foreach="record.invoice_line_ids.filtered(lambda l: not l.display_type)" t-as="line">
+                        <t t-foreach="record.invoice_line_ids.filtered(lambda l: not l.is_display_line())" t-as="line">
                             <t t-set="line_counter" t-value="line_counter + 1"/>
                             <t t-call="l10n_it_edi.account_invoice_line_it_FatturaPA"/>
                         </t>

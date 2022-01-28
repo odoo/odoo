@@ -130,7 +130,7 @@ class AccountInvoiceReport(models.Model):
         return '''
             WHERE move.move_type IN ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')
                 AND line.account_id IS NOT NULL
-                AND NOT line.exclude_from_invoice_tab
+                AND COALESCE(line.line_type, 'false') LIKE 'invoice_line%%'
         '''
 
 

@@ -1288,7 +1288,7 @@ class SaleOrder(models.Model):
         :param optional_values: any parameter that should be added to the returned down payment section
         """
         down_payments_section_line = {
-            'display_type': 'line_section',
+            'line_type': 'invoice_line_section',
             'name': _('Down Payments'),
             'product_id': False,
             'product_uom_id': False,

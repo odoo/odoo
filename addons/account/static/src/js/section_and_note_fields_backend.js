@@ -12,6 +12,18 @@ var fieldRegistry = require('web.field_registry');
 var ListFieldText = require('web.basic_fields').ListFieldText;
 var ListRenderer = require('web.ListRenderer');
 
+function IsSection(record) {
+    return record.data.line_type === 'invoice_line_section' || record.data.display_type === 'line_section';
+}
+
+function IsNote(record) {
+    return record.data.line_type === 'invoice_line_note' || record.data.display_type === 'line_note';
+}
+
+function GetClass(record) {
+    return IsSection(record) ? 'line_section' : IsNote(record) ? 'line_note' : '';
+}
+
 var SectionAndNoteListRenderer = ListRenderer.extend({
     /**
      * We want section and note to take the whole line (except handle and trash)
@@ -22,10 +34,7 @@ var SectionAndNoteListRenderer = ListRenderer.extend({
     _renderBodyCell: function (record, node, index, options) {
         var $cell = this._super.apply(this, arguments);
 
-        var isSection = record.data.display_type === 'line_section';
-        var isNote = record.data.display_type === 'line_note';
-
-        if (isSection || isNote) {
+        if (IsSection(record) || IsNote(record)) {
             if (node.attrs.widget === "handle") {
                 return $cell;
             } else if (node.attrs.name === "name") {
@@ -46,15 +55,14 @@ var SectionAndNoteListRenderer = ListRenderer.extend({
         return $cell;
     },
     /**
-     * We add the o_is_{display_type} class to allow custom behaviour both in JS and CSS.
+     * We add the o_is_{line_type} class to allow custom behaviour both in JS and CSS.
      *
      * @override
      */
     _renderRow: function (record, index) {
         var $row = this._super.apply(this, arguments);
-
-        if (record.data.display_type) {
-            $row.addClass('o_is_' + record.data.display_type);
+        if (IsSection(record) || IsNote(record)) {
+            $row.addClass('o_is_' + GetClass(record));
         }
 
         return $row;
@@ -94,8 +102,7 @@ var SectionAndNoteFieldOne2Many = FieldOne2Many.extend({
 // We want a FieldChar for section,
 // and a FieldText for the rest (product and note).
 var SectionAndNoteFieldText = function (parent, name, record, options) {
-    var isSection = record.data.display_type === 'line_section';
-    var Constructor = isSection ? FieldChar : ListFieldText;
+    var Constructor = IsSection(record) ? FieldChar : ListFieldText;
     return new Constructor(parent, name, record, options);
 };
 

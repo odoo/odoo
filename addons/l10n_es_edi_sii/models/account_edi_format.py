@@ -95,7 +95,7 @@ class AccountEdiFormat(models.Model):
         # on the same invoice, this can be deduced globally.
 
         recargo_tax_details = {} # Mapping between main tax and recargo tax details
-        invoice_lines = invoice.invoice_line_ids.filtered(lambda x: not x.display_type)
+        invoice_lines = invoice.invoice_line_ids.filtered(lambda x: not x.is_display_line())
         if filter_invl_to_apply:
             invoice_lines = invoice_lines.filtered(filter_invl_to_apply)
         for line in invoice_lines:
@@ -597,7 +597,7 @@ class AccountEdiFormat(models.Model):
 
         if not move.company_id.vat:
             res.append(_("VAT number is missing on company %s", move.company_id.display_name))
-        for line in move.invoice_line_ids.filtered(lambda line: not line.display_type):
+        for line in move.invoice_line_ids.filtered(lambda line: not line.is_display_line()):
             taxes = line.tax_ids.flatten_taxes_hierarchy()
             recargo_count = taxes.mapped('l10n_es_type').count('recargo')
             retention_count = taxes.mapped('l10n_es_type').count('retencion')

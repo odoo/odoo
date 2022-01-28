@@ -1039,7 +1039,7 @@ class TestAngloSaxonAccounting(TestStockValuationCommon):
                 line.quantity = 1
         reverse_invoice.action_post()
 
-        anglo_lines = reverse_invoice.line_ids.filtered(lambda l: l.is_anglo_saxon_line)
+        anglo_lines = reverse_invoice.line_ids.filtered(lambda l: l.line_type == 'invoice_anglo_saxon')
         self.assertEqual(len(anglo_lines), 2)
         self.assertEqual(abs(anglo_lines[0].balance), 10)
         self.assertEqual(abs(anglo_lines[1].balance), 10)

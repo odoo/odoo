@@ -3278,7 +3278,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                     'tax_ids': [(6, 0, self.product_a.taxes_id.ids)],
                 }),
                 (0, 0, {
-                    'display_type': 'line_note',
+                    'line_type': 'invoice_line_note',
                     'name': 'This is a note',
                     'account_id': False,
                 }),

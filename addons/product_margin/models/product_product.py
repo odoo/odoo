@@ -105,7 +105,7 @@ class ProductProduct(models.Model):
             company_id = self.env.context['force_company']
         else:
             company_id = self.env.company.id
-        self.env['account.move.line'].flush(['price_unit', 'quantity', 'balance', 'product_id', 'display_type'])
+        self.env['account.move.line'].flush(['price_unit', 'quantity', 'balance', 'product_id', 'line_type'])
         self.env['account.move'].flush(['state', 'payment_state', 'move_type', 'invoice_date', 'company_id'])
         self.env['product.template'].flush(['list_price'])
         sqlstr = """
@@ -134,8 +134,8 @@ class ProductProduct(models.Model):
                 AND i.move_type IN %s
                 AND i.invoice_date BETWEEN %s AND  %s
                 AND i.company_id = %s
-                AND l.display_type IS NULL
-                AND l.exclude_from_invoice_tab = false
+                AND COALESCE(l.line_type, 'false') LIKE 'invoice_line%%' 
+                AND COALESCE(l.line_type, 'false') NOT IN ('invoice_line_section', 'invoice_line_note')
                 GROUP BY l.product_id
                 """.format(self.env['res.currency']._select_companies_rates())
         invoice_types = ('out_invoice', 'out_refund')

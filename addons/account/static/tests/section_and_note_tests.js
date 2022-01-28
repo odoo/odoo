@@ -23,10 +23,10 @@ QUnit.module('section_and_note', {
             },
             invoice_line: {
                 fields: {
-                    display_type: {
+                    line_type: {
                         string: 'Type',
                         type: 'selection',
-                        selection: [['line_section', "Section"], ['line_note', "Note"]]
+                        selection: [['invoice_line', 'Invoice line'], ['invoice_line_cash_rounding', 'Cash rounding line'], ['invoice_line_section', 'Section line'], ['invoice_line_note', 'Note line'], ['invoice_cash_rounding', 'Tax cash rounding line']]
                     },
                     invoice_id: {
                         string: "Invoice",
@@ -39,8 +39,8 @@ QUnit.module('section_and_note', {
                     },
                 },
                 records: [
-                    {id: 1, display_type: false, invoice_id: 1, name: 'product\n2 lines'},
-                    {id: 2, display_type: 'line_section', invoice_id: 1, name: 'section'},
+                    {id: 1, line_type: 'invoice_line', invoice_id: 1, name: 'product\n2 lines'},
+                    {id: 2, line_type: 'invoice_line_section', invoice_id: 1, name: 'section'},
                 ]
             },
         };
@@ -57,7 +57,7 @@ QUnit.module('section_and_note', {
                 '</form>',
             archs: {
                 'invoice_line,false,list': '<tree editable="bottom">' +
-                    '<field name="display_type" invisible="1"/>' +
+                    '<field name="line_type" invisible="1"/>' +
                     '<field name="name" widget="section_and_note_text"/>' +
                 '</tree>',
             },
