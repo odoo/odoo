@@ -1400,7 +1400,9 @@ class UsersView(models.Model):
         return res
 
     @api.model
-    def new(self, values={}, origin=None, ref=None):
+    def new(self, values=None, origin=None, ref=None):
+        if values is None:
+            values = {}
         values = self._remove_reified_groups(values)
         user = super().new(values=values, origin=origin, ref=ref)
         group_multi_company = self.env.ref('base.group_multi_company', False)
