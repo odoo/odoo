@@ -2226,19 +2226,7 @@ class MailThread(models.AbstractModel):
             _logger.warning('QWeb template %s not found when sending notification emails. Sending without layouting.' % (template_xmlid))
             base_template = False
 
-        mail_subject = message.subject or (message.record_name and 'Re: %s' % message.record_name) # in cache, no queries
-        # Replace new lines by spaces to conform to email headers requirements
-        mail_subject = ' '.join((mail_subject or '').splitlines())
-        # prepare notification mail values
-        base_mail_values = {
-            'mail_message_id': message.id,
-            'mail_server_id': message.mail_server_id.id, # 2 query, check acces + read, may be useless, Falsy, when will it be used?
-            'auto_delete': mail_auto_delete,
-            # due to ir.rule, user have no right to access parent message if message is not published
-            'references': message.parent_id.sudo().message_id if message.parent_id else False,
-            'subject': mail_subject,
-        }
-        base_mail_values = self._notify_by_email_add_mail_values(base_mail_values)
+        base_mail_values = self._notify_by_email_get_base_mail_values(message, additional_values={'auto_delete': mail_auto_delete})
 
         # Clean the context to get rid of residual default_* keys that could cause issues during
         # the mail.mail creation.
@@ -2268,22 +2256,15 @@ class MailThread(models.AbstractModel):
 
             # create email
             for recipients_ids_chunk in split_every(recipients_max, recipients_ids):
-                recipient_values = self._notify_by_email_get_recipients_values(recipients_ids_chunk)
-                email_to = recipient_values['email_to']
-                recipient_ids = recipient_values['recipient_ids']
+                mail_values = self._notify_by_email_get_final_mail_values(
+                    recipients_ids_chunk,
+                    base_mail_values,
+                    additional_values={'body_html': mail_body}
+                )
+                new_email = SafeMail.create(mail_values)
 
-                create_values = {
-                    'body_html': mail_body,
-                    'subject': mail_subject,
-                    'recipient_ids': [Command.link(pid) for pid in recipient_ids],
-                }
-                if email_to:
-                    create_values['email_to'] = email_to
-                create_values.update(base_mail_values)  # mail_message_id, mail_server_id, auto_delete, references, headers
-                email = SafeMail.create(create_values)
-
-                if email and recipient_ids:
-                    tocreate_recipient_ids = list(recipient_ids)
+                if new_email and recipients_ids_chunk:
+                    tocreate_recipient_ids = list(recipients_ids_chunk)
                     if check_existing:
                         existing_notifications = self.env['mail.notification'].sudo().search([
                             ('mail_message_id', '=', message.id),
@@ -2291,20 +2272,20 @@ class MailThread(models.AbstractModel):
                             ('res_partner_id', 'in', tocreate_recipient_ids)
                         ])
                         if existing_notifications:
-                            tocreate_recipient_ids = [rid for rid in recipient_ids if rid not in existing_notifications.mapped('res_partner_id.id')]
+                            tocreate_recipient_ids = [rid for rid in recipients_ids_chunk if rid not in existing_notifications.mapped('res_partner_id.id')]
                             existing_notifications.write({
                                 'notification_status': 'ready',
-                                'mail_mail_id': email.id,
+                                'mail_mail_id': new_email.id,
                             })
                     notif_create_values += [{
                         'mail_message_id': message.id,
                         'res_partner_id': recipient_id,
                         'notification_type': 'email',
-                        'mail_mail_id': email.id,
+                        'mail_mail_id': new_email.id,
                         'is_read': True,  # discard Inbox notification
                         'notification_status': 'ready',
                     } for recipient_id in tocreate_recipient_ids]
-                emails |= email
+                emails |= new_email
 
         if notif_create_values:
             SafeNotification.create(notif_create_values)
@@ -2414,7 +2395,7 @@ class MailThread(models.AbstractModel):
             'lang': lang,
         }
 
-    def _notify_by_email_add_mail_values(self, base_mail_values):
+    def _notify_by_email_get_base_mail_values(self, message, additional_values=None):
         """ Add model-specific values to the dictionary used to create the
         notification email. Its base behavior is to compute model-specific
         headers.
@@ -2422,22 +2403,37 @@ class MailThread(models.AbstractModel):
         :param dict base_mail_values: base mail.mail values, holding message
         to notify (mail_message_id and its fields), server, references, subject.
         """
+        mail_subject = message.subject or (message.record_name and 'Re: %s' % message.record_name) # in cache, no queries
+        # Replace new lines by spaces to conform to email headers requirements
+        mail_subject = ' '.join((mail_subject or '').splitlines())
+        # prepare notification mail values
+        base_mail_values = {
+            'mail_message_id': message.id,
+            'mail_server_id': message.mail_server_id.id, # 2 query, check acces + read, may be useless, Falsy, when will it be used?
+            # due to ir.rule, user have no right to access parent message if message is not published
+            'references': message.parent_id.sudo().message_id if message.parent_id else False,
+            'subject': mail_subject,
+        }
+        if additional_values:
+            base_mail_values.update(additional_values)
+
         headers = self._notify_by_email_get_headers()
         if headers:
             base_mail_values['headers'] = repr(headers)
         return base_mail_values
 
-    def _notify_by_email_get_recipients_values(self, recipient_ids):
+    def _notify_by_email_get_final_mail_values(self, recipient_ids, base_mail_values, additional_values=None):
         """ Format email notification recipient values to store on the notification
         mail.mail. Basic method just set the recipient partners as mail_mail
         recipients. Override to generate other mail values like email_to or
         email_cc.
         :param recipient_ids: res.partner recordset to notify
         """
-        return {
-            'email_to': False,
-            'recipient_ids': recipient_ids,
-        }
+        final_mail_values = dict(base_mail_values)
+        final_mail_values['recipient_ids'] = [Command.link(pid) for pid in recipient_ids]
+        if additional_values:
+            final_mail_values.update(additional_values)
+        return final_mail_values
 
     def _notify_get_recipients(self, message, msg_vals):
         """ Compute recipients to notify based on subtype and followers. This
