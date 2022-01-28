@@ -10,6 +10,8 @@
                      <field name="question_ids" class="w-100">
                          <tree sample="1">
                              <field name="title"/>
+                             <field name="is_mandatory_answer"/>
+                             <field name="once_per_order"/>
                              <field name="question_type" />
                              <field name="answer_ids" widget = "many2many_tags"/>
                          </tree>
@@ -31,6 +33,7 @@
                             <tree>
                                 <field name="sequence" widget="handle" />
                                 <field name="title"/>
+                                <field name="is_mandatory_answer"/>
                                 <field name="once_per_order"/>
                                 <field name="question_type" string="Type" />
                                 <field name="answer_ids" widget="many2many_tags"
@@ -43,13 +46,13 @@
                             <form string="Question">
                                 <sheet>
                                     <h1><field name="title" placeholder='e.g. "Do you have any diet restrictions?"' /></h1>
-                                    <group class="mb-0">
-                                        <group class="mb-0">
-                                            <div colspan="2">
-                                                <field name="once_per_order"/>
-                                                <label for="once_per_order"/>
-                                            </div>
-                                            <field name="question_type" widget="radio" options="{'horizontal': true}" />
+                                    <group>
+                                        <group>
+                                            <field name="is_mandatory_answer"/>
+                                            <field name="question_type" widget="radio" options="{'horizontal': true}"/>
+                                        </group>
+                                        <group>
+                                            <field name="once_per_order"/>
                                         </group>
                                     </group>
                                     <notebook attrs="{'invisible': [('question_type', '!=', 'simple_choice')]}">
