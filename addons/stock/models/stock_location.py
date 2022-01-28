@@ -69,7 +69,17 @@ class Location(models.Model):
         help='Let this field empty if this location is shared between companies')
     scrap_location = fields.Boolean('Is a Scrap Location?', default=False, help='Check this box to allow using this location to put scrapped/damaged goods.')
     return_location = fields.Boolean('Is a Return Location?', help='Check this box to allow using this location as a return location.')
-    removal_strategy_id = fields.Many2one('product.removal', 'Removal Strategy', help="Defines the default method used for suggesting the exact location (shelf) where to take the products from, which lot etc. for this location. This method can be enforced at the product category level, and a fallback is made on the parent locations if none is set here.")
+    removal_strategy_id = fields.Many2one(
+        'product.removal', 'Removal Strategy',
+        help="Defines the default method used for suggesting the exact location (shelf) "
+             "where to take the products from, which lot etc. for this location. "
+             "This method can be enforced at the product category level, "
+             "and a fallback is made on the parent locations if none is set here.\n\n"
+             "FIFO: products/lots that were stocked first will be moved out first.\n"
+             "LIFO: products/lots that were stocked last will be moved out first.\n"
+             "Closet location: products/lots closest to the target location will be moved out first.\n"
+             "FEFO: products/lots with the closest removal date will be moved out first "
+             "(the availability of this method depends on the \"Expiration Dates\" setting).")
     putaway_rule_ids = fields.One2many('stock.putaway.rule', 'location_in_id', 'Putaway Rules')
     barcode = fields.Char('Barcode', copy=False)
     quant_ids = fields.One2many('stock.quant', 'location_id')
