@@ -11,7 +11,7 @@ import requests
 
 import odoo
 from odoo import http
-from odoo.tests.common import BaseCase, HttpCase, tagged, _wait_remaining_requests
+from odoo.tests.common import BaseCase, HttpCase, tagged, wait_remaining_requests
 from odoo.tools import config, mute_logger
 
 
@@ -91,6 +91,7 @@ class TestDatabaseOperations(BaseCase):
         self.assertDbs([test_db_name])
 
         # delete the created database
+        wait_remaining_requests(_logger)  # wait for all remaining requests before droping to avoid error on _drop_conn
         res = self.session.post(self.url('/web/database/drop'), data={
             'master_pwd': self.password,
             'name': test_db_name,
@@ -101,6 +102,7 @@ class TestDatabaseOperations(BaseCase):
 
     def test_database_duplicate(self):
         # duplicate this database
+        wait_remaining_requests(_logger)  # wait for all remaining requests before duplicate to avoid error on _drop_conn
         test_db_name = self.db_name + '-test-database-duplicate'
         self.assertNotIn(test_db_name, self.list_dbs_filtered())
         res = self.session.post(self.url('/web/database/duplicate'), data={
@@ -129,6 +131,7 @@ class TestDatabaseOperations(BaseCase):
         self.assertTrue(session['uid'])
 
         # delete the created database
+        wait_remaining_requests(_logger)  # wait for all remaining requests before droping to avoid error on _drop_conn
         res = self.session.post(self.url('/web/database/drop'), data={
             'master_pwd': self.password,
             'name': test_db_name,
@@ -149,7 +152,7 @@ class TestDatabaseOperations(BaseCase):
             #self._logger = logging.getLogger(__name__)  # pylint: disable=attribute-defined-outside-init
             # the raised OperationalError will reach werkzeug and may be logged after the end of the request,
             # outside the mute logger. We need to wait for remaining request to avoid that
-            _wait_remaining_requests(_logger)
+            wait_remaining_requests(_logger)
 
 
         # in any case, session should have been invalidated to avoid being stuck, logged in a dropped database

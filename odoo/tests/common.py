@@ -182,7 +182,7 @@ class RecordCapturer:
         return self._after
 
 
-def _wait_remaining_requests(logger=None, timeout=10):
+def wait_remaining_requests(logger=None, timeout=10):
     logger = logger or _logger
 
     def get_http_request_threads():
@@ -1666,7 +1666,7 @@ class HttpCase(TransactionCase):
             # the method several times in a test method
             self.browser.delete_cookie('session_id', domain=HOST)
             self.browser.clear()
-            _wait_remaining_requests(self._logger)
+            wait_remaining_requests(self._logger)
 
     @classmethod
     def base_url(cls):
