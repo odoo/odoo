@@ -1784,26 +1784,26 @@ class BaseModel(metaclass=MetaModel):
         return self.get_formview_action(access_uid=access_uid)
 
     @api.model
-    def search_count(self, args):
-        """ search_count(args) -> int
+    def search_count(self, domain):
+        """ search_count(domain) -> int
 
         Returns the number of records in the current model matching :ref:`the
         provided domain <reference/orm/domains>`.
         """
-        res = self.search(args, count=True)
+        res = self.search(domain, count=True)
         return res if isinstance(res, int) else len(res)
 
     @api.model
     @api.returns('self',
-        upgrade=lambda self, value, args, offset=0, limit=None, order=None, count=False: value if count else self.browse(value),
-        downgrade=lambda self, value, args, offset=0, limit=None, order=None, count=False: value if count else value.ids)
-    def search(self, args, offset=0, limit=None, order=None, count=False):
-        """ search(args[, offset=0][, limit=None][, order=None][, count=False])
+        upgrade=lambda self, value, domain, offset=0, limit=None, order=None, count=False: value if count else self.browse(value),
+        downgrade=lambda self, value, domain, offset=0, limit=None, order=None, count=False: value if count else value.ids)
+    def search(self, domain, offset=0, limit=None, order=None, count=False):
+        """ search(domain[, offset=0][, limit=None][, order=None][, count=False])
 
-        Searches for records based on the ``args``
+        Searches for records based on the ``domain``
         :ref:`search domain <reference/orm/domains>`.
 
-        :param args: :ref:`A search domain <reference/orm/domains>`. Use an empty
+        :param domain: :ref:`A search domain <reference/orm/domains>`. Use an empty
                      list to match all records.
         :param int offset: number of results to ignore (default: none)
         :param int limit: maximum number of records to return (default: all)
@@ -1812,7 +1812,7 @@ class BaseModel(metaclass=MetaModel):
         :returns: at most ``limit`` records matching the search criteria
         :raise AccessError: * if user tries to bypass access rules for read on the requested object.
         """
-        res = self._search(args, offset=offset, limit=limit, order=order, count=count)
+        res = self._search(domain, offset=offset, limit=limit, order=order, count=count)
         return res if count else self.browse(res)
 
     #
@@ -3626,7 +3626,7 @@ Fields:
     def unlink(self):
         """ unlink()
 
-        Deletes the records of the current set
+        Deletes the records in ``self``.
 
         :raise AccessError: * if user has no unlink rights on the requested object
                             * if user tries to bypass access rules for unlink on the requested object
@@ -3724,7 +3724,7 @@ Fields:
     def write(self, vals):
         """ write(vals)
 
-        Updates all records in the current set with the provided values.
+        Updates all records in ``self`` with the provided values.
 
         :param dict vals: fields to update and the value to set on them e.g::
 
@@ -4739,7 +4739,7 @@ Fields:
             self.env[model_name].flush(field_names)
 
     @api.model
-    def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
+    def _search(self, domain, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
         """
         Private implementation of search() method, allowing specifying the uid to use for the access right check.
         This is useful for example when filling in the selection list for a drop-down and avoiding access rights errors,
@@ -4753,14 +4753,14 @@ Fields:
         model = self.with_user(access_rights_uid) if access_rights_uid else self
         model.check_access_rights('read')
 
-        if expression.is_false(self, args):
+        if expression.is_false(self, domain):
             # optimization: no need to query, as no record satisfies the domain
             return 0 if count else []
 
         # the flush must be done before the _where_calc(), as the latter can do some selects
-        self._flush_search(args, order=order)
+        self._flush_search(domain, order=order)
 
-        query = self._where_calc(args)
+        query = self._where_calc(domain)
         self._apply_ir_rules(query, 'read')
 
         if count:
@@ -4930,8 +4930,8 @@ Fields:
     def exists(self):
         """  exists() -> records
 
-        Returns the subset of records in ``self`` that exist, and marks deleted
-        records as such in cache. It can be used as a test on records::
+        Returns the subset of records in ``self`` that exist.
+        It can be used as a test on records::
 
             if record.exists():
                 ...
@@ -5241,7 +5241,7 @@ Fields:
     #
 
     def ensure_one(self):
-        """Verify that the current recorset holds a single record.
+        """Verify that the current recordset holds a single record.
 
         :raise odoo.exceptions.ValueError: ``len(self) != 1``
         """
@@ -5259,10 +5259,7 @@ Fields:
         :param env:
         :type env: :class:`~odoo.api.Environment`
 
-        .. warning::
-            The new environment will not benefit from the current
-            environment's data cache, so later data access may incur extra
-            delays while re-fetching from the database.
+        .. note::
             The returned recordset has the same prefetch object as ``self``.
         """
         return self.__class__(env, self._ids, self._prefetch_ids)
@@ -5287,10 +5284,6 @@ Fields:
 
         .. note::
 
-            Because the record rules and access control will have to be
-            re-evaluated, the new recordset will not benefit from the current
-            environment's data cache, so later data access may incur extra
-            delays while re-fetching from the database.
             The returned recordset has the same prefetch object as ``self``.
 
         """
