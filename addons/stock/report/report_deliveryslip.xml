@@ -119,7 +119,7 @@
                                     </t>
                                     <!-- If not printing lots/serial numbers => merge lines with same product+description+uom -->
                                     <t t-else="">
-                                        <t t-set="aggregated_lines" t-value="package_move_lines._get_aggregated_product_quantities()"/>
+                                        <t t-set="aggregated_lines" t-value="package_move_lines._get_aggregated_product_quantities(strict=True)"/>
                                         <t t-call="stock.stock_report_delivery_aggregated_move_lines"/>
                                     </t>
                                 </t>
