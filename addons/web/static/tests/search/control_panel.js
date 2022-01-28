@@ -82,8 +82,8 @@ QUnit.module("Search", (hooks) => {
             Component: ControlPanel,
             config: {
                 viewSwitcherEntries: [
-                    { type: "list", active: true, icon: "fa-list-ul", name: "List" },
-                    { type: "kanban", icon: "fa-th-large", name: "Kanban" },
+                    { type: "list", active: true, icon: "oi-table", name: "List" },
+                    { type: "kanban", icon: "oi-align--vertical-top", name: "Kanban" },
                 ],
             },
             searchMenuTypes: [],
@@ -96,7 +96,7 @@ QUnit.module("Search", (hooks) => {
         assert.strictEqual(views[0].getAttribute("data-tooltip"), "List");
         assert.hasClass(views[0], "active");
         assert.strictEqual(views[1].getAttribute("data-tooltip"), "Kanban");
-        assert.hasClass(views[1], "fa-th-large");
+        assert.hasClass(views[1], "oi-align--vertical-top");
 
         controlPanel.env.services.action.switchView = (viewType) => {
             assert.step(viewType);

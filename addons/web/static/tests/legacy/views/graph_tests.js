@@ -1754,7 +1754,7 @@ QUnit.module('Views', {
 
             this.selectTimeRanges = async (comparisonOptionId, basicDomainId) => {
                 const facetEls = graph.el.querySelectorAll('.o_searchview_facet');
-                const facetIndex = [...facetEls].findIndex(el => !!el.querySelector('span.fa-filter'));
+                const facetIndex = [...facetEls].findIndex(el => !!el.querySelector('span.oi-filter'));
                 if (facetIndex > -1) {
                     await cpHelpers.removeFacet(graph.el, facetIndex);
                 }
@@ -1776,7 +1776,7 @@ QUnit.module('Views', {
                 const productWasSelected = cpHelpers.isItemSelected(graph.el, 'Product');
 
                 const facetEls = graph.el.querySelectorAll('.o_searchview_facet');
-                const facetIndex = [...facetEls].findIndex(el => !!el.querySelector('span.fa-bars'));
+                const facetIndex = [...facetEls].findIndex(el => !!el.querySelector('span.oi-layers'));
                 if (facetIndex > -1) {
                     await cpHelpers.removeFacet(graph.el, facetIndex);
                     await cpHelpers.toggleGroupByMenu(graph.el);
