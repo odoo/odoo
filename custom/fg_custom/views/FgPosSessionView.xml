@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="fg_pos_session_view_inherit" model="ir.ui.view">
+        <field name="name">fg.pos.session.view.inherit</field>
+        <field name="model">pos.session</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_session_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_show_payments_list']" position="replace" >
+                <button
+                        name="action_show_payments_list"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-ruble"
+                        >
+                    <field name="total_payments_amount" widget="statinfo" string="Payments"/>
+                    </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>
