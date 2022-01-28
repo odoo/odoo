@@ -56,14 +56,13 @@ from .exceptions import AccessError, MissingError, ValidationError, UserError
 from .osv.query import Query
 from .tools import frozendict, lazy_classproperty, ormcache, \
                    LastOrderedSet, OrderedSet, ReversedIterable, \
-                   groupby, discardattr, partition
+                   unique, discardattr, partition
 from .tools.config import config
 from .tools.func import frame_codeinfo
 from .tools.misc import CountingStream, clean_context, DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT, get_lang, split_every
 from .tools.translate import _
 from .tools import date_utils
 from .tools import populate
-from .tools import unique
 from .tools.lru import LRU
 
 _logger = logging.getLogger(__name__)
@@ -2875,7 +2874,6 @@ class BaseModel(metaclass=MetaModel):
         """ This method is called after :meth:`~._auto_init`, and may be
             overridden to create or modify a model's database schema.
         """
-        pass
 
     def _check_parent_path(self):
         field = self._fields.get('parent_path')
@@ -5134,11 +5132,9 @@ Fields:
 
     def _register_hook(self):
         """ stuff to do right after the registry is built """
-        pass
 
     def _unregister_hook(self):
         """ Clean up what `~._register_hook` has done. """
-        pass
 
     @classmethod
     def _patch_method(cls, name, method):
@@ -5507,20 +5503,6 @@ Fields:
             return recs
         else:
             return self._mapped_func(func)
-
-    def _mapped_cache(self, name_seq):
-        """ Same as `~.mapped`, but ``name_seq`` is a dot-separated sequence of
-            field names, and only cached values are used.
-        """
-        recs = self
-        for name in name_seq.split('.'):
-            field = recs._fields[name]
-            null = field.convert_to_cache(False, self, validate=False)
-            if recs:
-                recs = recs.mapped(lambda rec: field.convert_to_record(rec._cache.get(name, null), rec))
-            else:
-                recs = field.convert_to_record(null, recs)
-        return recs
 
     def filtered(self, func):
         """Return the records in ``self`` satisfying ``func``.
