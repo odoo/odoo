@@ -32,15 +32,19 @@
 
 <template id="registration_event_question" name="Registration Event Question">
     <label t-esc="question.title"/>
+    <span t-if="question.is_mandatory_answer">*</span>
     <t t-if="question.question_type == 'simple_choice'">
-        <select t-attf-name="question_answer-#{registration_index}-#{question.id}" class="custom-select" required="true">
+        <select t-attf-name="question_answer-#{registration_index}-#{question.id}" class="custom-select"
+                t-att-required="question.is_mandatory_answer">
+            <option value=""/>
             <t t-foreach="question.answer_ids" t-as="answer">
                 <option t-esc="answer.name" t-att-value="answer.id"/>
             </t>
         </select>
     </t>
     <t t-elif="question.question_type == 'text_box'">
-        <textarea t-attf-name="question_answer-#{registration_index}-#{question.id}" class="col-lg-12 form-control"/>
+        <textarea t-attf-name="question_answer-#{registration_index}-#{question.id}" class="col-lg-12 form-control"
+                  t-att-required="question.is_mandatory_answer"/>
     </t>
 </template>
 
