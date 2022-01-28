@@ -99,7 +99,7 @@ msgid ""
 "<span> Orders</span>\n"
 "                    <span class=\"oe_grey\"> if 0, infinite use</span>"
 msgstr ""
-"<span> Đơn hàng</span>\n"
+"<span> Đơn đầu tiên</span>\n"
 "                    <span class=\"oe_grey\"> nếu 0, sử dụng vô hạn</span>"
 
 #. module: coupon
@@ -304,7 +304,7 @@ msgstr ""
 "        </span><br/>\n"
 "        % endif\n"
 "        <br/>\n"
-"        Cảm ơn,\n"
+"        Xin cảm ơn,\n"
 "        % if object.order_id.user_id.signature:\n"
 "            <br/>\n"
 "            ${object.order_id.user_id.signature | safe}\n"
@@ -316,7 +316,7 @@ msgstr ""
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__active
 msgid "A program is available for the customers when active"
-msgstr "Một chương trình có sẵn cho khách hàng khi kích hoạt"
+msgstr "Một chương trình khả dụng cho khách hàng khi kích hoạt"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__promo_code
@@ -325,8 +325,8 @@ msgid ""
 " example, a retailer might tell frequent customers to enter the promotion "
 "code 'THX001' to receive a 10%% discount on their whole order."
 msgstr ""				
-"Mã khuyến mãi là mã được kết hợp với giảm giá tiếp thị."
-" Ví dụ: một nhà bán lẻ có thể yêu cầu khách hàng thường xuyên nhập mã khuyến mãi 'THX001' để được giảm giá 10 %% cho toàn bộ "
+"Một mã khuyến mãi là mã được kết hợp với một chiết khấu."
+" Ví dụ: một đơn vị bán lẻ có thể yêu cầu khách hàng thân thiết nhập mã khuyến mãi 'THX001' để được giảm giá 10 %% cho toàn bộ "
 "đơn đặt hàng của họ."
 
 #. module: coupon
@@ -369,7 +369,7 @@ msgstr "Áp dụng cho đơn hàng hiện tại"
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_form
 msgid "Apply on First"
-msgstr "Số lượng đơn hàng tối đa"
+msgstr "Áp dụng cho"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
@@ -1126,8 +1126,8 @@ msgid ""
 "Some selected customers do not have an email address and will not receive "
 "the coupon."
 msgstr ""
-"Some selected customers do not have an email address and will not receive "
-"the coupon."
+"Một số khách hàng được chọn không có địa chỉ email sẽ không nhận được "
+"phiếu thưởng."
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__rule_date_from
@@ -1153,7 +1153,7 @@ msgstr "Đã bao gồm thuế"
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "Thank you,"
-msgstr "Thank you,"
+msgstr "Xin cảm ơn,"
 
 #. module: coupon
 #: model:ir.model.constraint,message:coupon.constraint_coupon_coupon_unique_coupon_code
@@ -1253,12 +1253,12 @@ msgstr "Phiếu thưởng của bạn từ ${object.program_id.company_id.name} 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "off %s"
-msgstr "off %s"
+msgstr "giảm %s"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "off on %s"
-msgstr "off on %s"
+msgstr "giảm giá trên %s"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
