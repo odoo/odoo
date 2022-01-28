@@ -820,3 +820,19 @@ class TestAccountPayment(AccountTestInvoicingCommon):
         self.assertRecordValues(payment, [{
             'partner_bank_id': self.comp_bank_account2.id,
         }])
+
+    def test_internal_transfer_change_journal(self):
+        self.bank_journal_1.bank_account_id = self.comp_bank_account1
+
+        payment = self.env['account.payment'].create({
+            'journal_id': self.bank_journal_1.id,
+            'amount': 50.0,
+            'is_internal_transfer': True,
+            'payment_type': 'outbound',
+            'partner_bank_id': self.comp_bank_account2.id,
+        })
+
+        # This should not raise an error.
+        payment.write({
+            'journal_id': self.company_data['default_journal_cash'].id
+        })
