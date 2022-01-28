@@ -868,6 +868,7 @@ class TestAccountPayment(AccountTestInvoicingCommon):
             'journal_id': bank.id,
             'destination_journal_id': bank_2.id,
         })
+<<<<<<< HEAD
         payment.action_post()
 
         self.assertRecordValues(payment.line_ids, [
@@ -903,3 +904,24 @@ class TestAccountPayment(AccountTestInvoicingCommon):
             {'account_id': bank_2.inbound_payment_method_line_ids.payment_account_id.id},
             {'account_id': transfer_account.id},
         ])
+=======
+        self.assertRecordValues(payment, [{
+            'partner_bank_id': self.comp_bank_account2.id,
+        }])
+
+    def test_internal_transfer_change_journal(self):
+        self.bank_journal_1.bank_account_id = self.comp_bank_account1
+
+        payment = self.env['account.payment'].create({
+            'journal_id': self.bank_journal_1.id,
+            'amount': 50.0,
+            'is_internal_transfer': True,
+            'payment_type': 'outbound',
+            'partner_bank_id': self.comp_bank_account2.id,
+        })
+
+        # This should not raise an error.
+        payment.write({
+            'journal_id': self.company_data['default_journal_cash'].id
+        })
+>>>>>>> 3fd89110eb6... temp
