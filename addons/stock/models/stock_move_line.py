@@ -271,16 +271,17 @@ class StockMoveLine(models.Model):
             else:
                 create_move(move_line)
 
+        move_qty_map = {}
         for ml, vals in zip(mls, vals_list):
             if ml.move_id and \
                     ml.move_id.picking_id and \
                     ml.move_id.picking_id.immediate_transfer and \
                     ml.move_id.state != 'done' and \
                     'qty_done' in vals:
-                ml.move_id.product_uom_qty = ml.move_id.quantity_done
+                move_qty_map[ml.move_id.id] = ml.move_id.quantity_done
             if ml.state == 'done':
                 if 'qty_done' in vals:
-                    ml.move_id.product_uom_qty = ml.move_id.quantity_done
+                    move_qty_map[ml.move_id.id] = ml.move_id.quantity_done
                 if ml.product_id.type == 'product':
                     Quant = self.env['stock.quant']
                     quantity = ml.product_uom_id._compute_quantity(ml.qty_done, ml.move_id.product_id.uom_id,rounding_method='HALF-UP')
@@ -297,6 +298,8 @@ class StockMoveLine(models.Model):
                 next_moves = ml.move_id.move_dest_ids.filtered(lambda move: move.state not in ('done', 'cancel'))
                 next_moves._do_unreserve()
                 next_moves._action_assign()
+        for move_id, qty in move_qty_map.items():
+            self.env['stock.move'].browse(move_id).product_uom_qty = qty
         return mls
 
     def write(self, vals):
