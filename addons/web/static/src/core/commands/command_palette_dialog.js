@@ -29,6 +29,6 @@ export class CommandPaletteDialog extends Dialog {
 CommandPaletteDialog.renderHeader = false;
 CommandPaletteDialog.renderFooter = false;
 CommandPaletteDialog.size = "modal-md";
-CommandPaletteDialog.contentClass = "o_command_palette";
+CommandPaletteDialog.contentClass = "o_command_palette mt-5";
 CommandPaletteDialog.bodyTemplate = "web.CommandPaletteDialogBody";
 CommandPaletteDialog.components = Object.assign({}, Dialog.components, { CommandPalette });
