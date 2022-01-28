@@ -6,7 +6,7 @@ import { clear, insertAndReplace, replace } from '@mail/model/model_field_comman
 
 registerModel({
     name: 'AttachmentList',
-    identifyingFields: [['composerView', 'messageView', 'attachmentBoxViewOwner']],
+    identifyingFields: [['composerViewOwner', 'messageViewOwner', 'attachmentBoxViewOwner']],
     recordMethods: {
         /**
          * Select the next attachment.
@@ -39,17 +39,17 @@ registerModel({
             }));
         },
         /**
-         * @returns {Attachment[]}
+         * @returns {FieldCommand}
          */
         _computeAttachments() {
-            if (this.message) {
-                return replace(this.message.attachments);
+            if (this.messageViewOwner) {
+                return replace(this.messageViewOwner.message.attachments);
             }
             if (this.attachmentBoxViewOwner) {
                 return replace(this.attachmentBoxViewOwner.chatter.thread.allAttachments);
             }
-            if (this.composerView && this.composerView.composer) {
-                return replace(this.composerView.composer.attachments);
+            if (this.composerViewOwner && this.composerViewOwner.composer) {
+                return replace(this.composerViewOwner.composer.attachments);
             }
             return clear();
         },
@@ -110,7 +110,7 @@ registerModel({
         /**
          * Link with a composer view to handle attachments.
          */
-        composerView: one('ComposerView', {
+        composerViewOwner: one('ComposerView', {
             inverse: 'attachmentList',
             readonly: true,
         }),
@@ -120,13 +120,10 @@ registerModel({
         imageAttachments: many('Attachment', {
             compute: '_computeImageAttachments',
         }),
-        message: one('Message', {
-            related: 'messageView.message'
-        }),
         /**
          * Link with a message view to handle attachments.
          */
-        messageView: one('MessageView', {
+        messageViewOwner: one('MessageView', {
             inverse: 'attachmentList',
             readonly: true,
         }),

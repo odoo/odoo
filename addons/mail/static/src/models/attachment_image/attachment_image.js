@@ -30,7 +30,7 @@ registerModel({
             if (!this.attachment) {
                 return;
             }
-            if (this.attachmentList.composerView) {
+            if (this.attachmentList.composerViewOwner) {
                 this.component.trigger('o-attachment-removed', { attachmentLocalId: this.attachment.localId });
                 this.attachment.remove();
             } else {
@@ -45,13 +45,13 @@ registerModel({
             if (!this.attachmentList) {
                 return clear();
             }
-            if (this.attachmentList.composerView) {
+            if (this.attachmentList.composerViewOwner) {
                 return 50;
             }
             if (this.attachmentList.attachmentBoxViewOwner) {
                 return 160;
             }
-            if (this.attachmentList.message) {
+            if (this.attachmentList.messageViewOwner) {
                 return 300;
             }
         },
