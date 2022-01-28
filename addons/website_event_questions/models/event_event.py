@@ -59,6 +59,7 @@ class EventEvent(models.Model):
                         'question_type': question.question_type,
                         'sequence': question.sequence,
                         'once_per_order': question.once_per_order,
+                        'is_mandatory_answer': question.is_mandatory_answer,
                         'answer_ids': [(0, 0, {
                             'name': answer.name,
                             'sequence': answer.sequence

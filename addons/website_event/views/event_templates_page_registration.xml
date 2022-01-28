@@ -288,12 +288,12 @@
                                 <h5 class="mt-1 pb-2 border-bottom">Ticket #<span t-esc="counter"/> <small class="text-muted">- <span t-esc="ticket['name']"/></small></h5>
                                 <div class="row">
                                     <div class="col-lg my-2">
-                                        <label>Name</label>
+                                        <label>Name *</label>
                                         <input class="form-control" type="text" t-attf-name="#{counter}-name" required="This field is required"
                                             t-att-value="default_first_attendee.get('name', '') if counter == 1 else ''"/>
                                     </div>
                                     <div class="col-lg my-2">
-                                        <label>Email</label>
+                                        <label>Email *</label>
                                         <input class="form-control" type="email" t-attf-name="#{counter}-email" required="This field is required"
                                             t-att-value="default_first_attendee.get('email', '') if counter == 1 else ''"/>
                                     </div>
