@@ -1427,6 +1427,10 @@ class BaseModel(metaclass=MetaModel):
 
     @api.model
     def fields_get_keys(self):
+        warnings.warn(
+            'fields_get_keys() method is deprecated, use `_fields` or `fields_view_get` instead',
+            DeprecationWarning
+        )
         return list(self._fields)
 
     @api.model
@@ -5051,9 +5055,9 @@ Fields:
         return {key: val[0] if val else ''
                 for key, val in results.items()}
 
-    # backwards compatibility
-    get_xml_id = get_external_id
-    _get_xml_ids = _get_external_ids
+    def get_xml_id(self):
+        warnings.warn('get_xml_id() is deprecated method, use get_external_id() instead', DeprecationWarning)
+        return self.get_external_id()
 
     # Transience
     @classmethod
