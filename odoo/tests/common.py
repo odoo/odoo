@@ -976,6 +976,9 @@ class ChromeBrowser:
             '--remote-debugging-port': '0',
             '--no-sandbox': '',
             '--disable-gpu': '',
+            # required for tests that depends on the jquery.touchSwipe library, which detects
+            # touch capabilities using "'ontouchstart' in window"
+            '--touch-events':'',
         }
         cmd = [self.executable]
         cmd += ['%s=%s' % (k, v) if v else k for k, v in switches.items()]
