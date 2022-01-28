@@ -7,9 +7,9 @@ const { Component, xml } = owl;
 
 class DialogCommand extends Component {}
 DialogCommand.template = xml`
-    <div class="o_command_default">
+    <div class="o_command_default d-flex align-items-center justify-content-between px-4 py-2 o_cursor_pointer">
         <t t-slot="name"/>
-        <span t-if="props.email" t-esc="props.email"/>
+        <span t-if="props.email" t-out="props.email"/>
     </div>
 `;
 
