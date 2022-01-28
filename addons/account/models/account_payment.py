@@ -764,6 +764,15 @@ class AccountPayment(models.Model):
 
         for pay in self.with_context(skip_account_move_synchronization=True):
             liquidity_lines, counterpart_lines, writeoff_lines = pay._seek_for_lines()
+            if len(liquidity_lines) != 1 or len(counterpart_lines) != 1:
+
+                raise UserError(_(
+                    "The journal entry %s reached an invalid state relative to its payment.\n"
+                    "To be consistent, the journal entry must always contains:\n"
+                    "- one journal item involving the outstanding payment/receipts account.\n"
+                    "- one journal item involving a receivable/payable account.\n"
+                    "- optional journal items, all sharing the same account.\n\n"
+                ) % pay.move_id.display_name)
 
             # Make sure to preserve the write-off amount.
             # This allows to create a new payment with custom 'line_ids'.
