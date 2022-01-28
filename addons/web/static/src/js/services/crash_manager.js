@@ -211,7 +211,19 @@ var RedirectWarningHandler = Dialog.extend(ExceptionHandler, {
             title: _.str.capitalize(error.type) || _t("Odoo Warning"),
             buttons: [
                 {text: error.data.arguments[2], classes : "btn-primary", click: function() {
-                    window.location.href = '#action='+error.data.arguments[1];
+                    var url_params = window.location.href.split('&');
+                    var menu_url = false;
+                    for (var i in url_params){
+                        if (url_params[i].startsWith('menu_id')){
+                            menu_url = url_params[i];
+                            break;
+                        }
+                    }
+                    var new_href = '#action='+error.data.arguments[1];
+                    if (menu_url){
+                        new_href += '&'+menu_url;
+                    }
+                    window.location.href = new_href;
                     self.destroy();
                 }},
                 {text: _t("Cancel"), click: function() { self.destroy(); }, close: true}
