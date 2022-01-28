@@ -214,6 +214,7 @@ WHERE sub.user_id IN %%s""" % {
                             'rank_id': ranks[i]['rank'].id,
                             'next_rank_id': ranks[i - 1]['rank'].id if 0 < i else False
                         })
+                    else:
                         break
             if old_rank != user.rank_id:
                 user._rank_changed()
