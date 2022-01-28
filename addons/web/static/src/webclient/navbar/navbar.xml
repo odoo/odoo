@@ -44,7 +44,7 @@
   <t t-name="web.NavBar.AppsMenu" owl="1">
     <Dropdown hotkey="'h'" title="'Home Menu'" class="o_navbar_apps_menu">
       <t t-set-slot="toggler">
-        <i class="fa fa-th-large" />
+        <i class="oi oi-apps" />
       </t>
       <DropdownItem
         t-foreach="apps"
@@ -143,7 +143,7 @@
   <t t-name="web.NavBar.SectionsMenu.MoreDropdown" owl="1">
     <Dropdown class="o_menu_sections_more" title="'More Menu'" hotkey="hotkey">
       <t t-set-slot="toggler">
-        <i class="fa fa-plus" />
+        <i class="oi oi-large oi-add--thick"/>
       </t>
       <t t-foreach="sections" t-as="section" t-key="section.id">
 
