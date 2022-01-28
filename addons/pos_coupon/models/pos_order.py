@@ -64,7 +64,11 @@ class PosOrder(models.Model):
 
     def _get_fields_for_order_line(self):
         fields = super(PosOrder, self)._get_fields_for_order_line()
-        fields.append('is_program_reward')
+        fields.extend({
+            'is_program_reward',
+            'coupon_id',
+            'program_id',
+        })
         return fields
 
 class PosOrderLine(models.Model):
