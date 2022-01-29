@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
-        <record id="provider_openerp" model="auth.oauth.provider">
+        <record id="provider_odoo" model="auth.oauth.provider">
             <field name="name">Odoo.com Accounts</field>
             <field name="auth_endpoint">https://accounts.odoo.com/oauth2/auth</field>
             <field name="scope">userinfo</field>
@@ -30,9 +30,9 @@
             <field name="body">Log in with Google</field>
         </record>
 
-        <!-- Use database uuid as client_id for OpenERP oauth provider -->
+        <!-- Use database uuid as client_id for Odoo oauth provider -->
         <function model="auth.oauth.provider" name="write">
-            <value eval="[ref('auth_oauth.provider_openerp')]"/>
+            <value eval="[ref('auth_oauth.provider_odoo')]"/>
             <value model="ir.config_parameter" eval="{
                 'client_id': obj().env['ir.config_parameter'].get_param('database.uuid'),
             }"/>
