@@ -2,16 +2,31 @@ odoo.define('account.upload.bill.mixin', function (require) {
 "use strict";
 
     var core = require('web.core');
-
     var qweb = core.qweb;
 
     var UploadBillMixin = {
+        events: {
+            'click .o_button_upload_bill': '_onUpload',
+            'change .o_vendor_bill_upload .o_form_binary_form': '_onAddAttachment',
+            'drop .o_drop_area': '_onDrop',
+            'dragenter .o_content': '_highlight',
+            'dragleave .o_drop_area': '_unhighlight',
+            'dragover .o_drop_area': '_clear',
+        },
 
-        start: function () {
+        start: async function () {
             // define a unique uploadId and a callback method
             this.fileUploadID = _.uniqueId('account_bill_file_upload');
             $(window).on(this.fileUploadID, this._onFileUploaded.bind(this));
-            return this._super.apply(this, arguments);
+            let result = await this._super.apply(this, arguments);
+            await this.$(this._dropZone).prepend($(qweb.render('account.BillDropZone')));
+            return result;
+        },
+
+        reload: async function () {
+            let result = await this._super.apply(this, arguments);
+            await this.$(this._dropZone).prepend($(qweb.render('account.BillDropZone')));
+            return result;
         },
 
         _onAddAttachment: function (ev) {
@@ -47,15 +62,39 @@ odoo.define('account.upload.bill.mixin', function (require) {
             });
         },
 
-        _onUpload: function (event) {
+        _createForm: function() {
             // If hidden upload form don't exists, create it
             var $formContainer = this.$('.o_content').find('.o_vendor_bill_upload');
             if (!$formContainer.length) {
                 $formContainer = $(qweb.render('account.BillsHiddenUploadForm', {widget: this}));
                 $formContainer.appendTo(this.$('.o_content'));
             }
+        },
+
+        _onUpload: function (ev) {
+            this._createForm();
             // Trigger the input to select a file
             this.$('.o_vendor_bill_upload .o_input_file').click();
+        },
+
+        _highlight: function(ev) {
+            $('.o_drop_area').show();
+        },
+
+        _unhighlight: function(ev) {
+            $('.o_drop_area').hide();
+        },
+
+        _clear: function(ev) {
+            ev.preventDefault();
+        },
+
+        _onDrop: function (ev) {
+            ev.preventDefault();
+            this._createForm();
+            this.$('.o_vendor_bill_upload .o_input_file')[0].files = ev.originalEvent.dataTransfer.files;
+            this.$('.o_form_binary_form')[0].submit();
+            this._unhighlight(ev);
         },
     }
     return UploadBillMixin;
@@ -69,16 +108,13 @@ odoo.define('account.bills.tree', function (require) {
     var UploadBillMixin = require('account.upload.bill.mixin');
     var viewRegistry = require('web.view_registry');
 
-    var BillsListController = ListController.extend(UploadBillMixin, {
+    var BillsListController = ListController.extend({_dropZone: '.o_content'}, UploadBillMixin, {
         buttons_template: 'BillsListView.buttons',
-        events: _.extend({}, ListController.prototype.events, {
-            'click .o_button_upload_bill': '_onUpload',
-            'change .o_vendor_bill_upload .o_form_binary_form': '_onAddAttachment',
-        }),
+        events: Object.assign({}, ListController.prototype.events, UploadBillMixin.events),
     });
 
     var BillsListView = ListView.extend({
-        config: _.extend({}, ListView.prototype.config, {
+        config: Object.assign({}, ListView.prototype.config, {
             Controller: BillsListController,
         }),
     });
@@ -92,16 +128,13 @@ odoo.define('account.bills.kanban', function (require) {
     var UploadBillMixin = require('account.upload.bill.mixin');
     var viewRegistry = require('web.view_registry');
 
-    var BillsKanbanController = KanbanController.extend(UploadBillMixin, {
+    var BillsKanbanController = KanbanController.extend({_dropZone: '.o_content'}, UploadBillMixin, {
         buttons_template: 'BillsKanbanView.buttons',
-        events: _.extend({}, KanbanController.prototype.events, {
-            'click .o_button_upload_bill': '_onUpload',
-            'change .o_vendor_bill_upload .o_form_binary_form': '_onAddAttachment',
-        }),
+        events: Object.assign({}, KanbanController.prototype.events, UploadBillMixin.events),
     });
 
     var BillsKanbanView = KanbanView.extend({
-        config: _.extend({}, KanbanView.prototype.config, {
+        config: Object.assign({}, KanbanView.prototype.config, {
             Controller: BillsKanbanController,
         }),
     });
@@ -116,31 +149,38 @@ odoo.define('account.dashboard.kanban', function (require) {
     var UploadBillMixin = require('account.upload.bill.mixin');
     var viewRegistry = require('web.view_registry');
 
-    var DashboardKanbanController = KanbanController.extend(UploadBillMixin, {
-        events: _.extend({}, KanbanController.prototype.events, {
-            'click .o_button_upload_bill': '_onUpload',
-            'change .o_vendor_bill_upload .o_form_binary_form': '_onAddAttachment',
-        }),
+    var DashboardKanbanController = KanbanController.extend({_dropZone: '.o_kanban_record'}, UploadBillMixin, {
+        events: Object.assign({}, KanbanController.prototype.events, UploadBillMixin.events),
         /**
          * We override _onUpload (from the upload bill mixin) to pass default_journal_id
          * and default_move_type in context.
          *
          * @override
          */
-        _onUpload: function (event) {
-            var kanbanRecord = $(event.currentTarget).closest('.o_kanban_record').data('record');
+        _setBillContext: function(ev) {
+            var kanbanRecord = $(ev.currentTarget).closest('.o_kanban_record').data('record');
             this.initialState.context['default_journal_id'] = kanbanRecord.id;
-            if ($(event.currentTarget).attr('journal_type') == 'sale') {
-                this.initialState.context['default_move_type'] = 'out_invoice'
-            } else if ($(event.currentTarget).attr('journal_type') == 'purchase') {
-                this.initialState.context['default_move_type'] = 'in_invoice'
+            let journal_type = kanbanRecord.state.data.type;
+            if (journal_type == 'sale') {
+                this.initialState.context['default_move_type'] = 'out_invoice';
+            } else if (journal_type == 'purchase') {
+                this.initialState.context['default_move_type'] = 'in_invoice';
             }
+        },
+
+        _onUpload: function (ev) {
+            this._setBillContext(ev);
             UploadBillMixin._onUpload.apply(this, arguments);
-        }
+        },
+
+        _onDrop: function (ev) {
+            this._setBillContext(ev);
+            UploadBillMixin._onDrop.apply(this, arguments);
+        },
     });
 
     var DashboardKanbanView = KanbanView.extend({
-        config: _.extend({}, KanbanView.prototype.config, {
+        config: Object.assign({}, KanbanView.prototype.config, {
             Controller: DashboardKanbanController,
         }),
     });
