@@ -239,6 +239,14 @@ class AccountMove(models.Model):
         amount_field = company_currency and 'balance' or 'price_subtotal'
         # if we use balance we need to correct sign (on price_subtotal is positive for refunds and invoices)
         sign = -1 if (company_currency and self.is_inbound()) else 1
+<<<<<<< HEAD
+=======
+
+        # if we are on a document that works invoice and refund and it's a refund, we need to export it as negative
+        sign = -sign if self.move_type in ('out_refund', 'in_refund') and\
+            self.l10n_latam_document_type_id.code in self._get_l10n_ar_codes_used_for_inv_and_ref() else sign
+
+>>>>>>> ea48d82fc36... temp
         tax_lines = self.line_ids.filtered('tax_line_id')
         vat_taxes = tax_lines.filtered(lambda r: r.tax_line_id.tax_group_id.l10n_ar_vat_afip_code)
 
@@ -267,6 +275,17 @@ class AccountMove(models.Model):
 
     def _get_vat(self):
         """ Applies on wsfe web service and in the VAT digital books """
+<<<<<<< HEAD
+=======
+        amount_field = company_currency and 'balance' or 'price_subtotal'
+        # if we use balance we need to correct sign (on price_subtotal is positive for refunds and invoices)
+        sign = -1 if (company_currency and self.is_inbound()) else 1
+
+        # if we are on a document that works invoice and refund and it's a refund, we need to export it as negative
+        sign = -sign if self.move_type in ('out_refund', 'in_refund') and\
+            self.l10n_latam_document_type_id.code in self._get_l10n_ar_codes_used_for_inv_and_ref() else sign
+
+>>>>>>> ea48d82fc36... temp
         res = []
         vat_taxable = self.env['account.move.line']
         # get all invoice lines that are vat taxable
