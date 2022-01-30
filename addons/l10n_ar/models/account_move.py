@@ -247,7 +247,7 @@ class AccountMove(models.Model):
         sign = -1 if (company_currency and self.is_inbound()) else 1
 
         # if we are on a document that works invoice and refund and it's a refund, we need to export it as negative
-        sign = -sign if self.type in ('out_refund', 'in_refund') and\
+        sign = -sign if self.move_type in ('out_refund', 'in_refund') and\
             self.l10n_latam_document_type_id.code in self._get_l10n_ar_codes_used_for_inv_and_ref() else sign
 
         tax_lines = self.line_ids.filtered('tax_line_id')
@@ -283,7 +283,7 @@ class AccountMove(models.Model):
         sign = -1 if (company_currency and self.is_inbound()) else 1
 
         # if we are on a document that works invoice and refund and it's a refund, we need to export it as negative
-        sign = -sign if self.type in ('out_refund', 'in_refund') and\
+        sign = -sign if self.move_type in ('out_refund', 'in_refund') and\
             self.l10n_latam_document_type_id.code in self._get_l10n_ar_codes_used_for_inv_and_ref() else sign
 
         res = []
