@@ -346,7 +346,6 @@ export class MessageList extends Component {
      */
     _onScrollThrottled(ev) {
         const {
-            order,
             orderedMessages,
             thread,
             threadCache,
