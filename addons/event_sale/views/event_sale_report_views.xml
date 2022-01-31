@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_event_sale_report_graph" model="ir.ui.view">
+        <field name="name">event.sale.report.view.graph</field>
+        <field name="model">event.sale.report</field>
+        <field name="arch" type="xml">
+            <graph string="Revenues" sample="1">
+                <field name="seats_available" type="measure"/>
+                <field name="sale_price_subtotal" type="measure"/>
+                <field name="sale_price_total" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_event_sale_report_tree" model="ir.ui.view">
+        <field name="name">event.sale.report.view.tree</field>
+        <field name="model">event.sale.report</field>
+        <field name="arch" type="xml">
+            <tree string="Revenues" edit="false">
+                <field name="event_id"/>
+                <field name="event_ticket_ids"/>
+                <field name="sale_price_total"/>
+                <field name="sale_price_subtotal"/>
+                <field name="seats_available"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_event_sale_report_search" model="ir.ui.view">
+        <field name="name">event.sale.report.view.search</field>
+        <field name="model">event.sale.report</field>
+        <field name="arch" type="xml">
+            <search string="Event Sales Analysis">
+                <filter string="By Event" name="group_by_event_id" context="{'group_by': 'event_id' }"/>
+                <filter string="By Ticket" name="group_by_ticket_id" context="{'group_by': 'event_ticket_ids'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="event_sale_report_action" model="ir.actions.act_window">
+        <field name="name">Revenues</field>
+        <field name="res_model">event.sale.report</field>
+        <field name="view_mode">graph,pivot</field>
+        <field name="context">{
+            'search_default_group_by_event_id': 1,
+            'search_default_group_by_ticket_id': 1
+        }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No Event Revenues yet!
+            </p><p>
+                Come back once tickets have been sold to overview your sales income.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_show_revenues" model="ir.actions.server">
+        <field name="name">Revenue</field>
+        <field name="model_id" ref="model_event_sale_report"/>
+        <field name="state">code</field>
+        <field name="code">action = model.action_show_revenues()</field>
+    </record>
+
+    <menuitem name="Revenues"
+        id="menu_action_show_revenues"
+        action="action_show_revenues"
+        sequence="5"
+        parent="event.menu_reporting_events"
+        groups="event.group_event_user"/>
+</odoo>

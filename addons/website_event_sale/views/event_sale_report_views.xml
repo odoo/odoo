@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_event_sale_report_tree" model="ir.ui.view">
+        <field name="name">event.sale.report.view.tree.inherit</field>
+        <field name="model">event.sale.report</field>
+        <field name="inherit_id" ref="event_sale.view_event_sale_report_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='sale_price_subtotal']" position="after">
+                <field name="is_published"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_event_sale_report_search" model="ir.ui.view">
+        <field name="name">event.sale.report.view.search.inherit</field>
+        <field name="model">event.sale.report</field>
+        <field name="inherit_id" ref="event_sale.view_event_sale_report_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <filter string="Published" name="is_published" domain="[('is_published', '=', True)]"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -22,6 +22,7 @@ this event.
     'data': [
         'views/event_ticket_views.xml',
         'views/event_registration_views.xml',
+        'views/event_sale_report_views.xml',
         'views/event_views.xml',
         'views/sale_order_views.xml',
         'data/event_sale_data.xml',
@@ -32,7 +33,9 @@ this event.
         'wizard/event_edit_registration.xml',
         'wizard/event_configurator_views.xml',
     ],
-    'demo': ['data/event_demo.xml'],
+    'demo': [
+        'data/event_sale_demo.xml'
+    ],
     'installable': True,
     'auto_install': True,
     'assets': {

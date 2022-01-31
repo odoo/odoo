@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="event_sale_order_1" model="sale.order">
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="partner_id" ref="base.res_partner_1"/>
+            <field name="pricelist_id" ref="product.list0"/>
+        </record>
+
+        <record id="event_sale_order_2" model="sale.order">
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="partner_id" ref="base.res_partner_2"/>
+            <field name="pricelist_id" ref="product.list0"/>
+        </record>
+
+        <record id="event_sale_order_3" model="sale.order">
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="partner_id" ref="base.res_partner_3"/>
+            <field name="pricelist_id" ref="product.list0"/>
+        </record>
+
+        <record id="event_sale_order_line_1" model="sale.order.line">
+            <field name="order_id" ref="event_sale.event_sale_order_1"/>
+            <field name="name">Event Registration</field>
+            <field name="product_id" ref="event_sale.product_product_event"/>
+            <field name="price_unit">0</field>
+            <field name="product_uom_qty">5.0</field>
+            <field name="event_id" ref="event.event_0"/>
+            <field name="event_ticket_id" ref="event.event_0_ticket_0"/>
+        </record>
+
+        <record id="event_sale_order_line_2" model="sale.order.line">
+            <field name="order_id" ref="event_sale.event_sale_order_1"/>
+            <field name="name">Event Registration</field>
+            <field name="product_id" ref="event_sale.product_product_event"/>
+            <field name="price_unit">15</field>
+            <field name="product_uom_qty">3.0</field>
+            <field name="event_id" ref="event.event_0"/>
+            <field name="event_ticket_id" ref="event.event_0_ticket_1"/>
+        </record>
+
+        <record id="event_sale_order_line_3" model="sale.order.line">
+            <field name="order_id" ref="event_sale.event_sale_order_2"/>
+            <field name="name">Event Registration</field>
+            <field name="product_id" ref="event_sale.product_product_event"/>
+            <field name="price_unit">50</field>
+            <field name="product_uom_qty">1.0</field>
+            <field name="event_id" ref="event.event_2"/>
+            <field name="event_ticket_id" ref="event.event_2_ticket_1"/>
+        </record>
+
+        <record id="event_sale_order_line_4" model="sale.order.line">
+            <field name="order_id" ref="event_sale.event_sale_order_3"/>
+            <field name="name">Event Registration</field>
+            <field name="product_id" ref="event_sale.product_product_event"/>
+            <field name="price_unit">35</field>
+            <field name="product_uom_qty">1.0</field>
+            <field name="event_id" ref="event.event_2"/>
+            <field name="event_ticket_id" ref="event.event_2_ticket_2"/>
+        </record>
+    </data>
+</odoo>
