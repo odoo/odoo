@@ -3,7 +3,7 @@
     <t t-name="mail.AttachmentImage" owl="1">
         <div t-attf-class="{{ className }}" t-ref="root">
             <t t-if="attachmentImage">
-                <div class="o_AttachmentImage d-flex o-details-overlay position-relative m-1 flex-shrink-0"
+                <div class="o_AttachmentImage d-flex position-relative m-1 flex-shrink-0"
                     t-att-class="{
                         'o-isUploading': attachmentImage.attachment.isUploading,
                     }"
