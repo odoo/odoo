@@ -65,6 +65,62 @@ class TestOnchangeProductId(TransactionCase):
         # Check the unit price of SO line
         self.assertEqual(100, sale_order.order_line[0].price_unit, "The included tax must be subtracted to the price")
 
+    def test_fiscalposition_application(self):
+        """Test application of a fiscal position mapping
+        price included to price included tax
+        """
+
+        uom = self.product_uom_model.search([('name', '=', 'Units')])
+        pricelist = self.pricelist_model.search([('name', '=', 'Public Pricelist')])
+
+        partner = self.res_partner_model.create({
+            'name': "George"
+        })
+        tax_include_src = self.tax_model.create({
+            'name': "Include tax",
+            'amount': 21.00,
+            'price_include': True,
+        })
+        tax_include_dst = self.tax_model.create({
+            'name': "Exclude tax",
+            'amount': 6.00,
+            'price_include': True,
+        })
+
+        product_tmpl = self.product_tmpl_model.create({
+            'name': "Voiture",
+            'list_price': 121,
+            'taxes_id': [(6, 0, [tax_include_src.id])]
+        })
+
+        product_product = product_tmpl.product_variant_id
+
+        fpos = self.fiscal_position_model.create({
+            'name': "fiscal position",
+            'sequence': 1
+        })
+
+        fpos_tax = self.fiscal_position_tax_model.create({
+            'position_id' :fpos.id,
+            'tax_src_id': tax_include_src.id,
+            'tax_dest_id': tax_include_dst.id
+        })
+
+        # Create the SO with one SO line and apply a pricelist and fiscal position on it
+        order_form = Form(self.env['sale.order'].with_context(tracking_disable=True))
+        order_form.partner_id = partner
+        order_form.pricelist_id = pricelist
+        order_form.fiscal_position_id = fpos
+        with order_form.order_line.new() as line:
+            line.name = product_product.name
+            line.product_id = product_product
+            line.product_uom_qty = 1.0
+            line.product_uom = uom
+        sale_order = order_form.save()
+
+        # Check the unit price of SO line
+        self.assertRecordValues(sale_order.order_line, [{'price_unit': 106}])
+
     def test_pricelist_application(self):
         """ Test different prices are correctly applied based on dates """
         support_product = self.env['product.product'].create({
