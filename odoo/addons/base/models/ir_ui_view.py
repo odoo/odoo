@@ -1824,20 +1824,28 @@ actual arch.
         return etree.tostring(arch_tree, encoding='unicode')
 
     @api.model
-    def get_view_id(self, template):
+    def _get_view_id(self, template):
         """ Return the view ID corresponding to ``template``, which may be a
         view ID or an XML ID. Note that this method may be overridden for other
         kinds of template values.
-
-        This method could return the ID of something that is not a view (when
-        using fallback to `_xmlid_to_res_id`).
         """
         if isinstance(template, int):
             return template
         if '.' not in template:
             raise ValueError('Invalid template id: %r' % template)
         view = self.sudo().search([('key', '=', template)], limit=1)
-        return view and view.id or self.env['ir.model.data']._xmlid_to_res_id(template, raise_if_not_found=True)
+        if view:
+            return view.id
+        res_model, res_id = self.env['ir.model.data']._xmlid_to_res_model_res_id(template, raise_if_not_found=True)
+        assert res_model == self._name, "Call _get_view_id, expected %r, got %r" % (self._name, res_model)
+        return res_id
+
+    @api.model
+    def _get_view(self, view_ref):
+        """ Return the view corresponding to ``view_ref``, which may be a
+        view ID or an XML ID.
+        """
+        return self.browse(self._get_view_id(view_ref))
 
     def clear_cache(self):
         """ Deprecated, use `clear_caches` instead. """
@@ -1927,8 +1935,8 @@ actual arch.
 
     @api.model
     def render_public_asset(self, template, values=None):
-        template = self.sudo().browse(self.get_view_id(template))
-        template._check_view_access()
+        template_sudo = self._get_view(template).sudo()
+        template_sudo._check_view_access()
         return self.env['ir.qweb'].sudo()._render(template, values)
 
     def _render_template(self, template, values=None):

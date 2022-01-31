@@ -131,15 +131,8 @@ export const TimeOffCalendarController = CalendarController.extend({
      * @private
      */
     async _onNewTimeOff() {
-        const viewId = await this._rpc({
-            model: 'ir.ui.view',
-            method: 'get_view_id',
-            args: ['hr_holidays.hr_leave_view_form_dashboard_new_time_off'],
-        });
-
         this.timeOffDialog = new dialogs.FormViewDialog(this, {
             res_model: "hr.leave",
-            view_id: viewId,
             context: this._getTimeOffContext(),
             title: _t("New time off"),
             disable_multiple_selection: true,
@@ -154,17 +147,8 @@ export const TimeOffCalendarController = CalendarController.extend({
      * @private
      */
     async _onNewAllocation() {
-        const viewXmlId = this._getFormViewId();
-
-        const viewId = await this._rpc({
-            model: 'ir.ui.view',
-            method: 'get_view_id',
-            args: [viewXmlId],
-        });
-
         this.allocationDialog = new dialogs.FormViewDialog(this, {
             res_model: "hr.leave.allocation",
-            view_id: viewId,
             context: this._getAllocationContext(),
             title: _t("New Allocation"),
             disable_multiple_selection: true,
@@ -203,6 +187,7 @@ export const TimeOffCalendarController = CalendarController.extend({
             'default_date_from': moment().locale('en').format('YYYY-MM-DD'),
             'default_date_to': moment().add(1, 'days').locale('en').format('YYYY-MM-DD'),
             'lang': this.context.lang,
+            'form_view_ref': 'hr_holidays.hr_leave_view_form_dashboard_new_time_off'
         };
     },
 
@@ -210,6 +195,7 @@ export const TimeOffCalendarController = CalendarController.extend({
         return {
             'default_state': 'confirm',
             'lang': this.context.lang,
+            'form_view_ref': this._getFormViewId()
         };
     },
 

@@ -79,7 +79,7 @@ class TestWebsiteResetViews(odoo.tests.HttpCase):
     #     self.assertEqual(total_views + 1, self.View.search_count([('type', '=', 'qweb')]), "Missing COW view (1)")
     #     self.fix_it('/test_view')
 
-    # also mute ir.ui.view as `get_view_id()` will raise "Could not find view object with xml_id 'no_record.exist'""
+    # also mute ir.ui.view as `_get_view_id()` will raise "Could not find view object with xml_id 'no_record.exist'""
     @mute_logger('odoo.http', 'odoo.addons.website.models.ir_ui_view')
     def test_06_reset_specific_view_controller_inexisting_template(self):
         total_views = self.View.search_count([('type', '=', 'qweb')])
