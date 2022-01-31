@@ -173,8 +173,8 @@ QUnit.test('activity info layout when planned after tomorrow', async function (a
         "should have activity delay"
     );
     assert.ok(
-        document.querySelector('.o_Activity_dueDateText').classList.contains('o-planned'),
-        "activity delay should have the right color modifier class (planned)"
+        document.querySelector('.o_Activity_dueDateText').classList.contains('text-success'),
+        "activity delay should have the right color modifier class (text-success)"
     );
     assert.strictEqual(
         document.querySelector('.o_Activity_dueDateText').textContent,
@@ -216,8 +216,8 @@ QUnit.test('activity info layout when planned tomorrow', async function (assert)
         "should have activity delay"
     );
     assert.ok(
-        document.querySelector('.o_Activity_dueDateText').classList.contains('o-planned'),
-        "activity delay should have the right color modifier class (planned)"
+        document.querySelector('.o_Activity_dueDateText').classList.contains('text-success'),
+        "activity delay should have the right color modifier class (text-success)"
     );
     assert.strictEqual(
         document.querySelector('.o_Activity_dueDateText').textContent,
@@ -256,8 +256,8 @@ QUnit.test('activity info layout when planned today', async function (assert) {
         "should have activity delay"
     );
     assert.ok(
-        document.querySelector('.o_Activity_dueDateText').classList.contains('o-today'),
-        "activity delay should have the right color modifier class (today)"
+        document.querySelector('.o_Activity_dueDateText').classList.contains('text-warning'),
+        "activity delay should have the right color modifier class (text-warning)"
     );
     assert.strictEqual(
         document.querySelector('.o_Activity_dueDateText').textContent,
@@ -299,8 +299,8 @@ QUnit.test('activity info layout when planned yesterday', async function (assert
         "should have activity delay"
     );
     assert.ok(
-        document.querySelector('.o_Activity_dueDateText').classList.contains('o-overdue'),
-        "activity delay should have the right color modifier class (overdue)"
+        document.querySelector('.o_Activity_dueDateText').classList.contains('text-danger'),
+        "activity delay should have the right color modifier class (text-danger)"
     );
     assert.strictEqual(
         document.querySelector('.o_Activity_dueDateText').textContent,
@@ -342,8 +342,8 @@ QUnit.test('activity info layout when planned before yesterday', async function 
         "should have activity delay"
     );
     assert.ok(
-        document.querySelector('.o_Activity_dueDateText').classList.contains('o-overdue'),
-        "activity delay should have the right color modifier class (overdue)"
+        document.querySelector('.o_Activity_dueDateText').classList.contains('text-danger'),
+        "activity delay should have the right color modifier class (text-danger)"
     );
     assert.strictEqual(
         document.querySelector('.o_Activity_dueDateText').textContent,
