@@ -2160,6 +2160,22 @@ class Task(models.Model):
         action['views'] = [[self.env.ref('project.project_sharing_project_task_view_form').id, 'form']]
         return action
 
+    def action_project_sharing_open_subtasks(self):
+        self.ensure_one()
+        subtasks = self.env['project.task'].search([('id', 'child_of', self.id), ('id', '!=', self.id)])
+        if subtasks.project_id == self.project_id:
+            action = self.env['ir.actions.act_window']._for_xml_id('project.project_sharing_project_task_action_sub_task')
+            if len(subtasks) == 1:
+                action['view_mode'] = 'form'
+                action['views'] = [(view_id, view_type) for view_id, view_type in action['views'] if view_type == 'form']
+                action['res_id'] = subtasks.id
+            return action
+        return {
+            'name': 'Portal Sub-tasks',
+            'type': 'ir.actions.act_url',
+            'url': f'/my/projects/{self.project_id.id}/task/{self.id}/subtasks' if len(subtasks) > 1 else subtasks.get_portal_url(query_string='project_sharing=1'),
+        }
+
     def action_dependent_tasks(self):
         self.ensure_one()
         action = {
