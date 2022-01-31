@@ -854,9 +854,9 @@ class MrpProduction(models.Model):
         if len(group_orders) > 1:
             move_dest_ids |= group_orders[0].move_finished_ids.filtered(lambda m: m.product_id == self.product_id).move_dest_ids
         date_planned_finished = self.date_planned_start + relativedelta(days=self.product_id.produce_delay)
-        date_planned_finished = date_planned_finished + relativedelta(days=self.company_id.manufacturing_lead)
-        if date_planned_finished == self.date_planned_start:
-            date_planned_finished = date_planned_finished + relativedelta(hours=1)
+        self.date_planned_finished = date_planned_finished + relativedelta(days=self.company_id.manufacturing_lead)
+        if self.date_planned_finished == self.date_planned_start:
+            self.date_planned_finished = self.date_planned_finished + relativedelta(hours=1)
         return {
             'product_id': product_id,
             'product_uom_qty': product_uom_qty,
