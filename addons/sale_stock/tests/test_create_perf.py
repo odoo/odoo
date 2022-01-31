@@ -160,6 +160,6 @@ class TestPERF(common.TransactionCase):
             ],
         } for i in range(self.ENTITIES)]
 
-        # 1592 locally, 1593 in nightly runbot
-        with self.assertQueryCount(admin=1593):
+        # 1592 locally, 1593 in nightly runbot, 1954 sometimes
+        with self.assertQueryCount(admin=1594):
             self.env["sale.order"].create(vals_list)
