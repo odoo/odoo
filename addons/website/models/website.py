@@ -1033,7 +1033,7 @@ class Website(models.Model):
             In case of website context, return the most specific one.
 
             If no website_id is in the context, it will return the generic view,
-            instead of a random one like `get_view_id`.
+            instead of a random one like `_get_view_id`.
 
             Look also for archived views, no matter the context.
 
@@ -1088,16 +1088,12 @@ class Website(models.Model):
 
     @api.model
     def get_template(self, template):
-        View = self.env['ir.ui.view']
-        if isinstance(template, int):
-            view_id = template
-        else:
-            if '.' not in template:
-                template = 'website.%s' % template
-            view_id = View.get_view_id(template)
-        if not view_id:
+        if isinstance(template, str) and '.' not in template:
+            template = 'website.%s' % template
+        view = self.env['ir.ui.view']._get_view(template).sudo()
+        if not view:
             raise NotFound
-        return View.sudo().browse(view_id)
+        return view
 
     @api.model
     def pager(self, url, total, page=1, step=30, scope=5, url_args=None):
