@@ -24,6 +24,7 @@ class HolidaysType(models.Model):
         'project.task', string="Task", compute='_compute_timesheet_task_id',
         store=True, readonly=False, default=_default_task_id,
         domain="[('project_id', '=', timesheet_project_id),"
+                "('project_id', '!=', False),"
                 "('company_id', '=', company_id)]")
 
     @api.depends('timesheet_task_id', 'timesheet_project_id')
