@@ -3037,7 +3037,7 @@ class AccountMoveLine(models.Model):
             move_type=move_type or self.move_id.type,
             currency=currency or self.currency_id,
             company=company or self.move_id.company_id,
-            date=date or self.move_id.date,
+            date=date or self.move_id.invoice_date,
         )
 
     @api.model
