@@ -1555,6 +1555,7 @@ class Monetary(Field):
             # BEWARE: do not prefetch other fields, because 'value' may be in
             # cache, and would be overridden by the value read from database!
             currency = record[:1].with_context(prefetch_fields=False)[currency_field]
+            currency = currency.with_env(record.env)
 
         value = float(value or 0.0)
         if currency:
@@ -1574,7 +1575,7 @@ class Monetary(Field):
             if len(currency) > 1:
                 raise ValueError("Got multiple currencies while assigning values of monetary field %s" % str(self))
             elif currency:
-                value = currency.round(value)
+                value = currency.with_env(record.env).round(value)
         return value
 
     def convert_to_record(self, value, record):

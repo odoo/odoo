@@ -3809,9 +3809,9 @@ class TestPrecompute(common.TransactionCase):
         model.flush()
         model.invalidate_cache()
 
+        fnames = [fname for fname, field in currency._fields.items() if field.prefetch]
         QUERIES = [
-            select(currency, 'rounding'),
-            select(currency, 'decimal_places'),
+            select(currency, *fnames),
             insert(model, 'amount', 'currency_id'),
             select(model, 'currency_id'),
         ]
