@@ -67,6 +67,7 @@ registerModel({
             this.update({
                 composerForEditing: insertAndReplace({
                     isLastStateChangeProgrammatic: true,
+                    mentionedPartners: replace(this.message.recipients),
                     textInputContent,
                     textInputCursorEnd: textInputContent.length,
                     textInputCursorStart: textInputContent.length,
