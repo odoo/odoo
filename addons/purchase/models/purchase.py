@@ -186,9 +186,17 @@ class PurchaseOrder(models.Model):
             if 'date_order' in vals:
                 seq_date = fields.Datetime.context_timestamp(self, fields.Datetime.to_datetime(vals['date_order']))
             vals['name'] = self.env['ir.sequence'].with_context(force_company=company_id).next_by_code('purchase.order', sequence_date=seq_date) or '/'
+
+        partner = self.env['res.partner'].browse(vals.get('partner_id'))
+        if not partner.supplier_rank:
+            partner.supplier_rank = 1
         return super(PurchaseOrder, self.with_context(company_id=company_id)).create(vals)
 
     def write(self, vals):
+        if 'partner_id' in vals:
+            partner = self.env['res.partner'].browse(vals.get('partner_id'))
+            if not partner.supplier_rank:
+                partner.supplier_rank = 1
         res = super(PurchaseOrder, self).write(vals)
         if vals.get('date_planned'):
             self.order_line.filtered(lambda line: not line.display_type).date_planned = vals['date_planned']

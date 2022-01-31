@@ -477,7 +477,19 @@ class SaleOrder(models.Model):
             vals['partner_invoice_id'] = vals.setdefault('partner_invoice_id', addr['invoice'])
             vals['partner_shipping_id'] = vals.setdefault('partner_shipping_id', addr['delivery'])
             vals['pricelist_id'] = vals.setdefault('pricelist_id', partner.property_product_pricelist and partner.property_product_pricelist.id)
+        partner = self.env['res.partner'].browse(vals.get('partner_id'))
+        if not partner.customer_rank:
+            partner.customer_rank = 1
         result = super(SaleOrder, self).create(vals)
+        return result
+
+    def write(self, vals):
+        if 'partner_id' in vals:
+            partner = self.env['res.partner'].browse(vals.get('partner_id'))
+            if not partner.customer_rank:
+                partner.customer_rank = 1
+
+        result = super(SaleOrder, self).write(vals)
         return result
 
     def _write(self, values):
