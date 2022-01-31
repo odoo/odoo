@@ -100,7 +100,7 @@ tour.register('project_tour', {
     position: "bottom"
 }, {
     trigger: ".o_ChatterTopbar_buttonScheduleActivity",
-    content: Markup(_t("Use <b>activities</b> to organize your daily work.")),
+    content: Markup(_t("Create <b>activities</b> to set yourself to-dos or to schedule meetings.")),
 }, {
     trigger: ".modal-dialog .btn-primary",
     content: "Schedule your activity once it is ready.",
