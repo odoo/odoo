@@ -924,8 +924,8 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
 
         # Test the write-off part
         expected_write_off = {
-            'balance': 10,
-            'currency_id': False,
+            'balance': 10.0,
+            'currency_id': statement_line.currency_id.id,
             'reconcile_model_id': self.rule_1.id,
             'account_id': self.current_assets_account.id,
         }
@@ -1104,3 +1104,40 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
             [(6, 0, tax.refund_repartition_line_ids[1].tag_ids.ids)],
             'The tags of the second repartition line are not inverted'
         )
+
+    @freeze_time('2020-01-01')
+    def test_inv_matching_with_write_off_and_foreign_currency(self):
+        journal = self.bank_journal.copy({'currency_id': self.currency_data_2['currency'].id})
+        invoice_line = self._create_invoice_line(100, self.partner_1, 'out_invoice', self.currency_data_2['currency'])
+        self.rule_1.match_total_amount_param = 90
+        self.rule_1.match_partner = False
+        bank_st = self.bank_st.copy({
+            'journal_id': journal.id,
+            'line_ids': [
+                    (0, 0, {
+                        'date': '2020-01-01',
+                        'payment_ref': invoice_line.move_id.payment_reference,
+                        'partner_id': self.partner_1.id,
+                        'amount': 90,
+                        'sequence': 1,
+                    }),
+                ]
+        })
+
+        statement_line = bank_st.line_ids[0]
+
+        # Test the invoice-matching part
+        self._check_statement_matching(self.rule_1, {
+            statement_line.id: {'aml_ids': invoice_line.ids, 'model': self.rule_1, 'partner': invoice_line.partner_id, 'status': 'write_off'},
+        }, bank_st)
+
+        matching_result = self.rule_1._apply_rules(statement_line)
+
+        self.assertEqual(len(matching_result[statement_line.id].get('write_off_vals', [])), 1, "Exactly one write-off line should be proposed.")
+
+        full_write_off_dict = matching_result[statement_line.id]['write_off_vals'][0]
+
+        self.assertEqual(full_write_off_dict['balance'], 10.0)
+        self.assertEqual(full_write_off_dict['reconcile_model_id'], self.rule_1.id)
+        self.assertEqual(full_write_off_dict['account_id'], self.current_assets_account.id)
+        self.assertEqual(full_write_off_dict['currency_id'], statement_line.currency_id.id)

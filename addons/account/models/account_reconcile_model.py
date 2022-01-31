@@ -339,7 +339,7 @@ class AccountReconcileModel(models.Model):
         lines_vals_list = []
 
         for line in self.line_ids:
-            currency_id = st_line.currency_id or st_line.journal_id.currency_id or self.company_id.currency_id
+            currency_id = st_line.foreign_currency_id or st_line.currency_id or st_line.journal_id.currency_id or self.company_id.currency_id
             if not line.account_id or currency_id.is_zero(residual_balance):
                 return []
 
@@ -365,7 +365,7 @@ class AccountReconcileModel(models.Model):
                 'debit': balance > 0 and balance or 0,
                 'credit': balance < 0 and -balance or 0,
                 'account_id': line.account_id.id,
-                'currency_id': False,
+                'currency_id': currency_id.id,
                 'analytic_account_id': line.analytic_account_id.id,
                 'analytic_tag_ids': [(6, 0, line.analytic_tag_ids.ids)],
                 'reconcile_model_id': self.id,
@@ -863,6 +863,7 @@ class AccountReconcileModel(models.Model):
             # A write-off must be applied if there are some 'new' lines to propose.
             write_off_lines_vals = list(filter(lambda x: 'id' not in x, lines_vals_list))
             if not lines_vals_list or write_off_lines_vals:
+                self._convert_writeoff_balance(write_off_lines_vals, st_line)
                 rslt['status'] = 'write_off'
                 rslt['write_off_vals'] = write_off_lines_vals
 
@@ -984,6 +985,7 @@ class AccountReconcileModel(models.Model):
     def _get_writeoff_suggestion_rule_result(self, st_line, partner):
         # Create write-off lines.
         lines_vals_list = self._prepare_reconciliation(st_line, partner=partner)
+        self._convert_writeoff_balance(lines_vals_list, st_line)
 
         rslt = {
             'model': self,
@@ -1002,3 +1004,8 @@ class AccountReconcileModel(models.Model):
             rslt['reconciled_lines'] = st_line.line_ids
 
         return rslt
+
+    def _convert_writeoff_balance(self, lines_vals_list, st_line):
+        for line_vals in lines_vals_list:
+            if line_vals.get('currency_id') and line_vals.get('currency_id') != st_line.company_id.currency_id.id:
+                line_vals['balance'] = st_line._prepare_counterpart_move_line_vals({'balance': line_vals.get('balance'), 'currency_id': st_line.company_id.currency_id.id}).get('amount_currency')
