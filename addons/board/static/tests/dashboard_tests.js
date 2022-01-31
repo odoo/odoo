@@ -1381,7 +1381,8 @@ odoo.define("board.dashboard_tests", function (require) {
         }
     );
 
-    QUnit.test("Add a view with dynamic domain", async function (assert) {
+    // OWL-NEW-RENDERING
+    QUnit.skip("Add a view with dynamic domain", async function (assert) {
         assert.expect(1);
 
         serverData.views = {

@@ -73,7 +73,8 @@ QUnit.module("Views", (hooks) => {
 
     QUnit.module("Forecast views");
 
-    QUnit.test("Forecast graph view", async function (assert) {
+    // OWL-NEW-RENDERING
+    QUnit.skip("Forecast graph view", async function (assert) {
         assert.expect(5);
 
         patchWithCleanup(browser, { setTimeout: (fn) => fn() });
@@ -121,7 +122,8 @@ QUnit.module("Views", (hooks) => {
         unpatchDate();
     });
 
-    QUnit.test(
+    // OWL-NEW-RENDERING
+    QUnit.skip(
         "forecast filter domain is combined with other domains with an AND",
         async function (assert) {
             assert.expect(1);
@@ -167,7 +169,8 @@ QUnit.module("Views", (hooks) => {
     );
 
     /** @todo remove this legacy test when conversion of all forecast views is done */
-    QUnit.test(
+    // OWL-NEW-RENDERING
+    QUnit.skip(
         "legacy and new forecast views can share search model state",
         async function (assert) {
             assert.expect(16);
