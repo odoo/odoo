@@ -42,6 +42,7 @@ export class AttachmentBox extends Component {
      */
     _onAttachmentCreated(ev) {
         // FIXME Could be changed by spying attachments count (task-2252858)
+        debugger;
         this.trigger('o-attachments-changed');
     }
 

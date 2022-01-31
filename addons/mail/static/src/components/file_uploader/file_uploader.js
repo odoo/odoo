@@ -154,6 +154,7 @@ export class FileUploader extends Component {
             originThread: (!composer && thread) ? replace(thread) : undefined,
             ...attachmentData,
         });
+        debugger;
         this.trigger('o-attachment-created', { attachment });
     }
 
