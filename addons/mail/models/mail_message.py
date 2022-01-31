@@ -974,6 +974,7 @@ class Message(models.Model):
                 'is_discussion': message_sudo.subtype_id.id == com_id,
                 'subtype_description': message_sudo.subtype_id.description,
                 'is_notification': vals['message_type'] == 'user_notification',
+                'recipients': [{'id': p.id, 'name': p.name} for p in message_sudo.partner_ids],
             })
             if vals['model'] and self.env[vals['model']]._original_module:
                 vals['module_icon'] = modules.module.get_module_icon(self.env[vals['model']]._original_module)
@@ -984,7 +985,6 @@ class Message(models.Model):
             'id', 'body', 'date', 'author_id', 'email_from',  # base message fields
             'message_type', 'subtype_id', 'subject',  # message specific
             'model', 'res_id', 'record_name',  # document related
-            'partner_ids',  # recipients
             'starred_partner_ids',  # list of partner ids for whom the message is starred
         ]
 
