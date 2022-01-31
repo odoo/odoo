@@ -218,25 +218,40 @@
 </template>
 
 <template id="s_mail_block_event" name="Event">
-    <div class="o_mail_snippet_general o_mail_block_event s_event bg-300">
+    <div class="s_mail_block_event o_mail_snippet_general bg-100 pt32 pb32">
         <div class="container">
             <div class="row align-items-center">
-                <div class="col-lg-3 px-0 text-center">
-                    <h3 class="o_mail_no_margin">21 Jul</h3>
-                    <p class="o_mail_no_margin">ALL DAY</p>
-                </div>
-                <div class="col-lg-2 px-0">
-                    <img src="/web/image/mass_mailing.s_mail_block_event_default_image" class="img w-100"/>
-                </div>
-                <div class="col-lg-7">
-                    <h4>Cybersecurity</h4>
-                    <p>Cyber-threats continue to increase.
-                        <br/>The discussion will examine how to develop new norms and integrate them into EU
-                    </p>
-                    <div class="text-left">
-                        <a href="#" class="btn btn-primary">Register</a>
+                <div class="s_col_no_bgcolor col-lg-6">
+                    <div class="card bg-white h-100 rounded" style="border-radius: 5px !important; border-color: rgb(233, 236, 239) !important;">
+                        <img class="card-img-top" src="/mass_mailing_themes/static/src/img/theme_default/s_default_image_block_event_1.jpg" alt=""/>
+                        <div class="card-body">
+                            <h3 class="card-title">
+                                <font style="font-size: 18px;">Event One</font>
+                            </h3>
+                            <p><font class="text-o-color-1">25 September 2022 - 4:30 PM</font></p>
+                            <p>London, United Kingdom</p>
+                            <p>
+                                <a href="#" target="_blank" class="btn btn-primary">Register Now</a>
+                            </p>
+                        </div>
                     </div>
                 </div>
+                <div class="s_col_no_bgcolor col-lg-6">
+                    <div class="card bg-white h-100 rounded" style="border-radius: 5px !important; border-color: rgb(233, 236, 239) !important;">
+                        <img class="card-img-top" src="/mass_mailing_themes/static/src/img/theme_default/s_default_image_block_event_2.jpg" alt=""/>
+                        <div class="card-body">
+                            <h3 class="card-title">
+                                <font style="font-size: 18px">Event Two</font>
+                            </h3>
+                            <p><font class="text-o-color-1">26 September 2022 - 1:30 PM</font></p>
+                            <p>London, United Kingdom</p>
+                            <p>
+                                <a href="#" target="_blank" class="btn btn-primary">Register Now</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
@@ -490,9 +505,9 @@
         <t t-set="with_images" t-value="True"/>
     </t>
 
-    <!-- COLOR | .s_three_columns | .s_comparisons -->
+    <!-- COLOR | .s_three_columns | .s_comparisons | .s_mail_block_event  -->
     <div data-js="Box"
-         data-selector=".s_three_columns .row > div, .s_comparisons .row > div"
+         data-selector=".s_three_columns .row > div, .s_comparisons .row > div, .s_mail_block_event .row > div"
          data-target=".card-body">
         <we-colorpicker string="Background Color"
             data-select-style="true"
@@ -500,9 +515,9 @@
             data-css-property="background-color"
             data-color-prefix="bg-"/>
     </div>
-    <!-- BORDER | .s_three_columns | .s_comparisons -->
+    <!-- BORDER | .s_three_columns | .s_comparisons | .s_mail_block_event  -->
     <div data-js="Box"
-         data-selector=".s_three_columns .row > div, .s_comparisons .row > div"
+         data-selector=".s_three_columns .row > div, .s_comparisons .row > div, .s_mail_block_event .row > div"
          data-target=".card">
         <t t-call="mass_mailing.snippet_options_border_widgets">
             <t t-set="so_rounded_no_dependencies" t-value="True"/>
@@ -517,7 +532,7 @@
     </div>
 
     <!--  Vertical Alignment -->
-    <div data-option-name="vAlignment" id="row_valign_snippet_option" data-selector=".s_text_image, .s_image_text, .s_three_columns" data-target=".row">
+    <div data-option-name="vAlignment" id="row_valign_snippet_option" data-selector=".s_text_image, .s_image_text, .s_three_columns, s_mail_block_event" data-target=".row">
         <we-button-group string="Vert. Alignment" title="Vertical Alignment">
             <we-button title="Align Top"
                        data-select-class="align-items-start"
