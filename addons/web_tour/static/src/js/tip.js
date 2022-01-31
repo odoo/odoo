@@ -57,7 +57,7 @@ var Tip = Widget.extend({
      * Attaches the tip to the provided $anchor and $altAnchor.
      * $altAnchor is an alternative trigger that can consume the step. The tip is
      * however only displayed on the $anchor.
-     * 
+     *
      * Note that the returned promise stays pending if the Tip widget was
      * destroyed in the meantime.
      *
