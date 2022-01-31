@@ -1767,15 +1767,19 @@ class BaseModel(metaclass=MetaModel):
             'context': dict(self._context),
         }
 
-    def get_access_action(self, access_uid=None):
+    def _get_access_action(self, access_uid=None, force_website=False):
         """ Return an action to open the document. This method is meant to be
         overridden in addons that want to give specific access to the document.
         By default, it opens the formview of the document.
 
-        An optional access_uid holds the user that will access the document
-        that could be different from the current user.
+        :param integer access_uid: optional access_uid being the user that
+          accesses the document. May be different from the current user as we
+          may compute an access for someone else.
+        :param integer force_website: force frontend redirection if available
+          on self. Used in overrides, notably with portal / website addons.
         """
-        return self[0].get_formview_action(access_uid=access_uid)
+        self.ensure_one()
+        return self.get_formview_action(access_uid=access_uid)
 
     @api.model
     def search_count(self, args):

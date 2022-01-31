@@ -587,7 +587,7 @@ class TestMailComplexPerformance(BaseMailPerformance):
         record = self.container.with_user(self.env.user)
         template_id = self.env.ref('test_mail.mail_test_container_tpl').id
 
-        with self.assertQueryCount(__system__=72, employee=73):
+        with self.assertQueryCount(__system__=72, employee=73):  # about 20 queries per additional customer group
             record.message_post_with_template(template_id, message_type='comment', composition_mode='comment')
 
         self.assertEqual(record.message_ids[0].body, '<p>Adding stuff on %s</p>' % record.name)
@@ -1018,7 +1018,7 @@ class TestMailHeavyPerformancePost(BaseMailPerformance):
                 parent_id=False,
                 attachments=attachements,
                 attachment_ids=attachement_ids,
-                add_sign=True,
+                email_add_signature=True,
                 model_description=False,
                 mail_auto_delete=True
             )

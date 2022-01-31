@@ -68,17 +68,16 @@ class MailResendMessage(models.TransientModel):
                 record = self.env[message.model].browse(message.res_id) if message.is_thread_message() else self.env['mail.thread']
 
                 email_partners_data = []
-                for pid, active, pshare, notif, groups in self.env['mail.followers']._get_recipient_data(None, 'comment', False, pids=to_send.ids):
-                    if pid and notif == 'email' or not notif:
-                        pdata = {'id': pid, 'share': pshare, 'active': active, 'notif': 'email', 'groups': groups or []}
-                        if not pshare and notif:  # has an user and is not shared, is therefore user
-                            email_partners_data.append(dict(pdata, type='user'))
-                        elif pshare and notif:  # has an user and is shared, is therefore portal
-                            email_partners_data.append(dict(pdata, type='portal'))
-                        else:  # has no user, is therefore customer
-                            email_partners_data.append(dict(pdata, type='customer'))
+                recipients_data = self.env['mail.followers']._get_recipient_data(None, 'comment', False, pids=to_send.ids)[0]
+                for pid, pdata in recipients_data.items():
+                    if pid and pdata.get('notif', 'email') == 'email':
+                        email_partners_data.append(pdata)
 
-                record._notify_record_by_email(message, email_partners_data, check_existing=True, send_after_commit=False)
+                record._notify_thread_by_email(
+                    message, email_partners_data,
+                    check_existing=True,
+                    send_after_commit=False
+                )
 
             self.mail_message_id._notify_message_notification_update()
         return {'type': 'ir.actions.act_window_close'}

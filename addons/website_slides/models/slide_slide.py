@@ -649,10 +649,10 @@ class Slide(models.Model):
             raise AccessError(_('Not enough karma to comment'))
         return super(Slide, self).message_post(message_type=message_type, **kwargs)
 
-    def get_access_action(self, access_uid=None):
+    def _get_access_action(self, access_uid=None, force_website=False):
         """ Instead of the classic form view, redirect to website if it is published. """
         self.ensure_one()
-        if self.website_published:
+        if force_website or self.website_published:
             return {
                 'type': 'ir.actions.act_url',
                 'url': '%s' % self.website_url,
@@ -660,14 +660,14 @@ class Slide(models.Model):
                 'target_type': 'public',
                 'res_id': self.id,
             }
-        return super(Slide, self).get_access_action(access_uid)
+        return super(Slide, self)._get_access_action(access_uid=access_uid, force_website=force_website)
 
-    def _notify_get_groups(self, msg_vals=None):
+    def _notify_get_recipients_groups(self, msg_vals=None):
         """ Add access button to everyone if the document is active. """
-        groups = super(Slide, self)._notify_get_groups(msg_vals=msg_vals)
+        groups = super(Slide, self)._notify_get_recipients_groups(msg_vals=msg_vals)
 
         if self.website_published:
-            for group_name, group_method, group_data in groups:
+            for _group_name, _group_method, group_data in groups:
                 group_data['has_button_access'] = True
 
         return groups

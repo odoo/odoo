@@ -7,6 +7,7 @@ import logging
 
 from odoo import _, api, fields, models, tools, Command
 from odoo.exceptions import UserError
+from odoo.tools import is_html_empty
 
 _logger = logging.getLogger(__name__)
 
@@ -301,10 +302,21 @@ class MailTemplate(models.Model):
                     model = model.with_context(lang=lang)
 
                 template_ctx = {
+                    # message
                     'message': self.env['mail.message'].sudo().new(dict(body=values['body_html'], record_name=record.display_name)),
+                    'subtype': self.env['mail.message.subtype'].sudo(),
+                    # record
                     'model_description': model.display_name,
-                    'company': 'company_id' in record and record['company_id'] or self.env.company,
                     'record': record,
+                    'record_name': False,
+                    'subtitle': False,
+                    # user / environment
+                    'company': 'company_id' in record and record['company_id'] or self.env.company,
+                    'email_add_signature': False,
+                    'signature': '',
+                    'website_url': '',
+                    # tools
+                    'is_html_empty': is_html_empty,
                 }
                 body = template._render(template_ctx, engine='ir.qweb', minimal_qcontext=True)
                 values['body_html'] = self.env['mail.render.mixin']._replace_local_links(body)

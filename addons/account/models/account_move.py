@@ -3,7 +3,7 @@
 from odoo import api, fields, models, Command, _
 from odoo.exceptions import RedirectWarning, UserError, ValidationError, AccessError
 from odoo.tools import float_compare, date_utils, email_split, email_re, html_escape, is_html_empty, sql
-from odoo.tools.misc import formatLang, format_date, get_lang
+from odoo.tools.misc import format_amount, formatLang, format_date, get_lang
 
 from datetime import date, timedelta
 from collections import defaultdict
@@ -11,6 +11,7 @@ from contextlib import contextmanager
 from itertools import zip_longest
 from hashlib import sha256
 from json import dumps
+from markupsafe import Markup
 
 import ast
 import json
@@ -2346,41 +2347,6 @@ class AccountMove(models.Model):
             result.append((move.id, name))
         return result
 
-    def _creation_subtype(self):
-        # OVERRIDE
-        if self.move_type in ('out_invoice', 'out_refund', 'out_receipt'):
-            return self.env.ref('account.mt_invoice_created')
-        else:
-            return super(AccountMove, self)._creation_subtype()
-
-    def _track_subtype(self, init_values):
-        # OVERRIDE to add custom subtype depending of the state.
-        self.ensure_one()
-
-        if not self.is_invoice(include_receipts=True):
-            if self.payment_id and 'state' in init_values:
-                self.payment_id._message_track(['state'], {self.payment_id.id: init_values})
-            return super(AccountMove, self)._track_subtype(init_values)
-
-        if 'payment_state' in init_values and self.payment_state == 'paid':
-            return self.env.ref('account.mt_invoice_paid')
-        elif 'state' in init_values and self.state == 'posted' and self.is_sale_document(include_receipts=True):
-            return self.env.ref('account.mt_invoice_validated')
-        return super(AccountMove, self)._track_subtype(init_values)
-
-    def _creation_message(self):
-        # OVERRIDE
-        if not self.is_invoice(include_receipts=True):
-            return super()._creation_message()
-        return {
-            'out_invoice': _('Invoice Created'),
-            'out_refund': _('Credit Note Created'),
-            'in_invoice': _('Vendor Bill Created'),
-            'in_refund': _('Refund Created'),
-            'out_receipt': _('Sales Receipt Created'),
-            'in_receipt': _('Purchase Receipt Created'),
-        }[self.move_type]
-
     # -------------------------------------------------------------------------
     # RECONCILIATION METHODS
     # -------------------------------------------------------------------------
@@ -2856,59 +2822,6 @@ class AccountMove(models.Model):
             'domain': [('id', 'in', self.tax_cash_basis_created_move_ids.ids)],
             'views': [(self.env.ref('account.view_move_tree').id, 'tree'), (False, 'form')],
         }
-
-    @api.model
-    def message_new(self, msg_dict, custom_values=None):
-        # OVERRIDE
-        # Add custom behavior when receiving a new invoice through the mail's gateway.
-        if (custom_values or {}).get('move_type', 'entry') not in ('out_invoice', 'in_invoice'):
-            return super().message_new(msg_dict, custom_values=custom_values)
-
-        def is_internal_partner(partner):
-            # Helper to know if the partner is an internal one.
-            return partner.user_ids and all(user.has_group('base.group_user') for user in partner.user_ids)
-
-        extra_domain = False
-        if custom_values.get('company_id'):
-            extra_domain = ['|', ('company_id', '=', custom_values['company_id']), ('company_id', '=', False)]
-
-        # Search for partners in copy.
-        cc_mail_addresses = email_split(msg_dict.get('cc', ''))
-        followers = [partner for partner in self._mail_find_partner_from_emails(cc_mail_addresses, extra_domain) if partner]
-
-        # Search for partner that sent the mail.
-        from_mail_addresses = email_split(msg_dict.get('from', ''))
-        senders = partners = [partner for partner in self._mail_find_partner_from_emails(from_mail_addresses, extra_domain) if partner]
-
-        # Search for partners using the user.
-        if not senders:
-            senders = partners = list(self._mail_search_on_user(from_mail_addresses))
-
-        if partners:
-            # Check we are not in the case when an internal user forwarded the mail manually.
-            if is_internal_partner(partners[0]):
-                # Search for partners in the mail's body.
-                body_mail_addresses = set(email_re.findall(msg_dict.get('body')))
-                partners = [partner for partner in self._mail_find_partner_from_emails(body_mail_addresses, extra_domain) if not is_internal_partner(partner)]
-
-        # Little hack: Inject the mail's subject in the body.
-        if msg_dict.get('subject') and msg_dict.get('body'):
-            msg_dict['body'] = '<div><div><h3>%s</h3></div>%s</div>' % (msg_dict['subject'], msg_dict['body'])
-
-        # Create the invoice.
-        values = {
-            'name': '/',  # we have to give the name otherwise it will be set to the mail's subject
-            'invoice_source_email': from_mail_addresses[0],
-            'partner_id': partners and partners[0].id or False,
-        }
-        move_ctx = self.with_context(default_move_type=custom_values['move_type'], default_journal_id=custom_values['journal_id'])
-        move = super(AccountMove, move_ctx).message_new(msg_dict, custom_values=values)
-        move._compute_name()  # because the name is given, we need to recompute in case it is the first invoice of the journal
-
-        # Assign followers.
-        all_followers_ids = set(partner.id for partner in followers + senders + partners if is_internal_partner(partner))
-        move.message_subscribe(list(all_followers_ids))
-        return move
 
     def post(self):
         warnings.warn(
@@ -3403,6 +3316,92 @@ class AccountMove(models.Model):
 
         return rslt
 
+    def _get_create_invoice_from_attachment_decoders(self):
+        """ Returns a list of method that are able to create an invoice from an attachment and a priority.
+
+        :returns:   A list of tuples (priority, method) where method takes an attachment as parameter.
+        """
+        return []
+
+    def _get_update_invoice_from_attachment_decoders(self, invoice):
+        """ Returns a list of method that are able to create an invoice from an attachment and a priority.
+
+        :param invoice: The invoice on which to update the data.
+        :returns:       A list of tuples (priority, method) where method takes an attachment as parameter.
+        """
+        return []
+
+    @api.depends('move_type', 'partner_id', 'company_id')
+    def _compute_narration(self):
+        use_invoice_terms = self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms')
+        for move in self.filtered(lambda am: not am.narration):
+            if not use_invoice_terms or not move.is_sale_document(include_receipts=True):
+                move.narration = False
+            else:
+                if not move.company_id.terms_type == 'html':
+                    narration = move.company_id.invoice_terms if not is_html_empty(move.company_id.invoice_terms) else ''
+                else:
+                    baseurl = self.env.company.get_base_url() + '/terms'
+                    narration = _('Terms & Conditions: %s', baseurl)
+                move.narration = narration or False
+
+    # ------------------------------------------------------------
+    # MAIL.THREAD
+    # ------------------------------------------------------------
+
+    @api.model
+    def message_new(self, msg_dict, custom_values=None):
+        # OVERRIDE
+        # Add custom behavior when receiving a new invoice through the mail's gateway.
+        if (custom_values or {}).get('move_type', 'entry') not in ('out_invoice', 'in_invoice'):
+            return super().message_new(msg_dict, custom_values=custom_values)
+
+        def is_internal_partner(partner):
+            # Helper to know if the partner is an internal one.
+            return partner.user_ids and all(user.has_group('base.group_user') for user in partner.user_ids)
+
+        extra_domain = False
+        if custom_values.get('company_id'):
+            extra_domain = ['|', ('company_id', '=', custom_values['company_id']), ('company_id', '=', False)]
+
+        # Search for partners in copy.
+        cc_mail_addresses = email_split(msg_dict.get('cc', ''))
+        followers = [partner for partner in self._mail_find_partner_from_emails(cc_mail_addresses, extra_domain) if partner]
+
+        # Search for partner that sent the mail.
+        from_mail_addresses = email_split(msg_dict.get('from', ''))
+        senders = partners = [partner for partner in self._mail_find_partner_from_emails(from_mail_addresses, extra_domain) if partner]
+
+        # Search for partners using the user.
+        if not senders:
+            senders = partners = list(self._mail_search_on_user(from_mail_addresses))
+
+        if partners:
+            # Check we are not in the case when an internal user forwarded the mail manually.
+            if is_internal_partner(partners[0]):
+                # Search for partners in the mail's body.
+                body_mail_addresses = set(email_re.findall(msg_dict.get('body')))
+                partners = [partner for partner in self._mail_find_partner_from_emails(body_mail_addresses, extra_domain) if not is_internal_partner(partner)]
+
+        # Little hack: Inject the mail's subject in the body.
+        if msg_dict.get('subject') and msg_dict.get('body'):
+            msg_dict['body'] = '<div><div><h3>%s</h3></div>%s</div>' % (msg_dict['subject'], msg_dict['body'])
+
+        # Create the invoice.
+        values = {
+            'name': '/',  # we have to give the name otherwise it will be set to the mail's subject
+            'invoice_source_email': from_mail_addresses[0],
+            'partner_id': partners and partners[0].id or False,
+        }
+        move_ctx = self.with_context(default_move_type=custom_values['move_type'], default_journal_id=custom_values['journal_id'])
+        move = super(AccountMove, move_ctx).message_new(msg_dict, custom_values=values)
+        move._compute_name()  # because the name is given, we need to recompute in case it is the first invoice of the journal
+
+        # Assign followers.
+        all_followers_ids = set(partner.id for partner in followers + senders + partners if is_internal_partner(partner))
+        move.message_subscribe(list(all_followers_ids))
+        return move
+
     def _message_post_after_hook(self, new_message, message_values):
         # OVERRIDE
         # When posting a message, check the attachment to see if it's an invoice and update with the imported data.
@@ -3437,34 +3436,56 @@ class AccountMove(models.Model):
 
         return res
 
-    def _get_create_invoice_from_attachment_decoders(self):
-        """ Returns a list of method that are able to create an invoice from an attachment and a priority.
+    def _creation_subtype(self):
+        # OVERRIDE
+        if self.move_type in ('out_invoice', 'out_refund', 'out_receipt'):
+            return self.env.ref('account.mt_invoice_created')
+        else:
+            return super(AccountMove, self)._creation_subtype()
 
-        :returns:   A list of tuples (priority, method) where method takes an attachment as parameter.
-        """
-        return []
+    def _track_subtype(self, init_values):
+        # OVERRIDE to add custom subtype depending of the state.
+        self.ensure_one()
 
-    def _get_update_invoice_from_attachment_decoders(self, invoice):
-        """ Returns a list of method that are able to create an invoice from an attachment and a priority.
+        if not self.is_invoice(include_receipts=True):
+            if self.payment_id and 'state' in init_values:
+                self.payment_id._message_track(['state'], {self.payment_id.id: init_values})
+            return super(AccountMove, self)._track_subtype(init_values)
 
-        :param invoice: The invoice on which to update the data.
-        :returns:       A list of tuples (priority, method) where method takes an attachment as parameter.
-        """
-        return []
+        if 'payment_state' in init_values and self.payment_state == 'paid':
+            return self.env.ref('account.mt_invoice_paid')
+        elif 'state' in init_values and self.state == 'posted' and self.is_sale_document(include_receipts=True):
+            return self.env.ref('account.mt_invoice_validated')
+        return super(AccountMove, self)._track_subtype(init_values)
 
-    @api.depends('move_type', 'partner_id', 'company_id')
-    def _compute_narration(self):
-        use_invoice_terms = self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms')
-        for move in self.filtered(lambda am: not am.narration):
-            if not use_invoice_terms or not move.is_sale_document(include_receipts=True):
-                move.narration = False
-            else:
-                if not move.company_id.terms_type == 'html':
-                    narration = move.company_id.invoice_terms if not is_html_empty(move.company_id.invoice_terms) else ''
-                else:
-                    baseurl = self.env.company.get_base_url() + '/terms'
-                    narration = _('Terms & Conditions: %s', baseurl)
-                move.narration = narration or False
+    def _creation_message(self):
+        # OVERRIDE
+        if not self.is_invoice(include_receipts=True):
+            return super()._creation_message()
+        return {
+            'out_invoice': _('Invoice Created'),
+            'out_refund': _('Credit Note Created'),
+            'in_invoice': _('Vendor Bill Created'),
+            'in_refund': _('Refund Created'),
+            'out_receipt': _('Sales Receipt Created'),
+            'in_receipt': _('Purchase Receipt Created'),
+        }[self.move_type]
+
+    def _notify_by_email_prepare_rendering_context(self, message, msg_vals, model_description=False,
+                                                   force_email_company=False, force_email_lang=False):
+        render_context = super()._notify_by_email_prepare_rendering_context(
+            message, msg_vals, model_description=model_description,
+            force_email_company=force_email_company, force_email_lang=force_email_lang
+        )
+        if self.invoice_date_due:
+            amount_txt = _('%(amount)s due %(date)s',
+                           amount=format_amount(self.env, self.amount_total, self.currency_id, lang_code=render_context.get('lang')),
+                           date=format_date(self.env, self.invoice_date_due, date_format='short', lang_code=render_context.get('lang'))
+                          )
+        else:
+            amount_txt = format_amount(self.env, self.amount_total, self.currency_id, lang_code=render_context.get('lang'))
+        render_context['subtitle'] = Markup("<span>%s<br />%s</span>") % (self.name, amount_txt)
+        return render_context
 
 
 class AccountMoveLine(models.Model):

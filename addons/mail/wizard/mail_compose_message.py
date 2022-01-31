@@ -100,8 +100,7 @@ class MailComposer(models.TransientModel):
         'ir.attachment', 'mail_compose_message_ir_attachments_rel',
         'wizard_id', 'attachment_id', 'Attachments')
     email_layout_xmlid = fields.Char('Email Notification Layout', copy=False)
-    layout = fields.Char('Layout', copy=False)  # xml id of layout
-    add_sign = fields.Boolean(default=True)
+    email_add_signature = fields.Boolean(default=True)
     # origin
     email_from = fields.Char('From', help="Email address of the sender. This field is set when no matching partner is found and replaces the author_id field in the chatter.")
     author_id = fields.Many2one(
@@ -252,7 +251,7 @@ class MailComposer(models.TransientModel):
         # 'purchase.order' which is used for a RFQ and and PO. To avoid confusion, we must use a
         # different wording depending on the state of the object.
         # Therefore, we can set the description in the context from the beginning to avoid falling
-        # back on the regular display_name retrieved in '_notify_prepare_template_context'.
+        # back on the regular display_name retrieved in ``_notify_by_email_prepare_rendering_context()``.
         model_description = self._context.get('model_description')
 
         for wizard in self:
@@ -311,7 +310,7 @@ class MailComposer(models.TransientModel):
                             message_type=wizard.message_type,
                             subtype_id=subtype_id,
                             email_layout_xmlid=wizard.email_layout_xmlid,
-                            add_sign=not bool(wizard.template_id),
+                            email_add_signature=not bool(wizard.template_id) and wizard.email_add_signature,
                             mail_auto_delete=wizard.template_id.auto_delete if wizard.template_id else self._context.get('mail_auto_delete', True),
                             model_description=model_description)
                         post_params.update(mail_values)
@@ -395,7 +394,7 @@ class MailComposer(models.TransientModel):
             # mass mailing: rendering override wizard static values
             if mass_mail_mode and self.model:
                 record = self.env[self.model].browse(res_id)
-                mail_values['headers'] = record._notify_email_headers()
+                mail_values['headers'] = repr(record._notify_by_email_get_headers())
                 # keep a copy unless specifically requested, reset record name (avoid browsing records)
                 mail_values.update(is_notification=not self.auto_delete_message, model=self.model, res_id=res_id, record_name=False)
                 # auto deletion of mail_mail

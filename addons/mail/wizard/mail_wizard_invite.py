@@ -68,20 +68,18 @@ class Invite(models.TransientModel):
                     'model': wizard.res_model,
                     'res_id': wizard.res_id,
                     'reply_to_force_new': True,
-                    'add_sign': True,
+                    'email_add_signature': True,
                 })
-                partners_data = []
-                recipient_data = self.env['mail.followers']._get_recipient_data(document, 'comment', False, pids=new_partners.ids)
-                for pid, active, pshare, notif, groups in recipient_data:
-                    pdata = {'id': pid, 'share': pshare, 'active': active, 'notif': 'email', 'groups': groups or []}
-                    if not pshare and notif:  # has an user and is not shared, is therefore user
-                        partners_data.append(dict(pdata, type='user'))
-                    elif pshare and notif:  # has an user and is shared, is therefore portal
-                        partners_data.append(dict(pdata, type='portal'))
-                    else:  # has no user, is therefore customer
-                        partners_data.append(dict(pdata, type='customer'))
+                email_partners_data = []
+                recipients_data = self.env['mail.followers']._get_recipient_data(document, 'comment', False, pids=new_partners.ids)[document.id]
+                for _pid, pdata in recipients_data.items():
+                    pdata['notif'] = 'email'
+                    email_partners_data.append(pdata)
 
-                document._notify_record_by_email(message, partners_data, send_after_commit=False)
+                document._notify_thread_by_email(
+                    message, email_partners_data,
+                    send_after_commit=False
+                )
                 # in case of failure, the web client must know the message was
                 # deleted to discard the related failure notification
                 self.env['bus.bus']._sendone(self.env.user.partner_id, 'mail.message/delete', {'message_ids': message.ids})

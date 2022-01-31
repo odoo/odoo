@@ -258,13 +258,13 @@ class BlogPost(models.Model):
         default = dict(default or {}, name=name)
         return super(BlogPost, self).copy_data(default)
 
-    def get_access_action(self, access_uid=None):
+    def _get_access_action(self, access_uid=None, force_website=False):
         """ Instead of the classic form view, redirect to the post on website
         directly if user is an employee or if the post is published. """
         self.ensure_one()
-        user = access_uid and self.env['res.users'].sudo().browse(access_uid) or self.env.user
-        if user.share and not self.sudo().website_published:
-            return super(BlogPost, self).get_access_action(access_uid)
+        user = self.env['res.users'].sudo().browse(access_uid) if access_uid else self.env.user
+        if not force_website and user.share and not self.sudo().website_published:
+            return super(BlogPost, self)._get_access_action(access_uid=access_uid, force_website=force_website)
         return {
             'type': 'ir.actions.act_url',
             'url': self.website_url,
@@ -273,23 +273,25 @@ class BlogPost(models.Model):
             'res_id': self.id,
         }
 
-    def _notify_get_groups(self, msg_vals=None):
+    def _notify_get_recipients_groups(self, msg_vals=None):
         """ Add access button to everyone if the document is published. """
-        groups = super(BlogPost, self)._notify_get_groups(msg_vals=msg_vals)
+        groups = super(BlogPost, self)._notify_get_recipients_groups(msg_vals=msg_vals)
 
         if self.website_published:
-            for group_name, group_method, group_data in groups:
+            for _group_name, _group_method, group_data in groups:
                 group_data['has_button_access'] = True
 
         return groups
 
-    def _notify_record_by_inbox(self, message, recipients_data, msg_vals=False, **kwargs):
+    def _notify_thread_by_inbox(self, message, recipients_data, msg_vals=False, **kwargs):
         """ Override to avoid keeping all notified recipients of a comment.
         We avoid tracking needaction on post comments. Only emails should be
         sufficient. """
+        if msg_vals is None:
+            msg_vals = {}
         if msg_vals.get('message_type', message.message_type) == 'comment':
             return
-        return super(BlogPost, self)._notify_record_by_inbox(message, recipients_data, msg_vals=msg_vals, **kwargs)
+        return super(BlogPost, self)._notify_thread_by_inbox(message, recipients_data, msg_vals=msg_vals, **kwargs)
 
     def _default_website_meta(self):
         res = super(BlogPost, self)._default_website_meta()
