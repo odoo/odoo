@@ -200,6 +200,10 @@ class PurchaseOrder(models.Model):
             self.order_line.filtered(lambda line: not line.display_type).date_planned = self.date_planned
 
     def write(self, vals):
+        if 'partner_id' in vals:
+            partner = self.env['res.partner'].browse(vals.get('partner_id'))
+            if not partner.supplier_rank:
+                partner.supplier_rank = 1
         vals, partner_vals = self._write_partner_values(vals)
         res = super().write(vals)
         if partner_vals:
@@ -217,6 +221,10 @@ class PurchaseOrder(models.Model):
                 seq_date = fields.Datetime.context_timestamp(self, fields.Datetime.to_datetime(vals['date_order']))
             vals['name'] = self_comp.env['ir.sequence'].next_by_code('purchase.order', sequence_date=seq_date) or '/'
         vals, partner_vals = self._write_partner_values(vals)
+
+        partner = self.env['res.partner'].browse(vals.get('partner_id'))
+        if not partner.supplier_rank:
+            partner.supplier_rank = 1
         res = super(PurchaseOrder, self_comp).create(vals)
         if partner_vals:
             res.sudo().write(partner_vals)  # Because the purchase user doesn't have write on `res.partner`
