@@ -150,7 +150,7 @@ class Partner(models.Model):
             values['lang'] = values.get('lang') or parent.lang or self.env.lang
         return values
 
-    name = fields.Char(index=True)
+    name = fields.Char(index=True, default_export_compatible=True)
     display_name = fields.Char(compute='_compute_display_name', recursive=True, store=True, index=True)
     date = fields.Date(index=True)
     title = fields.Many2one('res.partner.title')

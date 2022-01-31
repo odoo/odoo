@@ -397,10 +397,14 @@ var DataExport = Dialog.extend({
             self._onShowData(records);
             self.$('.o_fields_list').empty();
 
+            const forceDefaultExportFields = records.filter(r => r.default_export).map(r => r.id);
+
             _.chain(self.$fieldsList.find('.o_export_field'))
             .map(function (field) { return $(field).data('field_id'); })
+            .union(forceDefaultExportFields)
             .union(self.defaultExportFields)
             .intersection(compatibleFields)
+            .uniq()
             .each(function (field) {
                 var record = _.find(records, function (rec) {
                     return rec.id === field;

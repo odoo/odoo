@@ -231,6 +231,8 @@ class Field(MetaField('DummyField', (object,), {})):
 
     :param str related: sequence of field names
 
+    :param bool default_export_compatible: whether the field must be exported by default in an import-compatible export
+
         .. seealso:: :ref:`Advanced fields/Related fields <reference/fields/related>`
     """
 
@@ -289,6 +291,8 @@ class Field(MetaField('DummyField', (object,), {})):
     group_operator = None               # operator for aggregating values
     group_expand = None                 # name of method to expand groups in read_group()
     prefetch = True                     # whether the field is prefetched
+
+    default_export_compatible = False   # whether the field must be exported by default in an import-compatible export
 
     def __init__(self, string=Default, **kwargs):
         kwargs['string'] = string
@@ -812,6 +816,7 @@ class Field(MetaField('DummyField', (object,), {})):
     _description_groups = property(attrgetter('groups'))
     _description_change_default = property(attrgetter('change_default'))
     _description_group_operator = property(attrgetter('group_operator'))
+    _description_default_export_compatible = property(attrgetter('default_export_compatible'))
 
     def _description_depends(self, env):
         return env.registry.field_depends[self]
