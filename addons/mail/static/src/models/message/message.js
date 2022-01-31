@@ -107,7 +107,10 @@ registerModel({
                 }
             }
             if ('partner_ids' in data && this.messaging.currentPartner) {
-                data2.isCurrentPartnerMentioned = data.partner_ids.includes(this.messaging.currentPartner.id);
+                data2.recipients = insertAndReplace(data.partner_ids.map(partner_id => ({ id: partner_id })));
+            }
+            if ('recipients' in data) {
+                data2.recipients = insertAndReplace(data.recipients);
             }
             if ('starred_partner_ids' in data && this.messaging.currentPartner) {
                 data2.isStarred = data.starred_partner_ids.includes(this.messaging.currentPartner.id);
@@ -422,6 +425,13 @@ registerModel({
             return inlineBody.toLowerCase() === this.subtype_description.toLowerCase();
         },
         /**
+         * @private
+         * @returns {boolean}
+         */
+        _computeIsCurrentPartnerMentioned() {
+            return this.recipients.includes(this.messaging.currentPartner);
+        },
+        /**
          * The method does not attempt to cover all possible cases of empty
          * messages, but mostly those that happen with a standard flow. Indeed
          * it is preferable to be defensive and show an empty message sometimes
@@ -704,6 +714,7 @@ registerModel({
          * Determine whether the current partner is mentioned.
          */
         isCurrentPartnerMentioned: attr({
+            compute: '_computeIsCurrentPartnerMentioned',
             default: false,
         }),
         /**
@@ -762,6 +773,7 @@ registerModel({
             compute: '_computePrettyBody',
             default: "",
         }),
+        recipients: many('Partner'),
         subject: attr(),
         subtype_description: attr(),
         subtype_id: attr(),
