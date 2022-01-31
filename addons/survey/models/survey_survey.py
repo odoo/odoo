@@ -991,8 +991,15 @@ class Survey(models.Model):
         self.user_input_ids.sudo().write({'state': 'done'})
         self.env['bus.bus']._sendone(self.access_token, 'end_session', {})
 
-    def get_start_url(self):
-        return '/survey/start/%s' % self.access_token
+    def get_start_url(self, lang_code=None):
+        if lang_code is not None:
+            active_lang_codes = {code for code, _, _, active, *_ in
+                                 self.env['res.lang'].get_available(force_context='front') if active}
+            # restrict lang_code to language available
+            lang_code = lang_code if lang_code in active_lang_codes else None
+        # url_for cannot be used here because it relies on request which is not always available
+        return '/%s/survey/start/%s' % (lang_code, self.access_token) if lang_code is not None \
+            else '/survey/start/%s' % lang_code
 
     def get_start_short_url(self):
         """ See controller method docstring for more details. """

@@ -228,9 +228,9 @@ class SurveyUserInput(models.Model):
             if challenges:
                 Challenge._cron_update(ids=challenges.ids, commit=False)
 
-    def get_start_url(self):
+    def get_start_url(self, lang_code=None):
         self.ensure_one()
-        return '%s?answer_token=%s' % (self.survey_id.get_start_url(), self.access_token)
+        return '%s?answer_token=%s' % (self.survey_id.get_start_url(lang_code), self.access_token)
 
     def get_print_url(self):
         self.ensure_one()

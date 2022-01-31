@@ -218,8 +218,9 @@ class Lang(models.Model):
 
     @api.model
     @tools.ormcache()
-    def get_available(self):
-        """ Return the available languages as a list of (code, url_code, name,
+    def get_available(self, force_context=None):
+        """ :param force_context: force the context (ex.: front)
+            Return the available languages as a list of (code, url_code, name,
             active) sorted by name.
         """
         langs = self.with_context(active_test=False).search([])

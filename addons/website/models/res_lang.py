@@ -18,7 +18,9 @@ class Lang(models.Model):
 
     @api.model
     @tools.ormcache_context(keys=("website_id",))
-    def get_available(self):
+    def get_available(self, force_context=None):
+        if force_context == 'front':
+            return self.env['website'].get_current_website().language_ids.get_sorted()
         website = ir_http.get_request_website()
         if not website:
             return super().get_available()

@@ -43,6 +43,11 @@
                         </t>
                     </t>
                 </div>
+                <div t-if="len(languages) > 1" class="d-inline-block pr-2 align-top">
+                    <t id="language_selector_call" t-call="portal.language_selector">
+                        <t t-set="_div_classes" t-value="(_div_classes or '') + ' dropup'"/>
+                    </t>
+                </div>
                 <div class="o_survey_brand_message float-right rounded mr-3 border">
                     <div class="px-2 py-2 d-inline-block" t-call="web.brand_promotion_message">
                         <t t-set="_message"></t>
