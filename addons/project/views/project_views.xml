@@ -94,9 +94,10 @@
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     No tasks found. Let's create one!
-                </p><p>
-                    To get things done, use activities and status on tasks.<br/>
-                    Chat in real-time or by email to collaborate efficiently.
+                </p>
+                <p>
+                    Keep track of the progress of your tasks from creation to completion.<br/>
+                    Collaborate efficiently by chatting in real-time or via email.
                 </p>
             </field>
         </record>
@@ -111,9 +112,10 @@
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     No tasks found. Let's create one!
-                </p><p>
-                    To get things done, use activities and status on tasks.<br/>
-                    Chat in real time or by email to collaborate efficiently.
+                </p>
+                <p>
+                    Keep track of the progress of your tasks from creation to completion.<br/>
+                    Collaborate efficiently by chatting in real-time or via email.
                 </p>
             </field>
         </record>
@@ -254,7 +256,7 @@
               <p class="o_view_nocontent_smiling_face">
                 No stages found. Let's create one!
               </p><p>
-                Track the progress of your tasks from their creation to their closing.
+                Define the steps your tasks move through from creation to completion.
               </p>
             </field>
         </record>
@@ -762,38 +764,32 @@
             </field>
         </record>
 
-        <!-- Please update both act_window when modifying one (open_view_project_all or open_view_project_all_group_stage) as one or the other is used in the menu menu_project_config -->
+        <record id="view_project_kanban_inherit" model="ir.ui.view">
+            <field name="name">project.kanban.inherit.project</field>
+            <field name="model">project.project</field>
+            <field name="groups_id" eval="[Command.link(ref('project.group_project_stages'))]"/>
+            <field name="inherit_id" ref="view_project_kanban"/>
+            <field name="arch" type="xml">
+                <xpath expr="//kanban" position="attributes">
+                    <attribute name="default_group_by">stage_id</attribute>
+                </xpath>
+            </field>
+        </record>
+
         <record id="open_view_project_all" model="ir.actions.act_window">
             <field name="name">Projects</field>
             <field name="res_model">project.project</field>
             <field name="domain">[]</field>
-            <field name="view_mode">kanban,form</field>
-            <field name="view_id" ref="view_project_kanban"/>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_id" ref="view_project_kanban_inherit"/>
             <field name="search_view_id" ref="view_project_project_filter"/>
             <field name="target">main</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     No projects found. Let's create one!
-                </p><p>
-                    Projects regroup tasks on the same topic, and each has its dashboard.
                 </p>
-            </field>
-        </record>
-
-        <record id="open_view_project_all_group_stage" model="ir.actions.act_window">
-            <field name="name">Projects</field>
-            <field name="res_model">project.project</field>
-            <field name="domain">[]</field>
-            <field name="view_mode">kanban,form</field>
-            <field name="view_id" ref="view_project_kanban"/>
-            <field name="search_view_id" ref="view_project_project_filter"/>
-            <field name="target">main</field>
-            <field name="context">{'search_default_groupby_stage': 1}</field>
-            <field name="help" type="html">
-                <p class="o_view_nocontent_smiling_face">
-                    No projects found. Let's create one!
-                </p><p>
-                    Projects regroup tasks on the same topic, and each has its dashboard.
+                <p>
+                    Projects contain tasks on the same topic, and each has its own dashboard.
                 </p>
             </field>
         </record>
@@ -811,8 +807,9 @@
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                    No projects found. Let's create one!
-                </p><p>
-                    Projects regroup tasks on the same topic, and each has its dashboard.
+                </p>
+                <p>
+                    Projects contain tasks on the same topic, and each has its own dashboard.
                 </p>
             </field>
         </record>
@@ -1074,7 +1071,7 @@
             <field name="arch" type="xml">
                 <form>
                     <group>
-                        <field name="name" string = "Task Title" placeholder="e.g. New Design"/>
+                        <field name="name" string = "Task Title" placeholder="e.g. Send Invitations"/>
                         <field name="user_ids" options="{'no_open': True,'no_create': True}" domain="[('share', '=', False), ('active', '=', True)]"
                             widget="many2many_tags"/>
                         <field name="company_id" invisible="1"/>
@@ -1324,9 +1321,10 @@
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     No tasks found. Let's create one!
-                </p><p>
-                    To get things done, use activities and status on tasks.<br/>
-                    Chat in real-time or by email to collaborate efficiently.
+                </p>
+                <p>
+                    Keep track of the progress of your tasks from creation to completion.<br/>
+                    Collaborate efficiently by chatting in real-time or via email.
                 </p>
             </field>
         </record>
@@ -1340,9 +1338,10 @@
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     No tasks found. Let's create one!
-                </p><p>
-                     To get things done, use activities and status on tasks.<br/>
-                    Chat in real-time or by email to collaborate efficiently.
+                </p>
+                <p>
+                    Organize your tasks by dispatching them across the pipeline.<br/>
+                    Collaborate efficiently by chatting in real-time or via email.
                 </p>
             </field>
         </record>
@@ -1394,7 +1393,6 @@
         <menuitem action="open_task_type_form" id="menu_project_config_project" name="Task Stages" parent="menu_project_config" sequence="10" groups="base.group_no_one"/>
 
         <menuitem action="open_view_project_all" id="menu_projects" name="Projects" parent="menu_main_pm" sequence="1"/>
-        <menuitem action="open_view_project_all_group_stage" id="menu_projects_group_stage" name="Projects" parent="menu_main_pm" sequence="1" groups="project.group_project_stages"/>
         <menuitem action="open_view_project_all_config" id="menu_projects_config" name="Projects" parent="menu_project_config" sequence="5"/>
 
         <!-- User Form -->

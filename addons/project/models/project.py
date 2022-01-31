@@ -685,13 +685,6 @@ class Project(models.Model):
         action_context['search_default_project_id'] = self.id
         return dict(action, context=action_context)
 
-    @api.model
-    def _action_open_all_projects(self):
-        action = self.env['ir.actions.act_window']._for_xml_id(
-            'project.open_view_project_all' if not self.user_has_groups('project.group_project_stages') else
-            'project.open_view_project_all_group_stage')
-        return action
-
     def action_view_analytic_account_entries(self):
         self.ensure_one()
         return {
