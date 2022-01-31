@@ -138,6 +138,23 @@ var ListController = BasicController.extend({
         });
     },
     /**
+     * Returns the list of currently selected records (with the check boxes on
+     * the left) or the whole domain records if it is selected
+     *
+     * @returns {Promise<{id, display_name}[]>}
+     */
+    getSelectedRecordsWithDomain: async function () {
+        if (this.isDomainSelected) {
+            const state = this.model.get(this.handle, {raw: true});
+            return await this._domainToRecords(state.getDomain(), session.active_ids_limit);
+        } else {
+            return Promise.resolve(this.selectedRecords.map(localId => {
+                const data = this.model.localData[localId].data;
+                return { id: data.id, display_name: data.display_name };
+            }));
+        }
+    },
+    /**
      * Display and bind all buttons in the control panel
      *
      * Note: clicking on the "Save" button does nothing special. Indeed, all
@@ -392,6 +409,25 @@ var ListController = BasicController.extend({
         var self = this;
         return this._super(recordID).then(function () {
             self.updateButtons('readonly');
+        });
+    },
+    /**
+     * Returns the records matching the given domain.
+     *
+     * @private
+     * @param {Array[]} domain
+     * @param {integer} [limit]
+     * @returns {Promise<{id, display_name}[]>}
+     */
+    _domainToRecords: function (domain, limit) {
+        return this._rpc({
+            model: this.modelName,
+            method: 'search_read',
+            args: [domain],
+            kwargs: {
+                fields: ['display_name'],
+                limit: limit,
+            },
         });
     },
     /**
