@@ -49,6 +49,7 @@ class ResPartner(models.Model):
 
     def write(self, values):
         if any(field in values for field in ['vat', 'l10n_latam_identification_type_id', 'country_id']):
+            vat_dict = {}
             for record in self:
                 vat_values = {
                     'vat': values.get('vat', record.vat),
@@ -56,5 +57,11 @@ class ResPartner(models.Model):
                         'l10n_latam_identification_type_id', record.l10n_latam_identification_type_id.id),
                     'country_id': values.get('country_id', record.country_id.id)
                 }
-                values['vat'] = self._format_vat_cl(vat_values)
-        return super().write(values)
+                vat = self._format_vat_cl(vat_values)
+                values['vat'] = vat
+                vat_dict.setdefault(vat, self.env['res.partner'])
+                vat_dict[vat] |= record
+            for vat in vat_dict:
+                vat_values['vat'] = vat
+                values.update(vat_values)
+                super(ResPartner, vat_dict[vat]).write(values)
