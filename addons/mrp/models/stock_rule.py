@@ -93,6 +93,10 @@ class StockRule(models.Model):
     def _prepare_mo_vals(self, product_id, product_qty, product_uom, location_id, name, origin, company_id, values, bom):
         date_planned = self._get_date_planned(product_id, company_id, values)
         date_deadline = values.get('date_deadline') or date_planned + relativedelta(days=company_id.manufacturing_lead) + relativedelta(days=product_id.produce_delay)
+        date_planned_finished = date_planned + relativedelta(days=product_id.produce_delay)
+        date_planned_finished = date_planned_finished + relativedelta(days=self.company_id.manufacturing_lead)
+        if date_planned_finished == date_planned:
+            date_planned_finished = date_planned_finished + relativedelta(hours=1)
         return {
             'origin': origin,
             'product_id': product_id.id,
@@ -104,6 +108,7 @@ class StockRule(models.Model):
             'bom_id': bom.id,
             'date_deadline': date_deadline,
             'date_planned_start': date_planned,
+            'date_planned_finished': date_planned_finished,
             'procurement_group_id': False,
             'propagate_cancel': self.propagate_cancel,
             'orderpoint_id': values.get('orderpoint_id', False) and values.get('orderpoint_id').id,
