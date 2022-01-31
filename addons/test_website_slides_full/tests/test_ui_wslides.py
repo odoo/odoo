@@ -98,7 +98,6 @@ class TestUi(TestUICommon):
                     'title': 'Select all the furniture shown in the video',
                     'sequence': 3,
                     'question_type': 'multiple_choice',
-                    'column_nb': '4',
                     'suggested_answer_ids': [
                         (0, 0, {
                             'value': 'Chair',
