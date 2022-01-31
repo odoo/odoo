@@ -37,6 +37,16 @@ registerModel({
         isAtEnd: attr({
             compute: '_computeIsAtEnd',
         }),
+        /**
+         * States whether there was at least one programmatic scroll since the
+         * last scroll event was handled (which is particularly async due to
+         * throttled behavior).
+         * Useful to avoid loading more messages or to incorrectly disabling the
+         * auto-scroll feature when the scroll was not made by the user.
+         */
+        isLastScrollProgrammatic: attr({
+            default: false,
+        }),
         scrollHeight: attr(),
         scrollTop: attr(),
         threadViewOwner: one('ThreadView', {
