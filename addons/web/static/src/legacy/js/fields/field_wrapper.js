@@ -178,7 +178,8 @@ odoo.define('web.FieldWrapper', function (require) {
                 const fieldsInfo = this.props.record.fieldsInfo[viewType];
                 fieldsInfo[this.props.fieldName].modifiersValue = modifiers || {};
             }
-            this.componentRef.comp.props = this.props;
+            // OWL-NEW-RENDERING
+            this.componentRef.comp.props = owl.reactive(this.props);
         }
     }
 

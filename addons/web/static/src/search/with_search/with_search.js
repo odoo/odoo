@@ -36,7 +36,7 @@ export class WithSearch extends Component {
         });
 
         onWillStart(async () => {
-            const config = { ...this.props };
+            const config = { ...owl.toRaw(this.props) };
             if (config.globalState && config.globalState.searchModel) {
                 config.state = JSON.parse(config.globalState.searchModel);
                 delete config.globalState;

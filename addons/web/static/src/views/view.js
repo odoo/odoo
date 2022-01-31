@@ -282,7 +282,7 @@ export class View extends Component {
 
         // prepare the WithSearch component props
         this.withSearchProps = {
-            ...this.props,
+            ...owl.toRaw(this.props),
             Component: ViewClass,
             componentProps: viewProps,
         };
