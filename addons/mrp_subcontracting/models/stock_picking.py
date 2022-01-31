@@ -44,7 +44,7 @@ class StockPicking(models.Model):
             recorded_qty = sum(recorded_productions.mapped('qty_producing'))
             sm_done_qty = sum(productions._get_subcontract_move().mapped('quantity_done'))
             rounding = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-            if float_compare(recorded_qty, sm_done_qty, precision_rounding=rounding) >= 0:
+            if float_compare(recorded_qty, sm_done_qty, precision_digits=rounding) >= 0:
                 continue
             production = productions - recorded_productions
             if not production:
