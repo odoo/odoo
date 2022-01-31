@@ -474,8 +474,7 @@ var SelectCreateDialog = ViewDialog.extend({
                 close: true,
                 hotkey: 'v',
                 click: async () => {
-                    const resIds = await this.viewController.getSelectedIdsWithDomain();
-                    const values = resIds.map(e => ({id: e}));
+                    const values = await this.viewController.getSelectedRecordsWithDomain();
                     this.on_selected(values);
                 },
             });
