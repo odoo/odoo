@@ -4,7 +4,7 @@
 import re
 
 from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 from odoo.tools.misc import mod10r
 
 
@@ -272,7 +272,8 @@ class ResPartnerBank(models.Model):
         QR-codes. They are formed like regular IBANs, but are actually something
         different.
         """
-        self.ensure_one()
+        if len(self) != 1:
+            return UserError(_("Bank account is mandatory to generate QR invoice"))
 
         return self.sanitized_acc_number.startswith('CH')\
                and self.acc_type == 'iban'\
