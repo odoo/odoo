@@ -368,7 +368,7 @@ class IrActionsReport(models.Model):
         layout = self.env.ref('web.minimal_layout', False)
         if not layout:
             return {}
-        layout = self.env['ir.ui.view'].browse(self.env['ir.ui.view'].get_view_id('web.minimal_layout'))
+        layout = self.env['ir.ui.view'].browse(self.env['ir.ui.view']._get_view_id('web.minimal_layout'))
         base_url = IrConfig.get_param('report.url') or layout.get_base_url()
 
         root = lxml.html.fromstring(html)

@@ -76,7 +76,7 @@ class IrQWeb(models.AbstractModel):
         el.set('t-call', key)
         el.set('t-options', f"{{'snippet-key': {key!r}}}")
         View = self.env['ir.ui.view'].sudo()
-        view_id = View.get_view_id(key)
+        view_id = View._get_view_id(key)
         name = View.browse(view_id).name
         thumbnail = el.attrib.pop('t-thumbnail', "oe-thumbnail")
         div = '<div name="%s" data-oe-type="snippet" data-oe-thumbnail="%s" data-oe-snippet-id="%s" data-oe-keywords="%s">' % (

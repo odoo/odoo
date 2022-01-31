@@ -1381,6 +1381,19 @@ class HolidaysRequest(models.Model):
             'domain': domain
         }
 
+    def action_new_time_off(self):
+        today = fields.Date.today()
+        return {
+            'name': _("New time off"),
+            'type': 'ir.actions.act_window',
+            'res_model': 'hr.leave',
+            'view_mode': 'form',
+            'views': [[self.env.ref('hr_holidays.hr_leave_view_form_dashboard_new_time_off').id, 'form']],
+            'context': {
+                'default_date_from': fields.Date.to_string(today),
+                'default_date_to': fields.Date.to_string(today + timedelta(days=1)),
+            }
+        }
 
     def _check_approval_update(self, state):
         """ Check if target state is achievable. """

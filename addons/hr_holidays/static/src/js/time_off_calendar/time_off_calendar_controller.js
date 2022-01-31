@@ -132,8 +132,8 @@ export const TimeOffCalendarController = CalendarController.extend({
      */
     async _onNewTimeOff() {
         const viewId = await this._rpc({
-            model: 'ir.ui.view',
-            method: 'get_view_id',
+            model: 'hr.leave',
+            method: 'action_new_time_off',
             args: ['hr_holidays.hr_leave_view_form_dashboard_new_time_off'],
         });
 

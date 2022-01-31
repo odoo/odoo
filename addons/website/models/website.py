@@ -1028,7 +1028,7 @@ class Website(models.Model):
             In case of website context, return the most specific one.
 
             If no website_id is in the context, it will return the generic view,
-            instead of a random one like `get_view_id`.
+            instead of a random one like `_get_view_id`.
 
             Look also for archived views, no matter the context.
 
@@ -1089,7 +1089,7 @@ class Website(models.Model):
         else:
             if '.' not in template:
                 template = 'website.%s' % template
-            view_id = View.get_view_id(template)
+            view_id = View._get_view_id(template)
         if not view_id:
             raise NotFound
         return View.sudo().browse(view_id)

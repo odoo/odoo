@@ -697,7 +697,7 @@ class IrQWeb(models.AbstractModel):
         :rtype: Optional[Tuple[Union[etree, str], Optional[str, int]]]
         """
         lang = options.get('lang') or get_lang(self.env).code
-        view_id = self.env['ir.ui.view'].get_view_id(ref)
+        view_id = self.env['ir.ui.view']._get_view_id(ref)
         template = self.env['ir.ui.view'].with_context(lang=lang).sudo()._read_template(view_id)
 
         # QWeb's ``_read_template`` will check if one of the first children of
@@ -705,7 +705,7 @@ class IrQWeb(models.AbstractModel):
         # to consider it has found it. As it'll never be the case when working
         # with view ids or children view or children primary views, force it here.
         def is_child_view(view_ref):
-            view_id = self.env['ir.ui.view'].get_view_id(view_ref)
+            view_id = self.env['ir.ui.view']._get_view_id(view_ref)
             view = self.env['ir.ui.view'].sudo().browse(view_id)
             return view.inherit_id is not None
 
