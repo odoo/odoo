@@ -3,7 +3,7 @@
 
 from .common import TestSaleCommon
 from odoo.fields import Command
-from odoo.tests import tagged
+from odoo.tests import tagged, Form
 
 
 @tagged('post_install', '-at_install')
@@ -147,6 +147,62 @@ class TestSaleOrder(TestSaleCommon):
                 else:  # no discount for the rest
                     self.assertEqual(line.discount, 0.0, 'Pricelist of SO should not be applied on an order line')
                     self.assertEqual(line.price_unit, line.product_id.list_price, 'Unit price of order line should be a sale price as the pricelist not applied on the other category\'s product')
+
+    def test_fiscalposition_application(self):
+        """Test application of a fiscal position mapping
+        price included to price included tax
+        """
+
+        uom = self.env['uom.uom'].search([('name', '=', 'Units')])
+        pricelist = self.env['product.pricelist'].search([('name', '=', 'Public Pricelist')])
+
+        partner = self.env['res.partner'].create({
+            'name': "George"
+        })
+        tax_include_src = self.env['account.tax'].create({
+            'name': "Include tax",
+            'amount': 21.00,
+            'price_include': True,
+        })
+        tax_include_dst = self.env['account.tax'].create({
+            'name': "Exclude tax",
+            'amount': 6.00,
+            'price_include': True,
+        })
+
+        product_tmpl = self.env['product.template'].create({
+            'name': "Voiture",
+            'list_price': 121,
+            'taxes_id': [(6, 0, [tax_include_src.id])]
+        })
+
+        product_product = product_tmpl.product_variant_id
+
+        fpos = self.env['account.fiscal.position'].create({
+            'name': "fiscal position",
+            'sequence': 1
+        })
+
+        self.env['account.fiscal.position.tax'].create({
+            'position_id' :fpos.id,
+            'tax_src_id': tax_include_src.id,
+            'tax_dest_id': tax_include_dst.id
+        })
+
+        # Create the SO with one SO line and apply a pricelist and fiscal position on it
+        order_form = Form(self.env['sale.order'].with_context(tracking_disable=True))
+        order_form.partner_id = partner
+        order_form.pricelist_id = pricelist
+        order_form.fiscal_position_id = fpos
+        with order_form.order_line.new() as line:
+            line.name = product_product.name
+            line.product_id = product_product
+            line.product_uom_qty = 1.0
+            line.product_uom = uom
+        sale_order = order_form.save()
+
+        # Check the unit price of SO line
+        self.assertRecordValues(sale_order.order_line, [{'price_unit': 106}])
 
     def test_pricelist_application(self):
         """ Test different prices are correctly applied based on dates """
