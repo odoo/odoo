@@ -312,7 +312,7 @@ function classToStyle($editable, cssRules) {
         rules.sort((a, b) => a.specificity - b.specificity);
     }
 
-    _applyOverDescendants($editable[0], function (node) {
+    for (const node of nodeToRules.keys()) {
         const $target = $(node);
         const nodeRules = nodeToRules.get(node);
         const css = nodeRules ? _getMatchedCSSRules(node, nodeRules) : {};
@@ -360,7 +360,7 @@ function classToStyle($editable, cssRules) {
         } else if (node.nodeName === 'IMG' && $target.is('.mx-auto.d-block')) {
             writes.push(() => { $target.wrap('<p class="o_outlook_hack" style="text-align:center;margin:0"/>'); });
         }
-    });
+    };
     writes.forEach(fn => fn());
 }
 /**
@@ -765,32 +765,6 @@ function _applyColspan($element, colspan) {
     const width = (Math.round(+$element.attr('colspan') * 10000 / 12) / 100) + '%';
     $element.attr('width', width);
     $element.css('width', width);
-}
-/*
- * Utility function to apply function over descendants elements
- *
- * This is needed until the following issue of jQuery is solved:
- *  https://github.com./jquery/sizzle/issues/403
- *
- * @param {Element} node The root Element node
- * @param {Function} func The function applied over descendants
- */
-function _applyOverDescendants(node, func) {
-    node = node.firstChild;
-    while (node) {
-        if (node.nodeType === 1) {
-            func(node);
-            _applyOverDescendants(node, func);
-        }
-        var $node = $(node);
-        if (node.nodeName === 'A' && $node.hasClass('btn') && !$node.children().length && $(node).parents('.o_outlook_hack').length)  {
-            node = $(node).parents('.o_outlook_hack')[0];
-        }
-        else if (node.nodeName === 'IMG' && $node.parent('p').hasClass('o_outlook_hack')) {
-            node = $node.parent()[0];
-        }
-        node = node.nextSibling;
-    }
 }
 /**
  * Take a selector and return its specificity according to the w3 specification.
