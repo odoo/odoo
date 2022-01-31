@@ -349,7 +349,7 @@ class View(models.Model):
 
     @api.model
     @tools.ormcache_context('self.env.uid', 'self.env.su', 'xml_id', keys=('website_id',))
-    def get_view_id(self, xml_id):
+    def _get_view_id(self, xml_id):
         """If a website_id is in the context and the given xml_id is not an int
         then try to get the id of the specific view for that website, but
         fallback to the id of the generic view if there is no specific.
@@ -370,7 +370,7 @@ class View(models.Model):
                 _logger.warning("Could not find view object with xml_id '%s'", xml_id)
                 raise ValueError('View %r in website %r not found' % (xml_id, self._context['website_id']))
             return view.id
-        return super(View, self.sudo()).get_view_id(xml_id)
+        return super(View, self.sudo())._get_view_id(xml_id)
 
     def _handle_visibility(self, do_raise=True):
         """ Check the visibility set on the main view and raise 403 if you should not have access.
@@ -409,7 +409,7 @@ class View(models.Model):
 
     def _render_template(self, template, values=None):
         """ Render the template. If website is enabled on request, then extend rendering context with website values. """
-        view = self.sudo().browse(self.get_view_id(template))
+        view = self._get_view(template).sudo()
         view._handle_visibility(do_raise=True)
         if values is None:
             values = {}

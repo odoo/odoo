@@ -740,10 +740,9 @@ class IrQWeb(models.AbstractModel):
             identifier
         :rtype: Tuple[Union[etree, str], Optional[str, int]]
         """
-        IrUIView = self.env['ir.ui.view']
-        view_id = IrUIView.get_view_id(ref)
-        view = IrUIView.sudo().browse(view_id)
-        template = IrUIView.sudo()._read_template(view_id)
+        IrUIView = self.env['ir.ui.view'].sudo()
+        view = IrUIView._get_view(ref)
+        template = IrUIView._read_template(view.id)
         etree_view = etree.fromstring(template)
 
         xmlid = view.key or ref
@@ -765,7 +764,7 @@ class IrQWeb(models.AbstractModel):
                     etree_view = node
                     break
         etree_view.set('t-name', str(xmlid))
-        return (etree_view, view_id)
+        return (etree_view, view.id)
 
     # values for running time
 
