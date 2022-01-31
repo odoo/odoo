@@ -178,7 +178,7 @@ var Tip = Widget.extend({
         this.$el.addClass("o_animated");
     },
     _bind_anchor_events: function () {
-        this.consume_event = Tip.getConsumeEventType(this.$anchor, this.info.run);
+        this.consume_event = this.info.consumeEvent || Tip.getConsumeEventType(this.$anchor, this.info.run);
         this.$consumeEventAnchor = this.$anchor;
         // jQuery-ui draggable triggers 'drag' events on the .ui-draggable element,
         // but the tip is attached to the .ui-draggable-handle element which may
