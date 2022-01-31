@@ -293,9 +293,32 @@ function cardToTable($editable) {
  */
 function classToStyle($editable, cssRules) {
     const writes = [];
+    const nodeToRules = new Map();
+    const rulesToProcess = [];
+    for (const rule of cssRules) {
+        const nodes = $editable[0].querySelectorAll(rule.selector);
+        if (nodes.length) {
+            rulesToProcess.push(rule);
+        }
+        for (const node of nodes) {
+            const nodeRules = nodeToRules.get(node);
+            if (!nodeRules) {
+                nodeToRules.set(node, [rule]);
+            } else {
+                nodeRules.push(rule);
+            }
+        }
+    }
+    computeStyleAndSpecificityOnRules(rulesToProcess);
+    for (const rules of nodeToRules.values()) {
+        rules.sort((a, b) => a.specificity - b.specificity)
+    }
+
     _applyOverDescendants($editable[0], function (node) {
         const $target = $(node);
-        const css = _getMatchedCSSRules(node, cssRules);
+        const target = node;
+        const nodeRules = nodeToRules.get(node);
+        const css = nodeRules ? _getMatchedCSSRules(node, nodeRules) : {};
         // Flexbox
         for (const styleName of node.style) {
             if (styleName.includes('flex') || `${node.style[styleName]}`.includes('flex')) {
@@ -308,7 +331,7 @@ function classToStyle($editable, cssRules) {
         }
 
         // Do not apply css that would override inline styles (which are prioritary).
-        let style = $target.attr('style') || '';
+        let style = target.getAttribute('style') || '';
         // Outlook doesn't support inline !important
         style = style.replace(/!important/g,'');
         for (const [key, value] of Object.entries(css)) {
@@ -317,25 +340,25 @@ function classToStyle($editable, cssRules) {
             }
         };
         if (_.isEmpty(style)) {
-            writes.push(()=> { $target.removeAttr('style'); });
+            writes.push(()=> { target.removeAttribute('style'); });
         } else {
-            writes.push(()=> { $target.attr('style', style); });
+            writes.push(()=> { target.setAttribute('style', style); });
         }
         if ($target.get(0).style.width) {
-            const width = $target.css('width');
-            writes.push(()=> { $target.attr('width', width); });
+            const width = getComputedStyle(target).width;
+            writes.push(()=> { target.setAttribute('width', width); });
         }
 
         // Media list images should not have an inline height
         if (node.nodeName === 'IMG' && $target.hasClass('s_media_list_img')) {
-            writes.push(()=> { $target.css('height', ''); });
+            writes.push(()=> { target.style['height'] = ''; });
         }
         // Apple Mail
         if (node.nodeName === 'TD' && !node.childNodes.length) {
-            writes.push(()=> { $(node).append('&nbsp;'); });
+            writes.push(()=> { node.appendChild(document.createTextNode('&nbsp;')); });
         }
         // Outlook
-        if (node.nodeName === 'A' && $target.hasClass('btn') && !$target.hasClass('btn-link') && !$target.children().length) {
+        if (node.nodeName === 'A' && target.classList.contains('btn') && !target.classList.contains('btn-link') && !target.children.length) {
             writes.push(()=> { $target.prepend(`<!--[if mso]><i style="letter-spacing: 25px; mso-font-width: -100%; mso-text-raise: 30pt;">&nbsp;</i><![endif]-->`); });
             writes.push(()=> { $target.append(`<!--[if mso]><i style="letter-spacing: 25px; mso-font-width: -100%;">&nbsp;</i><![endif]-->`); });
         } else if (node.nodeName === 'IMG' && $target.is('.mx-auto.d-block')) {
@@ -350,19 +373,11 @@ function classToStyle($editable, cssRules) {
  * will be computed for the editable element's owner document.
  *
  * @param {JQuery} $editable
- * @param {Object[]} [cssRules] Array<{selector: string;
- *                                   style: {[styleName]: string};
- *                                   specificity: number;}>
  * @param {JQuery} [$iframe] the iframe containing the editable, if any
  */
-function toInline($editable, cssRules, $iframe) {
-    const doc = $editable[0].ownerDocument;
-    cssRules = cssRules || doc._rulesCache;
-    if (!cssRules) {
-        cssRules = getCSSRules(doc);
-        doc._rulesCache = cssRules;
-    }
-
+function toInline($editable, $iframe) {
+    console.profile('toInline');
+    const cssRules = getCSSRules($editable[0].ownerDocument);
     // If the editable is not visible, we need to make it visible in order to
     // retrieve image/icon dimensions. This iterates over ancestors to make them
     // visible again. We then restore it at the end of this function.
@@ -405,6 +420,7 @@ function toInline($editable, cssRules, $iframe) {
     for (const displayToRestore of displaysToRestore) {
         $(displayToRestore[0]).css('display', displayToRestore[1]);
     }
+    console.profileEnd('toInline');
 }
 /**
  * Convert font icons to images.
@@ -582,6 +598,8 @@ function formatTables($editable) {
         }
     }
 }
+
+let cssRulesCache;
 /**
  * Parse through the given document's stylesheets, preprocess(*) them and return
  * the result as an array of objects, each containing a selector string , a
@@ -595,7 +613,12 @@ function formatTables($editable) {
  *                            specificity: number;}>
  */
 function getCSSRules(doc) {
-    const cssRules = [];
+    console.profile('getCSSRules');
+    if (cssRulesCache) {
+        return cssRulesCache;
+    }
+    cssRulesCache = [];
+    const cssRules = cssRulesCache;
     for (const sheet of doc.styleSheets) {
         // try...catch because browser may not able to enumerate rules for cross-domain sheets
         let rules;
@@ -624,77 +647,33 @@ function getCSSRules(doc) {
             for (const subRule of subRules) {
                 const selectorText = subRule.selectorText;
                 if (selectorText && !SELECTORS_IGNORE.test(selectorText)) {
-                    const style = _normalizeStyle(subRule.style);
-                    if (Object.keys(style).length) {
-                        for (let selector of selectorText.split(',')) {
-                            selector = selector.trim();
-                            cssRules.push({ selector, style, specificity: _computeSpecificity(selector) });
-                        }
+                    for (const selector of selectorText.split(',')) {
+                        cssRules.push({ selector: selector.trim(), rawRule: rule });
                     }
                 }
             }
         }
     }
 
-    // Group together rules with the same selector.
-    for (let i = cssRules.length - 1; i >= 0; i--) {
-        for (let j = cssRules.length - 1; j >= 0; j--) {
-            if (i > j && cssRules[i].selector === cssRules[j].selector) {
-                // Styles of "later" selector override styles of "earlier" one.
-                const importantJStyles = {};
-
-                const previousStyle = cssRules[j].style;
-                const previousStyleKey = Object.keys(previousStyle);
-                const sameKeys = Object.keys(cssRules[i].style).filter(x => previousStyleKey.includes(x));
-
-                for (const key of sameKeys) {
-                    if (previousStyle[key].endsWith('!important')) {
-                        importantJStyles[key] = previousStyle[key];
-                    }
-                    delete previousStyle[key];
-                }
-
-                for (const [key, value] of Object.entries(importantJStyles)) {
-                    cssRules[i].style[key] = value;
-                }
-
-                if (!Object.keys(previousStyleKey).length) {
-                    cssRules.splice(j, 1);
-                    i--;
-                }
-            }
-        }
-    }
     // The top element of a mailing has the class 'o_layout'. Give it the body's
     // styles so they can trickle down.
     cssRules.unshift({
         selector: '.o_layout',
-        style: {...cssRules.find(r => r.selector === 'body').style},
-        specificity: 1,
+        rawRule: cssRules.find(r => r.selector === 'body').rawRule,
     });
+    console.profileEnd('getCSSRules');
+    return cssRules;
+}
 
-    const groupedRules = [];
-    const ungroupedRules = [...cssRules];
-    while (ungroupedRules.length) {
-        const rule = ungroupedRules.shift();
-        let groupedRule = {...rule};
-        for (const otherRule of ungroupedRules) {
-            if (
-                otherRule !== rule &&
-                rule.specificity === otherRule.specificity &&
-                Object.keys(rule.style).length === Object.keys(otherRule.style).length &&
-                Object.keys(rule.style).every(key => key in otherRule.style && rule.style[key] === otherRule.style[key])
-            ) {
-                if (rule.selector !== otherRule.selector) {
-                    groupedRule.selector = `${groupedRule.selector},${otherRule.selector}`;
-                }
-                ungroupedRules.splice(ungroupedRules.indexOf(otherRule), 1);
+function computeStyleAndSpecificityOnRules(cssRules) {
+    for (const cssRule of cssRules) {
+        if (!cssRule.style && cssRule.rawRule.style) {
+            const style = _normalizeStyle(cssRule.rawRule.style);
+            if (Object.keys(style).length) {
+                Object.assign(cssRule,  { style, specificity: _computeSpecificity(cssRule.selector) });
             }
         }
-        groupedRules.push(groupedRule);
     }
-    groupedRules.sort((a, b) => a.specificity - b.specificity);
-    return groupedRules;
 }
 /**
  * Convert Bootstrap list groups and their items to table structures.
@@ -920,12 +899,7 @@ function _getColumnSize(column) {
  */
 function _getMatchedCSSRules(node, cssRules) {
     node.matches = node.matches || node.webkitMatchesSelector || node.mozMatchesSelector || node.msMatchesSelector || node.oMatchesSelector;
-    const css = [];
-    for (const rule of cssRules) {
-        if (node.matches(rule.selector)) {
-            css.push([rule.selector, rule.style, rule.specificity]);
-        }
-    }
+    const styles = cssRules.map((rule) => rule.style).filter(Boolean);
 
     // Add inline styles at the highest specificity.
     if (node.style.length) {
@@ -933,29 +907,29 @@ function _getMatchedCSSRules(node, cssRules) {
         for (const styleName of node.style) {
             inlineStyles[styleName] = node.style[styleName];
         }
-        css.push([node, inlineStyles]);
+        styles.push(inlineStyles);
     }
 
-    const style = {};
-    for (const cssValue of css) {
-        for (const [key, value] of Object.entries(cssValue[1])) {
-            if (!style[key] || !style[key].includes('important') || value.includes('important')) {
-                style[key] = value;
+    const aggregatedStyle = {};
+    for (const style of styles) {
+        for (const [key, value] of Object.entries(style)) {
+            if (!aggregatedStyle[key] || !aggregatedStyle[key].includes('important') || value.includes('important')) {
+                aggregatedStyle[key] = value;
             }
-        };
-    };
+        }
+    }
 
-    for (const [key, value] of Object.entries(style)) {
+    for (const [key, value] of Object.entries(aggregatedStyle)) {
         if (value.endsWith('important')) {
-            style[key] = value.replace(/\s*!important\s*$/, '');
+            aggregatedStyle[key] = value.replace(/\s*!important\s*$/, '');
         }
     };
 
-    if (style.display === 'block' && !(node.classList && node.classList.contains('btn-block'))) {
-        delete style.display;
+    if (aggregatedStyle.display === 'block' && !(node.classList && node.classList.contains('btn-block'))) {
+        delete aggregatedStyle.display;
     }
-    if (!style['box-sizing']) {
-        style['box-sizing'] = 'border-box'; // This is by default with Bootstrap.
+    if (!aggregatedStyle['box-sizing']) {
+        aggregatedStyle['box-sizing'] = 'border-box'; // This is by default with Bootstrap.
     }
 
     // The css generates all the attributes separately and not in simplified
@@ -969,55 +943,55 @@ function _getMatchedCSSRules(node, cssRules) {
     ]) {
         const positions = ['top', 'right', 'bottom', 'left'];
         const positionalKeys = positions.map(position => `${info.name}-${position}${info.suffix || ''}`);
-        const hasStyles = positionalKeys.some(key => style[key]);
-        const inherits = positionalKeys.some(key => ['inherit', 'initial'].includes((style[key] || '').trim()));
+        const hasStyles = positionalKeys.some(key => aggregatedStyle[key]);
+        const inherits = positionalKeys.some(key => ['inherit', 'initial'].includes((aggregatedStyle[key] || '').trim()));
         if (hasStyles && !inherits) {
             const propertyName = `${info.name}${info.suffix || ''}`;
-            style[propertyName] = positionalKeys.every(key => style[positionalKeys[0]] === style[key])
-                ? style[propertyName] = style[positionalKeys[0]] // top = right = bottom = left => property: [top];
-                : positionalKeys.map(key => style[key] || (info.defaultValue || 0)).join(' '); // property: [top] [right] [bottom] [left];
+            aggregatedStyle[propertyName] = positionalKeys.every(key => aggregatedStyle[positionalKeys[0]] === aggregatedStyle[key])
+                ? aggregatedStyle[propertyName] = aggregatedStyle[positionalKeys[0]] // top = right = bottom = left => property: [top];
+                : positionalKeys.map(key => aggregatedStyle[key] || (info.defaultValue || 0)).join(' '); // property: [top] [right] [bottom] [left];
             for (const prop of positionalKeys) {
-                delete style[prop];
+                delete aggregatedStyle[prop];
             }
         }
     };
 
-    if (style['border-bottom-left-radius']) {
-        style['border-radius'] = style['border-bottom-left-radius'];
-        delete style['border-bottom-left-radius'];
-        delete style['border-bottom-right-radius'];
-        delete style['border-top-left-radius'];
-        delete style['border-top-right-radius'];
+    if (aggregatedStyle['border-bottom-left-radius']) {
+        aggregatedStyle['border-radius'] = aggregatedStyle['border-bottom-left-radius'];
+        delete aggregatedStyle['border-bottom-left-radius'];
+        delete aggregatedStyle['border-bottom-right-radius'];
+        delete aggregatedStyle['border-top-left-radius'];
+        delete aggregatedStyle['border-top-right-radius'];
     }
 
     // If the border styling is initial we remove it to simplify the css tags
     // for compatibility. Also, since we do not send a css style tag, the
     // initial value of the border is useless.
-    for (const styleName in style) {
-        if (styleName.includes('border') && style[styleName] === 'initial') {
-            delete style[styleName];
+    for (const styleName in aggregatedStyle) {
+        if (styleName.includes('border') && aggregatedStyle[styleName] === 'initial') {
+            delete aggregatedStyle[styleName];
         }
     };
 
     // text-decoration rule is decomposed in -line, -color and -style. This is
     // however not supported by many browser/mail clients and the editor does
     // not allow to change -color and -style rule anyway
-    if (style['text-decoration-line']) {
-        style['text-decoration'] = style['text-decoration-line'];
-        delete style['text-decoration-line'];
-        delete style['text-decoration-color'];
-        delete style['text-decoration-style'];
-        delete style['text-decoration-thickness'];
+    if (aggregatedStyle['text-decoration-line']) {
+        aggregatedStyle['text-decoration'] = aggregatedStyle['text-decoration-line'];
+        delete aggregatedStyle['text-decoration-line'];
+        delete aggregatedStyle['text-decoration-color'];
+        delete aggregatedStyle['text-decoration-style'];
+        delete aggregatedStyle['text-decoration-thickness'];
     }
 
     // flexboxes are not supported in Windows Outlook
-    for (const styleName in style) {
-        if (styleName.includes('flex') || `${style[styleName]}`.includes('flex')) {
-            delete style[styleName];
+    for (const styleName in aggregatedStyle) {
+        if (styleName.includes('flex') || `${aggregatedStyle[styleName]}`.includes('flex')) {
+            delete aggregatedStyle[styleName];
         }
     }
 
-    return style;
+    return aggregatedStyle;
 }
 /**
  * Take a css style declaration return a "normalized" version of it (as a
@@ -1085,7 +1059,7 @@ FieldHtml.include({
         $odooEditor.removeClass('odoo-editor');
         $editable.html(html);
 
-        toInline($editable, this.cssRules, this.wysiwyg.$iframe);
+        toInline($editable, this.wysiwyg.$iframe);
         $odooEditor.addClass('odoo-editor');
 
         this.wysiwyg.setValue($editable.html(), {
