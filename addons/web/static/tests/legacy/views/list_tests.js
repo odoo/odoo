@@ -2404,7 +2404,7 @@ QUnit.module('Views', {
 
         // Let's update the view to dislay NO records
         await list.update({domain: ['&', ['bar', '=', false], ['int_field', '>', 0]]});
-        assert.strictEqual(list.$('tfoot td:nth(2)').text(), "0", "total should have been recomputed to 0");
+        assert.strictEqual(list.$('tfoot td:nth(2)').text(), "", "No records, so no total.");
 
         list.destroy();
     });
@@ -2436,6 +2436,34 @@ QUnit.module('Views', {
                         "total should be 10 as first record of first group is selected");
         list.destroy();
     });
+
+    QUnit.test('hide aggregated value in grouped lists when no data provided by RPC call', async function(assert) {
+        assert.expect(1);
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            groupBy: ['bar'],
+            arch: '<tree editable="bottom"><field name="foo"/><field name="qux" widget="float_time" sum="Sum"/></tree>',
+            mockRPC: function (route, args) {
+                return this._super.apply(this, arguments).then(result => {
+                    // On PY-side, a read_group won't provide any aggregate value
+                    // if the field does not have a `group_operator` attribute.
+                    // (see 5691b126f06/odoo/models.py#L2521-L2528)
+                    // Here, since `qux` does not have such an attribute, we
+                    // remove the value provided by `_mockReadGroup`
+                    _.each(result.groups, function(group) {
+                      delete group.qux
+                    })
+                    return Promise.resolve(result)
+                });
+            },
+        });
+
+        assert.strictEqual(list.$('tfoot td:nth(2)').text(), "", "There isn't any aggregated value");
+        list.destroy();
+    })
 
     QUnit.test('aggregates are updated when a line is edited', async function (assert) {
         assert.expect(2);
