@@ -16,17 +16,36 @@ odoo.define("website_blog.tour", function (require) {
         trigger: "button.btn-continue",
         extra_trigger: "form[id=\"editor_new_blog\"]",
         content: _t("Select the blog you want to add the post to."),
+        // Without demo data (and probably in most user cases) there is only
+        // one blog so this step would not be needed and would block the tour.
+        // We keep the step with "auto: true", so that the main python test
+        // still works but never display this to the user anymore. We suppose
+        // the user does not need guidance once that modal is opened. Note: if
+        // you run the tour via your console without demo data, the tour will
+        // thus fail as this will be considered.
+        auto: true,
     }, {
         trigger: "div[data-oe-expression=\"blog_post.name\"]",
         extra_trigger: "#oe_snippets.o_loaded",
         content: _t("Write a title, the subtitle is optional."),
         position: "top",
+        // FIXME instead of using the default 'click' event that is used to mark
+        // DIV elements as consumed, we would like to use the 'input' event for
+        // this specific contenteditable element. However, using 'input' here
+        // makes the auto test not work as the 'text' run method stops working
+        // correctly for contenteditable element whose 'consumeEvent' is set to
+        // 'input'. The auto tests should be entirely independent of what is set
+        // as 'consumeEvent'. While this is investigated and fixed, let's use
+        // the 'mouseup' event. Indeed we cannot let it to 'click' because of
+        // the old editor currently removing all click handlers on top level
+        // editable content (which the blog post title area is).
+        consumeEvent: 'mouseup',
         run: "text",
     }, {
         trigger: "we-button:containsExact(" + _t("Change Cover") + "):visible",
         extra_trigger: "#wrap div[data-oe-expression=\"blog_post.name\"]:not(:containsExact(\"\"))",
         content: _t("Set a blog post <b>cover</b>."),
-        position: "right",
+        position: "bottom",
     }, {
         trigger: ".o_select_media_dialog .o_existing_attachment_cell:nth(1) img",
         extra_trigger: '.modal:has(.o_existing_attachment_cell:nth(1))',
