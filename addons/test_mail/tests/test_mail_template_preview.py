@@ -20,7 +20,7 @@ class TestMailTemplateTools(TestMailTemplate):
             'resource_ref': test_record,
             'lang': 'es_ES',
         })
-        self.assertEqual(preview.body_html, '<p>Spanish Body for %s</p>' % test_record.name)
+        self.assertEqual(preview.body_html, '<p>SpanishBody for %s</p>' % test_record.name)
 
         preview.write({'lang': 'en_US'})
-        self.assertEqual(preview.body_html, '<p>English Body for %s</p>' % test_record.name)
+        self.assertEqual(preview.body_html, '<p>EnglishBody for %s</p>' % test_record.name)

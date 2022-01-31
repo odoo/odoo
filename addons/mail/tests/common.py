@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
 import email
 import email.policy
 import time
@@ -601,21 +602,23 @@ class MailCase(MockEmail):
         return cls.email_template
 
 
-    def _generate_notify_recipients(self, partners):
+    def _generate_notify_recipients(self, partners, record=None):
         """ Tool method to generate recipients data according to structure used
         in notification methods. Purpose is to allow testing of internals of
         some notification methods, notably testing links or group-based notification
         details.
 
-        See notably ``MailThread._notify_compute_recipients()``.
+        See notably ``MailThread._notify_get_recipients()``.
         """
         return [
             {'id': partner.id,
-             'active': True,
-             'share': partner.partner_share,
+             'active': partner.active,
+             'is_follower': partner in record.message_partner_ids if record else False,
              'groups': partner.user_ids.groups_id.ids,
              'notif': partner.user_ids.notification_type or 'email',
+             'share': partner.partner_share,
              'type': 'user' if partner.user_ids and not partner.partner_share else partner.user_ids and 'portal' or 'customer',
+             'ushare': all(user.share for user in partner.user_ids) if partner.user_ids else False,
             } for partner in partners
         ]
 
@@ -940,3 +943,168 @@ class MailCommon(common.TransactionCase, MailCase):
             signature='--\nEnguerrand'
         )
         cls.partner_employee_c2 = cls.user_employee_c2.partner_id
+
+    @classmethod
+    def _activate_multi_lang(cls, lang_code='es_ES', layout_arch_db=None, test_record=False, test_template=False):
+        """ Summary of es_ES matching done here (a bit hardcoded to ease tests)
+
+          * layout
+            * 'English Layout for' -> Spanish Layout para
+          * model
+            * description: English:    Lang Chatter Model (depends on test_record._name)
+                           translated: Spanish description
+          * module
+            * _('TestStuff') -> TestSpanishStuff (used as link button name in layout)
+            * _('View %s') -> SpanishView %s
+          * template
+            * body: English:    <p>EnglishBody for <t t-out="object.name"/></p> (depends on test_template.body)
+                    translated: <p>SpanishBody for <t t-out="object.name" /></p>
+            * subject: English:    EnglishSubject for {{ object.name }} (depends on test_template.subject)
+                       translated: SpanishSubject for {{ object.name }}
+        """
+        # activate translations
+        cls.env['res.lang']._activate_lang(lang_code)
+        cls.env.ref('base.module_base')._update_translations([lang_code])
+
+        # Make sure Spanish translations have not been altered
+        if test_record:
+            description_translations = cls.env['ir.translation'].search([
+                ('module', '=', 'test_mail'),
+                ('src', '=', test_record._description),
+                ('lang', '=', lang_code)
+            ])
+            if description_translations:
+                description_translations.update({'value': 'Spanish description'})
+            else:
+                description_translations.create({
+                    'lang': lang_code,
+                    'module': 'test_mail',
+                    'name': 'ir.model,name',
+                    'res_id': cls.env['ir.model']._get_id(test_record._name),
+                    'src': test_record._description,
+                    'state': 'translated',
+                    'type': 'model',
+                    'value': 'Spanish description',
+                })
+
+        translations_tocreate = []
+        # Have a TestStuff always available
+        test_stuff_translations = cls.env['ir.translation'].search([
+            ('module', '=', 'test_mail'),
+            ('src', '=', 'TestStuff'),
+            ('lang', '=', lang_code)
+        ])
+        if test_stuff_translations:
+            test_stuff_translations.update({'value': 'TestSpanishStuff'})
+        else:
+            translations_tocreate.append({
+                'lang': lang_code,
+                'name': 'idontknow',
+                'module': 'test_mail',
+                'res_id': False,
+                'src': 'TestStuff',
+                'state': 'translated',
+                'type': 'code',
+                'value': 'TestSpanishStuff',
+            })
+
+        view_translations = cls.env['ir.translation'].search([
+            ('module', '=', 'mail'),
+            ('src', '=', 'View %s'),
+            ('lang', '=', lang_code)
+        ])
+        if view_translations:
+            view_translations.update({'value': 'SpanishView'})
+        else:
+            translations_tocreate.append({
+                'lang': lang_code,
+                'name': 'idontknow',
+                'module': 'mail',
+                'res_id': False,
+                'src': 'View %s',
+                'state': 'translated',
+                'type': 'code',
+                'value': 'SpanishView %s',
+            })
+
+        # Prepare some translated value for template if given
+        if test_template:
+            translations_tocreate += [{
+                'lang': lang_code,
+                'module': 'mail',
+                'name': 'mail.template,subject',
+                'res_id': test_template.id,
+                'state': 'translated',
+                'type': 'model',
+                'value': 'SpanishSubject for {{ object.name }}',
+            }, {
+                'lang': lang_code,
+                'module': 'mail',
+                'name': 'mail.template,body_html',
+                'res_id': test_template.id,
+                'state': 'translated',
+                'type': 'model',
+                'value': '<p>SpanishBody for <t t-out="object.name" /></p>',
+            }]
+
+        # create a custom layout for email notification
+        if not layout_arch_db:
+            layout_arch_db = """
+<body>
+    <p>English Layout for <t t-esc="model_description"/></p>
+    <img t-att-src="'/logo.png?company=%s' % (company.id or 0)" t-att-alt="'%s' % company.name"/>
+    <a t-if="has_button_access" t-att-href="button_access['url']">
+        <t t-esc="button_access['title']"/>
+    </a>
+    <t t-if="actions">
+        <t t-foreach="actions" t-as="action">
+            <a t-att-href="action['url']">
+                <t t-esc="action['title']"/>
+            </a>
+        </t>
+    </t>
+    <t t-out="message.body"/>
+    <ul t-if="tracking_values">
+        <li t-foreach="tracking_values" t-as="tracking">
+            <t t-esc="tracking[0]"/>: <t t-esc="tracking[1]"/> -&gt; <t t-esc="tracking[2]"/>
+        </li>
+    </ul>
+    <div t-if="signature" t-out="signature"/>
+    <p>Sent by <t t-esc="company.name"/></p>
+</body>"""
+        view = cls.env['ir.ui.view'].create({
+            'arch_db': layout_arch_db,
+            'key': 'test_layout',
+            'name': 'test_layout',
+            'type': 'qweb',
+        })
+        cls.env['ir.model.data'].create({
+            'model': 'ir.ui.view',
+            'module': 'mail',
+            'name': 'test_layout',
+            'res_id': view.id
+        })
+        translations_tocreate.append({
+            'lang': lang_code,
+            'module': 'mail',
+            'name': 'ir.ui.view,arch_db',
+            'res_id': view.id,
+            'src': 'English Layout for',
+            'state': 'translated',
+            'type': 'model_terms',
+            'value': 'Spanish Layout para',
+        })
+        cls.env['ir.translation'].create(translations_tocreate)
+
+    def _generate_attachments_data(self, count, res_model=None, res_id=None):
+        # attachment visibility depends on what they are attached to
+        if res_model is None:
+            res_model = self.template._name
+        if res_id is None:
+            res_id = self.template.id
+        return [{
+            'name': '%02d.txt' % x,
+            'datas': base64.b64encode(b'Att%02d' % x),
+            'res_model': res_model,
+            'res_id': res_id,
+        } for x in range(count)]

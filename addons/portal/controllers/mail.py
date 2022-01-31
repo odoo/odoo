@@ -230,7 +230,7 @@ class MailController(mail.MailController):
                 record_sudo.with_user(uid).check_access_rule('read')
             except AccessError:
                 if record_sudo.access_token and access_token and consteq(record_sudo.access_token, access_token):
-                    record_action = record_sudo.with_context(force_website=True).get_access_action()
+                    record_action = record_sudo._get_access_action(force_website=True)
                     if record_action['type'] == 'ir.actions.act_url':
                         pid = kwargs.get('pid')
                         hash = kwargs.get('hash')

@@ -53,9 +53,10 @@ class TestMessagePost(TestMailCommon, TestRecipients):
         for email_xmlid in ['mail.message_notification_email',
                             'mail.mail_notification_light',
                             'mail.mail_notification_paynow']:
+            test_message.sudo().notification_ids.unlink()  # otherwise partner/message constraint fails
             test_message.write({'email_layout_xmlid': email_xmlid})
             with self.mock_mail_gateway():
-                test_record._notify_record_by_email(
+                test_record._notify_thread_by_email(
                     test_message,
                     recipients_data,
                     force_send=False
@@ -71,7 +72,7 @@ class TestMessagePost(TestMailCommon, TestRecipients):
             self.assertTrue(user_email)
 
     @users('employee')
-    def test_notify_mail_add_signature(self):
+    def test_notify_by_mail_add_signature(self):
         self.test_track = self.env['mail.test.track'].with_context(self._test_context).with_user(self.user_employee).create({
             'name': 'Test',
             'email_from': 'ignasse@example.com'
@@ -84,19 +85,31 @@ class TestMessagePost(TestMailCommon, TestRecipients):
         self.assertIn("record.user_id.sudo().signature", template.arch)
 
         with self.mock_mail_gateway():
-            self.test_track.message_post(body="Test body", mail_auto_delete=False, add_sign=True, partner_ids=[self.partner_1.id, self.partner_2.id], email_layout_xmlid="mail.mail_notification_paynow")
+            self.test_track.message_post(
+                body="Test body",
+                email_add_signature=True,
+                email_layout_xmlid="mail.mail_notification_paynow",
+                mail_auto_delete=False,
+                partner_ids=[self.partner_1.id, self.partner_2.id],
+            )
         found_mail = self._new_mails
         self.assertIn(signature, found_mail.body_html)
         self.assertEqual(found_mail.body_html.count(signature), 1)
 
         with self.mock_mail_gateway():
-            self.test_track.message_post(body="Test body", mail_auto_delete=False, add_sign=False, partner_ids=[self.partner_1.id, self.partner_2.id], email_layout_xmlid="mail.mail_notification_paynow")
+            self.test_track.message_post(
+                body="Test body",
+                email_add_signature=False,
+                email_layout_xmlid="mail.mail_notification_paynow",
+                mail_auto_delete=False,
+                partner_ids=[self.partner_1.id, self.partner_2.id]
+            )
         found_mail = self._new_mails
         self.assertNotIn(signature, found_mail.body_html)
         self.assertEqual(found_mail.body_html.count(signature), 0)
 
     @users('employee')
-    def test_notify_prepare_template_context_company_value(self):
+    def test_notify_by_email_prepare_rendering_contextt(self):
         """ Verify that the template context company value is right
         after switching the env company or if a company_id is set
         on mail record.
@@ -113,7 +126,7 @@ class TestMessagePost(TestMailCommon, TestRecipients):
         # self.env.company.id = Main Company    AND    test_record.company_id = False
         self.assertEqual(self.env.company.id, main_company.id)
         self.assertEqual(test_record.company_id.id, False)
-        template_values = test_record._notify_prepare_template_context(test_record.message_ids, {})
+        template_values = test_record._notify_by_email_prepare_rendering_context(test_record.message_ids, {})
         self.assertEqual(template_values.get('company').id, self.env.company.id)
 
         # self.env.company.id = Other Company    AND    test_record.company_id = False
@@ -121,7 +134,7 @@ class TestMessagePost(TestMailCommon, TestRecipients):
         test_record = self.env['mail.test.multi.company'].browse(test_record.id)
         self.assertEqual(self.env.company.id, other_company.id)
         self.assertEqual(test_record.company_id.id, False)
-        template_values = test_record._notify_prepare_template_context(test_record.message_ids, {})
+        template_values = test_record._notify_by_email_prepare_rendering_context(test_record.message_ids, {})
         self.assertEqual(template_values.get('company').id, self.env.company.id)
 
         # self.env.company.id = Other Company    AND    test_record.company_id = Main Company
@@ -129,7 +142,7 @@ class TestMessagePost(TestMailCommon, TestRecipients):
         test_record = self.env['mail.test.multi.company'].browse(test_record.id)
         self.assertEqual(self.env.company.id, other_company.id)
         self.assertEqual(test_record.company_id.id, main_company.id)
-        template_values = test_record._notify_prepare_template_context(test_record.message_ids, {})
+        template_values = test_record._notify_by_email_prepare_rendering_context(test_record.message_ids, {})
         self.assertEqual(template_values.get('company').id, main_company.id)
 
     def test_notify_recipients_internals(self):
@@ -147,7 +160,7 @@ class TestMessagePost(TestMailCommon, TestRecipients):
             'auth_login': 'auth_login_val',
         }
         notify_msg_vals = dict(msg_vals, **link_vals)
-        classify_res = self.env[self.test_record._name]._notify_classify_recipients(pdata, 'My Custom Model Name', msg_vals=notify_msg_vals)
+        classify_res = self.env[self.test_record._name]._notify_get_recipients_classify(pdata, 'My Custom Model Name', msg_vals=notify_msg_vals)
         # find back information for each recipients
         partner_info = next(item for item in classify_res if item['recipients'] == self.partner_1.ids)
         emp_info = next(item for item in classify_res if item['recipients'] == self.partner_employee.ids)
@@ -528,3 +541,133 @@ class TestMessagePostGlobal(TestMailCommon, TestRecipients):
                              {'body': 'test'}
         )
         self.assertTrue(isinstance(message_id, int))
+
+
+@tagged('mail_post', 'multi_lang')
+class TestMessagePostLang(TestMailCommon, TestRecipients):
+
+    @classmethod
+    def setUpClass(cls):
+        super(TestMessagePostLang, cls).setUpClass()
+
+        cls.test_records = cls.env['mail.test.lang'].create([
+            {'customer_id': False,
+             'email_from': 'test.record.1@test.customer.com',
+             'lang': 'es_ES',
+             'name': 'TestRecord1',
+            },
+            {'customer_id': cls.partner_2.id,
+             'email_from': 'valid.other@gmail.com',
+             'name': 'TestRecord2',
+            },
+        ])
+
+        cls.test_template = cls.env['mail.template'].create({
+            'auto_delete': True,
+            'body_html': '<p>EnglishBody for <t t-out="object.name"/></p>',
+            'email_from': '{{ user.email_formatted }}',
+            'email_to': '{{ (object.email_from if not object.customer_id else "") }}',
+            'lang': '{{ object.customer_id.lang or object.lang }}',
+            'model_id': cls.env['ir.model']._get('mail.test.lang').id,
+            'name': 'TestTemplate',
+            'partner_to': '{{ object.customer_id.id if object.customer_id else "" }}',
+            'subject': 'EnglishSubject for {{ object.name }}',
+        })
+        cls.user_employee.write({  # add group to create contacts, necessary for templates
+            'groups_id': [(4, cls.env.ref('base.group_partner_manager').id)],
+        })
+
+        cls._activate_multi_company()
+        cls._activate_multi_lang(test_record=cls.test_records[0], test_template=cls.test_template)
+
+        cls.partner_2.write({'lang': 'es_ES'})
+
+    @users('employee')
+    def test_composer_lang_template(self):
+        test_records = self.test_records.with_user(self.env.user)
+        test_template = self.test_template.with_user(self.env.user)
+
+        with self.mock_mail_gateway():
+            test_records.message_post_with_template(
+                test_template.id,
+                composition_mode='mass_mail',
+                # email_layout_xmlid='mail.test_layout',  Not supported
+                message_type='comment',
+                subtype_id=self.env.ref('mail.mt_comment').id,
+            )
+
+        record0_customer = self.env['res.partner'].search([('email_normalized', '=', 'test.record.1@test.customer.com')], limit=1)
+        self.assertTrue(record0_customer, 'Template usage should have created a contact based on record email')
+
+        for record, customer in zip(test_records, record0_customer + self.partner_2):
+            customer_email = self._find_sent_mail_wemail(customer.email_formatted)
+            self.assertTrue(customer_email)
+            body = customer_email['body']
+            # check content
+            # self.assertIn('SpanishBody for %s' % record.name, body, 'Body based on template should be translated')
+            self.assertIn('EnglishBody for %s' % record.name, body, 'Fixme: this should be translated')
+            # check subject
+            # self.assertEqual('SpanishSubject for %s' % record.name, customer_email['subject'], 'Subject based on template should be translated')
+            self.assertEqual('EnglishSubject for %s' % record.name, customer_email['subject'], 'Fixme: this should be translated')
+
+    @users('employee')
+    def test_layout_email_lang_context(self):
+        test_records = self.test_records.with_user(self.env.user).with_context(lang='es_ES')
+        test_records[1].message_subscribe(self.partner_2.ids)
+
+        with self.mock_mail_gateway():
+            test_records[1].message_post(
+                body='<p>Hello</p>',
+                email_layout_xmlid='mail.test_layout',
+                message_type='comment',
+                subject='Subject',
+                subtype_xmlid='mail.mt_comment',
+            )
+
+        customer_email = self._find_sent_mail_wemail(self.partner_2.email_formatted)
+        self.assertTrue(customer_email)
+        body = customer_email['body']
+        # check notification layout translation
+        self.assertIn('Spanish Layout para', body, 'Layout content should be translated')
+        self.assertNotIn('English Layout for', body)
+        self.assertIn('Spanish Layout para Spanish description', body, 'Model name should be translated')
+        self.assertIn('SpanishView Spanish description', body, '"View document" should be translated')
+        self.assertNotIn('View %s' % test_records[1]._description, body)
+        self.assertIn('TestSpanishStuff', body, 'Groups-based action names should be translated')
+        self.assertNotIn('TestStuff', body)
+        # check content
+        self.assertIn('Hello', body, 'Body of posted message should be present')
+
+    @users('employee')
+    def test_layout_email_lang_template(self):
+        test_records = self.test_records.with_user(self.env.user)
+        test_template = self.test_template.with_user(self.env.user)
+
+        with self.mock_mail_gateway():
+            for test_record in test_records:
+                test_record.message_post_with_template(
+                    test_template.id,
+                    email_layout_xmlid='mail.test_layout',
+                    message_type='comment',
+                    subtype_id=self.env.ref('mail.mt_comment').id,
+                )
+
+        record0_customer = self.env['res.partner'].search([('email_normalized', '=', 'test.record.1@test.customer.com')], limit=1)
+        self.assertTrue(record0_customer, 'Template usage should have created a contact based on record email')
+
+        for record, customer in zip(test_records, record0_customer + self.partner_2):
+            customer_email = self._find_sent_mail_wemail(customer.email_formatted)
+            self.assertTrue(customer_email)
+            body = customer_email['body']
+            # check notification layout translation
+            self.assertIn('Spanish Layout para', body, 'Layout content should be translated')
+            self.assertNotIn('English Layout for', body)
+            self.assertIn('Spanish Layout para Spanish description', body, 'Model name should be translated')
+            # self.assertIn('SpanishView Spanish description', body, '"View document" should be translated')
+            self.assertIn('View %s' % test_records[1]._description, body, 'Fixme: this should be translated')
+            # self.assertIn('TestSpanishStuff', body, 'Groups-based action names should be translated')
+            self.assertIn('TestStuff', body, 'Fixme: groups-based action names should be translated')
+            # check content
+            self.assertIn('SpanishBody for %s' % record.name, body, 'Body based on template should be translated')
+            # check subject
+            self.assertEqual('SpanishSubject for %s' % record.name, customer_email['subject'], 'Subject based on template should be translated')

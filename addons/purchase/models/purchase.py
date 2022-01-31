@@ -10,7 +10,7 @@ from werkzeug.urls import url_encode
 
 from odoo import api, fields, models, _
 from odoo.osv import expression
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, format_amount, formatLang, get_lang, groupby
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, format_amount, format_date, formatLang, get_lang, groupby
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
 from odoo.exceptions import AccessError, UserError, ValidationError
 
@@ -289,18 +289,6 @@ class PurchaseOrder(models.Model):
                     del line[2]['date_planned']
         return result
 
-    def _track_subtype(self, init_values):
-        self.ensure_one()
-        if 'state' in init_values and self.state == 'purchase':
-            if init_values['state'] == 'to approve':
-                return self.env.ref('purchase.mt_rfq_approved')
-            return self.env.ref('purchase.mt_rfq_confirmed')
-        elif 'state' in init_values and self.state == 'to approve':
-            return self.env.ref('purchase.mt_rfq_confirmed')
-        elif 'state' in init_values and self.state == 'done':
-            return self.env.ref('purchase.mt_rfq_done')
-        return super(PurchaseOrder, self)._track_subtype(init_values)
-
     def _get_report_base_filename(self):
         self.ensure_one()
         return 'Purchase Order-%s' % (self.name)
@@ -352,6 +340,69 @@ class PurchaseOrder(models.Model):
                 self.update({'partner_id': False})
             return {'warning': warning}
         return {}
+
+    # ------------------------------------------------------------
+    # MAIL.THREAD
+    # ------------------------------------------------------------
+
+    @api.returns('mail.message', lambda value: value.id)
+    def message_post(self, **kwargs):
+        if self.env.context.get('mark_rfq_as_sent'):
+            self.filtered(lambda o: o.state == 'draft').write({'state': 'sent'})
+        return super(PurchaseOrder, self.with_context(mail_post_autofollow=self.env.context.get('mail_post_autofollow', True))).message_post(**kwargs)
+
+    def _notify_get_recipients_groups(self, msg_vals=None):
+        """ Tweak 'view document' button for portal customers, calling directly
+        routes for confirm specific to PO model. """
+        groups = super(PurchaseOrder, self)._notify_get_recipients_groups(msg_vals=msg_vals)
+
+        customer_portal_group = next(group for group in groups if group[0] == 'portal_customer')
+        if customer_portal_group:
+            access_opt = customer_portal_group[2].setdefault('button_access', {})
+            if self.env.context.get('is_reminder'):
+                access_opt['title'] = _('View')
+                actions = customer_portal_group[2].setdefault('actions', list())
+                actions.extend([
+                    {'url': self.get_confirm_url(confirm_type='reminder'), 'title': _('Accept')},
+                    {'url': self.get_update_url(), 'title': _('Update Dates')},
+                ])
+            else:
+                access_opt['title'] = _('Confirm')
+                access_opt['url'] = self.get_confirm_url(confirm_type='reception')
+
+        return groups
+
+    def _notify_by_email_prepare_rendering_context(self, message, msg_vals, model_description=False,
+                                                   force_email_company=False, force_email_lang=False):
+        render_context = super()._notify_by_email_prepare_rendering_context(
+            message, msg_vals, model_description=model_description,
+            force_email_company=force_email_company, force_email_lang=force_email_lang
+        )
+        if self.date_order:
+            amount_txt = _('%(amount)s due %(date)s',
+                           amount=format_amount(self.env, self.amount_total, self.currency_id, lang_code=render_context.get('lang')),
+                           date=format_date(self.env, self.date_order, date_format='short', lang_code=render_context.get('lang'))
+                          )
+        else:
+            amount_txt = format_amount(self.env, self.amount_total, self.currency_id, lang_code=render_context.get('lang'))
+        render_context['subtitle'] = Markup("<span>%s<br />%s</span>") % (self.name, amount_txt)
+        return render_context
+
+    def _track_subtype(self, init_values):
+        self.ensure_one()
+        if 'state' in init_values and self.state == 'purchase':
+            if init_values['state'] == 'to approve':
+                return self.env.ref('purchase.mt_rfq_approved')
+            return self.env.ref('purchase.mt_rfq_confirmed')
+        elif 'state' in init_values and self.state == 'to approve':
+            return self.env.ref('purchase.mt_rfq_confirmed')
+        elif 'state' in init_values and self.state == 'done':
+            return self.env.ref('purchase.mt_rfq_done')
+        return super(PurchaseOrder, self)._track_subtype(init_values)
+
+    # ------------------------------------------------------------
+    # ACTIONS
+    # ------------------------------------------------------------
 
     def action_rfq_send(self):
         '''
@@ -409,12 +460,6 @@ class PurchaseOrder(models.Model):
             'target': 'new',
             'context': ctx,
         }
-
-    @api.returns('mail.message', lambda value: value.id)
-    def message_post(self, **kwargs):
-        if self.env.context.get('mark_rfq_as_sent'):
-            self.filtered(lambda o: o.state == 'draft').write({'state': 'sent'})
-        return super(PurchaseOrder, self.with_context(mail_post_autofollow=self.env.context.get('mail_post_autofollow', True))).message_post(**kwargs)
 
     def print_quotation(self):
         self.write({'state': "sent"})

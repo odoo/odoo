@@ -14,6 +14,7 @@ import time
 from collections import defaultdict
 from hashlib import sha256
 from itertools import chain, repeat
+from markupsafe import Markup
 
 import decorator
 import pytz
@@ -28,7 +29,7 @@ from odoo.exceptions import AccessDenied, AccessError, UserError, ValidationErro
 from odoo.http import request
 from odoo.osv import expression
 from odoo.service.db import check_super
-from odoo.tools import partition, collections, frozendict, lazy_property
+from odoo.tools import is_html_empty, partition, collections, frozendict, lazy_property
 
 _logger = logging.getLogger(__name__)
 
@@ -285,7 +286,7 @@ class Users(models.Model):
         help="Specify a value only when creating a user or if you're "\
              "changing the user's password, otherwise leave empty. After "\
              "a change of password, the user has to login again.")
-    signature = fields.Html(string="Email Signature", default="")
+    signature = fields.Html(string="Email Signature", compute='_compute_signature', readonly=False, store=True)
     active = fields.Boolean(default=True)
     active_partner = fields.Boolean(related='partner_id.active', readonly=True, string="Partner is Active")
     action_id = fields.Many2one('ir.actions.actions', string='Home Action',
@@ -400,6 +401,11 @@ class Users(models.Model):
                 raise UserError(_('Please use the change password wizard (in User Preferences or User menu) to change your own password.'))
             else:
                 user.password = user.new_password
+
+    @api.depends('name')
+    def _compute_signature(self):
+        for user in self.filtered(lambda user: user.name and is_html_empty(user.signature)):
+            user.signature = Markup('<p>--<br />%s</p>') % user['name']
 
     @api.depends('groups_id')
     def _compute_share(self):

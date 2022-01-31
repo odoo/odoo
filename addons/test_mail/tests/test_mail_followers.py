@@ -1,12 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from psycopg2 import IntegrityError
-
 from odoo.addons.test_mail.tests.common import TestMailCommon
 from odoo.tests import tagged
 from odoo.tests import users
-from odoo.tools.misc import mute_logger
 
 
 @tagged('mail_followers')
@@ -417,62 +414,264 @@ class AdvancedResponsibleNotifiedTest(TestMailCommon):
         self.assertEqual(mail_notification.mail_mail_id.state, 'outgoing')
 
 
-@tagged('post_install', '-at_install')
-class DuplicateNotificationTest(TestMailCommon):
-    def test_no_duplicate_notification(self):
-        """
-        Check that we only create one mail.notification per partner
+@tagged('mail_followers', 'post_install', '-at_install')
+class RecipientsNotificationTest(TestMailCommon):
+    """ Test advanced and complex recipients computation / notification, such
+    as multiple users, batch computation, ... Post install because we need the
+    registry to be ready to send notifications."""
 
-        Post install because we need the registery to be ready to send notification
-        """
-        #Simulate case of 2 users that got their partner merged
-        common_partner = self.env['res.partner'].create({"name": "demo1", "email": "demo1@test.com"})
-        user_1 = self.env['res.users'].create({'login': 'demo1', 'partner_id': common_partner.id, 'notification_type': 'email'})
-        user_2 = self.env['res.users'].create({'login': 'demo2', 'partner_id': common_partner.id, 'notification_type': 'inbox'})
+    @classmethod
+    def setUpClass(cls):
+        super(RecipientsNotificationTest, cls).setUpClass()
 
-        #Trigger auto subscribe notification
-        test = self.env['mail.test.track'].create({"name": "Test Track", "user_id": user_2.id})
+        # portal user for testing share status / internal subtypes
+        cls.user_portal = cls._create_portal_user()
+        cls.partner_portal = cls.user_portal.partner_id
+
+        # simple customer
+        cls.customer = cls.env['res.partner'].create({
+            'email': 'customer@test.customer.com',
+            'name': 'Customer',
+            'phone': '+32455778899',
+        })
+
+        # Simulate case of 2 users that got their partner merged
+        cls.common_partner = cls.env['res.partner'].create({
+            'email': 'common.partner@test.customer.com',
+            'name': 'Common Partner',
+            'phone': '+32455998877',
+        })
+        cls.user_1, cls.user_2 = cls.env['res.users'].with_context(no_reset_password=True).create([
+            {'groups_id': [(4, cls.env.ref('base.group_portal').id)],
+             'login': '_login_portal',
+             'notification_type': 'email',
+             'partner_id': cls.common_partner.id,
+            },
+            {'groups_id': [(4, cls.env.ref('base.group_user').id)],
+             'login': '_login_internal',
+             'notification_type': 'inbox',
+             'partner_id': cls.common_partner.id,
+            }
+        ])
+        (cls.user_1 + cls.user_2).flush()
+
+    def assertRecipientsData(self, recipients_data, records, partners, partner_to_users=None):
+        """ Custom assert as recipients structure is custom and may change due
+        to some implementation choice. """
+        self.assertEqual(set(recipients_data.keys()), set(records.ids))
+        for record in records:
+            record_data = recipients_data[record.id]
+            self.assertEqual(set(record_data.keys()), set(partners.ids))
+            for partner in partners:
+                partner_data = record_data[partner.id]
+                if partner_to_users and partner_to_users.get(partner.id):  #helps making test explicit
+                    user = partner_to_users[partner.id]
+                else:
+                    user = next((user for user in partner.user_ids if not user.share), self.env['res.users'])
+                    if not user:
+                        user = next((user for user in partner.user_ids), self.env['res.users'])
+                self.assertEqual(partner_data['active'], partner.active)
+                if user:
+                    self.assertEqual(partner_data['groups'], set(user.groups_id.ids))
+                    self.assertEqual(partner_data['notif'], user.notification_type)
+                    self.assertEqual(partner_data['uid'], user.id)
+                else:
+                    self.assertEqual(partner_data['groups'], set())
+                    self.assertEqual(partner_data['notif'], 'email')
+                    self.assertFalse(partner_data['uid'])
+                self.assertEqual(partner_data['is_follower'], partner in record.message_partner_ids)
+                self.assertEqual(partner_data['share'], partner.partner_share)
+                self.assertEqual(partner_data['ushare'], user.share)
+
+    @users('employee')
+    def test_notification_nodupe(self):
+        """ Check that we only create one mail.notification per partner. """
+        # Trigger auto subscribe notification
+        test = self.env['mail.test.track'].create({"name": "Test Track", "user_id": self.user_2.id})
         mail_message = self.env['mail.message'].search([
-             ('res_id', '=', test.id),
-             ('model', '=', 'mail.test.track'),
-             ('message_type', '=', 'user_notification')
+            ('res_id', '=', test.id),
+            ('model', '=', 'mail.test.track'),
+            ('message_type', '=', 'user_notification')
         ])
         notif = self.env['mail.notification'].search([
             ('mail_message_id', '=', mail_message.id),
-            ('res_partner_id', '=', common_partner.id)
+            ('res_partner_id', '=', self.common_partner.id)
         ])
         self.assertEqual(len(notif), 1)
-        self.assertEqual(notif.notification_type, 'email')
+        self.assertEqual(notif.notification_type, 'inbox', 'Multi users should take internal users if possible')
 
-        subtype = self.env.ref('mail.mt_comment')
-        res = self.env['mail.followers']._get_recipient_data(test, 'comment', subtype.id, pids=common_partner.ids)
-        partner_notif = [r for r in res if r[0] == common_partner.id]
-        self.assertEqual(len(partner_notif), 1)
-        self.assertEqual(partner_notif[0][3], 'email')
+        recipients_data = self.env['mail.followers']._get_recipient_data(
+            test, 'comment', self.env.ref('mail.mt_comment').id,
+            pids=self.common_partner.ids)
+        self.assertRecipientsData(recipients_data, test, self.common_partner + self.partner_employee,
+                                  partner_to_users={self.common_partner.id: self.user_2})
 
-@tagged('post_install', '-at_install')
-class UnlinkedNotificationTest(TestMailCommon):
-    def test_unlinked_notification(self):
-        """
-        Check that we unlink the created user_notification after unlinked the related document
-
-        Post install because we need the registery to be ready to send notification
-        """
-        common_partner = self.env['res.partner'].create({"name": "demo1", "email": "demo1@test.com"})
-        user_1 = self.env['res.users'].create({'login': 'demo1', 'partner_id': common_partner.id, 'notification_type': 'inbox'})
-
-        test = self.env['mail.test.track'].create({"name": "Test Track", "user_id": user_1.id})
-        test_id = test.id
+    @users('employee')
+    def test_notification_unlink(self):
+        """ Check that we unlink the created user_notification after unlinked the
+        related document. """
+        test = self.env['mail.test.track'].create({"name": "Test Track", "user_id": self.user_1.id})
         mail_message = self.env['mail.message'].search([
-             ('res_id', '=', test_id),
-             ('model', '=', 'mail.test.track'),
-             ('message_type', '=', 'user_notification')
+            ('res_id', '=', test.id),
+            ('model', '=', 'mail.test.track'),
+            ('message_type', '=', 'user_notification')
         ])
         self.assertEqual(len(mail_message), 1)
         test.unlink()
-        mail_message = self.env['mail.message'].search([
-             ('res_id', '=', test_id),
-             ('model', '=', 'mail.test.track'),
-             ('message_type', '=', 'user_notification')
+        self.assertEqual(
+            self.env['mail.message'].search_count([
+                ('res_id', '=', test.id),
+                ('model', '=', 'mail.test.track'),
+                ('message_type', '=', 'user_notification')
+            ]), 0
+        )
+
+    @users('employee')
+    def test_notification_user_choice(self):
+        """ Check fetching user information when notifying someone with multiple
+        users (more complex use case). """
+        company_other = self.env['res.company'].sudo().create({
+            'currency_id': self.env.ref('base.CAD').id,
+            'email': 'company_other@test.example.com',
+            'name': 'Company Other',
+        })
+        shared_partner = self.env['res.partner'].sudo().create({
+            'email': 'common.partner@test.customer.com',
+            'name': 'Common Partner',
+            'phone': '+32455998877',
+        })
+        cids = (company_other + self.company_admin).ids
+        user_2_1, user_2_2, user_2_3 = self.env['res.users'].sudo().with_context(no_reset_password=True).create([
+            {'company_ids': [(6, 0, cids)],
+             'company_id': self.company_admin.id,
+             'groups_id': [(4, self.env.ref('base.group_portal').id)],
+             'login': '_login2_portal',
+             'notification_type': 'email',
+             'partner_id': shared_partner.id,
+            },
+            {'company_ids': [(6, 0, cids)],
+             'company_id': self.company_admin.id,
+             'groups_id': [(4, self.env.ref('base.group_user').id)],
+             'login': '_login2_internal',
+             'notification_type': 'inbox',
+             'partner_id': shared_partner.id,
+            },
+            {'company_ids': [(6, 0, cids)],
+             'company_id': company_other.id,
+             'groups_id': [(4, self.env.ref('base.group_user').id), (4, self.env.ref('base.group_partner_manager').id)],
+             'login': '_login2_manager',
+             'notification_type': 'inbox',
+             'partner_id': shared_partner.id,
+            }
         ])
-        self.assertEqual(len(mail_message), 0)
+        (user_2_1 + user_2_2 + user_2_3).flush()
+
+        # just ensure current share status
+        self.assertFalse(shared_partner.partner_share)
+        self.assertTrue(user_2_1.share)
+        self.assertFalse(user_2_2.share or user_2_3.share)
+
+        test = self.env['mail.test.track'].create({"name": "Test Track", "user_id": False})
+        self.assertEqual(test.message_partner_ids, self.partner_employee)
+
+        with self.assertSinglePostNotifications(
+                [{'group': 'customer', 'partner': shared_partner,
+                  'status': 'sent', 'type': 'inbox'}],
+                message_info={'content': 'User Choice Notification'}):
+            test.message_post(
+                body='<p>User Choice Notification</p>',
+                message_type='comment',
+                partner_ids=shared_partner.ids,
+                subtype_xmlid='mail.mt_comment',
+            )
+
+        recipients_data = self.env['mail.followers']._get_recipient_data(
+            test, 'comment', self.env.ref('mail.mt_comment').id,
+            pids=shared_partner.ids)
+        self.assertRecipientsData(recipients_data, test, self.partner_employee + shared_partner,
+                                  partner_to_users={shared_partner.id: user_2_2})
+
+    @users('employee')
+    def test_recipients_fetch(self):
+        test_records = self.env['mail.test.simple'].create([
+            {'email_from': 'ignasse@example.com',
+             'name': 'Test %s' % idx,
+            } for idx in range(5)
+        ])
+        # make followers listen to notes to use it and check portal will never be notified of it (internal)
+        test_records.message_follower_ids.sudo().write({'subtype_ids': [(4, self.env.ref('mail.mt_note').id)]})
+        for test_record in test_records:
+            self.assertEqual(test_record.message_partner_ids, self.env.user.partner_id)
+
+        test_records[0].message_subscribe(self.partner_portal.ids)
+        self.assertNotIn(
+            self.env.ref('mail.mt_note'),
+            test_records[0].message_follower_ids.filtered(lambda fol: fol.partner_id == self.partner_portal).subtype_ids,
+            'Portal user should not follow notes by default')
+
+        # just fetch followers
+        recipients_data = self.env['mail.followers']._get_recipient_data(
+            test_records[0], 'comment', self.env.ref('mail.mt_comment').id,
+            pids=None
+        )
+        self.assertRecipientsData(recipients_data, test_records[0], self.env.user.partner_id + self.partner_portal)
+
+        # followers + additional recipients
+        recipients_data = self.env['mail.followers']._get_recipient_data(
+            test_records[0], 'comment', self.env.ref('mail.mt_comment').id,
+            pids=(self.customer + self.common_partner + self.partner_admin).ids
+        )
+        self.assertRecipientsData(recipients_data, test_records[0],
+                                  self.env.user.partner_id + self.partner_portal + self.customer + self.common_partner + self.partner_admin)
+
+        # ensure filtering on internal: should exclude Portal even if misconfiguration
+        follower_portal = test_records[0].message_follower_ids.filtered(lambda fol: fol.partner_id == self.partner_portal).sudo()
+        follower_portal.write({'subtype_ids': [(4, self.env.ref('mail.mt_note').id)]})
+        follower_portal.flush()
+        recipients_data = self.env['mail.followers']._get_recipient_data(
+            test_records[0], 'comment', self.env.ref('mail.mt_note').id,
+            pids=(self.common_partner + self.partner_admin).ids
+        )
+        self.assertRecipientsData(recipients_data, test_records[0], self.env.user.partner_id + self.common_partner + self.partner_admin)
+
+        # ensure filtering on subtype: should exclude Portal as it does not follow comment anymore
+        follower_portal.write({'subtype_ids': [(3, self.env.ref('mail.mt_comment').id)]})
+        recipients_data = self.env['mail.followers']._get_recipient_data(
+            test_records[0], 'comment', self.env.ref('mail.mt_comment').id,
+            pids=(self.common_partner + self.partner_admin).ids
+        )
+        self.assertRecipientsData(recipients_data, test_records[0], self.env.user.partner_id + self.common_partner + self.partner_admin)
+
+        # check without subtype
+        recipients_data = self.env['mail.followers']._get_recipient_data(
+            test_records[0], 'comment', False,
+            pids=(self.common_partner + self.partner_admin).ids
+        )
+        self.assertRecipientsData(recipients_data, test_records[0], self.common_partner + self.partner_admin)
+
+        # multi mode
+        test_records[1].message_subscribe(self.partner_portal.ids)
+        test_records[0:4].message_subscribe(self.common_partner.ids)
+        recipients_data = self.env['mail.followers']._get_recipient_data(
+            test_records, 'comment', self.env.ref('mail.mt_comment').id,
+            pids=self.partner_admin.ids
+        )
+        # 0: portal is follower but does not follow comment + common partner (+ admin as pid)
+        recipients_data_1 = dict((r, recipients_data[r]) for r in recipients_data if r in  test_records[0:1].ids)
+        self.assertRecipientsData(recipients_data_1, test_records[0:1], self.env.user.partner_id + self.common_partner + self.partner_admin)
+        # 1: portal is follower with comment + common partner (+ admin as pid)
+        recipients_data_1 = dict((r, recipients_data[r]) for r in recipients_data if r in  test_records[1:2].ids)
+        self.assertRecipientsData(recipients_data_1, test_records[1:2], self.env.user.partner_id + self.common_partner + self.partner_portal + self.partner_admin)
+        # 2-3: common partner (+ admin as pid)
+        recipients_data_2 = dict((r, recipients_data[r]) for r in recipients_data if r in  test_records[2:4].ids)
+        self.assertRecipientsData(recipients_data_2, test_records[2:4], self.env.user.partner_id + self.common_partner + self.partner_admin)
+        # 4+: env user partner (+ admin as pid)
+        recipients_data_3 = dict((r, recipients_data[r]) for r in recipients_data if r in  test_records[4:].ids)
+        self.assertRecipientsData(recipients_data_3, test_records[4:], self.env.user.partner_id + self.partner_admin)
+
+        # multi mode, pids only
+        recipients_data = self.env['mail.followers']._get_recipient_data(
+            test_records, 'comment', False,
+            pids=(self.env.user.partner_id + self.partner_admin).ids
+        )
+        self.assertRecipientsData(recipients_data, test_records, self.env.user.partner_id + self.partner_admin)

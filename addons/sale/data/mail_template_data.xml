@@ -30,7 +30,11 @@
         </t>
         <br/><br/>
         Do not hesitate to contact us if you have any questions.
-        <br/>
+        <t t-if="not is_html_empty(object.user_id.signature)">
+            <br />
+            <t t-out="object.user_id.signature or ''">--<br/>Mitchell Admin</t>
+        </t>
+        <br/><br/>
     </p>
 </div>
             </field>
@@ -65,6 +69,10 @@
         </t>
         <br/><br/>
         Do not hesitate to contact us if you have any questions.
+        <t t-if="not is_html_empty(object.user_id.signature)">
+            <br />
+            <t t-out="object.user_id.signature or ''">--<br/>Mitchell Admin</t>
+        </t>
         <br/><br/>
     </p>
 <t t-if="hasattr(object, 'website_id') and object.website_id">

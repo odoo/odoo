@@ -70,7 +70,7 @@ class TestSyncOdoo2Google(TestSyncGoogle):
         })
         partner_model = self.env.ref('base.model_res_partner')
         partner = self.env['res.partner'].search([], limit=1)
-        with self.assertQueryCount(__system__=1211):
+        with self.assertQueryCount(__system__=1112):
             events = self.env['calendar.event'].create([{
                 'name': "Event %s" % (i),
                 'start': datetime(2020, 1, 15, 8, 0),
@@ -102,7 +102,7 @@ class TestSyncOdoo2Google(TestSyncGoogle):
         })
         partner_model = self.env.ref('base.model_res_partner')
         partner = self.env['res.partner'].search([], limit=1)
-        with self.assertQueryCount(__system__=3635):
+        with self.assertQueryCount(__system__=2916):
             event = self.env['calendar.event'].create({
                 'name': "Event",
                 'start': datetime(2020, 1, 15, 8, 0),

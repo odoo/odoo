@@ -46,10 +46,14 @@ class PortalMixin(models.AbstractModel):
         :return: the url of the record with access parameters, if any.
         """
         self.ensure_one()
-        params = {
-            'model': self._name,
-            'res_id': self.id,
-        }
+        if redirect:
+            # model / res_id used by mail/view to check access on record
+            params = {
+                'model': self._name,
+                'res_id': self.id,
+            }
+        else:
+            params = {}
         if share_token and hasattr(self, 'access_token'):
             params['access_token'] = self._portal_ensure_token()
         if pid:
@@ -60,14 +64,16 @@ class PortalMixin(models.AbstractModel):
 
         return '%s?%s' % ('/mail/view' if redirect else self.access_url, url_encode(params))
 
-    def _notify_get_groups(self, msg_vals=None):
+    def _notify_get_recipients_groups(self, msg_vals=None):
         access_token = self._portal_ensure_token()
-        groups = super(PortalMixin, self)._notify_get_groups(msg_vals=msg_vals)
+        groups = super(PortalMixin, self)._notify_get_recipients_groups(msg_vals=msg_vals)
         local_msg_vals = dict(msg_vals or {})
 
         if access_token and 'partner_id' in self._fields and self['partner_id']:
             customer = self['partner_id']
             local_msg_vals['access_token'] = self.access_token
+            local_msg_vals['pid'] = customer.id
+            local_msg_vals['hash'] = self._sign_token(customer.id)
             local_msg_vals.update(customer.signup_get_auth_param()[customer.id])
             access_link = self._notify_get_action_link('view', **local_msg_vals)
 
@@ -82,11 +88,18 @@ class PortalMixin(models.AbstractModel):
             ]
         else:
             new_group = []
+
+        # enable portal users that should have access through portal (if not access rights
+        # will do their duty)
+        portal_group = next(group for group in groups if group[0] == 'portal')
+        portal_group[2]['active'] = True
+        portal_group[2]['has_button_access'] = True
+
         return new_group + groups
 
-    def get_access_action(self, access_uid=None):
+    def _get_access_action(self, access_uid=None, force_website=False):
         """ Instead of the classic form view, redirect to the online document for
-        portal users or if force_website=True in the context. """
+        portal users or if force_website=True. """
         self.ensure_one()
 
         user, record = self.env.user, self
@@ -95,15 +108,17 @@ class PortalMixin(models.AbstractModel):
                 record.check_access_rights('read')
                 record.check_access_rule("read")
             except exceptions.AccessError:
-                return super(PortalMixin, self).get_access_action(access_uid)
+                return super(PortalMixin, self)._get_access_action(
+                    access_uid=access_uid, force_website=force_website
+                )
             user = self.env['res.users'].sudo().browse(access_uid)
+        if user.share or force_website:
             record = self.with_user(user)
-        if user.share or self.env.context.get('force_website'):
             try:
                 record.check_access_rights('read')
                 record.check_access_rule('read')
             except exceptions.AccessError:
-                if self.env.context.get('force_website'):
+                if force_website:
                     return {
                         'type': 'ir.actions.act_url',
                         'url': record.access_url,
@@ -119,7 +134,9 @@ class PortalMixin(models.AbstractModel):
                     'target': 'self',
                     'res_id': record.id,
                 }
-        return super(PortalMixin, self).get_access_action(access_uid)
+        return super(PortalMixin, self)._get_access_action(
+            access_uid=access_uid, force_website=force_website
+        )
 
     @api.model
     def action_share(self):
