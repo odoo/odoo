@@ -3399,6 +3399,16 @@ class TestFieldParametersValidation(common.TransactionCase):
         ))
 
 
+def select(model, *fnames):
+    """ Return the expected query string to SELECT the given columns. """
+    table = model._table
+    terms = ", ".join(
+        f'"{table}"."{fname}" AS "{fname}"'
+        for fname in ['id'] + list(fnames)
+    )
+    return f'SELECT {terms} FROM "{table}" WHERE "{table}".id IN %s'
+
+
 def insert(model, *fnames, rowcount=1):
     """ Return the expected query string to INSERT the given columns. """
     columns = sorted(fnames + ('create_uid', 'create_date', 'write_uid', 'write_date'))
@@ -3788,3 +3798,22 @@ class TestPrecompute(common.TransactionCase):
         # check the number of queries: 1 SELECT + 1 INSERT
         with self.assertQueryCount(2):
             model.create([{'partner_id': pid} for pid in partners.ids])
+
+    def test_precompute_monetary(self):
+        """Make sure the rounding of monetaries correctly prefetches currency fields"""
+        model = self.env['test_new_api.precompute.monetary']
+        currency = self.env['res.currency']
+
+        # warmup
+        model.create({})
+        model.flush()
+        model.invalidate_cache()
+
+        QUERIES = [
+            select(currency, 'rounding'),
+            select(currency, 'decimal_places'),
+            insert(model, 'amount', 'currency_id'),
+            select(model, 'currency_id'),
+        ]
+        with self.assertQueries(QUERIES):
+            model.create({})
