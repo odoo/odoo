@@ -52,7 +52,6 @@ class TestUiCertification(HttpCaseWithUserDemo):
                     'title': 'Select all the existing products',
                     'sequence': 3,
                     'question_type': 'multiple_choice',
-                    'column_nb': '4',
                     'suggested_answer_ids': [
                         (0, 0, {
                             'value': 'Chair floor protection',
@@ -83,7 +82,6 @@ class TestUiCertification(HttpCaseWithUserDemo):
                     'title': 'Select all the available customizations for our Customizable Desk',
                     'sequence': 4,
                     'question_type': 'multiple_choice',
-                    'column_nb': '4',
                     'suggested_answer_ids': [
                         (0, 0, {
                             'value': 'Color',
@@ -174,7 +172,6 @@ class TestUiCertification(HttpCaseWithUserDemo):
                     'title': 'Select all the products that sell for $100 or more',
                     'sequence': 9,
                     'question_type': 'multiple_choice',
-                    'column_nb': '2',
                     'suggested_answer_ids': [
                         (0, 0, {
                             'value': 'Corner Desk Right Sit',

@@ -112,10 +112,6 @@ class SurveyQuestion(models.Model):
         'survey.question.answer', 'matrix_question_id', string='Matrix Rows', copy=True,
         help='Labels used for proposed choices: rows of matrix')
     # -- display & timing options
-    column_nb = fields.Selection([
-        ('12', '1'), ('6', '2'), ('4', '3'), ('3', '4'), ('2', '6')],
-        string='Number of columns', default='12',
-        help='These options refer to col-xx-[12|6|4|3|2] classes in Bootstrap for dropdown-based simple and multiple choice questions.')
     is_time_limited = fields.Boolean("The question is limited in time",
         help="Currently only supported for live sessions.")
     time_limit = fields.Integer("Time limit (seconds)")
