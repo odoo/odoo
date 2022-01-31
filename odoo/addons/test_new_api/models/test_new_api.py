@@ -1516,6 +1516,23 @@ class PrecomputeRequired(models.Model):
     name = fields.Char(related='partner_id.name', precompute=True, store=True, required=True)
 
 
+class PrecomputeMonetary(models.Model):
+    _name = 'test_new_api.precompute.monetary'
+    _description = 'a model with precomputed monetary and currency'
+
+    amount = fields.Monetary(
+        compute='_compute_amount', store=True, precompute=True)
+    currency_id = fields.Many2one(
+        'res.currency', compute="_compute_currency_id", store=True, precompute=True)
+
+    def _compute_amount(self):
+        for record in self:
+            record.amount = 12.333
+
+    def _compute_currency_id(self):
+        self.currency_id = 1  # EUR
+
+
 class PrefetchTranslateField(models.Model):
     _name = 'test_new_api.prefetch.translate'
     _description = 'A model with some translate fields to check prefetch'
