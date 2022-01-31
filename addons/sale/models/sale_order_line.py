@@ -410,8 +410,16 @@ class SaleOrderLine(models.Model):
                 line.price_unit = 0.0
             else:
                 price = line._get_display_price()
-                line.price_unit = self.env['account.tax']._fix_tax_included_price_company(
-                    price, line.product_id.taxes_id, line.tax_id, line.company_id)
+                line.price_unit = line.product_id._get_tax_included_unit_price(
+                    line.company_id,
+                    line.order_id.currency_id,
+                    line.order_id.date_order,
+                    'sale',
+                    fiscal_position=line.order_id.fiscal_position_id,
+                    product_price_unit=price,
+                    product_currency=line.currency_id
+                )
+
 
     def _get_display_price(self):
         self.ensure_one()
