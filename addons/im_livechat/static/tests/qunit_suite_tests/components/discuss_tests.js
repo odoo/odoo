@@ -338,5 +338,33 @@ QUnit.test('invite button should be present on livechat', async function (assert
     );
 });
 
+QUnit.test('call buttons should not be present on livechat', async function (assert) {
+    assert.expect(1);
+
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv['mail.channel'].create(
+        {
+            anonymous_name: "Visitor 11",
+            channel_type: 'livechat',
+            livechat_operator_id: pyEnv.currentPartnerId,
+            channel_partner_ids: [pyEnv.currentPartnerId, pyEnv.publicPartnerId],
+        },
+    );
+    await start({
+        autoOpenDiscuss: true,
+        discuss: {
+            params: {
+                default_active_id: `mail.channel_${mailChannelId1}`,
+            },
+        },
+        hasDiscuss: true,
+    });
+    assert.containsNone(
+        document.body,
+        '.o_ThreadViewTopbar_callButton',
+        "Call buttons should not be visible in top bar when livechat is active thread"
+    );
+});
+
 });
 });
