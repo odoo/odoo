@@ -195,8 +195,13 @@
     @include o-hover-text-color($default-color: $color, $hover-color: $color-active);
 
     &, &:hover, &:focus, &:active, &.active {
-        border-color: transparent;
-        background-color: transparent;
+        border-color: transparent !important;
+        background-color: transparent !important;
+    }
+
+    &:hover:active:focus {
+        box-shadow: none;
+        outline: none;
     }
 
     &.text-muted, .text-muted {
