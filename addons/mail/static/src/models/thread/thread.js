@@ -1369,6 +1369,13 @@ registerModel({
          * @private
          * @returns {boolean}
          */
+        _computeHasCallFeature() {
+            return ['channel', 'chat', 'group'].includes(this.channel_type);
+        },
+        /**
+         * @private
+         * @returns {boolean}
+         */
         _computeHasInviteFeature() {
             return this.model === 'mail.channel';
         },
@@ -2083,6 +2090,12 @@ registerModel({
          */
         hasActivities: attr({
             default: false,
+        }),
+        /**
+         * Determines whether the RTC call feature should be displayed.
+         */
+        hasCallFeature: attr({
+            compute: '_computeHasCallFeature',
         }),
         /**
          * States whether this thread should has the invite feature. Only makes
