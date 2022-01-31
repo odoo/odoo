@@ -16,14 +16,6 @@ export class MessageList extends Component {
         super.setup();
         useComponentToModel({ fieldName: 'component', modelName: 'MessageListView' });
         /**
-         * States whether there was at least one programmatic scroll since the
-         * last scroll event was handled (which is particularly async due to
-         * throttled behavior).
-         * Useful to avoid loading more messages or to incorrectly disabling the
-         * auto-scroll feature when the scroll was not made by the user.
-         */
-        this._isLastScrollProgrammatic = false;
-        /**
          * Reference of the "load more" item. Useful to trigger load more
          * on scroll when it becomes visible.
          */
@@ -153,7 +145,7 @@ export class MessageList extends Component {
         if (this._getScrollableElement().scrollTop === value) {
             return;
         }
-        this._isLastScrollProgrammatic = true;
+        this.messageListView.update({ isLastScrollProgrammatic: true });
         this._getScrollableElement().scrollTop = value;
     }
 
@@ -371,7 +363,7 @@ export class MessageList extends Component {
                 scrollTop: this._getScrollableElement().scrollTop,
             });
         }
-        if (!this._isLastScrollProgrammatic && threadView && threadView.exists()) {
+        if (!this.messageListView.isLastScrollProgrammatic && threadView && threadView.exists()) {
             // Automatically scroll to new received messages only when the list is
             // currently fully scrolled.
             const hasAutoScrollOnMessageReceived = this.messageListView.isAtEnd;
@@ -381,11 +373,11 @@ export class MessageList extends Component {
             threadViewer.saveThreadCacheScrollHeightAsInitial(this._getScrollableElement().scrollHeight, threadCache);
             threadViewer.saveThreadCacheScrollPositionsAsInitial(scrollTop, threadCache);
         }
-        if (!this._isLastScrollProgrammatic && this._isLoadMoreVisible()) {
+        if (!this.messageListView.isLastScrollProgrammatic && this._isLoadMoreVisible()) {
             this._loadMore();
         }
         this._checkMostRecentMessageIsVisible();
-        this._isLastScrollProgrammatic = false;
+        this.messageListView.update({ isLastScrollProgrammatic: false });
     }
 
 }
