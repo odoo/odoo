@@ -25,4 +25,4 @@ class ProjectDelete(models.TransientModel):
 
     def confirm_delete(self):
         self.with_context(active_test=False).project_ids.unlink()
-        return self.env["project.project"]._action_open_all_projects()
+        return self.env['ir.actions.act_window']._for_xml_id('project.open_view_project_all')
