@@ -269,6 +269,7 @@ var MassMailingFieldHtml = FieldHtml.extend({
         }
         var $newLayout = $('<div/>', {
             class: 'o_layout oe_unremovable oe_unmovable bg-200 ' + themeParams.className,
+            style: themeParams.layoutStyles,
             'data-name': 'Mailing',
         }).append($new_wrapper);
 
@@ -418,7 +419,8 @@ var MassMailingFieldHtml = FieldHtml.extend({
                         return imagesInfo[filename];
                     }
                     return imagesInfo.all;
-                }
+                },
+                layoutStyles: $theme.data('layout-styles'),
             };
         });
         $themes.parent().remove();
