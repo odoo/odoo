@@ -49,7 +49,7 @@
                     <t t-if="threadViewTopbar.thread and threadViewTopbar.thread === messaging.starred">
                         <button class="o_ThreadViewTopbar_unstarAllButton btn btn-secondary" t-att-disabled="threadViewTopbar.threadView.messages.length === 0" t-on-click="threadViewTopbar.onClickUnstarAll">Unstar all</button>
                     </t>
-                    <t t-if="threadViewTopbar.thread and threadViewTopbar.thread.model === 'mail.channel' and threadViewTopbar.thread.rtcSessions.length === 0">
+                    <t t-if="threadViewTopbar.thread and threadViewTopbar.thread.hasCallFeature and threadViewTopbar.thread.rtcSessions.length === 0">
                         <button class="o_ThreadViewTopbar_callButton o_ThreadViewTopbar_button o-active" t-att-disabled="threadViewTopbar.thread.hasPendingRtcRequest" title="Start a Call" t-on-click="_onClickPhone">
                             <i class="fa fa-lg fa-phone"/>
                         </button>
