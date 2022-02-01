@@ -11,6 +11,7 @@
         'data/sms_data.xml',
         'security/ir.model.access.csv',
         'security/sms_security.xml',
+        'views/event_views.xml',
     ],
     'demo': [
     ],
