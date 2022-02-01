@@ -9,6 +9,7 @@ import { isBlock, rgbToHex } from '../../../lib/odoo-editor/src/utils/utils';
 //--------------------------------------------------------------------------
 
 const RE_COL_MATCH = /(^| )col(-[\w\d]+)*( |$)/;
+const RE_COMMAS_OUTSIDE_PARENTHESES = /,(?![^(]*?\))/g;
 const RE_OFFSET_MATCH = /(^| )offset(-[\w\d]+)*( |$)/;
 const RE_PADDING = /([\d.]+)/;
 const RE_WHITESPACE = /[\s\u200b]*/;
@@ -290,9 +291,31 @@ function cardToTable($editable) {
  */
 function classToStyle($editable, cssRules) {
     const writes = [];
+    const nodeToRules = new Map();
+    const rulesToProcess = [];
+    for (const rule of cssRules) {
+        const nodes = $editable[0].querySelectorAll(rule.selector);
+        if (nodes.length) {
+            rulesToProcess.push(rule);
+        }
+        for (const node of nodes) {
+            const nodeRules = nodeToRules.get(node);
+            if (!nodeRules) {
+                nodeToRules.set(node, [rule]);
+            } else {
+                nodeRules.push(rule);
+            }
+        }
+    }
+    _computeStyleAndSpecificityOnRules(rulesToProcess);
+    for (const rules of nodeToRules.values()) {
+        rules.sort((a, b) => a.specificity - b.specificity);
+    }
+
     _applyOverDescendants($editable[0], function (node) {
         const $target = $(node);
-        const css = _getMatchedCSSRules(node, cssRules);
+        const nodeRules = nodeToRules.get(node);
+        const css = nodeRules ? _getMatchedCSSRules(node, nodeRules) : {};
         // Flexbox
         for (const styleName of node.style) {
             if (styleName.includes('flex') || `${node.style[styleName]}`.includes('flex')) {
@@ -618,17 +641,15 @@ function getCSSRules(doc) {
             }
             for (const subRule of subRules) {
                 const selectorText = subRule.selectorText || '';
-                for (const selector of selectorText.split(',')) {
+                // Split selectors, making sure not to split at commas in parentheses.
+                for (const selector of selectorText.split(RE_COMMAS_OUTSIDE_PARENTHESES)) {
                     if (selector && !SELECTORS_IGNORE.test(selector)) {
-                        const style = _normalizeStyle(subRule.style);
-                        if (Object.keys(style).length) {
-                            cssRules.push({ selector, style, specificity: _computeSpecificity(selector) });
-                            if (selector === 'body') {
-                                // The top element of a mailing has the class
-                                // 'o_layout'. Give it the body's styles so they can
-                                // trickle down.
-                                cssRules.push({ selector: '.o_layout', style, specificity: 1 });
-                            }
+                        cssRules.push({ selector: selector.trim(), rawRule: subRule });
+                        if (selector === 'body') {
+                            // The top element of a mailing has the class
+                            // 'o_layout'. Give it the body's styles so they can
+                            // trickle down.
+                            cssRules.push({ selector: '.o_layout', rawRule: subRule, specificity: 1 });
                         }
                     }
                 }
@@ -790,6 +811,24 @@ function _computeSpecificity(selector) {
     return (a * 100) + (b * 10) + c;
 }
 /**
+ * Take all the rules and modify them to contain information on their
+ * specificity and to have normalized style.
+ *
+ * @see _computeSpecificity
+ * @see _normalizeStyle
+ * @param {Object} cssRules
+ */
+function _computeStyleAndSpecificityOnRules(cssRules) {
+    for (const cssRule of cssRules) {
+        if (!cssRule.style && cssRule.rawRule.style) {
+            const style = _normalizeStyle(cssRule.rawRule.style);
+            if (Object.keys(style).length) {
+                Object.assign(cssRule,  { style, specificity: _computeSpecificity(cssRule.selector) });
+            }
+        }
+    }
+}
+/**
  * Return an array of twelve table cells as JQuery elements.
  *
  * @returns {JQuery[]}
@@ -861,13 +900,7 @@ function _getColumnSize(column) {
  */
 function _getMatchedCSSRules(node, cssRules) {
     node.matches = node.matches || node.webkitMatchesSelector || node.mozMatchesSelector || node.msMatchesSelector || node.oMatchesSelector;
-    const css = [];
-    cssRules.sort((a, b) => a.specificity - b.specificity);
-    for (const rule of cssRules) {
-        if (node.matches(rule.selector)) {
-            css.push([rule.selector, rule.style, rule.specificity]);
-        }
-    }
+    const styles = cssRules.map((rule) => rule.style).filter(Boolean);
 
     // Add inline styles at the highest specificity.
     if (node.style.length) {
@@ -875,29 +908,29 @@ function _getMatchedCSSRules(node, cssRules) {
         for (const styleName of node.style) {
             inlineStyles[styleName] = node.style[styleName];
         }
-        css.push([node, inlineStyles]);
+        styles.push(inlineStyles);
     }
 
-    const style = {};
-    for (const cssValue of css) {
-        for (const [key, value] of Object.entries(cssValue[1])) {
-            if (!style[key] || !style[key].includes('important') || value.includes('important')) {
-                style[key] = value;
+    const processedStyle = {};
+    for (const style of styles) {
+        for (const [key, value] of Object.entries(style)) {
+            if (!processedStyle[key] || !processedStyle[key].includes('important') || value.includes('important')) {
+                processedStyle[key] = value;
             }
-        };
-    };
+        }
+    }
 
-    for (const [key, value] of Object.entries(style)) {
+    for (const [key, value] of Object.entries(processedStyle)) {
         if (value.endsWith('important')) {
-            style[key] = value.replace(/\s*!important\s*$/, '');
+            processedStyle[key] = value.replace(/\s*!important\s*$/, '');
         }
     };
 
-    if (style.display === 'block' && !(node.classList && node.classList.contains('btn-block'))) {
-        delete style.display;
+    if (processedStyle.display === 'block' && !(node.classList && node.classList.contains('btn-block'))) {
+        delete processedStyle.display;
     }
-    if (!style['box-sizing']) {
-        style['box-sizing'] = 'border-box'; // This is by default with Bootstrap.
+    if (!processedStyle['box-sizing']) {
+        processedStyle['box-sizing'] = 'border-box'; // This is by default with Bootstrap.
     }
 
     // The css generates all the attributes separately and not in simplified
@@ -911,55 +944,55 @@ function _getMatchedCSSRules(node, cssRules) {
     ]) {
         const positions = ['top', 'right', 'bottom', 'left'];
         const positionalKeys = positions.map(position => `${info.name}-${position}${info.suffix || ''}`);
-        const hasStyles = positionalKeys.some(key => style[key]);
-        const inherits = positionalKeys.some(key => ['inherit', 'initial'].includes((style[key] || '').trim()));
+        const hasStyles = positionalKeys.some(key => processedStyle[key]);
+        const inherits = positionalKeys.some(key => ['inherit', 'initial'].includes((processedStyle[key] || '').trim()));
         if (hasStyles && !inherits) {
             const propertyName = `${info.name}${info.suffix || ''}`;
-            style[propertyName] = positionalKeys.every(key => style[positionalKeys[0]] === style[key])
-                ? style[propertyName] = style[positionalKeys[0]] // top = right = bottom = left => property: [top];
-                : positionalKeys.map(key => style[key] || (info.defaultValue || 0)).join(' '); // property: [top] [right] [bottom] [left];
+            processedStyle[propertyName] = positionalKeys.every(key => processedStyle[positionalKeys[0]] === processedStyle[key])
+                ? processedStyle[propertyName] = processedStyle[positionalKeys[0]] // top = right = bottom = left => property: [top];
+                : positionalKeys.map(key => processedStyle[key] || (info.defaultValue || 0)).join(' '); // property: [top] [right] [bottom] [left];
             for (const prop of positionalKeys) {
-                delete style[prop];
+                delete processedStyle[prop];
             }
         }
     };
 
-    if (style['border-bottom-left-radius']) {
-        style['border-radius'] = style['border-bottom-left-radius'];
-        delete style['border-bottom-left-radius'];
-        delete style['border-bottom-right-radius'];
-        delete style['border-top-left-radius'];
-        delete style['border-top-right-radius'];
+    if (processedStyle['border-bottom-left-radius']) {
+        processedStyle['border-radius'] = processedStyle['border-bottom-left-radius'];
+        delete processedStyle['border-bottom-left-radius'];
+        delete processedStyle['border-bottom-right-radius'];
+        delete processedStyle['border-top-left-radius'];
+        delete processedStyle['border-top-right-radius'];
     }
 
     // If the border styling is initial we remove it to simplify the css tags
     // for compatibility. Also, since we do not send a css style tag, the
     // initial value of the border is useless.
-    for (const styleName in style) {
-        if (styleName.includes('border') && style[styleName] === 'initial') {
-            delete style[styleName];
+    for (const styleName in processedStyle) {
+        if (styleName.includes('border') && processedStyle[styleName] === 'initial') {
+            delete processedStyle[styleName];
         }
     };
 
     // text-decoration rule is decomposed in -line, -color and -style. This is
     // however not supported by many browser/mail clients and the editor does
     // not allow to change -color and -style rule anyway
-    if (style['text-decoration-line']) {
-        style['text-decoration'] = style['text-decoration-line'];
-        delete style['text-decoration-line'];
-        delete style['text-decoration-color'];
-        delete style['text-decoration-style'];
-        delete style['text-decoration-thickness'];
+    if (processedStyle['text-decoration-line']) {
+        processedStyle['text-decoration'] = processedStyle['text-decoration-line'];
+        delete processedStyle['text-decoration-line'];
+        delete processedStyle['text-decoration-color'];
+        delete processedStyle['text-decoration-style'];
+        delete processedStyle['text-decoration-thickness'];
     }
 
     // flexboxes are not supported in Windows Outlook
-    for (const styleName in style) {
-        if (styleName.includes('flex') || `${style[styleName]}`.includes('flex')) {
-            delete style[styleName];
+    for (const styleName in processedStyle) {
+        if (styleName.includes('flex') || `${processedStyle[styleName]}`.includes('flex')) {
+            delete processedStyle[styleName];
         }
     }
 
-    return style;
+    return processedStyle;
 }
 /**
  * Take a css style declaration return a "normalized" version of it (as a
