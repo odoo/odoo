@@ -102,20 +102,20 @@ class TestCRMLeadMultiCompany(TestCrmCommon):
         lead = LeadUnsyncCids.sudo().create({
             'name': 'My Lead MC',
         })
-        self.assertEqual(lead.company_id, self.company_2)
-        self.assertEqual(lead.team_id, self.team_company2)
-        # self.assertEqual(lead.team_id, self.sales_team_1,
-        #                  'Lead: due to MC rule, took first availability in other company')
+        self.assertFalse(lead.company_id,
+                         'Lead: due to MC rule, avoid setting a company when it would cause crashes')
+        self.assertEqual(lead.team_id, self.sales_team_1,
+                         'Lead: due to MC rule, took first availability in other company')
         self.assertEqual(lead.user_id, self.user_sales_manager_mc)
 
-        # multicompany raises if trying to create manually
-        with self.assertRaises(AccessError):
-            lead = LeadUnsyncCids.create({
-                'name': 'My Lead MC',
-            })
-            # self.assertEqual(lead.company_id.id, False)
-            # self.assertEqual(lead.team_id, self.sales_team_1)
-            # self.assertEqual(lead.user_id, self.user_sales_manager_mc)
+        # manual creation
+        lead = LeadUnsyncCids.create({
+            'name': 'My Lead MC',
+        })
+        self.assertFalse(lead.company_id,
+                         'Lead: due to MC rule, avoid setting a company when it would cause crashes')
+        self.assertEqual(lead.team_id, self.sales_team_1)
+        self.assertEqual(lead.user_id, self.user_sales_manager_mc)
 
     @users('user_sales_manager_mc')
     def test_lead_mc_company_form(self):
