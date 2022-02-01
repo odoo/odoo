@@ -15,7 +15,7 @@ const strikeThrough = async editor => {
 };
 
 describe('Format', () => {
-    const b = (content, zws) => `<span${zws === 'first' ? ' data-oe-zws-empty-inline=""' : ''} style="font-weight: bolder;"${zws === 'last' ? ' data-oe-zws-empty-inline=""' : ''}>${content}</span>`;
+    const b = (content, zws) => `<span${zws === 'first' ? ' data-oe-zws-empty-inline=""' : ''} style="font-weight: bold;"${zws === 'last' ? ' data-oe-zws-empty-inline=""' : ''}>${content}</span>`;
     const notB = (content, weight, zws) => `<span${zws === 'first' ? ' data-oe-zws-empty-inline=""' : ''} style="font-weight: ${weight || 'normal'};"${zws === 'last' ? ' data-oe-zws-empty-inline=""' : ''}>${content}</span>`;
     describe('bold', () => {
         it('should make a few characters bold', async () => {

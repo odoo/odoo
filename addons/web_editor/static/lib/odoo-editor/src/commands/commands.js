@@ -303,7 +303,7 @@ const styles = {
     bold: {
         is: editable => isSelectionFormat(editable, 'bold'),
         name: 'fontWeight',
-        value: 'bolder',
+        value: 'bold',
     },
     italic: {
         is: editable => isSelectionFormat(editable, 'italic'),
