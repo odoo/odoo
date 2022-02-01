@@ -738,7 +738,6 @@ const tableAttributesString = Object.keys(tableAttributes).map(key => `${key}="$
 const tableStyles = {
     'border-collapse': 'collapse',
     'text-align': 'inherit',
-    'font-size': 'unset',
     'line-height': 'unset',
 };
 const tableStylesString = Object.keys(tableStyles).map(key => `${key}: ${tableStyles[key]};`).join(' ');
