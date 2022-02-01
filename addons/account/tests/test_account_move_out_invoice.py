@@ -514,7 +514,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         ], self.move_vals)
 
         move_form = Form(self.invoice)
-        with move_form.line_ids.edit(2) as line_form:
+        with move_form.line_ids.edit(1) as line_form:
             # Reset field except the discount that becomes 100%.
             # /!\ The modification is made on the accounting tab.
             line_form.quantity = 1
@@ -558,14 +558,14 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
 
     def test_out_invoice_line_onchange_accounting_fields_1(self):
         move_form = Form(self.invoice)
-        with move_form.line_ids.edit(2) as line_form:
+        with move_form.line_ids.edit(1) as line_form:
             # Custom credit on the first product line.
             line_form.credit = 3000
-        with move_form.line_ids.edit(3) as line_form:
+        with move_form.line_ids.edit(2) as line_form:
             # Custom debit on the second product line. Credit should be reset by onchange.
             # /!\ It's a negative line.
             line_form.debit = 500
-        with move_form.line_ids.edit(0) as line_form:
+        with move_form.line_ids.edit(3) as line_form:
             # Custom credit on the first tax line.
             line_form.credit = 800
         with move_form.line_ids.edit(4) as line_form:
@@ -3189,3 +3189,25 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         self.assertRecordValues(copy_invoice.line_ids.filtered('date_maturity'), [
             {'date_maturity': fields.Date.from_string('2018-01-01')},
         ])
+
+    def test_out_invoice_note_and_tax_partner_is_set(self):
+        # Make sure that, when creating an invoice by giving a list of lines with the last one being a note,
+        # the partner_id of the tax line is properly set.
+        invoice_vals_list = [{
+            'move_type': 'out_invoice',
+            'currency_id': self.currency_data['currency'].id,
+            'partner_id': self.partner_a.id,
+            'journal_id': self.company_data['default_journal_sale'].id,
+            'invoice_line_ids': [(0, 0, {
+                'name': 'My super product.',
+                'quantity': 1.0,
+                'price_unit': 750.0,
+                'tax_ids': [(6, 0, self.product_a.taxes_id.ids)],
+            }), (0, 0, {
+                'display_type': 'line_note',
+                'name': 'This is a note',
+            })]
+        }]
+        moves = self.env['account.move'].with_context(default_move_type='out_invoice').create(invoice_vals_list)
+        tax_line = [line for line in moves.line_ids if line.tax_line_id][0]
+        self.assertEqual(tax_line.partner_id.id, self.partner_a.id)
