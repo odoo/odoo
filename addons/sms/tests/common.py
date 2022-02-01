@@ -218,6 +218,7 @@ class SMSCase(MockSMS):
 
             notif = notifications.filtered(lambda n: n.res_partner_id == partner and n.sms_number == number and n.notification_status == state)
             self.assertTrue(notif, 'SMS: not found notification for %s (number: %s, state: %s)' % (partner, number, state))
+            self.assertEqual(notif.author_id, notif.mail_message_id.author_id, 'SMS: Message and notification should have the same author')
 
             if state not in ('sent', 'ready', 'canceled'):
                 self.assertEqual(notif.failure_type, recipient_info['failure_type'])

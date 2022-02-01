@@ -24,10 +24,11 @@ class MailResendCancel(models.TransientModel):
                                 FROM mail_notification notif
                                 JOIN mail_message mes
                                     ON notif.mail_message_id = mes.id
-                                WHERE notif.notification_type = 'email' AND notif.notification_status IN ('bounce', 'exception')
-                                    AND mes.model = %s
-                                    AND mes.author_id = %s
-                            """, (wizard.model, author_id))
+                                WHERE notif.notification_type = 'email'
+                                  AND notif.author_id = %(author_id)s
+                                  AND notif.notification_status IN ('bounce', 'exception')
+                                  AND mes.model = %(model_name)s
+                            """, {'model_name': wizard.model, 'author_id': author_id})
             res = self._cr.fetchall()
             notif_ids = [row[0] for row in res]
             messages_ids = list(set([row[1] for row in res]))

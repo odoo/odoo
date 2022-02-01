@@ -20,12 +20,19 @@ class MailThread(models.AbstractModel):
     def _compute_message_has_sms_error(self):
         res = {}
         if self.ids:
-            self._cr.execute(""" SELECT msg.res_id, COUNT(msg.res_id) FROM mail_message msg
-                                 RIGHT JOIN mail_notification rel
-                                 ON rel.mail_message_id = msg.id AND rel.notification_type = 'sms' AND rel.notification_status in ('exception')
-                                 WHERE msg.author_id = %s AND msg.model = %s AND msg.res_id in %s AND msg.message_type != 'user_notification'
-                                 GROUP BY msg.res_id""",
-                             (self.env.user.partner_id.id, self._name, tuple(self.ids),))
+            self.env.cr.execute("""
+                    SELECT msg.res_id, COUNT(msg.res_id)
+                      FROM mail_message msg
+                INNER JOIN mail_notification notif
+                        ON notif.mail_message_id = msg.id
+                     WHERE notif.notification_type = 'sms'
+                       AND notif.notification_status = 'exception'
+                       AND notif.author_id = %(author_id)s
+                       AND msg.model = %(model_name)s
+                       AND msg.res_id in %(res_ids)s
+                       AND msg.message_type != 'user_notification'
+                  GROUP BY msg.res_id
+            """, {'author_id': self.env.user.partner_id.id, 'model_name': self._name, 'res_ids': tuple(self.ids)})
             res.update(self._cr.fetchall())
 
         for record in self:
@@ -331,6 +338,7 @@ class MailThread(models.AbstractModel):
                         existing_numbers.append(n.sms_number)
 
             notif_create_values = [{
+                'author_id': message.author_id.id,
                 'mail_message_id': message.id,
                 'res_partner_id': sms.partner_id.id,
                 'sms_number': sms.number,

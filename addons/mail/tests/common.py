@@ -737,6 +737,7 @@ class MailCase(MockEmail):
                     n.is_read == nis_read
                 )
                 self.assertTrue(partner_notif, 'Mail: not found notification for %s (type: %s, state: %s, message: %s)' % (partner, ntype, nstatus, message.id))
+                self.assertEqual(partner_notif.author_id, partner_notif.mail_message_id.author_id, 'Mail: Message and notification should have the same author')
 
                 # prepare further asserts
                 if ntype == 'email':
