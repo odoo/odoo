@@ -33,14 +33,14 @@
         <div class="page">
             <div class="oe_structure"/>
 
-            <h2 class="mt16">
+            <h2 class="mt-4">
                 <span t-if="env.context.get('proforma', False) or is_pro_forma">Pro-Forma Invoice # </span>
                 <span t-elif="doc.state in ['draft','sent']">Quotation # </span>
                 <span t-else="">Order # </span>
                 <span t-field="doc.name"/>
             </h2>
 
-            <div class="row mt32 mb32" id="informations">
+            <div class="row mt-4 mb-4" id="informations">
                 <div t-if="doc.client_order_ref" class="col-auto col-3 mw-100 mb-2" name="informations_reference">
                     <strong>Your Reference:</strong>
                     <p class="m-0" t-field="doc.client_order_ref"/>
@@ -65,7 +65,7 @@
             <!-- Is there a discount on at least one line? -->
             <t t-set="display_discount" t-value="any(l.discount for l in doc.order_line)"/>
 
-            <table class="table table-sm o_main_table">
+            <table class="table table-sm o_main_table mt-4">
                 <!-- In case we want to repeat the header, remove "display: table-row-group" -->
                 <thead style="display: table-row-group">
                     <tr>
@@ -153,7 +153,7 @@
                 </div>
             </div>
 
-            <div t-if="doc.signature" class="mt32 ml64 mr4" name="signature">
+            <div t-if="doc.signature" class="mt-4 ml64 mr4" name="signature">
                 <div class="offset-8">
                     <strong>Signature</strong>
                 </div>

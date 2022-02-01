@@ -21,11 +21,13 @@
         <div class="page">
             <div class="oe_structure"/>
 
-            <h2 t-if="o.state in ['draft', 'sent', 'to approve']">Request for Quotation #<span t-field="o.name"/></h2>
-            <h2 t-if="o.state in ['purchase', 'done']">Purchase Order #<span t-field="o.name"/></h2>
-            <h2 t-if="o.state == 'cancel'">Cancelled Purchase Order #<span t-field="o.name"/></h2>
+            <div class="mt-4">
+                <h2 t-if="o.state in ['draft', 'sent', 'to approve']">Request for Quotation #<span t-field="o.name"/></h2>
+                <h2 t-if="o.state in ['purchase', 'done']">Purchase Order #<span t-field="o.name"/></h2>
+                <h2 t-if="o.state == 'cancel'">Cancelled Purchase Order #<span t-field="o.name"/></h2>
+            </div>
 
-            <div id="informations" class="row mt32 mb32">
+            <div id="informations" class="row mt-4 mb32">
                 <div t-if="o.user_id" class="col-3 bm-2">
                     <strong>Purchase Representative:</strong>
                     <p t-field="o.user_id" class="m-0"/>
@@ -44,7 +46,7 @@
                 </div>
             </div>
 
-            <table class="table table-sm o_main_table">
+            <table class="table table-sm o_main_table mt-4">
                 <thead>
                     <tr>
                         <th name="th_description"><strong>Description</strong></th>
@@ -121,7 +123,7 @@
                 </div>
             </div>
 
-            <p t-field="o.notes"/>
+            <p t-field="o.notes" class="mt-4"/>
             <div class="oe_structure"/>
         </div>
     </t>
