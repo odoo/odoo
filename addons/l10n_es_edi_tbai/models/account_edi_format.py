@@ -15,7 +15,7 @@ from odoo import _, models
 from odoo.exceptions import UserError
 from odoo.tools.float_utils import float_repr
 from pytz import timezone
-from requests.exceptions import Timeout
+from requests.exceptions import RequestException
 
 from .res_company import L10N_ES_EDI_TBAI_VERSION
 
@@ -214,6 +214,7 @@ class AccountEdiFormat(models.Model):
         # Peviously generated XML was posted but without a response (timeout) => try again
         if invoice.l10n_es_tbai_temp_xml:
             return etree.fromstring(invoice.l10n_es_tbai_temp_xml.with_context(bin_size=False).raw)
+        # TODO second champ pour temp_cancel, utiliser temp_xml directment pour le _compute de account_move
 
         # Otherwise, generate a new XML
         values = {
@@ -553,9 +554,9 @@ class AccountEdiFormat(models.Model):
         # Post and retrieve response
         try:
             response = util._post(url=url, data=xml_str, headers=header, pkcs12_data=cert_file, timeout=10)
-        except Timeout as e:
+        except (ValueError, RequestException) as e:
             return {invoices: {
-                'success': False, 'error': str(e), 'blocking_level': 'error', 'response': None
+                'success': False, 'error': str(e), 'blocking_level': 'warning', 'response': None
             }}
 
         data = response.content.decode(response.encoding)
