@@ -42,6 +42,7 @@
                         </ram:GrossPriceProductTradePrice>
                         <!-- Line unit price, with discount applied -->
                         <ram:NetPriceProductTradePrice>
+<<<<<<< HEAD:addons/account_edi_facturx/data/facturx_templates.xml
                             <t t-if="line.quantity > 0">
                                 <ram:ChargeAmount
                                     t-att-currencyID="record.currency_id.name"
@@ -52,6 +53,11 @@
                                     t-att-currencyID="record.currency_id.name"
                                     t-esc="format_monetary(0.0, record.currency_id)"/>
                             </t>
+=======
+                            <ram:ChargeAmount
+                                t-att-currencyID="currency.name"
+                                t-esc="format_monetary(line.price_subtotal/line.quantity if line.quantity else 0, currency)"/>
+>>>>>>> 04ea92d9e5b... temp:addons/account_facturx/data/facturx_templates.xml
                         </ram:NetPriceProductTradePrice>
                     </ram:SpecifiedLineTradeAgreement>
 
