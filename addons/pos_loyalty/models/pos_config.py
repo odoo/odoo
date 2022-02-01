@@ -60,7 +60,7 @@ class PosConfig(models.Model):
         default_loyalty_program = self._default_loyalty_program()
         main_config.write({'module_pos_loyalty': bool(default_loyalty_program), 'loyalty_program_id': default_loyalty_program.id})
 
-    def open_session_cb(self):
+    def _check_before_creating_new_session(self):
         self.ensure_one()
         # Check validity of programs before opening a new session
         invalid_reward_products_msg = ''
@@ -102,7 +102,7 @@ class PosConfig(models.Model):
             reward = gc_program.reward_ids
             if reward.reward_type != 'discount' or reward.discount_mode != 'per_point' or reward.discount != 1:
                 raise UserError(_('Invalid gift card program reward. Use 1 currency per point discount.'))
-        return super().open_session_cb()
+        return super()._check_before_creating_new_session()
 
     def use_coupon_code(self, code, creation_date, partner_id):
         self.ensure_one()

@@ -306,10 +306,20 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
             }
         }
         /**
+         * If the order is the only order and is empty
+         */
+        isDefaultOrderEmpty(order) {
+            let status = this._getScreenToStatusMap()[order.get_screen_data().name];
+            let productScreenStatus = this._getScreenToStatusMap().ProductScreen;
+            return order.get_orderlines().length === 0 && this.env.pos.get_order_list().length === 1 &&
+                status === productScreenStatus && order.get_paymentlines().length === 0;
+        }
+        /**
          * Hide the delete button if one of the payments is a 'done' electronic payment.
          */
         shouldHideDeleteButton(order) {
             return (
+                this.isDefaultOrderEmpty(order)||
                 order.locked ||
                 order
                     .get_paymentlines()
