@@ -11,16 +11,39 @@
         </field>
     </record>
 
+    <!-- main view for fleet-->
     <record id="fleet_vehicle_assignation_log_view_list" model="ir.ui.view">
         <field name="name">fleet.vehicle.assignation.log.view.tree.inherit.hr.fleet</field>
         <field name="model">fleet.vehicle.assignation.log</field>
+        <field name="mode">primary</field>
         <field name="inherit_id" ref="fleet.fleet_vehicle_assignation_log_view_list" />
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='driver_id']" position="after">
-                <field name="driver_employee_id" widget="many2one_avatar" optional="hide"/>
-                <field name="attachment_number" string=" "/>
+            <field name="vehicle_id" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </field>
+            <field name="driver_id" position="after">
+                <field name="driver_employee_id" widget="many2one_avatar"/>
+            </field>
+            <field name="date_end" position="after">
+                <field name="attachment_number" optional="show" />
                 <button name="action_get_attachment_view" string="Attachments" type="object" icon="fa-paperclip"/>
-            </xpath>
+            </field>
+        </field>
+    </record>
+
+    <!-- for employee cars -->
+    <record id="fleet_vehicle_assignation_log_employee_view_list" model="ir.ui.view">
+        <field name="name">fleet.vehicle.assignation.log.view.tree.inherit.hr.fleet</field>
+        <field name="model">fleet.vehicle.assignation.log</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_assignation_log_view_list" />
+        <field name="arch" type="xml">
+            <field name="driver_id" position="replace" />
+            <field name="date_end" position="after">
+                <field name="driver_id" string="Current Driver" optional="hide"/>
+                <field name="attachment_number" optional="show" />
+                <button name="action_get_attachment_view" string="Attachments" type="object" icon="fa-paperclip" />
+            </field>
         </field>
     </record>
 
