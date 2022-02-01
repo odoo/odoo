@@ -27,7 +27,6 @@ const TABLE_ATTRIBUTES = {
 const TABLE_STYLES = {
     'border-collapse': 'collapse',
     'text-align': 'inherit',
-    'font-size': 'unset',
     'line-height': 'unset',
 };
 
@@ -928,13 +927,6 @@ function _getMatchedCSSRules(node, cssRules) {
             processedStyle[key] = value.replace(/\s*!important\s*$/, '');
         }
     };
-
-    if (processedStyle.display === 'block' && !(node.classList && node.classList.contains('btn-block'))) {
-        delete processedStyle.display;
-    }
-    if (!processedStyle['box-sizing']) {
-        processedStyle['box-sizing'] = 'border-box'; // This is by default with Bootstrap.
-    }
 
     // The css generates all the attributes separately and not in simplified
     // form. In order to have a better compatibility (outlook for example) we

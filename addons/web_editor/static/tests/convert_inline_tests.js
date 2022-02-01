@@ -252,21 +252,21 @@ QUnit.module('convert_inline', {}, function () {
                     `<td>` +
                         `<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" width=\"100%\" align=\"center\" ` +
                         `role=\"presentation\" style=\"width: 100% !important; border-collapse: collapse; text-align: inherit; ` +
-                        `font-size: unset; line-height: unset;\"><tr>` +
+                        `line-height: unset;\"><tr>` +
                             `<td class="card-header"><span>HEADER</span></td>` +
                         `</tr></table></td>`)
                 .replace(/<td[^>]*>\(1, 0\)<\/td>/,
                     `<td>` +
                         `<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" width=\"100%\" align=\"center\" ` +
                         `role=\"presentation\" style=\"width: 100% !important; border-collapse: collapse; text-align: inherit; ` +
-                        `font-size: unset; line-height: unset;\"><tr>` +
+                        `line-height: unset;\"><tr>` +
                             `<td class="card-body"><h2 class="card-title">TITLE</h2><small>BODY <img></small></td>` +
                         `</tr></table></td>`)
                 .replace(/<td[^>]*>\(2, 0\)<\/td>/,
                     `<td>` +
                         `<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" width=\"100%\" align=\"center\" ` +
                         `role=\"presentation\" style=\"width: 100% !important; border-collapse: collapse; text-align: inherit; ` +
-                        `font-size: unset; line-height: unset;\"><tr>` +
+                        `line-height: unset;\"><tr>` +
                             `<td class="card-footer"><a href="#" class="btn">FOOTER</a></td>` +
                         `</tr></table></td>`),
             "should have converted a card structure into a table");
@@ -528,7 +528,7 @@ QUnit.module('convert_inline', {}, function () {
         assert.strictEqual($editable.html(),
             getRegularTableHtml(1, 1, 12, 100)
                 .split('style=').join('class="o_layout" style=')
-                .replace(' font-size: unset; line-height: unset;', '') // o_layout keeps those default values
+                .replace(' line-height: unset;', '') // o_layout keeps those default values
                 .replace(/<td[^>]*>\(0, 0\)/, '<td>' + getRegularTableHtml(1, 1, 12, 100).replace(/<td[^>]*>\(0, 0\)/, '<td><div>Mailing</div>')),
             "should have converted .o_layout to a special table structure with a table in it"
         );
@@ -542,7 +542,7 @@ QUnit.module('convert_inline', {}, function () {
         assert.strictEqual($editable.html(),
             getRegularTableHtml(1, 1, 12, 100)
                 .split('style=').join('class="o_layout" style=')
-                .replace(' font-size: unset; line-height: unset;', '') // o_layout keeps those default values
+                .replace(' line-height: unset;', '') // o_layout keeps those default values
                 .replace(/<td[^>]*>\(0, 0\)/, '<td><table><tbody><tr><td>Mailing</td></tr></tbody></table>'),
             "should have converted .o_layout to a special table structure, keeping the table in it"
         );
@@ -556,9 +556,9 @@ QUnit.module('convert_inline', {}, function () {
 
         const $editable = $(`<div><div class="container"><div class="row"><div class="col">Hello</div></div></div></div>`);
         convertInline.classToStyle($editable, convertInline.getCSSRules($editable[0].ownerDocument));
-        const containerStyle = `padding:0 16px 0 16px;margin:0 auto 0 auto;box-sizing:border-box;max-width:1140px;width:100%;`;
-        const rowStyle = `margin:0 -16px 0 -16px;box-sizing:border-box;`;
-        const colStyle = `padding:0 16px 0 16px;box-sizing:border-box;max-width:100%;width:100%;position:relative;`;
+        const containerStyle = `padding:0 16px 0 16px;margin:0 auto 0 auto;max-width:1140px;width:100%;`;
+        const rowStyle = `margin:0 -16px 0 -16px;`;
+        const colStyle = `padding:0 16px 0 16px;max-width:100%;width:100%;position:relative;`;
         assert.strictEqual($editable.html(),
             `<div class="container" style="${containerStyle}" width="100%">` +
             `<div class="row" style="${rowStyle}">` +
@@ -585,7 +585,7 @@ QUnit.module('convert_inline', {}, function () {
         let $editable = $(`<div>${`<div class="test-border-radius"></div>`}</div>`);
         convertInline.classToStyle($editable, convertInline.getCSSRules($editable[0].ownerDocument));
         assert.strictEqual($editable.html(),
-            `<div class="test-border-radius" style="border-radius:30%;box-sizing:border-box;"></div>`,
+            `<div class="test-border-radius" style="border-radius:30%;"></div>`,
             "should have converted border-[position]-radius styles (from class) to border-radius");
         styleSheet.deleteRule(0);
 
@@ -601,7 +601,7 @@ QUnit.module('convert_inline', {}, function () {
         $editable = $(`<div>${`<div class="test-border"></div>`}</div>`);
         convertInline.classToStyle($editable, convertInline.getCSSRules($editable[0].ownerDocument));
         assert.strictEqual($editable.html(),
-            `<div class="test-border" style="border-style:dotted dashed none solid;box-sizing:border-box;"></div>`,
+            `<div class="test-border" style="border-style:dotted dashed none solid;"></div>`,
             "should have converted border-[position]-style styles (from class) to border-style");
         styleSheet.deleteRule(0);
 
@@ -615,7 +615,7 @@ QUnit.module('convert_inline', {}, function () {
         $editable = $(`<div>${`<div class="test-margin"></div>`}</div>`);
         convertInline.classToStyle($editable, convertInline.getCSSRules($editable[0].ownerDocument));
         assert.strictEqual($editable.html(),
-            `<div class="test-margin" style="margin:0 20px 30px 40px;box-sizing:border-box;"></div>`,
+            `<div class="test-margin" style="margin:0 20px 30px 40px;"></div>`,
             "should have converted margin-[position] styles (from class) to margin");
         styleSheet.deleteRule(0);
 
@@ -629,7 +629,7 @@ QUnit.module('convert_inline', {}, function () {
         $editable = $(`<div>${`<div class="test-padding"></div>`}</div>`);
         convertInline.classToStyle($editable, convertInline.getCSSRules($editable[0].ownerDocument));
         assert.strictEqual($editable.html(),
-            `<div class="test-padding" style="padding:10px 0 30px 40px;box-sizing:border-box;"></div>`,
+            `<div class="test-padding" style="padding:10px 0 30px 40px;"></div>`,
             "should have converted padding-[position] styles (from class) to padding");
         styleSheet.deleteRule(0);
 
@@ -646,7 +646,7 @@ QUnit.module('convert_inline', {}, function () {
         $editable = $(`<div>${`<div class="test-border-uniform"></div>`}</div>`);
         convertInline.classToStyle($editable, convertInline.getCSSRules($editable[0].ownerDocument));
         assert.strictEqual($editable.html(),
-            `<div class="test-border-uniform" style="border-style:dotted;box-sizing:border-box;"></div>`,
+            `<div class="test-border-uniform" style="border-style:dotted;"></div>`,
             "should have converted uniform border-[position]-style styles (from class) to border-style");
         styleSheet.deleteRule(0);
 
@@ -661,7 +661,7 @@ QUnit.module('convert_inline', {}, function () {
         $editable = $(`<div>${`<div class="test-margin-uniform"></div>`}</div>`);
         convertInline.classToStyle($editable, convertInline.getCSSRules($editable[0].ownerDocument));
         assert.strictEqual($editable.html(),
-            `<div class="test-margin-uniform" style="margin:10px;box-sizing:border-box;"></div>`,
+            `<div class="test-margin-uniform" style="margin:10px;"></div>`,
             "should have converted uniform margin-[position] styles (from class) to margin");
         styleSheet.deleteRule(0);
 
@@ -676,7 +676,7 @@ QUnit.module('convert_inline', {}, function () {
         $editable = $(`<div>${`<div class="test-padding-uniform"></div>`}</div>`);
         convertInline.classToStyle($editable, convertInline.getCSSRules($editable[0].ownerDocument));
         assert.strictEqual($editable.html(),
-            `<div class="test-padding-uniform" style="padding:10px;box-sizing:border-box;"></div>`,
+            `<div class="test-padding-uniform" style="padding:10px;"></div>`,
             "should have converted uniform padding-[position] styles (from class) to padding");
         styleSheet.deleteRule(0);
 
@@ -693,7 +693,7 @@ QUnit.module('convert_inline', {}, function () {
         $editable = $(`<div>${`<div class="test-border-inherit"></div>`}</div>`);
         convertInline.classToStyle($editable, convertInline.getCSSRules($editable[0].ownerDocument));
         assert.strictEqual($editable.html(),
-            `<div class="test-border-inherit" style="box-sizing:border-box;border-left-style:solid;border-bottom-style:inherit;border-right-style:dashed;border-top-style:dotted;"></div>`,
+            `<div class="test-border-inherit" style="border-left-style:solid;border-bottom-style:inherit;border-right-style:dashed;border-top-style:dotted;"></div>`,
             "should not have converted border-[position]-style styles (from class) to border-style as they include an inherit");
         styleSheet.deleteRule(0);
 
@@ -708,7 +708,7 @@ QUnit.module('convert_inline', {}, function () {
         $editable = $(`<div>${`<div class="test-margin-inherit"></div>`}</div>`);
         convertInline.classToStyle($editable, convertInline.getCSSRules($editable[0].ownerDocument));
         assert.strictEqual($editable.html(),
-            `<div class="test-margin-inherit" style="box-sizing:border-box;margin-left:40px;margin-bottom:30px;margin-right:inherit;margin-top:10px;"></div>`,
+            `<div class="test-margin-inherit" style="margin-left:40px;margin-bottom:30px;margin-right:inherit;margin-top:10px;"></div>`,
             "should not have converted margin-[position] styles (from class) to margin as they include an inherit");
         styleSheet.deleteRule(0);
 
@@ -723,7 +723,7 @@ QUnit.module('convert_inline', {}, function () {
         $editable = $(`<div>${`<div class="test-padding-inherit"></div>`}</div>`);
         convertInline.classToStyle($editable, convertInline.getCSSRules($editable[0].ownerDocument));
         assert.strictEqual($editable.html(),
-            `<div class="test-padding-inherit" style="box-sizing:border-box;padding-left:40px;padding-bottom:inherit;padding-right:20px;padding-top:10px;"></div>`,
+            `<div class="test-padding-inherit" style="padding-left:40px;padding-bottom:inherit;padding-right:20px;padding-top:10px;"></div>`,
             "should have converted padding-[position] styles (from class) to padding as they include an inherit");
         styleSheet.deleteRule(0);
 
@@ -742,7 +742,7 @@ QUnit.module('convert_inline', {}, function () {
         $editable = $(`<div>${`<div class="test-margin-initial"></div>`}</div>`);
         convertInline.classToStyle($editable, convertInline.getCSSRules($editable[0].ownerDocument));
         assert.strictEqual($editable.html(),
-            `<div class="test-margin-initial" style="box-sizing:border-box;margin-left:40px;margin-bottom:30px;margin-right:20px;margin-top:initial;"></div>`,
+            `<div class="test-margin-initial" style="margin-left:40px;margin-bottom:30px;margin-right:20px;margin-top:initial;"></div>`,
             "should not have converted margin-[position] styles (from class) to margin as they include an initial");
         styleSheet.deleteRule(0);
 
@@ -757,14 +757,14 @@ QUnit.module('convert_inline', {}, function () {
         $editable = $(`<div>${`<div class="test-padding-initial"></div>`}</div>`);
         convertInline.classToStyle($editable, convertInline.getCSSRules($editable[0].ownerDocument));
         assert.strictEqual($editable.html(),
-            `<div class="test-padding-initial" style="box-sizing:border-box;padding-left:initial;padding-bottom:30px;padding-right:20px;padding-top:10px;"></div>`,
+            `<div class="test-padding-initial" style="padding-left:initial;padding-bottom:30px;padding-right:20px;padding-top:10px;"></div>`,
             "should not have converted padding-[position] styles (from class) to padding as they include an initial");
         styleSheet.deleteRule(0);
 
         $styleSheet.remove();
     });
     QUnit.test('remove unsupported styles', async function (assert) {
-        assert.expect(10);
+        assert.expect(8);
 
         const $styleSheet = $('<style type="text/css" title="test-stylesheet"/>');
         document.head.appendChild($styleSheet[0])
@@ -782,7 +782,7 @@ QUnit.module('convert_inline', {}, function () {
         let $editable = $(`<div>${`<div class="test-decoration"></div>`}</div>`);
         convertInline.classToStyle($editable, convertInline.getCSSRules($editable[0].ownerDocument));
         assert.strictEqual($editable.html(),
-            `<div class="test-decoration" style="text-decoration:underline;box-sizing:border-box;"></div>`,
+            `<div class="test-decoration" style="text-decoration:underline;"></div>`,
             "should have removed all text-decoration-[prop] styles (from class) and kept a simple text-decoration");
         styleSheet.deleteRule(0);
 
@@ -798,26 +798,8 @@ QUnit.module('convert_inline', {}, function () {
         $editable = $(`<div>${`<div class="test-border-initial"></div>`}</div>`);
         convertInline.classToStyle($editable, convertInline.getCSSRules($editable[0].ownerDocument));
         assert.strictEqual($editable.html(),
-            `<div class="test-border-initial" style="box-sizing:border-box;border-bottom-style:double;border-right-style:dashed;border-top-style:dotted;"></div>`,
+            `<div class="test-border-initial" style="border-bottom-style:double;border-right-style:dashed;border-top-style:dotted;"></div>`,
             "should have removed border initial");
-        styleSheet.deleteRule(0);
-
-        // display: block (except for .btn-block)
-        styleSheet.insertRule(`
-            .test-block {
-                display: block;
-            }
-        `, 0);
-        $editable = $(`<div>${`<div class="test-block"></div>`}</div>`);
-        convertInline.classToStyle($editable, convertInline.getCSSRules($editable[0].ownerDocument));
-        assert.strictEqual($editable.html(),
-            `<div class="test-block" style="box-sizing:border-box;"></div>`,
-            "should have removed display block");
-        $editable = $(`<div>${`<div class="btn-block"></div>`}</div>`);
-        convertInline.classToStyle($editable, convertInline.getCSSRules($editable[0].ownerDocument));
-        assert.strictEqual($editable.html(),
-            `<div class="btn-block" style="box-sizing:border-box;width:100%;display:block;" width="100%"></div>`,
-            "should not have removed display block for .btn-block");
         styleSheet.deleteRule(0);
 
         // !important
@@ -829,7 +811,7 @@ QUnit.module('convert_inline', {}, function () {
         $editable = $(`<div>${`<div class="test-unimportant-color"></div>`}</div>`);
         convertInline.classToStyle($editable, convertInline.getCSSRules($editable[0].ownerDocument));
         assert.strictEqual($editable.html(),
-            `<div class="test-unimportant-color" style="box-sizing:border-box;color:blue;"></div>`,
+            `<div class="test-unimportant-color" style="color:blue;"></div>`,
             "should have converted a simple color");
         styleSheet.insertRule(`
             .test-important-color {
@@ -839,7 +821,7 @@ QUnit.module('convert_inline', {}, function () {
         $editable = $(`<div>${`<div class="test-important-color test-unimportant-color"></div>`}</div>`);
         convertInline.classToStyle($editable, convertInline.getCSSRules($editable[0].ownerDocument));
         assert.strictEqual($editable.html(),
-            `<div class="test-important-color test-unimportant-color" style="box-sizing:border-box;color:red;"></div>`,
+            `<div class="test-important-color test-unimportant-color" style="color:red;"></div>`,
             "should have converted an important color and removed the !important");
         styleSheet.deleteRule(0);
         styleSheet.deleteRule(0);
@@ -853,7 +835,7 @@ QUnit.module('convert_inline', {}, function () {
         $editable = $(`<div>${`<div class="test-animation"></div>`}</div>`);
         convertInline.classToStyle($editable, convertInline.getCSSRules($editable[0].ownerDocument));
         assert.strictEqual($editable.html(),
-            `<div class="test-animation" style="box-sizing:border-box;"></div>`,
+            `<div class="test-animation"></div>`,
             "should have removed animation style");
         styleSheet.deleteRule(0);
         styleSheet.insertRule(`
@@ -869,7 +851,7 @@ QUnit.module('convert_inline', {}, function () {
         $editable = $(`<div>${`<div class="test-animation-specific"></div>`}</div>`);
         convertInline.classToStyle($editable, convertInline.getCSSRules($editable[0].ownerDocument));
         assert.strictEqual($editable.html(),
-            `<div class="test-animation-specific" style="box-sizing:border-box;"></div>`,
+            `<div class="test-animation-specific"></div>`,
             "should have removed all specific animation styles");
         styleSheet.deleteRule(0);
 
@@ -883,7 +865,7 @@ QUnit.module('convert_inline', {}, function () {
         $editable = $(`<div>${`<div class="test-flex"></div>`}</div>`);
         convertInline.classToStyle($editable, convertInline.getCSSRules($editable[0].ownerDocument));
         assert.strictEqual($editable.html(),
-            `<div class="test-flex" style="box-sizing:border-box;"></div>`,
+            `<div class="test-flex"></div>`,
             "should have removed all flex styles");
         styleSheet.deleteRule(0);
         styleSheet.insertRule(`
@@ -899,7 +881,7 @@ QUnit.module('convert_inline', {}, function () {
         $editable = $(`<div>${`<div class="test-flex-specific"></div>`}</div>`);
         convertInline.classToStyle($editable, convertInline.getCSSRules($editable[0].ownerDocument));
         assert.strictEqual($editable.html(),
-            `<div class="test-flex-specific" style="box-sizing:border-box;"></div>`,
+            `<div class="test-flex-specific"></div>`,
             "should have removed all specific flex styles");
         styleSheet.deleteRule(0);
 
@@ -926,7 +908,7 @@ QUnit.module('convert_inline', {}, function () {
         $iframeEditable.append(`<div class="o_layout" style="padding: 50px;"></div>`);
         convertInline.classToStyle($iframeEditable, convertInline.getCSSRules($iframeEditable[0].ownerDocument));
         assert.strictEqual($iframeEditable.html(),
-            `<div class="o_layout" style="box-sizing:border-box;font-size:50px;color:white;background-color:red;padding: 50px;"></div>`,
+            `<div class="o_layout" style="font-size:50px;color:white;background-color:red;padding: 50px;"></div>`,
             "should have given all styles of body to .o_layout");
         styleSheet.deleteRule(0);
 
@@ -958,19 +940,19 @@ QUnit.module('convert_inline', {}, function () {
         let $editable = $(`<div><span class="test-color"></span></div>`);
         convertInline.classToStyle($editable, convertInline.getCSSRules($editable[0].ownerDocument));
         assert.strictEqual($editable.html(),
-            `<span class="test-color" style="box-sizing:border-box;color:blue;"></span>`,
+            `<span class="test-color" style="color:blue;"></span>`,
             "should have prioritized the last defined style");
 
         $editable = $(`<div><div class="test-color"></div></div>`);
         convertInline.classToStyle($editable, convertInline.getCSSRules($editable[0].ownerDocument));
         assert.strictEqual($editable.html(),
-            `<div class="test-color" style="box-sizing:border-box;color:green;"></div>`,
+            `<div class="test-color" style="color:green;"></div>`,
             "should have prioritized the more specific style");
 
         $editable = $(`<div><div class="test-color" style="color: yellow;"></div></div>`);
         convertInline.classToStyle($editable, convertInline.getCSSRules($editable[0].ownerDocument));
         assert.strictEqual($editable.html(),
-            `<div class="test-color" style="box-sizing:border-box;color: yellow;"></div>`,
+            `<div class="test-color" style="color: yellow;"></div>`,
             "should have prioritized the inline style");
 
         styleSheet.insertRule(`
@@ -981,7 +963,7 @@ QUnit.module('convert_inline', {}, function () {
         $editable = $(`<div><div class="test-color"></div></div>`);
         convertInline.classToStyle($editable, convertInline.getCSSRules($editable[0].ownerDocument));
         assert.strictEqual($editable.html(),
-            `<div class="test-color" style="box-sizing:border-box;color:black;"></div>`,
+            `<div class="test-color" style="color:black;"></div>`,
             "should have prioritized the important style");
 
         styleSheet.deleteRule(0);
