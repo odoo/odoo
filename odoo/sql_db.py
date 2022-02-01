@@ -355,8 +355,6 @@ class Cursor(BaseCursor):
             # psycopg2's TypeError is not clear if you mess up the params
             raise ValueError("SQL query parameters should be a tuple, list or dict; got %r" % (params,))
 
-        if self.sql_log:
-            _logger.debug("query: %s", self._format(query, params))
         start = time.time()
         try:
             params = params or None
@@ -369,6 +367,8 @@ class Cursor(BaseCursor):
         # simple query count is always computed
         self.sql_log_count += 1
         delay = (time.time() - start)
+        if self.sql_log:
+            _logger.debug("query (%.4fms): %s", delay*1000, self._format(query, params))
         current_thread = threading.current_thread()
         if hasattr(current_thread, 'query_count'):
             current_thread.query_count += 1
