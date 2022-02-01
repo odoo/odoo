@@ -466,7 +466,7 @@ QUnit.module('web_editor', {}, function () {
 
             let pText = $field.find('.note-editable p').first().contents()[0];
             Wysiwyg.setRange(pText.firstChild, 0, pText.firstChild, pText.firstChild.length);
-            await testUtils.dom.click($('#toolbar #create-link'));
+            await testUtils.dom.triggerEvent($('#toolbar #create-link'), 'mousedown');
             // load static xml file (dialog, link dialog)
             await defLinkDialog;
             $('.modal .tab-content .tab-pane').removeClass('fade'); // to be sync in test
@@ -515,7 +515,7 @@ QUnit.module('web_editor', {}, function () {
 
             let pText = $field.find('.note-editable p').first().contents()[0];
             Wysiwyg.setRange(pText.firstChild, 0, pText.firstChild, pText.firstChild.length);
-            await testUtils.dom.click($('#toolbar #create-link'));
+            await testUtils.dom.triggerEvent($('#toolbar #create-link'), 'mousedown');
             // load static xml file (dialog, link dialog)
             await defLinkDialog;
             $('.modal .tab-content .tab-pane').removeClass('fade'); // to be sync in test
@@ -564,7 +564,7 @@ QUnit.module('web_editor', {}, function () {
 
             let pText = $field.find('.note-editable p').first().contents()[0];
             Wysiwyg.setRange(pText, 0, pText, pText.length);
-            await testUtils.dom.click($('#toolbar #create-link'));
+            await testUtils.dom.triggerEvent($('#toolbar #create-link'), 'mousedown');
             // load static xml file (dialog, link dialog)
             await defLinkDialog;
             $('.modal .tab-content .tab-pane').removeClass('fade'); // to be sync in test
@@ -614,7 +614,7 @@ QUnit.module('web_editor', {}, function () {
 
             let pText = $field.find('.note-editable p').first().contents()[0];
             Wysiwyg.setRange(pText, 0, pText, pText.length);
-            await testUtils.dom.click($('#toolbar #create-link'));
+            await testUtils.dom.triggerEvent($('#toolbar #create-link'), 'mousedown');
             // load static xml file (dialog, link dialog)
             await defLinkDialog;
             $('.modal .tab-content .tab-pane').removeClass('fade'); // to be sync in test
@@ -637,7 +637,7 @@ QUnit.module('web_editor', {}, function () {
             $field = form.$('.oe_form_field[name="body"]');
             pText = $field.find('.note-editable a').eq(0).contents()[0];
             Wysiwyg.setRange(pText, 0, pText, pText.length);
-            await testUtils.dom.click($('#toolbar #create-link'));
+            await testUtils.dom.triggerEvent($('#toolbar #create-link'), 'mousedown');
             // load static xml file (dialog, link dialog)
             await defLinkDialog;
             $('.modal .tab-content .tab-pane').removeClass('fade'); // to be sync in test
