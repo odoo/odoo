@@ -785,6 +785,21 @@
             </field>
         </record>
 
+        <record id="action_registration_mass_mail" model="ir.actions.act_window">
+            <field name="name">Send email</field>
+            <field name="res_model">mail.compose.message</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="context">
+                {
+                    'default_composition_mode': 'mass_mail',
+                    'default_use_template': False,
+                }
+            </field>
+            <field name="binding_model_id" ref="model_event_registration"/>
+            <field name="binding_view_types">list</field>
+        </record>
+
         <menuitem name="Attendees"
             id="menu_action_registration"
             parent="event.menu_reporting_events"
