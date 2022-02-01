@@ -190,7 +190,7 @@
                             </form>
                         </field>
                         <separator string="Terms and Conditions"/>
-                        <field name="description" attrs="{'readonly': [('state','not in',('draft','in_progress','open'))]}"/>
+                        <field name="description" class="oe-bordered-editor" attrs="{'readonly': [('state','not in',('draft','in_progress','open'))]}"/>
                     </page>
                 </notebook>
             </sheet>
