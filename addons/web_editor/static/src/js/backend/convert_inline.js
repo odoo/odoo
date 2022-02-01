@@ -616,13 +616,18 @@ function getCSSRules(doc) {
                 }
             }
             for (const subRule of subRules) {
-                const selectorText = subRule.selectorText;
-                if (selectorText && !SELECTORS_IGNORE.test(selectorText)) {
-                    const style = _normalizeStyle(subRule.style);
-                    if (Object.keys(style).length) {
-                        for (let selector of selectorText.split(',')) {
-                            selector = selector.trim();
+                const selectorText = subRule.selectorText || '';
+                for (const selector of selectorText.split(',')) {
+                    if (selector && !SELECTORS_IGNORE.test(selector)) {
+                        const style = _normalizeStyle(subRule.style);
+                        if (Object.keys(style).length) {
                             cssRules.push({ selector, style, specificity: _computeSpecificity(selector) });
+                            if (selector === 'body') {
+                                // The top element of a mailing has the class
+                                // 'o_layout'. Give it the body's styles so they can
+                                // trickle down.
+                                cssRules.push({ selector: '.o_layout', style, specificity: 1 });
+                            }
                         }
                     }
                 }
@@ -630,56 +635,7 @@ function getCSSRules(doc) {
         }
     }
 
-    // Group together rules with the same selector.
-    for (let i = cssRules.length - 1; i >= 0; i--) {
-        for (let j = cssRules.length - 1; j >= 0; j--) {
-            if (i > j && cssRules[i].selector === cssRules[j].selector) {
-                // Styles of "later" selector override styles of "earlier" one.
-                const importantJStyles = {};
-                for (const [key, value] of Object.entries(cssRules[j].style)) {
-                    if (value.endsWith('!important')) {
-                        importantJStyles[key] = value;
-                    }
-                }
-                cssRules[i].style = {...cssRules[j].style, ...cssRules[i].style};
-                for (const [key, value] of Object.entries(importantJStyles)) {
-                    cssRules[i].style[key] = value;
-                }
-                cssRules.splice(j, 1);
-                i--;
-            }
-        }
-    }
-    // The top element of a mailing has the class 'o_layout'. Give it the body's
-    // styles so they can trickle down.
-    cssRules.unshift({
-        selector: '.o_layout',
-        style: {...cssRules.find(r => r.selector === 'body').style},
-        specificity: 1,
-    });
-
-    const groupedRules = [];
-    const ungroupedRules = [...cssRules];
-    while (ungroupedRules.length) {
-        const rule = ungroupedRules.shift();
-        let groupedRule = {...rule};
-        for (const otherRule of ungroupedRules) {
-            if (
-                otherRule !== rule &&
-                rule.specificity === otherRule.specificity &&
-                Object.keys(rule.style).length === Object.keys(otherRule.style).length &&
-                Object.keys(rule.style).every(key => key in otherRule.style && rule.style[key] === otherRule.style[key])
-            ) {
-                if (rule.selector !== otherRule.selector) {
-                    groupedRule.selector = `${groupedRule.selector},${otherRule.selector}`;
-                }
-                ungroupedRules.splice(ungroupedRules.indexOf(otherRule), 1);
-            }
-        }
-        groupedRules.push(groupedRule);
-    }
-    groupedRules.sort((a, b) => a.specificity - b.specificity);
-    return groupedRules;
+    return cssRules;
 }
 /**
  * Convert Bootstrap list groups and their items to table structures.
@@ -905,6 +861,7 @@ function _getColumnSize(column) {
 function _getMatchedCSSRules(node, cssRules) {
     node.matches = node.matches || node.webkitMatchesSelector || node.mozMatchesSelector || node.msMatchesSelector || node.oMatchesSelector;
     const css = [];
+    cssRules.sort((a, b) => a.specificity - b.specificity);
     for (const rule of cssRules) {
         if (node.matches(rule.selector)) {
             css.push([rule.selector, rule.style, rule.specificity]);
