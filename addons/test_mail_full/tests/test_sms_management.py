@@ -26,6 +26,7 @@ class TestSMSActionsCommon(TestMailFullCommon, TestMailFullRecipients):
             'state': 'error',
         })
         cls.notif_p1 = cls.env['mail.notification'].create({
+            'author_id': cls.msg.author_id.id,
             'mail_message_id': cls.msg.id,
             'res_partner_id': cls.partner_1.id,
             'sms_id': cls.sms_p1.id,
@@ -43,6 +44,7 @@ class TestSMSActionsCommon(TestMailFullCommon, TestMailFullRecipients):
             'state': 'error',
         })
         cls.notif_p2 = cls.env['mail.notification'].create({
+            'author_id': cls.msg.author_id.id,
             'mail_message_id': cls.msg.id,
             'res_partner_id': cls.partner_2.id,
             'sms_id': cls.sms_p2.id,

@@ -100,6 +100,7 @@ class SnailmailLetter(models.Model):
         notification_vals = []
         for letter in letters:
             notification_vals.append({
+                'author_id': letter.message_id.author_id.id,
                 'mail_message_id': letter.message_id.id,
                 'res_partner_id': letter.partner_id.id,
                 'notification_type': 'snail',

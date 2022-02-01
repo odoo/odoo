@@ -16,6 +16,7 @@ class MailNotification(models.Model):
     _description = 'Message Notifications'
 
     # origin
+    author_id = fields.Many2one('res.partner', 'Author', ondelete='set null')
     mail_message_id = fields.Many2one('mail.message', 'Message', index=True, ondelete='cascade', required=True)
     mail_mail_id = fields.Many2one('mail.mail', 'Mail', index=True, help='Optional mail_mail ID. Used mainly to optimize searches.')
     # recipient
@@ -57,7 +58,10 @@ class MailNotification(models.Model):
     def init(self):
         self._cr.execute("""
             CREATE INDEX IF NOT EXISTS mail_notification_res_partner_id_is_read_notification_status_mail_message_id
-                                    ON mail_notification (res_partner_id, is_read, notification_status, mail_message_id)
+                                    ON mail_notification (res_partner_id, is_read, notification_status, mail_message_id);
+            CREATE INDEX IF NOT EXISTS mail_notification_author_id_notification_status_failure
+                                    ON mail_notification (author_id, notification_status)
+                                 WHERE notification_status IN ('bounce', 'exception');
         """)
         self.env.cr.execute(
             """CREATE UNIQUE INDEX IF NOT EXISTS unique_mail_message_id_res_partner_id_if_set
