@@ -1047,3 +1047,32 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         self.assertEqual(mails, ['odoobot@example.com'])
 
         self.assertGoogleAPINotCalled()
+
+    def test_several_users_have_the_same_mail(self):
+        # We want to chose the internal user
+        user1 = new_test_user(self.env, login='test@example.com', groups='base.group_portal')
+        user2 = new_test_user(self.env, login='calendar-user2')
+        user2.partner_id.email = 'test@example.com'
+        user1.partner_id.name = "A First in alphabet"
+        user2.partner_id.name = "B Second in alphabet"
+        values = {
+            'id': "abcd",
+            'description': 'coucou',
+            "updated": self.now,
+            'organizer': {'email': 'odoobot@example.com', 'self': True},
+            'summary': False,
+            'visibility': 'public',
+            'attendees': [{'email': 'test@example.com', 'responseStatus': 'accepted'}, {'email': 'test2@example.com', 'responseStatus': 'accepted'}],
+            'reminders': {'useDefault': True},
+            'start': {
+                'dateTime': '2020-01-13T16:00:00+01:00',
+                'timeZone': 'Europe/Brussels'
+            },
+            'end': {
+                'dateTime': '2020-01-13T20:00:00+01:00',
+                'timeZone': 'Europe/Brussels'
+            },
+        }
+        event = self.env['calendar.event']._sync_google2odoo(GoogleEvent([values]))
+        new_partner = self.env['res.partner'].search([('email', '=', 'test2@example.com')])
+        self.assertEqual(event.partner_ids.ids, [user2.partner_id.id, new_partner.id], "The internal user should be chosen")
