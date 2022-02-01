@@ -22,11 +22,7 @@
                         <div>
                             <span><strong>Customer Address:</strong></span>
                             <div t-field="o.partner_id"
-                                   t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
-                            <p t-if="o.partner_id.vat">
-                                <t t-set="default_vat_label">VAT</t>
-                                <t t-esc="o.company_id.account_fiscal_country_id.vat_label or default_vat_label"/>: <span t-field="o.partner_id.vat"/>
-                            </p>
+                                 t-options='{"widget": "contact", "fields": ["address", "name", "phone", "vat"], "no_marker": True, "phone_icons": True}'/>
                         </div>
                     </div>
                 </div>

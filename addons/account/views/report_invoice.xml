@@ -15,10 +15,7 @@
                 </t>
                 <div t-field="o.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' groups="account.group_delivery_invoice_address"/>
                 <t t-set="address">
-                    <address t-field="o.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' groups="!account.group_delivery_invoice_address"/>
-                    <div t-if="o.partner_id.vat" class="mt-2">
-                        <t t-if="o.company_id.account_fiscal_country_id.vat_label" t-esc="o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>
-                        <t t-else="">Tax ID</t>: <span t-field="o.partner_id.vat"/></div>
+                    <address t-field="o.partner_id" t-options='{"widget": "contact", "fields": ["address", "name", "vat"], "no_marker": True}' groups="!account.group_delivery_invoice_address"/>
                 </t>
                 <div class="page">
                     <h2 class="mt-4">
