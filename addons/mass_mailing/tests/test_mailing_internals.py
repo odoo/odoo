@@ -3,8 +3,8 @@
 
 from ast import literal_eval
 from datetime import datetime
-
 from freezegun import freeze_time
+from psycopg2 import IntegrityError
 
 from odoo.addons.base.tests.test_ir_cron import CronMixinCase
 from odoo.addons.mass_mailing.tests.common import MassMailCommon
@@ -192,6 +192,40 @@ class TestMassMailValues(MassMailCommon):
             [('email', 'ilike', 'test.example.com')],
         )
         self.assertEqual(mailing_form.mailing_model_real, 'res.partner')
+
+    @mute_logger('odoo.sql_db')
+    @users('user_marketing')
+    def test_mailing_trace_values(self):
+        recipient = self.partner_employee
+
+        # both void and 0 are invalid, document should have an id != 0
+        with self.assertRaises(IntegrityError):
+            self.env['mailing.trace'].create({
+                'model': recipient._name,
+            })
+        with self.assertRaises(IntegrityError):
+            self.env['mailing.trace'].create({
+                'model': recipient._name,
+                'res_id': 0,
+            })
+        with self.assertRaises(IntegrityError):
+            self.env['mailing.trace'].create({
+                'res_id': 3,
+            })
+
+        activity = self.env['mailing.trace'].create({
+            'model': recipient._name,
+            'res_id': recipient.id,
+        })
+        with self.assertRaises(IntegrityError):
+            activity.write({'model': False})
+            activity.flush()
+        with self.assertRaises(IntegrityError):
+            activity.write({'res_id': False})
+            activity.flush()
+        with self.assertRaises(IntegrityError):
+            activity.write({'res_id': 0})
+            activity.flush()
 
 
 class TestMassMailFeatures(MassMailCommon, CronMixinCase):
