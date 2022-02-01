@@ -492,6 +492,30 @@ class TestChannelInternals(MailCommon):
         ):
             channel.image_128 = base64.b64encode(("<svg/>").encode())
 
+    def test_mail_message_starred_private_channel(self):
+        """ Test starred message computation for a private channel. A starred
+        message in a private channel should be considered only if:
+            - It's our message
+            - OR we have access to the channel
+        """
+        self.assertEqual(self.user_employee._init_messaging()['starred_counter'], 0)
+        private_channel = self.env['mail.channel'].create({
+            'name': 'Private Channel',
+            'public': 'private',
+            'channel_partner_ids': [(6, 0, self.partner_employee.id)]
+        })
+
+        private_channel_own_message = private_channel.with_user(self.user_employee.id).message_post(body='TestingMessage')
+        private_channel_own_message.write({'starred_partner_ids': [(6, 0, self.partner_employee.ids)]})
+        self.assertEqual(self.user_employee.with_user(self.user_employee)._init_messaging()['starred_counter'], 1)
+
+        private_channel_message = private_channel.message_post(body='TestingMessage')
+        private_channel_message.write({'starred_partner_ids': [(6, 0, self.partner_employee.ids)]})
+        self.assertEqual(self.user_employee.with_user(self.user_employee)._init_messaging()['starred_counter'], 2)
+
+        private_channel.write({'channel_partner_ids': False})
+        self.assertEqual(self.user_employee.with_user(self.user_employee)._init_messaging()['starred_counter'], 1)
+
     def test_multi_company_chat(self):
         self._activate_multi_company()
         self.assertEqual(self.env.user.company_id, self.company_admin)
