@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
+from collections import defaultdict
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
@@ -44,15 +45,16 @@ class StockQuantPackage(models.Model):
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
-
     @api.depends('move_line_ids', 'move_line_ids.result_package_id')
     def _compute_packages(self):
-        for package in self:
-            packs = set()
-            for move_line in package.move_line_ids:
-                if move_line.result_package_id:
-                    packs.add(move_line.result_package_id.id)
-            package.package_ids = list(packs)
+        picking_map = defaultdict(list)
+        data = self.env['stock.move.line'].read_group(
+            [('picking_id', 'in', self.ids), ('result_package_id','!=',False)], 
+            ['picking_id', 'result_package_id'], ['picking_id', 'result_package_id'], lazy=False)
+        for d in data:
+            picking_map[d['picking_id'][0]].append(d['result_package_id'][0])
+        for picking in self:
+            picking.package_ids = picking_map.get(picking.id)
 
     @api.depends('move_line_ids', 'move_line_ids.result_package_id', 'move_line_ids.product_uom_id', 'move_line_ids.qty_done')
     def _compute_bulk_weight(self):
@@ -63,7 +65,7 @@ class StockPicking(models.Model):
                     weight += move_line.product_uom_id._compute_quantity(move_line.qty_done, move_line.product_id.uom_id) * move_line.product_id.weight
             picking.weight_bulk = weight
 
-    @api.depends('move_line_ids.result_package_id', 'move_line_ids.result_package_id.shipping_weight', 'weight_bulk')
+    @api.depends('package_ids.weight', 'package_ids.shipping_weight', 'weight_bulk')
     def _compute_shipping_weight(self):
         for picking in self:
             # if shipping weight is not assigned => default to calculated product weight
