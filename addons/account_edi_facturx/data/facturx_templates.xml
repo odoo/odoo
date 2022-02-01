@@ -44,7 +44,7 @@
                         <ram:NetPriceProductTradePrice>
                             <ram:ChargeAmount
                                 t-att-currencyID="currency.name"
-                                t-esc="format_monetary(line.price_subtotal/line.quantity, currency)"/>
+                                t-esc="format_monetary(line.price_subtotal/line.quantity if line.quantity else 0, currency)"/>
                         </ram:NetPriceProductTradePrice>
                     </ram:SpecifiedLineTradeAgreement>
 
