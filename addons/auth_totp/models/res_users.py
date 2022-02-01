@@ -28,12 +28,18 @@ class Users(models.Model):
     def SELF_READABLE_FIELDS(self):
         return super().SELF_READABLE_FIELDS + ['totp_enabled', 'totp_trusted_device_ids']
 
+    def _mfa_type(self):
+        r = super()._mfa_type()
+        if r is not None:
+            return r
+        if self.totp_enabled:
+            return 'totp'
 
     def _mfa_url(self):
         r = super()._mfa_url()
         if r is not None:
             return r
-        if self.totp_enabled:
+        if self._mfa_type() == 'totp':
             return '/web/login/totp'
 
     @api.depends('totp_secret')
@@ -55,7 +61,7 @@ class Users(models.Model):
         match = TOTP(key).match(code)
         if match is None:
             _logger.info("2FA check: FAIL for %s %r", self, self.login)
-            raise AccessDenied()
+            raise AccessDenied(_("Verification failed, please double-check the 6-digit code"))
         _logger.info("2FA check: SUCCESS for %s %r", self, self.login)
 
     def _totp_try_setting(self, secret, code):
