@@ -947,10 +947,16 @@ class Module(models.Model):
         self.env.cr.execute("SELECT id FROM ir_module_module WHERE name=%s", (name,))
         return self.env.cr.fetchone()
 
-    @tools.ormcache('name')
-    def _get_cached_values(self, name):
-        model_id = self._get_id(name)
-        return self.sudo().browse(model_id).read()[0] if model_id else {}
+    @tools.ormcache('self.id')
+    def _get_cached_values(self):
+        self.ensure_one()
+        return {
+            'id': self.id,
+            'shortdesc': self.shortdesc,
+        }
+
+    def _get_cached(self, field):
+        return self._get_cached_values()[field]
 
     @api.model
     @tools.ormcache()
