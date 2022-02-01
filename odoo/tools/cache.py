@@ -5,7 +5,7 @@
 # this is important for the odoo.api.guess() that relies on signatures
 from collections import defaultdict
 from decorator import decorator
-from inspect import formatargspec, getargspec
+from inspect import formatargspec, getfullargspec
 import logging
 
 from . import pycompat
@@ -67,7 +67,7 @@ class ormcache(object):
         """ Determine the function that computes a cache key from arguments. """
         if self.skiparg is None:
             # build a string that represents function code and evaluate it
-            args = formatargspec(*getargspec(self.method))[1:-1]
+            args = formatargspec(*getfullargspec(self.method))[1:-1]
             if self.args:
                 code = "lambda %s: (%s,)" % (args, ", ".join(self.args))
             else:
@@ -115,7 +115,7 @@ class ormcache_context(ormcache):
         """ Determine the function that computes a cache key from arguments. """
         assert self.skiparg is None, "ormcache_context() no longer supports skiparg"
         # build a string that represents function code and evaluate it
-        spec = getargspec(self.method)
+        spec = getfullargspec(self.method)
         args = formatargspec(*spec)[1:-1]
         cont_expr = "(context or {})" if 'context' in spec.args else "self._context"
         keys_expr = "tuple(%s.get(k) for k in %r)" % (cont_expr, self.keys)
@@ -144,7 +144,7 @@ class ormcache_multi(ormcache):
         super(ormcache_multi, self).determine_key()
 
         # key_multi computes the extra element added to the key
-        spec = getargspec(self.method)
+        spec = getfullargspec(self.method)
         args = formatargspec(*spec)[1:-1]
         code_multi = "lambda %s: %s" % (args, self.multi)
         self.key_multi = unsafe_eval(code_multi)
