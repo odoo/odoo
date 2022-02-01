@@ -689,6 +689,8 @@ class Message(models.Model):
             }
             attachement_values = thread._message_post_process_attachments([], attachment_ids, message_values)
             self.update(attachement_values)
+        # Cleanup related message data if the message is empty
+        self.sudo()._filter_empty()._cleanup_side_records()
         thread._message_update_content_after_hook(self)
 
     def action_open_document(self):
@@ -1027,6 +1029,24 @@ class Message(models.Model):
     # ------------------------------------------------------
     # TOOLS
     # ------------------------------------------------------
+
+    def _cleanup_side_records(self):
+        """ Clean related data: notifications, stars, ... to avoid lingering
+        notifications / unreachable counters with void messages notably. """
+        self.write({
+            'starred_partner_ids': [(5, 0, 0)],
+            'notification_ids': [(5, 0, 0)],
+        })
+
+    def _filter_empty(self):
+        """ Return subset of "void" messages """
+        return self.filtered(
+            lambda msg:
+                (not msg.body or tools.is_html_empty(msg.body)) and
+                (not msg.subtype_id or not msg.subtype_id.description) and
+                not msg.attachment_ids and
+                not msg.tracking_value_ids
+        )
 
     @api.model
     def _get_record_name(self, values):
