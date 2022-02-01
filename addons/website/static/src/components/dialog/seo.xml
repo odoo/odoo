@@ -1,118 +1,84 @@
-<?xml version="1.0" encoding="utf-8"?>
-<templates id="template" xml:space="preserve">
-    <t t-name="Configurator.language_promote">
-        <t t-foreach="language" t-as="lang">
-            <option t-att-value="lang[0]" t-att-selected="lang[0] == def_lang ? 'selected' : null"><t t-esc="lang[2]" /></option>
-        </t>
-    </t>
-
-    <div t-name="website.seo_configuration" role="form">
-        <section class="js_seo_meta_title_description"/>
-        <section class="js_seo_meta_keywords"/>
-        <section class="js_seo_image"/>
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+<t t-name="website.MetaImage" owl="1">
+    <div t-att-class="props.active ? 'o_active_image o_meta_img m-1' : 'o_meta_img m-1'" t-on-click="() => props.selectImage(props.src)">
+        <span t-if="props.custom" class="o-custom-label w-100 text-white text-center">Custom</span>
+        <img t-att-src="props.src"/>
     </div>
+</t>
 
-    <t t-name="website.seo_suggestion_list">
-        <ul class="list-inline mb0">
-            <!-- filled in JS -->
-        </ul>
-    </t>
-
-    <t t-name="website.seo_list">
-        <tbody>
-            <!-- filled in JS -->
-        </tbody>
-    </t>
-
-    <t t-name="website.seo_keyword">
-        <tr class="js_seo_keyword" t-att-data-keyword="widget.keyword">
-            <td t-esc="widget.keyword"/>
-            <td class="text-center"><i t-if="widget.used_h1" class="fa fa-check" t-attf-title="{{ widget.keyword }} is used in page first level heading"/></td>
-            <td class="text-center"><i t-if="widget.used_h2" class="fa fa-check" t-attf-title="{{ widget.keyword }} is used in page second level heading"/></td>
-            <td class="text-center"><i class="js_seo_keyword_title fa fa-check" style="visibility: hidden;" t-attf-title="{{ widget.keyword }} is used in page title"/></td>
-            <td class="text-center"><i class="js_seo_keyword_description fa fa-check" style="visibility: hidden;" t-attf-title="{{ widget.keyword }} is used in page description"/></td>
-            <td class="text-center"><i t-if="widget.used_content" class="fa fa-check" t-attf-title="{{ widget.keyword }} is used in page content"/></td>
-            <td class="o_seo_keyword_suggestion"/>
-            <td class="text-center"><a href="#" class="oe_remove" data-action="remove-keyword" t-attf-title="Remove {{ widget.keyword }}"><i class="fa fa-trash"/></a></td>
-        </tr>
-    </t>
-
-    <t t-name="website.seo_suggestion">
-        <li class="list-inline-item">
-            <span class="o_seo_suggestion badge badge-info" t-att-data-keyword="widget.keyword" t-attf-title="Add {{ widget.keyword }}" t-esc="widget.keyword"/>
-        </li>
-    </t>
-
-    <t t-name="website.seo_preview">
-        <div class="oe_seo_preview_g">
-            <div class="rc">
-                <div class="r"><t t-esc="widget.title"/></div>
-                <div class="s">
-                    <div class="kv"><t t-esc="widget.url"/></div>
-                    <div class="st"><t t-esc="widget.description"/></div>
+<t t-name="website.ImageSelector" owl="1">
+    <section>
+        <div class="o_seo_og_image">
+            <h4><small>Select an image for social share</small></h4>
+            <div class="row">
+                <div class="col-lg-6">
+                    <t t-foreach="state.images" t-as="image" t-key="image.src">
+                        <MetaImage active="image.active" custom="image.custom" src="image.src" selectImage="src => this.selectImage(src)"/>
+                    </t>
+                    <div class="o_meta_img_upload m-1" title="Click to choose more images">
+                        <i class="fa fa-upload"/>
+                    </div>
                 </div>
-            </div>
-        </div>
-    </t>
-
-    <div t-name="website.seo_meta_title_description">
-        <div class="row">
-            <div class="col-lg-6">
-                <div class="form-group">
-                    <label for="website_meta_title">
-                        Title <i class="fa fa-question-circle-o" title="The title will take a default value unless you specify one."/>
-                    </label>
-                    <input type="text" name="website_meta_title" id="website_meta_title" class="form-control" placeholder="Keep empty to use default value" maxlength="70" size="70"/>
-                </div>
-                <div class="form-group">
-                    <label for="website_meta_description">
-                        Description <i class="fa fa-question-circle-o" t-att-title="widget.previewDescription"/>
-                    </label>
-                    <textarea name="website_meta_description" id="website_meta_description" placeholder="Keep empty to use default value" class="form-control"/>
-                    <div class="alert alert-warning mt16 mb0 small" id="website_meta_description_warning" style="display: none;"/>
-                </div>
-                <div class="form-group" t-if='widget.canEditUrl'>
-                    <label for="website_seo_name">
-                        Custom Url <i class="fa fa-question-circle-o" t-att-title="widget.seoNameHelp" />
-                    </label>
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text seo_name_pre"></span>
-                        </div>
-                        <input type="text" name="website_seo_name" id="website_seo_name" class="form-control" t-att-placeholder="widget.seoNameDefault" />
-                        <div class="input-group-append" title="Unalterable unique identifier">
-                            <span class="input-group-text seo_name_post"></span>
+                <div class="col-lg-6">
+                    <div class="card p-0 mb16">
+                        <div class="card-header">Social Preview</div>
+                        <img class="card-img-top o_meta_active_img" t-att-src="activeMetaImage"/>
+                        <div class="card-body px-3 py-2">
+                            <h6 class="text-primary card-title mb0"><t t-esc="title"/></h6>
+                            <small class="card-subtitle text-muted"><t t-esc="props.url"/></small>
+                            <p t-esc="description"/>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-6">
-                <div class="card-header">Preview</div>
-                <div class="card mb0 p-0">
-                    <div class="card-body">
-                        <div class="js_seo_preview"/>
-                    </div>
-                </div>
-            </div>
         </div>
-    </div>
+    </section>
+</t>
 
-    <t t-name="website.seo_meta_keywords">
+<t t-name="website.Keyword" owl="1">
+    <tr>
+        <td t-esc="props.keyword"/>
+        <td class="text-center"><i t-if="usedInH1" class="fa fa-check" t-att-title="props.keyword + ' is used in page first level heading'"/></td>
+        <td class="text-center"><i t-if="usedInH2" class="fa fa-check" t-att-title="props.keyword + ' is used in page second level heading'"/></td>
+        <td class="text-center"><i t-if="usedInTitle" class="fa fa-check" t-att-title="props.keyword + ' is used in page title'"/></td>
+        <td class="text-center"><i t-if="usedInDescription" class=" fa fa-check" t-att-title="props.keyword + ' is used in page description'"/></td>
+        <td class="text-center"><i t-if="usedInContent" class="fa fa-check" t-att-title="props.keyword + ' is used in page content'"/></td>
+        <td class="o_seo_keyword_suggestion">
+            <ul class="list-inline mb0">
+                <span t-if="!state.suggestions.length">Loading...</span>
+                <t t-foreach="state.suggestions" t-as="suggestion" t-key="suggestion">
+                    <li class="list-inline-item" t-on-click="() => props.addKeyword(suggestion)">
+                        <span class="o_seo_suggestion badge badge-info" t-att-title="'Add ' + suggestion" t-esc="suggestion"/>
+                    </li>
+                </t>
+            </ul>
+        </td>
+        <td class="text-center" t-on-click="() => props.removeKeyword(props.keyword)"><a href="#" class="oe_remove" t-att-title="'Remove ' + props.keyword"><i class="fa fa-trash"/></a></td>
+    </tr>
+</t>
+
+<t t-name="website.MetaKeywords" owl="1">
+    <section>
         <label for="website_meta_keywords">
             Keywords
         </label>
         <div class="form-inline" role="form">
             <div class="input-group">
-                <input type="text" name="website_meta_keywords" id="website_meta_keywords" class="form-control" placeholder="Keyword" maxlength="30"/>
+                <input t-model="state.keyword" type="text" class="form-control" t-att-placeholder="isFull ? 'Remove a keyword first' : 'Keyword'" t-att-readonly="isFull" maxlength="30" t-on-keyup="onKeyup"/>
                 <span title="The language of the keyword and related keywords." class="input-group-append">
-                    <select name="seo_page_language" id="language-box" class="btn form-control"/>
+                    <select t-model="state.language" class="btn btn-outline-primary pr-5 form-control">
+                        <t t-foreach="languages" t-as="lang" t-key="lang[0]">
+                            <option t-att-value="lang[0]"><t t-esc="lang[2]"/></option>
+                        </t>
+                    </select>
                 </span>
                 <span class="input-group-append">
-                    <button data-action="add" class="btn btn-primary btn-sm" type="button">Add</button>
+                    <button t-on-click="() => this.addKeyword(state.keyword)" t-att-disabled="isFull" class="btn btn-primary btn-sm" type="button">Add</button>
                 </span>
             </div>
         </div>
-        <div class="table-responsive mt16">
+        <div t-if="seoContext.keywords.length" class="table-responsive mt16">
             <table class="table table-sm">
                 <thead>
                     <tr>
@@ -126,43 +92,94 @@
                         <th class="text-center"></th>
                     </tr>
                 </thead>
-                <!-- body inserted in JS -->
+                <t t-foreach="seoContext.keywords" t-as="keyword" t-key="keyword">
+                    <Keyword language="state.language" keyword="keyword" addKeyword="(keyword) => this.addKeyword(keyword)" removeKeyword="(keyword) => this.removeKeyword(keyword)"/>
+                </t>
             </table>
         </div>
-    </t>
+    </section>
+</t>
 
-    <div t-name="website.seo_meta_image_selector" class="o_seo_og_image">
-        <t t-call="website.og_image_body"/>
+<t t-name="website.SEOPreview" owl="1">
+    <div class="oe_seo_preview_g">
+        <div class="rc">
+            <t t-if="props.isIndexed">
+                <div class="r"><t t-esc="props.title"/></div>
+                <div class="s">
+                    <div class="kv"><t t-esc="props.url"/></div>
+                    <div class="st"><t t-esc="description"/></div>
+                </div>
+            </t>
+            <t t-else="">
+                <div class="s">
+                    <div class="st">You have hidden this page from search results. It won't be indexed by search engines.</div>
+                </div>
+            </t>
+        </div>
     </div>
+</t>
 
-    <t t-name="website.og_image_body">
-        <h4><small>Select an image for social share</small></h4>
+<t t-name="website.TitleDescription" owl="1">
+    <section>
         <div class="row">
             <div class="col-lg-6">
-                <t t-foreach="widget.images" t-as="image">
-                    <div t-attf-class="o_meta_img mt4 #{new window.URL(image, window.location.origin).pathname === new window.URL(widget.activeMetaImg, window.location.origin).pathname and ' o_active_image' or ''}">
-                        <img t-att-src="image"/>
-                    </div>
-                </t>
-                <div t-if="widget.customImgUrl" t-attf-class="o_meta_img mt4 #{widget.customImgUrl === widget.activeMetaImg and ' o_active_image' or ''}">
-                    <span class="o-custom-label w-100 text-white text-center">Custom</span>
-                    <img t-att-src="widget.customImgUrl"/>
+                <div class="form-group">
+                    <label for="website_meta_title">
+                        Title <i class="fa fa-question-circle-o" title="The title will take a default value unless you specify one."/>
+                    </label>
+                    <input type="text" t-model="seoContext.title" t-att-disabled="!props.canEditTitle" class="form-control" placeholder="Keep empty to use default value" maxlength="70" size="70"/>
                 </div>
-                <div class="o_meta_img_upload mt4" title="Click to choose more images">
-                    <i class="fa fa-upload"/>
+                <div class="form-group">
+                    <label for="website_meta_description">
+                        Description <i class="fa fa-question-circle-o" t-att-title="props.previewDescription"/>
+                    </label>
+                    <textarea t-model="seoContext.description" t-att-disabled="!props.canEditDescription" name="website_meta_description" placeholder="Keep empty to use default value" class="form-control"/>
+                    <div t-if="descriptionWarning.length" class="alert alert-warning mt16 mb0 small">
+                        <span t-esc="descriptionWarning"/>
+                    </div>
+                </div>
+                <div class="form-group" t-if='props.canEditUrl'>
+                    <label for="website_seo_name">
+                        Custom Url <i class="fa fa-question-circle-o" t-att-title="props.seoNameHelp" />
+                    </label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text seo_name_pre" t-esc="seoNamePre"/>
+                        </div>
+                        <input type="text" t-model="seoContext.seoName" class="form-control" t-att-placeholder="props.seoNameDefault" />
+                        <div class="input-group-append" title="Unalterable unique identifier">
+                            <span class="input-group-text seo_name_post" t-esc="seoNamePost"/>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="col-lg-6">
-                <div class="card p-0 mb16">
-                    <div class="card-header">Social Preview</div>
-                    <img class="card-img-top o_meta_active_img" t-att-src="widget.activeMetaImg"/>
-                    <div class="card-body px-3 py-2">
-                        <h6 class="text-primary card-title mb0"><t t-esc="widget.metaTitle"/></h6>
-                        <small class="card-subtitle text-muted"><t t-esc="widget.serverUrl"/></small>
-                        <p t-esc="widget.metaDescription"/>
-                  </div>
+                <div class="card-header">Preview</div>
+                <div class="card mb0 p-0">
+                    <div class="card-body">
+                        <SEOPreview isIndexed="props.isIndexed" title="title" description="description" url="url"/>
+                    </div>
                 </div>
             </div>
         </div>
-    </t>
+    </section>
+</t>
+
+<t t-name="website.OptimizeSEODialog" owl="1">
+    <TitleDescription canEditDescription="canEditDescription"
+        canEditUrl="canEditUrl"
+        canEditTitle="canEditTitle"
+        seoNameHelp="seoNameHelp"
+        seoNameDefault="seoNameDefault"
+        isIndexed="isIndexed"
+        defaultTitle="defaultTitle"
+        previewDescription="previewDescription"
+        url="url"/>
+    <MetaKeywords/>
+    <ImageSelector previewDescription="socialPreviewDescription"
+        defaultTitle="defaultTitle"
+        hasSocialDefaultImage="hasSocialDefaultImage"
+        pageImages="pageImages"
+        url="url"/>
+</t>
 </templates>

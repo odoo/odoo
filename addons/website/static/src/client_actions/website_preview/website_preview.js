@@ -2,13 +2,13 @@
 
 import { registry } from '@web/core/registry';
 import { useService } from '@web/core/utils/hooks';
-import { unslugHtmlDataObject } from '../../services/website_service';
 
 const { Component, onWillStart, useRef, useEffect } = owl;
 
 export class WebsitePreview extends Component {
     setup() {
         this.websiteService = useService('website');
+        this.title = useService('title');
 
         this.iframeFallbackUrl = '/website/iframefallback';
 
@@ -24,7 +24,10 @@ export class WebsitePreview extends Component {
         useEffect(() => {
             this.websiteService.currentWebsiteId = this.websiteId;
             this.websiteService.context.showNewContentModal = this.props.action.context.params && this.props.action.context.params.display_new_content;
-            return () => this.websiteService.currentWebsiteId = null;
+            return () => {
+                this.websiteService.currentWebsiteId = null;
+                this.websiteService.pageDocument = null;
+            };
         }, () => [this.props.action.context.params]);
     }
 
@@ -83,16 +86,11 @@ export class WebsitePreview extends Component {
         // This replaces the browser url (/web#action=website...) with
         // the iframe's url (it is clearer for the user).
         this.currentUrl = this.iframe.el.contentDocument.location.href;
-        history.replaceState({}, this.props.action.display_name, this.currentUrl);
+        this.currentTitle = this.iframe.el.contentDocument.title;
+        history.replaceState({}, this.currentTitle, this.currentUrl);
+        this.title.setParts({ action: this.currentTitle });
 
-        const { mainObject, isPublished, canPublish, editableInBackend } = this.iframe.el.contentDocument.documentElement.dataset;
-        this.websiteService.currentMetadata = {
-            path: this.currentUrl,
-            mainObject: unslugHtmlDataObject(mainObject),
-            isPublished: isPublished === 'True',
-            canPublish: canPublish === 'True',
-            editableInBackend: editableInBackend === 'True',
-        };
+        this.websiteService.pageDocument = this.iframe.el.contentDocument;
 
         // Before leaving the iframe, its content is replicated on an
         // underlying iframe, to avoid for white flashes (visible on

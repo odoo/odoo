@@ -535,6 +535,11 @@
             sequence="1"
             parent="website.menu_website_configuration"/>
 
+        <menuitem id="menu_promote"
+            name="Promote"
+            sequence="5"
+            parent="website.menu_website_configuration"/>
+
         <menuitem id="menu_reporting"
             name="Reporting"
             sequence="99"
@@ -570,6 +575,12 @@
             sequence="20"
             parent="menu_reporting"
             action="website.ir_actions_server_website_google_analytics"/>
+
+        <menuitem id="menu_optimize_seo"
+            name="Optimize SEO"
+            sequence="1"
+            parent="website.menu_promote"
+            action="website.website_preview"/>
 
         <!-- Configurator actions -->
         <record id="start_configurator_act_url" model="ir.actions.act_url">
