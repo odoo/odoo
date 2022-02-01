@@ -37,14 +37,16 @@ def load_data(cr, idref, mode, kind, package):
 
     def _get_files_of_kind(kind):
         if kind == 'demo':
-            kind = ['demo_xml', 'demo']
+            keys = ['demo_xml', 'demo']
         elif kind == 'data':
-            kind = ['init_xml', 'update_xml', 'data']
+            keys = ['init_xml', 'update_xml', 'data']
         if isinstance(kind, str):
-            kind = [kind]
+            keys = [kind]
         files = []
-        for k in kind:
+        for k in keys:
             for f in package.data[k]:
+                if f in files:
+                    _logger.warning("File %s is imported twice in module %s %s", f, package.name, kind)
                 files.append(f)
                 if k.endswith('_xml') and not (k == 'init_xml' and not f.endswith('.xml')):
                     # init_xml, update_xml and demo_xml are deprecated except
