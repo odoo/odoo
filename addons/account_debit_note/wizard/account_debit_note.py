@@ -25,6 +25,7 @@ class AccountDebitNote(models.TransientModel):
     # computed fields
     move_type = fields.Char(compute="_compute_from_moves")
     journal_type = fields.Char(compute="_compute_from_moves")
+    country_code = fields.Char(related='move_ids.company_id.country_id.code')
 
     @api.model
     def default_get(self, fields):
