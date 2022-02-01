@@ -99,7 +99,9 @@
                             <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                         </group>
                     </group>
-                    <field name='description' placeholder="Internal Notes"/>
+                    <group>
+                        <field name='description' placeholder="Internal Notes"/>
+                    </group>
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids"/>
@@ -612,7 +614,9 @@
                         </div>
                     </div>
                 </group>
-                <field name="note" nolabel="1"/>
+                <group>
+                    <field name="note"/>
+                </group>
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids"/>
