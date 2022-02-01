@@ -507,12 +507,8 @@
             <div class="row">
                 <div class="col-4" name="company_address">
                     <div t-field="company.partner_id"
-                         t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'
+                         t-options='{"widget": "contact", "fields": ["address", "name", "vat"], "no_marker": true}'
                     />
-                    <p t-if="company.partner_id.vat">
-                        <t t-out="o.company_id.account_fiscal_country_id.vat_label or 'Tax ID'"/>:
-                        <span t-field="company.partner_id.vat"/>
-                    </p>
                 </div>
                 <div class="col-4" name="qr_code"/>
                 <div class="col-4" name="company_address" dir="rtl" style="text-align:right">
@@ -525,11 +521,7 @@
              t-att-data-oe-lang="o and o.env.context.get('lang')">
             <div class="pt-5">
                 <t t-set="address">
-                    <address t-field="o.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' class="mb-0"/>
-                    <p t-if="o.partner_id.vat">
-                        <t t-out="o.company_id.account_fiscal_country_id.vat_label or 'Tax ID'"/>:
-                        <span t-field="o.partner_id.vat"/>
-                    </p>
+                    <address t-field="o.partner_id" t-options='{"widget": "contact", "fields": ["address", "name", "vat"], "no_marker": True}' class="mb-0"/>
                 </t>
                 <t t-call="web.address_layout"/>
             </div>
