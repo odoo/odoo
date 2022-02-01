@@ -586,6 +586,7 @@ class Profiler:
                         "init_stack_trace": json.dumps(_format_stack(self.init_stack_trace)),
                         "duration": self.duration,
                         "entry_count": self.entry_count(),
+                        "sql_count": sum(len(collector.entries) for collector in self.collectors if collector.name == 'sql')
                     }
                     for collector in self.collectors:
                         if collector.entries:

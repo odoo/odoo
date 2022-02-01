@@ -22,6 +22,7 @@
                 <field name="session"/>
                 <field name="name"/>
                 <field name="entry_count"/>
+                <field name="sql_count" optional="hide"/>
                 <field name="speedscope_url" widget="url"/>
                 <field name="duration"/>
             </tree>
@@ -37,9 +38,11 @@
                     <field name="name"/>
                     <field name="session"/>
                     <field name="entry_count"/>
+                    <!-- Do not rely on sql field for the invisible attrs to avoid fetching whole trace from server. -->
+                    <field name="sql_count" attrs="{'invisible': [('sql_count', '=', 0)]}"/>
                     <field name="speedscope_url" widget="url"/>
                 </group>
-                <group attrs="{'invisible': [('qweb','=', '')]}">
+                <group attrs="{'invisible': [('qweb', '=', '')]}">
                     <field name="qweb" widget="profiling_qweb_view" nolabel="1"/>
                 </group>
             </form>
@@ -78,10 +81,10 @@
         <field name="context">{'search_default_group_session': 1}</field>
     </record>
 
-    <menuitem 
+    <menuitem
         name="Profiling"
-        action="action_menu_ir_profile" 
-        id="menu_ir_profile" 
+        action="action_menu_ir_profile"
+        id="menu_ir_profile"
         parent="base.next_id_9"/>
 
 </odoo>
