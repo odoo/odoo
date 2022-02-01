@@ -9,7 +9,7 @@ import pytz
 from dateutil.parser import parse
 
 from odoo import api, fields, models, registry, _
-from odoo.tools import ormcache_context
+from odoo.tools import ormcache_context, email_normalize
 from odoo.exceptions import UserError
 from odoo.osv import expression
 
@@ -283,6 +283,17 @@ class GoogleSync(models.AbstractModel):
     @api.model
     def _create_from_google(self, gevents, vals_list):
         return self.create(vals_list)
+
+    @api.model
+    def _get_sync_partner(self, emails):
+        normalized_emails = [email_normalize(contact) for contact in emails if email_normalize(contact)]
+        user_partners = self.env['mail.thread']._mail_search_on_user(normalized_emails, extra_domain=[('share', '=', False)])
+        partners = [user_partner for user_partner in user_partners]
+        remaining = [email for email in normalized_emails if
+                     email not in [partner.email_normalized for partner in partners]]
+        if remaining:
+            partners += self.env['mail.thread']._mail_find_partner_from_emails(remaining, records=self, force_create=True)
+        return partners
 
     @api.model
     def _odoo_values(self, google_event: GoogleEvent, default_reminders=()):
