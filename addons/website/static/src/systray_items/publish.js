@@ -22,10 +22,10 @@ class PublishSystray extends Component {
 
     publishContent() {
         this.state.published = !this.state.published;
-        const { metadata: { id, object } } = this.website.currentWebsite;
+        const { metadata: { mainObject } } = this.website.currentWebsite;
         return this.rpc('/website/publish', {
-            id,
-            object,
+            id: mainObject.id,
+            object: mainObject.model,
         });
     }
 }

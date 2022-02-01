@@ -7,6 +7,17 @@ const { reactive } = owl;
 
 const websiteSystrayRegistry = registry.category('website_systray');
 
+const unslugHtmlDataObject = (repr) => {
+    const match = repr && repr.match(/(.+)\((\d+),(.*)\)/);
+    if (!match) {
+        return null;
+    }
+    return {
+        model: match[1],
+        id: match[2] | 0,
+    };
+};
+
 export const websiteService = {
     dependencies: ['rpc', 'http', 'action'],
     async start(env, { rpc, http, action }) {
@@ -16,14 +27,11 @@ export const websiteService = {
         const context = reactive({
             showNewContentModal: false,
         });
+        let pageDocument;
         return {
             set currentWebsiteId(id) {
                 currentWebsiteId = id;
                 websiteSystrayRegistry.trigger('EDIT-WEBSITE');
-            },
-            set currentMetadata(metadata) {
-                currentMetadata = metadata;
-                websiteSystrayRegistry.trigger('CONTENT-UPDATED');
             },
             get currentWebsite() {
                 const currentWebsite = websites.find(w => w.id === currentWebsiteId);
@@ -37,6 +45,23 @@ export const websiteService = {
             },
             get context() {
                 return context;
+            },
+            set pageDocument(document) {
+                pageDocument = document;
+                const { mainObject, seoObject, isPublished, canPublish, editableInBackend } = document.documentElement.dataset;
+                currentMetadata = {
+                    path: document.location.href,
+                    mainObject: unslugHtmlDataObject(mainObject),
+                    seoObject: unslugHtmlDataObject(seoObject),
+                    isPublished: isPublished === 'True',
+                    canPublish: canPublish === 'True',
+                    editableInBackend: editableInBackend === 'True',
+                    title: document.title,
+                };
+                websiteSystrayRegistry.trigger('CONTENT-UPDATED');
+            },
+            get pageDocument() {
+                return pageDocument;
             },
             goToWebsite({ websiteId = currentWebsiteId || websites[0].id, path = '/' } = {}) {
                 action.doAction('website.website_editor', {

@@ -537,6 +537,11 @@
             sequence="1"
             parent="website.menu_website_configuration"/>
 
+        <menuitem id="menu_promote"
+            name="Promote"
+            sequence="5"
+            parent="website.menu_website_configuration"/>
+
         <menuitem id="menu_reporting"
             name="Reporting"
             sequence="99"
@@ -558,7 +563,7 @@
             parent="menu_site"
             sequence="30"
             name="Edit Menu"
-            action="action_website_menu"/>
+            action="website.website_editor"/>
 
         <menuitem id="menu_website_dashboard"
             name="eCommerce"
@@ -572,6 +577,12 @@
             sequence="20"
             parent="menu_reporting"
             action="website.ir_actions_server_website_google_analytics"/>
+
+        <menuitem id="menu_optimize_seo"
+            name="Optimize SEO"
+            sequence="1"
+            parent="website.menu_promote"
+            action="website.website_editor"/>
 
         <!-- Configurator actions -->
         <record id="start_configurator_act_url" model="ir.actions.act_url">

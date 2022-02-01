@@ -9,8 +9,8 @@ patch(EditInBackendSystray.prototype, 'website_blog_edit_in_backend', {
      */
     getElements() {
         const elements = this._super();
-        const { metadata: { object } } = this.websiteService.currentWebsite;
-        if (object === 'blog.post') {
+        const { metadata: { mainObject } } = this.websiteService.currentWebsite;
+        if (mainObject.model === 'blog.post') {
             return [...elements, {
                 title: this.env._t("Duplicate"),
                 callback: () => this.duplicate(),
@@ -20,8 +20,8 @@ patch(EditInBackendSystray.prototype, 'website_blog_edit_in_backend', {
     },
 
     async duplicate() {
-        const { metadata: { id } } = this.websiteService.currentWebsite;
-        const duplicateUrl = await this.websiteService.sendRequest('/blog/post_duplicate', { blog_post_id: id });
+        const { metadata: { mainObject } } = this.websiteService.currentWebsite;
+        const duplicateUrl = await this.websiteService.sendRequest('/blog/post_duplicate', { blog_post_id: mainObject.id });
         this.websiteService.goToWebsite({ path: duplicateUrl });
     }
 });

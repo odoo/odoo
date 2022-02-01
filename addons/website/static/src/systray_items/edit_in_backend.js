@@ -21,10 +21,10 @@ export class EditInBackendSystray extends Component {
     }
 
     editInBackend() {
-        const { metadata: { object, id } } = this.websiteService.currentWebsite;
+        const { metadata: { mainObject } } = this.websiteService.currentWebsite;
         this.actionService.doAction({
-            res_model: object,
-            res_id: id,
+            res_model: mainObject.model,
+            res_id: mainObject.id,
             views: [[false, "form"]],
             type: "ir.actions.act_window",
             view_mode: "form",

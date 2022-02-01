@@ -50,8 +50,6 @@
             'data-oe-company-name': res_company.name,
             'data-is-published': 'website_published' in main_object.fields_get() and main_object.website_published,
             'data-can-publish': 'can_publish' in main_object.fields_get() and main_object.can_publish,
-            'data-object': main_object._name,
-            'data-id': main_object.id,
             'data-editable-in-backend': editable_in_backend,
         }"/>
     </xpath>
