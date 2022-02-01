@@ -22,6 +22,7 @@ from email import message_from_string, policy
 from lxml import etree
 from werkzeug import urls
 from xmlrpc import client as xmlrpclib
+from markupsafe import Markup
 
 from odoo import _, api, exceptions, fields, models, tools, registry, SUPERUSER_ID, Command
 from odoo.exceptions import MissingError
@@ -2400,8 +2401,8 @@ class MailThread(models.AbstractModel):
             author_user = self.env.user if self.env.user.partner_id == author else author.user_ids[0] if author and author.user_ids else False
             if author_user:
                 signature = author_user.signature
-            else:
-                signature = "<p>-- <br/>%s</p>" % author.name
+            elif author.name:
+                signature = Markup("<p>-- <br/>%s</p>") % author.name
 
         if force_email_company:
             company = force_email_company
