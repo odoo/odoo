@@ -32,6 +32,7 @@ class IrProfile(models.Model):
     init_stack_trace = fields.Text('Initial stack trace', prefetch=False)
 
     sql = fields.Text('Sql', prefetch=False)
+    sql_count = fields.Integer('Queries Count')
     traces_async = fields.Text('Traces Async', prefetch=False)
     traces_sync = fields.Text('Traces Sync', prefetch=False)
     qweb = fields.Text('Qweb', prefetch=False)
