@@ -1463,11 +1463,7 @@ class PosSession(models.Model):
         """
         if not self.ids:
             return {}
-        return {
-            'type': 'ir.actions.act_url',
-            'target': 'self',
-            'url': self.config_id._get_pos_base_url() + '?config_id=%d' % self.config_id.id,
-        }
+        return self.config_id.open_ui()
 
     def set_cashbox_pos(self, cashbox_value, notes):
         self.state = 'opened'

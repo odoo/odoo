@@ -114,7 +114,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'coupon_program_ids': [Command.link(self.coupon_program.id)],
             'promo_program_ids': [Command.link(prog.id) for prog in self.promo_programs],
         })
-        self.main_pos_config.open_session_cb()
+        self.main_pos_config.open_ui()
 
 
 
