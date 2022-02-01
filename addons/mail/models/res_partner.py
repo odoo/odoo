@@ -126,14 +126,14 @@ class Partner(models.Model):
         """Returns all messages, sent by the current partner, that have errors, in
         the format expected by the web client."""
         self.ensure_one()
-        messages = self.env['mail.message'].search([
-            ('has_error', '=', True),
+        notifications = self.env['mail.notification'].search([
             ('author_id', '=', self.id),
-            ('res_id', '!=', 0),
-            ('model', '!=', False),
-            ('message_type', '!=', 'user_notification')
+            ('notification_status', 'in', ('bounce', 'exception')),
+            ('mail_message_id.message_type', '!=', 'user_notification'),
+            ('mail_message_id.model', '!=', False),
+            ('mail_message_id.res_id', '!=', 0),
         ])
-        return messages._message_notification_format()
+        return notifications.mail_message_id._message_notification_format()
 
     def _get_channels_as_member(self):
         """Returns the channels of the partner."""
