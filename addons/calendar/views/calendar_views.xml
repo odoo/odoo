@@ -162,8 +162,9 @@
                                     <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
                                 </group>
                             </group>
-                            <label for="description"/>
-                            <field name="description"/>
+                            <group>
+                                <field name="description"/>
+                            </group>
                         </page>
                         <page name="page_options" string="Options">
                             <group>
