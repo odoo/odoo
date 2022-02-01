@@ -1088,6 +1088,21 @@ var DateTimePicker = function ($, moment) {
             }
 
             var parsedDate = this._parseInputDate(_defaultDate);
+
+            if (this._options.minDate && this._options.maxDate){
+                if (parsedDate.isBefore(this._options.minDate) || parsedDate.isAfter(this._options.maxDate)) {
+                    parsedDate = this._options.minDate;
+                }
+            } else if (this._options.minDate){
+                if (parsedDate.isBefore(this._options.minDate)) {
+                    parsedDate = this._options.minDate;
+                }
+            } else if (this._options.maxDate){
+                if (parsedDate.isAfter(this._options.maxDate)) {
+                    parsedDate = this._options.maxDate;
+                }
+            }
+
             if (!parsedDate.isValid()) {
                 throw new TypeError('defaultDate() Could not parse date parameter: ' + _defaultDate);
             }
