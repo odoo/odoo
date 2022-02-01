@@ -2,10 +2,10 @@
 <odoo>
     <template id="l10n_in_report_invoice_document_inherit" inherit_id="account.report_invoice_document">
 
-        <xpath expr="//span[@t-field='o.partner_id.vat']" position="attributes">
+        <xpath expr="//address[@t-field='o.partner_id']" position="attributes">
             <attribute name="t-if">o.company_id.account_fiscal_country_id.code != 'IN'</attribute>
         </xpath>
-        <xpath expr="//span[@t-field='o.partner_id.vat']" position="after">
+        <xpath expr="//address[@t-field='o.partner_id']" position="after">
             <span t-field="o.l10n_in_gstin" t-if="o.company_id.account_fiscal_country_id.code == 'IN'"/>
         </xpath>
         <xpath expr="//t[@t-set='address']" position="inside">
