@@ -26,8 +26,8 @@ class PosConfig(models.Model):
         for conf in (configs - open_configs):
             conf.discount_product_id = product if conf.module_pos_discount and product and (not product.company_id or product.company_id == conf.company_id) else False
 
-    def open_session_cb(self):
+    def open_ui(self):
         for config in self:
             if not self.current_session_id and config.module_pos_discount and not config.discount_product_id:
                 raise UserError(_('A discount product is needed to use the Global Discount feature. Go to Point of Sale > Configuration > Settings to set it.'))
-        return super().open_session_cb()
+        return super().open_ui()

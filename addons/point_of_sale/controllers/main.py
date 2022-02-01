@@ -5,7 +5,6 @@ import logging
 from odoo import http
 from odoo.http import request
 from odoo.osv.expression import AND
-from odoo.tools import convert
 
 _logger = logging.getLogger(__name__)
 
@@ -85,7 +84,3 @@ class PosController(http.Controller):
         pdf, _ = request.env['ir.actions.report'].with_context(date_start=date_start, date_stop=date_stop)._render_qweb_pdf('point_of_sale.sale_details_report', r)
         pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', len(pdf))]
         return request.make_response(pdf, headers=pdfhttpheaders)
-
-    @http.route('/pos/load_onboarding_data', type='json', auth='user')
-    def load_onboarding_data(self):
-        convert.convert_file(request.env.cr, 'point_of_sale', 'data/point_of_sale_onboarding.xml', None, mode='init', kind='data')

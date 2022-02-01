@@ -154,6 +154,12 @@ odoo.define('pos_restaurant.TicketScreen', function (require) {
                 }
                 super._onDoRefund();
             }
+            isDefaultOrderEmpty(order) {
+                if (this.env.pos.config.iface_floorplan) {
+                    return false;
+                }
+                return super.isDefaultOrderEmpty(...arguments);
+            }
         };
 
     Registries.Component.extend(TicketScreen, PosResTicketScreen);

@@ -147,9 +147,6 @@ odoo.define('point_of_sale.Chrome', function(require) {
                     : 0;
                 this.state.uiState = 'READY';
                 this._showStartScreen();
-                if (_.isEmpty(this.env.pos.db.product_by_category_id)) {
-                    this._loadDemoData();
-                }
                 setTimeout(() => this._runBackgroundTasks());
             } catch (error) {
                 let title = 'Unknown Error',
@@ -387,30 +384,6 @@ odoo.define('point_of_sale.Chrome', function(require) {
         }
 
         // MISC METHODS //
-
-        async _loadDemoData() {
-            const { confirmed } = await this.showPopup('ConfirmPopup', {
-                title: this.env._t('You do not have any products'),
-                body: this.env._t(
-                    'Would you like to load demo data?'
-                ),
-                confirmText: this.env._t('Yes'),
-                cancelText: this.env._t('No')
-            });
-            if (confirmed) {
-                await this.rpc({
-                    'route': '/pos/load_onboarding_data',
-                });
-                const result = await this.rpc({
-                    method: 'get_onboarding_data',
-                    model: 'pos.session',
-                    args: [[odoo.pos_session_id]]
-                });
-                this.env.pos.db.add_categories(result['categories']);
-                this.env.pos._loadProductProduct(result['products']);
-            }
-        }
-
         _preloadImages() {
             for (let product of this.env.pos.db.get_product_by_category(0)) {
                 const image = new Image();

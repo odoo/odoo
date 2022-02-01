@@ -62,7 +62,7 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
     def test_create_account_move_line(self):
         # This test will check that the correct journal entries are created when a product in real time valuation
         # is sold in a company using anglo-saxon
-        self.pos_config.open_session_cb()
+        self.pos_config.open_ui()
         current_session = self.pos_config.current_session_id
         self.cash_journal.loss_account_id = self.account
         current_session.set_cashbox_pos(0, None)
@@ -144,7 +144,8 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
         self.assertEqual(self.product.value_svl, 30, "Value should be (5*5 + 5*1) = 30")
         self.assertEqual(self.product.quantity_svl, 10)
 
-        self.pos_config.open_session_cb()
+
+        self.pos_config.open_ui()
         pos_session = self.pos_config.current_session_id
         pos_session.set_cashbox_pos(0, None)
 

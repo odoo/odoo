@@ -7,9 +7,7 @@ import { PosLoyaltyCard } from '@pos_loyalty/js/Loyalty';
 
 export const PosLoyaltyPaymentScreen = (PaymentScreen) =>
     class extends PaymentScreen {
-        /**
-         * @override
-         */
+        //@override
         async validateOrder(isForceValidate) {
             const pointChanges = {};
             const newCodes = [];

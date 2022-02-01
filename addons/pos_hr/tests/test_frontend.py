@@ -52,7 +52,7 @@ class TestPosHrHttpCommon(TestPointOfSaleHttpCommon):
 class TestUi(TestPosHrHttpCommon):
     def test_01_pos_hr_tour(self):
         # open a session, the /pos/ui controller will redirect to it
-        self.main_pos_config.open_session_cb()
+        self.main_pos_config.open_ui()
 
         self.start_tour(
             "/pos/ui?config_id=%d" % self.main_pos_config.id,
