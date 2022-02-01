@@ -38,6 +38,7 @@ class AccountMoveReversal(models.TransientModel):
     )
     company_id = fields.Many2one('res.company', required=True, readonly=True)
     available_journal_ids = fields.Many2many('account.journal', compute='_compute_available_journal_ids')
+    country_code = fields.Char(related='company_id.country_id.code')
 
     # computed fields
     residual = fields.Monetary(compute="_compute_from_moves")
