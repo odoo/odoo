@@ -737,3 +737,19 @@ class PosConfig(models.Model):
         """, [self.company_id.id, str(self.limited_partners_amount)])
         result = self.env.cr.fetchall()
         return result
+
+    def _is_pos_broadcast_allowed(self):
+        self.ensure_one()
+        return not self.env.registry.in_test_mode()
+
+    def broadcast_pos_message(self, message_name, message_value):
+        """Send near real-time message to the open pos ui instances.
+        Should be received by sessions with the same config_id.
+        :type message_name: str
+        :type message_value: any
+        """
+        self.ensure_one()
+        # Each open pos ui starts a longpolling on this channel.
+        pos_channel = f'pos_config_{self.id}'
+        payload = {'pos_channel': pos_channel, 'message': [message_name, message_value]}
+        self.env['bus.bus']._sendone(pos_channel, 'pos_notification', payload)

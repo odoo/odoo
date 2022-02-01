@@ -32,6 +32,7 @@
                 'login_number': login_number,
                 'pos_session_id': pos_session_id,
                 'debug': debug,
+                'pos_broadcast_enabled': pos_broadcast_enabled,
             })"/>;
             odoo.loadTemplatesPromise = fetch(`/web/webclient/qweb/${odoo.__session_info__.cache_hashes.qweb}?bundle=web.assets_qweb`).then(doc => doc.text());
         </script>

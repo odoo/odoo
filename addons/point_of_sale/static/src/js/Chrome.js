@@ -30,6 +30,8 @@ odoo.define('point_of_sale.Chrome', function(require) {
 
     /**
      * Chrome is the root component of the PoS App.
+     * This component is also responsible in starting to listen to broadcasted
+     * pos messages. @see _startLongpolling.
      */
     class Chrome extends PosComponent {
         setup() {
@@ -89,10 +91,12 @@ odoo.define('point_of_sale.Chrome', function(require) {
 
             onWillUnmount(() => {
                 BarcodeEvents.stop();
+                this.env.services.bus_service.stopPolling();
             });
 
             onWillDestroy(() => {
                 this.env.pos.destroy();
+                this.env.services.bus_service.stopPolling();
             });
 
             onError((error) => {
@@ -154,6 +158,7 @@ odoo.define('point_of_sale.Chrome', function(require) {
                     ? this.env.pos.config.iface_start_categ_id[0]
                     : 0;
                 this.state.uiState = 'READY';
+                this._startLongpolling();
                 this._showStartScreen();
                 if (_.isEmpty(this.env.pos.db.product_by_category_id)) {
                     this._loadDemoData();
@@ -188,6 +193,40 @@ odoo.define('point_of_sale.Chrome', function(require) {
                     body,
                     exitButtonIsShown: true,
                 });
+            }
+        }
+
+        /**
+         * When pos is ready (required data are loaded to show the interface),
+         * and if `odoo.pos_broadcast_enabled`, we start longpolling for pos messages.
+         */
+        _startLongpolling() {
+            if (!odoo.pos_broadcast_enabled) return;
+            if (!this.env.pos.posBroadcastChannel) {
+                this.showPopup('ErrorPopup', {
+                    title: this.env._t('Longpolling failed'),
+                    body: this.env._t('This session failed to listen to broadcasted pos messages. Some features like terminal payments might not work.')
+                });
+                return;
+            }
+            this.env.services.bus_service.onNotification(null, this._onBusServiceNotification.bind(this));
+            this.env.services.bus_service.addChannel(this.env.pos.posBroadcastChannel);
+            this.env.services.bus_service.startPolling();
+        }
+
+        _onBusServiceNotification(notifications) {
+            // Only notifications with `pos_channel` equal to `posBroadcastChannel` are considered valid pos messages.
+            const validPosNotifications = notifications.filter(
+                (n) => n.type == 'pos_notification' && n.payload.pos_channel == this.env.pos.posBroadcastChannel
+            );
+            if (validPosNotifications.length > 0) {
+                for (const posMessage of validPosNotifications.map((n) => n.payload.message)) {
+                    const [name, value] = posMessage;
+                    // TODO: Or should we rather trigger synchronously?
+                    // Basically, we queue the messages in some kind of task queue where each task
+                    // is only triggered when the previous task is done.
+                    this.env.posBroadcastBus.trigger(name, value);
+                }
             }
         }
 

@@ -2,6 +2,7 @@ odoo.define('point_of_sale.custom_hooks', function (require) {
     'use strict';
 
     const { onMounted, onPatched, onWillUnmount, useComponent } = owl;
+    const { useBus } = require("@web/core/utils/hooks");
 
     /**
      * Introduce error handlers in the component.
@@ -103,5 +104,53 @@ odoo.define('point_of_sale.custom_hooks', function (require) {
         });
     }
 
-    return { useErrorHandlers, useAutoFocusToLast, useBarcodeReader };
+    /**
+     * Use this hook to listen to broadcasted pos messages.
+     *
+     * Example
+     * -------
+     *
+     * Broadcast a pos message from the frontend.
+     * ```js
+     * class Anywhere {
+     *   _addProduct(product) {
+     *     // ...
+     *     this.env.broadcastPosMessage('product-added', [product.name, product.id]);
+     *     // ...
+     *   }
+     * }
+     * ```
+     *
+     * Or broadcast a pos message from the backend.
+     * ```py
+     * def session_method(self, product):
+     *     self.config_id.broadcast_pos_message('product-added', [product.name, product.id]);
+     * ```
+     *
+     * Listen to specific type of broadcasted pos messages in a component.
+     *```js
+     * const { onPosBroadcast } = require('point_of_sale.custom_hooks');
+     * class AnyPosComponent extends PosComponent {
+     *   setup() {
+     *     super.setup();
+     *     onPosBroadcast('product-added', this._onProductAdded)
+     *   }
+     *   _onProductAdded(messageValue) {
+     *       let [productName, productId] = messageValue;
+     *       // Do something with productName and productId.
+     *     }
+     *   }
+     * }
+     * ```
+     * @param {string} messageName
+     * @param {(messageValue) => void | Promise<void>} callback
+     */
+    function onPosBroadcast(messageName, callback) {
+        const component = owl.useComponent();
+        useBus(component.env.posBroadcastBus, messageName, (ev) => {
+            callback.apply(component, [ev.detail])
+        });
+    }
+
+    return { useErrorHandlers, useAutoFocusToLast, useBarcodeReader, onPosBroadcast };
 });

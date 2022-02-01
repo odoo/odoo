@@ -106,6 +106,9 @@ class PosGlobalState extends PosModel {
         this.default_pricelist = null;
         this.order_sequence = 1;
 
+        // This is needed to start the longpolling in the ui. This is set during _processData.
+        this.posBroadcastChannel = false;
+
         // Object mapping the order's name (which contains the uid) to it's server_id after
         // validation (order paid then sent to the backend).
         this.validated_orders_name_server_id_map = {};
@@ -218,6 +221,7 @@ class PosGlobalState extends PosModel {
     }
     _loadPoSConfig() {
         this.db.set_uuid(this.config.uuid);
+        this.posBroadcastChannel = `pos_config_${this.config.id}`;
     }
     _loadResPartner() {
         this.db.add_partners(this.partners);

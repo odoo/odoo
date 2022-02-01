@@ -18,4 +18,22 @@ pos_env.barcode_reader = new BarcodeReader({ env: pos_env, proxy: pos_env.proxy 
 pos_env.posbus = new owl.EventBus();
 pos_env.posMutex = new concurrency.Mutex();
 
+// create a different bus that is responsible for broadcasted pos messages.
+pos_env.posBroadcastBus = new owl.EventBus();
+
+/**
+ * Broadcast a message to every open pos ui from the same config.
+ * Use the `onPosBroadcast` to catch the broadcasted message.
+ *
+ * @param {str} messageName
+ * @param {any} messageValue
+ */
+pos_env.broadcastPosMessage = function (messageName, messageValue) {
+    return this.services.rpc({
+        model: 'pos.config',
+        method: 'broadcast_pos_message',
+        args: [[this.pos.config.id], messageName, messageValue],
+    });
+}
+
 export default pos_env;
