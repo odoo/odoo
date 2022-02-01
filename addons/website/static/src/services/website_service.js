@@ -26,6 +26,7 @@ export const websiteService = {
         let currentWebsiteId;
         let currentMetadata = {};
         let fullscreen;
+        let pageDocument;
         const context = reactive({
             showNewContentModal: false,
         });
@@ -51,10 +52,6 @@ export const websiteService = {
             set currentWebsiteId(id) {
                 setCurrentWebsiteId(id);
             },
-            set currentMetadata(metadata) {
-                currentMetadata = metadata;
-                websiteSystrayRegistry.trigger('CONTENT-UPDATED');
-            },
             get currentWebsite() {
                 const currentWebsite = websites.find(w => w.id === currentWebsiteId);
                 if (currentWebsite) {
@@ -67,6 +64,26 @@ export const websiteService = {
             },
             get context() {
                 return context;
+            },
+            set pageDocument(document) {
+                pageDocument = document;
+                if (!document) {
+                    return;
+                }
+                const { mainObject, seoObject, isPublished, canPublish, editableInBackend } = document.documentElement.dataset;
+                currentMetadata = {
+                    path: document.location.href,
+                    mainObject: unslugHtmlDataObject(mainObject),
+                    seoObject: unslugHtmlDataObject(seoObject),
+                    isPublished: isPublished === 'True',
+                    canPublish: canPublish === 'True',
+                    editableInBackend: editableInBackend === 'True',
+                    title: document.title,
+                };
+                websiteSystrayRegistry.trigger('CONTENT-UPDATED');
+            },
+            get pageDocument() {
+                return pageDocument;
             },
             goToWebsite({ websiteId = currentWebsiteId || websites[0].id, path = '/' } = {}) {
                 action.doAction('website.website_preview', {
