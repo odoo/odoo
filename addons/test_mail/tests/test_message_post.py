@@ -15,6 +15,8 @@ from odoo.tests import tagged
 from odoo.tools import mute_logger, formataddr
 from odoo.tests.common import users
 
+from markupsafe import escape
+
 
 @tagged('mail_post')
 class TestMessagePost(TestMailCommon, TestRecipients):
@@ -107,6 +109,18 @@ class TestMessagePost(TestMailCommon, TestRecipients):
         found_mail = self._new_mails
         self.assertNotIn(signature, found_mail.body_html)
         self.assertEqual(found_mail.body_html.count(signature), 0)
+
+    @users('employee')
+    def test_notify_by_email_add_signature_no_author_user_or_no_user(self):
+        self.test_message.author_id = self.env['res.partner'].sudo().create({
+            'name': 'Steve',
+        }).id
+        template_values = self.test_record._notify_by_email_prepare_rendering_context(self.test_message, {})
+        self.assertNotEqual(escape(template_values['signature']), escape('<p>-- <br/>Steve</p>'))
+
+        self.test_message.author_id = None
+        template_values = self.test_record._notify_by_email_prepare_rendering_context(self.test_message, {})
+        self.assertEqual(template_values['signature'], '')
 
     @users('employee')
     def test_notify_by_email_prepare_rendering_contextt(self):
