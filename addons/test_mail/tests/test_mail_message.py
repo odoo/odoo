@@ -7,8 +7,8 @@ from unittest.mock import patch
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.test_mail.tests.common import TestMailCommon
 from odoo.addons.test_mail.models.test_mail_models import MailTestSimple
-from odoo.exceptions import AccessError
-from odoo.tools import mute_logger, formataddr
+from odoo.exceptions import AccessError, UserError
+from odoo.tools import is_html_empty, mute_logger, formataddr
 from odoo.tests import tagged, users
 
 
@@ -25,6 +25,75 @@ class TestMessageValues(TestMailCommon):
             'alias_contact': 'followers',
         })
         cls.Message = cls.env['mail.message'].with_user(cls.user_employee)
+
+    @users('employee')
+    def test_empty_message(self):
+        """ Test that message is correctly considered as empty (see `_filter_empty()`).
+        Message considered as empty if:
+            - no body or empty body
+            - AND no subtype or no subtype description
+            - AND no tracking values
+            - AND no attachment
+
+        Check _update_content behavior when voiding messages (cleanup side
+        records: stars, notifications).
+        """
+        note_subtype = self.env.ref('mail.mt_note')
+        _attach_1 = self.env['ir.attachment'].with_user(self.user_employee).create({
+            'name': 'Attach1',
+            'datas': 'bWlncmF0aW9uIHRlc3Q=',
+            'res_id': 0,
+            'res_model': 'mail.compose.message',
+        })
+        record = self.env['mail.test.track'].create({'name': 'EmptyTesting'})
+        self.flush_tracking()
+        record.message_subscribe(partner_ids=self.partner_admin.ids, subtype_ids=note_subtype.ids)
+        message = record.message_post(
+            attachment_ids=_attach_1.ids,
+            body='Test',
+            message_type='comment',
+            subtype_id=note_subtype.id,
+        )
+        message.write({'starred_partner_ids': [(4, self.partner_admin.id)]})
+
+        # check content
+        self.assertEqual(len(message.attachment_ids), 1)
+        self.assertFalse(is_html_empty(message.body))
+        self.assertEqual(len(message.sudo().notification_ids), 1)
+        self.assertEqual(message.notified_partner_ids, self.partner_admin)
+        self.assertEqual(message.starred_partner_ids, self.partner_admin)
+        self.assertFalse(message.sudo().tracking_value_ids)
+
+        # Reset body case
+        message._update_content('<p><br /></p>', attachment_ids=message.attachment_ids.ids)
+        self.assertTrue(is_html_empty(message.body))
+        self.assertFalse(message.sudo()._filter_empty(), 'Still having attachments')
+
+        # Subtype content
+        note_subtype.write({'description': 'Very important discussions'})
+        message._update_content('', None)
+        self.assertFalse(message.attachment_ids)
+        self.assertEqual(message.notified_partner_ids, self.partner_admin)
+        self.assertEqual(message.starred_partner_ids, self.partner_admin)
+        self.assertFalse(message.sudo()._filter_empty(), 'Subtype with description')
+
+        # Completely void now
+        note_subtype.write({'description': ''})
+        self.assertEqual(message.sudo()._filter_empty(), message)
+        message._update_content('', None)
+        self.assertFalse(message.notified_partner_ids)
+        self.assertFalse(message.starred_partner_ids)
+
+        # test tracking values
+        record.write({'user_id': self.user_admin.id})
+        self.flush_tracking()
+        tracking_message = record.message_ids[0]
+        self.assertFalse(tracking_message.attachment_ids)
+        self.assertTrue(is_html_empty(tracking_message.body))
+        self.assertFalse(tracking_message.subtype_id.description)
+        self.assertFalse(tracking_message.sudo()._filter_empty(), 'Has tracking values')
+        with self.assertRaises(UserError, msg='Tracking values prevent from updating content'):
+            tracking_message._update_content('', None)
 
     @mute_logger('odoo.models.unlink')
     def test_mail_message_format(self):
