@@ -384,21 +384,12 @@ function classToStyle($editable, cssRules) {
  * will be computed for the editable element's owner document.
  *
  * @param {JQuery} $editable
- * @param {Object[]} [cssRules] Array<{selector: string;
- *                                   style: {[styleName]: string};
- *                                   specificity: number;}>
  * @param {JQuery} [$iframe] the iframe containing the editable, if any
  */
-function toInline($editable, cssRules, $iframe) {
+function toInline($editable, $iframe) {
     const editable = $editable.get(0);
     const iframe = $iframe && $iframe.get(0);
-    const doc = editable.ownerDocument;
-    cssRules = cssRules || doc._rulesCache;
-    if (!cssRules) {
-        cssRules = getCSSRules(doc);
-        doc._rulesCache = cssRules;
-    }
-
+    const cssRules = getCSSRules($editable[0].ownerDocument);
     // If the editable is not visible, we need to make it visible in order to
     // retrieve image/icon dimensions. This iterates over ancestors to make them
     // visible again. We then restore it at the end of this function.
@@ -629,6 +620,8 @@ function formatTables($editable) {
         }
     }
 }
+
+let cssRulesCache;
 /**
  * Parse through the given document's stylesheets, preprocess(*) them and return
  * the result as an array of objects, each containing a selector string , a
@@ -642,7 +635,11 @@ function formatTables($editable) {
  *                            specificity: number;}>
  */
 function getCSSRules(doc) {
-    const cssRules = [];
+    if (cssRulesCache) {
+        return cssRulesCache;
+    }
+    cssRulesCache = [];
+    const cssRules = cssRulesCache;
     for (const sheet of doc.styleSheets) {
         // try...catch because browser may not able to enumerate rules for cross-domain sheets
         let rules;
@@ -775,6 +772,12 @@ function normalizeRem($editable, rootFontSize=16) {
             node.setAttribute('style', node.getAttribute('style').replace(rem, pxValue + 'px'));
         }
     }
+}
+/**
+ * Reset the CSS Rules cache.
+ */
+function resetCssRulesCache() {
+    cssRulesCache = undefined;
 }
 
 //--------------------------------------------------------------------------
@@ -1117,7 +1120,7 @@ FieldHtml.include({
         $odooEditor.removeClass('odoo-editor');
         $editable.html(html);
 
-        toInline($editable, this.cssRules, this.wysiwyg.$iframe);
+        toInline($editable, this.wysiwyg.$iframe);
         $odooEditor.addClass('odoo-editor');
 
         this.wysiwyg.setValue($editable.html(), {
@@ -1138,5 +1141,6 @@ export default {
     listGroupToTable: listGroupToTable,
     normalizeColors: normalizeColors,
     normalizeRem: normalizeRem,
+    resetCssRulesCache: resetCssRulesCache,
     toInline: toInline,
 };
