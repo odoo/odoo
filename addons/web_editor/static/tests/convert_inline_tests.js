@@ -584,12 +584,14 @@ QUnit.module('convert_inline', {}, function () {
                 border-top-left-radius: 40%;
             }
         `, 0);
+        convertInline.resetCssRulesCache();
         let $editable = $(`<div>${`<div class="test-border-radius"></div>`}</div>`);
         convertInline.classToStyle($editable, convertInline.getCSSRules($editable[0].ownerDocument));
         assert.strictEqual($editable.html(),
             `<div class="test-border-radius" style="border-radius:30%;"></div>`,
             "should have converted border-[position]-radius styles (from class) to border-radius");
         styleSheet.deleteRule(0);
+        convertInline.resetCssRulesCache();
 
         // convert all positional styles to a style in the form `property: a b c d`
 
@@ -606,6 +608,7 @@ QUnit.module('convert_inline', {}, function () {
             `<div class="test-border" style="border-style:dotted dashed none solid;"></div>`,
             "should have converted border-[position]-style styles (from class) to border-style");
         styleSheet.deleteRule(0);
+        convertInline.resetCssRulesCache();
 
         styleSheet.insertRule(`
             .test-margin {
@@ -620,6 +623,7 @@ QUnit.module('convert_inline', {}, function () {
             `<div class="test-margin" style="margin:0 20px 30px 40px;"></div>`,
             "should have converted margin-[position] styles (from class) to margin");
         styleSheet.deleteRule(0);
+        convertInline.resetCssRulesCache();
 
         styleSheet.insertRule(`
             .test-padding {
@@ -634,6 +638,7 @@ QUnit.module('convert_inline', {}, function () {
             `<div class="test-padding" style="padding:10px 0 30px 40px;"></div>`,
             "should have converted padding-[position] styles (from class) to padding");
         styleSheet.deleteRule(0);
+        convertInline.resetCssRulesCache();
 
         // convert all positional styles to a style in the form `property: a`
 
@@ -651,6 +656,7 @@ QUnit.module('convert_inline', {}, function () {
             `<div class="test-border-uniform" style="border-style:dotted;"></div>`,
             "should have converted uniform border-[position]-style styles (from class) to border-style");
         styleSheet.deleteRule(0);
+        convertInline.resetCssRulesCache();
 
         styleSheet.insertRule(`
             .test-margin-uniform {
@@ -666,6 +672,7 @@ QUnit.module('convert_inline', {}, function () {
             `<div class="test-margin-uniform" style="margin:10px;"></div>`,
             "should have converted uniform margin-[position] styles (from class) to margin");
         styleSheet.deleteRule(0);
+        convertInline.resetCssRulesCache();
 
         styleSheet.insertRule(`
             .test-padding-uniform {
@@ -681,6 +688,7 @@ QUnit.module('convert_inline', {}, function () {
             `<div class="test-padding-uniform" style="padding:10px;"></div>`,
             "should have converted uniform padding-[position] styles (from class) to padding");
         styleSheet.deleteRule(0);
+        convertInline.resetCssRulesCache();
 
         // do not convert positional styles that include an "inherit" value
 
@@ -698,6 +706,7 @@ QUnit.module('convert_inline', {}, function () {
             `<div class="test-border-inherit" style="border-left-style:solid;border-bottom-style:inherit;border-right-style:dashed;border-top-style:dotted;"></div>`,
             "should not have converted border-[position]-style styles (from class) to border-style as they include an inherit");
         styleSheet.deleteRule(0);
+        convertInline.resetCssRulesCache();
 
         styleSheet.insertRule(`
             .test-margin-inherit {
@@ -713,6 +722,7 @@ QUnit.module('convert_inline', {}, function () {
             `<div class="test-margin-inherit" style="margin-left:40px;margin-bottom:30px;margin-right:inherit;margin-top:10px;"></div>`,
             "should not have converted margin-[position] styles (from class) to margin as they include an inherit");
         styleSheet.deleteRule(0);
+        convertInline.resetCssRulesCache();
 
         styleSheet.insertRule(`
             .test-padding-inherit {
@@ -728,6 +738,7 @@ QUnit.module('convert_inline', {}, function () {
             `<div class="test-padding-inherit" style="padding-left:40px;padding-bottom:inherit;padding-right:20px;padding-top:10px;"></div>`,
             "should have converted padding-[position] styles (from class) to padding as they include an inherit");
         styleSheet.deleteRule(0);
+        convertInline.resetCssRulesCache();
 
         // do not convert positional styles that include an "initial" value
 
@@ -747,6 +758,7 @@ QUnit.module('convert_inline', {}, function () {
             `<div class="test-margin-initial" style="margin-left:40px;margin-bottom:30px;margin-right:20px;margin-top:initial;"></div>`,
             "should not have converted margin-[position] styles (from class) to margin as they include an initial");
         styleSheet.deleteRule(0);
+        convertInline.resetCssRulesCache();
 
         styleSheet.insertRule(`
             .test-padding-initial {
@@ -762,6 +774,7 @@ QUnit.module('convert_inline', {}, function () {
             `<div class="test-padding-initial" style="padding-left:initial;padding-bottom:30px;padding-right:20px;padding-top:10px;"></div>`,
             "should not have converted padding-[position] styles (from class) to padding as they include an initial");
         styleSheet.deleteRule(0);
+        convertInline.resetCssRulesCache();
 
         $styleSheet.remove();
     });
@@ -781,12 +794,14 @@ QUnit.module('convert_inline', {}, function () {
                 text-decoration-thickness: 10px;
             }
         `, 0);
+        convertInline.resetCssRulesCache();
         let $editable = $(`<div>${`<div class="test-decoration"></div>`}</div>`);
         convertInline.classToStyle($editable, convertInline.getCSSRules($editable[0].ownerDocument));
         assert.strictEqual($editable.html(),
             `<div class="test-decoration" style="text-decoration:underline;"></div>`,
             "should have removed all text-decoration-[prop] styles (from class) and kept a simple text-decoration");
         styleSheet.deleteRule(0);
+        convertInline.resetCssRulesCache();
 
         // border[\w-]*: initial
         styleSheet.insertRule(`
@@ -803,6 +818,7 @@ QUnit.module('convert_inline', {}, function () {
             `<div class="test-border-initial" style="border-bottom-style:double;border-right-style:dashed;border-top-style:dotted;"></div>`,
             "should have removed border initial");
         styleSheet.deleteRule(0);
+        convertInline.resetCssRulesCache();
 
         // !important
         styleSheet.insertRule(`
@@ -820,6 +836,7 @@ QUnit.module('convert_inline', {}, function () {
                 color: red !important;
             }
         `, 0);
+        convertInline.resetCssRulesCache();
         $editable = $(`<div>${`<div class="test-important-color test-unimportant-color"></div>`}</div>`);
         convertInline.classToStyle($editable, convertInline.getCSSRules($editable[0].ownerDocument));
         assert.strictEqual($editable.html(),
@@ -827,6 +844,7 @@ QUnit.module('convert_inline', {}, function () {
             "should have converted an important color and removed the !important");
         styleSheet.deleteRule(0);
         styleSheet.deleteRule(0);
+        convertInline.resetCssRulesCache();
 
         // animation
         styleSheet.insertRule(`
@@ -850,12 +868,14 @@ QUnit.module('convert_inline', {}, function () {
                 animation-direction: alternate;
             }
         `, 0);
+        convertInline.resetCssRulesCache();
         $editable = $(`<div>${`<div class="test-animation-specific"></div>`}</div>`);
         convertInline.classToStyle($editable, convertInline.getCSSRules($editable[0].ownerDocument));
         assert.strictEqual($editable.html(),
             `<div class="test-animation-specific"></div>`,
             "should have removed all specific animation styles");
         styleSheet.deleteRule(0);
+        convertInline.resetCssRulesCache();
 
         // flex
         styleSheet.insertRule(`
@@ -864,6 +884,7 @@ QUnit.module('convert_inline', {}, function () {
                 flex-flow: column wrap;
             }
         `, 0);
+        convertInline.resetCssRulesCache();
         $editable = $(`<div>${`<div class="test-flex"></div>`}</div>`);
         convertInline.classToStyle($editable, convertInline.getCSSRules($editable[0].ownerDocument));
         assert.strictEqual($editable.html(),
@@ -880,12 +901,14 @@ QUnit.module('convert_inline', {}, function () {
                 flex-grow: 4;
             }
         `, 0);
+        convertInline.resetCssRulesCache();
         $editable = $(`<div>${`<div class="test-flex-specific"></div>`}</div>`);
         convertInline.classToStyle($editable, convertInline.getCSSRules($editable[0].ownerDocument));
         assert.strictEqual($editable.html(),
             `<div class="test-flex-specific"></div>`,
             "should have removed all specific flex styles");
         styleSheet.deleteRule(0);
+        convertInline.resetCssRulesCache();
 
         $styleSheet.remove();
     });
@@ -913,6 +936,7 @@ QUnit.module('convert_inline', {}, function () {
             `<div class="o_layout" style="font-size:50px;color:white;background-color:red;padding: 50px;"></div>`,
             "should have given all styles of body to .o_layout");
         styleSheet.deleteRule(0);
+        convertInline.resetCssRulesCache();
 
         $iframe.remove();
     });
@@ -963,6 +987,7 @@ QUnit.module('convert_inline', {}, function () {
             }
         `, 0);
         $editable = $(`<div><div class="test-color"></div></div>`);
+        convertInline.resetCssRulesCache();
         convertInline.classToStyle($editable, convertInline.getCSSRules($editable[0].ownerDocument));
         assert.strictEqual($editable.html(),
             `<div class="test-color" style="color:black;"></div>`,
@@ -972,6 +997,7 @@ QUnit.module('convert_inline', {}, function () {
         styleSheet.deleteRule(0);
         styleSheet.deleteRule(0);
         styleSheet.deleteRule(0);
+        convertInline.resetCssRulesCache();
 
         $styleSheet.remove();
     });
