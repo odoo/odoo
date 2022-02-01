@@ -210,8 +210,7 @@ class AccountEdiFormat(models.Model):
         invoice.move_type = default_move_type
 
         # self could be a single record (editing) or be empty (new).
-        with Form(invoice.with_context(default_move_type=default_move_type,
-                                       account_predictive_bills_disable_prediction=True)) as invoice_form:
+        with Form(invoice.with_context(default_move_type=default_move_type)) as invoice_form:
             self_ctx = self.with_company(invoice.company_id)
 
             # Partner (first step to avoid warning 'Warning! You must first select a partner.').
