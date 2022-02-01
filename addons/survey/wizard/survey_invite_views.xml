@@ -45,7 +45,7 @@
                             <field name="subject" placeholder="Subject..."/>
                         </group>
                         <field name="can_edit_body" invisible="1"/>
-                        <field name="body" options="{'style-inline': true, 'height': 380}" attrs="{'readonly': [('can_edit_body', '=', False)]}" force_save="1"/>
+                        <field name="body" class="oe-bordered-editor" options="{'style-inline': true, 'height': 380}" attrs="{'readonly': [('can_edit_body', '=', False)]}" force_save="1"/>
                         <group>
                             <group>
                                 <field name="attachment_ids" widget="many2many_binary"/>
