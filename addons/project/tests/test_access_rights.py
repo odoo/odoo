@@ -3,8 +3,9 @@
 
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.project.tests.test_project_base import TestProjectCommon
+from odoo import Command
 from odoo.exceptions import AccessError, ValidationError
-from odoo.tests.common import users
+from odoo.tests.common import users, tagged
 from odoo.tools import mute_logger
 
 class TestAccessRights(TestProjectCommon):
@@ -314,3 +315,64 @@ class TestPortalProject(TestProjectPortalCommon):
         # Do: project user can create a task without project
         self.assertRaises(AccessError, self.env['project.task'].with_user(self.user_projectuser).with_context({
             'mail_create_nolog': True}).create, {'name': 'Pigs task', 'project_id': pigs.id})
+
+
+class TestAccessRightsPrivateTask(TestAccessRights):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.private_task = cls.env['project.task'].create({'name': 'OdooBot Private Task'})
+
+    def setUp(self):
+        super().setUp()
+        self.project_user = mail_new_test_user(self.env, 'Project user', groups='project.group_project_user')
+
+    def create_private_task(self, name, with_user=None, **kwargs):
+        values = dict(name=name, **kwargs)
+        return self.env['project.task'].with_user(with_user or self.env.user).create(values)
+
+    @users('Internal user', 'Portal user')
+    def test_internal_cannot_crud_private_task(self):
+        with self.assertRaises(AccessError):
+            self.create_private_task('coucou')
+
+        with self.assertRaises(AccessError):
+            self.private_task.with_user(self.env.user).write({'name': 'blabla'})
+
+        with self.assertRaises(AccessError):
+            self.private_task.with_user(self.env.user).unlink()
+
+        with self.assertRaises(AccessError):
+            self.private_task.with_user(self.env.user).read(['name'])
+
+    @users('Project user')
+    def test_project_user_crud_own_private_task(self):
+        private_task = self.create_private_task('coucou')
+
+        private_task.with_user(self.env.user).write({'name': 'blabla'})
+        vals = private_task.with_user(self.env.user).read(['name'])
+        self.assertEqual(vals[0]['id'], private_task.id)
+        self.assertEqual(vals[0]['name'], private_task.name)
+
+    @users('Project user')
+    def test_project_user_cannot_create_private_task_for_another_user(self):
+        with self.assertRaises(AccessError):
+            task = self.create_private_task('test private for another user', self.env.user, user_ids=[Command.set(self.user_projectuser.ids)])
+            print(task)
+
+    @users('Project user')
+    def test_project_user_cannot_write_private_task_of_another_user(self):
+        with self.assertRaises(AccessError):
+            import pdb; pdb.set_trace()
+            self.private_task.with_user(self.env.user).write({'name': 'blabla'})
+
+    @users('Project user')
+    def test_project_user_cannot_read_private_task_of_another_user(self):
+        with self.assertRaises(AccessError):
+            self.private_task.with_user(self.env.user).read(['name'])
+
+    @users('Project user')
+    def test_project_user_cannot_unlink_private_task_of_another_user(self):
+        with self.assertRaises(AccessError):
+            self.private_task.with_user(self.env.user).unlink()

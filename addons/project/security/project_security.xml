@@ -82,10 +82,12 @@
         <field name="name">Project/Task: employees: follow required for follower-only projects</field>
         <field name="model_id" ref="model_project_task"/>
         <field name="domain_force">[
-        '|',
-            ('project_id.privacy_visibility', '!=', 'followers'),
             '|',
-                ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
+                '&amp;',
+                    ('project_id', '!=', False),
+                    '|',
+                        ('project_id.privacy_visibility', '!=', 'followers'),
+                        ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
                 '|',
                     ('message_partner_ids', 'in', [user.partner_id.id]),
                     # to subscribe check access to the record, follower is not enough at creation
