@@ -14,7 +14,7 @@ class FormViewDialogComponentAdapter extends ComponentAdapter {
         // Ensure the dialog is properly reconstructed. Without this line, it is
         // impossible to open the dialog again after having it closed a first
         // time, because the DOM of the dialog has disappeared.
-        await this.willStart();
+        await this.onWillStart();
         this.props.setFormViewDialogWidget(this.widget);
     }
 

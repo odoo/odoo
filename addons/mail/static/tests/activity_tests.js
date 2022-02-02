@@ -604,11 +604,14 @@ QUnit.test("Activity view: on_destroy_callback doesn't crash", async function (a
     };
 
     patchWithCleanup(ActivityRenderer.prototype, {
-        mounted() {
-            assert.step('mounted');
-        },
-        willUnmount() {
-            assert.step('willUnmount');
+        setup() {
+            this._super();
+            owl.onMounted(() => {
+                assert.step('mounted');
+            });
+            owl.onWillUnmount(() => {
+                assert.step('willUnmount');
+            });
         }
     });
 

@@ -3,7 +3,7 @@
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 import { clear } from '@mail/model/model_field_command';
 
-const { Component, onWillUpdateProps } = owl;
+const { Component, onWillDestroy, onWillUpdateProps } = owl;
 
 const getChatterNextTemporaryId = (function () {
     let tmpId = 0;
@@ -32,6 +32,7 @@ export class ChatterContainer extends Component {
         this.chatterId = getChatterNextTemporaryId();
         this._insertFromProps(this.props);
         onWillUpdateProps(nextProps => this._willUpdateProps(nextProps));
+        onWillDestroy(this._onWillDestroy);
     }
 
     _willUpdateProps(nextProps) {
@@ -41,8 +42,7 @@ export class ChatterContainer extends Component {
     /**
      * @override
      */
-    destroy() {
-        super.destroy();
+    _onWillDestroy() {
         if (this.chatter) {
             this.chatter.delete();
         }
