@@ -589,7 +589,7 @@ class test_m2o(ImporterCase):
         # 1 x RELEASE SAVEPOINT _load_records
         # 1 x RELEASE SAVEPOINT load
         # => 10
-        with self.assertQueryCount(10):
+        with self.assertQueryCount(8):
             result = self.import_(['value'], [
                 # import by name_get
                 [name1],
