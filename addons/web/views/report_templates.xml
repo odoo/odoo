@@ -326,7 +326,7 @@
             <t t-out="0"/>
         </div>
 
-        <div t-attf-class="o_company_#{company.id}_layout footer o_background_footer">
+        <div t-attf-class="o_company_#{company.id}_layout footer o_background_footer" t-att-style="report_footer_style">
             <div class="text-center">
                 <ul class="list-inline">
                     <div t-field="company.report_footer"/>
@@ -366,7 +366,7 @@
             <t t-out="0"/>
         </div>
 
-        <div t-attf-class="footer o_boxed_footer o_company_#{company.id}_layout">
+        <div t-attf-class="footer o_boxed_footer o_company_#{company.id}_layout" t-att-style="report_footer_style">
             <div class="text-center">
                 <div t-field="company.report_footer"/>
                 <div t-if="report_type == 'pdf'">
@@ -405,7 +405,7 @@
             <t t-out="0"/>
         </div>
 
-        <div t-attf-class="footer o_clean_footer o_company_#{company.id}_layout">
+        <div t-attf-class="footer o_clean_footer o_company_#{company.id}_layout" t-att-style="report_footer_style">
             <div class="row">
                 <div class="col-4">
                     <span t-field="company.report_footer"/>
@@ -453,7 +453,7 @@
             <t t-out="0"/>
         </div>
 
-        <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout">
+        <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout" t-att-style="report_footer_style">
             <div class="text-center" style="border-top: 1px solid black;">
                 <ul class="list-inline mb4">
                     <div t-field="company.report_footer"/>
@@ -505,7 +505,7 @@
             </t>
         </t>
 
-        <div class="header">
+        <div class="header" t-att-style="report_header_style">
             <div class="row">
                 <div class="col-3">
                     <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d %H:%M')"/>
