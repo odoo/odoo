@@ -166,6 +166,115 @@ class TestSaleService(TestCommonSaleTimesheet):
         with self.assertRaises(UserError):
             timesheets.write({'so_line': False})
 
+    def test_non_billable_timesheet_task_sol_invoice(self):
+        """ Test correct timesheets are invoiced when different SOL set on tasks/timesheet entrires
+
+            Test Case:
+            =========
+            1) Create SO with three sol (2 timesheet based and 1 prepaid hours)
+            2) Create timesheets in task or make one timesheet non billable
+            3) Check the Recorded hours and Effective hours
+            4) Create invoice and Check correct quantity delievered and invoiced
+            5) Validate the invoice and make sure it shows correct quantity
+        """
+        self.product_delivery_timesheet3.write({'project_template_id': self.project_template.id})
+        product_delivery_timesheet1 = self.env['product.product'].create({
+            'name': "Senior Architect (Invoice on timesheets)",
+            'type': 'service',
+            'service_type': 'timesheet',
+            'service_policy': 'delivered_timesheet',
+            'service_tracking': 'task_in_project',
+            'project_template_id': self.project_template.id,
+        })
+        prepaid_service_product = self.env['product.product'].create({
+            'name': 'Service Product (Prepaid Hours)',
+            'type': 'service',
+            'service_policy': 'ordered_timesheet',
+            'service_tracking': 'task_global_project',
+            'project_id': self.project_global.id,
+        })
+
+        # create SO line and confirm it
+        so_line1 = self.env['sale.order.line'].create({
+            'product_id': self.product_delivery_timesheet3.id,
+            'product_uom_qty': 50,
+            'order_id': self.sale_order.id,
+        })
+        so_line2 = self.env['sale.order.line'].create({
+            'product_id': product_delivery_timesheet1.id,
+            'product_uom_qty': 50,
+            'order_id': self.sale_order.id,
+        })
+        so_line3 = self.env['sale.order.line'].create({
+            'product_id': prepaid_service_product.id,
+            'product_uom_qty': 50,
+            'order_id': self.sale_order.id,
+        })
+        self.sale_order.action_confirm()
+
+        self.assertEqual(so_line1.project_id.sale_line_id, so_line1, "The created project is also linked to its origin sale line, for invoicing purpose.")
+
+        task_serv1 = self.env['project.task'].search([('sale_line_id', '=', so_line1.id)])
+        task_serv2 = self.env['project.task'].search([('sale_line_id', '=', so_line2.id)])
+
+        self.assertEqual(task_serv1.sale_line_id, so_line1, "The created task is also linked to its origin sale line, for invoicing purpose.")
+        self.assertEqual(task_serv2.sale_line_id, so_line2, "The created task is also linked to its origin sale line, for invoicing purpose.")
+
+        # add a timesheets
+        timesheet1 = self.env['account.analytic.line'].create({
+            'name': 'Test Line 1',
+            'project_id': task_serv1.project_id.id,
+            'task_id': task_serv1.id,
+            'unit_amount': 5,
+            'employee_id': self.employee_user.id,
+        })
+        timesheet2 = self.env['account.analytic.line'].create({
+            'name': 'Test Line 2',
+            'project_id': task_serv1.project_id.id,
+            'task_id': task_serv1.id,
+            'unit_amount': 5,
+            'employee_id': self.employee_user.id,
+        })
+        timesheet2.write({'so_line': so_line2.id})
+        timesheet3 = self.env['account.analytic.line'].create({
+            'name': 'Test Line 3',
+            'project_id': task_serv1.project_id.id,
+            'task_id': task_serv1.id,
+            'unit_amount': 5,
+            'employee_id': self.employee_user.id,
+        })
+        timesheet3.write({'so_line': False})
+        timesheet4 = self.env['account.analytic.line'].create({
+            'name': 'Test Line 4',
+            'project_id': task_serv2.project_id.id,
+            'task_id': task_serv2.id,
+            'unit_amount': 5,
+            'employee_id': self.employee_user.id,
+        })
+
+        self.assertEqual(so_line1.qty_delivered, timesheet1.unit_amount, "Delivered quantity should be the same then its only related timesheet.")
+        self.assertEqual(so_line2.qty_delivered, timesheet2.unit_amount + timesheet4.unit_amount, "Delivered quantity should be the sum of the 2 timesheets of unit amounts")
+        self.assertEqual(self.sale_order.project_ids[1].total_timesheet_time, 20, "Check the total recorded hours in project")
+        self.assertEqual(self.sale_order.timesheet_total_duration, 15, "Check recoreded hours should not consider non billable hours")
+        self.assertEqual(self.sale_order.project_ids[1].total_timesheet_time - self.sale_order.timesheet_total_duration, 5, "Check the number of non billable hours")
+
+        invoice1 = self.sale_order._create_invoices()[0]
+
+        self.assertTrue(so_line1.qty_delivered == so_line1.qty_invoiced, "Sale Order line 1 should be invoiced completely")
+        self.assertTrue(so_line2.qty_delivered == so_line2.qty_invoiced, "Sale Order line 2 should be invoiced completely")
+        self.assertEqual(so_line3.qty_delivered, 0, "Sale Order line 3 should be invoiced completely (Prepaid Hours)")
+        self.assertTrue(so_line3.product_uom_qty == so_line3.qty_invoiced, "Sale Order line 3 should be invoiced completely")
+
+        # validate the first invoice
+        invoice1.action_post()
+
+        invoice_line_1 = so_line1.invoice_lines.filtered(lambda line: line.move_id == invoice1)
+        self.assertEqual(invoice_line_1.quantity, 5, "The invoiced quantity should be 5 same as invoiced quantity set on SO line 1")
+        invoice_line_2 = so_line2.invoice_lines.filtered(lambda line: line.move_id == invoice1)
+        self.assertEqual(invoice_line_2.quantity, 10, "The invoiced quantity should be 10 same as invoiced quantity set on SO line 2")
+        invoice_line_3 = so_line3.invoice_lines.filtered(lambda line: line.move_id == invoice1)
+        self.assertEqual(invoice_line_3.quantity, 50, "The invoiced quantity should be 50 same as invoiced quantity set on SO line 3")
+
     def test_delivered_quantity(self):
         # create SO line and confirm it
         so_line_deliver_new_task_project = self.env['sale.order.line'].create({

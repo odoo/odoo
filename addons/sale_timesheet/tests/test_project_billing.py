@@ -442,3 +442,22 @@ class TestProjectBilling(TestCommonSaleTimesheet):
             self.assertEqual(project_form.partner_id, self.so.partner_id, 'The partner should be the one defined the SO linked to the SOL defined in the mapping.')
             project = project_form.save()
             self.assertEqual(project.pricing_type, 'employee_rate', 'Since there is a mapping in this project, the pricing type should be employee rate.')
+
+    def test_project_task_sale_line_mapping(self):
+        """Test the SOL set to user in sale line of project then it should be set by default for same user in task timesheet entries"""
+        task_serv = self.env['project.task'].search([('sale_line_id', '=', self.so2_line_deliver_project_task.id)])
+        self.project_task_rate.write({
+            'sale_line_employee_ids': [(0, 0, {
+                'employee_id': self.employee_manager.id,
+                'sale_line_id': self.so2_line_deliver_project_task.id,
+            })]
+        })
+        timesheet1 = self.env['account.analytic.line'].create({
+            'name': 'Test Line',
+            'project_id': task_serv.project_id.id,
+            'task_id': task_serv.id,
+            'unit_amount': 10.5,
+            'employee_id': self.employee_manager.id,
+        })
+
+        self.assertEqual(self.project_task_rate.sale_line_employee_ids.mapped('sale_line_id'), timesheet1.so_line, "The correct SOL should be set by default on task and timesheet entries")
