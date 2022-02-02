@@ -153,7 +153,7 @@ export class Message extends Component {
                 this.messageView.messageActionList &&
                 (
                     this.messageView.messageActionList.reactionPopoverView ||
-                    this.messageView.messageActionList.showDeleteConfirm
+                    this.messageView.messageActionList.deleteConfirmDialog
                 )
             )
         );
@@ -541,15 +541,6 @@ export class Message extends Component {
             return;
         }
         this.messageView.message.author.openProfile();
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickFailure(ev) {
-        markEventHandled(ev, 'Message.ClickFailure');
-        this.messageView.message.openResendAction();
     }
 
     /**

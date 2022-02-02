@@ -20,18 +20,8 @@ registerModel({
          * @private
          * @param {MouseEvent} ev
          */
-        onClickConfirmDelete(ev) {
-            this.message.updateContent({
-                body: '',
-                attachment_ids: [],
-            });
-        },
-        /**
-         * @private
-         * @param {MouseEvent} ev
-         */
         onClickDelete(ev) {
-            this.update({ showDeleteConfirm: true });
+            this.update({ deleteConfirmDialog: insertAndReplace() });
         },
         /**
          * @private
@@ -84,13 +74,6 @@ registerModel({
         },
         /**
          * @private
-         * @param {CustomEvent} ev
-         */
-        onDeleteConfirmDialogClosed(ev) {
-            this.update({ showDeleteConfirm: false });
-        },
-        /**
-         * @private
          * @returns {boolean}
          */
         _computeHasMarkAsReadIcon() {
@@ -114,21 +97,16 @@ registerModel({
                 )
             );
         },
-        /**
-         * @private
-         * @returns {MessageView}
-         */
-        _computeMessageViewForDelete() {
-            return this.message
-                ? insertAndReplace({ message: replace(this.message) })
-                : clear();
-        },
     },
     fields: {
         /**
          * States the reference to the reaction action in the component.
          */
         actionReactionRef: attr(),
+        deleteConfirmDialog: one('Dialog', {
+            inverse: 'messageActionListOwnerAsDeleteConfirm',
+            isCausal: true,
+        }),
         /**
          * Determines whether this message action list has mark as read icon.
          */
@@ -156,26 +134,11 @@ registerModel({
             required: true,
         }),
         /**
-         * Determines the message view that this message action list will use to
-         * display this message in this delete confirmation dialog.
-         */
-        messageViewForDelete: one('MessageView', {
-            compute: '_computeMessageViewForDelete',
-            inverse: 'messageActionListWithDelete',
-            isCausal: true,
-        }),
-        /**
          * Determines the reaction popover that is active on this message action list.
          */
         reactionPopoverView: one('PopoverView', {
             inverse: 'messageActionListOwnerAsReaction',
             isCausal: true,
-        }),
-        /**
-         * Determines whether to show the message delete-confirm dialog.
-         */
-        showDeleteConfirm: attr({
-            default: false,
         }),
     },
 });

@@ -1,90 +1,32 @@
 /** @odoo-module **/
 
+import { useComponentToModel } from '@mail/component_hooks/use_component_to_model/use_component_to_model';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
-
-import Dialog from 'web.OwlDialog';
 
 const { Component } = owl;
 
-class SnailmailError extends Component {
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
+export class SnailmailError extends Component {
 
     /**
-     * @returns {boolean}
+     * @override
      */
-    get hasCreditsError() {
-        return (
-            this.notification.failure_type === 'sn_credit' ||
-            this.notification.failure_type === 'sn_trial'
-        );
+    setup() {
+        super.setup();
+        useComponentToModel({ fieldName: 'component', modelName: 'SnailmailErrorView' });
     }
 
     /**
-     * @returns {Message}
+     * @returns {SnailmailErrorView}
      */
-    get message() {
-        return this.messaging && this.messaging.models['Message'].get(this.props.messageLocalId);
-    }
-
-    /**
-     * @returns {Notification}
-     */
-    get notification() {
-        // Messages from snailmail are considered to have at most one notification.
-        return this.message.notifications[0];
-    }
-
-    /**
-     * @returns {string}
-     */
-    get title() {
-        return this.env._t("Failed letter");
-    }
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     */
-    _onClickCancelLetter() {
-        this.root.comp._close();
-        this.message.cancelLetter();
-    }
-
-    /**
-     * @private
-     */
-    _onClickClose() {
-        this.root.comp._close();
-    }
-
-    /**
-     * @private
-     */
-    _onClickResendLetter() {
-        this.root.comp._close();
-        this.message.resendLetter();
+    get snailmailErrorView() {
+        return this.messaging && this.messaging.models['SnailmailErrorView'].get(this.props.localId);
     }
 
 }
 
 Object.assign(SnailmailError, {
-    components: { Dialog },
-    props: {
-        messageLocalId: String,
-        onClosed: {
-            type: Function,
-            optional: true,
-        },
-    },
+    props: { localId: String },
     template: 'snailmail.SnailmailError',
 });
 
 registerMessagingComponent(SnailmailError);
-
-export default SnailmailError;

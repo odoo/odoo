@@ -16,12 +16,6 @@
             <t t-else="">$0</t>
         </xpath>
 
-        <xpath expr="//*[@name='rootCondition']" position="inside">
-            <t t-if="snailmailState.hasDialog">
-                <SnailmailError messageLocalId="messageView.message.localId" onClosed="_onDialogClosedSnailmailError"/>
-            </t>
-        </xpath>
-
         <!--
             It was decided that the information displayed for snailmail messages
             has to be different than for standard messages, see task-1907998.
