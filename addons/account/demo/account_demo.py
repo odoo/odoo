@@ -30,6 +30,7 @@ class AccountChartTemplate(models.Model):
     def _get_demo_data_move(self):
         cid = self.env.company.id
         ref = self.env.ref
+        fifteen_months_ago = fields.Date.today() + relativedelta(months=-15)
         return ('account.move', {
             f'{cid}_demo_invoice_1': {
                 'move_type': 'out_invoice',
@@ -90,10 +91,10 @@ class AccountChartTemplate(models.Model):
             },
             f'{cid}_demo_invoice_equipment_purchase': {
                 'move_type': 'in_invoice',
-                'ref': 'INV/2018/0057',
+                'ref': f'INV/{fifteen_months_ago.year}/0057',
                 'partner_id': ref('base.res_partner_12').id,
                 'invoice_user_id': False,
-                'invoice_date': '2018-09-17',
+                'invoice_date': fifteen_months_ago.strftime("%Y-%m-17"),
                 'invoice_line_ids': [
                     Command.create({'name': 'Redeem Reference Number: PO02529', 'quantity': 1, 'price_unit': 541.10}),
                 ],
