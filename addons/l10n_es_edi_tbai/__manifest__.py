@@ -43,7 +43,8 @@
         'wizards/account_invoice_refund_views.xml',
     ],
     'demo': [
-        'demo/demo_company.xml'
+        'demo/demo_company.xml',
+        'demo/demo_res_partner.xml',
     ],
     'post_init_hook': '_l10n_es_tbai_post_init',
     'license': 'LGPL-3',
