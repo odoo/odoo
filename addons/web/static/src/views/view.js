@@ -9,7 +9,7 @@ import { WithSearch } from "@web/search/with_search/with_search";
 import { useActionLinks } from "@web/views/helpers/view_hook";
 import { extractLayoutComponents } from "@web/views/layout";
 
-const { Component, useSubEnv } = owl;
+const { Component, onWillUpdateProps, onWillStart, useSubEnv } = owl;
 const viewRegistry = registry.category("views");
 
 /** @typedef {Object} Config
@@ -153,9 +153,12 @@ export class View extends Component {
         });
 
         useActionLinks({ resModel });
+
+        onWillStart(this.onWillStart);
+        onWillUpdateProps(this.onWillUpdateProps);
     }
 
-    async willStart() {
+    async onWillStart() {
         // determine view type
         let ViewClass = viewRegistry.get(this.props.type);
         const type = ViewClass.type;
@@ -309,7 +312,7 @@ export class View extends Component {
         }
     }
 
-    async willUpdateProps(nextProps) {
+    async onWillUpdateProps(nextProps) {
         // we assume that nextProps can only vary in the search keys:
         // comparison, context, domain, groupBy, orderBy
         const { comparison, context, domain, groupBy, orderBy } = nextProps;

@@ -333,9 +333,9 @@ QUnit.module("ActionManager", (hooks) => {
                 const { breadcrumbs } = this.env.config;
                 assert.strictEqual(breadcrumbs.length, 2);
                 assert.strictEqual(breadcrumbs[0].name, "Favorite Ponies");
-            }
-            mounted() {
-                this.env.config.setDisplayName(this.breadcrumbTitle);
+                owl.onMounted(() => {
+                    this.env.config.setDisplayName(this.breadcrumbTitle);
+                });
             }
             onClick() {
                 this.breadcrumbTitle = "newOwlTitle";

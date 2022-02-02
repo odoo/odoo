@@ -89,17 +89,19 @@ const getCounters = (v) => (isNaN(v[1]) ? null : Number(v[1]));
 const makeTestComponent = ({ onWillStart, onWillUpdateProps } = {}) => {
     let domain;
     class TestComponent extends Component {
-        async willStart() {
-            if (onWillStart) {
-                await onWillStart();
-            }
-            domain = this.props.domain;
-        }
-        async willUpdateProps(nextProps) {
-            if (onWillUpdateProps) {
-                await onWillUpdateProps();
-            }
-            domain = nextProps.domain;
+        setup() {
+            owl.onWillStart(async () => {
+                if (onWillStart) {
+                    await onWillStart();
+                }
+                domain = this.props.domain;
+            });
+            owl.onWillUpdateProps(async (nextProps) => {
+                if (onWillUpdateProps) {
+                    await onWillUpdateProps();
+                }
+                domain = nextProps.domain;
+            });
         }
     }
 

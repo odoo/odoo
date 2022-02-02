@@ -15,7 +15,7 @@ import {
 import { registry } from "@web/core/registry";
 import { loadPublicAsset } from "@web/core/assets";
 
-const { Component, xml } = owl;
+const { Component, xml, onWillStart } = owl;
 const viewRegistry = registry.category("views");
 
 function getJsClassWidget(fieldsInfo) {
@@ -93,9 +93,10 @@ function registerView(name, LegacyView) {
                 getGlobalState: () => getGlobalState(legacyRefs.component.exportState()),
                 getLocalState: () => getLocalState(legacyRefs.component.exportState()),
             });
+            onWillStart(this.onWillStart);
         }
 
-        async willStart() {
+        async onWillStart() {
             const params = {
                 resModel: this.props.resModel,
                 views: this.props.views,

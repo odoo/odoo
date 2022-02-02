@@ -19,7 +19,7 @@ import {
     toggleMenuItem,
 } from "./helpers";
 
-const { Component, xml } = owl;
+const { Component, onWillUpdateProps, xml } = owl;
 const serviceRegistry = registry.category("services");
 const viewRegistry = registry.category("views");
 const favoriteMenuRegistry = registry.category("favoriteMenu");
@@ -135,9 +135,9 @@ QUnit.module("Search", (hooks) => {
             class ToyView extends Component {
                 setup() {
                     assert.deepEqual(this.props.domain, [["foo", "=", "qsdf"]]);
-                }
-                willUpdateProps(nextProps) {
-                    assert.deepEqual(nextProps.domain, []);
+                    onWillUpdateProps((nextProps) => {
+                        assert.deepEqual(nextProps.domain, []);
+                    });
                 }
             }
             ToyView.components = { FavoriteMenu, SearchBar };

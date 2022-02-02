@@ -4,7 +4,7 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { escape, sprintf } from "@web/core/utils/strings";
 
-const { Component, xml } = owl;
+const { Component, onMounted, xml } = owl;
 
 export const displayNotificationAction = (env, action) => {
     const params = action.params || {};
@@ -27,9 +27,10 @@ registry.category("actions").add("display_notification", displayNotificationActi
 class InvalidAction extends Component {
     setup() {
         this.notification = useService("notification");
+        onMounted(this.onMounted);
     }
 
-    mounted() {
+    onMounted() {
         const message = sprintf(
             this.env._t("No action with id '%s' could be found"),
             this.props.actionId

@@ -295,16 +295,16 @@ QUnit.module("Components", (hooks) => {
                     document,
                     "UI active element should be the default (document) as Parent is not mounted yet"
                 );
+                owl.onMounted(() => {
+                    assert.strictEqual(
+                        this.ui.activeElement,
+                        this.modal,
+                        "UI active element should be the dialog modal"
+                    );
+                });
             }
             setModalRef(modalEl) {
                 this.modal = modalEl;
-            }
-            mounted() {
-                assert.strictEqual(
-                    this.ui.activeElement,
-                    this.modal,
-                    "UI active element should be the dialog modal"
-                );
             }
         }
         const env = await makeTestEnv();

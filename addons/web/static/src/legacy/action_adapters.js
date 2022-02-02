@@ -218,7 +218,7 @@ export class ClientActionAdapter extends ActionAdapter {
         return this.props.widgetArgs[0].jsId;
     }
 
-    async willStart() {
+    async onWillStart() {
         if (this.props.widget) {
             this.widget = this.props.widget;
             this.widget.setParent(this);
@@ -227,7 +227,7 @@ export class ClientActionAdapter extends ActionAdapter {
             }
             return this.updateWidget();
         }
-        return super.willStart();
+        return super.onWillStart();
     }
 
     /**
@@ -309,7 +309,7 @@ export class ViewAdapter extends ActionAdapter {
         return this.props.viewParams.action.jsId;
     }
 
-    async willStart() {
+    async onWillStart() {
         if (this.props.widget) {
             this.widget = this.props.widget;
             this.widget.setParent(this);

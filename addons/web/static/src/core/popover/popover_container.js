@@ -2,18 +2,20 @@
 
 import { Popover } from "./popover";
 
-const { Component, useExternalListener, useState, xml } = owl;
+const { Component, onMounted, onWillUnmount, useExternalListener, useState, xml } = owl;
 
 class PopoverController extends Component {
     setup() {
         this.state = useState({ displayed: false });
         this.targetObserver = new MutationObserver(this.onTargetMutate.bind(this));
         useExternalListener(window, "click", this.onClickAway, { capture: true });
+        onMounted(this.onMounted);
+        onWillUnmount(this.onWillUnmount);
     }
-    mounted() {
+    onMounted() {
         this.targetObserver.observe(this.target.parentElement, { childList: true });
     }
-    willUnmount() {
+    onWillUnmount() {
         this.targetObserver.disconnect();
     }
 

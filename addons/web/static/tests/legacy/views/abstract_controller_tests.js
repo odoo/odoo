@@ -10,7 +10,7 @@ const AbstractRenderer = require('web.AbstractRendererOwl');
 const RendererWrapper = require('web.RendererWrapper');
 const { nextTick } = require('web.test_utils');
 
-const { xml, onWillDestroy } = owl;
+const { xml, onMounted, onWillUnmount, onWillDestroy } = owl;
 
 function getHtmlRenderer(html) {
     return BasicRenderer.extend({
@@ -144,11 +144,13 @@ QUnit.module("Views", {
         assert.expect(3);
 
         class Renderer extends AbstractRenderer {
-            mounted() {
-                assert.step("mounted");
-            }
-            willUnmount() {
-                assert.step("unmounted");
+            setup() {
+                onMounted(() => {
+                    assert.step("mounted");
+                });
+                onWillUnmount(() => {
+                    assert.step("unmounted");
+                });
             }
         }
         Renderer.template = xml`<div>Test</div>`;

@@ -14,7 +14,7 @@ import { View } from "@web/views/view";
 import { ActionDialog } from "./action_dialog";
 import { CallbackRecorder } from "./action_hook";
 
-const { Component, markup, useChildSubEnv, xml } = owl;
+const { Component, markup, onMounted, onWillUnmount, onError, useChildSubEnv, xml } = owl;
 
 const actionHandlersRegistry = registry.category("action_handlers");
 const actionRegistry = registry.category("actions");
@@ -579,8 +579,12 @@ function makeActionManager(env) {
                     });
                 }
                 this.isMounted = false;
+
+                onMounted(this.onMounted);
+                onWillUnmount(this.onWillUnmount);
+                onError(this.onError);
             }
-            catchError(error) {
+            onError(error) {
                 reject(error);
                 cleanDomFromBootstrap();
                 if (action.target === "new") {
@@ -608,7 +612,7 @@ function makeActionManager(env) {
                     env.bus.trigger("ACTION_MANAGER:UPDATE", info);
                 }
             }
-            mounted() {
+            onMounted() {
                 if (action.target === "new") {
                     dialogCloseProm = new Promise((_r) => {
                         dialogCloseResolve = _r;
@@ -664,7 +668,7 @@ function makeActionManager(env) {
                 env.bus.trigger("ACTION_MANAGER:UI-UPDATED", _getActionMode(action));
                 this.isMounted = true;
             }
-            willUnmount() {
+            onWillUnmount() {
                 if (action.target === "new" && dialogCloseResolve) {
                     dialogCloseResolve();
                 }

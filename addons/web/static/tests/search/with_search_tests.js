@@ -270,11 +270,13 @@ QUnit.module("Search", (hooks) => {
             assert.expect(2);
 
             class TestComponent extends Component {
-                async willStart() {
-                    assert.deepEqual(this.props.domain, []);
-                }
-                async willUpdateProps(nextProps) {
-                    assert.deepEqual(nextProps.domain, [[1, "=", 1]]);
+                setup() {
+                    owl.onWillStart(() => {
+                        assert.deepEqual(this.props.domain, []);
+                    });
+                    owl.onWillUpdateProps((nextProps) => {
+                        assert.deepEqual(nextProps.domain, [[1, "=", 1]]);
+                    });
                 }
             }
             TestComponent.components = { FilterMenu };

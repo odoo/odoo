@@ -4,7 +4,7 @@ import { loadAssets } from "@web/core/assets";
 import { useService } from "@web/core/utils/hooks";
 import { useActionLinks } from "@web/views/helpers/view_hook";
 
-const { Component, markup, xml } = owl;
+const { Component, markup, onWillStart, xml } = owl;
 
 export class OnboardingBanner extends Component {
     setup() {
@@ -18,9 +18,11 @@ export class OnboardingBanner extends Component {
                 this.render();
             },
         });
+
+        onWillStart(this.onWillStart);
     }
 
-    async willStart() {
+    async onWillStart() {
         this.bannerHTML = await this.loadBanner(this.env.config.bannerRoute);
     }
 

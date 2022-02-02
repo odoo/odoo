@@ -4,7 +4,15 @@ import { localization } from "@web/core/l10n/localization";
 import { registry } from "@web/core/registry";
 import { useAutofocus } from "@web/core/utils/hooks";
 
-const { Component, useExternalListener, useRef, useState } = owl;
+const {
+    Component,
+    onMounted,
+    onWillUpdateProps,
+    onWillUnmount,
+    useExternalListener,
+    useRef,
+    useState,
+} = owl;
 const { DateTime } = luxon;
 
 const formatters = registry.category("formatters");
@@ -53,9 +61,13 @@ export class DatePicker extends Component {
 
         useAutofocus();
         useExternalListener(window, "scroll", this.onWindowScroll);
+
+        onMounted(this.onMounted);
+        onWillUpdateProps(this.onWillUpdateProps);
+        onWillUnmount(this.onWillUnmount);
     }
 
-    mounted() {
+    onMounted() {
         window.$(this.el).on("show.datetimepicker", () => this.inputRef.el.select());
         window.$(this.el).on("hide.datetimepicker", () => this.onDateChange());
         window.$(this.el).on("error.datetimepicker", () => false); // Ignores datepicker errors
@@ -64,7 +76,7 @@ export class DatePicker extends Component {
         this.updateInput();
     }
 
-    willUpdateProps(nextProps) {
+    onWillUpdateProps(nextProps) {
         const pickerParams = {};
         for (const prop in nextProps) {
             if (this.props[prop] !== nextProps[prop]) {
@@ -78,7 +90,7 @@ export class DatePicker extends Component {
         this.bootstrapDateTimePicker(pickerParams);
     }
 
-    willUnmount() {
+    onWillUnmount() {
         window.$(this.el).off(); // Removes all jQuery events
 
         this.bootstrapDateTimePicker("destroy");

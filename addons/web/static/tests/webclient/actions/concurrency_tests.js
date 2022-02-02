@@ -440,8 +440,8 @@ QUnit.module("ActionManager", (hooks) => {
             assert.expect(3);
             const slowWillStartDef = testUtils.makeTestPromise();
             class ClientAction extends Component {
-                willStart() {
-                    return slowWillStartDef;
+                setup() {
+                    owl.onWillStart(() => slowWillStartDef);
                 }
             }
             ClientAction.template = xml`<div class="client_action">ClientAction</div>`;
@@ -596,9 +596,7 @@ QUnit.module("ActionManager", (hooks) => {
                         return { fromId: this.id };
                     },
                 });
-            }
-            async willStart() {
-                await def;
+                owl.onWillStart(() => def);
             }
         }
         ToyView.components = { ControlPanel };

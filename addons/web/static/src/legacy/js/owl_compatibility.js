@@ -13,6 +13,7 @@ odoo.define('web.OwlCompatibility', function (require) {
         App,
         Component,
         onMounted,
+        onWillStart,
         onWillUnmount,
         onPatched,
         onWillUpdateProps,
@@ -141,16 +142,19 @@ odoo.define('web.OwlCompatibility', function (require) {
             });
 
             onWillDestroy(() => this.__destroy(this.__owl__.parent.component));
+
+            onWillStart(this.onWillStart);
+            onWillUnmount(this.onWillUnmount);
         }
 
-        willStart() {
+        onWillStart() {
             if (!(this.props.Component.prototype instanceof Component)) {
                 this.widget = new this.props.Component(this, ...this.widgetArgs);
                 return this.widget._widgetRenderAndInsert(() => {});
             }
         }
 
-        willUnmount() {
+        onWillUnmount() {
             this.removeEl();
             if (this.widget && this.widget.on_detach_callback) {
                 this.widget.on_detach_callback();

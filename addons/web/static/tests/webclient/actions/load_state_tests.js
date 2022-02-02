@@ -1014,9 +1014,11 @@ QUnit.module("ActionManager", (hooks) => {
         assert.expect(5);
 
         class MyAction extends Component {
-            mounted() {
-                assert.step("myAction mounted");
-                browser.location.hash = "#action=__test__client__action__&menu_id=1";
+            setup() {
+                owl.onMounted(() => {
+                    assert.step("myAction mounted");
+                    browser.location.hash = "#action=__test__client__action__&menu_id=1";
+                });
             }
         }
         MyAction.template = xml`<div class="not-here" />`;
@@ -1043,11 +1045,13 @@ QUnit.module("ActionManager", (hooks) => {
         const baseURL = new URL(browser.location.href).toString();
 
         class MyAction extends Component {
-            mounted() {
-                assert.step("myAction mounted");
-                const newURL = baseURL + "#action=__test__client__action__&menu_id=1";
-                // immediate triggering
-                window.dispatchEvent(new HashChangeEvent("hashchange", { newURL }));
+            setup() {
+                owl.onMounted(() => {
+                    assert.step("myAction mounted");
+                    const newURL = baseURL + "#action=__test__client__action__&menu_id=1";
+                    // immediate triggering
+                    window.dispatchEvent(new HashChangeEvent("hashchange", { newURL }));
+                });
             }
         }
         MyAction.template = xml`<div class="not-here" />`;

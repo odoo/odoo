@@ -5,7 +5,7 @@ import { localization } from "@web/core/l10n/localization";
 import { registry } from "@web/core/registry";
 import fieldUtils from "web.field_utils";
 
-const { Component } = owl;
+const { Component, onWillUpdateProps } = owl;
 const formatterRegistry = registry.category("formatters");
 
 export class PivotRenderer extends Component {
@@ -13,8 +13,10 @@ export class PivotRenderer extends Component {
         this.model = this.props.model;
         this.table = this.model.getTable();
         this.l10n = localization;
+
+        onWillUpdateProps(this.onWillUpdateProps);
     }
-    willUpdateProps() {
+    onWillUpdateProps() {
         this.table = this.model.getTable();
     }
     /**

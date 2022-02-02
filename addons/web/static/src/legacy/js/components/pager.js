@@ -3,7 +3,7 @@ odoo.define('web.Pager', function (require) {
 
     const { useAutofocus } = require('web.custom_hooks');
 
-    const { Component, useState } = owl;
+    const { Component, onWillUpdateProps, useState } = owl;
 
     /**
      * Pager
@@ -37,9 +37,11 @@ odoo.define('web.Pager', function (require) {
             });
 
             useAutofocus();
+
+            onWillUpdateProps(this.onWillUpdateProps);
         }
 
-        async willUpdateProps() {
+        async onWillUpdateProps() {
             this.state.editing = false;
             this.state.disabled = false;
         }

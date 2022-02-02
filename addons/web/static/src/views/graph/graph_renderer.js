@@ -8,7 +8,7 @@ import { sortBy } from "@web/core/utils/arrays";
 import { useAssets } from "@web/core/assets";
 import { renderToString } from "@web/core/utils/render";
 
-const { Component, useEffect, useRef } = owl;
+const { Component, onWillUnmount, useEffect, useRef } = owl;
 
 const NO_DATA = _lt("No data");
 
@@ -54,9 +54,10 @@ export class GraphRenderer extends Component {
         useAssets({ jsLibs: ["/web/static/lib/Chart/Chart.js"] });
 
         useEffect(() => this.renderChart());
+        onWillUnmount(this.onWillUnmount);
     }
 
-    willUnmount() {
+    onWillUnmount() {
         if (this.chart) {
             this.chart.destroy();
         }

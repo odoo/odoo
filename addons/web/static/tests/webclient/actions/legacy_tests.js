@@ -174,14 +174,16 @@ QUnit.module("ActionManager", (hooks) => {
 
         let mountCount = 0;
         patchWithCleanup(ControlPanel.prototype, {
-            mounted() {
-                mountCount = mountCount + 1;
-                this.__uniqueId = mountCount;
-                assert.step(`mounted ${this.__uniqueId}`);
-                this._super(...arguments);
-            },
-            willUnmount() {
-                assert.step(`willUnmount ${this.__uniqueId}`);
+            setup() {
+                this._super();
+                owl.onMounted(() => {
+                    mountCount = mountCount + 1;
+                    this.__uniqueId = mountCount;
+                    assert.step(`mounted ${this.__uniqueId}`);
+                });
+                owl.onWillUnmount(() => {
+                    assert.step(`willUnmount ${this.__uniqueId}`);
+                });
             },
         });
 

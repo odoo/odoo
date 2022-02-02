@@ -26,6 +26,7 @@ odoo.define('web.OwlCompatibilityTests', function (require) {
         onWillDestroy,
         onWillStart,
         onWillUnmount,
+        onWillUpdateProps,
         useState,
         xml,
     } = owl;
@@ -286,8 +287,8 @@ odoo.define('web.OwlCompatibilityTests', function (require) {
                 }
             }
             class AsyncComponent extends Component {
-                willUpdateProps() {
-                    return prom;
+                setup() {
+                    onWillUpdateProps(() => prom);
                 }
             }
             AsyncComponent.template = xml`<div>Hi <t t-esc="props.name"/>!</div>`;

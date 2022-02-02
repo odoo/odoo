@@ -1546,11 +1546,13 @@ QUnit.module("Views", (hooks) => {
         assert.expect(2);
 
         class ToyView extends Component {
-            willStart() {
-                assert.deepEqual(this.props.domain, [["type", "=", "carnivorous"]]);
-            }
-            willUpdateProps(nextProps) {
-                assert.deepEqual(nextProps.domain, [["type", "=", "herbivorous"]]);
+            setup() {
+                owl.onWillStart(() => {
+                    assert.deepEqual(this.props.domain, [["type", "=", "carnivorous"]]);
+                });
+                owl.onWillUpdateProps((nextProps) => {
+                    assert.deepEqual(nextProps.domain, [["type", "=", "herbivorous"]]);
+                });
             }
         }
         ToyView.template = xml`<div/>`;

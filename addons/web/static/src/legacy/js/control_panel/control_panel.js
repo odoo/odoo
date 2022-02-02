@@ -11,7 +11,15 @@ odoo.define('web.ControlPanel', function (require) {
     const SearchBar = require('web.SearchBar');
     const { useModel } = require('web.Model');
 
-    const { Component, useRef, useSubEnv } = owl;
+    const {
+        Component,
+        useRef,
+        onMounted,
+        onPatched,
+        onWillDestroy,
+        onWillUpdateProps,
+        useSubEnv,
+    } = owl;
 
     /**
      * TODO: remove this whole mechanism as soon as `cp_content` is completely removed.
@@ -126,17 +134,35 @@ odoo.define('web.ControlPanel', function (require) {
             this.fields = this._formatFields(this.props.fields);
 
             this.sprintf = _.str.sprintf;
+
+            onWillDestroy(() => {
+                const content =  this.props.cp_content;
+                if (content) {
+                    if (content.$buttons) {
+                        content.$buttons.remove();
+                    }
+                    if (content.$searchview) {
+                        content.$searchview.remove();
+                    }
+                    if (content.$pager) {
+                        content.$pager.remove();
+                    }
+                    if (content.$searchview_buttons) {
+                        content.$searchview_buttons.remove();
+                    }
+                }
+            });
+
+            onMounted(() => {
+                this._attachAdditionalContent();
+            });
+            onPatched(() => {
+                this._attachAdditionalContent();
+            });
+            onWillUpdateProps(this.onWillUpdateProps);
         }
 
-        mounted() {
-            this._attachAdditionalContent();
-        }
-
-        patched() {
-            this._attachAdditionalContent();
-        }
-
-        async willUpdateProps(nextProps) {
+        async onWillUpdateProps(nextProps) {
             // Note: action and searchModel are not likely to change during
             // the lifespan of a ControlPanel instance, so we only need to update
             // the view information.

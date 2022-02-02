@@ -28,7 +28,7 @@ const { getFixture, click, legacyExtraNextTick } = require("@web/../tests/helper
 const { createWebClient, doAction, loadState } = require('@web/../tests/webclient/helpers');
 
 const { _t } = core;
-const { Component, markup, xml } = owl;
+const { Component, markup, onMounted, onWillUnmount, xml } = owl;
 
 let serverData;
 let target;
@@ -12100,11 +12100,9 @@ QUnit.module('Views', {
         let mountedCalls = 0;
         let willUnmountCalls = 0;
         class MyField extends AbstractFieldOwl {
-            mounted() {
-                mountedCalls++;
-            }
-            willUnmount() {
-                willUnmountCalls++;
+            setup() {
+                onMounted(() => mountedCalls++);
+                onWillUnmount(() => willUnmountCalls++);
             }
         }
         MyField.template = xml`<span>Hello World</span>`;
@@ -12252,10 +12250,12 @@ QUnit.module('Views', {
         let mountedCounterCall = 0;
 
         patch(ControlPanel.prototype, 'test.ControlPanel', {
-            mounted() {
-                mountedCounterCall = mountedCounterCall + 1;
-                assert.step(`mountedCounterCall-${mountedCounterCall}`);
-                this._super(...arguments);
+            setup() {
+                this._super();
+                onMounted(() => {
+                    mountedCounterCall = mountedCounterCall + 1;
+                    assert.step(`mountedCounterCall-${mountedCounterCall}`);
+                });
             },
         });
 

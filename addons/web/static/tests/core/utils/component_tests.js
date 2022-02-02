@@ -4,18 +4,20 @@ import { NotUpdatable, ErrorHandler } from "@web/core/utils/components";
 import { makeTestEnv } from "../../helpers/mock_env";
 import { getFixture, mount } from "../../helpers/utils";
 
-const { Component, xml } = owl;
+const { Component, onMounted, onWillUpdateProps, xml } = owl;
 
 QUnit.module("utils", () => {
     QUnit.module("components");
 
     QUnit.test("NotUpdatable component", async function (assert) {
         class Child extends Component {
-            mounted() {
-                assert.step("mounted");
-            }
-            willUpdateProps() {
-                assert.step("willupdateprops");
+            setup() {
+                onMounted(() => {
+                    assert.step("mounted");
+                });
+                onWillUpdateProps(() => {
+                    assert.step("willupdateprops");
+                });
             }
         }
         Child.template = xml`<div>hey</div>`;
