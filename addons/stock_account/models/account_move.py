@@ -227,7 +227,8 @@ class AccountMoveLine(models.Model):
         self = self.with_context(force_company=self.move_id.journal_id.company_id.id)
         if self.product_id.type == 'product' \
             and self.move_id.company_id.anglo_saxon_accounting \
-            and self.move_id.is_purchase_document():
+            and self.move_id.is_purchase_document() \
+            and not self.product_id.product_tmpl_id._is_cost_method_standard():
             fiscal_position = self.move_id.fiscal_position_id
             accounts = self.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=fiscal_position)
             if accounts['stock_input']:
