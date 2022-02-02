@@ -9,6 +9,7 @@ var field_utils = require('web.field_utils');
 var time = require('web.time');
 var utils = require('web.utils');
 var { Gui } = require('point_of_sale.Gui');
+const { batched } = require("point_of_sale.utils");
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -16,7 +17,7 @@ var round_di = utils.round_decimals;
 var round_pr = utils.round_precision;
 
 const Registries = require('point_of_sale.Registries');
-const reactivity = require('@point_of_sale/js/reactivity');
+const { markRaw, reactive } = owl;
 
 // Container of the product images fetched during rendering
 // of customer display. There is no need to observe it, thus,
@@ -87,7 +88,7 @@ class PosGlobalState extends PosModel {
 
         this.db = new PosDB();                       // a local database used to search trough products and categories & store pending orders
         this.debug = config.isDebug(); //debug mode
-        this.unwatched = reactivity.markRaw({});
+        this.unwatched = markRaw({});
 
         // Business data; loaded from the server at launch
         this.company_logo = null;
@@ -356,10 +357,10 @@ class PosGlobalState extends PosModel {
             options.json = json;
         }
         let order = Order.create({}, options);
-        const batchedSaveToDb = reactivity.batched(() => {
+        const batchedSaveToDb = batched(() => {
             order.save_to_db();
         });
-        order = reactivity.reactive(order, batchedSaveToDb);
+        order = reactive(order, batchedSaveToDb);
         order.save_to_db();
         return order;
     }
@@ -521,7 +522,7 @@ class PosGlobalState extends PosModel {
     }
 
     set customer_display(value) {
-        this.unwatched.customer_display = reactivity.markRaw(value);
+        this.unwatched.customer_display = markRaw(value);
     }
 
     send_current_order_to_customer_facing_display() {
@@ -1559,15 +1560,7 @@ class Orderline extends PosModel {
     }
     get_unit_display_price(){
         if (this.pos.config.iface_tax_included === 'total') {
-            let price;
-            // this is used to update the attribute object without triggering the rendering of the components
-            reactivity.inSilentContext(() => {
-                let quantity = this.quantity;
-                this.quantity = 1.0;
-                price = this.get_all_prices().priceWithTax;
-                this.quantity = quantity;
-            });
-            return price;
+            return this.get_all_prices(1).priceWithTax;
         } else {
             return this.get_unit_price();
         }
@@ -1854,7 +1847,7 @@ class Orderline extends PosModel {
             'total_included': sign * round_pr(total_included, this.pos.currency.rounding),
         }
     }
-    get_all_prices(){
+    get_all_prices(qty = this.get_quantity()){
         var self = this;
 
         var price_unit = this.get_unit_price() * (1.0 - (this.get_discount() / 100.0));
@@ -1875,8 +1868,8 @@ class Orderline extends PosModel {
         });
         product_taxes = _.uniq(product_taxes, function(tax) { return tax.id; });
 
-        var all_taxes = this.compute_all(product_taxes, price_unit, this.get_quantity(), this.pos.currency.rounding);
-        var all_taxes_before_discount = this.compute_all(product_taxes, this.get_unit_price(), this.get_quantity(), this.pos.currency.rounding);
+        var all_taxes = this.compute_all(product_taxes, price_unit, qty, this.pos.currency.rounding);
+        var all_taxes_before_discount = this.compute_all(product_taxes, this.get_unit_price(), qty, this.pos.currency.rounding);
         _(all_taxes.taxes).each(function(tax) {
             taxtotal += tax.amount;
             taxdetail[tax.id] = tax.amount;

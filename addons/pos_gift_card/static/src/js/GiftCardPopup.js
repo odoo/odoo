@@ -7,8 +7,8 @@ odoo.define("pos_gift_card.GiftCardPopup", function (require) {
   const { useState } = owl;
 
   class GiftCardPopup extends AbstractAwaitablePopup {
-    constructor() {
-      super(...arguments);
+    setup() {
+      super.setup();
       this.state = useState({
         giftCardConfig: this.env.pos.config.gift_card_settings,
         showBarcodeGeneration: false,

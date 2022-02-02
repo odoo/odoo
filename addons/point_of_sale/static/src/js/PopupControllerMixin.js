@@ -1,7 +1,7 @@
 odoo.define('point_of_sale.PopupControllerMixin', function(require) {
     'use strict';
 
-    const { useListener } = require('web.custom_hooks');
+    const { useListener } = require("@web/core/utils/hooks");
 
     const { useState } = owl;
 
@@ -16,8 +16,8 @@ odoo.define('point_of_sale.PopupControllerMixin', function(require) {
      */
     const PopupControllerMixin = x =>
         class extends x {
-            constructor() {
-                super(...arguments);
+            setup() {
+                super.setup();
                 useListener('show-popup', this.__showPopup);
                 useListener('close-popup', this.__closePopup);
 

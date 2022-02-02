@@ -9,9 +9,9 @@
                 <main class="body">
                     <div class="opening-cash-section">
                         <span class="info-title">Opening cash</span>
-                        <div class="cash-input-sub-section" t-on-input="handleInputChange()">
+                        <div class="cash-input-sub-section" t-on-input="handleInputChange">
                             <input class="pos-input" type="number" t-model.number="state.openingCash"/>
-                            <div class="button icon" t-on-click="openDetailsPopup()">
+                            <div class="button icon" t-on-click="openDetailsPopup">
                                 <i class="fa fa-calculator" role="img" title="Open the money details popup"/>
                             </div>
                         </div>
@@ -19,10 +19,15 @@
                     <textarea placeholder="Notes" class="opening-cash-notes" t-model="state.notes"/>
                 </main>
                 <footer class="footer">
-                    <div class="button" t-on-click="startSession()">Open session</div>
+                    <div class="button" t-on-click="startSession">Open session</div>
                 </footer>
             </div>
-            <MoneyDetailsPopup t-ref="moneyDetails" t-on-money-details-validated="updateCashOpening"/>
+            <MoneyDetailsPopup
+                t-if="state.displayMoneyDetailsPopup"
+                manualInputCashCount="manualInputCashCount"
+                onConfirm="(payload) => this.updateCashOpening(payload)"
+                onDiscard.bind="closeDetailsPopup"
+            />
         </div>
     </t>
 </templates>

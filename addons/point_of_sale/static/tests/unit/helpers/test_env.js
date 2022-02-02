@@ -17,10 +17,6 @@ odoo.define('point_of_sale.test_env', async function (require) {
     // We override this method in the pos unit tests to prevent the unnecessary error in the web tests.
     cleanup.registerCleanup = () => {}
 
-    const { Portal } = owl;
-
-    Registries.Component.add(Portal);
-
     await env.session.is_bound;
     const pos = PosGlobalState.create({ env });
     await pos.load_server_data();

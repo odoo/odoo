@@ -14,10 +14,12 @@ odoo.define('point_of_sale.ProductInfoPopup', function(require) {
      *  }
      */
     class ProductInfoPopup extends AbstractAwaitablePopup {
-        constructor() {
-            super(...arguments);
+        setup() {
+            super.setup();
+            owl.onWillStart(this.onWillStart);
+            owl.onMounted(this.onMounted);
         }
-        async willStart() {
+        async onWillStart() {
             const order = this.env.pos.get_order();
             try {
                 // check back-end method `get_product_info_pos` to see what it returns
@@ -52,7 +54,7 @@ odoo.define('point_of_sale.ProductInfoPopup', function(require) {
         /*
          * Since this popup need to be self dependent, in case of an error, the popup need to be closed on its own.
          */
-        mounted() {
+        onMounted() {
             if (this.error) {
                 this.cancel();
                 if (this.error.message instanceof ConnectionLostError) {

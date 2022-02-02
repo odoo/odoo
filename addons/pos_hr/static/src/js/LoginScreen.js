@@ -8,8 +8,8 @@ odoo.define('pos_hr.LoginScreen', function (require) {
     const { useBarcodeReader } = require('point_of_sale.custom_hooks');
 
     class LoginScreen extends PosComponent {
-        constructor() {
-            super(...arguments);
+        setup() {
+            super.setup();
             const { selectEmployee, askPin } = useSelectEmployee();
             this.selectEmployee = selectEmployee;
             this.askPin = askPin;

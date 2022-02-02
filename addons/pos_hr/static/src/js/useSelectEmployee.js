@@ -2,10 +2,10 @@
 odoo.define('pos_hr.useSelectEmployee', function (require) {
     'use strict';
 
-    const { Component } = owl;
+    const { useComponent } = owl;
 
     function useSelectEmployee() {
-        const current = Component.current;
+        const current = useComponent();
 
         async function askPin(employee) {
             const { confirmed, payload: inputPin } = await this.showPopup('NumberPopup', {

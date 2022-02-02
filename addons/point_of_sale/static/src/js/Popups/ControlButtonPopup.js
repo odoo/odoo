@@ -10,8 +10,8 @@ odoo.define('point_of_sale.ControlButtonPopup', function(require) {
          * @param {Object} props
          * @param {string} props.startingValue
          */
-        constructor() {
-            super(...arguments);
+        setup() {
+            super.setup();
             this.controlButtons = this.props.controlButtons;
         }
     }

@@ -6,22 +6,25 @@ odoo.define('point_of_sale.ClosePosPopup', function(require) {
     const { identifyError } = require('point_of_sale.utils');
     const { ConnectionLostError, ConnectionAbortedError} = require('@web/core/network/rpc_service')
 
-    const { useRef, useState } = owl;
+    const { onWillStart, onMounted, useState } = owl;
 
     /**
      * This popup needs to be self-dependent because it needs to be called from different place.
      */
     class ClosePosPopup extends AbstractAwaitablePopup {
-        constructor() {
-            super(...arguments);
+        setup() {
+            super.setup();
             this.manualInputCashCount = false;
             this.cashControl = this.env.pos.config.cash_control;
-            this.moneyDetailsRef = useRef('moneyDetails');
             this.closeSessionClicked = false;
             this.moneyDetails = null;
-            this.state = useState({});
+            this.state = useState({
+                displayMoneyDetailsPopup: false,
+            });
+            onWillStart(this.onWillStart);
+            onMounted(this.onMounted);
         }
-        async willStart() {
+        async onWillStart() {
             try {
                 const closingData = await this.rpc({
                     model: 'pos.session',
@@ -57,7 +60,7 @@ odoo.define('point_of_sale.ClosePosPopup', function(require) {
         /*
          * Since this popup need to be self dependent, in case of an error, the popup need to be closed on its own.
          */
-        mounted() {
+        onMounted() {
             if (this.error) {
                 this.cancel();
                 if (identifyError(this.error) instanceof ConnectionLostError) {
@@ -71,15 +74,13 @@ odoo.define('point_of_sale.ClosePosPopup', function(require) {
             }
         }
         openDetailsPopup() {
-            if (this.moneyDetailsRef.comp.isClosed()){
-                this.moneyDetailsRef.comp.openPopup();
-                this.state.payments[this.defaultCashDetails.id].counted = 0;
-                this.state.payments[this.defaultCashDetails.id].difference = -this.defaultCashDetails.amount;
-                this.state.notes = '';
-                if (this.manualInputCashCount) {
-                    this.moneyDetailsRef.comp.reset();
-                }
-            }
+            this.state.payments[this.defaultCashDetails.id].counted = 0;
+            this.state.payments[this.defaultCashDetails.id].difference = -this.defaultCashDetails.amount;
+            this.state.notes = "";
+            this.state.displayMoneyDetailsPopup = true;
+        }
+        closeDetailsPopup() {
+            this.state.displayMoneyDetailsPopup = false;
         }
         handleInputChange(paymentId) {
             let expectedAmount;
@@ -94,8 +95,7 @@ odoo.define('point_of_sale.ClosePosPopup', function(require) {
                 this.env.pos.round_decimals_currency(this.state.payments[paymentId].counted - expectedAmount);
             this.state.acceptClosing = false;
         }
-        updateCountedCash(event) {
-            const { total, moneyDetailsNotes, moneyDetails } = event.detail;
+        updateCountedCash({ total, moneyDetailsNotes, moneyDetails }) {
             this.state.payments[this.defaultCashDetails.id].counted = total;
             this.state.payments[this.defaultCashDetails.id].difference =
                 this.env.pos.round_decimals_currency(this.state.payments[[this.defaultCashDetails.id]].counted - this.defaultCashDetails.amount);
@@ -105,6 +105,7 @@ odoo.define('point_of_sale.ClosePosPopup', function(require) {
             this.manualInputCashCount = false;
             this.moneyDetails = moneyDetails;
             this.state.acceptClosing = false;
+            this.closeDetailsPopup();
         }
         hasDifference() {
             return Object.entries(this.state.payments).find(pm => pm[1].difference != 0);

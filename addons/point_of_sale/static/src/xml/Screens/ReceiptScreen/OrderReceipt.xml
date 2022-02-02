@@ -30,7 +30,7 @@
                     <div><t t-esc="receipt.company.website" /></div>
                 </t>
                 <t t-if="receipt.header_html">
-                    <t t-raw="receipt.header_html" />
+                    <t t-out="receipt.header_html" />
                 </t>
                 <t t-if="!receipt.header_html and receipt.header">
                     <div style="white-space:pre-line"><t t-esc="receipt.header" /></div>
@@ -124,7 +124,7 @@
 
             <!-- Footer -->
             <div t-if="receipt.footer_html"  class="pos-receipt-center-align">
-                <t t-raw="receipt.footer_html" />
+                <t t-out="receipt.footer_html" />
             </div>
 
             <div t-if="!receipt.footer_html and receipt.footer"  class="pos-receipt-center-align" style="white-space:pre-line">
@@ -135,11 +135,11 @@
             </div>
 
             <div class="after-footer">
-                <t t-foreach="receipt.paymentlines" t-as="line">
+                <t t-foreach="receipt.paymentlines" t-as="line" t-key="line_index">
                     <t t-if="line.ticket">
                         <br />
                         <div class="pos-payment-terminal-receipt">
-                            <t t-raw="line.ticket" />
+                            <t t-out="line.ticket" />
                         </div>
                     </t>
                 </t>
