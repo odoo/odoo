@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-Bas b.ubbels@solutions2use.com https://github.com/basubbels
+Bas Ubbels info@solutions2use.com https://github.com/basubbels
