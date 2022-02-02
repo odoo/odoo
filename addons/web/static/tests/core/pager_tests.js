@@ -1,17 +1,22 @@
 /** @odoo-module **/
 
 import { Pager } from "@web/core/pager/pager";
-import { registerCleanup } from "../helpers/cleanup";
+import { makeTestEnv } from "../helpers/mock_env";
 import {
     click,
     triggerEvent,
     makeDeferred,
+    mount,
     nextTick,
     getFixture,
     triggerEvents,
 } from "../helpers/utils";
+import { registry } from "@web/core/registry";
+import { uiService } from "@web/core/ui/ui_service";
 
-const { Component, mount, useState, xml } = owl;
+const { Component, useState, xml } = owl;
+
+const serviceRegistry = registry.category("services");
 
 class PagerController extends Component {
     setup() {
@@ -26,10 +31,9 @@ PagerController.template = xml`<Pager t-props="state" />`;
 PagerController.components = { Pager };
 
 async function makePager(props) {
-    const pager = await mount(PagerController, { target: getFixture(), props });
-    registerCleanup(() => {
-        pager.destroy();
-    });
+    serviceRegistry.add("ui", uiService);
+    const env = await makeTestEnv();
+    const pager = await mount(PagerController, { env, target: getFixture(), props });
     return pager;
 }
 

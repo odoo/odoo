@@ -8,10 +8,11 @@ import Registry from "web.Registry";
 import SearchBar from "web.SearchBar";
 import { registry } from "@web/core/registry";
 import * as cpHelpers from "@web/../tests/search/helpers";
-import { patchWithCleanup } from "@web/../tests/helpers/utils";
+import { getFixture, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { browser } from "@web/core/browser/browser";
 
 let serverData;
+let target;
 QUnit.module("Search Bar (legacy)", (hooks) => {
     hooks.beforeEach(() => {
         serverData = {
@@ -58,17 +59,18 @@ QUnit.module("Search Bar (legacy)", (hooks) => {
                 },
             },
         };
+        target = getFixture();
     });
 
         QUnit.test("basic rendering", async function (assert) {
             assert.expect(1);
 
-            const webClient = await createWebClient({ serverData });
+            const webClient = await createWebClient({ target, serverData });
             await doAction(webClient, 1);
 
             assert.strictEqual(
                 document.activeElement,
-                webClient.el.querySelector(".o_searchview input.o_searchview_input"),
+                target.querySelector(".o_searchview input.o_searchview_input"),
                 "searchview input should be focused"
             );
         });
@@ -77,25 +79,25 @@ QUnit.module("Search Bar (legacy)", (hooks) => {
             assert.expect(4);
 
             patchWithCleanup(browser, { setTimeout: (fn) => fn() });
-            const webClient = await createWebClient({ serverData });
+            const webClient = await createWebClient({ target, serverData });
             await doAction(webClient, 1);
 
             // add a facet
-            await cpHelpers.toggleGroupByMenu(webClient);
-            await cpHelpers.toggleMenuItem(webClient, 0);
-            await cpHelpers.toggleMenuItemOption(webClient, 0, 0);
-            assert.containsOnce(webClient, '.o_searchview .o_searchview_facet',
+            await cpHelpers.toggleGroupByMenu(target);
+            await cpHelpers.toggleMenuItem(target, 0);
+            await cpHelpers.toggleMenuItemOption(target, 0, 0);
+            assert.containsOnce(target, '.o_searchview .o_searchview_facet',
                 "there should be one facet");
             assert.strictEqual(document.activeElement,
-                webClient.el.querySelector('.o_searchview input.o_searchview_input'));
+                target.querySelector('.o_searchview input.o_searchview_input'));
 
             // press left to focus the facet
             await testUtils.dom.triggerEvent(document.activeElement, 'keydown', { key: 'ArrowLeft' });
-            assert.strictEqual(document.activeElement, webClient.el.querySelector('.o_searchview .o_searchview_facet'));
+            assert.strictEqual(document.activeElement, target.querySelector('.o_searchview .o_searchview_facet'));
 
             // press right to focus the input
             await testUtils.dom.triggerEvent(document.activeElement, 'keydown', { key: 'ArrowRight' });
-            assert.strictEqual(document.activeElement, webClient.el.querySelector('.o_searchview input.o_searchview_input'));
+            assert.strictEqual(document.activeElement, target.querySelector('.o_searchview input.o_searchview_input'));
         });
 
         QUnit.test('search date and datetime fields. Support of timezones', async function (assert) {
@@ -103,7 +105,7 @@ QUnit.module("Search Bar (legacy)", (hooks) => {
 
             let searchReadCount = 0;
 
-            const webClient = await createWebClient({
+            const webClient = await createWebClient({ target,
                 serverData,
                 legacyParams: {
                     getTZOffset() {
@@ -135,12 +137,12 @@ QUnit.module("Search Bar (legacy)", (hooks) => {
             await doAction(webClient, 1);
 
             // Date case
-            let searchInput = webClient.el.querySelector('.o_searchview_input');
+            let searchInput = target.querySelector('.o_searchview_input');
             await testUtils.fields.editInput(searchInput, '07/15/1983');
             await testUtils.dom.triggerEvent(searchInput, 'keydown', { key: 'ArrowDown' });
             await testUtils.dom.triggerEvent(searchInput, 'keydown', { key: 'Enter' });
 
-            assert.strictEqual(webClient.el.querySelector('.o_searchview_facet .o_facet_values').innerText.trim(),
+            assert.strictEqual(target.querySelector('.o_searchview_facet .o_facet_values').innerText.trim(),
                 '07/15/1983',
                 'The format of the date in the facet should be in locale');
 
@@ -148,13 +150,13 @@ QUnit.module("Search Bar (legacy)", (hooks) => {
             await testUtils.dom.click($('.o_searchview_facet .o_facet_remove'));
 
             // DateTime case
-            searchInput = webClient.el.querySelector('.o_searchview_input');
+            searchInput = target.querySelector('.o_searchview_input');
             await testUtils.fields.editInput(searchInput, '07/15/1983 00:00:00');
             await testUtils.dom.triggerEvent(searchInput, 'keydown', { key: 'ArrowDown' });
             await testUtils.dom.triggerEvent(searchInput, 'keydown', { key: 'ArrowDown' });
             await testUtils.dom.triggerEvent(searchInput, 'keydown', { key: 'Enter' });
 
-            assert.strictEqual(webClient.el.querySelector('.o_searchview_facet .o_facet_values').innerText.trim(),
+            assert.strictEqual(target.querySelector('.o_searchview_facet .o_facet_values').innerText.trim(),
                 '07/15/1983 00:00:00',
                 'The format of the datetime in the facet should be in locale');
         });
@@ -215,15 +217,13 @@ QUnit.module("Search Bar (legacy)", (hooks) => {
 
             assert.strictEqual(input.value, "", "input value should be empty");
             assert.containsNone(searchBar, '.o_searchview_autocomplete');
-
-            searchBar.destroy();
         });
 
         QUnit.test('select an autocomplete field', async function (assert) {
             assert.expect(3);
 
             let searchReadCount = 0;
-            const webClient = await createWebClient({
+            const webClient = await createWebClient({ target,
                 serverData,
                 mockRPC: (route, args) => {
                     if (route === '/web/dataset/search_read') {
@@ -241,13 +241,13 @@ QUnit.module("Search Bar (legacy)", (hooks) => {
             });
             await doAction(webClient, 1);
 
-            const searchInput = webClient.el.querySelector('.o_searchview_input');
+            const searchInput = target.querySelector('.o_searchview_input');
             await testUtils.fields.editInput(searchInput, 'a');
-            assert.containsN(webClient, '.o_searchview_autocomplete li', 2,
+            assert.containsN(target, '.o_searchview_autocomplete li', 2,
                 "there should be 2 result for 'a' in search bar autocomplete");
 
             await testUtils.dom.triggerEvent(searchInput, 'keydown', { key: 'Enter' });
-            assert.strictEqual(webClient.el.querySelector('.o_searchview_input_container .o_facet_values').innerText.trim(),
+            assert.strictEqual(target.querySelector('.o_searchview_input_container .o_facet_values').innerText.trim(),
                 "a", "There should be a field facet with label 'a'");
         });
 
@@ -256,7 +256,7 @@ QUnit.module("Search Bar (legacy)", (hooks) => {
 
             let searchReadCount = 0;
             const firstLoading = testUtils.makeTestPromise();
-            const webClient = await createWebClient({
+            const webClient = await createWebClient({ target,
                 serverData,
                 mockRPC: (route, args) => {
                     if (route === '/web/dataset/search_read') {
@@ -280,7 +280,7 @@ QUnit.module("Search Bar (legacy)", (hooks) => {
             await doAction(webClient, 1);
             await firstLoading;
             assert.strictEqual(searchReadCount, 1, "there should be 1 search_read");
-            const searchInput = webClient.el.querySelector('.o_searchview_input');
+            const searchInput = target.querySelector('.o_searchview_input');
 
             // 'r' key to filter on bar "First Record"
             await testUtils.fields.editInput(searchInput, 'record');
@@ -289,7 +289,7 @@ QUnit.module("Search Bar (legacy)", (hooks) => {
             await testUtils.dom.triggerEvent(searchInput, 'keydown', { key: 'ArrowDown' });
             await testUtils.dom.triggerEvent(searchInput, 'keydown', { key: 'Enter' });
 
-            assert.strictEqual(webClient.el.querySelector('.o_searchview_input_container .o_facet_values').innerText.trim(),
+            assert.strictEqual(target.querySelector('.o_searchview_input_container .o_facet_values').innerText.trim(),
                 "First record",
                 "the autocompletion facet should be correct");
             assert.strictEqual(searchReadCount, 2, "there should be 2 search_read");
@@ -302,7 +302,7 @@ QUnit.module("Search Bar (legacy)", (hooks) => {
             await testUtils.dom.triggerEvent(searchInput, 'keydown', { key: 'ArrowDown' });
             await testUtils.dom.triggerEvent(searchInput, 'keydown', { key: 'Enter' });
 
-            assert.strictEqual(webClient.el.querySelector('.o_searchview_input_container .o_facet_values').innerText.trim(),
+            assert.strictEqual(target.querySelector('.o_searchview_input_container .o_facet_values').innerText.trim(),
                 "First recordorSecond record",
                 "the autocompletion facet should be correct");
             assert.strictEqual(searchReadCount, 3, "there should be 3 search_read");
@@ -323,27 +323,27 @@ QUnit.module("Search Bar (legacy)", (hooks) => {
             registry.category("services").add("user", makeFakeUserService());
 
             let rpcs;
-            const webClient = await createWebClient({
+            const webClient = await createWebClient({ target,
                 serverData,
                 mockRPC: () => { rpcs++; },
             });
             await doAction(webClient, 1);
 
-            const searchInput = webClient.el.querySelector('.o_searchview_input');
+            const searchInput = target.querySelector('.o_searchview_input');
             rpcs = 0;
             await testUtils.dom.triggerEvent(searchInput, 'keydown', { key: 'Enter' });
 
-            assert.containsNone(webClient, '.o_searchview_facet_label');
+            assert.containsNone(target, '.o_searchview_facet_label');
             assert.strictEqual(rpcs, 2, "should have reloaded");
         });
 
         QUnit.test('selecting (no result) triggers a re-render', async function (assert) {
             assert.expect(3);
 
-            const webClient = await createWebClient({ serverData });
+            const webClient = await createWebClient({ target, serverData });
             await doAction(webClient, 1);
 
-            const searchInput = webClient.el.querySelector('.o_searchview_input');
+            const searchInput = target.querySelector('.o_searchview_input');
 
             // 'a' key to filter nothing on bar
             await testUtils.fields.editInput(searchInput, 'hello there');
@@ -351,13 +351,13 @@ QUnit.module("Search Bar (legacy)", (hooks) => {
             await testUtils.dom.triggerEvent(searchInput, 'keydown', { key: 'ArrowRight' });
             await testUtils.dom.triggerEvent(searchInput, 'keydown', { key: 'ArrowDown' });
 
-            assert.strictEqual(webClient.el.querySelector('.o_searchview_autocomplete .o_selection_focus').innerText.trim(), "(no result)",
+            assert.strictEqual(target.querySelector('.o_searchview_autocomplete .o_selection_focus').innerText.trim(), "(no result)",
                 "there should be no result for 'a' in bar");
 
             await testUtils.dom.triggerEvent(searchInput, 'keydown', { key: 'Enter' });
 
-            assert.containsNone(webClient, '.o_searchview_facet_label');
-            assert.strictEqual(webClient.el.querySelector('.o_searchview_input').value, "",
+            assert.containsNone(target, '.o_searchview_facet_label');
+            assert.strictEqual(target.querySelector('.o_searchview_input').value, "",
                 "the search input should be re-rendered");
         });
 
@@ -369,10 +369,10 @@ QUnit.module("Search Bar (legacy)", (hooks) => {
             // not handled but are triggered to ensure they do not interfere.
             const TEST = "TEST";
             const テスト = "テスト";
-            const webClient = await createWebClient({ serverData });
+            const webClient = await createWebClient({ target, serverData });
             await doAction(webClient, 1);
 
-            const searchInput = webClient.el.querySelector('.o_searchview_input');
+            const searchInput = target.querySelector('.o_searchview_input');
 
             // Simulate typing "TEST" on search view.
             for (let i = 0; i < TEST.length; i++) {
@@ -391,11 +391,11 @@ QUnit.module("Search Bar (legacy)", (hooks) => {
                 await testUtils.dom.triggerEvent(searchInput, 'input',
                     { inputType: 'insertCompositionText', isComposing: true });
             }
-            assert.containsOnce(webClient.el, '.o_searchview_autocomplete',
+            assert.containsOnce(target, '.o_searchview_autocomplete',
                 "should display autocomplete dropdown menu on typing something in search view"
             );
             assert.strictEqual(
-                webClient.el.querySelector('.o_searchview_autocomplete li').innerText.trim(),
+                target.querySelector('.o_searchview_autocomplete li').innerText.trim(),
                 "Search Foo for: TEST",
                 `1st filter suggestion should be based on typed word "TEST"`
             );
@@ -412,7 +412,7 @@ QUnit.module("Search Bar (legacy)", (hooks) => {
                 { inputType: 'insertCompositionText', isComposing: true });
 
             assert.strictEqual(
-                webClient.el.querySelector('.o_searchview_autocomplete li').innerText.trim(),
+                target.querySelector('.o_searchview_autocomplete li').innerText.trim(),
                 "Search Foo for: テスト",
                 `1st filter suggestion should be updated with soft-selection typed word "テスト"`
             );
@@ -432,7 +432,7 @@ QUnit.module("Search Bar (legacy)", (hooks) => {
             await testUtils.dom.triggerEvent(searchInput, 'compositionend');
 
             assert.strictEqual(
-                webClient.el.querySelector('.o_searchview_autocomplete li').innerText.trim(),
+                target.querySelector('.o_searchview_autocomplete li').innerText.trim(),
                 "Search Foo for: TEST",
                 `1st filter suggestion should finally be updated with click selection on word "TEST" from IME`
             );
@@ -442,16 +442,16 @@ QUnit.module("Search Bar (legacy)", (hooks) => {
         QUnit.test('open search view autocomplete on paste value using mouse', async function (assert) {
             assert.expect(1);
 
-            const webClient = await createWebClient({ serverData });
+            const webClient = await createWebClient({ target, serverData });
             await doAction(webClient, 1);
 
             // Simulate paste text through the mouse.
-            const searchInput = webClient.el.querySelector('.o_searchview_input');
+            const searchInput = target.querySelector('.o_searchview_input');
             searchInput.value = "ABC";
             await testUtils.dom.triggerEvent(searchInput, 'input',
                 { inputType: 'insertFromPaste' });
             await testUtils.nextTick();
-            assert.containsOnce(webClient, '.o_searchview_autocomplete',
+            assert.containsOnce(target, '.o_searchview_autocomplete',
                 "should display autocomplete dropdown menu on paste in search view");
 
         });
@@ -468,7 +468,7 @@ QUnit.module("Search Bar (legacy)", (hooks) => {
                 </search>
             `;
 
-            const webClient = await createWebClient({
+            const webClient = await createWebClient({ target,
                 serverData,
                 mockRPC: (route, { domain }) => {
                     if (route === '/web/dataset/search_read') {
@@ -478,14 +478,14 @@ QUnit.module("Search Bar (legacy)", (hooks) => {
             });
             await doAction(webClient, 1);
 
-            await testUtils.controlPanel.editSearch(webClient, "rec");
-            await testUtils.dom.click(webClient.el.querySelector('.o_searchview_autocomplete li:last-child'));
+            await testUtils.controlPanel.editSearch(target, "rec");
+            await testUtils.dom.click(target.querySelector('.o_searchview_autocomplete li:last-child'));
 
-            await cpHelpers.removeFacet(webClient, 0);
+            await cpHelpers.removeFacet(target, 0);
 
-            await testUtils.controlPanel.editSearch(webClient, "rec");
-            await testUtils.dom.click(webClient.el.querySelector('.o_expand'));
-            await testUtils.dom.click(webClient.el.querySelector('.o_searchview_autocomplete li.o_menu_item.o_indent'));
+            await testUtils.controlPanel.editSearch(target, "rec");
+            await testUtils.dom.click(target.querySelector('.o_expand'));
+            await testUtils.dom.click(target.querySelector('.o_searchview_autocomplete li.o_menu_item.o_indent'));
 
             assert.verifySteps([
                 '[]',
@@ -499,7 +499,7 @@ QUnit.module("Search Bar (legacy)", (hooks) => {
         QUnit.test('"null" as autocomplete value', async function (assert) {
             assert.expect(4);
 
-            const webClient = await createWebClient({
+            const webClient = await createWebClient({ target,
                 serverData,
                 mockRPC: (route, { domain }) => {
                     if (route === '/web/dataset/search_read') {
@@ -509,14 +509,14 @@ QUnit.module("Search Bar (legacy)", (hooks) => {
             });
             await doAction(webClient, 1);
 
-            await testUtils.controlPanel.editSearch(webClient, "null");
+            await testUtils.controlPanel.editSearch(target, "null");
 
             assert.strictEqual(
-                webClient.el.querySelector('.o_searchview_autocomplete .o_selection_focus').innerText,
+                target.querySelector('.o_searchview_autocomplete .o_selection_focus').innerText,
                 "Search Foo for: null"
             );
 
-            await testUtils.dom.click(webClient.el.querySelector('.o_searchview_autocomplete li.o_selection_focus a'));
+            await testUtils.dom.click(target.querySelector('.o_searchview_autocomplete li.o_selection_focus a'));
 
             assert.verifySteps([
                 JSON.stringify([]), // initial search
@@ -532,7 +532,7 @@ QUnit.module("Search Bar (legacy)", (hooks) => {
                 <search><field name="bool"/></search>
             `;
 
-            const webClient = await createWebClient({
+            const webClient = await createWebClient({ target,
                 serverData,
                 mockRPC: (route, { domain }) => {
                     if (route === '/web/dataset/search_read') {
@@ -542,25 +542,25 @@ QUnit.module("Search Bar (legacy)", (hooks) => {
             });
             await doAction(webClient, 1);
 
-            await testUtils.controlPanel.editSearch(webClient, "y");
+            await testUtils.controlPanel.editSearch(target, "y");
 
-            assert.containsOnce(webClient, '.o_searchview_autocomplete li');
-            assert.strictEqual(webClient.el.querySelector('.o_searchview_autocomplete li').innerText, "Search Bool: Yes");
-            assert.doesNotHaveClass(webClient.el.querySelector('.o_searchview_autocomplete li'), 'o_indent');
+            assert.containsOnce(target, '.o_searchview_autocomplete li');
+            assert.strictEqual(target.querySelector('.o_searchview_autocomplete li').innerText, "Search Bool: Yes");
+            assert.doesNotHaveClass(target.querySelector('.o_searchview_autocomplete li'), 'o_indent');
 
             // select "Yes"
-            await testUtils.dom.click(webClient.el.querySelector('.o_searchview_autocomplete li'));
+            await testUtils.dom.click(target.querySelector('.o_searchview_autocomplete li'));
 
-            await cpHelpers.removeFacet(webClient, 0);
+            await cpHelpers.removeFacet(target, 0);
 
-            await testUtils.controlPanel.editSearch(webClient, "No");
+            await testUtils.controlPanel.editSearch(target, "No");
 
-            assert.containsOnce(webClient, '.o_searchview_autocomplete li');
-            assert.strictEqual(webClient.el.querySelector('.o_searchview_autocomplete li').innerText, "Search Bool: No");
-            assert.doesNotHaveClass(webClient.el.querySelector('.o_searchview_autocomplete li'), 'o_indent');
+            assert.containsOnce(target, '.o_searchview_autocomplete li');
+            assert.strictEqual(target.querySelector('.o_searchview_autocomplete li').innerText, "Search Bool: No");
+            assert.doesNotHaveClass(target.querySelector('.o_searchview_autocomplete li'), 'o_indent');
 
             // select "No"
-            await testUtils.dom.click(webClient.el.querySelector('.o_searchview_autocomplete li'));
+            await testUtils.dom.click(target.querySelector('.o_searchview_autocomplete li'));
 
             assert.verifySteps([
                 JSON.stringify([]), // initial search
@@ -577,16 +577,16 @@ QUnit.module("Search Bar (legacy)", (hooks) => {
                 <search><field name="status"/></search>
             `;
 
-            const webClient = await createWebClient({ serverData });
+            const webClient = await createWebClient({ target, serverData });
             await doAction(webClient, 1);
 
-            await testUtils.controlPanel.editSearch(webClient, "n");
+            await testUtils.controlPanel.editSearch(target, "n");
 
-            assert.containsN(webClient, '.o_searchview_autocomplete li', 2);
-            assert.strictEqual(webClient.el.querySelector('.o_searchview_autocomplete li:first-child').innerText, "Search Status: New");
-            assert.strictEqual(webClient.el.querySelector('.o_searchview_autocomplete li:last-child').innerText, "Search Status: Cancelled");
-            assert.doesNotHaveClass(webClient.el.querySelector('.o_searchview_autocomplete li:first-child'), 'o_indent');
-            assert.doesNotHaveClass(webClient.el.querySelector('.o_searchview_autocomplete li:last-child'), 'o_indent');
+            assert.containsN(target, '.o_searchview_autocomplete li', 2);
+            assert.strictEqual(target.querySelector('.o_searchview_autocomplete li:first-child').innerText, "Search Status: New");
+            assert.strictEqual(target.querySelector('.o_searchview_autocomplete li:last-child').innerText, "Search Status: Cancelled");
+            assert.doesNotHaveClass(target.querySelector('.o_searchview_autocomplete li:first-child'), 'o_indent');
+            assert.doesNotHaveClass(target.querySelector('.o_searchview_autocomplete li:last-child'), 'o_indent');
         });
 
         QUnit.test("reference fields are supported in search view", async function (assert) {
@@ -604,7 +604,7 @@ QUnit.module("Search Bar (legacy)", (hooks) => {
                 </search>
             `;
 
-            const webClient = await createWebClient({
+            const webClient = await createWebClient({ target,
                 serverData,
                 mockRPC: (route, { domain }) => {
                     if (route === '/web/dataset/search_read') {
@@ -614,16 +614,16 @@ QUnit.module("Search Bar (legacy)", (hooks) => {
             });
             await doAction(webClient, 1);
 
-            await testUtils.controlPanel.editSearch(webClient, "ref");
-            await cpHelpers.validateSearch(webClient);
+            await testUtils.controlPanel.editSearch(target, "ref");
+            await cpHelpers.validateSearch(target);
 
-            assert.containsN(webClient, ".o_data_row", 5);
+            assert.containsN(target, ".o_data_row", 5);
 
-            await cpHelpers.removeFacet(webClient, 0);
-            await testUtils.controlPanel.editSearch(webClient, "ref002");
-            await cpHelpers.validateSearch(webClient);
+            await cpHelpers.removeFacet(target, 0);
+            await testUtils.controlPanel.editSearch(target, "ref002");
+            await cpHelpers.validateSearch(target);
 
-            assert.containsOnce(webClient, ".o_data_row");
+            assert.containsOnce(target, ".o_data_row");
 
             assert.verifySteps([
                 '[]',

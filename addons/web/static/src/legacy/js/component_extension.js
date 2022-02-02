@@ -16,12 +16,12 @@
         return new Promise((resolve, reject) => {
             return this.env.services.rpc(...arguments)
                 .then(result => {
-                    if (this.__owl__.status !== 5 /* not destroyed */) {
+                    if (owl.status(this) !== "destroyed") {
                         resolve(result);
                     }
                 })
                 .catch(reason => {
-                    if (this.__owl__.status !== 5) /* not destroyed */ {
+                    if (owl.status(this) !== "destroyed") {
                         reject(reason);
                     }
                 });
@@ -35,11 +35,21 @@
      * a widgetSymbol key in the environment, corresponding to the hook to call
      * (see ComponentWrapper).
      */
-    const originalTrigger = Component.prototype.__trigger;
-    Component.prototype.__trigger = function (component, evType, payload) {
+    Component.prototype.trigger = function (evType, payload) {
         if (this.env[odoo.widgetSymbol]) {
             this.env[odoo.widgetSymbol](evType);
         }
-        originalTrigger.call(this, component, evType, payload);
+        if (!this.el) {
+            return;
+        }
+        const event = new CustomEvent(evType, { detail: payload, bubbles: true, cancelable: true });
+        event.originalComponent = this;
+        let el = this.el;
+        if (!(el instanceof EventTarget)){
+            el = el.parentElement;
+        }
+        if (el) {
+            el.dispatchEvent(event);
+        }
     };
 })();

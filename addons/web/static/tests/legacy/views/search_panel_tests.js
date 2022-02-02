@@ -11,7 +11,7 @@ const createView = testUtils.createView;
 
 const { makeFakeUserService } = require("@web/../tests/helpers/mock_services");
 const { createWebClient, doAction } = require('@web/../tests/webclient/helpers');
-const { legacyExtraNextTick } = require("@web/../tests/helpers/utils");
+const { getFixture, legacyExtraNextTick } = require("@web/../tests/helpers/utils");
 const { registry } = require("@web/core/registry");
 const { PivotView } = require("@web/views/pivot/pivot_view");
 
@@ -47,6 +47,7 @@ function toggleFold(widget, text) {
 }
 
 let serverData;
+let target;
 
 QUnit.module('Views', {
     beforeEach: function () {
@@ -139,6 +140,8 @@ QUnit.module('Views', {
             models: this.data,
             views: this.archs,
         };
+
+        target = getFixture();
     },
 }, function () {
 
@@ -2345,27 +2348,27 @@ QUnit.module('Views', {
         assert.expect(8);
 
         registry.category("services").add("user", makeFakeUserService());
-        const webClient = await createWebClient({ serverData });
+        const webClient = await createWebClient({ target, serverData });
 
         await doAction(webClient, 1);
 
-        assert.containsOnce(webClient, '.o_content.o_controller_with_searchpanel .o_kanban_view');
-        assert.containsOnce(webClient, '.o_content.o_controller_with_searchpanel .o_search_panel');
+        assert.containsOnce(target, '.o_content.o_controller_with_searchpanel .o_kanban_view');
+        assert.containsOnce(target, '.o_content.o_controller_with_searchpanel .o_search_panel');
 
-        await switchView(webClient, 'pivot');
+        await switchView(target, 'pivot');
         await testUtils.nextTick();
-        assert.containsOnce(webClient, '.o_content .o_pivot');
-        assert.containsNone(webClient, '.o_content .o_search_panel');
+        assert.containsOnce(target, '.o_content .o_pivot');
+        assert.containsNone(target, '.o_content .o_search_panel');
 
-        await switchView(webClient, 'list');
+        await switchView(target, 'list');
         await legacyExtraNextTick();
-        assert.containsOnce(webClient, '.o_content.o_controller_with_searchpanel .o_list_view');
-        assert.containsOnce(webClient, '.o_content.o_controller_with_searchpanel .o_search_panel');
+        assert.containsOnce(target, '.o_content.o_controller_with_searchpanel .o_list_view');
+        assert.containsOnce(target, '.o_content.o_controller_with_searchpanel .o_search_panel');
 
-        await testUtils.dom.click($(webClient.el).find('.o_data_row .o_data_cell:first'));
+        await testUtils.dom.click($(target).find('.o_data_row .o_data_cell:first'));
         await legacyExtraNextTick();
-        assert.containsOnce(webClient, '.o_content .o_form_view');
-        assert.containsNone(webClient, '.o_content .o_search_panel');
+        assert.containsOnce(target, '.o_content .o_form_view');
+        assert.containsNone(target, '.o_content .o_search_panel');
     });
 
     QUnit.skip('search panel with view_types attribute', async function (assert) {
@@ -2406,34 +2409,34 @@ QUnit.module('Views', {
             }
         };
 
-        const webClient = await createWebClient({ serverData , mockRPC });
+        const webClient = await createWebClient({ target, serverData , mockRPC });
 
         await doAction(webClient, 1);
 
-        assert.hasClass($(webClient.el).find('.o_search_panel_category_value:first header'), 'active');
-        assert.containsN(webClient, '.o_kanban_record:not(.o_kanban_ghost)', 4);
+        assert.hasClass($(target).find('.o_search_panel_category_value:first header'), 'active');
+        assert.containsN(target, '.o_kanban_record:not(.o_kanban_ghost)', 4);
 
         // select 'asustek' company
-        await testUtils.dom.click($(webClient.el).find('.o_search_panel_category_value:nth(1) header'));
+        await testUtils.dom.click($(target).find('.o_search_panel_category_value:nth(1) header'));
         await legacyExtraNextTick();
-        assert.hasClass($(webClient.el).find('.o_search_panel_category_value:nth(1) header'), 'active');
-        assert.containsN(webClient, '.o_kanban_record:not(.o_kanban_ghost)', 2);
+        assert.hasClass($(target).find('.o_search_panel_category_value:nth(1) header'), 'active');
+        assert.containsN(target, '.o_kanban_record:not(.o_kanban_ghost)', 2);
 
-        await switchView(webClient, 'list');
+        await switchView(target, 'list');
         await legacyExtraNextTick();
-        assert.hasClass($(webClient.el).find('.o_search_panel_category_value:nth(1) header'), 'active');
-        assert.containsN(webClient, '.o_data_row', 2);
+        assert.hasClass($(target).find('.o_search_panel_category_value:nth(1) header'), 'active');
+        assert.containsN(target, '.o_data_row', 2);
 
         // select 'agrolait' company
-        await testUtils.dom.click($(webClient.el).find('.o_search_panel_category_value:nth(2) header'));
+        await testUtils.dom.click($(target).find('.o_search_panel_category_value:nth(2) header'));
         await legacyExtraNextTick();
-        assert.hasClass($(webClient.el).find('.o_search_panel_category_value:nth(2) header'), 'active');
-        assert.containsN(webClient, '.o_data_row', 2);
+        assert.hasClass($(target).find('.o_search_panel_category_value:nth(2) header'), 'active');
+        assert.containsN(target, '.o_data_row', 2);
 
-        await switchView(webClient, 'kanban');
+        await switchView(target, 'kanban');
         await legacyExtraNextTick();
-        assert.hasClass($(webClient.el).find('.o_search_panel_category_value:nth(2) header'), 'active');
-        assert.containsN(webClient, '.o_kanban_record:not(.o_kanban_ghost)', 2);
+        assert.hasClass($(target).find('.o_search_panel_category_value:nth(2) header'), 'active');
+        assert.containsN(target, '.o_kanban_record:not(.o_kanban_ghost)', 2);
 
         assert.verifySteps([
             '[]', // initial search_read
@@ -2453,37 +2456,37 @@ QUnit.module('Views', {
             }
         };
 
-        const webClient = await createWebClient({ serverData , mockRPC });
+        const webClient = await createWebClient({ target, serverData , mockRPC });
         await doAction(webClient, 1);
 
-        assert.containsNone(webClient, '.o_search_panel_filter_value input:checked');
-        assert.containsN(webClient, '.o_kanban_record:not(.o_kanban_ghost)', 4);
+        assert.containsNone(target, '.o_search_panel_filter_value input:checked');
+        assert.containsN(target, '.o_kanban_record:not(.o_kanban_ghost)', 4);
 
         // select gold filter
-        await testUtils.dom.click($(webClient.el).find('.o_search_panel_filter input[type="checkbox"]:nth(0)'));
+        await testUtils.dom.click($(target).find('.o_search_panel_filter input[type="checkbox"]:nth(0)'));
         await legacyExtraNextTick();
-        assert.containsOnce(webClient, '.o_search_panel_filter_value input:checked');
-        assert.containsN(webClient, '.o_kanban_record:not(.o_kanban_ghost)', 1);
+        assert.containsOnce(target, '.o_search_panel_filter_value input:checked');
+        assert.containsN(target, '.o_kanban_record:not(.o_kanban_ghost)', 1);
 
-        await switchView(webClient, 'list');
+        await switchView(target, 'list');
         await legacyExtraNextTick();
-        assert.containsOnce(webClient, '.o_search_panel_filter_value input:checked');
-        assert.containsN(webClient, '.o_data_row', 1);
+        assert.containsOnce(target, '.o_search_panel_filter_value input:checked');
+        assert.containsN(target, '.o_data_row', 1);
 
         // select silver filter
-        await testUtils.dom.click($(webClient.el).find('.o_search_panel_filter input[type="checkbox"]:nth(1)'));
+        await testUtils.dom.click($(target).find('.o_search_panel_filter input[type="checkbox"]:nth(1)'));
         await legacyExtraNextTick();
-        assert.containsN(webClient, '.o_search_panel_filter_value input:checked', 2);
-        assert.containsN(webClient, '.o_data_row', 4);
+        assert.containsN(target, '.o_search_panel_filter_value input:checked', 2);
+        assert.containsN(target, '.o_data_row', 4);
 
-        await switchView(webClient, 'kanban');
+        await switchView(target, 'kanban');
         await legacyExtraNextTick();
-        assert.containsN(webClient, '.o_search_panel_filter_value input:checked', 2);
-        assert.containsN(webClient, '.o_kanban_record:not(.o_kanban_ghost)', 4);
+        assert.containsN(target, '.o_search_panel_filter_value input:checked', 2);
+        assert.containsN(target, '.o_kanban_record:not(.o_kanban_ghost)', 4);
 
-        await testUtils.dom.click($(webClient.el).find(".o_kanban_record:nth(0)"));
+        await testUtils.dom.click($(target).find(".o_kanban_record:nth(0)"));
         await legacyExtraNextTick();
-        await testUtils.dom.click($(webClient.el).find(".breadcrumb-item:nth(0)"));
+        await testUtils.dom.click($(target).find(".breadcrumb-item:nth(0)"));
         await legacyExtraNextTick();
 
         assert.verifySteps([
@@ -2533,15 +2536,15 @@ QUnit.module('Views', {
     QUnit.test('after onExecuteAction, selects "All" as default category value', async function (assert) {
         assert.expect(4);
 
-        const webClient = await createWebClient({ serverData });
+        const webClient = await createWebClient({ target, serverData });
         await doAction(webClient, 2);
 
-        await testUtils.dom.click($(webClient.el).find('.o_form_view button:contains("multi view")'));
+        await testUtils.dom.click($(target).find('.o_form_view button:contains("multi view")'));
         await legacyExtraNextTick();
 
-        assert.containsOnce(webClient, '.o_kanban_view');
-        assert.containsOnce(webClient, '.o_search_panel');
-        assert.containsOnce(webClient, '.o_search_panel_category_value:first .active');
+        assert.containsOnce(target, '.o_kanban_view');
+        assert.containsOnce(target, '.o_search_panel');
+        assert.containsOnce(target, '.o_search_panel_category_value:first .active');
 
         assert.verifySteps([]); // should not communicate with localStorage
     });
@@ -2550,14 +2553,14 @@ QUnit.module('Views', {
         assert.expect(2);
 
         serverData.actions[2].context = {search_panel: false};
-        const webClient = await createWebClient({ serverData });
+        const webClient = await createWebClient({ target, serverData });
         await doAction(webClient, 2);
 
-        await testUtils.dom.click($(webClient.el).find('.o_form_view button:contains("multi view")'));
+        await testUtils.dom.click($(target).find('.o_form_view button:contains("multi view")'));
         await legacyExtraNextTick();
 
-        assert.containsOnce(webClient, '.o_kanban_view');
-        assert.containsNone(webClient, '.o_search_panel');
+        assert.containsOnce(target, '.o_kanban_view');
+        assert.containsNone(target, '.o_search_panel');
     });
 
     QUnit.test('categories and filters are not reloaded when switching between views', async function (assert) {
@@ -2569,12 +2572,12 @@ QUnit.module('Views', {
             }
         };
 
-        const webClient = await createWebClient({ serverData, mockRPC });
+        const webClient = await createWebClient({ target, serverData, mockRPC });
         await doAction(webClient, 1);
 
-        await switchView(webClient, 'list');
+        await switchView(target, 'list');
         await legacyExtraNextTick();
-        await switchView(webClient, 'kanban');
+        await switchView(target, 'kanban');
         await legacyExtraNextTick();
 
         assert.verifySteps([
@@ -2593,32 +2596,35 @@ QUnit.module('Views', {
             serverData.models.category.records.push({id: i, name: "Cat " + i});
         }
 
-        const webClient = await createWebClient({ serverData });
-        webClient.el.querySelector('.o_action_manager').style.maxHeight = "300px";
+        const container = document.createElement("div");
+        container.classList.add("o_web_client");
+        container.style = "max-height: 300px";
+        target.appendChild(container);
+        const webClient = await createWebClient({ target: container, serverData });
 
         await doAction(webClient, 1);
 
         async function scroll(top) {
-            webClient.el.querySelector(".o_search_panel").scrollTop = top;
+            target.querySelector(".o_search_panel").scrollTop = top;
             await testUtils.nextTick();
         }
 
-        assert.containsOnce(webClient, '.o_content .o_kanban_view');
-        assert.strictEqual($(webClient.el).find('.o_search_panel').scrollTop(), 0);
+        assert.containsOnce(target, '.o_content .o_kanban_view');
+        assert.strictEqual($(target).find('.o_search_panel').scrollTop(), 0);
 
         // simulate a scroll in the search panel and switch into list
         await scroll(50);
-        await switchView(webClient, 'list');
+        await switchView(target, 'list');
         await legacyExtraNextTick();
-        assert.containsOnce(webClient, '.o_content .o_list_view');
-        assert.strictEqual($(webClient.el).find('.o_search_panel').scrollTop(), 50);
+        assert.containsOnce(target, '.o_content .o_list_view');
+        assert.strictEqual($(target).find('.o_search_panel').scrollTop(), 50);
 
         // simulate another scroll and switch back to kanban
         await scroll(30);
-        await switchView(webClient, 'kanban');
+        await switchView(target, 'kanban');
         await legacyExtraNextTick();
-        assert.containsOnce(webClient, '.o_content .o_kanban_view');
-        assert.strictEqual($(webClient.el).find('.o_search_panel').scrollTop(), 30);
+        assert.containsOnce(target, '.o_content .o_kanban_view');
+        assert.strictEqual($(target).find('.o_search_panel').scrollTop(), 30);
         SearchPanel.scrollDebounce = originalDebounce;
     });
 

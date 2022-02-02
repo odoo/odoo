@@ -11,7 +11,7 @@ export class CustomFavoriteItem extends Component {
     setup() {
         this.notificationService = useService("notification");
         this.descriptionRef = useRef("description");
-        useAutofocus();
+        useAutofocus("description");
         this.state = useState({
             description: this.env.config.getDisplayName(),
             isDefault: false,

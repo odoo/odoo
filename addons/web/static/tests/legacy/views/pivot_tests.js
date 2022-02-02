@@ -7,7 +7,7 @@ const PivotController = require("web.PivotController");
 var testUtils = require('web.test_utils');
 var testUtilsDom = require('web.test_utils_dom');
 const { browser } = require('@web/core/browser/browser');
-const { patchWithCleanup } = require('@web/../tests/helpers/utils');
+const { getFixture, patchWithCleanup } = require('@web/../tests/helpers/utils');
 const { registry } = require('@web/core/registry');
 const legacyViewRegistry = require('web.view_registry');
 
@@ -17,6 +17,8 @@ var _t = core._t;
 const cpHelpers = require('@web/../tests/search/helpers');
 var createView = testUtils.createView;
 var patchDate = testUtils.mock.patchDate;
+
+const { markup } = owl;
 
 /**
  * Helper function that returns, given a pivot instance, the values of the
@@ -32,6 +34,7 @@ var getCurrentValues = function (pivot) {
 
 
 let serverData;
+let target;
 
 QUnit.module('Views', {
     beforeEach: function () {
@@ -122,6 +125,7 @@ QUnit.module('Views', {
         };
 
         serverData = { models: this.data };
+        target = getFixture();
         patchWithCleanup(browser, { setTimeout: (fn) => fn() });
     },
 }, function () {
@@ -850,7 +854,7 @@ QUnit.module('Views', {
         await testUtils.dom.click(pivot.$('.o_pivot_field_menu .o_add_custom_group_menu .dropdown-menu button'));
         // click on closed header to open groupby selection dropdown
         await testUtils.dom.click(pivot.el.querySelector('tbody tr:last-child .o_pivot_header_cell_closed'));
-        assert.containsN(pivot, '.o_pivot_field_menu .o_menu_item', 4,
+        assert.containsN(pivot, '.o_pivot_field_menu .o_menu_item', 3,
             "should have 4 dropdown items pivot groupby dropdown");
 
         // applying custom groupby in pivot groupby dropdown will not update search dropdown
@@ -902,7 +906,7 @@ QUnit.module('Views', {
             "pivot groupby menu should have two separators"
         );
         assert.hasClass(
-            items[items.length - 1].nextSibling,
+            items[items.length - 1].nextElementSibling,
             "dropdown-divider",
             "pivot groupby menu separator is placed after all menu items"
         );
@@ -1910,7 +1914,7 @@ QUnit.module('Views', {
             'partner,false,form': '<form><field name="foo"/></form>',
         };
 
-        const webClient = await createWebClient({ serverData });
+        const webClient = await createWebClient({ target, serverData });
 
         await doAction(webClient, {
             res_model: 'partner',
@@ -1920,7 +1924,7 @@ QUnit.module('Views', {
         });
 
         assert.deepEqual(
-            [...webClient.el.querySelectorAll("tbody th")].map(e => e.innerText),
+            [...target.querySelectorAll("tbody th")].map(e => e.innerText),
             [
                 "Total",
                     "xphone",
@@ -1929,23 +1933,23 @@ QUnit.module('Views', {
         );
 
         // flip axis
-        await testUtils.dom.click(webClient.el.querySelector('.o_cp_buttons .o_pivot_flip_button'));
+        await testUtils.dom.click(target.querySelector('.o_cp_buttons .o_pivot_flip_button'));
         await testUtils.nextTick();
 
         assert.deepEqual(
-            [...webClient.el.querySelectorAll("tbody th")].map(e => e.innerText),
+            [...target.querySelectorAll("tbody th")].map(e => e.innerText),
             [
                 "Total",
             ]
         );
 
         // select filter "Bayou" in control panel
-        await cpHelpers.toggleFilterMenu(webClient);
-        await cpHelpers.toggleMenuItem(webClient, "Bayou");
+        await cpHelpers.toggleFilterMenu(target);
+        await cpHelpers.toggleMenuItem(target, "Bayou");
         await testUtils.nextTick();
 
         assert.deepEqual(
-            [...webClient.el.querySelectorAll("tbody th")].map(e => e.innerText),
+            [...target.querySelectorAll("tbody th")].map(e => e.innerText),
             [
                 "Total",
                     "xphone",
@@ -1954,17 +1958,15 @@ QUnit.module('Views', {
         );
 
         // close row header "Total"
-        await testUtils.dom.click(webClient.el.querySelector('tbody .o_pivot_header_cell_opened'));
+        await testUtils.dom.click(target.querySelector('tbody .o_pivot_header_cell_opened'));
         await testUtils.nextTick();
 
         assert.deepEqual(
-            [...webClient.el.querySelectorAll("tbody th")].map(e => e.innerText),
+            [...target.querySelectorAll("tbody th")].map(e => e.innerText),
             [
                 "Total"
             ]
         );
-
-        webClient.destroy();
     });
 
     QUnit.test('correctly group data after flip (2)', async function (assert) {
@@ -1977,7 +1979,7 @@ QUnit.module('Views', {
             'partner,false,form': '<form><field name="foo"/></form>',
         };
 
-        const webClient = await createWebClient({ serverData });
+        const webClient = await createWebClient({ target, serverData });
 
         await doAction(webClient, {
             res_model: 'partner',
@@ -1987,7 +1989,7 @@ QUnit.module('Views', {
         });
 
         assert.deepEqual(
-            [...webClient.el.querySelectorAll("tbody th")].map(e => e.innerText),
+            [...target.querySelectorAll("tbody th")].map(e => e.innerText),
             [
                 "Total",
                     "xphone",
@@ -1996,11 +1998,11 @@ QUnit.module('Views', {
         );
 
         // select filter "Bayou" in control panel
-        await cpHelpers.toggleFilterMenu(webClient);
-        await cpHelpers.toggleMenuItem(webClient, "Bayou");
+        await cpHelpers.toggleFilterMenu(target);
+        await cpHelpers.toggleMenuItem(target, "Bayou");
 
         assert.deepEqual(
-            [...webClient.el.querySelectorAll("tbody th")].map(e => e.innerText),
+            [...target.querySelectorAll("tbody th")].map(e => e.innerText),
             [
                 "Total",
                     "xphone",
@@ -2009,23 +2011,23 @@ QUnit.module('Views', {
         );
 
         // flip axis
-        await testUtils.dom.click(webClient.el.querySelector('.o_cp_buttons .o_pivot_flip_button'));
+        await testUtils.dom.click(target.querySelector('.o_cp_buttons .o_pivot_flip_button'));
         await testUtils.nextTick();
 
         assert.deepEqual(
-            [...webClient.el.querySelectorAll("tbody th")].map(e => e.innerText),
+            [...target.querySelectorAll("tbody th")].map(e => e.innerText),
             [
                 "Total"
             ]
         );
 
         // unselect filter "Bayou" in control panel
-        await cpHelpers.toggleFilterMenu(webClient);
-        await cpHelpers.toggleMenuItem(webClient, "Bayou");
+        await cpHelpers.toggleFilterMenu(target);
+        await cpHelpers.toggleMenuItem(target, "Bayou");
         await testUtils.nextTick();
 
         assert.deepEqual(
-            [...webClient.el.querySelectorAll("tbody th")].map(e => e.innerText),
+            [...target.querySelectorAll("tbody th")].map(e => e.innerText),
             [
                 "Total",
                     "xphone",
@@ -2034,17 +2036,15 @@ QUnit.module('Views', {
         );
 
         // close row header "Total"
-        await testUtils.dom.click(webClient.el.querySelector('tbody .o_pivot_header_cell_opened'));
+        await testUtils.dom.click(target.querySelector('tbody .o_pivot_header_cell_opened'));
         await testUtils.nextTick();
 
         assert.deepEqual(
-            [...webClient.el.querySelectorAll("tbody th")].map(e => e.innerText),
+            [...target.querySelectorAll("tbody th")].map(e => e.innerText),
             [
                 "Total"
             ]
         );
-
-        webClient.destroy();
     });
 
     QUnit.test('correctly group data after flip (3))', async function (assert) {
@@ -3569,7 +3569,7 @@ QUnit.module('Views', {
             domain: [['id', '<', 0]],
             viewOptions: {
                 action: {
-                    help: '<p class="abc">click to add a foo</p>'
+                    help: markup('<p class="abc">click to add a foo</p>'),
                 }
             },
         });
@@ -3600,7 +3600,7 @@ QUnit.module('Views', {
             domain: [['id', '<', 0]],
             viewOptions: {
                 action: {
-                    help: '<p class="abc">click to add a foo</p>'
+                    help: markup('<p class="abc">click to add a foo</p>'),
                 }
             },
         });
@@ -3633,7 +3633,7 @@ QUnit.module('Views', {
                 </pivot>`,
             viewOptions: {
                 action: {
-                    help: '<p class="abc">click to add a foo</p>'
+                    help: markup('<p class="abc">click to add a foo</p>'),
                 }
             },
         });

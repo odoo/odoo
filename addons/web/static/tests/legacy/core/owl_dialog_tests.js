@@ -1,4 +1,3 @@
-
 odoo.define('web.owl_dialog_tests', function (require) {
     "use strict";
 
@@ -6,22 +5,25 @@ odoo.define('web.owl_dialog_tests', function (require) {
     const makeTestEnvironment = require('web.test_env');
     const Dialog = require('web.OwlDialog');
     const testUtils = require('web.test_utils');
-    const { registry } = require("@web/core/registry");
-    const { makeFakeDialogService } = require("@web/../tests/helpers/mock_services");
 
     const { makeLegacyDialogMappingTestEnv } = require('@web/../tests/helpers/legacy_env_utils');
     const { Dialog: WowlDialog } = require("@web/core/dialog/dialog");
-    const { getFixture, nextTick, patchWithCleanup } = require("@web/../tests/helpers/utils");
+    const {
+        getFixture,
+        nextTick,
+        mount,
+        destroy,
+    } = require("@web/../tests/helpers/utils");
     const { createWebClient, doAction } = require("@web/../tests/webclient/helpers");
 
-    const { Component, mount, useState, xml } = owl;
+    const { Component, useState, xml } = owl;
     const EscapeKey = { key: 'Escape', keyCode: 27, which: 27 };
 
     QUnit.module('core', {}, function () {
         QUnit.module('OwlDialog');
 
         QUnit.test("Rendering of all props", async function (assert) {
-            assert.expect(35);
+            assert.expect(36);
 
             class SubComponent extends Component {
                 // Handlers
@@ -32,12 +34,11 @@ odoo.define('web.owl_dialog_tests', function (require) {
             SubComponent.template = xml`<div class="o_subcomponent" t-esc="props.text" t-on-click="_onClick"/>`;
 
             class Parent extends Component {
-                constructor() {
-                    super(...arguments);
+                setup() {
                     this.state = useState({ textContent: "sup" });
                 }
                 // Handlers
-                _onButtonClicked(ev) {
+                _onButtonClicked() {
                     assert.step('button_clicked');
                 }
                 _onDialogClosed() {
@@ -45,7 +46,6 @@ odoo.define('web.owl_dialog_tests', function (require) {
                 }
             }
             Parent.components = { Dialog, SubComponent };
-            Parent.env = makeTestEnvironment();
             Parent.template = xml`
                 <Dialog
                     backdrop="state.backdrop"
@@ -57,16 +57,18 @@ odoo.define('web.owl_dialog_tests', function (require) {
                     subtitle="state.subtitle"
                     technical="state.technical"
                     title="state.title"
-                    t-on-dialog-closed="_onDialogClosed"
+                    onClosed="_onDialogClosed"
                     >
                     <SubComponent text="state.textContent"/>
-                    <t t-set="buttons">
+                    <t t-set-slot="buttons">
                         <button class="btn btn-primary" t-on-click="_onButtonClicked">The Button</button>
                     </t>
                 </Dialog>`;
 
-            const parent = new Parent();
-            await parent.mount(testUtils.prepareTarget());
+            const parent = await mount(Parent, {
+                env: makeTestEnvironment(),
+                target: getFixture(),
+            });
             const dialog = document.querySelector('.o_dialog');
 
             // Helper function
@@ -150,6 +152,7 @@ odoo.define('web.owl_dialog_tests', function (require) {
 
             // Reactivity of buttons
             await testUtils.dom.click(dialog.querySelector('.modal-footer .btn-primary'));
+            assert.verifySteps(["button_clicked"]);
 
             // Render footer (default: true)
             await changeProps('renderFooter', false);
@@ -165,18 +168,15 @@ odoo.define('web.owl_dialog_tests', function (require) {
                 "Subcomponent should match with its given text");
             await testUtils.dom.click(dialog.querySelector('.o_subcomponent'));
 
-            assert.verifySteps(['button_clicked', 'subcomponent_clicked']);
-
-            parent.destroy();
+            assert.verifySteps(["subcomponent_clicked"]);
         });
 
         QUnit.test("Interactions between multiple dialogs", async function (assert) {
-            assert.expect(22);
+            assert.expect(23);
 
             const { legacyEnv } = await makeLegacyDialogMappingTestEnv();
             class Parent extends Component {
-                constructor() {
-                    super(...arguments);
+                setup() {
                     this.dialogIds = useState([]);
                 }
                 // Handlers
@@ -186,17 +186,17 @@ odoo.define('web.owl_dialog_tests', function (require) {
                 }
             }
             Parent.components = { Dialog };
-            Parent.env = legacyEnv;
             Parent.template = xml`
                 <div>
                     <Dialog t-foreach="dialogIds" t-as="dialogId" t-key="dialogId"
-                        contentClass="'dialog_' + dialogId"
-                        t-on-dialog-closed="_onDialogClosed(dialogId)"
-                    />
+                        contentClass="'dialog_' + dialogId" onClosed="() => this._onDialogClosed(dialogId)"
+                        />
                 </div>`;
 
-            const parent = new Parent();
-            await parent.mount(testUtils.prepareTarget());
+            const parent = await mount(Parent, {
+                env: legacyEnv,
+                target: getFixture(),
+            });
 
             // Dialog 1 : Owl
             parent.dialogIds.push(1);
@@ -220,6 +220,7 @@ odoo.define('web.owl_dialog_tests', function (require) {
             // Manually closes the last legacy dialog. Should not affect the other
             // existing dialogs (3 owl and 2 legacy).
             unopenedModal.close();
+            assert.containsN(document.body, ".modal", 5);
 
             let modals = document.querySelectorAll('.modal');
             assert.notOk(modals[modals.length - 1].classList.contains('o_inactive_modal'),
@@ -267,47 +268,43 @@ odoo.define('web.owl_dialog_tests', function (require) {
             assert.containsOnce(document.body, '.o_dialog');
             assert.containsNone(document.body, '.o_legacy_dialog');
 
-            parent.unmount();
+            destroy(parent);
 
             assert.containsNone(document.body, '.modal');
             // dialog 1 is closed through the removal of its parent => no callback
             assert.verifySteps(['dialog_5_closed', 'dialog_4_closed']);
-
-            parent.destroy();
         });
 
         QUnit.test("Interactions between legacy owl dialogs and new owl dialogs", async function (assert) {
-            assert.expect(7);
+            assert.expect(9);
             const { legacyEnv, env } = await makeLegacyDialogMappingTestEnv();
 
-            let id = 1;
-            // OwlDialog env
             class OwlDialogWrapper extends Component {
                 setup() {
                     this.env = legacyEnv;
+                    this.__owl__.childEnv = legacyEnv;
                 }
             }
             OwlDialogWrapper.template = xml`
-                <Dialog t-on-dialog-closed="props.close()" />
+                <Dialog
+                onClosed="() => props.close()"
+                />
             `;
             OwlDialogWrapper.components = { Dialog };
             class WowlDialogSubClass extends WowlDialog{
-                setup(){
+                setup() {
                     super.setup();
                     this.contentClass = this.props.contentClass;
                 }
             }
             class Parent extends Component {
                 setup() {
-                    super.setup();
                     this.dialogs = useState([]);
                 }
                 // Handlers
                 _onDialogClosed(id) {
-                    return () => {
-                        assert.step(`dialog_${id}_closed`);
-                        this.dialogs.splice(this.dialogs.findIndex(d => d.id === id), 1);
-                    };
+                    assert.step(`dialog_${id}_closed`);
+                    this.dialogs.splice(this.dialogs.findIndex(d => d.id === id), 1);
                 }
             }
             Parent.template = xml`
@@ -315,30 +312,30 @@ odoo.define('web.owl_dialog_tests', function (require) {
                     <div class="o_dialog_container"/>
                     <t t-foreach="dialogs" t-as="dialog" t-key="dialog.id" t-component="dialog.class"
                         contentClass="'dialog_' + dialog.id"
-                        close="_onDialogClosed(dialog.id)"
+                        close="() => this._onDialogClosed(dialog.id)"
                     />
                 </div>`;
-            const parent = await mount(Parent, { env, target: getFixture() });
+
+            const target = getFixture();
+            const parent = await mount(Parent, {env, target });
 
             parent.dialogs.push({ id: 1, class: WowlDialogSubClass });
             await nextTick();
-            id ++;
             parent.dialogs.push({ id: 2, class: OwlDialogWrapper });
             await nextTick();
-            id ++;
             parent.dialogs.push({ id: 3, class: WowlDialogSubClass });
             await nextTick();
 
             assert.verifySteps([]);
+            assert.containsN(document.body, ".modal", 3);
             await testUtils.dom.triggerEvent(window, 'keydown', EscapeKey); // Press Escape
             assert.verifySteps(['dialog_3_closed']);
             await testUtils.dom.triggerEvent(window, 'keydown', EscapeKey); // Press Escape
             assert.verifySteps(['dialog_2_closed']);
             await testUtils.dom.triggerEvent(window, 'keydown', EscapeKey); // Press Escape
             assert.verifySteps(['dialog_1_closed']);
-
-            parent.unmount();
-            parent.destroy();
+            await nextTick();
+            assert.containsNone(document.body, ".modal");
         });
 
         QUnit.test("Z-index toggling and interactions", async function (assert) {
@@ -362,22 +359,36 @@ odoo.define('web.owl_dialog_tests', function (require) {
                 return modal;
             }
 
-            class Parent extends Component {
-                constructor() {
-                    super(...arguments);
+            class Parent1 extends Component {
+                setup() {
+                }
+            }
+            Parent1.components = { Dialog };
+            Parent1.template = xml`
+                <div>
+                    <Dialog/>
+                </div>`;
+
+            const parent1 = await mount(Parent1, {
+                env: makeTestEnvironment(),
+                target: getFixture(),
+            });
+
+            class Parent2 extends Component {
+                setup() {
                     this.state = useState({ showSecondDialog: true });
                 }
             }
-            Parent.components = { Dialog };
-            Parent.env = makeTestEnvironment();
-            Parent.template = xml`
+            Parent2.components = { Dialog };
+            Parent2.template = xml`
                 <div>
-                    <Dialog/>
                     <Dialog t-if="state.showSecondDialog"/>
                 </div>`;
 
-            const parent = new Parent();
-            await parent.mount(testUtils.prepareTarget());
+            const parent2 = await mount(Parent2, {
+                env: makeTestEnvironment(),
+                target: getFixture(),
+            });
 
             const frontEndModal = createCustomModal('modal');
             const backEndModal = createCustomModal('modal o_technical_modal');
@@ -387,7 +398,7 @@ odoo.define('web.owl_dialog_tests', function (require) {
             const feZIndexBefore = getComputedStyle(frontEndModal).zIndex;
             const beZIndexBefore = getComputedStyle(backEndModal).zIndex;
 
-            parent.state.showSecondDialog = false;
+            parent2.state.showSecondDialog = false;
             await testUtils.nextTick();
 
             assert.ok(owlIndexBefore < getComputedStyle(document.querySelector('.o_dialog .modal')).zIndex,
@@ -397,9 +408,10 @@ odoo.define('web.owl_dialog_tests', function (require) {
             assert.strictEqual(beZIndexBefore, getComputedStyle(backEndModal).zIndex,
                 "z-index of custom back-end modals should not be impacted by Owl Dialog activity system");
 
-            parent.destroy();
             frontEndModal.destroy();
             backEndModal.destroy();
+            destroy(parent1);
+            destroy(parent2);
         });
 
         QUnit.test("remove tabindex on inactive dialog", async (assert) => {
@@ -453,56 +465,57 @@ odoo.define('web.owl_dialog_tests', function (require) {
                 },
             };
 
-            const webClient = await createWebClient({ serverData });
+            const target = getFixture();
+            const webClient = await createWebClient({ target, serverData });
             await doAction(webClient, 1);
 
-            await testUtils.dom.click(webClient.el.querySelector(`.fc-event[data-event-id="1"]`));
-            await testUtils.dom.click(webClient.el.querySelector(`.o_cw_popover_edit`));
+            await testUtils.dom.click(target.querySelector(`.fc-event[data-event-id="1"]`));
+            await testUtils.dom.click(target.querySelector(`.o_cw_popover_edit`));
 
-            assert.containsNone(webClient.el, ".o_dialog");
-            assert.containsOnce(webClient.el, ".modal");
-            assert.containsOnce(webClient.el, ".modal[tabindex='-1']");
+            assert.containsNone(target, ".o_dialog");
+            assert.containsOnce(target, ".modal");
+            assert.containsOnce(target, ".modal[tabindex='-1']");
 
             assert.strictEqual(
-                webClient.el.querySelector(`.o_field_widget[name="display_name"]`).value,
+                target.querySelector(`.o_field_widget[name="display_name"]`).value,
                 "Event 1"
             );
             await testUtils.fields.editInput(
-                webClient.el.querySelector(`.o_field_widget[name="display_name"]`),
+                target.querySelector(`.o_field_widget[name="display_name"]`),
                 "legacy"
             );
             assert.strictEqual(
-                webClient.el.querySelector(`.o_field_widget[name="display_name"]`).value,
+                target.querySelector(`.o_field_widget[name="display_name"]`).value,
                 "legacy"
             );
 
-            await testUtils.dom.click(webClient.el.querySelector(`button[name="2"]`));
-            assert.containsOnce(webClient.el, ".o_dialog");
-            assert.containsN(webClient.el, ".modal", 2);
-            assert.containsOnce(webClient.el, ".modal:not([tabindex='-1'])");
-            assert.containsOnce(webClient.el, ".o_dialog .modal[tabindex='-1']");
+            await testUtils.dom.click(target.querySelector(`button[name="2"]`));
+            assert.containsOnce(target, ".o_dialog");
+            assert.containsN(target, ".modal", 2);
+            assert.containsOnce(target, ".modal:not([tabindex='-1'])");
+            assert.containsOnce(target, ".o_dialog .modal[tabindex='-1']");
 
             assert.strictEqual(
-                webClient.el.querySelector(`.o_dialog .o_field_widget[name="display_name"]`).value,
+                target.querySelector(`.o_dialog .o_field_widget[name="display_name"]`).value,
                 ""
             );
             await testUtils.fields.editInput(
-                webClient.el.querySelector(`.o_dialog .o_field_widget[name="display_name"]`),
+                target.querySelector(`.o_dialog .o_field_widget[name="display_name"]`),
                 "wowl"
             );
             assert.strictEqual(
-                webClient.el.querySelector(`.o_dialog .o_field_widget[name="display_name"]`).value,
+                target.querySelector(`.o_dialog .o_field_widget[name="display_name"]`).value,
                 "wowl"
             );
 
-            await testUtils.dom.click(webClient.el.querySelector(`.o_dialog .modal-header .close`));
-            assert.containsNone(webClient.el, ".o_dialog");
-            assert.containsOnce(webClient.el, ".modal");
-            assert.containsOnce(webClient.el, ".modal[tabindex='-1']");
+            await testUtils.dom.click(target.querySelector(`.o_dialog .modal-header .close`));
+            assert.containsNone(target, ".o_dialog");
+            assert.containsOnce(target, ".modal");
+            assert.containsOnce(target, ".modal[tabindex='-1']");
 
-            await testUtils.dom.click(webClient.el.querySelector(`.modal-header .close`));
-            assert.containsNone(webClient.el, ".o_dialog");
-            assert.containsNone(webClient.el, ".modal");
+            await testUtils.dom.click(target.querySelector(`.modal-header .close`));
+            assert.containsNone(target, ".o_dialog");
+            assert.containsNone(target, ".modal");
         });
     });
 });

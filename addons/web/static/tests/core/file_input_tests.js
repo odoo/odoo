@@ -4,9 +4,8 @@ import { FileInput } from "@web/core/file_input/file_input";
 import { registry } from "@web/core/registry";
 import testUtils from "web.test_utils";
 import { makeTestEnv } from "../helpers/mock_env";
-import { getFixture } from "../helpers/utils";
+import { getFixture, mount } from "../helpers/utils";
 
-const { mount } = owl;
 const serviceRegistry = registry.category("services");
 
 // -----------------------------------------------------------------------------
@@ -59,6 +58,7 @@ QUnit.module("Components", () => {
                 assert.step(route);
                 return "[]";
             },
+            props: {},
         });
         const input = fileInput.el.querySelector("input");
 
@@ -73,8 +73,6 @@ QUnit.module("Components", () => {
 
         assert.notOk(input.multiple, "'multiple' attribute should not be set");
         assert.verifySteps(["/web/binary/upload"]);
-
-        fileInput.destroy();
     });
 
     QUnit.test("Upload a file: custom attachment", async function (assert) {
@@ -114,7 +112,5 @@ QUnit.module("Components", () => {
 
         assert.ok(input.multiple, "'multiple' attribute should be set");
         assert.verifySteps(["/web/binary/upload_attachment"]);
-
-        fileInput.destroy();
     });
 });

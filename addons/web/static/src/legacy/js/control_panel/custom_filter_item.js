@@ -42,9 +42,7 @@ odoo.define('web.CustomFilterItem', function (require) {
      *                     ]
      */
     class CustomFilterItem extends Component {
-        constructor() {
-            super(...arguments);
-
+        setup() {
             this.model = useModel('searchModel');
 
             this.conditions = useState([]);

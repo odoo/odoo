@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.GroupByMenu" owl="1">
-        <Dropdown class="o_group_by_menu btn-group"
+        <Dropdown class="'o_group_by_menu btn-group' + props.class"
             togglerClass="'btn btn-light'"
             t-props="dropdownProps"
         >
@@ -25,8 +25,7 @@
                             <t t-if="subGroup !== null and subGroup !== option.groupNumber">
                                 <div class="dropdown-divider" role="separator"/>
                             </t>
-                            <DropdownItem class="o_item_option"
-                                t-att-class="{ selected: option.isActive }"
+                            <DropdownItem class="{ o_item_option: true, selected: option.isActive }"
                                 parentClosingMode="'none'"
                                 t-esc="option.description"
                                 onSelected="() => this.onGroupBySelected({ itemId: item.id, optionId: option.id})"
@@ -36,8 +35,7 @@
                     </Dropdown>
                 </t>
                 <t t-else="">
-                    <DropdownItem class="o_menu_item"
-                        t-att-class="{ selected: item.isActive }"
+                    <DropdownItem class="{ o_menu_item: true, selected: item.isActive }"
                         parentClosingMode="'none'"
                         t-esc="item.description"
                         onSelected="() => this.onGroupBySelected({ itemId: item.id })"
@@ -47,7 +45,7 @@
             </t>
             <t t-if="fields.length">
                 <div t-if="items.length" role="separator" class="dropdown-divider"/>
-                <CustomGroupByItem fields="fields" t-on-add-custom-group="onAddCustomGroup"/>
+                <CustomGroupByItem fields="fields" onAddCustomGroup.bind="onAddCustomGroup"/>
             </t>
         </Dropdown>
     </t>

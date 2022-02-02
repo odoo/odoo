@@ -9,9 +9,17 @@ import { actionService } from "@web/webclient/actions/action_service";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { NavBar } from "@web/webclient/navbar/navbar";
 import { clearRegistryWithCleanup, makeTestEnv } from "../helpers/mock_env";
-import { click, getFixture, nextTick, patchWithCleanup, makeDeferred } from "../helpers/utils";
+import {
+    click,
+    destroy,
+    getFixture,
+    mount,
+    nextTick,
+    patchWithCleanup,
+    makeDeferred,
+} from "../helpers/utils";
 
-const { Component, mount, xml } = owl;
+const { Component, xml } = owl;
 const systrayRegistry = registry.category("systray");
 const serviceRegistry = registry.category("services");
 
@@ -49,7 +57,6 @@ QUnit.test("can be rendered", async (assert) => {
         ".o_navbar_apps_menu button.dropdown-toggle",
         "1 apps menu toggler present"
     );
-    navbar.destroy();
 });
 
 QUnit.test("dropdown menu can be toggled", async (assert) => {
@@ -61,7 +68,6 @@ QUnit.test("dropdown menu can be toggled", async (assert) => {
     assert.containsOnce(dropdown, ".dropdown-menu");
     await click(dropdown, "button.dropdown-toggle");
     assert.containsNone(dropdown, ".dropdown-menu");
-    navbar.destroy();
 });
 
 QUnit.test("data-menu-xmlid attribute on AppsMenu items", async (assert) => {
@@ -103,8 +109,6 @@ QUnit.test("data-menu-xmlid attribute on AppsMenu items", async (assert) => {
     // check sub menus
     await click(navbar.el.querySelector(".o_menu_sections .dropdown-toggle"));
     assert.containsOnce(navbar, ".o_menu_sections .dropdown-item[data-menu-xmlid=menu_5]");
-
-    navbar.destroy();
 });
 
 QUnit.test("navbar can display current active app", async (assert) => {
@@ -128,7 +132,6 @@ QUnit.test("navbar can display current active app", async (assert) => {
         ".dropdown-menu .dropdown-item.focus",
         "should show the current active app"
     );
-    navbar.destroy();
 });
 
 QUnit.test("navbar can display systray items", async (assert) => {
@@ -136,7 +139,6 @@ QUnit.test("navbar can display systray items", async (assert) => {
     const target = getFixture();
     const navbar = await mount(NavBar, { env, target });
     assert.containsOnce(navbar.el, "li.my-item");
-    navbar.destroy();
 });
 
 QUnit.test("navbar can display systray items ordered based on their sequence", async (assert) => {
@@ -160,7 +162,6 @@ QUnit.test("navbar can display systray items ordered based on their sequence", a
     const menuSystray = navbar.el.getElementsByClassName("o_menu_systray")[0];
     assert.containsN(menuSystray, "li", 4, "four systray items should be displayed");
     assert.strictEqual(menuSystray.innerText, "my item 3\nmy item 4\nmy item 2\nmy item 1");
-    navbar.destroy();
 });
 
 QUnit.test("can adapt with 'more' menu sections behavior", async (assert) => {
@@ -237,7 +238,6 @@ QUnit.test("can adapt with 'more' menu sections behavior", async (assert) => {
         "adapt -> hide 3/3 sections",
         "adapt -> hide 0/3 sections",
     ]);
-    navbar.destroy();
 });
 
 QUnit.test(
@@ -345,8 +345,6 @@ QUnit.test(
             2,
             "during adapt, render triggered as the more menu dropdown is NO MORE the same"
         );
-
-        navbar.destroy();
     }
 );
 
@@ -417,7 +415,6 @@ QUnit.test("'more' menu sections properly updated on app change", async (assert)
         ["Section 20", "Section 21", "Section 22", "Section 220", "Section 221", "Section 222"],
         "'more' menu should contain App2 sections"
     );
-    navbar.destroy();
 });
 
 QUnit.test("Do not execute adapt when navbar is destroyed", async (assert) => {
@@ -452,7 +449,7 @@ QUnit.test("Do not execute adapt when navbar is destroyed", async (assert) => {
     prom = makeDeferred();
     assert.verifySteps(["adapt NavBar"]);
     window.dispatchEvent(new Event("resize"));
-    navbar.destroy();
+    destroy(navbar);
     prom.resolve();
     await prom;
     assert.verifySteps([]);

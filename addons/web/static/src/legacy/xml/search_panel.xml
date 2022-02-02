@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 
 <t t-name="web.Legacy.SearchPanel" owl="1">
-    <div class="o_search_panel" t-att-class="props.className">
+    <div class="o_search_panel" t-att-class="props.className" t-ref="legacySearchPanel">
         <section t-foreach="model.get('sections', s => !s.empty)" t-as="section" t-key="section.id"
             t-attf-class="o_search_panel_section o_search_panel_{{ section.type }}"
             >
@@ -34,7 +34,7 @@
                                 <input type="checkbox"
                                     class="custom-control-input"
                                     t-attf-id="{{ section.id }}_input_{{ groupId }})"
-                                    t-on-click="_toggleFilterGroup(section.id, group)"
+                                    t-on-click="_toggleFilterGroup.bind(this, section.id, group)"
                                 />
                                 <label t-attf-for="{{ section.id }}_input_{{ groupId }})"
                                     class="o_search_panel_label custom-control-label"
@@ -79,7 +79,7 @@
         <li class="o_search_panel_category_value list-group-item border-0">
             <header class="list-group-item-action"
                 t-att-class="{ active: state.active[section.id] === valueId }"
-                t-on-click="_toggleCategory(section, value)"
+                t-on-click="() => this._toggleCategory(section, value)"
                 >
                 <label class="o_search_panel_label mb0" t-att-class="{ o_with_counters: section.enableCounters }">
                     <div class="o_toggle_fold">
@@ -114,7 +114,7 @@
                 t-attf-id="{{ section.id }}_input_{{ valueId }}"
                 t-att-checked="state.active[section.id][valueId]"
                 class="custom-control-input"
-                t-on-click="_toggleFilterValue(section.id, valueId)"
+                t-on-click="_toggleFilterValue.bind(this, section.id, valueId)"
             />
             <label class="o_search_panel_label custom-control-label"
                 t-attf-for="{{ section.id }}_input_{{ valueId }}"

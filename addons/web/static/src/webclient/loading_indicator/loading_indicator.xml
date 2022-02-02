@@ -3,7 +3,8 @@
 
     <t t-name="web.LoadingIndicator" owl="1">
         <div t-attf-class="o_loading_indicator {{state.show ? 'o_loading' : ''}}">
-            <span t-if="state.show" t-transition="fade">
+            <span t-if="state.show">
+                <!-- NXOWL t-transition="fade" -->
                 <t>Loading<t t-if="env.debug" t-esc="' (' + state.count + ')'" /></t>
             </span>
         </div>

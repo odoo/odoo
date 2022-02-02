@@ -70,8 +70,6 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
             assert.containsN(cfi, '.o_filter_condition', 2);
             assert.containsOnce(cfi, '.o_filter_condition .o_or_filter');
             assert.containsN(cfi, '.o_filter_condition .o_generator_menu_delete', 2);
-
-            cfi.destroy();
         });
 
         QUnit.test('custom OR filter presets new condition from preceding', async function (assert) {
@@ -112,8 +110,6 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
                 cfi.el.querySelector('.o_filter_condition:nth-of-type(2) .o_generator_menu_operator').value,
                 operatorSecondValue
             );
-
-            cfi.destroy();
         });
 
         QUnit.test('binary field: basic search', async function (assert) {
@@ -154,8 +150,6 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
             await testUtils.fields.editSelect(cfi.el.querySelector('.o_generator_menu_field'), 'binary_field');
             await cpHelpers.editConditionOperator(cfi, 0, '=');
             await cpHelpers.applyFilter(cfi);
-
-            cfi.destroy();
         });
 
         QUnit.test('selection field: default and updated value', async function (assert) {
@@ -196,8 +190,6 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
             await testUtils.fields.editSelect(cfi.el.querySelector('.o_generator_menu_field'), 'color');
             await testUtils.fields.editSelect(cfi.el.querySelector('.o_generator_menu_value select'), 'white');
             await cpHelpers.applyFilter(cfi);
-
-            cfi.destroy();
         });
 
         QUnit.test('adding a simple filter works', async function (assert) {
@@ -231,8 +223,6 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
             assert.strictEqual(cfi.el.children.length, 2);
             assert.containsOnce(cfi, 'button.dropdown-toggle');
             assert.containsOnce(cfi, '.dropdown-menu');
-
-            cfi.destroy();
         });
 
         QUnit.test('filtering by ID interval works', async function (assert) {
@@ -277,8 +267,6 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
             for (const domain of [...expectedDomains]) {
                 await testValue(domain[0][1], domain[0][2]);
             }
-
-            cfi.destroy();
         });
 
 
@@ -330,7 +318,6 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
             }
 
             delete ActionModel.registry.map.testExtension;
-            cfi.destroy();
         });
 
         QUnit.test('custom filter datetime with equal operator', async function (assert) {
@@ -371,8 +358,6 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
             await cpHelpers.editConditionOperator(cfi, 0, '=');
             await testUtils.fields.editSelect(cfi.el.querySelector('.o_filter_condition span.o_generator_menu_value input'), '02/22/2017 11:00:00'); // in TZ
             await cpHelpers.applyFilter(cfi);
-
-            cfi.destroy();
         });
 
         QUnit.test('custom filter datetime between operator', async function (assert) {
@@ -415,8 +400,6 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
             await testUtils.fields.editSelect(valueInputs[0], '02/22/2017 11:00:00'); // in TZ
             await testUtils.fields.editSelect(valueInputs[1], '02-22-2017 17:00:00'); // in TZ
             await cpHelpers.applyFilter(cfi);
-
-            cfi.destroy();
         });
 
         QUnit.test('default custom filter datetime', async function (assert) {
@@ -454,8 +437,6 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
             assert.strictEqual(cfi.el.querySelector('.o_generator_menu_operator').value, 'between');
 
             await cpHelpers.applyFilter(cfi);
-
-            cfi.destroy();
         });
 
         QUnit.test('input value parsing', async function (assert) {
@@ -497,8 +478,6 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
             await cpHelpers.editConditionValue(cfi, 1, "DefinitelyValidID");
             // String input in a number input gives "", which is parsed as 0
             assert.strictEqual(idInput.value, "0");
-
-            cfi.destroy();
         });
 
         QUnit.test('input value parsing with language', async function (assert) {
@@ -539,8 +518,6 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
             await cpHelpers.editConditionValue(cfi, 0, "DefinitelyValidFloat");
             // The input here is a string, resulting in a parsing error instead of 0
             assert.strictEqual(floatInput.value, "4,2");
-
-            cfi.destroy();
         });
 
         QUnit.test('add custom filter with multiple values', async function (assert) {
@@ -608,8 +585,6 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
             await cpHelpers.removeCondition(cfi, 2);
 
             await cpHelpers.applyFilter(cfi);
-
-            cfi.destroy();
         });
     });
 });

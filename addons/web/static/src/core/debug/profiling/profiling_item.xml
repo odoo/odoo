@@ -5,7 +5,7 @@
         <DropdownItem>
             <div class="o_debug_profiling_item">
                 <span class="o_profiling_switch">
-                    <span class="custom-control custom-switch" t-on-click.stop.prevent="profiling.toggleProfiling()">
+                    <span class="custom-control custom-switch" t-on-click.stop.prevent="() => this.profiling.toggleProfiling()">
                         <input type="checkbox" class="custom-control-input" id="enable_profiling" t-att-checked="profiling.state.isEnabled"/>
                         <label class="custom-control-label">
                             Enable profiling
@@ -15,12 +15,12 @@
                     <i class="o_open_profiling float-right fa fa-list fa-lg" t-on-click="openProfiles"/>
                 </span>
                 <t t-if="profiling.state.isEnabled">
-                    <span class="o_profiling_switch custom-control custom-switch" t-on-click.stop.prevent="profiling.toggleCollector('sql')">
+                    <span class="o_profiling_switch custom-control custom-switch" t-on-click.stop.prevent="() => this.profiling.toggleCollector('sql')">
                         <input type="checkbox" class="custom-control-input" id="profile_sql"
                             t-att-checked="profiling.isCollectorEnabled('sql')"/>
                         <label class="custom-control-label" for="profile_sql">Record sql</label>
                     </span>
-                    <span class="o_profiling_switch custom-control custom-switch" t-on-click.stop.prevent="profiling.toggleCollector('traces_async')">
+                    <span class="o_profiling_switch custom-control custom-switch" t-on-click.stop.prevent="() => this.profiling.toggleCollector('traces_async')">
                         <input type="checkbox" class="custom-control-input" id="profile_traces_async"
                             t-att-checked="profiling.isCollectorEnabled('traces_async')"/>
                         <label class="custom-control-label" for="profile_traces_async">Record traces</label>
@@ -29,7 +29,7 @@
                         <div class="input-group-prepend">
                             <div class="input-group-text">Interval</div>
                         </div>
-                        <select class="profile_param form-control" t-on-change="changeParam('traces_async_interval')">
+                        <select class="profile_param form-control" t-on-change="(ev) => this.changeParam('traces_async_interval', ev)">
                             <t t-set="interval" t-value="profiling.state.params.traces_async_interval"/>
                             <option value="">Default</option>
                             <option value="0.001" t-att-selected="interval === '0.001'">0.001</option>
@@ -38,12 +38,12 @@
                             <option value="1" t-att-selected="interval === '1'">1</option>
                         </select>
                     </div>
-                    <span t-if="profiling.isCollectorEnabled('sql') || profiling.isCollectorEnabled('traces_async')" class="o_profiling_switch custom-control custom-switch" t-on-click.stop.prevent="toggleParam('execution_context_qweb')">
+                    <span t-if="profiling.isCollectorEnabled('sql') || profiling.isCollectorEnabled('traces_async')" class="o_profiling_switch custom-control custom-switch" t-on-click.stop.prevent="(ev) => this.toggleParam('execution_context_qweb')">
                         <input type="checkbox" class="custom-control-input" id="profile_execution_context_qweb"
                             t-att-checked="!!profiling.state.params.execution_context_qweb"/>
                         <label class="custom-control-label" for="profile_execution_context_qweb">Add qweb directive context</label>
                     </span>
-                    <span class="o_profiling_switch custom-control custom-switch" t-on-click.stop.prevent="profiling.toggleCollector('qweb')">
+                    <span class="o_profiling_switch custom-control custom-switch" t-on-click.stop.prevent="() => this.profiling.toggleCollector('qweb')">
                         <input type="checkbox" class="custom-control-input" id="profile_qweb"
                             t-att-checked="profiling.isCollectorEnabled('qweb')"/>
                         <label class="custom-control-label" for="profile_qweb">Record qweb</label>

@@ -2,8 +2,8 @@
 <templates xml:space="preserve">
 
     <t t-name="web.FileInput" owl="1">
-        <span class="o_file_input" aria-atomic="true">
-            <span class="o_file_input_trigger" t-on-click.prevent="onTriggerClicked">
+        <span class="o_file_input" aria-atomic="true" t-on-uploaded="(ev) => this.onUpload(ev)">
+            <span class="o_file_input_trigger" t-on-click.prevent="() => this.onTriggerClicked()">
                 <t t-slot="default">
                     <button class="btn btn-primary">Choose File</button>
                 </t>
@@ -11,7 +11,7 @@
             <input type="file" name="ufile" class="o_input_file d-none"
                 t-att="{multiple: props.multi_upload, accept: props.accepted_file_extensions}"
                 t-ref="file-input"
-                t-on-change="onFileInputChange"
+                t-on-change="this.onFileInputChange"
             />
         </span>
     </t>

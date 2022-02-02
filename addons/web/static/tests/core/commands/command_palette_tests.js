@@ -12,13 +12,14 @@ import {
     click,
     getFixture,
     makeDeferred,
+    mount,
     nextTick,
     patchWithCleanup,
     triggerHotkey,
 } from "../../helpers/utils";
 import { editSearchBar } from "./command_service_tests";
 
-const { Component, mount, xml } = owl;
+const { Component, xml } = owl;
 
 let env;
 let target;
@@ -56,11 +57,6 @@ QUnit.module("Command Palette Dialog", {
 
         env = await makeTestEnv();
         target = getFixture();
-    },
-    afterEach() {
-        if (testComponent) {
-            testComponent.destroy();
-        }
     },
 });
 

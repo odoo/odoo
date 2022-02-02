@@ -17,6 +17,7 @@
     ];
 
     const { isEnterprise } = odoo.info;
+    const { onWillStart } = owl;
     let appsMenusOnly = false;
     let actionCount = 0;
     let viewUpdateCount = 0;
@@ -38,7 +39,7 @@
         }
         setupDone = true;
         const env = odoo.__WOWL_DEBUG__.root.env;
-        env.bus.on("ACTION_MANAGER:UI-UPDATED", null, () => {
+        env.bus.addEventListener("ACTION_MANAGER:UI-UPDATED", () => {
             actionCount++;
         });
 
@@ -58,9 +59,11 @@
         const { WithSearch } = odoo.__DEBUG__.services["@web/search/with_search/with_search"];
 
         patch(WithSearch.prototype, "PatchedWithSearch", {
-            async willStart() {
-                await this._super(...arguments);
-                viewUpdateCount++;
+            setup() {
+                this._super();
+                onWillStart(() => {
+                    viewUpdateCount++;
+                });
             },
             async render() {
                 await this._super(...arguments);
@@ -155,7 +158,13 @@
     async function ensureHomeMenu() {
         const homeMenu = document.querySelector(".o_home_menu");
         if (!homeMenu) {
-            const menuToggle = document.querySelector("nav.o_main_navbar > a.o_menu_toggle.fa-th");
+            let menuToggle = document.querySelector("nav.o_main_navbar > a.o_menu_toggle.fa-th");
+            if (!menuToggle) {
+                // In the Barcode application, there is no navbar. So you have to click
+                // on the o_stock_barcode_menu button which is the equivalent of
+                // the o_menu_toggle button in the navbar.
+                menuToggle = document.querySelector(".o_stock_barcode_menu");
+            }
             await triggerClick(menuToggle, "home menu toggle button");
             await waitForCondition(() => document.querySelector(".o_home_menu"));
         }
@@ -191,11 +200,11 @@
         let menu = menus[menuIndex];
         if (menu.classList.contains("dropdown-toggle")) {
             // the current menu is a dropdown toggler -> open it and pick a menu inside the dropdown
-            if (!menu.nextSibling) {
+            if (!menu.nextElementSibling) {
                 // might already be opened if the last menu was blacklisted
                 await triggerClick(menu, "menu toggler");
             }
-            const dropdown = menu.nextSibling;
+            const dropdown = menu.nextElementSibling;
             if (!dropdown) {
                 menuIndex = 0; // empty More menu has no dropdown (FIXME?)
                 return;

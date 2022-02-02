@@ -7,8 +7,7 @@ odoo.define("web.ComparisonMenu", function (require) {
     const { Component } = owl;
 
     class ComparisonMenu extends Component {
-        constructor() {
-            super(...arguments);
+        setup() {
             this.icon = FACET_ICONS.comparison;
             this.model = useModel('searchModel');
         }

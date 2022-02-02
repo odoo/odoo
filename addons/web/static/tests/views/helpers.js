@@ -3,11 +3,12 @@
 import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { getFixture } from "@web/../tests/helpers/utils";
+import { renderToString } from "@web/core/utils/render";
 import { getDefaultConfig, View } from "@web/views/view";
 import { _fieldsViewGet } from "../helpers/mock_server";
 import { addLegacyMockEnvironment } from "../webclient/helpers";
 
-const { Component, mount } = owl;
+const { App } = owl;
 
 /**
  * @typedef {{
@@ -80,12 +81,24 @@ export const makeView = async (params) => {
     //
 
     const target = getFixture();
-    const view = await mount(View, { env, props, target });
 
-    registerCleanup(() => view.destroy());
+    const app = new App(View, {
+        env,
+        dev: env.debug,
+        props,
+        templates: window.__ODOO_TEMPLATES__,
+    });
 
-    const withSearch = Object.values(view.__owl__.children)[0];
-    const concreteView = Object.values(withSearch.__owl__.children)[0];
+    renderToString.app = app;
+    const view = await app.mount(target);
+
+    registerCleanup(() => app.destroy());
+
+    const viewNode = view.__owl__;
+    const withSearchNode = Object.values(viewNode.children)[0];
+    const concreteViewNode = Object.values(withSearchNode.children)[0];
+    const concreteView = concreteViewNode.component;
+    //
 
     return concreteView;
 };

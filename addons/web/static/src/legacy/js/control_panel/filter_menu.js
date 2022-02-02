@@ -16,8 +16,7 @@ odoo.define('web.FilterMenu', function (require) {
      */
     class FilterMenu extends Component {
 
-        constructor() {
-            super(...arguments);
+        setup() {
             this.icon = FACET_ICONS.filter;
             this.model = useModel('searchModel');
         }
@@ -53,7 +52,13 @@ odoo.define('web.FilterMenu', function (require) {
     }
 
     FilterMenu.components = { CustomFilterItem };
-    FilterMenu.props = { fields: Object };
+    FilterMenu.defaultProps = {
+        class: "",
+    };
+    FilterMenu.props = {
+        fields: Object,
+        class: { String, optional: true },
+    };
     FilterMenu.template = "web.legacy.FilterMenu";
 
     return FilterMenu;

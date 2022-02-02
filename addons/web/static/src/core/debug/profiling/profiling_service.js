@@ -33,7 +33,7 @@ const profilingService = {
         }
 
         if (env.debug) {
-            env.bus.on("WEB_CLIENT_READY", null, updateDebugIcon);
+            env.bus.addEventListener("WEB_CLIENT_READY", updateDebugIcon);
         }
 
         async function setProfiling(params) {

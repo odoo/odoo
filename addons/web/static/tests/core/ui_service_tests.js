@@ -4,9 +4,9 @@ import { registry } from "@web/core/registry";
 import { uiService, useActiveElement } from "@web/core/ui/ui_service";
 import { makeTestEnv } from "../helpers/mock_env";
 import { makeFakeLocalizationService } from "../helpers/mock_services";
-import { getFixture, nextTick } from "../helpers/utils";
+import { destroy, getFixture, mount, nextTick } from "../helpers/utils";
 
-const { Component, mount, xml } = owl;
+const { Component, xml } = owl;
 const serviceRegistry = registry.category("services");
 
 let target;
@@ -80,21 +80,21 @@ QUnit.test("a component can be the active element", async (assert) => {
     const comp = await mount(MyComponent, { env, target });
     assert.deepEqual(ui.activeElement, comp.el);
 
-    comp.unmount();
+    destroy(comp);
     assert.deepEqual(ui.activeElement, document);
-    comp.destroy();
 });
 
 QUnit.test("a component can be the  UI active element: with t-ref delegation", async (assert) => {
     class MyComponent extends Component {
         setup() {
             useActiveElement("delegatedRef");
+            this.hasRef = true;
         }
     }
     MyComponent.template = xml`
     <div>
       <h1>My Component</h1>
-      <div id="owner" t-ref="delegatedRef"/>
+      <div t-if="hasRef" id="owner" t-ref="delegatedRef"/>
     </div>
   `;
 
@@ -104,8 +104,9 @@ QUnit.test("a component can be the  UI active element: with t-ref delegation", a
 
     const comp = await mount(MyComponent, { env, target });
     assert.deepEqual(ui.activeElement, comp.el.querySelector("div#owner"));
+    comp.hasRef = false;
+    comp.render();
+    await nextTick();
 
-    comp.unmount();
     assert.deepEqual(ui.activeElement, document);
-    comp.destroy();
 });

@@ -10,14 +10,15 @@ const { Component, xml } = owl;
 export class ActionContainer extends Component {
     setup() {
         this.info = {};
-        this.env.bus.on("ACTION_MANAGER:UPDATE", this, (info) => {
+        this.onActionManagerUpdate = ({ detail: info }) => {
             this.info = info;
             this.render();
-        });
+        };
+        this.env.bus.addEventListener("ACTION_MANAGER:UPDATE", this.onActionManagerUpdate);
     }
 
     __destroy() {
-        this.env.bus.off("ACTION_MANAGER:UPDATE", this);
+        this.env.bus.removeEventListener("ACTION_MANAGER:UPDATE", this.onActionManagerUpdate);
         super.__destroy();
     }
 }

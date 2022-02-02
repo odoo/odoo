@@ -7,14 +7,9 @@ import { localization } from "./localization";
 import { translatedTerms, _t } from "./translation";
 import { session } from "@web/session";
 
-const { config } = owl;
-
 export const localizationService = {
     dependencies: ["user"],
     start: async (env, { user }) => {
-        // add "data-toolip" to the list of translatable attributes in owl templates
-        config.translatableAttributes.push("data-tooltip");
-
         const cacheHashes = session.cache_hashes || {};
         const translationsHash = cacheHashes.translations || new Date().getTime().toString();
         const lang = user.lang || null;
@@ -42,7 +37,6 @@ export const localizationService = {
 
         Object.setPrototypeOf(translatedTerms, terms);
         env._t = _t;
-        env.qweb.translateFn = _t;
 
         // Setup lang inside luxon. The locale codes received from the server contain "_", whereas
         // the Intl codes use "-" (Unicode BCP 47). There's only one exception, which is locale

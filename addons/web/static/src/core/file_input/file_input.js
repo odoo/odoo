@@ -2,7 +2,7 @@
 
 import { useService } from "@web/core/utils/hooks";
 
-const { Component, QWeb, useRef } = owl;
+const { Component, useRef } = owl;
 
 /**
  * Custom file input
@@ -67,6 +67,12 @@ export class FileInput extends Component {
     onTriggerClicked() {
         this.fileInputRef.el.click();
     }
+
+    onUpload(ev) {
+        if (this.props.onUpload && ev.detail) {
+            this.props.onUpload(ev.detail.files);
+        }
+    }
 }
 
 FileInput.defaultProps = {
@@ -80,7 +86,7 @@ FileInput.props = {
     id: { type: Number, optional: 1 },
     model: { type: String, optional: 1 },
     multi_upload: { type: Boolean, optional: 1 },
+    onUpload: { type: Function, optional: 1 },
+    slots: { type: Object, optional: true },
 };
 FileInput.template = "web.FileInput";
-
-QWeb.registerComponent("FileInput", FileInput);

@@ -17,7 +17,7 @@ var field_registry = require('web.field_registry');
 const  makeTestEnvironment = require("web.test_env");
 const { makeLegacyCommandService } = require("@web/legacy/utils");
 const { registry } = require("@web/core/registry");
-const { legacyExtraNextTick, patchWithCleanup, triggerHotkey, nextTick, click } = require("@web/../tests/helpers/utils");
+const { getFixture, legacyExtraNextTick, patchWithCleanup, triggerHotkey, nextTick, click } = require("@web/../tests/helpers/utils");
 const { createWebClient, doAction } = require('@web/../tests/webclient/helpers');
 
 var createView = testUtils.createView;
@@ -33,6 +33,7 @@ const PRODUCT_IMAGE = 'R0lGODlhDAAMAKIFAF5LAP/zxAAAANyuAP/gaP///wAAAAAAACH5BAEAA
 const FR_FLAG_URL = '/base/static/img/country_flags/fr.png';
 const EN_FLAG_URL = '/base/static/img/country_flags/gb.png';
 
+let target;
 
 QUnit.module('fields', {}, function () {
 
@@ -156,6 +157,8 @@ QUnit.module('basic_fields', {
                 }]
             },
         };
+
+        target = getFixture();
     },
 }, function () {
 
@@ -6710,7 +6713,7 @@ QUnit.module('basic_fields', {
             'partner,false,search': '<search></search>',
         };
         const serverData = { models: this.data, views}
-        const webClient = await createWebClient({serverData});
+        const webClient = await createWebClient({ target, serverData });
         await doAction(webClient, {
             res_id: 1,
             type: 'ir.actions.act_window',
@@ -6719,23 +6722,23 @@ QUnit.module('basic_fields', {
             'view_mode': 'form',
             'views': [[false, 'form']],
         });
-        assert.containsOnce(webClient, ".fa-star")
+        assert.containsOnce(target, ".fa-star")
 
         triggerHotkey("control+k")
         await nextTick();
-        const idx = [...webClient.el.querySelectorAll(".o_command")].map(el => el.textContent).indexOf("Set priority...ALT + R")
+        const idx = [...target.querySelectorAll(".o_command")].map(el => el.textContent).indexOf("Set priority...ALT + R")
         assert.ok(idx >= 0);
 
-        await click([...webClient.el.querySelectorAll(".o_command")][idx])
+        await click([...target.querySelectorAll(".o_command")][idx])
         await nextTick();
-        assert.deepEqual([...webClient.el.querySelectorAll(".o_command")].map(el => el.textContent), [
+        assert.deepEqual([...target.querySelectorAll(".o_command")].map(el => el.textContent), [
             "Normal",
             "Blocked",
             "Done"
           ])
-        await click(webClient.el, "#o_command_2")
+        await click(target, "#o_command_2")
         await legacyExtraNextTick();
-        assert.containsN(webClient, ".fa-star", 2)
+        assert.containsN(target, ".fa-star", 2)
     });
 
     QUnit.module('StateSelection Widget');
@@ -7009,7 +7012,7 @@ QUnit.module('basic_fields', {
             'partner,false,search': '<search></search>',
         };
         const serverData = { models: this.data, views}
-        const webClient = await createWebClient({serverData});
+        const webClient = await createWebClient({ target, serverData });
         await doAction(webClient, {
             res_id: 1,
             type: 'ir.actions.act_window',
@@ -7018,23 +7021,23 @@ QUnit.module('basic_fields', {
             'view_mode': 'form',
             'views': [[false, 'form']],
         });
-        assert.containsOnce(webClient, ".o_status_red")
+        assert.containsOnce(target, ".o_status_red")
 
         triggerHotkey("control+k")
         await nextTick();
-        const idx = [...webClient.el.querySelectorAll(".o_command")].map(el => el.textContent).indexOf("Set kanban state...ALT + SHIFT + R")
+        const idx = [...target.querySelectorAll(".o_command")].map(el => el.textContent).indexOf("Set kanban state...ALT + SHIFT + R")
         assert.ok(idx >= 0);
 
-        await click([...webClient.el.querySelectorAll(".o_command")][idx])
+        await click([...target.querySelectorAll(".o_command")][idx])
         await nextTick();
-        assert.deepEqual([...webClient.el.querySelectorAll(".o_command")].map(el => el.textContent), [
+        assert.deepEqual([...target.querySelectorAll(".o_command")].map(el => el.textContent), [
             "Normal",
             "Blocked",
             "Done"
           ])
-        await click(webClient.el, "#o_command_2")
+        await click(target, "#o_command_2")
         await legacyExtraNextTick();
-        assert.containsOnce(webClient, ".o_status_green")
+        assert.containsOnce(target, ".o_status_green")
     });
 
 

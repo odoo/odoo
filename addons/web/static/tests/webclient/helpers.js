@@ -38,7 +38,6 @@ import {
 } from "../helpers/mock_services";
 import { getFixture, legacyExtraNextTick, nextTick, patchWithCleanup } from "../helpers/utils";
 import session from "web.session";
-import { ComponentAdapter } from "web.OwlCompatibility";
 import LegacyMockServer from "web.MockServer";
 import Widget from "web.Widget";
 import { userService } from "@web/core/user_service";
@@ -46,8 +45,10 @@ import { uiService } from "@web/core/ui/ui_service";
 import { ClientActionAdapter, ViewAdapter } from "@web/legacy/action_adapters";
 import { commandService } from "@web/core/commands/command_service";
 import { CustomFavoriteItem } from "@web/search/favorite_menu/custom_favorite_item";
+import { standaloneAdapter } from "web.OwlCompatibility";
+import { renderToString } from "@web/core/utils/render";
 
-const { Component, mount, xml } = owl;
+const { App, Component, onMounted, xml } = owl;
 
 const actionRegistry = registry.category("actions");
 const serviceRegistry = registry.category("services");
@@ -192,7 +193,7 @@ export function addLegacyMockEnvironment(env, legacyParams = {}) {
     registerCleanup(() => (debouncedField.prototype.DEBOUNCE = initialDebouncedVal));
 
     if (legacyParams.withLegacyMockServer) {
-        const adapter = new ComponentAdapter(null, { Component: Component });
+        const adapter = standaloneAdapter({ Component });
         adapter.env = legacyEnv;
         const W = Widget.extend({ do_push_state() {} });
         const widget = new W(adapter);
@@ -231,15 +232,19 @@ export async function createWebClient(params) {
     // to be destroyed. We thus need to manually destroy them here.
     const controllers = [];
     patchWithCleanup(ClientActionAdapter.prototype, {
-        mounted() {
+        setup() {
             this._super();
-            controllers.push(this.widget);
+            onMounted(() => {
+                controllers.push(this.widget);
+            });
         },
     });
     patchWithCleanup(ViewAdapter.prototype, {
-        mounted() {
+        setup() {
             this._super();
-            controllers.push(this.widget);
+            onMounted(() => {
+                controllers.push(this.widget);
+            });
         },
     });
 
@@ -266,14 +271,21 @@ export async function createWebClient(params) {
 
     const WebClientClass = params.WebClientClass || WebClient;
     const target = params && params.target ? params.target : getFixture();
-    const wc = await mount(WebClientClass, { env, target });
+
+    const app = new App(WebClientClass, {
+        env,
+        dev: env.debug,
+        templates: window.__ODOO_TEMPLATES__,
+    });
+    renderToString.app = app;
+    const wc = await app.mount(target);
     registerCleanup(() => {
         for (const controller of controllers) {
             if (!controller.isDestroyed()) {
                 controller.destroy();
             }
         }
-        wc.destroy();
+        app.destroy();
     });
     // Wait for visual changes caused by a potential loadState
     await nextTick();

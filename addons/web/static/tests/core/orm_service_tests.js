@@ -4,9 +4,9 @@ import { ormService } from "@web/core/orm_service";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { makeTestEnv } from "../helpers/mock_env";
-import { getFixture } from "../helpers/utils";
+import { getFixture, mount } from "../helpers/utils";
 
-const { Component, mount, xml } = owl;
+const { Component, xml } = owl;
 const serviceRegistry = registry.category("services");
 
 QUnit.module("ORM Service", {

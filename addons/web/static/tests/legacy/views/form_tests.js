@@ -8,6 +8,7 @@ var concurrency = require('web.concurrency');
 var core = require('web.core');
 var fieldRegistry = require('web.field_registry');
 const fieldRegistryOwl = require('web.field_registry_owl');
+const { FieldBoolean } = require("web.basic_fields_owl");
 const FormRenderer = require('web.FormRenderer');
 var FormView = require('web.FormView');
 var mixins = require('web.mixins');
@@ -22,7 +23,6 @@ var Widget = require('web.Widget');
 var _t = core._t;
 var createView = testUtils.createView;
 
-const { registerCleanup } = require("@web/../tests/helpers/cleanup");
 const { getFixture, legacyExtraNextTick, patchWithCleanup } = require("@web/../tests/helpers/utils");
 const { createWebClient, doAction } = require('@web/../tests/webclient/helpers');
 const { makeTestEnv } = require("@web/../tests/helpers/mock_env");
@@ -31,13 +31,16 @@ const { mapLegacyEnvToWowlEnv } = require("@web/legacy/utils");
 const { registry } = require("@web/core/registry");
 const { scrollerService } = require("@web/core/scroller_service");
 
-const { Component, xml } = owl;
+const { Component, onMounted, onWillUnmount, xml } = owl;
 
 let serverData;
+let target;
 QUnit.module('Views', {
     beforeEach: async function () {
         registry.category("services").add("scroller", scrollerService);
-        
+
+        target = getFixture();
+
         this.data = {
             partner: {
                 fields: {
@@ -561,7 +564,7 @@ QUnit.module('Views', {
             }
         };
 
-        const webClient = await createWebClient({serverData, mockRPC});
+        const webClient = await createWebClient({ target, serverData, mockRPC});
         await doAction(webClient, {
             res_id: 1,
             type: 'ir.actions.act_window',
@@ -571,7 +574,7 @@ QUnit.module('Views', {
             'views': [[false, 'form']],
         });
 
-        await testUtils.dom.click(webClient.el.querySelector('.o_field_widget[name="product_id"]'));
+        await testUtils.dom.click(target.querySelector('.o_field_widget[name="product_id"]'));
     });
 
     QUnit.test('invisible fields are properly hidden', async function (assert) {
@@ -1213,24 +1216,24 @@ QUnit.module('Views', {
             }
         };
 
-        const webClient = await createWebClient({ serverData });
+        const webClient = await createWebClient({ target,  serverData });
         await doAction(webClient, 1);
 
-        await testUtils.dom.click(webClient.el.querySelector('.o_list_button_add'));
+        await testUtils.dom.click(target.querySelector('.o_list_button_add'));
         await legacyExtraNextTick();
-        assert.containsOnce(webClient, '.o_form_view');
+        assert.containsOnce(target, '.o_form_view');
 
         // click on second page tab
-        await testUtils.dom.click($(webClient.el).find('.o_notebook .nav-link:eq(1)'));
+        await testUtils.dom.click($(target).find('.o_notebook .nav-link:eq(1)'));
 
         await testUtils.dom.click('.o_control_panel .o_form_button_cancel');
         await legacyExtraNextTick();
-        assert.containsNone(webClient, '.o_form_view');
+        assert.containsNone(target, '.o_form_view');
 
-        await testUtils.dom.click(webClient.el.querySelector('.o_list_button_add'));
+        await testUtils.dom.click(target.querySelector('.o_list_button_add'));
         await legacyExtraNextTick();
         // check notebook active page is 0th page
-        assert.hasClass($(webClient.el).find('.o_notebook .nav-link:eq(0)'), 'active');
+        assert.hasClass($(target).find('.o_notebook .nav-link:eq(0)'), 'active');
 
     });
 
@@ -7291,24 +7294,24 @@ QUnit.module('Views', {
             }
         };
 
-        const webClient = await createWebClient({ serverData });
+        const webClient = await createWebClient({ target,  serverData });
         patchWithCleanup(_t.database, {
             multi_lang: true,
         });
         await doAction(webClient, 1);
-        $(webClient.el).find('input[name="foo"]').val("test").trigger("input");
+        $(target).find('input[name="foo"]').val("test").trigger("input");
 
-        await testUtils.dom.click(webClient.el.querySelector('.o_form_button_save'));
+        await testUtils.dom.click(target.querySelector('.o_form_button_save'));
         await legacyExtraNextTick();
 
-        assert.containsOnce(webClient, '.o_form_view .alert > div',
+        assert.containsOnce(target, '.o_form_view .alert > div',
             "should have a translation alert");
 
         await doAction(webClient, 2);
 
         await testUtils.dom.click($('.o_control_panel .breadcrumb a:first'));
         await legacyExtraNextTick();
-        assert.containsOnce(webClient, '.o_form_view .alert > div',
+        assert.containsOnce(target, '.o_form_view .alert > div',
             "should have a translation alert");
     });
 
@@ -9289,7 +9292,7 @@ QUnit.module('Views', {
             'partner,false,search': '<search></search>',
         };
 
-        const webClient = await createWebClient({ serverData });
+        const webClient = await createWebClient({ target,  serverData });
         await doAction(webClient, 1);
 
         await testUtils.dom.click('.o_control_panel .o-kanban-button-new');
@@ -9300,8 +9303,8 @@ QUnit.module('Views', {
         await legacyExtraNextTick();
         await testUtils.dom.click('.o_control_panel .o_form_button_cancel');
         await legacyExtraNextTick();
-        assert.containsNone(webClient, '.o_form_view');
-        assert.containsOnce(webClient, '.o_kanban_view');
+        assert.containsNone(target, '.o_form_view');
+        assert.containsOnce(target, '.o_kanban_view');
     });
 
     QUnit.test("one2many create record dialog shouldn't have a 'remove' button", async function (assert) {
@@ -10161,14 +10164,14 @@ QUnit.module('Views', {
     QUnit.test('do not call mounted twice on children', async function (assert) {
         assert.expect(3);
 
-        class CustomFieldComponent extends fieldRegistryOwl.get('boolean') {
-            mounted() {
-                super.mounted(...arguments);
-                assert.step('mounted');
-            }
-            willUnmount() {
-                super.willUnmount(...arguments);
-                assert.step('willUnmount');
+        class CustomFieldComponent extends FieldBoolean {
+            setup() {
+                onMounted(() => {
+                    assert.step('mounted');
+                });
+                onWillUnmount(() => {
+                    assert.step('willUnmount');
+                });
             }
         }
         fieldRegistryOwl.add('custom', CustomFieldComponent);
@@ -10222,32 +10225,32 @@ QUnit.module('Views', {
             }
         };
 
-        const webClient = await createWebClient({ serverData , mockRPC });
+        const webClient = await createWebClient({ target,  serverData , mockRPC });
 
         await doAction(webClient, 1);
 
-        await testUtils.dom.click($(webClient.el).find('.o_data_row:first'));
+        await testUtils.dom.click($(target).find('.o_data_row:first'));
         await legacyExtraNextTick();
-        assert.strictEqual($(webClient.el).find('.breadcrumb').text(), 'Partnerfirst record');
+        assert.strictEqual($(target).find('.breadcrumb').text(), 'Partnerfirst record');
 
-        await testUtils.dom.click($(webClient.el).find('.o_form_button_edit'));
-        await testUtils.fields.editInput($(webClient.el).find('.o_field_widget[name="name"]'), 'aaa');
+        await testUtils.dom.click($(target).find('.o_form_button_edit'));
+        await testUtils.fields.editInput($(target).find('.o_field_widget[name="name"]'), 'aaa');
 
-        await testUtils.controlPanel.pagerNext(webClient);
+        await testUtils.controlPanel.pagerNext(target);
         await legacyExtraNextTick();
-        assert.containsOnce(webClient, '.o_form_editable');
-        assert.strictEqual($(webClient.el).find('.breadcrumb').text(), 'Partnersecond record');
-        assert.strictEqual($(webClient.el).find('.o_field_widget[name="name"]').val(), 'name');
+        assert.containsOnce(target, '.o_form_editable');
+        assert.strictEqual($(target).find('.breadcrumb').text(), 'Partnersecond record');
+        assert.strictEqual($(target).find('.o_field_widget[name="name"]').val(), 'name');
 
-        await testUtils.dom.click($(webClient.el).find('.o_form_button_cancel'));
-        assert.strictEqual($(webClient.el).find('.breadcrumb').text(), 'Partnersecond record');
-        assert.strictEqual($(webClient.el).find('.o_field_widget[name="name"]').text(), 'name');
+        await testUtils.dom.click($(target).find('.o_form_button_cancel'));
+        assert.strictEqual($(target).find('.breadcrumb').text(), 'Partnersecond record');
+        assert.strictEqual($(target).find('.o_field_widget[name="name"]').text(), 'name');
 
-        await testUtils.controlPanel.pagerPrevious(webClient);
+        await testUtils.controlPanel.pagerPrevious(target);
         await legacyExtraNextTick();
-        assert.containsOnce(webClient, '.o_form_readonly');
-        assert.strictEqual($(webClient.el).find('.breadcrumb').text(), 'Partnerfirst record');
-        assert.strictEqual($(webClient.el).find('.o_field_widget[name="name"]').text(), 'aaa');
+        assert.containsOnce(target, '.o_form_readonly');
+        assert.strictEqual($(target).find('.breadcrumb').text(), 'Partnerfirst record');
+        assert.strictEqual($(target).find('.o_field_widget[name="name"]').text(), 'aaa');
     });
 
     QUnit.test('Auto save: save when breadcrumb clicked', async function (assert) {
@@ -10286,28 +10289,28 @@ QUnit.module('Views', {
             }
         };
 
-        const webClient = await createWebClient({ serverData , mockRPC });
+        const webClient = await createWebClient({ target,  serverData , mockRPC });
 
         await doAction(webClient, 1);
 
-        await testUtils.dom.click($(webClient.el).find('.o_data_row:first'));
+        await testUtils.dom.click($(target).find('.o_data_row:first'));
         await legacyExtraNextTick();
-        assert.strictEqual($(webClient.el).find('.breadcrumb').text(), 'Partnerfirst record');
+        assert.strictEqual($(target).find('.breadcrumb').text(), 'Partnerfirst record');
 
-        await testUtils.dom.click($(webClient.el).find('.o_form_button_edit'));
-        await testUtils.fields.editInput($(webClient.el).find('.o_field_widget[name="name"]'), 'aaa');
+        await testUtils.dom.click($(target).find('.o_form_button_edit'));
+        await testUtils.fields.editInput($(target).find('.o_field_widget[name="name"]'), 'aaa');
 
-        await testUtils.dom.click($(webClient.el).find('.breadcrumb-item.o_back_button'));
+        await testUtils.dom.click($(target).find('.breadcrumb-item.o_back_button'));
         await legacyExtraNextTick();
 
-        assert.strictEqual($(webClient.el).find('.breadcrumb').text(), 'Partner');
-        assert.strictEqual($(webClient.el).find('.o_field_cell[name="name"]:first').text(), 'aaa');
+        assert.strictEqual($(target).find('.breadcrumb').text(), 'Partner');
+        assert.strictEqual($(target).find('.o_field_cell[name="name"]:first').text(), 'aaa');
 
-        await testUtils.dom.click($(webClient.el).find('.o_data_row:first'));
+        await testUtils.dom.click($(target).find('.o_data_row:first'));
         await legacyExtraNextTick();
-        assert.containsOnce(webClient, '.o_form_readonly');
-        assert.strictEqual($(webClient.el).find('.breadcrumb').text(), 'Partnerfirst record');
-        assert.strictEqual($(webClient.el).find('.o_field_widget[name="name"]').text(), 'aaa');
+        assert.containsOnce(target, '.o_form_readonly');
+        assert.strictEqual($(target).find('.breadcrumb').text(), 'Partnerfirst record');
+        assert.strictEqual($(target).find('.o_field_widget[name="name"]').text(), 'aaa');
     });
 
     QUnit.test('Auto save: save when action changed', async function (assert) {
@@ -10364,28 +10367,28 @@ QUnit.module('Views', {
             }
         };
 
-        const webClient = await createWebClient({ serverData , mockRPC });
+        const webClient = await createWebClient({ target,  serverData , mockRPC });
 
         await doAction(webClient, 1);
 
-        await testUtils.dom.click($(webClient.el).find('.o_data_row:first'));
+        await testUtils.dom.click($(target).find('.o_data_row:first'));
         await legacyExtraNextTick();
-        assert.strictEqual($(webClient.el).find('.breadcrumb').text(), 'Partnerfirst record');
+        assert.strictEqual($(target).find('.breadcrumb').text(), 'Partnerfirst record');
 
-        await testUtils.dom.click($(webClient.el).find('.o_form_button_edit'));
-        await testUtils.fields.editInput($(webClient.el).find('.o_field_widget[name="name"]'), 'aaa');
+        await testUtils.dom.click($(target).find('.o_form_button_edit'));
+        await testUtils.fields.editInput($(target).find('.o_field_widget[name="name"]'), 'aaa');
 
         await doAction(webClient, 2, { clearBreadcrumbs: true });
 
-        assert.strictEqual($(webClient.el).find('.breadcrumb').text(), 'Other action');
+        assert.strictEqual($(target).find('.breadcrumb').text(), 'Other action');
 
         await doAction(webClient, 1, { clearBreadcrumbs: true });
 
-        await testUtils.dom.click($(webClient.el).find('.o_data_row:first'));
+        await testUtils.dom.click($(target).find('.o_data_row:first'));
         await legacyExtraNextTick();
-        assert.containsOnce(webClient, '.o_form_readonly');
-        assert.strictEqual($(webClient.el).find('.breadcrumb').text(), 'Partnerfirst record');
-        assert.strictEqual($(webClient.el).find('.o_field_widget[name="name"]').text(), 'aaa');
+        assert.containsOnce(target, '.o_form_readonly');
+        assert.strictEqual($(target).find('.breadcrumb').text(), 'Partnerfirst record');
+        assert.strictEqual($(target).find('.o_field_widget[name="name"]').text(), 'aaa');
     });
 
     QUnit.test('Auto save: save on closing tab/browser', async function (assert) {
@@ -10520,19 +10523,19 @@ QUnit.module('Views', {
             }
         };
 
-        const webClient = await createWebClient({ serverData, mockRPC });
+        const webClient = await createWebClient({ target,  serverData, mockRPC });
 
         await doAction(webClient, 1);
 
         // Click on a row to open a record
-        await testUtils.dom.click($(webClient.el).find('.o_data_row:first'));
+        await testUtils.dom.click($(target).find('.o_data_row:first'));
         await legacyExtraNextTick();
-        assert.strictEqual($(webClient.el).find('.breadcrumb').text(), 'Partnerfirst record');
+        assert.strictEqual($(target).find('.breadcrumb').text(), 'Partnerfirst record');
 
         // Return in the list view to detach the form view
-        await testUtils.dom.click($(webClient.el).find('.o_back_button'));
+        await testUtils.dom.click($(target).find('.o_back_button'));
         await legacyExtraNextTick();
-        assert.strictEqual($(webClient.el).find('.breadcrumb').text(), 'Partner');
+        assert.strictEqual($(target).find('.breadcrumb').text(), 'Partner');
 
         // Simulate tab/browser close in the list
         window.dispatchEvent(new Event("beforeunload"));

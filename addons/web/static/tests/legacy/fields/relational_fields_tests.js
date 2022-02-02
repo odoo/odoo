@@ -13,7 +13,7 @@ const core = require('web.core');
 const makeTestEnvironment = require("web.test_env");
 const { makeLegacyCommandService } = require("@web/legacy/utils");
 const { createWebClient, doAction } = require('@web/../tests/webclient/helpers');
-const { triggerHotkey, nextTick, click } = require("@web/../tests/helpers/utils");
+const { getFixture, triggerHotkey, nextTick, click } = require("@web/../tests/helpers/utils");
 const { registry } = require("@web/core/registry");
 
 const { makeLegacyDialogMappingTestEnv } = require('@web/../tests/helpers/legacy_env_utils');
@@ -1040,7 +1040,8 @@ QUnit.module('relational_fields', {
             'partner,false,search': '<search></search>',
         };
         const serverData = { models: this.data, views}
-        const webClient = await createWebClient({serverData});
+        const target = getFixture();
+        const webClient = await createWebClient({ target, serverData });
         await doAction(webClient, {
             res_id: 1,
             type: 'ir.actions.act_window',
@@ -1049,22 +1050,22 @@ QUnit.module('relational_fields', {
             'view_mode': 'form',
             'views': [[false, 'form']],
         });
-        assert.containsOnce(webClient, ".o_field_widget")
+        assert.containsOnce(target, ".o_field_widget")
 
         triggerHotkey("control+k")
         await nextTick();
-        const movestage = webClient.el.querySelectorAll(".o_command");
+        const movestage = target.querySelectorAll(".o_command");
         const idx = [...movestage].map(el => el.textContent).indexOf("Move to Trululu...ALT + SHIFT + X")
         assert.ok(idx >= 0);
 
         await click(movestage[idx])
         await nextTick();
-        assert.deepEqual([...webClient.el.querySelectorAll(".o_command")].map(el => el.textContent), [
+        assert.deepEqual([...target.querySelectorAll(".o_command")].map(el => el.textContent), [
             "first record",
             "second record",
             "aaa",
           ])
-        await click(webClient.el, "#o_command_2")
+        await click(target, "#o_command_2")
     });
 
     QUnit.module('FieldSelection');

@@ -4,7 +4,7 @@ import { loadAssets } from "@web/core/assets";
 import { useService } from "@web/core/utils/hooks";
 import { useActionLinks } from "@web/views/helpers/view_hook";
 
-const { Component, xml } = owl;
+const { Component, markup, xml } = owl;
 
 export class OnboardingBanner extends Component {
     setup() {
@@ -46,9 +46,9 @@ export class OnboardingBanner extends Component {
                 elem.remove();
             });
         await loadAssets(assets);
-        return new XMLSerializer().serializeToString(banner);
+        return markup(new XMLSerializer().serializeToString(banner));
     }
 }
 
-OnboardingBanner.template = xml`<div class="w-100" t-raw="bannerHTML" />`;
+OnboardingBanner.template = xml`<div class="w-100" t-out="bannerHTML"/>`;
 OnboardingBanner.props = {};

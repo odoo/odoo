@@ -23,6 +23,9 @@ odoo.define('web._field_registry_owl', function (require) {
 
     // Basic fields
     registry
-        .add('badge', basicFields.FieldBadge)
-        .add('boolean', basicFields.FieldBoolean);
+        .add('badge', basicFields.FieldBadge);
+        // deactivate the owl FieldBoolean as it causes issues in the Settings form view
+        // if it is in an invisible block. This was a legacy implementation of the owl FieldBoolean
+        // anyway, and we're currently rewritting the basic views in owl.
+        // .add('boolean', basicFields.FieldBoolean);
 });

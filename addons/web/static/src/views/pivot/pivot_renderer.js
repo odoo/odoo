@@ -76,8 +76,8 @@ export class PivotRenderer extends Component {
      * @param {"col"|"row"} type
      * @param {CustomEvent} ev
      */
-    onAddCustomGroupBy(type, ev) {
-        this.model.addGroupBy({ ...ev.detail, custom: true, type });
+    onAddCustomGroupBy(type, groupId, fieldName) {
+        this.model.addGroupBy({ groupId, fieldName, custom: true, type });
     }
 
     /**

@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { loadJS } from "web.ajax";
+import { loadJS } from "@web/core/assets";
 import BrowserDetection from "web.BrowserDetection";
 import { _t } from "web.core";
 /**

@@ -4,20 +4,19 @@
   <t t-name="web.CommandPalette" owl="1">
     <div>
       <div class="o_command_palette_search">
-        <input type="text" t-model="state.searchValue" t-on-input="onSearchInput" autofocus="" t-att-placeholder="state.placeholder"/>
+        <input type="text" t-model="state.searchValue" t-on-input="onSearchInput" t-ref="autofocus" t-att-placeholder="state.placeholder"/>
         <i  t-att-title="state.placeholder" role="img"  t-att-aria-label="state.placeholder" class="fa fa-search"></i>
       </div>
 
       <div t-ref="listbox" class="o_command_palette_listbox">
         <div t-if="!state.commands.length" class="o_command_palette_listbox_empty" t-esc="state.emptyMessage"/>
         <t t-if="!isFuzzySearch">
-          <t t-foreach="commandsByCategory" t-as="category">
-
-            <div class="o_command_category" t-key="category.keyId">
-              <t t-foreach="category.commands" t-as="command">
+          <t t-foreach="commandsByCategory" t-as="category" t-key="category.keyId">
+            <div class="o_command_category">
+              <t t-foreach="category.commands" t-as="command"  t-key="command.keyId">
                 <t t-set="commandIndex" t-value="state.commands.indexOf(command)" />
-                <div t-attf-id="o_command_{{commandIndex}}" class="o_command" t-att-class="{ focused: state.selectedCommand === command }" t-on-click="onCommandClicked(commandIndex)" t-on-mouseenter="onCommandMouseEnter(commandIndex)" t-key="command.keyId">
-                  <t t-component="command.Component || DefaultCommandItem" name="command.name" searchValue="clearSearchValue" t-props="command.props" t-on-close="props.closeMe()" t-on-execute-command="executeCommand(command)">
+                <div t-attf-id="o_command_{{commandIndex}}" class="o_command" t-att-class="{ focused: state.selectedCommand === command }" t-on-click="() => this.onCommandClicked(commandIndex)" t-on-mouseenter="() => this.onCommandMouseEnter(commandIndex)" t-on-close="() => this.props.closeMe()" t-on-execute-command="() => this.executeCommand(command)" t-key="command.keyId">
+                  <t t-component="command.Component || DefaultCommandItem" name="command.name" searchValue="clearSearchValue" t-props="command.props">
                     <t t-set-slot="name">
                         <span class="o_command_name">
                           <t t-foreach="command.splitName" t-as="name" t-key="name_index">

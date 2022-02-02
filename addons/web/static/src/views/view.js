@@ -151,6 +151,7 @@ export class View extends Component {
                 ...this.env.config,
             },
         });
+
         useActionLinks({ resModel });
     }
 
@@ -250,6 +251,7 @@ export class View extends Component {
         const viewProps = {
             info: { actionMenus, mode: this.props.display.mode },
             arch,
+            className: "o_action o_view_controller",
             fields,
             resModel,
             useSampleModel: false,
@@ -271,12 +273,8 @@ export class View extends Component {
         }
 
         let { noContentHelp } = this.props;
-        if (noContentHelp !== undefined) {
-            const htmlHelp = document.createElement("div");
-            htmlHelp.innerHTML = noContentHelp;
-            if (htmlHelp.innerText.trim()) {
-                viewProps.info.noContentHelp = noContentHelp;
-            }
+        if (noContentHelp) {
+            viewProps.info.noContentHelp = noContentHelp;
         }
 
         // prepare the WithSearch component props

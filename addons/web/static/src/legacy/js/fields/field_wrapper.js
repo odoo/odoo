@@ -4,6 +4,8 @@ odoo.define('web.FieldWrapper', function (require) {
     const { ComponentWrapper } = require('web.OwlCompatibility');
     const field_utils = require('web.field_utils');
 
+    const { App } = owl;
+
     /**
      * This file defines the FieldWrapper component, an extension of ComponentWrapper,
      * needed to instanciate Owl fields inside legacy widgets. This component
@@ -66,8 +68,8 @@ odoo.define('web.FieldWrapper', function (require) {
          * not the real field Component, which triggers the 'field-changed'
          * event. This function writes the attribute on that field Component.
          */
-        mounted() {
-            super.mounted(...arguments);
+        on_attach_callback() {
+            super.on_attach_callback();
             this.componentRef.comp.__node = this.__node;
         }
 
@@ -124,9 +126,10 @@ odoo.define('web.FieldWrapper', function (require) {
             // instantiated yet when the renderer first asks if it is set
             // (only the wrapper is instantiated), so we instantiate one
             // with the same props, get its 'isSet' status, and destroy it.
-            const c = new this.Component(null, this.props);
-            const isSet = c.isSet;
-            c.destroy();
+            const app = new App(null, { env: this.env, templates: window.__ODOO_TEMPLATES__});
+            const node = app.makeNode(this.Component, this.props);
+            const isSet = node.component.isSet;
+            app.destroy();
             return isSet;
         }
         isValid() {
@@ -137,9 +140,10 @@ odoo.define('web.FieldWrapper', function (require) {
             // instantiated yet when the renderer first asks if it is set
             // (only the wrapper is instantiated), so we instantiate one
             // with the same props, get its 'isValid' status, and destroy it.
-            const c = new this.Component(null, this.props);
-            const isValid = c.isValid;
-            c.destroy();
+            const app = new App(null, { env: this.env, templates: window.__ODOO_TEMPLATES__});
+            const node = app.makeNode(this.Component, this.props);
+            const isValid = node.component.isValid;
+            app.destroy();
             return isValid;
         }
         removeInvalidClass() {

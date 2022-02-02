@@ -1,19 +1,23 @@
 /** @odoo-module **/
 
-const { Component, xml } = owl;
+const { Component, onError, useComponent, xml } = owl;
 
 export class NotUpdatable extends Component {
-    shouldUpdate() {
-        return false;
+    setup() {
+        const node = useComponent().__owl__;
+        node.patch = () => {};
+        node.updateAndRender = () => Promise.resolve();
     }
 }
 NotUpdatable.template = xml`<t t-slot="default" />`;
 
 export class ErrorHandler extends Component {
-    catchError(error) {
-        if (this.props.onError) {
-            this.props.onError(error);
-        }
+    setup() {
+        onError((error) => {
+            if (this.props.onError) {
+                this.props.onError(error);
+            }
+        });
     }
 }
 ErrorHandler.template = xml`<t t-slot="default" />`;

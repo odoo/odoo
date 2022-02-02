@@ -1,12 +1,13 @@
 odoo.define('web.OwlDialog', function (require) {
     "use strict";
 
-    const { Component, Portal, useRef } = owl;
+    const { Component, useRef, onMounted, onWillUnmount } = owl;
     const SIZE_CLASSES = {
         'extra-large': 'modal-xl',
         'large': 'modal-lg',
         'small': 'modal-sm',
     };
+    const { renderToString } = require('@web/core/utils/render');
 
     /**
      * Dialog (owl version)
@@ -36,51 +37,53 @@ odoo.define('web.OwlDialog', function (require) {
          * @param {boolean} [props.technical=true] If set to false, the modal will have
          *      the standard frontend style (use this for non-editor frontend features).
          */
-        constructor() {
-            super(...arguments);
-
+        setup() {
             this.modalRef = useRef('modal');
+            this.dialogRef = useRef('dialog');
             this.footerRef = useRef('modal-footer');
-        }
-
-        mounted() {
-            this.constructor.display(this);
-
-            this.env.bus.on('close_dialogs', this, this._close);
-
-            if (this.props.renderFooter) {
-                // Set up main button : will first look for an element with the
-                // 'btn-primary' class, then a 'btn' class, then the first button
-                // element.
-                let mainButton = this.footerRef.el.querySelector('.btn.btn-primary');
-                if (!mainButton) {
-                    mainButton = this.footerRef.el.querySelector('.btn');
-                }
-                if (!mainButton) {
-                    mainButton = this.footerRef.el.querySelector('button');
-                }
-                if (mainButton) {
-                    this.mainButton = mainButton;
-                    this.mainButton.addEventListener('keydown', this._onMainButtonKeydown.bind(this));
-                    this.mainButton.focus();
-                }
+            if (this.props.dialogAPI) {
+                this.props.dialogAPI.close = this._close.bind(this);
             }
 
-            this._removeTooltips();
+            onMounted(() => {
+                this.constructor.display(this);
 
-            // Notifies new webclient to adjust UI active element
-            this.env.bus.trigger("owl_dialog_mounted", this);
-        }
+                this.env.bus.on('close_dialogs', this, this._close);
 
-        willUnmount() {
-            // Notifies new webclient to adjust UI active element
-            this.env.bus.trigger("owl_dialog_willunmount", this);
+                if (this.props.renderFooter) {
+                    // Set up main button : will first look for an element with the
+                    // 'btn-primary' class, then a 'btn' class, then the first button
+                    // element.
+                    let mainButton = this.footerRef.el.querySelector('.btn.btn-primary');
+                    if (!mainButton) {
+                        mainButton = this.footerRef.el.querySelector('.btn');
+                    }
+                    if (!mainButton) {
+                        mainButton = this.footerRef.el.querySelector('button');
+                    }
+                    if (mainButton) {
+                        this.mainButton = mainButton;
+                        this.mainButton.addEventListener('keydown', this._onMainButtonKeydown.bind(this));
+                        this.mainButton.focus();
+                    }
+                }
 
-            this.env.bus.off('close_dialogs', this, this._close);
+                this._removeTooltips();
 
-            this._removeTooltips();
+                // Notifies new webclient to adjust UI active element
+                this.env.bus.trigger("owl_dialog_mounted", this);
+            });
 
-            this.constructor.hide(this);
+            onWillUnmount(() => {
+                // Notifies new webclient to adjust UI active element
+                this.env.bus.trigger("owl_dialog_willunmount", this);
+
+                this.env.bus.off('close_dialogs', this, this._close);
+
+                this._removeTooltips();
+
+                this.constructor.hide(this);
+            });
         }
 
         //--------------------------------------------------------------------------
@@ -178,7 +181,7 @@ odoo.define('web.OwlDialog', function (require) {
                 $(this.mainButton)
                     .tooltip({
                         delay: { show: 200, hide: 0 },
-                        title: () => this.env.qweb.renderToString('web.DialogButton.tooltip', {
+                        title: () => renderToString('web.DialogButton.tooltip', {
                             title: this.mainButton.innerText.toUpperCase(),
                         }),
                         trigger: 'manual',
@@ -225,7 +228,13 @@ odoo.define('web.OwlDialog', function (require) {
             // Activate last dialog and update body class
             const lastDialog = this.displayed[this.displayed.length - 1];
             if (lastDialog) {
-                lastDialog.el.focus();
+                if (lastDialog.el) {
+                    // legacy dialog
+                    lastDialog.el.focus();
+                } else {
+                    // Owl dialog | LegacyAdaptedDialog
+                    lastDialog.dialogRef.el.focus();
+                }
                 const modalEl = lastDialog.modalRef ?
                     // Owl dialog | LegacyAdaptedDialog
                     lastDialog.modalRef.el :
@@ -241,7 +250,6 @@ odoo.define('web.OwlDialog', function (require) {
 
     Dialog.displayed = [];
 
-    Dialog.components = { Portal };
     Dialog.defaultProps = {
         backdrop: 'static',
         renderFooter: true,
@@ -263,6 +271,15 @@ odoo.define('web.OwlDialog', function (require) {
         subtitle: { type: String, optional: 1 },
         technical: Boolean,
         title: String,
+        dialogAPI: { type: Object, optional: 1 },
+        slots: {
+            type: Object,
+            optional: 1,
+            shape: {
+                default: { optional: true },
+                buttons: { optional: true },
+            },
+        },
     };
     Dialog.template = 'web.OwlDialog';
 

@@ -9,7 +9,7 @@ var Widget = require('web.Widget');
 const { dialogService } = require('@web/core/dialog/dialog_service');
 const { errorService } = require("@web/core/errors/error_service");
 const { registry } = require('@web/core/registry');
-const { nextTick, patchWithCleanup } = require('@web/../tests/helpers/utils');
+const { getFixture, nextTick, patchWithCleanup } = require('@web/../tests/helpers/utils');
 const { createWebClient, doAction } = require('@web/../tests/webclient/helpers');
 
 QUnit.module('core', {}, function () {
@@ -66,10 +66,11 @@ QUnit.module('core', {}, function () {
                 throw new Error("This error should be throw only once");
             }
         };
-        const webClient = await createWebClient({mockRPC});
+        const target = getFixture();
+        const webClient = await createWebClient({ target, mockRPC});
         await doAction(webClient, "TestAction");
         await nextTick();
-        assert.containsOnce(webClient, ".o_dialog");
+        assert.containsOnce(target, ".o_dialog");
     });
 });
 

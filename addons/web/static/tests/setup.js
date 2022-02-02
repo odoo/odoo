@@ -11,10 +11,30 @@ import { prepareRegistriesWithCleanup } from "./helpers/mock_env";
 import { session as sessionInfo } from "@web/session";
 import { prepareLegacyRegistriesWithCleanup } from "./helpers/legacy_env_utils";
 
-const { QWeb, config, loadFile, whenReady } = owl;
+import { patch } from "@web/core/utils/patch";
+import { processTemplates } from "@web/core/assets";
+const { App, whenReady, loadFile } = owl;
 
-config.enableTransitions = false;
-QWeb.dev = true;
+patch(App.prototype, "TestOwlApp", {
+    setup() {
+        this.isBuilt = true;
+        this.dev = true;
+    },
+    destroy() {
+        if (!this.destroyed) {
+            this._super(...arguments);
+            this.destroyed = true;
+        }
+    },
+    addTemplate(name) {
+        if (this.isBuilt) {
+            registerCleanup(() => {
+                delete this.constructor.sharedTemplates[name];
+            });
+        }
+        return this._super(...arguments);
+    },
+});
 
 function stringifyObjectValues(obj, properties) {
     let res = "";
@@ -203,21 +223,7 @@ export async function setupTests() {
     });
 
     const templatesUrl = `/web/webclient/qweb/${new Date().getTime()}?bundle=web.assets_qweb`;
-    // TODO replace by `processTemplates` when the legacy system is removed
-    let templates = await loadFile(templatesUrl);
-    // as we currently have two qweb engines (owl and legacy), owl templates are
-    // flagged with attribute `owl="1"`. The following lines removes the 'owl'
-    // attribute from the templates, so that it doesn't appear in the DOM. For now,
-    // we make the assumption that 'templates' only contains owl templates. We
-    // might need at some point to handle the case where we have both owl and
-    // legacy templates. At the end, we'll get rid of all this.
-    const doc = new DOMParser().parseFromString(templates, "text/xml");
-    const owlTemplates = [];
-    for (let child of doc.querySelectorAll("templates > [owl]")) {
-        child.removeAttribute("owl");
-        owlTemplates.push(child.outerHTML);
-    }
-    templates = `<templates> ${owlTemplates.join("\n")} </templates>`;
-    window.__ODOO_TEMPLATES__ = templates;
+    const templates = await loadFile(templatesUrl);
+    window.__ODOO_TEMPLATES__ = processTemplates(templates);
     await Promise.all([whenReady(), legacyProm]);
 }

@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { click, patchDate } from "@web/../tests/helpers/utils";
+import { click, getFixture, patchDate } from "@web/../tests/helpers/utils";
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
 import { dialogService } from "@web/core/dialog/dialog_service";
 import { registry } from "@web/core/registry";
@@ -29,8 +29,10 @@ function getDomain(comp) {
 }
 
 let serverData;
+let target;
 QUnit.module("Search", (hooks) => {
     hooks.beforeEach(async () => {
+        target = getFixture();
         serverData = {
             models: {
                 foo: {
@@ -165,6 +167,7 @@ QUnit.module("Search", (hooks) => {
             ];
 
             const webClient = await createWebClient({
+                target,
                 serverData,
                 mockRPC: async (_, args) => {
                     if (args.model === "ir.filters" && args.method === "unlink") {
@@ -179,21 +182,18 @@ QUnit.module("Search", (hooks) => {
                 views: [[false, "toy"]],
             });
 
-            await toggleFavoriteMenu(webClient);
+            await toggleFavoriteMenu(target);
 
-            assert.deepEqual(getFacetTexts(webClient), ["My favorite"]);
-            assert.hasClass(
-                webClient.el.querySelector(".o_favorite_menu .o_menu_item"),
-                "selected"
-            );
+            assert.deepEqual(getFacetTexts(target), ["My favorite"]);
+            assert.hasClass(target.querySelector(".o_favorite_menu .o_menu_item"), "selected");
 
-            await deleteFavorite(webClient, 0);
+            await deleteFavorite(target, 0);
 
             await click(document.querySelector("div.o_dialog footer button"));
 
-            assert.deepEqual(getFacetTexts(webClient), []);
-            assert.containsNone(webClient, ".o_favorite_menu .o_menu_item");
-            assert.containsOnce(webClient, ".o_favorite_menu .o_add_favorite");
+            assert.deepEqual(getFacetTexts(target), []);
+            assert.containsNone(target, ".o_favorite_menu .o_menu_item");
+            assert.containsOnce(target, ".o_favorite_menu .o_add_favorite");
         }
     );
 

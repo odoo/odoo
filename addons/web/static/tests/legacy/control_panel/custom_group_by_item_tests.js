@@ -1,7 +1,7 @@
 odoo.define('web.groupby_menu_generator_tests', function (require) {
     "use strict";
 
-    const CustomGroupByItem = require('web.CustomGroupByItem');
+    const { CustomGroupByItem } = require('@web/search/group_by_menu/custom_group_by_item');
     const ActionModel = require('web.ActionModel');
     const testUtils = require('web.test_utils');
 
@@ -38,38 +38,32 @@ odoo.define('web.groupby_menu_generator_tests', function (require) {
 
             // Button apply
             assert.containsOnce(cgi, 'div > button.btn.btn-primary');
-
-            cgi.destroy();
         });
 
         QUnit.test('select a field name in Add Custom Group menu properly trigger the corresponding field', async function (assert) {
-            assert.expect(5);
+            assert.expect(4);
 
             const fields = [
                 { sortable: true, name: 'candlelight', string: 'Candlelight', type: 'boolean' },
             ];
-            class MockedSearchModel extends ActionModel {
-                dispatch(method, ...args) {
-                    assert.strictEqual(method, 'createNewGroupBy');
-                    const field = args[0];
-                    assert.deepEqual(field, fields[0]);
-                }
-            }
-            const searchModel = new MockedSearchModel();
+            const searchModel = new ActionModel();
             const cgi = await createComponent(CustomGroupByItem, {
-                props: { fields },
+                props: {
+                    fields,
+                    onAddCustomGroup(fieldName) {
+                        assert.deepEqual(fieldName, fields[0].name);
+                    },
+                },
                 env: { searchModel },
             });
 
             await testUtils.dom.click(cgi.el.querySelector('.o_add_custom_group_menu .dropdown-toggle'));
             await testUtils.dom.click(cgi.el.querySelector('div > button.btn.btn-primary'));
 
-            // The only things visible should be the button 'Add Custome Group' and the dropdown menu;
+            // The only things visible should be the button 'Add Custom Group' and the dropdown menu;
             assert.strictEqual(cgi.el.children.length, 2);
             assert.containsOnce(cgi, '.dropdown-toggle');
             assert.containsOnce(cgi, '.dropdown-menu');
-
-            cgi.destroy();
         });
     });
 });

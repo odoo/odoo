@@ -1721,7 +1721,6 @@ QUnit.module('fields', {}, function () {
             // type something that doesn't exist
             await testUtils.fields.editAndTrigger(form.$('.o_field_many2one input'),
                 'Something that does not exist', 'keydown');
-            // await testUtils.nextTick();
             assert.containsN(form.$('.o_field_many2one input').autocomplete('widget'), 'li.o_m2o_dropdown_option', 2,
                 'autocomplete should contain Create and Create and Edit... options');
 

@@ -12,13 +12,14 @@ import {
     click,
     getFixture,
     makeDeferred,
+    mount,
     mouseEnter,
     nextTick,
     patchWithCleanup,
     triggerHotkey,
 } from "../helpers/utils";
 
-const { Component, mount, xml } = owl;
+const { App, Component, xml } = owl;
 const serviceRegistry = registry.category("services");
 
 let env;
@@ -30,7 +31,6 @@ QUnit.module("Components", ({ beforeEach }) => {
         serviceRegistry.add("hotkey", hotkeyService);
         serviceRegistry.add("ui", uiService);
         target = getFixture();
-        registerCleanup(() => parent.destroy());
         patchWithCleanup(browser, {
             setTimeout: (fn) => fn(),
             clearTimeout: () => {},
@@ -46,7 +46,7 @@ QUnit.module("Components", ({ beforeEach }) => {
         parent = await mount(Parent, { env, target });
         assert.strictEqual(
             parent.el.outerHTML,
-            '<div class="o-dropdown dropdown o-dropdown--no-caret"><button class="dropdown-toggle  "></button></div>'
+            '<div class="o-dropdown dropdown o-dropdown--no-caret"><button class="dropdown-toggle"></button></div>'
         );
         assert.containsOnce(parent.el, "button.dropdown-toggle");
         assert.containsNone(parent.el, ".dropdown-menu");
@@ -65,7 +65,7 @@ QUnit.module("Components", ({ beforeEach }) => {
         Parent.template = xml`<DropdownItem href="'#'">coucou</DropdownItem>`;
         env = await makeTestEnv();
         parent = await mount(Parent, { env, target });
-        assert.strictEqual(parent.el.outerHTML, '<a href="#" class="dropdown-item">coucou</a>');
+        assert.strictEqual(parent.el.outerHTML, '<a class="dropdown-item" href="#">coucou</a>');
     });
 
     QUnit.test("DropdownItem: prevents click default with href", async (assert) => {
@@ -84,8 +84,8 @@ QUnit.module("Components", ({ beforeEach }) => {
         class Parent extends Component {}
         Parent.template = xml`
             <Dropdown>
-                <DropdownItem class="link" href="'#'"/>
-                <DropdownItem class="nolink" />
+                <DropdownItem class="'link'" href="'#'"/>
+                <DropdownItem class="'nolink'" />
             </Dropdown>`;
         env = await makeTestEnv();
         parent = await mount(Parent, { env, target });
@@ -102,8 +102,8 @@ QUnit.module("Components", ({ beforeEach }) => {
     QUnit.test("can be styled", async (assert) => {
         class Parent extends Component {}
         Parent.template = xml`
-        <Dropdown class="one" togglerClass="'two'" menuClass="'three'">
-            <DropdownItem class="four" />
+        <Dropdown class="'one'" togglerClass="'two'" menuClass="'three'">
+            <DropdownItem class="'four'" />
         </Dropdown>
       `;
         env = await makeTestEnv();
@@ -289,10 +289,10 @@ QUnit.module("Components", ({ beforeEach }) => {
         Parent.template = xml`
         <Dropdown>
             <Dropdown>
-                <DropdownItem class="item1" parentClosingMode="'none'" />
-                <DropdownItem class="item2" parentClosingMode="'closest'" />
-                <DropdownItem class="item3" parentClosingMode="'all'" />
-                <DropdownItem class="item4" />
+                <DropdownItem class="'item1'" parentClosingMode="'none'" />
+                <DropdownItem class="'item2'" parentClosingMode="'closest'" />
+                <DropdownItem class="'item3'" parentClosingMode="'all'" />
+                <DropdownItem class="'item4'" />
             </Dropdown>
         </Dropdown>
       `;
@@ -324,28 +324,9 @@ QUnit.module("Components", ({ beforeEach }) => {
     });
 
     QUnit.test("multi-level dropdown: recursive template can be rendered", async (assert) => {
-        const recursiveTemplate = `
-        <Dropdown startOpen="true">
-            <t t-set-slot="toggler">
-                <t t-esc="name" />
-            </t>
-            <t t-foreach="items" t-as="item">
-
-              <t t-if="!item.children.length">
-                <DropdownItem t-esc="item.name" />
-              </t>
-
-              <t t-else="" t-call="recursive.Template">
-                <t t-set="name" t-value="item.name" />
-                <t t-set="items" t-value="item.children" />
-              </t>
-
-            </t>
-        </Dropdown>
-    `;
         class Parent extends Component {
-            constructor() {
-                super(...arguments);
+            setup() {
+                super.setup();
                 this.name = "foo";
                 this.items = [
                     {
@@ -377,8 +358,33 @@ QUnit.module("Components", ({ beforeEach }) => {
         }
         Parent.template = "recursive.Template";
         env = await makeTestEnv();
-        env.qweb.addTemplate("recursive.Template", recursiveTemplate);
-        parent = await mount(Parent, { env, target });
+        const app = new App(Parent, {
+            env,
+            templates: window.__ODOO_TEMPLATES__,
+            dev: env.debug,
+        });
+        registerCleanup(() => app.destroy());
+        app.addTemplate(
+            "recursive.Template",
+            `<Dropdown startOpen="true">
+                <t t-set-slot="toggler">
+                    <t t-esc="name" />
+                </t>
+                <t t-foreach="items" t-as="item" t-key="item_index">
+
+                <t t-if="!item.children.length">
+                    <DropdownItem><t t-esc="item.name"/></DropdownItem>
+                </t>
+
+                <t t-else="" t-call="recursive.Template">
+                    <t t-set="name" t-value="item.name" />
+                    <t t-set="items" t-value="item.children" />
+                </t>
+
+                </t>
+            </Dropdown>`
+        );
+        parent = await app.mount(target);
         assert.deepEqual(
             [...parent.el.querySelectorAll("button,.dropdown-menu > .dropdown-item")].map(
                 (el) => el.textContent
@@ -417,9 +423,9 @@ QUnit.module("Components", ({ beforeEach }) => {
             }
             Parent.template = xml`
         <div>
-          <Dropdown class="one" />
-          <Dropdown class="two" beforeOpen="beforeOpen"/>
-          <Dropdown class="three" />
+          <Dropdown class="'one'" />
+          <Dropdown class="'two'" beforeOpen="beforeOpen"/>
+          <Dropdown class="'three'" />
           <div class="outside">OUTSIDE</div>
         </div>
       `;
@@ -466,9 +472,9 @@ QUnit.module("Components", ({ beforeEach }) => {
             class Parent extends Component {}
             Parent.template = xml`
         <div>
-          <div><Dropdown class="foo" /></div>
-          <Dropdown class="bar1" />
-          <Dropdown class="bar2" />
+          <div><Dropdown class="'foo'" /></div>
+          <Dropdown class="'bar1'" />
+          <Dropdown class="'bar2'" />
         </div>
       `;
             env = await makeTestEnv();
@@ -491,9 +497,9 @@ QUnit.module("Components", ({ beforeEach }) => {
             class Parent extends Component {}
             Parent.template = xml`
         <div>
-          <div><Dropdown class="foo" /></div>
-          <Dropdown class="bar1" />
-          <Dropdown class="bar2" />
+          <div><Dropdown class="'foo'" /></div>
+          <Dropdown class="'bar1'" />
+          <Dropdown class="'bar2'" />
         </div>
       `;
             env = await makeTestEnv();
@@ -518,8 +524,8 @@ QUnit.module("Components", ({ beforeEach }) => {
         class Parent extends Component {}
         Parent.template = xml`
         <div>
-          <Dropdown class="one" manualOnly="true"/>
-          <Dropdown class="two" manualOnly="true"/>
+          <Dropdown class="'one'" manualOnly="true"/>
+          <Dropdown class="'two'" manualOnly="true"/>
           <div class="outside">OUTSIDE</div>
         </div>
       `;
@@ -555,9 +561,9 @@ QUnit.module("Components", ({ beforeEach }) => {
         }
         Parent.template = xml`
         <Dropdown hotkey="'m'">
-            <DropdownItem class="item1" onSelected="() => onItemSelected(1)">item1</DropdownItem>
-            <DropdownItem class="item2" hotkey="'2'" onSelected="() => onItemSelected(2)">item2</DropdownItem>
-            <DropdownItem class="item3" onSelected="() => onItemSelected(3)">item3</DropdownItem>
+            <DropdownItem class="'item1'" onSelected="() => onItemSelected(1)">item1</DropdownItem>
+            <DropdownItem class="'item2'" hotkey="'2'" onSelected="() => onItemSelected(2)">item2</DropdownItem>
+            <DropdownItem class="'item3'" onSelected="() => onItemSelected(3)">item3</DropdownItem>
         </Dropdown>
       `;
         env = await makeTestEnv();
@@ -670,17 +676,17 @@ QUnit.module("Components", ({ beforeEach }) => {
             }
         }
         Parent.template = xml`
-            <Dropdown class="first" hotkey="'1'">
-                <DropdownItem class="first-first" onSelected="() => onItemSelected('first-first')">O</DropdownItem>
-                <Dropdown class="second">
-                    <DropdownItem class="second-first" onSelected="() => onItemSelected('second-first')">O</DropdownItem>
-                    <Dropdown class="third">
-                        <DropdownItem class="third-first" onSelected="() => onItemSelected('third-first')">O</DropdownItem>
-                        <DropdownItem class="third-last" onSelected="() => onItemSelected('third-last')">O</DropdownItem>
+            <Dropdown class="'first'" hotkey="'1'">
+                <DropdownItem class="'first-first'" onSelected="() => onItemSelected('first-first')">O</DropdownItem>
+                <Dropdown class="'second'">
+                    <DropdownItem class="'second-first'" onSelected="() => onItemSelected('second-first')">O</DropdownItem>
+                    <Dropdown class="'third'">
+                        <DropdownItem class="'third-first'" onSelected="() => onItemSelected('third-first')">O</DropdownItem>
+                        <DropdownItem class="'third-last'" onSelected="() => onItemSelected('third-last')">O</DropdownItem>
                     </Dropdown>
-                    <DropdownItem class="second-last" onSelected="() => onItemSelected('second-last')">O</DropdownItem>
+                    <DropdownItem class="'second-last'" onSelected="() => onItemSelected('second-last')">O</DropdownItem>
                 </Dropdown>
-                <DropdownItem class="first-last" onSelected="() => onItemSelected('first-last')">O</DropdownItem>
+                <DropdownItem class="'first-last'" onSelected="() => onItemSelected('first-last')">O</DropdownItem>
             </Dropdown>
         `;
         env = await makeTestEnv();
@@ -765,10 +771,10 @@ QUnit.module("Components", ({ beforeEach }) => {
         assert.expect(10);
         class Parent extends Component {}
         Parent.template = xml`
-            <Dropdown class="first" hotkey="'1'">
-                <DropdownItem class="first-first">O</DropdownItem>
-                <Dropdown class="second">
-                    <DropdownItem class="second-first">O</DropdownItem>
+            <Dropdown class="'first'" hotkey="'1'">
+                <DropdownItem class="'first-first'">O</DropdownItem>
+                <Dropdown class="'second'">
+                    <DropdownItem class="'second-first'">O</DropdownItem>
                 </Dropdown>
             </Dropdown>
         `;
@@ -813,7 +819,7 @@ QUnit.module("Components", ({ beforeEach }) => {
             Parent.template = xml`
                 <Dropdown togglerClass="'main'">
                     <Dropdown togglerClass="'sub'" />
-                    <DropdownItem class="item" />
+                    <DropdownItem class="'item'" />
                 </Dropdown>
             `;
             env = await makeTestEnv();

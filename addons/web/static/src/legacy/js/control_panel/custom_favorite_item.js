@@ -29,9 +29,7 @@ odoo.define('web.CustomFavoriteItem', function (require) {
      * and save the context to a new filter.
      */
     class CustomFavoriteItem extends Component {
-        constructor() {
-            super(...arguments);
-
+        setup() {
             const favId = favoriteId++;
             this.useByDefaultId = `o_favorite_use_by_default_${favId}`;
             this.shareAllUsersId = `o_favorite_share_all_users_${favId}`;
@@ -45,7 +43,7 @@ odoo.define('web.CustomFavoriteItem', function (require) {
                 isShared: false,
             });
 
-            useAutofocus();
+            useAutofocus("description");
         }
 
         //---------------------------------------------------------------------

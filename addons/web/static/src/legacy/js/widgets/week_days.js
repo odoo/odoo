@@ -7,7 +7,6 @@ odoo.define('web.WeekDays', function (require) {
 
     const { Component, useState } = owl;
 
-
     class WeekDays extends Component {
         constructor(parent) {
             super(...arguments);

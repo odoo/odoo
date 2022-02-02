@@ -27,8 +27,11 @@ import { makeEnv, startServices } from "@web/env";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { browser } from '@web/core/browser/browser';
 import { jsonrpc } from '@web/core/network/rpc_service';
+import { _t } from "@web/core/l10n/translation";
+
+
 const serviceRegistry = registry.category("services");
-const { Component, config, mount, whenReady } = owl;
+const { Component, App, xml, mount, whenReady } = owl;
 
 // Load localizations outside the PublicRoot to not wait for DOM ready (but
 // wait for them in PublicRoot)
@@ -355,12 +358,10 @@ export const PublicRoot = publicWidget.RootWidget.extend({
     },
 });
 
-
 /**
  * Configure Owl with the public env
  */
-config.mode = legacyEnv.isDebug() ? "dev" : "prod";
-Component.env = legacyEnv;
+owl.Component.env = legacyEnv;
 
 /**
  * This widget is important, because the tour manager needs a root widget in
@@ -404,16 +405,31 @@ export async function createPublicRoot(RootWidget) {
     }, { force: true });
 
     const wowlEnv = makeEnv();
-    wowlEnv.qweb.addTemplates(await loadBundleTemplates("web.assets_frontend"));
+
+    const templates = await loadBundleTemplates("web.assets_frontend");
+    window.__ODOO_TEMPLATES__ = templates;
     await startServices(wowlEnv);
     mapLegacyEnvToWowlEnv(legacyEnv, wowlEnv);
+    class RootParent extends Component {}
+    RootParent.template = xml``;
+    const app = new App(ComponentAdapter, {
+        templates: window.__ODOO_TEMPLATES__,
+        env: legacyEnv,
+        props: { Component: RootParent },
+        dev: env.debug,
+        translatableAttributes: ["label", "title", "placeholder", "alt", "data-tooltip"],
+        translateFn: _t,
+    });
 
-    const adapter = new ComponentAdapter(null, { Component }); // Used for _trigger_up compat layer
+    // We have a two fold constrain
+    // - the adapter is here to provide a triiger_up to map to new services
+    // - it needs to be in the dom to eventually transmit events to the publicRoot widget via the body
+    const adapter = await app.mount(document.body);
     const publicRoot = new RootWidget(adapter);
     await Promise.all([
-        mount(MainComponentsContainer, {
-            target: document.body,
+        mount(MainComponentsContainer, document.body, {
             env: wowlEnv,
+            templates: window.__ODOO_TEMPLATES__,
         }),
         publicRoot.attachTo(document.body),
     ]);

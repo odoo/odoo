@@ -47,7 +47,7 @@ export const viewService = {
     start(env, { orm }) {
         let cache = {};
 
-        env.bus.on("CLEAR-CACHES", null, () => {
+        env.bus.addEventListener("CLEAR-CACHES", () => {
             cache = {};
             const processedArchs = registry.category("__processed_archs__");
             processedArchs.content = {};

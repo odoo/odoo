@@ -33,8 +33,6 @@ odoo.define('web.pager_tests', function (require) {
 
             assert.strictEqual(testUtils.controlPanel.getPagerValue(pager), "5-8",
                 "currentMinimum should now be 5");
-
-            pager.destroy();
         });
 
         QUnit.test('edit the pager', async function (assert) {
@@ -67,8 +65,6 @@ odoo.define('web.pager_tests', function (require) {
                 "the pager should not contain an input anymore");
             assert.strictEqual(testUtils.controlPanel.getPagerValue(pager), "1-6",
                 "the limit should have been updated");
-
-            pager.destroy();
         });
 
         QUnit.test("keydown on pager with same value", async function (assert) {
@@ -98,8 +94,6 @@ odoo.define('web.pager_tests', function (require) {
             assert.containsNone(pager, "input");
             assert.strictEqual(testUtils.controlPanel.getPagerValue(pager), "1-4");
             assert.verifySteps(["pager-changed"]);
-
-            pager.destroy();
         });
 
         QUnit.test('pager value formatting', async function (assert) {
@@ -133,8 +127,6 @@ odoo.define('web.pager_tests', function (require) {
             await inputAndAssert("definitelyValidNumber", "10", "fallback to previous value if not a number");
             await inputAndAssert(" 1 ,  2   ", "1-2", "value is normalized and accepts several separators");
             await inputAndAssert("3  8", "3-8", "value accepts whitespace(s) as a separator");
-
-            pager.destroy();
         });
 
         QUnit.test('pager disabling', async function (assert) {
@@ -186,8 +178,6 @@ odoo.define('web.pager_tests', function (require) {
 
             assert.strictEqual(pager.el.querySelector('.o_pager_value').tagName, 'INPUT',
                 "pager edition is re-enabled");
-
-            pager.destroy();
         });
     });
 });

@@ -3,9 +3,8 @@ import { registry } from "@web/core/registry";
 import legacyFieldRegistry from "web.field_registry";
 import owlFieldRegistry from "web.field_registry_owl";
 import { ComponentAdapter } from "web.OwlCompatibility";
-import { useEffect } from "@web/core/utils/hooks";
 
-const { Component, useRef, xml } = owl;
+const { Component, useEffect, xml } = owl;
 
 const fieldRegistry = registry.category("fields");
 
@@ -36,13 +35,12 @@ class Field extends Component {
 
     setup() {
         const { record, type, name } = this.props;
-        this.fieldRef = useRef("fieldRef");
         this.FieldComponent = Field.getTangibleField({ record, type, name }).FieldClass;
     }
 }
 
 Field.template = xml/* xml */ `
-    <t t-component="FieldComponent" t-props="props" class="o-field" t-key="props.record.id" t-ref="fieldRef"/>
+    <t t-component="FieldComponent" t-props="props" class="o-field" t-key="props.record.id"/>
 `;
 
 class FieldSupportsLegacy extends Field {
@@ -106,8 +104,8 @@ class FieldSupportsLegacy extends Field {
 }
 FieldSupportsLegacy.template = xml/* xml */ `<t>
     <t t-if="!isOwlLegacy and !isLegacy" t-call="${Field.template}" />
-    <t t-elif="isOwlLegacy" t-component="FieldComponent" t-props="legacyProps" />
-    <t t-elif="isLegacy" t-component="ComponentAdapter" widgetArgs="widgetArgs" Component="FieldComponent" t-key="renderId" />
+    <FieldComponent t-elif="isOwlLegacy" t-props="legacyProps" />
+    <ComponentAdapter t-elif="isLegacy" widgetArgs="widgetArgs" Component="FieldComponent" t-key="renderId" />
 </t>
 `;
 FieldSupportsLegacy.components = { ComponentAdapter };

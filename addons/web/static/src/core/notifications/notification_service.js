@@ -41,14 +41,15 @@ export const notificationService = {
          */
         function add(message, options = {}) {
             const id = ++notifId;
-            const props = Object.assign({}, options, { message });
+            const closeFn = () => close(id);
+            const props = Object.assign({}, options, { message, close: closeFn });
             const sticky = props.sticky;
             delete props.sticky;
-            const closeFn = () => close(id);
+            delete props.onClose;
             const notification = {
                 id,
                 props,
-                close: closeFn,
+                onClose: options.onClose,
             };
             notifications.push(notification);
             bus.trigger("UPDATE");
@@ -61,6 +62,9 @@ export const notificationService = {
         function close(id) {
             const index = notifications.findIndex((n) => n.id === id);
             if (index > -1) {
+                if (notifications[index].onClose) {
+                    notifications[index].onClose();
+                }
                 notifications.splice(index, 1);
                 bus.trigger("UPDATE");
             }

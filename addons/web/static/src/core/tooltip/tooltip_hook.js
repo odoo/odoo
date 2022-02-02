@@ -1,9 +1,11 @@
 /** @odoo-module **/
 
 import { browser } from "@web/core/browser/browser";
-import { useEffect, useListener } from "@web/core/utils/hooks";
+import { useListener } from "@web/core/utils/hooks";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { Tooltip } from "./tooltip";
+
+const { useEffect } = owl;
 
 /**
  * The useTooltip hook allows to display custom tooltips on every elements with

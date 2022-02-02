@@ -27,9 +27,7 @@ odoo.define('web.DropdownMenuItem', function (require) {
      * @extends Component
      */
     class DropdownMenuItem extends Component {
-        constructor() {
-            super(...arguments);
-
+        setup() {
             this.canBeOpened = Boolean(this.props.options && this.props.options.length);
 
             this.fallbackFocusRef = useRef('fallback-focus');

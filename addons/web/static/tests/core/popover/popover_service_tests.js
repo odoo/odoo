@@ -4,9 +4,9 @@ import { popoverService } from "@web/core/popover/popover_service";
 import { registry } from "@web/core/registry";
 import { registerCleanup } from "../../helpers/cleanup";
 import { clearRegistryWithCleanup, makeTestEnv } from "../../helpers/mock_env";
-import { click, getFixture, nextTick } from "../../helpers/utils";
+import { click, getFixture, mount, nextTick } from "../../helpers/utils";
 
-const { Component, mount, xml } = owl;
+const { Component, xml } = owl;
 
 let env;
 let fixture;
@@ -40,13 +40,7 @@ QUnit.module("Popover service", {
 
         fixture = getFixture();
         env = await makeTestEnv();
-        const pseudoWebClient = await mount(PseudoWebClient, {
-            env,
-            target: fixture,
-        });
-        registerCleanup(() => {
-            pseudoWebClient.destroy();
-        });
+        await mount(PseudoWebClient, { env, target: fixture });
         popovers = env.services.popover;
         popoverTarget = fixture.querySelector("#anchor");
     },
@@ -139,7 +133,7 @@ QUnit.test("sub component triggers close", async (assert) => {
     assert.containsOnce(fixture, ".o_popover_container");
 
     class Comp extends Component {}
-    Comp.template = xml`<div id="comp" t-on-click="trigger('popover-closed')">in popover</div>`;
+    Comp.template = xml`<div id="comp" t-on-click="trigger.bind(this, 'popover-closed')">in popover</div>`;
 
     popovers.add(popoverTarget, Comp, {});
     await nextTick();

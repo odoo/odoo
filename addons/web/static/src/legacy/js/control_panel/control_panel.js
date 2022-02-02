@@ -96,16 +96,18 @@ odoo.define('web.ControlPanel', function (require) {
      * @extends Component
      */
     class ControlPanel extends Component {
-        constructor() {
-            super(...arguments);
-
+        setup() {
             this.additionalContent = getAdditionalContent(this.props);
 
-            useSubEnv({
+            const subEnv = {
                 action: this.props.action,
                 searchModel: this.props.searchModel,
-                view: this.props.view,
+            };
+            this.subEnvView = this.props.view;
+            Object.defineProperty(subEnv, "view", {
+                get: () => this.subEnvView,
             });
+            useSubEnv(subEnv);
 
             // Connect to the model
             // TODO: move this in enterprise whenever possible
@@ -139,7 +141,7 @@ odoo.define('web.ControlPanel', function (require) {
             // the lifespan of a ControlPanel instance, so we only need to update
             // the view information.
             if ('view' in nextProps) {
-                this.env.view = nextProps.view;
+                this.subEnvView = nextProps.view;
             }
             if ('fields' in nextProps) {
                 this.fields = this._formatFields(nextProps.fields);

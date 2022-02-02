@@ -5,6 +5,7 @@
         <div role="tooltip" class="o_popover"
             t-att-class="props.popoverClass"
             t-on-popover-compute="compute"
+            t-on-popover-closed="props.close"
         >
             <t t-slot="default" />
         </div>

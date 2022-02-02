@@ -23,12 +23,12 @@ export class LoadingIndicator extends Component {
             show: false,
         });
         this.rpcIds = new Set();
-        this.env.bus.on("RPC:REQUEST", this, this.requestCall);
-        this.env.bus.on("RPC:RESPONSE", this, this.responseCall);
+        this.env.bus.addEventListener("RPC:REQUEST", this.requestCall.bind(this));
+        this.env.bus.addEventListener("RPC:RESPONSE", this.responseCall.bind(this));
         this.uiService = useService("ui");
     }
 
-    requestCall(rpcId) {
+    requestCall({ detail: rpcId }) {
         if (this.state.count === 0) {
             this.state.show = true;
             this.blockUITimer = browser.setTimeout(() => {
@@ -40,7 +40,7 @@ export class LoadingIndicator extends Component {
         this.state.count++;
     }
 
-    responseCall(rpcId) {
+    responseCall({ detail: rpcId }) {
         this.rpcIds.delete(rpcId);
         this.state.count = this.rpcIds.size;
         if (this.state.count === 0) {

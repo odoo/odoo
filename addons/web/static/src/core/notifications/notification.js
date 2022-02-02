@@ -1,14 +1,8 @@
 /** @odoo-module **/
 
-const { Component, onWillUnmount } = owl;
+const { Component } = owl;
 
 export class Notification extends Component {
-    setup() {
-        if (this.props.onClose) {
-            onWillUnmount(() => this.props.onClose());
-        }
-    }
-
     shouldUpdate() {
         return false;
     }
@@ -48,7 +42,6 @@ Notification.props = {
         optional: true,
         validate: (t) => ["warning", "danger", "success", "info"].includes(t),
     },
-    messageIsHtml: { type: Boolean, optional: true },
     className: { type: String, optional: true },
     buttons: {
         type: Array,
@@ -62,11 +55,10 @@ Notification.props = {
             },
         },
     },
-    onClose: { type: Function, optional: true },
+    close: { type: Function },
 };
 Notification.defaultProps = {
     buttons: [],
     className: "",
-    messageIsHtml: false,
     type: "warning",
 };

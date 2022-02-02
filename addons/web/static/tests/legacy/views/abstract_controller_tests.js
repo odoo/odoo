@@ -8,8 +8,9 @@ var BasicView = require("web.BasicView");
 var BasicRenderer = require("web.BasicRenderer");
 const AbstractRenderer = require('web.AbstractRendererOwl');
 const RendererWrapper = require('web.RendererWrapper');
+const { nextTick } = require('web.test_utils');
 
-const { xml } = owl;
+const { xml, onWillDestroy } = owl;
 
 function getHtmlRenderer(html) {
     return BasicRenderer.extend({
@@ -101,9 +102,10 @@ QUnit.module("Views", {
         assert.expect(2);
 
         class Renderer extends AbstractRenderer {
-            __destroy() {
-                assert.step("destroy");
-                super.__destroy();
+            setup() {
+                onWillDestroy(() => {
+                    assert.step("destroy");
+                });
             }
         }
         Renderer.template = xml`<div>Test</div>`;

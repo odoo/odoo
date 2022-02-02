@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.UserMenu" owl="1">
-        <Dropdown class="o_user_menu">
+        <Dropdown class="'o_user_menu'">
             <t t-set-slot="toggler">
                 <img class="rounded-circle o_user_avatar" t-att-src="source" alt="User"/> <span class="oe_topbar_name"><t t-esc="user.name"/><t t-if="env.debug" t-esc="' (' + user.db.name + ')'"/></span>
             </t>
@@ -11,8 +11,8 @@
                     <DropdownItem
                         t-if="element.type == 'item'"
                         href="element.href"
-                        t-esc="element.description"
                         dataset="{ menu: element.id }"
+                        t-esc="element.description"
                         onSelected="element.callback"
                     />
                     <div t-if="element.type == 'separator'" role="separator" class="dropdown-divider"/>

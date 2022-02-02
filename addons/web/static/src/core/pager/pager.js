@@ -27,7 +27,7 @@ export class Pager extends Component {
         this.inputRef = useRef("input");
         useExternalListener(document, "mousedown", this.onClickAway, { capture: true });
 
-        this.forceFocus = useAutofocus();
+        this.forceFocus = useAutofocus("input");
     }
 
     /**

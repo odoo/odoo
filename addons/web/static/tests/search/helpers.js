@@ -13,7 +13,7 @@ import { registerCleanup } from "../helpers/cleanup";
 import { makeTestEnv } from "../helpers/mock_env";
 import { click, getFixture, mouseEnter, triggerEvent } from "../helpers/utils";
 
-const { Component, mount } = owl;
+const { App, Component } = owl;
 const serviceRegistry = registry.category("services");
 const favoriteMenuRegistry = registry.category("favoriteMenu");
 
@@ -50,11 +50,21 @@ export const makeWithSearch = async (params) => {
     const env = await makeTestEnv({ serverData, mockRPC, config });
 
     const target = getFixture();
-    const withSearch = await mount(WithSearch, { env, props, target });
 
-    registerCleanup(() => withSearch.destroy());
+    const appConfig = {
+        env,
+        props,
+        templates: window.__ODOO_TEMPLATES__,
+    };
+    const app = new App(WithSearch, appConfig);
+    env.app = app;
+    const withSearch = await app.mount(target);
 
-    const component = Object.values(withSearch.__owl__.children)[0];
+    registerCleanup(() => app.destroy());
+
+    const withSearchNode = withSearch.__owl__;
+    const componentNode = Object.values(withSearchNode.children)[0];
+    const component = componentNode.component;
 
     return component;
 };

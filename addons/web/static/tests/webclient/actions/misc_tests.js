@@ -8,6 +8,7 @@ import Widget from "web.Widget";
 import { makeTestEnv } from "../../helpers/mock_env";
 import {
     click,
+    getFixture,
     hushConsole,
     legacyExtraNextTick,
     makeDeferred,
@@ -24,6 +25,7 @@ import * as cpHelpers from "@web/../tests/search/helpers";
 import ListController from "web.ListController";
 
 let serverData;
+let target;
 // legacy stuff
 const actionRegistry = registry.category("actions");
 const actionHandlersRegistry = registry.category("action_handlers");
@@ -31,6 +33,7 @@ const actionHandlersRegistry = registry.category("action_handlers");
 QUnit.module("ActionManager", (hooks) => {
     hooks.beforeEach(() => {
         serverData = getActionManagerServerData();
+        target = getFixture();
     });
 
     QUnit.module("Misc");
@@ -100,7 +103,7 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("properly handle case when action id does not exist", async (assert) => {
         assert.expect(2);
-        const webClient = await createWebClient({ serverData });
+        const webClient = await createWebClient({ target, serverData });
         patchWithCleanup(window, { console: hushConsole }, { pure: true });
         patchWithCleanup(webClient.env.services.notification, {
             add(message) {
@@ -108,7 +111,7 @@ QUnit.module("ActionManager", (hooks) => {
             },
         });
         await doAction(webClient, 4448);
-        assert.containsOnce(webClient.el, "div.o_invalid_action");
+        assert.containsOnce(target, "div.o_invalid_action");
     });
 
     QUnit.test("actions can be cached", async function (assert) {
@@ -213,18 +216,18 @@ QUnit.module("ActionManager", (hooks) => {
                 this._super.apply(this, arguments);
             },
         });
-        const webClient = await createWebClient({ serverData });
+        const webClient = await createWebClient({ target, serverData });
         await doAction(webClient, 8);
         const n = delta;
         await doAction(webClient, 4);
         // kanban view is loaded, switch to list view
-        await cpHelpers.switchView(webClient.el, "list");
+        await cpHelpers.switchView(target, "list");
         await legacyExtraNextTick();
         // open a record in form view
-        await testUtils.dom.click(webClient.el.querySelector(".o_list_view .o_data_row"));
+        await testUtils.dom.click(target.querySelector(".o_list_view .o_data_row"));
         await legacyExtraNextTick();
         // go back to action 7 in breadcrumbs
-        await testUtils.dom.click(webClient.el.querySelector(".o_control_panel .breadcrumb a"));
+        await testUtils.dom.click(target.querySelector(".o_control_panel .breadcrumb a"));
         await legacyExtraNextTick();
         assert.strictEqual(delta, n, "should have properly destroyed all other widgets");
         testUtils.mock.unpatch(Widget);
@@ -245,7 +248,7 @@ QUnit.module("ActionManager", (hooks) => {
                 this._super.apply(this, arguments);
             },
         });
-        const webClient = await createWebClient({ serverData });
+        const webClient = await createWebClient({ target, serverData });
         const n = delta;
         await doAction(webClient, 5);
         await doAction(webClient, { type: "ir.actions.act_window_close" });
@@ -274,13 +277,13 @@ QUnit.module("ActionManager", (hooks) => {
                     await Promise.resolve(def);
                 }
             };
-            const webClient = await createWebClient({ serverData, mockRPC });
+            const webClient = await createWebClient({ target, serverData, mockRPC });
             await doAction(webClient, 4);
             const n = delta;
             await doAction(webClient, 3, { clearBreadcrumbs: true });
             // switch to the form view (this request is blocked)
             def = testUtils.makeTestPromise();
-            await testUtils.dom.click(webClient.el.querySelector(".o_list_view .o_data_row"));
+            await testUtils.dom.click(target.querySelector(".o_list_view .o_data_row"));
             // execute another action meanwhile (don't block this request)
             await doAction(webClient, 4, { clearBreadcrumbs: true });
             // unblock the switch to the form view in action 3
@@ -312,7 +315,7 @@ QUnit.module("ActionManager", (hooks) => {
                     await Promise.resolve(def);
                 }
             };
-            const webClient = await createWebClient({ serverData, mockRPC });
+            const webClient = await createWebClient({ target, serverData, mockRPC });
             // execute action 4 to know the number of widgets it instantiates
             await doAction(webClient, 4);
             const n = delta;
@@ -352,7 +355,7 @@ QUnit.module("ActionManager", (hooks) => {
                     await Promise.resolve(def);
                 }
             };
-            const webClient = await createWebClient({ serverData, mockRPC });
+            const webClient = await createWebClient({ target, serverData, mockRPC });
             // execute action 4 to know the number of widgets it instantiates
             await doAction(webClient, 4);
             const n = delta;
@@ -374,20 +377,18 @@ QUnit.module("ActionManager", (hooks) => {
     QUnit.test('action with "no_breadcrumbs" set to true', async function (assert) {
         assert.expect(2);
         serverData.actions[4].context = { no_breadcrumbs: true };
-        const webClient = await createWebClient({
-            serverData,
-        });
+        const webClient = await createWebClient({ target, serverData });
         await doAction(webClient, 3);
-        assert.containsOnce(webClient, ".o_control_panel .breadcrumb-item");
+        assert.containsOnce(target, ".o_control_panel .breadcrumb-item");
         // push another action flagged with 'no_breadcrumbs=true'
         await doAction(webClient, 4);
-        assert.containsNone(webClient, ".o_control_panel .breadcrumb-item");
+        assert.containsNone(target, ".o_control_panel .breadcrumb-item");
     });
 
     QUnit.test("document's title is updated when an action is executed", async function (assert) {
         assert.expect(8);
         const defaultTitle = { zopenerp: "Odoo" };
-        const webClient = await createWebClient({ serverData });
+        const webClient = await createWebClient({ target, serverData });
         let currentTitle = webClient.env.services.title.getParts();
         assert.deepEqual(currentTitle, defaultTitle);
         let currentHash = webClient.env.services.router.current.hash;
@@ -408,7 +409,7 @@ QUnit.module("ActionManager", (hooks) => {
         });
         currentHash = webClient.env.services.router.current.hash;
         assert.deepEqual(currentHash, { action: 8, model: "pony", view_type: "list" });
-        await testUtils.dom.click($(webClient.el).find("tr.o_data_row:first"));
+        await testUtils.dom.click($(target).find("tr.o_data_row:first"));
         await legacyExtraNextTick();
         currentTitle = webClient.env.services.title.getParts();
         assert.deepEqual(currentTitle, {
@@ -441,15 +442,15 @@ QUnit.module("ActionManager", (hooks) => {
                 },
             });
             core.action_registry.add("ClientAction", ClientAction);
-            const webClient = await createWebClient({ serverData });
+            const webClient = await createWebClient({ target, serverData });
             await doAction(webClient, "ClientAction");
-            assert.containsOnce(webClient, ".my_button");
-            await testUtils.dom.click(webClient.el.querySelector(".my_button"));
+            assert.containsOnce(target, ".my_button");
+            await testUtils.dom.click(target.querySelector(".my_button"));
             await legacyExtraNextTick();
-            assert.containsOnce(webClient, ".o_kanban_view");
-            await testUtils.dom.click($(webClient.el).find(".o_control_panel .breadcrumb a:first"));
+            assert.containsOnce(target, ".o_kanban_view");
+            await testUtils.dom.click($(target).find(".o_control_panel .breadcrumb a:first"));
             await legacyExtraNextTick();
-            assert.containsOnce(webClient, ".my_button");
+            assert.containsOnce(target, ".my_button");
             assert.verifySteps(["on_reverse_breadcrumb"]);
             delete core.action_registry.map.ClientAction;
         }
@@ -464,16 +465,16 @@ QUnit.module("ActionManager", (hooks) => {
                 controller = this;
             },
         });
-        const webClient = await createWebClient({ serverData });
+        const webClient = await createWebClient({ target, serverData });
         await doAction(webClient, 4);
         await doAction(webClient, 3);
-        assert.containsN(webClient, ".o_control_panel .breadcrumb-item", 2);
+        assert.containsN(target, ".o_control_panel .breadcrumb-item", 2);
         controller.trigger_up("history_back");
         await testUtils.nextTick();
         await legacyExtraNextTick();
-        assert.containsOnce(webClient, ".o_control_panel .breadcrumb-item");
+        assert.containsOnce(target, ".o_control_panel .breadcrumb-item");
         assert.strictEqual(
-            $(webClient.el).find(".o_control_panel .breadcrumb-item").text(),
+            $(target).find(".o_control_panel .breadcrumb-item").text(),
             "Partners Action 4",
             "breadcrumbs should display the display_name of the action"
         );
@@ -484,20 +485,23 @@ QUnit.module("ActionManager", (hooks) => {
         for (let i = 0; i < 60; i++) {
             serverData.models.partner.records.push({ id: 100 + i, foo: `Record ${i}` });
         }
-        const webClient = await createWebClient({ serverData });
-        webClient.el.style.height = "250px";
+        const container = document.createElement("div");
+        container.classList.add("o_web_client");
+        container.style.height = "250px";
+        target.appendChild(container);
+        const webClient = await createWebClient({ target: container, serverData });
         // execute a first action
         await doAction(webClient, 3);
-        assert.strictEqual(webClient.el.querySelector(".o_content").scrollTop, 0);
+        assert.strictEqual(target.querySelector(".o_content").scrollTop, 0);
         // simulate a scroll
-        webClient.el.querySelector(".o_content").scrollTop = 100;
+        target.querySelector(".o_content").scrollTop = 100;
         // execute a second action (in which we don't scroll)
         await doAction(webClient, 4);
-        assert.strictEqual(webClient.el.querySelector(".o_content").scrollTop, 0);
+        assert.strictEqual(target.querySelector(".o_content").scrollTop, 0);
         // go back using the breadcrumbs
-        await testUtils.dom.click($(webClient.el).find(".o_control_panel .breadcrumb a"));
+        await click(target.querySelector(".o_control_panel .breadcrumb a"));
         await legacyExtraNextTick();
-        assert.strictEqual(webClient.el.querySelector(".o_content").scrollTop, 100);
+        assert.strictEqual(target.querySelector(".o_content").scrollTop, 100);
     });
 
     QUnit.test(
@@ -511,13 +515,13 @@ QUnit.module("ActionManager", (hooks) => {
           <form><field name="foo"/></form>
         </field>
       </form>`;
-            const webClient = await createWebClient({ serverData });
+            const webClient = await createWebClient({ target, serverData });
             await doAction(webClient, 3);
-            assert.containsOnce(webClient, ".o_list_view");
-            await testUtils.dom.click($(webClient.el).find(".o_list_view .o_data_row:first"));
+            assert.containsOnce(target, ".o_list_view");
+            await testUtils.dom.click(target.querySelector(".o_list_view .o_data_row"));
             await legacyExtraNextTick();
-            assert.containsOnce(webClient, ".o_form_view");
-            await testUtils.dom.click($(webClient.el).find(".o_form_view .o_data_row:first"));
+            assert.containsOnce(target, ".o_form_view");
+            await testUtils.dom.click(target.querySelector(".o_form_view .o_data_row"));
             await legacyExtraNextTick();
             assert.containsOnce(document.body, ".modal .o_form_view");
             await doAction(webClient, 1); // target != 'new'
@@ -536,13 +540,13 @@ QUnit.module("ActionManager", (hooks) => {
           <form><field name="foo"/></form>
         </field>
       </form>`;
-            const webClient = await createWebClient({ serverData });
+            const webClient = await createWebClient({ target, serverData });
             await doAction(webClient, 3);
-            assert.containsOnce(webClient, ".o_list_view");
-            await testUtils.dom.click($(webClient.el).find(".o_list_view .o_data_row:first"));
+            assert.containsOnce(target, ".o_list_view");
+            await testUtils.dom.click($(target).find(".o_list_view .o_data_row:first"));
             await legacyExtraNextTick();
-            assert.containsOnce(webClient, ".o_form_view");
-            await testUtils.dom.click($(webClient.el).find(".o_form_view .o_data_row:first"));
+            assert.containsOnce(target, ".o_form_view");
+            await testUtils.dom.click($(target).find(".o_form_view .o_data_row:first"));
             await legacyExtraNextTick();
             assert.containsOnce(document.body, ".modal .o_form_view");
             await doAction(webClient, 5); // target 'new'
@@ -567,19 +571,19 @@ QUnit.module("ActionManager", (hooks) => {
                 </footer>
             </form>
         `;
-        const webClient = await createWebClient({ serverData, mockRPC });
+        const webClient = await createWebClient({ target, serverData, mockRPC });
 
         await doAction(webClient, 25);
 
         const tooltipProm = makeDeferred();
-        $(webClient.el).one("shown.bs.tooltip", () => {
+        $(target).one("shown.bs.tooltip", () => {
             tooltipProm.resolve();
         });
 
-        triggerEvents(webClient.el, ".modal footer button", ["mouseover", "focusin"]);
+        triggerEvents(target, ".modal footer button", ["mouseover", "focusin"]);
         await tooltipProm;
         // check on webClient dom
-        assert.containsOnce(webClient.el, ".tooltip");
+        assert.containsOnce(document.body, ".tooltip");
         await doAction(webClient, {
             type: "ir.actions.act_window_close",
         });
@@ -604,20 +608,20 @@ QUnit.module("ActionManager", (hooks) => {
                 <field name="display_name" />
             </form>
         `;
-        const webClient = await createWebClient({ serverData, mockRPC });
+        const webClient = await createWebClient({ target, serverData, mockRPC });
 
         await doAction(webClient, 24);
 
         const tooltipProm = makeDeferred();
-        $(webClient.el).one("shown.bs.tooltip", () => {
+        $(target).one("shown.bs.tooltip", () => {
             tooltipProm.resolve();
         });
 
-        triggerEvents(webClient.el, ".o_form_statusbar button", ["mouseover", "focusin"]);
+        triggerEvents(target, ".o_form_statusbar button", ["mouseover", "focusin"]);
         await tooltipProm;
         // check on webClient DOM
-        assert.containsOnce(webClient.el, ".tooltip");
-        await click(webClient.el, ".o_content");
+        assert.containsOnce(document.body, ".tooltip");
+        await click(target, ".o_content");
         // check on the whole DOM
         assert.containsNone(document.body, ".tooltip");
     });

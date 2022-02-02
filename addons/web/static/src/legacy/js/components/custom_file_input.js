@@ -23,9 +23,7 @@ odoo.define('web.CustomFileInput', function (require) {
          * @param {string} [props.multi_upload=false] Whether the input should allow
          *      to upload multiple files at once.
          */
-        constructor() {
-            super(...arguments);
-
+        setup() {
             this.fileInputRef = useRef('file-input');
         }
 
@@ -68,6 +66,12 @@ odoo.define('web.CustomFileInput', function (require) {
         _onTriggerClicked() {
             this.fileInputRef.el.click();
         }
+
+        _onUpload(ev) {
+            if (this.props.onUpload && ev.detail) {
+                this.props.onUpload(ev.detail.files);
+            }
+        }
     }
     CustomFileInput.defaultProps = {
         accepted_file_extensions: '*',
@@ -80,6 +84,8 @@ odoo.define('web.CustomFileInput', function (require) {
         id: { type: Number, optional: 1 },
         model: { type: String, optional: 1 },
         multi_upload: { type: Boolean, optional: 1 },
+        onUpload: { type: Function, optional: 1 },
+        slots: { type: Object, optional: true },
     };
     CustomFileInput.template = 'web.CustomFileInput';
 

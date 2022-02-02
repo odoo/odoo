@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { useBus, useEffect, useService } from "@web/core/utils/hooks";
+import { useBus, useService } from "@web/core/utils/hooks";
 import { usePosition } from "../position/position_hook";
 import { useDropdownNavigation } from "./dropdown_navigation_hook";
 import { localization } from "../l10n/localization";
@@ -8,12 +8,12 @@ import { localization } from "../l10n/localization";
 const {
     Component,
     EventBus,
-    QWeb,
     onWillStart,
+    useEffect,
     useExternalListener,
     useRef,
     useState,
-    useSubEnv,
+    useChildSubEnv,
 } = owl;
 
 const DIRECTION_CARET_CLASS = {
@@ -75,7 +75,7 @@ export class Dropdown extends Component {
 
         // Set up nested dropdowns ---------------------------------------------
         this.parentDropdown = this.env[DROPDOWN];
-        useSubEnv({
+        useChildSubEnv({
             [DROPDOWN]: {
                 close: this.close.bind(this),
                 closeAllParents: () => {
@@ -206,26 +206,26 @@ export class Dropdown extends Component {
      *
      * @see changeStateAndNotify()
      *
-     * @param {DropdownStateChangedPayload} args
+     * @param {CustomEvent<DropdownStateChangedPayload>} ev
      */
-    onDropdownStateChanged(args) {
-        if (this.el.contains(args.emitter.el)) {
+    onDropdownStateChanged({ detail }) {
+        if (this.el.contains(detail.emitter.el)) {
             // Do not listen to events emitted by self or children
             return;
         }
 
         // Emitted by direct siblings ?
-        if (args.emitter.el.parentElement === this.el.parentElement) {
+        if (detail.emitter.el.parentElement === this.el.parentElement) {
             // Sync the group status
-            this.state.groupIsOpen = args.newState.groupIsOpen;
+            this.state.groupIsOpen = detail.newState.groupIsOpen;
 
             // Another dropdown is now open ? Close myself without notifying siblings.
-            if (this.state.open && args.newState.open) {
+            if (this.state.open && detail.newState.open) {
                 this.state.open = false;
             }
         } else {
             // Another dropdown is now open ? Close myself and notify the world (i.e. siblings).
-            if (this.state.open && args.newState.open) {
+            if (this.state.open && detail.newState.open) {
                 this.close();
             }
         }
@@ -273,6 +273,10 @@ export class Dropdown extends Component {
 }
 Dropdown.bus = new EventBus();
 Dropdown.props = {
+    class: {
+        type: String,
+        optional: true,
+    },
     toggler: {
         type: String,
         optional: true,
@@ -314,7 +318,11 @@ Dropdown.props = {
         type: String,
         optional: true,
     },
+    slots: {
+        type: Object,
+        optional: true,
+    },
 };
 Dropdown.template = "web.Dropdown";
 
-QWeb.registerComponent("Dropdown", Dropdown);
+owl.Component._components.Dropdown = Dropdown;

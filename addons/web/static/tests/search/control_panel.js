@@ -125,6 +125,7 @@ QUnit.module("Search", (hooks) => {
             },
             searchMenuTypes: [],
         });
+
         assert.containsOnce(controlPanel.el, ".o_pager");
 
         pagerInfo.total = 0;

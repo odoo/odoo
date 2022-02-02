@@ -18,6 +18,7 @@ Popover.defaultProps = {
     position: "bottom",
 };
 Popover.props = {
+    close: { type: Function },
     popoverClass: {
         optional: true,
         type: String,
@@ -27,4 +28,11 @@ Popover.props = {
         validate: (p) => ["top", "bottom", "left", "right"].includes(p),
     },
     target: HTMLElement,
+    slots: {
+        type: Object,
+        optional: true,
+        shape: {
+            default: { optional: true },
+        },
+    },
 };

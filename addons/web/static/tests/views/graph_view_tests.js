@@ -1,7 +1,14 @@
 /** @odoo-module **/
 
 import { makeFakeLocalizationService } from "@web/../tests/helpers/mock_services";
-import { click, makeDeferred, nextTick, patchDate, triggerEvent } from "@web/../tests/helpers/utils";
+import {
+    click,
+    getFixture,
+    makeDeferred,
+    nextTick,
+    patchDate,
+    triggerEvent,
+} from "@web/../tests/helpers/utils";
 import {
     editFavoriteName,
     saveFavorite,
@@ -33,8 +40,10 @@ function getGraphModelMetaData(graph) {
 }
 
 export function getGraphRenderer(graph) {
-    const layout = Object.values(graph.__owl__.children)[0];
-    return Object.values(layout.__owl__.children).find((c) => c.chart);
+    const layoutNode = Object.values(graph.__owl__.children)[0];
+    return Object.values(layoutNode.children)
+        .map((c) => c.component)
+        .find((c) => c.chart);
 }
 
 function getChart(graph) {
@@ -111,18 +120,18 @@ function checkTooltip(assert, graph, expectedTooltipContent, index, datasetIndex
     );
 }
 
-function getModeButton(comp, mode) {
-    return comp.el.querySelector(`.o_graph_button[data-mode="${mode}"`);
+function getModeButton(el, mode) {
+    return el.querySelector(`.o_graph_button[data-mode="${mode}"`);
 }
 
-async function selectMode(comp, mode) {
-    await click(getModeButton(comp, mode));
+async function selectMode(el, mode) {
+    await click(getModeButton(el, mode));
 }
 
 function checkModeIs(assert, graph, mode) {
     assert.strictEqual(getGraphModelMetaData(graph).mode, mode);
     assert.strictEqual(getChart(graph).config.type, mode);
-    assert.hasClass(getModeButton(graph, mode), "active");
+    assert.hasClass(getModeButton(graph.el, mode), "active");
 }
 
 function getXAxeLabel(graph) {
@@ -286,9 +295,9 @@ QUnit.module("Views", (hooks) => {
     QUnit.module("GraphView");
 
     QUnit.test("simple bar chart rendering", async function (assert) {
-        assert.expect(12);
         const graph = await makeView({ serverData, type: "graph", resModel: "foo" });
         const { measure, mode, order, stacked } = getGraphModelMetaData(graph);
+        assert.hasClass(graph.el, "o_action o_view_controller");
         assert.containsOnce(graph, "div.o_graph_canvas_container canvas");
         assert.strictEqual(measure, "__count", `the active measure should be "__count" by default`);
         assert.strictEqual(mode, "bar", "should be in bar chart mode by default");
@@ -1879,7 +1888,7 @@ QUnit.module("Views", (hooks) => {
         checkModeIs(assert, graph, "bar");
         assert.strictEqual(getXAxeLabel(graph), "bar");
         assert.strictEqual(getYAxeLabel(graph), "Count");
-        await selectMode(graph, "line");
+        await selectMode(graph.el, "line");
         checkModeIs(assert, graph, "line");
         assert.strictEqual(getXAxeLabel(graph), "bar");
         await toggleMenu(graph, "Measures");
@@ -1897,11 +1906,11 @@ QUnit.module("Views", (hooks) => {
         assert.expect(12);
         const graph = await makeView({ serverData, type: "graph", resModel: "foo" });
         checkModeIs(assert, graph, "bar");
-        await selectMode(graph, "bar"); // click on the active mode does not change anything
+        await selectMode(graph.el, "bar"); // click on the active mode does not change anything
         checkModeIs(assert, graph, "bar");
-        await selectMode(graph, "line");
+        await selectMode(graph.el, "line");
         checkModeIs(assert, graph, "line");
-        await selectMode(graph, "pie");
+        await selectMode(graph.el, "pie");
         checkModeIs(assert, graph, "pie");
     });
 
@@ -2004,12 +2013,12 @@ QUnit.module("Views", (hooks) => {
         checkLabels(assert, graph, ["xphone", "xpad"]);
         checkLegend(assert, graph, ["true / Undefined", "true / red", "false / Undefined"]);
 
-        await selectMode(graph, "line");
+        await selectMode(graph.el, "line");
 
         checkLabels(assert, graph, ["xphone", "xpad"]);
         checkLegend(assert, graph, ["true / Undefined", "true / red", "false / Undefined"]);
 
-        await selectMode(graph, "pie");
+        await selectMode(graph.el, "pie");
 
         checkLabels(assert, graph, [
             "xphone / true / Undefined",
@@ -2157,7 +2166,7 @@ QUnit.module("Views", (hooks) => {
         await editFavoriteName(graph, "Second Favorite");
         await saveFavorite(graph);
 
-        await selectMode(graph, "line");
+        await selectMode(graph.el, "line");
 
         await toggleFavoriteMenu(graph);
         await toggleSaveFavorite(graph);
@@ -2645,12 +2654,12 @@ QUnit.module("Views", (hooks) => {
                 return getChart(graph).data.labels.some((l) => /Undefined/.test(l));
             }
             assert.notOk(someUndefined());
-            await selectMode(graph, "bar");
+            await selectMode(graph.el, "bar");
             assert.ok(someUndefined());
-            await selectMode(graph, "pie");
+            await selectMode(graph.el, "pie");
             assert.ok(someUndefined());
             // Undefined should not appear after switching back to line chart
-            await selectMode(graph, "line");
+            await selectMode(graph.el, "line");
             assert.notOk(someUndefined());
         }
     );
@@ -2743,7 +2752,8 @@ QUnit.module("Views", (hooks) => {
     );
 
     QUnit.test("action name is displayed in breadcrumbs", async function (assert) {
-        const webClient = await createWebClient({ serverData });
+        const target = getFixture();
+        const webClient = await createWebClient({ serverData, target });
         await doAction(webClient, {
             name: "Glou glou",
             res_model: "foo",
@@ -2751,7 +2761,7 @@ QUnit.module("Views", (hooks) => {
             views: [[false, "graph"]],
         });
         assert.strictEqual(
-            webClient.el.querySelector(".o_control_panel .breadcrumb-item.active").innerText,
+            target.querySelector(".o_control_panel .breadcrumb-item.active").innerText,
             "Glou glou"
         );
     });
@@ -2805,55 +2815,58 @@ QUnit.module("Views", (hooks) => {
         await clickOnDataset(graph);
     });
 
-    QUnit.test("Clicking on bar charts removes group_by and search_default_* context keys", async function(assert) {
-        assert.expect(2);
+    QUnit.test(
+        "Clicking on bar charts removes group_by and search_default_* context keys",
+        async function (assert) {
+            assert.expect(2);
 
-        serviceRegistry.add(
-            "action",
-            {
-                start() {
-                    return {
-                        doAction(actionRequest, options) {
-                            assert.deepEqual(actionRequest, {
-                                context: {
-                                    lang: "en",
-                                    tz: "taht",
-                                    uid: 7,
-                                },
-                                domain: [["bar", "=", true]],
-                                name: "Foo Analysis",
-                                res_model: "foo",
-                                target: "current",
-                                type: "ir.actions.act_window",
-                                views: [
-                                    [false, "list"],
-                                    [false, "form"],
-                                ],
-                            });
-                            assert.deepEqual(options, { viewType: "list" });
-                        },
-                    };
+            serviceRegistry.add(
+                "action",
+                {
+                    start() {
+                        return {
+                            doAction(actionRequest, options) {
+                                assert.deepEqual(actionRequest, {
+                                    context: {
+                                        lang: "en",
+                                        tz: "taht",
+                                        uid: 7,
+                                    },
+                                    domain: [["bar", "=", true]],
+                                    name: "Foo Analysis",
+                                    res_model: "foo",
+                                    target: "current",
+                                    type: "ir.actions.act_window",
+                                    views: [
+                                        [false, "list"],
+                                        [false, "form"],
+                                    ],
+                                });
+                                assert.deepEqual(options, { viewType: "list" });
+                            },
+                        };
+                    },
                 },
-            },
-            { force: true }
-        );
-        const graph = await makeView({
-            serverData,
-            type: "graph",
-            resModel: "foo",
-            arch: `
+                { force: true }
+            );
+            const graph = await makeView({
+                serverData,
+                type: "graph",
+                resModel: "foo",
+                arch: `
                 <graph string="Foo Analysis">
                     <field name="bar"/>
                 </graph>
             `,
-            context: {
-                search_default_user: 1,
-                group_by: 'bar',
-            },
-        });
+                context: {
+                    search_default_user: 1,
+                    group_by: "bar",
+                },
+            });
 
-        await clickOnDataset(graph);
-    });
+            await clickOnDataset(graph);
+        }
+    );
 
     QUnit.test(
         "clicking on a pie chart trigger a do_action with correct views",
@@ -3048,7 +3061,7 @@ QUnit.module("Views", (hooks) => {
         checkDatasets(assert, graph, "data", { data: [4, 3, 1] });
 
         // set line mode
-        await selectMode(graph, "line");
+        await selectMode(graph.el, "line");
         assert.containsOnce(graph, "button.fa-sort-amount-asc");
         assert.containsOnce(graph, "button.fa-sort-amount-desc");
 
@@ -3274,7 +3287,8 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("reload chart with switchView button keep internal state", async function (assert) {
         assert.expect(3);
         serverData.views["foo,false,list"] = `<list/>`;
-        const webClient = await createWebClient({ serverData });
+        const target = getFixture();
+        const webClient = await createWebClient({ serverData, target });
         await doAction(webClient, {
             name: "Foo Action 1",
             res_model: "foo",
@@ -3284,11 +3298,11 @@ QUnit.module("Views", (hooks) => {
                 [false, "list"],
             ],
         });
-        assert.hasClass(getModeButton(webClient, "bar"), "active");
-        await selectMode(webClient, "line");
-        assert.hasClass(getModeButton(webClient, "line"), "active");
-        await switchView(webClient, "graph");
-        assert.hasClass(getModeButton(webClient, "line"), "active");
+        assert.hasClass(getModeButton(target, "bar"), "active");
+        await selectMode(target, "line");
+        assert.hasClass(getModeButton(target, "line"), "active");
+        await switchView(target, "graph");
+        assert.hasClass(getModeButton(target, "line"), "active");
     });
 
     QUnit.test(
@@ -3342,7 +3356,7 @@ QUnit.module("Views", (hooks) => {
 
             checkModeIs(assert, graph, "line");
 
-            await selectMode(graph, "bar");
+            await selectMode(graph.el, "bar");
 
             checkModeIs(assert, graph, "bar");
             assert.hasClass(graph.el.querySelector(`[data-tooltip="Stacked"]`), "active");
@@ -3462,7 +3476,7 @@ QUnit.module("Views", (hooks) => {
         checkModeIs(assert, graph, "line");
 
         // Change graph mode
-        await selectMode(graph, "bar");
+        await selectMode(graph.el, "bar");
 
         checkDatasets(assert, graph, ["data", "label"], {
             data: [4, 4],
@@ -3570,7 +3584,7 @@ QUnit.module("Views", (hooks) => {
         });
     });
 
-    QUnit.test('fake data in line chart', async function (assert) {
+    QUnit.test("fake data in line chart", async function (assert) {
         assert.expect(1);
 
         patchDate(2020, 4, 19, 1, 0, 0);
@@ -3581,13 +3595,13 @@ QUnit.module("Views", (hooks) => {
             type: "graph",
             resModel: "foo",
             serverData,
-            context: { search_default_date_filter: 1, },
+            context: { search_default_date_filter: 1 },
             arch: `
                 <graph type="line">
                     <field name="date"/>
                 </graph>
             `,
-            searchViewArch:`
+            searchViewArch: `
                 <search>
                     <filter name="date_filter" domain="[]" date="date" default_period="third_quarter"/>
                 </search>
@@ -3595,12 +3609,12 @@ QUnit.module("Views", (hooks) => {
         });
 
         await toggleComparisonMenu(graph);
-        await toggleMenuItem(graph, 'Date: Previous period');
+        await toggleMenuItem(graph, "Date: Previous period");
 
-        checkLabels(assert, graph, ['', '']);
+        checkLabels(assert, graph, ["", ""]);
     });
 
-    QUnit.test('no filling color for period of comparison', async function (assert) {
+    QUnit.test("no filling color for period of comparison", async function (assert) {
         assert.expect(1);
 
         patchDate(2020, 4, 19, 1, 0, 0);
@@ -3615,7 +3629,7 @@ QUnit.module("Views", (hooks) => {
             type: "graph",
             resModel: "foo",
             serverData,
-            context: { search_default_date_filter: 1, },
+            context: { search_default_date_filter: 1 },
             arch: `
                 <graph type="line">
                     <field name="product_id"/>
@@ -3629,10 +3643,10 @@ QUnit.module("Views", (hooks) => {
         });
 
         await toggleComparisonMenu(graph);
-        await toggleMenuItem(graph, 'Date: Previous period');
+        await toggleMenuItem(graph, "Date: Previous period");
 
         checkDatasets(assert, graph, "backgroundColor", {
-            "backgroundColor": undefined,
+            backgroundColor: undefined,
         });
     });
 });

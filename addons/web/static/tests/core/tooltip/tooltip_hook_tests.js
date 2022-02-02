@@ -5,11 +5,11 @@ import { PopoverContainer } from "@web/core/popover/popover_container";
 import { popoverService } from "@web/core/popover/popover_service";
 import { useTooltip } from "@web/core/tooltip/tooltip_hook";
 import { registry } from "@web/core/registry";
-import { registerCleanup } from "../../helpers/cleanup";
 import { clearRegistryWithCleanup, makeTestEnv } from "../../helpers/mock_env";
-import { getFixture, nextTick, patchWithCleanup, triggerEvent } from "../../helpers/utils";
+import { destroy, getFixture, nextTick, patchWithCleanup, triggerEvent } from "../../helpers/utils";
+import { registerCleanup } from "../../helpers/cleanup";
 
-const { Component, mount, useState, xml } = owl;
+const { App, Component, useState, xml } = owl;
 
 const mainComponents = registry.category("main_components");
 
@@ -18,16 +18,17 @@ const mainComponents = registry.category("main_components");
  *
  * @param {Component} Child a child Component that contains nodes with "data-tooltip" attribute
  * @param {Object} [options]
- * @param {function} options.mockSetTimeout the mocked setTimeout to use (by default, calls the
+ * @param {function} [options.mockSetTimeout] the mocked setTimeout to use (by default, calls the
  *   callback directly)
- * @param {function} options.mockSetInterval the mocked setInterval to use (by default, calls the
+ * @param {function} [options.mockSetInterval] the mocked setInterval to use (by default, calls the
  *   callback directly)
- * @param {function} options.mockClearTimeout the mocked clearTimeout to use (by default, does nothing)
- * @param {function} options.mockClearInterval the mocked clearInterval to use (by default, does nothing)
+ * @param {function} [options.mockClearTimeout] the mocked clearTimeout to use (by default, does nothing)
+ * @param {function} [options.mockClearInterval] the mocked clearInterval to use (by default, does nothing)
+ * @param {{[templateName:string]: string}} [options.templates] additional templates
  * @returns {Promise<Component>}
  */
 async function makeParent(Child, options = {}) {
-    const fixture = getFixture();
+    const target = getFixture();
 
     // add the popover service to the registry -> will add the PopoverContainer
     // to the mainComponentRegistry
@@ -59,9 +60,18 @@ async function makeParent(Child, options = {}) {
         clearInterval: options.mockClearInterval || (() => {}),
     });
 
-    const comp = await mount(Parent, { env, target: fixture });
-    registerCleanup(() => comp.destroy());
-    return comp;
+    const app = new App(Parent, {
+        env,
+        target,
+        templates: window.__ODOO_TEMPLATES__,
+        dev: env.debug,
+    });
+    registerCleanup(() => app.destroy());
+    for (const [name, template] of Object.entries(options.templates || {})) {
+        app.addTemplate(name, template);
+    }
+
+    return app.mount(target);
 }
 
 QUnit.module("Tooltip hook", () => {
@@ -214,13 +224,16 @@ QUnit.module("Tooltip hook", () => {
         MyComponent.template = xml`
             <button data-tooltip-template="my_tooltip_template">Action</button>
         `;
-        const parent = await makeParent(MyComponent);
-        parent.env.qweb.addTemplate("my_tooltip_template", "<i>tooltip</i>");
+        const templates = {
+            my_tooltip_template: "<i>tooltip</i>",
+        };
+        const parent = await makeParent(MyComponent, { templates });
 
         assert.containsNone(parent, ".o_popover_container .o-tooltip");
         parent.el.querySelector("button").dispatchEvent(new Event("mouseenter"));
         await nextTick();
         assert.containsOnce(parent, ".o_popover_container .o-tooltip");
+        console.log("Before Prout 1");
         assert.strictEqual(parent.el.querySelector(".o-tooltip").innerHTML, "<i>tooltip</i>");
     });
 
@@ -237,16 +250,15 @@ QUnit.module("Tooltip hook", () => {
                 Action
             </button>
         `;
-        const parent = await makeParent(MyComponent);
-        parent.env.qweb.addTemplate(
-            "my_tooltip_template",
-            `
+        const templates = {
+            my_tooltip_template: `
                 <ul>
                     <li>X: <t t-esc="info.x"/></li>
                     <li>Y: <t t-esc="info.y"/></li>
                 </ul>
-            `
-        );
+            `,
+        };
+        const parent = await makeParent(MyComponent, { templates });
 
         assert.containsNone(parent, ".o_popover_container .o-tooltip");
         parent.el.querySelector("button").dispatchEvent(new Event("mouseenter"));
@@ -280,7 +292,7 @@ QUnit.module("Tooltip hook", () => {
         assert.containsOnce(parent, ".o_popover_container .o-tooltip");
         assert.strictEqual(parent.el.querySelector(".o-tooltip").innerText, "tooltip");
 
-        parent.destroy();
+        destroy(parent);
 
         assert.verifySteps(["clearInterval"]);
     });

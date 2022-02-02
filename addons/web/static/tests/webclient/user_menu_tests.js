@@ -4,17 +4,15 @@ import { browser } from "@web/core/browser/browser";
 import { ormService } from "@web/core/orm_service";
 import { registry } from "@web/core/registry";
 import { uiService } from "@web/core/ui/ui_service";
-import { patch, unpatch } from "@web/core/utils/patch";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { UserMenu } from "@web/webclient/user_menu/user_menu";
 import { preferencesItem } from "@web/webclient/user_menu/user_menu_items";
 import { userService } from "@web/core/user_service";
-import { makeTestEnv } from "../helpers/mock_env";
+import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { makeFakeLocalizationService } from "../helpers/mock_services";
-import { click, getFixture, patchWithCleanup } from "../helpers/utils";
+import { click, getFixture, mount, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { session } from "@web/session";
 
-const { mount } = owl;
 const serviceRegistry = registry.category("services");
 const userMenuRegistry = registry.category("user_menuitems");
 let target;
@@ -24,19 +22,15 @@ let userMenu;
 QUnit.module("UserMenu", {
     async beforeEach() {
         patchWithCleanup(session, { name: "Sauron" });
-        serviceRegistry.add("user", userService);
-        serviceRegistry.add("hotkey", hotkeyService);
-        serviceRegistry.add("ui", uiService);
-        target = getFixture();
-        patch(browser, "usermenutest", {
+        patchWithCleanup(browser, {
             location: {
                 origin: "http://lordofthering",
             },
         });
-    },
-    afterEach() {
-        userMenu.unmount();
-        unpatch(browser, "usermenutest");
+        serviceRegistry.add("user", userService);
+        serviceRegistry.add("hotkey", hotkeyService);
+        serviceRegistry.add("ui", uiService);
+        target = getFixture();
     },
 });
 

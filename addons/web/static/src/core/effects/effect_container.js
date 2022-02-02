@@ -5,8 +5,8 @@ const { Component, xml } = owl;
 export class EffectContainer extends Component {
     setup() {
         this.effect = null;
-        this.props.bus.on("UPDATE", this, (effect) => {
-            this.effect = effect;
+        this.props.bus.addEventListener("UPDATE", (ev) => {
+            this.effect = ev.detail;
             this.render();
         });
     }

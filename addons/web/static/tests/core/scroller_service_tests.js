@@ -5,13 +5,12 @@ import { scrollerService } from "@web/core/scroller_service";
 import { scrollTo } from "@web/core/utils/scrolling";
 import { registerCleanup } from "../helpers/cleanup";
 import { makeTestEnv } from "../helpers/mock_env";
-import { click, getFixture, nextTick } from "../helpers/utils";
+import { click, getFixture, mount, nextTick } from "../helpers/utils";
 
-const { Component, mount, xml } = owl;
+const { Component, xml } = owl;
 const serviceRegistry = registry.category("services");
 
 let env;
-let comp;
 let target;
 
 QUnit.module("ScrollerService", {
@@ -19,8 +18,6 @@ QUnit.module("ScrollerService", {
         serviceRegistry.add("scroller", scrollerService);
         env = await makeTestEnv();
         target = getFixture();
-
-        registerCleanup(() => comp && comp.destroy());
     },
 });
 
@@ -38,7 +35,7 @@ QUnit.test("Ignore empty hrefs", async (assert) => {
             </button>
         </div>`;
 
-    comp = await mount(MyComponent, { env, target });
+    const comp = await mount(MyComponent, { env, target });
 
     /**
      * To determine whether the hash changed we need to use a custom hash for
@@ -106,7 +103,7 @@ QUnit.test("Simple rendering with a scroll", async (assert) => {
             <div id="scrollToHere">sroll here!</div>
         </div>
     `;
-    comp = await mount(MyComponent, { env, target: scrollableParent });
+    const comp = await mount(MyComponent, { env, target: scrollableParent });
 
     assert.strictEqual(scrollableParent.scrollTop, 0);
     await click(scrollableParent, ".btn.btn-primary");
@@ -169,7 +166,7 @@ QUnit.test("Rendering with multiple anchors and scrolls", async (assert) => {
             <a href="#anchor2" class="link2">TO ANCHOR 2</a>
         </div>
     `;
-    comp = await mount(MyComponent, { env, target: scrollableParent });
+    const comp = await mount(MyComponent, { env, target: scrollableParent });
     assert.strictEqual(scrollableParent.scrollTop, 0);
     await click(scrollableParent, ".link1");
 
@@ -216,7 +213,7 @@ QUnit.test("clicking anchor when no scrollable", async (assert) => {
             </div>
         </div>
     `;
-    comp = await mount(MyComponent, { env, target: scrollableParent });
+    const comp = await mount(MyComponent, { env, target: scrollableParent });
     assert.strictEqual(scrollableParent.scrollTop, 0);
     await click(scrollableParent, ".btn.btn-primary");
     assert.ok(scrollableParent.scrollTop === 0, "no scroll happened");
@@ -291,7 +288,7 @@ QUnit.test("clicking anchor when multi levels scrollables", async (assert) => {
                 </p>
         </div>
     `;
-    comp = await mount(MyComponent, { env, target: scrollableParent });
+    const comp = await mount(MyComponent, { env, target: scrollableParent });
 
     const border = (el) => {
         // Returns the state of the element in relation to the borders
@@ -364,7 +361,7 @@ QUnit.test("Simple scroll to HTML elements", async (assert) => {
             </p>
         </div>
     `;
-    comp = await mount(MyComponent, { env, target: scrollableParent });
+    const comp = await mount(MyComponent, { env, target: scrollableParent });
     assert.strictEqual(scrollableParent.scrollTop, 0);
 
     // The element must be contained in the scrollable parent (top and bottom)

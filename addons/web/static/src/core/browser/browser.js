@@ -10,7 +10,7 @@
  */
 
 let sessionStorage = window.sessionStorage;
-let localStorage = owl.browser.localStorage;
+let localStorage = window.localStorage;
 try {
     // Safari crashes in Private Browsing
     localStorage.setItem("__localStorage__", "true");
@@ -20,9 +20,13 @@ try {
     sessionStorage = makeRAMLocalStorage();
 }
 
-export const browser = Object.assign({}, owl.browser, {
+export const browser = {
     addEventListener: window.addEventListener.bind(window),
     removeEventListener: window.removeEventListener.bind(window),
+    setTimeout: window.setTimeout.bind(window),
+    clearTimeout: window.clearTimeout.bind(window),
+    setInterval: window.setInterval.bind(window),
+    clearInterval: window.clearInterval.bind(window),
     requestAnimationFrame: window.requestAnimationFrame.bind(window),
     cancelAnimationFrame: window.cancelAnimationFrame.bind(window),
     console: window.console,
@@ -32,7 +36,8 @@ export const browser = Object.assign({}, owl.browser, {
     XMLHttpRequest: window.XMLHttpRequest,
     localStorage,
     sessionStorage,
-});
+    fetch: window.fetch.bind(window),
+};
 
 Object.defineProperty(browser, "location", {
     set(val) {

@@ -6,9 +6,9 @@ import { formatFloat } from "@web/fields/formatters";
 import { SEP } from "./graph_model";
 import { sortBy } from "@web/core/utils/arrays";
 import { useAssets } from "@web/core/assets";
-import { useEffect } from "@web/core/utils/hooks";
+import { renderToString } from "@web/core/utils/render";
 
-const { Component, useRef } = owl;
+const { Component, useEffect, useRef } = owl;
 
 const NO_DATA = _lt("No data");
 
@@ -48,6 +48,8 @@ export class GraphRenderer extends Component {
         this.chart = null;
         this.tooltip = null;
         this.legendTooltip = null;
+
+        this.tooltipItemId = 1;
 
         useAssets({ jsLibs: ["/web/static/lib/Chart/Chart.js"] });
 
@@ -107,7 +109,7 @@ export class GraphRenderer extends Component {
         }
         const chartAreaTop = this.chart.chartArea.top;
         const viewContentTop = this.el.getBoundingClientRect().top;
-        const innerHTML = this.env.qweb.renderToString("web.GraphRenderer.CustomTooltip", {
+        const innerHTML = renderToString("web.GraphRenderer.CustomTooltip", {
             maxWidth: getMaxWidth(this.chart.chartArea),
             measure: measures[measure].string,
             mode: this.model.metaData.mode,
@@ -451,10 +453,10 @@ export class GraphRenderer extends Component {
         const sortedDataPoints = sortBy(tooltipModel.dataPoints, "yLabel", "desc");
         const items = [];
         for (const item of sortedDataPoints) {
-            const id = item.index;
+            const index = item.index;
             const dataset = data.datasets[item.datasetIndex];
-            let label = dataset.trueLabels[id];
-            let value = this.formatValue(dataset.data[id], allIntegers);
+            let label = dataset.trueLabels[index];
+            let value = this.formatValue(dataset.data[index], allIntegers);
             let boxColor;
             let percentage;
             if (mode === "pie") {
@@ -464,7 +466,7 @@ export class GraphRenderer extends Component {
                 if (domains.length > 1) {
                     label = `${dataset.label} / ${label}`;
                 }
-                boxColor = dataset.backgroundColor[id];
+                boxColor = dataset.backgroundColor[index];
                 const totalData = dataset.data.reduce((a, b) => a + b, 0);
                 percentage = totalData && ((dataset.data[item.index] * 100) / totalData).toFixed(2);
             } else {
@@ -473,7 +475,7 @@ export class GraphRenderer extends Component {
                 }
                 boxColor = mode === "bar" ? dataset.backgroundColor : dataset.borderColor;
             }
-            items.push({ id, label, value, boxColor, percentage });
+            items.push({ id: this.tooltipItemId++, label, value, boxColor, percentage });
         }
         return items;
     }
@@ -627,4 +629,4 @@ export class GraphRenderer extends Component {
 }
 
 GraphRenderer.template = "web.GraphRenderer";
-GraphRenderer.props = ["model", "onGraphClicked"];
+GraphRenderer.props = ["class?", "model", "onGraphClicked"];

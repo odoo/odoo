@@ -3,17 +3,25 @@
 import { registry } from "@web/core/registry";
 import testUtils from "web.test_utils";
 import { clearRegistryWithCleanup } from "../../helpers/mock_env";
-import { click, legacyExtraNextTick, nextTick, patchWithCleanup } from "../../helpers/utils";
+import {
+    click,
+    getFixture,
+    legacyExtraNextTick,
+    nextTick,
+    patchWithCleanup,
+} from "../../helpers/utils";
 import { createWebClient, doAction, getActionManagerServerData } from "./../helpers";
 import { session } from "@web/session";
 
 let serverData;
+let target;
 
 const mainComponentRegistry = registry.category("main_components");
 
 QUnit.module("ActionManager", (hooks) => {
     hooks.beforeEach(() => {
         serverData = getActionManagerServerData();
+        target = getFixture();
     });
 
     QUnit.module("Effects");
@@ -23,29 +31,29 @@ QUnit.module("ActionManager", (hooks) => {
         patchWithCleanup(session, { show_effect: true });
         clearRegistryWithCleanup(mainComponentRegistry);
 
-        const webClient = await createWebClient({ serverData });
+        const webClient = await createWebClient({ target, serverData });
         await doAction(webClient, 1);
-        assert.containsOnce(webClient.el, ".o_kanban_view");
-        assert.containsNone(webClient.el, ".o_reward");
+        assert.containsOnce(target, ".o_kanban_view");
+        assert.containsNone(target, ".o_reward");
         webClient.env.services.effect.add({ type: "rainbow_man", message: "", fadeout: "no" });
         await nextTick();
         await legacyExtraNextTick();
-        assert.containsOnce(webClient.el, ".o_reward");
-        assert.containsOnce(webClient.el, ".o_kanban_view");
-        await testUtils.dom.click(webClient.el.querySelector(".o_kanban_record"));
+        assert.containsOnce(target, ".o_reward");
+        assert.containsOnce(target, ".o_kanban_view");
+        await testUtils.dom.click(target.querySelector(".o_kanban_record"));
         await legacyExtraNextTick();
-        assert.containsNone(webClient.el, ".o_reward");
-        assert.containsOnce(webClient.el, ".o_kanban_view");
+        assert.containsNone(target, ".o_reward");
+        assert.containsOnce(target, ".o_kanban_view");
         webClient.env.services.effect.add({ type: "rainbow_man", message: "", fadeout: "no" });
         await nextTick();
         await legacyExtraNextTick();
-        assert.containsOnce(webClient.el, ".o_reward");
-        assert.containsOnce(webClient.el, ".o_kanban_view");
+        assert.containsOnce(target, ".o_reward");
+        assert.containsOnce(target, ".o_kanban_view");
         // Do not force rainbow man to destroy on doAction
         // we let it die either after its animation or on user click
         await doAction(webClient, 3);
-        assert.containsOnce(webClient.el, ".o_reward");
-        assert.containsOnce(webClient.el, ".o_list_view");
+        assert.containsOnce(target, ".o_reward");
+        assert.containsOnce(target, ".o_list_view");
     });
 
     QUnit.test("on close with effect from server", async function (assert) {
@@ -64,10 +72,10 @@ QUnit.module("ActionManager", (hooks) => {
         };
         clearRegistryWithCleanup(mainComponentRegistry);
 
-        const webClient = await createWebClient({ serverData, mockRPC });
+        const webClient = await createWebClient({ target, serverData, mockRPC });
         await doAction(webClient, 6);
-        await click(webClient.el.querySelector('button[name="object"]'));
-        assert.containsOnce(webClient, ".o_reward");
+        await click(target.querySelector('button[name="object"]'));
+        assert.containsOnce(target, ".o_reward");
     });
 
     QUnit.test("on close with effect in xml", async function (assert) {
@@ -89,13 +97,13 @@ QUnit.module("ActionManager", (hooks) => {
         };
         clearRegistryWithCleanup(mainComponentRegistry);
 
-        const webClient = await createWebClient({ serverData, mockRPC });
+        const webClient = await createWebClient({ target, serverData, mockRPC });
         await doAction(webClient, 6);
-        await click(webClient.el.querySelector('button[name="object"]'));
+        await click(target.querySelector('button[name="object"]'));
         await legacyExtraNextTick();
-        assert.containsOnce(webClient.el, ".o_reward");
+        assert.containsOnce(target, ".o_reward");
         assert.strictEqual(
-            webClient.el.querySelector(".o_reward .o_reward_msg_content").textContent,
+            target.querySelector(".o_reward .o_reward_msg_content").textContent,
             "rainBowInXML"
         );
     });

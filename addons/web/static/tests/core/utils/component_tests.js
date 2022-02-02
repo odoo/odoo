@@ -2,9 +2,9 @@
 
 import { NotUpdatable, ErrorHandler } from "@web/core/utils/components";
 import { makeTestEnv } from "../../helpers/mock_env";
-import { getFixture } from "../../helpers/utils";
+import { getFixture, mount } from "../../helpers/utils";
 
-const { Component, mount, xml } = owl;
+const { Component, xml } = owl;
 
 QUnit.module("utils", () => {
     QUnit.module("components");
@@ -33,7 +33,6 @@ QUnit.module("utils", () => {
 
         await parent.render();
         assert.verifySteps(["willupdateprops"]);
-        parent.destroy();
     });
 
     QUnit.test("ErrorHandler component", async function (assert) {
@@ -63,8 +62,7 @@ QUnit.module("utils", () => {
         Parent.components = { Boom, ErrorHandler };
 
         const target = getFixture();
-        const parent = await mount(Parent, { env: makeTestEnv(), target });
+        await mount(Parent, { env: makeTestEnv(), target });
         assert.strictEqual(target.innerHTML, "<div> not boom </div>");
-        parent.destroy();
     });
 });

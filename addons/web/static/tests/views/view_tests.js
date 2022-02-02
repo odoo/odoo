@@ -5,6 +5,7 @@ import {
     click,
     getFixture,
     makeDeferred,
+    mount,
     nextTick,
     patchWithCleanup,
 } from "@web/../tests/helpers/utils";
@@ -15,7 +16,7 @@ import { OnboardingBanner } from "@web/views/onboarding_banner";
 import { View } from "@web/views/view";
 import { actionService } from "@web/webclient/actions/action_service";
 
-const { Component, mount, useState, xml } = owl;
+const { Component, useState, xml } = owl;
 
 const serviceRegistry = registry.category("services");
 const viewRegistry = registry.category("views");
@@ -110,14 +111,15 @@ QUnit.module("Views", (hooks) => {
     ////////////////////////////////////////////////////////////////////////////
 
     QUnit.test("simple rendering", async function (assert) {
-        assert.expect(10);
+        assert.expect(11);
 
         const ToyView = viewRegistry.get("toy");
         patchWithCleanup(ToyView.prototype, {
             setup() {
                 this._super();
-                const { arch, fields, info } = this.props;
+                const { arch, fields, info, className } = this.props;
                 assert.strictEqual(arch, serverData.views["animal,false,toy"]);
+                assert.strictEqual(className, "o_action o_view_controller");
                 assert.deepEqual(fields, serverData.models.animal.fields);
                 assert.strictEqual(info.actionMenus, undefined);
                 assert.strictEqual(this.env.config.viewId, false);
@@ -139,7 +141,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "animal",
             type: "toy",
         });
-        assert.hasClass(view.el, "o_action o_view_controller o_toy_view");
+        assert.hasClass(view.el, "o_toy_view");
         assert.strictEqual(view.el.innerHTML, serverData.views["animal,false,toy"]);
     });
 
@@ -1366,21 +1368,6 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.test("empty prop 'noContentHelp'", async function (assert) {
-        assert.expect(1);
-
-        class ToyView extends Component {
-            setup() {
-                assert.strictEqual(this.props.info.noContentHelp, undefined);
-            }
-        }
-        ToyView.template = xml`<div/>`;
-        ToyView.type = "toy";
-        viewRegistry.add("toy", ToyView, { force: true });
-
-        await makeView({ serverData, resModel: "animal", type: "toy", noContentHelp: "  " });
-    });
-
     QUnit.test("non empty prop 'noContentHelp'", async function (assert) {
         assert.expect(1);
 
@@ -1571,7 +1558,6 @@ QUnit.module("Views", (hooks) => {
         viewRegistry.add("toy", ToyView, { force: true });
 
         const env = await makeTestEnv({ serverData });
-        const target = getFixture();
 
         class Parent extends Component {
             setup() {
@@ -1585,12 +1571,11 @@ QUnit.module("Views", (hooks) => {
         Parent.template = xml`<View t-props="state"/>`;
         Parent.components = { View };
 
+        const target = getFixture();
         const parent = await mount(Parent, { env, target });
 
         parent.state.domain = [["type", "=", "herbivorous"]];
 
         await nextTick();
-
-        parent.destroy();
     });
 });

@@ -37,7 +37,7 @@ class WebSuite(odoo.tests.HttpCase):
                     self.fail("`QUnit.only()` or `QUnit.debug()` used in file %r" % asset['url'])
 
 
-@odoo.tests.tagged('post_install', '-at_install')
+@odoo.tests.tagged('post_install', '-at_install', 'qunit_mobile_suite')
 class MobileWebSuite(odoo.tests.HttpCase):
     browser_size = '375x667'
 

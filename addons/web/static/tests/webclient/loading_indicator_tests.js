@@ -6,9 +6,14 @@ import { uiService } from "@web/core/ui/ui_service";
 import { patch, unpatch } from "@web/core/utils/patch";
 import { LoadingIndicator } from "@web/webclient/loading_indicator/loading_indicator";
 import { makeTestEnv } from "../helpers/mock_env";
-import { getFixture, nextTick, patchWithCleanup, mockTimeout } from "../helpers/utils";
+import {
+    getFixture,
+    mockTimeout,
+    mount,
+    nextTick,
+    patchWithCleanup,
+} from "@web/../tests/helpers/utils";
 
-const { mount } = owl;
 const serviceRegistry = registry.category("services");
 
 let target;
@@ -129,10 +134,10 @@ QUnit.test("loading indicator blocks UI", async (assert) => {
         },
     });
     const ui = env.services.ui;
-    ui.bus.on("BLOCK", null, () => {
+    ui.bus.addEventListener("BLOCK", () => {
         assert.step("block");
     });
-    ui.bus.on("UNBLOCK", null, () => {
+    ui.bus.addEventListener("UNBLOCK", () => {
         assert.step("unblock");
     });
     await mount(LoadingIndicator, { env, target });

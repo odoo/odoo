@@ -183,10 +183,9 @@ function displayNotification(parent, action) {
     links = links.map(({url, label}) => `<a href="${_.escape(url)}" target="_blank">${_.escape(label)}</a>`)
     parent.displayNotification({
         title, // no escape for the title because it is done in the template
-        message: sprintf(_.escape(message), ...links),
+        message: owl.markup(sprintf(_.escape(message), ...links)),
         type,
         sticky,
-        messageIsHtml: true, // dynamic parts of the message are escaped above
     });
     return next;
 }

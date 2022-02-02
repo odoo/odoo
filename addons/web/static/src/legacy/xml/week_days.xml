@@ -15,8 +15,8 @@
                         <CustomCheckbox disabled="mode === 'readonly'"
                             value="state.days[day].value"
                             id="state.days[day].id"
-                            class="o_recurrent_weekday_checkbox text-center"
-                            t-on-change="_onChange"/>
+                            class="'o_recurrent_weekday_checkbox text-center'"
+                            onChange.bind="_onChange"/>
                     </td>
                 </tr>
             </table>

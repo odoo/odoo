@@ -1,7 +1,7 @@
 odoo.define('web.GroupByMenu', function (require) {
     "use strict";
 
-    const CustomGroupByItem = require('web.CustomGroupByItem');
+    const { CustomGroupByItem } = require('@web/search/group_by_menu/custom_group_by_item');
     const { FACET_ICONS, GROUPABLE_TYPES } = require('web.searchUtils');
     const { useModel } = require('web.Model');
 
@@ -9,8 +9,7 @@ odoo.define('web.GroupByMenu', function (require) {
 
     class GroupByMenu extends Component {
 
-        constructor() {
-            super(...arguments);
+        setup() {
             this.icon = FACET_ICONS.groupBy;
 
             this.fields = Object.values(this.props.fields)
@@ -64,10 +63,20 @@ odoo.define('web.GroupByMenu', function (require) {
                 this.model.dispatch('toggleFilter', itemId);
             }
         }
+        onAddCustomGroup(fieldName) {
+            const field = this.props.fields[fieldName];
+            this.model.dispatch("createNewGroupBy", field);
+        }
     }
 
     GroupByMenu.components = { CustomGroupByItem };
-    GroupByMenu.props = { fields: Object };
+    GroupByMenu.defaultProps = {
+        class: "",
+    };
+    GroupByMenu.props = {
+        fields: Object,
+        class: { String, optional: true },
+    };
     GroupByMenu.template = "web.GroupByMenu";
 
     return GroupByMenu;

@@ -15,15 +15,15 @@
         </t>
         <div class="btn-group" role="toolbar" aria-label="Change graph">
             <button class="btn btn-secondary fa fa-bar-chart-o o_graph_button" data-tooltip="Bar Chart" aria-label="Bar Chart" data-mode="bar"
-                t-on-click="onModeSelected('bar')"
+                t-on-click="() => this.onModeSelected('bar')"
                 t-att-class="{ active: model.metaData.mode === 'bar' }"
             />
             <button class="btn btn-secondary fa fa-area-chart o_graph_button" data-tooltip="Line Chart" aria-label="Line Chart" data-mode="line"
-                t-on-click="onModeSelected('line')"
+                t-on-click="() => this.onModeSelected('line')"
                 t-att-class="{ active: model.metaData.mode === 'line' }"
             />
             <button class="btn btn-secondary fa fa-pie-chart o_graph_button" data-tooltip="Pie Chart" aria-label="Pie Chart" data-mode="pie"
-                t-on-click="onModeSelected('pie')"
+                t-on-click="() => this.onModeSelected('pie')"
                 t-att-class="{ active: model.metaData.mode === 'pie' }"
             />
         </div>
@@ -35,18 +35,18 @@
         </div>
         <div t-if="model.metaData.mode !== 'pie' and model.metaData.domains.length === 1" class="btn-group" role="toolbar" aria-label="Sort graph">
             <button class="btn btn-secondary fa fa-sort-amount-desc o_graph_button" data-tooltip="Descending" aria-label="Descending"
-                t-on-click="toggleOrder('DESC')"
+                t-on-click="() => this.toggleOrder('DESC')"
                 t-att-class="{ active: model.metaData.order === 'DESC' }"
             />
             <button class="btn btn-secondary fa fa-sort-amount-asc o_graph_button" data-tooltip="Ascending" aria-label="Ascending"
-                t-on-click="toggleOrder('ASC')"
+                t-on-click="() => this.toggleOrder('ASC')"
                 t-att-class="{ active: model.metaData.order === 'ASC' }"
             />
         </div>
     </t>
 
     <t t-name="web.GraphView" owl="1">
-        <Layout viewType="'graph'" useSampleModel="model.useSampleModel">
+        <Layout viewType="'graph'" useSampleModel="model.useSampleModel" className="props.className">
             <t t-set-slot="control-panel-bottom-left">
                 <t t-call="{{ constructor.buttonTemplate }}"/>
             </t>
@@ -55,11 +55,10 @@
                     <t t-set="noContentHelp" t-value="props.info.noContentHelp"/>
                 </t>
                 <Renderer
-                    class="o_renderer"
+                    class="{ o_graph_renderer: true, o_sample_data_disabled: model.useSampleModel }"
                     model="model"
-                    t-att-class="{ o_sample_data_disabled: model.useSampleModel }"
                     onGraphClicked="(domain) => this.onGraphClicked(domain)"
-                />
+                    />
             </t>
             <t t-else="" t-call="web.NoContentHelper">
                 <t t-set="title">Invalid data</t>

@@ -2,12 +2,12 @@
 
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { useEffect, useService, onDestroyed, useBus } from "@web/core/utils/hooks";
+import { useService, useBus } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { debounce } from "@web/core/utils/timing";
 import { ErrorHandler, NotUpdatable } from "@web/core/utils/components";
 
-const { Component, useExternalListener, useRef } = owl;
+const { Component, onWillDestroy, useExternalListener, useEffect, useRef } = owl;
 const systrayRegistry = registry.category("systray");
 
 const getBoundingClientRect = Element.prototype.getBoundingClientRect;
@@ -37,7 +37,7 @@ export class NavBar extends Component {
         this.menuService = useService("menu");
         this.appSubMenus = useRef("appSubMenus");
         const debouncedAdapt = debounce(this.adapt.bind(this), 250);
-        onDestroyed(() => debouncedAdapt.cancel());
+        onWillDestroy(() => debouncedAdapt.cancel());
         useExternalListener(window, "resize", debouncedAdapt);
 
         let adaptCounter = 0;

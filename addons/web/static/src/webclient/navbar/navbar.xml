@@ -17,7 +17,7 @@
           t-if="currentApp and !env.isSmall"
           href="getMenuItemHref(currentApp)"
           t-esc="currentApp.name"
-          class="o_menu_brand"
+          class="'o_menu_brand'"
           dataset="{ menuXmlid: currentApp.xmlid, section: currentApp.id }"
           onSelected="() => this.onNavBarDropdownItemSelection(currentApp)"
         />
@@ -42,7 +42,7 @@
   </t>
 
   <t t-name="web.NavBar.AppsMenu" owl="1">
-    <Dropdown hotkey="'h'" title="'Home Menu'" class="o_navbar_apps_menu">
+    <Dropdown hotkey="'h'" title="'Home Menu'" class="'o_navbar_apps_menu'">
       <t t-set-slot="toggler">
         <i class="fa fa-th-large" />
       </t>
@@ -50,8 +50,7 @@
         t-foreach="apps"
         t-as="app"
         t-key="app.id"
-        class="o_app"
-        t-att-class="{ focus: menuService.getCurrentApp() === app }"
+        class="{ 'o_app': true, focus: menuService.getCurrentApp() === app }"
         href="getMenuItemHref(app)"
         t-esc="app.name"
         dataset="{ menuXmlid: app.xmlid, section: app.id }"
@@ -79,7 +78,7 @@
         <t t-if="!section.childrenTree.length">
           <DropdownItem
             title="section.name"
-            class="o_nav_entry"
+            class="'o_nav_entry'"
             href="getMenuItemHref(section)"
             hotkey="hotkey"
             t-esc="section.name"
@@ -118,7 +117,7 @@
       <DropdownItem
         t-if="!item.childrenTree.length"
         href="getMenuItemHref(item)"
-        class="dropdown-item"
+        class="'dropdown-item'"
         t-esc="item.name" 
         dataset="{ menuXmlid: item.xmlid, section: item.id }"
         onSelected="() => this.onNavBarDropdownItemSelection(item)"
@@ -130,7 +129,7 @@
           t-foreach="item.childrenTree"
           t-as="subItem"
           t-key="subItem.id"
-          class="o_dropdown_menu_group_entry dropdown-item"
+          class="'o_dropdown_menu_group_entry dropdown-item'"
           href="getMenuItemHref(subItem)"
           t-esc="subItem.name"
           dataset="{ menuXmlid: subItem.xmlid, section: subItem.id }"
@@ -141,7 +140,7 @@
   </t>
 
   <t t-name="web.NavBar.SectionsMenu.MoreDropdown" owl="1">
-    <Dropdown class="o_menu_sections_more" title="'More Menu'" hotkey="hotkey">
+    <Dropdown class="'o_menu_sections_more'" title="'More Menu'" hotkey="hotkey">
       <t t-set-slot="toggler">
         <i class="fa fa-plus" />
       </t>
@@ -149,7 +148,7 @@
 
         <t t-if="!section.childrenTree.length">
           <DropdownItem
-            class="o_more_dropdown_section"
+            class="'o_more_dropdown_section'"
             href="getMenuItemHref(section)"
             t-esc="section.name"
             dataset="{ menuXmlid: section.xmlid, section: section.id }"
