@@ -3,7 +3,7 @@
 
     <t t-name="website.Configurator.SkipButton" owl="1">
         <div class="container-fluid py-2 pb-md-3 text-right pr-lg-5">
-            <button class="btn btn-link" t-on-click="skip()">Skip and start from scratch</button>
+            <button class="btn btn-link" t-on-click="skip">Skip and start from scratch</button>
         </div>
     </t>
 
@@ -19,7 +19,7 @@
                 </div>
                 <div class="lead font-weight-normal mb-4 text-600">We'll set you up and running in <b>4 steps</b>
                 </div>
-                <button class="o_configurator_show btn btn-primary btn-lg px-4 py-2" t-on-click="goToDescription()">Let's do it</button>
+                <button class="o_configurator_show btn btn-primary btn-lg px-4 py-2" t-on-click="goToDescription">Let's do it</button>
             </div>
         </div>
         <SkipButton/>
@@ -39,14 +39,14 @@
                         <div class="w-100 px-2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <a class="d-flex align-items-center">
                                 <i class="text-primary" t-if="state.selectedType">
-                                    <t t-esc="getters.getSelectedType(state.selectedType).label" />
+                                    <t t-esc="state.getSelectedType(state.selectedType).label"/>
                                 </i>
                                 <i class="fa fa-angle-down text-black-50 ml-auto pl-2" role="img"/>
                             </a>
                         </div>
                         <div t-attf-class="dropdown-menu border-0 shadow-lg {{state.selectedType ? 'o_step_completed' : 'o_step_todo show'}}" role="menu">
-                            <t t-foreach="getters.getWebsiteTypes()" t-as="type" t-key="type.name">
-                                <a t-att-title="type.name" t-att-data-id="type.id" t-on-click="selectWebsiteType" class="dropdown-item o_change_website_type">
+                            <t t-foreach="state.getWebsiteTypes()" t-as="type" t-key="type.name">
+                                <a t-att-title="type.name" t-on-click="() => this.selectWebsiteType(type.id)" class="dropdown-item o_change_website_type">
                                     <t t-esc="type.label"/>
                                 </a>
                             </t>
@@ -67,14 +67,14 @@
                         <div class="w-100 px-2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <a class="d-flex align-items-center">
                                 <t t-if="state.selectedPurpose">
-                                    <t t-esc="getters.getSelectedPurpose(state.selectedPurpose).label" />
+                                    <t t-esc="state.getSelectedPurpose(state.selectedPurpose).label"/>
                                 </t>
                                 <i class="fa fa-angle-down text-black-50 ml-auto pl-2" role="img"/>
                             </a>
                         </div>
                         <div class="dropdown-menu border-0 shadow-lg" role="menu">
-                            <t t-foreach="getters.getWebsitePurpose()" t-as="type" t-key="type.name">
-                                <a t-att-title="type.name" t-att-data-id="type.id" t-on-click="selectWebsitePurpose" class="dropdown-item o_change_website_purpose">
+                            <t t-foreach="state.getWebsitePurpose()" t-as="type" t-key="type.name">
+                                <a t-att-title="type.name" t-on-click="() => this.selectWebsitePurpose(type.id)" class="dropdown-item o_change_website_purpose">
                                     <t t-esc="type.label"/>
                                 </a>
                             </t>
@@ -110,13 +110,13 @@
                             </div>
                         </div>
                         <div t-if="state.recommendedPalette" class="w-75 mx-auto px-2 pt-3" style="max-width: 184px;">
-                            <div t-attf-class="palette_card rounded-pill overflow-hidden d-flex {{getters.getSelectedPaletteName() == 'recommendedPalette' ? 'selected' : ''}}"
-                                 t-on-click="selectPalette('recommendedPalette')" t-attf-style="background-color: {{state.recommendedPalette.color3}}">
+                            <div t-attf-class="palette_card rounded-pill overflow-hidden d-flex {{state.getSelectedPaletteName() == 'recommendedPalette' ? 'selected' : ''}}"
+                                 t-on-click="() => this.selectPalette('recommendedPalette')" t-attf-style="background-color: {{state.recommendedPalette.color3}}">
                                 <div class="color_sample w-100" t-attf-style="background-color: {{state.recommendedPalette.color1}}"/>
                                 <div class="color_sample w-100" t-attf-style="background-color: {{state.recommendedPalette.color3}}"/>
                                 <div class="color_sample w-100" t-attf-style="background-color: {{state.recommendedPalette.color2}}"/>
                             </div>
-                            <button class="btn btn-primary text-nowrap mt-3 d-block mx-auto" t-on-click="selectPalette('recommendedPalette')">
+                            <button class="btn btn-primary text-nowrap mt-3 d-block mx-auto" t-on-click="() => this.selectPalette('recommendedPalette')">
                                 Let's go!<i class="fa fa-angle-right text-white-50 pl-2" role="img"/>
                             </button>
                         </div>
@@ -131,10 +131,10 @@
                     <div class="h4 text-center">
                         <b>Choose</b> a pre-made Palette</div>
                     <div class="d-flex flex-wrap align-items-end">
-                        <t t-foreach="getters.getPalettes()" t-as="palette" t-key="palette_index">
+                        <t t-foreach="state.getPalettes()" t-as="palette" t-key="palette_index">
                             <div class="w-50 w-md-25 px-2 pt-3">
-                                <div t-attf-class="palette_card rounded-pill overflow-hidden d-flex {{getters.getSelectedPaletteName() == palette.name ? 'selected' : ''}}"
-                                     t-on-click="selectPalette(palette.name)" t-attf-style="background-color: {{palette.color3}}">
+                                <div t-attf-class="palette_card rounded-pill overflow-hidden d-flex {{state.getSelectedPaletteName() == palette.name ? 'selected' : ''}}"
+                                     t-on-click="() => this.selectPalette(palette.name)" t-attf-style="background-color: {{palette.color3}}">
                                     <div class="color_sample w-100" t-attf-style="background-color: {{palette.color1}}"/>
                                     <div class="color_sample w-100" t-attf-style="background-color: {{palette.color3}}"/>
                                     <div class="color_sample w-100" t-attf-style="background-color: {{palette.color2}}"/>
@@ -160,10 +160,10 @@
                 <h5 class="o_configurator_show_fast text-muted pb-lg-3">You'll be able to create your pages later on.</h5>
                 <div class="page_feature_selection o_configurator_show overflow-auto mt-lg-3 mx-n2">
                     <div class="w-100 page_feature_selection d-flex flex-wrap">
-                        <t t-foreach="getters.getFeatures()" t-as="feature" t-key="feature_index">
+                        <t t-foreach="state.getFeatures()" t-as="feature" t-key="feature_index">
                             <t t-set='isInstalled' t-value="feature.module_state == 'installed'"/>
                             <div class="p-2 w-100 w-md-50 w-lg-25" t-if="feature.type != 'empty'">
-                                <div t-attf-class="card h-100 {{isInstalled ? 'card_installed' : (feature.selected ? 'border-success' : '')}}" t-on-click="dispatch('toggleFeature', feature.id)">
+                                <div t-attf-class="card h-100 {{isInstalled ? 'card_installed' : (feature.selected ? 'border-success' : '')}}" t-on-click="() => state.toggleFeature(feature.id)">
                                     <div class="card-body py-2">
                                         <t t-if="isInstalled">
                                             <i t-attf-class="o_configurator_feature_status fa fa-info-circle text-muted" title="Already installed"/>
@@ -183,7 +183,7 @@
                     </div>
                 </div>
                 <div class="text-right border-top pt-2">
-                    <button class="btn btn-primary btn-lg ml-3" t-on-click="buildWebsite()">Build my website</button>
+                    <button class="btn btn-primary btn-lg ml-3" t-on-click="buildWebsite">Build my website</button>
                 </div>
             </div>
         </div>
@@ -203,29 +203,29 @@
                 <div class="container">
                     <div class="row pb-4 pt-5">
                         <div class="col-12 col-lg-4 d-flex align-items-end mb-4 mb-lg-0">
-                            <t t-if="getters.getThemeName(1)">
+                            <t t-if="state.getThemeName(1)">
                                 <div class="theme_preview border rounded position-relative w-100 small o_configurator_show_fast">
                                     <h6 class="theme_preview_tip text-center text-muted">Click to select</h6>
                                     <div class="theme_svg_container rounded overflow-hidden" t-ref="ThemePreview2"/>
-                                    <div class="button_area" t-on-click="chooseTheme(getters.getThemeName(1))"/>
+                                    <div class="button_area" t-on-click="() => this.chooseTheme(state.getThemeName(1))"/>
                                 </div>
                             </t>
                         </div>
                         <div class="col-12 col-lg-4 d-flex align-items-end mb-4 mb-lg-0">
-                            <t t-if="getters.getThemeName(0)">
+                            <t t-if="state.getThemeName(0)">
                                 <div class="theme_preview border rounded position-relative w-100 o_configurator_show">
                                     <h6 class="theme_preview_tip text-center text-muted">Click to select</h6>
                                     <div class="theme_svg_container rounded overflow-hidden" t-ref="ThemePreview1"/>
-                                    <div class="button_area" t-on-click="chooseTheme(getters.getThemeName(0))"/>
+                                    <div class="button_area" t-on-click="() => this.chooseTheme(state.getThemeName(0))"/>
                                 </div>
                             </t>
                         </div>
                         <div class="col-12 col-lg-4 d-flex align-items-end">
-                            <t t-if="getters.getThemeName(2)">
+                            <t t-if="state.getThemeName(2)">
                                 <div class="theme_preview border rounded position-relative w-100 small o_configurator_show_fast">
                                     <h6 class="theme_preview_tip text-center text-muted">Click to select</h6>
                                     <div class="theme_svg_container rounded overflow-hidden" t-ref="ThemePreview3"/>
-                                    <div class="button_area" t-on-click="chooseTheme(getters.getThemeName(2))"/>
+                                    <div class="button_area" t-on-click="() => this.chooseTheme(state.getThemeName(2))"/>
                                 </div>
                             </t>
                         </div>
@@ -236,9 +236,13 @@
     </div>
 </t>
 
-<t t-name="website.Configurator.App">
+<t t-name="website.Configurator.Configurator" owl="1">
     <div class="o_configurator_container">
-        <RouteComponent />
+        <DescriptionScreen t-if="router.location === '/website/configurator/2'"/>
+        <PaletteSelectionScreen t-elif="router.location === '/website/configurator/3'"/>
+        <FeaturesSelectionScreen t-elif="router.location === '/website/configurator/4'"/>
+        <ThemeSelectionScreen t-elif="router.location === '/website/configurator/5'"/>
+        <WelcomeScreen t-else=""/>
     </div>
 </t>
 

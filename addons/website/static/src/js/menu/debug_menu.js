@@ -11,10 +11,10 @@ const debugMenuService = {
             const systray = document.querySelector('.o_menu_systray');
             if (systray) {
                 Object.assign(env, createDebugContext(env, {categories: ["default"]}));
-                mount(DebugMenuBasic, {
-                    target: systray,
+                mount(DebugMenuBasic, systray, {
                     position: 'first-child',
                     env,
+                    templates: window.__OWL_TEMPLATES__,
                 });
             }
         }
