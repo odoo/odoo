@@ -235,7 +235,7 @@ class ProductProduct(models.Model):
             raise ValidationError(
                 _("This barcode is already in use by:\n\n{products_with_same_barcode}").format(
                     products_with_same_barcode="\n".join(
-                        [product.complete_name for product in products_with_same_barcode]
+                        [product.name for product in products_with_same_barcode]
                     )
                 )
             )
