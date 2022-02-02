@@ -42,7 +42,6 @@ QUnit.test("ErrorDialog with traceback", async (assert) => {
     assert.expect(11);
     class Parent extends Component {
         setup() {
-            super.setup();
             this.message = "Something bad happened";
             this.data = { debug: "Some strange unreadable stack" };
             this.name = "ERROR_NAME";
@@ -167,7 +166,6 @@ QUnit.test("button clipboard copy error traceback", async (assert) => {
     env = await makeTestEnv();
     class Parent extends Component {
         setup() {
-            super.setup();
             this.message = error.message;
             this.name = "ERROR_NAME";
             this.traceback = "This is a traceback";
@@ -185,7 +183,6 @@ QUnit.test("WarningDialog", async (assert) => {
     assert.expect(6);
     class Parent extends Component {
         setup() {
-            super.setup();
             this.name = "odoo.exceptions.UserError";
             this.message = "...";
             this.data = { arguments: ["Some strange unreadable message"] };
@@ -210,7 +207,6 @@ QUnit.test("RedirectWarningDialog", async (assert) => {
 
     class Parent extends Component {
         setup() {
-            super.setup();
             this.data = {
                 arguments: [
                     "Some strange unreadable message",

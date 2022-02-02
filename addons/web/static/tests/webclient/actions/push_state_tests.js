@@ -78,7 +78,6 @@ QUnit.module("ActionManager", (hooks) => {
         assert.expect(5);
         class ClientActionPushes extends Component {
             setup() {
-                super.setup();
                 this.router = useService("router");
             }
             _actionPushState() {
@@ -107,7 +106,6 @@ QUnit.module("ActionManager", (hooks) => {
         assert.expect(5);
         class ClientActionPushes extends Component {
             setup() {
-                super.setup();
                 this.router = useService("router");
             }
             _actionPushState() {
@@ -137,7 +135,6 @@ QUnit.module("ActionManager", (hooks) => {
         assert.expect(3);
         class ClientActionPushes extends Component {
             setup() {
-                super.setup();
                 this.router = useService("router");
             }
             _actionPushState() {
