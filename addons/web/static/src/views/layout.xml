@@ -3,7 +3,7 @@
 
     <t t-name="web.Layout" owl="1">
         <div t-att-class="className">
-            <t t-component="components.ControlPanel" slots="controlPanelSlots" t-if="display.controlPanel">
+            <t t-component="components.ControlPanel" slots="controlPanelSlots" t-if="display.controlPanel" pagerProps="props.pagerProps">
                 <!-- Empty body to assign slot id to control panel -->
             </t>
             <div class="o_content" t-att-class="{ o_component_with_search_panel: display.searchPanel }">

@@ -43,7 +43,6 @@ export function getDefaultConfig() {
             },
         ],
         getDisplayName: () => displayName,
-        getPagerProps: () => {},
         historyBack: () => {},
         setDisplayName: (newDisplayName) => {
             displayName = newDisplayName;

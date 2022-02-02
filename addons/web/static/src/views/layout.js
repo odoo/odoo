@@ -47,4 +47,5 @@ Layout.props = {
     slots: { type: Object, optional: true },
     viewType: { type: String, optional: true },
     useSampleModel: { type: Boolean, optional: true },
+    pagerProps: { type: Object, optional: true },
 };
