@@ -659,7 +659,7 @@ class Website(Home):
             fields.extend(['website_indexed', 'website_id'])
 
         record = request.env[res_model].browse(res_id)
-        res = record._read_format(fields)[0]
+        res = record.read(fields)[0]
         res['has_social_default_image'] = request.website.has_social_default_image
 
         if res_model not in ('website.page', 'ir.ui.view') and 'seo_name' in record:  # allow custom slugify
