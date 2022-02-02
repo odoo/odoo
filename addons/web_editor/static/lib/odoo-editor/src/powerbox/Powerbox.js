@@ -22,7 +22,7 @@ export class Powerbox {
         this.el.style.width = `${this.options.width}px`;
         document.body.append(this.el);
 
-        this.addKeydownTrigger('/', { commands: this.options.commands });
+        this.addHotKey('/', { commands: this.options.commands });
 
         this._mainWrapperElement = document.createElement('div');
         this._mainWrapperElement.className = 'oe-commandbar-mainWrapper';
@@ -140,14 +140,14 @@ export class Powerbox {
         this._resetPosition();
     }
 
-    addKeydownTrigger(triggerKey, options) {
+    addHotKey(triggerKey, options) {
         this.options.editable.addEventListener(
-            'keydown',
+            'input',
             ev => {
                 const selection = this.options.document.getSelection();
                 if (!selection.isCollapsed || !selection.rangeCount) return;
                 if (
-                    ev.key === triggerKey &&
+                    ev.data === triggerKey &&
                     !this._active &&
                     (!this.options.shouldActivate || this.options.shouldActivate())
                 ) {
