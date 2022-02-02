@@ -80,6 +80,16 @@ class MailTestTicket(models.Model):
     user_id = fields.Many2one('res.users', 'Responsible', tracking=1)
     container_id = fields.Many2one('mail.test.container', tracking=True)
 
+    def _notify_get_recipients_groups(self, msg_vals=None):
+        """ Activate more groups to test query counters notably (and be backward
+        compatible for tests). """
+        groups = super(MailTestTicket, self)._notify_get_recipients_groups(msg_vals=msg_vals)
+        for group_name, _group_method, group_data in groups:
+            if group_name == 'portal':
+                group_data['active'] = True
+
+        return groups
+
     def _track_template(self, changes):
         res = super(MailTestTicket, self)._track_template(changes)
         record = self[0]
@@ -115,6 +125,16 @@ class MailTestContainer(models.Model):
     alias_id = fields.Many2one(
         'mail.alias', 'Alias',
         delegate=True)
+
+    def _notify_get_recipients_groups(self, msg_vals=None):
+        """ Activate more groups to test query counters notably (and be backward
+        compatible for tests). """
+        groups = super(MailTestContainer, self)._notify_get_recipients_groups(msg_vals=msg_vals)
+        for group_name, _group_method, group_data in groups:
+            if group_name == 'portal':
+                group_data['active'] = True
+
+        return groups
 
     def _alias_get_creation_values(self):
         values = super(MailTestContainer, self)._alias_get_creation_values()
