@@ -2,10 +2,9 @@ odoo.define('web.AbstractFieldOwl', function (require) {
     "use strict";
 
     const field_utils = require('web.field_utils');
-    const { useListener } = require('web.custom_hooks');
-    const { useEffect } = require("@web/core/utils/hooks");
+    const { useListener } = require("@web/core/utils/hooks");
 
-    const { Component } = owl;
+    const { Component, onWillUpdateProps, useEffect } = owl;
 
     /**
      * This file defines the Owl version of the AbstractField. Specific fields
@@ -60,9 +59,7 @@ odoo.define('web.AbstractFieldOwl', function (require) {
          * @param {string} [props.options.mode=readonly] should be 'readonly' or 'edit'
          * @param {string} [props.options.viewType=default]
          */
-        constructor() {
-            super(...arguments);
-
+        setup() {
             this._canQuickEdit = this.constructor.isQuickEditable;
             this._isValid = true;
             // this is the last value that was set by the user, unparsed. This is
@@ -73,33 +70,14 @@ odoo.define('web.AbstractFieldOwl', function (require) {
             useListener('keydown', this._onKeydown);
             useListener('navigation-move', this._onNavigationMove);
             useEffect(() => this._applyDecorations());
-        }
-        /**
-         * Hack: studio tries to find the field with a selector base on its
-         * name, before it is mounted into the DOM. Ideally, this should be
-         * done in the onMounted hook, but in this case we are too late, and
-         * Studio finds nothing. As a consequence, the field can't be edited
-         * by clicking on its label (or on the row formed by the pair label-field).
-         *
-         * TODO: move this to mounted at some point?
-         *
-         * @override
-         */
-        __patch() {
-            const res = super.__patch(...arguments);
-            this.el.setAttribute('name', this.name);
-            this.el.classList.add('o_field_widget');
-            this.el.classList.toggle('o_quick_editable', this._canQuickEdit);
-            return res;
-        }
-        /**
-         * @async
-         * @param {Object} [nextProps]
-         * @returns {Promise}
-         */
-        async willUpdateProps(nextProps) {
-            this._lastSetValue = undefined;
-            return super.willUpdateProps(nextProps);
+            useEffect(() => {
+                this.el.setAttribute('name', this.name);
+                this.el.classList.add('o_field_widget');
+                this.el.classList.toggle('o_quick_editable', this._canQuickEdit);
+            });
+            onWillUpdateProps(() => {
+                this._lastSetValue = undefined;
+            });
         }
 
         //----------------------------------------------------------------------

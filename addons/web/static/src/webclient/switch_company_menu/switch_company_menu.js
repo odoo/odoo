@@ -1,5 +1,7 @@
 /** @odoo-module **/
 
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { browser } from "@web/core/browser/browser";
@@ -37,6 +39,7 @@ export class SwitchCompanyMenu extends Component {
     }
 }
 SwitchCompanyMenu.template = "web.SwitchCompanyMenu";
+SwitchCompanyMenu.components = { Dropdown, DropdownItem };
 SwitchCompanyMenu.toggleDelay = 1000;
 
 export const systrayItem = {

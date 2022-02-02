@@ -1,7 +1,7 @@
 odoo.define('web.DropdownMenuItem', function (require) {
     "use strict";
 
-    const { useListener } = require('web.custom_hooks');
+    const { useListener } = require("@web/core/utils/hooks");
 
     const { Component, useExternalListener, useRef, useState } = owl;
 
@@ -27,9 +27,7 @@ odoo.define('web.DropdownMenuItem', function (require) {
      * @extends Component
      */
     class DropdownMenuItem extends Component {
-        constructor() {
-            super(...arguments);
-
+        setup() {
             this.canBeOpened = Boolean(this.props.options && this.props.options.length);
 
             this.fallbackFocusRef = useRef('fallback-focus');

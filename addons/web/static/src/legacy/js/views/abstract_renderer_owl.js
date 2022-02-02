@@ -1,6 +1,6 @@
 /** @odoo-module alias=web.AbstractRendererOwl **/
 
-const { Component } = owl;
+const { Component, onMounted, onPatched } = owl;
 
 // Renderers may display sample data when there is no real data to display. In
 // this case the data is displayed with opacity and can't be clicked. Moreover,
@@ -15,22 +15,20 @@ const FOCUSABLE_ELEMENTS = [
 
 class AbstractRenderer extends Component {
 
-    constructor() {
-        super(...arguments);
+    setup() {
         // Defines the elements suppressed when in demo data. This must be a list
         // of DOM selectors matching view elements that will:
         // 1. receive the 'o_sample_data_disabled' class (greyd out & no user events)
         // 2. have themselves and any of their focusable children removed from the
         //    tab navigation
         this.sampleDataTargets = [];
-    }
 
-    mounted() {
-        this._suppressFocusableElements();
-    }
-
-    patched() {
-        this._suppressFocusableElements();
+        onMounted(() => {
+            this._suppressFocusableElements();
+        });
+        onPatched(() => {
+            this._suppressFocusableElements();
+        });
     }
 
     /**

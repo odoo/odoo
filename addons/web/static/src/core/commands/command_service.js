@@ -47,7 +47,7 @@ class DefaultFooter extends Component {
 DefaultFooter.template = xml`
 <span>
     <span class='o_promote'>TIP</span> — search for
-    <t t-foreach="elements" t-as="element">
+    <t t-foreach="elements" t-as="element" t-key="element.namespace">
         <t t-if="!(element_first || element_last)">, </t>
         <t t-if="element_last and !element_first"> and </t>
         <span t-esc="element.namespace" class='o_promote'/><t t-esc="element.name"/>

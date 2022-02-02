@@ -28,8 +28,7 @@ var KanbanRenderer = require('web.KanbanRenderer');
 var ListRenderer = require('web.ListRenderer');
 const { ComponentWrapper, WidgetAdapterMixin } = require('web.OwlCompatibility');
 const { sprintf, toBoolElse } = require("web.utils");
-
-const { escape } = owl;
+const { escape } = require("@web/core/utils/strings");
 
 var _t = core._t;
 var _lt = core._lt;
@@ -1100,7 +1099,6 @@ var FieldX2Many = AbstractField.extend(WidgetAdapterMixin, {
         navigation_move: '_onNavigationMove',
         save_optional_fields: '_onSaveOrLoadOptionalFields',
         load_optional_fields: '_onSaveOrLoadOptionalFields',
-        pager_changed: '_onPagerChanged',
     }),
 
     // We need to trigger the reset on every changes to be aware of the parent changes
@@ -1145,6 +1143,7 @@ var FieldX2Many = AbstractField.extend(WidgetAdapterMixin, {
                     Promise.resolve();
             },
             withAccessKey: false,
+            onPagerChanged: this._onPagerChanged.bind(this),
         };
         var arch = this.view && this.view.arch;
         if (arch) {
@@ -1776,9 +1775,7 @@ var FieldX2Many = AbstractField.extend(WidgetAdapterMixin, {
      * @private
      * @param {OdooEvent} ev
      */
-    _onPagerChanged: function (ev) {
-        ev.stopPropagation();
-        const { currentMinimum, limit } = ev.data;
+    _onPagerChanged: function ({ currentMinimum, limit }) {
         this._updateControlPanel({ currentMinimum, limit });
         this.trigger_up('load', {
             id: this.value.id,

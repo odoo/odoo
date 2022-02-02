@@ -1,7 +1,8 @@
 /** @odoo-module **/
 
-import { browser } from "@web/core/browser/browser";
+import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 
@@ -30,7 +31,7 @@ export class UserMenu extends Component {
     }
 }
 UserMenu.template = "web.UserMenu";
-UserMenu.components = { DropdownItem };
+UserMenu.components = { Dropdown, DropdownItem };
 
 export const systrayItem = {
     Component: UserMenu,

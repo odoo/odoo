@@ -3,15 +3,19 @@
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
-import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
-import { click, getFixture, makeDeferred, patchWithCleanup } from "@web/../tests/helpers/utils";
+import {
+    click,
+    getFixture,
+    makeDeferred,
+    mount,
+    patchWithCleanup,
+} from "@web/../tests/helpers/utils";
 import { MobileSwitchCompanyMenu } from "@web/webclient/burger_menu/mobile_switch_company_menu/mobile_switch_company_menu";
 import { companyService } from "@web/webclient/company_service";
 import { uiService } from "@web/core/ui/ui_service";
 import { session } from "@web/session";
 
-const { mount } = owl;
 const serviceRegistry = registry.category("services");
 
 async function createSwitchCompanyMenu(routerParams = {}, toggleDelay = 0) {
@@ -31,8 +35,7 @@ async function createSwitchCompanyMenu(routerParams = {}, toggleDelay = 0) {
     }
     const env = await makeTestEnv();
     const target = getFixture();
-    const scMenu = await mount(MobileSwitchCompanyMenu, { env, target });
-    registerCleanup(() => scMenu.destroy());
+    const scMenu = await mount(MobileSwitchCompanyMenu, target, { env });
     return scMenu;
 }
 

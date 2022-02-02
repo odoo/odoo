@@ -1,5 +1,7 @@
 /** @odoo-module **/
 
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { DebugMenuBasic } from "@web/core/debug/debug_menu_basic";
 import { useCommand } from "@web/core/commands/command_hook";
 import { useService } from "@web/core/utils/hooks";
@@ -53,3 +55,4 @@ export class DebugMenu extends DebugMenuBasic {
         );
     }
 }
+DebugMenu.components = { Dropdown, DropdownItem };

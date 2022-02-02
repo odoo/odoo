@@ -6,9 +6,8 @@
  *
  */
 
+import { renderToString } from '@web/core/utils/render';
 import * as mvc from 'web.mvc';
-
-const { Component } = owl;
 
 // Renderers may display sample data when there is no real data to display. In
 // this case the data is displayed with opacity and can't be clicked. Moreover,
@@ -154,12 +153,8 @@ export default mvc.Renderer.extend({
         } else {
             templateName = "web.NoContentHelper";
         }
-        const template = document.createElement('template');
-        // FIXME: retrieve owl qweb instance via the env set on Component s.t.
-        // it also works in the tests (importing 'web.env' wouldn't). This
-        // won't be necessary as soon as this will be written in 
-        const owlQWeb = Component.env.qweb;
-        template.innerHTML = owlQWeb.renderToString(templateName, context);
+        const innerHTML = renderToString(templateName, context);
+        const template = Object.assign(document.createElement("template"), { innerHTML });
         this.el.append(template.content.firstChild);
     },
     /**

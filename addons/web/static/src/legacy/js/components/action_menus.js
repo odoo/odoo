@@ -5,7 +5,13 @@ odoo.define('web.ActionMenus', function (require) {
     const DropdownMenu = require('web.DropdownMenu');
     const Registry = require('web.Registry');
 
-    const { Component } = owl;
+    const {
+        Component,
+        onMounted,
+        onPatched,
+        onWillStart,
+        onWillUpdateProps,
+    } = owl;
 
     let registryActionId = 1;
 
@@ -22,23 +28,21 @@ odoo.define('web.ActionMenus', function (require) {
      * @extends Component
      */
     class ActionMenus extends Component {
-
-        async willStart() {
-            this.actionItems = await this._setActionItems(this.props);
-            this.printItems = await this._setPrintItems(this.props);
-        }
-
-        async willUpdateProps(nextProps) {
-            this.actionItems = await this._setActionItems(nextProps);
-            this.printItems = await this._setPrintItems(nextProps);
-        }
-
-        mounted() {
-            this._addTooltips();
-        }
-
-        patched() {
-            this._addTooltips();
+        setup() {
+            onWillStart(async () => {
+                this.actionItems = await this._setActionItems(this.props);
+                this.printItems = await this._setPrintItems(this.props);
+            });
+            onWillUpdateProps(async (nextProps) => {
+                this.actionItems = await this._setActionItems(nextProps);
+                this.printItems = await this._setPrintItems(nextProps);
+            });
+            onMounted(() => {
+                this._addTooltips();
+            });
+            onPatched(() => {
+                this._addTooltips();
+            });
         }
 
         //---------------------------------------------------------------------

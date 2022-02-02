@@ -27,7 +27,7 @@ export class Pager extends Component {
         this.inputRef = useRef("input");
         useExternalListener(document, "mousedown", this.onClickAway, { capture: true });
 
-        this.forceFocus = useAutofocus();
+        this.forceFocus = useAutofocus("input");
     }
 
     /**
@@ -162,6 +162,6 @@ Pager.props = {
     limit: Number,
     total: Number,
     onUpdate: Function,
-    isEditable: Boolean,
-    withAccessKey: Boolean,
+    isEditable: { type: Boolean, optional: true },
+    withAccessKey: { type: Boolean, optional: true },
 };

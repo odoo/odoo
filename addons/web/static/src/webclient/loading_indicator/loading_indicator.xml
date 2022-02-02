@@ -2,11 +2,9 @@
 <templates xml:space="preserve">
 
     <t t-name="web.LoadingIndicator" owl="1">
-        <div t-attf-class="o_loading_indicator {{state.show ? 'o_loading' : ''}}">
-            <span t-if="state.show" t-transition="fade">
-                <t>Loading<t t-if="env.debug" t-esc="' (' + state.count + ')'" /></t>
-            </span>
-        </div>
+        <Transition visible="state.show" name="'o-fade'" t-slot-scope="transition" leaveDuration="400">
+            <span class="o_loading_indicator" t-att-class="transition.className">Loading<t t-if="env.debug" t-esc="' (' + state.count + ')'" /></span>
+        </Transition>
     </t>
 
 </templates>

@@ -16,11 +16,12 @@ odoo.define("web/static/src/js/views/graph/graph_renderer", function (require) {
         shortenLabel,
     } = require("web/static/src/js/views/graph/graph_utils");
 
-    const { useRef } = owl;
+    const { onWillDestroy, onWillUpdateProps, useEffect, useRef } = owl;
+    const { renderToString } = require('@web/core/utils/render');
 
     class GraphRenderer extends AbstractRenderer {
-        constructor() {
-            super(...arguments);
+        setup() {
+            super.setup();
 
             this.noDataLabel = [this.env._t("No data")];
             this.fakeDataLabel = [""];
@@ -29,21 +30,20 @@ odoo.define("web/static/src/js/views/graph/graph_renderer", function (require) {
 
             this.canvasRef = useRef("canvas");
             this.containerRef = useRef("container");
-        }
 
-        async willUpdateProps(nextProps) {
-            await super.willUpdateProps(...arguments);
-            this._processProps(nextProps);
-        }
+            useEffect(() => {
+                this._renderChart();
+            });
 
-        mounted() {
-            super.mounted();
-            this._renderChart();
-        }
+            onWillUpdateProps((nextProps) => {
+                this._processProps(nextProps);
+            });
 
-        patched() {
-            super.patched();
-            this._renderChart();
+            onWillDestroy(() => {
+                if (this.chart) {
+                    this.chart.destroy();
+                }
+            });
         }
 
         //---------------------------------------------------------------------
@@ -81,7 +81,7 @@ odoo.define("web/static/src/js/views/graph/graph_renderer", function (require) {
                 const tr = document.createElement("tr");
                 const td = document.createElement("td");
                 tr.classList.add("o_show_more");
-                td.innerHTML = this.env._t("...");
+                td.innerText = this.env._t("...");
                 tr.appendChild(td);
                 this.tooltip.querySelector("tbody").appendChild(tr);
             }
@@ -261,7 +261,7 @@ odoo.define("web/static/src/js/views/graph/graph_renderer", function (require) {
             const chartAreaTop = this.chart.chartArea.top;
             const rendererTop = this.el.getBoundingClientRect().top;
 
-            const innerHTML = this.env.qweb.renderToString("web.GraphRenderer.CustomTooltip", {
+            const innerHTML = renderToString("web.GraphRenderer.CustomTooltip", {
                 maxWidth: getMaxWidth(this.chart.chartArea),
                 measure: this.measureDescription,
                 mode: this.props.mode,
@@ -614,8 +614,8 @@ odoo.define("web/static/src/js/views/graph/graph_renderer", function (require) {
         _getTooltipItemContent(item, data) {
             const { comparisonFieldIndex } = this.props;
             const dataset = data.datasets[item.datasetIndex];
-            const id = item.index;
-            let label = data.labels[item.index];
+            const index = item.index;
+            let label = data.labels[index];
             let value;
             let boxColor;
             let percentage;
@@ -623,15 +623,15 @@ odoo.define("web/static/src/js/views/graph/graph_renderer", function (require) {
                 if (label === this.noDataLabel) {
                     value = this._formatValue(0);
                 } else {
-                    value = this._formatValue(dataset.data[item.index]);
+                    value = this._formatValue(dataset.data[index]);
                     const totalData = dataset.data.reduce((a, b) => a + b, 0);
-                    percentage = totalData && ((dataset.data[item.index] * 100) / totalData).toFixed(2);
+                    percentage = totalData && ((dataset.data[index] * 100) / totalData).toFixed(2);
                 }
                 label = this._relabelling(label, comparisonFieldIndex, dataset.originIndex);
                 if (this.props.origins.length > 1) {
                     label = `${dataset.label}/${label}`;
                 }
-                boxColor = dataset.backgroundColor[item.index];
+                boxColor = dataset.backgroundColor[index];
             } else {
                 label = this._relabelling(label, comparisonFieldIndex, dataset.originIndex);
                 if (
@@ -645,7 +645,7 @@ odoo.define("web/static/src/js/views/graph/graph_renderer", function (require) {
                     dataset.backgroundColor :
                     dataset.borderColor;
             }
-            return { id, label, value, boxColor, percentage };
+            return { label, value, boxColor, percentage };
         }
 
         /**

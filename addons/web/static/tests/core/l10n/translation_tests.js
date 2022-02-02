@@ -8,10 +8,10 @@ import { patch, unpatch } from "@web/core/utils/patch";
 import { session } from "@web/session";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { makeFakeLocalizationService } from "@web/../tests/helpers/mock_services";
-import { getFixture, patchWithCleanup } from "@web/../tests/helpers/utils";
+import { getFixture, mount, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { registerCleanup } from "@web/../tests/helpers/cleanup";
 
-const { Component, mount, xml } = owl;
+const { Component, xml } = owl;
 
 const terms = { Hello: "Bonjour" };
 const serviceRegistry = registry.category("services");
@@ -26,7 +26,7 @@ QUnit.test("can translate a text node", async (assert) => {
     const env = await makeTestEnv();
     patch(translatedTerms, "add translations", terms);
     const target = getFixture();
-    await mount(TestComponent, { env, target });
+    await mount(TestComponent, target, { env });
     assert.strictEqual(target.innerText, "Bonjour");
     unpatch(translatedTerms, "add translations");
 });
@@ -43,7 +43,7 @@ QUnit.test("can lazy translate", async (assert) => {
     const env = await makeTestEnv();
     patch(translatedTerms, "add translations", terms);
     const target = getFixture();
-    await mount(TestComponent, { env, target });
+    await mount(TestComponent, target, { env });
     assert.strictEqual(target.innerText, "Bonjour");
     unpatch(translatedTerms, "add translations");
 });
@@ -55,7 +55,7 @@ QUnit.test("_t is in env", async (assert) => {
     const env = await makeTestEnv();
     patch(translatedTerms, "add translations", terms);
     const target = getFixture();
-    await mount(TestComponent, { env, target });
+    await mount(TestComponent, target, { env });
     assert.strictEqual(target.innerText, "Bonjour");
     unpatch(translatedTerms, "add translations");
 });

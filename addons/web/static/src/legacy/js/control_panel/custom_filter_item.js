@@ -1,6 +1,8 @@
 odoo.define('web.CustomFilterItem', function (require) {
     "use strict";
 
+    const { Dropdown } = require("@web/core/dropdown/dropdown");
+    const { DropdownItem } = require("@web/core/dropdown/dropdown_item");
     const { DatePicker, DateTimePicker } = require('web.DatePickerOwl');
     const Domain = require('web.Domain');
     const { FIELD_OPERATORS, FIELD_TYPES } = require('web.searchUtils');
@@ -42,9 +44,7 @@ odoo.define('web.CustomFilterItem', function (require) {
      *                     ]
      */
     class CustomFilterItem extends Component {
-        constructor() {
-            super(...arguments);
-
+        setup() {
             this.model = useModel('searchModel');
 
             this.conditions = useState([]);
@@ -270,7 +270,7 @@ odoo.define('web.CustomFilterItem', function (require) {
         }
     }
 
-    CustomFilterItem.components = { DatePicker, DateTimePicker };
+    CustomFilterItem.components = { DatePicker, DateTimePicker, Dropdown };
     CustomFilterItem.props = { fields: Object };
     CustomFilterItem.template = "web.CustomFilterItem";
 

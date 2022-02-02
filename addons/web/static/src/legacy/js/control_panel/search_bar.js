@@ -3,11 +3,11 @@ odoo.define('web.SearchBar', function (require) {
 
     const Domain = require('web.Domain');
     const field_utils = require('web.field_utils');
-    const { useAutofocus } = require('web.custom_hooks');
+    const { useAutofocus } = require("@web/core/utils/hooks");
     const { useModel } = require('web.Model');
     const { fuzzyTest } = require('@web/core/utils/search');
 
-    const { Component, useExternalListener, useRef, useState } = owl;
+    const { Component, onMounted, onWillUnmount, useExternalListener, useRef, useState } = owl;
     const CHAR_FIELDS = ['char', 'html', 'many2many', 'many2one', 'one2many', 'text'];
 
     let sourceId = 0;
@@ -37,10 +37,8 @@ odoo.define('web.SearchBar', function (require) {
      * @extends Component
      */
     class SearchBar extends Component {
-        constructor() {
-            super(...arguments);
-
-            this.focusOnUpdate = useAutofocus();
+        setup() {
+            this.focusOnUpdate = useAutofocus('search-input');
             this.inputRef = useRef('search-input');
             this.model = useModel('searchModel');
             this.state = useState({
@@ -56,19 +54,19 @@ odoo.define('web.SearchBar', function (require) {
 
             useExternalListener(window, 'click', this._onWindowClick);
             useExternalListener(window, 'keydown', this._onWindowKeydown);
-        }
 
-        mounted() {
-            // 'search' will always patch the search bar, 'focus' will never.
-            this.env.searchModel.on('search', this, this.focusOnUpdate);
-            this.env.searchModel.on('focus-control-panel', this, () => {
-                this.inputRef.el.focus();
+            onMounted(() => {
+                // 'search' will always patch the search bar, 'focus' will never.
+                this.model.on('search', this, this.focusOnUpdate);
+                this.model.on('focus-control-panel', this, () => {
+                    this.inputRef.el.focus();
+                });
             });
-        }
 
-        willUnmount() {
-            this.env.searchModel.off('search', this);
-            this.env.searchModel.off('focus-control-panel', this);
+            onWillUnmount(() => {
+                this.model.off('search', this);
+                this.model.off('focus-control-panel', this);
+            });
         }
 
         //---------------------------------------------------------------------
@@ -485,7 +483,7 @@ odoo.define('web.SearchBar', function (require) {
         fields: {},
     };
     SearchBar.props = {
-        fields: Object,
+        fields: { type: Object, optional: true },
     };
     SearchBar.template = 'web.Legacy.SearchBar';
 

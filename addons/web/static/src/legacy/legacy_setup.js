@@ -16,7 +16,7 @@ import * as legacyEnv from "web.env";
 import * as session from "web.session";
 import * as makeLegacyWebClientService from "web.pseudo_web_client";
 
-const { Component, config, whenReady } = owl;
+const { Component, whenReady } = owl;
 
 let legacySetupResolver;
 export const legacySetupProm = new Promise((resolve) => {
@@ -26,7 +26,6 @@ export const legacySetupProm = new Promise((resolve) => {
 // build the legacy env and set it on Component (this was done in main.js,
 // with the starting of the webclient)
 (async () => {
-    config.mode = legacyEnv.isDebug() ? "dev" : "prod";
     AbstractService.prototype.deployServices(legacyEnv);
     Component.env = legacyEnv;
     const legacyActionManagerService = makeLegacyActionManagerService(legacyEnv);
@@ -48,6 +47,6 @@ export const legacySetupProm = new Promise((resolve) => {
     serviceRegistry.add("legacy_command", legacyCommandService);
     serviceRegistry.add("legacy_dropdown", makeLegacyDropdownService(legacyEnv));
     await Promise.all([whenReady(), session.is_bound]);
-    legacyEnv.qweb.addTemplates(session.owlTemplates);
+    legacyEnv.templates = session.owlTemplates;
     legacySetupResolver(legacyEnv);
 })();

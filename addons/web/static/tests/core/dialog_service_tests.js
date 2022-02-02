@@ -10,14 +10,20 @@ import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { registerCleanup } from "../helpers/cleanup";
 import { clearRegistryWithCleanup, makeTestEnv } from "../helpers/mock_env";
 import { makeFakeLocalizationService, makeFakeRPCService } from "../helpers/mock_services";
-import { click, getFixture, makeDeferred, nextTick, patchWithCleanup } from "../helpers/utils";
+import {
+    click,
+    getFixture,
+    makeDeferred,
+    mount,
+    nextTick,
+    patchWithCleanup,
+} from "../helpers/utils";
 import { Dialog } from "../../src/core/dialog/dialog";
 
-const { Component, mount, xml } = owl;
+const { Component, onMounted, xml } = owl;
 
 let env;
 let target;
-let pseudoWebClient;
 const serviceRegistry = registry.category("services");
 const mainComponentRegistry = registry.category("main_components");
 
@@ -47,15 +53,12 @@ QUnit.module("DialogManager", {
 
         env = await makeTestEnv();
     },
-    afterEach() {
-        pseudoWebClient.destroy();
-    },
 });
 QUnit.test("Simple rendering with a single dialog", async (assert) => {
     assert.expect(4);
     class CustomDialog extends Dialog {}
     CustomDialog.title = "Welcome";
-    pseudoWebClient = await mount(PseudoWebClient, { env, target });
+    await mount(PseudoWebClient, target, { env });
     assert.containsNone(target, ".o_dialog_container .o_dialog");
     env.services.dialog.add(CustomDialog);
     await nextTick();
@@ -71,7 +74,7 @@ QUnit.test("Simple rendering and close a single dialog", async (assert) => {
     class CustomDialog extends Dialog {}
     CustomDialog.title = "Welcome";
 
-    pseudoWebClient = await mount(PseudoWebClient, { env, target });
+    await mount(PseudoWebClient, target, { env });
     assert.containsNone(target, ".o_dialog_container .o_dialog");
 
     const removeDialog = env.services.dialog.add(CustomDialog);
@@ -97,7 +100,7 @@ QUnit.test("rendering with two dialogs", async (assert) => {
             this.title = this.props.title;
         }
     }
-    pseudoWebClient = await mount(PseudoWebClient, { env, target });
+    await mount(PseudoWebClient, target, { env });
     assert.containsNone(target, ".o_dialog_container .o_dialog");
     env.services.dialog.add(CustomDialog, { title: "Hello" });
     await nextTick();
@@ -123,7 +126,7 @@ QUnit.test("multiple dialogs can become the UI active element", async (assert) =
             this.title = this.props.title;
         }
     }
-    pseudoWebClient = await mount(PseudoWebClient, { env, target });
+    await mount(PseudoWebClient, target, { env });
 
     env.services.dialog.add(CustomDialog, { title: "Hello" });
     await nextTick();
@@ -168,7 +171,7 @@ QUnit.test("Interactions between multiple dialogs", async (assert) => {
             this.title = this.props.title;
         }
     }
-    pseudoWebClient = await mount(PseudoWebClient, { env, target });
+    await mount(PseudoWebClient, target, { env });
 
     env.services.dialog.add(CustomDialog, { title: "Hello" });
     await nextTick();
@@ -222,9 +225,11 @@ QUnit.test("dialog component crashes", async (assert) => {
 
     const prom = makeDeferred();
     patchWithCleanup(ErrorDialog.prototype, {
-        mounted() {
+        setup() {
             this._super();
-            prom.resolve();
+            onMounted(() => {
+                prom.resolve();
+            });
         },
     });
 
@@ -246,12 +251,12 @@ QUnit.test("dialog component crashes", async (assert) => {
     serviceRegistry.add("error", errorService);
     serviceRegistry.add("localization", makeFakeLocalizationService());
 
-    pseudoWebClient = await mount(PseudoWebClient, { env, target });
+    await mount(PseudoWebClient, target, { env });
 
     env.services.dialog.add(FailingDialog);
     await prom;
 
     assert.verifySteps(["error"]);
-    assert.containsOnce(pseudoWebClient, ".modal");
-    assert.containsOnce(pseudoWebClient, ".modal .o_dialog_error");
+    assert.containsOnce(target, ".modal");
+    assert.containsOnce(target, ".modal .o_dialog_error");
 });

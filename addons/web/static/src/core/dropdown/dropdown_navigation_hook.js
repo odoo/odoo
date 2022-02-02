@@ -1,11 +1,11 @@
 /** @odoo-module */
 
-import { useEffect, useService } from "@web/core/utils/hooks";
+import { useService } from "@web/core/utils/hooks";
 import { browser } from "../browser/browser";
 import { localization } from "@web/core/l10n/localization";
 import { scrollTo } from "../utils/scrolling";
 
-const { useComponent, useRef } = owl;
+const { useComponent, useEffect, useRef } = owl;
 
 /**
  * @typedef {{

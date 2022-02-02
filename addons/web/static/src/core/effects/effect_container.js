@@ -1,13 +1,16 @@
 /** @odoo-module **/
 
-const { Component, xml } = owl;
+const { Component, xml, onWillDestroy } = owl;
 
 export class EffectContainer extends Component {
     setup() {
         this.effect = null;
-        this.props.bus.on("UPDATE", this, (effect) => {
-            this.effect = effect;
+        const listenerRef = this.props.bus.addEventListener("UPDATE", (ev) => {
+            this.effect = ev.detail;
             this.render();
+        });
+        onWillDestroy(() => {
+            this.props.bus.removeEventListener("UPDATE", listenerRef);
         });
     }
     removeEffect() {

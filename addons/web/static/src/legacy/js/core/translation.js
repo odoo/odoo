@@ -3,6 +3,7 @@ odoo.define('web.translation', function (require) {
 "use strict";
 
 var Class = require('web.Class');
+const { _lt } = require("@web/core/l10n/translation");
 
 var TranslationDataBase = Class.extend(/** @lends instance.TranslationDataBase# */{
     init: function() {
@@ -90,20 +91,6 @@ var TranslationDataBase = Class.extend(/** @lends instance.TranslationDataBase# 
  * @returns {String} source translated into the current locale
  */
 var _t = new TranslationDataBase().build_translation_function();
-/**
- * Lazy translation function, only performs the translation when actually
- * printed (e.g. inserted into a template)
- *
- * Useful when defining translatable strings in code evaluated before the
- * translation database is loaded, as class attributes or at the top-level of
- * an OpenERP Web module
- *
- * @param {String} s string to translate
- * @returns {Object} lazy translation object
- */
-var _lt = function (s) {
-    return {toString: function () { return _t(s); }};
-};
 
 /** Setup jQuery timeago */
 /*
