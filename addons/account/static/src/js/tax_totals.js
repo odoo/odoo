@@ -6,29 +6,29 @@ import AbstractFieldOwl from 'web.AbstractFieldOwl';
 import fieldUtils from 'web.field_utils';
 import field_registry from 'web.field_registry_owl';
 
-const { Component, useRef, useState } = owl;
+const { Component, onPatched, onWillUpdateProps, useRef, useState } = owl;
 
 /**
     A line of some TaxTotalsComponent, giving the values of a tax group.
 **/
 class TaxGroupComponent extends Component {
-
-    constructor(parent, props) {
-        super(parent, props);
+    setup() {
         this.inputTax = useRef('taxValueInput');
         this.state = useState({value: 'readonly'});
-        this.allowTaxEdition = this.__owl__.parent.mode === 'edit' ? props.allowTaxEdition : false;
+        this.allowTaxEdition = this.props.mode === 'edit' ? this.props.allowTaxEdition : false;
+        onPatched(this.onPatched);
+        onWillUpdateProps(this.onWillUpdateProps);
     }
 
     //--------------------------------------------------------------------------
     // Life cycle methods
     //--------------------------------------------------------------------------
 
-    willUpdateProps(nextProps) {
+    onWillUpdateProps(nextProps) {
         this.setState('readonly'); // If props are edited, we set the state to readonly
     }
 
-    patched() {
+    onPatched() {
         if (this.state.value === 'edit') {
             this.inputTax.el.focus(); // Focus the input
             this.inputTax.el.value = this.props.taxGroup.tax_group_amount;
@@ -88,14 +88,14 @@ class TaxGroupComponent extends Component {
             return;
         }
         this.props.taxGroup.tax_group_amount = newValue;
-        this.trigger('change-tax-group', {
+        this.props.onChangeTaxGroup({
             oldValue: this.props.taxGroup.tax_group_amount,
             newValue: newValue,
             taxGroupId: this.props.taxGroup.tax_group_id
         });
     }
 }
-TaxGroupComponent.props = ['taxGroup', 'allowTaxEdition', 'record'];
+TaxGroupComponent.props = ['taxGroup', 'allowTaxEdition', 'record', 'onChangeTaxGroup', 'mode'];
 TaxGroupComponent.template = 'account.TaxGroupComponent';
 
 /**
@@ -106,13 +106,14 @@ TaxGroupComponent.template = 'account.TaxGroupComponent';
     currency_id field.
 **/
 class TaxTotalsComponent extends AbstractFieldOwl {
-    constructor(...args) {
-        super(...args);
+    setup() {
+        super.setup();
         this.totals = useState({value: this.value ? JSON.parse(this.value) : null});
         this.allowTaxEdition = this.nodeOptions['allowTaxEdition'];
+        onWillUpdateProps(this.onWillUpdateProps);
     }
 
-    willUpdateProps(nextProps) {
+    onWillUpdateProps(nextProps) {
         // We only reformat tax groups if there are changed
         this.totals.value = JSON.parse(nextProps.record.data[this.props.fieldName]);
     }

@@ -12,8 +12,10 @@ var ServicesMixin = require('web.ServicesMixin');
 var session = require('web.session');
 var Tip = require('web_tour.Tip');
 const {Markup} = require('web.utils');
+const { config: transitionConfig } = require("@web/core/transition");
 
 var _t = core._t;
+const { markup } = owl;
 
 var RUNNING_TOUR_TIMEOUT = 10000;
 
@@ -39,6 +41,12 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
         });
         this.disabled = disabled;
         this.running_tour = local_storage.getItem(get_running_key());
+        if (this.running_tour) {
+            // Transitions can cause DOM mutations which will cause the tour_service
+            // MutationObserver to wait longer before proceeding to the next step
+            // this can slow down tours
+            transitionConfig.disabled = true;
+        }
         this.running_step_delay = parseInt(local_storage.getItem(get_running_delay_key()), 10) || 0;
         this.edition = (_.last(session.server_version_info) === 'e') ? 'enterprise' : 'community';
         this._log = [];
@@ -430,14 +438,13 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
             if (message) {
                 message = typeof message === 'function' ? message() : message;
             } else {
-                message = _t('<strong><b>Good job!</b> You went through all steps of this tour.</strong>');
+                message = markup(_t('<strong><b>Good job!</b> You went through all steps of this tour.</strong>'));
             }
             const fadeout = this.tours[tour_name].fadeout;
             core.bus.trigger('show-effect', {
                 type: "rainbow_man",
                 message,
                 fadeout,
-                messageIsHtml: true,
             });
         }
         this.tours[tour_name].current_step = 0;

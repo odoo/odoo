@@ -1,8 +1,11 @@
 /* @odoo-module */
 
+import Popover from "web.Popover";
+
 const { Component } = owl;
 
 export class TimeOffCardPopover extends Component {}
+TimeOffCardPopover.components = { Popover };
 
 TimeOffCardPopover.template = 'hr_holidays.TimeOffCardPopover';
 TimeOffCardPopover.props = ['allocated', 'approved', 'planned', 'left'];

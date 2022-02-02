@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { Dropdown } from "@web/core/dropdown/dropdown";
 import { registry } from "@web/core/registry";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
@@ -82,6 +83,7 @@ export class AddToBoard extends Component {
 }
 
 AddToBoard.template = "board.AddToBoard";
+AddToBoard.components = { Dropdown };
 
 const addToBoardItem = {
     Component: AddToBoard,

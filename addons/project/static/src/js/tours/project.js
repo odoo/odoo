@@ -8,7 +8,7 @@ var tour = require('web_tour.tour');
 tour.register('project_tour', {
     sequence: 110,
     url: "/web",
-    rainbowManMessage: "Congratulations, you are now a master of project management.",
+    rainbowManMessage: _t("Congratulations, you are now a master of project management."),
 }, [tour.stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="project.menu_main_pm"]',
     content: Markup(_t('Want a better way to <b>manage your projects</b>? <i>It starts here.</i>')),

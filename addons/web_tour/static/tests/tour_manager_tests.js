@@ -79,8 +79,7 @@ odoo.define('web_tour.tour_manager_tests', async function (require) {
             function onShowEffect(params) {
                 assert.deepEqual(params, {
                     fadeout: "medium",
-                    message: "<strong><b>Good job!</b> You went through all steps of this tour.</strong>",
-                    messageIsHtml: true,
+                    message: owl.markup("<strong><b>Good job!</b> You went through all steps of this tour.</strong>"),
                     type: "rainbow_man"
                 });
             }

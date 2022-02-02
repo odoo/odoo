@@ -77,6 +77,9 @@ odoo.define('event.configurator.tests', function (require) {
         }
     }, function (){
         QUnit.test('Select a regular product and verify that the event configurator is not opened', async function (assert) {
+            // When the module event_booth_sale is installed, it will also call the rpc: read/detailed_type when selecting a product.
+            // This means that 2 asserts are done when this module is installed.
+            // Note that: this test will fail if the module event_booth_sale is not installed.
             assert.expect(2);
 
             var form = await createView({

@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { legacyExtraNextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
+import { getFixture, legacyExtraNextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
 import {
     setupControlPanelServiceRegistry,
     switchView,
@@ -29,6 +29,7 @@ const forecastDomain = (forecastStart) => {
 };
 
 let serverData;
+let target;
 QUnit.module("Views", (hooks) => {
     hooks.beforeEach(async () => {
         serverData = {
@@ -66,6 +67,8 @@ QUnit.module("Views", (hooks) => {
         };
         setupControlPanelServiceRegistry();
         serviceRegistry.add("dialog", dialogService);
+
+        target = getFixture();
     });
 
     QUnit.module("Forecast views");
@@ -241,24 +244,24 @@ QUnit.module("Views", (hooks) => {
                 },
             });
 
-            assert.containsOnce(webClient, ".o_switch_view.o_graph.active");
+            assert.containsOnce(target, ".o_switch_view.o_graph.active");
 
-            await toggleGroupByMenu(webClient);
-            await toggleMenuItem(webClient, "Date Field");
-            await toggleMenuItemOption(webClient, "Date Field", "Quarter");
+            await toggleGroupByMenu(target);
+            await toggleMenuItem(target, "Date Field");
+            await toggleMenuItemOption(target, "Date Field", "Quarter");
 
-            await switchView(webClient, "legacy_toy");
+            await switchView(target, "legacy_toy");
             await legacyExtraNextTick();
 
-            assert.containsOnce(webClient, ".o_switch_view.o_legacy_toy.active");
+            assert.containsOnce(target, ".o_switch_view.o_legacy_toy.active");
 
-            await cpHelpers.toggleGroupByMenu(webClient);
-            await toggleMenuItem(webClient, "Date Field");
-            await toggleMenuItemOption(webClient, "Date Field", "Year");
+            await cpHelpers.toggleGroupByMenu(target);
+            await toggleMenuItem(target, "Date Field");
+            await toggleMenuItemOption(target, "Date Field", "Year");
 
-            await switchView(webClient, "graph");
+            await switchView(target, "graph");
 
-            assert.containsOnce(webClient, ".o_switch_view.o_graph.active");
+            assert.containsOnce(target, ".o_switch_view.o_graph.active");
 
             // second doAction legacy_toy -> forecast_graph -> legacy_toy
 
@@ -277,24 +280,24 @@ QUnit.module("Views", (hooks) => {
             });
             await legacyExtraNextTick();
 
-            assert.containsOnce(webClient, ".o_switch_view.o_legacy_toy.active");
+            assert.containsOnce(target, ".o_switch_view.o_legacy_toy.active");
 
-            await cpHelpers.toggleGroupByMenu(webClient);
-            await toggleMenuItem(webClient, "Date Field");
-            await toggleMenuItemOption(webClient, "Date Field", "Quarter");
+            await cpHelpers.toggleGroupByMenu(target);
+            await toggleMenuItem(target, "Date Field");
+            await toggleMenuItemOption(target, "Date Field", "Quarter");
 
-            await switchView(webClient, "graph");
+            await switchView(target, "graph");
 
-            assert.containsOnce(webClient, ".o_switch_view.o_graph.active");
+            assert.containsOnce(target, ".o_switch_view.o_graph.active");
 
-            await toggleGroupByMenu(webClient);
-            await toggleMenuItem(webClient, "Date Field");
-            await toggleMenuItemOption(webClient, "Date Field", "Year");
+            await toggleGroupByMenu(target);
+            await toggleMenuItem(target, "Date Field");
+            await toggleMenuItemOption(target, "Date Field", "Year");
 
-            await switchView(webClient, "legacy_toy");
+            await switchView(target, "legacy_toy");
             await legacyExtraNextTick();
 
-            assert.containsOnce(webClient, ".o_switch_view.o_legacy_toy.active");
+            assert.containsOnce(target, ".o_switch_view.o_legacy_toy.active");
 
             unpatchDate();
         }

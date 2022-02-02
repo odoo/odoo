@@ -7,7 +7,7 @@ import * as AbstractStorageService from "web.AbstractStorageService";
 
 import { createWebClient } from "@web/../tests/webclient/helpers";
 import { calendarNotificationService } from "@calendar/js/services/calendar_notification_service";
-import { click, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
+import { click, getFixture, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 
@@ -18,7 +18,10 @@ const serviceRegistry = registry.category("services");
 
 QUnit.module("Calendar Notification", (hooks) => {
     let legacyServicesRegistry;
+    let target;
     hooks.beforeEach(() => {
+        target = getFixture();
+
         legacyServicesRegistry = new legacyRegistry();
         legacyServicesRegistry.add("bus_service", BusService);
         legacyServicesRegistry.add("local_storage", LocalStorageService);
@@ -69,23 +72,23 @@ QUnit.module("Calendar Notification", (hooks) => {
                 }
             };
 
-            const webClient = await createWebClient({
+            await createWebClient({
                 legacyParams: { serviceRegistry: legacyServicesRegistry },
                 mockRPC,
             });
 
             await nextTick();
 
-            assert.containsOnce(webClient.el, ".o_notification_body");
+            assert.containsOnce(target, ".o_notification_body");
             assert.strictEqual(
-                webClient.el.querySelector(".o_notification_body .o_notification_content")
+                target.querySelector(".o_notification_body .o_notification_content")
                     .textContent,
                 "Very old meeting message"
             );
 
-            await click(webClient.el.querySelector(".o_notification_buttons .btn"));
+            await click(target.querySelector(".o_notification_buttons .btn"));
             assert.verifySteps(["notifyAck"]);
-            assert.containsNone(webClient.el, ".o_notification");
+            assert.containsNone(target, ".o_notification");
         }
     );
 
@@ -139,23 +142,23 @@ QUnit.module("Calendar Notification", (hooks) => {
             };
             serviceRegistry.add("action", fakeActionService, { force: true });
 
-            const webClient = await createWebClient({
+            await createWebClient({
                 legacyParams: { serviceRegistry: legacyServicesRegistry },
                 mockRPC,
             });
 
             await nextTick();
 
-            assert.containsOnce(webClient.el, ".o_notification_body");
+            assert.containsOnce(target, ".o_notification_body");
             assert.strictEqual(
-                webClient.el.querySelector(".o_notification_body .o_notification_content")
+                target.querySelector(".o_notification_body .o_notification_content")
                     .textContent,
                 "Very old meeting message"
             );
 
-            await click(webClient.el.querySelectorAll(".o_notification_buttons .btn")[1]);
+            await click(target.querySelectorAll(".o_notification_buttons .btn")[1]);
             assert.verifySteps(["calendar.action_calendar_event_notify"]);
-            assert.containsNone(webClient.el, ".o_notification");
+            assert.containsNone(target, ".o_notification");
         }
     );
 
@@ -197,23 +200,23 @@ QUnit.module("Calendar Notification", (hooks) => {
                 }
             };
 
-            const webClient = await createWebClient({
+            await createWebClient({
                 legacyParams: { serviceRegistry: legacyServicesRegistry },
                 mockRPC,
             });
 
             await nextTick();
 
-            assert.containsOnce(webClient.el, ".o_notification_body");
+            assert.containsOnce(target, ".o_notification_body");
             assert.strictEqual(
-                webClient.el.querySelector(".o_notification_body .o_notification_content")
+                target.querySelector(".o_notification_body .o_notification_content")
                     .textContent,
                 "Very old meeting message"
             );
 
-            await click(webClient.el.querySelectorAll(".o_notification_buttons .btn")[2]);
+            await click(target.querySelectorAll(".o_notification_buttons .btn")[2]);
             assert.verifySteps([], "should only close the notification withtout calling a rpc");
-            assert.containsNone(webClient.el, ".o_notification");
+            assert.containsNone(target, ".o_notification");
         }
     );
 });
