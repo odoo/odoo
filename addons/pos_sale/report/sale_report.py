@@ -23,7 +23,7 @@ class SaleReport(models.Model):
     )
 
     def _select_pos(self):
-        select_ = """
+        select_ = f"""
             -MIN(l.id) AS id,
             l.product_id AS product_id,
             t.uom_id AS product_uom,
@@ -32,10 +32,22 @@ class SaleReport(models.Model):
             0 AS qty_to_deliver,
             CASE WHEN pos.state = 'invoiced' THEN SUM(l.qty) ELSE 0 END AS qty_invoiced,
             CASE WHEN pos.state != 'invoiced' THEN SUM(l.qty) ELSE 0 END AS qty_to_invoice,
-            SUM(l.price_subtotal_incl) / MIN(CASE COALESCE(pos.currency_rate, 0) WHEN 0 THEN 1.0 ELSE pos.currency_rate END) AS price_total,
-            SUM(l.price_subtotal) / MIN(CASE COALESCE(pos.currency_rate, 0) WHEN 0 THEN 1.0 ELSE pos.currency_rate END) AS price_subtotal,
-            (CASE WHEN pos.state != 'invoiced' THEN SUM(l.price_subtotal_incl) ELSE 0 END) / MIN(CASE COALESCE(pos.currency_rate, 0) WHEN 0 THEN 1.0 ELSE pos.currency_rate END) AS amount_to_invoice,
-            (CASE WHEN pos.state = 'invoiced' THEN SUM(l.price_subtotal_incl) ELSE 0 END) / MIN(CASE COALESCE(pos.currency_rate, 0) WHEN 0 THEN 1.0 ELSE pos.currency_rate END) AS amount_invoiced,
+            SUM(l.price_subtotal_incl)
+                * MIN({self._case_value_or_one('pos.currency_rate')})
+                * {self._case_value_or_one('currency_table.rate')}
+            AS price_total,
+            SUM(l.price_subtotal)
+                * MIN({self._case_value_or_one('pos.currency_rate')})
+                * {self._case_value_or_one('currency_table.rate')}
+            AS price_subtotal,
+            (CASE WHEN pos.state != 'invoiced' THEN SUM(l.price_subtotal_incl) ELSE 0 END)
+                * MIN({self._case_value_or_one('pos.currency_rate')})
+                * {self._case_value_or_one('currency_table.rate')}
+            AS amount_to_invoice,
+            (CASE WHEN pos.state = 'invoiced' THEN SUM(l.price_subtotal_incl) ELSE 0 END)
+                * MIN({self._case_value_or_one('pos.currency_rate')})
+                * {self._case_value_or_one('currency_table.rate')}
+            AS amount_invoiced,
             count(*) AS nbr,
             pos.name AS name,
             pos.date_order AS date,
@@ -57,7 +69,10 @@ class SaleReport(models.Model):
             (SUM(t.weight) * l.qty / u.factor) AS weight,
             (SUM(t.volume) * l.qty / u.factor) AS volume,
             l.discount AS discount,
-            SUM((l.price_unit * l.discount * l.qty / 100.0 / CASE COALESCE(pos.currency_rate, 0) WHEN 0 THEN 1.0 ELSE pos.currency_rate END)) AS discount_amount,
+            SUM((l.price_unit * l.discount * l.qty / 100.0
+                * {self._case_value_or_one('pos.currency_rate')}
+                * {self._case_value_or_one('currency_table.rate')}))
+            AS discount_amount,
             NULL AS order_id"""
 
         additional_fields_info = self._select_additional_fields()
@@ -76,7 +91,15 @@ class SaleReport(models.Model):
             LEFT JOIN product_template t ON p.product_tmpl_id=t.id
             LEFT JOIN uom_uom u ON u.id=t.uom_id
             LEFT JOIN pos_session session ON session.id = pos.session_id
-            LEFT JOIN pos_config config ON config.id = session.config_id"""
+            LEFT JOIN pos_config config ON config.id = session.config_id
+            JOIN {currency_table} ON currency_table.company_id = pos.company_id
+            """.format(
+            currency_table=self.env['res.currency']._get_query_currency_table(
+                {
+                    'multi_company': True,
+                    'date': {'date_to': fields.Date.today()}
+                }),
+            )
 
     def _where_pos(self):
         return """
@@ -103,7 +126,8 @@ class SaleReport(models.Model):
             partner.industry_id,
             partner.commercial_partner_id,
             u.factor,
-            pos.crm_team_id"""
+            pos.crm_team_id,
+            currency_table.rate"""
 
     def _query(self):
         res = super()._query()
