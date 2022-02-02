@@ -1,19 +1,19 @@
 /** @odoo-module **/
 
+import CustomFilterItem from "web.CustomFilterItem";
+import ActionModel from "web.ActionModel";
 import { DatePicker, DateTimePicker } from "@web/core/datepicker/datepicker";
 import { registry } from "@web/core/registry";
 import { uiService } from "@web/core/ui/ui_service";
+import { editSelect } from "web.test_utils_fields";
+import { createComponent } from "web.test_utils";
 import { registerCleanup } from "../helpers/cleanup";
 import { makeTestEnv } from "../helpers/mock_env";
 import { makeFakeLocalizationService } from "../helpers/mock_services";
-import { click, getFixture, triggerEvent } from "../helpers/utils";
-import CustomFilterItem from 'web.CustomFilterItem';
-import ActionModel from 'web.ActionModel';
-import { applyFilter, toggleMenu } from '@web/../tests/search/helpers';
-import { editSelect } from 'web.test_utils_fields';
-import { createComponent } from 'web.test_utils';
+import { click, destroy, getFixture, mount, triggerEvent } from "../helpers/utils";
+import { applyFilter, toggleMenu } from "@web/../tests/search/helpers";
 
-const { Component, mount, xml } = owl;
+const { Component, xml } = owl;
 const { DateTime } = luxon;
 const serviceRegistry = registry.category("services");
 
@@ -40,12 +40,10 @@ const mountPicker = async (Picker, props) => {
     `;
 
     const env = await makeTestEnv();
-    const target = getFixture();
     if (!props.onDateTimeChanged) {
         props.onDateTimeChanged = () => {};
     }
-    const parent = await mount(Parent, { env, props: { Picker, props }, target });
-    registerCleanup(() => parent.destroy());
+    const parent = await mount(Parent, getFixture(), { env, props: { Picker, props } });
     return parent;
 };
 
@@ -429,23 +427,27 @@ QUnit.module("Components", () => {
         assert.strictEqual(input.value, "12:30:01 1997/01/09");
     });
 
-    QUnit.test('custom filter date', async function (assert) {
+    QUnit.test("custom filter date", async function (assert) {
         assert.expect(3);
         class MockedSearchModel extends ActionModel {
             dispatch(method, ...args) {
-                assert.strictEqual(method, 'createNewFilters');
+                assert.strictEqual(method, "createNewFilters");
                 const preFilters = args[0];
                 const preFilter = preFilters[0];
-                assert.strictEqual(preFilter.description,
+                assert.strictEqual(
+                    preFilter.description,
                     'A date is equal to "05/05/2005"',
-                    "description should be in localized format");
-                assert.deepEqual(preFilter.domain,
+                    "description should be in localized format"
+                );
+                assert.deepEqual(
+                    preFilter.domain,
                     '[["date_field","=","2005-05-05"]]',
-                    "domain should be in UTC format");
+                    "domain should be in UTC format"
+                );
             }
         }
         const searchModel = new MockedSearchModel();
-        const date_field = { name: 'date_field', string: "A date", type: 'date', searchable: true };
+        const date_field = { name: "date_field", string: "A date", type: "date", searchable: true };
         const cfi = await createComponent(CustomFilterItem, {
             props: {
                 fields: { date_field },
@@ -453,11 +455,10 @@ QUnit.module("Components", () => {
             env: { searchModel },
         });
         await toggleMenu(cfi, "Add Custom Filter");
-        await editSelect(cfi.el.querySelector('.o_generator_menu_field'), 'date_field');
-        const valueInput = cfi.el.querySelector('.o_generator_menu_value .o_input');
+        await editSelect(cfi.el.querySelector(".o_generator_menu_field"), "date_field");
+        const valueInput = cfi.el.querySelector(".o_generator_menu_value .o_input");
         await click(valueInput);
-        await editSelect(valueInput, '05/05/2005');
+        await editSelect(valueInput, "05/05/2005");
         await applyFilter(cfi);
-        cfi.destroy();
     });
 });

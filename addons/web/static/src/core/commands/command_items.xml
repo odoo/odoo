@@ -11,7 +11,7 @@
     <div class="o_command_hotkey">
       <t t-slot="name"/>
       <span>
-        <t t-foreach="getKeysToPress(props)" t-as="key">
+        <t t-foreach="getKeysToPress(props)" t-as="key" t-key="key_index">
           <kbd t-esc="key" />
           <span t-if="!key_last"> + </span>
         </t>

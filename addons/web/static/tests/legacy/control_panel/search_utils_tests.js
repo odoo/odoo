@@ -3,6 +3,11 @@ odoo.define('web.search_utils_tests', function (require) {
 
     const { constructDateDomain } = require('web.searchUtils');
     const testUtils = require('web.test_utils');
+    const { registry } = require("@web/core/registry");
+    const { translatedTerms } = require("@web/core/l10n/translation");
+    const { patchWithCleanup } = require("@web/../tests/helpers/utils");
+    const { makeTestEnv } = require("@web/../tests/helpers/mock_env");
+    const { makeFakeLocalizationService } = require("@web/../tests/helpers/mock_services");
     const { _t } = require('web.core');
 
     const patchDate = testUtils.mock.patchDate;
@@ -268,7 +273,9 @@ odoo.define('web.search_utils_tests', function (require) {
 
             const unpatchDate = patchDate(2020, 5, 1, 13, 0, 0);
             const referenceMoment = moment().locale('en');
-            testUtils.mock.patch(_t.database.db, {
+            registry.category("services").add("localization", makeFakeLocalizationService());
+            await makeTestEnv();
+            patchWithCleanup(translatedTerms, {
                 "Q2": "Deuxième trimestre de l'an de grâce",
             });
 
@@ -282,7 +289,6 @@ odoo.define('web.search_utils_tests', function (require) {
             );
 
             unpatchDate();
-            testUtils.mock.unpatch(_t.database.db);
         });
 
         QUnit.test("Quarter option: right to left", async function (assert) {
@@ -312,7 +318,9 @@ odoo.define('web.search_utils_tests', function (require) {
 
             const unpatchDate = patchDate(2020, 5, 1, 13, 0, 0);
             const referenceMoment = moment().locale('en');
-            testUtils.mock.patch(_t.database.db, {
+            registry.category("services").add("localization", makeFakeLocalizationService());
+            await makeTestEnv();
+            patchWithCleanup(translatedTerms, {
                 "Q2": "2e Trimestre",
             });
             testUtils.mock.patch(_t.database.parameters, {
@@ -329,7 +337,6 @@ odoo.define('web.search_utils_tests', function (require) {
             );
 
             unpatchDate();
-            testUtils.mock.unpatch(_t.database.db);
             testUtils.mock.unpatch(_t.database.parameters);
         });
 

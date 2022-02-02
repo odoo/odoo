@@ -6,9 +6,14 @@ import { uiService } from "@web/core/ui/ui_service";
 import { patch, unpatch } from "@web/core/utils/patch";
 import { LoadingIndicator } from "@web/webclient/loading_indicator/loading_indicator";
 import { makeTestEnv } from "../helpers/mock_env";
-import { getFixture, nextTick, patchWithCleanup, mockTimeout } from "../helpers/utils";
+import {
+    getFixture,
+    mockTimeout,
+    mount,
+    nextTick,
+    patchWithCleanup,
+} from "@web/../tests/helpers/utils";
 
-const { mount } = owl;
 const serviceRegistry = registry.category("services");
 
 let target;
@@ -26,12 +31,12 @@ QUnit.module("LoadingIndicator", {
 
 QUnit.test("displays the loading indicator in non debug mode", async (assert) => {
     const env = await makeTestEnv({ ...baseConfig });
-    await mount(LoadingIndicator, { env, target });
-    let loadingIndicator = target.querySelector(".o_loading");
+    await mount(LoadingIndicator, target, { env });
+    let loadingIndicator = target.querySelector(".o_loading_indicator");
     assert.strictEqual(loadingIndicator, null, "the loading indicator should not be displayed");
     env.bus.trigger("RPC:REQUEST", 1);
     await nextTick();
-    loadingIndicator = target.querySelector(".o_loading");
+    loadingIndicator = target.querySelector(".o_loading_indicator");
     assert.notStrictEqual(loadingIndicator, null, "the loading indicator should be displayed");
     assert.strictEqual(
         loadingIndicator.textContent,
@@ -40,19 +45,19 @@ QUnit.test("displays the loading indicator in non debug mode", async (assert) =>
     );
     env.bus.trigger("RPC:RESPONSE", 1);
     await nextTick();
-    loadingIndicator = target.querySelector(".o_loading");
+    loadingIndicator = target.querySelector(".o_loading_indicator");
     assert.strictEqual(loadingIndicator, null, "the loading indicator should not be displayed");
 });
 
 QUnit.test("displays the loading indicator for one rpc in debug mode", async (assert) => {
     patchWithCleanup(odoo, { debug: "1" });
     const env = await makeTestEnv({ ...baseConfig });
-    await mount(LoadingIndicator, { env, target });
-    let loadingIndicator = target.querySelector(".o_loading");
+    await mount(LoadingIndicator, target, { env });
+    let loadingIndicator = target.querySelector(".o_loading_indicator");
     assert.strictEqual(loadingIndicator, null, "the loading indicator should not be displayed");
     env.bus.trigger("RPC:REQUEST", 1);
     await nextTick();
-    loadingIndicator = target.querySelector(".o_loading");
+    loadingIndicator = target.querySelector(".o_loading_indicator");
     assert.notStrictEqual(loadingIndicator, null, "the loading indicator should be displayed");
     assert.strictEqual(
         loadingIndicator.textContent,
@@ -61,20 +66,20 @@ QUnit.test("displays the loading indicator for one rpc in debug mode", async (as
     );
     env.bus.trigger("RPC:RESPONSE", 1);
     await nextTick();
-    loadingIndicator = target.querySelector(".o_loading");
+    loadingIndicator = target.querySelector(".o_loading_indicator");
     assert.strictEqual(loadingIndicator, null, "the loading indicator should not be displayed");
 });
 
 QUnit.test("displays the loading indicator for multi rpc in debug mode", async (assert) => {
     patchWithCleanup(odoo, { debug: "1" });
     const env = await makeTestEnv({ ...baseConfig });
-    await mount(LoadingIndicator, { env, target });
-    let loadingIndicator = target.querySelector(".o_loading");
+    await mount(LoadingIndicator, target, { env });
+    let loadingIndicator = target.querySelector(".o_loading_indicator");
     assert.strictEqual(loadingIndicator, null, "the loading indicator should not be displayed");
     env.bus.trigger("RPC:REQUEST", 1);
     env.bus.trigger("RPC:REQUEST", 2);
     await nextTick();
-    loadingIndicator = target.querySelector(".o_loading");
+    loadingIndicator = target.querySelector(".o_loading_indicator");
     assert.notStrictEqual(loadingIndicator, null, "the loading indicator should be displayed");
     assert.strictEqual(
         loadingIndicator.textContent,
@@ -83,7 +88,7 @@ QUnit.test("displays the loading indicator for multi rpc in debug mode", async (
     );
     env.bus.trigger("RPC:REQUEST", 3);
     await nextTick();
-    loadingIndicator = target.querySelector(".o_loading");
+    loadingIndicator = target.querySelector(".o_loading_indicator");
     assert.strictEqual(
         loadingIndicator.textContent,
         "Loading (3)",
@@ -91,7 +96,7 @@ QUnit.test("displays the loading indicator for multi rpc in debug mode", async (
     );
     env.bus.trigger("RPC:RESPONSE", 1);
     await nextTick();
-    loadingIndicator = target.querySelector(".o_loading");
+    loadingIndicator = target.querySelector(".o_loading_indicator");
     assert.strictEqual(
         loadingIndicator.textContent,
         "Loading (2)",
@@ -99,7 +104,7 @@ QUnit.test("displays the loading indicator for multi rpc in debug mode", async (
     );
     env.bus.trigger("RPC:REQUEST", 4);
     await nextTick();
-    loadingIndicator = target.querySelector(".o_loading");
+    loadingIndicator = target.querySelector(".o_loading_indicator");
     assert.strictEqual(
         loadingIndicator.textContent,
         "Loading (3)",
@@ -108,7 +113,7 @@ QUnit.test("displays the loading indicator for multi rpc in debug mode", async (
     env.bus.trigger("RPC:RESPONSE", 2);
     env.bus.trigger("RPC:RESPONSE", 3);
     await nextTick();
-    loadingIndicator = target.querySelector(".o_loading");
+    loadingIndicator = target.querySelector(".o_loading_indicator");
     assert.strictEqual(
         loadingIndicator.textContent,
         "Loading (1)",
@@ -116,7 +121,7 @@ QUnit.test("displays the loading indicator for multi rpc in debug mode", async (
     );
     env.bus.trigger("RPC:RESPONSE", 4);
     await nextTick();
-    loadingIndicator = target.querySelector(".o_loading");
+    loadingIndicator = target.querySelector(".o_loading_indicator");
     assert.strictEqual(loadingIndicator, null, "the loading indicator should not be displayed");
 });
 
@@ -129,13 +134,13 @@ QUnit.test("loading indicator blocks UI", async (assert) => {
         },
     });
     const ui = env.services.ui;
-    ui.bus.on("BLOCK", null, () => {
+    ui.bus.addEventListener("BLOCK", () => {
         assert.step("block");
     });
-    ui.bus.on("UNBLOCK", null, () => {
+    ui.bus.addEventListener("UNBLOCK", () => {
         assert.step("unblock");
     });
-    await mount(LoadingIndicator, { env, target });
+    await mount(LoadingIndicator, target, { env });
     env.bus.trigger("RPC:REQUEST", 1);
     await nextTick();
     env.bus.trigger("RPC:RESPONSE", 1);
@@ -154,7 +159,7 @@ QUnit.test("loading indicator doesn't unblock ui if it didn't block it", async (
     ui.bus.on("UNBLOCK", null, () => {
         assert.step("unblock");
     });
-    await mount(LoadingIndicator, { env, target });
+    await mount(LoadingIndicator, target, { env });
     env.bus.trigger("RPC:REQUEST", 1);
     execRegisteredTimeouts();
     env.bus.trigger("RPC:RESPONSE", 1);

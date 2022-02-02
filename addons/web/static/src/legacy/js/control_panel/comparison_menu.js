@@ -1,14 +1,15 @@
 odoo.define("web.ComparisonMenu", function (require) {
     "use strict";
 
+    const { Dropdown } = require("@web/core/dropdown/dropdown");
+    const { DropdownItem } = require("@web/core/dropdown/dropdown_item");
     const { FACET_ICONS } = require("web.searchUtils");
     const { useModel } = require("web.Model");
 
     const { Component } = owl;
 
     class ComparisonMenu extends Component {
-        constructor() {
-            super(...arguments);
+        setup() {
             this.icon = FACET_ICONS.comparison;
             this.model = useModel('searchModel');
         }
@@ -29,6 +30,7 @@ odoo.define("web.ComparisonMenu", function (require) {
         }
     }
     ComparisonMenu.template = "web.ComparisonMenu";
+    ComparisonMenu.components = { Dropdown, DropdownItem };
 
     return ComparisonMenu;
 });

@@ -37,8 +37,6 @@ odoo.define('web.filter_menu_tests', function (require) {
             await cpHelpers.toggleFilterMenu(controlPanel);
             assert.containsNone(controlPanel, '.o_menu_item, .dropdown-divider');
             assert.containsOnce(controlPanel, '.o_add_custom_filter_menu');
-
-            controlPanel.destroy();
         });
 
         QUnit.test('simple rendering with a single filter', async function (assert) {
@@ -58,8 +56,6 @@ odoo.define('web.filter_menu_tests', function (require) {
             assert.containsOnce(controlPanel, '.o_menu_item');
             assert.containsOnce(controlPanel, '.dropdown-divider');
             assert.containsOnce(controlPanel, 'div.o_add_custom_filter_menu');
-
-            controlPanel.destroy();
         });
 
         QUnit.test('should have Date and ID field proposed in that order in "Add custom Filter" submenu', async function (assert) {
@@ -76,8 +72,6 @@ odoo.define('web.filter_menu_tests', function (require) {
             const optionEls = controlPanel.el.querySelectorAll('.o_filter_condition select.o_generator_menu_field option');
             assert.strictEqual(optionEls[0].innerText.trim(), 'Date');
             assert.strictEqual(optionEls[1].innerText.trim(), 'ID');
-
-            controlPanel.destroy();
         });
 
         QUnit.test('toggle a "simple" filter in filter menu works', async function (assert) {
@@ -116,8 +110,6 @@ odoo.define('web.filter_menu_tests', function (require) {
             await cpHelpers.toggleMenuItem(controlPanel, "Foo");
             assert.deepEqual(cpHelpers.getFacetTexts(controlPanel), []);
             assert.notOk(cpHelpers.isItemSelected(controlPanel, "Foo"));
-
-            controlPanel.destroy();
         });
 
         QUnit.test('add a custom filter works', async function (assert) {
@@ -137,8 +129,6 @@ odoo.define('web.filter_menu_tests', function (require) {
             await cpHelpers.applyFilter(controlPanel);
 
             assert.deepEqual(cpHelpers.getFacetTexts(controlPanel), ['ID is "1"']);
-
-            controlPanel.destroy();
         });
 
         QUnit.test('deactivate a new custom filter works', async function (assert) {
@@ -164,7 +154,6 @@ odoo.define('web.filter_menu_tests', function (require) {
             assert.notOk(cpHelpers.isItemSelected(controlPanel, 'Date is equal to "02/05/2020"'));
             assert.deepEqual(cpHelpers.getFacetTexts(controlPanel), []);
 
-            controlPanel.destroy();
             unpatchDate();
         });
 
@@ -281,7 +270,6 @@ odoo.define('web.filter_menu_tests', function (require) {
                 });
             }
 
-            controlPanel.destroy();
             unpatchDate();
         });
 
@@ -321,7 +309,6 @@ odoo.define('web.filter_menu_tests', function (require) {
             assert.ok(cpHelpers.isOptionSelected(controlPanel, "Date", 'December'));
             assert.ok(cpHelpers.isOptionSelected(controlPanel, "Date", '2016'));
 
-            controlPanel.destroy();
             unpatchDate();
         });
 
@@ -349,8 +336,6 @@ odoo.define('web.filter_menu_tests', function (require) {
 
             await cpHelpers.toggleFilterMenu(controlPanel);
             await cpHelpers.toggleMenuItem(controlPanel, 0);
-
-            controlPanel.destroy();
         });
 
         QUnit.test('Filter with JSON-parsable domain works', async function (assert) {
@@ -381,8 +366,6 @@ odoo.define('web.filter_menu_tests', function (require) {
 
             await cpHelpers.toggleFilterMenu(controlPanel);
             await cpHelpers.toggleMenuItem(controlPanel, 0);
-
-            controlPanel.destroy();
         });
 
         QUnit.test('filter with date attribute set as search_default', async function (assert) {
@@ -409,7 +392,6 @@ odoo.define('web.filter_menu_tests', function (require) {
 
             assert.deepEqual(cpHelpers.getFacetTexts(controlPanel), ["Date: June 2019"]);
 
-            controlPanel.destroy();
             unpatchDate();
         });
 
@@ -451,8 +433,6 @@ odoo.define('web.filter_menu_tests', function (require) {
                 cpHelpers.getFacetTexts(controlPanel),
                 ["Filter Group 1", "Filter 1 Group 2orFilter 2 GROUP 2"]
             );
-
-            controlPanel.destroy();
         });
 
         QUnit.test('arch order of groups of filters preserved', async function (assert) {
@@ -499,8 +479,6 @@ odoo.define('web.filter_menu_tests', function (require) {
             [...menuItemEls].forEach((e, index) => {
                 assert.strictEqual(e.innerText.trim(), String(index + 1));
             });
-
-            controlPanel.destroy();
         });
     });
 });

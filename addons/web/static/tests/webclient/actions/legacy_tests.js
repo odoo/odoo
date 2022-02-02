@@ -4,7 +4,13 @@ import { registry } from "@web/core/registry";
 import testUtils from "web.test_utils";
 import ListController from "web.ListController";
 import ListView from "web.ListView";
-import { click, legacyExtraNextTick, patchWithCleanup } from "../../helpers/utils";
+import {
+    click,
+    destroy,
+    getFixture,
+    legacyExtraNextTick,
+    patchWithCleanup,
+} from "../../helpers/utils";
 import { registerCleanup } from "../../helpers/cleanup";
 import { makeTestEnv } from "../../helpers/mock_env";
 import { createWebClient, doAction, getActionManagerServerData } from "./../helpers";
@@ -22,10 +28,12 @@ import Widget from "web.Widget";
 import SystrayMenu from "web.SystrayMenu";
 
 let serverData;
+let target;
 
 QUnit.module("ActionManager", (hooks) => {
     hooks.beforeEach(() => {
         serverData = getActionManagerServerData();
+        target = getFixture();
     });
 
     QUnit.module("Legacy tests (to eventually drop)");
@@ -43,14 +51,14 @@ QUnit.module("ActionManager", (hooks) => {
 
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 3);
-        assert.containsOnce(webClient, ".o_list_view");
+        assert.containsOnce(target, ".o_list_view");
         list.trigger_up("warning", {
             title: "Warning!!!",
             message: "This is a warning...",
         });
         await testUtils.nextTick();
         await legacyExtraNextTick();
-        assert.containsOnce(webClient, ".o_list_view");
+        assert.containsOnce(target, ".o_list_view");
         assert.containsOnce(document.body, ".o_notification.bg-warning");
         assert.strictEqual($(".o_notification_title").text(), "Warning!!!");
         assert.strictEqual($(".o_notification_content").text(), "This is a warning...");
@@ -69,7 +77,7 @@ QUnit.module("ActionManager", (hooks) => {
 
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 3);
-        assert.containsOnce(webClient, ".o_list_view");
+        assert.containsOnce(target, ".o_list_view");
         list.trigger_up("warning", {
             title: "Warning!!!",
             message: "This is a warning...",
@@ -77,7 +85,7 @@ QUnit.module("ActionManager", (hooks) => {
         });
         await testUtils.nextTick();
         await legacyExtraNextTick();
-        assert.containsOnce(webClient, ".o_list_view");
+        assert.containsOnce(target, ".o_list_view");
         assert.containsOnce(document.body, ".modal");
         assert.strictEqual($(".modal-title").text(), "Warning!!!");
         assert.strictEqual($(".modal-body").text(), "This is a warning...");
@@ -147,22 +155,22 @@ QUnit.module("ActionManager", (hooks) => {
 
         const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, "customLegacy");
-        assert.containsOnce(webClient, ".custom-action");
+        assert.containsOnce(target, ".custom-action");
         assert.verifySteps([]);
 
-        await click(webClient.el, ".o_debug_manager button");
+        await click(target, ".o_debug_manager button");
         assert.verifySteps(["debugItems executed"]);
 
         await doAction(webClient, 5); // action in Dialog
-        await click(webClient.el, ".modal .o_form_button_cancel");
-        assert.containsNone(webClient, ".modal");
-        assert.containsOnce(webClient, ".custom-action");
+        await click(target, ".modal .o_form_button_cancel");
+        assert.containsNone(target, ".modal");
+        assert.containsOnce(target, ".custom-action");
         assert.verifySteps([]);
 
         // close debug menu
-        await click(webClient.el, ".o_debug_manager button");
+        await click(target, ".o_debug_manager button");
         // open debug menu
-        await click(webClient.el, ".o_debug_manager button");
+        await click(target, ".o_debug_manager button");
         assert.verifySteps(["debugItems executed"]);
         delete core.action_registry.map.customLegacy;
     });
@@ -172,15 +180,16 @@ QUnit.module("ActionManager", (hooks) => {
 
         let mountCount = 0;
         patchWithCleanup(ControlPanel.prototype, {
-            mounted() {
-                mountCount = mountCount + 1;
-                this.__uniqueId = mountCount;
-                assert.step(`mounted ${this.__uniqueId}`);
-                this._super(...arguments);
-            },
-            willUnmount() {
-                assert.step(`willUnmount ${this.__uniqueId}`);
-                this._super(...arguments);
+            setup() {
+                this._super();
+                owl.onMounted(() => {
+                    mountCount = mountCount + 1;
+                    this.__uniqueId = mountCount;
+                    assert.step(`mounted ${this.__uniqueId}`);
+                });
+                owl.onWillUnmount(() => {
+                    assert.step(`willUnmount ${this.__uniqueId}`);
+                });
             },
         });
 
@@ -199,10 +208,10 @@ QUnit.module("ActionManager", (hooks) => {
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 1);
         await doAction(webClient, "customLegacy");
-        await click(webClient.el.querySelectorAll(".breadcrumb-item")[0]);
+        await click(target.querySelectorAll(".breadcrumb-item")[0]);
         await legacyExtraNextTick();
 
-        webClient.destroy();
+        destroy(webClient);
 
         assert.verifySteps([
             "mounted 1",
@@ -279,9 +288,7 @@ QUnit.module("ActionManager", (hooks) => {
         };
         const serverData = { models, views };
 
-        const webClient = await createWebClient({
-            serverData,
-        });
+        const webClient = await createWebClient({ serverData });
 
         await doAction(webClient, {
             id: 1,
@@ -373,7 +380,7 @@ QUnit.module("ActionManager", (hooks) => {
             doctor: "quackson",
         });
 
-        await click(webClient.el, ".tommy");
+        await click(target, ".tommy");
         assert.deepEqual(webClient.env.services.router.current.hash, {
             action: "clientAction",
             pinball: "wizard",
@@ -494,14 +501,14 @@ QUnit.module("ActionManager", (hooks) => {
         const webClient = await createWebClient({ serverData });
 
         await doAction(webClient, 3);
-        assert.containsOnce(webClient, ".o_list_view");
-        assert.strictEqual($(webClient.el).find(".breadcrumb-item").text(), "Partners");
+        assert.containsOnce(target, ".o_list_view");
+        assert.strictEqual($(target).find(".breadcrumb-item").text(), "Partners");
 
         await doAction(webClient, {
             type: "ir.actions.client",
             tag: "clientAction",
         });
-        assert.containsOnce(webClient, ".client_action");
-        assert.strictEqual($(webClient.el).find(".breadcrumb-item").text(), "PartnersBlabla");
+        assert.containsOnce(target, ".client_action");
+        assert.strictEqual($(target).find(".breadcrumb-item").text(), "PartnersBlabla");
     });
 });

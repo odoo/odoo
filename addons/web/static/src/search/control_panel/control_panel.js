@@ -23,44 +23,6 @@ export class ControlPanel extends Component {
     }
 
     /**
-     * !!! What follows is a hack, do not copy it !!!
-     *
-     * Duplicates the slots defined for the parent s.t. they are also available
-     * for the current control panel.
-     *
-     * This hack is necessary since Owl does not support manual slots
-     * assignment/transfer yet. This must be removed as soon as Owl implements
-     * such a system.
-     *
-     * @strongly_discouraged_override
-     */
-    __render() {
-        const { slots } = this.env.qweb.constructor;
-        const { __owl__ } = this;
-        const originalSlots = {};
-        const transferredSlotNames = [
-            "control-panel-top-left",
-            "control-panel-top-right",
-            "control-panel-bottom-left",
-            "control-panel-bottom-right",
-        ];
-        for (const slotName of transferredSlotNames) {
-            const parentSlotkey = `${__owl__.parent.__owl__.slotId}_${slotName}`;
-            if (parentSlotkey in slots) {
-                const cpSlotKey = `${__owl__.slotId}_${slotName}`;
-                originalSlots[cpSlotKey] = slots[cpSlotKey];
-                slots[cpSlotKey] = function (scope, extra) {
-                    slots[parentSlotkey].call(this, __owl__.parent.__owl__.scope, extra);
-                };
-            }
-        }
-        const res = super.__render(...arguments);
-        // Clean up
-        Object.assign(slots, originalSlots);
-        return res;
-    }
-
-    /**
      * @returns {Object}
      */
     get display() {

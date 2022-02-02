@@ -41,8 +41,6 @@ odoo.define('web.custom_file_input_tests', function (require) {
 
             assert.notOk(input.multiple, "'multiple' attribute should not be set");
             assert.verifySteps(['/web/binary/upload']);
-
-            customFileInput.destroy();
         });
 
         QUnit.test("Upload a file: custom attachment", async function (assert) {
@@ -83,8 +81,6 @@ odoo.define('web.custom_file_input_tests', function (require) {
 
             assert.ok(input.multiple, "'multiple' attribute should be set");
             assert.verifySteps(['/web/binary/upload_attachment']);
-
-            customFileInput.destroy();
         });
     });
 });

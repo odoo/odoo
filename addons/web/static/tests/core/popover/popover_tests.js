@@ -2,9 +2,7 @@
 
 import { Popover } from "@web/core/popover/popover";
 import { registerCleanup } from "../../helpers/cleanup";
-import { getFixture } from "../../helpers/utils";
-
-const { mount } = owl;
+import { getFixture, mount } from "../../helpers/utils";
 
 let fixture;
 let popoverTarget;
@@ -36,66 +34,54 @@ QUnit.module("Popover", {
 });
 
 QUnit.test("popover can have custom class", async (assert) => {
-    const popover = await mount(Popover, {
-        target: fixture,
+    await mount(Popover, fixture, {
         props: { target: popoverTarget, popoverClass: "custom-popover" },
     });
 
     assert.containsOnce(fixture, ".o_popover.custom-popover");
-    popover.destroy();
 });
 
 QUnit.test("popover is rendered nearby target (default)", async (assert) => {
-    const popover = await mount(Popover, {
-        target: fixture,
+    await mount(Popover, fixture, {
         props: { target: popoverTarget },
     });
 
     const popoverEl = fixture.querySelector(".o_popover");
     assert.ok(pointsTo(popoverEl, "bottom"));
-    popover.destroy();
 });
 
 QUnit.test("popover is rendered nearby target (bottom)", async (assert) => {
-    const popover = await mount(Popover, {
-        target: fixture,
+    await mount(Popover, fixture, {
         props: { target: popoverTarget, position: "bottom" },
     });
 
     const popoverEl = fixture.querySelector(".o_popover");
     assert.ok(pointsTo(popoverEl, "bottom"));
-    popover.destroy();
 });
 
 QUnit.test("popover is rendered nearby target (top)", async (assert) => {
-    const popover = await mount(Popover, {
-        target: fixture,
+    await mount(Popover, fixture, {
         props: { target: popoverTarget, position: "top" },
     });
 
     const popoverEl = fixture.querySelector(".o_popover");
     assert.ok(pointsTo(popoverEl, "top"));
-    popover.destroy();
 });
 
 QUnit.test("popover is rendered nearby target (left)", async (assert) => {
-    const popover = await mount(Popover, {
-        target: fixture,
+    await mount(Popover, fixture, {
         props: { target: popoverTarget, position: "left" },
     });
 
     const popoverEl = fixture.querySelector(".o_popover");
     assert.ok(pointsTo(popoverEl, "left"));
-    popover.destroy();
 });
 
 QUnit.test("popover is rendered nearby target (right)", async (assert) => {
-    const popover = await mount(Popover, {
-        target: fixture,
+    await mount(Popover, fixture, {
         props: { target: popoverTarget, position: "right" },
     });
 
     const popoverEl = fixture.querySelector(".o_popover");
     assert.ok(pointsTo(popoverEl, "right"));
-    popover.destroy();
 });

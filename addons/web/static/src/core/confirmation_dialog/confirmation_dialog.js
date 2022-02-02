@@ -23,17 +23,18 @@ export class ConfirmationDialog extends Dialog {
     }
 }
 ConfirmationDialog.props = {
+    ...Dialog.props,
     title: {
         validate: (m) => {
             return (
                 typeof m === "string" || (typeof m === "object" && typeof m.toString === "function")
             );
         },
+        optional: true,
     },
     body: String,
     confirm: { type: Function, optional: true },
     cancel: { type: Function, optional: true },
-    close: Function,
 };
 ConfirmationDialog.defaultProps = {
     title: _lt("Confirmation"),

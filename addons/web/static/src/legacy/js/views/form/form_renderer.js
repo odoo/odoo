@@ -1305,17 +1305,24 @@ var FormRenderer = BasicRenderer.extend({
             ev.data.originalEvent.preventDefault();
             ev.data.originalEvent.stopPropagation();
         }
-        var index;
-        let target = ev.data.target || ev.target;
-        if (target.__owl__) {
-            target = target.__owl__.parent; // Owl fields are wrapped by the FieldWrapper
-        }
-        if (ev.data.direction === "next") {
-            index = this.allFieldWidgets[this.state.id].indexOf(target);
-            this._activateNextFieldWidget(this.state, index);
-        } else if (ev.data.direction === "previous") {
-            index = this.allFieldWidgets[this.state.id].indexOf(target);
-            this._activatePreviousFieldWidget(this.state, index);
+        if (["next", "previous"].includes(ev.data.direction)) {
+            const fieldWidgets = this.allFieldWidgets[this.state.id];
+            let target = ev.data.target || ev.target;
+            let index;
+            if (target.__owl__) {
+                // the fieldWidget is an owl component, so we need to find the
+                // FieldWrapper that wraps the owl component that triggered the event
+                index = fieldWidgets.findIndex((widget) => {
+                    return widget.componentRef && widget.componentRef.comp === target;
+                });
+            } else {
+                index = fieldWidgets.indexOf(target);
+            }
+            if (ev.data.direction === "next") {
+                this._activateNextFieldWidget(this.state, index);
+            } else if (ev.data.direction === "previous") {
+                this._activatePreviousFieldWidget(this.state, index);
+            }
         }
     },
     /**

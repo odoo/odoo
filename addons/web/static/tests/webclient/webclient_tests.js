@@ -12,14 +12,14 @@ import { menuService } from "@web/webclient/menus/menu_service";
 import { WebClient } from "@web/webclient/webclient";
 import { clearRegistryWithCleanup, makeTestEnv } from "../helpers/mock_env";
 import { fakeTitleService } from "../helpers/mock_services";
-import { getFixture, patchWithCleanup, triggerEvent } from "../helpers/utils";
-import { session } from "@web/session";
+import { destroy, getFixture, mount, patchWithCleanup, triggerEvent } from "../helpers/utils";
 
-const { Component, mount, xml } = owl;
+const { Component, xml } = owl;
 const mainComponentRegistry = registry.category("main_components");
 const serviceRegistry = registry.category("services");
 
 let baseConfig;
+let target;
 
 QUnit.module("WebClient", {
     async beforeEach() {
@@ -34,16 +34,15 @@ QUnit.module("WebClient", {
             .add("title", fakeTitleService)
             .add("ui", uiService);
         baseConfig = { activateMockServer: true };
+        target = getFixture();
     },
 });
 
 QUnit.test("can be rendered", async (assert) => {
     assert.expect(1);
     const env = await makeTestEnv(baseConfig);
-    const target = getFixture();
-    const webClient = await mount(WebClient, { env, target });
-    assert.containsOnce(webClient.el, "header > nav.o_main_navbar");
-    webClient.destroy();
+    await mount(WebClient, target, { env });
+    assert.containsOnce(target, "header > nav.o_main_navbar");
 });
 
 QUnit.test("can render a main component", async (assert) => {
@@ -53,30 +52,8 @@ QUnit.test("can render a main component", async (assert) => {
     clearRegistryWithCleanup(mainComponentRegistry);
     mainComponentRegistry.add("mycomponent", { Component: MyComponent });
     const env = await makeTestEnv(baseConfig);
-    const target = getFixture();
-    const webClient = await mount(WebClient, { env, target });
-    assert.containsOnce(webClient.el, ".chocolate");
-    webClient.destroy();
-});
-
-QUnit.test("webclient for the superuser", async (assert) => {
-    assert.expect(1);
-    patchWithCleanup(session, { uid: 1 });
-    const env = await makeTestEnv(baseConfig);
-    const target = getFixture();
-    const webClient = await mount(WebClient, { env, target });
-    assert.hasClass(webClient.el, "o_is_superuser");
-    webClient.destroy();
-});
-
-QUnit.test("webclient for a non superuser", async (assert) => {
-    assert.expect(1);
-    patchWithCleanup(session, { uid: 2 });
-    const env = await makeTestEnv(baseConfig);
-    const target = getFixture();
-    const webClient = await mount(WebClient, { env, target });
-    assert.doesNotHaveClass(webClient.el, "o_is_superuser");
-    webClient.destroy();
+    await mount(WebClient, target, { env });
+    assert.containsOnce(target, ".chocolate");
 });
 
 QUnit.test("control-click propagation stopped on <a href/>", async (assert) => {
@@ -106,25 +83,23 @@ QUnit.test("control-click propagation stopped on <a href/>", async (assert) => {
         }
     }
     MyComponent.template = xml`<a href="#" class="MyComponent" t-on-click="onclick" />`;
-    const target = getFixture();
     let env = await makeTestEnv(baseConfig);
 
     // Mount the component as standalone and control-click the <a href/>
-    const standaloneComponent = await mount(MyComponent, { env, target });
+    const standaloneComponent = await mount(MyComponent, target, { env });
     assert.verifySteps([]);
     await triggerEvent(standaloneComponent.el, "", "click", { ctrlKey: false });
     await triggerEvent(standaloneComponent.el, "", "click", { ctrlKey: true });
     assert.verifySteps(["click", "ctrl-click"]);
-    standaloneComponent.destroy();
+    destroy(standaloneComponent);
 
     // Register the component as a main one, mount the webclient and control-click the <a href/>
     clearRegistryWithCleanup(mainComponentRegistry);
     mainComponentRegistry.add("mycomponent", { Component: MyComponent });
     env = await makeTestEnv(baseConfig);
-    const webClient = await mount(WebClient, { env, target });
+    await mount(WebClient, target, { env });
     assert.verifySteps([]);
-    await triggerEvent(webClient.el, ".MyComponent", "click", { ctrlKey: false });
-    await triggerEvent(webClient.el, ".MyComponent", "click", { ctrlKey: true });
+    await triggerEvent(target, ".MyComponent", "click", { ctrlKey: false });
+    await triggerEvent(target, ".MyComponent", "click", { ctrlKey: true });
     assert.verifySteps(["click"]);
-    webClient.destroy();
 });

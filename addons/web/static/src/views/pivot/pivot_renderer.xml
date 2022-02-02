@@ -25,7 +25,7 @@
                             <td class="o_pivot_cell_value text-right" t-att-class="{
                                     o_empty: cell.value === undefined,
                                     'font-weight-bold': cell.isBold,
-                                }" t-on-click="onCellClicked(cell)"
+                                }" t-on-click="() => this.onCellClicked(cell)"
                                    t-on-mouseover="onMouseEnter" t-on-mouseout="onMouseLeave">
                                 <t t-if="cell.value !== undefined">
                                     <div t-if="cell.originIndexes.length > 1" class="o_variation" t-att-class="{
@@ -63,7 +63,7 @@
             }}"
             t-att-data-tooltip="cell.label"
             t-attf-data-tooltip-position="{{ l10n.direction === 'ltr' ? 'right' : 'left' }}"
-            t-on-click.prevent="onHeaderClick(cell, isXAxis ? 'col' : 'row')"
+            t-on-click.prevent="() => this.onHeaderClick(cell, isXAxis ? 'col' : 'row')"
         >
             <t t-if="cell.isLeaf and !cell.isFolded">
                 <PivotGroupByMenu
@@ -72,9 +72,8 @@
                     cell="cell"
                     customGroupBys="model.metaData.customGroupBys"
                     showActiveItems="false"
-                    t-on-click.stop=""
-                    onItemSelected="payload => this.onGroupBySelected(isXAxis ? 'col' : 'row', payload)"
-                    t-on-add-custom-group-by="onAddCustomGroupBy(isXAxis ? 'col' : 'row')"
+                    onItemSelected="(payload) => this.onGroupBySelected(isXAxis ? 'col' : 'row', payload)"
+                    onAddCustomGroupBy="fieldName => this.onAddCustomGroupBy(isXAxis ? 'col' : 'row', cell.groupId, fieldName)"
                 />
             </t>
             <span t-esc="cell.title"/>
@@ -87,7 +86,7 @@
                 o_pivot_measure_row: !cell.originIndexes,
                 o_pivot_sort_order_asc: cell.order === 'asc',
                 o_pivot_sort_order_desc: cell.order === 'desc',
-            }" t-on-click.prevent="onMeasureClick(cell)" t-on-mouseover="onMouseEnter" t-on-mouseout="onMouseLeave">
+            }" t-on-click.prevent="() => this.onMeasureClick(cell)" t-on-mouseover="onMouseEnter" t-on-mouseout="onMouseLeave">
             <t t-esc="cell.title"/>
         </th>
     </t>

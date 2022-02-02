@@ -179,12 +179,12 @@ export function mapLegacyEnvToWowlEnv(legacyEnv, wowlEnv) {
     legacyEnv.services.local_storage = mapStorage(browser.localStorage);
     legacyEnv.services.session_storage = mapStorage(browser.sessionStorage);
     // map WebClientReady
-    wowlEnv.bus.on("WEB_CLIENT_READY", null, () => {
+    wowlEnv.bus.addEventListener("WEB_CLIENT_READY", () => {
         legacyEnv.bus.trigger("web_client_ready");
     });
 
-    wowlEnv.bus.on("SCROLLER:ANCHOR_LINK_CLICKED", null, (payload) => {
-        legacyEnv.bus.trigger("SCROLLER:ANCHOR_LINK_CLICKED", payload);
+    wowlEnv.bus.addEventListener("SCROLLER:ANCHOR_LINK_CLICKED", (ev) => {
+        legacyEnv.bus.trigger("SCROLLER:ANCHOR_LINK_CLICKED", ev.detail);
     });
 
     legacyEnv.bus.on("clear_cache", null, () => {
@@ -209,7 +209,7 @@ export function cleanDomFromBootstrap() {
 export function makeLegacyNotificationService(legacyEnv) {
     return {
         dependencies: ["notification"],
-        start(env) {
+        start(env, { notification }) {
             let notifId = 0;
             const idsToRemoveFn = {};
 
@@ -240,14 +240,13 @@ export function makeLegacyNotificationService(legacyEnv) {
                     };
                 });
 
-                const removeFn = env.services.notification.add(_.escape(message), {
+                const removeFn = notification.add(message, {
                     sticky,
                     title,
                     type,
                     className,
                     onClose,
                     buttons,
-                    messageIsHtml: true,
                 });
                 const id = ++notifId;
                 idsToRemoveFn[id] = removeFn;
@@ -311,4 +310,24 @@ export function makeLegacyRainbowManService(legacyEnv) {
             });
         },
     };
+}
+
+export function useLegacyRefs() {
+    const env = owl.useEnv();
+
+    let legacyRefs;
+    if (env.legacyRefs) {
+        legacyRefs = env.legacyRefs;
+    } else {
+        legacyRefs = {
+            component: null,
+            widget: null,
+        };
+    }
+
+    owl.useChildSubEnv({
+        legacyRefs,
+    });
+
+    return legacyRefs;
 }

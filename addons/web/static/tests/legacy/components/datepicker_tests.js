@@ -39,8 +39,6 @@ odoo.define('web.datepicker_tests', function (require) {
                 '01/09/1997',
                 "Datepicker should have set the correct day"
             );
-
-            picker.destroy();
         });
 
         QUnit.test("pick a date", async function (assert) {
@@ -67,8 +65,6 @@ odoo.define('web.datepicker_tests', function (require) {
 
             assert.strictEqual(input.value, '02/08/1997');
             assert.verifySteps(['datetime-changed']);
-
-            picker.destroy();
         });
 
         QUnit.test("pick a date with locale", async function (assert) {
@@ -108,8 +104,6 @@ odoo.define('web.datepicker_tests', function (require) {
 
             moment.locale(originalLocale);
             moment.updateLocale('frenchForTests', null);
-
-            picker.destroy();
         });
 
         QUnit.test("enter a date value", async function (assert) {
@@ -140,8 +134,6 @@ odoo.define('web.datepicker_tests', function (require) {
                 '02/08/1997',
                 "Datepicker should have set the correct day"
             );
-
-            picker.destroy();
         });
 
         QUnit.test("Date format is correctly set", async function (assert) {
@@ -160,7 +152,6 @@ odoo.define('web.datepicker_tests', function (require) {
 
             assert.strictEqual(input.value, '1997/01/09');
 
-            picker.destroy();
             testUtils.mock.unpatch(time);
         });
 
@@ -197,8 +188,6 @@ odoo.define('web.datepicker_tests', function (require) {
                 "Datepicker should have set the correct minute");
             assert.strictEqual(document.querySelector('.timepicker .timepicker-second').innerText.trim(), '01',
                 "Datepicker should have set the correct second");
-
-            picker.destroy();
         });
 
         QUnit.test("pick a date and time", async function (assert) {
@@ -232,8 +221,6 @@ odoo.define('web.datepicker_tests', function (require) {
 
             assert.strictEqual(input.value, '02/08/1997 15:45:05');
             assert.verifySteps(['datetime-changed']);
-
-            picker.destroy();
         });
 
         QUnit.test("pick a date and time with locale", async function (assert) {
@@ -285,8 +272,6 @@ odoo.define('web.datepicker_tests', function (require) {
 
             moment.locale(originalLocale);
             moment.updateLocale('frenchForTests', null);
-
-            picker.destroy();
         });
 
         QUnit.test("enter a datetime value", async function (assert) {
@@ -324,8 +309,6 @@ odoo.define('web.datepicker_tests', function (require) {
                 "Datepicker should have set the correct minute");
             assert.strictEqual(document.querySelector('.timepicker .timepicker-second').innerText.trim(), '05',
                 "Datepicker should have set the correct second");
-
-            picker.destroy();
         });
 
         QUnit.test("Date time format is correctly set", async function (assert) {
@@ -344,7 +327,6 @@ odoo.define('web.datepicker_tests', function (require) {
 
             assert.strictEqual(input.value, '12:30:01 1997/01/09');
 
-            picker.destroy();
             testUtils.mock.unpatch(time);
         });
     });

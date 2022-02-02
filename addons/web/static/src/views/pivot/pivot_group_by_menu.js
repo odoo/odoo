@@ -34,13 +34,10 @@ export class PivotGroupByMenu extends GroupByMenu {
     }
     /**
      * @override
-     * @param {CustomEvent} ev
+     * @param {string} fieldName
      */
-    onAddCustomGroup(ev) {
-        this.trigger("add-custom-group-by", {
-            fieldName: ev.detail.fieldName,
-            groupId: this.props.cell.groupId,
-        });
+    onAddCustomGroup(fieldName) {
+        this.props.onAddCustomGroupBy(fieldName);
     }
     /**
      * @override

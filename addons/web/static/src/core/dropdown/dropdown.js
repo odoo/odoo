@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { useBus, useEffect, useService } from "@web/core/utils/hooks";
+import { useBus, useService } from "@web/core/utils/hooks";
 import { usePosition } from "../position/position_hook";
 import { useDropdownNavigation } from "./dropdown_navigation_hook";
 import { localization } from "../l10n/localization";
@@ -8,12 +8,12 @@ import { localization } from "../l10n/localization";
 const {
     Component,
     EventBus,
-    QWeb,
     onWillStart,
+    useEffect,
     useExternalListener,
     useRef,
     useState,
-    useSubEnv,
+    useChildSubEnv,
 } = owl;
 
 const DIRECTION_CARET_CLASS = {
@@ -59,7 +59,9 @@ export class Dropdown extends Component {
             // Close on outside click listener
             useExternalListener(window, "click", this.onWindowClicked);
             // Listen to all dropdowns state changes
-            useBus(Dropdown.bus, "state-changed", this.onDropdownStateChanged);
+            useBus(Dropdown.bus, "state-changed", ({ detail }) =>
+                this.onDropdownStateChanged(detail)
+            );
         }
 
         // Set up UI active element related behavior ---------------------------
@@ -75,7 +77,7 @@ export class Dropdown extends Component {
 
         // Set up nested dropdowns ---------------------------------------------
         this.parentDropdown = this.env[DROPDOWN];
-        useSubEnv({
+        useChildSubEnv({
             [DROPDOWN]: {
                 close: this.close.bind(this),
                 closeAllParents: () => {
@@ -273,6 +275,10 @@ export class Dropdown extends Component {
 }
 Dropdown.bus = new EventBus();
 Dropdown.props = {
+    class: {
+        type: String,
+        optional: true,
+    },
     toggler: {
         type: String,
         optional: true,
@@ -314,7 +320,9 @@ Dropdown.props = {
         type: String,
         optional: true,
     },
+    slots: {
+        type: Object,
+        optional: true,
+    },
 };
 Dropdown.template = "web.Dropdown";
-
-QWeb.registerComponent("Dropdown", Dropdown);

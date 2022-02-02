@@ -4,15 +4,16 @@ import { browser } from "@web/core/browser/browser";
 import { computePositioning, DEFAULTS, usePosition } from "@web/core/position/position_hook";
 import { registerCleanup } from "../helpers/cleanup";
 import {
+    destroy,
     getFixture,
     mockAnimationFrame,
+    mount,
     nextTick,
     patchWithCleanup,
     triggerEvent,
 } from "../helpers/utils";
 
-const { Component, css, mount, xml } = owl;
-
+const { Component, xml } = owl;
 let container;
 let reference;
 
@@ -43,13 +44,6 @@ class TestComp extends Component {
         usePosition(reference, this.constructor.popperOptions);
     }
 }
-TestComp.style = css`
-    #popper {
-        background-color: cyan;
-        height: 100px;
-        width: 100px;
-    }
-`;
 TestComp.template = xml`<div id="popper"/>`;
 /** @type {import("@web/core/position/position_hook").Options} */
 TestComp.popperOptions = {};
@@ -78,27 +72,40 @@ QUnit.module("usePosition Hook", {
         });
         TestComp.popperOptions = { container };
 
+        const sheet = document.createElement("style");
+        sheet.textContent = `
+            #popper {
+                background-color: cyan;
+                height: 100px;
+                width: 100px;
+            }
+        `;
+        document.head.appendChild(sheet);
+        registerCleanup(() => {
+            sheet.remove();
+        });
         patchWithCleanup(browser, { setTimeout: (func) => func() });
     },
 });
 
 QUnit.test("default position is bottom", async (assert) => {
-    const popper = await mount(TestComp, { target: container });
+    const popper = await mount(TestComp, container);
     assert.ok(isWellPositioned(popper.el, "bottom"));
 });
 
 QUnit.test("can add margin", async (assert) => {
     let margin = 0;
     Object.assign(TestComp.popperOptions, { margin });
-    let popper = await mount(TestComp, { target: container });
+    let popper = await mount(TestComp, container);
+
     const popBox1 = popper.el.getBoundingClientRect();
-    popper.destroy();
+    destroy(popper);
 
     margin = 20;
     Object.assign(TestComp.popperOptions, { margin });
-    popper = await mount(TestComp, { target: container });
+    popper = await mount(TestComp, container);
     const popBox2 = popper.el.getBoundingClientRect();
-    popper.destroy();
+    destroy(popper);
 
     assert.strictEqual(popBox1.top + margin, popBox2.top);
 });
@@ -112,7 +119,7 @@ QUnit.test("can use a t-ref as popper", async (assert) => {
             </div>
         `,
     });
-    const comp = await mount(TestComp, { target: container });
+    const comp = await mount(TestComp, container);
     assert.notOk(isWellPositioned(comp.el));
     assert.ok(isWellPositioned(comp.el.querySelector("#popper")));
 });
@@ -125,7 +132,7 @@ QUnit.test("has no effect when component is destroyed", async (assert) => {
         return originalReference;
     };
 
-    const popper = await mount(TestComp, { target: container });
+    const comp = await mount(TestComp, container);
     assert.verifySteps(["reference called"], "reference called when component mounted");
 
     triggerEvent(document, null, "scroll");
@@ -136,7 +143,7 @@ QUnit.test("has no effect when component is destroyed", async (assert) => {
 
     triggerEvent(document, null, "scroll");
     await nextTick();
-    popper.destroy();
+    destroy(comp);
     execRegisteredCallbacks();
     assert.verifySteps(
         [],
@@ -147,7 +154,7 @@ QUnit.test("has no effect when component is destroyed", async (assert) => {
 const getPositionTest = (position, positionToCheck) => {
     return async (assert) => {
         Object.assign(TestComp.popperOptions, { position });
-        const popper = await mount(TestComp, { target: container });
+        const popper = await mount(TestComp, container);
         positionToCheck = positionToCheck || position;
         assert.ok(isWellPositioned(popper.el, positionToCheck));
     };
@@ -185,7 +192,7 @@ const CONTAINER_STYLE_MAP = {
 const getRepositionTest = (from, to, containerStyleChanges) => {
     return async (assert) => {
         Object.assign(TestComp.popperOptions, { position: from });
-        const popper = await mount(TestComp, { target: container });
+        const popper = await mount(TestComp, container);
         assert.ok(isWellPositioned(popper.el, from), `points to ${from} direction`);
 
         // Change container style and force update

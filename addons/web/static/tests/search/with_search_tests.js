@@ -9,6 +9,7 @@ import { FilterMenu } from "@web/search/filter_menu/filter_menu";
 import { GroupByMenu } from "@web/search/group_by_menu/group_by_menu";
 import { WithSearch } from "@web/search/with_search/with_search";
 import { viewService } from "@web/views/view_service";
+import { mount } from "../helpers/utils";
 import {
     getMenuItemTexts,
     makeWithSearch,
@@ -17,7 +18,7 @@ import {
     toggleMenuItem,
 } from "./helpers";
 
-const { Component, mount, useState, xml } = owl;
+const { Component, onWillUpdateProps, onWillStart, useState, xml } = owl;
 
 const serviceRegistry = registry.category("services");
 
@@ -269,11 +270,13 @@ QUnit.module("Search", (hooks) => {
             assert.expect(2);
 
             class TestComponent extends Component {
-                async willStart() {
-                    assert.deepEqual(this.props.domain, []);
-                }
-                async willUpdateProps(nextProps) {
-                    assert.deepEqual(nextProps.domain, [[1, "=", 1]]);
+                setup() {
+                    owl.onWillStart(() => {
+                        assert.deepEqual(this.props.domain, []);
+                    });
+                    owl.onWillUpdateProps((nextProps) => {
+                        assert.deepEqual(nextProps.domain, [[1, "=", 1]]);
+                    });
                 }
             }
             TestComponent.components = { FilterMenu };
@@ -298,11 +301,13 @@ QUnit.module("Search", (hooks) => {
         assert.expect(2);
 
         class TestComponent extends Component {
-            willStart() {
-                assert.deepEqual(this.props.domain, [["type", "=", "carnivorous"]]);
-            }
-            willUpdateProps(nextProps) {
-                assert.deepEqual(nextProps.domain, [["type", "=", "herbivorous"]]);
+            setup() {
+                onWillStart(() => {
+                    assert.deepEqual(this.props.domain, [["type", "=", "carnivorous"]]);
+                });
+                onWillUpdateProps((nextProps) => {
+                    assert.deepEqual(nextProps.domain, [["type", "=", "herbivorous"]]);
+                });
             }
         }
         TestComponent.template = xml`<div class="o_test_component">Test component content</div>`;
@@ -322,12 +327,9 @@ QUnit.module("Search", (hooks) => {
         Parent.template = xml`<WithSearch t-props="state"/>`;
         Parent.components = { WithSearch };
 
-        const parent = await mount(Parent, { env, target });
-
+        const parent = await mount(Parent, target, { env });
         parent.state.domain = [["type", "=", "herbivorous"]];
 
         await nextTick();
-
-        parent.destroy();
     });
 });

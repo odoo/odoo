@@ -3,14 +3,13 @@
 import { usePopover } from "@web/core/popover/popover_hook";
 import { popoverService } from "@web/core/popover/popover_service";
 import { registry } from "@web/core/registry";
-import { registerCleanup } from "../../helpers/cleanup";
 import { clearRegistryWithCleanup, makeTestEnv } from "../../helpers/mock_env";
-import { getFixture, nextTick } from "../../helpers/utils";
+import { destroy, getFixture, mount, nextTick } from "../../helpers/utils";
 
-const { Component, mount, xml } = owl;
+const { Component, xml } = owl;
 
 let env;
-let fixture;
+let target;
 let popoverTarget;
 
 const mainComponents = registry.category("main_components");
@@ -36,17 +35,10 @@ QUnit.module("Popover hook", {
     async beforeEach() {
         clearRegistryWithCleanup(mainComponents);
         registry.category("services").add("popover", popoverService);
-
-        fixture = getFixture();
+        target = getFixture();
         env = await makeTestEnv();
-        const pseudoWebClient = await mount(PseudoWebClient, {
-            env,
-            target: fixture,
-        });
-        registerCleanup(() => {
-            pseudoWebClient.destroy();
-        });
-        popoverTarget = fixture.querySelector("#anchor");
+        await mount(PseudoWebClient, target, { env });
+        popoverTarget = target.querySelector("#anchor");
     },
 });
 
@@ -61,29 +53,29 @@ QUnit.test("close popover when component is unmounted", async (assert) => {
     }
     CompWithPopover.template = xml`<div />`;
 
-    const comp1 = await mount(CompWithPopover, { env, target: fixture });
+    const comp1 = await mount(CompWithPopover, target, { env });
     comp1.popover.add(popoverTarget, Comp, { id: "comp1" });
     await nextTick();
 
-    const comp2 = await mount(CompWithPopover, { env, target: fixture });
+    const comp2 = await mount(CompWithPopover, target, { env });
     comp2.popover.add(popoverTarget, Comp, { id: "comp2" });
     await nextTick();
 
-    assert.containsN(fixture, ".o_popover", 2);
-    assert.containsOnce(fixture, ".o_popover #comp1");
-    assert.containsOnce(fixture, ".o_popover #comp2");
+    assert.containsN(target, ".o_popover", 2);
+    assert.containsOnce(target, ".o_popover #comp1");
+    assert.containsOnce(target, ".o_popover #comp2");
 
-    comp1.destroy();
+    destroy(comp1);
     await nextTick();
 
-    assert.containsOnce(fixture, ".o_popover");
-    assert.containsNone(fixture, ".o_popover #comp1");
-    assert.containsOnce(fixture, ".o_popover #comp2");
+    assert.containsOnce(target, ".o_popover");
+    assert.containsNone(target, ".o_popover #comp1");
+    assert.containsOnce(target, ".o_popover #comp2");
 
-    comp2.destroy();
+    destroy(comp2);
     await nextTick();
 
-    assert.containsNone(fixture, ".o_popover");
-    assert.containsNone(fixture, ".o_popover #comp1");
-    assert.containsNone(fixture, ".o_popover #comp2");
+    assert.containsNone(target, ".o_popover");
+    assert.containsNone(target, ".o_popover #comp1");
+    assert.containsNone(target, ".o_popover #comp2");
 });

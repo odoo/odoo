@@ -2,7 +2,7 @@
 
 import { ActionDialog } from "./action_dialog";
 
-const { Component, xml } = owl;
+const { Component, xml, onWillDestroy } = owl;
 
 // -----------------------------------------------------------------------------
 // ActionContainer (Component)
@@ -10,15 +10,14 @@ const { Component, xml } = owl;
 export class ActionContainer extends Component {
     setup() {
         this.info = {};
-        this.env.bus.on("ACTION_MANAGER:UPDATE", this, (info) => {
+        this.onActionManagerUpdate = ({ detail: info }) => {
             this.info = info;
             this.render();
+        };
+        this.env.bus.addEventListener("ACTION_MANAGER:UPDATE", this.onActionManagerUpdate);
+        onWillDestroy(() => {
+            this.env.bus.removeEventListener("ACTION_MANAGER:UPDATE", this.onActionManagerUpdate);
         });
-    }
-
-    __destroy() {
-        this.env.bus.off("ACTION_MANAGER:UPDATE", this);
-        super.__destroy();
     }
 }
 ActionContainer.components = { ActionDialog };

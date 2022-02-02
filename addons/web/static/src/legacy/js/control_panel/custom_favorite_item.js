@@ -1,8 +1,10 @@
 odoo.define('web.CustomFavoriteItem', function (require) {
     "use strict";
 
+    const { CheckBox } = require("@web/core/checkbox/checkbox");
+    const { Dropdown } = require("@web/core/dropdown/dropdown");
     const FavoriteMenu = require('web.FavoriteMenu');
-    const { useAutofocus } = require('web.custom_hooks');
+    const { useAutofocus } = require("@web/core/utils/hooks");
     const { useModel } = require('web.Model');
 
     const { Component, useRef, useState } = owl;
@@ -29,9 +31,7 @@ odoo.define('web.CustomFavoriteItem', function (require) {
      * and save the context to a new filter.
      */
     class CustomFavoriteItem extends Component {
-        constructor() {
-            super(...arguments);
-
+        setup() {
             const favId = favoriteId++;
             this.useByDefaultId = `o_favorite_use_by_default_${favId}`;
             this.shareAllUsersId = `o_favorite_share_all_users_${favId}`;
@@ -45,7 +45,7 @@ odoo.define('web.CustomFavoriteItem', function (require) {
                 isShared: false,
             });
 
-            useAutofocus();
+            useAutofocus("description");
         }
 
         //---------------------------------------------------------------------
@@ -92,10 +92,9 @@ odoo.define('web.CustomFavoriteItem', function (require) {
 
         /**
          * @private
-         * @param {Event} ev change Event
+         * @param {boolean} checked
          */
-        onDefaultCheckboxChange(ev) {
-            const { checked } = ev.target;
+        onDefaultCheckboxChange(checked) {
             this.state.isDefault = checked;
             if (checked) {
                 this.state.isShared = false;
@@ -104,10 +103,9 @@ odoo.define('web.CustomFavoriteItem', function (require) {
 
         /**
          * @private
-         * @param {Event} ev change Event
+         * @param {boolean} checked
          */
-        onShareCheckboxChange(ev) {
-            const { checked } = ev.target;
+        onShareCheckboxChange(checked) {
             this.state.isShared = checked;
             if (checked) {
                 this.state.isDefault = false;
@@ -147,6 +145,7 @@ odoo.define('web.CustomFavoriteItem', function (require) {
 
     CustomFavoriteItem.props = {};
     CustomFavoriteItem.template = "web.CustomFavoriteItem";
+    CustomFavoriteItem.components = { CheckBox, Dropdown };
     CustomFavoriteItem.groupNumber = 3; // have 'Save Current Search' in its own group
 
     FavoriteMenu.registry.add('favorite-generator-menu', CustomFavoriteItem, 0);
