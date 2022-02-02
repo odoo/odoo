@@ -353,6 +353,7 @@ class AccountEdiFormat(models.Model):
         return values
 
     def _l10n_es_tbai_get_invoice_tax_details_values(self, invoice, filter_invl_to_apply=None):
+        # Copied (and slightly adapted) from l10n_es_edi_sii module
 
         def grouping_key_generator(tax_values):
             tax = tax_values['tax_id']
