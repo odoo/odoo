@@ -3,16 +3,20 @@
 
 <!-- Share on social networks -->
 <template id='slide_share_social' name="Slides Media Share">
+    <t t-if="not website_share_url">
+        <t t-set="website_share_url"
+           t-value="record.website_share_url if 'website_share_url' in record else record.website_url"/>
+    </t>
     <div class="btn-group" role="group">
-        <a t-attf-href="https://www.facebook.com/sharer/sharer.php?u=#{record.website_url}" class="btn border bg-white o_wslides_js_social_share"
+        <a t-attf-href="https://www.facebook.com/sharer/sharer.php?u=#{website_share_url}" class="btn border bg-white o_wslides_js_social_share"
             social-key="facebook" aria-label="Share on Facebook" title="Share on Facebook" target="_blank">
             <i class="fa fa-facebook-square fa-fw"/>
         </a>
-        <a t-attf-href="https://twitter.com/intent/tweet?text=#{record.name}&amp;url=#{record.website_url}" class="btn border bg-white o_wslides_js_social_share"
+        <a t-attf-href="https://twitter.com/intent/tweet?text=#{record.name}&amp;url=#{website_share_url}" class="btn border bg-white o_wslides_js_social_share"
             social-key="twitter" aria-label="Share on Twitter" title="Share on Twitter" target="_blank">
             <i class="fa fa-twitter fa-fw"/>
         </a>
-        <a t-attf-href="http://www.linkedin.com/sharing/share-offsite/?url=#{record.website_url}" class="btn border bg-white o_wslides_js_social_share"
+        <a t-attf-href="http://www.linkedin.com/sharing/share-offsite/?url=#{website_share_url}" class="btn border bg-white o_wslides_js_social_share"
             social-key="linkedin" aria-label="Share on LinkedIn" title="Share on LinkedIn" target="_blank">
             <i class="fa fa-linkedin fa-fw"/>
         </a>
@@ -21,9 +25,6 @@
 
 <!-- Share: social media -->
 <template id='slide_share_modal'>
-    <t t-if="not website_url">
-        <t t-set="website_url" t-value="record.website_url"/>
-    </t>
     <div class="modal fade" t-att-id="'slideChannelShareModal_%s' % record.id" tabindex="-1" role="dialog" aria-labelledby="slideChannelShareModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -55,10 +56,14 @@
 </template>
 
 <template id="slide_share_link">
+    <t t-if="not website_share_url">
+        <t t-set="website_share_url"
+           t-value="record.website_share_url if 'website_share_url' in record else record.website_url"/>
+    </t>
     <h5 class="mt-3">Share Link</h5>
     <div class="input-group">
         <input type="text" t-att-id="'wslides_share_link_id_%s' % record.id" class="form-control o_wslides_js_share_link" readonly="readonly" onclick="this.select();"
-            t-att-value="website_url"/>
+            t-att-value="website_share_url"/>
         <div class="input-group-append">
             <button t-att-id="'share_link_clipboard_button_id_%s' % record.id" class="btn btn-sm btn-primary o_clipboard_button" >
                 <span class="fa fa-clipboard"> Copy Text</span>

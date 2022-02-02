@@ -13,13 +13,13 @@
                         <center><strong t-out="object.name or ''">Trees</strong></center>
                         <t t-if="object.image_1024">
                             <div style="padding: 16px 8px 16px 8px; text-align: center;">
-                                <a t-att-href="object.website_url">
+                                <a t-att-href="object.website_share_url">
                                 <img t-att-alt="object.name" t-attf-src="{{ ctx.get('base_url') }}/web/image/slide.slide/{{ object.id }}/image_1024" style="height:auto; width:150px; margin: 16px;"/>
                             </a>
                         </div>
                         </t>
                         <div style="padding: 16px 8px 16px 8px; text-align: center;">
-                            <a t-att-href="object.website_url"
+                            <a t-att-href="object.website_share_url"
                                 style="background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;">View content</a>
                         </div>
                         Enjoy this exclusive content!
@@ -45,12 +45,12 @@
                         Hello<br/><br/>
                         <t t-out="user.name or ''">Mitchell Admin</t> shared the <t t-out="object.slide_category or ''">document</t> <strong t-out="object.name or ''">Trees</strong> with you!
                         <div style="margin: 16px 8px 16px 8px; text-align: center;">
-                            <a t-att-href="(object.website_url + '?fullscreen=1') if ctx.get('fullscreen') else object.website_url">
+                            <a t-att-href="(object.website_share_url + '?fullscreen=1') if ctx.get('fullscreen') else object.website_share_url">
                                 <img t-att-alt="object.name" t-attf-src="{{ ctx.get('base_url') }}/web/image/slide.slide/{{ object.id }}/image_1024" style="height:auto; width:150px; margin: 16px;"/>
                             </a>
                         </div>
                         <div style="padding: 16px 8px 16px 8px; text-align: center;">
-                            <a t-att-href="(object.website_url + '?fullscreen=1') if ctx.get('fullscreen') else object.website_url"
+                            <a t-att-href="(object.website_share_url + '?fullscreen=1') if ctx.get('fullscreen') else object.website_share_url"
                                 style="background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;">View <strong t-out="object.name or ''">Trees</strong></a>
                         </div>
                         <t t-if="user.signature">

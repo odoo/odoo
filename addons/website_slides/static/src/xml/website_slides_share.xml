@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
-
     <t t-name="website.slide.share.modal">
         <div>
             <t t-call="website.slide.share.socialmedia"/>
@@ -12,15 +11,15 @@
             <div class="col-12 col-lg-6 mb-4">
                 <h5 class="mt-0 mb-2">Share on Social Networks</h5>
                 <div class="btn-group" role="group">
-                    <a t-attf-href="https://www.facebook.com/sharer/sharer.php?u=#{window.location.href}" class="btn border bg-white o_wslides_js_social_share" social-key="facebook" aria-label="Share on Facebook" title="Share on Facebook"><i class="fa fa-facebook-square fa-fw"/></a>
-                    <a t-attf-href="https://twitter.com/intent/tweet?text=#{widget.slide.name}&amp;url=#{window.location.href}" class="btn border bg-white o_wslides_js_social_share"  social-key="twitter" aria-label="Share on Twitter" title="Share on Twitter"><i class="fa fa-twitter fa-fw"/></a>
-                    <a t-attf-href="http://www.linkedin.com/sharing/share-offsite/?url=#{window.location.href}" social-key="linkedin" class="btn border bg-white o_wslides_js_social_share" aria-label="Share on LinkedIn" title="Share on LinkedIn"><i class="fa fa-linkedin fa-fw"/></a>
+                    <a t-attf-href="https://www.facebook.com/sharer/sharer.php?u=#{widget.slide.websiteShareUrl}" class="btn border bg-white o_wslides_js_social_share" social-key="facebook" aria-label="Share on Facebook" title="Share on Facebook"><i class="fa fa-facebook-square fa-fw"/></a>
+                    <a t-attf-href="https://twitter.com/intent/tweet?text=#{widget.slide.name}&amp;url=#{widget.slide.websiteShareUrl}" class="btn border bg-white o_wslides_js_social_share"  social-key="twitter" aria-label="Share on Twitter" title="Share on Twitter"><i class="fa fa-twitter fa-fw"/></a>
+                    <a t-attf-href="http://www.linkedin.com/sharing/share-offsite/?url=#{widget.slide.websiteShareUrl}" social-key="linkedin" class="btn border bg-white o_wslides_js_social_share" aria-label="Share on LinkedIn" title="Share on LinkedIn"><i class="fa fa-linkedin fa-fw"/></a>
                 </div>
             </div>
             <div class="col-12 col-lg-6">
                 <h5 class="mt-0 mb-2">Share Link</h5>
                 <div class="input-group">
-                    <input type="text" class="form-control o_wslides_js_share_link" t-att-value="window.location.href" readonly="readonly" onClick="this.select();" />
+                    <input type="text" class="form-control o_wslides_js_share_link" t-att-value="widget.slide.websiteShareUrl" readonly="readonly" onClick="this.select();" />
                     <div class="input-group-append">
                         <button class="btn btn-sm btn-primary o_clipboard_button" style="border-top-right-radius: 4px;border-bottom-right-radius: 4px;" >
                             <span class="fa fa-clipboard"> Copy Link</span>
