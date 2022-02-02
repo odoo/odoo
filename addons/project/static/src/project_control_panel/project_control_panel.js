@@ -3,30 +3,28 @@
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { useService } from "@web/core/utils/hooks";
 
+const { onWillStart, onWillUpdateProps } = owl;
+
 export class ProjectControlPanel extends ControlPanel {
-    constructor() {
-        super(...arguments);
+    setup() {
+        super.setup();
         this.orm = useService("orm");
         this.user = useService("user");
         const { active_id, show_project_update } = this.env.searchModel.globalContext;
         this.showProjectUpdate = this.env.config.viewType === "form" || show_project_update;
         this.projectId = this.showProjectUpdate ? active_id : false;
-    }
 
-    async willStart() {
-        const proms = [super.willStart(...arguments)];
-        if (this.showProjectUpdate) {
-            proms.push(this.loadData());
-        }
-        await Promise.all(proms);
-    }
+        onWillStart(async () => {
+            if (this.showProjectUpdate) {
+                await this.loadData();
+            }
+        });
 
-    async willUpdateProps() {
-        const proms = [super.willUpdateProps(...arguments)];
-        if (this.showProjectUpdate) {
-            proms.push(this.loadData());
-        }
-        await Promise.all(proms);
+        onWillUpdateProps(async () => {
+            if (this.showProjectUpdate) {
+                await this.loadData();
+            }
+        });
     }
 
     async loadData() {

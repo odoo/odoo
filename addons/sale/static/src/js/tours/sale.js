@@ -5,6 +5,8 @@ const {_t} = require('web.core');
 const {Markup} = require('web.utils');
 var tour = require('web_tour.tour');
 
+const { markup } = owl;
+
 tour.register("sale_tour", {
     url: "/web",
     rainbowMan: false,
@@ -58,7 +60,7 @@ tour.register("sale_tour", {
 tour.register("sale_quote_tour", {
         url: "/web#action=sale.action_quotations_with_onboarding&view_type=form",
         rainbowMan: true,
-        rainbowManMessage: "<b>Congratulations</b>, your first quotation is sent!<br>Check your email to validate the quote.",
+        rainbowManMessage: markup(_t("<b>Congratulations</b>, your first quotation is sent!<br>Check your email to validate the quote.")),
         sequence: 30,
     }, [{
         trigger: ".o_form_editable .o_field_many2one[name='partner_id']",

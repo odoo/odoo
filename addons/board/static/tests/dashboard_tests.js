@@ -8,7 +8,7 @@ odoo.define("board.dashboard_tests", function (require) {
     var ListRenderer = require("web.ListRenderer");
     var pyUtils = require("web.py_utils");
     const { browser } = require("@web/core/browser/browser");
-    const { patchWithCleanup } = require("@web/../tests/helpers/utils");
+    const { getFixture, patchWithCleanup } = require("@web/../tests/helpers/utils");
     const { registry } = require("@web/core/registry");
     const { makeFakeUserService } = require("@web/../tests/helpers/mock_services");
     const {
@@ -35,7 +35,10 @@ odoo.define("board.dashboard_tests", function (require) {
     const patchDate = testUtils.mock.patchDate;
     const favoriteMenuRegistry = registry.category("favoriteMenu");
 
+    const { markup } = owl;
+
     let serverData;
+    let target;
     QUnit.module("Dashboard", {
         beforeEach: function () {
             this.data = {
@@ -93,6 +96,7 @@ odoo.define("board.dashboard_tests", function (require) {
                 { sequence: 10 }
             );
             serverData = { models: this.data };
+            target = getFixture();
         },
     });
 
@@ -155,7 +159,7 @@ odoo.define("board.dashboard_tests", function (require) {
                 "</form>",
             viewOptions: {
                 action: {
-                    help: '<p class="hello">click to add a partner</p>',
+                    help: markup('<p class="hello">click to add a partner</p>'),
                 },
             },
         });
@@ -886,18 +890,18 @@ odoo.define("board.dashboard_tests", function (require) {
             views: [[false, "list"]],
         });
 
-        assert.containsOnce(webClient, ".o_list_view", "should display the list view");
+        assert.containsOnce(target, ".o_list_view", "should display the list view");
 
         // Sort the list
         await testUtils.dom.click($(".o_column_sortable"));
 
         // Group It
-        await toggleGroupByMenu(webClient);
-        await toggleAddCustomGroup(webClient);
-        await applyGroup(webClient);
+        await toggleGroupByMenu(target);
+        await toggleAddCustomGroup(target);
+        await applyGroup(target);
 
         // add this action to dashboard
-        await toggleFavoriteMenu(webClient);
+        await toggleFavoriteMenu(target);
 
         await testUtils.dom.triggerEvent($(".o_add_to_board button.dropdown-toggle"), "mouseenter");
         await testUtils.fields.editInput($(".o_add_to_board input"), "a name");
@@ -949,32 +953,32 @@ odoo.define("board.dashboard_tests", function (require) {
 
         var filter_count = 0;
         // Add a first filter
-        await toggleFilterMenu(webClient);
-        await toggleAddCustomFilter(webClient);
-        await editConditionValue(webClient, 0, "a");
-        await applyFilter(webClient);
+        await toggleFilterMenu(target);
+        await toggleAddCustomFilter(target);
+        await editConditionValue(target, 0, "a");
+        await applyFilter(target);
 
         // Add it to dashboard
-        await toggleFavoriteMenu(webClient);
+        await toggleFavoriteMenu(target);
         await testUtils.dom.triggerEvent($(".o_add_to_board button.dropdown-toggle"), "mouseenter");
         await testUtils.dom.click($(".o_add_to_board .dropdown-menu button"));
 
         // Remove it
-        await testUtils.dom.click(webClient.el.querySelector(".o_facet_remove"));
+        await testUtils.dom.click(target.querySelector(".o_facet_remove"));
 
         // Add the second filter
-        await toggleFilterMenu(webClient);
-        await toggleAddCustomFilter(webClient);
-        await editConditionValue(webClient, 0, "b");
-        await applyFilter(webClient);
+        await toggleFilterMenu(target);
+        await toggleAddCustomFilter(target);
+        await editConditionValue(target, 0, "b");
+        await applyFilter(target);
         // Add it to dashboard
-        await toggleFavoriteMenu(webClient);
+        await toggleFavoriteMenu(target);
         await testUtils.dom.triggerEvent(
-            webClient.el.querySelector(".o_add_to_board button.dropdown-toggle"),
+            target.querySelector(".o_add_to_board button.dropdown-toggle"),
             "mouseenter"
         );
         await testUtils.dom.click(
-            webClient.el.querySelector(".o_add_to_board .dropdown-menu button")
+            target.querySelector(".o_add_to_board .dropdown-menu button")
         );
     });
 
@@ -1012,19 +1016,19 @@ odoo.define("board.dashboard_tests", function (require) {
         });
 
         // Add a filter
-        await toggleFilterMenu(webClient);
-        await toggleAddCustomFilter(webClient);
-        await editConditionValue(webClient, 0, "b");
-        await applyFilter(webClient);
+        await toggleFilterMenu(target);
+        await toggleAddCustomFilter(target);
+        await editConditionValue(target, 0, "b");
+        await applyFilter(target);
         // Add it to dashboard
-        await toggleFavoriteMenu(webClient);
+        await toggleFavoriteMenu(target);
         await testUtils.dom.triggerEvent(
-            webClient.el.querySelector(".o_add_to_board button.dropdown-toggle"),
+            target.querySelector(".o_add_to_board button.dropdown-toggle"),
             "mouseenter"
         );
         // add
         await testUtils.dom.click(
-            webClient.el.querySelector(".o_add_to_board .dropdown-menu button")
+            target.querySelector(".o_add_to_board .dropdown-menu button")
         );
     });
 
@@ -1253,19 +1257,19 @@ odoo.define("board.dashboard_tests", function (require) {
             });
 
             // filter on July 2020
-            await toggleFilterMenu(webClient);
-            await toggleMenuItem(webClient, "Date");
-            await toggleMenuItemOption(webClient, "Date", "July");
+            await toggleFilterMenu(target);
+            await toggleMenuItem(target, "Date");
+            await toggleMenuItemOption(target, "Date", "July");
 
             // compare July 2020 to June 2020
-            await toggleComparisonMenu(webClient);
-            await toggleMenuItem(webClient, 0);
+            await toggleComparisonMenu(target);
+            await toggleMenuItem(target, 0);
 
             // add the view to the dashboard
-            await toggleFavoriteMenu(webClient);
+            await toggleFavoriteMenu(target);
 
-            await mouseEnter(webClient.el.querySelector(".o_add_to_board .dropdown-toggle"));
-            const input = webClient.el.querySelector(".o_add_to_board .dropdown-menu input");
+            await mouseEnter(target.querySelector(".o_add_to_board .dropdown-toggle"));
+            const input = target.querySelector(".o_add_to_board .dropdown-menu input");
             await testUtils.fields.editInput(input, "Pipeline");
             await testUtils.dom.click($(".o_add_to_board div button"));
 
@@ -1301,9 +1305,9 @@ odoo.define("board.dashboard_tests", function (require) {
             views: [[false, "pivot"]],
         });
 
-        await toggleFavoriteMenu(webClient.el);
-        await mouseEnter(webClient.el.querySelector(".o_add_to_board .dropdown-toggle"));
-        const input = webClient.el.querySelector(".o_add_to_board .dropdown-menu input");
+        await toggleFavoriteMenu(target);
+        await mouseEnter(target.querySelector(".o_add_to_board .dropdown-toggle"));
+        const input = target.querySelector(".o_add_to_board .dropdown-menu input");
         await testUtils.fields.editInput(input, "Pipeline");
         await triggerEvent(input, null, "keydown", { key: "Enter" });
 
@@ -1411,9 +1415,9 @@ odoo.define("board.dashboard_tests", function (require) {
             context: { search_default_filter: 1 },
         });
 
-        await toggleFavoriteMenu(webClient.el);
-        await mouseEnter(webClient.el.querySelector(".o_add_to_board .dropdown-toggle"));
-        const input = webClient.el.querySelector(".o_add_to_board .dropdown-menu input");
+        await toggleFavoriteMenu(target);
+        await mouseEnter(target.querySelector(".o_add_to_board .dropdown-toggle"));
+        const input = target.querySelector(".o_add_to_board .dropdown-menu input");
         await testUtils.fields.editInput(input, "Pipeline");
         await triggerEvent(input, null, "keydown", { key: "Enter" });
     });

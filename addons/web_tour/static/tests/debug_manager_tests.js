@@ -7,14 +7,11 @@ import { ormService } from "@web/core/orm_service";
 import { registry } from "@web/core/registry";
 import { uiService } from "@web/core/ui/ui_service";
 
-import { click, getFixture } from "@web/../tests/helpers/utils";
-import { registerCleanup } from "@web/../tests/helpers/cleanup";
+import { click, getFixture, mount } from "@web/../tests/helpers/utils";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { makeFakeLocalizationService } from "@web/../tests/helpers/mock_services";
 import { DebugMenuParent } from "@web/../tests/core/debug/debug_manager_tests";
 import { fakeCommandService } from "@web/../tests/helpers/mock_services";
-
-const { mount } = owl;
 
 const debugRegistry = registry.category("debug");
 let target;
@@ -60,8 +57,7 @@ QUnit.module("Tours", (hooks) => {
         };
         const env = await makeTestEnv({ mockRPC });
 
-        const debugManager = await mount(DebugMenuParent, { env, target });
-        registerCleanup(() => debugManager.destroy());
+        const debugManager = await mount(DebugMenuParent, target, { env });
 
         await click(debugManager.el.querySelector("button.dropdown-toggle"));
 

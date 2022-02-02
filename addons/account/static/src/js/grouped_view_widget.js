@@ -4,7 +4,7 @@ odoo.define('account.ShowGroupedList', function (require) {
 const AbstractFieldOwl = require('web.AbstractFieldOwl');
 const field_registry = require('web.field_registry_owl');
 
-const { Component } = owl;
+const { Component, onWillUpdateProps } = owl;
 
 class ListItem extends Component { }
 ListItem.template = 'account.GroupedItemTemplate';
@@ -17,8 +17,8 @@ ListGroup.props = ["group_vals", "options"];
 
 
 class ShowGroupedList extends AbstractFieldOwl {
-    constructor(...args) {
-        super(...args);
+    setup() {
+        super.setup();
         this.data = this.value ? JSON.parse(this.value) : {
             groups_vals: [],
             options: {
@@ -26,10 +26,9 @@ class ShowGroupedList extends AbstractFieldOwl {
                 columns: [],
             },
         };
-    }
-    async willUpdateProps(nextProps) {
-        await super.willUpdateProps(nextProps);
-        Object.assign(this.data, JSON.parse(this.value));
+        onWillUpdateProps(() => {
+            Object.assign(this.data, JSON.parse(this.value));
+        });
     }
 }
 ShowGroupedList.template = 'account.GroupedListTemplate';

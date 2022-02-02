@@ -7,9 +7,10 @@ class InsufficientCreditDialog extends Dialog {
     setup() {
         super.setup(...arguments);
         this.orm = useService("orm");
+        owl.onWillStart(this.onWillStart);
     }
 
-    async willStart() {
+    async onWillStart() {
         const { errorData } = this.props;
         this.url = await this.orm.call("iap.account", "get_credits_url", [], {
             base_url: errorData.base_url,

@@ -4,37 +4,35 @@ import { useService } from '@web/core/utils/hooks';
 import { getLangDateFormat } from 'web.time';
 import widgetRegistry from 'web.widgetRegistry';
 
-const { Component, useState } = owl;
+const { Component, useState, onWillStart, onWillUpdateProps } = owl;
 
 export class LeaveStatsComponent extends Component {
     setup() {
-        super.setup(...arguments);
         this.rpc = useService('rpc');
 
         this.state = useState({
             leaves: [],
             departmentLeaves: [],
         });
-    }
 
-    async willStart() {
-        await this.loadLeaves(this.date, this.employee);
-        await this.loadDepartmentLeaves(this.date, this.department, this.employee);
-    }
+        onWillStart(async () => {
+            await this.loadLeaves(this.date, this.employee);
+            await this.loadDepartmentLeaves(this.date, this.department, this.employee);
+        });
+        onWillUpdateProps(async (nextProps) => {
+            const dateFrom = nextProps.record.data.date_from || moment();
+            const dateChanged = this.date !== dateFrom;
+            const employee = nextProps.record.data.employee_id.data;
+            const department = nextProps.record.data.department_id.data;
 
-    async willUpdateProps(nextProps) {
-        const dateFrom = nextProps.record.data.date_from || moment();
-        const dateChanged = this.date !== dateFrom;
-        const employee = nextProps.record.data.employee_id.data;
-        const department = nextProps.record.data.department_id.data;
+            if (dateChanged || employee && (this.employee && this.employee.id) !== employee.id) {
+                await this.loadLeaves(dateFrom, employee);
+            }
 
-        if (dateChanged || employee && (this.employee && this.employee.id) !== employee.id) {
-            await this.loadLeaves(dateFrom, employee);
-        }
-
-        if (dateChanged || department && (this.department && this.department.id) !== department.id) {
-            await this.loadDepartmentLeaves(dateFrom, department, employee);
-        }
+            if (dateChanged || department && (this.department && this.department.id) !== department.id) {
+                await this.loadDepartmentLeaves(dateFrom, department, employee);
+            }
+        })
     }
 
     get date() {
