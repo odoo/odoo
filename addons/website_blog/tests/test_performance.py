@@ -13,8 +13,8 @@ class TestBlogPerformance(UtilPerf):
             self.env['website'].search([]).channel_id = False
 
     def test_10_perf_sql_blog_standard_data(self):
-        self.assertEqual(self._get_url_hot_query('/blog'), 25)
-        self.assertEqual(self._get_url_hot_query('/blog', cache=False), 24)
+        self.assertEqual(self._get_url_hot_query('/blog'), 26)
+        self.assertEqual(self._get_url_hot_query('/blog', cache=False), 25)
 
     def test_20_perf_sql_blog_bigger_data_scaling(self):
         BlogPost = self.env['blog.post']
@@ -26,10 +26,10 @@ class TestBlogPerformance(UtilPerf):
         for blog_post in blog_posts:
             blog_post.tag_ids += blog_tags
             blog_tags = blog_tags[:-1]
-        self.assertEqual(self._get_url_hot_query('/blog'), 25)
-        self.assertEqual(self._get_url_hot_query('/blog', cache=False), 24)
-        self.assertEqual(self._get_url_hot_query(blog_post[0].website_url), 29)
-        self.assertEqual(self._get_url_hot_query(blog_post[0].website_url, cache=False), 28)
+        self.assertEqual(self._get_url_hot_query('/blog'), 26)
+        self.assertEqual(self._get_url_hot_query('/blog', cache=False), 25)
+        self.assertEqual(self._get_url_hot_query(blog_post[0].website_url), 31)
+        self.assertEqual(self._get_url_hot_query(blog_post[0].website_url, cache=False), 30)
 
     def test_30_perf_sql_blog_bigger_data_scaling(self):
         BlogPost = self.env['blog.post']
@@ -41,7 +41,7 @@ class TestBlogPerformance(UtilPerf):
         for blog_post in blog_posts:
             blog_post.write({'tag_ids': [[6, 0, random.choices(blog_tags.ids, k=random.randint(0, len(blog_tags)))]]})
 
-        self.assertLessEqual(self._get_url_hot_query('/blog'), 28)
-        self.assertLessEqual(self._get_url_hot_query('/blog', cache=False), 28)
+        self.assertLessEqual(self._get_url_hot_query('/blog'), 27)
+        self.assertLessEqual(self._get_url_hot_query('/blog', cache=False), 26)
         self.assertLessEqual(self._get_url_hot_query(blog_post[0].website_url), 32)
         self.assertLessEqual(self._get_url_hot_query(blog_post[0].website_url, cache=False), 31)
