@@ -13,7 +13,6 @@ export class ChannelInvitationForm extends Component {
      * @override
      */
     setup() {
-        super.setup();
         useComponentToModel({ fieldName: 'component', modelName: 'ChannelInvitationForm' });
         useRefToModel({ fieldName: 'searchInputRef', modelName: 'ChannelInvitationForm', refName: 'searchInput' });
         useUpdateToModel({ methodName: 'onComponentUpdate', modelName: 'ChannelInvitationForm' });

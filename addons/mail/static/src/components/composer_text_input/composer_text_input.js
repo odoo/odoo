@@ -13,7 +13,6 @@ export class ComposerTextInput extends Component {
      * @override
      */
     setup() {
-        super.setup();
         useComponentToModel({ fieldName: 'textInputComponent', modelName: 'ComposerView' });
         /**
          * Updates the composer text input content when composer is mounted

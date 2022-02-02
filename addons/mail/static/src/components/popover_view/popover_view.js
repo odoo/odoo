@@ -13,7 +13,6 @@ export class PopoverView extends Component {
      * @override
      */
     setup() {
-        super.setup();
         useComponentToModel({ fieldName: 'component', modelName: 'PopoverView' });
         usePosition(
             () => this.popoverView && this.popoverView.anchorRef && this.popoverView.anchorRef.el,

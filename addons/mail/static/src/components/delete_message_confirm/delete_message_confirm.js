@@ -12,7 +12,6 @@ export class DeleteMessageConfirm extends Component {
      * @override
      */
     setup() {
-        super.setup();
         this.title = this.env._t("Confirmation");
     }
 

@@ -12,7 +12,6 @@ export class EmojiList extends Component {
      * @override
      */
     setup() {
-        super.setup();
         this.emojis = emojis;
         useUpdate({ func: () => this._update() });
     }

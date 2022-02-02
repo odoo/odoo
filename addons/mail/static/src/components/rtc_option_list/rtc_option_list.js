@@ -11,7 +11,6 @@ export class RtcOptionList extends Component {
      * @override
      */
     setup() {
-        super.setup();
         useComponentToModel({ fieldName: 'component', modelName: 'RtcOptionList' });
     }
 

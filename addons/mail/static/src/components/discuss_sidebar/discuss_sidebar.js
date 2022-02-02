@@ -11,7 +11,6 @@ export class DiscussSidebar extends Component {
      * @override
      */
     setup() {
-        super.setup();
         useUpdate({ func: () => this._update() });
         /**
          * Reference of the quick search input. Useful to filter channels and

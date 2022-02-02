@@ -12,7 +12,6 @@ export class RtcConfigurationMenu extends Component {
      * @override
      */
     setup() {
-        super.setup();
         this.state = useState({
             userDevices: undefined,
         });

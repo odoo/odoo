@@ -13,7 +13,6 @@ export class MessageList extends Component {
      * @override
      */
     setup() {
-        super.setup();
         useComponentToModel({ fieldName: 'component', modelName: 'MessageListView' });
         /**
          * Reference of the "load more" item. Useful to trigger load more

@@ -21,7 +21,6 @@ export class Message extends Component {
      * @override
      */
     setup() {
-        super.setup();
         useComponentToModel({ fieldName: 'component', modelName: 'MessageView' });
         useUpdateToModel({ methodName: 'onComponentUpdate', modelName: 'MessageView' });
         this.state = useState({

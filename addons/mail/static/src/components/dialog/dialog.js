@@ -10,7 +10,6 @@ export class Dialog extends Component {
      * @override
      */
     setup() {
-        super.setup();
         this._onClickGlobal = this._onClickGlobal.bind(this);
         this._onKeydownDocument = this._onKeydownDocument.bind(this);
         onMounted(() => this._mounted());

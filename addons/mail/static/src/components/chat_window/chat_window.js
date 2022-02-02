@@ -12,7 +12,6 @@ export class ChatWindow extends Component {
      * @override
      */
     setup() {
-        super.setup();
         useUpdate({ func: () => this._update() });
         /**
          * Reference of the autocomplete input (new_message chat window only).

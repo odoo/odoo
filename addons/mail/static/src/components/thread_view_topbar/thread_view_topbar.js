@@ -12,7 +12,6 @@ export class ThreadViewTopbar extends Component {
      * @override
      */
     setup() {
-        super.setup();
         useRefToModel({ fieldName: 'guestNameInputRef', modelName: 'ThreadViewTopbar', refName: 'guestNameInput' });
         useRefToModel({ fieldName: 'inviteButtonRef', modelName: 'ThreadViewTopbar', refName: 'inviteButton' });
         useRefToModel({ fieldName: 'threadNameInputRef', modelName: 'ThreadViewTopbar', refName: 'threadNameInput' });

@@ -12,7 +12,6 @@ export class AttachmentBox extends Component {
      * @override
      */
     setup() {
-        super.setup();
         this.isDropZoneVisible = useDragVisibleDropZone();
         useComponentToModel({ fieldName: 'component', modelName: 'AttachmentBoxView' });
         this._onDropZoneFilesDropped = this._onDropZoneFilesDropped.bind(this);

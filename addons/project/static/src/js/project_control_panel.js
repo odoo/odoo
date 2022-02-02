@@ -15,7 +15,7 @@ export class ProjectControlPanel extends ControlPanel {
         onWillStart(async () => {
             await this._loadWidgetData();
         });
-    
+
         onWillUpdateProps(async () => {
             await this._loadWidgetData();
         });

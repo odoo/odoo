@@ -397,6 +397,7 @@ QUnit.test('new message', async function (assert) {
         hasChatWindow: true,
     });
     await createMessagingMenuComponent();
+
     await afterNextRender(() =>
         document.querySelector(`.o_MessagingMenu_toggler`).click()
     );

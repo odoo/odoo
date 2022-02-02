@@ -10,7 +10,6 @@ export class ComposerSuggestedRecipientList extends Component {
      * @override
      */
     setup() {
-        super.setup();
         this.state = useState({
             hasShowMoreButton: false,
         });

@@ -11,7 +11,6 @@ export class AttachmentImage extends Component {
      * @override
      */
     setup() {
-        super.setup();
         useComponentToModel({ fieldName: 'component', modelName: 'AttachmentImage' });
     }
 

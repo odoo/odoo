@@ -10,7 +10,6 @@ export class RtcCallParticipantCard extends Component {
      * @override
      */
     setup() {
-        super.setup();
         this._volumeMenuAnchorRef = useRef('volumeMenuAnchor');
     }
 

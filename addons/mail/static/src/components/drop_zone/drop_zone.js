@@ -10,7 +10,6 @@ export class DropZone extends Component {
      * @override
      */
     setup() {
-        super.setup();
         this.state = useState({
             /**
              * Determine whether the user is dragging files over the dropzone.

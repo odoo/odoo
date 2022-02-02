@@ -10,7 +10,6 @@ export class MessagingMenu extends Component {
      * @override
      */
     setup() {
-        super.setup();
         /**
          * global JS generated ID for this component. Useful to provide a
          * custom class to autocomplete input, so that click in an autocomplete

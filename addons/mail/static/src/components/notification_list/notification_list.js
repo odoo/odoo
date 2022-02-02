@@ -10,7 +10,6 @@ export class NotificationList extends Component {
      * @override
      */
     setup() {
-        super.setup();
         onMounted(() => this._mounted());
     }
 
