@@ -13,11 +13,10 @@ const { Component, useRef, useState } = owl;
 **/
 class TaxGroupComponent extends Component {
 
-    constructor(parent, props) {
-        super(parent, props);
+    setup() {
         this.inputTax = useRef('taxValueInput');
         this.state = useState({value: 'readonly'});
-        this.allowTaxEdition = this.__owl__.parent.mode === 'edit' ? props.allowTaxEdition : false;
+        this.allowTaxEdition = this.props.mode === 'edit' ? this.props.allowTaxEdition : false;
     }
 
     //--------------------------------------------------------------------------
@@ -95,7 +94,7 @@ class TaxGroupComponent extends Component {
         });
     }
 }
-TaxGroupComponent.props = ['taxGroup', 'allowTaxEdition', 'record'];
+TaxGroupComponent.props = ['taxGroup', 'allowTaxEdition', 'record', 'onChangeTaxGroup', 'mode'];
 TaxGroupComponent.template = 'account.TaxGroupComponent';
 
 /**

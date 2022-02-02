@@ -12,8 +12,7 @@ odoo.define('base_import.ImportMenu', function (require) {
      * This component is used to import the records for particular model.
      */
     class ImportMenu extends Component {
-        constructor() {
-            super(...arguments);
+        setup() {
             this.model = useModel('searchModel');
         }
 

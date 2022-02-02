@@ -59,7 +59,7 @@
             </t>
             <t t-if="projects" t-call="portal.portal_table">
                 <tbody>
-                    <tr t-foreach="projects" t-as="project">
+                    <tr t-foreach="projects" t-as="project" t-key="project_index">
                         <td>
                             <a t-attf-href="/my/project/#{project.id}?{{ keep_query() }}"><span t-field="project.name"/></a>
                         </td>
@@ -113,7 +113,7 @@
                         <th t-if="groupby != 'stage'">Stage</th>
                     </tr>
                 </thead>
-                <t t-foreach="grouped_tasks" t-as="tasks">
+                <t t-foreach="grouped_tasks" t-as="tasks" t-key="tasks_index">
                     <tbody>
                         <tr t-if="not groupby == 'none'" class="thead-light">
                             <th t-if="groupby == 'project'" t-attf-colspan="{{grouped_tasks_colspan}}">
@@ -129,7 +129,7 @@
                         </tr>
                     </tbody>
                     <tbody>
-                        <t t-foreach="tasks" t-as="task">
+                        <t t-foreach="tasks" t-as="task" t-key="task_index">
                             <tr>
                                 <td class="text-left">
                                     #<span t-esc="task.id"/>
@@ -211,7 +211,7 @@
                             <li t-if="task.user_ids or task.partner_id" class="list-group-item flex-grow-1 pl-0">
                                 <div class="col-12 col-md-12 pb-2" t-if="task.user_ids">
                                     <strong>Assignees</strong>
-                                    <t t-foreach="task.user_ids" t-as="user">
+                                    <t t-foreach="task.user_ids" t-as="user" t-key="user_index">
                                         <div class="row pl-3 flex-nowrap">
                                             <img class="rounded-circle mt-1 o_portal_contact_img" t-att-src="image_data_uri(user.avatar_1024)" alt="Contact"/>
                                             <div class="ml-2">
@@ -286,7 +286,7 @@
                                     <div class="row">
                                         <div t-attf-class="col {{'col-lg-6' if not task.description else 'col-lg-12'}}">
                                             <ul class="list-group">
-                                                <a class="list-group-item list-group-item-action d-flex align-items-center oe_attachments py-1 px-2" t-foreach='task.attachment_ids' t-as='attachment' t-attf-href="/web/content/#{attachment.id}?download=true&amp;access_token=#{attachment.access_token}" target="_blank" data-no-post-process="">
+                                                <a class="list-group-item list-group-item-action d-flex align-items-center oe_attachments py-1 px-2" t-foreach='task.attachment_ids' t-as='attachment' t-key="attachment_index" t-attf-href="/web/content/#{attachment.id}?download=true&amp;access_token=#{attachment.access_token}" target="_blank" data-no-post-process="">
                                                     <div class='oe_attachment_embedded o_image o_image_small mr-2 mr-lg-3' t-att-title="attachment.name" t-att-data-mimetype="attachment.mimetype" t-attf-data-src="/web/image/#{attachment.id}/50x40?access_token=#{attachment.access_token}"/>
                                                     <div class='oe_attachment_name text-truncate'><t t-esc='attachment.name'/></div>
                                                 </a>

@@ -1,13 +1,13 @@
 /** @odoo-module **/
 
-import { useBus, useEffect, useService } from '@web/core/utils/hooks';
+import { useBus, useService } from '@web/core/utils/hooks';
 import { ActionContainer } from '@web/webclient/actions/action_container';
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { useOwnDebugContext } from "@web/core/debug/debug_context";
 import { ErrorHandler, NotUpdatable } from "@web/core/utils/components";
 import { session } from '@web/session';
 
-const { Component } = owl;
+const { Component, useEffect } = owl;
 
 export class ProjectSharingWebClient extends Component {
     setup() {

@@ -2,7 +2,7 @@
 
 import { _lt } from 'web.core';
 import fieldUtils from 'web.field_utils';
-import { ComponentAdapter } from 'web.OwlCompatibility';
+import { ComponentAdapter, standaloneAdapter } from 'web.OwlCompatibility';
 import { FormViewDialog } from 'web.view_dialogs';
 
 const { Component, useRef, useState } = owl;
@@ -13,14 +13,6 @@ class MilestoneComponent extends Component {
         this.contextValue = Object.assign({}, {
             'default_project_id': this.props.context.active_id,
         }, this.props.context);
-        this.FormViewDialog = FormViewDialog;
-        this.state = useState({
-            openDialog: false
-        });
-        this._dialogRef = useRef('dialog');
-        this._isDialogOpen = false;
-        this._createContext = this._createContext.bind(this);
-        this._onDialogSaved = this._onDialogSaved.bind(this);
     }
 
     get context() {
@@ -33,43 +25,34 @@ class MilestoneComponent extends Component {
         }, value);
     }
 
-    dialogClosed() {
-        this._isDialogOpen = false;
-        this.state.openDialog = false;
-    }
-
-    patched() {
-        if (this.state.openDialog && !this._isDialogOpen) {
-            this._isDialogOpen = true;
-            this._dialogRef.comp.widget.on('closed', this, () => {
-                this.dialogClosed();
-            });
-            this._dialogRef.comp.widget.open();
-        }
-    }
-
-    _createContext() {
-        return Object.assign({}, {
-            'default_project_id': this.contextValue.active_id,
-        }, this.contextValue);
-    }
-
-    async _onDialogSaved() {
-        await this.__owl__.parent.willUpdateProps();
+    async openLegacyFormDialog(params) {
+        const adapterParent = standaloneAdapter({ Component });
+        const dialog = new FormViewDialog(adapterParent, {
+            context: this.context,
+            res_model: "project.milestone",
+            res_id: false,
+            on_saved: this.props.onMilestoneUpdate,
+            ...params,
+        });
+        await dialog.open();
+        return dialog;
     }
 }
 MilestoneComponent.components = { ComponentAdapter };
 
 export class AddMilestone extends MilestoneComponent {
-    get NEW_PROJECT_MILESTONE() {
-        return _lt("New Milestone");
-    }
-
     onAddMilestoneClick(event) {
-        if (!this._isDialogOpen) {
-            event.stopPropagation();
-            this.state.openDialog = true;
-        }
+        event.stopPropagation();
+        this.openLegacyFormDialog({
+            _createContext: () => {
+                return {
+                    default_project_id: this.contextValue.active_id,
+                    ...this.contextValue
+                };
+            },
+            title: this.env._t("New Milestone"),
+            multi_select: true
+        });
     }
 }
 AddMilestone.template = 'project.AddMilestone';
@@ -79,12 +62,10 @@ export class OpenMilestone extends MilestoneComponent {
     constructor() {
         super(...arguments);
         this.milestone = useState(this.props.milestone);
-        this.state.colorClass = this.milestone.is_deadline_exceeded ? "o_milestone_danger" : "";
-        this.state.checkboxIcon = this.milestone.is_reached ? "fa-check-square-o" : "fa-square-o";
-    }
-
-    get OPEN_PROJECT_MILESTONE() {
-        return _lt("Milestone");
+        this.state = useState({
+            colorClass: this.milestone.is_deadline_exceeded ? "o_milestone_danger" : "",
+            checkboxIcon: this.milestone.is_reached ? "fa-check-square-o" : "fa-square-o",
+        });
     }
 
     get deadline() {
@@ -102,24 +83,27 @@ export class OpenMilestone extends MilestoneComponent {
         }
     }
 
-    dialogClosed() {
-        super.dialogClosed();
-        this.write_mutex = false;
-    }
-
     async onDeleteMilestone() {
         await this.rpc({
             model: 'project.milestone',
             method: 'unlink',
             args: [this.milestone.id]
         });
-        await this.__owl__.parent.willUpdateProps();
+        await this.props.onMilestoneUpdate();
     }
 
-    onOpenMilestone() {
-        if (!this._isDialogOpen && !this.write_mutex) {
+    async onOpenMilestone() {
+        if (!this.write_mutex) {
             this.write_mutex = true;
-            this.state.openDialog = true;
+            const dialog = await this.openLegacyFormDialog({
+                res_id: this.milestone.id,
+                title: this.env._t("Milestone"),
+                disable_multiple_selection: true,
+                deletable: true
+            });
+            dialog.on('closed', this, () => {
+                this.write_mutex = false;
+            });
         }
     }
 

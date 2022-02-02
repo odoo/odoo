@@ -22,9 +22,7 @@ odoo.define('board.AddToBoardMenu', function (require) {
      * This component is only available in actions of type 'ir.actions.act_window'.
      */
     class AddToBoardMenu extends Component {
-        constructor() {
-            super(...arguments);
-
+        setup() {
             this.interactive = true;
             this.state = useState({
                 name: this.env.action.name || "",

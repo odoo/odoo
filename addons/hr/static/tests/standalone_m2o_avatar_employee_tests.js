@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-
     import AbstractRendererOwl from 'web.AbstractRendererOwl';
     import BasicView from "web.BasicView";
     import BasicRenderer from "web.BasicRenderer";

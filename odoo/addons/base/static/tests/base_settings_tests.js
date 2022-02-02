@@ -7,10 +7,11 @@ var view_registry = require('web.view_registry');
 var createView = testUtils.createView;
 var BaseSettingsView = view_registry.get('base_settings');
 
-const { legacyExtraNextTick } = require("@web/../tests/helpers/utils");
+const { getFixture, legacyExtraNextTick } = require("@web/../tests/helpers/utils");
 const { createWebClient, doAction } = require("@web/../tests/webclient/helpers");
 
 let serverData;
+let target;
 QUnit.module('base_settings_tests', {
     beforeEach: function () {
         this.data = {
@@ -26,6 +27,7 @@ QUnit.module('base_settings_tests', {
             }
         };
         serverData = { models: this.data };
+        target = getFixture();
     }
 }, function () {
 
@@ -134,14 +136,14 @@ QUnit.module('base_settings_tests', {
                 }
             };
 
-            const webClient = await createWebClient({ serverData, mockRPC });
+            const webClient = await createWebClient({ target, serverData, mockRPC });
 
             await doAction(webClient, 1);
-            await testUtils.dom.click($(webClient.el).find('button[name="4"]'));
+            await testUtils.dom.click($(target).find('button[name="4"]'));
             await legacyExtraNextTick();
             await testUtils.dom.click($(".o_control_panel .breadcrumb-item a"));
             await legacyExtraNextTick();
-            assert.hasClass($(webClient.el).find(".o_form_view"), "o_form_editable");
+            assert.hasClass($(target).find(".o_form_view"), "o_form_editable");
             assert.verifySteps([
                 "load_views", // initial setting action
                 "onchange", // this is a setting view => create new record
@@ -218,48 +220,48 @@ QUnit.module('base_settings_tests', {
                 }
             };
 
-            const webClient = await createWebClient({ serverData, mockRPC });
+            const webClient = await createWebClient({ target, serverData, mockRPC });
 
             await doAction(webClient, 1);
             assert.containsNone(
-                webClient,
+                target,
                 ".o_field_boolean input:checked",
                 "checkbox should not be checked"
             );
 
-            await testUtils.dom.click($(webClient.el).find("input[type='checkbox']"));
+            await testUtils.dom.click($(target).find("input[type='checkbox']"));
             assert.containsOnce(
-                webClient,
+                target,
                 ".o_field_boolean input:checked",
                 "checkbox should be checked"
             );
 
-            await testUtils.dom.click($(webClient.el).find('button[name="4"]'));
+            await testUtils.dom.click($(target).find('button[name="4"]'));
             await legacyExtraNextTick();
             assert.containsOnce(document.body, ".modal", "should open a warning dialog");
 
             await testUtils.dom.click($(".modal button:contains(Discard)"));
             await legacyExtraNextTick();
-            assert.containsOnce(webClient, ".o_list_view", "should be open list view");
+            assert.containsOnce(target, ".o_list_view", "should be open list view");
 
             await testUtils.dom.click($(".o_control_panel .breadcrumb-item a"));
             await legacyExtraNextTick();
             assert.containsNone(
-                webClient,
+                target,
                 ".o_field_boolean input:checked",
                 "checkbox should not be checked"
             );
 
-            await testUtils.dom.click($(webClient.el).find("input[type='checkbox']"));
-            await testUtils.dom.click($(webClient.el).find('button[name="4"]'));
+            await testUtils.dom.click($(target).find("input[type='checkbox']"));
+            await testUtils.dom.click($(target).find('button[name="4"]'));
             await legacyExtraNextTick();
             assert.containsOnce(document.body, ".modal", "should open a warning dialog");
 
             await testUtils.dom.click($(".modal button:contains(Stay Here)"));
             await legacyExtraNextTick();
-            assert.containsOnce(webClient, ".o_form_view", "should be remain on form view");
+            assert.containsOnce(target, ".o_form_view", "should be remain on form view");
 
-            await testUtils.dom.click($(webClient.el).find("button[name='execute']"));
+            await testUtils.dom.click($(target).find("button[name='execute']"));
             await legacyExtraNextTick();
             assert.containsNone(
                 document.body,
@@ -267,8 +269,8 @@ QUnit.module('base_settings_tests', {
                 "should not open a warning dialog"
             );
 
-            await testUtils.dom.click($(webClient.el).find("input[type='checkbox']"));
-            await testUtils.dom.click($(webClient.el).find("button[name='cancel']"));
+            await testUtils.dom.click($(target).find("input[type='checkbox']"));
+            await testUtils.dom.click($(target).find("button[name='cancel']"));
             await legacyExtraNextTick();
             assert.containsNone(
                 document.body,
@@ -447,21 +449,21 @@ QUnit.module('base_settings_tests', {
                 }
             };
 
-            const webClient = await createWebClient({ serverData, mockRPC });
+            const webClient = await createWebClient({ target, serverData, mockRPC });
             await doAction(webClient, 1);
-            assert.strictEqual($(webClient.el).find(".breadcrumb").text(), "First action");
+            assert.strictEqual($(target).find(".breadcrumb").text(), "First action");
 
             await doAction(webClient, 2);
             assert.strictEqual(
-                $(webClient.el).find(".breadcrumb").text(),
+                $(target).find(".breadcrumb").text(),
                 "First actionNew"
             );
 
             loadViewsDef = testUtils.makeTestPromise();
-            await testUtils.dom.click($(webClient.el).find('button[name="3"]'));
+            await testUtils.dom.click($(target).find('button[name="3"]'));
             await legacyExtraNextTick();
             assert.strictEqual(
-                $(webClient.el).find(".breadcrumb").text(),
+                $(target).find(".breadcrumb").text(),
                 "First actionNew"
             );
 
@@ -469,7 +471,7 @@ QUnit.module('base_settings_tests', {
             await testUtils.nextTick();
             await legacyExtraNextTick();
             assert.strictEqual(
-                $(webClient.el).find(".breadcrumb").text(),
+                $(target).find(".breadcrumb").text(),
                 "First actionNewOther action"
             );
         }
@@ -577,23 +579,23 @@ QUnit.module('base_settings_tests', {
                 }
             };
 
-            const webClient = await createWebClient({ serverData, mockRPC });
+            const webClient = await createWebClient({ target, serverData, mockRPC });
 
             await doAction(webClient, 1);
             assert.containsNone(
-                webClient,
+                target,
                 ".o_field_boolean input:checked",
                 "checkbox should not be checked"
             );
 
-            await testUtils.dom.click($(webClient.el).find('input[type="checkbox"]'));
+            await testUtils.dom.click($(target).find('input[type="checkbox"]'));
             assert.containsOnce(
-                webClient,
+                target,
                 ".o_field_boolean input:checked",
                 "checkbox should be checked"
             );
 
-            await testUtils.dom.click($(webClient.el).find('button[name="4"]'));
+            await testUtils.dom.click($(target).find('button[name="4"]'));
             assert.containsOnce(document.body, ".modal", "should open a warning dialog");
 
             await testUtils.dom.click($(".modal-footer .btn-primary"));

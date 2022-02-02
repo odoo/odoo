@@ -2,10 +2,10 @@
 <templates xml:space="preserve">
 
     <t t-name="board.AddToBoard" owl="1">
-        <Dropdown class="o_add_to_board">
+        <Dropdown class="'o_add_to_board'">
             <t t-set-slot="toggler">Add to my dashboard</t>
             <div class="px-3 py-2">
-                <input type="text" class="o_input" autofocus="" t-model.trim="state.name" t-on-keydown="onInputKeydown" />
+                <input type="text" class="o_input" t-ref="autofocus" t-model.trim="state.name" t-on-keydown="onInputKeydown" />
             </div>
             <div class="px-3 py-2">
                 <button type="button" class="btn btn-primary" t-on-click="addToBoard">Add</button>

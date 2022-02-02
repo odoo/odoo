@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="google_spreadsheet.AddToGoogleSpreadsheet" owl="1">
-        <DropdownItem class="o_add_to_spreadsheet dropdown-item" t-on-click="addToGoogleSpreadsheet">
+        <DropdownItem class="'o_add_to_spreadsheet dropdown-item'" onSelected.bind="addToGoogleSpreadsheet">
             Add to Google Spreadsheet
         </DropdownItem>
     </t>

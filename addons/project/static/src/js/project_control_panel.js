@@ -3,26 +3,22 @@
 import ControlPanel from 'web.ControlPanel';
 import session from 'web.session';
 
+const { onWillStart, onWillUpdateProps } = owl;
+
 export class ProjectControlPanel extends ControlPanel {
 
-    constructor() {
-        super(...arguments);
-        this.show_project_update = this.env.view.type === "form" || this.props.action.context.show_project_update;
+    setup() {
+        super.setup();
+        this.show_project_update = this.props.view.type === "form" || this.props.action.context.show_project_update;
         this.project_id = this.show_project_update ? this.props.action.context.active_id : false;
-    }
 
-    async willStart() {
-        const promises = [];
-        promises.push(super.willStart(...arguments));
-        promises.push(this._loadWidgetData());
-        return Promise.all(promises);
-    }
-
-    async willUpdateProps() {
-        const promises = [];
-        promises.push(super.willUpdateProps(...arguments));
-        promises.push(this._loadWidgetData());
-        return Promise.all(promises);
+        onWillStart(async () => {
+            await this._loadWidgetData();
+        });
+    
+        onWillUpdateProps(async () => {
+            await this._loadWidgetData();
+        });
     }
 
     async _loadWidgetData() {

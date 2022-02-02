@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="base_import.ImportRecords" owl="1">
-        <DropdownItem class="o_import_menu dropdown-item" t-on-click="importRecords">
+        <DropdownItem class="'o_import_menu dropdown-item'" onSelected.bind="importRecords">
             Import records
         </DropdownItem>
     </t>

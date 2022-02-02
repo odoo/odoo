@@ -435,9 +435,8 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
             const fadeout = this.tours[tour_name].fadeout;
             core.bus.trigger('show-effect', {
                 type: "rainbow_man",
-                message,
+                message: owl.markup(message),
                 fadeout,
-                messageIsHtml: true,
             });
         }
         this.tours[tour_name].current_step = 0;

@@ -3,11 +3,10 @@
 import { AddMilestone, OpenMilestone } from '@project/js/right_panel/project_utils';
 import { formatFloat } from "@web/fields/formatters";
 
-const { Component, useState } = owl;
+const { Component, onWillStart, onWillUpdateProps, useState } = owl;
 
 export default class ProjectRightPanel extends Component {
-    constructor() {
-        super(...arguments);
+    setup() {
         this.context = this.props.action.context;
         this.domain = this.props.action.domain;
         this.project_id = this.context.active_id;
@@ -19,20 +18,18 @@ export default class ProjectRightPanel extends Component {
                 user: {},
             }
         });
+
+        onWillStart(async () => {
+            await this._loadQwebContext();
+        });
+
+        onWillUpdateProps(async () => {
+            await this._loadQwebContext();
+        });
     }
 
     formatFloat(value) {
         return formatFloat(value, { digits: [false, 1] });
-    }
-
-    async willStart() {
-        await super.willStart(...arguments);
-        await this._loadQwebContext();
-    }
-
-    async willUpdateProps() {
-        await super.willUpdateProps(...arguments);
-        await this._loadQwebContext();
     }
 
     async _loadQwebContext() {

@@ -15,7 +15,7 @@
                     <thead>
                         <tr>
                             <th>Month</th>
-                            <t t-foreach="get_months" t-as="month">
+                            <t t-foreach="get_months" t-as="month" t-key="month_index">
                                 &lt;th class="text-center" colspan=<t t-esc="month['days']"/>&gt;<t t-esc="month['month_name']"/>&lt;/th&gt;
                             </t>
                             <th/>
@@ -24,32 +24,32 @@
                             <td rowspan="2">
                                 <strong>Departments and Employees</strong>
                             </td>
-                            <t t-foreach="get_day" t-as="day">
+                            <t t-foreach="get_day" t-as="day" t-key="day_index">
                                 &lt;td class="text-center oe_leftfit oe_rightfit" style="background-color:<t t-esc="day['color']"/>!important; font-size: 8px; min-width: 18px"&gt; <t t-esc="day['day_str']"/>&lt;/td&gt;
                             </t>
                             <td/>
                         </tr>
                         <tr>
-                            <t t-foreach="get_day" t-as="day">
+                            <t t-foreach="get_day" t-as="day" t-key="day_index">
                                 &lt;td class="text-center oe_leftfit oe_rightfit" style="background-color:<t t-esc="day['color']"/>!important; font-size: 10px" &gt; <t t-esc="day['day']"/>&lt;/td&gt;
                             </t>
                             <td class="text-center">Sum</td>
                         </tr>
                     </thead>
                     <tbody>
-                        <t t-foreach="get_data_from_report" t-as="obj">
+                        <t t-foreach="get_data_from_report" t-as="obj" t-key="obj_index">
                             <tr t-if="'dept' in obj">
                                 <td style="background-color:#ababab">
                                     <strong><t t-esc="obj['dept']"/></strong>
                                 </td>
-                                <t t-foreach="obj['color']" t-as="c">
+                                <t t-foreach="obj['color']" t-as="c" t-key="c_index">
                                     &lt;td style=background-color:<t t-esc="c['color']"/> !important/&gt;
                                 </t>
                                 <td/>
                             </tr>
-                            <tr t-foreach="obj['data']" t-as="emp">
+                            <tr t-foreach="obj['data']" t-as="emp" t-key="emp_index">
                                 <td><t t-esc="emp['emp']"/></td>
-                                <t t-foreach="emp['display']" t-as="details">
+                                <t t-foreach="emp['display']" t-as="details" t-key="details_index">
                                     &lt;td style=background-color:<t t-esc="details['color']"/> !important /&gt;
                                 </t>
                                 <td class="text-center"><strong><t t-esc="emp['sum']"/></strong></td>
@@ -67,7 +67,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr t-foreach="get_holidays_status" t-as="status">
+                            <tr t-foreach="get_holidays_status" t-as="status" t-key="status_index">
                                 &lt;td style=background-color:<t t-esc="status['color']"/>!important &gt;&lt;/td&gt;
                                 <td><t t-esc="status['name']"/></td>
                             </tr>
