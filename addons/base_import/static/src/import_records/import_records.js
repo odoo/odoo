@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 
@@ -32,6 +33,7 @@ export class ImportRecords extends Component {
 }
 
 ImportRecords.template = "base_import.ImportRecords";
+ImportRecords.components = { DropdownItem };
 
 const importRecordsItem = {
     Component: ImportRecords,
