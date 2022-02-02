@@ -292,7 +292,6 @@ class TestBatchPicking(TransactionCase):
 
         for i in range(12):
             self.env['stock.quant']._update_available_quantity(self.productB, self.stock_location, 1.0, lot_id=sns[i])
-
         dozen_move = self.env['stock.move'].create({
             'name': self.productB.name,
             'product_id': self.productB.id,
