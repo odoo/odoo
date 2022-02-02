@@ -33,8 +33,11 @@ The automatic assignment is figured from the weight of partner levels and the ge
         'security/ir_rule.xml',
         'wizard/crm_forward_to_partner_view.xml',
         'views/res_partner_views.xml',
+        'views/res_partner_activation_views.xml',
+        'views/res_partner_grade_views.xml',
         'views/crm_lead_views.xml',
         'views/website_crm_partner_assign_templates.xml',
+        'views/partner_assign_menus.xml',
         'report/crm_partner_report_view.xml',
     ],
     'demo': [
