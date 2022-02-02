@@ -25,8 +25,8 @@
                         <span> </span>
                         <span>Print</span>
                     </div>
-                    <div class="pos-receipt-container">
-                        <OrderReceipt order="currentOrder" isBill="true" t-ref="order-receipt"/>
+                    <div class="pos-receipt-container" t-ref="order-receipt">
+                        <OrderReceipt order="currentOrder" isBill="true"/>
                     </div>
                 </div>
             </div>

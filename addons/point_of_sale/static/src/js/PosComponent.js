@@ -1,9 +1,16 @@
 odoo.define('point_of_sale.PosComponent', function (require) {
     'use strict';
 
-    const { Component } = owl;
+    const { Component, onRendered } = owl;
 
     class PosComponent extends Component {
+        setup() {
+            onRendered(() => {
+                if (this.env.isDebug()) {
+                    console.log('Rendered:', this.constructor.name);
+                }
+            });
+        }
         /**
          * This function is available to all Components that inherit this class.
          * The goal of this function is to show an awaitable dialog (popup) that
@@ -58,14 +65,6 @@ odoo.define('point_of_sale.PosComponent', function (require) {
         }
         closeNotification() {
             this.trigger('close-notification');
-        }
-        render() {
-            return super.render().then((res) => {
-                if (this.env.isDebug()) {
-                    console.log('Rendered:', this.constructor.name);
-                }
-                return res;
-            })
         }
     }
 

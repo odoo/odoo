@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="Notification" owl="1">
-        <div class="notification">
+        <div class="notification" t-att-class="props.className">
             <span>
                 <t t-esc="props.message" />
             </span>

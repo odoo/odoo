@@ -94,8 +94,8 @@ odoo.define('pos_mercury.PaymentScreen', function (require) {
 
     const PosMercuryPaymentScreen = (PaymentScreen) =>
         class extends PaymentScreen {
-            constructor() {
-                super(...arguments);
+            setup() {
+                super.setup();
                 if (this.env.pos.getOnlinePaymentMethods().length !== 0) {
                     useBarcodeReader({
                         credit: this.credit_code_action,

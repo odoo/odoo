@@ -2,13 +2,13 @@ odoo.define('pos_restaurant.PosResPaymentScreen', function (require) {
     'use strict';
 
     const PaymentScreen = require('point_of_sale.PaymentScreen');
-    const { useListener } = require('web.custom_hooks');
+    const { useListener } = require("@web/core/utils/hooks");
     const Registries = require('point_of_sale.Registries');
 
     const PosResPaymentScreen = (PaymentScreen) =>
         class extends PaymentScreen {
-            constructor() {
-                super(...arguments);
+            setup() {
+                super.setup();
                 useListener('send-payment-adjust', this._sendPaymentAdjust);
             }
 

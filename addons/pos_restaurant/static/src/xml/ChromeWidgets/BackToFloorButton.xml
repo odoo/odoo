@@ -2,7 +2,12 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="BackToFloorButton" owl="1">
-        <span t-if="hasTable" class="order-button floor-button" t-on-click="backToFloorScreen">
+        <span
+            t-if="hasTable"
+            class="order-button floor-button"
+            t-att-class="{ oe_hidden: props.mobileSearchBarIsShown }"
+            t-on-click="backToFloorScreen"
+        >
             <i class="fa fa-angle-double-left" role="img" aria-label="Back to floor" title="Back to floor" />
             <t t-if="env.isMobile">
                 <span class="table-name">

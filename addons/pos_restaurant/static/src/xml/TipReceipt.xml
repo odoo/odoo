@@ -30,7 +30,7 @@
                     <div><t t-esc="receipt.company.website" /></div>
                 </t>
                 <t t-if="receipt.header_html">
-                    <t t-raw="receipt.header_html" />
+                    <t t-out="receipt.header_html" />
                 </t>
                 <t t-if="!receipt.header_html and receipt.header">
                     <div><t t-esc="receipt.header" /></div>
@@ -45,7 +45,7 @@
             <br/>
 
             <div class="pos-payment-terminal-receipt">
-                <t t-raw="data"/>
+                <t t-out="data"/>
             </div>
             <br/>
 

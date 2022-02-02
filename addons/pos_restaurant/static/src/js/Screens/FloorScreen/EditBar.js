@@ -7,8 +7,8 @@ odoo.define('pos_restaurant.EditBar', function(require) {
     const { useState } = owl;
 
     class EditBar extends PosComponent {
-        constructor() {
-            super(...arguments);
+        setup() {
+            super.setup();
             this.state = useState({ isColorPicker: false })
         }
     }

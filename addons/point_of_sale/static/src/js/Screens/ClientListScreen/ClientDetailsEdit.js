@@ -6,21 +6,25 @@ odoo.define('point_of_sale.ClientDetailsEdit', function(require) {
     const PosComponent = require('point_of_sale.PosComponent');
     const Registries = require('point_of_sale.Registries');
 
+    const { onMounted, onWillUnmount } = owl;
+
     class ClientDetailsEdit extends PosComponent {
-        constructor() {
-            super(...arguments);
+        setup() {
+            super.setup();
             this.intFields = ['country_id', 'state_id', 'property_product_pricelist'];
             const partner = this.props.partner;
             this.changes = {
                 'country_id': partner.country_id && partner.country_id[0],
                 'state_id': partner.state_id && partner.state_id[0],
             };
-        }
-        mounted() {
-            this.env.bus.on('save-customer', this, this.saveChanges);
-        }
-        willUnmount() {
-            this.env.bus.off('save-customer', this);
+
+            onMounted(() => {
+                this.env.bus.on('save-customer', this, this.saveChanges);
+            });
+
+            onWillUnmount(() => {
+                this.env.bus.off('save-customer', this);
+            });
         }
         get partnerImageUrl() {
             // We prioritize image_1920 in the `changes` field because we want

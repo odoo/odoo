@@ -10,6 +10,7 @@ odoo.define('point_of_sale.CashMovePopup', function (require) {
 
     class CashMovePopup extends AbstractAwaitablePopup {
         setup() {
+            super.setup();
             this.state = useState({
                 inputType: '', // '' | 'in' | 'out'
                 inputAmount: '',
