@@ -27,6 +27,7 @@ export class ChatterContainer extends Component {
      * @override
      */
     setup() {
+        super.setup();
         this.chatter = undefined;
         this.chatterId = getChatterNextTemporaryId();
         this._insertFromProps(this.props);

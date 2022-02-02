@@ -11,6 +11,7 @@ export class FollowerSubtypeList extends Component {
      * @override
      */
      setup() {
+        super.setup();
         useComponentToModel({ fieldName: 'component', modelName: 'FollowerSubtypeList' });
     }
 

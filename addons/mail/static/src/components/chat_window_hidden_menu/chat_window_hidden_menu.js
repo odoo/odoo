@@ -10,6 +10,7 @@ export class ChatWindowHiddenMenu extends Component {
      * @override
      */
     setup() {
+        super.setup();
         this._onClickCaptureGlobal = this._onClickCaptureGlobal.bind(this);
         this._onClickedChatWindow = this._onClickedChatWindow.bind(this);
         /**

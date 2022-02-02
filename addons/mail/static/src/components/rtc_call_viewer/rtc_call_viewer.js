@@ -19,6 +19,7 @@ export class RtcCallViewer extends Component {
      * @override
      */
     setup() {
+        super.setup();
         this.state = useState({
             tileWidth: 0,
             tileHeight: 0,

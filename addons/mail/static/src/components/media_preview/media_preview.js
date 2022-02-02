@@ -11,6 +11,7 @@ export class MediaPreview extends Component {
      * @override
      */
     setup() {
+        super.setup();
         useRefToModel({ fieldName: 'audioRef', modelName: 'MediaPreview', refName: 'audio' });
         useRefToModel({ fieldName: 'videoRef', modelName: 'MediaPreview', refName: 'video' });
     }

@@ -12,6 +12,7 @@ export class ThreadNeedactionPreview extends Component {
      * @override
      */
     setup() {
+        super.setup();
         /**
          * Reference of the "mark as read" button. Useful to disable the
          * top-level click handler when clicking on this specific button.

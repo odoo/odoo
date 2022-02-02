@@ -35,6 +35,7 @@ export class ComposerSuggestedRecipient extends Component {
      * @override
      */
     setup() {
+        super.setup();
         this.id = _.uniqueId('o_ComposerSuggestedRecipient_');
         useUpdate({ func: () => this._update() });
         /**

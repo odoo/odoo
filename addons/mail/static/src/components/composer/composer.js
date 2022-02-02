@@ -14,6 +14,7 @@ export class Composer extends Component {
      * @override
      */
     setup() {
+        super.setup();
         this.isDropZoneVisible = useDragVisibleDropZone();
         useComponentToModel({ fieldName: 'component', modelName: 'ComposerView' });
         useRefToModel({ fieldName: 'buttonEmojisRef', modelName: 'ComposerView', refName: 'buttonEmojis' });

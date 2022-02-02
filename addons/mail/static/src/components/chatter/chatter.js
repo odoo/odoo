@@ -12,6 +12,7 @@ export class Chatter extends Component {
      * @override
      */
     setup() {
+        super.setup();
         useUpdate({ func: () => this._update() });
         useComponentToModel({ fieldName: 'component', modelName: 'Chatter' });
         /**

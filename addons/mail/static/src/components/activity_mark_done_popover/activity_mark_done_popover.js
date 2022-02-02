@@ -12,6 +12,7 @@ export class ActivityMarkDonePopover extends Component {
      * @override
      */
     setup() {
+        super.setup();
         useComponentToModel({ fieldName: 'component', modelName: 'ActivityMarkDonePopoverView' });
         useRefToModel({ fieldName: 'feedbackTextareaRef', modelName: 'ActivityMarkDonePopoverView', refName: 'feedbackTextarea' });
         this._feedbackTextareaRef = useRef('feedbackTextarea');

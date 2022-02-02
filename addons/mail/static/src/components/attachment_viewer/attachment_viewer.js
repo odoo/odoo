@@ -19,6 +19,7 @@ export class AttachmentViewer extends Component {
      * @override
      */
     setup() {
+        super.setup();
         useComponentToModel({ fieldName: 'component', modelName: 'AttachmentViewer' });
         this.MIN_SCALE = MIN_SCALE;
         /**

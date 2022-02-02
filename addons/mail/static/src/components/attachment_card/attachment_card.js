@@ -11,6 +11,7 @@ export class AttachmentCard extends Component {
      * @override
      */
     setup() {
+        super.setup();
         useComponentToModel({ fieldName: 'component', modelName: 'AttachmentCard' });
     }
 

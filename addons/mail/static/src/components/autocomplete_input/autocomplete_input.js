@@ -10,6 +10,7 @@ export class AutocompleteInput extends Component {
      * @override
      */
     setup() {
+        super.setup();
         onMounted(() => this._mounted());
         onWillUnmount(() => this._willUnmount());
         useEffect(() => {

@@ -326,6 +326,7 @@ QUnit.module("Components", ({ beforeEach }) => {
     QUnit.test("multi-level dropdown: recursive template can be rendered", async (assert) => {
         class Parent extends Component {
             setup() {
+                super.setup();
                 this.name = "foo";
                 this.items = [
                     {

@@ -10,6 +10,7 @@ export class FollowerListMenu extends Component {
      * @override
      */
     setup() {
+        super.setup();
         this.state = useState({
             /**
              * Determine whether the dropdown is open or not.

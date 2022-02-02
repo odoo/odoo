@@ -16,6 +16,7 @@ export class DiscussContainer extends Component {
         // `useModels` to work
         this.env = Component.env;
         useModels();
+        super.setup();
         useUpdate({ func: () => this._update() });
         onWillUnmount(() => this._willUnmount());
     }

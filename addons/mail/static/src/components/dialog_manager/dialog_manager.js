@@ -10,6 +10,7 @@ export class DialogManager extends Component {
      * @override
      */
     setup() {
+        super.setup();
         onMounted(() => this._mounted());
         onPatched(() => this._patched());
     }

@@ -12,6 +12,7 @@ export class WelcomeView extends Component {
      * @override
      */
     setup() {
+        super.setup();
         useRefToModel({ fieldName: 'guestNameInputRef', modelName: 'WelcomeView', refName: 'guestNameInput' });
         useUpdateToModel({ methodName: 'onComponentUpdate', modelName: 'WelcomeView' });
     }
