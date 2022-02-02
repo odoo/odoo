@@ -99,21 +99,8 @@ class Meeting(models.Model):
         if google_event.is_recurrent() and not google_event.is_recurrence():
             # Propagate the follow_recurrence according to the google result
             values['follow_recurrence'] = google_event.is_recurrence_follower()
-        if google_event.start.get('dateTime'):
-            # starting from python3.7, use the new [datetime, date].fromisoformat method
-            start = parse(google_event.start.get('dateTime')).astimezone(pytz.utc).replace(tzinfo=None)
-            stop = parse(google_event.end.get('dateTime')).astimezone(pytz.utc).replace(tzinfo=None)
-            values['allday'] = False
-        else:
-            start = parse(google_event.start.get('date'))
-            stop = parse(google_event.end.get('date')) - relativedelta(days=1)
-            # Stop date should be exclusive as defined here https://developers.google.com/calendar/v3/reference/events#resource
-            # but it seems that's not always the case for old event
-            if stop < start:
-                stop = parse(google_event.end.get('date'))
-            values['allday'] = True
-        values['start'] = start
-        values['stop'] = stop
+
+        values['start'], values['stop'], values['allday'] = self._odoo_dates_from_google_dates(google_event)
         return values
 
     @api.model

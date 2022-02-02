@@ -7,6 +7,7 @@ from functools import wraps
 from requests import HTTPError
 import pytz
 from dateutil.parser import parse
+from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, registry, _
 from odoo.tools import ormcache_context
@@ -147,15 +148,13 @@ class GoogleSync(models.AbstractModel):
         existing = google_events.exists(self.env)
         new = google_events - existing - google_events.cancelled()
 
-        odoo_values = [
-            dict(self._odoo_values(e, default_reminders), need_sync=False)
-            for e in new
-        ]
-        new_odoo = self.with_context(dont_notify=True)._create_from_google(new, odoo_values)
         cancelled = existing.cancelled()
         cancelled_odoo = self.browse(cancelled.odoo_ids(self.env))
         cancelled_odoo._cancel()
-        synced_records = new_odoo + cancelled_odoo
+
+        synced_records = cancelled_odoo
+
+        orphan_records = self.env["calendar.event"]
         for gevent in existing - cancelled:
             # Last updated wins.
             # This could be dangerous if google server time and odoo server time are different
@@ -164,8 +163,20 @@ class GoogleSync(models.AbstractModel):
             # Migration from 13.4 does not fill write_date. Therefore, we force the update from Google.
             if not odoo_record.write_date or updated >= pytz.utc.localize(odoo_record.write_date):
                 vals = dict(self._odoo_values(gevent, default_reminders), need_sync=False)
-                odoo_record.with_context(dont_notify=True)._write_from_google(gevent, vals)
+                orphans = odoo_record.with_context(dont_notify=True)._write_from_google(gevent, vals)
+                if orphans:
+                    orphan_records |= orphans
                 synced_records |= odoo_record
+
+        odoo_values = [
+            dict(self._odoo_values(e, default_reminders), need_sync=False)
+            for e in new
+        ]
+        new_odoo = self.with_context(dont_notify=True)._create_from_google(new, odoo_values, orphan_records)
+        synced_records |= new_odoo
+
+        # remove orphan records not mapped to new google events
+        orphan_records.filtered(lambda r: not r.google_id).unlink()
 
         return synced_records
 
@@ -281,8 +292,30 @@ class GoogleSync(models.AbstractModel):
         self.write(vals)
 
     @api.model
-    def _create_from_google(self, gevents, vals_list):
+    def _create_from_google(self, gevents, vals_list, orphan_records=None):
         return self.create(vals_list)
+
+    @api.model
+    def _odoo_dates_from_google_dates(self, gevent):
+        """
+        Convert start/stop dates of a google event to start/stop dates to be stored
+        in a Odoo event.
+        """
+        if gevent.start.get('dateTime'):
+            # starting from python3.7, use the new [datetime, date].fromisoformat method
+            start = parse(gevent.start.get('dateTime')).astimezone(pytz.utc).replace(tzinfo=None)
+            stop = parse(gevent.end.get('dateTime')).astimezone(pytz.utc).replace(tzinfo=None)
+            allday = False
+        else:
+            start = parse(gevent.start.get('date'))
+            stop = parse(gevent.end.get('date')) - relativedelta(days=1)
+            # Stop date should be exclusive as defined here https://developers.google.com/calendar/v3/reference/events#resource
+            # but it seems that's not always the case for old event
+            if stop < start:
+                stop = parse(gevent.end.get('date'))
+            allday = True
+
+        return (start, stop, allday)
 
     @api.model
     def _odoo_values(self, google_event: GoogleEvent, default_reminders=()):

@@ -2,6 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
+import pytz
+from dateutil.parser import parse
+
 from odoo import api, models, Command
 from odoo.tools import email_normalize
 
@@ -11,7 +14,6 @@ from odoo.addons.google_calendar.utils.google_calendar import GoogleCalendarServ
 class RecurrenceRule(models.Model):
     _name = 'calendar.recurrence'
     _inherit = ['calendar.recurrence', 'google.calendar.sync']
-
 
     def _apply_recurrence(self, specific_values_creation=None, no_send_edit=False, generic_values_creation=None):
         events = self.filtered('need_sync').calendar_event_ids
@@ -78,75 +80,119 @@ class RecurrenceRule(models.Model):
             'need_sync': True,
         })
 
-    def _write_from_google(self, gevent, vals):
-        current_rrule = self.rrule
-        # event_tz is written on event in Google but on recurrence in Odoo
-        vals['event_tz'] = gevent.start.get('timeZone')
-        super()._write_from_google(gevent, vals)
-
-        base_event_time_fields = ['start', 'stop', 'allday']
-        new_event_values = self.env["calendar.event"]._odoo_values(gevent)
-        # We update the attendee status for all events in the recurrence
-        google_attendees = gevent.attendees or []
-        emails = [a.get('email') for a in google_attendees]
-        partners = self.env['mail.thread']._mail_find_partner_from_emails(emails, records=self, force_create=True)
+    def _update_attendees_status(self, gevent):
         existing_attendees = self.calendar_event_ids.attendee_ids
-        for attendee in zip(emails, partners, google_attendees):
-            email = attendee[0]
-            if email in existing_attendees.mapped('email'):
-                # Update existing attendees
-                existing_attendees.filtered(lambda att: att.email == email).write({'state': attendee[2].get('responseStatus')})
-            else:
-                # Create new attendees
-                if attendee[2].get('self'):
-                    partner = self.env.user.partner_id
+        existing_attendees_emails = [email_normalize(e) for e in set(existing_attendees.mapped('email'))]
+        google_attendees = gevent.attendees or []
+        google_attendees_emails = [a.get('email') for a in google_attendees]
+
+        if google_attendees:
+            partners = self.env['mail.thread']._mail_find_partner_from_emails(
+                google_attendees_emails, records=self, force_create=True
+            )
+
+            # update existing attendees, create new ones
+            for email, partner, google_attendee in zip(google_attendees_emails, partners, gevent.attendees):
+                if email in existing_attendees_emails:
+                    existing_attendees.filtered(lambda a: a.email == email).write(
+                        {'state': google_attendee.get('responseStatus')}
+                    )
                 else:
-                    partner = attendee[1]
-                self.calendar_event_ids.write({'attendee_ids': [(0, 0, {'state': attendee[2].get('responseStatus'), 'partner_id': partner.id})]})
-                if attendee[2].get('displayName') and not partner.name:
-                    partner.name = attendee[2].get('displayName')
+                    if google_attendee.get('self'):
+                        partner = self.env.user.partner_id
 
-        for odoo_attendee_email in set(existing_attendees.mapped('email')):
-            # Remove old attendees. Sometimes, several partners have the same email.
-            if email_normalize(odoo_attendee_email) not in emails:
-                attendees = existing_attendees.exists().filtered(lambda att: att.email == email_normalize(odoo_attendee_email))
-                self.calendar_event_ids.write({'need_sync': False, 'partner_ids': [Command.unlink(att.partner_id.id) for att in attendees]})
+                    self.calendar_event_ids.write({
+                        'attendee_ids': [
+                            Command.create({'state': google_attendee.get('responseStatus'), 'partner_id': partner.id})
+                        ]
+                    })
 
-        # Update the recurrence values
-        old_event_values = self.base_event_id and self.base_event_id.read(base_event_time_fields)[0]
-        if old_event_values and any(new_event_values[key] != old_event_values[key] for key in base_event_time_fields):
-            # we need to recreate the recurrence, time_fields were modified.
-            base_event_id = self.base_event_id
-            # We archive the old events to recompute the recurrence. These events are already deleted on Google side.
-            # We can't call _cancel because events without user_id would not be deleted
-            (self.calendar_event_ids - base_event_id).google_id = False
-            (self.calendar_event_ids - base_event_id).unlink()
-            base_event_id.with_context(dont_notify=True).write(dict(new_event_values, google_id=False, need_sync=False))
+                    if google_attendee.get('displayName') and not partner.name:
+                        partner.name = google_attendee.get('displayName')
+
+        # Remove old attendees except the organizer. Sometimes, several partners have the same email.
+        if gevent.organizer and gevent.organizer.get('email'):
+            google_attendees_emails += [gevent.organizer.get('email')]
+
+        for odoo_attendee_email in existing_attendees_emails:
+            if odoo_attendee_email not in google_attendees_emails:
+                attendees = existing_attendees.exists().filtered(lambda a: a.email == odoo_attendee_email)
+                self.calendar_event_ids.write({
+                    'need_sync': False,
+                    'partner_ids': [Command.unlink(a.partner_id.id) for a in attendees]
+                })
+
+    def _write_from_google(self, gevent, vals):
+        """
+        Update a Odoo event recurrence from a Google event recurrence.
+        @note: gevent contains one google event recurrence only.
+        """
+        def _have_base_event_time_fields_changed(new_values):
+            fields = ['start', 'stop', 'allday']
+            old_values = self.base_event_id and self.base_event_id.read(fields)[0]
+            return old_values and any(new_values[key] != old_values[key] for key in fields)
+
+        self.ensure_one()
+        current_rrule = self.rrule
+
+        # In Odoo, the timezone is stored on the recurrence and not on the event,
+        # so use the timezone from google event to update the current recurrence.
+        super()._write_from_google(gevent, dict(vals, event_tz=gevent.start.get('timeZone')))
+
+        new_event_values = self.env["calendar.event"]._odoo_values(gevent)
+
+        # when time fields have been modified, recurrence has to be recreated from the base event
+        # with its new field values
+        if _have_base_event_time_fields_changed(new_event_values):
+            events_to_remove = self.calendar_event_ids - self.base_event_id
+            events_to_remove.google_id = False
+            events_to_remove.unlink()
+
+            self.base_event_id.with_context(dont_notify=True).write(
+                dict(new_event_values, google_id=False, need_sync=False)
+            )
+
+            # if the recurrence rule has not been modified, we just have
+            # to apply the recurrence rule to update existing events.
+            # no event will be excluded/detached from the recurrence.
             if self.rrule == current_rrule:
-                # if the rrule has changed, it will be recalculated below
-                # There is no detached event now
                 self.with_context(dont_notify=True)._apply_recurrence()
         else:
             time_fields = (
-                    self.env["calendar.event"]._get_time_fields()
-                    | self.env["calendar.event"]._get_recurrent_fields()
+                self.env["calendar.event"]._get_time_fields() | self.env["calendar.event"]._get_recurrent_fields()
             )
             # We avoid to write time_fields because they are not shared between events.
-            self._write_events(dict({
-                field: value
-                for field, value in new_event_values.items()
-                if field not in time_fields
-                }, need_sync=False)
-            )
+            self._write_events(dict(
+                {
+                    field: value
+                    for field, value in new_event_values.items()
+                    if field not in time_fields
+                },
+                need_sync=False,
+            ))
 
-        # We apply the rrule check after the time_field check because the google_id are generated according
-        # to base_event start datetime.
+        # If the recurrence rule has changed, applying the new rule may create some orphan events
+        # which may be reused for another new recurrence so we keep them.
+        # Note: rule update checking has to be done after having updated time fields (if required), because
+        # the event google_id field is computed based on these time fields, and more specifically the start datetime.
+        orphan_events = None
         if self.rrule != current_rrule:
-            detached_events = self._apply_recurrence()
-            detached_events.google_id = False
-            detached_events.unlink()
+            orphan_events = self._apply_recurrence()
+            orphan_events.google_id = False
 
-    def _create_from_google(self, gevents, vals_list):
+        # Once the recurrence structure is updated, let's update the status of attendees
+        self._update_attendees_status(gevent)
+
+        return orphan_events
+
+    def _find_events_from_orphans(self, expected_ranges, orphan_records):
+        """
+        Search if some events from the list of orphan events, matching the expected ranges
+        of events of the new recurrence.
+        """
+        return orphan_records.filtered(lambda e: e._range() in expected_ranges) if orphan_records else None
+
+    def _create_from_google(self, gevents, vals_list, orphan_records=None):
         attendee_values = {}
         for gevent, vals in zip(gevents, vals_list):
             base_values = dict(
@@ -157,24 +203,56 @@ class RecurrenceRule(models.Model):
             # Google reuse the event google_id to identify the recurrence in that case
             base_event = self.env['calendar.event'].search([('google_id', '=', vals['google_id'])])
             if not base_event:
+                # if this new recurrence comes from a recurrence split, we should try to reuse orphan events
+                # to find the new recurrence base event id
+                start, stop, _ = self._odoo_dates_from_google_dates(gevent)
+                base_event = self._find_events_from_orphans([(start, stop)], orphan_records)
+
+            if not base_event:
                 base_event = self.env['calendar.event'].create(base_values)
             else:
                 # We override the base_event values because they could have been changed in Google interface
                 # The event google_id will be recalculated once the recurrence is created
                 base_event.write(dict(base_values, google_id=False))
+
             vals['base_event_id'] = base_event.id
             vals['calendar_event_ids'] = [(4, base_event.id)]
             # event_tz is written on event in Google but on recurrence in Odoo
             vals['event_tz'] = gevent.start.get('timeZone')
             attendee_values[base_event.id] = {'attendee_ids': base_values.get('attendee_ids')}
 
-        recurrence = super(RecurrenceRule, self.with_context(dont_notify=True))._create_from_google(gevents, vals_list)
+        recurrences = super(RecurrenceRule, self.with_context(dont_notify=True))._create_from_google(gevents, vals_list)
         generic_values_creation = {
             rec.id: attendee_values[rec.base_event_id.id]
-            for rec in recurrence if attendee_values.get(rec.base_event_id.id)
+            for rec in recurrences if attendee_values.get(rec.base_event_id.id)
         }
-        recurrence.with_context(dont_notify=True)._apply_recurrence(generic_values_creation=generic_values_creation)
-        return recurrence
+
+        # if some orphan events exist, try to reuse them by matching expected event ranges from the new recurrence
+        # with these orphan events
+        if orphan_records:
+            time_fields = (
+                self.env["calendar.event"]._get_time_fields() | self.env["calendar.event"]._get_recurrent_fields()
+            )
+            for r in recurrences:
+                gevent = [e for e in gevents if e.id == r.google_id][0]
+                new_values = self.env["calendar.event"]._odoo_values(gevent)
+                expected_ranges = r._range_calculation(r.base_event_id, r.base_event_id.stop - r.base_event_id.start)
+                r.calendar_event_ids |= r._find_events_from_orphans(expected_ranges, orphan_records)
+
+                # but do not forget to update these orphan events according to their new recurrence
+                r._write_events(dict(
+                    {
+                        field: value
+                        for field, value in new_values.items()
+                        if field not in time_fields
+                    },
+                    need_sync=False,
+                ))
+                r._update_attendees_status(gevent)
+
+        recurrences.with_context(dont_notify=True)._apply_recurrence(generic_values_creation=generic_values_creation)
+
+        return recurrences
 
     def _get_sync_domain(self):
         # Empty rrule may exists in historical data. It is not a desired behavior but it could have been created with

@@ -4,7 +4,7 @@
 import pytz
 from datetime import datetime, date
 
-from dateutil.relativedelta import relativedelta
+from dateutil.relativedelta import relativedelta, MO, TU
 from odoo.tests.common import new_test_user
 from odoo.addons.google_calendar.tests.test_sync_common import TestSyncGoogle, patch_api
 from odoo.addons.google_calendar.utils.google_calendar import GoogleEvent
@@ -303,9 +303,9 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         self.assertEqual(events[0].start_date, date(2020, 1, 6))
         self.assertEqual(events[1].start_date, date(2020, 1, 13))
         self.assertEqual(events[2].start_date, date(2020, 1, 20))
-        self.assertEqual(events[0].start_date, date(2020, 1, 6))
-        self.assertEqual(events[1].start_date, date(2020, 1, 13))
-        self.assertEqual(events[2].start_date, date(2020, 1, 20))
+        self.assertEqual(events[0].stop_date, date(2020, 1, 6))
+        self.assertEqual(events[1].stop_date, date(2020, 1, 13))
+        self.assertEqual(events[2].stop_date, date(2020, 1, 20))
         self.assertEqual(events[0].google_id, '%s_20200106' % recurrence_id)
         self.assertEqual(events[1].google_id, '%s_20200113' % recurrence_id)
         self.assertEqual(events[2].google_id, '%s_20200120' % recurrence_id)
@@ -1047,3 +1047,215 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         self.assertEqual(mails, ['odoobot@example.com'])
 
         self.assertGoogleAPINotCalled()
+
+    @patch_api
+    def test_reuse_events_when_attendee_is_removed_from_recurrence(self):
+        """
+        A Google recurrence is modified in the middle (change one event and the following ones)
+        by removing an attendee, leading to have 2 recurrences.
+        On Odoo side, instead of unlinking/recreating all concerned events, these events
+        should be recycled and adapted to be used in the newly created recurrence.
+        """
+        # arrange
+        rec1_id = 'rec_1'
+        rec1_event_start_date = datetime.today().date() + relativedelta(weekday=MO(1))
+        rec1_event_end_date = rec1_event_start_date + relativedelta(days=1)
+
+        values = {
+            'id': rec1_id,
+            'description': 'recurrence 1',
+            'organizer': {'email': self.env.user.partner_id.email, 'self': True},
+            'summary': 'This is the recurrence 1',
+            'visibility': 'public',
+            'recurrence': ['RRULE:FREQ=WEEKLY;WKST=SU;COUNT=6;BYDAY=MO'],
+            'reminders': {'useDefault': True},
+            'start': {'date': str(rec1_event_start_date)},
+            'end': {'date': str(rec1_event_end_date)},
+            'attendees': [
+                {
+                    'email': 'attendee1@gmail.com',
+                    'responseStatus': 'needsAction'
+                },
+                {
+                    'email': 'attendee2@gmail.com',
+                    'responseStatus': 'needsAction'
+                }
+            ],
+        }
+        self.env['calendar.recurrence']._sync_google2odoo(GoogleEvent([values]))
+        recurrence = self.env['calendar.recurrence'].search([('google_id', '=', rec1_id)])
+
+        events = recurrence.calendar_event_ids.sorted('start')
+        expected_rec1_events = events[0:3]
+        expected_rec1_event_attendees = {e.id: [a.id for a in e.attendee_ids] for e in expected_rec1_events}
+        expected_rec2_events = events[3:]
+        expected_rec2_event_attendees = {
+            e.id: [a.id for a in e.attendee_ids if a.partner_id.email != 'attendee2@gmail.com']
+            for e in expected_rec2_events
+        }
+
+        # act
+        rec2_id = 'rec_2'
+        rec2_event_start_date = rec1_event_start_date + relativedelta(weeks=3)
+        rec2_event_end_date = rec2_event_start_date + relativedelta(days=1)
+        rec1_last_day = rec2_event_start_date - relativedelta(days=1)
+        values = [{
+            'id': rec1_id,
+            'description': 'recurrence 1',
+            'organizer': {'email': self.env.user.partner_id.email, 'self': True},
+            'summary': 'This is the recurrence 1',
+            'visibility': 'public',
+            'recurrence': [
+                'RRULE:FREQ=WEEKLY;WKST=SU;UNTIL=%s;BYDAY=MO' % rec1_last_day.strftime('%Y%m%d')
+            ],
+            'updated': self.now,
+            'reminders': {'useDefault': True},
+            'start': {'date': str(rec1_event_start_date)},
+            'end': {'date': str(rec1_event_end_date)},
+            'attendees': [
+                {
+                    'email': 'attendee1@gmail.com',
+                    'responseStatus': 'needsAction'
+                },
+                {
+                    'email': 'attendee2@gmail.com',
+                    'responseStatus': 'needsAction'
+                }
+            ],
+        }, {
+            'id': rec2_id,
+            'description': 'recurrence 2',
+            'organizer': {'email': self.env.user.partner_id.email, 'self': True},
+            'summary': 'This is the recurrence 2',
+            'visibility': 'public',
+            'recurrence': ['RRULE:FREQ=WEEKLY;WKST=SU;COUNT=3;BYDAY=MO'],
+            'updated': self.now,
+            'reminders': {'useDefault': True},
+            'start': {'date': str(rec2_event_start_date)},
+            'end': {'date': str(rec2_event_end_date)},
+            'attendees': [
+                {
+                    'email': 'attendee1@gmail.com',
+                    'responseStatus': 'needsAction'
+                },
+            ],
+        }]
+        self.env['calendar.recurrence']._sync_google2odoo(GoogleEvent(values))
+
+        # assert
+        recurrences = self.env['calendar.recurrence'].search([('google_id', 'in', (rec1_id, rec2_id))])
+        self.assertEqual(len(recurrences), 2)
+
+        self.assertEqual(len(recurrences[0].calendar_event_ids), 3)
+        self.assertTrue(all(e.id in recurrences[0].calendar_event_ids.ids for e in expected_rec1_events))
+        self.assertTrue(all(e.name == 'This is the recurrence 1' for e in expected_rec1_events))
+        self.assertTrue(all(
+            all(a.id in expected_rec1_event_attendees[e.id] for a in e.attendee_ids)
+            for e in recurrences[0].calendar_event_ids
+        ))
+
+        self.assertEqual(len(recurrences[1].calendar_event_ids), 3)
+        self.assertTrue(all(e.id in recurrences[1].calendar_event_ids.ids for e in expected_rec2_events))
+        self.assertTrue(all(e.name == 'This is the recurrence 2' for e in expected_rec2_events))
+        self.assertTrue(all(
+            all(a.id in expected_rec2_event_attendees[e.id] for a in e.attendee_ids)
+            for e in recurrences[1].calendar_event_ids
+        ))
+
+    @patch_api
+    def test_recreate_events_when_start_time_is_changed_from_recurrence(self):
+        """
+        A Google recurrence is modified in the middle (change one event and the following ones)
+        by modifying the start date of events, leading to have 2 recurrences.
+        In this case, on Odoo side, concerned events have to be unlinked/recreated.
+        """
+        # arrange
+        rec1_id = 'rec_1'
+        rec1_event_start_date = datetime.today().date() + relativedelta(weekday=MO(1))
+        rec1_event_end_date = rec1_event_start_date + relativedelta(days=1)
+
+        values = {
+            'id': rec1_id,
+            'description': 'recurrence 1',
+            'organizer': {'email': self.env.user.partner_id.email, 'self': True},
+            'summary': 'This is the recurrence 1',
+            'visibility': 'public',
+            'recurrence': ['RRULE:FREQ=WEEKLY;WKST=SU;COUNT=6;BYDAY=MO'],
+            'reminders': {'useDefault': True},
+            'start': {'date': str(rec1_event_start_date)},
+            'end': {'date': str(rec1_event_end_date)},
+            'attendees': [
+                {
+                    'email': 'attendee1@gmail.com',
+                    'responseStatus': 'needsAction'
+                },
+            ],
+        }
+        self.env['calendar.recurrence']._sync_google2odoo(GoogleEvent([values]))
+        recurrence = self.env['calendar.recurrence'].search([('google_id', '=', rec1_id)])
+
+        events = recurrence.calendar_event_ids.sorted('start')
+        expected_rec1_events = events[0:4]
+        expected_rec1_event_attendees = {e.id: [a.id for a in e.attendee_ids] for e in expected_rec1_events}
+        rec2_events_to_remove = events[4:]
+        rec2_event_attendees_to_remove = rec2_events_to_remove.attendee_ids
+
+        # act
+        rec2_id = 'rec_2'
+        rec2_event_start_date = rec1_event_start_date + relativedelta(weeks=3) + relativedelta(weekday=TU(1))
+        rec2_event_end_date = rec2_event_start_date + relativedelta(days=1)
+        rec1_last_day = rec2_event_start_date - relativedelta(days=1)
+        values = [{
+            'id': rec1_id,
+            'description': 'recurrence 1',
+            'organizer': {'email': self.env.user.partner_id.email, 'self': True},
+            'summary': 'This is the recurrence 1',
+            'visibility': 'public',
+            'recurrence': [
+                'RRULE:FREQ=WEEKLY;WKST=SU;UNTIL=%s;BYDAY=MO' % rec1_last_day.strftime('%Y%m%d')
+            ],
+            'updated': self.now,
+            'reminders': {'useDefault': True},
+            'start': {'date': str(rec1_event_start_date)},
+            'end': {'date': str(rec1_event_end_date)},
+            'attendees': [
+                {
+                    'email': 'attendee1@gmail.com',
+                    'responseStatus': 'needsAction'
+                },
+            ],
+        }, {
+            'id': rec2_id,
+            'description': 'recurrence 2',
+            'organizer': {'email': self.env.user.partner_id.email, 'self': True},
+            'summary': 'This is the recurrence 2',
+            'visibility': 'public',
+            'recurrence': ['RRULE:FREQ=WEEKLY;WKST=SU;COUNT=3;BYDAY=TU'],
+            'updated': self.now,
+            'reminders': {'useDefault': True},
+            'start': {'date': str(rec2_event_start_date)},
+            'end': {'date': str(rec2_event_end_date)},
+            'attendees': [
+                {
+                    'email': 'attendee1@gmail.com',
+                    'responseStatus': 'needsAction'
+                },
+            ],
+        }]
+        self.env['calendar.recurrence']._sync_google2odoo(GoogleEvent(values))
+
+        # assert
+        recurrences = self.env['calendar.recurrence'].search([('google_id', 'in', (rec1_id, rec2_id))])
+        self.assertEqual(len(recurrences), 2)
+
+        self.assertEqual(len(recurrences[0].calendar_event_ids), 4)
+        self.assertTrue(all(e.id in recurrences[0].calendar_event_ids.ids for e in expected_rec1_events))
+        self.assertTrue(all(e.name == 'This is the recurrence 1' for e in expected_rec1_events))
+        self.assertTrue(all(
+            all(a.id in expected_rec1_event_attendees[e.id] for a in e.attendee_ids)
+            for e in recurrences[0].calendar_event_ids
+        ))
+
+        self.assertEqual(len(recurrences[1].calendar_event_ids), 3)
+        self.assertFalse(rec2_events_to_remove.exists())
+        self.assertFalse(rec2_event_attendees_to_remove.exists())
