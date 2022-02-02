@@ -3,7 +3,7 @@
 import { useModels } from "@mail/component_hooks/use_models/use_models";
 import { getMessagingComponent } from "@mail/utils/messaging_component";
 
-const { Component, useSubEnv } = owl;
+const { Component } = owl;
 
 export class RtcActivityNoticeContainer extends Component {
 
@@ -15,6 +15,7 @@ export class RtcActivityNoticeContainer extends Component {
         // `useModels` to work
         this.env = Component.env;
         useModels();
+        super.setup();
     }
 
 }
