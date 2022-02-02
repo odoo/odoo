@@ -14,6 +14,7 @@
         'views/FgMessageWizard.xml',
         'views/FgCustomerMaster.xml',
         'views/FgPosOrder.xml',
+        'views/FgPosSessionView.xml',
         'security/ir.model.access.csv'
     ],
     'author': "1FG",
