@@ -2120,7 +2120,11 @@ class AccountMove(models.Model):
                 'credit': balance < 0.0 and -balance or 0.0,
             })
 
-            if not is_refund:
+            if not is_refund or self.tax_cash_basis_rec_id:
+                # We don't map tax repartition for non-refund operations, nor for cash basis entries.
+                # Indeed, cancelling a cash basis entry usually happens when unreconciling and invoice,
+                # in which case we always want the reverse entry to totally cancel the original one, keeping the same accounts,
+                # tags and repartition lines
                 continue
 
             # ==== Map tax repartition lines ====
