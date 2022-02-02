@@ -3,7 +3,7 @@
 
 import re
 import logging
-from odoo import api, fields, models
+from odoo import api, fields, models, tools
 from odoo.osv import expression
 from odoo.exceptions import UserError
 from psycopg2 import IntegrityError
@@ -95,6 +95,34 @@ class Country(models.Model):
         ids += list(self._search(search_domain + args, limit=limit))
 
         return ids
+
+    @api.model
+    def search(self, args, offset=0, limit=None, order=None, count=False):
+        """Override to speed up country search using xmlid
+        if you are using search with the following way:
+            self.search([('code', '=', 'MX')], count=False)
+
+        It will return the same but using faster cached xmlid:
+            self.env.ref('base.mx')
+        """
+        if (len(args) == 1 and len(args[0]) == 3
+            and args[0][0] == "code" and args[0][1] == "="
+            and isinstance(args[0][2], (bytes, str))
+            and len(args[0][2]) == 2 and args[0][2].isupper()
+            and not count
+            # limit and offset is not validated since that
+            # "code" column has unique constraint
+            # and we are using operator '=' so only 1 result will be retrieved
+        ):
+            self.check_access_rights('read')
+            code = tools.ustr(args[0][2]).lower()
+            domain = self.env['ir.rule']._compute_domain(self._name, 'read')
+            country = self.env.ref("base.%s" % code, raise_if_not_found=False)
+            if country and not domain:
+                # If country was found with xmlid so return it
+                # else search it in a normal way
+                return country
+        return super().search(args, offset=offset, limit=limit, order=order, count=count)
 
     @api.model_create_multi
     def create(self, vals_list):
