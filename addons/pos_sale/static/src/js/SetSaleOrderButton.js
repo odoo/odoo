@@ -11,6 +11,7 @@ odoo.define('pos_sale.SetSaleOrderButton', function(require) {
 
     class SetSaleOrderButton extends PosComponent {
         setup() {
+            super.setup();
             useListener('click', this.onClick);
         }
         get currentOrder() {

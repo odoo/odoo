@@ -8,6 +8,7 @@ odoo.define('pos_restaurant.TransferOrderButton', function(require) {
 
     class TransferOrderButton extends PosComponent {
         setup() {
+            super.setup();
             useListener('click', this.onClick);
         }
         async onClick() {

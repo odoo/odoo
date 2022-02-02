@@ -25,6 +25,7 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
      */
     class ClientListScreen extends PosComponent {
         setup() {
+            super.setup();
             useListener('click-save', () => this.env.bus.trigger('save-customer'));
             useListener('click-edit', () => this.editClient());
             useListener('save-changes', this.saveChanges);

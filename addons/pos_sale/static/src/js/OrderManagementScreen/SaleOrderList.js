@@ -13,6 +13,7 @@ odoo.define('pos_sale.SaleOrderList', function (require) {
      */
     class SaleOrderList extends PosComponent {
         setup() {
+            super.setup();
             useListener('click-order', this._onClickOrder);
             this.state = useState({ highlightedOrder: this.props.initHighlightedOrder || null });
         }

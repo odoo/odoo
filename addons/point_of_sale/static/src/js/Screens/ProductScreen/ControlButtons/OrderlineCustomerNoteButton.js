@@ -8,6 +8,7 @@ odoo.define('point_of_sale.OrderlineCustomerNoteButton', function(require) {
 
     class OrderlineCustomerNoteButton extends PosComponent {
         setup() {
+            super.setup();
             useListener('click', this.onClick);
         }
         async onClick() {

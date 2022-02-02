@@ -7,6 +7,7 @@ odoo.define('point_of_sale.ReprintReceiptButton', function (require) {
 
     class ReprintReceiptButton extends PosComponent {
         setup() {
+            super.setup();
             useListener('click', this._onClick);
         }
         async _onClick() {

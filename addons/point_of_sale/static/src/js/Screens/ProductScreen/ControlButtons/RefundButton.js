@@ -8,6 +8,7 @@ odoo.define('point_of_sale.RefundButton', function (require) {
 
     class RefundButton extends PosComponent {
         setup() {
+            super.setup();
             useListener('click', this._onClick);
         }
         _onClick() {

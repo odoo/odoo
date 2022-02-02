@@ -9,6 +9,7 @@ odoo.define('pos_restaurant.EditableTable', function(require) {
 
     class EditableTable extends PosComponent {
         setup() {
+            super.setup();
             useListener('resize-end', this._onResizeEnd);
             useListener('drag-end', this._onDragEnd);
             onPatched(this._setElementStyle.bind(this));

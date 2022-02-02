@@ -9,6 +9,7 @@ odoo.define('point_of_sale.OrderWidget', function(require) {
 
     class OrderWidget extends PosComponent {
         setup() {
+            super.setup();
             useListener('select-line', this._selectLine);
             useListener('edit-pack-lot-lines', this._editPackLotLines);
             this.scrollableRef = useRef('scrollable');

@@ -13,6 +13,7 @@ odoo.define('point_of_sale.MoneyDetailsPopup', function(require) {
      */
     class MoneyDetailsPopup extends PosComponent {
         setup() {
+            super.setup();
             this.currency = this.env.pos.currency;
             this.state = useState({
                 moneyDetails: Object.fromEntries(this.env.pos.bills.map(bill => ([bill.value, 0]))),

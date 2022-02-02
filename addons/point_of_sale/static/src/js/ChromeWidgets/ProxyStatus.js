@@ -9,6 +9,7 @@ odoo.define('point_of_sale.ProxyStatus', function(require) {
     // Previously ProxyStatusWidget
     class ProxyStatus extends PosComponent {
         setup() {
+            super.setup();
             const initialProxyStatus = this.env.proxy.get('status');
             this.state = useState({
                 status: initialProxyStatus.status,

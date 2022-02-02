@@ -7,6 +7,7 @@ odoo.define('pos_restaurant.SplitOrderline', function(require) {
 
     class SplitOrderline extends PosComponent {
         setup() {
+            super.setup();
             useListener('click', this.onClick);
         }
         get isSelected() {

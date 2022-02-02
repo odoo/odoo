@@ -8,6 +8,7 @@ odoo.define('pos_coupon.ResetProgramsButton', function (require) {
 
     class ResetProgramsButton extends PosComponent {
         setup() {
+            super.setup();
             useListener('click', this.onClick);
         }
         async onClick() {

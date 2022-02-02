@@ -8,6 +8,7 @@ odoo.define('point_of_sale.SetPricelistButton', function(require) {
 
     class SetPricelistButton extends PosComponent {
         setup() {
+            super.setup();
             useListener('click', this.onClick);
         }
         get currentOrder() {

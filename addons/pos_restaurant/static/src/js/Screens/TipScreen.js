@@ -10,6 +10,7 @@ odoo.define('pos_restaurant.TipScreen', function (require) {
 
     class TipScreen extends PosComponent {
         setup() {
+            super.setup();
             this.state = this.currentOrder.uiState.TipScreen;
             this._totalAmount = this.currentOrder.get_total_with_tax();
 

@@ -8,6 +8,7 @@ odoo.define('pos_restaurant.PrintBillButton', function(require) {
 
     class PrintBillButton extends PosComponent {
         setup() {
+            super.setup();
             useListener('click', this.onClick);
         }
         async onClick() {

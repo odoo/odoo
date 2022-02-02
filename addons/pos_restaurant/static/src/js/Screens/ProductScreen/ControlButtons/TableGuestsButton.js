@@ -8,6 +8,7 @@ odoo.define('pos_restaurant.TableGuestsButton', function(require) {
 
     class TableGuestsButton extends PosComponent {
         setup() {
+            super.setup();
             useListener('click', this.onClick);
         }
         get currentOrder() {

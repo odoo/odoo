@@ -9,6 +9,7 @@ odoo.define('point_of_sale.Notification', function (require) {
 
     class Notification extends PosComponent {
         setup() {
+            super.setup();
             useListener('click', this.closeNotification);
 
             onMounted(() => {
@@ -16,7 +17,7 @@ odoo.define('point_of_sale.Notification', function (require) {
                     this.closeNotification();
                 }, this.props.duration)
             });
-        }        
+        }
     }
     Notification.template = 'Notification';
 

@@ -8,6 +8,7 @@ odoo.define('pos_restaurant.OrderlineNoteButton', function(require) {
 
     class OrderlineNoteButton extends PosComponent {
         setup() {
+            super.setup();
             useListener('click', this.onClick);
         }
         get selectedOrderline() {

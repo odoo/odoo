@@ -29,6 +29,7 @@ odoo.define('pos_sale.SaleOrderManagementControlPanel', function (require) {
      */
     class SaleOrderManagementControlPanel extends PosComponent {
         setup() {
+            super.setup();
             this.orderManagementContext = useState(contexts.orderManagement);
             useListener('clear-search', this._onClearSearch);
             useAutofocus({ selector: 'input' });

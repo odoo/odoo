@@ -8,6 +8,7 @@ odoo.define('pos_restaurant.SplitBillButton', function(require) {
 
     class SplitBillButton extends PosComponent {
         setup() {
+            super.setup();
             useListener('click', this.onClick);
         }
         async onClick() {

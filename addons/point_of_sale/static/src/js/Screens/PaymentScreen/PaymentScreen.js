@@ -11,6 +11,7 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
 
     class PaymentScreen extends PosComponent {
         setup() {
+            super.setup();
             useListener('delete-payment-line', this.deletePaymentLine);
             useListener('select-payment-line', this.selectPaymentLine);
             useListener('new-payment-line', this.addNewPaymentLine);

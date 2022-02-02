@@ -16,6 +16,7 @@ odoo.define('pos_restaurant.SubmitOrderButton', function(require) {
      */
     class SubmitOrderButton extends PosComponent {
         setup() {
+            super.setup();
             useListener('click', this.onClick);
         }
         async onClick() {

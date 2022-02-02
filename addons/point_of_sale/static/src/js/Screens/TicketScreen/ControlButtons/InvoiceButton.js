@@ -8,6 +8,7 @@ odoo.define('point_of_sale.InvoiceButton', function (require) {
 
     class InvoiceButton extends PosComponent {
         setup() {
+            super.setup();
             useListener('click', this._onClick);
         }
         get isAlreadyInvoiced() {

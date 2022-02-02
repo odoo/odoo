@@ -8,6 +8,7 @@ odoo.define('pos_coupon.PromoCodeButton', function (require) {
 
     class PromoCodeButton extends PosComponent {
         setup() {
+            super.setup();
             useListener('click', this.onClick);
         }
         async onClick() {

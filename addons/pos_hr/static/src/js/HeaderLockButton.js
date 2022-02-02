@@ -8,6 +8,7 @@ odoo.define('point_of_sale.HeaderLockButton', function(require) {
 
     class HeaderLockButton extends PosComponent {
         setup() {
+            super.setup();
             this.state = useState({ isUnlockIcon: true, title: 'Unlocked' });
         }
         async showLoginScreen() {

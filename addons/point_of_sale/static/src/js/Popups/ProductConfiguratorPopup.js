@@ -33,6 +33,7 @@ odoo.define('point_of_sale.ProductConfiguratorPopup', function(require) {
 
     class BaseProductAttribute extends PosComponent {
         setup() {
+            super.setup();
             this.env.attribute_components.push(this);
 
             this.attribute = this.props.attribute;

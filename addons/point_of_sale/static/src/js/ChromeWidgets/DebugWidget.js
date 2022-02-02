@@ -11,6 +11,7 @@ odoo.define('point_of_sale.DebugWidget', function (require) {
 
     class DebugWidget extends PosComponent {
         setup() {
+            super.setup();
             this.state = useState({
                 barcodeInput: '',
                 weightInput: '',

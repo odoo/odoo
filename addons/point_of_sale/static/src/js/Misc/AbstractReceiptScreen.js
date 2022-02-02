@@ -15,6 +15,7 @@ odoo.define('point_of_sale.AbstractReceiptScreen', function (require) {
      */
     class AbstractReceiptScreen extends PosComponent {
         setup() {
+            super.setup();
             this.orderReceipt = useRef('order-receipt');
         }
         async _printReceipt() {

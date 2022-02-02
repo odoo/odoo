@@ -10,17 +10,18 @@ odoo.define('point_of_sale.ClientDetailsEdit', function(require) {
 
     class ClientDetailsEdit extends PosComponent {
         setup() {
+            super.setup();
             this.intFields = ['country_id', 'state_id', 'property_product_pricelist'];
             const partner = this.props.partner;
             this.changes = {
                 'country_id': partner.country_id && partner.country_id[0],
                 'state_id': partner.state_id && partner.state_id[0],
             };
-            
+
             onMounted(() => {
                 this.env.bus.on('save-customer', this, this.saveChanges);
             });
-            
+
             onWillUnmount(() => {
                 this.env.bus.off('save-customer', this);
             });

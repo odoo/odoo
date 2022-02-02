@@ -11,6 +11,7 @@ odoo.define('point_of_sale.ProductsWidgetControlPanel', function(require) {
 
     class ProductsWidgetControlPanel extends PosComponent {
         setup() {
+            super.setup();
             this.searchWordInput = useRef('search-word-input');
             this.updateSearch = debounce(this.updateSearch, 100);
 

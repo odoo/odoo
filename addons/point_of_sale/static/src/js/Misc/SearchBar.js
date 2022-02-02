@@ -32,6 +32,7 @@ odoo.define('point_of_sale.SearchBar', function (require) {
      */
     class SearchBar extends PosComponent {
         setup() {
+            super.setup();
             useExternalListener(window, 'click', this._hideOptions);
             useListener('click-search-field', this._onClickSearchField);
             useListener('select-filter', this._onSelectFilter);

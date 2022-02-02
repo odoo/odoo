@@ -9,6 +9,7 @@ odoo.define('pos_restaurant.Resizeable', function(require) {
 
     class Resizeable extends PosComponent {
         setup() {
+            super.setup();
             useExternalListener(document, 'mousemove', this.resizeN);
             useExternalListener(document, 'mouseup', this.endResizeN);
             useListener('mousedown', '.resize-handle-n', this.startResizeN);

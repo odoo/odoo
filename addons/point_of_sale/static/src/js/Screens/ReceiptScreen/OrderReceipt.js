@@ -5,9 +5,10 @@ odoo.define('point_of_sale.OrderReceipt', function(require) {
     const Registries = require('point_of_sale.Registries');
 
     const { onWillUpdateProps } = owl;
-    
+
     class OrderReceipt extends PosComponent {
         setup() {
+            super.setup();
             this._receiptEnv = this.props.order.getOrderReceiptEnv();
 
             onWillUpdateProps((nextProps) => {

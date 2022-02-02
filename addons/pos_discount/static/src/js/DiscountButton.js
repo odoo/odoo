@@ -8,6 +8,7 @@ odoo.define('pos_discount.DiscountButton', function(require) {
 
     class DiscountButton extends PosComponent {
         setup() {
+            super.setup();
             useListener('click', this.onClick);
         }
         async onClick() {
