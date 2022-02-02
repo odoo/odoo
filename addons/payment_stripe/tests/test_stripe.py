@@ -60,7 +60,7 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
             return_value={},
         ), patch(
             'odoo.addons.payment.models.payment_transaction.PaymentTransaction'
-            '._handle_feedback_data'
+            '._handle_notification_data'
         ):
             self._make_json_request(url, data=self.NOTIFICATION_DATA)
             self.assertEqual(signature_check_mock.call_count, 1)

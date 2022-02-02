@@ -84,24 +84,23 @@ class PaymentTransaction(models.Model):
         )
         return payulatam_values
 
-    @api.model
-    def _get_tx_from_feedback_data(self, provider, data):
+    def _get_tx_from_notification_data(self, provider, notification_data):
         """ Override of payment to find the transaction based on Payulatam data.
 
         :param str provider: The provider of the acquirer that handled the transaction
-        :param dict data: The feedback data sent by the provider
+        :param dict notification_data: The notification data sent by the provider
         :return: The transaction if found
         :rtype: recordset of `payment.transaction`
         :raise: ValidationError if inconsistent data were received
         :raise: ValidationError if the data match no transaction
         :raise: ValidationError if the signature can not be verified
         """
-        tx = super()._get_tx_from_feedback_data(provider, data)
-        if provider != 'payulatam':
+        tx = super()._get_tx_from_notification_data(provider, notification_data)
+        if provider != 'payulatam' or len(tx) == 1:
             return tx
 
-        reference = data.get('referenceCode')
-        sign = data.get('signature')
+        reference = notification_data.get('referenceCode')
+        sign = notification_data.get('signature')
         if not reference or not sign:
             raise ValidationError(
                 "PayU Latam: " + _(
@@ -117,7 +116,7 @@ class PaymentTransaction(models.Model):
             )
 
         # Verify signature
-        sign_check = tx.acquirer_id._payulatam_generate_sign(data, incoming=True)
+        sign_check = tx.acquirer_id._payulatam_generate_sign(notification_data, incoming=True)
         if not hmac.compare_digest(sign_check, sign):
             raise ValidationError(
                 "PayU Latam: " + _(
@@ -128,22 +127,22 @@ class PaymentTransaction(models.Model):
 
         return tx
 
-    def _process_feedback_data(self, data):
+    def _process_notification_data(self, notification_data):
         """ Override of payment to process the transaction based on Payulatam data.
 
         Note: self.ensure_one()
 
-        :param dict data: The feedback data sent by the provider
+        :param dict notification_data: The notification data sent by the provider
         :return: None
         """
-        super()._process_feedback_data(data)
+        super()._process_notification_data(notification_data)
         if self.provider != 'payulatam':
             return
 
-        self.acquirer_reference = data.get('transactionId')
+        self.acquirer_reference = notification_data.get('transactionId')
 
-        status = data.get('lapTransactionState')
-        state_message = data.get('message')
+        status = notification_data.get('lapTransactionState')
+        state_message = notification_data.get('message')
         if status == 'PENDING':
             self._set_pending(state_message=state_message)
         elif status == 'APPROVED':

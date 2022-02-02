@@ -124,12 +124,14 @@ class PayULatamTest(PayULatamCommon):
 
         # should raise error about unknown tx
         with self.assertRaises(ValidationError):
-            self.env['payment.transaction']._handle_feedback_data('payulatam', payulatam_post_data)
+            self.env['payment.transaction']._handle_notification_data(
+                'payulatam', payulatam_post_data
+            )
 
         tx = self.create_transaction(flow='redirect')
 
         # Validate the transaction ('pending' state)
-        self.env['payment.transaction']._handle_feedback_data('payulatam', payulatam_post_data)
+        self.env['payment.transaction']._handle_notification_data('payulatam', payulatam_post_data)
         self.assertEqual(tx.state, 'pending', 'Payulatam: wrong state after receiving a valid pending notification')
         self.assertEqual(tx.state_message, payulatam_post_data['message'], 'Payulatam: wrong state message after receiving a valid pending notification')
         self.assertEqual(tx.acquirer_reference, 'b232989a-4aa8-42d1-bace-153236eee791', 'Payulatam: wrong txn_id after receiving a valid pending notification')
@@ -141,7 +143,7 @@ class PayULatamTest(PayULatamCommon):
 
         # Validate the transaction ('approved' state)
         payulatam_post_data['lapTransactionState'] = 'APPROVED'
-        self.env['payment.transaction']._handle_feedback_data('payulatam', payulatam_post_data)
+        self.env['payment.transaction']._handle_notification_data('payulatam', payulatam_post_data)
         self.assertEqual(tx.state, 'done', 'Payulatam: wrong state after receiving a valid pending notification')
         self.assertEqual(tx.acquirer_reference, 'b232989a-4aa8-42d1-bace-153236eee791', 'Payulatam: wrong txn_id after receiving a valid pending notification')
 

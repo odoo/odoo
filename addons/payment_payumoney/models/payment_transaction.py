@@ -45,22 +45,21 @@ class PaymentTransaction(models.Model):
         )
         return payumoney_values
 
-    @api.model
-    def _get_tx_from_feedback_data(self, provider, data):
+    def _get_tx_from_notification_data(self, provider, notification_data):
         """ Override of payment to find the transaction based on Payumoney data.
 
         :param str provider: The provider of the acquirer that handled the transaction
-        :param dict data: The feedback data sent by the provider
+        :param dict notification_data: The notification data sent by the provider
         :return: The transaction if found
         :rtype: recordset of `payment.transaction`
         :raise: ValidationError if inconsistent data were received
         :raise: ValidationError if the data match no transaction
         """
-        tx = super()._get_tx_from_feedback_data(provider, data)
-        if provider != 'payumoney':
+        tx = super()._get_tx_from_notification_data(provider, notification_data)
+        if provider != 'payumoney' or len(tx) == 1:
             return tx
 
-        reference = data.get('txnid')
+        reference = notification_data.get('txnid')
         if not reference:
             raise ValidationError(
                 "PayUmoney: " + _("Received data with missing reference (%s)", reference)
@@ -74,26 +73,26 @@ class PaymentTransaction(models.Model):
 
         return tx
 
-    def _process_feedback_data(self, data):
+    def _process_notification_data(self, notification_data):
         """ Override of payment to process the transaction based on Payumoney data.
 
         Note: self.ensure_one()
 
-        :param dict data: The feedback data sent by the provider
+        :param dict notification_data: The notification data sent by the provider
         :return: None
         """
-        super()._process_feedback_data(data)
+        super()._process_notification_data(notification_data)
         if self.provider != 'payumoney':
             return
 
-        status = data.get('status')
-        self.acquirer_reference = data.get('payuMoneyId')
+        status = notification_data.get('status')
+        self.acquirer_reference = notification_data.get('payuMoneyId')
 
         if status == 'success':
             self._set_done()
         else:  # 'failure'
             # See https://www.payumoney.com/pdf/PayUMoney-Technical-Integration-Document.pdf
-            error_code = data.get('Error')
+            error_code = notification_data.get('Error')
             self._set_error(
                 "PayUmoney: " + _("The payment encountered an error with code %s", error_code)
             )

@@ -605,43 +605,44 @@ class PaymentTransaction(models.Model):
             **custom_create_values,
         })
 
-    @api.model
-    def _handle_feedback_data(self, provider, data):
-        """ Match the transaction with the feedback data, update its state and return it.
+    def _handle_notification_data(self, provider, notification_data):
+        """ Match the transaction with the notification data, update its state and return it.
 
         :param str provider: The provider of the acquirer that handled the transaction
-        :param dict data: The feedback data sent by the provider
+        :param dict notification_data: The notification data sent by the provider
         :return: The transaction
         :rtype: recordset of `payment.transaction`
         """
-        tx = self._get_tx_from_feedback_data(provider, data)
-        tx._process_feedback_data(data)
+        tx = self._get_tx_from_notification_data(provider, notification_data)
+        tx._process_notification_data(notification_data)
         tx._execute_callback()
         return tx
 
-    @api.model
-    def _get_tx_from_feedback_data(self, provider, data):
-        """ Find the transaction based on the feedback data.
+    def _get_tx_from_notification_data(self, provider, notification_data):
+        """ Find the transaction based on the notification data.
 
-        For an acquirer to handle transaction post-processing, it must overwrite this method and
-        return the transaction matching the data.
+        For an acquirer to handle transaction processing, it must overwrite this method and return
+        the transaction matching the notification data.
 
         :param str provider: The provider of the acquirer that handled the transaction
-        :param dict data: The feedback data sent by the acquirer
+        :param dict notification_data: The notification data sent by the provider
         :return: The transaction if found
         :rtype: recordset of `payment.transaction`
         """
         return self
 
-    def _process_feedback_data(self, data):
-        """ Update the transaction state and the acquirer reference based on the feedback data.
+    def _process_notification_data(self, notification_data):
+        """ Update the transaction state and the acquirer reference based on the notification data.
 
-        For an acquirer to handle transaction post-processing, it must overwrite this method and
-        process the feedback data.
+        This method should normally never be called directly. The correct method to call upon
+        receiving notification data is `_handle_notification_data`.
+
+        For an acquirer to handle transaction processing, it must overwrite this method and process
+        the notification data.
 
         Note: self.ensure_one()
 
-        :param dict data: The feedback data sent by the acquirer
+        :param dict notification_data: The notification data sent by the provider
         :return: None
         """
         self.ensure_one()

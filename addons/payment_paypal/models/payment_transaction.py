@@ -58,21 +58,20 @@ class PaymentTransaction(models.Model):
             'api_url': self.acquirer_id._paypal_get_api_url(),
         }
 
-    @api.model
-    def _get_tx_from_feedback_data(self, provider, data):
+    def _get_tx_from_notification_data(self, provider, notification_data):
         """ Override of payment to find the transaction based on Paypal data.
 
         :param str provider: The provider of the acquirer that handled the transaction
-        :param dict data: The feedback data sent by the provider
+        :param dict notification_data: The notification data sent by the provider
         :return: The transaction if found
         :rtype: recordset of `payment.transaction`
         :raise: ValidationError if the data match no transaction
         """
-        tx = super()._get_tx_from_feedback_data(provider, data)
-        if provider != 'paypal':
+        tx = super()._get_tx_from_notification_data(provider, notification_data)
+        if provider != 'paypal' or len(tx) == 1:
             return tx
 
-        reference = data.get('item_number')
+        reference = notification_data.get('item_number')
         tx = self.search([('reference', '=', reference), ('provider', '=', 'paypal')])
         if not tx:
             raise ValidationError(
@@ -80,21 +79,21 @@ class PaymentTransaction(models.Model):
             )
         return tx
 
-    def _process_feedback_data(self, data):
+    def _process_notification_data(self, notification_data):
         """ Override of payment to process the transaction based on Paypal data.
 
         Note: self.ensure_one()
 
-        :param dict data: The feedback data sent by the provider
+        :param dict notification_data: The notification data sent by the provider
         :return: None
         :raise: ValidationError if inconsistent data were received
         """
-        super()._process_feedback_data(data)
+        super()._process_notification_data(notification_data)
         if self.provider != 'paypal':
             return
 
-        txn_id = data.get('txn_id')
-        txn_type = data.get('txn_type')
+        txn_id = notification_data.get('txn_id')
+        txn_type = notification_data.get('txn_type')
         if not all((txn_id, txn_type)):
             raise ValidationError(
                 "PayPal: " + _(
@@ -105,7 +104,7 @@ class PaymentTransaction(models.Model):
         self.acquirer_reference = txn_id
         self.paypal_type = txn_type
 
-        payment_status = data.get('payment_status')
+        payment_status = notification_data.get('payment_status')
 
         if payment_status in PAYMENT_STATUS_MAPPING['pending'] + PAYMENT_STATUS_MAPPING['done'] \
             and not (self.acquirer_id.paypal_pdt_token and self.acquirer_id.paypal_seller_account):
@@ -113,7 +112,7 @@ class PaymentTransaction(models.Model):
             self.acquirer_id._paypal_send_configuration_reminder()
 
         if payment_status in PAYMENT_STATUS_MAPPING['pending']:
-            self._set_pending(state_message=data.get('pending_reason'))
+            self._set_pending(state_message=notification_data.get('pending_reason'))
         elif payment_status in PAYMENT_STATUS_MAPPING['done']:
             self._set_done()
         elif payment_status in PAYMENT_STATUS_MAPPING['cancel']:

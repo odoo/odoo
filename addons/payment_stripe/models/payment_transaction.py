@@ -167,12 +167,12 @@ class PaymentTransaction(models.Model):
 
         payment_intent = self._stripe_create_payment_intent()
         feedback_data = {'reference': self.reference}
-        StripeController._include_payment_intent_in_feedback_data(payment_intent, feedback_data)
+        StripeController._include_payment_intent_in_notification_data(payment_intent, feedback_data)
         _logger.info(
             "payment request response for transaction with reference %s:\n%s",
             self.reference, pprint.pformat(feedback_data)
         )
-        self._handle_feedback_data('stripe', feedback_data)
+        self._handle_notification_data('stripe', feedback_data)
 
     def _stripe_create_payment_intent(self):
         """ Create and return a PaymentIntent.
@@ -210,22 +210,21 @@ class PaymentTransaction(models.Model):
 
         return payment_intent
 
-    @api.model
-    def _get_tx_from_feedback_data(self, provider, data):
+    def _get_tx_from_notification_data(self, provider, notification_data):
         """ Override of payment to find the transaction based on Stripe data.
 
         :param str provider: The provider of the acquirer that handled the transaction
-        :param dict data: The feedback data sent by the provider
+        :param dict notification_data: The notification data sent by the provider
         :return: The transaction if found
         :rtype: recordset of `payment.transaction`
         :raise: ValidationError if inconsistent data were received
         :raise: ValidationError if the data match no transaction
         """
-        tx = super()._get_tx_from_feedback_data(provider, data)
-        if provider != 'stripe':
+        tx = super()._get_tx_from_notification_data(provider, notification_data)
+        if provider != 'stripe' or len(tx) == 1:
             return tx
 
-        reference = data.get('reference')
+        reference = notification_data.get('reference')
         if not reference:
             raise ValidationError("Stripe: " + _("Received data with missing merchant reference"))
 
@@ -236,30 +235,31 @@ class PaymentTransaction(models.Model):
             )
         return tx
 
-    def _process_feedback_data(self, data):
+    def _process_notification_data(self, notification_data):
         """ Override of payment to process the transaction based on Adyen data.
 
         Note: self.ensure_one()
 
-        :param dict data: The feedback data build from information passed to the return route.
-                          Depending on the operation of the transaction, the entries with the keys
-                          'payment_intent', 'charge', 'setup_intent' and 'payment_method' can be
-                          populated with their corresponding Stripe API objects.
+        :param dict notification_data: The notification data build from information passed to the
+                                       return route. Depending on the operation of the transaction,
+                                       the entries with the keys 'payment_intent', 'charge',
+                                       'setup_intent' and 'payment_method' can be populated with
+                                       their corresponding Stripe API objects.
         :return: None
         :raise: ValidationError if inconsistent data were received
         """
-        super()._process_feedback_data(data)
+        super()._process_notification_data(notification_data)
         if self.provider != 'stripe':
             return
 
-        if 'charge' in data:
-            self.acquirer_reference = data['charge']['id']
+        if 'charge' in notification_data:
+            self.acquirer_reference = notification_data['charge']['id']
 
         # Handle the intent status
         if self.operation == 'validation':
-            intent_status = data.get('setup_intent', {}).get('status')
+            intent_status = notification_data.get('setup_intent', {}).get('status')
         else:  # 'online_redirect', 'online_token', 'offline'
-            intent_status = data.get('payment_intent', {}).get('status')
+            intent_status = notification_data.get('payment_intent', {}).get('status')
         if not intent_status:
             raise ValidationError(
                 "Stripe: " + _("Received data with missing intent status.")
@@ -271,7 +271,7 @@ class PaymentTransaction(models.Model):
             self._set_pending()
         elif intent_status in INTENT_STATUS_MAPPING['done']:
             if self.tokenize:
-                self._stripe_tokenize_from_feedback_data(data)
+                self._stripe_tokenize_from_notification_data(notification_data)
             self._set_done()
         elif intent_status in INTENT_STATUS_MAPPING['cancel']:
             self._set_canceled()
@@ -284,21 +284,25 @@ class PaymentTransaction(models.Model):
                 "Stripe: " + _("Received data with invalid intent status: %s", intent_status)
             )
 
-    def _stripe_tokenize_from_feedback_data(self, data):
-        """ Create a new token based on the feedback data.
+    def _stripe_tokenize_from_notification_data(self, notification_data):
+        """ Create a new token based on the notification data.
 
-        :param dict data: The feedback data built with Stripe objects. See `_process_feedback_data`.
+        :param dict notification_data: The notification data built with Stripe objects.
+                                       See `_process_notification_data`.
         :return: None
         """
         if self.operation == 'online_redirect':
-            payment_method_id = data.get('charge', {}).get('payment_method')
-            customer_id = data.get('charge', {}).get('customer')
+            payment_method_id = notification_data.get('charge', {}).get('payment_method')
+            customer_id = notification_data.get('charge', {}).get('customer')
         else:  # 'validation'
-            payment_method_id = data.get('setup_intent', {}).get('payment_method', {}).get('id')
-            customer_id = data.get('setup_intent', {}).get('customer')
-        payment_method = data.get('payment_method')
+            payment_method_id = notification_data.get('setup_intent', {}) \
+                .get('payment_method', {}).get('id')
+            customer_id = notification_data.get('setup_intent', {}).get('customer')
+        payment_method = notification_data.get('payment_method')
         if not payment_method_id or not payment_method:
-            _logger.warning("requested tokenization with payment method missing from feedback data")
+            _logger.warning(
+                "requested tokenization from notification data with missing payment method"
+            )
             return
 
         if payment_method.get('type') != 'card':

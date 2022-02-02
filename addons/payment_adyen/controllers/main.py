@@ -85,7 +85,7 @@ class AdyenController(http.Controller):
         self, acquirer_id, reference, converted_amount, currency_id, partner_id, payment_method,
         access_token, browser_info=None
     ):
-        """ Make a payment request and process the feedback data.
+        """ Make a payment request and handle the notification data.
 
         :param int acquirer_id: The acquirer handling the transaction, as a `payment.acquirer` id
         :param str reference: The reference of the transaction
@@ -147,14 +147,14 @@ class AdyenController(http.Controller):
             "payment request response for transaction with reference %s:\n%s",
             reference, pprint.pformat(response_content)
         )
-        request.env['payment.transaction'].sudo()._handle_feedback_data(
+        tx_sudo._handle_notification_data(
             'adyen', dict(response_content, merchantReference=reference),  # Match the transaction
         )
         return response_content
 
     @http.route('/payment/adyen/payment_details', type='json', auth='public')
     def adyen_payment_details(self, acquirer_id, reference, payment_details):
-        """ Submit the details of the additional actions and process the feedback data.
+        """ Submit the details of the additional actions and handle the notification data.
 
          The additional actions can have been performed both from the inline form or during a
          redirection.
@@ -179,7 +179,7 @@ class AdyenController(http.Controller):
             "payment details request response for transaction with reference %s:\n%s",
             reference, pprint.pformat(response_content)
         )
-        request.env['payment.transaction'].sudo()._handle_feedback_data(
+        request.env['payment.transaction'].sudo()._handle_notification_data(
             'adyen', dict(response_content, merchantReference=reference),  # Match the transaction
         )
 
@@ -187,7 +187,7 @@ class AdyenController(http.Controller):
 
     @http.route('/payment/adyen/return', type='http', auth='public', csrf=False, save_session=False)
     def adyen_return_from_3ds_auth(self, **data):
-        """ Process the feedback data sent by Adyen after redirection from 3DS1 authentication page.
+        """ Process the authentication data sent by Adyen after redirection from the 3DS1 page.
 
         The route is flagged with `save_session=False` to prevent Odoo from assigning a new session
         to the user if they are redirected to this route with a POST request. Indeed, as the session
@@ -197,11 +197,11 @@ class AdyenController(http.Controller):
         will satisfy any specification of the `SameSite` attribute, the session of the user will be
         retrieved and with it the transaction which will be immediately post-processed.
 
-        :param dict data: Feedback data. May include custom params sent to Adyen in the request to
-                          allow matching the transaction when redirected here.
+        :param dict data: The authentication result data. May include custom params sent to Adyen in
+                          the request to allow matching the transaction when redirected here.
         """
         # Retrieve the transaction based on the reference included in the return url
-        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_feedback_data(
+        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
             'adyen', data
         )
 
@@ -248,12 +248,10 @@ class AdyenController(http.Controller):
             )
             try:
                 # Check the integrity of the notification
-                PaymentTransaction = request.env['payment.transaction']
-                tx_sudo = PaymentTransaction.sudo()._get_tx_from_feedback_data(
+                tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
                     'adyen', notification_data
                 )
-                acquirer_sudo = tx_sudo.acquirer_id  # Find the acquirer based on the transaction
-                self._verify_notification_signature(notification_data, acquirer_sudo.adyen_hmac_key)
+                self._verify_notification_signature(notification_data, tx_sudo)
 
                 # Check whether the event of the notification succeeded and reshape the notification
                 # data for parsing
@@ -268,19 +266,20 @@ class AdyenController(http.Controller):
                 else:
                     continue  # Don't handle unsupported event codes and failed events
 
-                # Handle the notification data as a regular feedback
-                PaymentTransaction.sudo()._handle_feedback_data('adyen', notification_data)
+                # Handle the notification data as if they were feedback of a S2S payment request
+                tx_sudo._handle_notification_data('adyen', notification_data)
             except ValidationError:  # Acknowledge the notification to avoid getting spammed
                 _logger.exception("unable to handle the notification data; skipping to acknowledge")
 
         return '[accepted]'  # Acknowledge the notification
 
     @staticmethod
-    def _verify_notification_signature(notification_data, hmac_key):
+    def _verify_notification_signature(notification_data, tx_sudo):
         """ Check that the received signature matches the expected one.
 
         :param dict notification_data: The notification payload containing the received signature
-        :param str hmac_key: The HMAC key of the acquirer handling the transaction
+        :param recordset tx_sudo: The sudoed transaction referenced by the notification data, as a
+                                  `payment.transaction` record
         :return: None
         :raise: :class:`werkzeug.exceptions.Forbidden` if the signatures don't match
         """
@@ -291,6 +290,7 @@ class AdyenController(http.Controller):
             raise Forbidden()
 
         # Compare the received signature with the expected signature computed from the payload
+        hmac_key = tx_sudo.acquirer_id.adyen_hmac_key
         expected_signature = AdyenController._compute_signature(notification_data, hmac_key)
         if not hmac.compare_digest(received_signature, expected_signature):
             _logger.warning("received notification with invalid signature")

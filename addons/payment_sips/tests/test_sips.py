@@ -70,11 +70,13 @@ class SipsTest(SipsCommon, PaymentHttpCommon):
     def test_feedback_processing(self):
         # Unknown transaction
         with self.assertRaises(ValidationError):
-            self.env['payment.transaction']._handle_feedback_data('sips', self.NOTIFICATION_DATA)
+            self.env['payment.transaction']._handle_notification_data(
+                'sips', self.NOTIFICATION_DATA
+            )
 
         # Confirmed transaction
         tx = self.create_transaction('redirect')
-        self.env['payment.transaction']._handle_feedback_data('sips', self.NOTIFICATION_DATA)
+        self.env['payment.transaction']._handle_notification_data('sips', self.NOTIFICATION_DATA)
         self.assertEqual(tx.state, 'done')
         self.assertEqual(tx.acquirer_reference, self.reference)
 
@@ -87,7 +89,7 @@ class SipsTest(SipsCommon, PaymentHttpCommon):
             Data=self.NOTIFICATION_DATA['Data'].replace(old_reference, self.reference)
                                                .replace('responseCode=00', 'responseCode=12')
         )
-        self.env['payment.transaction']._handle_feedback_data('sips', payload)
+        self.env['payment.transaction']._handle_notification_data('sips', payload)
         self.assertEqual(tx.state, 'cancel')
 
     @mute_logger('odoo.addons.payment_sips.controllers.main')
@@ -112,7 +114,7 @@ class SipsTest(SipsCommon, PaymentHttpCommon):
             '._verify_notification_signature'
         ) as signature_check_mock, patch(
             'odoo.addons.payment.models.payment_transaction.PaymentTransaction'
-            '._handle_feedback_data'
+            '._handle_notification_data'
         ):
             self._make_http_post_request(url, data=self.NOTIFICATION_DATA)
             self.assertEqual(signature_check_mock.call_count, 1)

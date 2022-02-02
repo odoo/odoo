@@ -83,11 +83,11 @@ class PaypalTest(PaypalCommon, PaymentHttpCommon):
     def test_feedback_processing(self):
         # Unknown transaction
         with self.assertRaises(ValidationError):
-            self.env['payment.transaction']._handle_feedback_data('paypal', self.NOTIFICATION_DATA)
+            self.env['payment.transaction']._handle_notification_data('paypal', self.NOTIFICATION_DATA)
 
         # Confirmed transaction
         tx = self.create_transaction('redirect')
-        self.env['payment.transaction']._handle_feedback_data('paypal', self.NOTIFICATION_DATA)
+        self.env['payment.transaction']._handle_notification_data('paypal', self.NOTIFICATION_DATA)
         self.assertEqual(tx.state, 'done')
         self.assertEqual(tx.acquirer_reference, self.NOTIFICATION_DATA['txn_id'])
 
@@ -100,7 +100,7 @@ class PaypalTest(PaypalCommon, PaymentHttpCommon):
             payment_status='Pending',
             pending_reason='multi_currency',
         )
-        self.env['payment.transaction']._handle_feedback_data('paypal', payload)
+        self.env['payment.transaction']._handle_notification_data('paypal', payload)
         self.assertEqual(tx.state, 'pending')
         self.assertEqual(tx.state_message, payload['pending_reason'])
 
@@ -150,7 +150,7 @@ class PaypalTest(PaypalCommon, PaymentHttpCommon):
             '._verify_webhook_notification_origin'
         ) as origin_check_mock, patch(
             'odoo.addons.payment.models.payment_transaction.PaymentTransaction'
-            '._handle_feedback_data'
+            '._handle_notification_data'
         ):
             self._make_http_post_request(url, data=self.NOTIFICATION_DATA)
             self.assertEqual(origin_check_mock.call_count, 1)

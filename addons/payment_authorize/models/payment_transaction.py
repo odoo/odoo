@@ -78,12 +78,7 @@ class PaymentTransaction(models.Model):
                 "auth_and_capture request response for transaction with reference %s:\n%s",
                 self.reference, pprint.pformat(res_content)
             )
-
-        # As the API has no redirection flow, we always know the reference of the transaction.
-        # Still, we prefer to simulate the matching of the transaction by crafting dummy feedback
-        # data in order to go through the centralized `_handle_feedback_data` method.
-        feedback_data = {'reference': self.reference, 'response': res_content}
-        self._handle_feedback_data('authorize', feedback_data)
+        self._handle_notification_data('authorize', {'response': res_content})
 
     def _send_refund_request(self, amount_to_refund=None, create_refund_transaction=True):
         """ Override of payment to send a refund request to Authorize.
@@ -112,12 +107,7 @@ class PaymentTransaction(models.Model):
             "refund request response for transaction with reference %s:\n%s",
             self.reference, pprint.pformat(res_content)
         )
-        # As the API has no redirection flow, we always know the reference of the transaction.
-        # Still, we prefer to simulate the matching of the transaction by crafting dummy feedback
-        # data in order to go through the centralized `_handle_feedback_data` method.
-        feedback_data = {'reference': self.reference, 'response': res_content}
-        self._handle_feedback_data('authorize', feedback_data)
-
+        self._handle_notification_data('authorize', {'response': res_content})
         return refund_tx
 
     def _send_capture_request(self):
@@ -138,11 +128,7 @@ class PaymentTransaction(models.Model):
             "capture request response for transaction with reference %s:\n%s",
             self.reference, pprint.pformat(res_content)
         )
-        # As the API has no redirection flow, we always know the reference of the transaction.
-        # Still, we prefer to simulate the matching of the transaction by crafting dummy feedback
-        # data in order to go through the centralized `_handle_feedback_data` method.
-        feedback_data = {'reference': self.reference, 'response': res_content}
-        self._handle_feedback_data('authorize', feedback_data)
+        self._handle_notification_data('authorize', {'response': res_content})
 
     def _send_void_request(self):
         """ Override of payment to send a void request to Authorize.
@@ -161,26 +147,21 @@ class PaymentTransaction(models.Model):
             "void request response for transaction with reference %s:\n%s",
             self.reference, pprint.pformat(res_content)
         )
-        # As the API has no redirection flow, we always know the reference of the transaction.
-        # Still, we prefer to simulate the matching of the transaction by crafting dummy feedback
-        # data in order to go through the centralized `_handle_feedback_data` method.
-        feedback_data = {'reference': self.reference, 'response': res_content}
-        self._handle_feedback_data('authorize', feedback_data)
+        self._handle_notification_data('authorize', {'response': res_content})
 
-    @api.model
-    def _get_tx_from_feedback_data(self, provider, data):
-        """ Find the transaction based on the feedback data.
+    def _get_tx_from_notification_data(self, provider, notification_data):
+        """ Find the transaction based on Authorize.net data.
 
         :param str provider: The provider of the acquirer that handled the transaction
-        :param dict data: The feedback data sent by the acquirer
+        :param dict notification_data: The notification data sent by the provider
         :return: The transaction if found
         :rtype: recordset of `payment.transaction`
         """
-        tx = super()._get_tx_from_feedback_data(provider, data)
-        if provider != 'authorize':
+        tx = super()._get_tx_from_notification_data(provider, notification_data)
+        if provider != 'authorize' or len(tx) == 1:
             return tx
 
-        reference = data.get('reference')
+        reference = notification_data.get('reference')
         tx = self.search([('reference', '=', reference), ('provider', '=', 'authorize')])
         if not tx:
             raise ValidationError(
@@ -188,19 +169,19 @@ class PaymentTransaction(models.Model):
             )
         return tx
 
-    def _process_feedback_data(self, data):
+    def _process_notification_data(self, notification_data):
         """ Override of payment to process the transaction based on Authorize data.
 
         Note: self.ensure_one()
 
-        :param dict data: The feedback data sent by the provider
+        :param dict notification_data: The notification data sent by the provider
         :return: None
         """
-        super()._process_feedback_data(data)
+        super()._process_notification_data(notification_data)
         if self.provider != 'authorize':
             return
 
-        response_content = data.get('response')
+        response_content = notification_data.get('response')
 
         self.acquirer_reference = response_content.get('x_trans_id')
         status_code = response_content.get('x_response_code', '3')
@@ -215,7 +196,7 @@ class PaymentTransaction(models.Model):
                 if self.tokenize and not self.token_id:
                     self._authorize_tokenize()
                 if self.operation == 'validation':
-                    # Void the transaction. In last step because it calls _handle_feedback_data()
+                    # Void the transaction. In last step because it calls _handle_notification_data.
                     self._send_refund_request(create_refund_transaction=False)
             elif status_type == 'void':
                 if self.operation == 'validation':  # Validation txs are authorized and then voided

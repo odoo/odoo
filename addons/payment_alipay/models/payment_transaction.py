@@ -68,23 +68,22 @@ class PaymentTransaction(models.Model):
         })
         return rendering_values
 
-    @api.model
-    def _get_tx_from_feedback_data(self, provider, data):
+    def _get_tx_from_notification_data(self, provider, notification_data):
         """ Override of payment to find the transaction based on Alipay data.
 
         :param str provider: The provider of the acquirer that handled the transaction
-        :param dict data: The feedback data sent by the provider
+        :param dict notification_data: The notification data sent by the provider
         :return: The transaction if found
         :rtype: recordset of `payment.transaction`
         :raise: ValidationError if inconsistent data were received
         :raise: ValidationError if the data match no transaction
         """
-        tx = super()._get_tx_from_feedback_data(provider, data)
-        if provider != 'alipay':
+        tx = super()._get_tx_from_notification_data(provider, notification_data)
+        if provider != 'alipay' or len(tx) == 1:
             return tx
 
-        reference = data.get('reference') or data.get('out_trade_no')
-        txn_id = data.get('trade_no')
+        reference = notification_data.get('reference') or notification_data.get('out_trade_no')
+        txn_id = notification_data.get('trade_no')
         if not reference or not txn_id:
             raise ValidationError(
                 "Alipay: " + _(
@@ -101,21 +100,21 @@ class PaymentTransaction(models.Model):
 
         return tx
 
-    def _process_feedback_data(self, data):
+    def _process_notification_data(self, notification_data):
         """ Override of payment to process the transaction based on Alipay data.
 
         Note: self.ensure_one()
 
-        :param dict data: The feedback data sent by the provider
+        :param dict notification_data: The notification data sent by the provider
         :return: None
         :raise: ValidationError if inconsistent data were received
         """
-        super()._process_feedback_data(data)
+        super()._process_notification_data(notification_data)
         if self.provider != 'alipay':
             return
 
-        self.acquirer_reference = data.get('trade_no')
-        status = data.get('trade_status')
+        self.acquirer_reference = notification_data.get('trade_no')
+        status = notification_data.get('trade_status')
         if status in ['TRADE_FINISHED', 'TRADE_SUCCESS']:
             self._set_done()
         elif status == 'TRADE_CLOSED':

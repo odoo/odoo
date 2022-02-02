@@ -29,13 +29,13 @@ class AlipayController(http.Controller):
         _logger.info("handling redirection from Alipay with data:\n%s", pprint.pformat(data))
 
         # Check the integrity of the notification
-        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_feedback_data(
+        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
             'alipay', data
         )
         self._verify_notification_signature(data, tx_sudo)
 
         # Handle the notification data
-        request.env['payment.transaction'].sudo()._handle_feedback_data('alipay', data)
+        tx_sudo._handle_notification_data('alipay', data)
         return request.redirect('/payment/status')
 
     @http.route(_webhook_url, type='http', auth='public', methods=['POST'], csrf=False)
@@ -51,14 +51,14 @@ class AlipayController(http.Controller):
         _logger.info("notification received from Alipay with data:\n%s", pprint.pformat(data))
         try:
             # Check the origin and integrity of the notification
-            tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_feedback_data(
+            tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
                 'alipay', data
             )
             self._verify_notification_origin(data, tx_sudo)
             self._verify_notification_signature(data, tx_sudo)
 
             # Handle the notification data
-            request.env['payment.transaction'].sudo()._handle_feedback_data('alipay', data)
+            tx_sudo._handle_notification_data('alipay', data)
         except ValidationError:  # Acknowledge the notification to avoid getting spammed
             _logger.exception("unable to handle the notification data; skipping to acknowledge")
 

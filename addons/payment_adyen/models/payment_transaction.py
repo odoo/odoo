@@ -88,7 +88,7 @@ class PaymentTransaction(models.Model):
             "payment request response for transaction with reference %s:\n%s",
             self.reference, pprint.pformat(response_content)
         )
-        self._handle_feedback_data('adyen', response_content)
+        self._handle_notification_data('adyen', response_content)
 
     def _send_refund_request(self, amount_to_refund=None, create_refund_transaction=True):
         """ Override of payment to send a refund request to Adyen.
@@ -145,31 +145,30 @@ class PaymentTransaction(models.Model):
 
         return refund_tx
 
-    @api.model
-    def _get_tx_from_feedback_data(self, provider, data):
+    def _get_tx_from_notification_data(self, provider, notification_data):
         """ Override of payment to find the transaction based on Adyen data.
 
         :param str provider: The provider of the acquirer that handled the transaction
-        :param dict data: The feedback data sent by the provider
+        :param dict notification_data: The notification data sent by the provider
         :return: The transaction if found
         :rtype: recordset of `payment.transaction`
         :raise: ValidationError if inconsistent data were received
         :raise: ValidationError if the data match no transaction
         """
-        tx = super()._get_tx_from_feedback_data(provider, data)
-        if provider != 'adyen':
+        tx = super()._get_tx_from_notification_data(provider, notification_data)
+        if provider != 'adyen' or len(tx) == 1:
             return tx
 
-        reference = data.get('merchantReference')
+        reference = notification_data.get('merchantReference')
         if not reference:
             raise ValidationError("Adyen: " + _("Received data with missing merchant reference"))
-        event_code = data.get('eventCode')
+        event_code = notification_data.get('eventCode')
 
         tx = self.search([('reference', '=', reference), ('provider', '=', 'adyen')])
         if event_code == 'REFUND' and (not tx or tx.operation != 'refund'):
             # If a refund is initiated from Adyen, the merchant reference can be personalized. We
             # need to get the source transaction and manually create the refund transaction.
-            source_acquirer_reference = data.get('originalReference')
+            source_acquirer_reference = notification_data.get('originalReference')
             source_tx = self.search(
                 [('acquirer_reference', '=', source_acquirer_reference), ('provider', '=', 'adyen')]
             )
@@ -177,7 +176,9 @@ class PaymentTransaction(models.Model):
                 # Manually create a refund transaction with a new reference. The reference of
                 # the refund transaction was personalized from Adyen and could be identical to
                 # that of an existing transaction.
-                tx = self._adyen_create_refund_tx_from_feedback_data(source_tx, data)
+                tx = self._adyen_create_refund_tx_from_notification_data(
+                    source_tx, notification_data
+                )
             else:  # The refund was initiated for an unknown source transaction
                 pass  # Don't do anything with the refund notification
 
@@ -187,18 +188,18 @@ class PaymentTransaction(models.Model):
             )
         return tx
 
-    def _adyen_create_refund_tx_from_feedback_data(self, source_tx, data):
+    def _adyen_create_refund_tx_from_notification_data(self, source_tx, notification_data):
         """ Create a refund transaction based on Adyen data.
 
         :param recordset source_tx: The source transaction for which a refund is initiated, as a
                                     `payment.transaction` recordset
-        :param dict data: The feedback data sent by the provider
+        :param dict notification_data: The notification data sent by the provider
         :return: The created refund transaction
         :rtype: recordset of `payment.transaction`
         :raise: ValidationError if inconsistent data were received
         """
-        refund_acquirer_reference = data.get('pspReference')
-        amount_to_refund = data.get('amount', {}).get('value')
+        refund_acquirer_reference = notification_data.get('pspReference')
+        amount_to_refund = notification_data.get('amount', {}).get('value')
         if not refund_acquirer_reference or not amount_to_refund:
             raise ValidationError(
                 "Adyen: " + _("Received refund data with missing transaction values")
@@ -211,35 +212,36 @@ class PaymentTransaction(models.Model):
             amount_to_refund=converted_amount, acquirer_reference=refund_acquirer_reference
         )
 
-    def _process_feedback_data(self, data):
+    def _process_notification_data(self, notification_data):
         """ Override of payment to process the transaction based on Adyen data.
 
         Note: self.ensure_one()
 
-        :param dict data: The feedback data sent by the provider
+        :param dict notification_data: The notification data sent by the provider
         :return: None
         :raise: ValidationError if inconsistent data were received
         """
-        super()._process_feedback_data(data)
+        super()._process_notification_data(notification_data)
         if self.provider != 'adyen':
             return
 
         # Handle the acquirer reference
-        if 'pspReference' in data:
-            self.acquirer_reference = data.get('pspReference')
+        if 'pspReference' in notification_data:
+            self.acquirer_reference = notification_data.get('pspReference')
 
         # Handle the payment state
-        payment_state = data.get('resultCode')
-        refusal_reason = data.get('refusalReason') or data.get('reason')
+        payment_state = notification_data.get('resultCode')
+        refusal_reason = notification_data.get('refusalReason') or notification_data.get('reason')
         if not payment_state:
             raise ValidationError("Adyen: " + _("Received data with missing payment state."))
 
         if payment_state in RESULT_CODES_MAPPING['pending']:
             self._set_pending()
         elif payment_state in RESULT_CODES_MAPPING['done']:
-            has_token_data = 'recurring.recurringDetailReference' in data.get('additionalData', {})
+            additional_data = notification_data.get('additionalData', {})
+            has_token_data = 'recurring.recurringDetailReference' in additional_data
             if self.tokenize and has_token_data:
-                self._adyen_tokenize_from_feedback_data(data)
+                self._adyen_tokenize_from_notification_data(notification_data)
             self._set_done()
             if self.operation == 'refund':
                 self.env.ref('payment.cron_post_process_payment_tx')._trigger()
@@ -272,22 +274,23 @@ class PaymentTransaction(models.Model):
                 "Adyen: " + _("Received data with invalid payment state: %s", payment_state)
             )
 
-    def _adyen_tokenize_from_feedback_data(self, data):
-        """ Create a new token based on the feedback data.
+    def _adyen_tokenize_from_notification_data(self, notification_data):
+        """ Create a new token based on the notification data.
 
         Note: self.ensure_one()
 
-        :param dict data: The feedback data sent by the provider
+        :param dict notification_data: The notification data sent by the provider
         :return: None
         """
         self.ensure_one()
 
+        additional_data = notification_data['additionalData']
         token = self.env['payment.token'].create({
             'acquirer_id': self.acquirer_id.id,
-            'name': payment_utils.build_token_name(data['additionalData'].get('cardSummary')),
+            'name': payment_utils.build_token_name(additional_data.get('cardSummary')),
             'partner_id': self.partner_id.id,
-            'acquirer_ref': data['additionalData']['recurring.recurringDetailReference'],
-            'adyen_shopper_reference': data['additionalData']['recurring.shopperReference'],
+            'acquirer_ref': additional_data['recurring.recurringDetailReference'],
+            'adyen_shopper_reference': additional_data['recurring.shopperReference'],
             'verified': True,  # The payment is authorized, so the payment method is valid
         })
         self.write({
