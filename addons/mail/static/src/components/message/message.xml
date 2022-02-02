@@ -102,7 +102,7 @@
                                 </t>
                                 <t t-if="threadView and messageView.message.originThread and messageView.message.originThread === threadView.thread and messageView.message.notifications.length > 0">
                                     <t t-if="messageView.message.failureNotifications.length > 0">
-                                        <span class="o_Message_notificationIconClickable o-error" t-on-click="_onClickFailure">
+                                        <span class="o_Message_notificationIconClickable o-error" t-on-click="messageView.onClickFailure">
                                             <i name="failureIcon" class="o_Message_notificationIcon fa fa-envelope"/>
                                         </span>
                                     </t>

@@ -3,10 +3,11 @@
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
 import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
+import { markEventHandled } from '@mail/utils/utils';
 
 registerModel({
     name: 'MessageView',
-    identifyingFields: [['threadView', 'messageActionListWithDelete'], 'message'],
+    identifyingFields: [['threadView', 'deleteMessageConfirmViewOwner'], 'message'],
     recordMethods: {
         /**
          * Briefly highlights the message.
@@ -19,6 +20,13 @@ registerModel({
                     this.update({ isHighlighted: false });
                 }, 2000),
             });
+        },
+        /**
+         * @param {MouseEvent} ev
+         */
+        onClickFailure(ev) {
+            markEventHandled(ev, 'Message.ClickFailure');
+            this.message.openResendAction();
         },
         onComponentUpdate() {
             if (!this.exists()) {
@@ -110,9 +118,7 @@ registerModel({
          * @returns {FieldCommand}
          */
         _computeMessageActionList() {
-            return (!this.messageActionListWithDelete)
-                ? insertAndReplace()
-                : clear();
+            return this.deleteMessageConfirmViewOwner ? clear() : insertAndReplace();
         },
         /**
          * @private
@@ -154,6 +160,14 @@ registerModel({
             isCausal: true,
         }),
         /**
+         * States the delete message confirm view that is displaying this
+         * message view.
+         */
+        deleteMessageConfirmViewOwner: one('DeleteMessageConfirmView', {
+            inverse: 'messageView',
+            readonly: true,
+        }),
+        /**
          * Determines whether this message view should be highlighted at next
          * render. Scrolls into view and briefly highlights it.
          */
@@ -186,15 +200,6 @@ registerModel({
         messageActionList: one('MessageActionList', {
             compute: '_computeMessageActionList',
             inverse: 'messageView',
-            isCausal: true,
-            readonly: true,
-        }),
-        /**
-         * States the message action list that is displaying this message view
-         * in its delete confirmation view.
-         */
-        messageActionListWithDelete: one('MessageActionList', {
-            inverse: 'messageViewForDelete',
             isCausal: true,
             readonly: true,
         }),

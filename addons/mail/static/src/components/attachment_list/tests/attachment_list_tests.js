@@ -272,6 +272,7 @@ QUnit.test('clicking on the delete attachment button multiple times should do th
     assert.expect(2);
 
     const { createMessageComponent } = await this.start({
+        hasDialog: true,
         async mockRPC(route, args) {
             if (route === '/mail/attachment/delete') {
                 assert.step('attachment_unlink');

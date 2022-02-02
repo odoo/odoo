@@ -654,7 +654,7 @@ QUnit.test('only show messaging seen indicator if authored by me, after last see
 QUnit.test('allow attachment delete on authored message', async function (assert) {
     assert.expect(5);
 
-    const { createMessageComponent } = await this.start();
+    const { createMessageComponent } = await this.start({ hasDialog: true });
     const message = this.messaging.models['Message'].create({
         attachments: insertAndReplace({
             filename: "BLAH.jpg",

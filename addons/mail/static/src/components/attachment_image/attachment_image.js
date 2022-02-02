@@ -25,13 +25,7 @@ export class AttachmentImage extends Component {
 }
 
 Object.assign(AttachmentImage, {
-    props: {
-        localId: String,
-        onAttachmentRemoved: {
-            type: Function,
-            optional: true,
-        },
-    },
+    props: { localId: String },
     template: 'mail.AttachmentImage',
 });
 

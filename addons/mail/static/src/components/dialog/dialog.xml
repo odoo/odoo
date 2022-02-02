@@ -2,12 +2,14 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.Dialog" owl="1">
-        <div class="o_Dialog" t-attf-class="{{ className }}" t-ref="root">
+        <div class="o_Dialog" t-attf-class="{{ className }}" t-att-style="dialog and dialog.style" t-ref="root">
             <t t-if="dialog">
                 <t
                     t-component="constructor.components[dialog.componentName]"
-                    className="'o_Dialog_component'"
-                    t-props="{ localId: dialog.record.localId }"
+                    t-props="{
+                        className: `o_Dialog_component ${dialog.componentClassName}`,
+                        localId: dialog.record.localId,
+                    }"
                 />
             </t>
         </div>
