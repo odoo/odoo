@@ -535,12 +535,14 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
             'partner_id': self.partner_a.id,
             'planned_hours': 10,
         })
+        employee = self.env['hr.employee'].create({'name': 'Maurice'})
 
         Timesheet.create({
             'project_id': self.project_global.id,
             'task_id': task.id,
             'name': 'my first timesheet',
             'unit_amount': 4,
+            'employee_id': employee.id,
         })
 
         timesheet_count1 = Timesheet.search_count([('project_id', '=', self.project_global.id)])
@@ -585,6 +587,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
             'task_id': task.id,
             'name': 'my second timesheet',
             'unit_amount': 6,
+            'employee_id': employee.id,
         })
 
         self.assertEqual(Timesheet.search_count([('project_id', '=', self.project_template.id)]), 2, "2 timesheets in project_template")

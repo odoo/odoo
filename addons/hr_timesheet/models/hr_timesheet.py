@@ -95,14 +95,24 @@ class AccountAnalyticLine(models.Model):
         employees = self.env['hr.employee'].search([('user_id', 'in', user_ids)])
         user_map = {employee.user_id.id: employee.id for employee in employees}
 
+        employee_ids = set()
         for vals in vals_list:
+            employee_id = vals.get('employee_id') or user_map.get(vals.get('user_id') or default_user_id)
             # when the name is not provide by the 'Add a line', we set a default one
-            if vals.get('project_id') and not vals.get('name'):
-                vals['name'] = '/'
+            if vals.get('project_id'):
+                employee_ids.add(employee_id)
+                if not vals.get('name'):
+                    vals['name'] = '/'
+
             # compute employee only for timesheet lines, makes no sense for other lines
             if not vals.get('employee_id') and vals.get('project_id'):
-                vals['employee_id'] = user_map.get(vals.get('user_id') or default_user_id)
+                vals['employee_id'] = employee_id
             vals.update(self._timesheet_preprocess(vals))
+
+        employee_ids = list(employee_ids)
+        if any(not employee_id for employee_id in employee_ids)\
+           or self.env['hr.employee'].search_count([('id', 'in', employee_ids), ('active', '=', False)]):
+            raise AccessError("Each timesheet should be linked to an active employee.")
 
         lines = super(AccountAnalyticLine, self).create(vals_list)
         for line, values in zip(lines, vals_list):
