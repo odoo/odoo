@@ -105,6 +105,9 @@ FormRenderer.include({
      * @returns {jQuery.Element}
      */
     _makeChatterContainerTarget() {
+        if (this._chatterContainerTarget) {
+            return $(this._chatterContainerTarget);
+        }
         const $el = $('<div class="o_FormRenderer_chatterContainer"/>');
         this._chatterContainerTarget = $el[0];
         return $el;
@@ -151,7 +154,7 @@ FormRenderer.include({
             if (!this._chatterContainerComponent) {
                 this._makeChatterContainerComponent();
             } else {
-                await this._updateChatterContainerComponent();
+                return this._updateChatterContainerComponent();
             }
             await this._mountChatterContainerComponent();
         }

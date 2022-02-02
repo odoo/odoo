@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.Activity" owl="1">
-        <div class="o_Activity d-flex p-2" t-attf-class="{{ className }}" t-on-click="activityView.onClickActivity" t-ref="root">
+        <div class="o_Activity d-flex p-2" t-attf-class="{{ className }}" t-on-click="activityView and activityView.onClickActivity" t-ref="root">
             <t t-if="activityView">
                 <div class="o_Activity_sidebar mr-3">
                     <div class="o_Activity_user position-relative">
@@ -102,7 +102,7 @@
 
                     <t t-if="activityView.activity.note">
                         <div class="o_Activity_note">
-                            <t t-raw="activityView.activity.note"/>
+                            <t t-out="noteAsMarkup"/>
                         </div>
                     </t>
 
@@ -125,7 +125,7 @@
                                     <button class="o_Activity_toolButton o_Activity_markDoneButton btn btn-link btn-primary pt-0 pl-0" t-att-title="activityView.markDoneText">
                                         <i class="fa fa-check"/> Mark Done
                                     </button>
-                                    <t t-set="opened">
+                                    <t t-set-slot="opened">
                                         <ActivityMarkDonePopover localId="activityView.activityMarkDonePopoverView.localId"/>
                                     </t>
                                 </Popover>

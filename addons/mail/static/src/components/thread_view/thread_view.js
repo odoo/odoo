@@ -42,6 +42,7 @@ Object.assign(ThreadView, {
         hasComposerThreadName: false,
         showComposerAttachmentsExtensions: true,
         showComposerAttachmentsFilenames: true,
+        onFocusin: () => {},
     },
     props: {
         /**
@@ -86,8 +87,14 @@ Object.assign(ThreadView, {
             type: Function,
             optional: true,
         },
-        showComposerAttachmentsExtensions: Boolean,
-        showComposerAttachmentsFilenames: Boolean,
+        showComposerAttachmentsExtensions: {
+            type: Boolean,
+            optional: true,
+        },
+        showComposerAttachmentsFilenames: {
+            type: Boolean,
+            optional: true,
+        },
     },
     template: 'mail.ThreadView',
 });

@@ -14,7 +14,6 @@ import utils from 'web.utils';
 const { useState } = owl;
 const _t = core._t;
 
-
 /**
  * Owl Component Adapter for ActivityRecord which is KanbanRecord (Odoo Widget)
  * TODO: Remove this adapter when ActivityRecord is a Component
@@ -70,16 +69,23 @@ class KanbanColumnProgressBarAdapter extends ComponentAdapter {
         // KanbanColumnProgressBar triggers 3 events before being mounted
         // but we don't need to listen to them in our case.
         if (this.el) {
+            if (ev.name === "set_progress_bar_state") {
+                this.props.onSetProgressBarState(new CustomEvent("set-progress-bar-state", {
+                    bubbles: true,
+                    cancelable: true,
+                    detail: ev.data,
+                }));
+            }
             super._trigger_up(ev);
         }
     }
 }
 
 class ActivityRenderer extends AbstractRendererOwl {
-    constructor(parent, props) {
-        super(...arguments);
+    setup() {
+        super.setup(...arguments);
         this.qweb = new QWeb(this.env.isDebug(), {_s: session.origin});
-        this.qweb.add_template(utils.json_node_to_xml(props.templates));
+        this.qweb.add_template(utils.json_node_to_xml(this.props.templates));
         this.activeFilter = useState({
             state: null,
             activityTypeId: null,
@@ -192,7 +198,11 @@ class ActivityRenderer extends AbstractRendererOwl {
         } else {
             this.activeFilter.state = null;
             this.activeFilter.activityTypeId = null;
-            this.activeFilter.resIds = [];
+            if (this.activeFilter.resIds.length > 0) {
+                // writing a new array is a state mutation which triggers a rerender
+                // only replace resIds with empty array if it's not already empty
+                this.activeFilter.resIds = [];
+            }
         }
     }
 }

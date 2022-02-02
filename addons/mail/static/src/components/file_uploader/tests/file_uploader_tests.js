@@ -11,13 +11,13 @@ QUnit.module('file_uploader', {}, function () {
 QUnit.module('file_uploader_tests.js', {
     beforeEach() {
         beforeEach(this);
-        this.components = [];
+        this.apps = [];
 
         this.start = async params => {
             const res = await start({ ...params, data: this.data });
-            const { components, env, widget } = res;
+            const { apps, env, widget } = res;
             this.env = env;
-            this.components = components;
+            this.apps = apps;
             this.widget = widget;
             return res;
         };

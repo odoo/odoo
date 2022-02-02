@@ -3,8 +3,7 @@
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
 import { clear, insertAndReplace, link, unlink } from '@mail/model/model_field_command';
-
-const { escape } = owl;
+import { escape } from '@web/core/utils/strings';
 
 registerModel({
     name: 'Discuss',

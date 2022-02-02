@@ -404,7 +404,10 @@ Object.assign(ComposerTextInput, {
     },
     props: {
         localId: String,
-        hasMentionSuggestionsBelowPosition: Boolean,
+        hasMentionSuggestionsBelowPosition: {
+            type: Boolean,
+            optional: true,
+        },
         isCompact: Boolean,
         onComposerTextInputSendShortcut: {
             type: Function,

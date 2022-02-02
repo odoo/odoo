@@ -11,7 +11,6 @@ export class Discuss extends Component {
      * @override
      */
     setup() {
-        super.setup();
         this._updateLocalStoreProps();
         // bind since passed as props
         this._onMobileAddItemHeaderInputSelect = this._onMobileAddItemHeaderInputSelect.bind(this);

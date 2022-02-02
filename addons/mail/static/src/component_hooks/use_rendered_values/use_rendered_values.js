@@ -2,7 +2,7 @@
 
 import { Listener } from '@mail/model/model_listener';
 
-const { onMounted, onPatched, useComponent } = owl;
+const { onMounted, onPatched, onWillDestroy, onWillRender, useComponent } = owl;
 
 /**
  * This hooks provides support for accessing the values returned by the given
@@ -22,22 +22,16 @@ export function useRenderedValues(selector) {
         name: `useRenderedValues() of ${component}`,
         onChange: () => component.render(),
     });
-    const __render = component.__render.bind(component);
-    component.__render = function () {
+    onWillRender(() => {
         modelManager.startListening(listener);
         renderedValues = selector();
         modelManager.stopListening(listener);
-        return __render(...arguments);
-    };
+    })
     onMounted(onUpdate);
     onPatched(onUpdate);
     function onUpdate() {
         patchedValues = renderedValues;
     }
-    const __destroy = component.__destroy;
-    component.__destroy = parent => {
-        modelManager.removeListener(listener);
-        __destroy.call(component, parent);
-    };
+    onWillDestroy(() => modelManager.removeListener(listener));
     return () => patchedValues;
 }

@@ -2,6 +2,8 @@
 
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
+import Popover from "web.Popover";
+
 const { Component, useRef } = owl;
 
 export class RtcCallParticipantCard extends Component {
@@ -48,6 +50,7 @@ export class RtcCallParticipantCard extends Component {
 Object.assign(RtcCallParticipantCard, {
     props: { localId: String },
     template: 'mail.RtcCallParticipantCard',
+    components: { Popover },
 });
 
 registerMessagingComponent(RtcCallParticipantCard);

@@ -116,7 +116,7 @@ Object.assign(ComposerSuggestion, {
     },
     props: {
         composerViewLocalId: String,
-        isActive: Boolean,
+        isActive: { type: Boolean, optional: true },
         modelName: String,
         recordLocalId: String,
     },
