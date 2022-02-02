@@ -271,7 +271,7 @@ const Link = Widget.extend({
             url = url.replace(/^tel:([0-9]+)$/, 'tel://$1');
         } else if (url.indexOf('@') !== -1 && url.indexOf(':') === -1) {
             url = 'mailto:' + url;
-        } else if (url.indexOf('://') === -1 && url[0] !== '/'
+        } else if (url && url.indexOf('://') === -1 && url[0] !== '/'
                     && url[0] !== '#' && url.slice(0, 2) !== '${') {
             url = 'http://' + url;
         }
@@ -463,13 +463,20 @@ const Link = Widget.extend({
      * @param {boolean} force
      */
     _updateLinkContent($link, linkInfos, { force = false } = {}) {
-        if (force || (this._setLinkContent && (linkInfos.content !== this.data.originalText || linkInfos.url !== this.data.url))) {
-            if (linkInfos.content === this.data.originalText) {
-                $link.html(this.data.originalHTML);
+        if (force || this._setLinkContent){
+            let html;
+            let text;
+            if (this.data.originalText && linkInfos.content === this.data.originalText) {
+                html = this.data.originalHTML;
             } else if (linkInfos.content && linkInfos.content.length) {
-                $link.text(linkInfos.content);
+                text = linkInfos.content;
             } else {
-                $link.text(linkInfos.url);
+                text = linkInfos.url || '';
+            }
+            if (html && html !== $link.html()) {
+                $link.html(html);
+            } else if (text !== $link.text()) {
+                $link.text(text);
             }
         }
     },
