@@ -14,7 +14,7 @@ registerModel({
             this._loaderTimeout = undefined;
         },
         _willDelete() {
-            this.env.browser.clearTimeout(this._loaderTimeout);
+            this.messaging.browser.clearTimeout(this._loaderTimeout);
         },
     },
     recordMethods: {
@@ -229,7 +229,7 @@ registerModel({
                     this.update({ isPreparingLoading: true });
                     this.async(() =>
                         new Promise(resolve => {
-                            this._loaderTimeout = this.env.browser.setTimeout(resolve, 400);
+                            this._loaderTimeout = this.messaging.browser.setTimeout(resolve, 400);
                         }
                     )).then(() => {
                         const isLoading = this.threadCache
@@ -240,7 +240,7 @@ registerModel({
                 }
                 return;
             }
-            this.env.browser.clearTimeout(this._loaderTimeout);
+            this.messaging.browser.clearTimeout(this._loaderTimeout);
             this.update({ isLoading: false, isPreparingLoading: false });
         },
         /**

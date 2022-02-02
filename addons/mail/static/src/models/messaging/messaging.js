@@ -157,6 +157,13 @@ registerModel({
         },
         /**
          * @private
+         * @returns {Object} browser
+         */
+        _computeBrowser() {
+            return this.env.browser;
+        },
+        /**
+         * @private
          * @returns {Promise}
          */
         _computeInitializedPromise() {
@@ -184,7 +191,7 @@ registerModel({
          * @returns {boolean}
          */
         _computeIsNotificationPermissionDefault() {
-            const browserNotification = this.env.browser.Notification;
+            const browserNotification = this.messaging.browser.Notification;
             return browserNotification ? browserNotification.permission === 'default' : false;
         },
         /**
@@ -228,6 +235,9 @@ registerModel({
          */
         autofetchPartnerImStatus: attr({
             default: true,
+        }),
+        browser: attr({
+            compute: '_computeBrowser',
         }),
         cannedResponses: many('CannedResponse'),
         chatWindowManager: one('ChatWindowManager', {

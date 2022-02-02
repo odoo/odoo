@@ -2,6 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr } from '@mail/model/model_field';
+import { browser } from "@web/core/browser/browser";
 
 registerModel({
     name: 'Device',
@@ -12,7 +13,7 @@ registerModel({
             this._onResize = _.debounce(() => this._refresh(), 100);
         },
         _willDelete() {
-            window.removeEventListener('resize', this._onResize);
+            browser.removeEventListener('resize', this._onResize);
         },
     },
     recordMethods: {
@@ -20,17 +21,15 @@ registerModel({
          * Called when messaging is started.
          */
         start() {
-            // TODO FIXME Not using this.env.browser because it's proxified, and
-            // addEventListener does not work on proxified window. task-2234596
-            window.addEventListener('resize', this._onResize);
+            browser.addEventListener('resize', this._onResize);
         },
         /**
          * @private
          */
         _refresh() {
             this.update({
-                globalWindowInnerHeight: this.env.browser.innerHeight,
-                globalWindowInnerWidth: this.env.browser.innerWidth,
+                globalWindowInnerHeight: this.messaging.browser.innerHeight,
+                globalWindowInnerWidth: this.messaging.browser.innerWidth,
                 isMobile: this.env.device.isMobile,
                 isMobileDevice: this.messaging.device.isMobileDevice,
                 sizeClass: this.env.device.size_class,

@@ -15,11 +15,13 @@ QUnit.module('throttle_tests.js', {
         this.throttles = [];
 
         this.start = async params => {
-            const { env, widget } = await start(Object.assign({}, params, {
+            const res = await start(Object.assign({}, params, {
                 data: this.data,
             }));
+            const { env, widget } = res;
             this.env = env;
             this.widget = widget;
+            return res;
         };
     },
     afterEach() {
@@ -35,13 +37,13 @@ QUnit.module('throttle_tests.js', {
 QUnit.test('single call', async function (assert) {
     assert.expect(6);
 
-    await this.start({
+    const { messaging } = await this.start({
         hasTimeControl: true,
     });
 
     let hasInvokedFunc = false;
     const throttledFunc = throttle(
-        this.env,
+        messaging,
         () => {
             hasInvokedFunc = true;
             return 'func_result';
@@ -83,13 +85,13 @@ QUnit.test('single call', async function (assert) {
 QUnit.test('2nd (throttled) call', async function (assert) {
     assert.expect(8);
 
-    await this.start({
+    const { messaging } = await this.start({
         hasTimeControl: true,
     });
 
     let funcCalledAmount = 0;
     const throttledFunc = throttle(
-        this.env,
+        messaging,
         () => {
             funcCalledAmount++;
             return `func_result_${funcCalledAmount}`;
@@ -142,13 +144,13 @@ QUnit.test('2nd (throttled) call', async function (assert) {
 QUnit.test('throttled call reinvocation', async function (assert) {
     assert.expect(11);
 
-    await this.start({
+    const { messaging } = await this.start({
         hasTimeControl: true,
     });
 
     let funcCalledAmount = 0;
     const throttledFunc = throttle(
-        this.env,
+        messaging,
         () => {
             funcCalledAmount++;
             return `func_result_${funcCalledAmount}`;
@@ -220,12 +222,12 @@ QUnit.test('throttled call reinvocation', async function (assert) {
 QUnit.test('flush throttled call', async function (assert) {
     assert.expect(9);
 
-    await this.start({
+    const { messaging } = await this.start({
         hasTimeControl: true,
     });
 
     const throttledFunc = throttle(
-        this.env,
+        messaging,
         () => {},
         1000,
     );
@@ -276,12 +278,12 @@ QUnit.test('flush throttled call', async function (assert) {
 QUnit.test('cancel throttled call', async function (assert) {
     assert.expect(10);
 
-    await this.start({
+    const { messaging } = await this.start({
         hasTimeControl: true,
     });
 
     const throttledFunc = throttle(
-        this.env,
+        messaging,
         () => {},
         1000,
         { silentCancelationErrors: false }
@@ -342,12 +344,12 @@ QUnit.test('cancel throttled call', async function (assert) {
 QUnit.test('clear throttled call', async function (assert) {
     assert.expect(9);
 
-    await this.start({
+    const { messaging } = await this.start({
         hasTimeControl: true,
     });
 
     const throttledFunc = throttle(
-        this.env,
+        messaging,
         () => {},
         1000,
         { silentCancelationErrors: false }
