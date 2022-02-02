@@ -161,6 +161,16 @@ QUnit.module("domain", {}, () => {
             '[("name", "=", "true")]'
         );
         assert.strictEqual(new Domain().toString(), "[]");
+        assert.strictEqual(new Domain([['name', 'in', [true, false]]]).toString(), '[("name", "in", [True, False])]');
+        assert.strictEqual(new Domain([['name', 'in', [null]]]).toString(), '[("name", "in", [None])]');
+        assert.strictEqual(new Domain([['name', 'in', ["foo", "bar"]]]).toString(), '[("name", "in", ["foo", "bar"])]');
+        assert.strictEqual(new Domain([['name', 'in', [1, 2]]]).toString(), '[("name", "in", [1, 2])]');
+        assert.strictEqual(new Domain(['&', ['name', '=', 'foo'], ['type', '=', 'bar']]).toString(), '["&", ("name", "=", "foo"), ("type", "=", "bar")]');
+        assert.strictEqual(new Domain(['|', ['name', '=', 'foo'], ['type', '=', 'bar']]).toString(), '["|", ("name", "=", "foo"), ("type", "=", "bar")]');
+        assert.strictEqual(new Domain().toString(), "[]");
+
+        // string domains are only reformatted
+        assert.strictEqual(new Domain('[("name","ilike","foo")]').toString(), '[("name", "ilike", "foo")]');
     });
 
     QUnit.test("implicit &", function (assert) {

@@ -250,21 +250,21 @@ var Domain = collections.Tree.extend({
      */
     arrayToString: function (domain) {
         if (_.isString(domain)) return domain;
-        const parts = (domain || []).map(part => {
-            if (_.isArray(part)) { // e.g. ['name', 'ilike', 'foo'] or ['is_active', '=', true]
-                return "[" + part.map(c => {
-                    switch (c) {
-                        case null: return "None";
-                        case true: return "True";
-                        case false: return "False";
-                        default: return JSON.stringify(c);
+
+        function jsToPy(p) {
+            switch (p) {
+                case null: return "None";
+                case true: return "True";
+                case false: return "False";
+                default:
+                    if (Array.isArray(p)) {
+                        return `[${p.map(jsToPy)}]`;
                     }
-                }).join(',') + "]";
-            } else { // e.g. '|' or '&'
-                return JSON.stringify(part);
+                    return JSON.stringify(p);
             }
-        });
-        return "[" + parts.join(',') + "]";
+        }
+
+        return `[${(domain || []).map(jsToPy)}]`;
     },
     /**
      * Converts a string representation of the Python prefix-array
