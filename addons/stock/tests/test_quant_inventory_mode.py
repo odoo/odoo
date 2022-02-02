@@ -226,6 +226,20 @@ class TestEditableQuant(TransactionCase):
         quant.action_apply_inventory()
         self.assertEqual(quant.quantity, 8)
 
+    def test_edit_quant_4(self):
+        """ Update the quantity with the inventory report mode """
+        default_wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        default_stock_location = default_wh.lot_stock_id
+        quant = self.Quant.create({
+            'product_id': self.product.id,
+            'location_id': default_stock_location.id,
+            'inventory_quantity': 100,
+        })
+        quant.action_apply_inventory()
+        self.assertEqual(self.product.qty_available, 100)
+        quant.with_context(inventory_report_mode=True).inventory_quantity_auto_apply = 75
+        self.assertEqual(self.product.qty_available, 75)
+
     def test_sn_warning(self):
         """ Checks that a warning is given when reusing an existing SN
         in inventory mode.
