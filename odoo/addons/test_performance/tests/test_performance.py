@@ -132,7 +132,7 @@ class TestPerformance(SavepointCaseWithUserDemo):
             rec1.write({'line_ids': [Command.create({'value': 0})]})
         self.assertEqual(len(rec1.line_ids), 1)
 
-        with self.assertQueryCount(15):
+        with self.assertQueryCount(5):
             rec1.invalidate_cache()
             rec1.write({'line_ids': [Command.create({'value': val}) for val in range(1, 12)]})
         self.assertEqual(len(rec1.line_ids), 12)
@@ -260,7 +260,7 @@ class TestPerformance(SavepointCaseWithUserDemo):
             rec1.write({'tag_ids': [Command.create({'name': 0})]})
         self.assertEqual(len(rec1.tag_ids), 1)
 
-        with self.assertQueryCount(14):
+        with self.assertQueryCount(4):
             rec1.invalidate_cache()
             rec1.write({'tag_ids': [Command.create({'name': val}) for val in range(1, 12)]})
         self.assertEqual(len(rec1.tag_ids), 12)
@@ -372,7 +372,7 @@ class TestPerformance(SavepointCaseWithUserDemo):
     @warmup
     def test_create_base_with_lines(self):
         """ Create records with one2many lines. """
-        with self.assertQueryCount(__system__=12, demo=12):
+        with self.assertQueryCount(__system__=3, demo=3):
             self.env['test_performance.base'].create({
                 'name': 'X',
                 'line_ids': [Command.create({'value': val}) for val in range(10)],
@@ -386,7 +386,7 @@ class TestPerformance(SavepointCaseWithUserDemo):
             self.env['test_performance.base'].create({'name': 'X'})
 
         # create N tags: add O(N) queries
-        with self.assertQueryCount(13):
+        with self.assertQueryCount(4):
             self.env['test_performance.base'].create({
                 'name': 'X',
                 'tag_ids': [Command.create({'name': val}) for val in range(10)],
