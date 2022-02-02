@@ -29,4 +29,5 @@ Layout.template = "web.Layout";
 Layout.props = {
     viewType: { type: String, optional: true },
     useSampleModel: { type: Boolean, optional: true },
+    pagerProps: { type: Object, optional: true },
 };

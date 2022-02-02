@@ -29,10 +29,7 @@
                     </t>
 
                     <div class="o_cp_pager" role="search">
-                        <t t-set="pagerProps" t-value="env.config.getPagerProps()" />
-                        <t t-if="pagerProps">
-                            <Pager t-if="pagerProps.total > 0" t-props="pagerProps" />
-                        </t>
+                        <Pager t-if="props.pagerProps and props.pagerProps.total > 0" t-props="props.pagerProps" />
                     </div>
 
                     <t t-if="env.config.viewSwitcherEntries.length">
