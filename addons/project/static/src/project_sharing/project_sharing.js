@@ -29,8 +29,6 @@ export class ProjectSharingWebClient extends Component {
         );
     }
 
-    mounted() { }
-
     handleComponentError(error, C) {
         // remove the faulty component
         this.Components.splice(this.Components.indexOf(C), 1);

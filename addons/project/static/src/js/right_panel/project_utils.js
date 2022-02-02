@@ -5,11 +5,11 @@ import fieldUtils from 'web.field_utils';
 import { ComponentAdapter, standaloneAdapter } from 'web.OwlCompatibility';
 import { FormViewDialog } from 'web.view_dialogs';
 
-const { Component, useRef, useState } = owl;
+const { Component, onWillUpdateProps, useRef, useState } = owl;
 
 class MilestoneComponent extends Component {
-    constructor() {
-        super(...arguments);
+    setup() {
+        super.setup();
         this.contextValue = Object.assign({}, {
             'default_project_id': this.props.context.active_id,
         }, this.props.context);
@@ -59,20 +59,21 @@ AddMilestone.template = 'project.AddMilestone';
 
 export class OpenMilestone extends MilestoneComponent {
 
-    constructor() {
-        super(...arguments);
+    setup() {
+        super.setup();
         this.milestone = useState(this.props.milestone);
         this.state = useState({
             colorClass: this.milestone.is_deadline_exceeded ? "o_milestone_danger" : "",
             checkboxIcon: this.milestone.is_reached ? "fa-check-square-o" : "fa-square-o",
         });
+        onWillUpdateProps(this.onWillUpdateProps);
     }
 
     get deadline() {
         return fieldUtils.format.date(moment(this.milestone.deadline));
     }
 
-    willUpdateProps(nextProps) {
+    onWillUpdateProps(nextProps) {
         if (nextProps.milestone) {
             this.milestone = nextProps.milestone;
             this.state.colorClass = this.milestone.is_deadline_exceeded ? "o_milestone_danger" : "";
