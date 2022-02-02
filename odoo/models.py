@@ -930,10 +930,13 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     moreinfo = _('Resolve other errors first')
                     messages.append(dict(info, type='error', message=message, moreinfo=moreinfo))
                     errors += 1
-                if errors >= 10 and (errors >= i / 10):
+
+                # Aumenta limite de Erros tratados pelo Odoo na Importação de Dados
+                # de 10 para 1000
+                if errors > 1000: # and (errors >= i / 10):
                     messages.append({
                         'type': 'warning',
-                        'message': _(u"Found more than 10 errors and more than one error per 10 records, interrupted to avoid showing too many errors.")
+                        'message': _(u"Found more than 1000 errors and more than one error per 1000 records, interrupted to avoid showing too many errors.")
                     })
                     break
 
