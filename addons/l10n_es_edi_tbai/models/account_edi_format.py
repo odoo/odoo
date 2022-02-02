@@ -92,44 +92,38 @@ class AccountEdiFormat(models.Model):
         if 'error' in res[invoice]:
             return res
 
-        # Store the XML as attachment to ensure it is never lost (even in case of timeour error)
-        invoice.l10n_es_tbai_temp_xml = self.env['ir.attachment'].create({
+        # Store the XML as attachment to ensure it is never lost (even in case of timeout error)
+        invoice.l10n_es_tbai_post_xml = self.env['ir.attachment'].create({
             'type': 'binary',
-            'name': invoice.name + '.xml',
+            'name': invoice.name + '_post.xml',
             'raw': etree.tostring(inv_xml, encoding='UTF-8'),
             'mimetype': 'application/xml',
+            'res_id': invoice.id,
+            'res_model': 'account.move',
         })
 
         # Call the web service and get response
         res.update(self._l10n_es_tbai_post_to_web_service(invoice, inv_xml))
-        res_xml = res[invoice]['response']
+        response_xml = res[invoice]['response']
 
-        # TIMEOUT: success is undetermined
-        if res_xml is None:
+        # TIMEOUT / NO RESPONSE: success is undetermined
+        if response_xml is None:
             pass
 
         # SUCCESS
         elif res[invoice].get('success'):
-
             # Track head of chain (last posted invoice)
             invoice.company_id.write({'l10n_es_tbai_last_posted_id': invoice})
 
-            # Create and save edi attachment, remove temp XML
-            attachment = invoice.l10n_es_tbai_temp_xml
-            invoice.l10n_es_tbai_temp_xml = False
-
-            attachment.update({
-                'res_id': invoice.id,
-                'res_model': 'account.move',
-            })  # those extra fields allow to read values from xml (it becomes "official")
+            # Attachment: post to chatter and save as EDI document
             invoice.with_context(no_new_invoice=True).message_post(
                 body="<pre>TicketBAI: posted XML\n" + res[invoice]['message'] + "</pre>",
-                attachment_ids=attachment.ids)
-            res[invoice]['attachment'] = attachment  # save attachment as EDI document
+                attachment_ids=invoice.l10n_es_tbai_post_xml.ids)
+            res[invoice]['attachment'] = invoice.l10n_es_tbai_post_xml
 
         # FAILURE
         else:
-            invoice.l10n_es_tbai_temp_xml = False  # will need to be re-created
+            invoice.l10n_es_tbai_post_xml = False  # will need to be re-created
 
         return res
 
@@ -153,20 +147,22 @@ class AccountEdiFormat(models.Model):
         if 'error' in res[invoice]:
             return res
 
-        # Store the XML as attachment to ensure it is never lost (even in case of timeour error)
-        invoice.l10n_es_tbai_temp_xml = self.env['ir.attachment'].create({
+        # Store the XML as attachment to ensure it is never lost (even in case of timeout error)
+        invoice.l10n_es_tbai_cancel_xml = self.env['ir.attachment'].create({
             'type': 'binary',
             'name': invoice.name + '_cancel.xml',
             'raw': etree.tostring(cancel_xml, encoding='UTF-8'),
             'mimetype': 'application/xml',
+            'res_id': invoice.id,
+            'res_model': 'account.move',
         })
 
         # Call the web service and get response
         res.update(self._l10n_es_tbai_post_to_web_service(invoice, cancel_xml, cancel=True))
-        res_xml = res[invoice]['response']
+        response_xml = res[invoice]['response']
 
-        # TIMEOUT: success is undetermined
-        if res_xml is None:
+        # TIMEOUT / NO RESPONSE: success is undetermined
+        if response_xml is None:
             pass
 
         # SUCCESS
@@ -175,17 +171,14 @@ class AccountEdiFormat(models.Model):
             # Track head of chain (last posted invoice)
             invoice.company_id.write({'l10n_es_tbai_last_posted_id': invoice})
 
-            # Create and save edi attachment, remove temp XML
-            attachment = invoice.l10n_es_tbai_temp_xml
-            invoice.l10n_es_tbai_temp_xml = False
-
+            # Put attachment in chatter
             invoice.with_context(no_new_invoice=True).message_post(
                 body="<pre>TicketBAI: posted cancelation XML\n" + res[invoice]['message'] + "</pre>",
-                attachment_ids=attachment.ids)
+                attachment_ids=invoice.l10n_es_tbai_cancel_xml.ids)
 
         # FAILURE
         else:
-            invoice.l10n_es_tbai_temp_xml = False  # will need to be re-created
+            invoice.l10n_es_tbai_cancel_xml = False  # will need to be re-created
 
         return res
 
@@ -211,10 +204,10 @@ class AccountEdiFormat(models.Model):
     # -------------------------------------------------------------------------
 
     def _l10n_es_tbai_get_invoice_xml(self, invoice, cancel=False):
-        # Peviously generated XML was posted but without a response (timeout) => try again
-        if invoice.l10n_es_tbai_temp_xml:
-            return etree.fromstring(invoice.l10n_es_tbai_temp_xml.with_context(bin_size=False).raw)
-        # TODO second champ pour temp_cancel, utiliser temp_xml directment pour le _compute de account_move
+        # If peviously generated XML was posted not rejected (success or timeout), reuse it
+        doc = invoice._get_l10n_es_tbai_submitted_xml(cancel)
+        if doc:
+            return doc
 
         # Otherwise, generate a new XML
         values = {

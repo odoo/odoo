@@ -16,14 +16,19 @@ class AccountMove(models.Model):
     # Stored fields
     l10n_es_tbai_is_required = fields.Boolean(
         string="Is the Bask EDI (TicketBAI) needed",
-        compute='_compute_l10n_es_tbai_is_required'
+        compute="_compute_l10n_es_tbai_is_required"
     )
 
     # Relations
-    l10n_es_tbai_temp_xml = fields.Many2one(
-        comodel_name='ir.attachment', readonly=True,
-        string="Temp XML (awaiting response)",
-        help="Stores the posted XML while no answer has been received from the govt (avoids loss of info in case of timeouts)."
+    l10n_es_tbai_post_xml = fields.Many2one(
+        comodel_name="ir.attachment", readonly=True, copy=False,
+        string="Posted XML (confirmed or awaiting response)",
+        help="Stores the posted XML before getting a response. Cleared if rejected by govt."
+    )
+    l10n_es_tbai_cancel_xml = fields.Many2one(
+        comodel_name="ir.attachment", readonly=True, copy=False,
+        string="Posted cancelation XML (confirmed or awaiting response)",
+        help="Stores the posted cancelation XML before getting a response. Cleared if rejected by govt."
     )
 
     # Non-stored fields
@@ -106,16 +111,22 @@ class AccountMove(models.Model):
         for record in self:
             record.l10n_es_tbai_qr_escaped = url_quote(record.l10n_es_tbai_qr)
 
+    def _get_l10n_es_tbai_submitted_xml(self, cancel=False):
+        doc = self.l10n_es_tbai_cancel_xml if cancel else self.l10n_es_tbai_post_xml
+        doc_raw = doc.with_context(bin_size=False).raw  # Without bin_size=False, size is returned instead of content
+        if not doc_raw:
+            print("Invoice {}: no doc".format(self.name))
+            return False
+        print("Invoice {}: has doc".format(self.name))
+        return etree.fromstring(doc_raw.decode())
+
     def _get_l10n_es_tbai_values_from_xml(self, xpaths):
         res = {key: '' for key in xpaths.keys()}
-        for doc in self.env['ir.attachment'].search([
-            ('res_model', '=', 'account.move'),
-            ('res_id', '=', self.id)
-        ]):
-            doc_xml = etree.fromstring(doc.with_context(bin_size=False).raw)  # Without bin_size=False, size is returned instead of content
-            for key, value in xpaths.items():
-                res[key] = doc_xml.find(value).text
+        doc_xml = self._get_l10n_es_tbai_submitted_xml()  # values are in post, not cancel
+        if not doc_xml:
             return res
+        for key, value in xpaths.items():
+            res[key] = doc_xml.find(value).text
         return res
 
     @api.depends('edi_document_ids.attachment_id.raw')
