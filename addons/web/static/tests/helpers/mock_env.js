@@ -10,28 +10,30 @@ import { makeMockServer } from "./mock_server";
 import { mocks } from "./mock_services";
 import { patchWithCleanup } from "./utils";
 
-export function clearRegistryWithCleanup(registry) {
+function prepareRegistry(registry, keepContent = false) {
+    const _addEventListener = registry.addEventListener.bind(registry);
+    const _removeEventListener = registry.removeEventListener.bind(registry);
     const patch = {
-        content: {},
+        content: keepContent ? { ...registry.content } : {},
         elements: null,
         entries: null,
         subRegistries: {},
-        // Preserve OnUpdate handlers
-        subscriptions: { UPDATE: [...registry.subscriptions.UPDATE] },
+        addEventListener(type, callback) {
+            _addEventListener(type, callback);
+            registerCleanup(() => {
+                _removeEventListener(type, callback);
+            });
+        },
     };
     patchWithCleanup(registry, patch);
 }
 
+export function clearRegistryWithCleanup(registry) {
+    prepareRegistry(registry);
+}
+
 function cloneRegistryWithCleanup(registry) {
-    const patch = {
-        content: { ...registry.content },
-        elements: null,
-        entries: null,
-        subRegistries: {},
-        // Preserve OnUpdate handlers
-        subscriptions: { UPDATE: [...registry.subscriptions.UPDATE] },
-    };
-    patchWithCleanup(registry, patch);
+    prepareRegistry(registry, true);
 }
 
 export function clearServicesMetadataWithCleanup() {
@@ -110,8 +112,8 @@ export async function makeTestEnv(config = {}) {
     });
 
     const env = makeEnv();
+    owl.Component.env = env;
     env.config = config.config || {};
     await startServices(env);
-    env.qweb.addTemplates(window.__ODOO_TEMPLATES__);
     return env;
 }

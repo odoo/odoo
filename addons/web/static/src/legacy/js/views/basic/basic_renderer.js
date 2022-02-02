@@ -25,6 +25,8 @@ const { Component } = owl;
 var qweb = core.qweb;
 const _t = core._t;
 
+const { status } = owl;
+
 var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
     custom_events: {
         navigation_move: '_onNavigationMove',
@@ -160,7 +162,7 @@ var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
      * @returns {Promise<AbstractField[]>} resolved with the list of widgets
      *                                      that have been reset
      */
-    confirmChange: function (state, id, fields, ev) {
+    confirmChange: async function (state, id, fields, ev) {
         var self = this;
         this._setState(state);
         var record = this._getRecord(id);
@@ -171,21 +173,30 @@ var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
         // reset all widgets (from the <widget> tag) if any:
         _.invoke(this.widgets, 'updateState', state);
 
-        var defs = [];
-
+        const fieldWidgets = (this.allFieldWidgets[id] || []).slice();
         // Reset all the field widgets that are marked as changed and the ones
         // which are configured to always be reset on any change
-        _.each(this.allFieldWidgets[id], function (widget) {
+        let defs = fieldWidgets.map(async (widget) => {
             var fieldChanged = _.contains(fields, widget.name);
             if (fieldChanged || widget.resetOnAnyFieldChange) {
-                defs.push(widget.reset(record, ev, fieldChanged));
+                return widget.reset(record, ev, fieldChanged);
             }
         });
 
         // The modifiers update is done after widget resets as modifiers
         // associated callbacks need to have all the widgets with the proper
         // state before evaluation
-        defs.push(this._updateAllModifiers(record));
+        await this._updateAllModifiers(record);
+
+        // Remove defs of destroyed widget (by the call to updateAllModifiers), as
+        // those defs will never resolve
+        defs = defs.filter((def, index) => {
+            if (fieldWidgets[index] instanceof FieldWrapper) {
+                return status(fieldWidgets[index]) !== "destroyed";
+            } else {
+                return !fieldWidgets[index].isDestroyed();
+            }
+        });
 
         return Promise.all(defs).then(function () {
             return _.filter(self.allFieldWidgets[id], function (widget) {

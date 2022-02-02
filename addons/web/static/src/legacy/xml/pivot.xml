@@ -31,7 +31,7 @@
                         <td class="o_pivot_cell_value text-right" t-att-class="{
                                 o_empty: cell.value === undefined,
                                 'font-weight-bold': cell.isBold,
-                            }" t-on-click="trigger('open_view', cell)"
+                            }" t-on-click="() => this.trigger('open_view', cell)"
                                t-on-mouseover="_onMouseEnter" t-on-mouseout="_onMouseLeave">
                             <t t-if="cell.value !== undefined">
                                 <div t-if="cell.originIndexes.length > 1" class="o_variation" t-att-class="{
@@ -58,8 +58,8 @@
         <th t-att-colspan="isXAxis ? cell.width : undefined" t-att-rowspan="isXAxis ? cell.height : undefined" t-att-class="{
                 o_pivot_header_cell_closed: cell.isLeaf,
                 o_pivot_header_cell_opened: !cell.isLeaf,
-            }" t-attf-style="{{ isXAxis ? undefined : 'padding-left: ' + _getPadding(cell) + 'px;' }}" t-att-title="cell.label" t-on-click.self.prevent="_onHeaderClick(cell, isXAxis ? 'col' : 'row')">
-            <span t-on-click.self.prevent="_onHeaderClick(cell, isXAxis ? 'col' : 'row')" t-esc="cell.title"/>
+            }" t-attf-style="{{ isXAxis ? undefined : 'padding-left: ' + _getPadding(cell) + 'px;' }}" t-att-title="cell.label" t-on-click.self.prevent="() => this._onHeaderClick(cell, isXAxis ? 'col' : 'row')">
+            <span t-on-click.self.prevent="() => this._onHeaderClick(cell, isXAxis ? 'col' : 'row')" t-esc="cell.title"/>
             <t t-if="cell.isLeaf and !cell.isFolded" t-call="web.legacy.PivotGroupBySelection"/>
         </th>
     </t>
@@ -70,23 +70,23 @@
                 o_pivot_measure_row: !cell.originIndexes,
                 o_pivot_sort_order_asc: cell.order === 'asc',
                 o_pivot_sort_order_desc: cell.order === 'desc',
-            }" t-on-click.prevent="trigger('sort_rows',cell)" t-on-mouseover="_onMouseEnter" t-on-mouseout="_onMouseLeave">
+            }" t-on-click.prevent="() => this.trigger('sort_rows',cell)" t-on-mouseover="_onMouseEnter" t-on-mouseout="_onMouseLeave">
             <t t-esc="cell.title"/>
         </th>
     </t>
 
     <t t-name="web.legacy.PivotGroupBySelection" owl="1">
-        <PivotGroupByMenu 
+        <PivotGroupByMenu
             customGroupBys="customGroupBys"
             fields="props.groupableFields"
             hasSearchArchGroupBys="hasSearchArchGroupBys"
             searchModel="props.searchModel"
-            t-on-groupby-menu-selection="_onGroupByMenuSelection"
+            onGroupbyMenuSelection.bind="_onGroupByMenuSelection"
         />
     </t>
 
     <t t-name="web.legacy.PivotGroupByMenu" owl="1">
-        <Dropdown class="o_pivot_field_menu" toggler="'parent'">
+        <Dropdown class="'o_pivot_field_menu'" toggler="'parent'">
             <t t-set="currentGroup" t-value="null"/>
             <t t-foreach="items" t-as="item" t-key="item.id">
                 <t t-if="item.groupNumber and currentGroup !== null and currentGroup !== item.groupNumber">
@@ -98,14 +98,14 @@
                             <t t-esc="item.description"/>
                         </t>
                         <t t-foreach="Object.values(intervalOptions)" t-as="option" t-key="option.id">
-                            <DropdownItem class="o_item_option dropdown-item" onSelected="() => this._onClickMenuGroupBy(item.fieldName, option.id)">
+                            <DropdownItem class="'o_item_option'" onSelected="() => this._onClickMenuGroupBy(item.fieldName, option.id)">
                                 <t t-esc="option.description"/>
                             </DropdownItem>
                         </t>
                     </Dropdown>
                 </t>
                 <t t-else="">
-                    <DropdownItem class="o_menu_item dropdown-item" onSelected="() => this._onClickMenuGroupBy(item.fieldName, null)">
+                    <DropdownItem class="'o_menu_item'" onSelected="() => this._onClickMenuGroupBy(item.fieldName, null)">
                         <t t-esc="item.description"/>
                     </DropdownItem>
                 </t>
@@ -113,7 +113,7 @@
             </t>
             <t t-if="props.fields.length and props.hasSearchArchGroupBys">
                 <li t-if="items.length" class="dropdown-divider" role="separator"/>
-                <PivotCustomGroupByItem fields="props.fields"/>
+                <CustomGroupByItem fields="props.fields" onAddCustomGroup.bind="onAddCustomGroup"/>
             </t>
         </Dropdown>
     </t>

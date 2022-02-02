@@ -1,5 +1,7 @@
 /** @odoo-module **/
 
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _lt } from "@web/core/l10n/translation";
 import { download } from "@web/core/network/download";
 import { registry } from "@web/core/registry";
@@ -157,7 +159,7 @@ export class PivotView extends Component {
 
 PivotView.template = "web.PivotView";
 PivotView.buttonTemplate = "web.PivotView.Buttons";
-PivotView.components = { Renderer: PivotRenderer, Layout };
+PivotView.components = { Dropdown, DropdownItem, Renderer: PivotRenderer, Layout };
 
 PivotView.props = {
     ...standardViewProps,

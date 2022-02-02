@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-const { Component, useState } = owl;
+const { Component, onMounted, onWillStart, onWillUpdateProps, useState } = owl;
 
 /**
  * Search panel
@@ -21,24 +21,24 @@ export class SearchPanel extends Component {
         this.hasImportedState = false;
 
         this.importState(this.props.importedState);
-    }
 
-    async willStart() {
-        await this.env.searchModel.sectionsPromise;
-        this.expandDefaultValue();
-        this.updateActiveValues();
-    }
+        onWillStart(async () => {
+            await this.env.searchModel.sectionsPromise;
+            this.expandDefaultValue();
+            this.updateActiveValues();
+        });
 
-    mounted() {
-        this.updateGroupHeadersChecked();
-        if (this.hasImportedState) {
-            this.el.scroll({ top: this.scrollTop });
-        }
-    }
+        onMounted(() => {
+            this.updateGroupHeadersChecked();
+            if (this.hasImportedState) {
+                this.el.scroll({ top: this.scrollTop });
+            }
+        });
 
-    async willUpdateProps() {
-        await this.env.searchModel.sectionsPromise;
-        this.updateActiveValues();
+        onWillUpdateProps(async () => {
+            await this.env.searchModel.sectionsPromise;
+            this.updateActiveValues();
+        });
     }
 
     //---------------------------------------------------------------------

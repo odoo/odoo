@@ -9,11 +9,10 @@ import { WithSearch } from "@web/search/with_search/with_search";
 import { getDefaultConfig } from "@web/views/view";
 import { viewService } from "@web/views/view_service";
 import { actionService } from "@web/webclient/actions/action_service";
-import { registerCleanup } from "../helpers/cleanup";
 import { makeTestEnv } from "../helpers/mock_env";
-import { click, getFixture, mouseEnter, triggerEvent } from "../helpers/utils";
+import { click, getFixture, mount, mouseEnter, triggerEvent } from "../helpers/utils";
 
-const { Component, mount } = owl;
+const { Component } = owl;
 const serviceRegistry = registry.category("services");
 const favoriteMenuRegistry = registry.category("favoriteMenu");
 
@@ -48,13 +47,10 @@ export const makeWithSearch = async (params) => {
     delete props.config;
 
     const env = await makeTestEnv({ serverData, mockRPC, config });
-
-    const target = getFixture();
-    const withSearch = await mount(WithSearch, { env, props, target });
-
-    registerCleanup(() => withSearch.destroy());
-
-    const component = Object.values(withSearch.__owl__.children)[0];
+    const withSearch = await mount(WithSearch, getFixture(), { env, props });
+    const withSearchNode = withSearch.__owl__;
+    const componentNode = Object.values(withSearchNode.children)[0];
+    const component = componentNode.component;
 
     return component;
 };

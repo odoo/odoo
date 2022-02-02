@@ -24,7 +24,15 @@ const profilingService = {
             const debugItem = document.querySelector(".o_debug_manager .dropdown-toggle");
             if (state.isEnabled) {
                 recordingIcon = document.createElement("i");
-                recordingIcon.classList.add("o_recording", "badge", "badge-pill", "d-inline", "p-2", "bg-danger", "border");
+                recordingIcon.classList.add(
+                    "o_recording",
+                    "badge",
+                    "badge-pill",
+                    "d-inline",
+                    "p-2",
+                    "bg-danger",
+                    "border"
+                );
                 debugItem.appendChild(recordingIcon);
             } else if (recordingIcon) {
                 debugItem.removeChild(recordingIcon);
@@ -33,7 +41,7 @@ const profilingService = {
         }
 
         if (env.debug) {
-            env.bus.on("WEB_CLIENT_READY", null, updateDebugIcon);
+            env.bus.addEventListener("WEB_CLIENT_READY", updateDebugIcon);
         }
 
         async function setProfiling(params) {

@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.FilterMenu" owl="1">
-        <Dropdown class="o_filter_menu btn-group" togglerClass="'btn btn-light'">
+        <Dropdown class="'o_filter_menu btn-group ' + props.class" togglerClass="'btn btn-light'">
             <t t-set-slot="toggler">
                 <i class="oi-small mr-1" t-att-class="icon"/>
                 <span class="o_dropdown_title">Filters</span>
@@ -22,10 +22,9 @@
                             <t t-if="subGroup !== null and subGroup !== option.groupNumber">
                                 <div class="dropdown-divider" role="separator"/>
                             </t>
-                            <DropdownItem class="o_item_option"
-                                t-att-class="{ selected: option.isActive }"
-                                parentClosingMode="'none'"
+                            <DropdownItem class="{ o_item_option: true, selected: option.isActive }"
                                 t-esc="option.description"
+                                parentClosingMode="'none'"
                                 onSelected="() => this.onFilterSelected({ itemId: item.id, optionId: option.id })"
                             />
                             <t t-set="subGroup" t-value="option.groupNumber"/>
@@ -33,8 +32,7 @@
                     </Dropdown>
                 </t>
                 <t t-else="">
-                    <DropdownItem class="o_menu_item"
-                        t-att-class="{ selected: item.isActive }"
+                    <DropdownItem class="{ o_menu_item: true, selected: item.isActive }"
                         parentClosingMode="'none'"
                         t-esc="item.description"
                         onSelected="() => this.onFilterSelected({ itemId: item.id })"

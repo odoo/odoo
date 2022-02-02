@@ -5,25 +5,23 @@ odoo.define('web.WeekDays', function (require) {
     const Registry = require('web.widgetRegistry');
     const utils = require('web.utils');
 
-    const { Component, useState } = owl;
-
+    const { Component, onWillUpdateProps, useState } = owl;
 
     class WeekDays extends Component {
-        constructor(parent) {
-            super(...arguments);
-            this.parent = parent;
+        setup() {
             this.weekdaysShort = [];
             this._sortWeekdays();
             this.state = useState({ days: this._prepareData(this.props.record.data) });
             this.mode = this.props.options.mode;
+
+            onWillUpdateProps(this.onWillUpdateProps);
         }
 
         /**
-         * @override
          * @param {Object} nextProps
          * @param {Object} nextProps.record
          */
-        async willUpdateProps(nextProps) {
+        async onWillUpdateProps(nextProps) {
             this.state.days = this._prepareData(nextProps.record.data);
             this.mode = nextProps.options.mode;
         }
@@ -67,11 +65,10 @@ odoo.define('web.WeekDays', function (require) {
          * @private
          * @param {MouseEvent} ev
          */
-        _onChange(ev) {
-            const field = ev.target.id.split("-")[0];
+        _onChange(checked, field) {
             this.trigger('field-changed', {
                 dataPointID: this.props.record.id,
-                changes: { [field]: ev.target.checked },
+                changes: { [field.split("-")[0]]: checked },
             });
         }
     }

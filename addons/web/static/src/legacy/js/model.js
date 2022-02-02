@@ -1,10 +1,11 @@
 odoo.define("web.Model", function (require) {
     "use strict";
 
-    const { groupBy, partitionBy } = require("web.utils");
+    const { groupBy  } = require("web.utils");
     const Registry = require("web.Registry");
+    const { useBus } = require("@web/core/utils/hooks");
 
-    const { Component, EventBus, Observer } = owl;
+    const { EventBus, onWillRender, useComponent } = owl;
     const isNotNull = (val) => val !== null && val !== undefined;
 
     /**
@@ -232,7 +233,7 @@ odoo.define("web.Model", function (require) {
             this.dispatching = false;
             this.extensions = [];
             this.externalState = {};
-            this.mapping = {};
+            this.mapping = new WeakMap();
             this.rev = 1;
 
             const { name, registry } = this.constructor;
@@ -426,19 +427,9 @@ odoo.define("web.Model", function (require) {
          * @see Context.__notifyComponents() in owl.js for explanation
          * @private
          */
-        async _notifyComponents() {
+        _notifyComponents() {
             const rev = ++this.rev;
-            const subscriptions = this.subscriptions.update || [];
-            const groups = partitionBy(subscriptions, (s) =>
-                s.owner ? s.owner.__owl__.depth : -1
-            );
-            for (let group of groups) {
-                const proms = group.map((sub) =>
-                    sub.callback.call(sub.owner, rev)
-                );
-                Component.scheduler.flush();
-                await Promise.all(proms);
-            }
+            this.trigger("update", { rev });
         }
     }
 
@@ -452,47 +443,32 @@ odoo.define("web.Model", function (require) {
      * @returns {model}
      */
     function useModel(modelName) {
-        const component = Component.current;
+        const component = useComponent();
         const model = component.env[modelName];
         if (!(model instanceof Model)) {
-            throw new Error(`No Model found when connecting '${
-                component.name
-                }'`);
+            throw new Error(`No Model found when connecting '${component.constructor.name}'`);
         }
 
-        const mapping = model.mapping;
-        const __owl__ = component.__owl__;
-        const componentId = __owl__.id;
-        if (!__owl__.observer) {
-            __owl__.observer = new Observer();
-            __owl__.observer.notifyCB = component.render.bind(component);
-        }
-        const currentCB = __owl__.observer.notifyCB;
-        __owl__.observer.notifyCB = function () {
-            if (model.rev > mapping[componentId]) {
+        model.mapping.set(component, 0);
+        const __render = component.render.bind(component);
+        component.render = function () {
+            if (model.rev > model.mapping.get(component)) {
                 return;
             }
-            currentCB();
-        };
-        mapping[componentId] = 0;
-        const renderFn = __owl__.renderFn;
-        __owl__.renderFn = function (comp, params) {
-            mapping[componentId] = model.rev;
-            return renderFn(comp, params);
+            __render();
         };
 
-        model.on("update", component, async (modelRev) => {
-            if (mapping[componentId] < modelRev) {
-                mapping[componentId] = modelRev;
-                await component.render();
-            }
+        onWillRender(() => {
+            model.mapping.set(component, model.rev);
         });
 
-        const __destroy = component.__destroy;
-        component.__destroy = (parent) => {
-            model.off("update", component);
-            __destroy.call(component, parent);
-        };
+        useBus(model, "update", (ev) => {
+            const { rev } = ev.detail;
+            if (model.mapping.get(component) < rev) {
+                model.mapping.set(component, rev);
+                component.render();
+            }
+        });
 
         return model;
     }

@@ -2,7 +2,7 @@
 
 import { SERVICES_METADATA } from "@web/env";
 
-const { onMounted, onPatched, onWillPatch, onWillUnmount, useComponent } = owl;
+const { status, useComponent, useEffect, useRef } = owl;
 
 /**
  * This file contains various custom hooks.
@@ -24,37 +24,36 @@ const { onMounted, onPatched, onWillPatch, onWillUnmount, useComponent } = owl;
 // -----------------------------------------------------------------------------
 
 /**
- * Focus a given selector as soon as it appears in the DOM and if it was not
- * displayed before. If the selected target is an input|textarea, set the selection
+ * Focus a dom element with provided ref as soon as it appears in the DOM and if it was not
+ * displayed before. If it is an input|textarea, set the selection
  * at the end.
- *
- * @param {Object} [params]
- * @param {string} [params.selector='autofocus'] default: select the first element
- *                 with an `autofocus` attribute.
+ * @param {string} [refName="autofocus"]
  * @returns {Function} function that forces the focus on the next update if visible.
  */
-export function useAutofocus(params = {}) {
+export function useAutofocus(refName = "autofocus") {
     const comp = useComponent();
     // Prevent autofocus in mobile
     if (comp.env.isSmall) {
         return () => {};
     }
-    const selector = params.selector || "[autofocus]";
+    // LEGACY
+    if (comp.env.device && comp.env.device.isMobileDevice) {
+        return () => {};
+    }
+    // LEGACY
+    let ref = useRef(refName);
     let forceFocusCount = 0;
     useEffect(
-        function autofocus() {
-            const target = comp.el.querySelector(selector);
-            if (target) {
-                target.focus();
-                if (["INPUT", "TEXTAREA"].includes(target.tagName)) {
-                    const inputEl = target;
-                    inputEl.selectionStart = inputEl.selectionEnd = inputEl.value.length;
+        (el) => {
+            if (el) {
+                el.focus();
+                if (["INPUT", "TEXTAREA"].includes(el.tagName)) {
+                    el.selectionStart = el.selectionEnd = el.value.length;
                 }
             }
         },
-        () => [forceFocusCount]
+        () => [ref.el, forceFocusCount]
     );
-
     return function focusOnUpdate() {
         forceFocusCount++; // force the effect to rerun on next patch
     };
@@ -75,60 +74,12 @@ export function useBus(bus, eventName, callback) {
     const component = useComponent();
     useEffect(
         () => {
-            bus.on(eventName, component, callback);
-            return () => bus.off(eventName, component);
+            const listener = callback.bind(component);
+            bus.addEventListener(eventName, listener);
+            return () => bus.removeEventListener(eventName, listener);
         },
         () => []
     );
-}
-
-// -----------------------------------------------------------------------------
-// useEffect
-// -----------------------------------------------------------------------------
-
-const NO_OP = () => {};
-/**
- * @callback Effect
- * @param {...any} dependencies the dependencies computed by computeDependencies
- * @returns {void|(()=>void)} a cleanup function that reverses the side
- *      effects of the effect callback.
- */
-
-/**
- * This hook will run a callback when a component is mounted and patched, and
- * will run a cleanup function before patching and before unmounting the
- * the component.
- *
- * @param {Effect} effect the effect to run on component mount and/or patch
- * @param {()=>any[]} [computeDependencies=()=>[NaN]] a callback to compute
- *      dependencies that will decide if the effect needs to be cleaned up and
- *      run again. If the dependencies did not change, the effect will not run
- *      again. The default value returns an array containing only NaN because
- *      NaN !== NaN, which will cause the effect to rerun on every patch.
- */
-export function useEffect(effect, computeDependencies = () => [NaN]) {
-    let cleanup, dependencies;
-    onMounted(() => {
-        dependencies = computeDependencies();
-        cleanup = effect(...dependencies) || NO_OP;
-    });
-
-    let shouldReapplyOnPatch = false;
-    onWillPatch(() => {
-        const newDeps = computeDependencies();
-        shouldReapplyOnPatch = newDeps.some((val, i) => val !== dependencies[i]);
-        if (shouldReapplyOnPatch) {
-            cleanup();
-            dependencies = newDeps;
-        }
-    });
-    onPatched(() => {
-        if (shouldReapplyOnPatch) {
-            cleanup = effect(...dependencies) || NO_OP;
-        }
-    });
-
-    onWillUnmount(() => cleanup());
 }
 
 // -----------------------------------------------------------------------------
@@ -157,7 +108,7 @@ export function useEffect(effect, computeDependencies = () => [NaN]) {
  *
  *   useListener('click', 'button', () => { console.log('clicked'); });
  *
- * Note: components that alter the event's target (e.g. Portal) are not
+ * Note: components that alter the event's target and the t-portal directive are not
  * expected to behave as expected with event delegation.
  *
  * @param {string} eventName the name of the event
@@ -215,11 +166,11 @@ export function useListener(eventName, querySelector, handler, options = {}) {
 
 function _protectMethod(component, caller, fn) {
     return async (...args) => {
-        if (component.__owl__.status === 5 /* DESTROYED */) {
+        if (status(component) === "destroyed") {
             throw new Error("Component is destroyed");
         }
         const result = await fn.call(caller, ...args);
-        return component.__owl__.status === 5 ? new Promise(() => {}) : result;
+        return status(component) === "destroyed" ? new Promise(() => {}) : result;
     };
 }
 
@@ -249,18 +200,4 @@ export function useService(serviceName) {
         }
     }
     return service;
-}
-
-/**
- * Executes "callback" when the component is being destroyed
- * @param  {Function} callback
- */
-export function onDestroyed(callback) {
-    const component = useComponent();
-    const _destroy = component.__destroy;
-    component.__destroy = (...args) => {
-        _destroy.call(component, ...args);
-        // callback is called after super to guarantee the component is actually destroyed
-        callback();
-    };
 }

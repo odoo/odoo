@@ -28,9 +28,7 @@ odoo.define('web.DropdownMenu', function (require) {
      * @extends Component
      */
     class DropdownMenu extends Component {
-        constructor() {
-            super(...arguments);
-
+        setup() {
             this.dropdownMenu = useRef('dropdown');
             this.state = useState({ open: false });
 

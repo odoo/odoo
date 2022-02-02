@@ -6,6 +6,8 @@ import { patch, unpatch } from "@web/core/utils/patch";
 import { registerCleanup } from "./cleanup";
 import { download } from "@web/core/network/download";
 
+const { App, onMounted, onPatched, useComponent } = owl;
+
 /**
  * Patch the native Date object
  *
@@ -339,4 +341,74 @@ export function mockAnimationFrame() {
         }
         callbacks.clear();
     };
+}
+
+export async function mount(Comp, target, config = {}) {
+    let { props, env } = config;
+    env = env || {};
+    const configuration = {
+        env,
+        templates: window.__OWL_TEMPLATES__,
+        test: true,
+        props,
+    };
+    if (env.services && "localization" in env.services) {
+        configuration.translateFn = env._t;
+    }
+    const app = new App(Comp, configuration);
+    registerCleanup(() => app.destroy());
+    return app.mount(target);
+}
+
+export function destroy(comp) {
+    comp.__owl__.app.destroy();
+}
+
+export function findChildren(comp, predicate = (e) => e) {
+    let queue = [];
+    [].unshift.apply(queue, Object.values(comp.__owl__.children));
+
+    while (queue.length > 0) {
+        const curNode = queue.pop();
+        if (predicate(curNode)) {
+            return curNode;
+        }
+        [].unshift.apply(queue, Object.values(curNode.component.__owl__.children));
+    }
+}
+
+// partial replacement of t-ref on component
+export function useChild() {
+    const node = useComponent().__owl__;
+    const setChild = () => {
+        const componentNode = Object.values(node.children)[0];
+        node.component.child = componentNode.component;
+    };
+    onMounted(setChild);
+    onPatched(setChild);
+}
+
+const lifeCycleHooks = [
+    "onError",
+    "onMounted",
+    "onPatched",
+    "onRendered",
+    "onWillDestroy",
+    "onWillPatch",
+    "onWillRender",
+    "onWillStart",
+    "onWillUnmount",
+    "onWillUpdateProps",
+];
+export function useLogLifeCycle(logFn, name = "") {
+    const component = owl.useComponent();
+    let loggedName = `${component.constructor.name}`;
+    if (name) {
+        loggedName = `${component.constructor.name} ${name}`;
+    }
+    for (const hook of lifeCycleHooks) {
+        owl[hook](() => {
+            logFn(`${hook} ${loggedName}`);
+        });
+    }
 }

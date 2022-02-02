@@ -4,13 +4,20 @@
   <t t-name="web.Dropdown" owl="1">
     <div
       class="o-dropdown dropdown"
-      t-att-class="{ show: state.open, 'o-dropdown--no-caret': !parentDropdown }"
-      t-attf-class="{{ directionCaretClass || '' }}"
+      t-att-class="props.class"
+      t-attf-class="
+        {{ directionCaretClass || ''}}
+        {{ state.open ? 'show' : ''}}
+        {{ !parentDropdown ? 'o-dropdown--no-caret' : '' }}
+      "
     >
       <button
         t-if="props.toggler !== 'parent'"
         class="dropdown-toggle"
-        t-attf-class="{{props.togglerClass || ''}} {{parentDropdown ? 'dropdown-item' : ''}}"
+        t-attf-class="
+          {{props.togglerClass || ''}}
+          {{parentDropdown ? 'dropdown-item' : ''}}
+        "
         t-on-click="onTogglerClick"
         t-on-mouseenter="onTogglerMouseEnter"
         t-att-title="props.title"
@@ -20,7 +27,12 @@
       >
         <t t-slot="toggler" />
       </button>
-      <div t-if="state.open" class="o-dropdown--menu dropdown-menu d-block" t-att-class="props.menuClass" t-ref="menuRef">
+      <div
+        t-if="state.open"
+        class="o-dropdown--menu dropdown-menu d-block"
+        t-att-class="props.menuClass"
+        t-ref="menuRef"
+      >
         <t t-slot="default" />
       </div>
     </div>

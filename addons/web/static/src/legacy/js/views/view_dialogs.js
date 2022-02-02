@@ -9,6 +9,8 @@ import select_create_controllers_registry from 'web.select_create_controllers_re
 
 var _t = core._t;
 
+const { markup } = owl;
+
 /**
  * Class with everything which is common between FormViewDialog and
  * SelectCreateDialog.
@@ -396,7 +398,7 @@ var SelectCreateDialog = ViewDialog.extend({
         var view = new ViewClass(fieldsViews[this.viewType], _.extend(viewOptions, {
             action: {
                 controlPanelFieldsView: fieldsViews.search,
-                help: _.str.sprintf("<p>%s</p>", _t("No records found!")),
+                help: markup(_.str.sprintf("<p>%s</p>", _t("No records found!"))),
             },
             action_buttons: false,
             dynamicFilters: this.options.dynamicFilters,

@@ -4,7 +4,7 @@ import { registry } from "../registry";
 import { EffectContainer } from "./effect_container";
 import { RainbowMan } from "./rainbow_man";
 
-const { Component, EventBus } = owl;
+const { EventBus } = owl;
 
 const effectRegistry = registry.category("effects");
 
@@ -25,8 +25,6 @@ const effectRegistry = registry.category("effects");
  *    Can be a string representation of html (prefer component if you want interactions in the DOM)
  * @param {string} [params.img_url="/web/static/img/smile.svg"]
  *    The url of the image to display inside the rainbow
- * @param {boolean} [params.messageIsHtml=false]
- *    Set to true if the message encodes html, s.t. it will be correctly inserted into the DOM.
  * @param {"slow"|"medium"|"fast"|"no"} [params.fadeout="medium"]
  *    Delay for rainbowman to disappear
  *    'fast' will make rainbowman dissapear quickly
@@ -58,7 +56,6 @@ function rainbowMan(env, params = {}) {
             imgUrl: params.img_url || "/web/static/img/smile.svg",
             fadeout: params.fadeout || "medium",
             message,
-            messageIsHtml: params.messageIsHtml || false,
             Component: params.Component,
             props: params.props,
         };

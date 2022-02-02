@@ -8,10 +8,17 @@ import { useService } from "@web/core/utils/hooks";
 import { patch, unpatch } from "@web/core/utils/patch";
 import { clearRegistryWithCleanup, makeTestEnv } from "../../helpers/mock_env";
 import { makeMockXHR } from "../../helpers/mock_services";
-import { getFixture, makeDeferred, nextTick, patchWithCleanup } from "../../helpers/utils";
+import {
+    destroy,
+    getFixture,
+    makeDeferred,
+    mount,
+    nextTick,
+    patchWithCleanup,
+} from "../../helpers/utils";
 import { registerCleanup } from "../../helpers/cleanup";
 
-const { Component, mount, xml } = owl;
+const { Component, xml } = owl;
 
 let isXHRMocked = false;
 const serviceRegistry = registry.category("services");
@@ -132,7 +139,7 @@ QUnit.test("rpc coming from destroyed components are left pending", async (asser
         serviceRegistry,
     });
     const target = getFixture();
-    const component = await mount(MyComponent, { env, target });
+    const component = await mount(MyComponent, target, { env });
     let isResolved = false;
     let isFailed = false;
     component
@@ -145,7 +152,7 @@ QUnit.test("rpc coming from destroyed components are left pending", async (asser
         });
     assert.strictEqual(isResolved, false);
     assert.strictEqual(isFailed, false);
-    component.destroy();
+    destroy(component);
     def.resolve();
     await nextTick();
     assert.strictEqual(isResolved, false);
@@ -165,8 +172,8 @@ QUnit.test("rpc initiated from destroyed components throw exception", async (ass
         serviceRegistry,
     });
     const target = getFixture();
-    const component = await mount(MyComponent, { env, target });
-    component.destroy();
+    const component = await mount(MyComponent, target, { env });
+    destroy(component);
     try {
         await component.rpc("/my/route");
     } catch (e) {
@@ -183,11 +190,11 @@ QUnit.test("check trigger RPC:REQUEST and RPC:RESPONSE for a simple rpc", async 
     });
     let rpcIdsRequest = [];
     let rpcIdsResponse = [];
-    env.bus.on("RPC:REQUEST", null, (rpcId) => {
+    env.bus.addEventListener("RPC:REQUEST", (rpcId) => {
         rpcIdsRequest.push(rpcId);
         assert.step("RPC:REQUEST");
     });
-    env.bus.on("RPC:RESPONSE", null, (rpcId) => {
+    env.bus.addEventListener("RPC:RESPONSE", (rpcId) => {
         rpcIdsResponse.push(rpcId);
         assert.step("RPC:RESPONSE");
     });
@@ -217,11 +224,11 @@ QUnit.test("check trigger RPC:REQUEST and RPC:RESPONSE for a rpc with an error",
     });
     let rpcIdsRequest = [];
     let rpcIdsResponse = [];
-    env.bus.on("RPC:REQUEST", null, (rpcId) => {
+    env.bus.addEventListener("RPC:REQUEST", (rpcId) => {
         rpcIdsRequest.push(rpcId);
         assert.step("RPC:REQUEST");
     });
-    env.bus.on("RPC:RESPONSE", null, (rpcId) => {
+    env.bus.addEventListener("RPC:RESPONSE", (rpcId) => {
         rpcIdsResponse.push(rpcId);
         assert.step("RPC:RESPONSE");
     });

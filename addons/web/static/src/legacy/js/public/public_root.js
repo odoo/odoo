@@ -20,15 +20,18 @@ import {
     mapLegacyEnvToWowlEnv,
     makeLegacyRainbowManService,
 } from "../../utils";
-import { ComponentAdapter } from "web.OwlCompatibility";
+import { standaloneAdapter } from "web.OwlCompatibility";
 
 import { loadBundleTemplates } from "@web/core/assets";
 import { makeEnv, startServices } from "@web/env";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { browser } from '@web/core/browser/browser';
 import { jsonrpc } from '@web/core/network/rpc_service';
+import { _t } from "@web/core/l10n/translation";
+
+
 const serviceRegistry = registry.category("services");
-const { Component, config, mount, whenReady } = owl;
+const { Component, App, whenReady } = owl;
 
 // Load localizations outside the PublicRoot to not wait for DOM ready (but
 // wait for them in PublicRoot)
@@ -355,12 +358,10 @@ export const PublicRoot = publicWidget.RootWidget.extend({
     },
 });
 
-
 /**
  * Configure Owl with the public env
  */
-config.mode = legacyEnv.isDebug() ? "dev" : "prod";
-Component.env = legacyEnv;
+owl.Component.env = legacyEnv;
 
 /**
  * This widget is important, because the tour manager needs a root widget in
@@ -404,17 +405,21 @@ export async function createPublicRoot(RootWidget) {
     }, { force: true });
 
     const wowlEnv = makeEnv();
-    wowlEnv.qweb.addTemplates(await loadBundleTemplates("web.assets_frontend"));
+
+    const templates = await loadBundleTemplates("web.assets_frontend");
+    window.__OWL_TEMPLATES__ = templates;
     await startServices(wowlEnv);
     mapLegacyEnvToWowlEnv(legacyEnv, wowlEnv);
-
-    const adapter = new ComponentAdapter(null, { Component }); // Used for _trigger_up compat layer
-    const publicRoot = new RootWidget(adapter);
+    // The root widget's parent is a standalone adapter so that it has _trigger_up
+    const publicRoot = new RootWidget(standaloneAdapter({ Component }));
     await Promise.all([
-        mount(MainComponentsContainer, {
-            target: document.body,
+        new App(MainComponentsContainer, {
             env: wowlEnv,
-        }),
+            dev: wowlEnv.debug,
+            templates: window.__OWL_TEMPLATES__,
+            translateFn: _t,
+            translatableAttributes: ["data-tooltip"],
+        }).mount(document.body),
         publicRoot.attachTo(document.body),
     ]);
     return publicRoot;

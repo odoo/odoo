@@ -34,7 +34,7 @@
                                 <input type="checkbox"
                                     class="custom-control-input"
                                     t-attf-id="{{ section.id }}_input_{{ groupId }})"
-                                    t-on-click="toggleFilterGroup(section.id, group)"
+                                    t-on-click="() => this.toggleFilterGroup(section.id, group)"
                                 />
                                 <label t-attf-for="{{ section.id }}_input_{{ groupId }})"
                                     class="o_search_panel_label custom-control-label"
@@ -79,7 +79,7 @@
         <li class="o_search_panel_category_value list-group-item border-0">
             <header class="list-group-item-action"
                 t-att-class="{ active: state.active[section.id] === valueId }"
-                t-on-click="toggleCategory(section, value)"
+                t-on-click="() => this.toggleCategory(section, value)"
                 >
                 <label class="o_search_panel_label mb0" t-att-class="{ o_with_counters: section.enableCounters }">
                     <div class="o_toggle_fold">
@@ -114,7 +114,7 @@
                 t-attf-id="{{ section.id }}_input_{{ valueId }}"
                 t-att-checked="state.active[section.id][valueId]"
                 class="custom-control-input"
-                t-on-click="toggleFilterValue(section.id, valueId)"
+                t-on-click="ev => this.toggleFilterValue(section.id, valueId, ev)"
             />
             <label class="o_search_panel_label custom-control-label"
                 t-attf-for="{{ section.id }}_input_{{ valueId }}"

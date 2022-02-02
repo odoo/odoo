@@ -5,6 +5,7 @@ odoo.define('web.basic_fields_owl', function (require) {
     const CustomCheckbox = require('web.CustomCheckbox');
     const { _lt } = require('web.translation');
 
+    const { onPatched } = owl;
 
     /**
      * FieldBadge displays the field's value inside a bootstrap pill badge.
@@ -27,11 +28,13 @@ odoo.define('web.basic_fields_owl', function (require) {
 
 
     class FieldBoolean extends AbstractField {
-        patched() {
-            super.patched();
-            if (this.props.event && this.props.event.target === this) {
-                this.activate();
-            }
+        setup() {
+            super.setup();
+            onPatched(() => {
+                if (this.props.event && this.props.event.target === this) {
+                    this.activate();
+                }
+            });
         }
 
         //----------------------------------------------------------------------

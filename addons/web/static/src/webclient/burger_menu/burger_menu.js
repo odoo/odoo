@@ -1,12 +1,13 @@
 /** @odoo-module **/
 
-import { useService } from "@web/core/utils/hooks";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
+import { Transition } from "@web/core/transition";
+import { useService } from "@web/core/utils/hooks";
 import { BurgerUserMenu } from "./user_menu/user_menu";
 import { MobileSwitchCompanyMenu } from "./mobile_switch_company_menu/mobile_switch_company_menu";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 
-const { Component, Portal, onMounted, useState } = owl;
+const { Component, onMounted, useState } = owl;
 
 /**
  * This file includes the widget Menu in mobile to render the BurgerMenu which
@@ -15,21 +16,21 @@ const { Component, Portal, onMounted, useState } = owl;
 
 const SWIPE_ACTIVATION_THRESHOLD = 100;
 
-export class BurgerMenu extends owl.Component {
+export class BurgerMenu extends Component {
     setup() {
         this.company = useService("company");
         this.user = useService("user");
         this.menuRepo = useService("menu");
-        this.state = owl.hooks.useState({
+        this.state = useState({
             isUserMenuOpened: false,
             isBurgerOpened: false,
         });
         this.swipeStartX = null;
         onMounted(() => {
-            this.env.bus.on("HOME-MENU:TOGGLED", this, () => {
+            this.env.bus.addEventListener("HOME-MENU:TOGGLED", () => {
                 this._closeBurger();
             });
-            this.env.bus.on("ACTION_MANAGER:UPDATE", this, (req) => {
+            this.env.bus.addEventListener("ACTION_MANAGER:UPDATE", ({ detail: req }) => {
                 if (req.id) {
                     this._closeBurger();
                 }
@@ -74,10 +75,10 @@ export class BurgerMenu extends owl.Component {
 }
 BurgerMenu.template = "web.BurgerMenu";
 BurgerMenu.components = {
-    Portal: Portal,
     DropdownItem,
     BurgerUserMenu,
     MobileSwitchCompanyMenu,
+    Transition,
 };
 
 const systrayItem = {

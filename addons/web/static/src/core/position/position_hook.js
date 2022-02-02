@@ -1,9 +1,8 @@
 /** @odoo-module */
 
-import { useEffect } from "@web/core/utils/hooks";
 import { throttleForAnimation } from "../utils/timing";
 
-const { onWillUnmount, useComponent, useExternalListener, useRef } = owl;
+const { onWillUnmount, useComponent, useEffect, useExternalListener, useRef } = owl;
 
 /**
  * @typedef {{

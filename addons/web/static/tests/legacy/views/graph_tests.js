@@ -6,7 +6,7 @@ const GraphView = require('web.GraphView');
 const testUtils = require('web.test_utils');
 const { sortBy } = require('web.utils');
 const { browser } = require('@web/core/browser/browser');
-const { legacyExtraNextTick, patchWithCleanup } = require("@web/../tests/helpers/utils");
+const { getFixture, legacyExtraNextTick, patchWithCleanup } = require("@web/../tests/helpers/utils");
 const { createWebClient, doAction } = require('@web/../tests/webclient/helpers');
 const legacyViewRegistry = require("web.view_registry");
 const { registry } = require("@web/core/registry");
@@ -19,6 +19,8 @@ const viewRegistry = registry.category("views");
 
 const { INTERVAL_OPTIONS, PERIOD_OPTIONS, COMPARISON_OPTIONS } = searchUtils;
 const INTERVAL_OPTION_IDS = Object.keys(INTERVAL_OPTIONS);
+
+const { markup } = owl;
 
 const yearIds = [];
 const otherIds = [];
@@ -355,7 +357,7 @@ QUnit.module('Views', {
                 </graph>`,
             viewOptions: {
                 action: {
-                    help: '<p class="abc">This helper should not be displayed in graph views</p>'
+                    help: markup('<p class="abc">This helper should not be displayed in graph views</p>'),
                 }
             },
         });
@@ -381,7 +383,7 @@ QUnit.module('Views', {
                 </graph>`,
             viewOptions: {
                 action: {
-                    help: '<p class="abc">This helper should not be displayed in graph views</p>'
+                    help: markup('<p class="abc">This helper should not be displayed in graph views</p>'),
                 }
             },
         });
@@ -509,7 +511,7 @@ QUnit.module('Views', {
                 </graph>`,
             viewOptions: {
                 action: {
-                    help: '<p class="abc">This helper should not be displayed in graph views</p>'
+                    help: markup('<p class="abc">This helper should not be displayed in graph views</p>'),
                 }
             },
         });
@@ -911,6 +913,8 @@ QUnit.module('Views', {
         legacyViewRegistry.add("graph", GraphView); // We want to test the legacy view that was not added to viewRegistry!
         // (see end of registerView in legacy_views.js)
 
+        const target = getFixture();
+
         const webClient = await createWebClient({ serverData });
 
         await doAction(webClient, {
@@ -924,16 +928,16 @@ QUnit.module('Views', {
             },
         });
 
-        assert.containsOnce(webClient, '.o_control_panel .o_graph_measures_list',
+        assert.containsOnce(target, '.o_control_panel .o_graph_measures_list',
             "Measures dropdown is present at init"
         );
 
-        await cpHelpers.switchView(webClient, 'kanban');
+        await cpHelpers.switchView(target, 'kanban');
         await legacyExtraNextTick();
-        await cpHelpers.switchView(webClient, 'graph');
+        await cpHelpers.switchView(target, 'graph');
         await legacyExtraNextTick();
 
-        assert.containsOnce(webClient, '.o_control_panel .o_graph_measures_list',
+        assert.containsOnce(target, '.o_control_panel .o_graph_measures_list',
             "Measures dropdown is present after reload"
         );
     });
@@ -1604,7 +1608,7 @@ QUnit.module('Views', {
             domain: [['id', '<', 0]],
             viewOptions: {
                 action: {
-                    help: '<p class="abc">click to add a foo</p>'
+                    help: "click to add a foo",
                 }
             },
         });
@@ -1638,7 +1642,7 @@ QUnit.module('Views', {
                 </graph>`,
             viewOptions: {
                 action: {
-                    help: '<p class="abc">click to add a foo</p>'
+                    help: "click to add a foo",
                 }
             },
         })

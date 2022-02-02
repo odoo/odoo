@@ -82,8 +82,6 @@ odoo.define('web.action_menus_tests', function (require) {
             await testUtils.controlPanel.toggleActionMenu(actionMenus, "Print");
 
             assert.containsNone(actionMenus, '.dropdown-menu');
-
-            actionMenus.destroy();
         });
 
         QUnit.test("empty action menus", async function (assert) {
@@ -101,8 +99,6 @@ odoo.define('web.action_menus_tests', function (require) {
             });
 
             assert.containsNone(actionMenus, ".o_cp_action_menus > *");
-
-            actionMenus.destroy();
         });
 
         QUnit.test('execute action', async function (assert) {
@@ -139,8 +135,6 @@ odoo.define('web.action_menus_tests', function (require) {
             await testUtils.controlPanel.toggleMenuItem(actionMenus, "What's taters, precious ?");
 
             assert.verifySteps(['load-action', 'do-action']);
-
-            actionMenus.destroy();
         });
 
         QUnit.test('execute callback action', async function (assert) {
@@ -173,8 +167,6 @@ odoo.define('web.action_menus_tests', function (require) {
             await testUtils.controlPanel.toggleMenuItem(actionMenus, "Boil'em");
 
             await callbackPromise;
-
-            actionMenus.destroy();
         });
 
         QUnit.test('execute print action', async function (assert) {
@@ -211,8 +203,6 @@ odoo.define('web.action_menus_tests', function (require) {
             await testUtils.controlPanel.toggleMenuItem(actionMenus, "Po-ta-toes");
 
             assert.verifySteps(['load-action', 'do-action']);
-
-            actionMenus.destroy();
         });
 
         QUnit.test('execute url action', async function (assert) {
@@ -243,8 +233,6 @@ odoo.define('web.action_menus_tests', function (require) {
             await testUtils.controlPanel.toggleMenuItem(actionMenus, "Stick'em in a stew");
 
             assert.verifySteps(['#stew']);
-
-            actionMenus.destroy();
         });
 
         QUnit.test('execute action with context', async function (assert) {
@@ -271,8 +259,6 @@ odoo.define('web.action_menus_tests', function (require) {
 
             await testUtils.controlPanel.toggleActionMenu(actionMenus, "Action");
             await testUtils.controlPanel.toggleMenuItem(actionMenus, "What's taters, precious ?");
-
-            actionMenus.destroy();
         });
     });
 });

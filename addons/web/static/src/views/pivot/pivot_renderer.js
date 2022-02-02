@@ -1,11 +1,12 @@
 /** @odoo-module **/
 
-import { PivotGroupByMenu } from "@web/views/pivot/pivot_group_by_menu";
+import { CheckBox } from "@web/core/checkbox/checkbox";
 import { localization } from "@web/core/l10n/localization";
 import { registry } from "@web/core/registry";
+import { PivotGroupByMenu } from "@web/views/pivot/pivot_group_by_menu";
 import fieldUtils from "web.field_utils";
 
-const { Component } = owl;
+const { Component, onWillUpdateProps } = owl;
 const formatterRegistry = registry.category("formatters");
 
 export class PivotRenderer extends Component {
@@ -13,8 +14,10 @@ export class PivotRenderer extends Component {
         this.model = this.props.model;
         this.table = this.model.getTable();
         this.l10n = localization;
+
+        onWillUpdateProps(this.onWillUpdateProps);
     }
-    willUpdateProps() {
+    onWillUpdateProps() {
         this.table = this.model.getTable();
     }
     /**
@@ -74,10 +77,11 @@ export class PivotRenderer extends Component {
      * Handle the adding of a custom groupby (inside the view, not the searchview).
      *
      * @param {"col"|"row"} type
-     * @param {CustomEvent} ev
+     * @param {Array[]} groupId
+     * @param {string} fieldName
      */
-    onAddCustomGroupBy(type, ev) {
-        this.model.addGroupBy({ ...ev.detail, custom: true, type });
+    onAddCustomGroupBy(type, groupId, fieldName) {
+        this.model.addGroupBy({ groupId, fieldName, custom: true, type });
     }
 
     /**
@@ -145,5 +149,5 @@ export class PivotRenderer extends Component {
     }
 }
 PivotRenderer.template = "web.PivotRenderer";
-PivotRenderer.components = { PivotGroupByMenu };
+PivotRenderer.components = { CheckBox, PivotGroupByMenu };
 PivotRenderer.props = ["model", "onCellClicked"];

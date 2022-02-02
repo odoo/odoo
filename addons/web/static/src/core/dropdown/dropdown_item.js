@@ -1,7 +1,7 @@
 /** @odoo-module **/
 import { DROPDOWN } from "./dropdown";
 
-const { Component, QWeb } = owl;
+const { Component } = owl;
 
 /**
  * @enum {string}
@@ -12,19 +12,6 @@ const ParentClosingMode = {
     AllParents: "all",
 };
 
-/**
- * @typedef DropdownItemSelectedEventDetail
- * @property {*} payload
- * @property {Object} dropdownClosingRequest
- * @property {boolean} dropdownClosingRequest.isFresh
- * @property {ParentClosingMode} dropdownClosingRequest.mode
- *
- * @typedef {CustomEvent<DropdownItemSelectedEventDetail>} DropdownItemSelectedEvent
- */
-
-/**
- * @extends Component
- */
 export class DropdownItem extends Component {
     /**
      * Tells the parent dropdown that an item was selected and closes the
@@ -71,6 +58,10 @@ DropdownItem.props = {
         type: Function,
         optional: true,
     },
+    class: {
+        type: [String, Object],
+        optional: true,
+    },
     parentClosingMode: {
         type: ParentClosingMode,
         optional: true,
@@ -81,6 +72,10 @@ DropdownItem.props = {
     },
     href: {
         type: String,
+        optional: true,
+    },
+    slots: {
+        type: Object,
         optional: true,
     },
     title: {
@@ -95,5 +90,3 @@ DropdownItem.props = {
 DropdownItem.defaultProps = {
     parentClosingMode: ParentClosingMode.AllParents,
 };
-
-QWeb.registerComponent("DropdownItem", DropdownItem);

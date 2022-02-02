@@ -2,7 +2,7 @@
 
 import { useService } from "@web/core/utils/hooks";
 
-const { Component, QWeb, useRef } = owl;
+const { Component, useRef } = owl;
 
 /**
  * Custom file input
@@ -73,6 +73,7 @@ FileInput.defaultProps = {
     accepted_file_extensions: "*",
     action: "/web/binary/upload",
     multi_upload: false,
+    onUpload: () => {},
 };
 FileInput.props = {
     accepted_file_extensions: { type: String, optional: 1 },
@@ -80,7 +81,7 @@ FileInput.props = {
     id: { type: Number, optional: 1 },
     model: { type: String, optional: 1 },
     multi_upload: { type: Boolean, optional: 1 },
+    onUpload: { type: Function, optional: 1 },
+    slots: { type: Object, optional: 1 },
 };
 FileInput.template = "web.FileInput";
-
-QWeb.registerComponent("FileInput", FileInput);

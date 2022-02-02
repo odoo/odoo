@@ -7,7 +7,7 @@
                 role="img"
                 aria-label="search"
                 tabindex="0"
-                t-on-keydown="onFacetKeydown(facet, facet_index)"
+                t-on-keydown="ev => this.onFacetKeydown(facet, facet_index, ev)"
                 >
                 <t t-if="facet.icon">
                     <span t-attf-class="o_searchview_facet_label {{ facet.icon }}"/>
@@ -27,7 +27,7 @@
                     role="img"
                     aria-label="Remove"
                     title="Remove"
-                    t-on-click="onFacetRemove(facet)"
+                    t-on-click="() => this.onFacetRemove(facet)"
                 />
             </div>
         </t>
@@ -36,7 +36,6 @@
     <t t-name="web.SearchBar.Input" owl="1">
         <input type="text"
             class="o_searchview_input"
-            autofocus=""
             accesskey="Q"
             placeholder="Search..."
             role="searchbox"
@@ -52,13 +51,13 @@
                 <li class="o_menu_item"
                     t-att-class="{ o_indent: item.isChild, o_selection_focus: item_index === state.focusedIndex}"
                     t-att-id="item.id"
-                    t-on-click="selectItem(item)"
-                    t-on-mousemove="onItemMousemove(item_index)"
+                    t-on-click="() => this.selectItem(item)"
+                    t-on-mousemove="() => this.onItemMousemove(item_index)"
                     >
                     <t t-if="item.isParent">
                         <a class="o_expand"
                             href="#"
-                            t-on-click.stop.prevent="toggleItem(item, !item.isExpanded)"
+                            t-on-click.stop.prevent="() => this.toggleItem(item, !item.isExpanded)"
                             >
                             <i t-attf-class="fa fa-caret-{{ item.isExpanded ? 'down' : 'right' }}"/>
                         </a>

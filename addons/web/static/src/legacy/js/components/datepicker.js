@@ -3,9 +3,18 @@ odoo.define('web.DatePickerOwl', function (require) {
 
     const field_utils = require('web.field_utils');
     const time = require('web.time');
-    const { useAutofocus } = require('web.custom_hooks');
+    const { useAutofocus } = require("@web/core/utils/hooks");
 
-    const { Component, useExternalListener, useRef, useState } = owl;
+    const {
+        Component,
+        onMounted,
+        onPatched,
+        onWillUnmount,
+        onWillUpdateProps,
+        useExternalListener,
+        useRef,
+        useState,
+    } = owl;
 
     let datePickerId = 0;
 
@@ -23,44 +32,52 @@ odoo.define('web.DatePickerOwl', function (require) {
      * @extends Component
      */
     class DatePicker extends Component {
-        constructor() {
-            super(...arguments);
-
-            this.inputRef = useRef('input');
+        setup() {
             this.state = useState({ warning: false });
 
             this.datePickerId = `o_datepicker_${datePickerId++}`;
             this.typeOfDate = 'date';
 
-            useAutofocus();
+            useAutofocus("input");
             useExternalListener(window, 'scroll', this._onWindowScroll);
-        }
 
-        mounted() {
-            $(this.el).on('show.datetimepicker', this._onDateTimePickerShow.bind(this));
-            $(this.el).on('hide.datetimepicker', this._onDateTimePickerHide.bind(this));
-            $(this.el).on('error.datetimepicker', () => false);
+            this.inputRef = useRef('input');
 
-            const pickerOptions = Object.assign({ format: this.defaultFormat }, this.props);
-            this._datetimepicker(pickerOptions);
-            this.inputRef.el.value = this._formatDate(this.props.date);
-        }
+            onMounted(() => {
+                $(this.el).on('show.datetimepicker', this._onDateTimePickerShow.bind(this));
+                $(this.el).on('hide.datetimepicker', this._onDateTimePickerHide.bind(this));
+                $(this.el).on('error.datetimepicker', () => false);
 
-        willUnmount() {
-            $(this.el).off('show.datetimepicker hide.datetimepicker error.datetimepicker');
-            this._datetimepicker('destroy');
-        }
+                const pickerOptions = Object.assign({ format: this.defaultFormat }, this.props);
+                this._datetimepicker(pickerOptions);
+                this.inputRef.el.value = this._formatDate(this.props.date);
+            });
 
-        willUpdateProps(nextProps) {
-            for (const prop in nextProps) {
-                if (prop == "onDateTimeChanged") {
-                    continue;
+            onWillUnmount(() => {
+                $(this.el).off('show.datetimepicker hide.datetimepicker error.datetimepicker');
+                this._datetimepicker('destroy');
+            });
+
+            let newDateReceived = false;
+
+            onWillUpdateProps((nextProps) => {
+                for (const prop in nextProps) {
+                    if (prop == "onDateTimeChanged") {
+                        continue;
+                    }
+                    this._datetimepicker(prop, nextProps[prop]);
                 }
-                this._datetimepicker(prop, nextProps[prop]);
-            }
-            if (nextProps.date) {
-                this.inputRef.el.value = this._formatDate(nextProps.date);
-            }
+                if (nextProps.date) {
+                    newDateReceived = true;
+                }
+            });
+
+            onPatched(() => {
+                if (newDateReceived) {
+                    newDateReceived = false;
+                    this.inputRef.el.value = this._formatDate(this.props.date);
+                }
+            });
         }
 
         //---------------------------------------------------------------------
@@ -210,7 +227,7 @@ odoo.define('web.DatePickerOwl', function (require) {
             },
             optional: 1,
         },
-        calendarWeeks: Boolean,
+        calendarWeeks: { type: Boolean, optional: true },
         format: { type: String, optional: 1 },
         icons: {
             type: Object,
@@ -225,14 +242,15 @@ odoo.define('web.DatePickerOwl', function (require) {
                 today: String,
                 up: String,
             },
+            optional: true,
         },
         keyBinds: { validate: kb => typeof kb === 'object' || kb === null, optional: 1 },
-        locale: String,
-        maxDate: moment,
-        minDate: moment,
+        locale: { type: String, optional: true },
+        maxDate: { type: moment, optional: true },
+        minDate: { type: moment, optional: true },
         readonly: { type: Boolean, optional: 1 },
-        useCurrent: Boolean,
-        widgetParent: String,
+        useCurrent: { type: Boolean, optional: true },
+        widgetParent: { type: String, optional: true },
     };
     DatePicker.template = "web.Legacy.DatePicker";
 
@@ -247,9 +265,8 @@ odoo.define('web.DatePickerOwl', function (require) {
      * @extends DatePicker
      */
     class DateTimePicker extends DatePicker {
-        constructor() {
-            super(...arguments);
-
+        setup() {
+            super.setup();
             this.typeOfDate = 'datetime';
         }
 

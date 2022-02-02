@@ -255,11 +255,13 @@ _.escape = function escape(s) {
 // TODO (?)
 // * Markup.join / Markup#join => escapes items and returns a Markup
 // * Markup#replace => automatically escapes the replacements (difficult impl)
-class _Markup extends String {
-    [_.escapeMethod]() {
-        return this;
-    }
+
+// get a reference to the internalMarkup class from owl
+const _Markup = owl.markup('').constructor; 
+_Markup.prototype[_.escapeMethod] = function () {
+    return this;
 }
+
 // exposed for qweb2.js
 window._Markup = _Markup;
 
