@@ -29,8 +29,6 @@ odoo.define('pos_sale.SaleOrderManagementControlPanel', function (require) {
      */
     class SaleOrderManagementControlPanel extends PosComponent {
         setup() {
-            // We are using context because we want the `searchString` to be alive
-            // even if this component is destroyed (unmounted).
             this.orderManagementContext = useState(contexts.orderManagement);
             useListener('clear-search', this._onClearSearch);
             useAutofocus({ selector: 'input' });

@@ -12,13 +12,8 @@ export class ProjectControlPanel extends ControlPanel {
         this.show_project_update = this.props.view.type === "form" || this.props.action.context.show_project_update;
         this.project_id = this.show_project_update ? this.props.action.context.active_id : false;
 
-        onWillStart(async () => {
-            await this._loadWidgetData();
-        });
-
-        onWillUpdateProps(async () => {
-            await this._loadWidgetData();
-        });
+        onWillStart(() => this._loadWidgetData());
+        onWillUpdateProps(() => this._loadWidgetData());
     }
 
     async _loadWidgetData() {

@@ -6,8 +6,6 @@ odoo.define('point_of_sale.SetPricelistButton', function(require) {
     const { useListener } = require('web.custom_hooks');
     const Registries = require('point_of_sale.Registries');
 
-    const { onMounted, onWillUnmount } = owl;
-
     class SetPricelistButton extends PosComponent {
         setup() {
             useListener('click', this.onClick);

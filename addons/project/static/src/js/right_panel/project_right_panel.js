@@ -19,13 +19,8 @@ export default class ProjectRightPanel extends Component {
             }
         });
 
-        onWillStart(async () => {
-            await this._loadQwebContext();
-        });
-
-        onWillUpdateProps(async () => {
-            await this._loadQwebContext();
-        });
+        onWillStart(() => this._loadQwebContext());
+        onWillUpdateProps(() => this._loadQwebContext());
     }
 
     formatFloat(value) {
