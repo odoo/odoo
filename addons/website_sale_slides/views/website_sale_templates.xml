@@ -3,13 +3,16 @@
 
 <template id="website_sale_confirmation_slide" inherit_id="website_sale.confirmation">
     <xpath expr="//div[@id='oe_structure_website_sale_confirmation_2']" position="after">
-        <t t-call="website_sale_slides.course_purchased_confirmation_message"/>
+        <t t-if="any(product.detailed_type == 'course' for product in order.order_line.product_id)" t-call="website_sale_slides.course_purchased_confirmation_message"/>
     </xpath>
 </template>
 
 <template id="course_purchased_confirmation_message">
     <div>
-        <h4>You have gained access to the following course(s):</h4>
+        <h4>
+            <t t-if="order.state == 'sale'">You have gained access to the following course(s):</t>
+            <t t-else="">Once your order is paid &amp; confirmed, you will gain access to:</t>
+        </h4>
     </div>
     <div class="mt-2">
         <t t-foreach="order.order_line" t-as="line">
