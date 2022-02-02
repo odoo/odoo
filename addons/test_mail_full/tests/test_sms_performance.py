@@ -52,7 +52,7 @@ class TestSMSPerformance(BaseMailPerformance, sms_common.SMSCase):
     def test_message_sms_record_10_partners(self):
         record = self.test_record.with_user(self.env.user)
         pids = self.partners.ids
-        with self.mockSMSGateway(sms_allow_unlink=True), self.assertQueryCount(employee=44):
+        with self.mockSMSGateway(sms_allow_unlink=True), self.assertQueryCount(employee=26):
             messages = record._message_sms(
                 body='Performance Test',
                 partner_ids=pids,
@@ -120,7 +120,7 @@ class TestSMSMassPerformance(BaseMailPerformance, sms_common.MockSMS):
             'mass_keep_log': False,
         })
 
-        with self.mockSMSGateway(sms_allow_unlink=True), self.assertQueryCount(employee=106):
+        with self.mockSMSGateway(sms_allow_unlink=True), self.assertQueryCount(employee=57):
             composer.action_send_sms()
 
     @mute_logger('odoo.addons.sms.models.sms_sms')
@@ -137,5 +137,5 @@ class TestSMSMassPerformance(BaseMailPerformance, sms_common.MockSMS):
             'mass_keep_log': True,
         })
 
-        with self.mockSMSGateway(sms_allow_unlink=True), self.assertQueryCount(employee=157):
+        with self.mockSMSGateway(sms_allow_unlink=True), self.assertQueryCount(employee=59):
             composer.action_send_sms()

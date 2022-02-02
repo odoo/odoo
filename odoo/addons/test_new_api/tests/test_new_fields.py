@@ -3785,6 +3785,6 @@ class TestPrecompute(common.TransactionCase):
         model.flush()
         model.invalidate_cache()
 
-        # check the number of queries: 1 SELECT + 3 INSERT
-        with self.assertQueryCount(4):
+        # check the number of queries: 1 SELECT + 1 INSERT
+        with self.assertQueryCount(2):
             model.create([{'partner_id': pid} for pid in partners.ids])
