@@ -38,7 +38,7 @@ import { makeDeferred } from '@mail/utils/deferred/deferred';
 class Timer {
 
     /**
-     * @param {Object} env the OWL env
+     * @param {Messaging} messaging the messaging record.
      * @param {function} onTimeout
      * @param {integer} duration
      * @param {Object} [param3={}]
@@ -48,8 +48,8 @@ class Timer {
      *   @see TimerClearedError for when timer has been aborted from `.clear()`
      *     or `.reset()`.
      */
-    constructor(env, onTimeout, duration, { silentCancelationErrors = true } = {}) {
-        this.env = env;
+    constructor(messaging, onTimeout, duration, { silentCancelationErrors = true } = {}) {
+        this.messaging = messaging;
         /**
          * Determine whether the timer has a pending timeout.
          */
@@ -90,7 +90,7 @@ class Timer {
      * when this timer is running.
      */
     clear() {
-        this.env.browser.clearTimeout(this._timeoutId);
+        this.messaging.browser.clearTimeout(this._timeoutId);
         this.isRunning = false;
         if (!this._timeoutDeferred) {
             return;
@@ -121,7 +121,7 @@ class Timer {
         this.isRunning = true;
         const timeoutDeferred = makeDeferred();
         this._timeoutDeferred = timeoutDeferred;
-        const timeoutId = this.env.browser.setTimeout(
+        const timeoutId = this.messaging.browser.setTimeout(
             () => {
                 this.isRunning = false;
                 timeoutDeferred.resolve(this._onTimeout());
@@ -143,7 +143,7 @@ class Timer {
                 throw error;
             }
         } finally {
-            this.env.browser.clearTimeout(timeoutId);
+            this.messaging.browser.clearTimeout(timeoutId);
             this._timeoutDeferred = undefined;
             this.isRunning = false;
         }

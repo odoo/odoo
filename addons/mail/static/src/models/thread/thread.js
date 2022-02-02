@@ -23,7 +23,7 @@ registerModel({
     name: 'Thread',
     identifyingFields: ['model', 'id'],
     lifecycleHooks: {
-        _willCreate() {
+        _created() {
             /**
              * Timer of current partner that was currently typing something, but
              * there is no change on the input for 5 seconds. This is used
@@ -32,7 +32,7 @@ registerModel({
              * on the composer for some time.
              */
             this._currentPartnerInactiveTypingTimer = new Timer(
-                this.env,
+                this.messaging,
                 () => this.async(() => {
                     if (this.messaging.currentPartner) {
                         return this._onCurrentPartnerInactiveTypingTimeout();
@@ -65,7 +65,7 @@ registerModel({
              * has stopped typing something.
              */
             this._currentPartnerLongTypingTimer = new Timer(
-                this.env,
+                this.messaging,
                 () => this.async(() => this._onCurrentPartnerLongTypingTimeout()),
                 50 * 1000
             );
@@ -102,7 +102,7 @@ registerModel({
              * @see _notifyCurrentPartnerTypingStatus
              */
             this._throttleNotifyCurrentPartnerTypingStatus = throttle(
-                this.env,
+                this.messaging,
                 ({ isTyping }) => this.async(() => this._notifyCurrentPartnerTypingStatus({ isTyping })),
                 2.5 * 1000
             );
@@ -1038,7 +1038,7 @@ registerModel({
          */
         registerOtherMemberTypingMember(partner) {
             const timer = new Timer(
-                this.env,
+                this.messaging,
                 () => this.async(() => this._onOtherMemberLongTypingTimeout(partner)),
                 60 * 1000
             );

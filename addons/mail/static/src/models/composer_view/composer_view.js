@@ -197,7 +197,7 @@ registerModel({
                 return;
             }
             // Let event be handled by bubbling handlers first
-            await new Promise(this.env.browser.setTimeout);
+            await new Promise(this.messaging.browser.setTimeout);
             if (isEventHandled(ev, 'MessageActionList.replyTo')) {
                 return;
             }

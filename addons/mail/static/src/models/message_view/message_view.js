@@ -13,10 +13,10 @@ registerModel({
          * Briefly highlights the message.
          */
         highlight() {
-            this.env.browser.clearTimeout(this.highlightTimeout);
+            this.messaging.browser.clearTimeout(this.highlightTimeout);
             this.update({
                 isHighlighted: true,
-                highlightTimeout: this.env.browser.setTimeout(() => {
+                highlightTimeout: this.messaging.browser.setTimeout(() => {
                     if (!this.exists()) {
                         return;
                     }

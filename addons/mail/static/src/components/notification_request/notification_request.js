@@ -49,7 +49,7 @@ export class NotificationRequest extends Component {
      * @private
      */
     _onClick() {
-        const windowNotification = this.env.browser.Notification;
+        const windowNotification = this.messaging.browser.Notification;
         const def = windowNotification && windowNotification.requestPermission();
         if (def) {
             def.then(this._handleResponseNotificationPermission.bind(this));
