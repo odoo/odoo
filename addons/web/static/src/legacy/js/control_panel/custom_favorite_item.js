@@ -90,10 +90,9 @@ odoo.define('web.CustomFavoriteItem', function (require) {
 
         /**
          * @private
-         * @param {Event} ev change Event
+         * @param {boolean} checked
          */
-        onDefaultCheckboxChange(ev) {
-            const { checked } = ev.target;
+        onDefaultCheckboxChange(checked) {
             this.state.isDefault = checked;
             if (checked) {
                 this.state.isShared = false;
@@ -102,10 +101,9 @@ odoo.define('web.CustomFavoriteItem', function (require) {
 
         /**
          * @private
-         * @param {Event} ev change Event
+         * @param {boolean} checked
          */
-        onShareCheckboxChange(ev) {
-            const { checked } = ev.target;
+        onShareCheckboxChange(checked) {
             this.state.isShared = checked;
             if (checked) {
                 this.state.isDefault = false;

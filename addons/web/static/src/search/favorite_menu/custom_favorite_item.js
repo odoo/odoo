@@ -52,10 +52,9 @@ export class CustomFavoriteItem extends Component {
     }
 
     /**
-     * @param {Event} ev
+     * @param {boolean} checked
      */
-    onDefaultCheckboxChange(ev) {
-        const { checked } = ev.target;
+    onDefaultCheckboxChange(checked) {
         this.state.isDefault = checked;
         if (checked) {
             this.state.isShared = false;
@@ -63,10 +62,9 @@ export class CustomFavoriteItem extends Component {
     }
 
     /**
-     * @param {Event} ev
+     * @param {boolean} checked
      */
-    onShareCheckboxChange(ev) {
-        const { checked } = ev.target;
+    onShareCheckboxChange(checked) {
         this.state.isShared = checked;
         if (checked) {
             this.state.isDefault = false;

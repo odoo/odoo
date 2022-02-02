@@ -20,13 +20,11 @@ export class CheckBox extends Component {
     setup() {
         this.id = `checkbox-comp-${CheckBox.nextId++}`;
     }
-    onChange(ev) {
-        if (this.props.onChange) {
-            this.props.onChange(ev);
-        }
-    }
 }
 
 CheckBox.template = "web.CheckBox";
 CheckBox.nextId = 1;
+CheckBox.defaultProps = {
+    onChange: () => {},
+};
 owl.Component._components.CheckBox = CheckBox;

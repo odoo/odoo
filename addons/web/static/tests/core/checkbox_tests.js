@@ -5,7 +5,7 @@ import { translatedTerms } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { makeFakeLocalizationService } from "@web/../tests/helpers/mock_services";
-import { getFixture, patchWithCleanup, mount, triggerEvent } from "@web/../tests/helpers/utils";
+import { click, getFixture, patchWithCleanup, mount } from "@web/../tests/helpers/utils";
 
 const { Component, xml } = owl;
 const serviceRegistry = registry.category("services");
@@ -41,20 +41,19 @@ QUnit.module("Components", (hooks) => {
     QUnit.test("call onChange prop when some change occurs", async (assert) => {
         const env = await makeTestEnv();
 
-        let value;
+        let value = false;
         class Parent extends Component {
-            onChange(ev) {
-                value = ev.target.value;
+            onChange(checked) {
+                value = checked;
             }
         }
         Parent.template = xml`<CheckBox onChange="onChange"/>`;
 
-        const parent = await mount(Parent, { env, target });
+        await mount(Parent, { env, target });
         assert.containsOnce(target, "div.custom-checkbox");
-        const input = parent.el.querySelector("input");
-        input.value = "on";
-        await triggerEvent(input, null, "change");
-
-        assert.strictEqual(value, "on");
+        await click(target.querySelector("input"));
+        assert.strictEqual(value, true);
+        await click(target.querySelector("input"));
+        assert.strictEqual(value, false);
     });
 });
