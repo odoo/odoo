@@ -110,8 +110,6 @@ class Lead(models.Model):
     user_company_ids = fields.Many2many(
         'res.company', compute='_compute_user_company_ids',
         help='UX: Limit to lead company or all if no company')
-    user_email = fields.Char('User Email', related='user_id.email', readonly=True)
-    user_login = fields.Char('User Login', related='user_id.login', readonly=True)
     team_id = fields.Many2one(
         'crm.team', string='Sales Team', check_company=True, index=True, tracking=True,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
