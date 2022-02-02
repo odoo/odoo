@@ -22,8 +22,8 @@ odoo.define('point_of_sale.NumberPopup', function(require) {
          * @confirmed {Boolean}
          * @payload {String}
          */
-        constructor() {
-            super(...arguments);
+        setup() {
+            super.setup();
             useListener('accept-input', this.confirm);
             useListener('close-this-popup', this.cancel);
             let startingBuffer = '';

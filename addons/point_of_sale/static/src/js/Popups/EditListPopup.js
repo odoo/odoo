@@ -46,8 +46,8 @@ odoo.define('point_of_sale.EditListPopup', function(require) {
          * @param {Array} [props.array=[]] the array of { id, text } to be edited or an array of strings
          * @param {Boolean} [props.isSingleItem=false] true if only allowed to edit single item (the first item)
          */
-        constructor() {
-            super(...arguments);
+        setup() {
+            super.setup();
             this._id = 0;
             this.state = useState({ array: this._initialize(this.props.array) });
             useAutoFocusToLast();

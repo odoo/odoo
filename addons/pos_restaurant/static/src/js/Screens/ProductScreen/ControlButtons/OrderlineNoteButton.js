@@ -7,8 +7,7 @@ odoo.define('pos_restaurant.OrderlineNoteButton', function(require) {
     const Registries = require('point_of_sale.Registries');
 
     class OrderlineNoteButton extends PosComponent {
-        constructor() {
-            super(...arguments);
+        setup() {
             useListener('click', this.onClick);
         }
         get selectedOrderline() {

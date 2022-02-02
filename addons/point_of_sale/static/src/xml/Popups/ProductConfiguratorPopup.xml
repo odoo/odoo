@@ -9,7 +9,7 @@
                 </header>
 
                 <main class="body product_configurator_attributes col-lg-4 col-md-6 col-sm-12">
-                    <div t-foreach="props.attributes" t-as="attribute" class="attribute">
+                    <div t-foreach="props.attributes" t-as="attribute" t-key="attribute.id" class="attribute">
                         <div class="attribute_name" t-esc="attribute.name"/>
                         <RadioProductAttribute t-if="attribute.display_type === 'radio' or attribute.display_type === 'pills'" attribute="attribute"/>
                         <SelectProductAttribute t-elif="attribute.display_type === 'select'" attribute="attribute"/>
@@ -32,7 +32,7 @@
     <t t-name="RadioProductAttribute" owl="1">
         <div class="configurator_radio">
             <div class="table">
-                <t t-foreach="values" t-as="value">
+                <t t-foreach="values" t-as="value" t-key="value.id">
                     <div class="attribute-name-cell">
                         <input type="radio" t-model="state.selected_value" t-att-name="attribute.id"
                                    t-attf-id="{{ attribute.id }}_{{ value.id }}" t-att-value="value.id"/>
@@ -62,7 +62,7 @@
             <t t-set="is_custom" t-value="false"/>
 
             <select class="configurator_select" t-model="state.selected_value">
-                <option t-foreach="values" t-as="value" t-att-value="value.id">
+                <option t-foreach="values" t-as="value" t-key="value.id" t-att-value="value.id">
                     <t t-set="is_custom" t-value="is_custom || (value.is_custom &amp;&amp; value.id == state.selected_value)"/>
                     <t t-esc="value.name"/>
                     <t t-if="value.price_extra">
@@ -80,7 +80,7 @@
             <t t-set="is_custom" t-value="false"/>
 
             <ul class="color_attribute_list">
-                <li t-foreach="values" t-as="value" class="color_attribute_list_item">
+                <li t-foreach="values" t-as="value" t-key="value.id" class="color_attribute_list_item">
                     <t t-set="is_custom" t-value="is_custom || (value.is_custom &amp;&amp; value.id == state.selected_value)"/>
                     <label t-attf-class="configurator_color {{ value.id == state.selected_value ? 'active' : '' }}"
                         t-attf-style="background-color: {{ value.html_color }};" t-att-data-color="value.name">

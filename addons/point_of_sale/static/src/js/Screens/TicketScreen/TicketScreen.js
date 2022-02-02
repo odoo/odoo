@@ -11,8 +11,8 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
     const { useState } = owl;
 
     class TicketScreen extends IndependentToOrderScreen {
-        constructor() {
-            super(...arguments);
+        setup() {
+            super.setup();
             useListener('close-screen', this._onCloseScreen);
             useListener('filter-selected', this._onFilterSelected);
             useListener('search', this._onSearch);

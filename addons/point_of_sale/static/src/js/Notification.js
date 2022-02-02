@@ -5,16 +5,18 @@ odoo.define('point_of_sale.Notification', function (require) {
     const PosComponent = require('point_of_sale.PosComponent');
     const Registries = require('point_of_sale.Registries');
 
+    const { onMounted } = owl;
+
     class Notification extends PosComponent {
-        constructor() {
-            super(...arguments)
+        setup() {
             useListener('click', this.closeNotification);
-        }
-        mounted() {
-            setTimeout(() => {
-                this.closeNotification();
-            }, this.props.duration)
-        }
+
+            onMounted(() => {
+                setTimeout(() => {
+                    this.closeNotification();
+                }, this.props.duration)
+            });
+        }        
     }
     Notification.template = 'Notification';
 

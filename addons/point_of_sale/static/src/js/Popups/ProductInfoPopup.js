@@ -14,9 +14,6 @@ odoo.define('point_of_sale.ProductInfoPopup', function(require) {
      *  }
      */
     class ProductInfoPopup extends AbstractAwaitablePopup {
-        constructor() {
-            super(...arguments);
-        }
         async willStart() {
             const order = this.env.pos.get_order();
             try {

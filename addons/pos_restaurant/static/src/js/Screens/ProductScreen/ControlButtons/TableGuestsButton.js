@@ -7,8 +7,7 @@ odoo.define('pos_restaurant.TableGuestsButton', function(require) {
     const Registries = require('point_of_sale.Registries');
 
     class TableGuestsButton extends PosComponent {
-        constructor() {
-            super(...arguments);
+        setup() {
             useListener('click', this.onClick);
         }
         get currentOrder() {

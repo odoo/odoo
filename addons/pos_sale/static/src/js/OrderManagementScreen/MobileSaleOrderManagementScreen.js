@@ -7,8 +7,8 @@ odoo.define('point_of_sale.MobileSaleOrderManagementScreen', function (require) 
 
     const MobileSaleOrderManagementScreen = (SaleOrderManagementScreen) => {
         class MobileSaleOrderManagementScreen extends SaleOrderManagementScreen {
-            constructor() {
-                super(...arguments);
+            settup() {
+                super.setup();
                 useListener('click-order', this._onShowDetails)
                 this.mobileState = useState({ showDetails: false });
             }

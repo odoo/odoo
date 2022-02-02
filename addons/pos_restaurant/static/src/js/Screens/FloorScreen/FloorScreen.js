@@ -4,16 +4,17 @@ odoo.define('pos_restaurant.FloorScreen', function (require) {
     const PosComponent = require('point_of_sale.PosComponent');
     const { useListener } = require('web.custom_hooks');
     const Registries = require('point_of_sale.Registries');
+    const { debounce } = require("@web/core/utils/timing");
 
-    const { debounce, useRef, useState } = owl;
+    const { useRef, useState } = owl;
 
     class FloorScreen extends PosComponent {
         /**
          * @param {Object} props
          * @param {Object} props.floor
          */
-        constructor() {
-            super(...arguments);
+        setup() {
+            super.setup();
             this._setTableColor = debounce(this._setTableColor, 70);
             this._setFloorColor = debounce(this._setFloorColor, 70);
             useListener('select-table', this._onSelectTable);

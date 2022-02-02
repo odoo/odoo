@@ -9,8 +9,8 @@ odoo.define('point_of_sale.TextInputPopup', function(require) {
 
     // formerly TextInputPopupWidget
     class TextInputPopup extends AbstractAwaitablePopup {
-        constructor() {
-            super(...arguments);
+        setup() {
+            super.setup();
             this.state = useState({ inputValue: this.props.startingValue });
             this.inputRef = useRef('input');
         }

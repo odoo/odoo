@@ -12,11 +12,11 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
     const contexts = require('point_of_sale.PosContext');
     const { Orderline } = require('point_of_sale.models');
 
-    const { useContext } = owl;
+    const { useState } = owl;
 
     class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentToOrderScreen) {
-        constructor() {
-            super(...arguments);
+        setup() {
+            super.setup();
             useListener('close-screen', this.close);
             useListener('click-sale-order', this._onClickSaleOrder);
             useListener('next-page', this._onNextPage);
@@ -24,7 +24,7 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
             useListener('search', this._onSearch);
 
             SaleOrderFetcher.setComponent(this);
-            this.orderManagementContext = useContext(contexts.orderManagement);
+            this.orderManagementContext = useState(contexts.orderManagement);
         }
         mounted() {
             SaleOrderFetcher.on('update', this, this.render);

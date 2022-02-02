@@ -12,8 +12,8 @@ odoo.define('point_of_sale.ScaleScreen', function(require) {
          * @param {Object} props
          * @param {Object} props.product The product to weight.
          */
-        constructor() {
-            super(...arguments);
+        setup() {
+            super.setup();
             useExternalListener(document, 'keyup', this._onHotkeys);
             this.state = useState({ weight: 0 });
         }

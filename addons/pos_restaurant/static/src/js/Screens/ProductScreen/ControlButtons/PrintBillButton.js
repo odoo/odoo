@@ -7,8 +7,7 @@ odoo.define('pos_restaurant.PrintBillButton', function(require) {
     const Registries = require('point_of_sale.Registries');
 
     class PrintBillButton extends PosComponent {
-        constructor() {
-            super(...arguments);
+        setup() {
             useListener('click', this.onClick);
         }
         async onClick() {

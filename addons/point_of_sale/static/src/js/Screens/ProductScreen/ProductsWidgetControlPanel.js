@@ -5,22 +5,23 @@ odoo.define('point_of_sale.ProductsWidgetControlPanel', function(require) {
     const { ConnectionLostError, ConnectionAbortedError } = require('@web/core/network/rpc_service');
     const PosComponent = require('point_of_sale.PosComponent');
     const Registries = require('point_of_sale.Registries');
+    const { debounce } = require("@web/core/utils/timing");
 
-    const { debounce, useRef } = owl;
+    const { onMounted, onWillUnmount, useRef } = owl;
 
     class ProductsWidgetControlPanel extends PosComponent {
-        constructor() {
-            super(...arguments);
+        setup() {
             this.searchWordInput = useRef('search-word-input');
             this.updateSearch = debounce(this.updateSearch, 100);
-        }
-        mounted() {
-            this.env.posbus.on('search-product-from-info-popup', this, this.searchProductFromInfo)
-        }
-        willUnmount() {
-            this.env.posbus.off('search-product-from-info-popup', this);
-        }
 
+            onMounted(() => {
+                this.env.posbus.on('search-product-from-info-popup', this, this.searchProductFromInfo)
+            });
+
+            onWillUnmount(() => {
+                this.env.posbus.off('search-product-from-info-popup', this);
+            });
+        }
         clearSearch() {
             this.searchWordInput.el.value = '';
             this.trigger('clear-search');

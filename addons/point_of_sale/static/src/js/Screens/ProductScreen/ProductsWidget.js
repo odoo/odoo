@@ -12,8 +12,8 @@ odoo.define('point_of_sale.ProductsWidget', function(require) {
          * @param {Object} props
          * @param {number?} props.startCategoryId
          */
-        constructor() {
-            super(...arguments);
+        setup() {
+            super.setup();
             useListener('switch-category', this._switchCategory);
             useListener('update-search', this._updateSearch);
             useListener('try-add-product', this._tryAddProduct);

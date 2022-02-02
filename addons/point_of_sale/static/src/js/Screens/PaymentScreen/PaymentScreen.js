@@ -10,8 +10,7 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
     const { isConnectionError } = require('point_of_sale.utils');
 
     class PaymentScreen extends PosComponent {
-        constructor() {
-            super(...arguments);
+        setup() {
             useListener('delete-payment-line', this.deletePaymentLine);
             useListener('select-payment-line', this.selectPaymentLine);
             useListener('new-payment-line', this.addNewPaymentLine);

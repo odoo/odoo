@@ -7,8 +7,8 @@ odoo.define('pos_restaurant.PosResPaymentScreen', function (require) {
 
     const PosResPaymentScreen = (PaymentScreen) =>
         class extends PaymentScreen {
-            constructor() {
-                super(...arguments);
+            setup() {
+                super.setup();
                 useListener('send-payment-adjust', this._sendPaymentAdjust);
             }
 

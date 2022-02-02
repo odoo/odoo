@@ -7,8 +7,7 @@ odoo.define('pos_discount.DiscountButton', function(require) {
     const Registries = require('point_of_sale.Registries');
 
     class DiscountButton extends PosComponent {
-        constructor() {
-            super(...arguments);
+        setup() {
             useListener('click', this.onClick);
         }
         async onClick() {

@@ -8,8 +8,7 @@ odoo.define('pos_restaurant.EditableTable', function(require) {
     const { onMounted, onPatched } = owl;
 
     class EditableTable extends PosComponent {
-        constructor() {
-            super(...arguments);
+        setup() {
             useListener('resize-end', this._onResizeEnd);
             useListener('drag-end', this._onDragEnd);
             onPatched(this._setElementStyle.bind(this));

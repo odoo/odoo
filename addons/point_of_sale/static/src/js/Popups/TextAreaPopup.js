@@ -15,8 +15,8 @@ odoo.define('point_of_sale.TextAreaPopup', function(require) {
          * @param {Object} props
          * @param {string} props.startingValue
          */
-        constructor() {
-            super(...arguments);
+        setup() {
+            super.setup();
             this.state = useState({ inputValue: this.props.startingValue });
             this.inputRef = useRef('input');
         }

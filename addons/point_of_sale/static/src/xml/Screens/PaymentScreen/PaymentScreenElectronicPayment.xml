@@ -7,7 +7,7 @@
                 <div>
                     Payment request pending
                 </div>
-                <div class="button send_payment_request highlight" title="Send Payment Request" t-on-click="trigger('send-payment-request', props.line)">
+                <div class="button send_payment_request highlight" title="Send Payment Request" t-on-click="() => this.trigger('send-payment-request', props.line)">
                     Send
                 </div>
             </t>
@@ -15,7 +15,7 @@
                 <div>
                     Transaction cancelled
                 </div>
-                <div class="button send_payment_request highlight" title="Send Payment Request" t-on-click="trigger('send-payment-request', props.line)">
+                <div class="button send_payment_request highlight" title="Send Payment Request" t-on-click="() => this.trigger('send-payment-request', props.line)">
                     Retry
                 </div>
             </t>
@@ -23,7 +23,7 @@
                 <div>
                     Connection error
                 </div>
-                <div class="button send_force_done" title="Force Done" t-on-click="trigger('send-force-done', props.line)">
+                <div class="button send_force_done" title="Force Done" t-on-click="() => this.trigger('send-force-done', props.line)">
                     Force done
                 </div>
             </t>
@@ -31,7 +31,7 @@
                 <div>
                     Waiting for card
                 </div>
-                <div class="button send_payment_cancel" title="Cancel Payment Request" t-on-click="trigger('send-payment-cancel', props.line)">
+                <div class="button send_payment_cancel" title="Cancel Payment Request" t-on-click="() => this.trigger('send-payment-cancel', props.line)">
                     Cancel
                 </div>
             </t>
@@ -56,7 +56,7 @@
                     Payment Successful
                 </div>
                 <t t-if="props.line.can_be_reversed">
-                    <div class="button send_payment_reversal" title="Reverse Payment" t-on-click="trigger('send-payment-reverse', props.line)">
+                    <div class="button send_payment_reversal" title="Reverse Payment" t-on-click="() => this.trigger('send-payment-reverse', props.line)">
                         Reverse
                     </div>
                 </t>

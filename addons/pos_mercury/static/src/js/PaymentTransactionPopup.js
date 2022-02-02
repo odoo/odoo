@@ -8,8 +8,8 @@ odoo.define('pos_mercury.PaymentTransactionPopup', function(require) {
     const { useState } = owl;
 
     class PaymentTransactionPopup extends AbstractAwaitablePopup {
-        constructor() {
-            super(...arguments);
+        setup() {
+            super.setup();
             this.state = useState({ message: '', confirmButtonIsShown: false });
             this.props.transaction.then(data => {
                 if (data.auto_close) {

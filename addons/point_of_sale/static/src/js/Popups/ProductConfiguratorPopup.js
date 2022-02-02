@@ -8,8 +8,7 @@ odoo.define('point_of_sale.ProductConfiguratorPopup', function(require) {
     const { useState, useSubEnv } = owl;
 
     class ProductConfiguratorPopup extends AbstractAwaitablePopup {
-        constructor() {
-            super(...arguments);
+        setup() {
             useSubEnv({ attribute_components: [] });
         }
 
@@ -33,9 +32,7 @@ odoo.define('point_of_sale.ProductConfiguratorPopup', function(require) {
     Registries.Component.add(ProductConfiguratorPopup);
 
     class BaseProductAttribute extends PosComponent {
-        constructor() {
-            super(...arguments);
-
+        setup() {
             this.env.attribute_components.push(this);
 
             this.attribute = this.props.attribute;

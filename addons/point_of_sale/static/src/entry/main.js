@@ -28,7 +28,6 @@ PosApp.template = xml`
 PosApp.components = { ChromeAdapter };
 
 function startPosApp() {
-    Registries.Component.add(Portal);
     Registries.Component.freeze();
     Registries.Model.freeze();
     startWebClient(PosApp);

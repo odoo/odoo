@@ -7,11 +7,10 @@ odoo.define('point_of_sale.DebugWidget', function (require) {
     const PosComponent = require('point_of_sale.PosComponent');
     const Registries = require('point_of_sale.Registries');
 
-    const { useRef, useState } = owl;
+    const { onMounted, onWillUnmount, useRef, useState } = owl;
 
     class DebugWidget extends PosComponent {
-        constructor() {
-            super(...arguments);
+        setup() {
             this.state = useState({
                 barcodeInput: '',
                 weightInput: '',
@@ -44,12 +43,14 @@ odoo.define('point_of_sale.DebugWidget', function (require) {
                     }).bind(this)
                 );
             }
-        }
-        mounted() {
-            NumberBuffer.on('buffer-update', this, this._onBufferUpdate);
-        }
-        willUnmount() {
-            NumberBuffer.off('buffer-update', this, this._onBufferUpdate);
+
+            onMounted(() => {
+                NumberBuffer.on('buffer-update', this, this._onBufferUpdate);
+            });
+
+            onWillUnmount(() => {
+                NumberBuffer.off('buffer-update', this, this._onBufferUpdate);
+            });
         }
         toggleWidget() {
             this.state.isShown = !this.state.isShown;

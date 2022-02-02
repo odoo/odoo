@@ -7,8 +7,7 @@ odoo.define('pos_restaurant.SplitBillButton', function(require) {
     const Registries = require('point_of_sale.Registries');
 
     class SplitBillButton extends PosComponent {
-        constructor() {
-            super(...arguments);
+        setup() {
             useListener('click', this.onClick);
         }
         async onClick() {

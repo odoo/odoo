@@ -7,9 +7,10 @@ odoo.define('pos_sale.SetSaleOrderButton', function(require) {
     const Registries = require('point_of_sale.Registries');
     const { isConnectionError } = require('point_of_sale.utils');
 
+    const { onMounted, onWillUnmount } = owl;
+
     class SetSaleOrderButton extends PosComponent {
-        constructor() {
-            super(...arguments);
+        setup() {
             useListener('click', this.onClick);
         }
         get currentOrder() {

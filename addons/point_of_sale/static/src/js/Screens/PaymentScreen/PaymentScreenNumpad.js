@@ -5,8 +5,7 @@ odoo.define('point_of_sale.PaymentScreenNumpad', function(require) {
     const Registries = require('point_of_sale.Registries');
 
     class PaymentScreenNumpad extends PosComponent {
-        constructor() {
-            super(...arguments);
+        setup() {
             this.decimalPoint = this.env._t.database.parameters.decimal_point;
         }
     }

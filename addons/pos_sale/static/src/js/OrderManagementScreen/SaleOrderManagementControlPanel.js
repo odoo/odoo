@@ -7,7 +7,7 @@ odoo.define('pos_sale.SaleOrderManagementControlPanel', function (require) {
     const SaleOrderFetcher = require('pos_sale.SaleOrderFetcher');
     const contexts = require('point_of_sale.PosContext');
 
-    const { useContext } = owl;
+    const { useState } = owl;
 
     // NOTE: These are constants so that they are only instantiated once
     // and they can be used efficiently by the OrderManagementControlPanel.
@@ -28,11 +28,10 @@ odoo.define('pos_sale.SaleOrderManagementControlPanel', function (require) {
      * @emits search
      */
     class SaleOrderManagementControlPanel extends PosComponent {
-        constructor() {
-            super(...arguments);
+        setup() {
             // We are using context because we want the `searchString` to be alive
             // even if this component is destroyed (unmounted).
-            this.orderManagementContext = useContext(contexts.orderManagement);
+            this.orderManagementContext = useState(contexts.orderManagement);
             useListener('clear-search', this._onClearSearch);
             useAutofocus({ selector: 'input' });
 

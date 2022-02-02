@@ -7,7 +7,7 @@
             <div class="pos-topheader" t-att-class="{ oe_hidden: state.uiState !== 'READY' }">
                 <div t-if="tempScreen.isShown" class="block-top-header" />
                 <div class="pos-branding" t-if= "!env.isMobile">
-                    <img class="pos-logo" t-on-click="trigger('toggle-debug-widget')"
+                    <img class="pos-logo" t-on-click="() => this.trigger('toggle-debug-widget')"
                          src="/point_of_sale/static/src/img/logo.png" alt="Logo" />
                     <CashMoveButton t-if="showCashMoveButton()" />
                     <TicketButton isTicketScreenShown="isTicketScreenShown" />
@@ -40,17 +40,19 @@
                             </div>
                         </div>
                     </div>
-                    <DebugWidget t-if="env.isDebug() and state.debugWidgetIsShown" t-transition="fade" />
+                    <DebugWidget t-if="env.isDebug() and state.debugWidgetIsShown" />
+                                 <!-- NXOWL t-transition="fade" /> -->
                 </div>
             </t>
 
-            <div t-if="['LOADING', 'CLOSING'].includes(state.uiState)" class="loader" t-transition="swing">
+            <div t-if="['LOADING', 'CLOSING'].includes(state.uiState)" class="loader">
+                 <!-- NXOWL t-transition="swing"> -->
                 <div class="loader-feedback">
                     <!-- spinner from https://loading.io/css/ -->
                     <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
                     <t t-if="state.loadingSkipButtonIsShown">
                         <h1 class="message">Connecting to devices</h1>
-                        <div class="button skip" t-on-click="trigger('loading-skip-callback')">
+                        <div class="button skip" t-on-click="() => this.trigger('loading-skip-callback')">
                             Skip
                         </div>
                     </t>
@@ -63,7 +65,8 @@
                    t-key="popup.name" />
             </div>
 
-            <Notification t-if="state.notification.isShown" message="state.notification.message" duration="state.notification.duration" t-transition="fade"/>
+            <Notification t-if="state.notification.isShown" message="state.notification.message" duration="state.notification.duration"/>
+             <!-- NXOWL t-transition="fade"/> -->
 
             <NotificationSound t-if="state.sound.src" sound="state.sound" />
         </div>

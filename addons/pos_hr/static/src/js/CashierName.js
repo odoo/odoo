@@ -9,8 +9,8 @@ odoo.define('pos_hr.CashierName', function (require) {
 
     const PosHrCashierName = (CashierName) =>
         class extends CashierName {
-            constructor() {
-                super(...arguments);
+            setup() {
+                super.setup();
                 const { selectEmployee, askPin } = useSelectEmployee();
                 this.askPin = askPin;
                 this.selectEmployee = selectEmployee;

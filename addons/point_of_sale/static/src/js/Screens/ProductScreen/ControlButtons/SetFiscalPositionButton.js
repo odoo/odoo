@@ -6,9 +6,10 @@ odoo.define('point_of_sale.SetFiscalPositionButton', function(require) {
     const { useListener } = require('web.custom_hooks');
     const Registries = require('point_of_sale.Registries');
 
+    const { onMounted, onWillUnmount } = owl;
+    
     class SetFiscalPositionButton extends PosComponent {
-        constructor() {
-            super(...arguments);
+        setup() {
             useListener('click', this.onClick);
         }
         get currentOrder() {

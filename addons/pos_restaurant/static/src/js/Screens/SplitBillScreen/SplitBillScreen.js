@@ -9,8 +9,7 @@ odoo.define('pos_restaurant.SplitBillScreen', function(require) {
     const { useState, onMounted } = owl;
 
     class SplitBillScreen extends PosComponent {
-        constructor() {
-            super(...arguments);
+        setup() {
             useListener('click-line', this.onClickLine);
             this.splitlines = useState(this._initSplitLines(this.env.pos.get_order()));
             this.newOrderLines = {};

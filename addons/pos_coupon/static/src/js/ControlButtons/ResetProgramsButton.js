@@ -7,8 +7,7 @@ odoo.define('pos_coupon.ResetProgramsButton', function (require) {
     const Registries = require('point_of_sale.Registries');
 
     class ResetProgramsButton extends PosComponent {
-        constructor() {
-            super(...arguments);
+        setup() {
             useListener('click', this.onClick);
         }
         async onClick() {
