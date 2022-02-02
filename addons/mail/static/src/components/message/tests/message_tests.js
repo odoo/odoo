@@ -22,9 +22,9 @@ QUnit.module('message_tests.js', {
 
         this.start = async params => {
             const res = await start({ ...params, data: this.data });
-            const { afterEvent, components, env, widget } = res;
+            const { afterEvent, apps, env, widget } = res;
             this.afterEvent = afterEvent;
-            this.components = components;
+            this.apps = apps;
             this.env = env;
             this.widget = widget;
             return res;

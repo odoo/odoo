@@ -53,9 +53,8 @@ registerModel({
         },
         /**
          * @param {Partner} partner
-         * @param {MouseEvent} ev
          */
-        onClickSelectablePartner(partner, ev) {
+        onClickSelectablePartner(partner) {
             if (this.selectedPartners.includes(partner)) {
                 this.update({ selectedPartners: unlink(partner) });
                 return;
@@ -64,9 +63,8 @@ registerModel({
         },
         /**
          * @param {Partner} partner
-         * @param {MouseEvent} ev
          */
-        onClickSelectedPartner(partner, ev) {
+        onClickSelectedPartner(partner) {
             this.update({ selectedPartners: unlink(partner) });
         },
         /**

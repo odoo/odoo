@@ -2,9 +2,15 @@
 
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
-const { Component } = owl;
+import Popover from "web.Popover";
+
+const { Component, markup } = owl;
 
 export class Activity extends Component {
+
+    get noteAsMarkup() {
+        return markup(this.activityView.activity.note);
+    }
 
     /**
      * @returns {ActivityView}
@@ -18,6 +24,7 @@ export class Activity extends Component {
 Object.assign(Activity, {
     props: { localId: String },
     template: 'mail.Activity',
+    components: { Popover },
 });
 
 registerMessagingComponent(Activity);

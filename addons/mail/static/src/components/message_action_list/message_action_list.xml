@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates>
     <t t-name="mail.MessageActionList" owl="1">
-        <div class="o_MessageActionList d-flex" t-attf-class="{{ className }}" t-on-click="messageActionList and messageActionList.onClick" t-ref="root">
+        <div class="o_MessageActionList d-flex" t-attf-class="{{ className }}" t-on-click="(ev) => messageActionList and messageActionList.onClick(ev)" t-ref="root">
             <t t-if="messageActionList">
                 <i t-if="messageActionList.message.hasReactionIcon" class="o_MessageActionList_action o_MessageActionList_actionReaction p-2 fa fa-lg fa-smile-o" t-att-title="ADD_A_REACTION" t-on-click="messageActionList.onClickActionReaction" t-ref="actionReaction"/>
                 <PopoverView t-if="messageActionList.reactionPopoverView" localId="messageActionList.reactionPopoverView.localId"/>

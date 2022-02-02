@@ -5,6 +5,8 @@ import { getMessagingComponent } from "@mail/utils/messaging_component";
 import AbstractService from 'web.AbstractService';
 import { bus } from 'web.core';
 
+const { App } = owl;
+
 export const ChatWindowService = AbstractService.extend({
     dependencies: ['messaging'],
     /**
@@ -18,9 +20,9 @@ export const ChatWindowService = AbstractService.extend({
      * @private
      */
     destroy() {
-        if (this.component) {
-            this.component.destroy();
-            this.component = undefined;
+        if (this.app) {
+            this.app.destroy();
+            this.app = undefined;
         }
     },
 
@@ -45,14 +47,20 @@ export const ChatWindowService = AbstractService.extend({
      * @private
      */
     async _mount() {
-        if (this.component) {
-            this.component.destroy();
-            this.component = undefined;
+        if (this.app) {
+            this.app.destroy();
+            this.app = undefined;
         }
         const ChatWindowManagerComponent = getMessagingComponent("ChatWindowManager");
-        this.component = new ChatWindowManagerComponent(null);
+        this.app = new App(ChatWindowManagerComponent, {
+            templates: window.__OWL_TEMPLATES__,
+            env: owl.Component.env,
+            dev: owl.Component.env.isDebug(),
+            translateFn: owl.Component.env._t,
+            translatableAttributes: ["data-tooltip"],
+        });
         const parentNode = this._getParentNode();
-        await this.component.mount(parentNode);
+        await this.app.mount(parentNode);
     },
 
     //--------------------------------------------------------------------------
