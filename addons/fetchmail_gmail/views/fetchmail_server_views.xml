@@ -3,6 +3,7 @@
     <record id="fetchmail_server_view_form" model="ir.ui.view">
         <field name="name">fetchmail.server.view.form.inherit.gmail</field>
         <field name="model">fetchmail.server</field>
+        <field name="priority">100</field>
         <field name="inherit_id" ref="fetchmail.view_email_server_form"/>
         <field name="arch" type="xml">
             <field name="server" position="before">
