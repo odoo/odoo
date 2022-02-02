@@ -110,7 +110,6 @@ class PaymentTransaction(models.Model):
             raise UserError("Ogone: " + _("The transaction is not linked to a token."))
 
         # Make the payment request
-        base_url = self.acquirer_id.get_base_url()
         data = {
             # DirectLink parameters
             'PSPID': self.acquirer_id.ogone_pspid,
@@ -154,23 +153,22 @@ class PaymentTransaction(models.Model):
             "handling feedback data from Ogone for transaction with reference %s with data:\n%s",
             self.reference, pprint.pformat(feedback_data)
         )
-        self._handle_feedback_data('ogone', feedback_data)
+        self._handle_notification_data('ogone', feedback_data)
 
-    @api.model
-    def _get_tx_from_feedback_data(self, provider, data):
+    def _get_tx_from_notification_data(self, provider, notification_data):
         """ Override of payment to find the transaction based on Ogone data.
 
         :param str provider: The provider of the acquirer that handled the transaction
-        :param dict data: The feedback data sent by the provider
+        :param dict notification_data: The notification data sent by the provider
         :return: The transaction if found
         :rtype: recordset of `payment.transaction`
         :raise: ValidationError if the data match no transaction
         """
-        tx = super()._get_tx_from_feedback_data(provider, data)
-        if provider != 'ogone':
+        tx = super()._get_tx_from_notification_data(provider, notification_data)
+        if provider != 'ogone' or len(tx) == 1:
             return tx
 
-        reference = data.get('ORDERID')
+        reference = notification_data.get('ORDERID')
         tx = self.search([('reference', '=', reference), ('provider', '=', 'ogone')])
         if not tx:
             raise ValidationError(
@@ -178,37 +176,37 @@ class PaymentTransaction(models.Model):
             )
         return tx
 
-    def _process_feedback_data(self, data):
+    def _process_notification_data(self, notification_data):
         """ Override of payment to process the transaction based on Ogone data.
 
         Note: self.ensure_one()
 
-        :param dict data: The feedback data sent by the provider
+        :param dict notification_data: The notification data sent by the provider
         :return: None
         """
-        super()._process_feedback_data(data)
+        super()._process_notification_data(notification_data)
         if self.provider != 'ogone':
             return
 
-        if 'tree' in data:
-            data = data['tree']
+        if 'tree' in notification_data:
+            notification_data = notification_data['tree']
 
-        self.acquirer_reference = data.get('PAYID')
-        payment_status = int(data.get('STATUS', '0'))
+        self.acquirer_reference = notification_data.get('PAYID')
+        payment_status = int(notification_data.get('STATUS', '0'))
         if payment_status in const.PAYMENT_STATUS_MAPPING['pending']:
             self._set_pending()
         elif payment_status in const.PAYMENT_STATUS_MAPPING['done']:
-            has_token_data = 'ALIAS' in data
+            has_token_data = 'ALIAS' in notification_data
             if self.tokenize and has_token_data:
-                self._ogone_tokenize_from_feedback_data(data)
+                self._ogone_tokenize_from_notification_data(notification_data)
             self._set_done()
         elif payment_status in const.PAYMENT_STATUS_MAPPING['cancel']:
             self._set_canceled()
         elif payment_status in const.PAYMENT_STATUS_MAPPING['declined']:
-            if data.get("NCERRORPLUS"):
-                reason = data.get("NCERRORPLUS")
-            elif data.get("NCERROR"):
-                reason = "Error code: %s" % data.get("NCERROR")
+            if notification_data.get("NCERRORPLUS"):
+                reason = notification_data.get("NCERRORPLUS")
+            elif notification_data.get("NCERROR"):
+                reason = "Error code: %s" % notification_data.get("NCERROR")
             else:
                 reason = "Unknown reason"
             _logger.info("the payment has been declined: %s.", reason)
@@ -224,18 +222,18 @@ class PaymentTransaction(models.Model):
                 "Ogone: " + _("Received data with invalid payment status: %s", payment_status)
             )
 
-    def _ogone_tokenize_from_feedback_data(self, data):
-        """ Create a token from feedback data.
+    def _ogone_tokenize_from_notification_data(self, notification_data):
+        """ Create a token from notification data.
 
-        :param dict data: The feedback data sent by the provider
+        :param dict notification_data: The notification data sent by the provider
         :return: None
         """
-        token_name = data.get('CARDNO') or payment_utils.build_token_name()
+        token_name = notification_data.get('CARDNO') or payment_utils.build_token_name()
         token = self.env['payment.token'].create({
             'acquirer_id': self.acquirer_id.id,
             'name': token_name,  # Already padded with 'X's
             'partner_id': self.partner_id.id,
-            'acquirer_ref': data['ALIAS'],
+            'acquirer_ref': notification_data['ALIAS'],
             'verified': True,  # The payment is authorized, so the payment method is valid
         })
         self.write({

@@ -43,10 +43,10 @@ class BuckarooTest(BuckarooCommon, PaymentHttpCommon):
     def test_feedback_processing(self):
         notification_data = BuckarooController._normalize_data_keys(self.SYNC_NOTIFICATION_DATA)
         tx = self.create_transaction(flow='redirect')
-        tx._handle_feedback_data('buckaroo', notification_data)
+        tx._handle_notification_data('buckaroo', notification_data)
         self.assertEqual(tx.state, 'done')
         self.assertEqual(tx.acquirer_reference, notification_data.get('brq_transactions'))
-        tx._handle_feedback_data('buckaroo', notification_data)
+        tx._handle_notification_data('buckaroo', notification_data)
         self.assertEqual(tx.state, 'done', 'Buckaroo: validation did not put tx into done state')
         self.assertEqual(tx.acquirer_reference, notification_data.get('brq_transactions'))
 
@@ -58,7 +58,7 @@ class BuckarooTest(BuckarooCommon, PaymentHttpCommon):
             brq_statuscode='2',
             brq_signature='b8e54e26b2b5a5e697b8ed5085329ea712fd48b2',
         ))
-        self.env['payment.transaction']._handle_feedback_data('buckaroo', notification_data)
+        self.env['payment.transaction']._handle_notification_data('buckaroo', notification_data)
         self.assertEqual(tx.state, 'error')
 
     @mute_logger('odoo.addons.payment_buckaroo.controllers.main')

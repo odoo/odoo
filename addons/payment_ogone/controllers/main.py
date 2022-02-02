@@ -42,13 +42,13 @@ class OgoneController(http.Controller):
 
         # Check the integrity of the notification
         received_signature = data.get('SHASIGN')
-        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_feedback_data(
+        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
             'ogone', data
         )
         self._verify_notification_signature(raw_data, received_signature, tx_sudo)
 
         # Handle the notification data
-        request.env['payment.transaction'].sudo()._handle_feedback_data('ogone', data)
+        tx_sudo._handle_notification_data('ogone', data)
         return request.redirect('/payment/status')
 
     @staticmethod

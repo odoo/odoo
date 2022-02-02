@@ -37,13 +37,13 @@ class PayUMoneyController(http.Controller):
         _logger.info("handling redirection from PayU money with data:\n%s", pprint.pformat(data))
 
         # Check the integrity of the notification
-        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_feedback_data(
+        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
             'payumoney', data
         )
         self._verify_notification_signature(data, tx_sudo)
 
         # Handle the notification data
-        request.env['payment.transaction'].sudo()._handle_feedback_data('payumoney', data)
+        tx_sudo._handle_notification_data('payumoney', data)
         return request.redirect('/payment/status')
 
     @staticmethod

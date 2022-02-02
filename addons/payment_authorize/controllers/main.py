@@ -56,10 +56,4 @@ class AuthorizeController(http.Controller):
             "payment request response for transaction with reference %s:\n%s",
             reference, pprint.pformat(response_content)
         )
-        # As the API has no redirection flow, we always know the reference of the transaction.
-        # Still, we prefer to simulate the matching of the transaction by crafting dummy feedback
-        # data in order to go through the centralized `_handle_feedback_data` method.
-        feedback_data = {'reference': tx_sudo.reference, 'response': response_content}
-        request.env['payment.transaction'].sudo()._handle_feedback_data(
-            'authorize', feedback_data
-        )
+        tx_sudo._handle_notification_data('authorize', {'response': response_content})

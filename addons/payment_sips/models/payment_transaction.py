@@ -82,21 +82,20 @@ class PaymentTransaction(models.Model):
             'Seal': self.acquirer_id._sips_generate_shasign(data),
         }
 
-    @api.model
-    def _get_tx_from_feedback_data(self, provider, data):
+    def _get_tx_from_notification_data(self, provider, notification_data):
         """ Override of payment to find the transaction based on Sips data.
 
         :param str provider: The provider of the acquirer that handled the transaction
-        :param dict data: The feedback data sent by the provider
+        :param dict notification_data: The notification data sent by the provider
         :return: The transaction if found
         :rtype: recordset of `payment.transaction`
         :raise: ValidationError if the data match no transaction
         """
-        tx = super()._get_tx_from_feedback_data(provider, data)
-        if provider != 'sips':
+        tx = super()._get_tx_from_notification_data(provider, notification_data)
+        if provider != 'sips' or len(tx) == 1:
             return tx
 
-        data = self._sips_data_to_object(data['Data'])
+        data = self._sips_notification_data_to_object(notification_data['Data'])
         reference = data.get('transactionReference')
 
         if not reference:
@@ -111,19 +110,19 @@ class PaymentTransaction(models.Model):
 
         return tx
 
-    def _process_feedback_data(self, data):
+    def _process_notification_data(self, notification_data):
         """ Override of payment to process the transaction based on Sips data.
 
         Note: self.ensure_one()
 
-        :param dict data: The feedback data sent by the provider
+        :param dict notification_data: The notification data sent by the provider
         :return: None
         """
-        super()._process_feedback_data(data)
+        super()._process_notification_data(notification_data)
         if self.provider != 'sips':
             return
 
-        data = self._sips_data_to_object(data.get('Data'))
+        data = self._sips_notification_data_to_object(notification_data.get('Data'))
         self.acquirer_reference = data.get('transactionReference')
         response_code = data.get('responseCode')
         if response_code in RESPONSE_CODES_MAPPING['pending']:
@@ -148,7 +147,7 @@ class PaymentTransaction(models.Model):
             },
         )
 
-    def _sips_data_to_object(self, data):
+    def _sips_notification_data_to_object(self, data):
         res = {}
         for element in data.split('|'):
             key, value = element.split('=')
