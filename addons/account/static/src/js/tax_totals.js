@@ -12,7 +12,6 @@ const { Component, useRef, useState } = owl;
     A line of some TaxTotalsComponent, giving the values of a tax group.
 **/
 class TaxGroupComponent extends Component {
-
     setup() {
         this.inputTax = useRef('taxValueInput');
         this.state = useState({value: 'readonly'});
@@ -87,7 +86,7 @@ class TaxGroupComponent extends Component {
             return;
         }
         this.props.taxGroup.tax_group_amount = newValue;
-        this.trigger('change-tax-group', {
+        this.props.onChangeTaxGroup({
             oldValue: this.props.taxGroup.tax_group_amount,
             newValue: newValue,
             taxGroupId: this.props.taxGroup.tax_group_id

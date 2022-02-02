@@ -81,7 +81,7 @@ QUnit.module("base_automation", {}, function () {
 
         const env = await makeTestEnv();
         const { Component: Container, props } = registry.category("main_components").get("DialogContainer");
-        const dialogContainer = await mount(Container, { target: getFixture(), env, props })
+        const dialogContainer = await mount(Container, { target: getFixture(), env, props });
 
         const errorEvent = new PromiseRejectionEvent("error", { reason: {
             message: error,

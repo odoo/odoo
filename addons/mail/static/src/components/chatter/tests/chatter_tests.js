@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { afterEach, afterNextRender, beforeEach, nextAnimationFrame, start } from '@mail/utils/test_utils';
-import { nextTick } from '@web/../tests/helpers/utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -67,7 +66,6 @@ QUnit.test('base rendering when chatter has no attachment', async function (asse
         }).localId,
         "thread should have the right thread local id"
     );
-
     assert.strictEqual(
         document.querySelectorAll(`.o_Message`).length,
         30,
@@ -332,7 +330,6 @@ QUnit.test('should display subject when subject is not the same as the thread na
         threadId: 100,
         threadModel: 'res.partner',
     });
-
 
     assert.containsOnce(
         document.body,

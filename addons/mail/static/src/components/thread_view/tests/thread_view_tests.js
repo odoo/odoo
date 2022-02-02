@@ -8,7 +8,6 @@ import {
     dragenterFiles,
     start,
 } from '@mail/utils/test_utils';
-import { nextTick } from '@web/../tests/helpers/utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {

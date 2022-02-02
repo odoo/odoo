@@ -19,7 +19,7 @@ export class ProjectControlPanel extends ControlPanel {
                 await this.loadData();
             }
         });
-    
+
         onWillUpdateProps(async () => {
             if (this.showProjectUpdate) {
                 await this.loadData();
