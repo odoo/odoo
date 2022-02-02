@@ -38,12 +38,22 @@ class ResPartner(models.Model):
         'res.partner', 'assigned_partner_id',
         string='Implementation References',
     )
-    implemented_count = fields.Integer(compute='_compute_implemented_partner_count', store=True)
+    implemented_partner_count = fields.Integer(compute='_compute_implemented_partner_count', store=True)
 
-    @api.depends('implemented_partner_ids', 'implemented_partner_ids.website_published', 'implemented_partner_ids.active')
+    @api.depends('implemented_partner_ids.is_published', 'implemented_partner_ids.active')
     def _compute_implemented_partner_count(self):
+        if not self.ids:
+            self.implemented_partner_count = 0
+            return
+        rg_result = self.env['res.partner'].read_group(
+            [('assigned_partner_id', 'in', self.ids),
+             ('is_published', '=', True)],
+            ['assigned_partner_id'],
+            ['assigned_partner_id']
+        )
+        rg_data = {rg_item['assigned_partner_id'][0]: rg_item['assigned_partner_id_count'] for rg_item in rg_result}
         for partner in self:
-            partner.implemented_count = len(partner.implemented_partner_ids.filtered('website_published'))
+            partner.implemented_partner_count = rg_data.get(partner.id, 0)
 
     @api.depends('grade_id.partner_weight')
     def _compute_partner_weight(self):
