@@ -15,14 +15,14 @@ QUnit.module('Website Backend Dashboard', {
         assert.expect(5);
 
         patch(ControlPanel.prototype, 'test.ControlPanel', {
-            mounted() {
-                this.__superMounted = this._super.bind(this);
-                assert.step('mounted');
-                this.__superMounted(...arguments);
-            },
-            willUnmount() {
-                assert.step('willUnmount');
-                this.__superMounted(...arguments);
+            setup() {
+                this._super();
+                owl.onMounted(() => {
+                    assert.step('mounted');
+                });
+                owl.onWillUnmount(() => {
+                    assert.step('willUnmount');
+                })
             },
         });
 
