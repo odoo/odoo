@@ -202,6 +202,7 @@ class Slide(models.Model):
     embed_code = fields.Html('Embed Code', readonly=True, compute='_compute_embed_code', sanitize=False)
     embed_code_external = fields.Html('External Embed Code', readonly=True, compute='_compute_embed_code', sanitize=False,
         help="Same as 'Embed Code' but used to embed the content on an external website.")
+    website_share_url = fields.Char('Share URL', compute='_compute_website_share_url')
     # views
     embed_ids = fields.One2many('slide.embed', 'slide_id', string="External Slide Embeds")
     embed_count = fields.Integer('# of Embeds', compute='_compute_embed_counts')
@@ -552,6 +553,14 @@ class Slide(models.Model):
             if slide.id:  # avoid to perform a slug on a not yet saved record in case of an onchange.
                 base_url = slide.channel_id.get_base_url()
                 slide.website_url = '%s/slides/slide/%s' % (base_url, slug(slide))
+
+    @api.depends('is_published')
+    def _compute_website_share_url(self):
+        self.website_share_url = False
+        for slide in self:
+            if slide.id:  # ensure we can build the URL
+                base_url = slide.channel_id.get_base_url()
+                slide.website_share_url = '%s/slides/slide/%s/share' % (base_url, slide.id)
 
     @api.depends('channel_id.can_publish')
     def _compute_can_publish(self):

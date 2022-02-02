@@ -363,12 +363,13 @@
                             <h5 class="mt16">Share on Social Networks</h5>
                             <t t-call="website_slides.slide_share_social">
                                 <t t-set="record" t-value="slide"/>
+                                <t t-set="website_share_url" t-value="slide.website_share_url"/>
                             </t>
                         </div>
                         <div class="col-12 col-lg-6">
                             <t t-call="website_slides.slide_share_link">
                                 <t t-set="record" t-value="slide"/>
-                                <t t-set="website_url" t-value="slide.website_url"/>
+                                <t t-set="website_share_url" t-value="slide.website_share_url"/>
                             </t>
                         </div>
                     </div>
