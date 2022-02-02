@@ -99,7 +99,7 @@ var PrinterMixin = {
             html2canvas(self.receipt[0], {
                 onparsed: function(queue) {
                     queue.stack.ctx.height = Math.ceil(self.receipt.outerHeight() + self.receipt.offset().top);
-                    queue.stack.ctx.width = Math.ceil(self.receipt.outerWidth() + self.receipt.offset().left);
+                    queue.stack.ctx.width = Math.ceil(self.receipt.outerWidth() + 2 * self.receipt.offset().left);
                 },
                 onrendered: function (canvas) {
                     $('.pos-receipt-print').empty();
