@@ -8,8 +8,8 @@ odoo.define('point_of_sale.ClientScreenButton', function(require) {
 
     // Formerly ClientScreenWidget
     class ClientScreenButton extends PosComponent {
-        constructor() {
-            super(...arguments);
+        setup() {
+            super.setup();
             this.local = this.env.pos.config.iface_customer_facing_display_local && !this.env.pos.config.iface_customer_facing_display_proxy;
             this.state = useState({ status: this.local ? 'success' : 'failure' });
             this._start();

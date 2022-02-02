@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="ProxyStatus" owl="1">
-        <div class="oe_status js_proxy" t-on-click="trigger('connect-to-proxy')">
+        <div class="oe_status js_proxy" t-on-click="() => this.trigger('connect-to-proxy')">
             <span t-if="state.msg and !env.isMobile" class="js_msg">
                 <t t-esc="state.msg" />
             </span>

@@ -5,16 +5,17 @@ odoo.define('point_of_sale.TextInputPopup', function(require) {
     const Registries = require('point_of_sale.Registries');
     const { _lt } = require('@web/core/l10n/translation');
 
-    const { useRef, useState } = owl;
+    const { onMounted, useRef, useState } = owl;
 
     // formerly TextInputPopupWidget
     class TextInputPopup extends AbstractAwaitablePopup {
-        constructor() {
-            super(...arguments);
+        setup() {
+            super.setup();
             this.state = useState({ inputValue: this.props.startingValue });
             this.inputRef = useRef('input');
+            onMounted(this.onMounted);
         }
-        mounted() {
+        onMounted() {
             this.inputRef.el.focus();
         }
         getPayload() {

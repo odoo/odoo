@@ -1,15 +1,15 @@
 odoo.define('point_of_sale.OrderWidget', function(require) {
     'use strict';
 
-    const { useListener } = require('web.custom_hooks');
+    const { useListener } = require("@web/core/utils/hooks");
     const PosComponent = require('point_of_sale.PosComponent');
     const Registries = require('point_of_sale.Registries');
 
     const { onPatched, useRef } = owl;
 
     class OrderWidget extends PosComponent {
-        constructor() {
-            super(...arguments);
+        setup() {
+            super.setup();
             useListener('select-line', this._selectLine);
             useListener('edit-pack-lot-lines', this._editPackLotLines);
             this.scrollableRef = useRef('scrollable');

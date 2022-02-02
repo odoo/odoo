@@ -6,12 +6,12 @@
             <div class="pos-receipt-container"/>
             <div class="screen-content">
                 <div class="top-content">
-                    <span class="button back" t-on-click="showScreen('FloorScreen')">
+                    <span class="button back" t-on-click="() => this.showScreen('FloorScreen')">
                         <i class="fa fa-angle-double-left"></i>
                         <span> </span>
                         <span>Back</span>
                     </span>
-                    <span class="button" t-if="env.proxy.printer" t-on-click="printTipReceipt()">
+                    <span class="button" t-if="env.proxy.printer" t-on-click="printTipReceipt">
                         <i class="fa fa-print"></i>
                         <span> </span>
                         <span>Reprint receipts</span>
@@ -30,7 +30,7 @@
                     <div class="tip-amount-options">
                         <div class="percentage-amounts">
                             <t t-foreach="percentageTips" t-as="tip" t-key="tip.percentage">
-                                <div class="button" t-on-click="state.inputTipAmount = tip.amount.toFixed(2)">
+                                <div class="button" t-on-click="() => { state.inputTipAmount = tip.amount.toFixed(2); }">
                                     <div class="percentage">
                                         <t t-esc="tip.percentage"></t>
                                     </div>
@@ -40,7 +40,7 @@
                                 </div>
                             </t>
                         </div>
-                        <div class="no-tip" t-on-click="state.inputTipAmount = '0'">
+                        <div class="no-tip" t-on-click="() => { state.inputTipAmount = '0'; }">
                             <div class="button">No Tip</div>
                         </div>
                         <div class="custom-amount-form">

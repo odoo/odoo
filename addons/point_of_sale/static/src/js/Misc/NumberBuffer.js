@@ -1,13 +1,13 @@
 odoo.define('point_of_sale.NumberBuffer', function(require) {
     'use strict';
 
-    const { useListener } = require('web.custom_hooks');
+    const { useListener } = require("@web/core/utils/hooks");
     const { parse } = require('web.field_utils');
     const { BarcodeEvents } = require('barcodes.BarcodeEvents');
     const { _t } = require('web.core');
     const { Gui } = require('point_of_sale.Gui');
 
-    const { Component, EventBus, onMounted, onWillUnmount, useExternalListener } = owl;
+    const { EventBus, onMounted, onWillUnmount, useComponent, useExternalListener } = owl;
     const INPUT_KEYS = new Set(
         ['Delete', 'Backspace', '+1', '+2', '+5', '+10', '+20', '+50'].concat('0123456789+-.,'.split(''))
     );
@@ -132,7 +132,7 @@ odoo.define('point_of_sale.NumberBuffer', function(require) {
          */
         use(config) {
             this.eventsBuffer = [];
-            const currentComponent = Component.current;
+            const currentComponent = useComponent();
             config = Object.assign(getDefaultConfig(), config);
             onMounted(() => {
                 this.bufferHolderStack.push({

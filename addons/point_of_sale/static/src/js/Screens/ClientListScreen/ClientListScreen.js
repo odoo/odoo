@@ -3,10 +3,12 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
 
     const PosComponent = require('point_of_sale.PosComponent');
     const Registries = require('point_of_sale.Registries');
-    const { useListener } = require('web.custom_hooks');
-
-    const { Observer, debounce } = owl;
     const { isConnectionError } = require('point_of_sale.utils');
+
+    const { debounce } = require("@web/core/utils/timing");
+    const { useListener } = require("@web/core/utils/hooks");
+
+    const { onWillUnmount } = owl;
 
     /**
      * Render this screen using `showTempScreen` to select client.
@@ -24,8 +26,8 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
      * @props client - originally selected client
      */
     class ClientListScreen extends PosComponent {
-        constructor() {
-            super(...arguments);
+        setup() {
+            super.setup();
             useListener('click-save', () => this.env.bus.trigger('save-customer'));
             useListener('click-edit', () => this.editClient());
             useListener('save-changes', this.saveChanges);
@@ -48,6 +50,7 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
                 },
             };
             this.updateClientList = debounce(this.updateClientList, 70);
+            onWillUnmount(this.updateClientList.cancel);
         }
         // Lifecycle hooks
         back() {
@@ -110,8 +113,7 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
                 this.render();
             }
         }
-        clickClient(event) {
-            let partner = event.detail.client;
+        clickClient(partner) {
             if (this.state.selectedClient === partner) {
                 this.state.selectedClient = null;
             } else {
@@ -142,16 +144,6 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
             }
             this.render();
         }
-        deactivateEditMode() {
-            this.state.isEditMode = false;
-            this.state.editModeProps = {
-                partner: {
-                    country_id: this.env.pos.company.country_id,
-                    state_id: this.env.pos.company.state_id,
-                },
-            };
-            this.render();
-        }
         async saveChanges(event) {
             try {
                 let partnerId = await this.rpc({
@@ -173,9 +165,6 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
                     throw error;
                 }
             }
-        }
-        cancelEdit() {
-            this.deactivateEditMode();
         }
         async searchClient() {
             let result = await this.getNewClient();

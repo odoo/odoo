@@ -14,7 +14,7 @@
                     <div t-if="!props.exitButtonIsShown" class="button cancel" t-on-click="confirm">
                         <t t-esc="props.confirmText" />
                     </div>
-                    <div t-if="props.exitButtonIsShown" class="button cancel" t-on-click="trigger(props.exitButtonTrigger)">
+                    <div t-if="props.exitButtonIsShown" class="button cancel" t-on-click="() => this.trigger(props.exitButtonTrigger)">
                         <t t-esc="props.exitButtonText" />
                     </div>
                     <a t-att-download="tracebackFilename" t-att-href="tracebackUrl">

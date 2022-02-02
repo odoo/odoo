@@ -2,18 +2,19 @@ odoo.define('pos_restaurant.FloorScreen', function (require) {
     'use strict';
 
     const PosComponent = require('point_of_sale.PosComponent');
-    const { useListener } = require('web.custom_hooks');
+    const { useListener } = require("@web/core/utils/hooks");
     const Registries = require('point_of_sale.Registries');
+    const { debounce } = require("@web/core/utils/timing");
 
-    const { debounce, useRef, useState } = owl;
+    const { onPatched, onMounted, onWillUnmount, useRef, useState } = owl;
 
     class FloorScreen extends PosComponent {
         /**
          * @param {Object} props
          * @param {Object} props.floor
          */
-        constructor() {
-            super(...arguments);
+        setup() {
+            super.setup();
             this._setTableColor = debounce(this._setTableColor, 70);
             this._setFloorColor = debounce(this._setFloorColor, 70);
             useListener('select-table', this._onSelectTable);
@@ -36,12 +37,15 @@ odoo.define('pos_restaurant.FloorScreen', function (require) {
                 floorMapScrollTop: 0,
             });
             this.floorMapRef = useRef('floor-map-ref');
+            onPatched(this.onPatched);
+            onMounted(this.onMounted);
+            onWillUnmount(this.onWillUnmount);
         }
-        patched() {
+        onPatched() {
             this.floorMapRef.el.style.background = this.state.floorBackground;
             this.state.floorMapScrollTop = this.floorMapRef.el.getBoundingClientRect().top;
         }
-        mounted() {
+        onMounted() {
             if (this.env.pos.table) {
                 this.env.pos.set_table(null);
             }
@@ -52,7 +56,7 @@ odoo.define('pos_restaurant.FloorScreen', function (require) {
             this._tableLongpolling();
             this.tableLongpolling = setInterval(this._tableLongpolling.bind(this), 5000);
         }
-        willUnmount() {
+        onWillUnmount() {
             clearInterval(this.tableLongpolling);
         }
         get activeFloor() {
