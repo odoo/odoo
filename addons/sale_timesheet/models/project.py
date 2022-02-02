@@ -77,9 +77,9 @@ class Project(models.Model):
                 - value = 'employee_rate': [('sale_line_employee_ids', '!=', False), ('allow_billable', '=', True)]
                 - value is False: [('allow_billable', '=', False)]
             - operator = '!=':
-                - value = 'task_rate': ['|', ('sale_line_employee_ids', '!=', False), ('sale_line_id', '!=', False), ('allow_billable', '=', True)]
-                - value = 'fixed_rate': ['|', ('sale_line_employee_ids', '!=', False), ('sale_line_id', '=', False), ('allow_billable', '=', True)]
-                - value = 'employee_rate': [('sale_line_employee_ids', '=', False), ('allow_billable', '=', True)]
+                - value = 'task_rate': ['|', '|', ('sale_line_employee_ids', '!=', False), ('sale_line_id', '!=', False), ('allow_billable', '=', False)]
+                - value = 'fixed_rate': ['|', '|', ('sale_line_employee_ids', '!=', False), ('sale_line_id', '=', False), ('allow_billable', '=', False)]
+                - value = 'employee_rate': ['|', ('sale_line_employee_ids', '=', False), ('allow_billable', '=', False)]
                 - value is False: [('allow_billable', '!=', False)]
 
             :param operator: the supported operator is either '=' or '!='.
@@ -101,13 +101,13 @@ class Project(models.Model):
         elif value == 'fixed_rate':
             domain = [sol_cond, expression.NOT_OPERATOR, mapping_cond]
         else:  # value == 'employee_rate'
-            domain = [sol_cond, mapping_cond]
+            domain = [mapping_cond]
 
+        domain = expression.AND([domain, [('allow_billable', '=', True)]])
         domain = expression.normalize_domain(domain)
         if operator != '=':
             domain.insert(0, expression.NOT_OPERATOR)
         domain = expression.distribute_not(domain)
-        domain = expression.AND([domain, [('allow_billable', '=', True)]])
         return domain
 
     @api.depends('analytic_account_id', 'timesheet_ids')
