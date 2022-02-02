@@ -336,10 +336,10 @@ class SaleOrder(models.Model):
                 sent_orders |= order
         sent_orders.write({'cart_recovery_email_sent': True})
 
-    def _notify_get_groups(self, msg_vals=None):
+    def _notify_get_recipients_groups(self, msg_vals=None):
         """ In case of cart recovery email, update link to redirect directly
         to the cart (like ``mail_template_sale_cart_recovery`` template). """
-        groups = super(SaleOrder, self)._notify_get_groups(msg_vals=msg_vals)
+        groups = super(SaleOrder, self)._notify_get_recipients_groups(msg_vals=msg_vals)
 
         customer_portal_group = next(group for group in groups if group[0] == 'portal_customer')
         if customer_portal_group:
