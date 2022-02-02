@@ -277,7 +277,7 @@ QUnit.test('remove attachment should ask for confirmation', async function (asse
         res_id: 100,
         res_model: 'res.partner',
     });
-    const { createChatterContainerComponent } = await this.start();
+    const { createChatterContainerComponent } = await this.start({ hasDialog: true });
     await createChatterContainerComponent({
         isAttachmentBoxVisibleInitially: true,
         threadId: 100,

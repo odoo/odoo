@@ -56,13 +56,6 @@
                             </t>
                         </div>
                     </t>
-                    <t t-if="attachmentCard.hasDeleteConfirmDialog">
-                        <AttachmentDeleteConfirm
-                            attachmentLocalId="attachmentCard.attachment.localId"
-                            onAttachmentRemoved="props.onAttachmentRemoved"
-                            onClosed="attachmentCard.onDeleteConfirmDialogClosed"
-                        />
-                    </t>
                 </div>
             </t>
         </div>

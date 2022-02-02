@@ -14,10 +14,12 @@
     z-index: $zindex-modal;
 }
 
-// ------------------------------------------------------------------
-// Style
-// ------------------------------------------------------------------
+.o_Dialog_componentLargeSize {
+    min-width: Min(95vw, $o-modal-lg);
+    max-width: 95vw;
+}
 
-.o_Dialog {
-    background-color: rgba($black, 0.7);
+.o_Dialog_componentMediumSize {
+    min-width: Min(95vw, $o-modal-md);
+    max-width: 95vw;
 }

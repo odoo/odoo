@@ -34,17 +34,8 @@ registerModel({
                 this.component.trigger('o-attachment-removed', { attachmentLocalId: this.attachment.localId });
                 this.attachment.remove();
             } else {
-                this.update({ hasDeleteConfirmDialog: true });
+                this.update({ attachmentDeleteConfirmDialog: insertAndReplace() });
             }
-        },
-        /**
-         * Synchronizes the `hasDeleteConfirmDialog` when the dialog is closed.
-         */
-        onDeleteConfirmDialogClosed() {
-            if (!this.exists()) {
-                return;
-            }
-            this.update({ hasDeleteConfirmDialog: false });
         },
     },
     fields: {
@@ -54,6 +45,10 @@ registerModel({
         attachment: one('Attachment', {
             readonly: true,
             required: true,
+        }),
+        attachmentDeleteConfirmDialog: one('Dialog', {
+            inverse: 'attachmentCardOwnerAsAttachmentDeleteConfirm',
+            isCausal: true,
         }),
         /**
          * States the attachmentList displaying this card.
@@ -67,11 +62,5 @@ registerModel({
          * States the OWL component of this attachment card.
          */
         component: attr(),
-        /**
-         * Determines the status of the delete confirm dialog (open/closed).
-         */
-        hasDeleteConfirmDialog: attr({
-            default: false,
-        }),
     },
 });

@@ -1,80 +1,31 @@
 /** @odoo-module **/
 
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
+import { useComponentToModel } from '@mail/component_hooks/use_component_to_model/use_component_to_model';
 
-import Dialog from 'web.OwlDialog';
-
-const { Component, escape } = owl;
+const { Component } = owl;
 
 export class AttachmentDeleteConfirm extends Component {
 
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
     /**
-     * @returns {Attachment}
+     * @override
      */
-    get attachment() {
-        return this.messaging && this.messaging.models['Attachment'].get(this.props.attachmentLocalId);
+    setup() {
+        super.setup();
+        useComponentToModel({ fieldName: 'component', modelName: 'AttachmentDeleteConfirmView' });
     }
 
     /**
-     * @returns {string}
+     * @returns {AttachmentDeleteConfirmView}
      */
-    getBody() {
-        return _.str.sprintf(
-            this.env._t(`Do you really want to delete "%s"?`),
-            escape(this.attachment.displayName)
-        );
-    }
-
-    /**
-     * @returns {string}
-     */
-    getTitle() {
-        return this.env._t("Confirmation");
-    }
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     */
-    _onClickCancel() {
-        this.root.comp._close();
-    }
-
-    /**
-     * @private
-     */
-    async _onClickOk() {
-        await this.attachment.remove();
-        this.root.comp._close();
-        if (this.props.onAttachmentRemoved) {
-            this.props.onAttachmentRemoved({
-                attachmentLocalId: this.props.attachmentLocalId,
-            });
-        }
+    get attachmentDeleteConfirmView() {
+        return this.messaging && this.messaging.models['AttachmentDeleteConfirmView'].get(this.props.localId);
     }
 
 }
 
 Object.assign(AttachmentDeleteConfirm, {
-    components: { Dialog },
-    props: {
-        attachmentLocalId: String,
-        onAttachmentRemoved: {
-            type: Function,
-            optional: true,
-        },
-        onClosed: {
-            type: Function,
-            optional: true,
-        }
-    },
+    props: { localId: String },
     template: 'mail.AttachmentDeleteConfirm',
 });
 
