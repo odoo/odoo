@@ -2237,6 +2237,40 @@ QUnit.module("Search", (hooks) => {
         }
     );
 
+    QUnit.test(
+        "categories and filters are loaded when switching from a view without the search panel",
+        async (assert) => {
+            assert.expect(5);
+
+            // set the pivot view as the default view
+            serverData.actions[1].views = [
+                [false, "pivot"],
+                [false, "kanban"],
+                [false, "list"],
+            ];
+
+            const webclient = await createWebClient({
+                serverData,
+                async mockRPC(route, {method}) {
+                    if (/search_panel_/.test(method || route)) {
+                        assert.step(method || route);
+                    }
+                },
+            });
+
+            await doAction(webclient, 1);
+            assert.verifySteps([]);
+
+            await switchView(target, "list");
+            await legacyExtraNextTick();
+            assert.verifySteps(["search_panel_select_range", "search_panel_select_multi_range"]);
+
+            await switchView(target, "kanban");
+            await legacyExtraNextTick();
+            assert.verifySteps([]);
+        }
+    );
+
     QUnit.test("scroll position is kept when switching between controllers", async (assert) => {
         assert.expect(6);
 
