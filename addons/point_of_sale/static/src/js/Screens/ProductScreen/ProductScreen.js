@@ -33,6 +33,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                 triggerAtInput: 'update-selected-orderline',
                 useWithBarcode: true,
             });
+            onMounted(this.onMounted);
             // Call `reset` when the `onMounted` callback in `NumberBuffer.use` is done.
             // We don't do this in the `mounted` lifecycle method because it is called before
             // the callbacks in `onMounted` hook.
@@ -41,7 +42,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                 mobile_pane: this.props.mobile_pane || 'right',
             });
         }
-        mounted() {
+        onMounted() {
             this.env.posbus.trigger('start-cash-control');
         }
         /**

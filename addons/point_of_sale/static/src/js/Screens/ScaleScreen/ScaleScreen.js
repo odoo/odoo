@@ -5,7 +5,7 @@ odoo.define('point_of_sale.ScaleScreen', function(require) {
     const { round_precision: round_pr } = require('web.utils');
     const Registries = require('point_of_sale.Registries');
 
-    const { useExternalListener, useState } = owl;
+    const { onMounted, onWillUnmount, useExternalListener, useState } = owl;
 
     class ScaleScreen extends PosComponent {
         /**
@@ -16,12 +16,14 @@ odoo.define('point_of_sale.ScaleScreen', function(require) {
             super.setup();
             useExternalListener(document, 'keyup', this._onHotkeys);
             this.state = useState({ weight: 0 });
+            onMounted(this.onMounted);
+            onWillUnmount(this.onWillUnmount);
         }
-        mounted() {
+        onMounted() {
             // start the scale reading
             this._readScale();
         }
-        willUnmount() {
+        onWillUnmount() {
             // stop the scale reading
             this.env.proxy_queue.clear();
         }

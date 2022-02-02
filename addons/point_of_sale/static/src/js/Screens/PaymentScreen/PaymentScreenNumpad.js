@@ -6,6 +6,7 @@ odoo.define('point_of_sale.PaymentScreenNumpad', function(require) {
 
     class PaymentScreenNumpad extends PosComponent {
         setup() {
+            super.setup();
             this.decimalPoint = this.env._t.database.parameters.decimal_point;
         }
     }

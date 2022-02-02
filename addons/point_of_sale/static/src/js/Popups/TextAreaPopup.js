@@ -5,7 +5,7 @@ odoo.define('point_of_sale.TextAreaPopup', function(require) {
     const Registries = require('point_of_sale.Registries');
     const { _lt } = require('@web/core/l10n/translation');
 
-    const { useRef, useState } = owl;
+    const { onMounted, useRef, useState } = owl;
 
     // formerly TextAreaPopupWidget
     // IMPROVEMENT: This code is very similar to TextInputPopup.
@@ -19,8 +19,9 @@ odoo.define('point_of_sale.TextAreaPopup', function(require) {
             super.setup();
             this.state = useState({ inputValue: this.props.startingValue });
             this.inputRef = useRef('input');
+            onMounted(this.onMounted);
         }
-        mounted() {
+        onMounted() {
             this.inputRef.el.focus();
         }
         getPayload() {

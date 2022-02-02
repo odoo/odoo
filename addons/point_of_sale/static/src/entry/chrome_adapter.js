@@ -12,15 +12,7 @@ import env from "point_of_sale.env";
 import { debounce } from "@web/core/utils/timing";
 import { batched } from "point_of_sale.utils";
 
-const {
-    Component,
-    reactive,
-    markRaw,
-    useExternalListener,
-    useSubEnv,
-    onWillUnmount,
-    xml,
-} = owl;
+const { Component, reactive, markRaw, useExternalListener, useSubEnv, onWillUnmount, xml } = owl;
 
 export class ChromeAdapter extends Component {
     setup() {

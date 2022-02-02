@@ -8,7 +8,7 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
     const { useListener, useAutofocus } = require('web.custom_hooks');
     const { parse } = require('web.field_utils');
 
-    const { useState } = owl;
+    const { onMounted, onWillUnmount, useState } = owl;
 
     class TicketScreen extends IndependentToOrderScreen {
         setup() {
@@ -44,16 +44,19 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
                       selectedOrderlineIds: {},
                   };
             Object.assign(this._state.ui, defaultUIState, this.props.ui || {});
+
+            onMounted(this.onMounted);
+            onWillUnmount(this.onWillUnmount);
         }
         //#region LIFECYCLE METHODS
-        mounted() {
+        onMounted() {
             this.env.posbus.on('ticket-button-clicked', this, this.close);
             setTimeout(() => {
                 // Show updated list of synced orders when going back to the screen.
                 this._onFilterSelected({ detail: { filter: this._state.ui.filter } });
             });
         }
-        willUnmount() {
+        onWillUnmount() {
             this.env.posbus.off('ticket-button-clicked', this);
         }
         //#endregion

@@ -9,6 +9,7 @@ odoo.define('point_of_sale.ProductConfiguratorPopup', function(require) {
 
     class ProductConfiguratorPopup extends AbstractAwaitablePopup {
         setup() {
+            super.setup();
             useSubEnv({ attribute_components: [] });
         }
 
@@ -59,7 +60,11 @@ odoo.define('point_of_sale.ProductConfiguratorPopup', function(require) {
     }
 
     class RadioProductAttribute extends BaseProductAttribute {
-        mounted() {
+        setup() {
+            super.setup();
+            owl.onMounted(this.onMounted);
+        }
+        onMounted() {
             // With radio buttons `t-model` selects the default input by searching for inputs with
             // a matching `value` attribute. In our case, we use `t-att-value` so `value` is
             // not found yet and no radio is selected by default.

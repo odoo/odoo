@@ -12,7 +12,7 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
     const contexts = require('point_of_sale.PosContext');
     const { Orderline } = require('point_of_sale.models');
 
-    const { useState } = owl;
+    const { onMounted, onWillUnmount, useState } = owl;
 
     class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentToOrderScreen) {
         setup() {
@@ -25,8 +25,11 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
 
             SaleOrderFetcher.setComponent(this);
             this.orderManagementContext = useState(contexts.orderManagement);
+
+            onMounted(this.onMounted);
+            onWillUnmount(this.onWillUnmount);
         }
-        mounted() {
+        onMounted() {
             SaleOrderFetcher.on('update', this, this.render);
 
             // calculate how many can fit in the screen.
@@ -45,7 +48,7 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
             // is shown while fetching.
             setTimeout(() => SaleOrderFetcher.fetch(), 0);
         }
-        willUnmount() {
+        onWillUnmount() {
             SaleOrderFetcher.off('update', this);
         }
         get selectedClient() {

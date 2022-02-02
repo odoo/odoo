@@ -6,7 +6,7 @@ odoo.define('point_of_sale.ClosePosPopup', function(require) {
     const { identifyError } = require('point_of_sale.utils');
     const { ConnectionLostError, ConnectionAbortedError} = require('@web/core/network/rpc_service')
 
-    const { useState } = owl;
+    const { onWillStart, onMounted, useState } = owl;
 
     /**
      * This popup needs to be self-dependent because it needs to be called from different place.
@@ -21,8 +21,10 @@ odoo.define('point_of_sale.ClosePosPopup', function(require) {
             this.state = useState({
                 displayMoneyDetailsPopup: false,
             });
+            onWillStart(this.onWillStart);
+            onMounted(this.onMounted);
         }
-        async willStart() {
+        async onWillStart() {
             try {
                 const closingData = await this.rpc({
                     model: 'pos.session',
@@ -58,7 +60,7 @@ odoo.define('point_of_sale.ClosePosPopup', function(require) {
         /*
          * Since this popup need to be self dependent, in case of an error, the popup need to be closed on its own.
          */
-        mounted() {
+        onMounted() {
             if (this.error) {
                 this.cancel();
                 if (identifyError(this.error) instanceof ConnectionLostError) {
