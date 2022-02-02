@@ -1965,9 +1965,7 @@ class MrpProduction(models.Model):
         else:
             user_id = self.env.user
 
-        origs = {}
-        for move in self.move_raw_ids:
-            origs.setdefault(move.bom_line_id.id, []).extend(move.move_orig_ids.ids)
+        origs = self._prepare_merge_orig_links()
         dests = {}
         for move in self.move_finished_ids:
             dests.setdefault(move.byproduct_id.id, []).extend(move.move_dest_ids.ids)
@@ -1986,17 +1984,24 @@ class MrpProduction(models.Model):
         production._create_workorder()
 
         for move in production.move_raw_ids:
-            move.move_orig_ids = [Command.set(origs[move.bom_line_id.id])]
+            for field, vals in origs[move.bom_line_id.id].items():
+                move[field] = vals
         for move in production.move_finished_ids:
             move.move_dest_ids = [Command.set(dests[move.byproduct_id.id])]
-        production.move_dest_ids = [Command.set(sum(list(dests.values()), []))]
+
+        self.move_dest_ids.created_production_id = production.id
 
         self.procurement_group_id.stock_move_ids.group_id = production.procurement_group_id
 
         if 'confirmed' in self.mapped('state'):
-            production.action_confirm()
+            production.move_raw_ids._adjust_procure_method()
+            (production.move_raw_ids | production.move_finished_ids).write({'state': 'confirmed'})
+            production.workorder_ids._action_confirm()
+            production.state = 'confirmed'
 
         self.with_context(skip_activity=True)._action_cancel()
+        for p in self:
+            p._message_log(body=_('This production has been merge in %s', production.display_name))
 
         return {
             'type': 'ir.actions.act_window',
@@ -2133,3 +2138,15 @@ class MrpProduction(models.Model):
             raise UserError(_('You can only merge manufacturing with the same operation type'))
         # TODO explode and check no quantity has been edited
         return True
+
+    def _prepare_merge_orig_links(self):
+        origs = defaultdict(dict)
+        for move in self.move_raw_ids:
+            if not move.move_orig_ids:
+                continue
+            origs[move.bom_line_id.id].setdefault('move_orig_ids', set()).update(move.move_orig_ids.ids)
+        for vals in origs.values():
+            if not vals.get('move_orig_ids'):
+                continue
+            vals['move_orig_ids'] = [Command.set(vals['move_orig_ids'])]
+        return origs
