@@ -171,6 +171,7 @@
             <!-- Share modal : here to avoid having text-white from o_wslides_course_header -->
             <t t-call="website_slides.slide_share_modal" t-if="channel.channel_type == 'documentation'">
                 <t t-set="record" t-value="channel"/>
+                <t t-set="website_share_url" t-value="channel.website_url"/>
             </t>
 
             <div class="o_wslides_course_main">
@@ -201,7 +202,13 @@
 
                             <div class="tab-content py-4 o_wslides_tabs_content mb-4" id="courseMainTabContent">
                                 <div t-att-class="'tab-pane fade %s' % ('show active' if active_tab == 'home' else '')" id="home" role="tabpanel" aria-labelledby="home-tab">
-                                    <div t-if="channel.channel_type == 'training'" class="mb-2 pt-1">
+                                    <!-- ==== Error notification ==== -->
+                                    <div t-if="access_error == 'course_content'" class="alert alert-danger alert-dismissable mb-1" role="alert">
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">×</button>
+                                        You need to join this course to access &quot;<t t-out="access_error_content_name"/>&quot;.
+                                    </div>
+                                    <div t-if="channel.channel_type == 'training' and (channel_frontend_tags or channel.can_upload)"
+                                         class="mb-1 pt-1">
                                         <t t-if="channel_frontend_tags">
                                             <t t-foreach="channel_frontend_tags" t-as="channel_tag">
                                                 <span t-attf-class="badge o_wslides_channel_tag #{'o_tag_color_'+str(channel_tag.color)}" t-esc="channel_tag.name"/>
@@ -238,6 +245,7 @@
 
         <t t-call="website_slides.slide_share_modal">
             <t t-set="record" t-value="channel"/>
+            <t t-set="website_share_url" t-value="channel.website_url"/>
         </t>
     </t>
 </template>
@@ -351,7 +359,7 @@
             <t t-foreach="category_data" t-as="category">
                 <t t-set="category_id" t-value="category['id'] if category['id'] else None"/>
 
-                <li t-if="category['total_slides'] or channel.can_publish" t-att-class="'o_wslides_slide_list_category o_wslides_js_list_item mb-2' if category_id else 'mt-4'" t-att-data-slide-id="category_id" t-att-data-category-id="category_id">
+                <li t-if="category['total_slides'] or channel.can_publish" t-att-class="'o_wslides_slide_list_category o_wslides_js_list_item mb-2' if category_id else 'mt-1'" t-att-data-slide-id="category_id" t-att-data-category-id="category_id">
                     <div t-att-data-category-id="category_id"
                          t-att-class="'o_wslides_slide_list_category_header position-relative d-flex justify-content-between align-items-center mt8 %s %s' % ('bg-white shadow-sm border-bottom-0' if category_id else 'border-0', 'o_wslides_js_category py-0' if channel.can_upload else 'py-2')">
                         <div t-att-class="'d-flex align-items-center pl-3 %s' % ('o_wslides_slides_list_drag' if channel.can_publish else '')">

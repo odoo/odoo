@@ -14,7 +14,7 @@ from odoo.addons.http_routing.models.ir_http import slug, unslug
 from odoo.addons.website.controllers.main import QueryURL
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.website_profile.controllers.main import WebsiteProfile
-from odoo.exceptions import AccessError, ValidationError, UserError
+from odoo.exceptions import AccessError, ValidationError, UserError, MissingError
 from odoo.http import request
 from odoo.osv import expression
 
@@ -420,6 +420,29 @@ class WebsiteSlides(WebsiteProfile):
             ('karma', '>', 0),
             ('website_published', '=', True)], ['id'], limit=3, order='karma desc')
 
+    def _get_user_slide_authorization(self, slide_id):
+        """ Get authorization status for the current user to access the given slide along with some data.
+        :return: Dict in the form:
+        {
+            'status': authorized|not_found|not_authorized,
+            'slide': the slide corresponding to the slide_id (only if status != 'not_found')
+            'channel_id': id of the channel containing the slide (only if status != 'not_found')
+        }
+        """
+        status = 'authorized'
+        try:
+            slide_model = request.env['slide.slide']
+            slide_model.check_access_rights('read')
+            slide = slide_model.browse(slide_id)
+            slide.check_access_rule('read')
+        except (AccessError, MissingError):
+            try:
+                slide = request.env['slide.slide'].sudo().browse([slide_id])
+            except MissingError:
+                return {'status': 'not_found'}
+            status = 'not_authorized'
+        return {'status': status, 'slide': slide, 'channel_id': slide.sudo().channel_id.id}
+
     @http.route([
         '/slides/<model("slide.channel"):channel>',
         '/slides/<model("slide.channel"):channel>/page/<int:page>',
@@ -489,6 +512,16 @@ class WebsiteSlides(WebsiteProfile):
         elif uncategorized:
             query_string = "?search_uncategorized=1"
 
+        errors = {'access_error': False}
+        if request.params.get('access_error') == 'course_content' and request.params.get('access_error_slide_id'):
+            # Access are re-verified to support use case where the user refresh the page after an update of their access
+            user_slide_authorization = self._get_user_slide_authorization(int(request.params.get('access_error_slide_id')))
+            if user_slide_authorization['status'] == 'not_authorized':
+                errors.update({
+                    'access_error': 'course_content',
+                    'access_error_content_name': request.params.get('access_error_slide_name'),
+                })
+
         render_values = self._slide_render_context_base()
         render_values.update({
             'channel': channel,
@@ -507,6 +540,7 @@ class WebsiteSlides(WebsiteProfile):
             'pager': pager,
             # display upload modal
             'enable_slide_upload': 'enable_slide_upload' in kw,
+            ** errors,
             ** self._slide_channel_prepare_review_values(channel),
         })
 
@@ -735,6 +769,24 @@ class WebsiteSlides(WebsiteProfile):
 
         values.pop('channel', None)
         return request.render("website_slides.slide_main", values)
+
+    @http.route('/slides/slide/<int:slide_id>/share', type='http', auth="public", website=True, sitemap=False)
+    def slide_shared_view(self, slide_id, **kwargs):
+        user_slide_authorization = self._get_user_slide_authorization(slide_id)
+        status = user_slide_authorization['status']
+        if status == 'not_found':
+            raise werkzeug.exceptions.NotFound()
+
+        if status == 'authorized':
+            return request.redirect(
+                '%s?%s' % (user_slide_authorization['slide'].website_url, werkzeug.urls.url_encode(kwargs)))
+
+        channel_id = user_slide_authorization['channel_id']
+        return request.redirect('/slides/%s?%s' % (channel_id, werkzeug.urls.url_encode({
+            'access_error': 'course_content',
+            'access_error_slide_id': slide_id,
+            'access_error_slide_name': user_slide_authorization['slide'].name,
+        })))
 
     @http.route('''/slides/slide/<model("slide.slide"):slide>/pdf_content''',
                 type='http', auth="public", website=True, sitemap=False)
