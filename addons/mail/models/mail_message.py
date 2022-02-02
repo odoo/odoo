@@ -679,6 +679,9 @@ class Message(models.Model):
         thread = self.env[self.model].browse(self.res_id)
         thread._check_can_update_message_content(self)
         self.body = body
+        # if the message is starred, unstar it when it is deleted (i.e. when `body` is empty)
+        if not self.body and self.starred:
+            self.toggle_message_starred()
         if not attachment_ids:
             self.attachment_ids._delete_and_notify()
         else:
