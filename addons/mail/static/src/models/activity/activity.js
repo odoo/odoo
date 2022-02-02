@@ -4,6 +4,8 @@ import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
 import { clear, insert, unlink, unlinkAll } from '@mail/model/model_field_command';
 
+const { markup } = owl;
+
 registerModel({
     name: 'Activity',
     identifyingFields: ['id'],

@@ -25,7 +25,7 @@ Object.assign(ComposerSuggestionList, {
     },
     props: {
         composerViewLocalId: String,
-        isBelow: Boolean,
+        isBelow: { type: Boolean, optional: true },
     },
     template: 'mail.ComposerSuggestionList',
 });

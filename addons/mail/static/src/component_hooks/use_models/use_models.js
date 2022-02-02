@@ -2,7 +2,7 @@
 
 import { Listener } from '@mail/model/model_listener';
 
-const { useComponent } = owl;
+const { onRendered, onWillDestroy, onWillRender, useComponent } = owl;
 
 /**
  * This hook provides support for automatically re-rendering when used records
@@ -24,23 +24,21 @@ export function useModels() {
         name: `useModels() of ${component}`,
         onChange: () => component.render(),
     });
-    const __render = component.__render;
-    component.__render = fiber => {
+    onWillRender(() => {
         if (modelManager) {
             modelManager.startListening(listener);
         }
-        __render.call(component, fiber);
+    });
+    onRendered(() => {
         if (modelManager) {
             modelManager.stopListening(listener);
         }
-    };
-    const __destroy = component.__destroy;
-    component.__destroy = parent => {
+    });
+    onWillDestroy(() => {
         if (modelManager) {
             modelManager.removeListener(listener);
         }
-        __destroy.call(component, parent);
-    };
+    });
     modelManager.messagingCreatedPromise.then(() => {
         component.render();
     });

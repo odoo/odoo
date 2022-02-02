@@ -2,7 +2,7 @@
 
 import { afterEach, afterNextRender, beforeEach, start } from '@mail/utils/test_utils';
 import { editSearchBar } from '@web/../tests/core/commands/command_service_tests';
-import { click, nextTick, patchWithCleanup, triggerHotkey } from "@web/../tests/helpers/utils";
+import { click, getFixture, nextTick, patchWithCleanup, triggerHotkey } from "@web/../tests/helpers/utils";
 import { browser } from '@web/core/browser/browser';
 import { commandService } from "@web/core/commands/command_service";
 import { registry } from "@web/core/registry";
@@ -41,10 +41,12 @@ QUnit.module('mail', {}, function () {
             { id: 23, name: "User 3", partner_id: 13 },
         );
 
+        const target = getFixture();
         const { widget: webClient } = await start({
                 data: this.data,
                 hasChatWindow: true,
                 hasWebClient: true,
+                target,
             });
         triggerHotkey("control+k");
         await nextTick();
@@ -52,7 +54,7 @@ QUnit.module('mail', {}, function () {
         // Switch to partners
         await editSearchBar("@");
         assert.deepEqual(
-            [...webClient.el.querySelectorAll(".o_command_palette .o_command")].map((el) => el.textContent),
+            [...target.querySelectorAll(".o_command_palette .o_command")].map((el) => el.textContent),
             [
                 "Partner 1p1@odoo.com",
                 "Partner 2p2@odoo.com",
@@ -63,8 +65,6 @@ QUnit.module('mail', {}, function () {
         await afterNextRender(() => click(document.body, ".o_command.focused"));
         assert.containsOnce(document.body, ".o_ChatWindow");
         assert.strictEqual(document.querySelector(".o_ChatWindow .o_ChatWindowHeader_name").textContent, "Partner 1");
-
-        webClient.destroy();
     });
 
     QUnit.test('open the chatWindow of a channel from the command palette', async function (assert) {
@@ -80,10 +80,12 @@ QUnit.module('mail', {}, function () {
             name: "project",
             members: [this.data.currentPartnerId],
         });
+        const target = getFixture();
         const { widget: webClient } = await start({
                 data: this.data,
                 hasChatWindow: true,
                 hasWebClient: true,
+                target,
             });
         triggerHotkey("control+k");
         await nextTick();
@@ -91,7 +93,7 @@ QUnit.module('mail', {}, function () {
         // Switch to channels
         await editSearchBar("#");
         assert.deepEqual(
-            [...webClient.el.querySelectorAll(".o_command_palette .o_command")].map((el) => el.textContent),
+            [...target.querySelectorAll(".o_command_palette .o_command")].map((el) => el.textContent),
             [
                 "general",
                 "project"
@@ -101,7 +103,5 @@ QUnit.module('mail', {}, function () {
         await afterNextRender(() => click(document.body, ".o_command.focused"));
         assert.containsOnce(document.body, ".o_ChatWindow");
         assert.strictEqual(document.querySelector(".o_ChatWindow .o_ChatWindowHeader_name").textContent, "general");
-
-        webClient.destroy();
     });
 });

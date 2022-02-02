@@ -10,7 +10,7 @@ export class DiscussSidebarCategory extends Component {
      * @returns {DiscussSidebarCategory}
      */
     get category() {
-        return this.messaging.models['DiscussSidebarCategory'].get(this.props.localId);
+        return this.messaging && this.messaging.models['DiscussSidebarCategory'].get(this.props.localId);
     }
 }
 

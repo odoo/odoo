@@ -1,8 +1,7 @@
 /** @odoo-module **/
 
 import core from 'web.core';
-
-const { escape } = owl;
+import { escape } from '@web/core/utils/strings';
 
 var _t = core._t;
 
