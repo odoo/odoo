@@ -389,7 +389,7 @@ class View(models.Model):
                     (request.website.is_public_user() or self.id not in request.session.get('views_unlock', [])):
                 pwd = request.params.get('visibility_password')
                 if pwd and self.env.user._crypt_context().verify(
-                        pwd, self.sudo().visibility_password):
+                        pwd, self.visibility_password):
                     request.session.setdefault('views_unlock', list()).append(self.id)
                 else:
                     error = werkzeug.exceptions.Forbidden('website_visibility_password_required')
@@ -468,6 +468,10 @@ class View(models.Model):
                 translatable=translatable,
                 editable=editable,
             ))
+
+            # fetch non-prefetchable fields of the mixin SeoMetadata, as they
+            # will be read later in non-sudo mode
+            self.sudo().read(['website_meta_title', 'website_meta_description', 'website_meta_keywords'])
 
         return qcontext
 
