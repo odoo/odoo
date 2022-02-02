@@ -451,6 +451,7 @@ class AccountMove(models.Model):
             'analytic_account_id': tax_line.tax_line_id.analytic and tax_line.analytic_account_id.id,
             'tax_ids': [(6, 0, tax_line.tax_ids.ids)],
             'tag_ids': [(6, 0, tax_line.tag_ids.ids)],
+            'partner_id': tax_line.partner_id.id,
         }
 
     @api.model
@@ -471,6 +472,7 @@ class AccountMove(models.Model):
             'analytic_account_id': tax_vals['analytic'] and base_line.analytic_account_id.id,
             'tax_ids': [(6, 0, tax_vals['tax_ids'])],
             'tag_ids': [(6, 0, tax_vals['tag_ids'])],
+            'partner_id': base_line.partner_id.id,
         }
 
     def _get_tax_force_sign(self):
@@ -667,7 +669,6 @@ class AccountMove(models.Model):
                     **to_write_on_line,
                     'name': tax.name,
                     'move_id': self.id,
-                    'partner_id': line.partner_id.id,
                     'company_id': line.company_id.id,
                     'company_currency_id': line.company_currency_id.id,
                     'quantity': 1.0,
@@ -1615,7 +1616,7 @@ class AccountMove(models.Model):
         self.ensure_one()
 
         line_currency = self.currency_id if self.currency_id != self.company_id.currency_id else False
-        for line in self.line_ids:
+        for line in self.line_ids.filtered(lambda l: not l.display_type):
             # Do something only on invoice lines.
             if line.exclude_from_invoice_tab:
                 continue
@@ -1623,7 +1624,7 @@ class AccountMove(models.Model):
             # Shortcut to load the demo data.
             # Doing line.account_id triggers a default_get(['account_id']) that could returns a result.
             # A section / note must not have an account_id set.
-            if not line._cache.get('account_id') and not line.display_type and not line._origin:
+            if not line._cache.get('account_id') and not line._origin:
                 line.account_id = line._get_computed_account()
                 if not line.account_id:
                     if self.is_sale_document(include_receipts=True):
