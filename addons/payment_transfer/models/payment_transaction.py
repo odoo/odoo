@@ -31,21 +31,20 @@ class PaymentTransaction(models.Model):
             'reference': self.reference,
         }
 
-    @api.model
-    def _get_tx_from_feedback_data(self, provider, data):
+    def _get_tx_from_notification_data(self, provider, notification_data):
         """ Override of payment to find the transaction based on transfer data.
 
         :param str provider: The provider of the acquirer that handled the transaction
-        :param dict data: The transfer feedback data
+        :param dict notification_data: The notification feedback data
         :return: The transaction if found
         :rtype: recordset of `payment.transaction`
         :raise: ValidationError if the data match no transaction
         """
-        tx = super()._get_tx_from_feedback_data(provider, data)
-        if provider != 'transfer':
+        tx = super()._get_tx_from_notification_data(provider, notification_data)
+        if provider != 'transfer' or len(tx) == 1:
             return tx
 
-        reference = data.get('reference')
+        reference = notification_data.get('reference')
         tx = self.search([('reference', '=', reference), ('provider', '=', 'transfer')])
         if not tx:
             raise ValidationError(
@@ -53,15 +52,15 @@ class PaymentTransaction(models.Model):
             )
         return tx
 
-    def _process_feedback_data(self, data):
+    def _process_notification_data(self, notification_data):
         """ Override of payment to process the transaction based on transfer data.
 
         Note: self.ensure_one()
 
-        :param dict data: The transfer feedback data
+        :param dict notification_data: The transfer data
         :return: None
         """
-        super()._process_feedback_data(data)
+        super()._process_notification_data(notification_data)
         if self.provider != 'transfer':
             return
 

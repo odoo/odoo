@@ -50,7 +50,7 @@ class PaypalController(http.Controller):
             pass  # Redirect them to the status page to browse the (currently) draft transaction
         else:
             # Check the origin of the notification
-            tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_feedback_data(
+            tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
                 'paypal', pdt_data
             )
             try:
@@ -59,9 +59,7 @@ class PaypalController(http.Controller):
                 _logger.exception("could not verify the origin of the PDT; discarding it")
             else:
                 # Handle the notification data
-                request.env['payment.transaction'].sudo()._handle_feedback_data(
-                    'paypal', notification_data
-                )
+                tx_sudo._handle_notification_data('paypal', notification_data)
 
         return request.redirect('/payment/status')
 
@@ -144,13 +142,13 @@ class PaypalController(http.Controller):
         _logger.info("notification received from PayPal with data:\n%s", pprint.pformat(data))
         try:
             # Check the origin and integrity of the notification
-            tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_feedback_data(
+            tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
                 'paypal', data
             )
             self._verify_webhook_notification_origin(data, tx_sudo)
 
             # Handle the notification data
-            request.env['payment.transaction'].sudo()._handle_feedback_data('paypal', data)
+            tx_sudo._handle_notification_data('paypal', data)
         except ValidationError:  # Acknowledge the notification to avoid getting spammed
             _logger.exception("unable to handle the notification data; skipping to acknowledge")
         return ''

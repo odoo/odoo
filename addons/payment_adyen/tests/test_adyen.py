@@ -94,41 +94,34 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
             '._verify_notification_signature'
         ) as signature_check_mock, patch(
             'odoo.addons.payment.models.payment_transaction.PaymentTransaction'
-            '._handle_feedback_data'
+            '._handle_notification_data'
         ):
             self._make_json_request(url, data=self.WEBHOOK_NOTIFICATION_BATCH_DATA)
             self.assertEqual(signature_check_mock.call_count, 1)
 
     def test_accept_webhook_notification_with_valid_signature(self):
         """ Test the verification of a webhook notification with a valid signature. """
+        tx = self.create_transaction('direct')
         self._assert_does_not_raise(
             Forbidden,
             AdyenController._verify_notification_signature,
             self.WEBHOOK_NOTIFICATION_PAYLOAD,
-            self.acquirer.adyen_hmac_key,
+            tx,
         )
 
     @mute_logger('odoo.addons.payment_adyen.controllers.main')
     def test_reject_webhook_notification_with_missing_signature(self):
         """ Test the verification of a webhook notification with a missing signature. """
         payload = dict(self.WEBHOOK_NOTIFICATION_PAYLOAD, additionalData={'hmacSignature': None})
-        self.assertRaises(
-            Forbidden,
-            AdyenController._verify_notification_signature,
-            payload,
-            self.acquirer.adyen_hmac_key,
-        )
+        tx = self.create_transaction('direct')
+        self.assertRaises(Forbidden, AdyenController._verify_notification_signature, payload, tx)
 
     @mute_logger('odoo.addons.payment_adyen.controllers.main')
     def test_reject_webhook_notification_with_invalid_signature(self):
         """ Test the verification of a webhook notification with an invalid signature. """
         payload = dict(self.WEBHOOK_NOTIFICATION_PAYLOAD, additionalData={'hmacSignature': 'dummy'})
-        self.assertRaises(
-            Forbidden,
-            AdyenController._verify_notification_signature,
-            payload,
-            self.acquirer.adyen_hmac_key,
-        )
+        tx = self.create_transaction('direct')
+        self.assertRaises(Forbidden, AdyenController._verify_notification_signature, payload, tx)
 
     def test_adyen_neutralize(self):
         self.env['payment.acquirer']._neutralize()

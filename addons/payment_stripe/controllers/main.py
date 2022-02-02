@@ -29,7 +29,7 @@ class StripeController(http.Controller):
         :param dict data: The GET params appended to the URL in `_stripe_create_checkout_session`
         """
         # Retrieve the tx based on the tx reference included in the return url
-        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_feedback_data(
+        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
             'stripe', data
         )
 
@@ -38,10 +38,10 @@ class StripeController(http.Controller):
             f'payment_intents/{tx_sudo.stripe_payment_intent}', method='GET'
         )
         _logger.info("received payment_intents response:\n%s", pprint.pformat(payment_intent))
-        self._include_payment_intent_in_feedback_data(payment_intent, data)
+        self._include_payment_intent_in_notification_data(payment_intent, data)
 
-        # Handle the feedback data crafted with Stripe API objects
-        request.env['payment.transaction'].sudo()._handle_feedback_data('stripe', data)
+        # Handle the notification data crafted with Stripe API objects
+        tx_sudo._handle_notification_data('stripe', data)
 
         # Redirect the user to the status page
         return request.redirect('/payment/status')
@@ -53,7 +53,7 @@ class StripeController(http.Controller):
         :param dict data: The GET params appended to the URL in `_stripe_create_checkout_session`
         """
         # Retrieve the transaction based on the tx reference included in the return url
-        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_feedback_data(
+        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
             'stripe', data
         )
 
@@ -64,10 +64,12 @@ class StripeController(http.Controller):
             method='GET'
         )
         _logger.info("received checkout/session response:\n%s", pprint.pformat(checkout_session))
-        self._include_setup_intent_in_feedback_data(checkout_session.get('setup_intent', {}), data)
+        self._include_setup_intent_in_notification_data(
+            checkout_session.get('setup_intent', {}), data
+        )
 
-        # Handle the feedback data crafted with Stripe API objects
-        request.env['payment.transaction'].sudo()._handle_feedback_data('stripe', data)
+        # Handle the notification data crafted with Stripe API objects
+        tx_sudo._handle_notification_data('stripe', data)
 
         # Redirect the user to the status page
         return request.redirect('/payment/status')
@@ -87,7 +89,7 @@ class StripeController(http.Controller):
 
                 # Check the integrity of the event
                 data = {'reference': checkout_session['client_reference_id']}
-                tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_feedback_data(
+                tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
                     'stripe', data
                 )
                 self._verify_notification_signature(tx_sudo)
@@ -99,7 +101,7 @@ class StripeController(http.Controller):
                     _logger.info(
                         "received payment_intents response:\n%s", pprint.pformat(payment_intent)
                     )
-                    self._include_payment_intent_in_feedback_data(payment_intent, data)
+                    self._include_payment_intent_in_notification_data(payment_intent, data)
 
                 # Fetch the SetupIntent and PaymentMethod objects from Stripe
                 if checkout_session.get('setup_intent'):  # Can be None
@@ -111,27 +113,27 @@ class StripeController(http.Controller):
                     _logger.info(
                         "received setup_intents response:\n%s", pprint.pformat(setup_intent)
                     )
-                    self._include_setup_intent_in_feedback_data(setup_intent, data)
+                    self._include_setup_intent_in_notification_data(setup_intent, data)
 
-                # Handle the feedback data crafted with Stripe API objects as a regular feedback
-                request.env['payment.transaction'].sudo()._handle_feedback_data('stripe', data)
+                # Handle the notification data crafted with Stripe API objects
+                tx_sudo._handle_notification_data('stripe', data)
         except ValidationError:  # Acknowledge the notification to avoid getting spammed
             _logger.exception("unable to handle the notification data; skipping to acknowledge")
         return ''
 
     @staticmethod
-    def _include_payment_intent_in_feedback_data(payment_intent, data):
-        data.update({'payment_intent': payment_intent})
+    def _include_payment_intent_in_notification_data(payment_intent, notification_data):
+        notification_data.update({'payment_intent': payment_intent})
         if payment_intent.get('charges', {}).get('total_count', 0) > 0:
             charge = payment_intent['charges']['data'][0]  # Use the latest charge object
-            data.update({
+            notification_data.update({
                 'charge': charge,
                 'payment_method': charge.get('payment_method_details'),
             })
 
     @staticmethod
-    def _include_setup_intent_in_feedback_data(setup_intent, data):
-        data.update({
+    def _include_setup_intent_in_notification_data(setup_intent, notification_data):
+        notification_data.update({
             'setup_intent': setup_intent,
             'payment_method': setup_intent.get('payment_method')
         })

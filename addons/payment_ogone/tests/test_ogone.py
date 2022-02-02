@@ -122,7 +122,7 @@ class OgoneTest(OgoneCommon, PaymentHttpCommon):
             '._verify_notification_signature'
         ) as signature_check_mock, patch(
             'odoo.addons.payment.models.payment_transaction.PaymentTransaction'
-            '._handle_feedback_data'
+            '._handle_notification_data'
         ):
             self._make_http_post_request(url, data=self.NOTIFICATION_DATA)
             self.assertEqual(signature_check_mock.call_count, 1)

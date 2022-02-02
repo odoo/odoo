@@ -49,21 +49,20 @@ class PaymentTransaction(models.Model):
         )
         return rendering_values
 
-    @api.model
-    def _get_tx_from_feedback_data(self, provider, data):
+    def _get_tx_from_notification_data(self, provider, notification_data):
         """ Override of payment to find the transaction based on Buckaroo data.
 
         :param str provider: The provider of the acquirer that handled the transaction
-        :param dict data: The normalized feedback data sent by the provider
+        :param dict notification_data: The normalized notification data sent by the provider
         :return: The transaction if found
         :rtype: recordset of `payment.transaction`
         :raise: ValidationError if the data match no transaction
         """
-        tx = super()._get_tx_from_feedback_data(provider, data)
-        if provider != 'buckaroo':
+        tx = super()._get_tx_from_notification_data(provider, notification_data)
+        if provider != 'buckaroo' or len(tx) == 1:
             return tx
 
-        reference = data.get('brq_invoicenumber')
+        reference = notification_data.get('brq_invoicenumber')
         tx = self.search([('reference', '=', reference), ('provider', '=', 'buckaroo')])
         if not tx:
             raise ValidationError(
@@ -72,27 +71,27 @@ class PaymentTransaction(models.Model):
 
         return tx
 
-    def _process_feedback_data(self, data):
+    def _process_notification_data(self, notification_data):
         """ Override of payment to process the transaction based on Buckaroo data.
 
         Note: self.ensure_one()
 
-        :param dict data: The normalized feedback data sent by the provider
+        :param dict notification_data: The normalized notification data sent by the provider
         :return: None
         :raise: ValidationError if inconsistent data were received
         """
-        super()._process_feedback_data(data)
+        super()._process_notification_data(notification_data)
         if self.provider != 'buckaroo':
             return
 
-        transaction_keys = data.get('brq_transactions')
+        transaction_keys = notification_data.get('brq_transactions')
         if not transaction_keys:
             raise ValidationError("Buckaroo: " + _("Received data with missing transaction keys"))
         # BRQ_TRANSACTIONS can hold multiple, comma-separated, tx keys. In practice, it holds only
         # one reference. So we split for semantic correctness and keep the first transaction key.
         self.acquirer_reference = transaction_keys.split(',')[0]
 
-        status_code = int(data.get('brq_statuscode') or 0)
+        status_code = int(notification_data.get('brq_statuscode') or 0)
         if status_code in STATUS_CODES_MAPPING['pending']:
             self._set_pending()
         elif status_code in STATUS_CODES_MAPPING['done']:

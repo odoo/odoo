@@ -65,35 +65,37 @@ class PaymentTransaction(models.Model):
             'webhookUrl': f'{webhook_url}?ref={self.reference}',
         }
 
-    def _get_tx_from_feedback_data(self, provider, data):
+    def _get_tx_from_notification_data(self, provider, notification_data):
         """ Override of payment to find the transaction based on Mollie data.
 
         :param str provider: The provider of the acquirer that handled the transaction
-        :param dict data: The feedback data sent by the provider
+        :param dict notification_data: The notification data sent by the provider
         :return: The transaction if found
         :rtype: recordset of `payment.transaction`
         :raise: ValidationError if the data match no transaction
         """
-        tx = super()._get_tx_from_feedback_data(provider, data)
-        if provider != 'mollie':
+        tx = super()._get_tx_from_notification_data(provider, notification_data)
+        if provider != 'mollie' or len(tx) == 1:
             return tx
 
-        tx = self.search([('reference', '=', data.get('ref')), ('provider', '=', 'mollie')])
+        tx = self.search(
+            [('reference', '=', notification_data.get('ref')), ('provider', '=', 'mollie')]
+        )
         if not tx:
-            raise ValidationError(
-                "Mollie: " + _("No transaction found matching reference %s.", data.get('ref'))
-            )
+            raise ValidationError("Mollie: " + _(
+                "No transaction found matching reference %s.", notification_data.get('ref')
+            ))
         return tx
 
-    def _process_feedback_data(self, data):
+    def _process_notification_data(self, notification_data):
         """ Override of payment to process the transaction based on Mollie data.
 
         Note: self.ensure_one()
 
-        :param dict data: The feedback data sent by the provider
+        :param dict notification_data: The notification data sent by the provider
         :return: None
         """
-        super()._process_feedback_data(data)
+        super()._process_notification_data(notification_data)
         if self.provider != 'mollie':
             return
 

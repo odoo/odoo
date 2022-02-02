@@ -24,26 +24,22 @@ class PaymentTransaction(models.Model):
         if self.provider != 'test':
             return
 
-        # The payment request response would normally transit through the controller but in the end,
-        # all that interests us is the reference. To avoid making a localhost request, we bypass the
-        # controller and handle the fake feedback data directly.
-        self._handle_feedback_data('test', {'reference': self.reference})
+        self._handle_notification_data('test', None)
 
-    @api.model
-    def _get_tx_from_feedback_data(self, provider, data):
+    def _get_tx_from_notification_data(self, provider, notification_data):
         """ Override of payment to find the transaction based on dummy data.
 
         :param str provider: The provider of the acquirer that handled the transaction
-        :param dict data: The dummy feedback data
+        :param dict notification_data: The dummy notification data
         :return: The transaction if found
         :rtype: recordset of `payment.transaction`
         :raise: ValidationError if the data match no transaction
         """
-        tx = super()._get_tx_from_feedback_data(provider, data)
-        if provider != 'test':
+        tx = super()._get_tx_from_notification_data(provider, notification_data)
+        if provider != 'test' or len(tx) == 1:
             return tx
 
-        reference = data.get('reference')
+        reference = notification_data.get('reference')
         tx = self.search([('reference', '=', reference), ('provider', '=', 'test')])
         if not tx:
             raise ValidationError(
@@ -51,24 +47,25 @@ class PaymentTransaction(models.Model):
             )
         return tx
 
-    def _process_feedback_data(self, data):
+    def _process_notification_data(self, notification_data):
         """ Override of payment to process the transaction based on dummy data.
 
         Note: self.ensure_one()
 
-        :param dict data: The dummy feedback data
+        :param dict notification_data: The dummy notification data
         :return: None
         :raise: ValidationError if inconsistent data were received
         """
-        super()._process_feedback_data(data)
+        super()._process_notification_data(notification_data)
         if self.provider != "test":
             return
 
         self._set_done()  # Dummy transactions are always successful
         if self.tokenize:
+            payment_details_short = notification_data['cc_summary']
             token = self.env['payment.token'].create({
                 'acquirer_id': self.acquirer_id.id,
-                'name': payment_utils.build_token_name(payment_details_short=data['cc_summary']),
+                'name': payment_utils.build_token_name(payment_details_short=payment_details_short),
                 'partner_id': self.partner_id.id,
                 'acquirer_ref': 'fake acquirer reference',
                 'verified': True,
