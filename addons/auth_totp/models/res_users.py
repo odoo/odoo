@@ -35,11 +35,18 @@ class Users(models.Model):
         type(self).SELF_READABLE_FIELDS = self.SELF_READABLE_FIELDS + ['totp_enabled', 'totp_trusted_device_ids']
         return init_res
 
+    def _mfa_type(self):
+        r = super()._mfa_type()
+        if r is not None:
+            return r
+        if self.totp_enabled:
+            return 'totp'
+
     def _mfa_url(self):
         r = super()._mfa_url()
         if r is not None:
             return r
-        if self.totp_enabled:
+        if self._mfa_type() == 'totp':
             return '/web/login/totp'
 
     @api.depends('totp_secret')
