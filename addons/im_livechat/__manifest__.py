@@ -80,7 +80,7 @@ Help your customers with this chat, and analyse their feedback.
             'web/static/lib/qweb/qweb2.js',
             # Odoo JS Framework
             'web/static/lib/owl/owl.js',
-            'web/static/src/owl_next_adapter.js',
+            'web/static/src/owl2compat/*.js',
             'web/static/src/legacy/js/promise_extension.js',
             'web/static/src/boot.js',
             'web/static/src/core/assets.js',

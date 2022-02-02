@@ -17,6 +17,7 @@
                 <t t-if="!suggestedRecipientInfo.partner">
                     <FormViewDialogComponentAdapter
                         Component="FormViewDialog"
+                        setFormViewDialogWidget="setFormViewDialogWidget"
                         params="{
                             context: {
                                 active_id: suggestedRecipientInfo.thread.id,
@@ -33,7 +34,6 @@
                             res_model: 'res.partner',
                             title: PLEASE_COMPLETE_CUSTOMER_S_INFORMATION,
                         }"
-                        t-ref="dialog"
                     />
                 </t>
             </t>

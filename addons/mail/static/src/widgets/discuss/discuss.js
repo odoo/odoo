@@ -4,7 +4,7 @@ import { DiscussContainer } from "@mail/components/discuss_container/discuss_con
 
 import AbstractAction from 'web.AbstractAction';
 
-const { Component } = owl;
+const { App, Component } = owl;
 
 export const DiscussWidget = AbstractAction.extend({
     template: 'mail.widgets.Discuss',
@@ -27,7 +27,7 @@ export const DiscussWidget = AbstractAction.extend({
         this.discuss = undefined;
         this.options = options;
 
-        this.component = undefined;
+        this.app = undefined;
 
         this._lastPushStateActiveThread = null;
         this.env = Component.env;
@@ -45,9 +45,9 @@ export const DiscussWidget = AbstractAction.extend({
      * @override {web.AbstractAction}
      */
     destroy() {
-        if (this.component) {
-            this.component.destroy();
-            this.component = undefined;
+        if (this.app) {
+            this.app.destroy();
+            this.app = undefined;
         }
         if (this.$buttons) {
             this.$buttons.off().remove();
@@ -57,13 +57,12 @@ export const DiscussWidget = AbstractAction.extend({
     /**
      * @override {web.AbstractAction}
      */
-    on_attach_callback() {
+    async on_attach_callback() {
         this._super(...arguments);
-        if (this.component) {
+        if (this.app) {
             // prevent twice call to on_attach_callback (FIXME)
             return;
         }
-        this.component = new DiscussContainer();
         this._pushStateActionManagerEventListener = ev => {
             ev.stopPropagation();
             if (this._lastPushStateActiveThread === this.discuss.thread) {
@@ -84,17 +83,22 @@ export const DiscussWidget = AbstractAction.extend({
             'o-show-rainbow-man',
             this._showRainbowManEventListener
         );
-        return this.component.mount(this.el);
+
+        this.app = new App(DiscussContainer, {
+            env: owl.Component.env,
+            templates: window.__ODOO_TEMPLATES__,
+        });
+        await this.app.mount(this.el);
     },
     /**
      * @override {web.AbstractAction}
      */
     on_detach_callback() {
         this._super(...arguments);
-        if (this.component) {
-            this.component.destroy();
+        if (this.app) {
+            this.app.destroy();
         }
-        this.component = undefined;
+        this.app = undefined;
         this.el.removeEventListener(
             'o-push-state-action-manager',
             this._pushStateActionManagerEventListener

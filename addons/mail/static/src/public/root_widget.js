@@ -3,9 +3,7 @@
  * TourManager so it can get access to _trigger_up.
  */
 odoo.define("root.widget", function (require) {
-    const { ComponentAdapter } = require("web.OwlCompatibility");
-
+    const { standaloneAdapter } = require("web.OwlCompatibility");
     const { Component } = owl;
-
-    return new ComponentAdapter(null, { Component });
+    return standaloneAdapter({ Component });
 });

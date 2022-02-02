@@ -2,7 +2,7 @@
 
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
-const { Component, onMounted, onWillUnmount } = owl;
+const { Component, onMounted, onWillUnmount, useEffect } = owl;
 
 export class AutocompleteInput extends Component {
 
@@ -13,6 +13,12 @@ export class AutocompleteInput extends Component {
         super.setup();
         onMounted(() => this._mounted());
         onWillUnmount(() => this._willUnmount());
+        useEffect(() => {
+            if (this.props.inputRef) {
+                this.props.inputRef.el = this.root.el;
+                return () => this.props.inputRef.el = null;
+            }
+        })
     }
 
     _mounted() {
@@ -71,13 +77,6 @@ export class AutocompleteInput extends Component {
             return false;
         }
         return element.contains(node);
-    }
-
-    focus() {
-        if (!this.root.el) {
-            return;
-        }
-        this.root.el.focus();
     }
 
     //--------------------------------------------------------------------------
@@ -147,6 +146,7 @@ Object.assign(AutocompleteInput, {
         isFocusOnMount: false,
         isHtml: false,
         placeholder: '',
+        onFocusin: () => {},
     },
     props: {
         customClass: {
@@ -174,6 +174,10 @@ Object.assign(AutocompleteInput, {
         },
         source: {
             type: Function,
+            optional: true,
+        },
+        inputRef: {
+            type: { el: Object },
             optional: true,
         },
     },

@@ -43,8 +43,7 @@
         <t t-if="discussView.discuss.threadView">
             <t name="beforeThread"/>
             <ThreadView
-                className="'o_Discuss_thread'"
-                t-att-class="{ 'o-mobile': messaging.device.isMobile }"
+                className="'o_Discuss_thread' + (messaging.device.isMobile ? ' o-mobile' : '')"
                 hasComposerCurrentPartnerAvatar="!messaging.device.isMobile"
                 hasComposerDiscardButton="discussView.discuss.thread === messaging.inbox"
                 hasComposerThreadName="discussView.discuss.thread === messaging.inbox"

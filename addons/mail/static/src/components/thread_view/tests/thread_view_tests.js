@@ -8,6 +8,7 @@ import {
     dragenterFiles,
     start,
 } from '@mail/utils/test_utils';
+import { nextTick } from '@web/../tests/helpers/utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -18,9 +19,9 @@ QUnit.module('thread_view_tests.js', {
 
         this.start = async params => {
             const res = await start({ ...params, data: this.data });
-            const { afterEvent, components, env, widget } = res;
+            const { afterEvent, apps, env, widget } = res;
             this.afterEvent = afterEvent;
-            this.components = components;
+            this.apps = apps;
             this.env = env;
             this.widget = widget;
             return res;

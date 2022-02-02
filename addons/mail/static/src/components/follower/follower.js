@@ -51,6 +51,9 @@ export class Follower extends Component {
 }
 
 Object.assign(Follower, {
+    defaultProps: {
+        onClick: () => {},
+    },
     props: {
         followerLocalId: String,
         onClick: {

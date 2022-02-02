@@ -8,7 +8,7 @@ import { OnChange } from '@mail/model/model_onchange';
 import { addLink, escapeAndCompactTextContent, parseAndTransform } from '@mail/js/utils';
 import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 
-const { escape } = owl;
+import { escape } from '@web/core/utils/strings';
 
 registerModel({
     name: 'ComposerView',

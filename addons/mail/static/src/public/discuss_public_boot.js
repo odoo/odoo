@@ -24,13 +24,12 @@ import {
 } from '@web/legacy/utils';
 import * as legacySession from 'web.session';
 
-const { Component, config, mount, whenReady } = owl;
+const { App, Component, mount, whenReady } = owl;
 
 Component.env = legacyEnv;
 
 (async function boot() {
     await whenReady();
-    config.mode = Component.env.isDebug() ? 'dev' : 'prod';
     AbstractService.prototype.deployServices(Component.env);
     const serviceRegistry = registry.category('services');
     serviceRegistry.add('legacy_rpc', makeLegacyRpcService(Component.env));
@@ -39,7 +38,6 @@ Component.env = legacyEnv;
     serviceRegistry.add('legacy_crash_manager', makeLegacyCrashManagerService(Component.env));
     serviceRegistry.add('legacy_dialog_mapping', makeLegacyDialogMappingService(Component.env));
     await legacySession.is_bound;
-    Component.env.qweb.addTemplates(legacySession.owlTemplates);
     Object.assign(odoo, {
         info: {
             db: session.db,
@@ -54,7 +52,6 @@ Component.env = legacyEnv;
         startServices(env),
         odoo.loadTemplatesPromise.then(processTemplates),
     ]);
-    env.qweb.addTemplates(templates);
     mapLegacyEnvToWowlEnv(Component.env, env);
     odoo.isReady = true;
     legacyServiceRegistry.add('messaging', MessagingService.extend({
@@ -62,7 +59,7 @@ Component.env = legacyEnv;
             autofetchPartnerImStatus: false,
         },
     }));
-    await mount(MainComponentsContainer, { env, target: document.body });
+    await mount(MainComponentsContainer, document.body, { env, templates });
     createAndMountDiscussPublicView();
 })();
 
@@ -70,8 +67,10 @@ async function createAndMountDiscussPublicView() {
     const messaging = await Component.env.services.messaging.get();
     // needed by the attachment viewer
     const DialogManager = getMessagingComponent('DialogManager');
-    const dialogManagerComponent = new DialogManager(null, {});
-    await dialogManagerComponent.mount(document.body);
+    await mount(DialogManager, document.body, {
+        templates: legacySession.owlTemplates,
+        env: Component.env,
+    });
     messaging.models['Thread'].insert(messaging.models['Thread'].convertData(data.channelData));
     const discussPublicView = messaging.models['DiscussPublicView'].create(data.discussPublicViewData);
     if (discussPublicView.shouldDisplayWelcomeViewInitially) {
@@ -80,8 +79,11 @@ async function createAndMountDiscussPublicView() {
         discussPublicView.switchToThreadView();
     }
     const DiscussPublicView = getMessagingComponent('DiscussPublicView');
-    const discussPublicViewComponent = new DiscussPublicView(null, {
-        localId: discussPublicView.localId,
+    await mount(DiscussPublicView, document.body, {
+        templates: legacySession.owlTemplates,
+        env: Component.env,
+        props: {
+            localId: discussPublicView.localId,
+        },
     });
-    await discussPublicViewComponent.mount(document.body);
 }

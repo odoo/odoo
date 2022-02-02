@@ -2,7 +2,7 @@
 
 import { Many2OneAvatarUser } from '@mail/js/m2x_avatar_user';
 import { afterEach, beforeEach, start } from '@mail/utils/test_utils';
-import { click, legacyExtraNextTick, patchWithCleanup, triggerHotkey } from "@web/../tests/helpers/utils";
+import { click, getFixture, legacyExtraNextTick, patchWithCleanup, triggerHotkey } from "@web/../tests/helpers/utils";
 import { createWebClient, doAction } from '@web/../tests/webclient/helpers';
 import { registry } from "@web/core/registry";
 import { makeLegacyCommandService } from "@web/legacy/utils";
@@ -14,6 +14,7 @@ import session from 'web.session';
 import makeTestEnvironment from "web.test_env";
 import { dom, mock, nextTick } from 'web.test_utils';
 
+let target;
 
 QUnit.module('mail', {}, function () {
     QUnit.module('M2XAvatarUser', {
@@ -48,6 +49,8 @@ QUnit.module('mail', {}, function () {
                 { id: 7, name: "Luigi", partner_id: 12 },
                 { id: 23, name: "Yoshi", partner_id: 13 }
             );
+
+            target = getFixture();
         },
         afterEach() {
             afterEach(this);
@@ -431,7 +434,7 @@ QUnit.module('mail', {}, function () {
             'res.users': this.data['res.users'],
         }
         const serverData = { models, views}
-        const webClient = await createWebClient({serverData});
+        const webClient = await createWebClient({ target, serverData });
         await doAction(webClient, {
             res_id: 1,
             type: 'ir.actions.act_window',
@@ -440,25 +443,25 @@ QUnit.module('mail', {}, function () {
             'view_mode': 'form',
             'views': [[false, 'form']],
         });
-        assert.strictEqual(webClient.el.querySelector(".o_m2o_avatar > span").textContent, "Mario")
+        assert.strictEqual(target.querySelector(".o_m2o_avatar > span").textContent, "Mario")
 
         triggerHotkey("control+k")
         await nextTick();
-        const idx = [...webClient.el.querySelectorAll(".o_command")].map(el => el.textContent).indexOf("Assign to ...ALT + I")
+        const idx = [...target.querySelectorAll(".o_command")].map(el => el.textContent).indexOf("Assign to ...ALT + I")
         assert.ok(idx >= 0);
 
-        await click([...webClient.el.querySelectorAll(".o_command")][idx])
+        await click([...target.querySelectorAll(".o_command")][idx])
         await nextTick();
-        assert.deepEqual([...webClient.el.querySelectorAll(".o_command")].map(el => el.textContent), [
+        assert.deepEqual([...target.querySelectorAll(".o_command")].map(el => el.textContent), [
             "Your Company, Mitchell Admin",
             "Public user",
             "Mario",
             "Luigi",
             "Yoshi",
           ])
-        await click(webClient.el, "#o_command_3")
+        await click(target, "#o_command_3")
         await legacyExtraNextTick();
-        assert.strictEqual(webClient.el.querySelector(".o_m2o_avatar > span").textContent, "Luigi")
+        assert.strictEqual(target.querySelector(".o_m2o_avatar > span").textContent, "Luigi")
     });
 
     QUnit.test('many2one_avatar_user widget edited by the smart action "Assign to me"', async function (assert) {
@@ -479,7 +482,7 @@ QUnit.module('mail', {}, function () {
             'res.users': this.data['res.users'],
         }
         const serverData = { models, views}
-        const webClient = await createWebClient({serverData});
+        const webClient = await createWebClient({ target, serverData });
         await doAction(webClient, {
             res_id: 1,
             type: 'ir.actions.act_window',
@@ -488,23 +491,23 @@ QUnit.module('mail', {}, function () {
             'view_mode': 'form',
             'views': [[false, 'form']],
         });
-        assert.strictEqual(webClient.el.querySelector(".o_m2o_avatar > span").textContent, "Mario")
+        assert.strictEqual(target.querySelector(".o_m2o_avatar > span").textContent, "Mario")
         triggerHotkey("control+k")
         await nextTick();
-        const idx = [...webClient.el.querySelectorAll(".o_command")].map(el => el.textContent).indexOf("Assign/unassign to meALT + SHIFT + I")
+        const idx = [...target.querySelectorAll(".o_command")].map(el => el.textContent).indexOf("Assign/unassign to meALT + SHIFT + I")
         assert.ok(idx >= 0);
 
         // Assign me (Luigi)
         triggerHotkey("alt+shift+i")
         await legacyExtraNextTick();
-        assert.strictEqual(webClient.el.querySelector(".o_m2o_avatar > span").textContent, "Luigi")
+        assert.strictEqual(target.querySelector(".o_m2o_avatar > span").textContent, "Luigi")
 
         // Unassign me
         triggerHotkey("control+k");
         await nextTick();
-        await click([...webClient.el.querySelectorAll(".o_command")][idx])
+        await click([...target.querySelectorAll(".o_command")][idx])
         await legacyExtraNextTick();
-        assert.strictEqual(webClient.el.querySelector(".o_m2o_avatar > span").textContent, "")
+        assert.strictEqual(target.querySelector(".o_m2o_avatar > span").textContent, "")
     });
 
     QUnit.test('many2many_avatar_user widget edited by the smart action "Assign to..."', async function (assert) {
@@ -524,7 +527,7 @@ QUnit.module('mail', {}, function () {
             'res.users': this.data['res.users'],
         }
         const serverData = { models, views}
-        const webClient = await createWebClient({serverData});
+        const webClient = await createWebClient({ target, serverData });
         await doAction(webClient, {
             res_id: 1,
             type: 'ir.actions.act_window',
@@ -533,25 +536,25 @@ QUnit.module('mail', {}, function () {
             'view_mode': 'form',
             'views': [[false, 'form']],
         });
-        let userNames = [...webClient.el.querySelectorAll(".o_tag_badge_text")].map((el => el.textContent));
+        let userNames = [...target.querySelectorAll(".o_tag_badge_text")].map((el => el.textContent));
         assert.deepEqual(userNames, ["Mario", "Yoshi"]);
 
         triggerHotkey("control+k")
         await nextTick();
-        const idx = [...webClient.el.querySelectorAll(".o_command")].map(el => el.textContent).indexOf("Assign to ...ALT + I")
+        const idx = [...target.querySelectorAll(".o_command")].map(el => el.textContent).indexOf("Assign to ...ALT + I")
         assert.ok(idx >= 0);
 
-        await click([...webClient.el.querySelectorAll(".o_command")][idx])
+        await click([...target.querySelectorAll(".o_command")][idx])
         await nextTick();
-        assert.deepEqual([...webClient.el.querySelectorAll(".o_command")].map(el => el.textContent), [
+        assert.deepEqual([...target.querySelectorAll(".o_command")].map(el => el.textContent), [
             "Your Company, Mitchell Admin",
             "Public user",
             "Luigi"
           ]);
 
-        await click(webClient.el, "#o_command_2");
+        await click(target, "#o_command_2");
         await legacyExtraNextTick();
-        userNames = [...webClient.el.querySelectorAll(".o_tag_badge_text")].map(el => el.textContent);
+        userNames = [...target.querySelectorAll(".o_tag_badge_text")].map(el => el.textContent);
         assert.deepEqual(userNames, ["Mario", "Yoshi", "Luigi"]);
     });
 
@@ -573,7 +576,7 @@ QUnit.module('mail', {}, function () {
             'res.users': this.data['res.users'],
         }
         const serverData = { models, views}
-        const webClient = await createWebClient({serverData});
+        const webClient = await createWebClient({ target, serverData });
         await doAction(webClient, {
             res_id: 1,
             type: 'ir.actions.act_window',
@@ -582,26 +585,26 @@ QUnit.module('mail', {}, function () {
             'view_mode': 'form',
             'views': [[false, 'form']],
         });
-        let userNames = [...webClient.el.querySelectorAll(".o_tag_badge_text")].map((el => el.textContent));
+        let userNames = [...target.querySelectorAll(".o_tag_badge_text")].map((el => el.textContent));
         assert.deepEqual(userNames, ["Mario", "Yoshi"]);
 
         triggerHotkey("control+k");
         await nextTick();
-        const idx = [...webClient.el.querySelectorAll(".o_command")].map(el => el.textContent).indexOf("Assign/unassign to meALT + SHIFT + I");
+        const idx = [...target.querySelectorAll(".o_command")].map(el => el.textContent).indexOf("Assign/unassign to meALT + SHIFT + I");
         assert.ok(idx >= 0);
 
         // Assign me (Luigi)
         triggerHotkey("alt+shift+i");
         await legacyExtraNextTick();
-        userNames = [...webClient.el.querySelectorAll(".o_tag_badge_text")].map((el => el.textContent));
+        userNames = [...target.querySelectorAll(".o_tag_badge_text")].map((el => el.textContent));
         assert.deepEqual(userNames, ["Mario", "Yoshi", "Luigi"]);
 
         // Unassign me
         triggerHotkey("control+k");
         await nextTick();
-        await click([...webClient.el.querySelectorAll(".o_command")][idx]);
+        await click([...target.querySelectorAll(".o_command")][idx]);
         await legacyExtraNextTick();
-        userNames = [...webClient.el.querySelectorAll(".o_tag_badge_text")].map((el => el.textContent));
+        userNames = [...target.querySelectorAll(".o_tag_badge_text")].map((el => el.textContent));
         assert.deepEqual(userNames, ["Mario", "Yoshi"]);
     });
 

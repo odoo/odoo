@@ -5,12 +5,13 @@ import ActivityView from '@mail/js/views/activity/activity_view';
 import testUtils from 'web.test_utils';
 import domUtils from 'web.dom';
 
-import { legacyExtraNextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
+import { getFixture, legacyExtraNextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
 import { session } from '@web/session';
 import { click } from "@web/../tests/helpers/utils";
 
 let serverData;
+let target;
 
 var createView = testUtils.createView;
 
@@ -116,6 +117,7 @@ QUnit.module('activity view', {
             },
         };
         serverData = { models: this.data };
+        target = getFixture();
     }
 });
 
@@ -397,22 +399,22 @@ QUnit.test("activity view: no group_by_menu and no comparison_menu", async funct
 
     patchWithCleanup(session.user_context, { lang: "zz_ZZ" });
 
-    const webClient = await createWebClient({ serverData, mockRPC , legacyParams: {withLegacyMockServer: true}});
+    const webClient = await createWebClient({ target, serverData, mockRPC , legacyParams: {withLegacyMockServer: true}});
 
     await doAction(webClient, 1);
 
     assert.containsN(
-        webClient,
+        target,
         ".o_search_options .dropdown button:visible",
         2,
         "only two elements should be available in view search"
     );
     assert.isVisible(
-        $(webClient.el).find(".o_search_options .dropdown.o_filter_menu > button"),
+        target.querySelector(".o_search_options .dropdown.o_filter_menu > button"),
         "filter should be available in view search"
     );
     assert.isVisible(
-        $(webClient.el).find(".o_search_options .dropdown.o_favorite_menu > button"),
+        target.querySelector(".o_search_options .dropdown.o_favorite_menu > button"),
         "favorites should be available in view search"
     );
 });
@@ -518,11 +520,11 @@ QUnit.test("Activity view: discard an activity creation dialog", async function 
         }
     };
 
-    const webClient = await createWebClient({ serverData, mockRPC, legacyParams: {withLegacyMockServer: true} });
+    const webClient = await createWebClient({ target, serverData, mockRPC, legacyParams: {withLegacyMockServer: true} });
     await doAction(webClient, 1);
 
     await testUtils.dom.click(
-        $(webClient.el).find(".o_activity_view .o_data_row .o_activity_empty_cell")[0]
+        target.querySelector(".o_activity_view .o_data_row .o_activity_empty_cell")
     );
     await legacyExtraNextTick();
     assert.containsOnce($, ".modal.o_technical_modal", "Activity Modal should be opened");
@@ -574,14 +576,14 @@ QUnit.test('Activity view: many2one_avatar_user widget in activity view', async 
         'task,false,search': '<search></search>'
     };
 
-    const webClient = await createWebClient({ serverData, legacyParams: { withLegacyMockServer: true } });
+    const webClient = await createWebClient({ target, serverData, legacyParams: { withLegacyMockServer: true } });
     await doAction(webClient, 1);
 
     await legacyExtraNextTick();
-    assert.containsN(webClient, '.o_m2o_avatar', 2);
-    assert.containsOnce(webClient, 'tr[data-res-id=13] .o_m2o_avatar > img[src="/web/image/res.users/1/avatar_128"]',
+    assert.containsN(target, '.o_m2o_avatar', 2);
+    assert.containsOnce(target, 'tr[data-res-id=13] .o_m2o_avatar > img[src="/web/image/res.users/1/avatar_128"]',
         "should have m2o avatar image");
-    assert.containsNone(webClient, '.o_m2o_avatar > span',
+    assert.containsNone(target, '.o_m2o_avatar > span',
         "should not have text on many2one_avatar_user if onlyImage node option is passed");
 });
 
@@ -645,7 +647,7 @@ QUnit.test("Schedule activity dialog uses the same search view as activity view"
         }
     }
 
-    const webClient = await createWebClient({ serverData, mockRPC, legacyParams: {withLegacyMockServer: true} });
+    const webClient = await createWebClient({ target, serverData, mockRPC, legacyParams: {withLegacyMockServer: true} });
 
     // open an activity view (with default search arch)
     await doAction(webClient, {
@@ -660,7 +662,7 @@ QUnit.test("Schedule activity dialog uses the same search view as activity view"
     ])
 
     // click on "Schedule activity"
-    await click(webClient.el.querySelector(".o_activity_view .o_record_selector"));
+    await click(target.querySelector(".o_activity_view .o_record_selector"));
 
     assert.verifySteps([
         '[[false,"list"],[false,"search"]]',
@@ -680,7 +682,7 @@ QUnit.test("Schedule activity dialog uses the same search view as activity view"
     ])
 
     // click on "Schedule activity"
-    await click(webClient.el.querySelector(".o_activity_view .o_record_selector"));
+    await click(target.querySelector(".o_activity_view .o_record_selector"));
 
     assert.verifySteps([
         '[[false,"list"],[1,"search"]]',
@@ -711,32 +713,32 @@ QUnit.test('Activity view: apply progressbar filter', async function (assert) {
         'task,false,search': '<search></search>',
     };
 
-    const webClient = await createWebClient({ serverData, legacyParams: { withLegacyMockServer: true } });
+    const webClient = await createWebClient({ target, serverData, legacyParams: { withLegacyMockServer: true } });
 
     await doAction(webClient, 1);
 
-    assert.containsNone(webClient.el.querySelector('.o_activity_view thead'),
+    assert.containsNone(target.querySelector('.o_activity_view thead'),
         '.o_activity_filter_planned,.o_activity_filter_today,.o_activity_filter_overdue,.o_activity_filter___false',
         "should not have active filter");
-    assert.containsNone(webClient.el.querySelector('.o_activity_view tbody'),
+    assert.containsNone(target.querySelector('.o_activity_view tbody'),
         '.o_activity_filter_planned,.o_activity_filter_today,.o_activity_filter_overdue,.o_activity_filter___false',
         "should not have active filter");
-    assert.strictEqual(webClient.el.querySelector('.o_activity_view tbody .o_activity_record').textContent,
+    assert.strictEqual(target.querySelector('.o_activity_view tbody .o_activity_record').textContent,
         'Office planning', "'Office planning' should be first record");
-    assert.containsOnce(webClient.el.querySelector('.o_activity_view tbody'), '.planned',
+    assert.containsOnce(target.querySelector('.o_activity_view tbody'), '.planned',
         "other records should be available");
 
-    await testUtils.dom.click(webClient.el.querySelector('.o_kanban_counter_progress .progress-bar[data-filter="planned"]'));
-    assert.containsOnce(webClient.el.querySelector('.o_activity_view thead'), '.o_activity_filter_planned',
+    await testUtils.dom.click(target.querySelector('.o_kanban_counter_progress .progress-bar[data-filter="planned"]'));
+    assert.containsOnce(target.querySelector('.o_activity_view thead'), '.o_activity_filter_planned',
         "planned should be active filter");
-    assert.containsN(webClient.el.querySelector('.o_activity_view tbody'), '.o_activity_filter_planned', 5,
+    assert.containsN(target.querySelector('.o_activity_view tbody'), '.o_activity_filter_planned', 5,
         "planned should be active filter");
-    assert.strictEqual(webClient.el.querySelector('.o_activity_view tbody .o_activity_record').textContent,
+    assert.strictEqual(target.querySelector('.o_activity_view tbody .o_activity_record').textContent,
         'Meeting Room Furnitures', "'Office planning' should be first record");
-    const tr = webClient.el.querySelectorAll('.o_activity_view tbody tr')[1];
+    const tr = target.querySelectorAll('.o_activity_view tbody tr')[1];
     assert.hasClass(tr.querySelectorAll('td')[1], 'o_activity_empty_cell',
         "other records should be hidden");
-    assert.containsNone(webClient.el.querySelector('.o_activity_view tbody'), 'planned',
+    assert.containsNone(target.querySelector('.o_activity_view tbody'), 'planned',
         "other records should be hidden");
 });
 

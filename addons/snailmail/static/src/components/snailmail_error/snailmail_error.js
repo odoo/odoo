@@ -7,6 +7,9 @@ import Dialog from 'web.OwlDialog';
 const { Component } = owl;
 
 class SnailmailError extends Component {
+    setup() {
+        this.dialogAPI = {};
+    }
 
     //--------------------------------------------------------------------------
     // Public
@@ -52,7 +55,7 @@ class SnailmailError extends Component {
      * @private
      */
     _onClickCancelLetter() {
-        this.root.comp._close();
+        this.dialogAPI.close();
         this.message.cancelLetter();
     }
 
@@ -60,14 +63,14 @@ class SnailmailError extends Component {
      * @private
      */
     _onClickClose() {
-        this.root.comp._close();
+        this.dialogAPI.close();
     }
 
     /**
      * @private
      */
     _onClickResendLetter() {
-        this.root.comp._close();
+        this.dialogAPI.close();
         this.message.resendLetter();
     }
 

@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { manageMessages } from "@mail/js/tools/debug_manager";
-import { click, legacyExtraNextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
+import { click, getFixture, legacyExtraNextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { createWebClient, doAction, getActionManagerServerData } from "@web/../tests/webclient/helpers";
 import { registry } from "@web/core/registry";
 
@@ -37,12 +37,13 @@ QUnit.test("Manage Messages", async function (assert) {
         }
     }
 
-    const wc = await createWebClient({ serverData, mockRPC });
+    const target = getFixture();
+    const wc = await createWebClient({ target, serverData, mockRPC });
     await doAction(wc, 3, { viewType: "form", props: { resId: 5 } });
     await legacyExtraNextTick();
-    await click(wc.el, ".o_debug_manager .dropdown-toggle");
+    await click(target, ".o_debug_manager .dropdown-toggle");
 
-    const dropdownItems = wc.el.querySelectorAll(
+    const dropdownItems = target.querySelectorAll(
         ".o_debug_manager .dropdown-menu .dropdown-item"
     );
     assert.strictEqual(dropdownItems.length, 1);
@@ -56,7 +57,7 @@ QUnit.test("Manage Messages", async function (assert) {
     await legacyExtraNextTick();
 
     assert.strictEqual(
-        wc.el.querySelector(".breadcrumb-item.active").innerText.trim(),
+        target.querySelector(".breadcrumb-item.active").innerText.trim(),
         "Manage Messages"
     );
 });

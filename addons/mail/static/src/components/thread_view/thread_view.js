@@ -42,6 +42,7 @@ Object.assign(ThreadView, {
         hasComposerThreadName: false,
         showComposerAttachmentsExtensions: true,
         showComposerAttachmentsFilenames: true,
+        onFocusin: () => {},
     },
     props: {
         /**

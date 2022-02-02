@@ -2,8 +2,8 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.Activity" owl="1">
-        <div class="o_Activity" t-attf-class="{{ className }}" t-on-click="activityView.onClickActivity" t-ref="root">
-            <t t-if="activityView">
+        <t t-if="activityView">
+            <div class="o_Activity" t-attf-class="{{ className }}" t-on-click="activityView.onClickActivity" t-ref="root">
                 <div class="o_Activity_sidebar">
                     <div class="o_Activity_user">
                         <t t-if="activityView.activity.assignee">
@@ -99,7 +99,7 @@
 
                     <t t-if="activityView.activity.note">
                         <div class="o_Activity_note">
-                            <t t-raw="activityView.activity.note"/>
+                            <t t-out="activityView.activity.note"/>
                         </div>
                     </t>
 
@@ -122,7 +122,7 @@
                                     <button class="o_Activity_toolButton o_Activity_markDoneButton btn btn-link" t-att-title="activityView.markDoneText">
                                         <i class="fa fa-check"/> Mark Done
                                     </button>
-                                    <t t-set="opened">
+                                    <t t-set-slot="opened">
                                         <ActivityMarkDonePopover localId="activityView.activityMarkDonePopoverView.localId"/>
                                     </t>
                                 </Popover>
@@ -141,8 +141,8 @@
                         </div>
                     </t>
                 </div>
-            </t>
-        </div>
+            </div>
+        </t>
     </t>
 
 </templates>

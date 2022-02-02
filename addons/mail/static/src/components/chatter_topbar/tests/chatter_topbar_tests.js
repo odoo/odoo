@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { afterEach, afterNextRender, beforeEach, nextAnimationFrame, start } from '@mail/utils/test_utils';
+import { nextTick } from '@web/../tests/helpers/utils';
 
 import { makeTestPromise } from 'web.test_utils';
 
@@ -167,8 +168,6 @@ QUnit.test('attachment loading is delayed', async function (assert) {
 });
 
 QUnit.test('attachment counter while loading attachments', async function (assert) {
-    assert.expect(4);
-
     this.data['res.partner'].records.push({ id: 100 });
     const { createChatterContainerComponent } = await this.start({
         async mockRPC(route) {
@@ -193,6 +192,7 @@ QUnit.test('attachment counter while loading attachments', async function (asser
         1,
         "should have an attachments button in chatter menu"
     );
+
     assert.strictEqual(
         document.querySelectorAll(`.o_ChatterTopbar_buttonAttachmentsCountLoader`).length,
         1,
@@ -234,6 +234,7 @@ QUnit.test('attachment counter transition when attachments become loaded)', asyn
         1,
         "should have an attachments button in chatter menu"
     );
+
     assert.strictEqual(
         document.querySelectorAll(`.o_ChatterTopbar_buttonAttachmentsCountLoader`).length,
         1,
