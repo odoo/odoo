@@ -73,8 +73,8 @@ class SetupBarBankConfigWizard(models.TransientModel):
     new_journal_name = fields.Char(default=lambda self: self.linked_journal_id.name, inverse='set_linked_journal_id', required=True, help='Will be used to name the Journal related to this bank account')
     linked_journal_id = fields.Many2one(string="Journal",
         comodel_name='account.journal', inverse='set_linked_journal_id',
-        compute="_compute_linked_journal_id", check_company=True,
-        domain="[('type','=','bank'), ('bank_account_id', '=', False), ('company_id', '=', company_id)]")
+        compute="_compute_linked_journal_id",
+        domain=lambda self: [('type', '=', 'bank'), ('bank_account_id', '=', False), ('company_id', '=', self.env.company.id)])
     bank_bic = fields.Char(related='bank_id.bic', readonly=False, string="Bic")
     num_journals_without_account = fields.Integer(default=lambda self: self._number_unlinked_journal())
 
