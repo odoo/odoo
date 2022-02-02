@@ -47,7 +47,7 @@ class StockMoveLine(models.Model):
         picking_to_wave_vals_list = []
         for picking, lines in line_by_picking.items():
             # Move the entire picking if all the line are taken
-            if lines == picking.move_line_ids:
+            if lines == picking.move_line_ids and lines.move_id == picking.move_lines:
                 wave.picking_ids = [Command.link(picking.id)]
                 continue
 
