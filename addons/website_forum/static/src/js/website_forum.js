@@ -253,12 +253,11 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
             // translation, to fix in the appropriate version
             notifOptions.message = `${karma} ${_t("karma is required to perform this action. ")}`;
             if (forumID) {
-                notifOptions.messageIsHtml = true;
                 const linkLabel = _.escape(_t("Read the guidelines to know how to gain karma."));
-                notifOptions.message = `
+                notifOptions.message = owl.markup(`
                     ${_.escape(notifOptions.message)}<br/>
                     <a class="alert-link" href="/forum/${forumID}/faq">${linkLabel}</a>
-                `;
+                `);
             }
         }
         this.displayNotification(notifOptions);

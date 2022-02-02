@@ -256,7 +256,11 @@
             '/website/static/src/scss/configurator.scss',
             '/website/static/src/scss/website.theme_install.scss',
             '/website/static/src/scss/website.wysiwyg.scss'
-        ]
+        ],
+        'website.website_configurator_assets_qweb': [
+            '/website/static/src/xml/theme_preview.xml',
+            '/website/static/src/components/configurator/configurator.xml',
+        ],
     },
     'license': 'LGPL-3',
 }
