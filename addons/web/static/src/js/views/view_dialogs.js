@@ -184,7 +184,6 @@ var FormViewDialog = ViewDialog.extend({
     open: function () {
         var self = this;
         var _super = this._super.bind(this);
-        var FormView = view_registry.get('form');
         var fields_view_def;
         if (this.options.fields_view) {
             fields_view_def = Promise.resolve(this.options.fields_view);
@@ -196,6 +195,9 @@ var FormViewDialog = ViewDialog.extend({
             var refinedContext = _.pick(self.context, function (value, key) {
                 return key.indexOf('_view_ref') === -1;
             });
+            var parsedXML = new DOMParser().parseFromString(viewInfo.arch, "text/xml");
+            var key = parsedXML.documentElement.getAttribute('js_class')  || 'form';
+            var FormView = view_registry.get(key);
             var formview = new FormView(viewInfo, {
                 modelName: self.res_model,
                 context: refinedContext,
