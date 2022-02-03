@@ -15,8 +15,8 @@ import { DialogService } from '@mail/services/dialog_service/dialog_service';
 import { getMessagingComponent } from '@mail/utils/messaging_component';
 import { nextTick } from '@mail/utils/utils';
 import { DiscussWidget } from '@mail/widgets/discuss/discuss';
-import { MockModels } from '@mail/../tests/helpers/mock_models';
 
+import core from 'web.core';
 import AbstractStorageService from 'web.AbstractStorageService';
 import RamStorage from 'web.RamStorage';
 import {
@@ -24,6 +24,7 @@ import {
     mock,
 } from 'web.test_utils';
 import Widget from 'web.Widget';
+import { registry } from '@web/core/registry';
 import { getFixture } from "@web/../tests/helpers/utils";
 import { createWebClient, getActionManagerServerData } from "@web/../tests/webclient/helpers";
 
@@ -36,6 +37,10 @@ const {
     patch: legacyPatch,
     unpatch: legacyUnpatch,
 } = mock;
+
+const modelDefinitionsPromise = new Promise(resolve => {
+    QUnit.begin(() => resolve(getModelDefinitions()));
+});
 
 //------------------------------------------------------------------------------
 // Private
@@ -169,47 +174,88 @@ function nextAnimationFrame() {
 }
 
 //------------------------------------------------------------------------------
+// Model definitions setup
+//------------------------------------------------------------------------------
+
+export const TEST_USER_IDS = {
+    partnerRootId: 2,
+    currentPartnerId: 3,
+    currentUserId: 2,
+    publicPartnerId: 4,
+    publicUserId: 3,
+};
+
+/**
+ * Fetch model definitions from the server then insert fields present in the
+ * `mail.model.definitions` registry. Use `addModelNamesToFetch`/`insertModelFields`
+ * helpers in order to add models to be fetched, default values to the fields,
+ * fields to a model definition.
+ *
+ * @return {Map<string, Object>} A map from model names to model fields definitions.
+ * @see model_definitions_setup.js
+ */
+async function getModelDefinitions() {
+    const modelDefinitionsRegistry = registry.category('mail.model.definitions');
+    const modelNamesToFetch = modelDefinitionsRegistry.get('modelNamesToFetch');
+    const fieldsToInsertRegistry = modelDefinitionsRegistry.category('fieldsToInsert');
+
+    // fetch the model definitions.
+    const formData = new FormData();
+    formData.append('csrf_token', core.csrf_token);
+    formData.append('model_names_to_fetch', JSON.stringify(modelNamesToFetch));
+    const response = await window.fetch('/mail/get_model_definitions', { body: formData, method: 'POST' });
+    if (response.status !== 200) {
+        throw new Error('Error while fetching required models');
+    }
+    const modelDefinitions = new Map(Object.entries(await response.json()));
+
+    for (const [modelName, fields] of modelDefinitions) {
+         // insert fields present in the fieldsToInsert registry : if the field
+         // exists, update its default value according to the one in the
+         // registry; If it does not exist, add it to the model definition.
+        const fieldNamesToFieldToInsert = fieldsToInsertRegistry.category(modelName).getEntries();
+        for (const [fname, fieldToInsert] of fieldNamesToFieldToInsert) {
+            if (fname in fields) {
+                fields[fname].default = fieldToInsert.default;
+            } else {
+                fields[fname] = fieldToInsert;
+            }
+        }
+        // apply default values for date like fields if none was passed.
+        for (const fname in fields) {
+            const field = fields[fname];
+            if (['date', 'datetime'].includes(field.type) && !field.default) {
+                const defaultFieldValue = field.type === 'date'
+                    ? () => moment.utc().format('YYYY-MM-DD')
+                    : () => moment.utc().format("YYYY-MM-DD HH:mm:ss");
+                field.default = defaultFieldValue;
+            }
+        }
+    }
+    // add models present in the fake models registry to the model definitions.
+    const fakeModels = modelDefinitionsRegistry.category('fakeModels').getEntries();
+    for (const [modelName, fields] of fakeModels) {
+        modelDefinitions.set(modelName, fields);
+    }
+    return modelDefinitions;
+}
+
+//------------------------------------------------------------------------------
 // Public: test lifecycle
 //------------------------------------------------------------------------------
 
-function beforeEach(self) {
-    const data = MockModels.generateData();
-
-    data.partnerRootId = 2;
-    data['res.partner'].records.push({
-        active: false,
-        display_name: "OdooBot",
-        id: data.partnerRootId,
-    });
-
-    data.currentPartnerId = 3;
-    data['res.partner'].records.push({
-        display_name: "Your Company, Mitchell Admin",
-        id: data.currentPartnerId,
-        name: "Mitchell Admin",
-    });
-    data.currentUserId = 2;
-    data['res.users'].records.push({
-        display_name: "Your Company, Mitchell Admin",
-        id: data.currentUserId,
-        name: "Mitchell Admin",
-        partner_id: data.currentPartnerId,
-    });
-
-    data.publicPartnerId = 4;
-    data['res.partner'].records.push({
-        active: false,
-        display_name: "Public user",
-        id: data.publicPartnerId,
-    });
-    data.publicUserId = 3;
-    data['res.users'].records.push({
-        active: false,
-        display_name: "Public user",
-        id: data.publicUserId,
-        name: "Public user",
-        partner_id: data.publicPartnerId,
-    });
+async function beforeEach(self) {
+    const data = { ...TEST_USER_IDS };
+    const modelDefinitions = await modelDefinitionsPromise;
+    const recordsToInsertRegistry = registry.category('mail.model.definitions').category('recordsToInsert');
+    for (const [modelName, fields] of modelDefinitions) {
+        const records = [];
+        if (recordsToInsertRegistry.contains(modelName)) {
+            // prevent tests from mutating the records.
+            records.push(...JSON.parse(JSON.stringify(recordsToInsertRegistry.get(modelName))));
+        }
+        data[modelName] = { fields, records };
+    }
 
     const originals = {
         '_.debounce': _.debounce,
