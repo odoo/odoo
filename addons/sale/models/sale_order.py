@@ -367,17 +367,19 @@ class SaleOrder(models.Model):
         for order in self:
             order.is_expired = order.state == 'sent' and order.validity_date and order.validity_date < today
 
-    @api.depends('order_line.customer_lead', 'date_order', 'order_line.state')
+    @api.depends('order_line.customer_lead', 'date_order', 'state')
     def _compute_expected_date(self):
         """ For service and consumable, we only take the min dates. This method is extended in sale_stock to
             take the picking_policy of SO into account.
         """
         self.mapped("order_line")  # Prefetch indication
         for order in self:
-            dates_list = []
-            for line in order.order_line.filtered(lambda x: x.state != 'cancel' and not x._is_delivery() and not x.display_type):
-                dt = line._expected_date()
-                dates_list.append(dt)
+            if order.state == 'cancel':
+                order.expected_date = False
+                continue
+            dates_list = order.order_line.filtered(
+                lambda line: not line.display_type and not line._is_delivery()
+            ).mapped(lambda line: line and line._expected_date())
             if dates_list:
                 order.expected_date = min(dates_list)
             else:
