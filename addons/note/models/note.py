@@ -40,7 +40,8 @@ class Note(models.Model):
     def _get_default_stage_id(self):
         return self.env['note.stage'].search([('user_id', '=', self.env.uid)], limit=1)
 
-    name = fields.Text(compute='_compute_name', string='Note Summary', store=True)
+    name = fields.Text(
+        compute='_compute_name', string='Note Summary', store=True, readonly=False)
     user_id = fields.Many2one('res.users', string='Owner', default=lambda self: self.env.uid)
     memo = fields.Html('Note Content')
     sequence = fields.Integer('Sequence')
@@ -59,6 +60,8 @@ class Note(models.Model):
     def _compute_name(self):
         """ Read the first line of the memo to determine the note name """
         for note in self:
+            if note.name:
+                continue
             text = html2plaintext(note.memo) if note.memo else ''
             note.name = text.strip().replace('*', '').split("\n")[0]
 
