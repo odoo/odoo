@@ -187,7 +187,7 @@
                                         'required': [('validation_required', '=', True)],
                                         'invisible': [('validation_required', '=', False)]}"/>
 
-                                    <field name="column_nb" string="Number of columns" attrs="{'invisible':[('question_type','not in',['simple_choice', 'multiple_choice'])]}"/>
+                                    <field name="column_nb" string="Number of columns" invisible="1"/>
                                     <field name="matrix_subtype" attrs="{'invisible':[('question_type','not in',['matrix'])],'required':[('question_type','=','matrix')]}"/>
                                     <field name="question_placeholder"
                                         attrs="{'invisible': [('question_type', 'not in', ['text_box', 'char_box', 'date', 'datetime', 'numerical_box'])]}"
