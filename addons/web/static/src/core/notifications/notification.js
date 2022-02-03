@@ -3,10 +3,6 @@
 const { Component } = owl;
 
 export class Notification extends Component {
-    shouldUpdate() {
-        return false;
-    }
-
     get className() {
         let className;
         switch (this.props.type) {

@@ -17,10 +17,6 @@ class PopoverController extends Component {
         this.targetObserver.disconnect();
     }
 
-    shouldUpdate() {
-        return false;
-    }
-
     get popoverProps() {
         return {
             close: this.props.close,
