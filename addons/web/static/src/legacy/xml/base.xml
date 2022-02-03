@@ -136,8 +136,8 @@
             t-attf-data-target="#{{ datePickerId }}"
             t-att-readonly="props.readonly"
             t-ref="input"
-            t-on-change="() => this._onInputChange()"
-            t-on-click="() => this._onInputClick()"
+            t-on-change="_onInputChange"
+            t-on-click="_onInputClick"
         />
         <span t-if="props.warn_future and state.warning" class="fa fa-exclamation-triangle text-danger o_tz_warning o_datepicker_warning">
             <t>This date is on the future. Make sure it is what you expected.</t>
@@ -172,7 +172,7 @@
             <i t-elif="displayChevron" t-attf-class="o_dropdown_chevron fa fa-fw ml-auto fa-chevron-{{ state.open ? 'down' : 'right' }}"/>
         </button>
         <ul t-if="state.open" t-attf-class="dropdown-menu {{ dropdownMenuAlignClass }} show" role="menu"
-            t-on-item-selected="_onItemSelected.bind(this)"
+            t-on-item-selected="_onItemSelected"
             >
             <t t-set="currentGroup" t-value="null"/>
             <t t-foreach="items" t-as="item" t-key="item.key || item.id || ('item-' + item_index)">
