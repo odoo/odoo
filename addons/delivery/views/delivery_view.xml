@@ -102,6 +102,11 @@
                                 </div>
                                 <field name="free_over"/>
                                 <field name="amount" attrs="{'required':[('free_over','!=', False)], 'invisible':[('free_over','=', False)]}"/>
+                                <field name="supports_shipping_insurance" invisible="1"/>
+                                <label for="shipping_insurance" String="Shipping Insurance" attrs="{'invisible': [('supports_shipping_insurance', '=', False)]}"/>
+                                <div attrs="{'invisible': [('supports_shipping_insurance', '=', False)]}">
+                                    <field name="shipping_insurance" class="oe_inline"/>%
+                                </div>
                             </group>
                         </group>
                         <notebook>
