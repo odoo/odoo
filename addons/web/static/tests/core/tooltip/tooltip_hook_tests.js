@@ -233,7 +233,6 @@ QUnit.module("Tooltip hook", () => {
         parent.el.querySelector("button").dispatchEvent(new Event("mouseenter"));
         await nextTick();
         assert.containsOnce(parent, ".o_popover_container .o-tooltip");
-        console.log("Before Prout 1");
         assert.strictEqual(parent.el.querySelector(".o-tooltip").innerHTML, "<i>tooltip</i>");
     });
 
