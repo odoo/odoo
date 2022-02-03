@@ -303,14 +303,14 @@ export async function loadState(env, state) {
     await legacyExtraNextTick();
 }
 
-export function getActionManagerServerData() {
+export function getActionManagerServerData(res_model="partner") {
     // additional basic client action
     class TestClientAction extends Component {}
     TestClientAction.template = tags.xml`
       <div class="test_client_action">
         ClientAction_<t t-esc="props.action.params?.description"/>
       </div>`;
-    actionRegistry.add("__test__client__action__", TestClientAction);
+    actionRegistry.add(`__test__client__action__${res_model}__`, TestClientAction);
 
     const menus = {
         root: { id: "root", children: [0, 1, 2], name: "root", appID: "root" },
@@ -324,7 +324,7 @@ export function getActionManagerServerData() {
             id: 1,
             xml_id: "action_1",
             name: "Partners Action 1",
-            res_model: "partner",
+            res_model,
             type: "ir.actions.act_window",
             views: [[1, "kanban"]],
         },
@@ -337,7 +337,7 @@ export function getActionManagerServerData() {
             id: 3,
             xml_id: "action_3",
             name: "Partners",
-            res_model: "partner",
+            res_model,
             type: "ir.actions.act_window",
             views: [
                 [false, "list"],
@@ -349,7 +349,7 @@ export function getActionManagerServerData() {
             id: 4,
             xml_id: "action_4",
             name: "Partners Action 4",
-            res_model: "partner",
+            res_model,
             type: "ir.actions.act_window",
             views: [
                 [1, "kanban"],
@@ -361,7 +361,7 @@ export function getActionManagerServerData() {
             id: 5,
             xml_id: "action_5",
             name: "Create a Partner",
-            res_model: "partner",
+            res_model,
             target: "new",
             type: "ir.actions.act_window",
             views: [[false, "form"]],
@@ -371,7 +371,7 @@ export function getActionManagerServerData() {
             xml_id: "action_6",
             name: "Partner",
             res_id: 2,
-            res_model: "partner",
+            res_model,
             target: "inline",
             type: "ir.actions.act_window",
             views: [[false, "form"]],
@@ -427,14 +427,14 @@ export function getActionManagerServerData() {
             id: 24,
             name: "Partner",
             res_id: 2,
-            res_model: "partner",
+            res_model,
             type: "ir.actions.act_window",
             views: [[666, "form"]],
         },
         {
             id: 25,
             name: "Create a Partner",
-            res_model: "partner",
+            res_model,
             target: "new",
             type: "ir.actions.act_window",
             views: [[3, "form"]],
@@ -468,16 +468,16 @@ export function getActionManagerServerData() {
     });
     const archs = {
         // kanban views
-        "partner,1,kanban":
+        [res_model + ",1,kanban"]:
             '<kanban><templates><t t-name="kanban-box">' +
             '<div class="oe_kanban_global_click"><field name="foo"/></div>' +
             "</t></templates></kanban>",
         // list views
-        "partner,false,list": '<tree><field name="foo"/></tree>',
-        "partner,2,list": '<tree limit="3"><field name="foo"/></tree>',
+        [res_model + ",false,list"]: '<tree><field name="foo"/></tree>',
+        [res_model + ",2,list"]: '<tree limit="3"><field name="foo"/></tree>',
         "pony,false,list": '<tree><field name="name"/></tree>',
         // form views
-        "partner,false,form":
+        [res_model + ",false,form"]:
             "<form>" +
             "<header>" +
             '<button name="object" string="Call method" type="object"/>' +
@@ -488,13 +488,13 @@ export function getActionManagerServerData() {
             '<field name="foo"/>' +
             "</group>" +
             "</form>",
-        "partner,3,form": `
+        [res_model + ",3,form"]: `
       <form>
       <footer>
       <button class="btn-primary" string="Save" special="save"/>
       </footer>
       </form>`,
-        "partner,666,form": `<form>
+        [res_model + ",666,form"]: `<form>
       <header></header>
       <sheet>
       <div class="oe_button_box" name="button_box" modifiers="{}">
@@ -507,26 +507,26 @@ export function getActionManagerServerData() {
       </form>`,
         "pony,false,form": "<form>" + '<field name="name"/>' + "</form>",
         // search views
-        "partner,false,search": '<search><field name="foo" string="Foo"/></search>',
-        "partner,4,search":
+        [res_model + ",false,search"]: '<search><field name="foo" string="Foo"/></search>',
+        [res_model + ",4,search"]:
             "<search>" +
             '<filter name="bar" help="Bar" domain="[(\'bar\', \'=\', 1)]"/>' +
             "</search>",
         "pony,false,search": "<search></search>",
     };
     const models = {
-        partner: {
+        [res_model]: {
             fields: {
                 id: { string: "Id", type: "integer" },
                 foo: { string: "Foo", type: "char" },
-                bar: { string: "Bar", type: "many2one", relation: "partner" },
+                bar: { string: "Bar", type: "many2one", relation: res_model },
                 o2m: {
                     string: "One2Many",
                     type: "one2many",
-                    relation: "partner",
+                    relation: res_model,
                     relation_field: "bar",
                 },
-                m2o: { string: "Many2one", type: "many2one", relation: "partner" },
+                m2o: { string: "Many2one", type: "many2one", relation: res_model },
             },
             records: [
                 { id: 1, display_name: "First record", foo: "yop", bar: 2, o2m: [2, 3], m2o: 3 },
