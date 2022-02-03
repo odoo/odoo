@@ -44,7 +44,7 @@
             <t name="beforeThread"/>
             <ThreadView
                 className="'o_Discuss_thread'"
-                t-att-class="{ 'o-mobile': messaging.device.isMobile }"
+                classNameObj="{ 'o-mobile': messaging.device.isMobile }"
                 hasComposerCurrentPartnerAvatar="!messaging.device.isMobile"
                 hasComposerDiscardButton="discussView.discuss.thread === messaging.inbox"
                 hasComposerThreadName="discussView.discuss.thread === messaging.inbox"

@@ -34,7 +34,7 @@
                         <t t-if="notificationView.constructor.name === 'NotificationRequestView'">
                             <NotificationRequest
                                 className="'o_NotificationList_notificationRequest'"
-                                t-att-class="{ 'o-mobile': messaging.device.isMobile }"
+                                classNameObj="{ 'o-mobile': messaging.device.isMobile }"
                                 localId="notificationView.localId"
                             />
                         </t>

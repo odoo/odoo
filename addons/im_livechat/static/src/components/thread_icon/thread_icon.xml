@@ -5,7 +5,7 @@
             <t t-elif="thread.channel_type === 'livechat'">
                 <t t-if="thread.orderedOtherTypingMembers.length > 0">
                     <ThreadTypingIcon
-                        class="o_ThreadIcon_typing"
+                        className="'o_ThreadIcon_typing'"
                         animation="'pulse'"
                         title="thread.typingStatusText"
                     />
