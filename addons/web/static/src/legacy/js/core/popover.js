@@ -1,7 +1,7 @@
 odoo.define('web.Popover', function (require) {
     'use strict';
 
-    const { Component, status, onMounted, onPatched, onWillUnmount, useRef, useState } = owl;
+    const { Component, status, onWillUnmount, useEffect, useRef, useState } = owl;
 
     /**
      * Popover
@@ -39,14 +39,10 @@ odoo.define('web.Popover', function (require) {
              */
             this._hasGlobalEventListeners = false;
 
-            onMounted(() => {
+            useEffect(() => {
                 this._compute();
             });
-    
-            onPatched(() => {
-                this._compute();
-            });
-    
+
             onWillUnmount(() => {
                 if (this._hasGlobalEventListeners) {
                     this._removeGlobalEventListeners();
