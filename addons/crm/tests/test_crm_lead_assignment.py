@@ -114,7 +114,8 @@ class TestLeadAssign(TestLeadAssignCommon):
             user_ids=[False],
             partner_ids=[False, False, False, self.contact_1.id],
             probabilities=[30],
-            count=8
+            count=8,
+            suffix='Initial',
         )
         # commit probability and related fields
         leads.flush()
@@ -137,7 +138,8 @@ class TestLeadAssign(TestLeadAssignCommon):
         existing_leads = self._create_leads_batch(
             lead_type='lead', user_ids=[self.user_sales_salesman.id],
             probabilities=[10],
-            count=14)
+            count=14,
+            suffix='Existing')
         self.assertEqual(existing_leads.team_id, self.sales_team_1, "Team should have lower sequence")
         existing_leads[0].active = False  # lost
         existing_leads[1].probability = 100  # not won
@@ -158,7 +160,26 @@ class TestLeadAssign(TestLeadAssignCommon):
         # sales_team_1_m2 is opt-out (new field in 14.3) -> even with max, no lead assigned
         self.sales_team_1_m2.update({'assignment_max': 45, 'assignment_optout': True})
         with self.with_user('user_sales_manager'):
-            self.env['crm.team'].browse(self.sales_team_1.ids)._action_assign_leads(work_days=4)
+            teams_data, members_data = self.sales_team_1._action_assign_leads(work_days=4)
+
+        Leads = self.env['crm.lead']
+
+        self.assertEqual(
+            sorted(Leads.browse(teams_data[self.sales_team_1]['assigned']).mapped('name')),
+            ['TestLeadInitial_0000', 'TestLeadInitial_0001', 'TestLeadInitial_0002',
+             'TestLeadInitial_0004', 'TestLeadInitial_0005', 'TestLeadInitial_0006']
+        )
+        self.assertEqual(
+            Leads.browse(teams_data[self.sales_team_1]['merged']).mapped('name'),
+            ['TestLeadInitial_0003']
+        )
+
+        self.assertEqual(len(teams_data[self.sales_team_1]['duplicates']), 1)
+
+        self.assertEqual(
+            sorted(members_data[self.sales_team_1_m3]['assigned'].mapped('name')),
+            ['TestLeadInitial_0000', 'TestLeadInitial_0005']
+        )
 
         # salespersons assign
         self.members.invalidate_cache(fnames=['lead_month_count'])
