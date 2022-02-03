@@ -362,3 +362,11 @@ class MailThread(models.AbstractModel):
             sms_all.filtered(lambda sms: sms.state == 'outgoing').send(auto_commit=False, raise_exception=False)
 
         return True
+
+    @api.model
+    def notify_cancel_by_type(self, notification_type):
+        super().notify_cancel_by_type(notification_type)
+        if notification_type == 'sms':
+            # TDE CHECK: delete pending SMS
+            self._notify_cancel_by_type_generic('sms')
+        return True

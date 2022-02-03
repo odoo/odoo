@@ -10,20 +10,13 @@ registerModel({
     identifyingFields: ['res_model', 'res_id', 'notification_type'],
     recordMethods: {
         /**
-         * Opens the view that allows to cancel all notifications of the group.
+         * Cancel notifications of the group.
          */
-        openCancelAction() {
-            if (this.notification_type !== 'email') {
-                return;
-            }
-            this.env.bus.trigger('do-action', {
-                action: 'mail.mail_resend_cancel_action',
-                options: {
-                    additional_context: {
-                        default_model: this.res_model,
-                        unread_counter: this.notifications.length,
-                    },
-                },
+        notifyCancel() {
+            this.env.services.rpc({
+                model: this.res_model,
+                method: 'notify_cancel_by_type',
+                kwargs: { notification_type: this.notification_type },
             });
         },
         /**

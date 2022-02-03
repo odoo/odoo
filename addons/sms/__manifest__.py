@@ -3,7 +3,7 @@
 
 {
     'name': 'SMS gateway',
-    'version': '2.2',
+    'version': '2.3',
     'category': 'Hidden/Tools',
     'summary': 'SMS Text Messaging',
     'description': """
@@ -20,7 +20,6 @@ The service is provided by the In App Purchase Odoo platform.
     ],
     'data': [
         'data/ir_cron_data.xml',
-        'wizard/sms_cancel_views.xml',
         'wizard/sms_composer_views.xml',
         'wizard/sms_template_preview_views.xml',
         'wizard/sms_resend_views.xml',

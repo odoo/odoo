@@ -14,15 +14,16 @@ QUnit.module('notification_list_notification_group_tests.js', {
 });
 
 QUnit.test('mark as read', async function (assert) {
-    assert.expect(6);
+    assert.expect(2);
 
     this.data['mail.message'].records.push(
         // message that is expected to have a failure
         {
-            id: 11, // random unique id, will be used to link failure to message
-            message_type: 'sms', // message must be sms (goal of the test)
-            model: 'mail.channel', // expected value to link message to channel
-            res_id: 31, // id of a random channel
+            author_id: this.data.currentPartnerId,
+            id: 11,
+            message_type: 'sms',
+            model: 'mail.channel',
+            res_id: 31,
         }
     );
     this.data['mail.notification'].records.push(
@@ -30,42 +31,24 @@ QUnit.test('mark as read', async function (assert) {
         {
             mail_message_id: 11, // id of the related message
             notification_status: 'exception', // necessary value to have a failure
-            notification_type: 'sms', // expected failure type for sms message
+            notification_type: 'sms',
         }
     );
-    const bus = new Bus();
-    bus.on('do-action', null, payload => {
-        assert.step('do_action');
-        assert.strictEqual(
-            payload.action,
-            'sms.sms_cancel_action',
-            "action should be the one to cancel sms"
-        );
-        assert.strictEqual(
-            payload.options.additional_context.default_model,
-            'mail.channel',
-            "action should have the group model as default_model"
-        );
-        assert.strictEqual(
-            payload.options.additional_context.unread_counter,
-            1,
-            "action should have the group notification length as unread_counter"
-        );
-    });
-
-    const { createNotificationListComponent } = await start({ data: this.data, env: { bus } });
+    const { afterNextRender, createNotificationListComponent } = await start({ data: this.data });
     await createNotificationListComponent();
-
     assert.containsOnce(
         document.body,
         '.o_NotificationGroup_markAsRead',
         "should have 1 mark as read button"
     );
 
-    document.querySelector('.o_NotificationGroup_markAsRead').click();
-    assert.verifySteps(
-        ['do_action'],
-        "should do an action to display the cancel sms dialog"
+    await afterNextRender(() => {
+        document.querySelector('.o_NotificationGroup_markAsRead').click();
+    });
+    assert.containsNone(
+        document.body,
+        '.o_NotificationGroup',
+        "should have no notification group"
     );
 });
 

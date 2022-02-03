@@ -8,23 +8,6 @@ patchRecordMethods('NotificationGroup', {
     /**
      * @override
      */
-    openCancelAction() {
-        if (this.notification_type !== 'snail') {
-            return this._super(...arguments);
-        }
-        this.env.bus.trigger('do-action', {
-            action: 'snailmail.snailmail_letter_cancel_action',
-            options: {
-                additional_context: {
-                    default_model: this.res_model,
-                    unread_counter: this.notifications.length,
-                },
-            },
-        });
-    },
-    /**
-     * @override
-     */
     _openDocuments() {
         if (this.notification_type !== 'snail') {
             return this._super(...arguments);

@@ -86,7 +86,7 @@ QUnit.test('notification group basic layout', async function (assert) {
 });
 
 QUnit.test('mark as read', async function (assert) {
-    assert.expect(6);
+    assert.expect(2);
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create();
@@ -100,28 +100,9 @@ QUnit.test('mark as read', async function (assert) {
     pyEnv['mail.notification'].create({
         mail_message_id: mailMessageId1, // id of the related message
         notification_status: 'exception', // necessary value to have a failure
-        notification_type: 'email', // expected failure type for email message
+        notification_type: 'email',
     });
-    const bus = new Bus();
-    bus.on('do-action', null, payload => {
-        assert.step('do_action');
-        assert.strictEqual(
-            payload.action,
-            'mail.mail_resend_cancel_action',
-            "action should be the one to cancel email"
-        );
-        assert.strictEqual(
-            payload.options.additional_context.default_model,
-            'mail.channel',
-            "action should have the group model as default_model"
-        );
-        assert.strictEqual(
-            payload.options.additional_context.unread_counter,
-            1,
-            "action should have the group notification length as unread_counter"
-        );
-    });
-    const { createNotificationListComponent } = await start({ env: { bus } });
+    const { createNotificationListComponent } = await start();
     await createNotificationListComponent();
     assert.containsOnce(
         document.body,
@@ -129,10 +110,13 @@ QUnit.test('mark as read', async function (assert) {
         "should have 1 mark as read button"
     );
 
-    document.querySelector('.o_NotificationGroup_markAsRead').click();
-    assert.verifySteps(
-        ['do_action'],
-        "should do an action to display the cancel email dialog"
+    await afterNextRender(() => {
+        document.querySelector('.o_NotificationGroup_markAsRead').click();
+    });
+    assert.containsNone(
+        document.body,
+        '.o_NotificationGroup',
+        "should have no notification group"
     );
 });
 

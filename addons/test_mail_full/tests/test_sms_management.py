@@ -58,6 +58,15 @@ class TestSMSActionsCommon(TestMailFullCommon, TestMailFullRecipients):
 @tagged('sms_management')
 class TestSMSActions(TestSMSActionsCommon):
 
+    def test_sms_notify_cancel(self):
+        self._reset_bus()
+
+        with self.with_user('employee'):
+            self.test_record.with_user(self.env.user).notify_cancel_by_type('sms')
+            self.assertEqual((self.notif_p1 | self.notif_p2).mapped('notification_status'), ['canceled', 'canceled'])
+
+        self.assertMessageBusNotifications(self.msg)
+
     def test_sms_set_cancel(self):
         self._reset_bus()
         self.sms_p1.action_set_canceled()
@@ -187,15 +196,4 @@ class TestSMSWizards(TestSMSActionsCommon):
 
         self.assertSMSNotification([{'partner': self.partner_1, 'state': 'sent'}], 'TEST BODY', self.msg, check_sms=True)
         self.assertSMSNotification([{'partner': self.partner_2, 'state': 'canceled', 'number': self.notif_p2.sms_number, 'failure_type': 'sms_credit'}], 'TEST BODY', self.msg, check_sms=False)
-        self.assertMessageBusNotifications(self.msg)
-
-    def test_sms_cancel(self):
-        self._reset_bus()
-
-        with self.mockSMSGateway(), self.with_user('employee'):
-            wizard = self.env['sms.cancel'].with_context(default_model=self.msg.model).create({})
-            wizard.action_cancel()
-
-            self.assertEqual((self.notif_p1 | self.notif_p2).mapped('notification_status'), ['canceled', 'canceled'])
-
         self.assertMessageBusNotifications(self.msg)
