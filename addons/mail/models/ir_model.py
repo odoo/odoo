@@ -100,3 +100,31 @@ class IrModel(models.Model):
             parents = [parents] if isinstance(parents, str) else parents
             model_class._inherit = parents + ['mail.thread.blacklist']
         return model_class
+
+    def _get_model_definitions(self, model_names_to_fetch):
+        fields_by_model_names = {}
+        for model_name in model_names_to_fetch:
+            model = self.env[model_name]
+            # get fields, relational fields are kept only if the related model is in model_names_to_fetch
+            fields_by_fname = {
+                fname: field
+                for fname, field in model.fields_get(
+                    attributes=['name', 'type', 'relation', 'required', 'readonly', 'selection', 'string']
+                ).items()
+                if not field.get('relation') or field['relation'] in model_names_to_fetch
+            }
+            # exclude date/datetime and binary default values: dates will always be wrong since they are dynamic
+            # and binary values are not needed for now
+            default_values_by_fname = model.default_get([
+                fname for fname, field in fields_by_fname.items()
+                if field['type'] not in ['binary', 'date', 'datetime']
+            ])
+            tracked_field_names = model._track_get_fields() if 'mail.thread' in model._inherit else []
+            for fname in tracked_field_names:
+                if fname in fields_by_fname:
+                    fields_by_fname[fname]['tracking'] = True
+            for fname, value in default_values_by_fname.items():
+                if fname in fields_by_fname:
+                    fields_by_fname[fname]['default'] = value
+            fields_by_model_names[model_name] = fields_by_fname
+        return fields_by_model_names

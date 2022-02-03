@@ -269,7 +269,7 @@ QUnit.test('rendering of tracked field of type char: from empty string to a stri
 QUnit.test('rendering of tracked field of type date: from no date to a set date', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.test.track.all'].records.push({ id: 1 });
+    this.data['mail.test.track.all'].records.push({ date_field: false, id: 1 });
     const { afterNextRender, widget: form } = await this.start({ res_id: 1 });
 
     await testUtils.fields.editAndTrigger(form.$('.o_datepicker[name=date_field] .o_datepicker_input'), '12/14/2018', ['change']);
@@ -303,7 +303,7 @@ QUnit.test('rendering of tracked field of type date: from a set date to no date'
 QUnit.test('rendering of tracked field of type datetime: from no date and time to a set date and time', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.test.track.all'].records.push({ id: 1 });
+    this.data['mail.test.track.all'].records.push({ datetime_field: false, id: 1 });
     const { afterNextRender, widget: form } = await this.start({ res_id: 1 });
 
     await testUtils.fields.editAndTrigger(form.$('.o_datepicker[name=datetime_field] .o_datepicker_input'), '12/14/2018 13:42:28', ['change']);

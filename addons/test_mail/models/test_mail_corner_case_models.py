@@ -99,6 +99,24 @@ class MailTestTrackMonetary(models.Model):
     company_currency = fields.Many2one("res.currency", string='Currency', related='company_id.currency_id', readonly=True, tracking=True)
     revenue = fields.Monetary('Revenue', currency_field='company_currency', tracking=True)
 
+class MailTestTrackAll(models.Model):
+    _name = 'mail.test.track.all'
+    _description = 'Test tracking on all field types'
+    _inherit = ['mail.thread']
+
+    boolean_field = fields.Boolean('Boolean', tracking=True)
+    char_field = fields.Char('Char', tracking=True)
+    company_id = fields.Many2one('res.company')
+    currency_id = fields.Many2one('res.currency', related='company_id.currency_id')
+    date_field = fields.Date('Date', tracking=True)
+    datetime_field = fields.Datetime('Datetime', tracking=True)
+    float_field = fields.Float('Float', tracking=True)
+    html_field = fields.Html('Html', tracking=True)
+    integer_field = fields.Integer('Integer', tracking=True)
+    many2one_field_id = fields.Many2one('res.partner', string='Many2one', tracking=True)
+    monetary_field = fields.Monetary('Monetary', tracking=True)
+    selection_field = fields.Selection(string='Selection', selection=[['first', 'FIRST']], tracking=True)
+    text_field = fields.Text('Text', tracking=True)
 
 class MailTestMultiCompany(models.Model):
     """ This model can be used in multi company tests"""
