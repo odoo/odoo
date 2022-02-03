@@ -12,6 +12,14 @@ odoo.define('pos_hr.CashierName', function (require) {
                 super.setup();
                 useBarcodeReader({ cashier: this.barcodeCashierAction });
             }
+            //@Override
+            get avatar() {
+                if (this.env.pos.config.module_pos_hr) {
+                    const cashier = this.env.pos.get_cashier();
+                    return `/web/image/hr.employee/${cashier.id}/avatar_128`;
+                }
+                return super.avatar;
+            }
         };
 
     Registries.Component.extend(CashierName, PosHrCashierName);
