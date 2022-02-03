@@ -199,7 +199,8 @@ class AccountMove(models.Model):
 
         to_review = self.filtered(
             lambda x: x.journal_id.type == 'sale' and x.l10n_latam_document_type_id and x.l10n_latam_document_number and
-            (x.l10n_latam_manual_document_number or not x.highest_name))
+            (x.l10n_latam_manual_document_number or not x.highest_name)
+            and x.l10n_latam_document_type_id.country_id.code == 'AR')
         for rec in to_review:
             number = rec.l10n_latam_document_type_id._format_document_number(rec.l10n_latam_document_number)
             current_pos = int(number.split("-")[0])
