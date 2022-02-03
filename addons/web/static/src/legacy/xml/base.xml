@@ -267,7 +267,7 @@
                             <t t-slot="default"/>
                         </main>
                         <footer t-if="props.renderFooter" class="modal-footer" t-ref="modal-footer">
-                            <t t-slot="buttons" close="() => this._close()" >
+                            <t t-slot="buttons" close="_close" >
                                 <button class="btn btn-primary" t-on-click.prevent="_close">
                                     <t>Ok</t>
                                 </button>

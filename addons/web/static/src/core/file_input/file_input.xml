@@ -3,7 +3,7 @@
 
     <t t-name="web.FileInput" owl="1">
         <span class="o_file_input" aria-atomic="true" t-on-uploaded="(ev) => props.onUpload(ev.detail.files)">
-            <span class="o_file_input_trigger" t-on-click.prevent="() => this.onTriggerClicked()">
+            <span class="o_file_input_trigger" t-on-click.prevent="onTriggerClicked">
                 <t t-slot="default">
                     <button class="btn btn-primary">Choose File</button>
                 </t>
