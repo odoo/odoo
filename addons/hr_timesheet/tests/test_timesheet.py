@@ -224,6 +224,7 @@ class TestTimesheet(TestCommonTimesheet):
             'task_id': self.task1.id,
             'name': 'my first timesheet',
             'unit_amount': 4,
+            'user_id': self.user_employee.id,
         })
 
         timesheet_count1 = Timesheet.search_count([('project_id', '=', self.project_customer.id)])
@@ -298,6 +299,7 @@ class TestTimesheet(TestCommonTimesheet):
             'task_id': self.task1.id,
             'name': 'my only timesheet',
             'unit_amount': 4,
+            'user_id': self.user_employee.id,
         })
 
         self.assertEqual(timesheet_entry.partner_id, self.partner, "The timesheet entry's partner should be equal to the task's partner/customer")
