@@ -805,3 +805,11 @@ class TestSaleOrder(TestSaleCommon):
 
         # Check the unit price of SO line
         self.assertEqual(100, sale_order.order_line[0].price_unit, "The included tax must be subtracted to the price")
+
+    def test_sol_name_search(self):
+        # Shouldn't raise
+        self.env['sale.order']._search([('order_line', 'ilike', 'acoustic')])
+
+        name_search_data = self.env['sale.order.line'].name_search(name=self.sale_order.name)
+        sol_ids_found = dict(name_search_data).keys()
+        self.assertEqual(list(sol_ids_found), self.sale_order.order_line.ids)
