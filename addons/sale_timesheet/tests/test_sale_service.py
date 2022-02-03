@@ -571,6 +571,7 @@ class TestSaleService(TestCommonSaleTimesheet):
             'project_id': self.project_task_rate.id,
             'task_id': task.id,
             'unit_amount': 1,
+            'employee_id': self.employee_user.id,
         })
         self.assertEqual(task.remaining_hours_so, 1, "Before the creation of a timesheet, the remaining hours was 2 hours, when we timesheet 1 hour, the remaining hours should be equal to 1 hour.")
         self.assertEqual(prepaid_service_sol.remaining_hours, task.remaining_hours_so, "The remaining hours on the SOL should also be equal to 1 hour.")
@@ -590,6 +591,7 @@ class TestSaleService(TestCommonSaleTimesheet):
             'unit_amount': 1,
             'so_line': prepaid_service_sol.id,
             'is_so_line_edited': True,
+            'employee_id': self.employee_user.id,
         })
         self.assertEqual(timesheet.so_line, prepaid_service_sol, "The SOL should be the same than one containing the prepaid service product.")
         self.assertEqual(prepaid_service_sol.remaining_hours, 2, "The remaining hours should not change.")
