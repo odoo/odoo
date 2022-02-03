@@ -3,6 +3,7 @@
 
 import logging
 import re
+from collections import defaultdict
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError, ValidationError
@@ -223,21 +224,33 @@ class ProductProduct(models.Model):
         self.env.cr.execute("CREATE UNIQUE INDEX IF NOT EXISTS product_product_combination_unique ON %s (product_tmpl_id, combination_indices) WHERE active is true"
             % self._table)
 
-    # # TODO: remove before merge
-    # _sql_constraints = [
-    #     ('barcode_uniq', 'unique(barcode)', "A barcode can only be assigned to one product !"),
-    # ]
-
     @api.constrains("barcode")
     def _check_barcode_unique(self):
-        products_with_same_barcode = self.env['product.product'].sudo().search([('barcode', '=', self.barcode)]) - self
-        if products_with_same_barcode:
+
+        # Collect duplicates (if there are any)
+        duplicates = defaultdict(set)
+        for product in self:
+
+            # Skip check on products without a barcode
+            if not product.barcode:
+                continue
+
+            products_with_same_barcode = self.env['product.product'].sudo().search(
+                [('barcode', '=', product.barcode)]
+            ) - product
+
+            if products_with_same_barcode:
+                for other in products_with_same_barcode:
+                    duplicates[product.barcode].add(other.display_name)
+
+        if duplicates:
+            duplicates_joined = {barcode: ', '.join(sorted(products)) for barcode, products in sorted(duplicates.items())}
+            duplicates_as_str = "\n".join(
+                f"Barcode \"{barcode}\" assigned to product(s): {products}"
+                for barcode, products in duplicates_joined.items()
+            )
             raise ValidationError(
-                _("This barcode is already in use by:\n\n{products_with_same_barcode}").format(
-                    products_with_same_barcode="\n".join(
-                        [product.name for product in products_with_same_barcode]
-                    )
-                )
+                "Barcode(s) already assigned:\n\n{duplicates}".format(duplicates=duplicates_as_str)
             )
 
     def _get_invoice_policy(self):
