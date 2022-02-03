@@ -257,6 +257,7 @@ function bootstrapToTable(editable) {
 function cardToTable(editable) {
     for (const card of editable.querySelectorAll('.card')) {
         const table = _createTable(card.attributes);
+        table.style.removeProperty('overflow');
         for (const child of [...card.childNodes]) {
             const row = document.createElement('tr');
             const col = document.createElement('td');
