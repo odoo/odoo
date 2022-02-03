@@ -319,8 +319,7 @@ QUnit.module('base_settings_tests', {
         form.destroy();
     });
 
-        // OWL-NEW-RENDERING
-        QUnit.skip('settings view shows a message if there are changes', async function (assert) {
+        QUnit.test('settings view shows a message if there are changes', async function (assert) {
         assert.expect(5);
 
         var form = await createView({

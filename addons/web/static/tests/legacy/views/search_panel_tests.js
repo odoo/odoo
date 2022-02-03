@@ -2400,8 +2400,7 @@ QUnit.module('Views', {
         assert.containsOnce(webClient, '.o_content.o_component_with_search_panel .o_search_panel');
     });
 
-    // OWL-NEW-RENDERING
-    QUnit.skip('search panel state is shared between views', async function (assert) {
+    QUnit.test('search panel state is shared between views', async function (assert) {
         assert.expect(16);
 
         const mockRPC = (route, args) => {
@@ -2448,8 +2447,7 @@ QUnit.module('Views', {
         ]);
     });
 
-    // OWL-NEW-RENDERING
-    QUnit.skip('search panel filters are kept between switch views', async function (assert) {
+    QUnit.test('search panel filters are kept between switch views', async function (assert) {
         assert.expect(17);
 
         const mockRPC = (route, args) => {
@@ -4009,8 +4007,7 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
-    // OWL-NEW-RENDERING
-    QUnit.skip("a selected value becomming invalid should no more impact the view", async function (assert) {
+    QUnit.test("a selected value becomming invalid should no more impact the view", async function (assert) {
         assert.expect(13);
 
         const kanban = await createView({

@@ -73,8 +73,7 @@ QUnit.module("Views", (hooks) => {
 
     QUnit.module("Forecast views");
 
-    // OWL-NEW-RENDERING
-    QUnit.skip("Forecast graph view", async function (assert) {
+    QUnit.test("Forecast graph view", async function (assert) {
         assert.expect(5);
 
         patchWithCleanup(browser, { setTimeout: (fn) => fn() });
@@ -122,8 +121,7 @@ QUnit.module("Views", (hooks) => {
         unpatchDate();
     });
 
-    // OWL-NEW-RENDERING
-    QUnit.skip(
+    QUnit.test(
         "forecast filter domain is combined with other domains with an AND",
         async function (assert) {
             assert.expect(1);

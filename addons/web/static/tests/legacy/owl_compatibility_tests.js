@@ -1060,10 +1060,8 @@ odoo.define('web.OwlCompatibilityTests', function (require) {
             ]);
         });
 
-        // OWL-NEW-RENDERING
-        QUnit.skip("lifecycle mount/unmount", async function (assert) {
+        QUnit.test("lifecycle mount/unmount", async function (assert) {
             assert.expect(37);
-
             class MyChildComponent extends Component {
                 setup() {
                     useLogLifeCycle(assert.step.bind(assert));
@@ -1195,8 +1193,7 @@ odoo.define('web.OwlCompatibilityTests', function (require) {
             assert.strictEqual(target.innerHTML, "<div><div>child leveeBreaks</div></div>");
         });
 
-        // OWL-NEW-RENDERING
-        QUnit.skip("lifecycle mount/unmount/update/render", async function (assert) {
+        QUnit.test("lifecycle mount/unmount/update/render", async function (assert) {
             assert.expect(36);
 
             class MyChildComponent extends Component {
@@ -1415,8 +1412,7 @@ odoo.define('web.OwlCompatibilityTests', function (require) {
             widget.destroy();
         });
 
-        // OWL-NEW-RENDERING
-        QUnit.skip("change parent of ComponentWrapper", async function (assert) {
+        QUnit.test("change parent of ComponentWrapper", async function (assert) {
             assert.expect(7);
 
             let myComponent;
