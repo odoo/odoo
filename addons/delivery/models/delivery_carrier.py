@@ -64,14 +64,27 @@ class DeliveryCarrier(models.Model):
     return_label_on_delivery = fields.Boolean(string="Generate Return Label", help="The return label is automatically generated at the delivery.")
     get_return_label_from_portal = fields.Boolean(string="Return Label Accessible from Customer Portal", help="The return label can be downloaded by the customer from the customer portal.")
 
+    supports_shipping_insurance = fields.Boolean(compute="_compute_supports_shipping_insurance")
+    shipping_insurance = fields.Integer(
+        "Insurance Percentage",
+        help="Shipping insurance is a service which may reimburse senders whose parcels are lost, stolen, and/or damaged in transit.",
+        default=0
+    )
+
     _sql_constraints = [
         ('margin_not_under_100_percent', 'CHECK (margin >= -100)', 'Margin cannot be lower than -100%'),
+        ('shipping_insurance_is_percentage', 'CHECK(shipping_insurance >= 0 AND shipping_insurance <= 100)', "The shipping insurance must be a percentage between 0 and 100."),
     ]
 
     @api.depends('delivery_type')
     def _compute_can_generate_return(self):
         for carrier in self:
             carrier.can_generate_return = False
+
+    @api.depends('delivery_type')
+    def _compute_supports_shipping_insurance(self):
+        for carrier in self:
+            carrier.supports_shipping_insurance = False
 
     def toggle_prod_environment(self):
         for c in self:
