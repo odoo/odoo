@@ -16,7 +16,7 @@
                             value="state.days[day].value"
                             id="state.days[day].id"
                             class="'o_recurrent_weekday_checkbox text-center'"
-                            onChange.bind="_onChange"/>
+                            onChange="(checked) => this._onChange(checked, state.days[day].id)"/>
                     </td>
                 </tr>
             </table>

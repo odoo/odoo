@@ -30,13 +30,10 @@ odoo.define('web.CustomCheckbox', function (require) {
         setup() {
             this._id = `checkbox-comp-${utils.generateID()}`;
         }
-        onChange(ev) {
-            if (this.props.onChange) {
-                this.props.onChange(ev);
-            }
-        }
     }
-
+    CustomCheckbox.defaultProps = {
+        onChange: () => {},
+    };
     CustomCheckbox.props = {
         id: {
             type: [String, Number],

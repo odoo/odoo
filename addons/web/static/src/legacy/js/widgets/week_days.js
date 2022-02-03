@@ -66,11 +66,10 @@ odoo.define('web.WeekDays', function (require) {
          * @private
          * @param {MouseEvent} ev
          */
-        _onChange(ev) {
-            const field = ev.target.id.split("-")[0];
+        _onChange(checked, field) {
             this.trigger('field-changed', {
                 dataPointID: this.props.record.id,
-                changes: { [field]: ev.target.checked },
+                changes: { [field.split("-")[0]]: checked },
             });
         }
     }
