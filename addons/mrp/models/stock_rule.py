@@ -121,6 +121,7 @@ class StockRule(models.Model):
             'bom_id': bom.id,
             'date_deadline': date_deadline,
             'date_planned_start': date_planned,
+            'date_planned_finished': fields.Datetime.from_string(values['date_planned']),
             'procurement_group_id': False,
             'propagate_cancel': self.propagate_cancel,
             'orderpoint_id': values.get('orderpoint_id', False) and values.get('orderpoint_id').id,
