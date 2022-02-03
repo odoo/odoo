@@ -728,3 +728,25 @@ class StockQuant(TransactionCase):
 
             quant = self.env['stock.quant'].search([('product_id', '=', self.product.id), ('location_id', '=', self.stock_location.id), ('quantity', '>', 0)])
             self.assertEqual(quant.in_date, tomorrow)
+
+    def test_quant_creation(self):
+        """
+        This test ensures that, after an internal transfer, the values of the created quand are correct
+        """
+        self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 10.0)
+
+        move = self.env['stock.move'].create({
+            'name': 'Move 1 product',
+            'product_id': self.product.id,
+            'product_uom_qty': 1,
+            'product_uom': self.product.uom_id.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.stock_subloc2.id,
+        })
+        move._action_confirm()
+        move._action_assign()
+        move.quantity_done = 1
+        move._action_done()
+
+        quant = self.gather_relevant(self.product, self.stock_subloc2)
+        self.assertFalse(quant.inventory_quantity_set)
