@@ -49,7 +49,7 @@ registerModel({
                 return replace(this.attachmentBoxViewOwner.chatter.thread.allAttachments);
             }
             if (this.composerViewOwner && this.composerViewOwner.composer) {
-                return replace(this.composerViewOwner.composer.messageComposition.attachments);
+                return replace(this.composerViewOwner.composer.attachments);
             }
             return clear();
         },

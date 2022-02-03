@@ -18,7 +18,7 @@ const { escape } = owl;
  */
 registerModel({
     name: 'MessageComposition',
-    identifyingFields: ['composer'],
+    identifyingFields: ['id'],
     recordMethods: {
         /**
          * This method will generate the html body of a message, create the
@@ -57,30 +57,6 @@ registerModel({
                 }
             }
             return replace(recipients);
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsLog() {
-            return this.composer.isLog;
-        },
-        /**
-         * @private
-         * @returns {string}
-         */
-        _computeRawBody() {
-            return this.composer.textInputContent;
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeThread() {
-            if (!this.composer.activeThread) {
-                return clear();
-            }
-            return replace(this.composer.activeThread);
         },
         /**
          * Generates the html link related to the mentioned partner
@@ -205,6 +181,10 @@ registerModel({
         },
     },
     fields: {
+        id: attr({
+            readonly: true,
+            required: true,
+        }),
         /**
          * States which attachments are currently being created in this message composition.
          */
@@ -214,13 +194,8 @@ registerModel({
          * It's created when needed to avoid performance issue.
          */
         body: attr(),
-        composer: one('Composer', {
-            inverse: 'messageComposition',
-            readonly: true,
-            required: true,
-        }),
         isLog: attr({
-            compute: '_computeIsLog',
+            default: false,
         }),
         /**
          * States the mentionned channel in the body.
@@ -234,14 +209,10 @@ registerModel({
          * States the body without any transformation. It basically the content of
          * the composer.
          */
-        rawBody: attr({
-            compute: '_computeRawBody',
-        }),
+        rawBody: attr(),
         recipients: many('Partner', {
             compute: '_computeRecipients',
         }),
-        thread: one('Thread', {
-            compute: '_computeThread',
-        }),
+        thread: one('Thread'),
     }
 });

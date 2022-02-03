@@ -26,7 +26,7 @@ registerModel({
          * @returns {boolean}
          */
         _computeCanPostMessage() {
-            if (this.thread && !this.textInputContent && this.messageComposition.attachments.length === 0) {
+            if (this.thread && !this.textInputContent && this.attachments.length === 0) {
                 return false;
             }
             return !this.hasUploadingAttachment && !this.isPostingMessage;
@@ -36,7 +36,7 @@ registerModel({
          * @returns {boolean}
          */
         _computeHasUploadingAttachment() {
-            return this.messageComposition.attachments.some(attachment => attachment.isUploading);
+            return this.attachments.some(attachment => attachment.isUploading);
         },
 
         /**
@@ -44,8 +44,8 @@ registerModel({
          */
         _reset() {
             this.update({
+                attachments: clear(),
                 isLastStateChangeProgrammatic: true,
-                messageComposition: clear(),
                 textInputContent: clear(),
                 textInputCursorEnd: clear(),
                 textInputCursorStart: clear(),
@@ -58,6 +58,12 @@ registerModel({
             compute: '_computeActiveThread',
             readonly: true,
             required: true,
+        }),
+        /**
+         * States which attachments are currently being created in this composer.
+         */
+        attachments: many('Attachment', {
+            inverse: 'composer',
         }),
         canPostMessage: attr({
             compute: '_computeCanPostMessage',
@@ -94,11 +100,6 @@ registerModel({
          * Determines whether a post_message request is currently pending.
          */
         isPostingMessage: attr(),
-        messageComposition: one('MessageComposition', {
-            default: insertAndReplace(),
-            inverse: 'composer',
-            isCausal: true,
-        }),
         messageViewInEditing: one('MessageView', {
             inverse: 'composerForEditing',
             readonly: true,

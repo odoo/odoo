@@ -7,6 +7,14 @@ import { OnChange } from '@mail/model/model_onchange';
 import { escapeAndCompactTextContent } from '@mail/js/utils';
 import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 
+const getMessageTemporaryId = (function() {
+    let tmpId = 0;
+    return () => {
+        tmpId -= 1;
+        return tmpId;
+    };
+})();
+
 registerModel({
     name: 'ComposerView',
     identifyingFields: [['threadView', 'messageViewInEditing', 'chatter']],
@@ -262,7 +270,7 @@ registerModel({
          * Open the full composer modal.
          */
         async openFullComposer() {
-            const attachmentIds = this.composer.messageComposition.attachments.map(attachment => attachment.id);
+            const attachmentIds = this.composer.attachments.map(attachment => attachment.id);
             const context = {
                 default_attachment_ids: attachmentIds,
                 default_body: escapeAndCompactTextContent(this.composer.textInputContent),
@@ -313,12 +321,19 @@ registerModel({
             if (this.messaging.currentPartner) {
                 composer.thread.unregisterCurrentPartnerIsTyping({ immediateNotify: true });
             }
-            composer.messageComposition.generateBody();
+            const messageComposition = this.messaging.models['MessageComposition'].insert({
+                attachments: link(composer.attachments),
+                id: getMessageTemporaryId(),
+                isLog: composer.isLog,
+                rawBody: composer.textInputContent,
+                thread: link(composer.activeThread),
+            });
+            messageComposition.generateBody();
             const postData = {
-                attachment_ids: composer.messageComposition.attachments.map(attachment => attachment.id),
-                body: composer.messageComposition.body,
+                attachment_ids: messageComposition.attachments.map(attachment => attachment.id),
+                body: messageComposition.body,
                 message_type: 'comment',
-                partner_ids: composer.messageComposition.recipients.map(partner => partner.id),
+                partner_ids: messageComposition.recipients.map(partner => partner.id),
             };
             const params = {
                 'post_data': postData,
@@ -497,8 +512,8 @@ registerModel({
         _computeAttachmentList() {
             if (
                 this.composer &&
-                this.composer.messageComposition &&
-                this.composer.messageComposition.attachments.length > 0
+                this.composer.attachments &&
+                this.composer.attachments.length > 0
             ) {
                 return insertAndReplace();
             }

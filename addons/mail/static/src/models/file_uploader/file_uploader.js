@@ -105,14 +105,11 @@ registerModel({
                 });
                 return;
             }
-            const attachment = this.messaging.models['Attachment'].insert({
+            return this.messaging.models['Attachment'].insert({
+                composer: composer && replace(composer),
                 originThread: (!composer && thread) ? replace(thread) : undefined,
                 ...attachmentData,
             });
-            if (composer) {
-                composer.messageComposition.update({ attachments: link(attachment) });
-            }
-            return attachment;
         },
         /**
          * @private
@@ -127,18 +124,15 @@ registerModel({
             const activity = this.activityView && this.activityView.activity; // save before async
             const uploadingAttachments = new Map();
             for (const file of files) {
-                const attachment = this.messaging.models['Attachment'].insert({
+                uploadingAttachments.set(file, this.messaging.models['Attachment'].insert({
+                    composer: composer && replace(composer),
                     filename: file.name,
                     id: getAttachmentNextTemporaryId(),
                     isUploading: true,
                     mimetype: file.type,
                     name: file.name,
                     originThread: (!composer && thread) ? replace(thread) : undefined,
-                });
-                uploadingAttachments.set(file, attachment);
-                if (composer) {
-                    composer.messageComposition.update({ attachments: link(attachment) });
-                }
+                }));
             }
             const attachments = [];
             for (const file of files) {

@@ -280,6 +280,12 @@ registerModel({
             inverse: 'attachments',
         }),
         checksum: attr(),
+        /**
+         * States on which composer this attachment is currently being created.
+         */
+        composer: one('Composer', {
+            inverse: 'attachments',
+        }),
         defaultSource: attr({
             compute: '_computeDefaultSource',
         }),
