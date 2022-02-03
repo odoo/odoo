@@ -3,7 +3,7 @@
 
 from odoo.fields import Command
 from odoo.tests.common import TransactionCase
-from odoo.exceptions import AccessError, UserError
+from odoo.exceptions import AccessError, UserError, ValidationError
 
 
 class TestCommonTimesheet(TransactionCase):
@@ -225,6 +225,7 @@ class TestTimesheet(TestCommonTimesheet):
             'task_id': self.task1.id,
             'name': 'my first timesheet',
             'unit_amount': 4,
+            'user_id': self.user_employee.id,
         })
 
         timesheet_count1 = Timesheet.search_count([('project_id', '=', self.project_customer.id)])
@@ -299,6 +300,7 @@ class TestTimesheet(TestCommonTimesheet):
             'task_id': self.task1.id,
             'name': 'my only timesheet',
             'unit_amount': 4,
+            'user_id': self.user_employee.id,
         })
 
         self.assertEqual(timesheet_entry.partner_id, self.partner, "The timesheet entry's partner should be equal to the task's partner/customer")
@@ -386,15 +388,16 @@ class TestTimesheet(TestCommonTimesheet):
             'name': 'Employee 2',
             'user_id': self.user_manager.id,
         })
-        timesheet = Timesheet.create({
-            'name': 'Timesheet',
-            'project_id': project.id,
-            'task_id': task.id,
-            'unit_amount': 2,
-            'user_id': self.user_manager.id,
-            'company_id': company_3.id,
-        })
-        self.assertFalse(timesheet.employee_id, 'As there are several employees for this user, but none of them in this company, none must be found')
+        with self.assertRaises(ValidationError):
+            # As there are several employees for this user, but none of them in this company, none must be found
+            Timesheet.create({
+                'name': 'Timesheet',
+                'project_id': project.id,
+                'task_id': task.id,
+                'unit_amount': 2,
+                'user_id': self.user_manager.id,
+                'company_id': company_3.id,
+            })
 
     def test_create_timesheet_with_multi_company(self):
         """ Always set the current company in the timesheet, not the employee company """
@@ -447,7 +450,7 @@ class TestTimesheet(TestCommonTimesheet):
                 5) Add analytic tag in task
                 6) Check the analytic tag of the timesheet and task
         """
-        Timesheet = self.env['account.analytic.line']
+        Timesheet = self.env['account.analytic.line'].with_user(self.user_employee)
 
         share_capital_tag, office_furn_tag = self.env['account.analytic.tag'].create([
             {'name': 'Share capital'},
@@ -477,7 +480,7 @@ class TestTimesheet(TestCommonTimesheet):
         self.assertFalse(self.project_customer.timesheet_ids, 'No timesheet should be recorded in this project')
         self.assertFalse(self.project_customer.total_timesheet_time, 'The total time recorded should be equal to 0 since no timesheet is recorded.')
 
-        timesheet1, timesheet2 = self.env['account.analytic.line'].create([
+        timesheet1, timesheet2 = self.env['account.analytic.line'].with_user(self.user_employee).create([
             {'unit_amount': 1.0, 'project_id': self.project_customer.id},
             {'unit_amount': 3.0, 'project_id': self.project_customer.id, 'product_uom_id': False},
         ])

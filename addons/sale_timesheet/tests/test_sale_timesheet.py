@@ -490,6 +490,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
 
     def test_transfert_project(self):
         """ Transfert task with timesheet to another project. """
+        self.env.user.employee_id = self.env['hr.employee'].create({'user_id': self.env.uid})
         Timesheet = self.env['account.analytic.line']
         Task = self.env['project.task']
         today = Date.context_today(self.env.user)
