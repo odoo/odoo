@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from . import test_get_model_definitions
 from . import test_mail_channel
 from . import test_mail_channel_as_guest
 from . import test_mail_channel_partner
