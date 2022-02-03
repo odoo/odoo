@@ -142,6 +142,7 @@
         'web.tests_assets': [
             'mail/static/src/env/test_env.js',
             'mail/static/src/utils/test_utils.js',
+            'mail/static/tests/helpers/models_initializer.js',
             'mail/static/tests/helpers/mock_models.js',
             'mail/static/tests/helpers/mock_server.js',
         ],

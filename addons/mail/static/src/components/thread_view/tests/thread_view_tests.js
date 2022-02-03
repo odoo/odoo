@@ -13,8 +13,8 @@ QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
 QUnit.module('thread_view', {}, function () {
 QUnit.module('thread_view_tests.js', {
-    beforeEach() {
-        beforeEach(this);
+    async beforeEach() {
+        await beforeEach(this);
 
         this.start = async params => {
             const res = await start({ ...params, data: this.data });
@@ -1110,8 +1110,8 @@ QUnit.test('delete all attachments of a message with tracking fields should stil
         changed_field: "Name",
         field_type: "char",
         id: 6,
-        new_value: "New name",
-        old_value: "Old name",
+        new_value_text: "New name",
+        old_value_text: "Old name",
     });
     const { createThreadViewComponent } = await this.start({ hasDialog: true });
     const threadViewer = this.messaging.models['ThreadViewer'].create({

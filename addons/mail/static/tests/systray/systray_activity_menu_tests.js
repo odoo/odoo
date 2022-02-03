@@ -12,8 +12,8 @@ import testUtils from 'web.test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('ActivityMenu', {
-    beforeEach() {
-        beforeEach(this);
+    async beforeEach() {
+        await beforeEach(this);
 
         Object.assign(this.data, {
             'mail.activity.menu': {

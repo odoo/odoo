@@ -178,6 +178,12 @@ class DiscussController(http.Controller):
     def mail_load_message_failures(self, **kwargs):
         return request.env.user.partner_id._message_fetch_failed()
 
+    @http.route('/mail/get_model_definitions', methods=['POST'], type='http', auth='user')
+    def get_model_definitions(self, required_models, **kwargs):
+        return request.make_response(json.dumps(
+            request.env['ir.model']._get_model_definitions(json.loads(required_models))
+        ))
+
     # --------------------------------------------------------------------------
     # Mailbox
     # --------------------------------------------------------------------------

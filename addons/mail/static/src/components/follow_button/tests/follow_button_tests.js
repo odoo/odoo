@@ -12,8 +12,8 @@ QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
 QUnit.module('follow_button', {}, function () {
 QUnit.module('follow_button_tests.js', {
-    beforeEach() {
-        beforeEach(this);
+    async beforeEach() {
+        await beforeEach(this);
 
         this.createFollowButtonComponent = async (thread, otherProps = {}) => {
             const props = Object.assign({ threadLocalId: thread.localId }, otherProps);

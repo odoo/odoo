@@ -8,8 +8,8 @@ import testUtils from 'web.test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('Chatter', {
-    beforeEach: function () {
-        beforeEach(this);
+    beforeEach: async function () {
+        await await beforeEach(this);
 
         this.data['res.partner'].records.push({ id: 11, im_status: 'online' });
         this.data['mail.activity.type'].records.push(
@@ -248,7 +248,6 @@ QUnit.test('list activity widget: open dropdown', async function (assert) {
             activity_type_id: 1,
         }
     );
-
     const { widget: list } = await start({
         hasView: true,
         View: ListView,
@@ -281,7 +280,6 @@ QUnit.test('list activity widget: open dropdown', async function (assert) {
             switch_view: () => assert.step('switch_view'),
         },
     });
-
     assert.strictEqual(list.$('.o_activity_summary').text(), 'Call with Al');
 
     // click on the first record to open it, to ensure that the 'switch_view'
@@ -372,8 +370,8 @@ QUnit.test('list activity exception widget with activity', async function (asser
 });
 
 QUnit.module('FieldMany2ManyTagsEmail', {
-    beforeEach() {
-        beforeEach(this);
+    async beforeEach() {
+        await beforeEach(this);
 
         Object.assign(this.data['res.users'].fields, {
             timmy: { string: "pokemon", type: "many2many", relation: 'partner_type' },

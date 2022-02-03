@@ -8,8 +8,8 @@ QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
 QUnit.module('chatter_topbar', {}, function () {
 QUnit.module('chatter_topbar_tests.js', {
-    beforeEach() {
-        beforeEach(this);
+    async beforeEach() {
+        await beforeEach(this);
 
         this.start = async params => {
             const res = await start(Object.assign({}, params, {
@@ -412,14 +412,14 @@ QUnit.test('rendering with multiple partner followers', async function (assert) 
             // simulate real return from RPC
             id: 1,
             name: "Jean Michang",
-            partner_id: 12,
+            partner_id: 3,
             res_id: 100,
             res_model: 'res.partner',
         }, {
             // simulate real return from RPC
             id: 2,
             name: "Eden Hazard",
-            partner_id: 11,
+            partner_id: 4,
             res_id: 100,
             res_model: 'res.partner',
         },

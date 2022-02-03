@@ -100,3 +100,12 @@ class IrModel(models.Model):
             parents = [parents] if isinstance(parents, str) else parents
             model_class._inherit = parents + ['mail.thread.blacklist']
         return model_class
+
+    def _get_model_definitions(self, required_models):
+        response = {}
+        for model_name, field_names in required_models.items():
+            if field_names:
+                field_names.extend(['id', 'display_name'])
+            response[model_name] = self.env[model_name].fields_get(
+                field_names, ['name', 'type', 'relation', 'required', 'readonly', 'selection'])
+        return response

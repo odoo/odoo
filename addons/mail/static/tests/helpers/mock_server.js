@@ -1,7 +1,5 @@
 /** @odoo-module **/
 
-import { nextAnimationFrame } from '@mail/utils/test_utils';
-
 import MockServer from 'web.MockServer';
 import { datetime_to_str } from 'web.time';
 
@@ -499,10 +497,10 @@ MockServer.include({
         if (request_list.includes('activities')) {
             const activities = this._mockSearchRead('mail.activity', [[
                 '|',
-                    ['id', 'in', thread.activity_ids || []],
-                    '&',
-                        ['res_id', '=', thread.id],
-                        ['res_model', '=', thread_model],
+                ['id', 'in', thread.activity_ids || []],
+                '&',
+                ['res_id', '=', thread.id],
+                ['res_model', '=', thread_model],
             ]], {});
             res['activities'] = this._mockMailActivityActivityFormat(activities.map(activity => activity.id));
         }
@@ -515,10 +513,10 @@ MockServer.include({
         if (request_list.includes('followers')) {
             const followers = this._mockSearchRead('mail.followers', [[
                 '|',
-                    ['id', 'in', thread.message_follower_ids || []],
-                    '&',
-                        ['res_id', '=', thread.id],
-                        ['res_model', '=', thread_model],
+                ['id', 'in', thread.message_follower_ids || []],
+                '&',
+                ['res_id', '=', thread.id],
+                ['res_model', '=', thread_model],
             ]], {});
             res['followers'] = followers;
         }
@@ -1352,9 +1350,6 @@ MockServer.include({
      * @returns {Object[]}
      */
     async _mockMailMessage_MessageFetch(domain, max_id, min_id, limit = 30) {
-        // TODO FIXME delay RPC until next potential render as a workaround
-        // to OWL issue (possibly https://github.com/odoo/owl/issues/904)
-        await nextAnimationFrame();
         if (max_id) {
             domain.push(['id', '<', max_id]);
         }
@@ -1534,6 +1529,7 @@ MockServer.include({
     _mockMailMessageToggleMessageStarred(ids) {
         const messages = this._getRecords('mail.message', [['id', 'in', ids]]);
         for (const message of messages) {
+
             const wasStared = message.starred_partner_ids.includes(this.currentPartnerId);
             this._mockWrite('mail.message', [
                 [message.id],
@@ -2100,26 +2096,26 @@ MockServer.include({
         // simulates domain with relational parts (not supported by mock server)
         const matchingPartners = [...this._mockResPartnerMailPartnerFormat(
             this._getRecords('res.users', [])
-            .filter(user => {
-                const partner = this._getRecords('res.partner', [['id', '=', user.partner_id]])[0];
-                // user must have a partner
-                if (!partner) {
+                .filter(user => {
+                    const partner = this._getRecords('res.partner', [['id', '=', user.partner_id]])[0];
+                    // user must have a partner
+                    if (!partner) {
+                        return false;
+                    }
+                    // not current partner
+                    if (partner.id === this.currentPartnerId) {
+                        return false;
+                    }
+                    // no name is considered as return all
+                    if (!search_term) {
+                        return true;
+                    }
+                    if (partner.name && partner.name.toLowerCase().includes(search_term)) {
+                        return true;
+                    }
                     return false;
-                }
-                // not current partner
-                if (partner.id === this.currentPartnerId) {
-                    return false;
-                }
-                // no name is considered as return all
-                if (!search_term) {
-                    return true;
-                }
-                if (partner.name && partner.name.toLowerCase().includes(search_term)) {
-                    return true;
-                }
-                return false;
-            })
-            .map(user => user.partner_id)
+                })
+                .map(user => user.partner_id)
         ).values()];
         const count = matchingPartners.length;
         matchingPartners.length = Math.min(count, limit);

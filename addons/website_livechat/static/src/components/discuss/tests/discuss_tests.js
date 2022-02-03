@@ -10,8 +10,8 @@ QUnit.module('website_livechat', {}, function () {
 QUnit.module('components', {}, function () {
 QUnit.module('discuss', {}, function () {
 QUnit.module('discuss_tests.js', {
-    beforeEach() {
-        beforeEach(this);
+    async beforeEach() {
+        await beforeEach(this);
 
         this.start = async params => {
             const { env, widget } = await start(Object.assign({}, params, {
@@ -30,7 +30,6 @@ QUnit.module('discuss_tests.js', {
 
 QUnit.test('rendering of visitor banner', async function (assert) {
     assert.expect(13);
-
     this.data['res.country'].records.push({
         id: 11,
         code: 'FAKE',

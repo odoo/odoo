@@ -15,19 +15,20 @@ import { DialogService } from '@mail/services/dialog_service/dialog_service';
 import { getMessagingComponent } from '@mail/utils/messaging_component';
 import { nextTick } from '@mail/utils/utils';
 import { DiscussWidget } from '@mail/widgets/discuss/discuss';
-import { MockModels } from '@mail/../tests/helpers/mock_models';
+import { ModelsInitializer } from '@mail/../tests/helpers/models_initializer';
+
+import { getFixture } from "@web/../tests/helpers/utils";
+import { createWebClient, getActionManagerServerData } from "@web/../tests/webclient/helpers";
+import { registerCleanup } from '@web/../tests/helpers/cleanup';
 
 import AbstractStorageService from 'web.AbstractStorageService';
 import RamStorage from 'web.RamStorage';
 import {
     createView,
-    makeTestPromise,
     mock,
 } from 'web.test_utils';
 import Widget from 'web.Widget';
-import { getFixture } from "@web/../tests/helpers/utils";
-import { createWebClient, getActionManagerServerData } from "@web/../tests/webclient/helpers";
-
+import core from 'web.core';
 import LegacyRegistry from "web.Registry";
 
 const { App, Component, EventBus } = owl;
@@ -170,12 +171,93 @@ function nextAnimationFrame() {
 }
 
 //------------------------------------------------------------------------------
+// Server Data Configuration
+//------------------------------------------------------------------------------
+
+let _modelDefinitions;
+QUnit.done(() => {
+    // clear model definitions only once all the tests are done
+    _modelDefinitions = undefined;
+});
+
+/**
+ * Fetch model definitions from the server if it's not already done then apply
+ * default values and custom fields to those definitions if necessary.
+ *
+ * @param {Object} models Models required for the test. If those models or their
+ * fields are missing, fetch them on the server.
+ * @param {Object} defaultFieldValues Give default values for some model fields.
+ * @param {Object} customModelfields Some fields that are not present on the
+ * python model definition but are required in order to ease testing.
+ */
+async function _setupModelDefinitions(models, defaultFieldValues, customModelfields) {
+    const modelsToFetch = {};
+    // find out which model need to be fetched. Either because we never fetched it, or because some
+    // required fields are missing.
+    Object.entries(models).forEach(([modelName, modelFields]) => {
+        const modelData = _modelDefinitions[modelName];
+        if (!modelData) {
+            modelsToFetch[modelName] = modelFields;
+        } else {
+            const missingFields = modelFields.filter(f => !Object.keys(modelData.fields).includes(f));
+            if (missingFields) {
+                modelsToFetch[modelName] = missingFields;
+            }
+        }
+    });
+    // fetch the missing required models
+    if (Object.keys(modelsToFetch).length) {
+        const formData = new FormData();
+        formData.append('csrf_token', core.csrf_token);
+        formData.append('required_models', JSON.stringify(modelsToFetch));
+        const response = await window.fetch('/mail/get_model_definitions', {
+            method: 'POST',
+            body: formData,
+        });
+        if (response.status !== 200) {
+            throw new Error('Error while fetching required models');
+        }
+        Object.entries(await response.json()).forEach(([modelName, modelFields]) => {
+            _modelDefinitions[modelName] = _modelDefinitions[modelName] || { fields: {}, records: [] };
+            Object.assign(_modelDefinitions[modelName].fields, modelFields);
+        });
+    }
+    // apply custom fields: fields that are not present in the python model definition but are
+    // used by the tests for simplicity's sake.
+    Object.entries(customModelfields).forEach(([modelName, fields]) => {
+        Object.assign(_modelDefinitions[modelName].fields, fields);
+    });
+    // apply default values to the fields
+    Object.entries(defaultFieldValues).forEach(([modelName, fieldValues]) => {
+        Object.entries(fieldValues).forEach(([fieldName, value]) => {
+            const { fields } = _modelDefinitions[modelName];
+            fields[fieldName].default = value;
+        });
+    });
+    registerCleanup(() => {
+        Object.values(_modelDefinitions).forEach(modelDef => modelDef.records = []);
+    });
+}
+
+//------------------------------------------------------------------------------
 // Public: test lifecycle
 //------------------------------------------------------------------------------
 
-function beforeEach(self) {
-    const data = MockModels.generateData();
-
+async function beforeEach(self, param0 = {}) {
+    const {
+        requiredModels = {},
+        defaultFieldValues = {},
+        customModelFields = {},
+    } = param0;
+    if (!_modelDefinitions) {
+        _modelDefinitions = {};
+        const modelsData = ModelsInitializer.getModelsData();
+        Object.assign(requiredModels, modelsData.models);
+        Object.assign(defaultFieldValues, modelsData.defaultFieldValues);
+        Object.assign(customModelFields, modelsData.customModelFields);
+    }
+    await _setupModelDefinitions(requiredModels, defaultFieldValues, customModelFields);
+    const data = { ..._modelDefinitions };
     data.partnerRootId = 2;
     data['res.partner'].records.push({
         active: false,
@@ -212,6 +294,29 @@ function beforeEach(self) {
         partner_id: data.publicPartnerId,
     });
 
+    data['mail.activity.type'].records.push(
+        { icon: 'fa-envelope', id: 1, name: "Email" },
+        { icon: 'fa-upload', id: 28, name: "Upload Document" },
+    );
+    data['mail.message.subtype'].records.push(
+        { name: "Discussions", sequence: 0, subtype_xmlid: 'mail.mt_comment' },
+        { default: false, internal: true, name: "Note", sequence: 100, subtype_xmlid: 'mail.mt_note' },
+        { default: false, internal: true, name: "Activities", sequence: 90, subtype_xmlid: 'mail.mt_activities' },
+    );
+
+    data['res.fake'] = {
+        fields: {
+            activity_ids: { string: "Activities", type: 'one2many', relation: 'mail.activity' },
+            email_cc: { type: 'char' },
+            partner_ids: {
+                string: "Related partners",
+                type: 'many2one',
+                relation: 'res.partner'
+            },
+        },
+        records: [],
+    };
+
     const originals = {
         '_.debounce': _.debounce,
         '_.throttle': _.throttle,
@@ -227,7 +332,6 @@ function beforeEach(self) {
         _.debounce = originals['_.debounce'];
         _.throttle = originals['_.throttle'];
     }
-
     Object.assign(self, {
         apps: [],
         data,
@@ -574,7 +678,7 @@ function getOpenDiscuss({ afterNextRender, discussWidget }) {
  *   `waitUntilMessagingCondition`.
  * @returns {Object}
  */
-async function start(param0 = {}) {
+ async function start(param0 = {}) {
     let callbacks = {
         init: [],
         mount: [],
