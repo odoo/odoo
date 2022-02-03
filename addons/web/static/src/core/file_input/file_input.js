@@ -67,18 +67,13 @@ export class FileInput extends Component {
     onTriggerClicked() {
         this.fileInputRef.el.click();
     }
-
-    onUpload(ev) {
-        if (this.props.onUpload && ev.detail) {
-            this.props.onUpload(ev.detail.files);
-        }
-    }
 }
 
 FileInput.defaultProps = {
     accepted_file_extensions: "*",
     action: "/web/binary/upload",
     multi_upload: false,
+    onUpload: () => {},
 };
 FileInput.props = {
     accepted_file_extensions: { type: String, optional: 1 },
