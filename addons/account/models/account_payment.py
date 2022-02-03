@@ -1017,3 +1017,11 @@ class AccountPayment(models.Model):
             'res_id': self.destination_journal_id.id,
         }
         return action
+
+# For optimization purpose, creating the reverse relation of m2o in _inherits saves
+# a lot of SQL queries
+class AccountMove(models.Model):
+    _name = "account.move"
+    _inherit = ['account.move']
+
+    payment_ids = fields.One2many('account.payment', 'move_id', string='Payments')

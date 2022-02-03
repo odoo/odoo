@@ -1271,3 +1271,11 @@ class AccountBankStatementLine(models.Model):
                 'to_check': False,
                 'line_ids': [(5, 0)] + [(0, 0, line_vals) for line_vals in st_line._prepare_move_line_default_vals()],
             })
+
+# For optimization purpose, creating the reverse relation of m2o in _inherits saves
+# a lot of SQL queries
+class AccountMove(models.Model):
+    _name = "account.move"
+    _inherit = ['account.move']
+
+    statement_line_ids = fields.One2many('account.bank.statement.line', 'move_id', string='Statements')

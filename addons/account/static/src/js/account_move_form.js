@@ -19,11 +19,6 @@ var AccountMoveFormController = FormController.extend({
         await self.saveRecord(this.handle, {
             stayInEdit: true,
             reload: true,
-        }).then(() => {
-            this.displayNotification({
-                type: 'info',
-                message: _lt('The invoice has been saved'),
-            });
         });
         await this.reload();
     },

@@ -320,7 +320,7 @@ class AccountChartTemplate(models.Model):
             created.line_ids._onchange_account_id()
 
             created._recompute_dynamic_lines(
-                recompute_all_taxes=True,
+                recompute_taxes=True,
                 recompute_tax_base_amount=True,
             )
 

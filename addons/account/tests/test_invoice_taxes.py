@@ -354,7 +354,6 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
             credit_line.tax_ids.clear()
             credit_line.tax_ids.add(sale_tax)
 
-            self.assertTrue(credit_line.recompute_tax_line)
 
         # Balance the journal entry.
         with move_form.line_ids.new() as credit_line:
@@ -382,8 +381,6 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
             credit_line.credit = 1000.0
             credit_line.tax_ids.clear()
             credit_line.tax_ids.add(sale_tax)
-
-            self.assertTrue(credit_line.recompute_tax_line)
 
         # Balance the journal entry.
         with move_form.line_ids.new() as debit_line:
@@ -447,8 +444,6 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
             credit_line.tax_ids.clear()
             credit_line.tax_ids.add(purch_tax)
 
-            self.assertTrue(credit_line.recompute_tax_line)
-
         # Balance the journal entry.
         with move_form.line_ids.new() as credit_line:
             credit_line.name = 'balance'
@@ -475,8 +470,6 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
             credit_line.credit = 1000.0
             credit_line.tax_ids.clear()
             credit_line.tax_ids.add(purch_tax)
-
-            self.assertTrue(credit_line.recompute_tax_line)
 
         # Balance the journal entry.
         with move_form.line_ids.new() as debit_line:

@@ -382,6 +382,9 @@ class Cursor(BaseCursor):
             query_lower = self._obj.query.decode().lower()
             res_from = re_from.match(query_lower)
             if res_from:
+                # if res_from.group(1)=='account_payment':
+                #     import pudb
+                #     pudb.set_trace()
                 self.sql_from_log.setdefault(res_from.group(1), [0, 0])
                 self.sql_from_log[res_from.group(1)][0] += 1
                 self.sql_from_log[res_from.group(1)][1] += delay

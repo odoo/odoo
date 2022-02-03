@@ -905,8 +905,6 @@
                                         <field name="partner_id" invisible="1"/>
                                         <field name="amount_currency" invisible="1"/>
                                         <field name="currency_id" invisible="1"/>
-                                        <field name="debit" invisible="1"/>
-                                        <field name="credit" invisible="1"/>
                                         <field name="date" invisible="1"/>
                                         <field name="date_maturity" invisible="1"/>
 
@@ -917,7 +915,6 @@
                                         <field name="tax_base_amount" invisible="1"/>
                                         <field name="company_id" invisible="1"/>
                                         <field name="company_currency_id" invisible="1"/>
-                                        <field name="recompute_tax_line" invisible="1" force_save="1"/>
                                         <field name="display_type" force_save="1" invisible="1"/>
                                         <field name="is_rounding_line" invisible="1"/>
                                         <field name="exclude_from_invoice_tab" invisible="1"/>
@@ -981,8 +978,6 @@
                                         <field name="partner_id" invisible="1"/>
                                         <field name="amount_currency" invisible="1"/>
                                         <field name="currency_id" invisible="1"/>
-                                        <field name="debit" invisible="1"/>
-                                        <field name="credit" invisible="1"/>
                                         <field name="date" invisible="1"/>
                                         <field name="date_maturity" invisible="1"/>
 
@@ -993,7 +988,6 @@
                                         <field name="tax_base_amount" invisible="1"/>
                                         <field name="company_id" invisible="1"/>
                                         <field name="company_currency_id" invisible="1"/>
-                                        <field name="recompute_tax_line" invisible="1" force_save="1"/>
                                         <field name="display_type" force_save="1" invisible="1"/>
                                         <field name="is_rounding_line" invisible="1"/>
                                         <field name="exclude_from_invoice_tab" invisible="1"/>
@@ -1153,7 +1147,6 @@
                                         <field name="tax_base_amount" invisible="1" force_save="1"/>
                                         <field name="company_id" invisible="1"/>
                                         <field name="company_currency_id" invisible="1"/>
-                                        <field name="recompute_tax_line" invisible="1" force_save="1"/>
                                         <field name="display_type" force_save="1" invisible="1"/>
                                         <field name="is_rounding_line" invisible="1"/>
                                         <field name="exclude_from_invoice_tab" invisible="1"/>
@@ -1178,7 +1171,6 @@
                                         <field name="credit" sum="Total Credit"/>
                                         <field name="tax_ids" string="Taxes Applied" widget="many2many_tags" options="{'no_create': True}"/>
                                         <field name="date_maturity" required="0" invisible="context.get('view_no_maturity', False)"/>
-                                        <field name="recompute_tax_line" invisible="1" readonly="1"/>
                                       </group>
                                     </form>
                                 </field>
