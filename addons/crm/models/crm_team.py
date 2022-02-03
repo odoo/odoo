@@ -448,7 +448,7 @@ class Team(models.Model):
         auto_commit = not getattr(threading.currentThread(), 'testing', False)
 
         # leads
-        max_create_dt = fields.Datetime.now() - datetime.timedelta(hours=BUNDLE_HOURS_DELAY)
+        max_create_dt = self.env.cr.now() - datetime.timedelta(hours=BUNDLE_HOURS_DELAY)
         duplicates_lead_cache = dict()
 
         # teams data
@@ -459,7 +459,7 @@ class Team(models.Model):
 
             lead_domain = expression.AND([
                 literal_eval(team.assignment_domain or '[]'),
-                [('create_date', '<', max_create_dt)],
+                [('create_date', '<=', max_create_dt)],
                 ['&', ('team_id', '=', False), ('user_id', '=', False)],
                 ['|', ('stage_id', '=', False), ('stage_id.is_won', '=', False)]
             ])
