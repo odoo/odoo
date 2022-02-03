@@ -223,7 +223,7 @@ class ProductProduct(models.Model):
         self.env.cr.execute("CREATE UNIQUE INDEX IF NOT EXISTS product_product_combination_unique ON %s (product_tmpl_id, combination_indices) WHERE active is true"
             % self._table)
 
-    # TODO: remove before merge
+    # # TODO: remove before merge
     # _sql_constraints = [
     #     ('barcode_uniq', 'unique(barcode)', "A barcode can only be assigned to one product !"),
     # ]
