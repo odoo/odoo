@@ -3,6 +3,7 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.osv.expression import AND
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
 
 class StockPickingBatch(models.Model):
@@ -75,9 +76,10 @@ class StockPickingBatch(models.Model):
                 domain_states.append('draft')
             domain = [
                 ('company_id', '=', batch.company_id.id),
-                ('immediate_transfer', '=', False),
                 ('state', 'in', domain_states),
             ]
+            if not batch.is_wave:
+                domain = AND([domain, [('immediate_transfer', '=', False)]])
             if batch.picking_type_id:
                 domain += [('picking_type_id', '=', batch.picking_type_id.id)]
             batch.allowed_picking_ids = self.env['stock.picking'].search(domain)
