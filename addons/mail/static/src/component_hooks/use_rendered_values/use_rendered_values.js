@@ -2,7 +2,7 @@
 
 import { Listener } from '@mail/model/model_listener';
 
-const { Component, onMounted, onPatched } = owl;
+const { onMounted, onPatched, useComponent } = owl;
 
 /**
  * This hooks provides support for accessing the values returned by the given
@@ -14,7 +14,7 @@ const { Component, onMounted, onPatched } = owl;
  * @returns {function} function to call to retrieve the last rendered values.
  */
 export function useRenderedValues(selector) {
-    const component = Component.current;
+    const component = useComponent();
     let renderedValues;
     let patchedValues;
     const { modelManager } = component.env.services.messaging;

@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-const { Component } = owl;
+const { useComponent } = owl;
 
 /**
  * This hook provides support for dynamic-refs.
@@ -9,7 +9,7 @@ const { Component } = owl;
  *   and values are refs.
  */
 export function useRefs() {
-    const component = Component.current;
+    const component = useComponent();
     return function () {
         return component.__owl__.refs || {};
     };

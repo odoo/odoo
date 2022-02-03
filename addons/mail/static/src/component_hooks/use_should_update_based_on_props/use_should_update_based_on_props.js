@@ -1,7 +1,6 @@
 /** @odoo-module **/
-'use strict';
 
-const { Component, onPatched } = owl;
+const { onPatched, useComponent } = owl;
 
 /**
  * Shallow compares props `a` and `b`.
@@ -30,7 +29,7 @@ function isEqual(a, b) {
  * comparing props.
  */
 export function useShouldUpdateBasedOnProps() {
-    const component = Component.current;
+    const component = useComponent();
     let forceRender = false;
     component.shouldUpdate = nextProps => {
         if (forceRender) {
