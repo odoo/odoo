@@ -301,6 +301,9 @@ MockServer.include({
             delete kwargs.context;
             return this._mockMailThreadMessagePost(args.model, [id], kwargs, context);
         }
+        if (args.method === 'notify_cancel_by_type') {
+            return this._mockMailThreadNotifyCancelByType(args.model, args.kwargs.notification_type);
+        }
         return this._super(route, args);
     },
     /**
@@ -2363,5 +2366,32 @@ MockServer.include({
             shortcodes: this._mockSearchRead('mail.shortcode', [[], ['source', 'substitution']], {}),
             starred_counter: this._getRecords('mail.message', [['starred_partner_ids', 'in', user.partner_id]]).length,
         };
+    },
+    /**
+     * Simulate the `notify_cancel_by_type` on `mail.thread` .
+     * Note that this method is overridden by snailmail module but not simulated here.
+     */
+    _mockMailThreadNotifyCancelByType(model, notificationType) {
+        // Query matching notifications
+        const notifications = this._getRecords('mail.notification', [
+            ['notification_type', '=', notificationType],
+            ['notification_status', 'in', ['bounce', 'exception']],
+        ]).filter(notification => {
+            const message = this._getRecords('mail.message', [['id', '=', notification.mail_message_id]])[0];
+            return message.model === model && message.author_id === this.currentPartnerId;
+        });
+        // Update notification status
+        this._mockWrite('mail.notification', [
+            notifications.map(notification => notification.id),
+            { notification_status: 'canceled' },
+        ]);
+        // Send bus notifications to update status of notifications in the web client
+        this._widget.call('bus_service', 'trigger', 'notification', [{
+            payload: {
+                elements: this._mockMailMessage_MessageNotificationFormat(
+                    notifications.map(notification => notification.mail_message_id)),
+            },
+            type: 'mail.message/notification_update',
+        }]);
     },
 });

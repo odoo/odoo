@@ -2105,6 +2105,48 @@ class MailThread(models.AbstractModel):
     # NOTIFICATION API
     # ------------------------------------------------------
 
+    def _notify_cancel_by_type_generic(self, notification_type):
+        """ Standard implementation for canceling notifications by type that cancels notifications
+         * in 'bounce' and 'exception' status
+         * of the current user
+         * of the given type
+         * for mail_message related to the model implemented by this class
+         It also sends bus notifications to update status of notifications in the web client.
+        """
+        author_id = self.env.user.partner_id.id
+        self._cr.execute("""
+                    SELECT notif.id, msg.id
+                      FROM mail_notification notif
+                      JOIN mail_message msg ON notif.mail_message_id = msg.id
+                      WHERE notif.notification_type = %(notification_type)s
+                      AND notif.author_id = %(author_id)s
+                      AND notif.notification_status IN ('bounce', 'exception')
+                      AND msg.model = %(model_name)s
+                """, {'model_name': self._name, 'author_id': author_id, 'notification_type': notification_type})
+        records = self._cr.fetchall()
+        if records:
+            notif_ids, msg_ids = zip(*records)
+            msg_ids = list(set(msg_ids))
+            if notif_ids:
+                self.env['mail.notification'].browse(notif_ids).sudo().write({'notification_status': 'canceled'})
+            if msg_ids:
+                self.env['mail.message'].browse(msg_ids)._notify_message_notification_update()
+        return True
+
+    @api.model
+    def notify_cancel_by_type(self, notification_type):
+        """ Subclasses must call this method and then
+         * either call the standard implementation _notify_cancel_by_type_generic
+         * or implements their own logic
+        """
+        if not self.env.user.has_group('base.group_user'):
+            raise exceptions.AccessError(_("Access Denied"))
+        self.check_access_rights('read')
+
+        if notification_type == 'email':
+            self._notify_cancel_by_type_generic('email')
+        return True
+
     def _notify_thread(self, message, msg_vals=False, **kwargs):
         """ Main notification method. This method basically does two things
 

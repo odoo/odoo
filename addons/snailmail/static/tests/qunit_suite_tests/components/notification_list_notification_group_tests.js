@@ -13,53 +13,41 @@ QUnit.module('notification_list_notification_group_tests.js', {
 });
 
 QUnit.test('mark as read', async function (assert) {
-    assert.expect(6);
+    assert.expect(2);
+
+    // Note: The server code is too complex to be rewritten in javascript.
+    // Actually, the server rely on the model "snailmail.letter" to identify the notification to cancel
+    // The following code simulates the cancel of the notification without using "snailmail.letter" model
 
     // message that is expected to have a failure
     this.data['mail.message'].records.push({
-        id: 11, // random unique id, will be used to link failure to message
-        message_type: 'snailmail', // message must be snailmail (goal of the test)
-        model: 'mail.channel', // expected value to link message to channel
-        res_id: 31, // id of a random channel
+        author_id: this.data.currentPartnerId,
+        id: 11,
+        message_type: 'snailmail',
+        model: 'mail.channel',
+        res_id: 31,
     });
     // failure that is expected to be used in the test
     this.data['mail.notification'].records.push({
         mail_message_id: 11, // id of the related message
         notification_status: 'exception', // necessary value to have a failure
-        notification_type: 'snail', // expected failure type for snailmail message
+        notification_type: 'snail',
     });
-    const bus = new Bus();
-    bus.on('do-action', null, payload => {
-        assert.step('do_action');
-        assert.strictEqual(
-            payload.action,
-            'snailmail.snailmail_letter_cancel_action',
-            "action should be the one to cancel letter"
-        );
-        assert.strictEqual(
-            payload.options.additional_context.default_model,
-            'mail.channel',
-            "action should have the group model as default_model"
-        );
-        assert.strictEqual(
-            payload.options.additional_context.unread_counter,
-            1,
-            "action should have the group notification length as unread_counter"
-        );
-    });
-    const { createNotificationListComponent } = await start({ data: this.data, env: { bus } });
+    const { afterNextRender, createNotificationListComponent } = await start({ data: this.data });
     await createNotificationListComponent();
-
     assert.containsOnce(
         document.body,
         '.o_NotificationGroup_markAsRead',
         "should have 1 mark as read button"
     );
 
-    document.querySelector('.o_NotificationGroup_markAsRead').click();
-    assert.verifySteps(
-        ['do_action'],
-        "should do an action to display the cancel letter dialog"
+    await afterNextRender(() => {
+        document.querySelector('.o_NotificationGroup_markAsRead').click();
+    });
+    assert.containsNone(
+        document.body,
+        '.o_NotificationGroup',
+        "should have no notification group"
     );
 });
 
