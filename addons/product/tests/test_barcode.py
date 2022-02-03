@@ -1,0 +1,50 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from odoo import exceptions
+from odoo.tests.common import TransactionCase
+
+
+class TestProductBarcode(TransactionCase):
+
+    def setUp(self):
+        super().setUp()
+        self.env['product.product'].create({'name': 'BC1', 'barcode': '1'})
+        self.env['product.product'].create({'name': 'BC2', 'barcode': '2'})
+
+    def test_blank_barcode(self):
+        for i in range(2):
+            self.env['product.product'].create({'name': f'BC_{i}'})
+
+    def test_false_barcode(self):
+        for i in range(2):
+            self.env['product.product'].create({'name': f'BC_{i}', 'barcode': False})
+
+    def test_duplicated_barcode(self):
+        with self.assertRaises(exceptions.ValidationError):
+            self.env['product.product'].create({'name': 'BC3', 'barcode': '1'})
+
+    def test_barcode_batch_edit(self):
+        batch = [
+            {'name': 'BC3', 'barcode': '3'},
+            {'name': 'BC4', 'barcode': '4'},
+        ]
+        self.env['product.product'].create(batch)
+        batch.append({'name': 'BC5', 'barcode': '1'})
+        with self.assertRaises(exceptions.ValidationError):
+            self.env['product.product'].create(batch)
+
+    def test_error_msg_content(self):
+        batch = [
+            {'name': 'BC3', 'barcode': '3'},
+            {'name': 'BC4', 'barcode': '3'},
+            {'name': 'BC5', 'barcode': '4'},
+            {'name': 'BC6', 'barcode': '4'},
+            {'name': 'BC7', 'barcode': '1'},
+        ]
+        try:
+            self.env['product.product'].create(batch)
+        except exceptions.ValidationError as exc:
+            assert 'Barcode "3" assigned to product(s): BC3, BC4' in exc.args[0]
+            assert 'Barcode "4" assigned to product(s): BC5, BC6' in exc.args[0]
+            assert 'Barcode "1" assigned to product(s): BC1' in exc.args[0]
