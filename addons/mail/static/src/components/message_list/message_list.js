@@ -337,6 +337,9 @@ export class MessageList extends Component {
      * @param {ScrollEvent} ev
      */
     _onScrollThrottled(ev) {
+        if (!this.messageListView) {
+            return;
+        }
         const {
             orderedMessages,
             thread,
