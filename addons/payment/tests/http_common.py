@@ -5,7 +5,6 @@ from uuid import uuid4
 
 from lxml import etree, objectify
 
-from odoo import http
 from odoo.tests import HttpCase
 
 from odoo.addons.payment.tests.utils import PaymentTestUtils
@@ -66,7 +65,6 @@ class PaymentHttpCommon(PaymentTestUtils, HttpCase):
         :return: The response of the request
         :rtype: :class:`requests.models.Response`
         """
-        data = self._ensure_csrf_token(payload=data)
         return self.opener.post(url, json=data)
 
     def _make_json_rpc_request(self, url, data=None):
@@ -85,21 +83,7 @@ class PaymentHttpCommon(PaymentTestUtils, HttpCase):
                 'params': _data,
             }
 
-        data = self._ensure_csrf_token(payload=data)
-        return self.opener.post(url, json=_build_jsonrpc_payload(data))
-
-    def _ensure_csrf_token(self, payload=None):
-        """ Check if a CSRF token is needed in the request payload and add one if so.
-
-        :param dict payload: The payload of the request
-        :return: The payload with a CSRF token
-        :rtype: dict
-        """
-        payload = {} if payload is None else payload
-        if not getattr(self, 'session', None):  # A CSRF token is required
-            self.authenticate('', '')  # Create a session first
-        payload['csrf_token'] = http.WebRequest.csrf_token(self)
-        return payload
+        return self._make_json_request(url, data=_build_jsonrpc_payload(data))
 
     def _get_tx_context(self, response, form_name):
         """Extracts txContext & other form info (acquirer & token ids)
