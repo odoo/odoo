@@ -314,7 +314,7 @@ class ProductTemplateAttributeLine(models.Model):
                 # We catch all kind of exceptions to be sure that the operation
                 # doesn't fail.
                 ptal_to_archive += ptal
-        ptal_to_archive.write({'active': False})
+        ptal_to_archive.action_archive()  # only calls write if there are records
         # For archived lines `_update_product_template_attribute_values` is
         # implicitly called during the `write` above, but for products that used
         # unlinked lines `_create_variant_ids` has to be called manually.
