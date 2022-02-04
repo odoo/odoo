@@ -91,12 +91,12 @@ odoo.define('point_of_sale.tour.ProductScreenTourMethods', function (require) {
             ];
         }
 
-        clickCustomerButton() {
+        clickPartnerButton() {
             return [
-                { content: 'click customer button', trigger: '.actionpad .button.set-customer' },
+                { content: 'click customer button', trigger: '.actionpad .button.set-partner' },
                 {
-                    content: 'customer screen is shown',
-                    trigger: '.pos-content .clientlist-screen',
+                    content: 'partner screen is shown',
+                    trigger: '.pos-content .partnerlist-screen',
                     run: () => {},
                 },
             ];
@@ -106,11 +106,11 @@ odoo.define('point_of_sale.tour.ProductScreenTourMethods', function (require) {
             return [
                 {
                     content: `select customer '${name}'`,
-                    trigger: `.clientlist-screen .client-line td:contains("${name}")`,
+                    trigger: `.partnerlist-screen .partner-line td:contains("${name}")`,
                 },
                 {
-                    content: `client line '${name}' is highlighted`,
-                    trigger: `.clientlist-screen .client-line.highlight td:contains("${name}")`,
+                    content: `partner line '${name}' is highlighted`,
+                    trigger: `.partnerlist-screen .partner-line.highlight td:contains("${name}")`,
                     run: () => {},
                 },
             ];
@@ -120,7 +120,7 @@ odoo.define('point_of_sale.tour.ProductScreenTourMethods', function (require) {
             return [
                 {
                     content: 'click set customer',
-                    trigger: '.clientlist-screen .button.next.highlight',
+                    trigger: '.partnerlist-screen .button.next.highlight',
                 },
             ];
         }

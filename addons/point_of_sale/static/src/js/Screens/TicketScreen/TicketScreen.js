@@ -191,18 +191,18 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
                 this._prepareAutoRefundOnOrder(order);
             }
 
-            const customer = order.get_client();
+            const partner = order.get_partner();
 
             // Select the lines from toRefundLines (can come from different orders)
             // such that:
             //   - the quantity to refund is not zero
-            //   - if there is customer in the selected paid order, select the items
+            //   - if there is partner in the selected paid order, select the items
             //     with the same orderPartnerId
             //   - it is not yet linked to an active order (no destinationOrderUid)
             const allToRefundDetails = Object.values(this.env.pos.toRefundLines).filter(
                 ({ qty, orderline, destinationOrderUid }) =>
                     !this.env.pos.isProductQtyZero(qty) &&
-                    (customer ? orderline.orderPartnerId == customer.id : true) &&
+                    (partner ? orderline.orderPartnerId == partner.id : true) &&
                     !destinationOrderUid
             );
             if (allToRefundDetails.length == 0) {
@@ -212,9 +212,9 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
 
             // The order that will contain the refund orderlines.
             // Use the destinationOrder from props if the order to refund has the same
-            // customer as the destinationOrder.
+            // partner as the destinationOrder.
             const destinationOrder =
-                this.props.destinationOrder && customer === this.props.destinationOrder.get_client()
+                this.props.destinationOrder && partner === this.props.destinationOrder.get_partner()
                     ? this.props.destinationOrder
                     : this.env.pos.add_new_order();
 
@@ -234,9 +234,9 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
                 refundDetail.destinationOrderUid = destinationOrder.uid;
             }
 
-            // Set the customer to the destinationOrder.
-            if (customer && !destinationOrder.get_client()) {
-                destinationOrder.set_client(customer);
+            // Set the partner to the destinationOrder.
+            if (partner && !destinationOrder.get_partner()) {
+                destinationOrder.set_partner(partner);
             }
 
             this._onCloseScreen();
@@ -288,14 +288,14 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
         getTotal(order) {
             return this.env.pos.format_currency(order.get_total_with_tax());
         }
-        getCustomer(order) {
-            return order.get_client_name();
+        getPartner(order) {
+            return order.get_partner_name();
         }
         getCardholderName(order) {
             return order.get_cardholder_name();
         }
-        getEmployee(order) {
-            return order.employee ? order.employee.name : '';
+        getCashier(order) {
+            return order.cashier ? order.cashier.name : '';
         }
         getStatus(order) {
             if (order.locked) {
@@ -348,9 +348,9 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
                 return `${this._state.syncedOrders.currentPage}/${this._getLastPage()}`;
             }
         }
-        getSelectedClient() {
+        getSelectedPartner() {
             const order = this.getSelectedSyncedOrder();
-            return order ? order.get_client() : null;
+            return order ? order.get_partner() : null;
         }
         getHasItemsToRefund() {
             const order = this.getSelectedSyncedOrder();
@@ -396,8 +396,8 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
             if (orderline.id in this.env.pos.toRefundLines) {
                 return this.env.pos.toRefundLines[orderline.id];
             } else {
-                const customer = orderline.order.get_client();
-                const orderPartnerId = customer ? customer.id : false;
+                const partner = orderline.order.get_partner();
+                const orderPartnerId = partner ? partner.id : false;
                 const newToRefundDetail = {
                     qty: 0,
                     orderline: {
@@ -445,8 +445,8 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
                     displayName: this.env._t('Date'),
                     modelField: 'date_order',
                 },
-                CUSTOMER: {
-                    repr: (order) => order.get_client_name(),
+                PARTNER: {
+                    repr: (order) => order.get_partner_name(),
                     displayName: this.env._t('Customer'),
                     modelField: 'partner_id.display_name',
                 },

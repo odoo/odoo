@@ -112,14 +112,6 @@ var ProxyDevice  = core.Class.extend(mixins.PropertiesMixin,{
         this.use_debug_weight = false;
 
         this.paying = false;
-        this.default_payment_status = {
-            status: 'waiting',
-            message: '',
-            payment_method: undefined,
-            receipt_client: undefined,
-            receipt_shop:   undefined,
-        };
-        this.custom_payment_status = this.default_payment_status;
 
         this.notifications = {};
         this.bypass_proxy = false;
@@ -466,14 +458,14 @@ var ProxyDevice  = core.Class.extend(mixins.PropertiesMixin,{
      * @param {string} html
      * @returns {Promise}
      */
-    take_ownership_over_client_screen: function(html) {
+    take_ownership_over_customer_screen: function(html) {
         return this.message("take_control", { html: html });
     },
 
     /**
      * @returns {Promise}
      */
-    test_ownership_of_client_screen: function() {
+    test_ownership_of_customer_screen: function() {
         if (this.connection) {
             return this.message("test_ownership", {});
         }

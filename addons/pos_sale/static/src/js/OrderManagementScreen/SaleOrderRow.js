@@ -26,9 +26,9 @@ odoo.define('pos_sale.SaleOrderRow', function (require) {
         get date() {
             return moment(this.order.date_order).format('YYYY-MM-DD hh:mm A');
         }
-        get customer() {
-            const customer = this.order.partner_id;
-            return customer ? customer[1] : null;
+        get partner() {
+            const partner = this.order.partner_id;
+            return partner ? partner[1] : null;
         }
         get total() {
             return this.env.pos.format_currency(this.order.amount_total);
