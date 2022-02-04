@@ -3503,15 +3503,15 @@ var BasicModel = AbstractModel.extend({
                 }
             }
         }
-        if (options.additionalContext) {
-            context.add(options.additionalContext);
-        }
         if (element.rawContext) {
             var rawContext = new Context(element.rawContext);
             var evalContext = this._getEvalContext(this.localData[element.parentID]);
             evalContext.id = evalContext.id || false;
             rawContext.set_eval_context(evalContext);
             context.add(rawContext);
+        }
+        if (options.additionalContext) {
+            context.add(options.additionalContext);
         }
 
         return context.eval();
