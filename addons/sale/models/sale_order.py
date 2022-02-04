@@ -551,7 +551,7 @@ class SaleOrder(models.Model):
                 }
             }
 
-    @api.depends('pricelist_id', 'order_line')
+    @api.depends('pricelist_id')
     def _compute_show_update_pricelist(self):
         for order in self:
             order.show_update_pricelist = order.order_line and order.pricelist_id and order._origin.pricelist_id != self.pricelist_id
