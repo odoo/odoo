@@ -73,6 +73,21 @@ class BuckarooTest(BuckarooCommon, PaymentHttpCommon):
             self._make_http_post_request(url, data=self.async_notification_data)
         self.assertEqual(tx.state, 'done')
 
+    @mute_logger('odoo.addons.payment_buckaroo.controllers.main')
+    def test_webhook_notification_triggers_signature_check(self):
+        """ Test that receiving a webhook notification triggers a signature check. """
+        self.create_transaction('redirect')
+        url = self._build_url(BuckarooController._return_url)
+        with patch(
+            'odoo.addons.payment_buckaroo.controllers.main.BuckarooController'
+            '._verify_notification_signature'
+        ) as signature_check_mock, patch(
+            'odoo.addons.payment.models.payment_transaction.PaymentTransaction'
+            '._handle_notification_data'
+        ):
+            self._make_http_post_request(url, data=self.async_notification_data)
+            self.assertEqual(signature_check_mock.call_count, 1)
+
     def test_accept_notification_with_valid_signature(self):
         """ Test the verification of a notification with a valid signature. """
         tx = self.create_transaction('redirect')
