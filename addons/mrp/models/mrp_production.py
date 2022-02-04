@@ -1475,6 +1475,9 @@ class MrpProduction(models.Model):
 
     def _get_backorder_mo_vals(self):
         self.ensure_one()
+        if not self.procurement_group_id:
+            # in the rare case that the procurement group has been removed somehow, create a new one
+            self.procurement_group_id = self.env["procurement.group"].create({'name': self.name})
         return {
             'procurement_group_id': self.procurement_group_id.id,
             'move_raw_ids': None,
