@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="stock_move_line_view_search_delivery">
+        <field name="name">stock.move.line.search.delivery</field>
+        <field name="model">stock.move.line</field>
+        <field name="inherit_id" ref="stock.stock_move_line_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='owner_id']" position="after">
+                <field name="carrier_name" invisible="1" string="Carrier name"/>
+            </xpath>
+            <xpath expr="//group[@name='groupby']" position="inside">
+                <filter string="Carrier" name="by_carrier" context="{'group_by': 'carrier_name'}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
