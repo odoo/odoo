@@ -1117,13 +1117,12 @@ class SaleOrder(models.Model):
             force_email_company=force_email_company, force_email_lang=force_email_lang
         )
         if self.validity_date:
-            amount_txt = _('%(amount)s due %(date)s',
+            render_context['subtitle'] = _(u'%(amount)s due\N{NO-BREAK SPACE}%(date)s',
                            amount=format_amount(self.env, self.amount_total, self.currency_id, lang_code=render_context.get('lang')),
                            date=format_date(self.env, self.validity_date, date_format='short', lang_code=render_context.get('lang'))
                           )
         else:
-            amount_txt = format_amount(self.env, self.amount_total, self.currency_id, lang_code=render_context.get('lang'))
-        render_context['subtitle'] = Markup("<span>%s<br />%s</span>") % (self.name, amount_txt)
+            render_context['subtitle'] = format_amount(self.env, self.amount_total, self.currency_id, lang_code=render_context.get('lang'))
         return render_context
 
     def preview_sale_order(self):

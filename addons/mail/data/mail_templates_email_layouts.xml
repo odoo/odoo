@@ -133,49 +133,65 @@
 
         <!-- Used mainly in conjunction of portal models (SO, PO, Invoices) although not mandatory -->
         <template id="mail_notification_paynow" name="Mail: Pay Now mail notification template">
-<table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #FFFFFF; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
-<table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 24px; background-color: #FFFFFF; color: #454748; border-collapse:separate;">
+<table border="0" cellpadding="0" cellspacing="0" style="background-color: #FFFFFF; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td>
+<table border="0" cellpadding="0" cellspacing="0" style="max-width:900px; width:100%; background-color: #FFFFFF; color: #454748; border-collapse:separate;">
 <tbody>
     <!-- HEADER -->
     <tr>
-        <td align="center" style="min-width: 590px;">
-            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #FFFFFF; padding: 0; border-collapse:separate;">
-                <tr><td valign="middle">
-                    <t t-if="has_button_access">
-                        <a t-att-href="button_access['url']"
-                           style="float: left; padding: 8px 12px; font-size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: 400; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px">
-                            <t t-esc="button_access['title']"/>
-                        </a>
+        <td align="center">
+            <table border="0" cellpadding="0" cellspacing="5" width="100%" style="background-color: #FFFFFF; padding: 0; border-collapse:separate;">
+                <tr><td>
+                    <img t-att-src="'/logo.png?company=%s' % (company.id or 0)" height="48" style="padding: 0; margin: 0"  t-att-alt="'%s' % company.name"/>
+                </td></tr>
+                <tr><td>
+                    <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:5px 0;"/>
+                </td></tr>
+                <tr><td valign="middle" style="white-space:nowrap;"><table cellspacing="0" cellpadding="0"><tr>
+                    <t t-if="has_button_access"><td>
+                        <table role="presentation" cellspacing="0" cellpadding="0" border="0">
+                            <tr><td style="border-radius: 3px; background: #875A7B; text-align: center; padding: 8px 12px;">
+                                <a t-att-href="button_access['url']"
+                                   style="border: 0; font-size: 12px; text-decoration: none !important; text-decoration: none; font-weight: 400; text-align: center; display: block;">
+                                    <span style="white-space:nowrap; color:#FFFFFF;" t-esc="button_access['title']"></span>
+                                </a>
+                            </td></tr>
+                        </table></td><td width="7"></td><!--only inner cellspacing-->
                     </t>
-                    <t t-else="">
-                        <span style="font-size: 10px;">Your <t t-esc="model_description or 'document'"/></span>
-                        <br />
-                        <span style="font-size: 20px; font-weight: bold;">
-                            <t t-esc="message.record_name and message.record_name.replace('/','-') or ''"/>
-                        </span>
+                    <t t-if="not has_button_access and is_html_empty(subtitle)">
+                        <td>
+                            <span style="font-size: 10px;">Your <t t-esc="model_description or 'document'"/></span>
+                            <br />
+                            <span style="font-size: 20px; font-weight: bold;">
+                                <t t-esc="message.record_name and message.record_name.replace('/','-') or ''"/>
+                            </span>
+                        </td><td width="7"></td>
                     </t>
                     <t t-if="actions">
-                        <t t-foreach="actions" t-as="action">
-                            |
-                            <a t-att-href="action['url']" style="color: #875A7B; text-decoration:none !important;">
-                                <t t-esc="action['title']"/>
-                            </a>
-                        </t>
+                        <td>
+                            <t t-foreach="actions" t-as="action">
+                                |
+                                <a t-att-href="action['url']" style="color: #875A7B; text-decoration:none !important; text-decoration: none;">
+                                    <t t-esc="action['title']"/>
+                                </a>
+                            </t>
+                        </td><td width="7"></td>
                     </t>
-                <t t-if="not is_html_empty(subtitle)" t-out='subtitle'
-                    style="margin-left: 20px; display: inline-block;"/>
-                </td><td valign="middle" align="right">
-                    <img t-att-src="'/logo.png?company=%s' % (company.id or 0)" style="padding: 0px; margin: 0px; height: 48px;" t-att-alt="'%s' % company.name"/>
-                </td></tr>
-                <tr><td colspan="2" style="text-align:center;">
-                  <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:4px 0px 32px 0px;"/>
+                    <t t-if="not is_html_empty(subtitle)">
+                        <td style="font-size: 12px;">
+                            <span style="font-weight:bold;" t-out="record.name"/><br/>
+                            <span t-out="subtitle"/>
+                        </td>
+                    </t>
+                </tr></table></td></tr>
+                <tr><td>
+                    <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 5px 0px;"/>
                 </td></tr>
             </table>
         </td>
     </tr>
     <!-- CONTENT -->
     <tr>
-        <td style="padding: 0">
+        <td style="padding-left: 5px;">
             <t t-out="message.body"/>
             <t t-if="email_add_signature and 'user_id' in record and record.user_id and not record.env.user._is_superuser() and not is_html_empty(record.user_id.sudo().signature)">
                 <div style="margin: 0px; padding: 0px; font-size:13px;">
@@ -190,10 +206,10 @@
     </tr>
     <!-- FOOTER -->
     <tr>
-        <td style="padding: 0; font-size:11px;">
-            <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 32px 0px 4px 0px;"/>
+        <td style="padding-left: 5px; font-size:11px;">
+            <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 4px 0px;"/>
             <b t-esc="company.name"/><br/>
-            <div style="color: #999999">
+            <div style="color: #999999; padding-top:2px">
                 <t t-esc="company.phone"/>
                 <t t-if="company.email"> |
                     <a t-att-href="'mailto:%s' % company.email" style="text-decoration:none; color: #999999;"><t t-esc="company.email"/></a>
@@ -206,12 +222,12 @@
             </div>
         </td>
     </tr>
+    <!-- POWERED BY -->
+    <tr><td style="padding: 2px 0 0 5px; font-size:11px;">
+        Powered by <a target="_blank" href="https://www.odoo.com?utm_source=db&amp;utm_medium=email" style="color: #875A7B;">Odoo</a>
+    </td></tr>
 </tbody>
 </table>
-</td></tr>
-<!-- POWERED BY -->
-<tr><td align="center" style="min-width: 590px; padding: 8px; font-size:11px;">
-    Powered by <a target="_blank" href="https://www.odoo.com?utm_source=db&amp;utm_medium=email" style="color: #875A7B;">Odoo</a>
 </td></tr>
 </table>
         </template>
