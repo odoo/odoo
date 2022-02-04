@@ -3,6 +3,7 @@
 
 from odoo import api, fields, models, _
 from odoo.addons.http_routing.models.ir_http import slug, unslug
+from odoo.addons.website.models import ir_http
 from odoo.tools.translate import html_translate
 from odoo.osv import expression
 
@@ -474,3 +475,14 @@ class ProductTemplate(models.Model):
             'currency': product.currency_id.name,
             'price': combination['list_price'],
         }
+
+    def _get_contextual_pricelist(self):
+        """ Override to fallback on website current pricelist
+        """
+        pricelist = super()._get_contextual_pricelist()
+        if pricelist:
+            return pricelist
+        website = ir_http.get_request_website()
+        if website:
+            return website.get_current_pricelist()
+        return pricelist
