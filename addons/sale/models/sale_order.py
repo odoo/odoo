@@ -574,19 +574,21 @@ class SaleOrder(models.Model):
         self.show_update_pricelist = False
         self.message_post(body=_("Product prices have been recomputed according to pricelist <b>%s<b> ", self.pricelist_id.display_name))
 
-    @api.model_create_multi
-    def create(self, vals_list):
-        for vals in vals_list:
-            if 'company_id' in vals:
-                self = self.with_company(vals['company_id'])
+    def _prepare_create_values(self, vals_list):
+        full_vals_list = super()._prepare_create_values(vals_list)
+        for vals in full_vals_list:
             if vals.get('name', _('New')) == _('New'):
                 seq_date = fields.Datetime.context_timestamp(
                     self, fields.Datetime.to_datetime(vals['date_order'])
                 ) if 'date_order' in vals else None
-                vals['name'] = self.env['ir.sequence'].next_by_code(
-                    'sale.order', sequence_date=seq_date) or _('New')
+                vals['name'] = self.env['ir.sequence'].with_company(
+                    vals['company_id']
+                ).next_by_code(
+                    'sale.order',
+                    sequence_date=seq_date
+                ) or _('New')
 
-        return super().create(vals_list)
+        return full_vals_list
 
     def _compute_field_value(self, field):
         if field.name == 'invoice_status' and not self.env.context.get('mail_activity_automation_skip'):
