@@ -4470,19 +4470,20 @@ Fields:
                     _logger.warning("Creating record %s in module %s.", data['xml_id'], module)
 
         # create records
-        records = self._load_records_create([data['values'] for data in to_create])
-        for data, record in zip(to_create, records):
-            data['record'] = record
-            if data.get('xml_id'):
-                # add XML ids for parent records that have just been created
-                for parent_model, parent_field in self._inherits.items():
-                    if not data['values'].get(parent_field):
-                        imd_data_list.append({
-                            'xml_id': f"{data['xml_id']}_{parent_model.replace('.', '_')}",
-                            'record': record[parent_field],
-                            'noupdate': data.get('noupdate', False),
-                        })
-                imd_data_list.append(data)
+        if to_create:
+            records = self._load_records_create([data['values'] for data in to_create])
+            for data, record in zip(to_create, records):
+                data['record'] = record
+                if data.get('xml_id'):
+                    # add XML ids for parent records that have just been created
+                    for parent_model, parent_field in self._inherits.items():
+                        if not data['values'].get(parent_field):
+                            imd_data_list.append({
+                                'xml_id': f"{data['xml_id']}_{parent_model.replace('.', '_')}",
+                                'record': record[parent_field],
+                                'noupdate': data.get('noupdate', False),
+                            })
+                    imd_data_list.append(data)
 
         # create or update XMLIDs
         imd._update_xmlids(imd_data_list, update)
