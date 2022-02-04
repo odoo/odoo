@@ -78,6 +78,61 @@ class TestMrpProductionBackorder(TestMrpCommon):
         self.assertEqual(sum(mo_backorder.move_raw_ids.filtered(lambda m: m.product_id.id == product_to_use_1.id).mapped("product_uom_qty")), 9)
         self.assertEqual(mo_backorder.reserve_visible, False)  # the reservation of the first MO should've been moved here
 
+    def test_backorder_and_orderpoint(self):
+        """ Same as test_no_tracking_2, except one of components also has an orderpoint (i.e. reordering rule)
+        and not enough components are in stock (i.e. so orderpoint is triggered)."""
+        production, _, product_to_build, product_to_use_1, product_to_use_2 = self.generate_mo(qty_final=4, qty_base_1=1)
+
+        # Make some stock and reserve
+        for product in production.move_raw_ids.product_id:
+            self.env['stock.quant'].with_context(inventory_mode=True).create({
+                'product_id': product.id,
+                'inventory_quantity': 1,
+                'location_id': production.location_src_id.id,
+            })
+        production.action_assign()
+
+        self.env['stock.warehouse.orderpoint'].create({
+            'name': 'product_to_use_1 RR',
+            'location_id': production.location_src_id.id,
+            'product_id': product_to_use_1.id,
+            'product_min_qty': 1,
+            'product_max_qty': 5,
+        })
+
+        self.env['mrp.bom'].create({
+            'product_id': product_to_use_1.id,
+            'product_tmpl_id': product_to_use_1.product_tmpl_id.id,
+            'product_uom_id': product_to_use_1.uom_id.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'consumption': 'flexible',
+            'bom_line_ids': [
+                (0, 0, {'product_id': product_to_use_2.id, 'product_qty': 1.0})
+            ]})
+        product_to_use_1.write({'route_ids': [(4, self.ref('mrp.route_warehouse0_manufacture'))]})
+
+        mo_form = Form(production)
+        mo_form.qty_producing = 1
+        production = mo_form.save()
+
+        action = production.button_mark_done()
+        backorder = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
+        backorder.save().action_backorder()
+
+        # Two related MO, orig + backorder, in same the procurement group
+        mos = self.env['mrp.production'].search([
+            ('product_id', '=', product_to_build.id),
+        ])
+        self.assertEqual(len(mos), 2, "Backorder was not created.")
+        self.assertEqual(len(production.procurement_group_id.mrp_production_ids), 2, "MO backorder not linked to original MO")
+
+        # Orderpoint MO is NOT part of procurement group
+        mo_orderpoint = self.env['mrp.production'].search([
+            ('product_id', '=', product_to_use_1.id),
+        ])
+        self.assertEqual(len(mo_orderpoint.procurement_group_id.mrp_production_ids), 1, "Reordering rule MO incorrectly linked to other MOs")
+
     def test_no_tracking_pbm_1(self):
         """Create a MO for 4 product. Produce 1. The backorder button should
         appear and hitting mark as done should open the backorder wizard. In the backorder
