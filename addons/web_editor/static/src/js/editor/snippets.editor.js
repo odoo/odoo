@@ -1317,6 +1317,7 @@ var SnippetsMenu = Widget.extend({
             if ($oeStructure.length && !$oeStructure.children().length && this.$snippets) {
                 // If empty oe_structure, encourage using snippets in there by
                 // making them "wizz" in the panel.
+                this._updateRightPanelContent({content: [], tab: this.tabs.BLOCKS});
                 this.$snippets.odooBounce();
                 return;
             }
@@ -2472,6 +2473,7 @@ var SnippetsMenu = Widget.extend({
                             dropped = true;
                             $(this).first().after($toInsert).addClass('invisible');
                             $toInsert.removeClass('oe_snippet_body');
+                            self.trigger_up('drop_zone_over');
                         },
                         out: function () {
                             var prev = $toInsert.prev();
@@ -2481,6 +2483,7 @@ var SnippetsMenu = Widget.extend({
                                 $(this).removeClass('invisible');
                                 $toInsert.addClass('oe_snippet_body');
                             }
+                            self.trigger_up('drop_zone_out');
                         },
                     });
 
@@ -2495,6 +2498,7 @@ var SnippetsMenu = Widget.extend({
                     self.draggableComponent.$scrollTarget.on('scroll.scrolling_element', function () {
                         self.$el.trigger('scroll');
                     });
+                    self.trigger_up('drop_zone_start');
                 },
                 stop: async function (ev, ui) {
                     const doc = self.options.wysiwyg.odooEditor.document;
@@ -2575,6 +2579,7 @@ var SnippetsMenu = Widget.extend({
                         }
                         self.$el.find('.oe_snippet_thumbnail').removeClass('o_we_already_dragging');
                     }
+                    self.trigger_up('drop_zone_stop');
                 },
             },
         });
