@@ -273,6 +273,29 @@ body.editor_enable.o_basic_theme.o_in_iframe {
     font-size: 14px;
 }
 
+.editor_enable .o_mass_mailing_iframe {
+    .o_editable:empty, .o_editable > .oe_drop_zone.oe_insert:not(.oe_vertical):only-child {
+        background-color: white;
+        border: 2px dashed #999999;
+        padding: 112px 0px;
+        text-align: center !important;
+        color: #999999;
+        margin: 5px;
+        height: auto;
+
+        &:before {
+            content: attr(data-editor-message);
+            display: block;
+            font-size: 20px;
+            line-height: 50px; // Useful for the "wizz" animation on snippet click to be more visible
+        }
+        &:after {
+            content: attr(data-editor-sub-message);
+            display: block;
+        }
+    }
+}
+
 
 .o_mass_mailing_iframe {
     //this will display the email body without padding
@@ -284,5 +307,4 @@ body.editor_enable.o_basic_theme.o_in_iframe {
     .iframe-editor-wrapper {
         margin-top: -2px;
     }
-
 }

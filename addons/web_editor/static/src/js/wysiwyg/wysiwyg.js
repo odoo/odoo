@@ -216,10 +216,7 @@ const Wysiwyg = Widget.extend({
 
         if (options.snippets) {
             $(this.odooEditor.document.body).addClass('editor_enable');
-            this.snippetsMenu = new snippetsEditor.SnippetsMenu(this, Object.assign({
-                wysiwyg: this,
-                selectorEditableArea: '.o_editable',
-            }, options));
+            this.snippetsMenu = this._createSnippetsMenuInstance(options);
             await this._insertSnippetMenu();
 
             this._onBeforeUnload = (event) => {
@@ -1055,6 +1052,18 @@ const Wysiwyg = Widget.extend({
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * Returns an instance of the snippets menu.
+     *
+     * @param {Object} [options]
+     * @returns {widget}
+     */
+    _createSnippetsMenuInstance: function (options={}) {
+        return new snippetsEditor.SnippetsMenu(this, Object.assign({
+            wysiwyg: this,
+            selectorEditableArea: '.o_editable',
+        }, options));
+    },
     _configureToolbar: function (options) {
         const $toolbar = this.toolbar.$el;
         $toolbar.on('mousedown', e => e.preventDefault());
