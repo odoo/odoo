@@ -1418,6 +1418,9 @@ class MrpProduction(models.Model):
 
     def _get_backorder_mo_vals(self):
         self.ensure_one()
+        if not self.procurement_group_id:
+            # in the rare case that the procurement group has been removed somehow, create a new one
+            self.procurement_group_id = self.env["procurement.group"].create({'name': self.name})
         next_seq = max(self.procurement_group_id.mrp_production_ids.mapped("backorder_sequence"), default=1)
         return {
             'name': self._get_name_backorder(self.name, next_seq + 1),
