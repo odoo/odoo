@@ -385,7 +385,7 @@ class PurchaseOrder(models.Model):
                           )
         else:
             amount_txt = format_amount(self.env, self.amount_total, self.currency_id, lang_code=render_context.get('lang'))
-        render_context['subtitle'] = Markup("<span>%s<br />%s</span>") % (self.name, amount_txt)
+        render_context['subtitle'] = amount_txt
         return render_context
 
     def _track_subtype(self, init_values):
