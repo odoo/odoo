@@ -57,7 +57,7 @@ tour.register('crm_forecast', {
         trigger: ".o_kanban_record .o_kanban_record_title:contains('Test Opportunity 1')",
         content: "move to the next month",
         run: function (actions) {
-            const undefined_groups = $('.o_column_title:contains("Undefined")').length;
+            const undefined_groups = $('.o_column_title:contains("None")').length;
             actions.drag_and_drop(` .o_opportunity_kanban .o_kanban_group:eq(${1 + undefined_groups})`, this.$anchor);
         }
     }, {

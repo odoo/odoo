@@ -33,8 +33,8 @@ const FIELD_TYPES = {
 // FilterMenu parameters
 const FIELD_OPERATORS = {
     boolean: [
-        { symbol: "=", description: _lt("is true"), value: true },
-        { symbol: "!=", description: _lt("is false"), value: true },
+        { symbol: "=", description: _lt("is Yes"), value: true },
+        { symbol: "!=", description: _lt("is No"), value: true },
     ],
     char: [
         { symbol: "ilike", description: _lt("contains") },

@@ -80,10 +80,12 @@ var KanbanColumn = Widget.extend({
 
         if (options.grouped_by_m2o || options.grouped_by_date || options.grouped_by_m2m) {
             // For many2x and datetime, a false value means that the field is not set.
-            this.title = value ? value : _t('Undefined');
+            this.title = value ? value : _t('None');
+        } else if (this.groupedBy && this.fields[this.groupedBy].type === 'boolean') {
+            this.title = value === undefined ? _t('None') : (value ? _t('Yes') : _t('No'));
         } else {
             // False and 0 might be valid values for these fields.
-            this.title = value === undefined ? _t('Undefined') : value;
+            this.title = value === undefined ? _t('None') : value;
         }
 
         if (options.group_by_tooltip) {

@@ -320,7 +320,7 @@ QUnit.module("Search", (hooks) => {
 
         await applyFilter(controlPanel);
 
-        assert.deepEqual(getFacetTexts(controlPanel), ["Boolean Field is true"]);
+        assert.deepEqual(getFacetTexts(controlPanel), ["Boolean Field is Yes"]);
         assert.deepEqual(getDomain(controlPanel), [["boolean_field", "=", true]]);
 
         assert.containsOnce(controlPanel, ".o_menu_item");
@@ -672,7 +672,7 @@ QUnit.module("Search", (hooks) => {
         assert.deepEqual(getFacetTexts(controlPanel), [
             [
                 'A date is equal to "01/09/1997"',
-                "Boolean Field is false",
+                "Boolean Field is No",
                 'Floaty McFloatface is equal to "7.2"',
                 'ID is "9"',
             ].join("or"),
