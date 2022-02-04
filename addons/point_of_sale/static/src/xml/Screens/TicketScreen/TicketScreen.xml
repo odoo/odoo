@@ -59,7 +59,7 @@
                                 <div class="col wide">Receipt Number</div>
                                 <div class="col">Customer</div>
                                 <div class="col wide" t-if="showCardholderName()">Cardholder Name</div>
-                                <div class="col">Employee</div>
+                                <div class="col">Cashier</div>
                                 <div class="col end">Total</div>
                                 <div class="col narrow">Status</div>
                                 <div class="col very-narrow" name="delete"></div>
@@ -76,15 +76,15 @@
                                     </div>
                                     <div class="col">
                                         <div t-if="env.isMobile">Customer</div>
-                                        <div><t t-esc="getCustomer(order)"></t></div>
+                                        <div><t t-esc="getPartner(order)"></t></div>
                                     </div>
                                     <div t-if="showCardholderName()" class="col">
                                         <div t-if="env.isMobile">Cardholder Name</div>
                                         <div><t t-esc="getCardholderName(order)"></t></div>
                                     </div>
                                     <div class="col">
-                                        <div t-if="env.isMobile">Employee</div>
-                                        <div><t t-esc="getEmployee(order)"></t></div>
+                                        <div t-if="env.isMobile">Cashier</div>
+                                        <div><t t-esc="getCashier(order)"></t></div>
                                     </div>
                                     <div class="col end">
                                         <div t-if="env.isMobile">Total</div>
@@ -121,7 +121,7 @@
                         <div class="subpads">
                             <!-- We set so that the term 'Refund' is translated. -->
                             <t t-set="_actionName">Refund</t>
-                            <ActionpadWidget client="getSelectedClient()" actionName="_actionName" actionToTrigger="'do-refund'" isActionButtonHighlighted="getHasItemsToRefund()" />
+                            <ActionpadWidget partner="getSelectedPartner()" actionName="_actionName" actionToTrigger="'do-refund'" isActionButtonHighlighted="getHasItemsToRefund()" />
                             <NumpadWidget disabledModes="['price', 'discount']" activeMode="_selectedOrderlineId and 'quantity'" disableSign="true" />
                         </div>
                     </div>

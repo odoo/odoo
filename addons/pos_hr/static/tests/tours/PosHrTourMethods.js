@@ -10,7 +10,7 @@ odoo.define('pos_hr.tour.PosHrTourMethods', function (require) {
             return [
                 {
                     content: 'click login button',
-                    trigger: '.login-overlay .login-button.select-employee',
+                    trigger: '.login-overlay .login-button.select-cashier',
                 },
             ];
         }

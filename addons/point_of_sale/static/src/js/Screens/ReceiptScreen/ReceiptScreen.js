@@ -16,9 +16,9 @@ odoo.define('point_of_sale.ReceiptScreen', function (require) {
                 useErrorHandlers();
                 this.orderReceipt = useRef('order-receipt');
                 const order = this.currentOrder;
-                const client = order.get_client();
+                const partner = order.get_partner();
                 this.orderUiState = order.uiState.ReceiptScreen;
-                this.orderUiState.inputEmail = this.orderUiState.inputEmail || (client && client.email) || '';
+                this.orderUiState.inputEmail = this.orderUiState.inputEmail || (partner && partner.email) || '';
                 this.is_email = is_email;
 
                 onMounted(() => {
@@ -111,14 +111,14 @@ odoo.define('point_of_sale.ReceiptScreen', function (require) {
                 const receiptString = this.orderReceipt.el.innerHTML;
                 const ticketImage = await printer.htmlToImg(receiptString);
                 const order = this.currentOrder;
-                const client = order.get_client();
+                const partner = order.get_partner();
                 const orderName = order.get_name();
-                const orderClient = { email: this.orderUiState.inputEmail, name: client ? client.name : this.orderUiState.inputEmail };
+                const orderPartner = { email: this.orderUiState.inputEmail, name: partner ? partner.name : this.orderUiState.inputEmail };
                 const order_server_id = this.env.pos.validated_orders_name_server_id_map[orderName];
                 await this.rpc({
                     model: 'pos.order',
                     method: 'action_receipt_to_customer',
-                    args: [[order_server_id], orderName, orderClient, ticketImage],
+                    args: [[order_server_id], orderName, orderPartner, ticketImage],
                 });
             }
         }

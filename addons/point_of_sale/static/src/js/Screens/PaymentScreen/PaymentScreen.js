@@ -43,17 +43,17 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
         get selectedPaymentLine() {
             return this.currentOrder.selected_paymentline;
         }
-        async selectClient() {
+        async selectPartner() {
             // IMPROVEMENT: This code snippet is repeated multiple times.
             // Maybe it's better to create a function for it.
-            const currentClient = this.currentOrder.get_client();
-            const { confirmed, payload: newClient } = await this.showTempScreen(
-                'ClientListScreen',
-                { client: currentClient }
+            const currentPartner = this.currentOrder.get_partner();
+            const { confirmed, payload: newPartner } = await this.showTempScreen(
+                'PartnerListScreen',
+                { partner: currentPartner }
             );
             if (confirmed) {
-                this.currentOrder.set_client(newClient);
-                this.currentOrder.updatePricelist(newClient);
+                this.currentOrder.set_partner(newPartner);
+                this.currentOrder.updatePricelist(newPartner);
             }
         }
         addNewPaymentLine({ detail: paymentMethod }) {
@@ -269,19 +269,19 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
             }
 
             const splitPayments = this.paymentLines.filter(payment => payment.payment_method.split_transactions)
-            if (splitPayments.length && !this.currentOrder.get_client()) {
+            if (splitPayments.length && !this.currentOrder.get_partner()) {
                 const paymentMethod = splitPayments[0].payment_method
                 const { confirmed } = await this.showPopup('ConfirmPopup', {
                     title: this.env._t('Customer Required'),
                     body: _.str.sprintf(this.env._t('Customer is required for %s payment method.'), paymentMethod.name),
                 });
                 if (confirmed) {
-                    this.selectClient();
+                    this.selectPartner();
                 }
                 return false;
             }
 
-            if ((this.currentOrder.is_to_invoice() || this.currentOrder.is_to_ship()) && !this.currentOrder.get_client()) {
+            if ((this.currentOrder.is_to_invoice() || this.currentOrder.is_to_ship()) && !this.currentOrder.get_partner()) {
                 const { confirmed } = await this.showPopup('ConfirmPopup', {
                     title: this.env._t('Please select the Customer'),
                     body: this.env._t(
@@ -289,13 +289,13 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
                     ),
                 });
                 if (confirmed) {
-                    this.selectClient();
+                    this.selectPartner();
                 }
                 return false;
             }
 
-            var customer = this.currentOrder.get_client()
-            if (this.currentOrder.is_to_ship() && !(customer.name && customer.street && customer.city && customer.country_id)) {
+            let partner = this.currentOrder.get_partner()
+            if (this.currentOrder.is_to_ship() && !(partner.name && partner.street && partner.city && partner.country_id)) {
                 this.showPopup('ErrorPopup', {
                     title: this.env._t('Incorrect address for shipping'),
                     body: this.env._t('The selected customer needs an address.'),

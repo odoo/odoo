@@ -51,9 +51,9 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
         onWillUnmount() {
             SaleOrderFetcher.off('update', this);
         }
-        get selectedClient() {
+        get selectedPartner() {
             const order = this.orderManagementContext.selectedOrder;
-            return order ? order.get_client() : null;
+            return order ? order.get_partner() : null;
         }
         get orders() {
             return SaleOrderFetcher.get();
@@ -90,7 +90,7 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
               }
               catch (error){
               }
-              currentPOSOrder.set_client(this.env.pos.db.get_partner_by_id(sale_order.partner_id[0]));
+              currentPOSOrder.set_partner(this.env.pos.db.get_partner_by_id(sale_order.partner_id[0]));
               let orderFiscalPos = sale_order.fiscal_position_id ? this.env.pos.fiscal_positions.find(
                   (position) => position.id === sale_order.fiscal_position_id[0]
               )

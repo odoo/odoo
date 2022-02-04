@@ -54,16 +54,15 @@
                             </section>
 
                             <div class="payment-buttons">
-                                <div class="customer-button">
-                                    <div class="button" t-att-class="{ highlight: currentOrder.get_client() }" t-on-click="selectClient">
-                                        <i class="fa fa-user" role="img" aria-label="Customer"
-                                           title="Customer" />
-                                        <t t-set="_client" t-value="currentOrder.get_client()" />
-                                        <span class="js_customer_name">
-                                            <t t-if="_client">
-                                                <t t-esc="_client.name" />
+                                <div class="partner-button">
+                                    <div class="button" t-att-class="{ highlight: currentOrder.get_partner() }" t-on-click="selectPartner">
+                                        <i class="fa fa-user" role="img" title="Customer" />
+                                        <t t-set="partner" t-value="currentOrder.get_partner()" />
+                                        <span>
+                                            <t t-if="partner">
+                                                <t t-esc="partner.name" />
                                             </t>
-                                            <t t-if="!_client">
+                                            <t t-if="!partner">
                                                 Customer
                                             </t>
                                         </span>

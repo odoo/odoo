@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="ClientDetailsEdit" owl="1">
-        <section class="client-details edit">
-            <div class="client-picture">
+    <t t-name="PartnerDetailsEdit" owl="1">
+        <section class="partner-details edit">
+            <div class="partner-picture">
                 <t t-if="partnerImageUrl">
                     <img t-att-src="partnerImageUrl" alt="Partner"
                          style="width: 64px; height: 64px; object-fit: cover;" />
@@ -13,31 +13,31 @@
                 </t>
                 <input type="file" class="image-uploader" t-on-change="uploadImage" />
             </div>
-            <input class="detail client-name" name="name" t-att-value="props.partner.name or ''"
+            <input class="detail partner-name" name="name" t-att-value="props.partner.name or ''"
                    placeholder="Name" t-on-change="captureChange" />
-            <div class="client-details-box clearfix">
-                <div class="client-details-left">
-                    <div class="client-detail">
+            <div class="partner-details-box clearfix">
+                <div class="partner-details-left">
+                    <div class="partner-detail">
                         <span class="label">Street</span>
-                        <input class="detail client-address-street" name="street"
+                        <input class="detail" name="street"
                                t-on-change="captureChange" t-att-value="props.partner.street || ''"
                                placeholder="Street" />
                     </div>
-                    <div class="client-detail">
+                    <div class="partner-detail">
                         <span class="label">City</span>
-                        <input class="detail client-address-city" name="city"
+                        <input class="detail" name="city"
                                t-on-change="captureChange" t-att-value="props.partner.city || ''"
                                placeholder="City" />
                     </div>
-                    <div class="client-detail">
+                    <div class="partner-detail">
                         <span class="label">Postcode</span>
-                        <input class="detail client-address-zip" name="zip"
+                        <input class="detail" name="zip"
                                t-on-change="captureChange" t-att-value="props.partner.zip || ''"
                                placeholder="ZIP" />
                     </div>
-                    <div class="client-detail">
+                    <div class="partner-detail">
                         <span class="label">State</span>
-                        <select class="detail client-address-states needsclick" name="state_id"
+                        <select class="detail" name="state_id"
                                 t-on-change="captureChange">
                             <option value="">None</option>
                             <t t-foreach="env.pos.states" t-as="state" t-key="state.id">
@@ -49,9 +49,9 @@
                             </t>
                         </select>
                     </div>
-                    <div class="client-detail">
+                    <div class="partner-detail">
                         <span class="label">Country</span>
-                        <select class="detail client-address-country needsclick" name="country_id"
+                        <select class="detail" name="country_id"
                                 t-on-change="captureChange">
                             <option value="">None</option>
                             <t t-foreach="env.pos.countries" t-as="country" t-key="country.id">
@@ -63,10 +63,10 @@
                         </select>
                     </div>
                 </div>
-                <div class="client-details-right">
-                    <div class="client-detail">
+                <div class="partner-details-right">
+                    <div class="partner-detail">
                         <span class="label">Language</span>
-                        <select class="detail client-lang needsclick" name="lang"
+                        <select class="detail" name="lang"
                                 t-on-change="captureChange">
                             <t t-foreach="env.pos.langs" t-as="lang" t-key="lang.id">
                                 <option t-att-value="lang.code"
@@ -76,31 +76,31 @@
                             </t>
                         </select>
                     </div>
-                    <div class="client-detail">
+                    <div class="partner-detail">
                         <span class="label">Email</span>
-                        <input class="detail client-email" name="email" type="email"
+                        <input class="detail" name="email" type="email"
                                t-on-change="captureChange"
                                t-att-value="props.partner.email || ''" />
                     </div>
-                    <div class="client-detail">
+                    <div class="partner-detail">
                         <span class="label">Phone</span>
-                        <input class="detail client-phone" name="phone" type="tel"
+                        <input class="detail" name="phone" type="tel"
                                t-on-change="captureChange"
                                t-att-value="props.partner.phone || ''" />
                     </div>
-                    <div class="client-detail">
+                    <div class="partner-detail">
                         <span class="label">Barcode</span>
                         <input class="detail barcode" name="barcode" t-on-change="captureChange"
                                t-att-value="props.partner.barcode || ''" />
                     </div>
-                    <div class="client-detail">
+                    <div class="partner-detail">
                         <span class="label">Tax ID</span>
                         <input class="detail vat" name="vat" t-on-change="captureChange"
                                t-att-value="props.partner.vat || ''" />
                     </div>
-                    <div t-if="env.pos.pricelists.length gt 1" class="client-detail">
+                    <div t-if="env.pos.pricelists.length gt 1" class="partner-detail">
                         <span class="label">Pricelist</span>
-                        <select class="detail needsclick" name="property_product_pricelist"
+                        <select class="detail" name="property_product_pricelist"
                                 t-on-change="captureChange">
                             <t t-foreach="env.pos.pricelists" t-as="pricelist"
                                t-key="pricelist.id">

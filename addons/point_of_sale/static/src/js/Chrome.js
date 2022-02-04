@@ -105,7 +105,7 @@ odoo.define('point_of_sale.Chrome', function(require) {
 
         // GETTERS //
 
-        get clientScreenButtonIsShown() {
+        get customerFacingDisplayButtonIsShown() {
             return this.env.pos.config.iface_customer_facing_display;
         }
 

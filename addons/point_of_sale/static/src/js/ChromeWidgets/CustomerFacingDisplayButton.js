@@ -1,4 +1,4 @@
-odoo.define('point_of_sale.ClientScreenButton', function(require) {
+odoo.define('point_of_sale.CustomerFacingDisplayButton', function(require) {
     'use strict';
 
     const PosComponent = require('point_of_sale.PosComponent');
@@ -6,8 +6,7 @@ odoo.define('point_of_sale.ClientScreenButton', function(require) {
 
     const { useState } = owl;
 
-    // Formerly ClientScreenWidget
-    class ClientScreenButton extends PosComponent {
+    class CustomerFacingDisplayButton extends PosComponent {
         setup() {
             super.setup();
             this.local = this.env.pos.config.iface_customer_facing_display_local && !this.env.pos.config.iface_customer_facing_display_proxy;
@@ -19,7 +18,7 @@ odoo.define('point_of_sale.ClientScreenButton', function(require) {
                 success: '',
                 warning: this.env._t('Connected, Not Owned'),
                 failure: this.env._t('Disconnected'),
-                not_found: this.env._t('Client Screen Unsupported. Please upgrade the IoT Box'),
+                not_found: this.env._t('Customer Screen Unsupported. Please upgrade the IoT Box'),
             }[this.state.status];
         }
         onClick() {
@@ -39,7 +38,7 @@ odoo.define('point_of_sale.ClientScreenButton', function(require) {
         async onClickProxy() {
             try {
                 const renderedHtml = await this.env.pos.render_html_for_customer_facing_display();
-                let ownership = await this.env.proxy.take_ownership_over_client_screen(
+                let ownership = await this.env.proxy.take_ownership_over_customer_screen(
                     renderedHtml
                 );
                 if (typeof ownership === 'string') {
@@ -71,7 +70,7 @@ odoo.define('point_of_sale.ClientScreenButton', function(require) {
             async function loop() {
                 if (self.env.proxy.posbox_supports_display) {
                     try {
-                        let ownership = await self.env.proxy.test_ownership_of_client_screen();
+                        let ownership = await self.env.proxy.test_ownership_of_customer_screen();
                         if (typeof ownership === 'string') {
                             ownership = JSON.parse(ownership);
                         }
@@ -99,9 +98,9 @@ odoo.define('point_of_sale.ClientScreenButton', function(require) {
             loop();
         }
     }
-    ClientScreenButton.template = 'ClientScreenButton';
+    CustomerFacingDisplayButton.template = 'CustomerFacingDisplayButton';
 
-    Registries.Component.add(ClientScreenButton);
+    Registries.Component.add(CustomerFacingDisplayButton);
 
-    return ClientScreenButton;
+    return CustomerFacingDisplayButton;
 });

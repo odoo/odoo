@@ -1,4 +1,4 @@
-odoo.define('point_of_sale.ClientListScreen', function(require) {
+odoo.define('point_of_sale.PartnerListScreen', function(require) {
     'use strict';
 
     const PosComponent = require('point_of_sale.PosComponent');
@@ -11,25 +11,25 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
     const { onWillUnmount } = owl;
 
     /**
-     * Render this screen using `showTempScreen` to select client.
+     * Render this screen using `showTempScreen` to select partner.
      * When the shown screen is confirmed ('Set Customer' or 'Deselect Customer'
      * button is clicked), the call to `showTempScreen` resolves to the
-     * selected client. E.g.
+     * selected partner. E.g.
      *
      * ```js
-     * const { confirmed, payload: selectedClient } = await showTempScreen('ClientListScreen');
+     * const { confirmed, payload: selectedPartner } = await showTempScreen('PartnerListScreen');
      * if (confirmed) {
-     *   // do something with the selectedClient
+     *   // do something with the selectedPartner
      * }
      * ```
      *
-     * @props client - originally selected client
+     * @props partner - originally selected partner
      */
-    class ClientListScreen extends PosComponent {
+    class PartnerListScreen extends PosComponent {
         setup() {
             super.setup();
-            useListener('click-save', () => this.env.bus.trigger('save-customer'));
-            useListener('click-edit', () => this.editClient());
+            useListener('click-save', () => this.env.bus.trigger('save-partner'));
+            useListener('click-edit', () => this.editPartner());
             useListener('save-changes', this.saveChanges);
 
             // We are not using useState here because the object
@@ -39,9 +39,9 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
             // is better to be safe.
             this.state = {
                 query: null,
-                selectedClient: this.props.client,
+                selectedPartner: this.props.partner,
                 detailIsShown: false,
-                isEditMode: false,
+                // isEditMode: false,
                 editModeProps: {
                     partner: {
                         country_id: this.env.pos.company.country_id,
@@ -49,8 +49,8 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
                     }
                 },
             };
-            this.updateClientList = debounce(this.updateClientList, 70);
-            onWillUnmount(this.updateClientList.cancel);
+            this.updatePartnerList = debounce(this.updatePartnerList, 70);
+            onWillUnmount(this.updatePartnerList.cancel);
         }
         // Lifecycle hooks
         back() {
@@ -63,7 +63,7 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
             }
         }
         confirm() {
-            this.props.resolve({ confirmed: true, payload: this.state.selectedClient });
+            this.props.resolve({ confirmed: true, payload: this.state.selectedPartner });
             this.trigger('close-temp-screen');
         }
         // Getters
@@ -72,7 +72,7 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
             return this.env.pos.get_order();
         }
 
-        get clients() {
+        get partners() {
             let res;
             if (this.state.query && this.state.query.trim() !== '') {
                 res = this.env.pos.db.search_partner(this.state.query.trim());
@@ -82,16 +82,16 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
             return res.sort(function (a, b) { return (a.name || '').localeCompare(b.name || '') });
         }
         get isNextButtonVisible() {
-            return this.state.selectedClient ? true : false;
+            return this.state.selectedPartner ? true : false;
         }
         /**
          * Returns the text and command of the next button.
          * The command field is used by the clickNext call.
          */
         get nextButton() {
-            if (!this.props.client) {
+            if (!this.props.partner) {
                 return { command: 'set', text: this.env._t('Set Customer') };
-            } else if (this.props.client && this.props.client === this.state.selectedClient) {
+            } else if (this.props.partner && this.props.partner === this.state.selectedPartner) {
                 return { command: 'deselect', text: this.env._t('Deselect Customer') };
             } else {
                 return { command: 'set', text: this.env._t('Change Customer') };
@@ -102,44 +102,43 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
 
         // We declare this event handler as a debounce function in
         // order to lower its trigger rate.
-        async updateClientList(event) {
-            var newClientList = await this.getNewClient();
+        async updatePartnerList(event) {
+            let newPartnerList = await this.getNewPartners();
             this.state.query = event.target.value;
-            const clients = this.clients;
-            if (event.code === 'Enter' && clients.length === 1) {
-                this.state.selectedClient = clients[0];
+            const partners = this.partners;
+            if (event.code === 'Enter' && partners.length === 1) {
+                this.state.selectedPartner = partners[0];
                 this.clickNext();
             } else {
                 this.render(true);
             }
         }
-        clickClient(partner) {
-            if (this.state.selectedClient === partner) {
-                this.state.selectedClient = null;
+        clickPartner(partner) {
+            if (this.state.selectedPartner === partner) {
+                this.state.selectedPartner = null;
             } else {
-                this.state.selectedClient = partner;
+                this.state.selectedPartner = partner;
             }
             this.render(true);
         }
-        editClient() {
+        editPartner() {
             this.state.editModeProps = {
-                partner: this.state.selectedClient,
+                partner: this.state.selectedPartner,
             };
             this.state.detailIsShown = true;
             this.render(true);
         }
         clickNext() {
-            this.state.selectedClient = this.nextButton.command === 'set' ? this.state.selectedClient : null;
+            this.state.selectedPartner = this.nextButton.command === 'set' ? this.state.selectedPartner : null;
             this.confirm();
         }
-        activateEditMode(event) {
-            const { isNewClient } = event.detail;
-            this.state.isEditMode = true;
+        activateEditMode(isNewPartner) {
+            // this.state.isEditMode = true;
             this.state.detailIsShown = true;
-            this.state.isNewClient = isNewClient;
-            if (!isNewClient) {
+            this.state.isNewPartner = isNewPartner;
+            if (!isNewPartner) {
                 this.state.editModeProps = {
-                    partner: this.state.selectedClient,
+                    partner: this.state.selectedPartner,
                 };
             }
             this.render(true);
@@ -152,7 +151,7 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
                     args: [event.detail.processedChanges],
                 });
                 await this.env.pos.load_new_partners();
-                this.state.selectedClient = this.env.pos.db.get_partner_by_id(partnerId);
+                this.state.selectedPartner = this.env.pos.db.get_partner_by_id(partnerId);
                 this.state.detailIsShown = false;
                 this.render(true);
             } catch (error) {
@@ -166,8 +165,8 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
                 }
             }
         }
-        async searchClient() {
-            let result = await this.getNewClient();
+        async searchPartner() {
+            let result = await this.getNewPartners();
             this.env.pos.db.add_partners(result);
             if(!result.length) {
                 await this.showPopup('ErrorPopup', {
@@ -177,8 +176,8 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
             }
             this.render(true);
         }
-        async getNewClient() {
-            var domain = [];
+        async getNewPartners() {
+            let domain = [];
             if(this.state.query) {
                 domain = [["name", "ilike", this.state.query + "%"]];
             }
@@ -203,9 +202,9 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
             return result;
         }
     }
-    ClientListScreen.template = 'ClientListScreen';
+    PartnerListScreen.template = 'PartnerListScreen';
 
-    Registries.Component.add(ClientListScreen);
+    Registries.Component.add(PartnerListScreen);
 
-    return ClientListScreen;
+    return PartnerListScreen;
 });

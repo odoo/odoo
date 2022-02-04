@@ -75,24 +75,24 @@ odoo.define('point_of_sale.InvoiceButton', function (require) {
                 return;
             }
 
-            // Part 1: Handle missing client.
-            // Write to pos.order the selected client.
-            if (!order.get_client()) {
+            // Part 1: Handle missing partner.
+            // Write to pos.order the selected partner.
+            if (!order.get_partner()) {
                 const { confirmed: confirmedPopup } = await this.showPopup('ConfirmPopup', {
                     title: this.env._t('Need customer to invoice'),
                     body: this.env._t('Do you want to open the customer list to select customer?'),
                 });
                 if (!confirmedPopup) return;
 
-                const { confirmed: confirmedTempScreen, payload: newClient } = await this.showTempScreen(
-                    'ClientListScreen'
+                const { confirmed: confirmedTempScreen, payload: newPartner } = await this.showTempScreen(
+                    'PartnerListScreen'
                 );
                 if (!confirmedTempScreen) return;
 
                 await this.rpc({
                     model: 'pos.order',
                     method: 'write',
-                    args: [[orderId], { partner_id: newClient.id }],
+                    args: [[orderId], { partner_id: newPartner.id }],
                     kwargs: { context: this.env.session.user_context },
                 });
             }

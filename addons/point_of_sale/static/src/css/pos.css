@@ -229,16 +229,16 @@ td {
     position: relative;
 }
 
-.pos .clientlist-screen .window,
-.pos .clientlist-screen .full-content .subwindow{
+.pos .partnerlist-screen .window,
+.pos .partnerlist-screen .full-content .subwindow{
     display: block;
 }
-.pos .clientlist-screen .full-content .subwindow-container{
+.pos .partnerlist-screen .full-content .subwindow-container{
     display: block;
     height: 100%;
 }
-.pos .clientlist-screen .full-content .subwindow.collapsed,
-.pos .clientlist-screen .full-content .subwindow-container.collapsed{
+.pos .partnerlist-screen .full-content .subwindow.collapsed,
+.pos .partnerlist-screen .full-content .subwindow-container.collapsed{
     height: auto;
 }
 
@@ -749,11 +749,11 @@ td {
     left: 3px;
 }
 
-.pos .actionpad .button.set-customer{
+.pos .actionpad .button.set-partner{
     padding-left: 40px;
     padding-right: 40px;
 }
-.pos .actionpad .button.set-customer.decentered {
+.pos .actionpad .button.set-partner.decentered {
     padding-left: 40px;
     padding-right: 5px;
 }
@@ -770,11 +770,11 @@ td {
 }
 
 @media screen and (max-width: 768px) {
-    .pos .actionpad .button.set-customer{
+    .pos .actionpad .button.set-partner{
         padding-left: 0px;
         padding-right: 0px;
     }
-    .pos .actionpad .button.set-customer.decentered{
+    .pos .actionpad .button.set-partner.decentered{
         padding-left: 0px;
         padding-right: 0px;
     }
@@ -1548,7 +1548,7 @@ td {
     padding-left: 0;
     flex-grow: 5;
 }
-.payment-screen .customer-button {
+.payment-screen .partner-button {
     margin-bottom: 10px;
 }
 .payment-screen .payment-buttons .button {
@@ -1800,56 +1800,56 @@ td {
 
 /* e) The Client List Screen */
 
-.pos .clientlist-screen .full-content{
+.pos .partnerlist-screen .full-content{
     overflow: auto;
 }
 
-.pos .clientlist-screen .client-list{
+.pos .partnerlist-screen .partner-list{
     font-size: 16px;
     width: 100%;
 }
-.pos .clientlist-screen .client-list th,
-.pos .clientlist-screen .client-list td {
+.pos .partnerlist-screen .partner-list th,
+.pos .partnerlist-screen .partner-list td {
     padding: 12px 8px;
 }
 
-.pos .clientlist-screen .client-list th.client-line-last-column-placeholder,
-.pos .clientlist-screen .client-list td.client-line-last-column-placeholder {
+.pos .partnerlist-screen .partner-list th.partner-line-last-column-placeholder,
+.pos .partnerlist-screen .partner-list td.partner-line-last-column-placeholder {
     padding: 0;
 }
 
-.pos .clientlist-screen .client-list tr{
+.pos .partnerlist-screen .partner-list tr{
     transition: all 150ms linear;
     background: rgb(230,230,230);
 }
-.pos .clientlist-screen .client-list thead > tr,
-.pos .clientlist-screen .client-list tr:nth-child(even) {
+.pos .partnerlist-screen .partner-list thead > tr,
+.pos .partnerlist-screen .partner-list tr:nth-child(even) {
     background: rgb(247,247,247);
 }
-.pos .clientlist-screen .client-list tr.highlight{
+.pos .partnerlist-screen .partner-list tr.highlight{
     transition: all 150ms linear;
     background: rgb(110,200,155) !important;
     color: white;
 }
-.pos .clientlist-screen .client-list tr.lowlight{
+.pos .partnerlist-screen .partner-list tr.lowlight{
     transition: all 150ms linear;
     background: rgb(216, 238, 227);
 }
-.pos .clientlist-screen .client-list tr.lowlight:nth-child(even){
+.pos .partnerlist-screen .partner-list tr.lowlight:nth-child(even){
     transition: all 150ms linear;
     background: rgb(227, 246, 237);
 }
-.pos .client-line {
+.pos .partner-line {
     vertical-align: text-top;
 }
-.pos .edit-client-button {
+.pos .edit-partner-button {
     margin-top: 6px;
     color: black;
 }
-.pos .clientlist-screen .client-details{
+.pos .partnerlist-screen .partner-details{
     padding: 16px;
 }
-.pos .clientlist-screen .client-picture{
+.pos .partnerlist-screen .partner-picture{
     height: 64px;
     width: 64px;
     border-radius: 32px;
@@ -1860,7 +1860,7 @@ td {
     background: white;
     position: relative;
 }
-.pos .clientlist-screen .client-picture > img {
+.pos .partnerlist-screen .partner-picture > img {
     position: absolute;
     top: -9999px;
     bottom: -9999px;
@@ -1869,11 +1869,11 @@ td {
     max-height: 64px;
     margin: auto;
 }
-.pos .clientlist-screen .client-picture > .fa {
+.pos .partnerlist-screen .partner-picture > .fa {
     line-height: 64px;
     font-size: 32px;
 }
-.pos .clientlist-screen .client-picture .image-uploader {
+.pos .partnerlist-screen .partner-picture .image-uploader {
     position: absolute;
     z-index: 1000;
     top: 0;
@@ -1883,47 +1883,47 @@ td {
     opacity: 0;
     cursor: pointer;
 }
-.pos .clientlist-screen .client-name {
+.pos .partnerlist-screen .partner-name {
     font-size: 32px;
     line-height: 64px;
     margin-bottom:16px;
 }
-.pos .clientlist-screen .edit-buttons {
+.pos .partnerlist-screen .edit-buttons {
     position: absolute;
     right: 16px;
     top: 10px;
 }
-.pos .clientlist-screen .edit-buttons .button{
+.pos .partnerlist-screen .edit-buttons .button{
     display: inline-block;
     margin-left: 16px;
     color: rgb(128,128,128);
     cursor: pointer;
     font-size: 36px;
 }
-.pos .clientlist-screen .client-details-box{
+.pos .partnerlist-screen .partner-details-box{
     position: relative;
     font-size: 16px;
 }
-.pos .clientlist-screen .client-details-left{
+.pos .partnerlist-screen .partner-details-left{
     width: 50%;
     float: left;
 }
-.pos .clientlist-screen .client-details-right{
+.pos .partnerlist-screen .partner-details-right{
     width: 50%;
     float: right;
 }
-.pos .clientlist-screen .client-detail{
+.pos .partnerlist-screen .partner-detail{
     line-height: 24px;
 }
-.pos .clientlist-screen .client-detail > .label{
+.pos .partnerlist-screen .partner-detail > .label{
     font-weight: bold;
     display: inline-block;
     width: 75px;
     text-align: right;
     margin-right: 8px;
 }
-.pos .clientlist-screen .client-details input,
-.pos .clientlist-screen .client-details select
+.pos .partnerlist-screen .partner-details input,
+.pos .partnerlist-screen .partner-details select
 {
     padding: 4px;
     border-radius: 3px;
@@ -1936,22 +1936,22 @@ td {
     font-size: 14px;
     box-sizing: border-box;
 }
-.pos .clientlist-screen .client-details input.client-name {
+.pos .partnerlist-screen .partner-details input.partner-name {
     font-size: 24px;
     line-height: 24px;
     margin: 18px 6px;
     width: 340px;
 }
-.pos .clientlist-screen .client-detail > .empty{
+.pos .partnerlist-screen .partner-detail > .empty{
     opacity: 0.3;
 }
-.pos .searchbox-client {
+.pos .searchbox-partner {
     padding: 3px 13px;
     margin-top: 12px;
     margin-bottom : 12px;
 }
 
-.pos .searchbox-client input {
+.pos .searchbox-partner input {
     width: 120px;
     border: 1px solid #cecbcb;
     padding: 10px 20px;
@@ -1962,13 +1962,13 @@ td {
     font-family: "Lato","Lucida Grande", Helvetica, Verdana, Arial;
     font-size: 13px;
 }
-.pos .searchbox-client input:focus {
+.pos .searchbox-partner input:focus {
     outline: none;
     box-shadow: 0px 0px 0px 2px rgb(153, 153, 255) inset;
     color: rgb(153, 153, 255);
 }
 
-.pos .search-clear-client {
+.pos .search-clear-partner {
     position: absolute;
     top: 9px;
     width: 30px;
@@ -1978,58 +1978,58 @@ td {
     justify-content: center;
 }
 
-.search-clear-client.left {
+.search-clear-partner.left {
     left: 11px;
     color: #808080;
 }
 
-.search-clear-client.right {
+.search-clear-partner.right {
     left: 145px;
     color: #808080;
     cursor: pointer;
 }
 
 @media screen and (max-width: 768px) {
-    .searchbox-client.top-content-center {
+    .searchbox-partner.top-content-center {
         display: flex
     }
-    .pos .searchbox-client input {
+    .pos .searchbox-partner input {
         width: auto;
         flex-grow: 1;
         padding-left: 10px;
         padding-right: 10px;
     }
-    .pos .clientlist-screen .client-details-box {
+    .pos .partnerlist-screen .partner-details-box {
         display: flex;
         flex-wrap: wrap;
     }
-    .pos .clientlist-screen .client-details-left{
+    .pos .partnerlist-screen .partner-details-left{
         width: auto;
         float: none;
         flex-grow: 1;
     }
-    .pos .clientlist-screen .client-details-right{
+    .pos .partnerlist-screen .partner-details-right{
         width: auto;
         float: none;
         flex-grow: 1;
     }
-    .pos .clientlist-screen .client-detail{
+    .pos .partnerlist-screen .partner-detail{
         display: flex;
         flex-direction: column;
     }
-    .pos .clientlist-screen .client-details input,
-    .pos .clientlist-screen .client-details select
+    .pos .partnerlist-screen .partner-details input,
+    .pos .partnerlist-screen .partner-details select
     {
         width: 100%;
     }
-    .pos .clientlist-screen .client-details input.client-name {
+    .pos .partnerlist-screen .partner-details input.partner-name {
         width: 100%;
     }
-    .pos .clientlist-screen .client-detail > .label{
+    .pos .partnerlist-screen .partner-detail > .label{
         width: auto;
         text-align: left;
     }
-    .pos .clientlist-screen .client-list td {
+    .pos .partnerlist-screen .partner-list td {
         overflow: hidden;
         white-space: nowrap;
     }

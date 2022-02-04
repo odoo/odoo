@@ -12,6 +12,7 @@ odoo.define('point_of_sale.HeaderLockButton', function(require) {
             this.state = useState({ isUnlockIcon: true, title: 'Unlocked' });
         }
         async showLoginScreen() {
+            this.env.pos.reset_cashier();
             await this.showTempScreen('LoginScreen');
         }
         onMouseOver(isMouseOver) {

@@ -11,7 +11,7 @@ const PosHrPosGlobalState = (PosGlobalState) => class PosHrPosGlobalState extend
         if (this.config.module_pos_hr) {
             this.employees = loadedData['hr.employee'];
             this.employee_by_id = loadedData['employee_by_id'];
-            this.cashier = {name: null, id: null, barcode: null, user_id: null, pin: null};
+            this.reset_cashier();
         }
     }
     async after_load_server_data() {
@@ -20,13 +20,16 @@ const PosHrPosGlobalState = (PosGlobalState) => class PosHrPosGlobalState extend
             this.hasLoggedIn = !this.config.module_pos_hr;
         }
     }
+    reset_cashier() {
+        this.cashier = {name: null, id: null, barcode: null, user_id: null, pin: null, role: null};
+    }
     set_cashier(employee) {
         this.cashier = employee;
         const selectedOrder = this.get_order();
         if (selectedOrder && !selectedOrder.get_orderlines().length) {
             // Order without lines can be considered to be un-owned by any employee.
-            // We set the employee on that order to the currently set employee.
-            selectedOrder.employee = employee;
+            // We set the cashier on that order to the currently set employee.
+            selectedOrder.cashier = employee;
         }
         if (!this.cashierHasPriceControlRights() && this.numpadMode === 'price') {
             this.numpadMode = 'quantity';
@@ -57,19 +60,19 @@ const PosHrOrder = (Order) => class PosHrOrder extends Order {
     constructor(obj, options) {
         super(...arguments);
         if (!options.json && this.pos.config.module_pos_hr) {
-            this.employee = this.pos.get_cashier();
+            this.cashier = this.pos.get_cashier();
         }
     }
     init_from_JSON(json) {
         super.init_from_JSON(...arguments);
         if (this.pos.config.module_pos_hr) {
-            this.employee = this.pos.employee_by_id[json.employee_id];
+            this.cashier = this.pos.employee_by_id[json.employee_id];
         }
     }
     export_as_JSON() {
         const json = super.export_as_JSON(...arguments);
         if (this.pos.config.module_pos_hr) {
-            json.employee_id = this.employee ? this.employee.id : false;
+            json.employee_id = this.cashier ? this.cashier.id : false;
         }
         return json;
     }

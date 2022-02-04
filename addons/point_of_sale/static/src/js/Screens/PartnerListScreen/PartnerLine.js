@@ -1,0 +1,17 @@
+odoo.define('point_of_sale.PartnerLine', function(require) {
+    'use strict';
+
+    const PosComponent = require('point_of_sale.PosComponent');
+    const Registries = require('point_of_sale.Registries');
+
+    class PartnerLine extends PosComponent {
+        get highlight() {
+            return this.props.partner !== this.props.selectedPartner ? '' : 'highlight';
+        }
+    }
+    PartnerLine.template = 'PartnerLine';
+
+    Registries.Component.add(PartnerLine);
+
+    return PartnerLine;
+});
