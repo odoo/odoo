@@ -18,3 +18,13 @@ class PayULatamCommon(PaymentCommon):
         # Override default values
         cls.acquirer = cls.payulatam
         cls.currency = cls.currency_euro
+
+        cls.async_notification_data = {
+            'currency': cls.currency.name,
+            'reference_sale': cls.reference,
+            'response_message_pol': 'APPROVED',
+            'sign': '6b4728ddb01317af58f92b8accdb4a42',
+            'state_pol': '4',
+            'transaction_id': '7008bc34-8258-4857-b866-7d4d7982bd73',
+            'value': str(cls.amount)
+        }

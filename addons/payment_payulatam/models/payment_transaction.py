@@ -63,6 +63,7 @@ class PaymentTransaction(models.Model):
         api_url = 'https://checkout.payulatam.com/ppp-web-gateway-payu/' \
             if self.acquirer_id.state == 'enabled' \
             else 'https://sandbox.checkout.payulatam.com/ppp-web-gateway-payu/'
+        base_url = self.get_base_url()
         payulatam_values = {
             'merchantId': self.acquirer_id.payulatam_merchant_id,
             'referenceCode': self.reference,
@@ -74,7 +75,8 @@ class PaymentTransaction(models.Model):
             'accountId': self.acquirer_id.payulatam_account_id,
             'buyerFullName': self.partner_name,
             'buyerEmail': self.partner_email,
-            'responseUrl': urls.url_join(self.get_base_url(), PayuLatamController._return_url),
+            'responseUrl': urls.url_join(base_url, PayuLatamController._return_url),
+            'confirmationUrl': urls.url_join(base_url, PayuLatamController._webhook_url),
             'api_url': api_url,
         }
         if self.acquirer_id.state != 'enabled':
@@ -91,38 +93,17 @@ class PaymentTransaction(models.Model):
         :param dict notification_data: The notification data sent by the provider
         :return: The transaction if found
         :rtype: recordset of `payment.transaction`
-        :raise: ValidationError if inconsistent data were received
         :raise: ValidationError if the data match no transaction
-        :raise: ValidationError if the signature can not be verified
         """
         tx = super()._get_tx_from_notification_data(provider, notification_data)
         if provider != 'payulatam' or len(tx) == 1:
             return tx
 
         reference = notification_data.get('referenceCode')
-        sign = notification_data.get('signature')
-        if not reference or not sign:
-            raise ValidationError(
-                "PayU Latam: " + _(
-                    "Received data with missing reference (%(ref)s) or sign (%(sign)s).",
-                    ref=reference, sign=sign
-                )
-            )
-
         tx = self.search([('reference', '=', reference), ('provider', '=', 'payulatam')])
         if not tx:
             raise ValidationError(
                 "PayU Latam: " + _("No transaction found matching reference %s.", reference)
-            )
-
-        # Verify signature
-        sign_check = tx.acquirer_id._payulatam_generate_sign(notification_data, incoming=True)
-        if not hmac.compare_digest(sign_check, sign):
-            raise ValidationError(
-                "PayU Latam: " + _(
-                    "Invalid sign: received %(sign)s, computed %(check)s.",
-                    sign=sign, check=sign_check
-                )
             )
 
         return tx
