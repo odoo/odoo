@@ -111,7 +111,7 @@ class PayUlatamForm(PayUlatamCommon):
             'pseBank': '',
             'referenceCode': 'test_ref_10',
             'reference_pol': '844164756',
-            'signature': '88f11d693d3551419f86850948d731ba',
+            'signature': '31af67235afba03be244224fe4d71da8',
             'pseReference3': '',
             'buyerEmail': 'admin@yourcompany.example.com',
             'lapResponseCode': 'PENDING_TRANSACTION_CONFIRMATION',
