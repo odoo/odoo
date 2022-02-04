@@ -4393,6 +4393,8 @@ Fields:
         self.write(values)
 
     def _load_records_create(self, values):
+        if not values:
+            return self.browse()
         return self.create(values)
 
     def _load_records(self, data_list, update=False):
