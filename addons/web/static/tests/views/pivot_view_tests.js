@@ -2102,7 +2102,7 @@ QUnit.module("Views", (hooks) => {
         await toggleMenuItem(webClient, "Bar");
         assert.strictEqual(
             webClient.el.querySelector("tbody .o_pivot_header_cell_closed").textContent,
-            "true"
+            "Yes"
         );
 
         // remove filter
@@ -2110,7 +2110,7 @@ QUnit.module("Views", (hooks) => {
 
         assert.strictEqual(
             webClient.el.querySelector("tbody .o_pivot_header_cell_closed").textContent,
-            "true"
+            "Yes"
         );
     });
 
@@ -2155,7 +2155,7 @@ QUnit.module("Views", (hooks) => {
         await toggleMenuItem(webClient, "Bar");
         assert.strictEqual(
             webClient.el.querySelector("tbody .o_pivot_header_cell_closed").textContent,
-            "true"
+            "Yes"
         );
 
         // remove groupBy
@@ -2280,7 +2280,7 @@ QUnit.module("Views", (hooks) => {
 
             assert.strictEqual(
                 webClient.el.querySelector("thead .o_pivot_header_cell_closed").textContent,
-                "true"
+                "Yes"
             );
 
             // desactivate the unique existing favorite
@@ -2293,7 +2293,7 @@ QUnit.module("Views", (hooks) => {
 
             assert.strictEqual(
                 webClient.el.querySelector("thead .o_pivot_header_cell_closed").textContent,
-                "true"
+                "Yes"
             );
 
             // Let's get rid of the rows and columns groupBy
@@ -2321,7 +2321,7 @@ QUnit.module("Views", (hooks) => {
 
             assert.strictEqual(
                 webClient.el.querySelector("thead .o_pivot_header_cell_closed").textContent,
-                "true"
+                "Yes"
             );
         }
     );
@@ -4448,7 +4448,7 @@ QUnit.module("Views", (hooks) => {
             };
             serverData.models.partner.records[0].favorite_animal = "Dog";
             serverData.models.partner.records[1].favorite_animal = "false";
-            serverData.models.partner.records[2].favorite_animal = "Undefined";
+            serverData.models.partner.records[2].favorite_animal = "None";
 
             patchDate(2016, 11, 20, 1, 0, 0);
             const pivot = await makeView({
@@ -4468,7 +4468,7 @@ QUnit.module("Views", (hooks) => {
             );
             assert.deepEqual(
                 [...pivot.el.querySelectorAll("tbody th")].map((th) => th.innerText),
-                ["Total", "Dog", "false", "Undefined", "Undefined"],
+                ["Total", "Dog", "false", "None", "None"],
                 "The row headers should be as expected"
             );
         }
@@ -4545,7 +4545,7 @@ QUnit.module("Views", (hooks) => {
             );
             assert.deepEqual(
                 [...pivot.el.querySelectorAll("tbody th")].map((th) => th.innerText),
-                ["Total", "Company", "true", "individual", "true", "Undefined"],
+                ["Total", "Company", "Yes", "individual", "Yes", "No"],
                 "The row headers should be as expected"
             );
         }

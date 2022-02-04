@@ -1516,8 +1516,17 @@ export class PivotModel extends Model {
     _sanitizeLabel(value, groupBy, config) {
         const { metaData } = config;
         const fieldName = groupBy.split(":")[0];
+        if (
+            fieldName &&
+            metaData.fields[fieldName] &&
+            metaData.fields[fieldName].type === "boolean"
+        ) {
+            return value === undefined ?
+                this.env._t('None')
+                : (value ? this.env._t('Yes') : this.env._t('No'));
+        }
         if (value === false) {
-            return this.env._t("Undefined");
+            return this.env._t("None");
         }
         if (value instanceof Array) {
             return this._getNumberedLabel(value, fieldName, config);

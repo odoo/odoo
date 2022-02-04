@@ -1316,7 +1316,7 @@ QUnit.module('Views', {
         assert.containsNone(list, ".o_group_open", "no group is open");
         assert.deepEqual(
             [...list.el.querySelectorAll(".o_group_header .o_group_name")].map((el) => el.innerText),
-            ["Value 1 (3)", "Value 2 (2)", "Value 3 (1)", "Undefined (1)"],
+            ["Value 1 (3)", "Value 2 (2)", "Value 3 (1)", "None (1)"],
             "should have those group headers",
         );
 
@@ -1340,7 +1340,7 @@ QUnit.module('Views', {
                 "​blipValue1Value2Value3",
                 "Value3(1)",
                 "​blipValue1Value2Value3",
-                "Undefined(1)",
+                "None(1)",
                 "​gnap"
             ],
             "should have these row contents"
@@ -9188,7 +9188,7 @@ QUnit.module('Views', {
             groupBy: ['date:month'],
         });
 
-        assert.strictEqual(list.$('tbody').text(), "January 2017 (1)Undefined (3)",
+        assert.strictEqual(list.$('tbody').text(), "January 2017 (1)None (3)",
             "the group names should be correct");
 
         list.destroy();
@@ -10981,14 +10981,14 @@ QUnit.module('Views', {
             'should focus the "Add a line" button');
         await testUtils.fields.triggerKeydown($(document.activeElement), 'down');
 
-        assert.strictEqual(document.activeElement.textContent, 'false (1)',
+        assert.strictEqual(document.activeElement.textContent, 'No (1)',
             'focus should be on second group header');
         assert.strictEqual(list.$('tr.o_data_row').length, 3,
             'should have 3 rows displayed');
         await testUtils.fields.triggerKeydown($(document.activeElement), 'enter');
         assert.strictEqual(list.$('tr.o_data_row').length, 4,
             'should have 4 rows displayed');
-        assert.strictEqual(document.activeElement.textContent, 'false (1)',
+        assert.strictEqual(document.activeElement.textContent, 'No (1)',
             'focus should still be on second group header');
 
         await testUtils.fields.triggerKeydown($(document.activeElement), 'down');
@@ -11037,12 +11037,12 @@ QUnit.module('Views', {
             'second field of first record should be focused');
 
         await testUtils.fields.triggerKeydown($(document.activeElement), 'up');
-        assert.strictEqual(document.activeElement.textContent, 'true (3)',
+        assert.strictEqual(document.activeElement.textContent, 'Yes (3)',
             'focus should be on first group header');
         await testUtils.fields.triggerKeydown($(document.activeElement), 'enter');
         assert.strictEqual(list.$('tr.o_data_row').length, 2,
             'should have 2 rows displayed (first group should be closed)');
-        assert.strictEqual(document.activeElement.textContent, 'true (3)',
+        assert.strictEqual(document.activeElement.textContent, 'Yes (3)',
             'focus should still be on first group header');
 
         assert.strictEqual(list.$('tr.o_data_row').length, 2,
@@ -11050,27 +11050,27 @@ QUnit.module('Views', {
         await testUtils.fields.triggerKeydown($(document.activeElement), 'right');
         assert.strictEqual(list.$('tr.o_data_row').length, 5,
             'should have 5 rows displayed');
-        assert.strictEqual(document.activeElement.textContent, 'true (3)',
+        assert.strictEqual(document.activeElement.textContent, 'Yes (3)',
             'focus is still in header');
         await testUtils.fields.triggerKeydown($(document.activeElement), 'right');
         assert.strictEqual(list.$('tr.o_data_row').length, 5,
             'should have 5 rows displayed');
-        assert.strictEqual(document.activeElement.textContent, 'true (3)',
+        assert.strictEqual(document.activeElement.textContent, 'Yes (3)',
             'focus is still in header');
 
         await testUtils.fields.triggerKeydown($(document.activeElement), 'left');
         assert.strictEqual(list.$('tr.o_data_row').length, 2,
             'should have 2 rows displayed');
-        assert.strictEqual(document.activeElement.textContent, 'true (3)',
+        assert.strictEqual(document.activeElement.textContent, 'Yes (3)',
             'focus is still in header');
         await testUtils.fields.triggerKeydown($(document.activeElement), 'left');
         assert.strictEqual(list.$('tr.o_data_row').length, 2,
             'should have 2 rows displayed');
-        assert.strictEqual(document.activeElement.textContent, 'true (3)',
+        assert.strictEqual(document.activeElement.textContent, 'Yes (3)',
             'focus is still in header');
 
         await testUtils.fields.triggerKeydown($(document.activeElement), 'down');
-        assert.strictEqual(document.activeElement.textContent, 'false (2)',
+        assert.strictEqual(document.activeElement.textContent, 'No (2)',
             'focus should now be on second group header');
         await testUtils.fields.triggerKeydown($(document.activeElement), 'down');
         assert.strictEqual(document.activeElement.tagName, 'TD',
@@ -11188,7 +11188,7 @@ QUnit.module('Views', {
         assert.containsOnce(list, 'tbody:nth(3) .o_data_row');
 
         await testUtils.dom.click(list.$('.o_group_field_row_add a:eq(1)')); // create row in second group
-        assert.strictEqual(list.$('.o_group_name:eq(1)').text(), 'false (2)',
+        assert.strictEqual(list.$('.o_group_name:eq(1)').text(), 'No (2)',
             "group should have correct name and count");
         assert.containsN(list, 'tbody:nth(3) .o_data_row', 2);
         assert.hasClass(list.$('.o_data_row:nth(3)'), 'o_selected_row');

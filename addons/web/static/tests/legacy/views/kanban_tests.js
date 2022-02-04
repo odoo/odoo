@@ -357,7 +357,7 @@ QUnit.module('Views', {
 
         assert.deepEqual(
             [...kanban.el.querySelectorAll(".o_kanban_group")].map(el => el.innerText.replace(/\s/g, " ")),
-            ["Undefined blork", "gold yopblip", "silver yopgnap"],
+            ["None blork", "gold yopblip", "silver yopgnap"],
         );
 
         // check archive/restore all actions in kanban header's config dropdown
@@ -5996,7 +5996,7 @@ QUnit.module('Views', {
                         "column should contain 2 record(s)");
         assert.strictEqual(kanban.$('.o_kanban_group:nth-child(3) .o_kanban_record').length, 1,
                         "column should contain 1 record(s)");
-        assert.ok(kanban.$('.o_kanban_group:first span.o_column_title:contains(Undefined)').length,
+        assert.ok(kanban.$('.o_kanban_group:first span.o_column_title:contains(None)').length,
             "first column should have a default title for when no value is provided");
         assert.ok(!kanban.$('.o_kanban_group:first .o_kanban_header_title').data('original-title'),
             "tooltip of first column should not defined, since group_by_tooltip title and the many2one field has no value");
@@ -8068,7 +8068,7 @@ QUnit.module('Views', {
         assert.containsNone(kanban.el, ".o_kanban_group.o_kanban_group_show");
         assert.deepEqual(
             [...kanban.el.querySelectorAll(".o_column_title")].map(el => el.innerText),
-            ["false", "true"],
+            ["No", "Yes"],
         );
         assert.deepEqual(
             [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
@@ -8082,7 +8082,7 @@ QUnit.module('Views', {
         // Apply an active filter
         await testUtils.dom.click(kanban.el.querySelector(".o_kanban_group:nth-child(2) .progress-bar[data-filter=yop]"));
         assert.containsOnce(kanban.el, ".o_kanban_group.o_kanban_group_show");
-        assert.strictEqual(kanban.el.querySelector(".o_kanban_group.o_kanban_group_show .o_column_title").innerText, "true");
+        assert.strictEqual(kanban.el.querySelector(".o_kanban_group.o_kanban_group_show .o_column_title").innerText, "Yes");
 
         // Add searchdomain to something restricting progressbars' values (records still in filtered group)
         await kanban.update({ domain: [["foo", "=", "yop"]] });
@@ -8090,7 +8090,7 @@ QUnit.module('Views', {
         // Check that we have now 1 column only and check its progressbar's state
         assert.containsOnce(kanban.el, ".o_kanban_group");
         assert.containsOnce(kanban.el, ".o_kanban_group.o_kanban_group_show");
-        assert.strictEqual(kanban.el.querySelector(".o_column_title").innerText, "true");
+        assert.strictEqual(kanban.el.querySelector(".o_column_title").innerText, "Yes");
         assert.deepEqual(
             [...kanban.el.querySelectorAll(".o_kanban_group .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
             ["1 yop", "0 blip", "0 __false"],
@@ -8104,7 +8104,7 @@ QUnit.module('Views', {
         assert.containsOnce(kanban.el, ".o_kanban_group.o_kanban_group_show");
         assert.deepEqual(
             [...kanban.el.querySelectorAll(".o_column_title")].map(el => el.innerText),
-            ["false", "true"],
+            ["No", "Yes"],
         );
         assert.deepEqual(
             [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
@@ -8147,7 +8147,7 @@ QUnit.module('Views', {
         assert.containsNone(kanban.el, ".o_kanban_group.o_kanban_group_show");
         assert.deepEqual(
             [...kanban.el.querySelectorAll(".o_column_title")].map(el => el.innerText),
-            ["false", "true"],
+            ["No", "Yes"],
         );
         assert.deepEqual(
             [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
@@ -8169,7 +8169,7 @@ QUnit.module('Views', {
         // Apply an active filter
         await testUtils.dom.click(kanban.el.querySelector(".o_kanban_group:nth-child(2) .progress-bar[data-filter=yop]"));
         assert.containsOnce(kanban.el, ".o_kanban_group.o_kanban_group_show");
-        assert.strictEqual(kanban.el.querySelector(".o_kanban_group.o_kanban_group_show .o_column_title").innerText, "true");
+        assert.strictEqual(kanban.el.querySelector(".o_kanban_group.o_kanban_group_show .o_column_title").innerText, "Yes");
         assert.deepEqual(
             [...kanban.el.querySelectorAll(".o_kanban_group.o_kanban_group_show .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
             ["1 yop", "1 blip", "1 __false"],
@@ -8187,7 +8187,7 @@ QUnit.module('Views', {
         assert.containsNone(kanban.el, ".o_kanban_group.o_kanban_group_show");
         assert.deepEqual(
             [...kanban.el.querySelectorAll(".o_column_title")].map(el => el.innerText),
-            ["false", "true"],
+            ["No", "Yes"],
         );
         assert.deepEqual(
             [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
@@ -8214,7 +8214,7 @@ QUnit.module('Views', {
         assert.containsNone(kanban.el, ".o_kanban_group.o_kanban_group_show");
         assert.deepEqual(
             [...kanban.el.querySelectorAll(".o_column_title")].map(el => el.innerText),
-            ["false", "true"],
+            ["No", "Yes"],
         );
         assert.deepEqual(
             [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
@@ -8265,7 +8265,7 @@ QUnit.module('Views', {
         assert.containsNone(kanban.el, ".o_kanban_group.o_kanban_group_show");
         assert.deepEqual(
             [...kanban.el.querySelectorAll(".o_column_title")].map(el => el.innerText),
-            ["false", "true"],
+            ["No", "Yes"],
         );
         assert.deepEqual(
             [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
@@ -8288,7 +8288,7 @@ QUnit.module('Views', {
         await testUtils.dom.click(kanban.el.querySelector(".o_kanban_group:nth-child(2) .progress-bar[data-filter=yop]"));
         assert.hasClass(kanban.el.querySelector(".o_kanban_group:nth-child(2)"), "o_kanban_group_show");
         assert.containsOnce(kanban.el, ".o_kanban_group.o_kanban_group_show");
-        assert.strictEqual(kanban.el.querySelector(".o_kanban_group.o_kanban_group_show .o_column_title").innerText, "true");
+        assert.strictEqual(kanban.el.querySelector(".o_kanban_group.o_kanban_group_show .o_column_title").innerText, "Yes");
         assert.containsOnce(kanban.el, ".o_kanban_group.o_kanban_group_show .o_kanban_record");
         assert.strictEqual(kanban.el.querySelector(".o_kanban_group.o_kanban_group_show .o_kanban_record").innerText, "1 yop");
 
@@ -8303,7 +8303,7 @@ QUnit.module('Views', {
         assert.containsOnce(kanban.el, ".o_kanban_group.o_kanban_group_show");
         assert.deepEqual(
             [...kanban.el.querySelectorAll(".o_column_title")].map(el => el.innerText),
-            ["false", "true"],
+            ["No", "Yes"],
         );
         assert.deepEqual(
             [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
@@ -8358,7 +8358,7 @@ QUnit.module('Views', {
         assert.containsNone(kanban.el, ".o_kanban_group.o_kanban_group_show");
         assert.deepEqual(
             [...kanban.el.querySelectorAll(".o_column_title")].map(el => el.innerText),
-            ["false", "true"],
+            ["No", "Yes"],
         );
         assert.deepEqual(
             [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
@@ -8387,7 +8387,7 @@ QUnit.module('Views', {
         await testUtils.dom.click(kanban.el.querySelector(".o_kanban_group:nth-child(2) .progress-bar[data-filter=yop]"));
         assert.hasClass(kanban.el.querySelector(".o_kanban_group:nth-child(2)"), "o_kanban_group_show");
         assert.containsOnce(kanban.el, ".o_kanban_group.o_kanban_group_show");
-        assert.strictEqual(kanban.el.querySelector(".o_kanban_group.o_kanban_group_show .o_column_title").innerText, "true");
+        assert.strictEqual(kanban.el.querySelector(".o_kanban_group.o_kanban_group_show .o_column_title").innerText, "Yes");
         assert.containsOnce(kanban.el, ".o_kanban_group.o_kanban_group_show .o_kanban_record");
         assert.strictEqual(kanban.el.querySelector(".o_kanban_group.o_kanban_group_show .o_kanban_record").innerText, "1 yop");
         assert.verifySteps(["/web/dataset/search_read"]);
@@ -8403,7 +8403,7 @@ QUnit.module('Views', {
         assert.containsNone(kanban.el, ".o_kanban_group.o_kanban_group_show");
         assert.deepEqual(
             [...kanban.el.querySelectorAll(".o_column_title")].map(el => el.innerText),
-            ["false", "true"],
+            ["No", "Yes"],
         );
         assert.deepEqual(
             [...kanban.el.querySelectorAll(".o_kanban_group:nth-child(1) .o_kanban_counter .progress-bar")].map(el => el.dataset.originalTitle),
