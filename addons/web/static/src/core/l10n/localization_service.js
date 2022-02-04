@@ -1,11 +1,26 @@
 /** @odoo-module **/
 
+import { session } from "@web/session";
 import { browser } from "../browser/browser";
 import { registry } from "../registry";
 import { strftimeToLuxonFormat } from "./dates";
 import { localization } from "./localization";
 import { translatedTerms, _t } from "./translation";
-import { session } from "@web/session";
+
+const { Settings } = luxon;
+
+/** @type {[RegExp, string][]} */
+const NUMBERING_SYSTEMS = [
+    [/^ar-(sa|001)$/i, "arab"],
+    [/^bn/i, "beng"],
+    [/^bo/i, "tibt"],
+    // [/^fa/i, "Farsi (Persian)"], // No numberingSystem found in Intl
+    // [/^(hi|mr|ne)/i, "Hindi"], // No numberingSystem found in Intl
+    // [/^my/i, "Burmese"], // No numberingSystem found in Intl
+    [/^pa-in/i, "guru"],
+    [/^ta/i, "tamldec"],
+    [/.*/i, "latn"],
+];
 
 const { config } = owl;
 
@@ -44,13 +59,18 @@ export const localizationService = {
         env._t = _t;
         env.qweb.translateFn = _t;
 
-        // Setup lang inside luxon. The locale codes received from the server contain "_", whereas
-        // the Intl codes use "-" (Unicode BCP 47). There's only one exception, which is locale
-        // "sr@latin", for which we manually fallback to the "sr-Latn-RS" locale.
-        if (lang === "sr@latin") {
-            luxon.Settings.defaultLocale = "sr-Latn-RS";
-        } else if (lang) {
-            luxon.Settings.defaultLocale = lang.replace(/_/g, "-");
+        if (lang) {
+            // Setup lang inside luxon. The locale codes received from the server contain "_",
+            // whereas the Intl codes use "-" (Unicode BCP 47). There's only one exception, which
+            // is locale "sr@latin", for which we manually fallback to the "sr-Latn-RS" locale.
+            const locale = lang === "sr@latin" ? "sr-Latn-RS" : lang.replace(/_/g, "-");
+            Settings.defaultLocale = locale;
+            for (const [re, numberingSystem] of NUMBERING_SYSTEMS) {
+                if (re.test(locale)) {
+                    Settings.defaultNumberingSystem = numberingSystem;
+                    break;
+                }
+            }
         }
 
         const dateFormat = strftimeToLuxonFormat(userLocalization.date_format);
