@@ -1,19 +1,23 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from unittest.mock import patch
+
 from freezegun import freeze_time
+from werkzeug.exceptions import Forbidden
 
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
 from odoo.tests import tagged
 from odoo.tools import mute_logger
 
-from .common import PayULatamCommon
-from ..controllers.main import PayuLatamController
-from ..models.payment_acquirer import SUPPORTED_CURRENCIES
+from odoo.addons.payment.tests.http_common import PaymentHttpCommon
+from odoo.addons.payment_payulatam.controllers.main import PayuLatamController
+from odoo.addons.payment_payulatam.models.payment_acquirer import SUPPORTED_CURRENCIES
+from odoo.addons.payment_payulatam.tests.common import PayULatamCommon
 
 
 @tagged('post_install', '-at_install')
-class PayULatamTest(PayULatamCommon):
+class PayULatamTest(PayULatamCommon, PaymentHttpCommon):
 
     def test_compatibility_with_supported_currencies(self):
         """ Test that the PayULatam acquirer is compatible with all supported currencies. """
@@ -67,6 +71,7 @@ class PayULatamTest(PayULatamCommon):
             'buyerEmail': self.partner.email,
             'buyerFullName': self.partner.name,
             'responseUrl': self._build_url(PayuLatamController._return_url),
+            'confirmationUrl': self._build_url(PayuLatamController._webhook_url),
             'test': str(1),  # testing is always performed in test mode
         }
         expected_values['signature'] = self.payulatam._payulatam_generate_sign(
@@ -146,6 +151,63 @@ class PayULatamTest(PayULatamCommon):
         self.env['payment.transaction']._handle_notification_data('payulatam', payulatam_post_data)
         self.assertEqual(tx.state, 'done', 'Payulatam: wrong state after receiving a valid pending notification')
         self.assertEqual(tx.acquirer_reference, 'b232989a-4aa8-42d1-bace-153236eee791', 'Payulatam: wrong txn_id after receiving a valid pending notification')
+
+    @mute_logger('odoo.addons.payment_payulatam.controllers.main')
+    def test_webhook_notification_confirms_transaction(self):
+        """ Test the processing of a webhook notification. """
+        tx = self.create_transaction('redirect')
+        url = self._build_url(PayuLatamController._webhook_url)
+        with patch(
+            'odoo.addons.payment_payulatam.controllers.main.PayuLatamController'
+            '._verify_notification_signature'
+        ):
+            self._make_http_post_request(url, data=self.async_notification_data)
+        self.assertEqual(tx.state, 'done')
+
+    @mute_logger('odoo.addons.payment_payulatam.controllers.main')
+    def test_webhook_notification_triggers_signature_check(self):
+        """ Test that receiving a webhook notification triggers a signature check. """
+        self.create_transaction('redirect')
+        url = self._build_url(PayuLatamController._webhook_url)
+        with patch(
+            'odoo.addons.payment_payulatam.controllers.main.PayuLatamController'
+            '._verify_notification_signature'
+        ) as signature_check_mock, patch(
+            'odoo.addons.payment.models.payment_transaction.PaymentTransaction'
+            '._handle_notification_data'
+        ):
+            self._make_http_post_request(url, data=self.async_notification_data)
+            self.assertEqual(signature_check_mock.call_count, 1)
+
+    def test_accept_notification_with_valid_signature(self):
+        """ Test the verification of a notification with a valid signature. """
+        tx = self.create_transaction('redirect')
+        payload = PayuLatamController._normalize_data_keys(self.async_notification_data)
+        self._assert_does_not_raise(
+            Forbidden, PayuLatamController._verify_notification_signature, payload, tx
+        )
+
+    @mute_logger('odoo.addons.payment_payulatam.controllers.main')
+    def test_reject_notification_with_missing_signature(self):
+        """ Test the verification of a notification with a missing signature. """
+        tx = self.create_transaction('redirect')
+        payload = PayuLatamController._normalize_data_keys(
+            dict(self.async_notification_data, sign=None)
+        )
+        self.assertRaises(
+            Forbidden, PayuLatamController._verify_notification_signature, payload, tx
+        )
+
+    @mute_logger('odoo.addons.payment_payulatam.controllers.main')
+    def test_reject_notification_with_invalid_signature(self):
+        """ Test the verification of a notification with an invalid signature. """
+        tx = self.create_transaction('redirect')
+        payload = PayuLatamController._normalize_data_keys(
+            dict(self.async_notification_data, sign='dummy')
+        )
+        self.assertRaises(
+            Forbidden, PayuLatamController._verify_notification_signature, payload, tx
+        )
 
     def test_payulatam_neutralize(self):
         self.env['payment.acquirer']._neutralize()
