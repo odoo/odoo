@@ -14,7 +14,7 @@
             (<t t-out="object.partner_id.parent_id.name or ''">Azure Interior</t>)
         </t>
         <br/><br/>
-        Here is in attachment a request for quotation <strong t-out="object.name or ''">P00015</strong>
+        Here is in attachment a request for quotation <span style="font-weight:bold;" t-out="object.name or ''">P00015</span>
         <t t-if="object.partner_ref">
             with reference: <t t-out="object.partner_ref or ''">REF_XXX</t>
         </t>
@@ -24,7 +24,7 @@
         <br/><br/>
         Best regards,
         <t t-if="not is_html_empty(object.user_id.signature)">
-            <br />
+            <br/><br/>
             <t t-out="object.user_id.signature or ''">--<br/>Mitchell Admin</t>
         </t>
     </p>
@@ -48,20 +48,20 @@
             (<t t-out="object.partner_id.parent_id.name or ''">Azure Interior</t>)
         </t>
         <br/><br/>
-        Here is in attachment a purchase order <strong t-out="object.name or ''">P00015</strong>
+        Here is in attachment a purchase order <span style="font-weight:bold;" t-out="object.name or ''">P00015</span>
         <t t-if="object.partner_ref">
             with reference: <t t-out="object.partner_ref or ''">REF_XXX</t>
         </t>
-        amounting in <strong t-out="format_amount(object.amount_total, object.currency_id) or ''">$ 10.00</strong>
+        amounting in <span style="font-weight:bold;" t-out="format_amount(object.amount_total, object.currency_id) or ''">$ 10.00</span>
         from <t t-out="object.company_id.name or ''">YourCompany</t>. 
         <br/><br/>
         <t t-if="object.date_planned">
-            The receipt is expected for <strong t-out="format_date(object.date_planned) or ''">05/05/2021</strong>.
+            The receipt is expected for <span style="font-weight:bold;" t-out="format_date(object.date_planned) or ''">05/05/2021</span>.
             <br/><br/>
             Could you please acknowledge the receipt of this order?
         </t>
         <t t-if="not is_html_empty(object.user_id.signature)">
-            <br />
+            <br/><br/>
             <t t-out="object.user_id.signature or ''">--<br/>Mitchell Admin</t>
         </t>
         <br/><br/>
@@ -87,20 +87,20 @@
             (<t t-out="object.partner_id.parent_id.name or ''">Azure Interior</t>)
         </t>
         <br/><br/>
-        Here is a reminder that the delivery of the purchase order <strong t-out="object.name or ''">P00015</strong>
+        Here is a reminder that the delivery of the purchase order <span style="font-weight:bold;" t-out="object.name or ''">P00015</span>
         <t t-if="object.partner_ref">
-            <strong>(<t t-out="object.partner_ref or ''">REF_XXX</t>)</strong>
+            <span style="font-weight:bold;">(<t t-out="object.partner_ref or ''">REF_XXX</t>)</span>
         </t>
         is expected for 
         <t t-if="object.date_planned">
-            <strong t-out="format_date(object.date_planned) or ''">05/05/2021</strong>.
+            <span style="font-weight:bold;" t-out="format_date(object.date_planned) or ''">05/05/2021</span>.
         </t>
          <t t-else="">
-            <strong>undefined</strong>.
+            <span style="font-weight:bold;">undefined</span>.
         </t>
         Could you please confirm it will be delivered on time?
         <t t-if="not is_html_empty(object.user_id.signature)">
-            <br />
+            <br/><br/>
             <t t-out="object.user_id.signature or ''">--<br/>Mitchell Admin</t>
         </t>
         <br/><br/>
