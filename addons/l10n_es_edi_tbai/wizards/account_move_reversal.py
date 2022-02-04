@@ -27,7 +27,7 @@ class AccountMoveReversal(models.TransientModel):
     @api.depends('move_ids')
     def _compute_l10n_es_tbai_is_required(self):
         for wizard in self:
-            wizard.l10n_es_tbai_is_required = wizard.move_ids.l10n_es_tbai_is_required
+            wizard.l10n_es_tbai_is_required = any(m.l10n_es_tbai_is_required for m in wizard.move_ids)
 
     def _prepare_default_reversal(self, move):
         # OVERRIDE
