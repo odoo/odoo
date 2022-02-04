@@ -153,6 +153,10 @@ $.fn.modal.Constructor.prototype._showElement = function () {
         // opened is a very specific Odoo behavior.
         $(this._element).on('content_changed.update_scrollbar', this, _updateScrollbar);
         $(window).on('resize.update_scrollbar', this, _updateScrollbar);
+
+        this._odooLoadEventCaptureHandler = _.debounce(() => _updateScrollbar({ data: this }, 100));
+        this._element.addEventListener('load', this._odooLoadEventCaptureHandler, true);
+
         _updateScrollbar({ data: this });
     }
 };
@@ -168,6 +172,11 @@ $.fn.modal.Constructor.prototype._hideModal = function () {
 
     $(this._element).off('content_changed.update_scrollbar');
     $(window).off('resize.update_scrollbar');
+
+    if (this._odooLoadEventCaptureHandler) {
+        this._element.removeEventListener('load', this._odooLoadEventCaptureHandler, true);
+        delete this._odooLoadEventCaptureHandler;
+    }
 };
 
 const _baseSetScrollbar = $.fn.modal.Constructor.prototype._setScrollbar;
