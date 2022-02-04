@@ -119,7 +119,7 @@ registerModel({
                 newerMessages = this.thread.messages;
             } else {
                 newerMessages = this.thread.messages.filter(message =>
-                    message.id > this.lastFetchedMessage.id
+                    message.id > this.lastFetchedMessage.id || message.messageComposition
                 );
             }
             return replace(this.fetchedMessages.concat(newerMessages));
@@ -133,10 +133,16 @@ registerModel({
         },
         /**
          * @private
-         * @returns {Message[]}
+         * @returns {FieldCommand}
          */
         _computeOrderedMessages() {
-            return replace(this.messages.sort((m1, m2) => m1.id < m2.id ? -1 : 1));
+            // TODO need to make a rule for negative ID
+            return replace(this.messages.sort((m1, m2) => {
+                if (m1.id < 0 || m2.id < 0) {
+                    return (m1.id < m2.id ? 1 : -1);
+                }
+                return m1.id < m2.id ? -1 : 1;
+            }));
         },
         /**
          *

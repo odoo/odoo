@@ -2431,6 +2431,11 @@ registerModel({
             compute: '_computeVideoCount',
             default: 0,
         }),
+        threadMessagePostQueue: one('ThreadMessagePostQueue', {
+            default: insertAndReplace(),
+            inverse: 'thread',
+            isCausal: true,
+        }),
     },
     onChanges: [
         new OnChange({

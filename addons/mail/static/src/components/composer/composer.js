@@ -105,7 +105,9 @@ export class Composer extends Component {
      */
     _onClickSend() {
         this._postMessage();
-        this.composerView.update({ doFocus: true });
+        if (this.composerView) {
+            this.composerView.update({ doFocus: true });
+        }
     }
 
     /**

@@ -719,6 +719,12 @@ registerModel({
             compute: '_computeCanStarBeToggled',
         }),
         /**
+         * Determines the message composition that hold this message.
+         */
+        messageComposition: one('MessageComposition', {
+            inverse: 'message',
+        }),
+        /**
          * Determines the date of the message as a moment object.
          */
         date: attr(),

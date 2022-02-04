@@ -3,12 +3,20 @@
 import { emojis } from '@mail/js/emojis';
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear, insertAndReplace, link, replace, unlink } from '@mail/model/model_field_command';
+import { clear, insert, insertAndReplace, link, replace, unlink } from '@mail/model/model_field_command';
 import { OnChange } from '@mail/model/model_onchange';
 import { addLink, escapeAndCompactTextContent, parseAndTransform } from '@mail/js/utils';
 import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 
 import { escape } from '@web/core/utils/strings';
+
+const getMessageCompositionId = (function() {
+    let tmpId = 0;
+    return () => {
+        tmpId -= 1;
+        return tmpId;
+    };
+})();
 
 registerModel({
     name: 'ComposerView',
@@ -291,7 +299,7 @@ registerModel({
                     if (!composer.exists()) {
                         return;
                     }
-                    composer._reset();
+                    composer.reset();
                     if (composer.activeThread) {
                         composer.activeThread.fetchData(['messages']);
                     }
@@ -300,107 +308,43 @@ registerModel({
             await this.env.bus.trigger('do-action', { action, options });
         },
         /**
-         * Post a message in provided composer's thread based on current composer fields values.
+         * Post a message in provided composer's thread based on current
+         * composer fields values.
          */
         async postMessage() {
-            const composer = this.composer;
-            if (composer.thread.model === 'mail.channel') {
-                const command = this._getCommandFromText(composer.textInputContent);
+            // Catch command from text early and process them immediatly
+            if (this.composer.thread.model === 'mail.channel') {
+                const command = this._getCommandFromText(this.composer.textInputContent);
                 if (command) {
-                    await command.execute({ channel: composer.thread, body: composer.textInputContent });
-                    if (composer.exists()) {
-                        composer._reset();
-                    }
+                    await command.execute({ channel: this.composer.thread, body: this.composer.textInputContent });
+                    this.composer.reset();
                     return;
                 }
             }
-            if (this.messaging.currentPartner) {
-                composer.thread.unregisterCurrentPartnerIsTyping({ immediateNotify: true });
-            }
-            const escapedAndCompactContent = escapeAndCompactTextContent(composer.textInputContent);
-            let body = escapedAndCompactContent.replace(/&nbsp;/g, ' ').trim();
-            // This message will be received from the mail composer as html content
-            // subtype but the urls will not be linkified. If the mail composer
-            // takes the responsibility to linkify the urls we end up with double
-            // linkification a bit everywhere. Ideally we want to keep the content
-            // as text internally and only make html enrichment at display time but
-            // the current design makes this quite hard to do.
-            body = this._generateMentionsLinks(body);
-            body = parseAndTransform(body, addLink);
-            body = this._generateEmojisOnHtml(body);
-            const postData = {
-                attachment_ids: composer.attachments.map(attachment => attachment.id),
-                body,
-                message_type: 'comment',
-                partner_ids: composer.recipients.map(partner => partner.id),
+            const compositionId = getMessageCompositionId();
+            const composition = {
+                id: compositionId,
+                composerView: replace(this),
+                mentionedChannels: replace(this.composer.mentionedChannels),
+                mentionedPartners: replace(this.composer.mentionedPartners),
+                recipients: replace(this.composer.recipients),
+                message: insert({
+                    attachments: replace(this.composer.attachments),
+                    author: replace(this.messaging.currentUser.partner),
+                    body: this.composer.textInputContent,
+                    date: moment(),
+                    id: compositionId,
+                    isTemporary: true,
+                    message_type: 'comment',
+                    is_discussion: true,
+                    originThread: replace(this.composer.activeThread),
+                })
             };
-            const params = {
-                'post_data': postData,
-                'thread_id': composer.thread.id,
-                'thread_model': composer.thread.model,
-            };
-            try {
-                composer.update({ isPostingMessage: true });
-                if (composer.thread.model === 'mail.channel') {
-                    Object.assign(postData, {
-                        subtype_xmlid: 'mail.mt_comment',
-                    });
-                } else {
-                    Object.assign(postData, {
-                        subtype_xmlid: composer.isLog ? 'mail.mt_note' : 'mail.mt_comment',
-                    });
-                    if (!composer.isLog) {
-                        params.context = { mail_post_autofollow: true };
-                    }
-                }
-                if (this.threadView && this.threadView.replyingToMessageView && this.threadView.thread !== this.messaging.inbox) {
-                    postData.parent_id = this.threadView.replyingToMessageView.message.id;
-                }
-                const { threadView = {} } = this;
-                const { thread: chatterThread } = this.chatter || {};
-                const { thread: threadViewThread } = threadView;
-                const messageData = await this.env.services.rpc({ route: `/mail/message/post`, params });
-                if (!this.messaging) {
-                    return;
-                }
-                const message = this.messaging.models['Message'].insert(
-                    this.messaging.models['Message'].convertData(messageData)
-                );
-                for (const threadView of message.originThread.threadViews) {
-                    // Reset auto scroll to be able to see the newly posted message.
-                    threadView.update({ hasAutoScrollOnMessageReceived: true });
-                    threadView.addComponentHint('message-posted', { message });
-                }
-                if (chatterThread) {
-                    if (this.exists()) {
-                        this.delete();
-                    }
-                    if (chatterThread.exists()) {
-                        // Load new messages to fetch potential new messages from other users (useful due to lack of auto-sync in chatter).
-                        chatterThread.fetchData(['followers', 'messages', 'suggestedRecipients']);
-                    }
-                }
-                if (threadViewThread) {
-                    if (threadViewThread === this.messaging.inbox) {
-                        if (this.exists()) {
-                            this.delete();
-                        }
-                        this.env.services['notification'].notify({
-                            message: _.str.sprintf(this.env._t(`Message posted on "%s"`), message.originThread.displayName),
-                            type: 'info',
-                        });
-                    }
-                    if (threadView && threadView.exists()) {
-                        threadView.update({ replyingToMessageView: clear() });
-                    }
-                }
-                if (composer.exists()) {
-                    composer._reset();
-                }
-            } finally {
-                if (composer.exists()) {
-                    composer.update({ isPostingMessage: false });
-                }
+            this.composer.activeThread.threadMessagePostQueue.add(composition);
+            this.composer.reset();
+            // Close the composer after the message is queued
+            if (this.chatter && this.exists()) {
+                this.delete();
             }
         },
         /**
@@ -473,17 +417,10 @@ registerModel({
                 body: body,
                 attachment_ids: composer.attachments.concat(this.messageViewInEditing.message.attachments).map(attachment => attachment.id),
             };
-            try {
-                composer.update({ isPostingMessage: true });
-                const messageViewInEditing = this.messageViewInEditing;
-                await messageViewInEditing.message.updateContent(data);
-                if (messageViewInEditing.exists()) {
-                    messageViewInEditing.stopEditing();
-                }
-            } finally {
-                if (composer.exists()) {
-                    composer.update({ isPostingMessage: false });
-                }
+            const messageViewInEditing = this.messageViewInEditing;
+            await messageViewInEditing.message.updateContent(data);
+            if (messageViewInEditing.exists()) {
+                messageViewInEditing.stopEditing();
             }
         },
         /**

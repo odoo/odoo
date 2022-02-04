@@ -5,6 +5,7 @@
         <t t-if="messageView">
             <div class="o_Message position-relative pt-1"
                 t-att-class="{
+                    'o_Message-isTemporary': messageView.message.isTemporary,
                     'o_Message_active': messageView.isActive,
                     'o-clicked': messageView.isClicked,
                     'o-discussion': messageView.message.is_discussion or messageView.message.is_notification,
