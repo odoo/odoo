@@ -594,21 +594,23 @@
     </record>
 
     <!-- Confirm some Sales Orders-->
-    <function model="sale.order" name="action_confirm" eval="[[ref('sale_order_4')]]"/>
-    <function model="sale.order" name="action_confirm" eval="[[ref('sale_order_6')]]"/>
-    <function model="sale.order" name="action_confirm" eval="[[ref('sale_order_7')]]"/>
-    <function model="sale.order" name="action_confirm" eval="[[ref('sale_order_8')]]"/>
-    <function model="sale.order" name="action_confirm" eval="[[ref('sale_order_9')]]"/>
-    <function model="sale.order" name="action_confirm" eval="[[ref('sale_order_10')]]"/>
-    <function model="sale.order" name="action_confirm" eval="[[ref('sale_order_11')]]"/>
-    <function model="sale.order" name="action_confirm" eval="[[ref('sale_order_12')]]"/>
-    <function model="sale.order" name="action_confirm" eval="[[ref('sale_order_13')]]"/>
-    <function model="sale.order" name="action_confirm" eval="[[ref('sale_order_14')]]"/>
-    <function model="sale.order" name="action_confirm" eval="[[ref('sale_order_15')]]"/>
-    <function model="sale.order" name="action_confirm" eval="[[ref('sale_order_16')]]"/>
-    <function model="sale.order" name="action_confirm" eval="[[ref('sale_order_17')]]"/>
-    <function model="sale.order" name="action_confirm" eval="[[ref('sale_order_18')]]"/>
-    <function model="sale.order" name="action_confirm" eval="[[ref('portal_sale_order_2')]]"/>
+    <function model="sale.order" name="action_confirm" eval="[[
+        ref('sale_order_4'),
+        ref('sale_order_6'),
+        ref('sale_order_7'),
+        ref('sale_order_8'),
+        ref('sale_order_9'),
+        ref('sale_order_10'),
+        ref('sale_order_11'),
+        ref('sale_order_12'),
+        ref('sale_order_13'),
+        ref('sale_order_14'),
+        ref('sale_order_15'),
+        ref('sale_order_16'),
+        ref('sale_order_17'),
+        ref('sale_order_18'),
+        ref('portal_sale_order_2'),
+    ]]"/>
 
     <!-- Setting date_order in the past for beautiful spread -->
     <record id="sale_order_9" model="sale.order">
