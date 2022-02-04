@@ -16,6 +16,9 @@ registerModel({
             this.update({
                 isHighlighted: true,
                 highlightTimeout: this.env.browser.setTimeout(() => {
+                    if (!this.exists()) {
+                        return;
+                    }
                     this.update({ isHighlighted: false });
                 }, 2000),
             });
