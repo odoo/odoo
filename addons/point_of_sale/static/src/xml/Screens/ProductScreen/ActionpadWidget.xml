@@ -3,11 +3,11 @@
 
     <t t-name="ActionpadWidget" owl="1">
         <div class="actionpad">
-            <button class="button set-customer" t-att-class="{'decentered': isLongName}"
-                    t-on-click="() => this.trigger('click-customer')">
+            <button class="button set-partner" t-att-class="{'decentered': isLongName}"
+                    t-on-click="() => this.trigger('click-partner')">
                 <t t-if="!env.isMobile"><i class="fa fa-user" role="img" aria-label="Customer" title="Customer" /></t>
-                <t t-if="props.client">
-                    <t t-esc="props.client.name" />
+                <t t-if="props.partner">
+                    <t t-esc="props.partner.name" />
                 </t>
                 <t t-else="">
                     Customer

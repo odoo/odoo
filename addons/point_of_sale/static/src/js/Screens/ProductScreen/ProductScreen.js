@@ -18,13 +18,13 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
             useListener('update-selected-orderline', this._updateSelectedOrderline);
             useListener('set-numpad-mode', this._setNumpadMode);
             useListener('click-product', this._clickProduct);
-            useListener('click-customer', this._onClickCustomer);
+            useListener('click-partner', this.onClickPartner);
             useListener('click-pay', this._onClickPay);
             useBarcodeReader({
                 product: this._barcodeProductAction,
                 weight: this._barcodeProductAction,
                 price: this._barcodeProductAction,
-                client: this._barcodeClientAction,
+                client: this._barcodePartnerAction,
                 discount: this._barcodeDiscountAction,
                 error: this._barcodeErrorAction,
             });
@@ -53,8 +53,8 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
         get isScaleAvailable() {
             return true;
         }
-        get client() {
-            return this.currentOrder ? this.currentOrder.get_client() : null;
+        get partner() {
+            return this.currentOrder ? this.currentOrder.get_partner() : null;
         }
         get currentOrder() {
             return this.env.pos.get_order();
@@ -260,11 +260,11 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
             }
             this.currentOrder.add_product(product,  options)
         }
-        _barcodeClientAction(code) {
+        _barcodePartnerAction(code) {
             const partner = this.env.pos.db.get_partner_by_barcode(code.code);
             if (partner) {
-                if (this.currentOrder.get_client() !== partner) {
-                    this.currentOrder.set_client(partner);
+                if (this.currentOrder.get_partner() !== partner) {
+                    this.currentOrder.set_partner(partner);
                     this.currentOrder.set_pricelist(
                         _.findWhere(this.env.pos.pricelists, {
                             id: partner.property_product_pricelist[0],
@@ -329,28 +329,28 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                 }
             }
         }
-        async _onClickCustomer() {
-            // IMPROVEMENT: This code snippet is very similar to selectClient of PaymentScreen.
-            const currentClient = this.currentOrder.get_client();
-            if (currentClient && this.currentOrder.getHasRefundLines()) {
+        async onClickPartner() {
+            // IMPROVEMENT: This code snippet is very similar to selectPartner of PaymentScreen.
+            const currentPartner = this.currentOrder.get_partner();
+            if (currentPartner && this.currentOrder.getHasRefundLines()) {
                 this.showPopup('ErrorPopup', {
                     title: this.env._t("Can't change customer"),
                     body: _.str.sprintf(
                         this.env._t(
                             "This order already has refund lines for %s. We can't change the customer associated to it. Create a new order for the new customer."
                         ),
-                        currentClient.name
+                        currentPartner.name
                     ),
                 });
                 return;
             }
-            const { confirmed, payload: newClient } = await this.showTempScreen(
-                'ClientListScreen',
-                { client: currentClient }
+            const { confirmed, payload: newPartner } = await this.showTempScreen(
+                'PartnerListScreen',
+                { partner: currentPartner }
             );
             if (confirmed) {
-                this.currentOrder.set_client(newClient);
-                this.currentOrder.updatePricelist(newClient);
+                this.currentOrder.set_partner(newPartner);
+                this.currentOrder.updatePricelist(newPartner);
             }
         }
         _onClickPay() {

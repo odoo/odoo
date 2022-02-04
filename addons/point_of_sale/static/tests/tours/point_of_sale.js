@@ -96,14 +96,14 @@ odoo.define('point_of_sale.tour.pricelist', function (require) {
         content: "select fixed pricelist",
         trigger: ".selection-item:contains('Fixed')",
     }, {
-        content: "open customer list",
-        trigger: "button.set-customer",
+        content: "open partner list",
+        trigger: "button.set-partner",
     }, {
         content: "select Deco Addict",
-        trigger: ".client-line:contains('Deco Addict')",
+        trigger: ".partner-line:contains('Deco Addict')",
     }, {
         content: "confirm selection",
-        trigger: ".clientlist-screen .next",
+        trigger: ".partnerlist-screen .next",
     }, {
         content: "click pricelist button",
         trigger: ".control-button.o_pricelist_button",
@@ -116,13 +116,13 @@ odoo.define('point_of_sale.tour.pricelist', function (require) {
         trigger: ".button.cancel:visible",
     }, {
         content: "open customer list",
-        trigger: "button.set-customer",
+        trigger: "button.set-partner",
     }, {
         content: "select Lumber Inc",
-        trigger: ".client-line:contains('Lumber Inc')",
+        trigger: ".partner-line:contains('Lumber Inc')",
     },  {
         content: "confirm selection",
-        trigger: ".clientlist-screen .next",
+        trigger: ".partnerlist-screen .next",
     }, {
         content: "click pricelist button",
         trigger: ".control-button.o_pricelist_button",

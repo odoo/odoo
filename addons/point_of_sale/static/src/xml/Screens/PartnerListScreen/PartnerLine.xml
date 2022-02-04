@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="ClientLine" owl="1">
-        <tr t-attf-class="client-line {{highlight}}" t-att-data-id="props.partner.id"
-            t-on-click="() => this.props.onClickClient(props.partner)">
+    <t t-name="PartnerLine" owl="1">
+        <tr t-attf-class="partner-line {{highlight}}" t-att-data-id="props.partner.id"
+            t-on-click="() => this.props.onClickPartner(props.partner)">
             <td>
                 <t t-esc="props.partner.name or ''" />
                 <span t-if="highlight">
-                    <br/><button class="edit-client-button" t-on-click.stop="() => this.trigger('click-edit')">EDIT</button>
+                    <br/><button class="edit-partner-button" t-on-click.stop="() => this.trigger('click-edit')">EDIT</button>
                 </span>
             </td>
             <td t-if="!env.isMobile">
@@ -20,11 +20,11 @@
                 <t t-esc="props.partner.zip or ''" />
                 <span t-if="highlight"><br/></span>
             </td>
-            <td class="client-line-email">
+            <td class="partner-line-email">
                 <t t-esc="props.partner.email or ''" />
                 <span t-if="highlight"><br/></span>
             </td>
-            <td class="client-line-last-column-placeholder oe_invisible"></td>
+            <td class="partner-line-last-column-placeholder oe_invisible"></td>
         </tr>
     </t>
 

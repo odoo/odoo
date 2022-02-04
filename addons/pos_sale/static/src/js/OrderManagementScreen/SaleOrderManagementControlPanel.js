@@ -34,9 +34,9 @@ odoo.define('pos_sale.SaleOrderManagementControlPanel', function (require) {
             useListener('clear-search', this._onClearSearch);
             useAutofocus();
 
-            let currentClient = this.env.pos.get_order().get_client();
-            if (currentClient) {
-                this.orderManagementContext.searchString = currentClient.name;
+            let currentPartner = this.env.pos.get_order().get_partner();
+            if (currentPartner) {
+                this.orderManagementContext.searchString = currentPartner.name;
                 let domain = this._computeDomain();
                 SaleOrderFetcher.setSearchDomain(domain);
             }

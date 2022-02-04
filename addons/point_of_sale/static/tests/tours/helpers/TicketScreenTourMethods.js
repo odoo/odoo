@@ -154,10 +154,10 @@ odoo.define('point_of_sale.tour.TicketScreenTourMethods', function (require) {
                 },
             ];
         }
-        customerIs(name) {
+        partnerIs(name) {
             return [
                 {
-                    trigger: `.ticket-screen .set-customer:contains("${name}")`,
+                    trigger: `.ticket-screen .set-partner:contains("${name}")`,
                     run: () => {},
                 },
             ];

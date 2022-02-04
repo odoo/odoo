@@ -374,7 +374,7 @@ odoo.define('pos_coupon.pos', function (require) {
                 const programIdsWithScannedCoupon = Object.values(this.bookedCouponCodes).map(
                     (couponCode) => couponCode.program_id
                 );
-                const customer = this.get_client();
+                const partner = this.get_partner();
                 const { successful, payload } = await rpc.query({
                     model: 'pos.config',
                     method: 'use_coupon_code',
@@ -382,7 +382,7 @@ odoo.define('pos_coupon.pos', function (require) {
                         [this.pos.config.id],
                         code,
                         this.creation_date,
-                        customer ? customer.id : false,
+                        partner ? partner.id : false,
                         programIdsWithScannedCoupon,
                     ],
                     kwargs: { context: session.user_context },
@@ -777,9 +777,9 @@ odoo.define('pos_coupon.pos', function (require) {
                 };
             }
 
-            // Check if valid customer
-            const customer = this.get_client();
-            if (program.rule_partners_domain && !program.valid_partner_ids.has(customer ? customer.id : 0)) {
+            // Check if valid partner
+            const partner = this.get_partner();
+            if (program.rule_partners_domain && !program.valid_partner_ids.has(partner ? partner.id : 0)) {
                 return {
                     successful: false,
                     reason: "Current customer can't avail this program.",

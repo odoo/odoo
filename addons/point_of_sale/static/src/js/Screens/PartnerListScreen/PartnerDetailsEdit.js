@@ -1,4 +1,4 @@
-odoo.define('point_of_sale.ClientDetailsEdit', function(require) {
+odoo.define('point_of_sale.PartnerDetailsEdit', function(require) {
     'use strict';
 
     const { _t } = require('web.core');
@@ -8,7 +8,7 @@ odoo.define('point_of_sale.ClientDetailsEdit', function(require) {
 
     const { onMounted, onWillUnmount } = owl;
 
-    class ClientDetailsEdit extends PosComponent {
+    class PartnerDetailsEdit extends PosComponent {
         setup() {
             super.setup();
             this.intFields = ['country_id', 'state_id', 'property_product_pricelist'];
@@ -19,11 +19,11 @@ odoo.define('point_of_sale.ClientDetailsEdit', function(require) {
             };
 
             onMounted(() => {
-                this.env.bus.on('save-customer', this, this.saveChanges);
+                this.env.bus.on('save-partner', this, this.saveChanges);
             });
 
             onWillUnmount(() => {
-                this.env.bus.off('save-customer', this);
+                this.env.bus.off('save-partner', this);
             });
         }
         get partnerImageUrl() {
@@ -125,9 +125,9 @@ odoo.define('point_of_sale.ClientDetailsEdit', function(require) {
             });
         }
     }
-    ClientDetailsEdit.template = 'ClientDetailsEdit';
+    PartnerDetailsEdit.template = 'PartnerDetailsEdit';
 
-    Registries.Component.add(ClientDetailsEdit);
+    Registries.Component.add(PartnerDetailsEdit);
 
-    return ClientDetailsEdit;
+    return PartnerDetailsEdit;
 });

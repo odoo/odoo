@@ -137,7 +137,7 @@ class PosGlobalState extends PosModel {
             'synch':            { status:'connected', pending:0 },
             'orders':           new PosCollection(),
             'selectedOrder':    null,
-            'selectedClient':   null,
+            'selectedPartner':   null,
             'selectedCategoryId': null,
         });
     }
@@ -1135,7 +1135,7 @@ Registries.Model.add(Product);
 
 var orderline_id = 1;
 
-// An orderline represent one element of the content of a client's shopping cart.
+// An orderline represent one element of the content of a customer's shopping cart.
 // An orderline contains a product, its quantity, its price, discount. etc.
 // An Order contains zero or more Orderlines.
 class Orderline extends PosModel {
@@ -2109,7 +2109,7 @@ class Payment extends PosModel {
 }
 Registries.Model.add(Payment);
 
-// An order more or less represents the content of a client's shopping cart (the OrderLines)
+// An order more or less represents the content of a customer's shopping cart (the OrderLines)
 // plus the associated payment information (the Paymentlines)
 // there is always an active ('selected') order in the Pos, a new one is created
 // automaticaly once an order is completed and sent to the server.
@@ -2130,11 +2130,11 @@ class Order extends PosModel {
         this.orderlines     = new PosCollection();
         this.paymentlines   = new PosCollection();
         this.pos_session_id = this.pos.pos_session.id;
-        this.employee       = this.pos.get_cashier();
+        this.cashier        = this.pos.get_cashier();
         this.finalized      = false; // if true, cannot be modified.
         this.set_pricelist(this.pos.default_pricelist);
 
-        this.client = null;
+        this.partner = null;
 
         this.uiState = {
             ReceiptScreen: {
@@ -2177,7 +2177,7 @@ class Order extends PosModel {
      * @param {object} json JSON representing one PoS order.
      */
     init_from_JSON(json) {
-        var client;
+        let partner;
         if (json.pos_session_id !== this.pos.pos_session.id) {
             this.sequence_number = this.pos.pos_session.sequence_number++;
         } else {
@@ -2212,14 +2212,14 @@ class Order extends PosModel {
         }
 
         if (json.partner_id) {
-            client = this.pos.db.get_partner_by_id(json.partner_id);
-            if (!client) {
+            partner = this.pos.db.get_partner_by_id(json.partner_id);
+            if (!partner) {
                 console.error('ERROR: trying to load a partner not available in the pos');
             }
         } else {
-            client = null;
+            partner = null;
         }
-        this.set_client(client);
+        this.set_partner(partner);
 
         this.temporary = false;     // FIXME
         this.to_invoice = false;    // FIXME
@@ -2272,7 +2272,7 @@ class Order extends PosModel {
             statement_ids: paymentLines,
             pos_session_id: this.pos_session_id,
             pricelist_id: this.pricelist ? this.pricelist.id : false,
-            partner_id: this.get_client() ? this.get_client().id : false,
+            partner_id: this.get_partner() ? this.get_partner().id : false,
             user_id: this.pos.user.id,
             uid: this.uid,
             sequence_number: this.sequence_number,
@@ -2307,10 +2307,10 @@ class Order extends PosModel {
             .map(function (paymentline) {
                 return paymentline.export_for_printing();
             });
-        var client  = this.client;
-        var cashier = this.pos.get_cashier();
-        var company = this.pos.company;
-        var date    = new Date();
+        let partner = this.partner;
+        let cashier = this.pos.get_cashier();
+        let company = this.pos.company;
+        let date    = new Date();
 
         function is_html(subreceipt){
             return subreceipt ? (subreceipt.split('\n')[0].indexOf('<!DOCTYPE QWEB') >= 0) : false;
@@ -2344,7 +2344,7 @@ class Order extends PosModel {
             tax_details: this.get_tax_details(),
             change: this.locked ? this.amount_return : this.get_change(),
             name : this.get_name(),
-            client: client ? client : null ,
+            partner: partner ? partner : null ,
             invoice_id: null,   //TODO
             cashier: cashier ? cashier.name : null,
             precision: {
@@ -2962,18 +2962,18 @@ class Order extends PosModel {
     is_to_invoice(){
         return this.to_invoice;
     }
-    /* ---- Client / Customer --- */
-    // the client related to the current order.
-    set_client(client){
+    /* ---- Partner --- */
+    // the partner related to the current order.
+    set_partner(partner){
         this.assert_editable();
-        this.client = client;
+        this.partner = partner;
     }
-    get_client(){
-        return this.client;
+    get_partner(){
+        return this.partner;
     }
-    get_client_name(){
-        var client = this.client;
-        return client ? client.name : "";
+    get_partner_name(){
+        let partner = this.partner;
+        return partner ? partner.name : "";
     }
     get_cardholder_name(){
         var card_payment_line = this.paymentlines.find(pl => pl.cardholder_name);
@@ -3016,27 +3016,27 @@ class Order extends PosModel {
             paymentlines: this.get_paymentlines(),
         };
     }
-    updatePricelist(newClient) {
-        let newClientPricelist, newClientFiscalPosition;
+    updatePricelist(newPartner) {
+        let newPartnerPricelist, newPartnerFiscalPosition;
         const defaultFiscalPosition = this.pos.fiscal_positions.find(
             (position) => position.id === this.pos.config.default_fiscal_position_id[0]
         );
-        if (newClient) {
-            newClientFiscalPosition = newClient.property_account_position_id
+        if (newPartner) {
+            newPartnerFiscalPosition = newPartner.property_account_position_id
                 ? this.pos.fiscal_positions.find(
-                      (position) => position.id === newClient.property_account_position_id[0]
+                      (position) => position.id === newPartner.property_account_position_id[0]
                   )
                 : defaultFiscalPosition;
-            newClientPricelist =
+            newPartnerPricelist =
                 this.pos.pricelists.find(
-                    (pricelist) => pricelist.id === newClient.property_product_pricelist[0]
+                    (pricelist) => pricelist.id === newPartner.property_product_pricelist[0]
                 ) || this.pos.default_pricelist;
         } else {
-            newClientFiscalPosition = defaultFiscalPosition;
-            newClientPricelist = this.pos.default_pricelist;
+            newPartnerFiscalPosition = defaultFiscalPosition;
+            newPartnerPricelist = this.pos.default_pricelist;
         }
-        this.set_fiscal_position(newClientFiscalPosition);
-        this.set_pricelist(newClientPricelist);
+        this.set_fiscal_position(newPartnerFiscalPosition);
+        this.set_pricelist(newPartnerPricelist);
     }
     /* ---- Ship later --- */
     set_to_ship(to_ship) {
