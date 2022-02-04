@@ -23,4 +23,49 @@
             </div>
         </div>
     </t>
+    <t t-name="website.s_countdown.graphics">
+        <t t-set="width" t-value="layout === 'boxes' ? 57 : 100" />
+        <t t-set="circles" t-value="layout === 'circle' ? display.split('') : []" />
+        <t t-set="boxes" t-value="layout === 'boxes' ? display.split('') : []" />
+        <svg t-if="layout !== 'text'" height="175" class="o_not_editable"
+            t-attf-viewBox="0 0 #{4 * width} 100">
+            <g class="s_countdown_background text-400" fill="currentColor" >
+                <circle t-foreach="circles" t-as="unit" r="43.5"
+                    t-att-cx="unit_index * width + 50" cy="50" />
+                <rect t-foreach="boxes" t-as="unit" width="57" height="100" rx="5"
+                    t-att-x="unit_index * width" y="0" />
+            </g>
+            <g class="s_countdown_surround text-o-color-1" fill="none"
+                stroke="currentColor" stroke-width="3" >
+                <circle t-foreach="circles" t-as="unit" opacity="0.2" r="45"
+                    t-att-cx="unit_index * width + 50" cy="50" />
+                <rect t-foreach="boxes" t-as="unit" rx="3.5" opacity="0.2"
+                    t-att-x="unit_index * width + 5" y="5" width="47" height="90" />
+            </g>
+            <g class="s_countdown_progress text-o-color-1" fill="none"
+                stroke="currentColor" stroke-width="3" >
+                <circle t-foreach="circles" t-as="unit"
+                    t-att-cx="unit_index * width + 50" cy="50" r="45"
+                    t-att-pathLength="sizes[unit]" t-att-stroke-dashoffset="sizes[unit]/4" />
+                <rect t-foreach="boxes" t-as="unit" rx="3.5"
+                    t-att-x="unit_index * width + 5" y="5" width="47" height="90"
+                    t-att-pathLength="sizes[unit]" />
+            </g>
+            <g class="s_countdown_text text-o-color-1" fill="currentColor">
+                <text t-foreach="display.split('')" t-as="unit"
+                    t-att-x="(unit_index + 0.5) * width" y="50" font-size="25"
+                    font-family="Arial" text-anchor="middle" dominant-baseline="middle"/>
+                <text t-foreach="display.split('')" t-as="unit" t-out="names[unit]"
+                    t-att-x="(unit_index + 0.5) * width" y="67" font-size="8"
+                    font-family="Arial" text-anchor="middle" dominant-baseline="middle"/>
+            </g>
+        </svg>
+        <span t-if="layout === 'text'">
+            Countdown ends in:
+            <t t-foreach="display.split('')" t-as="unit">
+                <span class="o_not_editable"/>
+                <t t-out="names[unit].toString().toLowerCase() + (unit_last ? '' : ', ')" />
+            </t>
+        </span>
+    </t>
 </templates>

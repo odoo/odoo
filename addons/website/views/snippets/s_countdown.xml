@@ -3,11 +3,10 @@
 
 <template id="s_countdown" name="Countdown">
     <section class="s_countdown pt48 pb48"
-        data-display="dhms" data-end-action="nothing" data-size="175"
+        data-display="dhms" data-end-action="nothing"
         t-att-data-end-time="datetime.datetime.now().timestamp() + 228307"
         data-layout="circle" data-layout-background="none"
-        data-progress-bar-style="surrounded" data-progress-bar-weight="thin"
-        data-text-color="o-color-1" data-layout-background-color="400" data-progress-bar-color="o-color-1">
+        data-progress-bar-style="surrounded" data-progress-bar-weight="thin">
         <div class="container">
             <div class="s_countdown_canvas_wrapper text-center"/>
         </div>
@@ -30,17 +29,20 @@
                 </we-button>
             </we-row>
             <we-urlpicker string="URL" data-dependencies="redirect_end_action_opt" data-select-data-attribute="" placeholder="e.g. /my-awesome-page" data-attribute-name="redirectUrl"/>
-            <we-select string="Size">
-                <we-button data-size="80">Small</we-button>
-                <we-button data-size="120">Medium</we-button>
-                <we-button data-size="175">Large</we-button>
+            <we-select string="Size" data-attribute-name="height" data-apply-to="svg">
+                <we-button data-select-attribute="80">Small</we-button>
+                <we-button data-select-attribute="120">Medium</we-button>
+                <we-button data-select-attribute="175">Large</we-button>
             </we-select>
             <we-select string="Display" data-attribute-name="display">
                 <we-button data-select-data-attribute="d">D</we-button>
                 <we-button data-select-data-attribute="dhm">D - H - M</we-button>
                 <we-button data-select-data-attribute="dhms">D - H - M - S</we-button>
+                <we-button data-select-data-attribute="hm">H - M</we-button>
+                <we-button data-select-data-attribute="hms">H - M - S</we-button>
             </we-select>
-            <we-colorpicker string="Text Color" data-attribute-name="textColor" data-select-data-attribute=""/>
+            <we-colorpicker string="Text Color" data-apply-to="svg .s_countdown_text"
+                data-select-style="" data-css-property="color" data-color-prefix="text-" />
             <we-select string="Layout">
                 <we-button data-layout="circle" data-name="circle_layout_opt">Circle</we-button>
                 <we-button data-layout="boxes" data-name="boxes_layout_opt">Boxes</we-button>
@@ -48,11 +50,12 @@
                 <we-button data-layout="text">Text Inline</we-button>
             </we-select>
             <we-select string="Layout Background" data-attribute-name="layoutBackground" data-dependencies="circle_layout_opt, boxes_layout_opt">
-                <we-button data-select-data-attribute="inner">Inner</we-button>
+                <we-button data-select-data-attribute="inner" data-dependencies="!no_progressbar_style_opt">Inner</we-button>
                 <we-button data-select-data-attribute="plain">Plain</we-button>
                 <we-button data-select-data-attribute="none" data-name="no_background_layout_opt">None</we-button>
             </we-select>
-            <we-colorpicker string="Layout Background Color" data-dependencies="!no_background_layout_opt" data-attribute-name="layoutBackgroundColor" data-select-data-attribute=""/>
+            <we-colorpicker string="Layout Background Color" data-apply-to="svg .s_countdown_background"
+                data-select-style="" data-css-property="color" data-color-prefix="text-" data-dependencies="!no_background_layout_opt" />
             <we-select string="Progress Bar Style" data-attribute-name="progressBarStyle" data-dependencies="circle_layout_opt, boxes_layout_opt">
                 <we-button data-select-data-attribute="surrounded">Surrounded</we-button>
                 <we-button data-select-data-attribute="disappear">Disappearing</we-button>
@@ -62,7 +65,8 @@
                 <we-button data-select-data-attribute="thin">Thin</we-button>
                 <we-button data-select-data-attribute="thick">Thick</we-button>
             </we-select>
-            <we-colorpicker string="Progress Bar Color" data-dependencies="!no_progressbar_style_opt" data-attribute-name="progressBarColor" data-select-data-attribute=""/>
+            <we-colorpicker string="Progress Bar Color" data-apply-to="svg .s_countdown_progress, svg .s_countdown_surround"
+                data-select-style="" data-css-property="color" data-color-prefix="text-" data-dependencies="!no_progressbar_style_opt" />
         </div>
     </xpath>
 </template>
