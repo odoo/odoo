@@ -44,7 +44,7 @@
         <t t-set="data" t-value="props.data"/>
         <t t-set="duration" t-value="props.requires_allocation ? data.virtual_remaining_leaves : data.virtual_leaves_taken" />
 
-        <span class="pull-right o_timeoff_card_mobile">
+        <span class="float-end o_timeoff_card_mobile">
             <t t-if="props.requires_allocation" name="duration_type">
                 <strong t-esc="duration" class="o_timeoff_green"/> / <span t-esc="data.max_leaves"/> <t t-if="data.request_unit == 'hour'">Hours</t><t t-else="">Days</t> <span class="o_timeoff_green">Available</span>
             </t>
