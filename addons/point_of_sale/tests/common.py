@@ -242,15 +242,13 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
 
     @classmethod
     def _create_basic_config(cls):
-        new_config = Form(cls.env['pos.config'])
-        new_config.name = 'PoS Shop Test'
-        new_config.module_account = True
-        new_config.invoice_journal_id = cls.invoice_journal
-        new_config.journal_id = cls.pos_sale_journal
-        new_config.available_pricelist_ids.clear()
-        new_config.available_pricelist_ids.add(cls.currency_pricelist)
-        new_config.pricelist_id = cls.currency_pricelist
-        config = new_config.save()
+        config = cls.env['pos.config'].create({
+            'name': 'PoS Shop Test',
+            'invoice_journal_id': cls.invoice_journal.id,
+            'journal_id': cls.pos_sale_journal.id,
+            'available_pricelist_ids': cls.currency_pricelist.ids,
+            'pricelist_id': cls.currency_pricelist.id,
+        })
         cls.cash_pm1 = cls.env['pos.payment.method'].create({
             'name': 'Cash',
             'journal_id': cls.company_data['default_journal_cash'].id,
@@ -332,18 +330,15 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
             'outstanding_account_id': cls.outstanding_bank.id,
         })
 
-        new_config = Form(cls.env['pos.config'])
-        new_config.name = 'Shop Other'
-        new_config.invoice_journal_id = other_invoice_journal
-        new_config.journal_id = other_sales_journal
-        new_config.use_pricelist = True
-        new_config.available_pricelist_ids.clear()
-        new_config.available_pricelist_ids.add(other_pricelist)
-        new_config.pricelist_id = other_pricelist
-        new_config.payment_method_ids.clear()
-        new_config.payment_method_ids.add(cls.cash_pm2)
-        new_config.payment_method_ids.add(cls.bank_pm2)
-        config = new_config.save()
+        config = cls.env['pos.config'].create({
+            'name': 'Shop Other',
+            'invoice_journal_id': other_invoice_journal.id,
+            'journal_id': other_sales_journal.id,
+            'use_pricelist': True,
+            'available_pricelist_ids': other_pricelist.ids,
+            'pricelist_id': other_pricelist.id,
+            'payment_method_ids': [cls.cash_pm2.id, cls.bank_pm2.id],
+        })
         return config
 
     @classmethod

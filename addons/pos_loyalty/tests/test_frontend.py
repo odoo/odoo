@@ -4,7 +4,8 @@
 from datetime import date, timedelta
 
 from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
-from odoo.tests import Form, tagged
+from odoo.tests import tagged
+from odoo import Command
 
 
 @tagged("post_install", "-at_install")
@@ -106,16 +107,16 @@ class TestUi(TestPointOfSaleHttpCommon):
         super().setUp()
         # Set the programs to the pos config.
         # Remove fiscal position and pricelist.
-        with Form(self.main_pos_config) as pos_config:
-            pos_config.tax_regime_selection = False
-            pos_config.use_pricelist = False
-            pos_config.pricelist_id = self.env["product.pricelist"].create(
+        self.main_pos_config.write({
+            'tax_regime_selection': False,
+            'use_pricelist': False,
+            'pricelist_id': self.env["product.pricelist"].create(
                 {"name": "PoS Default Pricelist",}
-            )
-            pos_config.use_coupon_programs = True
-            pos_config.coupon_program_ids.add(self.coupon_program)
-            for promo_program in self.promo_programs:
-                pos_config.promo_program_ids.add(promo_program)
+            ),
+            'use_coupon_programs': True,
+            'coupon_program_ids': [Command.link(self.coupon_program.id)],
+            'promo_program_ids': [Command.link(prog.id) for prog in self.promo_programs],
+        })
         self.main_pos_config.open_session_cb()
 
 

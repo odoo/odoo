@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.pos_hr</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="point_of_sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='warning_text_employees']" position='replace'>
+                <div class="row">
+                    <label for="pos_employee_ids" string="Allowed Employees" class="col-lg-3 o_light_label" />
+                    <field name="pos_employee_ids" widget="many2many_tags" domain="[('company_id', '=', company_id)]" />
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

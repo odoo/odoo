@@ -225,42 +225,50 @@ var BaseSettingRenderer = FormRenderer.extend({
      * @private
      */
     _searchSetting: function () {
-        var self = this;
         this.count = 0;
-        _.each(this.modules, function (module) {
-            self.inVisibleCount = 0;
-            module.settingView.find('h2, .o_setting_box, .o_setting_tip').addClass('o_hidden');
-            module.settingView.find('.settingSearchHeader').addClass('o_hidden');
-            module.settingView.find('.o_settings_container').removeClass('mt16').addClass('mb-0');
-
-            const upperCasedSearchText = self.searchText.toUpperCase();
-            const [matches, others] = _.partition(module.settingView.find(".o_form_label"),
-                (e) => e.textContent.toUpperCase().includes(upperCasedSearchText));
-            if (matches.length) {
-                for (let result of matches) {
-                    const settingBox = $(result).closest('.o_setting_box');
-                    if (!settingBox.hasClass('o_invisible_modifier')) {
-                        settingBox.removeClass('o_hidden');
-                        self._wordHighlighter(result, upperCasedSearchText);
-                    } else {
-                        self.inVisibleCount++;
-                    }
-                }
-                if (self.inVisibleCount !== matches.length) {
-                    module.settingView.find('.settingSearchHeader').removeClass('o_hidden');
-                    module.settingView.removeClass('o_hidden');
-                }
-            } else {
-                ++self.count;
-            }
-            others.filter(e => e.firstElementChild).forEach(e => self._removeHighlight(e));
-        });
+        _.each(this.modules, module => this._searchModule(module));
         this.count === _.size(this.modules) ? this.$('.notFound').removeClass('o_hidden') : this.$('.notFound').addClass('o_hidden');
         if (this.searchText.length === 0) {
             this._resetSearch();
         }
     },
 
+    /**
+     * @param {*} module
+     * @returns whether the module is visible or not
+     */
+    _searchModule: function (module) {
+        var self = this;
+        let inVisibleCount = 0;
+        let isModuleVisible = false;
+        module.settingView.find('h2, .o_setting_box, .o_setting_tip').addClass('o_hidden');
+        module.settingView.find('.settingSearchHeader').addClass('o_hidden');
+        module.settingView.find('.o_settings_container').removeClass('mt16').addClass('mb-0');
+
+        const upperCasedSearchText = self.searchText.toUpperCase();
+        const [matches, others] = _.partition(module.settingView.find(".o_form_label"),
+            (e) => e.textContent.toUpperCase().includes(upperCasedSearchText));
+        if (matches.length) {
+            for (let result of matches) {
+                const settingBox = $(result).closest('.o_setting_box');
+                if (!settingBox.hasClass('o_invisible_modifier')) {
+                    settingBox.removeClass('o_hidden');
+                    self._wordHighlighter(result, upperCasedSearchText);
+                } else {
+                    inVisibleCount++;
+                }
+            }
+            isModuleVisible = inVisibleCount !== matches.length
+            if (isModuleVisible) {
+                module.settingView.find('.settingSearchHeader').removeClass('o_hidden');
+                module.settingView.removeClass('o_hidden');
+            }
+        } else {
+            ++self.count;
+        }
+        others.filter(e => e.firstElementChild).forEach(e => self._removeHighlight(e));
+        return isModuleVisible;
+    },
     /**
      * highlight search word
      *
