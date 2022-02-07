@@ -4,7 +4,7 @@
     <t t-name="mail.Composer" owl="1">
         <div class="o_Composer"
             t-att-class="{
-                'o-focused': composerView and composerView.hasFocus,
+                'o-focused': composerView and composerView.isFocused,
                 'o-has-current-partner-avatar': props.hasCurrentPartnerAvatar,
                 'o-has-footer': hasFooter,
                 'o-has-header': hasHeader,

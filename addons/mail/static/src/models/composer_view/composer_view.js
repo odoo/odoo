@@ -978,9 +978,6 @@ registerModel({
             readonly: true,
             required: true,
         }),
-        hasFocus: attr({
-            default: false,
-        }),
         /**
          * States whether there is any result currently found for the current
          * suggestion delimiter and search term, if applicable.
@@ -994,6 +991,9 @@ registerModel({
          * into view.
          */
         hasToScrollToActiveSuggestion: attr({
+            default: false,
+        }),
+        isFocused: attr({
             default: false,
         }),
         /**

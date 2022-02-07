@@ -184,7 +184,7 @@ registerModel({
             if (this.lastVisibleMessage !== this.lastMessage) {
                 return;
             }
-            if (!this.hasComposerFocus) {
+            if (!this.isComposerFocused) {
                 // FIXME condition should not be on "composer is focused" but "threadView is active"
                 // See task-2277543
                 return;
@@ -336,9 +336,6 @@ registerModel({
         extraClass: attr({
             related: 'threadViewer.extraClass',
         }),
-        hasComposerFocus: attr({
-            related: 'composerView.hasFocus',
-        }),
         /**
          * Determines whether this thread viewer has a member list.
          * Only makes sense if thread.hasMemberListFeature is true.
@@ -359,6 +356,9 @@ registerModel({
          */
         hasTopbar: attr({
             related: 'threadViewer.hasTopbar',
+        }),
+        isComposerFocused: attr({
+            related: 'composerView.isFocused',
         }),
         /**
          * States whether `this.threadCache` is currently loading messages.
@@ -514,7 +514,7 @@ registerModel({
             methodName: '_onThreadCacheIsLoadingChanged',
         }),
         new OnChange({
-            dependencies: ['hasComposerFocus', 'lastMessage', 'thread.lastNonTransientMessage', 'lastVisibleMessage', 'threadCache'],
+            dependencies: ['isComposerFocused', 'lastMessage', 'thread.lastNonTransientMessage', 'lastVisibleMessage', 'threadCache'],
             methodName: '_computeThreadShouldBeSetAsSeen',
         }),
     ],
