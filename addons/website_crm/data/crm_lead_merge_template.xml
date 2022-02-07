@@ -8,7 +8,7 @@
 
     <xpath expr="//div[@name='marketing']" position="inside">
         <div t-if="lead.visitor_ids">
-            Web Visitors: <t t-out="', '.join(lead.visitor_ids.mapped('name'))"/>
+            Web Visitors: <t t-out="', '.join(lead.visitor_ids.mapped('display_name'))"/>
         </div>
     </xpath>
 </template>
