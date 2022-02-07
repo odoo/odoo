@@ -93,6 +93,7 @@
                 <field name="picking_id" string="Transfer"/>
                 <field name="reference" string="Reference"/>
                 <field name="product_id"/>
+                <field name="product_category_name" string="Category"/>
                 <field name="location_id" string="Source Location" groups="stock.group_stock_multi_locations"/>
                 <field name="location_dest_id" string="Destination Location" groups="stock.group_stock_multi_locations"/>
                 <field name="lot_id" string="Lot/Serial Number" groups="stock.group_production_lot"/>
@@ -121,6 +122,7 @@
                     <filter string="Date" name="by_date" domain="[]" context="{'group_by': 'date'}"/>
                     <filter string="Transfers" name="by_picking" domain="[]" context="{'group_by': 'picking_id'}"/>
                     <filter string="Location" name="by_location" domain="[]" context="{'group_by': 'location_id'}"/>
+                    <filter string="Category" name="by_category" domain="[]" context="{'group_by': 'product_category_name'}"/>
                 </group>
             </search>
         </field>
