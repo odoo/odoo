@@ -434,7 +434,7 @@ class PaymentAcquirer(models.Model):
     def _neutralize_fields(self, provider, fields):
         """ Helper to neutralize API keys for a specific provider
         :param str provider: name of provider
-        :param list fields: list of fiels to nullify
+        :param list fields: list of fields to nullify
         """
         self.flush()
         self.invalidate_cache()
