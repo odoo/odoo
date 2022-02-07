@@ -24,16 +24,14 @@
         </div>
     </t>
     <t t-name="website.s_countdown.graphics">
-        <t t-set="width" t-value="layout === 'boxes' ? 57 : 100" />
-        <svg t-foreach="layout !== 'text' ? display.split('') : []" t-as="unit"
-            class="o_not_editable" t-attf-viewBox="0 0 #{width} 100" height="175">
+        <svg t-if="layout !== 'text'" class="o_not_editable"
+            t-attf-viewBox="0 0 #{layout === 'boxes' ? 57 : 100} 100" height="175">
             <t t-if="layout === 'circle'">
                 <circle class="text-400" cx="50" cy="50" r="43.5" fill="currentColor" />
                 <circle class="text-o-color-1" cx="50" cy="50" r="45"
                     fill="none" stroke="currentColor" stroke-width="3" opacity="0.2" />
-                <circle class="text-o-color-1" cx="50" cy="50" r="45"
-                    fill="none" stroke="currentColor" stroke-width="3"
-                    t-att-pathLength="sizes[unit]" t-att-stroke-dashoffset="sizes[unit]/4" />
+                <circle class="s_countdown_progress text-o-color-1" cx="50" cy="50" r="45"
+                    fill="none" stroke="currentColor" stroke-width="3"/>
             </t>
             <t t-if="layout === 'boxes'">
                 <rect class="text-400" fill="currentColor"
@@ -41,24 +39,22 @@
                 <rect class="text-o-color-1" fill="none" opacity="0.2"
                     x="5" y="5" width="47" height="90" rx="3.5"
                     stroke="currentColor" stroke-width="3" />
-                <rect class="text-o-color-1" fill="none" x="5" y="5"
-                    width="47" height="90" rx="3.5" stroke="currentColor" stroke-width="3"
-                    t-att-pathLength="sizes[unit]" />
+                <rect class="s_countdown_progress text-o-color-1" fill="none" x="5" y="5"
+                    width="47" height="90" rx="3.5" stroke="currentColor" stroke-width="3"/>
             </t>
             <t t-if="layout !== 'text'">
-                <text class="text-o-color-1" fill="currentColor" x="50%" y="50" font-size="25"
-                    font-family="Arial" text-anchor="middle" dominant-baseline="middle"/>
-                <text class="text-o-color-1" fill="currentColor" x="50%" y="67" font-size="8"
-                    font-family="Arial" text-anchor="middle" dominant-baseline="middle"
-                    t-out="names[unit]"/>
+                <text class="s_countdown_value text-o-color-1" fill="currentColor" x="50%" y="50"
+                    font-size="25" font-family="Arial" text-anchor="middle" dominant-baseline="middle"/>
+                <text class="s_countdown_label text-o-color-1" fill="currentColor" x="50%" y="67"
+                    font-size="8" font-family="Arial" text-anchor="middle" dominant-baseline="middle"/>
             </t>
         </svg>
-        <span t-if="layout === 'text'">
+        <t t-if="layout === 'text'">
             Countdown ends in:
-            <t t-foreach="display.split('')" t-as="unit">
-                <span class="o_not_editable"/>
-                <t t-out="names[unit].toString().toLowerCase() + (unit_last ? '' : ', ')" />
-            </t>
-        </span>
+            <span class="ml-1">
+                <span class="s_countdown_value o_not_editable"/>
+                <span class="s_countdown_label"/>
+            </span>
+        </t>
     </t>
 </templates>

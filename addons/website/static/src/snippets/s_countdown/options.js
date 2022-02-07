@@ -8,7 +8,6 @@ const {ColorpickerWidget} = require('web.Colorpicker');
 const weUtils = require('web_editor.utils');
 
 const qweb = core.qweb;
-const _t = core._t;
 
 options.registry.countdown = options.Class.extend({
     xmlDependencies: ['/website/static/src/snippets/s_countdown/000.xml'],
@@ -147,13 +146,19 @@ options.registry.countdown = options.Class.extend({
      */
     _render: function () {
         const $wrapper = this.$target.find('.s_countdown_canvas_wrapper');
-        const svg = qweb.render(`website.s_countdown.graphics`, Object.assign({
-            names: {'s': _t('Seconds'), 'm': _t('Minutes'), 'h': _('Hours'), 'd': _('Days')},
-            sizes: {'s': 60, 'm': 60, 'h': 60, 'd': 15},
-        }, this.$target[0].dataset));
 
-        $wrapper.empty();
-        $wrapper.append(svg);
+        if (this.currentLayout !== this.$target[0].dataset.layout) {
+            const svg = qweb.render(`website.s_countdown.graphics`, this.$target[0].dataset);
+            $wrapper.empty();
+            $wrapper.append(svg);
+            this.currentLayout = this.$target[0].dataset.layout;
+        }
+
+        const display = this.$target[0].dataset.display;
+        $wrapper.find(`> :nth-child(${display.length}) ~ *`).remove();
+        for (let i = $wrapper[0].childElementCount; i < display.length; i++) {
+            $wrapper.append($wrapper[0].firstElementChild.cloneNode(true));
+        }
     },
     /**
      * Updates the countdown to reflect changes to an attribute.
@@ -177,7 +182,7 @@ options.registry.countdown = options.Class.extend({
             });
         } else if (attributeName === 'progressBarStyle') {
             this.$target.find('svg [opacity]').toggleClass('d-none', value !== 'surrounded');
-            this.$target.find('svg [pathLength]').toggleClass('d-none', value === 'none');
+            this.$target.find('.s_countdown_progress').toggleClass('d-none', value === 'none');
             if (value === "none" && this.$target[0].dataset.layoutBackground === 'inner') {
                 this.selectDataAttribute('layoutBackground', 'plain');
             }

@@ -5,6 +5,7 @@ const core = require('web.core');
 const publicWidget = require('web.public.widget');
 
 const qweb = core.qweb;
+const _t = core._t;
 
 const CountdownWidget = publicWidget.Widget.extend({
     selector: '.s_countdown',
@@ -24,6 +25,12 @@ const CountdownWidget = publicWidget.Widget.extend({
         this.display = this.el.dataset.display;
 
         this.onlyOneUnit = this.display === 'd';
+        this.unitNames = {'s': _t('Seconds'), 'm': _t('Minutes'), 'h': _t('Hours'), 'd': _t('Days')};
+        this.unitSizes = {'s': 60, 'm': 60, 'h': 60, 'd': 15};
+
+        this.$wrapper[0].querySelectorAll('.s_countdown_label').forEach((el, i) => {
+            el.textContent = this.unitNames[this.display[i]];
+        });
 
         this._update();
         this.setInterval = setInterval(this._update.bind(this), 1000);
@@ -35,7 +42,7 @@ const CountdownWidget = publicWidget.Widget.extend({
     destroy: function () {
         this.$('.s_countdown_end_redirect_message').remove();
         this.$('.s_countdown_end_message').addClass('d-none');
-        this.$('span.s_countdown_text').empty();
+        this.$('span.o_not_editable').empty();
         this.$('.s_countdown_canvas_wrapper').removeClass('d-none');
 
         clearInterval(this.setInterval);
@@ -90,24 +97,33 @@ const CountdownWidget = publicWidget.Widget.extend({
         let timeDelta = this._getDelta();
         let data = [];
 
-        for (const unit of this.display) {
+        for (const unit of this.onlyOneUnit ? 'dhms' : this.display) {
             const period = {'d': 86400, 'h': 3600, 'm': 60, 's': 1}[unit];
-            data.push(Math.floor(timeDelta / period));
+            data.push(Math.max(Math.floor(timeDelta / period), 0));
             timeDelta %= period;
         }
 
-        this.isFinished = timeDelta < 0;
-        const hideCountdown = this.isFinished && !this.editableMode && this.$el.hasClass('hide-countdown');
-        const counterSelector = 'text[y="50"], span.o_not_editable';
-        this.$wrapper[0].querySelectorAll(counterSelector).forEach((el, i) => {
+        if (this.onlyOneUnit) {
+            const index = data.findIndex((v, i) => v !== 0 || i + 1 === data.length);
+            const labelEl = this.$wrapper[0].querySelector('.s_countdown_label');
+            labelEl.textContent = this.unitNames['dhms'[index]];
+            data = [data[index]];
+        }
+
+        this.$wrapper[0].querySelectorAll('.s_countdown_value').forEach((el, i) => {
             el.textContent = data[i];
         });
-        this.$wrapper[0].querySelectorAll('[pathLength]').forEach((el, i) => {
-            const max = parseInt(el.getAttribute('pathLength'));
+        this.$wrapper[0].querySelectorAll('.s_countdown_progress').forEach((el, i) => {
+            const max = this.unitSizes[this.display[i]];
+            el.setAttribute('pathLength', max);
             el.setAttribute('stroke-dasharray', `${data[i]} ${max - data[i]}`);
+            if (el.tagName === 'circle') {
+                el.setAttribute('stroke-dashoffset', max / 4);
+            }
         });
 
-        if (this.isFinished) {
+        if (timeDelta < 0) {
+            const hideCountdown = !this.editableMode && this.$el.hasClass('hide-countdown');
             const $container = this.$('> .container, > .container-fluid, > .o_container_small');
             clearInterval(this.setInterval);
             $container.toggleClass('d-none', hideCountdown);
