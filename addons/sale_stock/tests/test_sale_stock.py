@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from datetime import datetime, timedelta
 
-from odoo.addons.sale.tests.test_sale_common import TestSale
+from odoo.addons.sale.tests.test_sale_common import TestSale, TestCommonSaleNoChart
 from odoo.exceptions import UserError
 from odoo.tests import Form, tagged
 
@@ -794,3 +794,43 @@ class TestSaleStock(TestSale):
         picking.move_lines.write({'quantity_done': 3.66})
         picking.button_validate()
         self.assertEqual(so.order_line.mapped('qty_delivered'), [4.0], 'Sale: no conversion error on delivery in different uom"')
+
+
+class TestSaleStockOnly(TestCommonSaleNoChart):
+
+    @classmethod
+    def setUpClass(cls):
+        super(TestSaleStockOnly, cls).setUpClass()
+
+        cls.setUpClassicProducts()
+
+    def test_no_automatic_assign(self):
+        """
+        This test ensures that when a picking is generated from a SO, the quantities are not
+        automatically reserved (the automatic reservation should only happen when `procurement_jit`
+        is installed)
+        """
+        product = self.product_map['prod_del']
+        product.type = 'product'
+        self.env['stock.quant']._update_available_quantity(product, self.env.ref('stock.stock_location_stock'), 3)
+
+        so_form = Form(self.env['sale.order'])
+        so_form.partner_id = self.partner_customer_usd
+        with so_form.order_line.new() as line:
+            line.product_id = product
+            line.product_uom_qty = 3
+        so = so_form.save()
+        so.action_confirm()
+
+        picking = so.picking_ids
+        self.assertEqual(picking.state, 'confirmed')
+        self.assertEqual(picking.move_lines.reserved_availability, 0.0)
+
+        picking.move_lines.quantity_done = 1
+        action = picking.button_validate()
+        wizard = self.env[action['res_model']].browse(action['res_id'])
+        wizard.process()
+
+        backorder = picking.backorder_ids
+        self.assertEqual(backorder.state, 'confirmed')
+        self.assertEqual(backorder.move_lines.reserved_availability, 0.0)
