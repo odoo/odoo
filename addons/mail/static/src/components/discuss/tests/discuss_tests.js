@@ -428,7 +428,7 @@ QUnit.test('sidebar: add channel', async function (assert) {
         `).click()
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_itemNewInput`).length,
+        document.querySelectorAll(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_addingItemInput`).length,
         1,
         "should have item to add a new channel"
     );

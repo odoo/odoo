@@ -12,7 +12,7 @@ tour.register('mail_tour', {
     content: Markup(_t("<p>Channels make it easy to organize information across different topics and groups.</p> <p>Try to <b>create your first channel</b> (e.g. sales, marketing, product XYZ, after work party, etc).</p>")),
     position: 'bottom',
 }, {
-    trigger: '.o_DiscussSidebarCategory_itemNewInput',
+    trigger: '.o_DiscussSidebarCategory_addingItemInput',
     content: Markup(_t("<p>Create a channel here.</p>")),
     position: 'bottom',
     auto: true,
