@@ -68,16 +68,13 @@ options.registry.countdown = options.Class.extend({
         this.$target[0].dataset.layout = widgetValue;
         this._render();
 
-        switch (widgetValue) {
-            case 'circle':
-                this.selectDataAttribute(false, 'surrounded', {attributeName: 'progressBarStyle'});
-                this.selectDataAttribute(false, 'thin', {attributeName: 'progressBarWeight'});
-                this.selectDataAttribute(false, 'none', {attributeName: 'layoutBackground'});
-                break;
-            case 'boxes':
-                this.selectDataAttribute(false, 'none', {attributeName: 'progressBarStyle'});
-                this.selectDataAttribute(false, 'plain', {attributeName: 'layoutBackground'});
-                break;
+        if (widgetValue === 'circle') {
+            this._update('progressBarStyle', 'surrounded');
+            this._update('progressBarWeight', 'thin');
+            this._update('layoutBackground', 'none');
+        } else if (widgetValue === 'boxes') {
+            this._update('progressBarStyle', 'none');
+            this._update('layoutBackground', 'plain');
         }
     },
     /**
@@ -164,9 +161,11 @@ options.registry.countdown = options.Class.extend({
      * @private
      * @param {string} attributeName - The attribute that was changed
      */
-    _update: function (attributeName) {
-        const value = this.$target[0].dataset[attributeName];
+    _update: function (attributeName, value = undefined) {
         let offset = 0;
+
+        value = value || this.$target[0].dataset[attributeName];
+        this.$target[0].dataset[attributeName] = value;
 
         if (attributeName === 'display') {
             this._render();
@@ -179,6 +178,9 @@ options.registry.countdown = options.Class.extend({
         } else if (attributeName === 'progressBarStyle') {
             this.$target.find('.s_countdown_surround').toggleClass('d-none', value !== 'surrounded');
             this.$target.find('.s_countdown_progress').toggleClass('d-none', value === 'none');
+            if (value === "none" && this.$target[0].dataset.layoutBackground === 'inner') {
+                this.selectDataAttribute(false, 'plain', {attributeName: 'layoutBackground'});
+            }
         } else if (attributeName === 'layoutBackground') {
             const stroke = this.$target[0].dataset.progressBarWeight === 'thin' ? 3 : 10;
             offset = (value === 'inner' ? -1 : 1) * stroke / 2;
