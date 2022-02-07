@@ -54,11 +54,11 @@ QUnit.test('sidebar find shows channels matching search term', async function (a
     await afterNextRender(() =>
         document.querySelector(`.o_DiscussSidebarCategory_commandAdd`).click()
     );
-    document.querySelector(`.o_DiscussSidebarCategory_newItem`).focus();
+    document.querySelector(`.o_DiscussSidebarCategory_addingItem`).focus();
     document.execCommand('insertText', false, "test");
-    document.querySelector(`.o_DiscussSidebarCategory_newItem`)
+    document.querySelector(`.o_DiscussSidebarCategory_addingItem`)
         .dispatchEvent(new window.KeyboardEvent('keydown'));
-    document.querySelector(`.o_DiscussSidebarCategory_newItem`)
+    document.querySelector(`.o_DiscussSidebarCategory_addingItem`)
         .dispatchEvent(new window.KeyboardEvent('keyup'));
 
     await searchReadDef;
@@ -106,11 +106,11 @@ QUnit.test('sidebar find shows channels matching search term even when user is m
     await afterNextRender(() =>
         document.querySelector(`.o_DiscussSidebarCategory_commandAdd`).click()
     );
-    document.querySelector(`.o_DiscussSidebarCategory_newItem`).focus();
+    document.querySelector(`.o_DiscussSidebarCategory_addingItem`).focus();
     document.execCommand('insertText', false, "test");
-    document.querySelector(`.o_DiscussSidebarCategory_newItem`)
+    document.querySelector(`.o_DiscussSidebarCategory_addingItem`)
         .dispatchEvent(new window.KeyboardEvent('keydown'));
-    document.querySelector(`.o_DiscussSidebarCategory_newItem`)
+    document.querySelector(`.o_DiscussSidebarCategory_addingItem`)
         .dispatchEvent(new window.KeyboardEvent('keyup'));
 
     await searchReadDef;

@@ -26,9 +26,9 @@
             <div class="o_DiscussSidebarCategory_content">
                 <t t-if="category.isOpen">
                     <t t-if="category.isAddingItem">
-                        <div class="o_DiscussSidebarCategory_newItem">
+                        <div class="o_DiscussSidebarCategory_addingItem d-flex mb-2">
                             <AutocompleteInput
-                                className="'o_DiscussSidebarCategory_itemNewInput'"
+                                className="'o_DiscussSidebarCategory_addingItemInput flex-grow-1'"
                                 customClass="category === messaging.discuss.categoryChannel ? 'o_DiscussSidebarCategory_newChannelAutocompleteSuggestions' : False"
                                 isFocusOnMount="true"
                                 isHtml="category === messaging.discuss.categoryChannel ? true : False"
