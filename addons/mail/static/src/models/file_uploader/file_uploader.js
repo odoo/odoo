@@ -105,7 +105,7 @@ registerModel({
                 });
                 return;
             }
-            return this.messaging.models['Attachment'].insert({
+            return (composer || thread).messaging.models['Attachment'].insert({
                 composer: composer && replace(composer),
                 originThread: (!composer && thread) ? replace(thread) : undefined,
                 ...attachmentData,
