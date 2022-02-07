@@ -1,6 +1,12 @@
 // ------------------------------------------------------------------
 // Layout
 // ------------------------------------------------------------------
+
+.o_DiscussSidebarCategory_addingItemInput {
+    margin-left: $o-mail-discuss-sidebar-category-item-avatar-left-margin;
+    margin-right: $o-mail-discuss-sidebar-scrollbar-width;
+}
+
 .o_DiscussSidebarCategory_command {
     margin-left: $o-mail-discuss-sidebar-category-item-margin;
     margin-right:$o-mail-discuss-sidebar-category-item-margin;
@@ -33,18 +39,6 @@
     }
 }
 
-.o_DiscussSidebarCategory_itemNewInput {
-    flex: 1 1 auto;
-    margin-left: $o-mail-discuss-sidebar-category-item-avatar-left-margin;
-    margin-right: $o-mail-discuss-sidebar-scrollbar-width;
-}
-
-.o_DiscussSidebarCategory_newItem {
-    display: flex;
-    justify-content: center;
-    padding-bottom: map-get($spacers, 2);
-}
-
 .o_DiscussSidebarCategory_title {
     display: flex;
     align-items: baseline;
@@ -59,6 +53,10 @@
 // ------------------------------------------------------------------
 // style
 // ------------------------------------------------------------------
+
+.o_DiscussSidebarCategory_addingItemInput {
+    outline: none;
+}
 
 .o_DiscussSidebarCategory_command {
     cursor: pointer;
@@ -75,10 +73,6 @@
 
 .o_DiscussSidebarCategory_headerItem {
     user-select: none;
-}
-
-.o_DiscussSidebarCategory_itemNewInput {
-    outline: none;
 }
 
 .o_DiscussSidebarCategory_title {
