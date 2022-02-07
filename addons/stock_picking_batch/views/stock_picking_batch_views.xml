@@ -289,5 +289,24 @@
             </xpath>
         </field>
     </record>
-
+    <record id="view_move_line_tree_inherit_stock_picking_batch" model="ir.ui.view">
+        <field name="name">stock.move.line.tree.stock_picking_batch</field>
+        <field name="model">stock.move.line</field>
+        <field name="inherit_id" ref="stock.view_move_line_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='state']" position="after">
+                <field name="batch_id" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="stock_move_line_view_search_inherit_stock_picking_batch" model="ir.ui.view">
+        <field name="name">stock.move.line.search.stock_picking_batch</field>
+        <field name="model">stock.move.line</field>
+        <field name="inherit_id" ref="stock.stock_move_line_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='groupby']" position="inside">
+                <filter string="Batch Transfer" name="by_batch_id" context="{'group_by': 'batch_id'}"/>
+            </xpath>
+        </field>
+    </record>    
 </odoo>
