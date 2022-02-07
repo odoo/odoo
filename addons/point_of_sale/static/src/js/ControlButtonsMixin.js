@@ -18,7 +18,7 @@ odoo.define('point_of_sale.ControlButtonsMixin', function (require) {
             get controlButtons() {
                 return sortedControlButtons
                     .filter((cb) => {
-                        return cb.condition.bind(this)();
+                        return cb.condition ? cb.condition.bind(this)() : true;
                     })
                     .map((cb) =>
                         Object.assign({}, cb, { component: Registries.Component.get(cb.component) })

@@ -7,10 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//div[@id='other_devices']//div[hasclass('o_setting_right_pane')]" position="inside">
                 <div class="content-group" attrs="{'invisible' : [('other_devices', '=', False)]}">
-                    <div class="row">
-                        <label string="Epson Receipt Printer IP Address" for="epson_printer_ip" class="col-lg-3 o_light_label"/>
-                        <field name="epson_printer_ip"/>
-                    </div>
+                    <field name="epson_printer_ip" placeholder="Epson Receipt Printer IP Address" />
                     <div class="row" attrs="{'invisible': [('epson_printer_ip', 'in', [False, ''])]}">
                         <label string="Cashdrawer" for="iface_cashdrawer" class="col-lg-3 o_light_label"/>
                         <field name="iface_cashdrawer"/>

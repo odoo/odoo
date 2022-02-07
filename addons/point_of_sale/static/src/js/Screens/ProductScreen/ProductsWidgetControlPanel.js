@@ -30,7 +30,7 @@ odoo.define('point_of_sale.ProductsWidgetControlPanel', function(require) {
             this.trigger('clear-search');
         }
         get displayCategImages() {
-            return this.env.pos.config.iface_display_categ_images && !this.env.isMobile;
+            return Object.values(this.env.pos.db.category_by_id).some(categ => categ.has_image) && !this.env.isMobile;
         }
         updateSearch(event) {
             this.trigger('update-search', event.target.value);

@@ -22,7 +22,7 @@ This module adds several features to the Point of Sale that are specific to rest
         'security/ir.model.access.csv',
         'views/pos_order_views.xml',
         'views/pos_restaurant_views.xml',
-        'views/pos_config_views.xml',
+        'views/res_config_settings_views.xml',
     ],
     'demo': [
         'data/pos_restaurant_demo.xml',

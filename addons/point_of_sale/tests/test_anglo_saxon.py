@@ -147,7 +147,6 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
         self.assertEqual(self.product.value_svl, 30, "Value should be (5*5 + 5*1) = 30")
         self.assertEqual(self.product.quantity_svl, 10)
 
-        self.pos_config.module_account = True
         self.pos_config.open_session_cb()
         pos_session = self.pos_config.current_session_id
         pos_session.set_cashbox_pos(0, None)

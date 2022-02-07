@@ -150,7 +150,7 @@ odoo.define('point_of_sale.Chrome', function(require) {
                 Object.assign(this.env.pos.toRefundLines, this.env.pos.db.load('TO_REFUND_LINES') || {});
                 this._buildChrome();
                 this._closeOtherTabs();
-                this.env.pos.selectedCategoryId = this.env.pos.config.iface_start_categ_id
+                this.env.pos.selectedCategoryId = this.env.pos.config.start_category && this.env.pos.config.iface_start_categ_id
                     ? this.env.pos.config.iface_start_categ_id[0]
                     : 0;
                 this.state.uiState = 'READY';

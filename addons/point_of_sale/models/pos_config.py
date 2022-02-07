@@ -67,7 +67,6 @@ class PosConfig(models.Model):
     iface_print_via_proxy = fields.Boolean(string='Print via Proxy', help="Bypass browser printing and prints via the hardware proxy.")
     iface_scan_via_proxy = fields.Boolean(string='Scan via Proxy', help="Enable barcode scanning with a remotely connected barcode scanner and card swiping with a Vantiv card reader.")
     iface_big_scrollbars = fields.Boolean('Large Scrollbars', help='For imprecise industrial touchscreens.')
-    iface_orderline_customer_notes = fields.Boolean(string='Customer Notes', help='Allow to write notes for customer on Orderlines. This will be shown in the receipt.')
     iface_print_auto = fields.Boolean(string='Automatic Receipt Printing', default=False,
         help='The receipt will automatically be printed at the end of each order.')
     iface_print_skip_screen = fields.Boolean(string='Skip Preview Screen', default=True,
@@ -77,12 +76,9 @@ class PosConfig(models.Model):
         help='The point of sale will display this product category by default. If no category is specified, all available products will be shown.')
     iface_available_categ_ids = fields.Many2many('pos.category', string='Available PoS Product Categories',
         help='The point of sale will only display products which are within one of the selected category trees. If no category is specified, all available products will be shown')
-    selectable_categ_ids = fields.Many2many('pos.category', compute='_compute_selectable_categories')
-    iface_display_categ_images = fields.Boolean(string='Display Category Pictures',
-        help="The product categories will be displayed with pictures.")
     restrict_price_control = fields.Boolean(string='Restrict Price Modifications to Managers',
         help="Only users with Manager access rights for PoS app can modify the product prices on orders.")
-    is_margins_costs_accessible_to_every_user = fields.Boolean(string='Margins & Costs', default=True,
+    is_margins_costs_accessible_to_every_user = fields.Boolean(string='Margins & Costs', default=False,
         help='When disabled, only PoS manager can view the margin and cost of product among the Product info.')
     cash_control = fields.Boolean(string='Advanced Cash Control', compute='_compute_cash_control', help="Check the amount of the cashbox at opening and closing.")
     set_maximum_difference = fields.Boolean('Set Maximum Difference', help="Set a maximum difference allowed between the expected and counted money during the closing of the session.")
@@ -112,12 +108,6 @@ class PosConfig(models.Model):
         help="The pricelist used if no customer is selected or if the customer has no Sale Pricelist configured.")
     available_pricelist_ids = fields.Many2many('product.pricelist', string='Available Pricelists', default=_default_pricelist,
         help="Make several pricelists available in the Point of Sale. You can also apply a pricelist to specific customers from their contact form (in Sales tab). To be valid, this pricelist must be listed here as an available pricelist. Otherwise the default pricelist will apply.")
-    allowed_pricelist_ids = fields.Many2many(
-        'product.pricelist',
-        string='Allowed Pricelists',
-        compute='_compute_allowed_pricelist_ids',
-        help='This is a technical field used for the domain of pricelist_id.',
-    )
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.company)
     barcode_nomenclature_id = fields.Many2one('barcode.nomenclature', string='Barcode Nomenclature',
         help='Defines what kind of barcodes are available and how they are assigned to products, customers and cashiers.',
@@ -133,18 +123,15 @@ class PosConfig(models.Model):
     default_fiscal_position_id = fields.Many2one('account.fiscal.position', string='Default Fiscal Position')
     default_bill_ids = fields.Many2many('pos.bill', string="Coins/Bills")
     use_pricelist = fields.Boolean("Use a pricelist.")
-    tax_regime = fields.Boolean("Tax Regime")
     tax_regime_selection = fields.Boolean("Tax Regime Selection value")
     start_category = fields.Boolean("Start Category", default=False)
-    limit_categories = fields.Boolean("Restrict Product Categories")
-    module_account = fields.Boolean(string='Invoicing', default=True, help='Enables invoice generation from the Point of Sale.')
+    limit_categories = fields.Boolean("Restrict Categories")
     module_pos_restaurant = fields.Boolean("Is a Bar/Restaurant")
     module_pos_discount = fields.Boolean("Global Discounts")
     module_pos_loyalty = fields.Boolean("Loyalty Program")
     module_pos_mercury = fields.Boolean(string="Integrated Card Payments")
-    product_configurator = fields.Boolean(string="Product Configurator", default=True)
     is_posbox = fields.Boolean("PosBox")
-    is_header_or_footer = fields.Boolean("Header & Footer")
+    is_header_or_footer = fields.Boolean("Custom Header & Footer")
     module_pos_hr = fields.Boolean(help="Show employee login screen")
     amount_authorized_diff = fields.Float('Amount Authorized Difference',
         help="This field depicts the maximum difference allowed between the ending balance and the theoretical cash when "
@@ -158,7 +145,7 @@ class PosConfig(models.Model):
     cash_rounding = fields.Boolean(string="Cash Rounding")
     only_round_cash_method = fields.Boolean(string="Only apply rounding on cash")
     has_active_session = fields.Boolean(compute='_compute_current_session')
-    manual_discount = fields.Boolean(string="Manual Discounts", default=True)
+    manual_discount = fields.Boolean(string="Line Discounts", default=True)
     ship_later = fields.Boolean(string="Ship Later")
     warehouse_id = fields.Many2one('stock.warehouse', default=_default_warehouse_id, ondelete='restrict')
     route_id = fields.Many2one('stock.route', string="Spefic route for products delivered later.")
@@ -169,30 +156,24 @@ class PosConfig(models.Model):
         help="If you deliver all products at once, the delivery order will be scheduled based on the greatest "
         "product lead time. Otherwise, it will be based on the shortest.")
     limited_products_loading = fields.Boolean('Limited Product Loading',
+                                              default=True,
                                               help="we load all starred products (favorite), all services, recent inventory movements of products, and the most recently updated products.\n"
                                                    "When the session is open, we keep on loading all remaining products in the background.\n"
                                                    "In the meantime, you can click on the 'database icon' in the searchbar to load products from database.")
     limited_products_amount = fields.Integer(default=20000)
-    product_load_background = fields.Boolean()
+    product_load_background = fields.Boolean(default=True)
     limited_partners_loading = fields.Boolean('Limited Partners Loading',
+                                              default=True,
                                               help="By default, 100 partners are loaded.\n"
                                                    "When the session is open, we keep on loading all remaining partners in the background.\n"
                                                    "In the meantime, you can use the 'Load Customers' button to load partners from database.")
     limited_partners_amount = fields.Integer(default=100)
-    partner_load_background = fields.Boolean()
+    partner_load_background = fields.Boolean(default=True)
 
     @api.depends('payment_method_ids')
     def _compute_cash_control(self):
         for config in self:
             config.cash_control = bool(config.payment_method_ids.filtered('is_cash_count'))
-
-    @api.depends('use_pricelist', 'available_pricelist_ids')
-    def _compute_allowed_pricelist_ids(self):
-        for config in self:
-            if config.use_pricelist:
-                config.allowed_pricelist_ids = config.available_pricelist_ids.ids
-            else:
-                config.allowed_pricelist_ids = self.env['product.pricelist'].search([]).ids
 
     @api.depends('company_id')
     def _compute_company_has_template(self):
@@ -264,14 +245,6 @@ class PosConfig(models.Model):
                 pos_config.pos_session_duration = 0
                 pos_config.current_user_id = False
 
-    @api.depends('iface_available_categ_ids')
-    def _compute_selectable_categories(self):
-        for config in self:
-            if config.iface_available_categ_ids:
-                config.selectable_categ_ids = config.iface_available_categ_ids
-            else:
-                config.selectable_categ_ids = self.env['pos.category'].search([])
-
     @api.depends('iface_customer_facing_display_via_proxy', 'iface_customer_facing_display_local')
     def _compute_customer_facing_display(self):
         for config in self:
@@ -334,6 +307,13 @@ class PosConfig(models.Model):
         ):
             raise ValidationError(_("All payment methods must be in the same currency as the Sales Journal or the company currency if that is not set."))
 
+    @api.constrains('iface_start_categ_id', 'iface_available_categ_ids')
+    def _check_start_categ(self):
+        for config in self:
+            allowed_categ_ids = config.iface_available_categ_ids or self.env['pos.category'].search([])
+            if config.iface_start_categ_id and config.iface_start_categ_id not in allowed_categ_ids:
+                raise ValidationError(_("Start category should belong in the available categories."))
+
     def _check_payment_method_ids(self):
         self.ensure_one()
         if not self.payment_method_ids:
@@ -354,78 +334,6 @@ class PosConfig(models.Model):
         for config in self:
             if any(pricelist.company_id.id not in [False, config.company_id.id] for pricelist in config.available_pricelist_ids):
                 raise ValidationError(_("The selected pricelists must belong to no company or the company of the point of sale."))
-
-    @api.onchange('iface_tipproduct')
-    def _onchange_tipproduct(self):
-        if self.iface_tipproduct:
-            self.tip_product_id = self.env.ref('point_of_sale.product_product_tip', False)
-        else:
-            self.tip_product_id = False
-
-    @api.onchange('iface_print_via_proxy')
-    def _onchange_iface_print_via_proxy(self):
-        self.iface_print_auto = self.iface_print_via_proxy
-        if not self.iface_print_via_proxy:
-            self.iface_cashdrawer = False
-
-    @api.onchange('module_account')
-    def _onchange_module_account(self):
-        if self.module_account and not self.invoice_journal_id:
-            self.invoice_journal_id = self._default_invoice_journal()
-
-    @api.onchange('use_pricelist')
-    def _onchange_use_pricelist(self):
-        """
-        If the 'pricelist' box is unchecked, we reset the pricelist_id to stop
-        using a pricelist for this iotbox.
-        """
-        if not self.use_pricelist:
-            self.pricelist_id = self._default_pricelist()
-
-    @api.onchange('available_pricelist_ids')
-    def _onchange_available_pricelist_ids(self):
-        if self.pricelist_id not in self.available_pricelist_ids._origin:
-            self.pricelist_id = False
-
-    @api.onchange('is_posbox')
-    def _onchange_is_posbox(self):
-        if not self.is_posbox:
-            self.proxy_ip = False
-            self.iface_scan_via_proxy = False
-            self.iface_electronic_scale = False
-            self.iface_cashdrawer = False
-            self.iface_print_via_proxy = False
-            self.iface_customer_facing_display_via_proxy = False
-
-    @api.onchange('tax_regime')
-    def _onchange_tax_regime(self):
-        if not self.tax_regime:
-            self.default_fiscal_position_id = False
-
-    @api.onchange('tax_regime_selection')
-    def _onchange_tax_regime_selection(self):
-        if not self.tax_regime_selection:
-            self.fiscal_position_ids = [(5, 0, 0)]
-
-    @api.onchange('start_category')
-    def _onchange_start_category(self):
-        if not self.start_category:
-            self.iface_start_categ_id = False
-
-    @api.onchange('limit_categories', 'iface_available_categ_ids', 'iface_start_categ_id')
-    def _onchange_limit_categories(self):
-        res = {}
-        if not self.limit_categories:
-            self.iface_available_categ_ids = False
-        if self.iface_available_categ_ids and self.iface_start_categ_id.id not in self.iface_available_categ_ids.ids:
-            self.iface_start_categ_id = False
-        return res
-
-    @api.onchange('is_header_or_footer')
-    def _onchange_header_footer(self):
-        if not self.is_header_or_footer:
-            self.receipt_header = False
-            self.receipt_footer = False
 
     def name_get(self):
         result = []
@@ -459,7 +367,16 @@ class PosConfig(models.Model):
         # If you plan to add something after this, use a new environment. The one above is no longer valid after the modules install.
         return pos_configs
 
+    def _reset_default_on_vals(self, vals):
+        if 'tip_product_id' in vals and any(self.mapped('iface_tipproduct')) and not vals['tip_product_id']:
+            default_product = self.env.ref('point_of_sale.product_product_tip', False)
+            if default_product:
+                vals['tip_product_id'] = default_product.id
+            else:
+                raise UserError(_('The default tip product is missing. Please manually specify the tip product. (See Tips field.)'))
+
     def write(self, vals):
+        self._reset_default_on_vals(vals)
         opened_session = self.mapped('session_ids').filtered(lambda s: s.state != 'closed')
         if opened_session:
             forbidden_fields = []
@@ -492,11 +409,12 @@ class PosConfig(models.Model):
         sequences_to_delete.unlink()
         return res
 
+    # TODO-JCB: Maybe we can move this logic in `_reset_default_on_vals`
     def _set_fiscal_position(self):
         for config in self:
-            if config.tax_regime and config.default_fiscal_position_id.id not in config.fiscal_position_ids.ids:
+            if config.tax_regime_selection and config.default_fiscal_position_id and (config.default_fiscal_position_id.id not in config.fiscal_position_ids.ids):
                 config.fiscal_position_ids = [(4, config.default_fiscal_position_id.id)]
-            elif not config.tax_regime_selection and not config.tax_regime and config.fiscal_position_ids.ids:
+            elif not config.tax_regime_selection and config.fiscal_position_ids.ids:
                 config.fiscal_position_ids = [(5, 0, 0)]
 
     def _check_modules_to_install(self):
@@ -679,8 +597,6 @@ class PosConfig(models.Model):
             invoice_journal_id = pos_config.invoice_journal_id or self.env['account.journal'].search([('type', '=', 'sale'), ('company_id', '=', company.id)], limit=1)
             if invoice_journal_id:
                 pos_config.write({'invoice_journal_id': invoice_journal_id.id})
-            else:
-                pos_config.write({'module_account': False})
 
     def get_limited_products_loading(self, fields):
         query = """
@@ -751,3 +667,13 @@ class PosConfig(models.Model):
             if field.startswith('module_'):
                 modules_to_check.append(field.replace('module_', ''))
         return modules_to_check
+
+    def action_pos_config_modal_edit(self):
+        return {
+            'view_mode': 'form',
+            'res_model': 'pos.config',
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'res_id': self.id,
+            'context': {'pos_config_open_modal': True},
+        }

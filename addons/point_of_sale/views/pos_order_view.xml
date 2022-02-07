@@ -8,7 +8,7 @@
                 <header>
                     <button name="%(action_pos_payment)d" string="Payment" class="oe_highlight" type="action" states="draft" />
                     <button name="action_pos_order_invoice" string="Invoice" type="object"
-                            attrs="{'invisible': ['|', ('invoice_group', '=', False), ('state','!=','paid')]}"/>
+                            attrs="{'invisible': [('state','!=','paid')]}"/>
                     <button name="refund" string="Return Products" type="object"
                         attrs="{'invisible':['|', ('state','=','draft'), ('has_refundable_lines', '=', False)]}"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,paid,done" />
@@ -56,7 +56,6 @@
                     <field string="User" name="user_id"/>
                     <field name="partner_id" context="{'res_partner_search_mode': 'customer'}" attrs="{'readonly': [('state','=','invoiced')]}"/>
                     <field name="fiscal_position_id" options="{'no_create': True}"/>
-                    <field name="invoice_group" invisible="1"/>
                 </group>
                 <notebook colspan="4">
                     <page string="Products" name="products">

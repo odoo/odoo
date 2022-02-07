@@ -63,7 +63,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
             let price_extra = 0.0;
             let draftPackLotLines, weight, description, packLotLinesToEdit;
 
-            if (this.env.pos.config.product_configurator && _.some(product.attribute_line_ids, (id) => id in this.env.pos.attributes_by_ptal_id)) {
+            if (_.some(product.attribute_line_ids, (id) => id in this.env.pos.attributes_by_ptal_id)) {
                 let attributes = _.map(product.attribute_line_ids, (id) => this.env.pos.attributes_by_ptal_id[id])
                                   .filter((attr) => attr !== undefined);
                 let { confirmed, payload } = await this.showPopup('ProductConfiguratorPopup', {
