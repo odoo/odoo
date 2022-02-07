@@ -13,7 +13,7 @@
         'point_of_sale'
     ],
     'data': [
-        'views/views.xml'
+        'views/res_config_settings_views.xml'
     ],
     'assets': {
         'point_of_sale.assets': [

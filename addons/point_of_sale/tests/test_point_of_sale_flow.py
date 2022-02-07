@@ -771,7 +771,6 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         })
         eur_config = self.pos_config.create({
             'name': 'Shop EUR Test',
-            'module_account': False,
             'journal_id': sale_journal.id,
             'use_pricelist': True,
             'available_pricelist_ids': [(6, 0, eur_pricelist.ids)],

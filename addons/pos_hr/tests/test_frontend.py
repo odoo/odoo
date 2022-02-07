@@ -1,12 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import tools
-from odoo.api import Environment
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
-from datetime import date, timedelta
-
-from odoo.tests import Form, tagged, new_test_user
+from odoo import Command
+from odoo.tests import tagged, new_test_user
 from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
 
 
@@ -47,9 +43,9 @@ class TestPosHrHttpCommon(TestPointOfSaleHttpCommon):
         emp2.write({"name": "Pos Employee2", "pin": "1234"})
         (admin + emp1 + emp2).company_id = cls.env.company
 
-        with Form(cls.main_pos_config) as config:
-            config.employee_ids.add(emp1)
-            config.employee_ids.add(emp2)
+        cls.main_pos_config.write({
+            'employee_ids': [Command.link(emp1.id), Command.link(emp2.id)]
+        })
 
 
 @tagged("post_install", "-at_install")

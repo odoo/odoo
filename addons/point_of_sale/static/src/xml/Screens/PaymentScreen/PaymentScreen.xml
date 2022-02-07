@@ -69,7 +69,7 @@
                                     </div>
                                 </div>
                                 <div class="payment-controls">
-                                    <div t-if="env.pos.config.module_account" class="button js_invoice"
+                                    <div class="button js_invoice"
                                         t-att-class="{ highlight: currentOrder.is_to_invoice() }"
                                         t-on-click="toggleIsToInvoice">
                                         <i class="fa fa-file-text-o" /> Invoice

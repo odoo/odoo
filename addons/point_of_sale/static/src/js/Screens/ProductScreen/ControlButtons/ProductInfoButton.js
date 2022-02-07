@@ -24,7 +24,6 @@ odoo.define('point_of_sale.ProductInfoButton', function(require) {
 
     ProductScreen.addControlButton({
         component: ProductInfoButton,
-        condition: () => true,
         position: ['before', 'SetFiscalPositionButton'],
     });
 

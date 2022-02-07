@@ -17,6 +17,7 @@ The actual till still requires one user but an unlimited number of employees can
         'views/pos_config.xml',
         'views/pos_order_view.xml',
         'views/pos_order_report_view.xml',
+        'views/res_config_settings_views.xml',
     ],
     'installable': True,
     'auto_install': True,

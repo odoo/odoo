@@ -1615,8 +1615,7 @@ class PosSession(models.Model):
         for fiscal_position in loaded_data['account.fiscal.position']:
             fiscal_position['fiscal_position_taxes_by_id'] = {tax_id: fiscal_position_by_id[tax_id] for tax_id in fiscal_position['tax_ids']}
 
-        if self.config_id.product_configurator:
-            loaded_data['attributes_by_ptal_id'] = self._get_attributes_by_ptal_id()
+        loaded_data['attributes_by_ptal_id'] = self._get_attributes_by_ptal_id()
 
     @api.model
     def _pos_ui_models_to_load(self):
@@ -1765,7 +1764,10 @@ class PosSession(models.Model):
         if not self.config_id.limited_partners_loading:
             return self.env['res.partner'].search_read(**params['search_params'])
         partner_ids = [res[0] for res in self.config_id.get_limited_partners_loading()]
-        return self.env['res.partner'].browse(partner_ids).read(params['search_params']['fields'])
+        # Need to search_read because get_limited_partners_loading
+        # might return a partner id that is not accessible.
+        params['search_params']['domain'] = [('id', 'in', partner_ids)]
+        return self.env['res.partner'].search_read(**params['search_params'])
 
     def _loader_params_stock_picking_type(self):
         return {
@@ -1844,7 +1846,7 @@ class PosSession(models.Model):
         if self.config_id.limit_categories and self.config_id.iface_available_categ_ids:
             domain = [('id', 'in', self.config_id.iface_available_categ_ids.ids)]
 
-        return {'search_params': {'domain': domain, 'fields': ['id', 'name', 'parent_id', 'child_id', 'write_date']}}
+        return {'search_params': {'domain': domain, 'fields': ['id', 'name', 'parent_id', 'child_id', 'write_date', 'has_image']}}
 
     def _get_pos_ui_pos_category(self, params):
         return self.env['pos.category'].search_read(**params['search_params'])

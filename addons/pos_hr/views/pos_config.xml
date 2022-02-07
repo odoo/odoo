@@ -6,11 +6,10 @@
         <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//div[@id='warning_text_employees']" position='replace'>
-                <div attrs="{'invisible': [('module_pos_hr', '=', False)]}">
-                    <span class="o_form_label oe_edit_only">Allowed Employees </span>
-                    <field name="employee_ids" widget="many2many_tags" 
-                    domain="[('company_id', '=', company_id)]"
-                    />
+                <field name="company_id" invisible="1" />
+                <div class="row">
+                    <label for="employee_ids" string="Allowed Employees" class="col-lg-3 o_light_label" />
+                    <field name="employee_ids" widget="many2many_tags" domain="[('company_id', '=', company_id)]" />
                 </div>
             </xpath>
         </field>

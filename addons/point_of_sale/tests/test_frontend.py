@@ -46,7 +46,6 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
         cls.main_pos_config = env['pos.config'].create({
             'name': 'Shop',
             'barcode_nomenclature_id': env.ref('barcodes.default_barcode_nomenclature').id,
-            'iface_orderline_customer_notes': True,
         })
 
         env['res.partner'].create({
@@ -520,7 +519,6 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertEqual(n_paid, 2, 'There should be 2 paid order.')
 
     def test_04_product_configurator(self):
-        self.main_pos_config.write({ 'product_configurator': True })
         self.main_pos_config.open_session_cb()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config, 'ProductConfiguratorTour', login="accountman")
 

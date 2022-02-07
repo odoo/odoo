@@ -29,9 +29,6 @@ odoo.define('point_of_sale.OrderlineCustomerNoteButton', function(require) {
 
     ProductScreen.addControlButton({
         component: OrderlineCustomerNoteButton,
-        condition: function() {
-            return this.env.pos.config.iface_orderline_customer_notes;
-        },
     });
 
     Registries.Component.add(OrderlineCustomerNoteButton);

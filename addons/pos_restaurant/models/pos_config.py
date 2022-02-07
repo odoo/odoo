@@ -17,20 +17,6 @@ class PosConfig(models.Model):
     set_tip_after_payment = fields.Boolean('Set Tip After Payment', help="Adjust the amount authorized by payment terminals to add a tip after the customers left or at the end of the day.")
     module_pos_restaurant = fields.Boolean(default=True)
 
-    @api.onchange('module_pos_restaurant')
-    def _onchange_module_pos_restaurant(self):
-        if not self.module_pos_restaurant:
-            self.update({'iface_printbill': False,
-            'iface_splitbill': False,
-            'is_order_printer': False,
-            'is_table_management': False,
-            'iface_orderline_notes': False})
-
-    @api.onchange('iface_tipproduct')
-    def _onchange_iface_tipproduct(self):
-        if not self.iface_tipproduct:
-            self.set_tip_after_payment = False
-
     def _force_http(self):
         enforce_https = self.env['ir.config_parameter'].sudo().get_param('point_of_sale.enforce_https')
         if not enforce_https and self.printer_ids.filtered(lambda pt: pt.printer_type == 'epson_epos'):
