@@ -13,19 +13,22 @@
                 <div t-if="lead.expected_revenue">
                     <span>Expected Revenues:</span>
                     <span t-if="lead.expected_revenue">
-                        <span t-field="lead.expected_revenue"
+                        <span t-if="lead.company_currency" t-field="lead.expected_revenue"
                             t-options='{"widget": "monetary", "display_currency": lead.company_currency}'/>
+                        <span t-else="" t-out="lead.expected_revenue"/>
                         <span t-if="lead.recurring_revenue" groups="crm.group_use_recurring_revenues"> + </span>
                     </span>
                     <span t-if="lead.recurring_revenue" groups="crm.group_use_recurring_revenues">
-                        <span t-field="lead.recurring_revenue"
+                        <span t-if="lead.company_currency" t-field="lead.recurring_revenue"
                             t-options='{"widget": "monetary", "display_currency": lead.company_currency}'/>
+                        <span t-else="" t-out="lead.recurring_revenue"/>
                         <span t-field="lead.recurring_plan.name"/>
                     </span>
                 </div>
                 <div t-elif="lead.recurring_revenue" groups="crm.group_use_recurring_revenues">
-                    <span t-field="lead.recurring_revenue"
+                    <span t-if="lead.company_currency" t-field="lead.recurring_revenue"
                         t-options='{"widget": "monetary", "display_currency": lead.company_currency}'/>
+                    <span t-else="" t-out="lead.recurring_revenue"/>
                     <span t-field="lead.recurring_plan.name"/>
                 </div>
                 <div t-if="lead.probability">
