@@ -260,9 +260,12 @@ class CustomerPortal(portal.CustomerPortal):
         pdf = request.env.ref('sale.action_report_saleorder').with_user(SUPERUSER_ID)._render_qweb_pdf([order_sudo.id])[0]
 
         _message_post_helper(
-            'sale.order', order_sudo.id, _('Order signed by %s') % (name,),
+            'sale.order',
+            order_sudo.id,
+            _('Order signed by %s', name),
             attachments=[('%s.pdf' % order_sudo.name, pdf)],
-            **({'token': access_token} if access_token else {}))
+            token=access_token,
+        )
 
         query_string = '&message=sign_ok'
         if order_sudo.has_to_be_paid(True):
@@ -273,22 +276,25 @@ class CustomerPortal(portal.CustomerPortal):
         }
 
     @http.route(['/my/orders/<int:order_id>/decline'], type='http', auth="public", methods=['POST'], website=True)
-    def decline(self, order_id, access_token=None, **post):
+    def portal_quote_decline(self, order_id, access_token=None, decline_message=None, **kwargs):
         try:
             order_sudo = self._document_check_access('sale.order', order_id, access_token=access_token)
         except (AccessError, MissingError):
             return request.redirect('/my')
 
-        message = post.get('decline_message')
-
-        query_string = False
-        if order_sudo.has_to_be_signed() and message:
+        if order_sudo.has_to_be_signed() and decline_message:
             order_sudo.action_cancel()
-            _message_post_helper('sale.order', order_id, message, **{'token': access_token} if access_token else {})
+            _message_post_helper(
+                'sale.order',
+                order_sudo.id,
+                decline_message,
+                token=access_token,
+            )
+            redirect_url = order_sudo.get_portal_url()
         else:
-            query_string = "&message=cant_reject"
+            redirect_url = order_sudo.get_portal_url(query_string="&message=cant_reject")
 
-        return request.redirect(order_sudo.get_portal_url(query_string=query_string))
+        return request.redirect(redirect_url)
 
 
 class PaymentPortal(payment_portal.PaymentPortal):
