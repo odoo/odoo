@@ -198,6 +198,41 @@ class Groups(models.Model):
             return len(groups) if count else groups.ids
         return super(Groups, self)._search(args, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid)
 
+    def _get_parent_group_ids(self):
+        query = """
+            WITH RECURSIVE group_implied_tree AS (
+                SELECT
+                    rgir.gid
+                FROM
+                    res_groups_implied_rel rgir
+                LEFT JOIN
+                    res_groups_implied_rel rgirr ON rgirr.hid=rgir.gid
+                JOIN
+                    res_groups rg ON rg.id=rgir.gid
+                WHERE
+                    rgir.hid IN %s and rg.category_id IN %s
+
+                UNION ALL
+
+                SELECT
+                    rgirr.gid
+                FROM
+                    res_groups_implied_rel rgirr
+                JOIN
+                    group_implied_tree git ON git.gid = rgirr.hid
+                JOIN
+                    res_groups rg ON rg.id=git.gid
+                WHERE
+                    rg.category_id IN %s
+            )
+            SELECT
+                gid
+            FROM
+                group_implied_tree;
+        """
+        self.env.cr.execute(query, [tuple(self.ids), tuple(self.category_id.ids), tuple(self.category_id.ids)])
+        return [x[0] for x in self.env.cr.fetchall()]
+
     def check_group_inheritance(self):
         if not self:
             return {}
@@ -217,7 +252,9 @@ class Groups(models.Model):
                     grp not in (key | key.implied_ids | self)
                 )
                 if parent_group:
-                    warnings[key.id] = _("Since you are a/an %s %s, you cannot have %s right lower than %s") % (value[0].category_id.name, value[0].name, parent_group[0].category_id.name, parent_group[0].name)
+                    parent_ids = parent_group._get_parent_group_ids()
+                    if not any([gid in parent_ids for gid in self.ids]):
+                        warnings[key.id] = _("Since you are a/an %s %s, you cannot have %s right lower than %s") % (value[0].category_id.name, value[0].name, parent_group[0].category_id.name, parent_group[0].name)
         return warnings
 
     def copy(self, default=None):
