@@ -67,9 +67,9 @@
 
                                 <div class="mb64 pt-3">
                                     <div t-if="show_blacklist_button">
-                                        <div class="btn btn-secondary pull-right" id="button_add_blacklist" style="display:none">Blacklist Me</div>
+                                        <div class="btn btn-secondary float-end" id="button_add_blacklist" style="display:none">Blacklist Me</div>
                                     </div>
-                                    <div class="btn btn-secondary pull-right" id="button_remove_blacklist" style="display:none">Come Back</div>
+                                    <div class="btn btn-secondary float-end" id="button_remove_blacklist" style="display:none">Come Back</div>
                                     <button type="submit" id="send_form" class="btn btn-primary">Update my subscriptions</button>
                                 </div>
                             </div>
@@ -113,8 +113,8 @@
                     </div>
 
                     <div t-if="show_blacklist_button" class="mb64">
-                        <div class="btn btn-secondary pull-right" id="button_add_blacklist" style="display:none">Blacklist Me</div>
-                        <div class="btn btn-secondary pull-right" id="button_remove_blacklist" style="display:none">Come Back</div>
+                        <div class="btn btn-secondary float-end" id="button_add_blacklist" style="display:none">Blacklist Me</div>
+                        <div class="btn btn-secondary float-end" id="button_remove_blacklist" style="display:none">Come Back</div>
                     </div>
                 </div>
             </div>
@@ -159,11 +159,11 @@
             </body>
             <xpath expr="//footer" position="replace">
                 <div class="container mt16 mb8">
-                    <div class="pull-right" t-ignore="true" t-if="not editable">
+                    <div class="float-end" t-ignore="true" t-if="not editable">
                         Create a <a target="_blank" href="https://www.odoo.com/app/website">free website</a> with
                         <a target="_blank" class="label label-danger" href="https://www.odoo.com/app/website">Odoo</a>
                     </div>
-                    <div class="pull-left text-muted" itemscope="itemscope" itemtype="https://schema.org/Organization">
+                    <div class="float-start text-muted" itemscope="itemscope" itemtype="https://schema.org/Organization">
                         <t t-call="web.debug_icon"/>
                         Copyright &amp;copy; <span t-field="res_company.name" itemprop="name">Company name</span>
                     </div>
