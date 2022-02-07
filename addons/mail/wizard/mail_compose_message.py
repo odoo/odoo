@@ -314,8 +314,8 @@ class MailComposer(models.TransientModel):
                     mail_values['auto_delete'] = True
                 # rendered values using template
                 if mass_mail_mode and self.model:
-                    rendered_values = self.render_message(res_ids, mail_values.copy())
-                email_dict = rendered_values[res_id]
+                    rendered_values = self.render_message(res_id, mail_values.copy())
+                email_dict = rendered_values
                 mail_values['partner_ids'] += email_dict.pop('partner_ids', [])
                 mail_values.update(email_dict)
                 if not self.no_auto_thread:
