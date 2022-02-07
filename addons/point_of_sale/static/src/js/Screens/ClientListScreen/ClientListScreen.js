@@ -193,19 +193,24 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
             if(this.state.query) {
                 domain = [["name", "ilike", this.state.query + "%"]];
             }
-            var fields = _.find(this.env.pos.models, function(model){ return model.label === 'load_partners'; }).fields;
-            var result = await this.rpc({
-                model: 'res.partner',
-                method: 'search_read',
-                args: [domain, fields],
-                kwargs: {
-                    limit: 10,
+            const result = await this.env.services.rpc(
+                {
+                    model: 'pos.session',
+                    method: 'get_pos_ui_res_partner_by_params',
+                    args: [
+                        [odoo.pos_session_id],
+                        {
+                            domain,
+                            limit: 10,
+                        },
+                    ],
+                    context: this.env.session.user_context,
                 },
-            },{
-                timeout: 3000,
-                shadow: true,
-            });
-
+                {
+                    timeout: 3000,
+                    shadow: true,
+                }
+            );
             return result;
         }
     }
