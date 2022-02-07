@@ -31,7 +31,7 @@ class MicrosoftCalendarService():
     @requires_auth_token
     def get_events(self, sync_token=None, token=None, timeout=TIMEOUT):
         url = "/v1.0/me/calendarView/delta"
-        headers = {'Content-type': 'application/json', 'Authorization': 'Bearer %s' % token}
+        headers = {'Content-type': 'application/json', 'Authorization': 'Bearer %s' % token, 'Prefer': 'outlook.body-content-type="html"'}
         params = {}
         if sync_token:
             params['$deltatoken'] = sync_token
