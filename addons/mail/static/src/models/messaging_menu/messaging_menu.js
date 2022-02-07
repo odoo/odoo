@@ -19,7 +19,7 @@ registerModel({
          * mobile.
          */
         toggleMobileNewMessage() {
-            this.update({ isMobileNewMessageToggled: !this.isMobileNewMessageToggled });
+            this.update({ mobileNewMessageInputView: this.mobileNewMessageInputView ? clear() : insertAndReplace({ doFocus: true }) });
         },
         /**
          * Toggle whether the messaging menu is open or not.
@@ -83,12 +83,6 @@ registerModel({
             compute: '_computeCounter',
         }),
         /**
-         * Determine whether the mobile new message input is visible or not.
-         */
-        isMobileNewMessageToggled: attr({
-            default: false,
-        }),
-        /**
          * Determine whether the messaging menu dropdown is open or not.
          */
         isOpen: attr({
@@ -105,6 +99,10 @@ registerModel({
          mobileMessagingNavbarView: one('MobileMessagingNavbarView', {
             compute: '_computeMobileMessagingNavbarView',
             inverse: 'messagingMenu',
+            isCausal: true,
+        }),
+        mobileNewMessageInputView: one('AutocompleteInputView', {
+            inverse: 'messagingMenuOwnerAsMobileNewMessageInput',
             isCausal: true,
         }),
         /**

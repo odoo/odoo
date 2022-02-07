@@ -45,8 +45,8 @@ registerModel({
          * Programmatically auto-focus an existing chat window.
          */
         focus() {
-            if (!this.thread) {
-                this.update({ isDoFocus: true });
+            if (this.newMessageFormInputView) {
+                this.newMessageFormInputView.update({ doFocus: true });
             }
             if (this.threadView && this.threadView.composerView) {
                 this.threadView.composerView.update({ doFocus: true });
@@ -151,14 +151,6 @@ registerModel({
             });
         },
         /**
-         * @param {Event} ev
-         */
-        onFocusInNewMessageFormInput(ev) {
-            if (this.exists()) {
-                this.update({ isFocused: true });
-            }
-        },
-        /**
          * Swap this chat window with the previous one.
          */
         shiftPrev() {
@@ -197,6 +189,16 @@ registerModel({
         },
         /**
          * @private
+         * @returns {string}
+         */
+        _computeComponentStyle() {
+            const textDirection = this.messaging.locale.textDirection;
+            const offsetFrom = textDirection === 'rtl' ? 'left' : 'right';
+            const oppositeFrom = offsetFrom === 'right' ? 'left' : 'right';
+            return `${offsetFrom}: ${this.visibleOffset}px; ${oppositeFrom}: auto`;
+        },
+        /**
+         * @private
          * @returns {boolean}
          */
         _computeHasCallButtons() {
@@ -211,13 +213,6 @@ registerModel({
                 this.thread && this.thread.hasInviteFeature &&
                 this.messaging && this.messaging.device && this.messaging.device.isMobile
             );
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeHasNewMessageForm() {
-            return this.isVisible && !this.isFolded && !this.thread;
         },
         /**
          * @private
@@ -257,6 +252,19 @@ registerModel({
         },
         /**
          * @private
+         * @returns {boolean|FieldCommand}
+         */
+        _computeIsFocused() {
+            if (this.newMessageFormInputView && this.newMessageFormInputView.isFocused) {
+                return true;
+            }
+            if (this.threadView && this.threadView.isComposerFocused) {
+                return true;
+            }
+            return clear();
+        },
+        /**
+         * @private
          * @returns {boolean}
          */
         _computeIsFolded() {
@@ -285,6 +293,16 @@ registerModel({
                 return this.thread.displayName;
             }
             return this.env._t("New message");
+        },
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
+        _computeNewMessageFormInputView() {
+            if (this.isVisible && !this.isFolded && !this.thread) {
+                return insertAndReplace();
+            }
+            return clear();
         },
         /**
          * @private
@@ -383,6 +401,10 @@ registerModel({
             compute: '_computeComponentStyle',
         }),
         /**
+         * States the OWL component of this chat window.
+         */
+        component: attr(),
+        /**
          * Determines whether the buttons to start a RTC call should be displayed.
          */
         hasCallButtons: attr({
@@ -394,12 +416,6 @@ registerModel({
          */
         hasInviteFeature: attr({
             compute: '_computeHasInviteFeature',
-        }),
-        /**
-         * Determines whether "new message form" should be displayed.
-         */
-        hasNewMessageForm: attr({
-            compute: '_computeHasNewMessageForm',
         }),
         hasShiftPrev: attr({
             compute: '_computeHasShiftPrev',
@@ -416,18 +432,10 @@ registerModel({
             compute: '_computeHasThreadView',
         }),
         /**
-         * Determine whether the chat window should be programmatically
-         * focused by observed component of chat window. Those components
-         * are responsible to unmark this record afterwards, otherwise
-         * any re-render will programmatically set focus again!
-         */
-        isDoFocus: attr({
-            default: false,
-        }),
-        /**
          * States whether `this` is focused. Useful for visual clue.
          */
         isFocused: attr({
+            compute: '_computeIsFocused',
             default: false,
         }),
         /**
@@ -461,6 +469,11 @@ registerModel({
         }),
         name: attr({
             compute: '_computeName',
+        }),
+        newMessageFormInputView: one('AutocompleteInputView', {
+            compute: '_computeNewMessageFormInputView',
+            inverse: 'chatWindowOwnerAsNewMessageFormInput',
+            isCausal: true,
         }),
         /**
          * Determines the `Thread` that should be displayed by `this`.

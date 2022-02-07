@@ -37,15 +37,10 @@
                             <t t-if="!messaging.device.isMobile and !messaging.discuss.discussView">
                                 <t t-call="mail.MessagingMenu.newMessageButton"/>
                             </t>
-                            <t t-if="messaging.device.isMobile and messagingMenu.isMobileNewMessageToggled">
+                            <t t-if="messagingMenu.mobileNewMessageInputView">
                                 <AutocompleteInput
                                     className="'o_MessagingMenu_mobileNewMessageInput'"
-                                    customClass="id + '_mobileNewMessageInputAutocomplete'"
-                                    isFocusOnMount="true"
-                                    placeholder="mobileNewMessageInputPlaceholder"
-                                    select="_onMobileNewMessageInputSelect"
-                                    source="_onMobileNewMessageInputSource"
-                                    onHide="_onHideMobileNewMessage"
+                                    localId="messagingMenu.mobileNewMessageInputView.localId"
                                 />
                             </t>
                         </div>

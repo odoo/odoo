@@ -3,19 +3,11 @@
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
 import { clear, insertAndReplace, link, unlink } from '@mail/model/model_field_command';
-import { escape } from '@web/core/utils/strings';
 
 registerModel({
     name: 'Discuss',
     identifyingFields: ['messaging'],
     recordMethods: {
-        clearIsAddingItem() {
-            this.update({
-                addingChannelValue: "",
-                isAddingChannel: false,
-                isAddingChat: false,
-            });
-        },
         /**
          * Close the discuss app. Should reset its internal state.
          */
@@ -28,109 +20,14 @@ registerModel({
             }
         },
         /**
-         * @param {Event} ev
-         * @param {Object} ui
-         * @param {Object} ui.item
-         * @param {integer} ui.item.id
-         */
-        async handleAddChannelAutocompleteSelect(ev, ui) {
-            const name = this.addingChannelValue;
-            this.clearIsAddingItem();
-            if (ui.item.special) {
-                const channel = await this.async(() =>
-                    this.messaging.models['Thread'].performRpcCreateChannel({
-                        name,
-                        privacy: ui.item.special,
-                    })
-                );
-                channel.open();
-            } else {
-                const channel = this.messaging.models['Thread'].insert({
-                    id: ui.item.id,
-                    model: 'mail.channel',
-                });
-                await channel.join();
-                // Channel must be pinned immediately to be able to open it before
-                // the result of join is received on the bus.
-                channel.update({ isServerPinned: true });
-                channel.open();
-            }
-        },
-        /**
-         * @param {Object} req
-         * @param {string} req.term
-         * @param {function} res
-         */
-        async handleAddChannelAutocompleteSource(req, res) {
-            this.update({ addingChannelValue: req.term });
-            const threads = await this.messaging.models['Thread'].searchChannelsToOpen({ limit: 10, searchTerm: req.term });
-            const items = threads.map((thread) => {
-                const escapedName = escape(thread.name);
-                return {
-                    id: thread.id,
-                    label: escapedName,
-                    value: escapedName,
-                };
-            });
-            const escapedValue = escape(req.term);
-            // XDU FIXME could use a component but be careful with owl's
-            // renderToString https://github.com/odoo/owl/issues/708
-            items.push({
-                label: _.str.sprintf(
-                    `<strong>${this.env._t('Create %s')}</strong>`,
-                    `<em><span class="fa fa-hashtag"/>${escapedValue}</em>`,
-                ),
-                escapedValue,
-                special: 'public'
-            }, {
-                label: _.str.sprintf(
-                    `<strong>${this.env._t('Create %s')}</strong>`,
-                    `<em><span class="fa fa-lock"/>${escapedValue}</em>`,
-                ),
-                escapedValue,
-                special: 'private'
-            });
-            res(items);
-        },
-        /**
-         * @param {Event} ev
-         * @param {Object} ui
-         * @param {Object} ui.item
-         * @param {integer} ui.item.id
-         */
-        handleAddChatAutocompleteSelect(ev, ui) {
-            this.messaging.openChat({ partnerId: ui.item.id });
-            this.clearIsAddingItem();
-        },
-        /**
-         * @param {Object} req
-         * @param {string} req.term
-         * @param {function} res
-         */
-        handleAddChatAutocompleteSource(req, res) {
-            const value = escape(req.term);
-            this.messaging.models['Partner'].imSearch({
-                callback: partners => {
-                    const suggestions = partners.map(partner => {
-                        return {
-                            id: partner.id,
-                            value: partner.nameOrDisplayName,
-                            label: partner.nameOrDisplayName,
-                        };
-                    });
-                    res(_.sortBy(suggestions, 'label'));
-                },
-                keyword: value,
-                limit: 10,
-            });
-        },
-        /**
          * Handles click on the mobile "new chat" button.
          *
          * @param {MouseEvent} ev
          */
         onClickMobileNewChatButton(ev) {
-            this.update({ isAddingChat: true });
+            this.discussView.update({
+                mobileAddChatInputView: this.discussView.mobileAddChatInputView ? clear() : insertAndReplace({ doFocus: true }),
+            });
         },
         /**
          * Handles click on the mobile "new channel" button.
@@ -138,7 +35,9 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onClickMobileNewChannelButton(ev) {
-            this.update({ isAddingChannel: true });
+            this.discussView.update({
+                mobileAddChannelInputView: this.discussView.mobileAddChannelInputView ? clear() : insertAndReplace({ doFocus: true }),
+            });
         },
         /**
          * Handles click on the "Start a meeting" button.
@@ -234,16 +133,6 @@ registerModel({
         },
         /**
          * @private
-         * @returns {string}
-         */
-        _computeAddingChannelValue() {
-            if (!this.discussView) {
-                return "";
-            }
-            return this.addingChannelValue;
-        },
-        /**
-         * @private
          * @returns {boolean}
          */
         _computeHasThreadView() {
@@ -260,26 +149,6 @@ registerModel({
                 return false;
             }
             return true;
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsAddingChannel() {
-            if (!this.discussView) {
-                return false;
-            }
-            return this.isAddingChannel;
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsAddingChat() {
-            if (!this.discussView) {
-                return false;
-            }
-            return this.isAddingChat;
         },
         /**
          * @private
@@ -337,13 +206,6 @@ registerModel({
             default: 'mailbox',
         }),
         /**
-         * Value that is used to create a channel from the sidebar.
-         */
-        addingChannelValue: attr({
-            compute: '_computeAddingChannelValue',
-            default: "",
-        }),
-        /**
          * Discuss sidebar category for `channel` type channel threads.
          */
         categoryChannel: one('DiscussSidebarCategory', {
@@ -377,22 +239,6 @@ registerModel({
          */
         initActiveId: attr({
             default: 'mail.box_inbox',
-        }),
-        /**
-         * Determine whether current user is currently adding a channel from
-         * the sidebar.
-         */
-        isAddingChannel: attr({
-            compute: '_computeIsAddingChannel',
-            default: false,
-        }),
-        /**
-         * Determine whether current user is currently adding a chat from
-         * the sidebar.
-         */
-        isAddingChat: attr({
-            compute: '_computeIsAddingChat',
-            default: false,
         }),
         /**
          * Determines if the logic for opening a thread via the `initActiveId`

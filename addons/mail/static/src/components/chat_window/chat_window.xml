@@ -9,7 +9,7 @@
                 'o-fullscreen': props.isFullscreen,
                 'o-mobile': messaging and messaging.device.isMobile,
                 'o-new-message': chatWindow and !chatWindow.thread,
-            }" t-att-style="chatWindow ? chatWindow.componentStyle : undefined" t-on-keydown="_onKeydown" t-on-focusout="_onFocusout" t-att-data-chat-window-local-id="chatWindow ? chatWindow.localId : undefined" t-att-data-thread-local-id="chatWindow ? (chatWindow.thread ? chatWindow.thread.localId : '') : undefined" t-ref="root"
+            }" t-att-style="chatWindow ? chatWindow.componentStyle : undefined" t-on-keydown="_onKeydown" t-att-data-chat-window-local-id="chatWindow ? chatWindow.localId : undefined" t-att-data-thread-local-id="chatWindow ? (chatWindow.thread ? chatWindow.thread.localId : '') : undefined" t-ref="root"
         >
             <t t-if="chatWindow">
                 <ChatWindowHeader
@@ -31,21 +31,16 @@
                         hasComposerCurrentPartnerAvatar="false"
                         hasComposerSendButton="messaging.device.isMobile"
                         localId="chatWindow.threadView.localId"
-                        onFocusin="_onFocusinThread"
                     />
                 </t>
-                <t t-if="chatWindow.hasNewMessageForm">
+                <t t-if="chatWindow.newMessageFormInputView">
                     <div class="o_ChatWindow_newMessageForm">
                         <span class="o_ChatWindow_newMessageFormLabel">
                             To:
                         </span>
                         <AutocompleteInput
                             className="'o_ChatWindow_newMessageFormInput'"
-                            placeholder="newMessageFormInputPlaceholder"
-                            select="_onAutocompleteSelect"
-                            source="_onAutocompleteSource"
-                            onFocusin="chatWindow.onFocusInNewMessageFormInput"
-                            inputRef="_inputRef"
+                            localId="chatWindow.newMessageFormInputView.localId"
                         />
                     </div>
                 </t>

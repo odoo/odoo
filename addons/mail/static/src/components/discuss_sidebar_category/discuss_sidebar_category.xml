@@ -25,17 +25,11 @@
             </div>
             <div class="o_DiscussSidebarCategory_content">
                 <t t-if="category.isOpen">
-                    <t t-if="category.isAddingItem">
+                    <t t-if="category.addingItemInputView">
                         <div class="o_DiscussSidebarCategory_addingItem d-flex mb-2">
                             <AutocompleteInput
                                 className="'o_DiscussSidebarCategory_addingItemInput flex-grow-1'"
-                                customClass="category === messaging.discuss.categoryChannel ? 'o_DiscussSidebarCategory_newChannelAutocompleteSuggestions' : False"
-                                isFocusOnMount="true"
-                                isHtml="category === messaging.discuss.categoryChannel ? true : False"
-                                placeholder="category.newItemPlaceholderText"
-                                select="category.onAddItemAutocompleteSelect"
-                                source="category.onAddItemAutocompleteSource"
-                                onHide="category.onHideAddingItem"
+                                localId="category.addingItemInputView.localId"
                             />
                         </div>
                     </t>

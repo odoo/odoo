@@ -1,8 +1,10 @@
 /** @odoo-module **/
 
+import { useComponentToModel } from '@mail/component_hooks/use_component_to_model/use_component_to_model';
+import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model/use_update_to_model';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
-const { Component, onMounted, onWillUnmount, useEffect } = owl;
+const { Component, onMounted, onWillPatch, onWillUnmount } = owl;
 
 export class AutocompleteInput extends Component {
 
@@ -11,31 +13,28 @@ export class AutocompleteInput extends Component {
      */
     setup() {
         super.setup();
+        useComponentToModel({ fieldName: 'component', modelName: 'AutocompleteInputView' });
+        useUpdateToModel({ methodName: 'onComponentUpdate', modelName: 'AutocompleteInputView' });
         onMounted(() => this._mounted());
+        onWillPatch(() => this._willPatch());
         onWillUnmount(() => this._willUnmount());
-        useEffect(() => {
-            if (this.props.inputRef) {
-                this.props.inputRef.el = this.root.el;
-                return () => this.props.inputRef.el = null;
-            }
-        })
     }
 
     _mounted() {
-        if (this.props.isFocusOnMount) {
-            this.root.el.focus();
-        }
-
         let args = {
             autoFocus: true,
-            select: (ev, ui) => this._onAutocompleteSelect(ev, ui),
-            source: (req, res) => this._onAutocompleteSource(req, res),
-            focus: ev => this._onAutocompleteFocus(ev),
-            html: this.props.isHtml || false,
+            select: this.autocompleteInputView.onSelect,
+            source: this.autocompleteInputView.onSource,
+            /**
+             * Prevent default behavior of ui-autocomplete
+             * to replace content of input by focused item.
+             */
+            focus: ev => ev.preventDefault(),
+            html: this.autocompleteInputView.isHtml,
         };
 
-        if (this.props.customClass) {
-            args.classes = { 'ui-autocomplete': this.props.customClass };
+        if (this.autocompleteInputView.customClass) {
+            args.classes = { 'ui-autocomplete': this.autocompleteInputView.customClass };
         }
 
         const autoCompleteElem = $(this.root.el).autocomplete(args);
@@ -47,8 +46,22 @@ export class AutocompleteInput extends Component {
         };
     }
 
+    _willPatch() {
+        if (!this.autocompleteInputView) {
+            this._rootEl = this.root.el;
+        }
+    }
+
     _willUnmount() {
-        $(this.root.el).autocomplete('destroy');
+        if (this._rootEl) {
+            $(this._rootEl).autocomplete('destroy');
+        } else {
+            $(this.root.el).autocomplete('destroy');
+        }
+    }
+
+    get autocompleteInputView() {
+        return this.messaging && this.messaging.models['AutocompleteInputView'].get(this.props.localId);
     }
 
     //--------------------------------------------------------------------------
@@ -69,127 +82,20 @@ export class AutocompleteInput extends Component {
         if (this.root.el.contains(node)) {
             return true;
         }
-        if (!this.props.customClass) {
+        if (!this.autocompleteInputView.customClass) {
             return false;
         }
-        const element = document.querySelector(`.${this.props.customClass}`);
+        const element = document.querySelector(`.${this.autocompleteInputView.customClass}`);
         if (!element) {
             return false;
         }
         return element.contains(node);
     }
 
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     * @param {FocusEvent} ev
-     */
-    _onAutocompleteFocus(ev) {
-        if (this.props.focus) {
-            this.props.focus(ev);
-        } else {
-            ev.preventDefault();
-        }
-    }
-
-    /**
-     * @private
-     * @param {Event} ev
-     * @param {Object} ui
-     */
-    _onAutocompleteSelect(ev, ui) {
-        if (this.props.select) {
-            this.props.select(ev, ui);
-        }
-    }
-
-    /**
-     * @private
-     * @param {Object} req
-     * @param {function} res
-     */
-    _onAutocompleteSource(req, res) {
-        if (this.props.source) {
-            this.props.source(req, res);
-        }
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onBlur(ev) {
-        if (this.props.onHide) {
-            this.props.onHide();
-        }
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onKeydown(ev) {
-        if (ev.key === 'Escape') {
-            if (this.props.onHide) {
-                this.props.onHide();
-            }
-        }
-    }
-
 }
 
 Object.assign(AutocompleteInput, {
-    defaultProps: {
-        isFocusOnMount: false,
-        isHtml: false,
-        placeholder: '',
-        onFocusin: () => {},
-    },
-    props: {
-        customClass: {
-            type: String,
-            optional: true,
-        },
-        focus: {
-            type: Function,
-            optional: true,
-        },
-        isFocusOnMount: {
-            type: Boolean,
-            optional: true,
-        },
-        isHtml: {
-            type: Boolean,
-            optional: true,
-        },
-        onFocusin: {
-            type: Function,
-            optional: true,
-        },
-        onHide: {
-            type: Function,
-            optional: true,
-        },
-        placeholder: {
-            type: String,
-            optional: true,
-        },
-        select: {
-            type: Function,
-            optional: true,
-        },
-        source: {
-            type: Function,
-            optional: true,
-        },
-        inputRef: {
-            type: { el: Object },
-            optional: true,
-        },
-    },
+    props: { localId: String },
     template: 'mail.AutocompleteInput',
 });
 

@@ -11,11 +11,7 @@ export class Discuss extends LegacyComponent {
      */
     setup() {
         this._updateLocalStoreProps();
-        // bind since passed as props
-        this._onMobileAddItemHeaderInputSelect = this._onMobileAddItemHeaderInputSelect.bind(this);
-        this._onMobileAddItemHeaderInputSource = this._onMobileAddItemHeaderInputSource.bind(this);
         useUpdate({ func: () => this._update() });
-        this._onHideMobileAddItemHeader = this._onHideMobileAddItemHeader.bind(this);
     }
 
     _update() {
@@ -40,20 +36,6 @@ export class Discuss extends LegacyComponent {
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
-
-    /**
-     * @returns {string}
-     */
-    get addChannelInputPlaceholder() {
-        return this.env._t("Create or search channel...");
-    }
-
-    /**
-     * @returns {string}
-     */
-    get addChatInputPlaceholder() {
-        return this.env._t("Search user...");
-    }
 
     /**
      * @returns {DiscussView}
@@ -91,56 +73,6 @@ export class Discuss extends LegacyComponent {
             this.discussView.discuss.thread &&
             this.discussView.discuss.thread.counter
         );
-    }
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     */
-    _onHideMobileAddItemHeader() {
-        if (!this.discussView) {
-            return;
-        }
-        this.discussView.discuss.clearIsAddingItem();
-    }
-
-    /**
-     * @private
-     * @param {Event} ev
-     * @param {Object} ui
-     * @param {Object} ui.item
-     * @param {integer} ui.item.id
-     */
-    _onMobileAddItemHeaderInputSelect(ev, ui) {
-        if (!this.discussView) {
-            return;
-        }
-        const discuss = this.discussView.discuss;
-        if (discuss.isAddingChannel) {
-            discuss.handleAddChannelAutocompleteSelect(ev, ui);
-        } else {
-            discuss.handleAddChatAutocompleteSelect(ev, ui);
-        }
-    }
-
-    /**
-     * @private
-     * @param {Object} req
-     * @param {string} req.term
-     * @param {function} res
-     */
-    _onMobileAddItemHeaderInputSource(req, res) {
-        if (!this.discussView) {
-            return;
-        }
-        if (this.discussView.discuss.isAddingChannel) {
-            this.discussView.discuss.handleAddChannelAutocompleteSource(req, res);
-        } else {
-            this.discussView.discuss.handleAddChatAutocompleteSource(req, res);
-        }
     }
 
 }

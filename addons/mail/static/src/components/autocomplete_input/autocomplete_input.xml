@@ -2,7 +2,9 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.AutocompleteInput" owl="1">
-        <input class="o_AutocompleteInput" t-attf-class="{{ className }}" t-on-blur="_onBlur" t-on-focusin="props.onFocusin" t-on-keydown="_onKeydown" t-att-placeholder="props.placeholder" t-ref="root"/>
+        <t t-if="autocompleteInputView">
+            <input class="o_AutocompleteInput" t-attf-class="{{ className }}" t-on-blur="autocompleteInputView.onBlur" t-on-focusin="autocompleteInputView.onFocusin" t-on-keydown="autocompleteInputView.onKeydown" t-att-placeholder="autocompleteInputView.placeholder" t-ref="root"/>
+        </t>
     </t>
 
 </templates>

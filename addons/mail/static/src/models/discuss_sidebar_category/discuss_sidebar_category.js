@@ -67,6 +67,27 @@ registerModel({
          * @private
          * @returns {FieldCommand}
          */
+        _computeAddingItemInputView() {
+            if (
+                this.discussAsChannel &&
+                this.messaging.discuss.discussView &&
+                this.messaging.discuss.discussView.sidebarAddChannelInputView
+            ) {
+                return replace(this.messaging.discuss.discussView.sidebarAddChannelInputView);
+            }
+            if (
+                this.discussAsChat &&
+                this.messaging.discuss.discussView &&
+                this.messaging.discuss.discussView.sidebarAddChatInputView
+            ) {
+                return replace(this.messaging.discuss.discussView.sidebarAddChatInputView);
+            }
+            return clear();
+        },
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
         _computeFilteredCategoryItems() {
             let categoryItems = this.categoryItems;
             const searchValue = this.messaging.discuss.sidebarQuickSearchValue;
@@ -118,46 +139,17 @@ registerModel({
                 await this.open();
             }
         },
-        onHideAddingItem() {
-            this.update({ isAddingItem: false });
-        },
-        /**
-         * @param {Event} ev
-         * @param {Object} ui
-         * @param {Object} ui.item
-         * @param {integer} ui.item.id
-         */
-        onAddItemAutocompleteSelect(ev, ui) {
-            switch (this.autocompleteMethod) {
-                case 'channel':
-                    this.messaging.discuss.handleAddChannelAutocompleteSelect(ev, ui);
-                    break;
-                case 'chat':
-                    this.messaging.discuss.handleAddChatAutocompleteSelect(ev, ui);
-                    break;
-            }
-        },
-        /**
-         * @param {Object} req
-         * @param {string} req.term
-         * @param {function} res
-         */
-        onAddItemAutocompleteSource(req, res) {
-            switch (this.autocompleteMethod) {
-                case 'channel':
-                    this.messaging.discuss.handleAddChannelAutocompleteSource(req, res);
-                    break;
-                case 'chat':
-                    this.messaging.discuss.handleAddChatAutocompleteSource(req, res);
-                    break;
-            }
-        },
         /**
          * @param {MouseEvent} ev
          */
         onClickCommandAdd(ev) {
             ev.stopPropagation();
-            this.update({ isAddingItem: true });
+            if (this.discussAsChannel) {
+                this.messaging.discuss.discussView.update({ sidebarAddChannelInputView: insertAndReplace({ doFocus: true }) });
+            }
+            if (this.discussAsChat) {
+                this.messaging.discuss.discussView.update({ sidebarAddChatInputView: insertAndReplace({ doFocus: true }) });
+            }
         },
         /**
          * Redirects to the public channels window when view command is clicked.
@@ -195,6 +187,9 @@ registerModel({
          */
         activeItem: one('DiscussSidebarCategoryItem', {
             compute: '_computeActiveItem',
+        }),
+        addingItemInputView: one('AutocompleteInputView', {
+            compute: '_computeAddingItemInputView',
         }),
         /**
          * Determines how the autocomplete of this category should behave.
@@ -256,12 +251,6 @@ registerModel({
             default: false,
         }),
         /**
-         * Boolean that determines whether discuss is adding a new category item.
-         */
-        isAddingItem: attr({
-            default: false,
-        }),
-        /**
          * Boolean that determines whether this category is open.
          */
         isOpen: attr({
@@ -279,10 +268,6 @@ registerModel({
          * Boolean that determines the last open state known by the server.
          */
         isServerOpen: attr(),
-        /**
-         * The placeholder text used when a new item is being added in UI.
-         */
-        newItemPlaceholderText: attr(),
         /**
          * The key used in the server side for the category state
          */

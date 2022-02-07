@@ -21,7 +21,7 @@ tour.register('mail_tour', {
         actions.text("SomeChannel_" + t, this.$anchor);
     },
 }, {
-    trigger: ".o_DiscussSidebarCategory_newChannelAutocompleteSuggestions",
+    trigger: ".o_AutocompleteInputView_customClass",
     content: Markup(_t("<p>Create a public or private channel.</p>")),
     position: 'right',
     run() {

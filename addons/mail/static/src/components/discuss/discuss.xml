@@ -4,7 +4,7 @@
     <t t-name="mail.Discuss" owl="1">
         <div class="o_Discuss" t-attf-class="{{ className }}"
             t-att-class="{
-                'o-adding-item': discussView ? discussView.discuss.isAddingChannel or discussView.discuss.isAddingChat : false,
+                'o-adding-item': discussView ? discussView.isAddingItem : false,
                 'o-mobile': messaging ? messaging.device.isMobile : false,
             }"
             t-ref="root"
@@ -27,16 +27,19 @@
         <t t-if="messaging.device.isMobile and discussView.discuss.activeMobileNavbarTabId === 'mailbox'">
             <DiscussMobileMailboxSelection className="'o_Discuss_mobileMailboxSelection border-bottom'"/>
         </t>
-        <t t-if="messaging.device.isMobile and (discussView.discuss.isAddingChannel or discussView.discuss.isAddingChat)">
-            <div class="o_Discuss_mobileAddItemHeader border-bottom">
+        <t t-if="discussView.mobileAddChannelInputView">
+            <div class="o_Discuss_channelMobileAddItemHeader o_Discuss_mobileAddItemHeader border-bottom">
                 <AutocompleteInput
-                    className="'o_Discuss_mobileAddItemHeaderInput'"
-                    isFocusOnMount="true"
-                    isHtml="discussView.discuss.isAddingChannel"
-                    placeholder="discussView.discuss.isAddingChannel ? addChannelInputPlaceholder : addChatInputPlaceholder"
-                    select="_onMobileAddItemHeaderInputSelect"
-                    source="_onMobileAddItemHeaderInputSource"
-                    onHide="_onHideMobileAddItemHeader"
+                    className="'o_Discuss_channelMobileAddItemHeaderInput o_Discuss_mobileAddItemHeaderInput'"
+                    localId="discussView.mobileAddChannelInputView.localId"
+                />
+            </div>
+        </t>
+        <t t-if="discussView.mobileAddChatInputView">
+            <div class="o_Discuss_chatMobileAddItemHeader o_Discuss_mobileAddItemHeader border-bottom">
+                <AutocompleteInput
+                    className="'o_Discuss_chatMobileAddItemHeaderInput o_Discuss_mobileAddItemHeaderInput'"
+                    localId="discussView.mobileAddChatInputView.localId"
                 />
             </div>
         </t>
