@@ -380,7 +380,7 @@
 
     <!-- Replace a media -->
     <!-- TODO probably review this system once the new editor is merged to not duplicate the selector, etc -->
-    <div data-js="ReplaceMedia" data-selector="img, .media_iframe_video, span.fa, i.fa" data-exclude="a[href^='/website/social/'] > i.fa">
+    <div data-js="ReplaceMedia" data-selector="img, .media_iframe_video, span.fa, i.fa" data-exclude="a[href^='/website/social/'] > i.fa, a[class*='s_share_'] > i.fa">
         <we-row string="Media">
             <we-button class="o_we_bg_brand_primary" data-replace-media="true" data-no-preview="true">Replace</we-button>
             <we-button class="fa fa-link"
