@@ -1092,9 +1092,14 @@ class Picking(models.Model):
                 moves_to_backorder.move_line_ids.package_level_id.write({'picking_id':backorder_picking.id})
                 moves_to_backorder.mapped('move_line_ids').write({'picking_id': backorder_picking.id})
                 backorders |= backorder_picking
-        if backorders:
-            backorders.action_assign()
+        backorders_to_assign = backorders.filtered(lambda picking: picking._needs_automatic_assign())
+        if backorders_to_assign:
+            backorders_to_assign.action_assign()
         return backorders
+
+    def _needs_automatic_assign(self):
+        self.ensure_one()
+        return True
 
     def _log_activity_get_documents(self, orig_obj_changes, stream_field, stream, sorted_method=False, groupby_method=False):
         """ Generic method to log activity. To use with
