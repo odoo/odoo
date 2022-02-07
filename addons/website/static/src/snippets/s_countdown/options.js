@@ -172,27 +172,27 @@ options.registry.countdown = options.Class.extend({
         } else if (attributeName === 'progressBarWeight') {
             const stroke = value === 'thin' ? 3 : 10;
             offset = (this.$target[0].dataset.layoutBackground === 'inner' ? -1 : 1) * stroke / 2;
-            this.$target[0].querySelectorAll('g[stroke] > :not(text)').forEach(el => {
+            this.$target[0].querySelectorAll('[stroke]:not(text)').forEach(el => {
                 el.setAttribute('stroke-width', stroke);
             });
         } else if (attributeName === 'progressBarStyle') {
-            this.$target.find('.s_countdown_surround').toggleClass('d-none', value !== 'surrounded');
-            this.$target.find('.s_countdown_progress').toggleClass('d-none', value === 'none');
+            this.$target.find('svg [opacity]').toggleClass('d-none', value !== 'surrounded');
+            this.$target.find('svg [pathLength]').toggleClass('d-none', value === 'none');
             if (value === "none" && this.$target[0].dataset.layoutBackground === 'inner') {
-                this.selectDataAttribute(false, 'plain', {attributeName: 'layoutBackground'});
+                this.selectDataAttribute('layoutBackground', 'plain');
             }
         } else if (attributeName === 'layoutBackground') {
             const stroke = this.$target[0].dataset.progressBarWeight === 'thin' ? 3 : 10;
             offset = (value === 'inner' ? -1 : 1) * stroke / 2;
-            this.$target.find('.s_countdown_background').toggleClass('d-none', value === 'none');
+            this.$target.find('svg :not(text):not([stroke])').toggleClass('d-none', value === 'none');
         }
 
         if (offset) {
-            this.$target[0].querySelectorAll('.s_countdown_background circle').forEach(el => {
+            this.$target[0].querySelectorAll('svg circle:first-child').forEach(el => {
                 el.setAttribute('r', 45 + offset);
             });
-            this.$target[0].querySelectorAll('.s_countdown_background rect').forEach((el, index) => {
-                el.setAttribute('x', 57 * index + 5 - offset);
+            this.$target[0].querySelectorAll('svg rect:first-child').forEach(el => {
+                el.setAttribute('x', 5 - offset);
                 el.setAttribute('y', 5 - offset);
                 el.setAttribute('width', 47 + 2 * offset);
                 el.setAttribute('height', 90 + 2 * offset);

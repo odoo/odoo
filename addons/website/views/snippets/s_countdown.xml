@@ -41,7 +41,7 @@
                 <we-button data-select-data-attribute="hm">H - M</we-button>
                 <we-button data-select-data-attribute="hms">H - M - S</we-button>
             </we-select>
-            <we-colorpicker string="Text Color" data-apply-to="svg .s_countdown_text"
+            <we-colorpicker string="Text Color" data-apply-to="svg text"
                 data-select-style="" data-css-property="color" data-color-prefix="text-" />
             <we-select string="Layout">
                 <we-button data-layout="circle" data-name="circle_layout_opt">Circle</we-button>
@@ -54,7 +54,7 @@
                 <we-button data-select-data-attribute="plain">Plain</we-button>
                 <we-button data-select-data-attribute="none" data-name="no_background_layout_opt">None</we-button>
             </we-select>
-            <we-colorpicker string="Layout Background Color" data-apply-to="svg .s_countdown_background"
+            <we-colorpicker string="Layout Background Color" data-apply-to="svg :not([stroke]):not(text)"
                 data-select-style="" data-css-property="color" data-color-prefix="text-" data-dependencies="!no_background_layout_opt" />
             <we-select string="Progress Bar Style" data-attribute-name="progressBarStyle" data-dependencies="circle_layout_opt, boxes_layout_opt">
                 <we-button data-select-data-attribute="surrounded">Surrounded</we-button>
@@ -65,7 +65,7 @@
                 <we-button data-select-data-attribute="thin">Thin</we-button>
                 <we-button data-select-data-attribute="thick">Thick</we-button>
             </we-select>
-            <we-colorpicker string="Progress Bar Color" data-apply-to="svg .s_countdown_progress, svg .s_countdown_surround"
+            <we-colorpicker string="Progress Bar Color" data-apply-to="svg [stroke]"
                 data-select-style="" data-css-property="color" data-color-prefix="text-" data-dependencies="!no_progressbar_style_opt" />
         </div>
     </xpath>
