@@ -128,7 +128,7 @@
                     <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
                     <field name="scrap_location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
                     <field name="company_id" readonly="1" groups="base.group_multi_company"/>
-                    <field name="state" widget="badge" decoration-success="state == 'done'" decoration-info="state == 'draft'"/>
+                    <field name="state" widget="badge" decoration-success="state == 'done'" decoration-muted="state == 'draft'"/>
                 </tree>
             </field>
         </record>

@@ -207,7 +207,12 @@
                     <field name="backorder_id" optional="hide"/>
                     <field name="picking_type_id" optional="hide"/>
                     <field name="company_id" groups="base.group_multi_company" optional="show"/>
-                    <field name="state" optional="show" widget="badge" decoration-success="state == 'done'" decoration-info="state not in ('done', 'cancel', 'draft')" decoration-muted="state == 'draft'"/>
+                    <field name="state" optional="show" widget="badge" 
+                           decoration-danger="state=='cancel'"
+                           decoration-info="state== 'assigned'"
+                           decoration-muted="state == 'draft'"
+                           decoration-success="state == 'done'"
+                           decoration-warning="state not in ('draft','cancel','done','assigned')"/>
                     <field name="activity_exception_decoration" widget="activity_exception"/>
                     <field name="json_popover" nolabel="1" widget="stock_rescheduling_popover" attrs="{'invisible': [('json_popover', '=', False)]}"/>
                 </tree>
