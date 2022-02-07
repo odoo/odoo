@@ -125,7 +125,7 @@ class CouponProgram(models.Model):
             products_qties[line.product_id] += line.product_uom_qty
         valid_program_ids = list()
         for program in self:
-            if not program.rule_products_domain:
+            if not program.rule_products_domain or program.rule_products_domain == "[]":
                 valid_program_ids.append(program.id)
                 continue
             valid_products = program._get_valid_products(products)
