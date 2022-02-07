@@ -150,12 +150,12 @@ options.registry.SocialMedia = options.Class.extend({
      */
     _findRelevantSocialMedia(url) {
         const supportedSocialMedia = [
-            ['facebook', /^(https?:\/\/)(www\.)?(facebook|fb|m\.facebook)\.(com|me)\/.+$/gm],
-            ['twitter', /^(https?:\/\/)((www\.)?twitter\.com)\/.+$/gm],
-            ['youtube', /^(https?:\/\/)(www\.)?(youtube.com|youtu.be)\/.+$/gm],
-            ['instagram', /^(https?:\/\/)(www\.)?(instagram.com|instagr.am|instagr.com)\/.+$/gm],
-            ['linkedin', /^(https?:\/\/)((www\.)?linkedin\.com)\/.+$/gm],
-            ['github', /^(https?:\/\/)((www\.)?github\.com)\/.+$/gm],
+            ['facebook', /^(https?:\/\/)(www\.)?(facebook|fb|m\.facebook)\.(com|me).*$/],
+            ['twitter', /^(https?:\/\/)((www\.)?twitter\.com).*$/],
+            ['youtube', /^(https?:\/\/)(www\.)?(youtube.com|youtu.be).*$/],
+            ['instagram', /^(https?:\/\/)(www\.)?(instagram.com|instagr.am|instagr.com).*$/],
+            ['linkedin', /^(https?:\/\/)((www\.)?linkedin\.com).*$/],
+            ['github', /^(https?:\/\/)((www\.)?github\.com).*$/],
         ];
         for (const [socialMedia, regex] of supportedSocialMedia) {
             if (regex.test(url)) {
@@ -166,7 +166,9 @@ options.registry.SocialMedia = options.Class.extend({
         try {
             const domain = new URL(url).hostname.split('.').slice(-2)[0];
             fonts.computeFonts();
-            return fonts.fontIcons[0].alias.find(el => el.includes(domain)).split('fa-').pop();
+            const iconNames = fonts.fontIcons[0].alias;
+            const exactIcon = iconNames.find(el => el === `fa-${domain}`);
+            return (exactIcon || iconNames.find(el => el.includes(domain))).split('fa-').pop();
         } catch (error) {
             return false;
         }
