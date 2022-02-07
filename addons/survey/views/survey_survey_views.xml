@@ -211,16 +211,16 @@
                 <field name="session_state"/>
                 <field name="success_ratio"/>
                 <templates>
-                    <div t-name="kanban-box" 
+                    <div t-name="kanban-box"
                         t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)}
                                       oe_kanban_card oe_kanban_global_click
                                       o_survey_kanban_card #{record.certification.raw_value ? 'o_survey_kanban_card_certification' : ''}">
                         <!-- displayed in ungrouped mode -->
                         <div class="o_survey_kanban_card_ungrouped row mx-0">
-                            <div class="col-lg-2 col-sm-8 col-12 py-0 my-2 my-lg-0">
+                            <div class="col-lg-2 col-sm-8 py-0 my-2 my-lg-0 col-12">
                                 <div class="d-flex flex-grow-1 flex-column my-0 my-lg-2">
                                     <span class="font-weight-bold"><field name="title"/></span>
-                                    <span>
+                                    <span t-if="!selection_mode">
                                         <field name="user_id" widget="many2one_avatar_user"
                                             options="{'display_avatar_name': True}"/>
                                         -
@@ -228,17 +228,20 @@
                                     </span>
                                 </div>
                             </div>
-                            <div class="col-lg-1 col-sm-4 col-6 py-0 my-2">
-                                <span class="font-weight-bold"><field name="question_count"/></span><br />
+                            <div t-attf-class="col-lg-1 col-sm-4 py-0 my-2 col-#{selection_mode ? '12' : '6'}">
+                                <span class="font-weight-bold"><field name="question_count"/></span><br t-if="!selection_mode"/>
                                 <span class="text-muted">Questions</span>
                             </div>
-                            <div class="col-lg-1 col-sm-4 col-6 py-0 my-2">
+                            <div t-if="selection_mode" class="col-12 d-flex justify-content-end">
+                                <field name="user_id" widget="many2one_avatar_user"/>
+                            </div>
+                            <div t-if="!selection_mode" class="col-lg-1 col-sm-4 col-6 py-0 my-2">
                                 <span class="font-weight-bold">
                                     <field name="answer_duration_avg" widget="float_time"/>
                                 </span><br />
                                 <span class="text-muted">Average Duration</span>
                             </div>
-                            <div class="col-lg-1 col-sm-4 col-6 py-0 my-2">
+                            <div t-if="!selection_mode" class="col-lg-1 col-sm-4 col-6 py-0 my-2">
                                 <a type="object"
                                    name="action_survey_user_input"
                                    class="font-weight-bold">
@@ -246,7 +249,7 @@
                                     <span class="text-muted">Registered</span>
                                 </a>
                             </div>
-                            <div class="col-lg-1 col-sm-4 col-6 py-0 my-2">
+                            <div t-if="!selection_mode" class="col-lg-1 col-sm-4 col-6 py-0 my-2">
                                 <a type="object"
                                    name="action_survey_user_input_completed"
                                    class="font-weight-bold">
@@ -254,7 +257,7 @@
                                     <span class="text-muted">Completed</span>
                                 </a>
                             </div>
-                            <div class="col-lg-1 col-sm-4 col-6 py-0 my-2"
+                            <div t-if="!selection_mode" class="col-lg-1 col-sm-4 col-6 py-0 my-2"
                                  name="o_survey_kanban_card_section_success">
                                  <a t-if="record.scoring_type.raw_value != 'no_scoring'"
                                    type="object"
@@ -268,7 +271,7 @@
                                     <span class="text-muted" t-else="">Certified</span>
                                 </a>
                             </div>
-                            <div class="col-lg-3 col-sm-12 py-0 my-2 pb-lg-3 ml-auto text-lg-right">
+                            <div t-if="!selection_mode" class="col-lg-3 col-sm-12 py-0 my-2 pb-lg-3 ml-auto text-lg-right">
                                 <button name="action_send_survey"
                                         string="Share" type="object"
                                         class="btn btn-secondary border"
@@ -356,7 +359,7 @@
                             </div>
                         </div>
                         <!-- Generic -->
-                        <div class="o_survey_kanban_card_bottom">
+                        <div  t-if="!selection_mode" class="o_survey_kanban_card_bottom">
                             <field name="activity_ids" widget="kanban_activity"/>
                         </div>
                     </div>
