@@ -401,7 +401,7 @@ class ProductTemplate(models.Model):
 
     def _compute_website_url(self):
         super(ProductTemplate, self)._compute_website_url()
-        for product in self:
+        for product in self.with_context(prefetch_fields=False):
             if product.id:
                 product.website_url = "/shop/%s" % slug(product)
 

@@ -456,7 +456,7 @@ class ProductProduct(models.Model):
 
         # Prefetch the fields used by the `name_get`, so `browse` doesn't fetch other fields
         # Use `load=False` to not call `name_get` for the `product_tmpl_id`
-        self.sudo().read(['name', 'default_code', 'product_tmpl_id'], load=False)
+        self.sudo().with_context(prefetch_fields=False).read(['name', 'default_code', 'product_tmpl_id'], load=False)
 
         product_template_ids = self.sudo().mapped('product_tmpl_id').ids
 
@@ -467,7 +467,7 @@ class ProductProduct(models.Model):
             ])
             # Prefetch the fields used by the `name_get`, so `browse` doesn't fetch other fields
             # Use `load=False` to not call `name_get` for the `product_tmpl_id` and `product_id`
-            supplier_info.sudo().read(['product_tmpl_id', 'product_id', 'product_name', 'product_code'], load=False)
+            supplier_info.sudo().with_context(prefetch_fields=False).read(['product_tmpl_id', 'product_id', 'product_name', 'product_code'], load=False)
             supplier_info_by_template = {}
             for r in supplier_info:
                 supplier_info_by_template.setdefault(r.product_tmpl_id, []).append(r)

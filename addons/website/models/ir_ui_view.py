@@ -369,7 +369,7 @@ class View(models.Model):
 
         self = self.sudo()
 
-        if self.visibility and not request.env.user.has_group('website.group_website_designer'):
+        if self.with_context(prefetch_fields=False).visibility and not request.env.user.has_group('website.group_website_designer'):
             if (self.visibility == 'connected' and request.website.is_public_user()):
                 error = werkzeug.exceptions.Forbidden()
             elif self.visibility == 'password' and \

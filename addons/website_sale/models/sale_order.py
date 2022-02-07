@@ -36,7 +36,7 @@ class SaleOrder(models.Model):
 
     @api.depends('order_line.product_uom_qty', 'order_line.product_id')
     def _compute_cart_info(self):
-        for order in self:
+        for order in self.with_context(prefetch_fields=False):
             order.cart_quantity = int(sum(order.mapped('website_order_line.product_uom_qty')))
             order.only_services = all(l.product_id.type in ('service', 'digital') for l in order.website_order_line)
 

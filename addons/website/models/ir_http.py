@@ -154,7 +154,7 @@ class Http(models.AbstractModel):
             website_page, template = response._cached_page, response._cached_template
 
         view = template and request.env['website'].get_template(template)
-        if view and view.track:
+        if view and view.with_context(prefetch_fields=False).track:
             request.env['website.visitor']._handle_webpage_dispatch(response, website_page)
 
         return False
