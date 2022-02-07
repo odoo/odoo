@@ -31,22 +31,6 @@ class CustomerPortal(portal.CustomerPortal):
 
         return values
 
-    def _prepare_quotations_domain(self, partner):
-        return [
-            ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
-            ('state', 'in', ['sent', 'cancel'])
-        ]
-
-    def _prepare_orders_domain(self, partner):
-        return [
-            ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
-            ('state', 'in', ['sale', 'done'])
-        ]
-
-    #
-    # Quotations and Sales Orders
-    #
-
     def _get_sale_searchbar_sortings(self):
         return {
             'date': {'label': _('Order Date'), 'order': 'date_order desc'},
@@ -54,88 +38,67 @@ class CustomerPortal(portal.CustomerPortal):
             'stage': {'label': _('Stage'), 'order': 'state'},
         }
 
-    @http.route(['/my/quotes', '/my/quotes/page/<int:page>'], type='http', auth="user", website=True)
-    def portal_my_quotes(self, page=1, date_begin=None, date_end=None, sortby=None, **kw):
-        values = self._prepare_portal_layout_values()
-        partner = request.env.user.partner_id
+    def _prepare_sale_portal_rendering_values(
+        self, page=1, date_begin=None, date_end=None, sortby=None, quotation_page=False, **kwargs
+    ):
         SaleOrder = request.env['sale.order']
 
-        domain = self._prepare_quotations_domain(partner)
-
-        searchbar_sortings = self._get_sale_searchbar_sortings()
-        # default sortby order
         if not sortby:
             sortby = 'date'
+
+        partner = request.env.user.partner_id
+        values = self._prepare_portal_layout_values()
+
+        domain = [
+            ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
+        ]
+
+        if quotation_page:
+            url = "/my/quotes"
+            domain += [('state', 'in', ['sent', 'cancel'])]
+        else:
+            url = "/my/orders"
+            domain += [('state', 'in', ['sale', 'done'])]
+
+        searchbar_sortings = self._get_sale_searchbar_sortings()
+
         sort_order = searchbar_sortings[sortby]['order']
 
         if date_begin and date_end:
             domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
 
-        # count for pager
-        quotation_count = SaleOrder.search_count(domain)
-        # make pager
         pager = portal_pager(
-            url="/my/quotes",
-            url_args={'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby},
-            total=quotation_count,
+            url=url,
+            total=SaleOrder.search_count(domain),
             page=page,
-            step=self._items_per_page
+            step=self._items_per_page,
+            url_args={'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby},
         )
-        # search the count to display, according to the pager data
-        quotations = SaleOrder.search(domain, order=sort_order, limit=self._items_per_page, offset=pager['offset'])
-        request.session['my_quotations_history'] = quotations.ids[:100]
+        orders = SaleOrder.search(domain, order=sort_order, limit=self._items_per_page, offset=pager['offset'])
 
         values.update({
             'date': date_begin,
-            'quotations': quotations.sudo(),
-            'page_name': 'quote',
+            'quotations': orders.sudo() if quotation_page else SaleOrder,
+            'orders': orders.sudo() if not quotation_page else SaleOrder,
+            'page_name': 'quote' if quotation_page else 'order',
             'pager': pager,
-            'default_url': '/my/quotes',
+            'default_url': url,
             'searchbar_sortings': searchbar_sortings,
             'sortby': sortby,
         })
+
+        return values
+
+    @http.route(['/my/quotes', '/my/quotes/page/<int:page>'], type='http', auth="user", website=True)
+    def portal_my_quotes(self, **kwargs):
+        values = self._prepare_sale_portal_rendering_values(quotation_page=True, **kwargs)
+        request.session['my_quotations_history'] = values['quotations'].ids[:100]
         return request.render("sale.portal_my_quotations", values)
 
     @http.route(['/my/orders', '/my/orders/page/<int:page>'], type='http', auth="user", website=True)
-    def portal_my_orders(self, page=1, date_begin=None, date_end=None, sortby=None, **kw):
-        values = self._prepare_portal_layout_values()
-        partner = request.env.user.partner_id
-        SaleOrder = request.env['sale.order']
-
-        domain = self._prepare_orders_domain(partner)
-
-        searchbar_sortings = self._get_sale_searchbar_sortings()
-        # default sortby order
-        if not sortby:
-            sortby = 'date'
-        sort_order = searchbar_sortings[sortby]['order']
-
-        if date_begin and date_end:
-            domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
-
-        # count for pager
-        order_count = SaleOrder.search_count(domain)
-        # pager
-        pager = portal_pager(
-            url="/my/orders",
-            url_args={'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby},
-            total=order_count,
-            page=page,
-            step=self._items_per_page
-        )
-        # content according to pager
-        orders = SaleOrder.search(domain, order=sort_order, limit=self._items_per_page, offset=pager['offset'])
-        request.session['my_orders_history'] = orders.ids[:100]
-
-        values.update({
-            'date': date_begin,
-            'orders': orders.sudo(),
-            'page_name': 'order',
-            'pager': pager,
-            'default_url': '/my/orders',
-            'searchbar_sortings': searchbar_sortings,
-            'sortby': sortby,
-        })
+    def portal_my_orders(self, **kwargs):
+        values = self._prepare_sale_portal_rendering_values(quotation_page=False, **kwargs)
+        request.session['my_orders_history'] = values['orders'].ids[:100]
         return request.render("sale.portal_my_orders", values)
 
     @http.route(['/my/orders/<int:order_id>'], type='http', auth="public", website=True)
