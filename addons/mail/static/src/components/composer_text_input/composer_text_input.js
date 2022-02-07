@@ -145,7 +145,7 @@ export class ComposerTextInput extends Component {
         }
         if (this.composerView.composer.isLastStateChangeProgrammatic) {
             this._textareaRef.el.value = this.composerView.composer.textInputContent;
-            if (this.composerView.hasFocus) {
+            if (this.composerView.isFocused) {
                 this._textareaRef.el.setSelectionRange(
                     this.composerView.composer.textInputCursorStart,
                     this.composerView.composer.textInputCursorEnd,
@@ -189,7 +189,7 @@ export class ComposerTextInput extends Component {
         if (!this.composerView) {
             return;
         }
-        this.composerView.update({ hasFocus: true });
+        this.composerView.update({ isFocused: true });
     }
 
     /**
@@ -200,7 +200,7 @@ export class ComposerTextInput extends Component {
             return;
         }
         this.saveStateInStore();
-        this.composerView.update({ hasFocus: false });
+        this.composerView.update({ isFocused: false });
     }
 
     /**
