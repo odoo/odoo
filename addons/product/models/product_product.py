@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
+from operator import itemgetter
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError
@@ -168,9 +169,35 @@ class ProductProduct(models.Model):
         self.env.cr.execute("CREATE UNIQUE INDEX IF NOT EXISTS product_product_combination_unique ON %s (product_tmpl_id, combination_indices) WHERE active is true"
             % self._table)
 
-    _sql_constraints = [
-        ('barcode_uniq', 'unique(barcode)', "A barcode can only be assigned to one product !"),
-    ]
+    @api.constrains("barcode")
+    def _check_barcode_unique(self):
+
+        # Collect `product.product.id` of objects that share a barcode with any of those in `self`,
+        # and group them by barcode.
+        candidate_duplicates = self.env['product.product'].sudo().read_group(
+            domain=[("barcode", "in", list(set(product.barcode for product in self if product.barcode)))],
+            fields=['ids:array_agg(id)', 'barcode'],
+            groupby=['barcode']
+        )
+
+        # Keep only barcodes that match more than one `product.product` object.
+        duplicates = [candidate for candidate in candidate_duplicates if candidate['barcode_count'] > 1]
+        if duplicates:
+            # Prepare a mapping of "{ `product.barcode`: [`product.display_name`, ... ] }" to show the user.
+            duplicates_joined = {dup['barcode']: ', '.join(
+                sorted([product.display_name for product in
+                        self.env['product.product'].browse(dup['ids'])])
+            ) for dup in sorted(duplicates, key=itemgetter('barcode'))}
+
+            # Transform the mapping into a prettified string and raise.
+            duplicates_as_str = "\n".join(
+                f"Barcode \"{barcode}\" already assigned to product(s): {products}"
+                for barcode, products in duplicates_joined.items()
+            )
+
+            raise ValidationError(
+                "Barcode(s) already assigned:\n\n{duplicates}".format(duplicates=duplicates_as_str)
+            )
 
     @api.constrains('barcode')
     def _check_barcode_uniqueness(self):
