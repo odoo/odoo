@@ -91,17 +91,17 @@ class AccountMove(models.Model):
             if base_vat_reduced:
                 qr_code_str += f"I3:{base_vat_reduced['base']}*"
                 qr_code_str += f"I4:{base_vat_reduced['vat']}*"
-                amount_total += float(base_vat_reduced['base'])
+                amount_total += float(base_vat_reduced['base']) + float(base_vat_reduced['vat'])
                 amount_tax += float(base_vat_reduced['vat'])
             if base_vat_intermediate:
                 qr_code_str += f"I5:{base_vat_intermediate['base']}*"
                 qr_code_str += f"I6:{base_vat_intermediate['vat']}*"
-                amount_total += float(base_vat_intermediate['base'])
+                amount_total += float(base_vat_intermediate['base']) + float(base_vat_intermediate['vat'])
                 amount_tax += float(base_vat_intermediate['vat'])
             if base_vat_normal:
                 qr_code_str += f"I7:{base_vat_normal['base']}*"
                 qr_code_str += f"I8:{base_vat_normal['vat']}*"
-                amount_total += float(base_vat_normal['base'])
+                amount_total += float(base_vat_normal['base']) + float(base_vat_normal['vat'])
                 amount_tax += float(base_vat_normal['vat'])
             qr_code_str += f"N:{float_repr(amount_tax, record.company_id.currency_id.decimal_places)}*"
             qr_code_str += f"O:{float_repr(amount_total, record.company_id.currency_id.decimal_places)}*"
