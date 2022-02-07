@@ -585,6 +585,8 @@ class ResCompany(models.Model):
         return account
 
     def _guess_chart_of_account(self):
+        if not self.country_id:
+            return 'generic_coa'
         return CHART_TEMPLATES_COUNTRY.get(self.country_id.get_metadata()[0]['xmlid'], 'generic_coa')
 
     def existing_accounting(self):
