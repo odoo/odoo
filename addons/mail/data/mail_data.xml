@@ -262,7 +262,7 @@
     <!-- CONTENT -->
     <tr>
         <td style="padding: 0">
-            <t t-raw="message.body"/>
+            <t t-raw="message.body or rendered_body"/>
             <div t-if="is_online and not record._context.get('proforma')" style="margin: 32px 0px 32px 0px; text-align: center;">
                 <a t-att-href="access_url"
                     style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">

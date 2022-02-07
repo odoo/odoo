@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import logging
 import ast
 import base64
 import re
@@ -8,6 +9,7 @@ import re
 from odoo import _, api, fields, models, tools
 from odoo.exceptions import UserError
 
+_logger = logging.getLogger(__name__)
 
 # main mako-like expression pattern
 EXPRESSION_PATTERN = re.compile('(\$\{.+?\})')
@@ -274,15 +276,6 @@ class MailComposer(models.TransientModel):
         rendered_values = {}
         mass_mail_mode = self.composition_mode == 'mass_mail'
 
-        # render all template-based value at once
-        if mass_mail_mode and self.model:
-            rendered_values = self.render_message(res_ids)
-        # compute alias-based reply-to in batch
-        reply_to_value = dict.fromkeys(res_ids, None)
-        if mass_mail_mode and not self.no_auto_thread:
-            records = self.env[self.model].browse(res_ids)
-            reply_to_value = records._notify_get_reply_to(default=self.email_from)
-
         blacklisted_rec_ids = set()
         if mass_mail_mode and issubclass(type(self.env[self.model]), self.pool['mail.thread.blacklist']):
             self.env['mail.blacklist'].flush(['email'])
@@ -320,10 +313,14 @@ class MailComposer(models.TransientModel):
                 if self.auto_delete or self.template_id.auto_delete:
                     mail_values['auto_delete'] = True
                 # rendered values using template
+                if mass_mail_mode and self.model:
+                    rendered_values = self.render_message(res_ids, mail_values.copy())
                 email_dict = rendered_values[res_id]
                 mail_values['partner_ids'] += email_dict.pop('partner_ids', [])
                 mail_values.update(email_dict)
                 if not self.no_auto_thread:
+                    # compute alias-based reply-to in batch
+                    reply_to_value = record._notify_get_reply_to(default=self.email_from)
                     mail_values.pop('reply_to')
                     if reply_to_value.get(res_id):
                         mail_values['reply_to'] = reply_to_value[res_id]
@@ -434,7 +431,7 @@ class MailComposer(models.TransientModel):
     # RENDERING
     # ------------------------------------------------------------
 
-    def render_message(self, res_ids):
+    def render_message(self, res_ids, mail_values):
         """Generate template-based values of wizard, for the document records given
         by res_ids. This method is meant to be inherited by email_template that
         will produce a more complete dictionary, using Jinja2 templates.
@@ -460,7 +457,26 @@ class MailComposer(models.TransientModel):
             res_ids = [res_ids]
 
         subjects = self.env['mail.render.mixin']._render_template(self.subject, self.model, res_ids)
-        bodies = self.env['mail.render.mixin']._render_template(self.body, self.model, res_ids, post_process=True)
+        if self._context.get('custom_layout'):
+            template_xmlid = self._context.get('custom_layout') or 'mail.message_notification_email'
+            try:
+                base_template = self.env.ref(template_xmlid, raise_if_not_found=True)
+            except ValueError:
+                _logger.warning('QWeb template %s not found when sending notification emails. Sending without layouting.' % (template_xmlid))
+                base_template = False
+            bodies = {}
+            for res_id in res_ids:
+                mail_values['record'] = self.env[self.model].browse(res_id).sudo()
+                mail_values['message'] = self.env['mail.mail']
+                mail_values['company'] = self.env.user.company_id
+                mail_values['signature'] = ''
+                mail_values['actions'] = []
+                mail_values['subtype'] = self.subtype_id
+                mail_values['rendered_body'] = self.env['mail.render.mixin']._render_template(self.body, self.model, [res_id], post_process=True)[res_id]
+                rendered_body = base_template._render(mail_values, engine='ir.qweb', minimal_qcontext=True)
+                bodies[res_id] = self.env['mail.render.mixin']._replace_local_links(rendered_body)
+        else:
+            bodies = self.env['mail.render.mixin']._render_template(self.body, self.model, res_ids, post_process=True)
         emails_from = self.env['mail.render.mixin']._render_template(self.email_from, self.model, res_ids)
         replies_to = self.env['mail.render.mixin']._render_template(self.reply_to, self.model, res_ids)
         default_recipients = {}
