@@ -15,7 +15,12 @@
                 <field name="qty_done" string="Quantity Done"/>
                 <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
                 <field name="company_id" groups="base.group_multi_company" force_save="1"/>
-                <field name="state" widget='badge' decoration-success="state == 'done'" decoration-info="state not in ('done', 'cancel')"/>
+                <field name="state" widget='badge' optional="show"
+                       decoration-danger="state=='cancel'"
+                       decoration-info="state== 'assigned'"
+                       decoration-muted="state == 'draft'"
+                       decoration-success="state == 'done'"
+                       decoration-warning="state not in ('draft','cancel','done','assigned')"/>
             </tree>
         </field>
     </record>
@@ -36,7 +41,12 @@
                 <field name="qty_done" string="Quantity Done" optional="hide"/>
                 <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" optional="hide" string="Unit of Measure" groups="uom.group_uom"/>
                 <field name="company_id" groups="base.group_multi_company" force_save="1" optional="hide"/>
-                <field name="state" widget='badge' decoration-success="state == 'done'" decoration-info="state not in ('done', 'cancel')"/>
+                <field name="state" widget='badge' optional="show"
+                       decoration-danger="state=='cancel'"
+                       decoration-info="state== 'assigned'"
+                       decoration-muted="state == 'draft'"
+                       decoration-success="state == 'done'"
+                       decoration-warning="state not in ('draft','cancel','done','assigned')"/>
             </tree>
         </field>
     </record>
