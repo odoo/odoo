@@ -751,7 +751,7 @@ var ActivityException = AbstractField.extend({
         if (this.value) {
             this.$el.attr({
                 title: _t('This record has an exception activity.'),
-                class: "pull-right mt-1 text-" + this.value + " fa " + this.recordData.activity_exception_icon
+                class: "float-end mt-1 text-" + this.value + " fa " + this.recordData.activity_exception_icon
             });
         }
     }

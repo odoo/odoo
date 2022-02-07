@@ -37,7 +37,7 @@
 <t t-name="group_add_item">
     <t t-set="empty" t-value="Object.keys(context).length == 2"/>
 
-    <div t-attf-class="o_field_x2many_list_row_add #{empty? 'd-block w-100' : 'd-inline pull-right'}">
+    <div t-attf-class="o_field_x2many_list_row_add #{empty? 'd-block w-100' : 'd-inline float-end'}">
         <div t-if="empty" class="o_resume_empty_helper o_horizontal_separator text-muted my-0">
             <em>Resumé empty</em>
         </div>
