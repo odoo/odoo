@@ -271,7 +271,7 @@ class AuthorizeAPI:
     def capture(self, transaction_id, amount):
         """Capture a previously authorized payment for the given amount.
 
-        Capture a previsouly authorized payment. Note that the amount is required
+        Capture a previously authorized payment. Note that the amount is required
         even though we do not support partial capture.
 
         :param str transaction_id: id of the authorized transaction in the
