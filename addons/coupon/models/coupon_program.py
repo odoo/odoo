@@ -133,16 +133,20 @@ class CouponProgram(models.Model):
             return True
 
     def _is_valid_product(self, product):
-        # NOTE: if you override this method, think of also overriding _get_valid_products
-        # we also encourage the use of _get_valid_products as its execution is faster
-        if self.rule_products_domain:
-            domain = ast.literal_eval(self.rule_products_domain) + [('id', '=', product.id)]
-            return bool(self.env['product.product'].search_count(domain))
-        else:
-            return True
+        """Check if the given product is valid for the program.
+
+        :param product: record of product.product
+        :rtype: bool
+        """
+        return bool(self._get_valid_products(product))
 
     def _get_valid_products(self, products):
-        if self.rule_products_domain:
+        """Get valid products for the program.
+
+        :param products: records of product.product
+        :return: valid products recordset
+        """
+        if self.rule_products_domain and self.rule_products_domain != "[]":
             domain = ast.literal_eval(self.rule_products_domain)
             return products.filtered_domain(domain)
         return products
