@@ -7,9 +7,15 @@
     <field name="inherit_id" ref="product.product_template_form_view"/>
     <field name="arch" type="xml">
 	       <xpath expr="//group[@name='group_lots_and_weight']" position="inside">
-            <field name="hs_code"/>
-            <field name="country_of_origin"/>
-        </xpath>
+               <label for="hs_code"/>
+               <div class="o_row" name="hs_code">
+                   <field name="hs_code" string="HS Code"/><div/>
+               </div>
+               <label for="country_of_origin"/>
+               <div class="o_row" name="country_of_origin">
+                   <field name="country_of_origin"/><div/>
+               </div>
+           </xpath>
     </field>
 </record>
 

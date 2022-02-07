@@ -120,12 +120,12 @@
                                     <label for="weight" attrs="{'invisible':[('product_variant_count', '>', 1), ('is_product_variant', '=', False)]}"/>
                                     <div class="o_row" name="weight" attrs="{'invisible':[('product_variant_count', '>', 1), ('is_product_variant', '=', False)]}">
                                         <field name="weight"/>
-                                        <span><field name="weight_uom_name"/></span>
+                                        <field name="weight_uom_name"/>
                                     </div>
                                     <label for="volume" attrs="{'invisible':[('product_variant_count', '>', 1), ('is_product_variant', '=', False)]}"/>
                                     <div class="o_row" name="volume" attrs="{'invisible':[('product_variant_count', '>', 1), ('is_product_variant', '=', False)]}">
                                         <field name="volume" string="Volume"/>
-                                        <span><field name="volume_uom_name"/></span>
+                                        <field name="volume_uom_name"/>
                                     </div>
                                 </group>
                             </group>
