@@ -16,7 +16,13 @@ class TestPurchaseOrder(AccountingTestCase):
         self.PurchaseOrderLine = self.env['purchase.order.line']
         self.AccountInvoice = self.env['account.invoice']
         self.AccountInvoiceLine = self.env['account.invoice.line']
+        self.demo_user = self.env.ref('base.user_demo')
+        self.ProductProduct = self.env['product.product']
         self.partner_id = self.env.ref('base.res_partner_1')
+        self.partner2_id = self.env.ref('base.res_partner_2')
+        self.partner3_id = self.env.ref('base.res_partner_3')
+        self.location_stock = self.env.ref('stock.stock_location_stock')
+        self.location_customers = self.env.ref('stock.stock_location_customers')
         self.product_id_1 = self.env.ref('product.product_product_8')
         self.product_id_2 = self.env.ref('product.product_product_11')
 
@@ -157,3 +163,74 @@ class TestPurchaseOrder(AccountingTestCase):
         self.invoice.invoice_line_ids[1].quantity = 2.0
         self.invoice.invoice_validate()
         self.assertEqual(self.po.order_line.mapped('qty_invoiced'), [3.0, 3.0], 'Purchase: Billed quantity should be 3.0')
+
+    def test_03_mto(self):
+        """
+        Test the creation of the PO upon SO confirmation and the activity creation
+        upon delivery order cancellation
+        """
+        # Partners:
+        vendor1 = self.partner3_id
+        customer1 = self.partner2_id
+        user1 = self.demo_user
+        # Routes:
+        warehouse = self.env.ref('stock.warehouse0')
+        route_mto = warehouse.mto_pull_id.route_id.id
+        route_buy = self.env.ref('purchase.route_warehouse0_buy').id
+        
+        # Create products:
+        self.prod_tp1 = self.ProductProduct.create({
+            'name': 'Test Product 1',
+            'type': 'product',
+            'list_price': 150.0,
+            'responsible_id': user1.id,
+            'produce_delay': 5.0,
+            'route_ids': [(6, 0, [route_buy, route_mto])],
+            'seller_ids': [(0, 0, {'name': vendor1.id, 'price': 20.0})],
+        })
+        # Create delivery
+        picking_cust = self.env['stock.picking'].create({
+            'location_id': self.location_stock.id,
+            'location_dest_id': self.location_customers.id,
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+        })
+        delivery_move = self.env['stock.move'].create({
+            'name': 'Test delivery',
+            'location_id': self.location_stock.id,
+            'location_dest_id': self.location_customers.id,
+            'product_id': self.prod_tp1.id,
+            'product_uom': self.prod_tp1.uom_id.id,
+            'product_uom_qty': 1.0,
+            'picking_id': picking_cust.id,
+        })
+        picking_cust.action_confirm()
+        # Create Procurement:
+        self.env['procurement.group'].run(
+            self.prod_tp1,
+            1.0,
+            self.prod_tp1.uom_id,
+            self.location_stock,
+            "Manual Proc",
+            "Manual Proc",
+            {
+            'date_planned': datetime.now(),
+            'warehouse_id': warehouse,
+            'orderpoint_id': False,
+            'company_id': self.env.user.company_id,
+            'group_id': False,
+        }
+        )
+        # Test the PO is created for the product
+        pol = self.env["purchase.order.line"].search([("product_id", "=", self.prod_tp1.id)])
+        self.assertEquals(len(pol), 1)
+        # Attach the delivery to the procurement
+        pol.order_id.button_approve()
+        # Link and Cancel the delivery
+        pol.order_id.picking_ids.move_lines.write({'move_dest_ids': delivery_move})        
+        delivery_move.write({"created_purchase_line_id": pol.id})
+        delivery_move._action_cancel()
+        # Check the activity
+        activity =  self.env["mail.activity"].search(
+            [("res_id", "=", pol.order_id.id),
+            ("res_model_id", "=", self.env.ref('purchase.model_purchase_order').id)])
+        self.assertEquals(activity.user_id, user1)

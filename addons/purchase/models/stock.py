@@ -69,6 +69,15 @@ class StockMove(models.Model):
         super(StockMove, self)._clean_merged()
         self.write({'created_purchase_line_id': False})
 
+    def _prepare_activity_vals(self, move, activity_type_id):
+        return {
+            'activity_type_id': activity_type_id,
+            'note': _('A sale order that generated this purchase order has been deleted. Check if an action is needed.'),
+            'user_id': move.created_purchase_line_id.product_id.responsible_id.id,
+            'res_id': move.created_purchase_line_id.order_id.id,
+            'res_model_id': self.env.ref('purchase.model_purchase_order').id,
+        }
+
     def _action_cancel(self):
         for move in self:
             if move.created_purchase_line_id:
@@ -76,13 +85,8 @@ class StockMove(models.Model):
                     activity_type_id = self.env.ref('mail.mail_activity_data_todo').id
                 except ValueError:
                     activity_type_id = False
-                self.env['mail.activity'].sudo().create({
-                    'activity_type_id': activity_type_id,
-                    'note': _('A sale order that generated this purchase order has been deleted. Check if an action is needed.'),
-                    'user_id': move.created_purchase_line_id.product_id.responsible_id.id,
-                    'res_id': move.created_purchase_line_id.order_id.id,
-                    'res_model_id': self.env.ref('purchase.model_purchase_order').id,
-                })
+                activity_vals = self._prepare_activity_vals(move, activity_type_id)
+                self.env['mail.activity'].sudo().create(activity_vals)
         return super(StockMove, self)._action_cancel()
 
 
