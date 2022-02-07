@@ -162,6 +162,13 @@ class StockPicking(models.Model):
 
         return super(StockPicking, self)._log_less_quantities_than_expected(moves)
 
+    def _needs_automatic_assign(self):
+        self.ensure_one()
+        if self.sale_id:
+            return False
+        return super()._needs_automatic_assign()
+
+
 class ProductionLot(models.Model):
     _inherit = 'stock.production.lot'
 
