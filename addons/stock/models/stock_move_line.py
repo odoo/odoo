@@ -29,6 +29,7 @@ class StockMoveLine(models.Model):
     product_id = fields.Many2one('product.product', 'Product', ondelete="cascade", check_company=True, domain="[('type', '!=', 'service'), '|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     product_uom_id = fields.Many2one('uom.uom', 'Unit of Measure', required=True, domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
+    product_category_name = fields.Char(related="product_id.categ_id.complete_name", store=True, string="Product Category")
     reserved_qty = fields.Float(
         'Real Reserved Quantity', digits=0, copy=False,
         compute='_compute_reserved_qty', inverse='_set_product_qty', store=True)
