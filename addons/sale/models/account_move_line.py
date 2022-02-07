@@ -74,7 +74,7 @@ class AccountMoveLine(models.Model):
             if not sale_order:
                 continue
 
-            # raise if the sale order is not currenlty open
+            # raise if the sale order is not currently open
             if sale_order.state != 'sale':
                 message_unconfirmed = _('The Sales Order %s linked to the Analytic Account %s must be validated before registering expenses.')
                 messages = {

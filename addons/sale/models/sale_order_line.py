@@ -21,13 +21,13 @@ class SaleOrderLine(models.Model):
         """
         Compute the invoice status of a SO line. Possible statuses:
         - no: if the SO is not in status 'sale' or 'done', we consider that there is nothing to
-          invoice. This is also hte default value if the conditions of no other status is met.
+          invoice. This is also the default value if the conditions of no other status is met.
         - to invoice: we refer to the quantity to invoice of the line. Refer to method
           `_compute_qty_to_invoice()` for more information on how this quantity is calculated.
         - upselling: this is possible only for a product invoiced on ordered quantities for which
           we delivered more than expected. The could arise if, for example, a project took more
           time than expected but we decided not to invoice the extra cost to the client. This
-          occurs onyl in state 'sale', so that when a SO is set to done, the upselling opportunity
+          occurs only in state 'sale', so that when a SO is set to done, the upselling opportunity
           is removed from the list.
         - invoiced: the quantity invoiced is larger or equal to the quantity ordered.
         """
@@ -611,7 +611,7 @@ class SaleOrderLine(models.Model):
 
     def _prepare_procurement_values(self, group_id=False):
         """ Prepare specific key for moves or other components that will be created from a stock rule
-        comming from a sale order line. This method could be override in order to add other custom key that could
+        coming from a sale order line. This method could be override in order to add other custom key that could
         be used in move/po creation.
         """
         return {}
@@ -768,7 +768,7 @@ class SaleOrderLine(models.Model):
 
     def _check_line_unlink(self):
         """
-        Check wether a line can be deleted or not.
+        Check whether a line can be deleted or not.
 
         Lines cannot be deleted if the order is confirmed; downpayment
         lines who have not yet been invoiced bypass that exception.

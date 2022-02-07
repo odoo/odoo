@@ -1001,7 +1001,7 @@ class SaleOrder(models.Model):
         self.write({'state': 'sale'})
 
     def _action_confirm(self):
-        """ Implementation of additionnal mecanism of Sales Order confirmation.
+        """ Implementation of additional mechanism of Sales Order confirmation.
             This method should be extended when the confirmation should generated
             other documents. In this method, the SO are in 'sale' state (not yet 'done').
         """

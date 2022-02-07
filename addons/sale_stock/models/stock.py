@@ -115,7 +115,7 @@ class StockPicking(models.Model):
 
     def _log_less_quantities_than_expected(self, moves):
         """ Log an activity on sale order that are linked to moves. The
-        note summarize the real proccessed quantity and promote a
+        note summarize the real processed quantity and promote a
         manual action.
 
         :param dict moves: a dict with a move as key and tuple with
