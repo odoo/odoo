@@ -440,11 +440,11 @@ class IrMailServer(models.Model):
         If "mail.catchall.domain" is not set, return None.
 
         '''
-        get_param = self.env['ir.config_parameter'].sudo().get_param
-        postmaster = get_param('mail.bounce.alias', default='postmaster-odoo')
-        domain = get_param('mail.catchall.domain')
-        if postmaster and domain:
-            return '%s@%s' % (postmaster, domain)
+        ICP = self.env['ir.config_parameter'].sudo()
+        bounce_alias = ICP.get_param('mail.bounce.alias')
+        domain = ICP.get_param('mail.catchall.domain')
+        if bounce_alias and domain:
+            return '%s@%s' % (bounce_alias, domain)
         return
 
     @api.model
