@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 
-from odoo import api, models, _, Command
-from odoo.http import request
+from odoo import models, _, Command
 from odoo.modules import get_resource_path
 from odoo.addons.base.models.ir_translation import IrTranslationImport
 import csv
 import ast
-from collections import defaultdict
+from collections import defaultdict, OrderedDict
 
 import logging
 
@@ -59,15 +58,13 @@ _logger = logging.getLogger(__name__)
                 created_models.add(model)
                 to_delay = defaultdict(dict)
                 for xml_id, vals in data.items():
-                    for field_name, value in list(vals.items()):
-                        if field_name in self.env[model]._fields:
-                            field = self.env[model]._fields[field_name]
-                            if (
-                                field.relational
-                                and field.comodel_name not in created_models
-                                and field.comodel_name in dict(all_data)
-                            ):
-                                to_delay[xml_id][field_name] = vals.pop(field_name)
+                    for field_name in vals:
+                        field = self.env[model]._fields.get(field_name, None)
+                        if (field and
+                            field.relational and
+                            field.comodel_name not in created_models and
+                            field.comodel_name in dict(all_data)):
+                            to_delay[xml_id][field_name] = vals.pop(field_name)
                 if any(to_delay.values()):
                     all_data.append((model, to_delay))
                 yield model, data
@@ -122,23 +119,25 @@ _logger = logging.getLogger(__name__)
 
         cid = self.env.company.id
         try:
-            with open(get_resource_path('account', 'data', 'template', module, file_name), 'r+') as fp:
+            path = get_resource_path('account', 'data', 'template', module, file_name)
+            with open(path, 'r', encoding="utf-8") as csv_file:
                 return {
-                    f"{cid}_{r['id']}": sanitize_csv(self.env['.'.join(file_name.split('.')[:-1])], r)
-                    for r in csv.DictReader(fp)
+                    f"{cid}_{data['id']}": sanitize_csv(self.env['.'.join(file_name.split('.')[:-1])], data)
+                    for data in csv.DictReader(csv_file)
                 }
-        except OSError:
+        except OSError as e:
+            _logger.warning("Error reading CSV file %s: %s", path, e)
             return {}
 
     def _get_chart_template_data(self):
-        return {
-            'account.account': self._get_account_account(),
-            'account.group': self._get_account_group(),
-            'account.journal': self._get_account_journal(),
-            'res.company': self._get_res_company(),
-            'account.tax.group': self._get_tax_group(),
-            'account.tax': self._get_account_tax(),
-        }
+        return OrderedDict([
+            ('account.account', self._get_account_account()),
+            ('account.group', self._get_account_group()),
+            ('account.journal', self._get_account_journal()),
+            ('res.company', self._get_res_company()),
+            ('account.tax.group', self._get_tax_group()),
+            ('account.tax', self._get_account_tax()),
+        ])
 
 
     def _get_account_account(self):
