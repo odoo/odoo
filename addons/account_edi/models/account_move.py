@@ -634,6 +634,41 @@ class AccountMove(models.Model):
         self.edi_document_ids.write({'error': False, 'blocking_level': False})
         self.action_process_edi_web_services()
 
+    ####################################################
+    # Mailing
+    ####################################################
+
+    def _mail_generate_template_attachments(self, mail_template):
+        """ Add Edi attachments to templates. """
+        result = super()._mail_generate_template_attachments(mail_template)
+        for record in self:
+            for edi_doc in record.edi_document_ids:
+                attachments = record._get_edi_attachments(doc)
+                result[record.id]['attachment_ids'] += attachments.get('attachment_ids', [])
+                result[record.id]['attachments'] += attachments.get('attachments', [])
+        return result
+
+    def _get_edi_attachments(self, document):
+        """
+        Will either return the information about the attachment of the edi document for adding the attachment in the
+        mail, or the attachment id to be linked to the 'send & print' wizard.
+        Can be overridden where e.g. a zip-file needs to be sent with the individual files instead of the entire zip
+        IMPORTANT:
+        * If the attachment's id is returned, no new attachment will be created, the existing one on the move is linked
+        to the wizard (see _onchange_template_id in mail.compose.message).
+        * If the attachment's content is returned, a new one is created and linked to the wizard. Thus, when sending
+        the mail (clicking on 'send & print' in the wizard), a new attachment is added to the move (see
+        _action_send_mail in mail.compose.message).
+        :param document: an edi document
+        :return: dict:
+            {'attachments': tuple with the name and base64 content of the attachment}
+            OR
+            {'attachment_ids': list containing the id of the attachment}
+        """
+        if not document.attachment_id:
+            return {}
+        return {'attachment_ids': [document.attachment_id.id]}
+
 
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'

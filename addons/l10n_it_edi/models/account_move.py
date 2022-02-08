@@ -3,8 +3,8 @@
 from odoo import models
 
 
-class MailTemplate(models.Model):
-    _inherit = "mail.template"
+class AccountMove(models.Model):
+    _inherit = "account.move"
 
     def _get_edi_attachments(self, document):
         """

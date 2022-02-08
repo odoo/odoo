@@ -228,6 +228,13 @@ class MailTemplate(models.Model):
             elif 'attachments' in render_fields:
                 values['attachments'] = []
 
+        # hook for attachments-specific computation, used currently only for accounting
+        if 'attachments' in render_fields and '_mail_generate_template_attachments' in self.env[self.model]:
+            records_attachments = self.env[self.model].browse(res_ids)._mail_generate_template_attachments(self)
+            for res_id, attachments in records_attachments.items():
+                if attachments:
+                    render_results[res_id]['attachments'] += attachments
+
         return render_results
 
     def _generate_template(self, res_ids, render_fields):
