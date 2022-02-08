@@ -1,0 +1,25 @@
+<odoo>
+    <data>
+        <template id="tmpl_galaxy">
+            <p><t t-out="galaxy.name"/></p>
+            <ul>
+                <li t-foreach="stargates" t-as="gate">
+                    <a t-attf-href="/test_http/#{ galaxy.id }/#{ gate.id }">
+                        <t t-out="gate.name"/> (<t t-out="gate.sgc_designation"/>)
+                    </a>
+                </li>
+            </ul>
+        </template>
+
+        <template id="tmpl_stargate">
+            <dl>
+                <t t-if="gate.galaxy_id.id != 1">
+                    <dt>galaxy</dt><dd><t t-out="gate.galaxy_id.name"/></dd>
+                </t>
+                <t t-foreach="('name', 'address', 'sgc_designation')" t-as="field">
+                    <dt><t t-out="field"/></dt><dd><t t-out="gate[field]"/></dd>
+                </t>
+            </dl>
+        </template>
+    </data>
+</odoo>
