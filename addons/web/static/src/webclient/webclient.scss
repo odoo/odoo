@@ -131,6 +131,18 @@ $o-inline-spacers: map-merge($spacers, ('auto': auto));
   }
 }
 
+// == Float Classes
+//------------------------------------------------------------------------------
+// "Bootstrap v5 ready" utility-classes to float elements to the left or right.
+// These classes definitions can be safely removed after migrating to BTS v5.
+
+.float-start {
+  float: left !important;
+}
+.float-end {
+  float: right !important;
+}
+
 //== Badges
 .badge {
   min-width: $o-badge-min-width;

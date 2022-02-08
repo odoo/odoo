@@ -59,7 +59,7 @@ QUnit.module("Search", (hooks) => {
         await toggleFilterMenu(controlPanel);
         await toggleMenuItem(controlPanel, "Birthday");
         await toggleMenuItemOption(controlPanel, "Birthday", "January");
-        assert.containsOnce(controlPanel, "div.o_comparison_menu > button i.fa.fa-adjust");
+        assert.containsOnce(controlPanel, "div.o_comparison_menu > button i.oi.oi-contrast");
         assert.strictEqual(
             controlPanel.el
                 .querySelector("div.o_comparison_menu > button span")

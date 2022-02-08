@@ -213,7 +213,7 @@
                                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
                                     <field name="kanban_state" widget="state_selection" optional="hide"/>
                                     <field name="stage_id" optional="show"/>
-                                    <button name="action_open_task" type="object" title="View Task" string="View Task" class="btn btn-link pull-right"
+                                    <button name="action_open_task" type="object" title="View Task" string="View Task" class="btn btn-link float-end"
                                             context="{'form_view_ref': 'project.project_sharing_project_task_view_form'}"
                                             attrs="{'invisible': &quot;[('display_project_id', '!=', False), ('display_project_id', '!=', active_id)]&quot;}"/>
                                 </tree>
