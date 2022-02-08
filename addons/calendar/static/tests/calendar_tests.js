@@ -83,4 +83,67 @@ QUnit.module('calendar', {
 
         form.destroy();
     });
+
+    QUnit.test('many2manyattendee widget: long event rendering', async function (assert) {
+        assert.expect(13);
+        const longEventData = {
+            event: {
+                fields: {
+                    partner_ids: {string: "Partners", type: "many2many", relation: "partner"},
+                },
+                records: [{
+                    id: 14,
+                    partner_ids: [1, 2, 3, 4, 5, 6, 7, 8],
+                }],
+            },
+            partner: {
+                fields: {
+                    name: {string: "Name", type: "char"},
+                },
+                records: Array(8).fill(0).map((_, index) => {
+                    return {
+                        id: index + 1,
+                        name: `Test user ${index + 1}`
+                    }
+                })
+            },
+        };
+        const form = await createView({
+            View: FormView,
+            model: 'event',
+            data: longEventData,
+            res_id: 14,
+            arch:
+                `<form>
+                    <field name="partner_ids" widget="many2manyattendee" options="{'isPopover': True}"/>
+                </form>`,
+            mockRPC: function (route, args) {
+                if (args.method === 'get_attendee_detail') {
+                    return Promise.resolve(
+                        longEventData.partner.records.map(item => {
+                            return {
+                                id: item.id,
+                                name: item.name,
+                                status: 'accepted',
+                                color: 0
+                            }
+                        })
+                    );
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        const expandButton = form.$("div.show.multicollapse a[type='button']");
+        const collapseButton = form.$("div.multicollapse:not(.show) a[type='button']")
+        assert.containsN(form, '.o_field_widget[name="partner_ids"] .badge:not(.collapse)', 5,
+            "there should be 5 shown badges");
+        assert.containsN(form, '.o_field_widget[name="partner_ids"] .badge', 8, "there should be 8 badges in total");
+        assert.strictEqual(expandButton.text().trim(), "8 attendees");
+        assert.strictEqual(expandButton.parent().find('i').text().trim(), '8 accepted');
+        assert.strictEqual(collapseButton.text().trim(), "8 attendees");
+        form.$('.o_field_widget[name="partner_ids"] .badge').each((index, element) => {
+            assert.strictEqual($(element).text().trim(), longEventData.partner.records[index].name)
+        })
+    });
 });
