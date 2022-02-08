@@ -544,7 +544,7 @@ function formatTables($editable) {
             height = parent.style.getPropertyValue('height');
         }
         if (parent) {
-            parent.style.setProperty('height', '0');
+            parent.style.setProperty('height', $(parent).height());
         }
     }
     // Align self and justify content don't work on table cells.
