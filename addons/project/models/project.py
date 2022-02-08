@@ -9,7 +9,7 @@ from datetime import timedelta, datetime, time
 from random import randint
 
 from odoo import api, Command, fields, models, tools, SUPERUSER_ID, _, _lt
-from odoo.addons.rating.models.rating_data import RATING_LIMIT_OK
+from odoo.addons.rating.models import rating_data
 from odoo.exceptions import UserError, ValidationError, AccessError
 from odoo.osv.expression import OR, AND
 from odoo.tools.misc import get_lang
@@ -785,8 +785,14 @@ class Project(models.Model):
             'sequence': 3,
         }]
         if self.user_has_groups('project.group_project_rating'):
+            if self.rating_avg >= rating_data.RATING_AVG_TOP:
+                icon = 'smile-o text-success'
+            elif self.rating_avg >= rating_data.RATING_AVG_OK:
+                icon = 'meh-o text-warning'
+            else:
+                icon = 'frown-o text-danger'
             buttons.append({
-                'icon': 'smile-o',
+                'icon': icon,
                 'text': _lt('Satisfaction'),
                 'number': f'{round(100 * self.rating_avg_percentage, 2)} %',
                 'action_type': 'object',
@@ -2280,7 +2286,7 @@ class Task(models.Model):
     def rating_apply(self, rate, token=None, rating=None, feedback=None, subtype_xmlid=None):
         rating = super(Task, self).rating_apply(rate, token=token, rating=rating, feedback=feedback, subtype_xmlid=subtype_xmlid)
         if self.stage_id and self.stage_id.auto_validation_kanban_state:
-            kanban_state = 'done' if rating.rating >= RATING_LIMIT_OK else 'blocked'
+            kanban_state = 'done' if rating.rating >= rating_data.RATING_LIMIT_OK else 'blocked'
             self.write({'kanban_state': kanban_state})
         return rating
 
