@@ -42,6 +42,7 @@ class Note(models.Model):
 
     name = fields.Text(
         compute='_compute_name', string='Note Summary', store=True, readonly=False)
+    company_id = fields.Many2one('res.company')
     user_id = fields.Many2one('res.users', string='Owner', default=lambda self: self.env.uid)
     memo = fields.Html('Note Content')
     sequence = fields.Integer('Sequence')
