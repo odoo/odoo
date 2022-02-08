@@ -246,9 +246,16 @@ class AccountAccount(models.Model):
             FROM account_journal journal
             JOIN res_company company on journal.company_id = company.id
             LEFT JOIN account_payment_method_line apml ON journal.id = apml.journal_id
-            WHERE company.account_journal_payment_credit_account_id in %(accounts)s
-            OR company.account_journal_payment_debit_account_id in %(accounts)s
-            OR apml.payment_account_id in %(accounts)s
+            WHERE (
+                company.account_journal_payment_credit_account_id IN %(accounts)s
+                AND company.account_journal_payment_credit_account_id != journal.default_account_id
+                ) OR (
+                company.account_journal_payment_debit_account_id in %(accounts)s
+                AND company.account_journal_payment_debit_account_id != journal.default_account_id
+                ) OR (
+                apml.payment_account_id IN %(accounts)s
+                AND apml.payment_account_id != journal.default_account_id
+            )
         ''', {
             'accounts': tuple(accounts.ids),
         })
