@@ -720,7 +720,8 @@ class ExportXlsxWriter:
         # Write main header
         for i, fieldname in enumerate(self.field_names):
             self.write(0, i, fieldname, self.header_style)
-        self.worksheet.set_column(0, i, 30) # around 220 pixels
+        if self.field_names:
+            self.worksheet.set_column(0, i, 30) # around 220 pixels
 
     def close(self):
         self.workbook.close()
