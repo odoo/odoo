@@ -179,6 +179,7 @@ export class OdooEditor extends EventTarget {
         // --------------
 
         this.document = options.document || document;
+        this.isDestroyed = false;
 
         this.isMobile = matchMedia('(max-width: 767px)').matches;
         this.isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
@@ -348,6 +349,7 @@ export class OdooEditor extends EventTarget {
         this._resizeObserver.disconnect();
         clearInterval(this._snapshotInterval);
         this._pluginCall('destroy', []);
+        this.isDestroyed = true;
     }
 
     sanitize() {
