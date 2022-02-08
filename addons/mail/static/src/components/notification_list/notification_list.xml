@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.NotificationList" owl="1">
+        <div class="o_NotificationList" t-att-class="{ 'o-empty': notificationListView and notificationListView.notificationViews.length === 0 }" t-attf-class="{{ className }}" t-ref="root">
+            <t t-if="notificationListView">
+                <t t-if="notificationListView.notificationViews.length === 0">
+                    <div class="o_NotificationList_noConversation">
+                        No conversation yet...
+                    </div>
+                </t>
+                <t t-else="">
+                    <t t-foreach="notificationListView.notificationViews" t-as="notificationView" t-key="notificationView.localId">
+                        <t t-if="notificationView.constructor.name === 'ThreadPreviewView'">
+                            <ThreadPreview
+                                className="'o_NotificationList_preview'"
+                                classNameObj="{ 'o-mobile': messaging.device.isMobile }"
+                                localId="notificationView.localId"
+                            />
+                        </t>
+                        <t t-if="notificationView.constructor.name === 'ThreadNeedactionPreviewView'">
+                            <ThreadNeedactionPreview
+                                className="'o_NotificationList_preview'"
+                                classNameObj="{ 'o-mobile': messaging.device.isMobile }"
+                                localId="notificationView.localId"
+                            />
+                        </t>
+                        <t t-if="notificationView.constructor.name === 'NotificationGroupView'">
+                            <NotificationGroup
+                                className="'o_NotificationList_group'"
+                                localId="notificationView.localId"
+                            />
+                        </t>
+                        <t t-if="notificationView.constructor.name === 'NotificationRequestView'">
+                            <NotificationRequest
+                                className="'o_NotificationList_notificationRequest'"
+                                classNameObj="{ 'o-mobile': messaging.device.isMobile }"
+                                localId="notificationView.localId"
+                            />
+                        </t>
+                        <t t-if="!notificationView_last">
+                            <div class="o_NotificationList_separator"/>
+                        </t>
+                    </t>
+                </t>
+            </t>
+        </div>
+    </t>
+
+</templates>

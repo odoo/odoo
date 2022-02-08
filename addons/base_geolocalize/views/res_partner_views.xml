@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="view_crm_partner_geo_form" model="ir.ui.view">
+            <field name="name">res.partner.geolocation.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook[last()]" position="inside">
+                    <page string="Partner Assignment" name="geo_location">
+                        <group>
+                            <group string="Geolocation">
+                                <label for="date_localization" string="Geo Location"/>
+                                <div>
+                                    <span>Lat : </span>
+                                    <field name="partner_latitude" nolabel="1" class="oe_inline"/>
+                                    <span>, Long: </span>
+                                    <field name="partner_longitude" nolabel="1" class="oe_inline"/>
+                                    <br/>
+                                    <span attrs="{'invisible': [('date_localization', '=', False)]}">Updated on: </span>
+                                    <field name="date_localization" nolabel="1" class="oe_inline"/>
+                                    <span class="oe_inline">
+                                        <button
+                                            string="(refresh)"
+                                            name="geo_localize"
+                                            class="btn btn-link"
+                                            type="object"/>
+                                    </span>
+                                </div>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+</odoo>

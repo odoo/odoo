@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="cart_delivery" name="Delivery Costs" inherit_id="website_sale.total">
+        <xpath expr="//tr[@id='order_total_untaxed']" position="before">
+            <tr id="order_delivery" t-if="website_sale_order and website_sale_order.carrier_id">
+              <td class="text-right border-0 text-muted"  title="Delivery will be updated after choosing a new delivery method">Delivery:</td>
+              <td class="text-xl-right border-0 text-muted" >
+                   <span t-field="website_sale_order.amount_delivery" class="monetary_field" style="white-space: nowrap;" t-options='{
+                      "widget": "monetary",
+                      "display_currency": website_sale_order.currency_id,
+                  }'/>
+              </td>
+            </tr>
+        </xpath>
+    </template>
+
+    <template id="payment_delivery_methods">
+        <input t-att-value="delivery.id" t-att-id="'delivery_%i' % delivery.id" type="radio" name="delivery_type" t-att-checked="order.carrier_id and order.carrier_id.id == delivery.id and 'checked' or False" t-att-class="'d-none' if delivery_nb == 1 else ''"/>
+        <label class="label-optional" t-field="delivery.name"/>
+        <t t-set='badge_class' t-value="(delivery_nb != 1 and 'float-right ' or '') + 'badge badge-secondary'" />
+        <t t-if="delivery.delivery_type == 'fixed'">
+          <span t-if="delivery.fixed_price > 0.0" t-att-class="badge_class">
+            <t t-esc="delivery.rate_shipment(website_sale_order)['price'] if delivery.free_over else delivery.fixed_price"
+               t-options='{"widget": "monetary",
+                           "from_currency": website_sale_order.currency_id if delivery.free_over else delivery.product_id.company_id.currency_id or website_sale_order.company_id.currency_id,
+                           "display_currency": website_sale_order.currency_id}'/>
+          </span>
+          <span t-else="" t-att-class="badge_class">Free</span>
+        </t>
+        <t t-else="">
+            <span t-attf-class="#{badge_class} o_wsale_delivery_badge_price">Select to compute delivery rate</span>
+        </t>
+        <t t-if="delivery.website_description">
+            <div t-field="delivery.website_description" class="text-muted mt8"/>
+        </t>
+    </template>
+
+    <template id="payment_delivery_shipping_method" name="Delivery Shipping method" inherit_id="website_sale.address_on_payment">
+        <xpath expr="//div[@id='shipping_and_billing']" position="inside">
+            <t t-set="delivery_nb" t-value="deliveries and len(deliveries)"/>
+            <div t-if="delivery_nb == 1" id="delivery_carrier" class="mt4">
+                <b>Shipping Method: </b>
+                <t t-foreach="deliveries" t-as="delivery">
+                    <t t-call="website_sale_delivery.payment_delivery_methods"/>
+                </t>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="payment_delivery" name="Delivery Costs" inherit_id="website_sale.payment">
+        <xpath expr="//div[@id='payment_method']" position="before">
+            <div t-if="deliveries" id="delivery_carrier">
+                <t t-set="delivery_nb" t-value="len(deliveries)"/>
+                <h3 t-if="delivery_nb &gt; 1" class="mb24">Choose a delivery method</h3>
+                <div t-if="delivery_nb &gt; 1" class="card border-0" id="delivery_method">
+                    <ul class="list-group">
+                    <t t-foreach="deliveries" t-as="delivery">
+                        <li class="list-group-item o_delivery_carrier_select">
+                            <t t-call="website_sale_delivery.payment_delivery_methods"/>
+                        </li>
+                    </t>
+                    </ul>
+                </div>
+            </div>
+        </xpath>
+        <!-- we shouldn't be able to pay if there is no way to deliver -->
+        <xpath expr="//div[@id='payment_method']" position="attributes">
+                <attribute name="t-att-style">'display: none!important' if not deliveries and delivery_has_storable else ''</attribute>
+        </xpath>
+    </template>
+
+</odoo>

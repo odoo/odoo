@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data noupdate="1">
+    <!-- Channel subtypes -->
+    <record id="mt_channel_slide_published" model="mail.message.subtype">
+        <field name="name">Presentation Published</field>
+        <field name="res_model">slide.channel</field>
+        <field name="default" eval="True"/>
+        <field name="description">Presentation Published</field>
+    </record>
+
+    <record id="mail_activity_data_access_request" model="mail.activity.type">
+        <field name="name">Access Request</field>
+        <field name="icon">fa-check-circle</field>
+        <field name="sequence">50</field>
+        <field name="res_model">slide.channel</field>
+    </record>
+</data></odoo>

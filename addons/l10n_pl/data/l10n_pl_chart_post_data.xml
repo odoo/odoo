@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pl_chart_template" model="account.chart.template">
+        <field name="property_account_receivable_id" ref="chart20000000"/>
+        <field name="property_account_payable_id" ref="chart21000000"/>
+        <field name="property_account_expense_categ_id" ref="chart30020000"/>
+        <field name="property_account_income_categ_id" ref="chart73010000"/>
+        <field name="income_currency_exchange_account_id" ref="chart75060000"/>
+        <field name="expense_currency_exchange_account_id" ref="pl_a_pay"/>
+        <field name="default_pos_receivable_account_id" ref="chart20000100" />
+    </record>
+</odoo>

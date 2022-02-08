@@ -1,0 +1,188 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+.o_mail_user_status {
+    font-size: 1em;
+    position: relative;
+    &.o_user_online {
+        color: $o-enterprise-primary-color;
+    }
+    &.fa-stack {
+        width: 1em;
+        height: 1em;
+        line-height: 1em;
+    }
+}
+
+// ------------------------------------------------------------------
+// Thread preview: shared between discuss (mobile) and systray
+// ------------------------------------------------------------------
+
+.o_mail_preview {
+    display: flex;
+    background-color: theme-color('light');
+    color: $o-main-text-color;
+    cursor: pointer;
+    overflow: hidden;
+    position: relative;
+    &:hover {
+        background-color: gray('300');
+        .o_preview_name {
+            color: $headings-color;
+        }
+        .o_discuss_icon {
+            opacity: 1;
+        }
+    }
+    &:not(:last-child) {
+        border-bottom: 1px solid gray('400');
+    }
+    .o_mail_preview_image {
+        display: flex;
+        align-items: center;
+        flex: 0 0 auto;
+        position: relative;
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
+        > img {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        &.o_mail_preview_app > img {
+            border-radius: 2px;
+        }
+        .o_mail_user_status {
+            @include o-position-absolute($bottom: 0px, $right: 0px);
+        }
+    }
+    .o_preview_info {
+        flex: 1 1 100%;
+        overflow: hidden;
+        .o_preview_title {
+            align-items: center;
+            display: flex;
+            .o_preview_name {
+                flex: 0 1 auto;
+                @include o-text-overflow;
+            }
+            .o_mail_activity_action_buttons {
+                display: flex;
+                flex: 1 1 auto;
+                flex-flow: row-reverse wrap;
+            }
+            .o_mail_activity_action {
+                padding-top: 0px;
+                padding-bottom: 0px;
+                padding-right: 0px;
+            }
+            .o_preview_counter {
+                flex: 0 1 auto;
+            }
+            .o_thread_window_expand {
+                margin: 0px 6px;
+            }
+            .o_last_message_date {
+                flex: 0 0 auto;
+                color: $o-main-color-muted;
+                font-weight: 500;
+            }
+        }
+        .o_last_message_preview {
+            width: 94%;
+            max-height: 20px;
+            color: $o-main-color-muted;
+            @include o-text-overflow;
+        }
+    }
+    .o_discuss_icon {
+        opacity: 0;
+    }
+    &.o_preview_unread {
+        background-color: transparent;
+        &:hover {
+            background-color: theme-color('light');
+        }
+        .o_preview_info {
+            .o_preview_title {
+                .o_preview_name, .o_preview_counter {
+                    font-weight: 700;
+                }
+                .o_last_message_date {
+                    color: $o-brand-primary;
+                }
+            }
+        }
+    }
+    &.o_systray_activity {
+        background-color: transparent;
+        &:hover {
+            background-color: theme-color('light');
+        }
+    }
+}
+
+@include media-breakpoint-down(sm) {
+
+    .o_main_navbar > ul.o_menu_systray > li .dropdown-menu.show {
+        border: none;
+    }
+
+    .o_mail_preview {
+        padding: $o-mail-chatter-mobile-gap;
+
+        .o_preview_info, .o_last_message_date {
+            margin-left: $o-mail-chatter-mobile-gap;
+        }
+
+        .o_preview_name {
+            font-size: 1.1em;
+        }
+
+        .o_last_message_date {
+            font-size: 0.9em;
+        }
+
+        .o_last_message_preview {
+            margin-top: $o-mail-chatter-mobile-gap*0.5;
+        }
+    }
+
+    .o_mail_mobile_tabs {
+        display: flex;
+        box-shadow: 0 0 8px gray('400');
+
+        .o_mail_mobile_tab {
+            display: flex;
+            flex: 1 1 auto;
+            width: 20%;
+            flex-flow: column nowrap;
+            justify-content: space-between;
+            padding: $o-mail-chatter-mobile-gap $o-mail-chatter-mobile-gap*2;
+            box-shadow: 1px 0 0 gray('400');
+            text-align: center;
+
+            > span {
+               display: block;
+               font-weight: 500;
+               font-size: 10px;
+
+               &.fa {
+                   padding-bottom: $o-mail-chatter-mobile-gap*2;
+                   font-size: 1.3em;
+               }
+            }
+
+            &.active > span {
+                color: $o-brand-primary;
+            }
+        }
+    }
+}

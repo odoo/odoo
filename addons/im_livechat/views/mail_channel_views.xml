@@ -1,0 +1,155 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+
+        <record id="mail_channel_view_search" model="ir.ui.view">
+            <field name="name">mail.channel.search</field>
+            <field name="model">mail.channel</field>
+            <field name="arch" type="xml">
+                <search string="Search history">
+                    <field name="name"/>
+                    <group expand="0" string="Group By...">
+                        <filter name="group_by_channel" string="Channel" domain="[]" context="{'group_by':'livechat_channel_id'}"/>
+                        <separator orientation="vertical"/>
+                        <filter name="group_by_month" string="Creation Date" domain="[]" context="{'group_by':'create_date:month'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="mail_channel_view_tree" model="ir.ui.view">
+            <field name="name">mail.channel.tree</field>
+            <field name="model">mail.channel</field>
+            <field name="arch" type="xml">
+                <tree string="History" create="false" default_order="create_date desc">
+                    <field name="create_date" string="Session Date"/>
+                    <field name="name" string="Attendees"/>
+                    <field name="message_ids" string="# Messages"/>
+                    <field name="rating_last_image" string="Rating" widget="image" options='{"size": [20, 20]}'/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="mail_channel_view_form" model="ir.ui.view">
+            <field name="name">mail.channel.form</field>
+            <field name="model">mail.channel</field>
+            <field name="arch" type="xml">
+                <form string="Session Form" create="false" edit="false">
+                    <sheet>
+                        <div style="width:50%" class="float-right">
+                            <field name="rating_last_image" widget="image" class="float-right" readonly="1" nolabel="1"/>
+                            <field name="rating_last_feedback" nolabel="1"/>
+                        </div>
+                        <div style="width:50%" class="float-left">
+                            <group>
+                                <field name="name" string="Attendees"/>
+                                <field name="create_date" readonly="1" string="Session Date"/>
+                            </group>
+                        </div>
+
+                        <group string="History" class="o_history_container">
+                            <div class="o_history_kanban_container">
+                                <div class="o_history_kanban_sub_container">
+                                    <field name="message_ids" mode="kanban">
+                                        <kanban default_order="create_date DESC">
+                                            <field name="author_id"/>
+                                            <field name="body"/>
+                                            <field name="create_date" groups="base.group_no_one"/>
+                                            <field name="id"/>
+                                            <field name="author_avatar"/>
+                                            <templates>
+                                                <t t-name="kanban-box">
+                                                    <div class="oe_module_vignette">
+                                                        <div class="o_kanban_image">
+                                                            <div>
+                                                                 <t t-if="record.author_avatar.raw_value">
+                                                                    <img t-att-src="kanban_image('mail.message', 'author_avatar', record.id.raw_value)" alt="Avatar" class="o_image_64_cover rounded-circle"/>
+                                                                 </t>
+                                                                 <t t-else=""><img alt="Anonymous" src="/mail/static/src/img/smiley/avatar.jpg" class="o_image_64_cover rounded-circle"/></t>
+                                                            </div>
+                                                        </div>
+                                                        <div class="oe_module_desc">
+                                                            <div class="float-right"><p><field name="date"/></p></div>
+                                                            <div>
+                                                                <p><strong>
+                                                                    <t t-if="record.author_id.raw_value"><field name="author_id"/></t>
+                                                                    <t t-else="">Anonymous</t>
+                                                                </strong></p>
+                                                                <p>
+                                                                    <t t-if="record.body.raw_value"><field name="body" widget="html"/><br/></t>
+                                                                </p>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </t>
+                                            </templates>
+                                         </kanban>
+                                    </field>
+                                </div>
+                            </div>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="mail_channel_action" model="ir.actions.act_window">
+            <field name="name">History</field>
+            <field name="res_model">mail.channel</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="im_livechat.mail_channel_view_search"/>
+            <field name="domain">[('livechat_channel_id', '!=', None)]</field>
+            <field name="context">{'search_default_session_not_empty': 1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_empty_folder">
+                    Your chatter history is empty
+                </p><p>
+                    Create a channel and start chatting to fill up your history.
+                </p>
+            </field>
+        </record>
+        <record id="mail_channel_action_tree" model="ir.actions.act_window.view">
+            <field name="sequence">1</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="im_livechat.mail_channel_view_tree"/>
+            <field name="act_window_id" ref="im_livechat.mail_channel_action"/>
+        </record>
+
+        <record id="mail_channel_action_form" model="ir.actions.act_window.view">
+            <field name="sequence">2</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="im_livechat.mail_channel_view_form"/>
+            <field name="act_window_id" ref="im_livechat.mail_channel_action"/>
+        </record>
+
+
+        <record id="mail_channel_action_from_livechat_channel" model="ir.actions.act_window">
+            <field name="name">Sessions</field>
+            <field name="res_model">mail.channel</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('livechat_channel_id', 'in', [active_id]), ('has_message', '=', True)]</field>
+            <field name="context">{
+                'search_default_livechat_channel_id': [active_id],
+                'default_livechat_channel_id': active_id,
+            }</field>
+            <field name="search_view_id" ref="mail_channel_view_search"/>
+        </record>
+        <record id="mail_channel_action_livechat_tree" model="ir.actions.act_window.view">
+            <field name="sequence">1</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="im_livechat.mail_channel_view_tree"/>
+            <field name="act_window_id" ref="im_livechat.mail_channel_action_from_livechat_channel"/>
+        </record>
+
+        <record id="mail_channel_action_livechat_form" model="ir.actions.act_window.view">
+            <field name="sequence">2</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="im_livechat.mail_channel_view_form"/>
+            <field name="act_window_id" ref="im_livechat.mail_channel_action_from_livechat_channel"/>
+        </record>
+
+
+    </data>
+</odoo>

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ITAX_21" model="account.tax.template">
+        <field name="chart_template_id" ref="bo_chart_template"/>
+        <field name="name">IVA 13% Venta</field>
+        <field name="amount">13</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="include_base_amount">1</field>
+        <field name="tax_group_id" ref="tax_group_iva_13"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_base_imponible_venras_iva')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('231'),
+                'plus_report_line_ids': [ref('tax_report_impuesto_ttl_cob_iva')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_base_imponible_venras_iva')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('231'),
+                'minus_report_line_ids': [ref('tax_report_impuesto_ttl_cob_iva')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="OTAX_21" model="account.tax.template">
+        <field name="chart_template_id" ref="bo_chart_template"/>
+        <field name="name">IVA 13% Compra</field>
+        <field name="amount">13</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="include_base_amount">1</field>
+        <field name="tax_group_id" ref="tax_group_iva_13"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_base_imponible_compras_iva')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('231'),
+                'plus_report_line_ids': [ref('tax_report_impuesto_ttl_pag_iva')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_base_imponible_compras_iva')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('231'),
+                'minus_report_line_ids': [ref('tax_report_impuesto_ttl_pag_iva')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="ITAX_03" model="account.tax.template">
+        <field name="chart_template_id" ref="bo_chart_template"/>
+        <field name="name">IT 3%</field>
+        <field name="amount">3</field>
+        <field name="amount_type">percent</field>
+        <field name="price_include" eval="True"/>
+        <field name="type_tax_use">sale</field>
+        <field name="tax_group_id" ref="tax_group_it_3"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_base_imponible_venras_iva')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('232'),
+                'plus_report_line_ids': [ref('tax_report_impuesto_trans_3')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_base_imponible_venras_iva')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('232'),
+                'minus_report_line_ids': [ref('tax_report_impuesto_trans_3')],
+            }),
+        ]"/>
+    </record>
+</odoo>

@@ -1,0 +1,108 @@
+.o_boxed_footer, .o_boxed_header, .o_report_layout_boxed {
+    color: gray('700');
+    font-size: 15px;
+}
+.o_boxed_header {
+    border-bottom: 1px solid gray('200');
+    img {
+        max-height: 100px;
+    }
+    h4 {
+        color: #999999;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+}
+.o_boxed_footer {
+    margin-top: 200px;
+    white-space: nowrap;
+    border-top: 3px solid $o-default-report-secondary-color;
+    ul {
+        margin: 4px 0;
+    }
+}
+.o_report_layout_boxed {
+    #total strong {
+        color: $o-default-report-primary-color;
+    }
+    #informations strong {
+        color: $o-default-report-secondary-color;
+    }
+    > h2 {
+        text-transform: uppercase;
+    }
+    h2 span {
+        color: $o-default-report-primary-color;
+    }
+    table {
+        border: 1px solid gray('700');
+        thead {
+            border-bottom: 2px solid gray('700');
+            tr th {
+                text-transform: uppercase;
+                border: 1px solid gray('700');
+                color: $o-default-report-secondary-color;
+            }
+        }
+        tbody {
+            color: gray('700');
+            tr {
+                td {
+                    // remove border-top from standard layout
+                    border-top: none;
+                    border-right: 1px solid gray('700');
+                }
+                &.o_line_section td,
+                &.o_line_note td,
+                &.is-subtotal td {
+                    border-top: 1px solid gray('700');
+                    border-bottom: 1px solid gray('700');
+                }
+                &.o_line_section td {
+                    background-color: rgba($o-default-report-primary-color, 0.7);
+                    color: #fff;
+                }
+                &.is-subtotal,
+                td.o_price_total {
+                    background-color: rgba($o-default-report-secondary-color, 0.1);
+                }
+            }
+        }
+    }
+    /* compat 12.0 */
+    .page > table:not(.o_main_table) tr td:last-child {
+        background-color: gray('200');
+    }
+    /* compat 12.0 */
+    .row:not(#total) > div > table tbody tr:not(:last-child) td:last-child {
+        background-color: gray('200');
+    }
+    /*Total table*/
+    /* row div rule compat 12.0 */
+    .row > div > table,
+    div#total table {
+        thead tr:first-child,
+        tr.o_subtotal {
+            border-bottom: 1px solid gray('700');
+        }
+        tr {
+            &.o_subtotal{
+                td:first-child {
+                    border-right: none;
+                }
+            }
+            &:last-child td,
+            &.o_total td {
+                background-color: rgba($o-default-report-primary-color, 0.9);
+                color: #fff;
+
+                &:first-child {
+                    border-right: none;
+                }
+            }
+            &.o_total strong {
+                color: white;
+            }
+        }
+    }
+}

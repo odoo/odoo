@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Theme "Basic" template -->
+    <template id="theme_basic_template">
+        <div class="o_mail_no_options">
+            <p><br/></p>
+            <p><br/></p>
+            <p>
+                <br/>
+                <a href="/unsubscribe_from_list">Unsubscribe</a>
+            </p>
+        </div>
+    </template>
+
+    <template id="theme_empty_template">
+    </template>
+
+    <!-- Default Theme -->
+    <template id="theme_default_template">
+        <t t-call="mass_mailing.s_mail_block_header_logo" />
+        <t t-call="mass_mailing.s_mail_block_title_text" />
+        <t t-call="mass_mailing.s_mail_block_footer_social_left"/>
+    </template>
+</odoo>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mail_group_message_reject_form" model="ir.ui.view">
+        <field name="name">mail.group.message.reject.form</field>
+        <field name="model">mail.group.message.reject</field>
+        <field name="arch" type="xml">
+            <form string="Reject">
+                <div class="alert alert-warning" role="alert" attrs="{'invisible': [('action', '!=', 'reject')]}">
+                    Reject the message <span attrs="{'invisible': [('send_email', '=', False)]}">and send an email to the author (<field name="email_from_normalized"/>)</span>.
+                </div>
+                <div class="alert alert-warning" role="alert" attrs="{'invisible': [('action', '!=', 'ban')]}">
+                    Ban the author of the message (<field name="email_from_normalized"/>) <span attrs="{'invisible': [('send_email', '=', False)]}">and send him an email</span>.
+                </div>
+                <group>
+                    <field name="send_email" invisible="1"/>
+                    <field name="mail_group_message_id" invisible="1"/>
+                    <field name="subject"/>
+                    <field name="body"/>
+                    <field name="action" invisible="1"/>
+                </group>
+                <footer>
+                    <button string="Reject" name="action_send_mail" type="object" class="btn-primary"
+                        attrs="{'invisible': ['|', ('action', '!=', 'reject'), ('send_email', '=', True)]}"/>
+                    <button string="Send &amp; Reject" name="action_send_mail" type="object" class="btn-primary"
+                        attrs="{'invisible': ['|', ('action', '!=', 'reject'), ('send_email', '=', False)]}"/>
+                    <button string="Ban" name="action_send_mail" type="object" class="btn-primary"
+                        attrs="{'invisible': ['|', ('action', '!=', 'ban'), ('send_email', '=', True)]}"/>
+                    <button string="Send &amp; Ban" name="action_send_mail" type="object" class="btn-primary"
+                        attrs="{'invisible': ['|', ('action', '!=', 'ban'), ('send_email', '=', False)]}"/>
+                    <button string="Discard" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="mail_group_message_reject_action" model="ir.actions.act_window">
+        <field name="name">Message Rejection Explanation</field>
+        <field name="res_model">mail.group.message.reject</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

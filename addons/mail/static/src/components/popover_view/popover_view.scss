@@ -1,0 +1,23 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+.o_PopoverView {
+    z-index: $zindex-modal + 1;
+    border: $border-width solid;
+}
+
+.o_PopoverView_channelInvitationForm {
+    width: Min(95vw, 400px);
+    max-height: Min(calc(100vh - 140px), 530px);
+}
+
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+.o_PopoverView {
+    border-color: gray('300');
+    background-color: $white;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+}

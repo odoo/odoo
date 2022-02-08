@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="timesheet_view_search" model="ir.ui.view">
+            <field name="name">account.analytic.line.search</field>
+            <field name="model">account.analytic.line</field>
+            <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='task_id']" position="after">
+                    <field name="so_line" groups="sales_team.group_sale_salesman"/>
+                </xpath>
+                <xpath expr="//filter[@name='month']" position="before">
+                    <filter name="billable_time" string="Billed on Timesheets" domain="[('timesheet_invoice_type', '=', 'billable_time')]"/>
+                    <filter name="billable_fixed" string="Billed at a Fixed Price" domain="[('timesheet_invoice_type', '=', 'billable_fixed')]"/>
+                    <filter name="non_billable" string="Non Billable" domain="[('timesheet_invoice_type', '=', 'non_billable')]"/>
+                    <separator/>
+                </xpath>
+                <xpath expr="//filter[@name='groupby_employee']" position="after">
+                    <filter string="Sales Order Item" name="groupby_sale_order_item" domain="[]" context="{'group_by': 'so_line'}" groups="sales_team.group_sale_salesman"/>
+                    <filter string="Invoice" name="groupby_invoice" domain="[]" context="{'group_by': 'timesheet_invoice_id'}"/>
+                    <filter string="Billable Type" name="groupby_timesheet_invoice_type" domain="[]" context="{'group_by': 'timesheet_invoice_type'}"/>
+                </xpath>
+            </field>
+    </record>
+
+    <record id="hr_timesheet_line_tree_inherit" model="ir.ui.view">
+        <field name="name">account.analytic.line.tree.inherit</field>
+        <field name="model">account.analytic.line</field>
+        <field name="groups_id" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+        <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree/field[@name='unit_amount']" position="before">
+                <field name="commercial_partner_id" invisible="1"/>
+                <field name="is_so_line_edited" invisible="1"/>
+                <field name="so_line" widget="so_line_many2one" optional="hide" options="{'no_create': True}" context="{'create': False, 'edit': False, 'delete': False}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_timesheet_line_form_inherit" model="ir.ui.view">
+        <field name="name">account.analytic.line.form.inherit</field>
+        <field name="model">account.analytic.line</field>
+        <field name="groups_id" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+        <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='task_id']" position="after">
+                <field name="commercial_partner_id" invisible="1"/>
+                <field name="is_so_line_edited" invisible="1" />
+                <field name="so_line" widget="so_line_many2one" options='{"no_create": True}' context="{'create': False, 'edit': False, 'delete': False}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="timesheet_view_pivot_revenue" model="ir.ui.view">
+        <field name="name">account.analytic.line.pivot.revenue</field>
+        <field name="model">account.analytic.line</field>
+        <field name="arch" type="xml">
+            <pivot string="Timesheet" sample="1">
+                <field name="employee_id" type="row"/>
+                <field name="date" interval="month" type="col"/>
+                <field name="unit_amount" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!--
+        Timesheet from Sales Order
+    -->
+    <record id="timesheet_action_from_sales_order" model="ir.actions.act_window">
+        <field name="name">Timesheets</field>
+        <field name="res_model">account.analytic.line</field>
+        <field name="search_view_id" ref="hr_timesheet.hr_timesheet_line_search"/>
+        <field name="domain">[('project_id', '!=', False)]</field>
+    </record>
+
+    <record id="timesheet_action_from_sales_order_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="4"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="hr_timesheet.timesheet_view_tree_user"/>
+        <field name="act_window_id" ref="timesheet_action_from_sales_order"/>
+    </record>
+
+    <record id="timesheet_action_from_sales_order_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="5"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="hr_timesheet.timesheet_view_form_user"/>
+        <field name="act_window_id" ref="timesheet_action_from_sales_order"/>
+    </record>
+
+    <!--
+        Reporting
+    -->
+    <record id="timesheet_action_billing_report" model="ir.actions.act_window">
+        <field name="name">Timesheets by Billing Type</field>
+        <field name="res_model">account.analytic.line</field>
+        <field name="view_mode">tree,form,pivot,graph,kanban</field>
+        <field name="domain">[('project_id', '!=', False)]</field>
+        <field name="context">{
+            'search_default_groupby_timesheet_invoice_type': 1,
+            'pivot_row_groupby': ['date:month'],
+        }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No data yet!
+            </p>
+            <p>Review your timesheets by billing type and make sure your time is billable.</p>
+        </field>
+        <field name="search_view_id" ref="hr_timesheet.hr_timesheet_line_search"/>
+    </record>
+
+    <record id="view_hr_timesheet_line_pivot_billing_rate" model="ir.ui.view">
+        <field name="name">account.analytic.line.pivot.billing.rate</field>
+        <field name="model">account.analytic.line</field>
+        <field name="arch" type="xml">
+            <pivot string="Timesheets" sample="1">
+                <field name="timesheet_invoice_type" type="col"/>
+                <field name="unit_amount" type="measure" widget="timesheet_uom"/>
+                <field name="amount" string="Timesheet Costs"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="timesheet_action_view_report_by_billing_rate_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="10"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="hr_timesheet.hr_timesheet_line_form"/>
+        <field name="act_window_id" ref="timesheet_action_billing_report"/>
+    </record>
+
+    <record id="timesheet_action_view_report_by_billing_rate_kanban" model="ir.actions.act_window.view">
+        <field name="sequence" eval="10"/>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="hr_timesheet.view_kanban_account_analytic_line"/>
+        <field name="act_window_id" ref="timesheet_action_billing_report"/>
+    </record>
+
+    <record id="timesheet_action_view_report_by_billing_rate_pivot" model="ir.actions.act_window.view">
+        <field name="sequence" eval="5"/>
+        <field name="view_mode">pivot</field>
+        <field name="view_id" ref="view_hr_timesheet_line_pivot_billing_rate"/>
+        <field name="act_window_id" ref="timesheet_action_billing_report"/>
+    </record>
+
+    <record id="timesheet_action_view_report_by_billing_rate_graph" model="ir.actions.act_window.view">
+        <field name="sequence" eval="6"/>
+        <field name="view_mode">graph</field>
+        <field name="view_id" ref="hr_timesheet.view_hr_timesheet_line_graph"/>
+        <field name="act_window_id" ref="timesheet_action_billing_report"/>
+    </record>
+
+    <record id="timesheet_action_view_report_by_billing_rate_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="8"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="hr_timesheet.hr_timesheet_line_tree"/>
+        <field name="act_window_id" ref="timesheet_action_billing_report"/>
+    </record>
+
+    <menuitem id="menu_timesheet_billing_analysis"
+            parent="hr_timesheet.menu_timesheets_reports_timesheet"
+            action="timesheet_action_billing_report"
+            name="By Billing Type"
+            sequence="40"/>
+
+    <!--
+        Plan
+    -->
+    <record id="timesheet_action_plan_pivot" model="ir.actions.act_window">
+        <field name="name">Timesheet</field>
+        <field name="res_model">account.analytic.line</field>
+        <field name="view_mode">pivot,tree,form</field>
+        <field name="domain">[('project_id', '!=', False)]</field>
+        <field name="search_view_id" ref="hr_timesheet.hr_timesheet_line_search"/>
+    </record>
+
+    <record id="timesheet_action_from_plan" model="ir.actions.act_window">
+        <field name="name">Timesheet</field>
+        <field name="res_model">account.analytic.line</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('project_id', '!=', False)]</field>
+        <field name="search_view_id" ref="hr_timesheet.hr_timesheet_line_search"/>
+    </record>
+
+</odoo>

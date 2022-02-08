@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo><data>
+
+    <record id="event_type_booth_view_form_from_type" model="ir.ui.view">
+        <field name="name">event.type.booth.view.form.from.type</field>
+        <field name="model">event.type.booth</field>
+        <field name="arch" type="xml">
+            <form string="Event Type Booth">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only" string="Name"/>
+                        <h1><field name="name" placeholder="e.g. First Booth Alley 1"/></h1>
+                    </div>
+                    <group>
+                        <field name="booth_category_id"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="event_type_booth_view_form" model="ir.ui.view">
+        <field name="name">event.type.booth.view.form</field>
+        <field name="model">event.type.booth</field>
+        <field name="inherit_id" ref="event_type_booth_view_form_from_type"/>
+        <field name="mode">primary</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='booth_category_id']" position="before">
+                <field name="event_type_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="event_type_booth_view_tree_from_type" model="ir.ui.view">
+        <field name="name">event.type.booth.view.tree.from.type</field>
+        <field name="model">event.type.booth</field>
+        <field name="arch" type="xml">
+            <tree string="Event Type Booths">
+                <field name="name"/>
+                <field name="booth_category_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="event_type_booth_view_tree" model="ir.ui.view">
+        <field name="name">event.type.booth.view.tree</field>
+        <field name="model">event.type.booth</field>
+        <field name="inherit_id" ref="event_type_booth_view_tree_from_type"/>
+        <field name="mode">primary</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='booth_category_id']" position="before">
+                <field name="event_type_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="event_type_booth_view_search" model="ir.ui.view">
+        <field name="name">event.type.booth.view.search</field>
+        <field name="model">event.type.booth</field>
+        <field name="arch" type="xml">
+            <search string="Event Type Booths">
+                <field name="name"/>
+                <group expand="0" string="Group By">
+                    <filter string="Booth Type" name="booth_category" context="{'group_by': 'booth_category_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="event_type_booth_action" model="ir.actions.act_window">
+        <field name="name">Event Type Booths</field>
+        <field name="res_model">event.type.booth</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a Type Booth
+            </p><p>
+                Booths are the physical stands that you rent during your event.
+            </p>
+        </field>
+    </record>
+
+</data></odoo>

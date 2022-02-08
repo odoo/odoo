@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="stock_inventory_request_count_form_view" model="ir.ui.view">
+        <field name="name">stock.request.count.form.view</field>
+        <field name="model">stock.request.count</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="quant_ids" invisible="1"/>
+                    <field name="inventory_date"/>
+                    <field name="user_id"/>
+                    <field name="set_count" widget='radio'/>
+                </group>
+                <footer>
+                    <button name="action_request_count" string="Confirm" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="z"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_stock_request_count" model="ir.actions.act_window">
+        <field name="name">Request a Count</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">stock.request.count</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="stock_inventory_request_count_form_view"/>
+        <field name="context">{
+            'default_quant_ids': active_ids
+        }</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

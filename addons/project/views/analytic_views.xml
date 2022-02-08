@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        Analytic Accounts with project
+    -->
+    <record id="account_analytic_account_view_form_inherit" model="ir.ui.view">
+        <field name="name">account.analytic.account.form.inherit</field>
+        <field name="model">account.analytic.account</field>
+        <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
+        <field eval="40" name="priority"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='%(analytic.account_analytic_line_action)d']" position="before">
+                <button class="oe_stat_button" type="object" name="action_view_projects"
+                    icon="fa-puzzle-piece" attrs="{'invisible': [('project_count', '=', 0)]}">
+                    <field string="Projects" name="project_count" widget="statinfo"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

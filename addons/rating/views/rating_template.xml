@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+        <!-- External page : thanks message -->
+        <template id="rating_external_page_view" name="Rating Page Done">
+            <t t-call="web.frontend_layout">
+                <div class="container pt-5">
+                    <div class="text-center mt-5 pt-5">
+                        <h3 class="d-inline">Thank you, we appreciate your feedback!</h3>
+                    </div>
+                    <div class="text-center">
+                        <a role="button" t-att-href="web_base_url" class="btn btn-primary my-5">Go back to the Homepage</a>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+        <!-- External page: rate and submit feedback -->
+        <template id="rating_external_page_submit" name="Rating Page Submit">
+            <t t-call="web.frontend_layout">
+                <div class="container mb-5 mt-4 o_rating_page_submit">
+                    <div class="row text-center justify-content-center">
+                        <h1 class="col-12 mt-5">Thank you for rating our services!</h1>
+                        <form class="col-md-6" t-attf-action="/rate/#{token}/submit_feedback" method="post">
+                            <div class="btn-group btn-group-toggle row flex-nowrap justify-content-center w-100 mt-5" data-toggle="buttons">
+                                <t t-foreach="rate_names" t-as="rate_name">
+                                    <label t-attf-class="col p-4 btn o_rating_label shadow-none {{rate == rate_name and 'active' or ''}}">
+                                        <input type="radio" name="rate" t-attf-id="rate_{{rate_name}}" t-att-value="rate_name" t-att-checked="rate == rate_name"/>
+                                        <a class="o_rating d-block bg-white rounded-circle" href="#">
+                                            <img t-attf-src='/rating/static/src/img/rating_#{rate_name}.svg' t-att-alt="rate_name_value" t-att-title="rate_name_value"/>
+                                        </a>
+                                    </label>
+                                </t>
+                            </div>
+                            <p class="mt-5">
+                                Feel free to write a feedback on your experience:
+                            </p>
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <textarea class="form-control" name="feedback" rows="8" t-att-value="rating.feedback"></textarea>
+                            <button type="submit" class="btn btn-primary mt-4" style="margin-top:8px;">Send Feedback</button>
+                        </form>
+                    </div>
+                </div>
+            </t>
+        </template>
+</odoo>

@@ -1,0 +1,29 @@
+// = Checkbox
+// ============================================================================
+
+.custom-control.custom-checkbox .custom-control-input {
+  // Force default bts default border color
+  &:not(:checked):not(:indeterminate):not(:disabled) ~ .custom-control-label:before {
+    border-color: $custom-control-indicator-border-color;
+  }
+
+  &:disabled {
+    ~ .custom-control-label {
+      cursor: not-allowed;
+
+      &:before {
+        border-color: $custom-control-indicator-checked-disabled-bg;
+      }
+    }
+
+    &:checked ~ .custom-control-label:after {
+      // Use odoo custom muted icon
+      background-image: $o-custom-checkbox-indicator-icon-checked-disabled;
+    }
+  }
+
+  @media print {
+    -webkit-print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+}

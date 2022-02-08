@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Israel keep standard taxes -->
+    <record id="account_fiscal_position_israel" model="account.fiscal.position.template">
+        <field name="name">Israel</field>
+        <field name="chart_template_id" ref="il_chart_template"/>
+        <field name="country_id" ref="base.il"/>
+        <field name="auto_apply" eval="True"/>
+    </record>
+
+    <!-- Palestinian Authority (PA) -->
+    <record id="account_fiscal_position_palestinian_authority" model="account.fiscal.position.template">
+        <field name="name">Palestinian Authority (PA)</field>
+        <field name="auto_apply" eval="True"/>
+        <field name="country_id" ref="base.ps"/>
+        <field name="chart_template_id" ref="il_chart_template"/>
+    </record>
+
+    <record id="account_fiscal_position_palestinian_authority_01" model="account.fiscal.position.tax.template">
+        <field name="tax_src_id" ref="il_vat_sales_17"/>
+        <field name="tax_dest_id" ref="il_vat_pa_sales_17"/>
+        <field name="position_id" ref="account_fiscal_position_palestinian_authority"/>
+    </record>
+
+    <record id="account_fiscal_position_palestinian_authority_02" model="account.fiscal.position.tax.template">
+        <field name="tax_src_id" ref="il_vat_inputs_17"/>
+        <field name="tax_dest_id" ref="il_vat_pa_purchase_16"/>
+        <field name="position_id" ref="account_fiscal_position_palestinian_authority"/>
+    </record>
+
+    <!-- Import / Export -->
+    <record id="account_fiscal_position_import_export" model="account.fiscal.position.template">
+        <field name="name">Import / Export</field>
+        <field name="auto_apply" eval="True"/>
+        <field name="chart_template_id" ref="il_chart_template"/>
+    </record>
+
+    <record id="account_fiscal_position_import_export_01" model="account.fiscal.position.tax.template">
+        <field name="tax_src_id" ref="il_vat_sales_17"/>
+        <field name="tax_dest_id" ref="il_vat_sales_exempt"/>
+        <field name="position_id" ref="account_fiscal_position_import_export"/>
+    </record>
+
+    <record id="account_fiscal_position_import_export_02" model="account.fiscal.position.tax.template">
+        <field name="tax_src_id" ref="il_vat_inputs_17"/>
+        <field name="position_id" ref="account_fiscal_position_import_export"/>
+    </record>
+
+    <!-- Eilat City -->
+    <record id="account_fiscal_position_eilat" model="account.fiscal.position.template">
+        <field name="name">Eilat</field>
+        <field name="chart_template_id" ref="il_chart_template"/>
+    </record>
+
+    <record id="account_fiscal_position_eilat_01" model="account.fiscal.position.tax.template">
+        <field name="tax_src_id" ref="il_vat_sales_17"/>
+        <field name="tax_dest_id" ref="il_vat_sales_exempt"/>
+        <field name="position_id" ref="account_fiscal_position_eilat"/>
+    </record>
+
+    <record id="account_fiscal_position_eilat_02" model="account.fiscal.position.tax.template">
+        <field name="tax_src_id" ref="il_vat_inputs_17"/>
+        <field name="tax_dest_id" ref="il_vat_purchase_exempt"/>
+        <field name="position_id" ref="account_fiscal_position_eilat"/>
+    </record>
+
+    <!-- Vat Zero -->
+    <record id="account_fiscal_position_vat_zero" model="account.fiscal.position.template">
+        <field name="name">Vat Zero</field>
+        <field name="chart_template_id" ref="il_chart_template"/>
+    </record>
+
+    <record id="account_fiscal_position_vat_zero_01" model="account.fiscal.position.tax.template">
+        <field name="tax_src_id" ref="il_vat_sales_17"/>
+        <field name="tax_dest_id" ref="il_vat_sales_zero"/>
+        <field name="position_id" ref="account_fiscal_position_vat_zero"/>
+    </record>
+
+    <record id="account_fiscal_position_vat_zero_02" model="account.fiscal.position.tax.template">
+        <field name="tax_src_id" ref="il_vat_inputs_17"/>
+        <field name="tax_dest_id" ref="il_vat_purchase_zero"/>
+        <field name="position_id" ref="account_fiscal_position_vat_zero"/>
+    </record>
+
+    <!-- Self Invoice -->
+    <record id="account_fiscal_position_self_invoice" model="account.fiscal.position.template">
+        <field name="name">Self Invoice</field>
+        <field name="chart_template_id" ref="il_chart_template"/>
+    </record>
+
+    <record id="account_fiscal_position_self_invoice_01" model="account.fiscal.position.tax.template">
+        <field name="tax_src_id" ref="il_vat_inputs_17"/>
+        <field name="tax_dest_id" ref="il_vat_self_inv_purchase"/>
+        <field name="position_id" ref="account_fiscal_position_self_invoice"/>
+    </record>
+    
+</odoo>

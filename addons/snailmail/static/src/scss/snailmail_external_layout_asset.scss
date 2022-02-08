@@ -1,0 +1,53 @@
+/* Generic report layouts*/
+.header {
+    max-height: 40mm;
+    overflow: hidden;
+}
+.container {
+    margin-top: 5mm;
+}
+.o_standard_footer, .o_clean_footer, .o_boxed_footer, .o_background_footer {
+    max-height: 90px !important;
+    overflow: hidden;
+    width: 95%;
+    div > div:first-child {
+        padding-left: 10mm;
+    }
+}
+.o_background_footer {
+    padding-left: 8mm;
+}
+.article>.page {
+    > h1, > h2, > h3 {
+        width: 50%;
+    }
+}
+.pt-5 {
+    padding-top: 48px !important;
+}
+.article > div > .address.row > div[name="address"] {
+    height: 65mm;
+    background-color: #ffffff;
+    padding-top: 11mm;
+    padding-left: 5mm;
+    padding-bottom: 5mm;
+    left: -20px !important;
+    address {
+        height: 28mm;
+    }
+}
+
+/*l10n_de_din layout*/
+.din {
+    .invoice_address {
+        top: 27.7mm !important;
+    }
+    &.article {
+        .page {
+            top: 18.46mm !important;
+        }
+    }
+    &.o_background_footer {
+        top: -8mm !important;
+    }
+}

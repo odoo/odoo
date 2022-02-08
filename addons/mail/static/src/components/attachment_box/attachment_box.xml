@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.AttachmentBox" owl="1">
+        <div class="o_AttachmentBox position-relative" t-attf-class="{{ className }}" t-ref="root">
+            <t t-if="attachmentBoxView">
+                <div class="o_AttachmentBox_title d-flex align-items-center">
+                    <hr class="o_AttachmentBox_dashedLine flex-grow-1"/>
+                    <span class="o_AttachmentBox_titleText p-3 font-weight-bold">
+                        Attachments
+                    </span>
+                    <hr class="o_AttachmentBox_dashedLine flex-grow-1"/>
+                </div>
+                <div class="o_AttachmentBox_content d-flex flex-column">
+                    <t t-if="isDropZoneVisible.value">
+                        <DropZone
+                            className="'o_AttachmentBox_dropZone'"
+                            onDropzoneFilesDropped="_onDropZoneFilesDropped"
+                        />
+                    </t>
+                    <t t-if="attachmentBoxView.attachmentList">
+                        <AttachmentList
+                            className="'o_attachmentBox_attachmentList'"
+                            localId="attachmentBoxView.attachmentList.localId"
+                        />
+                    </t>
+                    <button class="o_AttachmentBox_buttonAdd btn btn-link" type="button" t-on-click="attachmentBoxView.onClickAddAttachment">
+                        <i class="fa fa-plus-square"/>
+                        Add attachments
+                    </button>
+                </div>
+            </t>
+        </div>
+    </t>
+
+</templates>

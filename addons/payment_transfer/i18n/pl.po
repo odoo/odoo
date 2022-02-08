@@ -1,0 +1,85 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_transfer
+# 
+# Translators:
+# Martin Trigaux, 2019
+# Dariusz Żbikowski <darek@krokus.com.pl>, 2019
+# Piotr Szlązak <szlazakpiotr@gmail.com>, 2019
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~12.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2019-08-26 09:12+0000\n"
+"Last-Translator: Piotr Szlązak <szlazakpiotr@gmail.com>, 2019\n"
+"Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: pl\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+
+#. module: payment_transfer
+#: code:addons/payment_transfer/models/payment.py:0
+#, python-format
+msgid "; multiple order found"
+msgstr "; znaleziono wielokrotne zamówienie"
+
+#. module: payment_transfer
+#: code:addons/payment_transfer/models/payment.py:0
+#, python-format
+msgid "; no order found"
+msgstr "; nie znaleziono zamówienia"
+
+#. module: payment_transfer
+#: code:addons/payment_transfer/models/payment.py:0
+#, python-format
+msgid ""
+"<div>\n"
+"<h3>Please use the following transfer details</h3>\n"
+"<h4>%(bank_title)s</h4>\n"
+"%(bank_accounts)s\n"
+"<h4>Communication</h4>\n"
+"<p>Please use the order name as communication reference.</p>\n"
+"</div>"
+msgstr ""
+
+#. module: payment_transfer
+#: code:addons/payment_transfer/models/payment.py:0
+#, python-format
+msgid "Bank Account"
+msgstr "Konto bankowe"
+
+#. module: payment_transfer
+#: code:addons/payment_transfer/models/payment.py:0
+#, python-format
+msgid "Bank Accounts"
+msgstr "Konta bankowe"
+
+#. module: payment_transfer
+#: model:ir.model.fields.selection,name:payment_transfer.selection__payment_acquirer__provider__transfer
+msgid "Manual Payment"
+msgstr ""
+
+#. module: payment_transfer
+#: model:ir.model,name:payment_transfer.model_payment_acquirer
+msgid "Payment Acquirer"
+msgstr "Beneficjent płatności"
+
+#. module: payment_transfer
+#: model:ir.model,name:payment_transfer.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Transakcja płatności"
+
+#. module: payment_transfer
+#: model:ir.model.fields,field_description:payment_transfer.field_payment_acquirer__provider
+msgid "Provider"
+msgstr "Dostawca"
+
+#. module: payment_transfer
+#: code:addons/payment_transfer/models/payment.py:0
+#, python-format
+msgid "received data for reference %s"
+msgstr "odebrane dane do referencji %s"

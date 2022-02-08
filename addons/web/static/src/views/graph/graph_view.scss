@@ -1,0 +1,83 @@
+.o_graph_view > .o_content > .o_renderer {
+  height: 100%;
+
+  .o_graph_canvas_container {
+    padding-top: 5px;
+    position: relative;
+    height: 100%;
+    width: 100%;
+    top: 0px;
+    left: 0px;
+    canvas {
+      background-color: $o-view-background-color;
+    }
+  }
+
+  div.o_tooltip_legend {
+    background-color: white;
+    color: black;
+    font-size: 12px;
+    border: black solid 0.5px;
+    border-radius: 3px;
+    opacity: 1;
+    position: absolute;
+    padding: 10px;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  div.o_graph_custom_tooltip {
+    border-radius: 3px;
+    background-color: white;
+    border: black solid 0.5px;
+    position: absolute;
+    z-index: 1;
+    padding: 6px;
+    pointer-events: none;
+    opacity: 0.9;
+    font-family: Arial;
+    table {
+      font-size: 12px;
+      overflow: hidden;
+      display: block;
+      border-collapse: collapse;
+    }
+    th.o_measure {
+      color: black;
+      font-weight: bolder;
+      vertical-align: baseline;
+      padding-bottom: 1px;
+    }
+    td {
+      &:nth-child(1) {
+        min-width: 100px;
+      }
+      span.o_square {
+        height: 12px;
+        width: 12px;
+        display: inline-block;
+        vertical-align: middle;
+        margin-right: 5px;
+      }
+      span.o_label {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        color: black;
+        display: inline-block;
+        vertical-align: middle;
+      }
+      &.o_value {
+        color: black;
+        padding-left: 5px;
+        text-align: right;
+        font-weight: bold;
+      }
+    }
+    tr.o_show_more {
+      text-align: center;
+      color: black;
+      font-weight: bolder;
+    }
+  }
+}

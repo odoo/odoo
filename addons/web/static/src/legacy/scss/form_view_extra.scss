@@ -1,0 +1,131 @@
+$o-td-label-padding-right: 8px;
+
+.o_form_view {
+    $sheet-min-width: 650px;
+    $sheet-padding: 16px;
+
+    .o_statusbar_status > .o_arrow_button {
+        transition: none;
+        border-radius: 0;
+
+        &:active {
+            box-shadow: none;
+        }
+
+        &:not(.disabled):hover:after {
+            border-left-color: darken($secondary, 7.5%);
+        }
+        &:not(.disabled):active:after {
+            border-left-color: darken($secondary, 10%);
+        }
+    }
+
+    &.o_form_nosheet.oe_form_nomargin {
+        margin: 0;
+    }
+    .o_form_sheet_bg {
+        border-bottom: 1px solid #ddd;
+        background: url(/web/static/img/form_sheetbg.png);
+
+        > .o_form_sheet {
+            min-width: $sheet-min-width;
+            max-width: $o-form-view-sheet-max-width;
+            min-height: 330px;
+            border: 1px solid #c8c8d3;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            background: white;
+
+            margin: $o-sheet-vpadding*0.2 auto;
+            @include media-breakpoint-up(md) {
+                margin: $o-sheet-vpadding*0.5 auto;
+            }
+            padding: $o-sheet-vpadding;
+            @include o-form-sheet-inner-right-padding;
+            @include o-form-sheet-inner-left-padding;
+
+            .ui-tabs {
+                margin: 0 -16px;
+            }
+            .oe_notebook_page {
+                padding: 0 16px;
+            }
+        }
+    }
+
+    // Button box
+    .oe_button_box {
+        &, & + .oe_avatar {
+            + .oe_title {
+                width: 400px;
+            }
+        }
+
+        // TODO remove me in master (this rule is a copy of the one in the
+        // bootstrap_review.scss file)
+        + .alert {
+            clear: both;
+        }
+
+        .oe_stat_button {
+            &:hover {
+                background-color: #e6e6e6;
+            }
+            .o_button_icon {
+                color: #7C7BAD;
+            }
+        }
+    }
+
+    // Groups
+    .o_group {
+        .o_td_label, .o_checkbox_optional_field > .o_form_label {
+            border-right: 1px solid #ddd;
+        }
+        .o_td_label + td {
+            padding: 0px 36px 0px $o-td-label-padding-right;
+        }
+        .o_checkbox_optional_field > .o_form_label {
+            margin-right: $o-td-label-padding-right;
+        }
+
+        .o_field_widget.o_text_overflow {
+            width: 1px!important; // hack to make the table layout believe it is a small element (so that the table does not grow too much) ...
+            min-width: 100%;      // ... but in fact it takes the whole table space
+        }
+    }
+
+    // Separators
+    .o_horizontal_separator {
+        color: $o-brand-primary;
+        font-weight: bold;
+    }
+
+    // Specific style classes
+    .o_group.o_inner_group.oe_subtotal_footer {
+        .oe_subtotal_footer_separator {
+            border-top: 1px solid #cacaca;
+        }
+        .o_td_label {
+            border-right: none;
+        }
+    }
+}
+
+// Overridden style when form view in modal
+.modal .modal-dialog {
+    .o_form_view {
+        .o_form_sheet_bg, .o_form_sheet {
+            border: none;
+        }
+        .o_form_sheet_bg > .o_form_sheet {
+            min-height: 0;
+        }
+    }
+}
+
+// XXS form view specific rules
+.o_form_view.o_xxs_form_view {
+    .o_group .o_td_label {
+        border: none;
+    }
+}

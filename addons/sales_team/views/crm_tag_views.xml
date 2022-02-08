@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<odoo>
+    <!--
+        crm.tag views
+    -->
+    <record id="sales_team_crm_tag_view_form" model="ir.ui.view">
+        <field name="name">sales.team.crm.tag.view.form</field>
+        <field name="model">crm.tag</field>
+        <field name="arch" type="xml">
+            <form string="Tags">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. Services"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="color" required="True" widget="color_picker"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="sales_team_crm_tag_view_tree" model="ir.ui.view">
+        <field name="name">sales.team.crm.tag.view.tree</field>
+        <field name="model">crm.tag</field>
+        <field name="arch" type="xml">
+            <tree string="Tags" editable="bottom" sample="1">
+                <field name="name"/>
+                <field name="color" widget="color_picker" />
+            </tree>
+        </field>
+    </record>
+
+    <!-- Tags Configuration -->
+    <record id="sales_team_crm_tag_action" model="ir.actions.act_window">
+        <field name="name">Tags</field>
+        <field name="res_model">crm.tag</field>
+        <field name="view_id" ref="sales_team_crm_tag_view_tree"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+            Create CRM Tags
+            </p><p>
+            Use Tags to manage and track your Opportunities (product structure, sales type, ...)
+            </p>
+        </field>
+    </record>
+</odoo>

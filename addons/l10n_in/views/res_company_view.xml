@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="l10n_in_view_company_form" model="ir.ui.view">
+        <field name="name">l10n.in.view.company.form</field>
+        <field name="model">res.company</field>
+        <field name="priority" eval="100"/>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='vat']" position="attributes">
+                <attribute name="string" attrs="{'invisible': [('country_code', '!=', 'IN')]}">GSTIN</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

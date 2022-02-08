@@ -1,0 +1,43 @@
+.o_FormRenderer_chatterContainer {
+    display: flex;
+    background-color: $white;
+    border-color: $border-color;
+
+    .o_portal_chatter {
+        width: 100%;
+
+        .o_portal_chatter_header {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        div.o_portal_chatter_composer,
+        div.o_portal_chatter_messages {
+            div.media {
+                gap: 10px;
+
+                .o_portal_chatter_attachments {
+                    margin-bottom: 1rem;
+                }
+            }
+        }
+
+    }
+
+    &.o-aside {
+        flex-direction: column;
+
+        .o_portal_chatter {
+            .o_portal_chatter_header {
+                padding-top: 1rem;
+                padding-bottom: 2px;
+            }
+
+            .o_portal_chatter_composer, .o_portal_chatter_messages {
+                margin-left: 1rem;
+                margin-right: 1rem;
+            }
+        }
+    }
+}
+

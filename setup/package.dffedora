@@ -1,0 +1,62 @@
+# Please note that this Dockerfile is used for testing nightly builds and should
+# not be used to deploy Odoo
+FROM fedora:34
+MAINTAINER Odoo S.A. <info@odoo.com>
+
+# Dependencies and postgres
+RUN dnf update -d 0 -e 0 -y && \
+    dnf install -d 0 -e 0 \
+        createrepo \
+        libsass \
+        postgresql \
+        postgresql-contrib \
+        postgresql-devel \
+        postgresql-libs \
+        postgresql-server \
+        python3-PyPDF2 \
+        python3-babel \
+        python3-dateutil \
+        python3-decorator \
+        python3-docutils \
+        python3-freezegun \
+        python3-gevent \
+        python3-greenlet \
+        python3-idna \
+        python3-jinja2 \
+        python3-lxml \
+        python3-markupsafe \
+        python3-mock \
+        python3-num2words \
+        python3-ofxparse \
+        python3-passlib \
+        python3-pillow \
+        python3-polib \
+        python3-psutil \
+        python3-psycopg2 \
+        python3-pydot \
+        python3-pyldap \
+        python3-pyOpenSSL \
+        python3-pyserial \
+        python3-pytz \
+        python3-pyusb \
+        python3-qrcode \
+        python3-reportlab \
+        python3-requests \
+        python3-six \
+        python3-stdnum \
+        python3-vobject \
+        python3-werkzeug \
+        python3-xlrd \
+        python3-xlsxwriter \
+        python3-xlwt \
+        python3-zeep \
+        rpmdevtools -y && \
+    dnf clean all
+
+# Postgres configuration
+RUN mkdir -p /var/lib/postgres/data
+RUN chown -R postgres:postgres /var/lib/postgres/data
+RUN su postgres -c "initdb -D /var/lib/postgres/data -E UTF-8"
+RUN cp /usr/share/pgsql/postgresql.conf.sample /var/lib/postgres/data/postgresql.conf
+
+RUN echo "PS1=\"[\u@nightly-tests] # \"" > ~/.bashrc

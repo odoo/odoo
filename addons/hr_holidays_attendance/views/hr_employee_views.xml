@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="hr_user_view_form" model="ir.ui.view">
+        <field name="name">hr.user.preferences.view.form.attendance.inherit</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="hr_attendance.hr_user_view_form"/>
+        <field name="arch" type="xml">
+            <!-- Hide Attendance button -->
+            <xpath expr="//button[@id='hr_attendance_button']" position="attributes">
+                <attribute name="attrs">
+                    {'invisible': ['|', '|', '&amp;',
+                        ('hr_presence_state', '=', 'present'),
+                        ('attendance_state', '=', 'checked_out'),
+                        ('is_absent', '=', True),
+                        ('id', '=', False),
+                    ]}
+                </attribute>
+            </xpath>
+            <!-- Merge invisible attr of both module -->
+            <xpath expr="//button[@id='hr_presence_button']" position="attributes">
+                <attribute name="attrs">
+                    {'invisible': ['|', '|', '|',
+                        ('is_absent', '=', True),
+                        ('hr_presence_state', '=', 'absent'),
+                        ('attendance_state', '=', 'checked_in'),
+                        ('id', '=', False),
+                    ]}
+                </attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_employee_view_form_inherit" model="ir.ui.view">
+        <field name="name">hr.holidays.attendance.employee.view.form.inherit</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button
+                    name="%(hr_leave_allocation_overtime_manager_action)d"
+                    string="Deduct Extra Hours"
+                    type="action"
+                    groups="hr_holidays.group_hr_holidays_user"
+                    context="{'default_employee_id': id, 'deduct_extra_hours': True}"
+                    attrs="{'invisible': [('total_overtime', '&lt;=', 1)]}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_employee_view_form" model="ir.ui.view">
+        <field name="name">hr.employee.holidays.attendance.inherit</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr_attendance.view_employee_form_inherit_hr_attendance"/>
+        <field name="arch" type="xml">
+            <!-- Hide Attendance button -->
+            <xpath expr="//button[@id='hr_attendance_button']" position="attributes">
+                <attribute name="attrs">
+                    {'invisible': ['|', '|', '&amp;',
+                        ('hr_presence_state', '=', 'present'),
+                        ('attendance_state', '=', 'checked_out'),
+                        ('is_absent', '=', True),
+                        ('id', '=', False),
+                    ]}
+                </attribute>
+            </xpath>
+            <!-- Merge invisible attr of both module -->
+            <xpath expr="//button[@id='hr_presence_button']" position="attributes">
+                <attribute name="attrs">
+                    {'invisible': ['|', '|', '|',
+                        ('is_absent', '=', True),
+                        ('hr_presence_state', '=', 'absent'),
+                        ('attendance_state', '=', 'checked_in'),
+                        ('id', '=', False),
+                    ]}
+                </attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

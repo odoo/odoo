@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="forum_searchbar_input_snippet_options" inherit_id="website.searchbar_input_snippet_options" name="forum search bar snippet options">
+    <xpath expr="//div[@data-js='SearchBar']/we-select[@data-name='scope_opt']" position="inside">
+        <!-- Using /website/search/forums as result because the current forum search results page cannot be used across several forums -->
+        <we-button data-set-search-type="forums" data-select-data-attribute="forums" data-name="search_forums_opt" data-form-action="/website/search/forums">Forums</we-button>
+    </xpath>
+    <xpath expr="//div[@data-js='SearchBar']/we-select[@data-name='order_opt']" position="inside">
+        <we-button data-set-order-by="write_date asc" data-select-data-attribute="write_date asc" data-dependencies="search_forums_opt" data-name="date_asc_opt">Date (low to high)</we-button>
+        <we-button data-set-order-by="write_date desc" data-select-data-attribute="write_date desc" data-dependencies="search_forums_opt" data-name="date_desc_opt">Date (high to low)</we-button>
+    </xpath>
+    <xpath expr="//div[@data-js='SearchBar']/div[@data-dependencies='limit_opt']" position="inside">
+        <we-checkbox string="Description" data-dependencies="search_forums_opt" data-select-data-attribute="true" data-attribute-name="displayDescription"
+            data-apply-to=".search-query"/>
+        <we-checkbox string="Date" data-dependencies="search_forums_opt" data-select-data-attribute="true" data-attribute-name="displayDetail"
+            data-apply-to=".search-query"/>
+    </xpath>
+</template>
+
+</odoo>

@@ -1,0 +1,341 @@
+@font-face {
+  font-family: 'odoo_ui_icons';
+  src: url('fonts/odoo_ui_icons.woff2') format('woff2'), url('fonts/odoo_ui_icons.woff?wpto0f') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+.oi {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'odoo_ui_icons' !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.oi-odoo:before {
+  content: "\e900";
+}
+.oi-studio--filled:before {
+  content: "\e901";
+}
+.oi-studio:before {
+  content: "\e902";
+}
+.oi-apps:before {
+  content: "\e910";
+}
+.oi-discuss:before {
+  content: "\e90f";
+}
+.oi-chart--area--filled:before {
+  content: "\e90d";
+}
+.oi-chart--cohort:before {
+  content: "\e90e";
+}
+.oi-filter--filled:before {
+  content: "\e90c";
+}
+.oi-message--filled:before {
+  content: "\e909";
+}
+.oi-message:before {
+  content: "\e90a";
+}
+.oi-chevron-right--thick:before {
+  content: "\e907";
+}
+.oi-chevron-left--thick:before {
+  content: "\e908";
+}
+.oi-pencil:before {
+  content: "\e903";
+}
+.oi-mobile:before {
+  content: "\e904";
+}
+.oi-add--thick:before {
+  content: "\e905";
+}
+.oi-subtract--thick:before {
+  content: "\e906";
+}
+.oi-add:before {
+  content: "\e90b";
+}
+.oi-alarm--add:before {
+  content: "\e915";
+}
+.oi-align--vertical-top:before {
+  content: "\e91d";
+}
+.oi-arrow--down:before {
+  content: "\e93a";
+}
+.oi-arrow--left:before {
+  content: "\e93b";
+}
+.oi-arrow--right:before {
+  content: "\e93c";
+}
+.oi-arrow--up:before {
+  content: "\e93f";
+}
+.oi-attachment:before {
+  content: "\e94c";
+}
+.oi-calendar--heat-map:before {
+  content: "\e992";
+}
+.oi-calendar:before {
+  content: "\e995";
+}
+.oi-caret--down:before {
+  content: "\e99c";
+}
+.oi-caret--left:before {
+  content: "\e99d";
+}
+.oi-caret--right:before {
+  content: "\e99e";
+}
+.oi-caret--sort--down:before {
+  content: "\e99f";
+}
+.oi-caret--sort--up:before {
+  content: "\e9a0";
+}
+.oi-caret--sort:before {
+  content: "\e9a1";
+}
+.oi-caret--up:before {
+  content: "\e9a2";
+}
+.oi-chart--bullet:before {
+  content: "\e9c3";
+}
+.oi-chart--column:before {
+  content: "\e9c8";
+}
+.oi-chart--line-smooth:before {
+  content: "\e9d2";
+}
+.oi-chart--pie:before {
+  content: "\e9dc";
+}
+.oi-chart--stacked:before {
+  content: "\e9e7";
+}
+.oi-chat--launch:before {
+  content: "\e9f0";
+}
+.oi-chat:before {
+  content: "\e9f4";
+}
+.oi-checkmark:before {
+  content: "\ea02";
+}
+.oi-chevron--down:before {
+  content: "\ea05";
+}
+.oi-chevron--left:before {
+  content: "\ea06";
+}
+.oi-chevron--mini:before {
+  content: "\ea07";
+}
+.oi-chevron--right:before {
+  content: "\ea08";
+}
+.oi-chevron--up:before {
+  content: "\ea0c";
+}
+.oi-close:before {
+  content: "\ea22";
+}
+.oi-connection--two-way:before {
+  content: "\ea51";
+}
+.oi-container-software:before {
+  content: "\ea57";
+}
+.oi-contrast:before {
+  content: "\ea5c";
+}
+.oi-cross-tab:before {
+  content: "\ea6d";
+}
+.oi-dashboard:before {
+  content: "\ea85";
+}
+.oi-data--base:before {
+  content: "\ea89";
+}
+.oi-data--check:before {
+  content: "\ea8b";
+}
+.oi-debug:before {
+  content: "\eaa8";
+}
+.oi-document--download:before {
+  content: "\eae6";
+}
+.oi-event--schedule:before {
+  content: "\eb1d";
+}
+.oi-event:before {
+  content: "\eb1e";
+}
+.oi-filter:before {
+  content: "\eb42";
+}
+.oi-headphones:before {
+  content: "\ebaa";
+}
+.oi-headset:before {
+  content: "\ebab";
+}
+.oi-launch:before {
+  content: "\ec06";
+}
+.oi-layers:before {
+  content: "\ec07";
+}
+.oi-map:before {
+  content: "\ec60";
+}
+.oi-maximize:before {
+  content: "\ec63";
+}
+.oi-menu:before {
+  content: "\ec6a";
+}
+.oi-microphone--filled:before {
+  content: "\ec6e";
+}
+.oi-microphone--off--filled:before {
+  content: "\ec6f";
+}
+.oi-microphone--off:before {
+  content: "\ec70";
+}
+.oi-microphone:before {
+  content: "\ec71";
+}
+.oi-open-panel--filled--right:before {
+  content: "\ecd5";
+}
+.oi-overflow-menu--horizontal:before {
+  content: "\ece0";
+}
+.oi-overflow-menu--vertical:before {
+  content: "\ece1";
+}
+.oi-pen:before {
+  content: "\ed04";
+}
+.oi-phone--application:before {
+  content: "\ed0c";
+}
+.oi-phone--filled:before {
+  content: "\ed0f";
+}
+.oi-phone--voice--filled:before {
+  content: "\ed1c";
+}
+.oi-phone--voice:before {
+  content: "\ed1d";
+}
+.oi-phone:before {
+  content: "\ed1e";
+}
+.oi-printer:before {
+  content: "\ed3e";
+}
+.oi-reminder:before {
+  content: "\ed62";
+}
+.oi-screen:before {
+  content: "\edab";
+}
+.oi-search:before {
+  content: "\edb1";
+}
+.oi-settings--adjust:before {
+  content: "\edc2";
+}
+.oi-settings:before {
+  content: "\edc6";
+}
+.oi-show-data--cards:before {
+  content: "\edd7";
+}
+.oi-sort--ascending:before {
+  content: "\ee03";
+}
+.oi-sort--descending:before {
+  content: "\ee04";
+}
+.oi-star--filled:before {
+  content: "\ee0d";
+}
+.oi-star--half:before {
+  content: "\ee0e";
+}
+.oi-star:before {
+  content: "\ee10";
+}
+.oi-subtract:before {
+  content: "\ee26";
+}
+.oi-table--split:before {
+  content: "\ee35";
+}
+.oi-table:before {
+  content: "\ee37";
+}
+.oi-trash-can:before {
+  content: "\eeb5";
+}
+.oi-user--follow:before {
+  content: "\eee2";
+}
+.oi-user--multiple:before {
+  content: "\eee5";
+}
+.oi-user:before {
+  content: "\eeef";
+}
+.oi-video--filled:before {
+  content: "\eefe";
+}
+.oi-video:before {
+  content: "\ef01";
+}
+.oi-view-next:before {
+  content: "\ef07";
+}
+.oi-volume--mute--filled:before {
+  content: "\ef1b";
+}
+.oi-volume--mute:before {
+  content: "\ef1c";
+}
+.oi-volume--up--filled:before {
+  content: "\ef20";
+}
+.oi-volume--up:before {
+  content: "\ef21";
+}
+.oi-alarm:before {
+  content: "\e917";
+}

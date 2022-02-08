@@ -1,0 +1,92 @@
+<odoo>
+    <data>
+        <record id="default_faq" model="ir.ui.view">
+            <field name="name">Faq Accordion</field>
+            <field name="type">qweb</field>
+            <field name="key">website_forum.faq_accordion</field>
+            <field name="arch" type="xml">
+                <section class="s_faq_collapse pt32 pb32">
+                    <div class="container">
+                        <div id="myCollapse" class="accordion" role="tablist">
+                            <div class="card bg-white" data-name="Item">
+                                <a href="#" role="tab" data-toggle="collapse" aria-expanded="false" class="collapsed card-header" data-target="#collapse1">
+                                    <b>What kinds of questions can I ask here?</b>
+                                </a>
+                                <div id="collapse1" class="collapse" data-parent="#myCollapse" role="tabpanel">
+                                    <div class="card-body">
+                                        <p>This community is for professional and enthusiast users, partners and programmers. You can ask questions about:</p>
+                                        <ul>
+                                            <li>how to install Odoo on a specific infrastructure,</li>
+                                            <li>how to configure or customize Odoo to specific business needs,</li>
+                                            <li>what's the best way to use Odoo for a specific business need,</li>
+                                            <li>how to develop modules for your own need,</li>
+                                            <li>specific questions about Odoo service offers, etc.</li>
+                                        </ul>
+                                        <p><b>Before you ask - please make sure to search for a similar question.</b> You can search questions by their title or tags. It’s also OK to answer your own question.</p>
+                                        <p><b>Please avoid asking questions that are too subjective and argumentative</b> or not relevant to this community.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card bg-white" data-name="Item">
+                                <a href="#" role="tab" data-toggle="collapse" aria-expanded="false" class="collapsed card-header" data-target="#collapse2">
+                                    <b>What should I avoid in my questions?</b>
+                                </a>
+                                <div id="collapse2" class="collapse" data-parent="#myCollapse" role="tabpanel">
+                                    <div class="card-body">
+                                        <p>You should only ask practical, answerable questions based on actual problems that you face. Chatty, open-ended questions diminish the usefulness of this site and push other questions off the front page.</p>
+                                        <p>To prevent your question from being flagged and possibly removed, avoid asking subjective questions where …</p>
+                                        <ul>
+                                            <li>every answer is equally valid: “What’s your favorite ______?”</li>
+                                            <li>your answer is provided along with the question, and you expect more answers: “I use ______ for ______, what do you use?”</li>
+                                            <li>there is no actual problem to be solved: “I’m curious if other people feel like I do.”</li>
+                                            <li>we are being asked an open-ended, hypothetical question: “What if ______ happened?”</li>
+                                            <li>it is a rant disguised as a question: “______ sucks, am I right?”</li>
+                                        </ul>
+                                        <p>If you fit in one of these example or if your motivation for asking the question is “I would like to participate in a discussion about ______”, then you should not be asking here but on our mailing lists. However, if your motivation is “I would like others to explain ______ to me”, then you are probably OK.</p>
+                                        <p>(The above section was adapted from Stackoverflow’s FAQ.)</p>
+                                        <p>More over:</p>
+                                        <ul>
+                                            <li><b>Answers should not add or expand questions</b>. Instead either edit the question or add a question comment.</li>
+                                            <li><b>Answers should not comment other answers</b>. Instead add a comment on the other answers.</li>
+                                            <li><b>Answers shouldn't just point to other Questions</b>. Instead add a question comment indication "Possible duplicate of...". However, it's ok to include links to other questions or answers providing relevant additional information.</li>
+                                            <li><b>Answers shouldn't just provide a link a solution</b>. Instead provide the solution description text in your answer, even if it's just a copy/paste. Links are welcome, but should be complementary to answer, referring sources or additional reading.</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card bg-white" data-name="Item">
+                                <a href="#" role="tab" data-toggle="collapse" aria-expanded="false" class="collapsed card-header" data-target="#collapse3">
+                                    <b>What should I avoid in my answers?</b>
+                                </a>
+                                <div id="collapse3" class="collapse"  data-parent="#myCollapse" role="tabpanel">
+                                    <div class="card-body">
+                                        <p><b>Answers should not add or expand questions</b>. Insteadeither edit the question or add a comment.</p>
+                                        <p><b>Answers should not comment other answers</b>. Instead add a comment on the other answers.</p>
+                                        <p><b>Answers shouldn't just point to other questions</b>.Instead add a comment indicating <i>"Possible duplicate of..."</i>. However, it's fine to include links to other questions or answers providing relevant additional information.</p>
+                                        <p> <b>Answers shouldn't just provide a link a solution</b>. Instead provide the solution description text in your answer, even if it's just a copy/paste. Links are welcome, but should be complementary to answer, referring sources or additional reading.</p>
+                                        <p><b>Answers should not start debates</b> This community Q&amp;A is not a discussion group. Please avoid holding debates in your answers as they tend to dilute the essence of questions and answers. For brief discussions please use commenting facility.</p>
+                                        <p>When a question or answer is upvoted, the user who posted them will gain some points, which are called "karma points". These points serve as a rough measure of the community trust to him/her. Various moderation tasks are gradually assigned to the users based on those points.</p>
+                                        <p>For example, if you ask an interesting question or give a helpful answer, your input will be upvoted. On the other hand if the answer is misleading - it will be downvoted. Each vote in favor will generate 10 points, each vote against will subtract 10 points. There is a limit of 200 points that can be accumulated for a question or answer per day. The table given at the end explains reputation point requirements for each type of moderation task.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card bg-white" data-name="Item">
+                                <a href="#" role="tab" data-toggle="collapse" aria-expanded="false" class="collapsed card-header" data-target="#collapse4">
+                                    <b>Why can other people edit my questions/answers?</b>
+                                </a>
+                                <div id="collapse4" class="collapse" data-parent="#myCollapse" role="tabpanel">
+                                    <div class="card-body">
+                                        <p>The goal of this site is create a relevant knowledge base that would answer questions related to Odoo.</p>
+                                        <p>Therefore questions and answers can be edited like wiki pages by experienced users of this site in order to improve the overall quality of the knowledge base content. Such privileges are granted based on user karma level: you will be able to do the same once your karma gets high enough.</p>
+                                        <p>If this approach is not for you, please respect the community.</p>
+                                        <a t-attf-href="/forum/#{slug(forum)}/faq/karma">Here a table with the privileges and the karma level</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.ChatWindow" owl="1">
+        <div class="o_ChatWindow bg-white" t-attf-class="{{ className }}" tabindex="0" t-att-data-visible-index="chatWindow ? chatWindow.visibleIndex : undefined"
+            t-att-class="{
+                'o-focused': chatWindow and chatWindow.isFocused,
+                'o-folded': chatWindow and chatWindow.isFolded,
+                'o-fullscreen': props.isFullscreen,
+                'o-mobile': messaging and messaging.device.isMobile,
+                'o-new-message': chatWindow and !chatWindow.thread,
+            }" t-on-keydown="_onKeydown" t-on-focusout="_onFocusout" t-att-data-chat-window-local-id="chatWindow ? chatWindow.localId : undefined" t-att-data-thread-local-id="chatWindow ? (chatWindow.thread ? chatWindow.thread.localId : '') : undefined" t-ref="root"
+        >
+            <t t-if="chatWindow">
+                <ChatWindowHeader
+                    className="'o_ChatWindow_header'"
+                    chatWindowLocalId="chatWindow.localId"
+                    hasCloseAsBackButton="props.hasCloseAsBackButton"
+                    isExpandable="props.isExpandable"
+                    onClicked="_onClickedHeader"
+                />
+                <t t-if="chatWindow.thread and chatWindow.thread.hasMemberListFeature and chatWindow.isMemberListOpened">
+                    <ChannelMemberList channelLocalId="chatWindow.thread.localId" className="'bg-white'"/>
+                </t>
+                <t t-if="chatWindow.channelInvitationForm">
+                    <ChannelInvitationForm className="'o_ChatWindow_channelInvitationForm'" localId="chatWindow.channelInvitationForm.localId"/>
+                </t>
+                <t t-if="chatWindow.threadView">
+                    <ThreadView
+                        className="'o_ChatWindow_thread'"
+                        hasComposerCurrentPartnerAvatar="false"
+                        hasComposerSendButton="messaging.device.isMobile"
+                        localId="chatWindow.threadView.localId"
+                        onFocusin="_onFocusinThread"
+                    />
+                </t>
+                <t t-if="chatWindow.hasNewMessageForm">
+                    <div class="o_ChatWindow_newMessageForm">
+                        <span class="o_ChatWindow_newMessageFormLabel">
+                            To:
+                        </span>
+                        <AutocompleteInput
+                            className="'o_ChatWindow_newMessageFormInput'"
+                            placeholder="newMessageFormInputPlaceholder"
+                            select="_onAutocompleteSelect"
+                            source="_onAutocompleteSource"
+                            onFocusin="chatWindow.onFocusInNewMessageFormInput"
+                            t-ref="input"
+                        />
+                    </div>
+                </t>
+            </t>
+        </div>
+    </t>
+
+</templates>

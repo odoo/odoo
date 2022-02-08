@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_quotes_carousel" name="Quotes">
+    <section class="s_quotes_carousel_wrapper" data-vxml="001" data-vcss="001">
+        <t t-set="uniq" t-value="datetime.datetime.now().microsecond"/>
+        <div t-attf-id="myQuoteCarousel{{uniq}}" class="s_quotes_carousel s_carousel_default carousel slide o_cc o_cc2" data-interval="10000">
+            <!-- Indicators -->
+            <ol class="carousel-indicators">
+                <li t-attf-data-target="#myQuoteCarousel{{uniq}}" data-slide-to="0" class="active"/>
+                <li t-attf-data-target="#myQuoteCarousel{{uniq}}" data-slide-to="1"/>
+                <li t-attf-data-target="#myQuoteCarousel{{uniq}}" data-slide-to="2"/>
+            </ol>
+            <!-- Content -->
+            <div class="carousel-inner">
+                <!-- #01 -->
+                <div class="carousel-item active oe_img_bg o_bg_img_center pt80 pb80" style="background-image: url('/web/image/website.s_quotes_carousel_demo_image_0'); background-position: 50% 50%;" data-name="Slide">
+                    <div class="container">
+                        <blockquote class="s_blockquote s_blockquote_classic blockquote mx-auto w-50" data-name="Blockquote">
+                            <i class="fa fa-1x fa-quote-left rounded float-left bg-o-color-2 s_blockquote_icon"/>
+                            <div class="s_blockquote_content o_cc1">
+                                <p>Write a quote here from one of your customers. Quotes are a great way to build confidence in your products or services.</p>
+                                <footer class="blockquote-footer">
+                                    <img src="/web/image/website.s_quotes_carousel_demo_image_3" class="s_blockquote_avatar img rounded-circle mr-2" alt=""/>
+                                    <span class="s_blockquote_author"><b>Jane DOE</b> &#8226; CEO of MyCompany</span>
+                                </footer>
+                            </div>
+                        </blockquote>
+                    </div>
+                </div>
+                <!-- #02 -->
+                <div class="carousel-item oe_img_bg o_bg_img_center pt80 pb80" style="background-image: url('/web/image/website.s_quotes_carousel_demo_image_1'); background-position: 50% 50%;" data-name="Slide">
+                    <div class="container">
+                        <blockquote class="s_blockquote s_blockquote_classic blockquote mr-auto w-50" data-name="Blockquote">
+                            <i class="fa fa-1x fa-quote-left rounded float-left bg-o-color-2 s_blockquote_icon"/>
+                            <div class="s_blockquote_content o_cc1">
+                                <p>Write a quote here from one of your customers. Quotes are a great way to build confidence in your products or services.</p>
+                                <footer class="blockquote-footer">
+                                    <img src="/web/image/website.s_quotes_carousel_demo_image_4" class="s_blockquote_avatar img rounded-circle mr-2" alt=""/>
+                                    <span class="s_blockquote_author"><b>John DOE</b> &#8226; CEO of MyCompany</span>
+                                </footer>
+                            </div>
+                        </blockquote>
+                    </div>
+                </div>
+                <!-- #03 -->
+                <div class="carousel-item oe_img_bg o_bg_img_center pt80 pb80" style="background-image: url('/web/image/website.s_quotes_carousel_demo_image_2'); background-position: 50% 50%;" data-name="Slide">
+                    <div class="container">
+                        <blockquote class="s_blockquote s_blockquote_classic blockquote ml-auto w-50" data-name="Blockquote">
+                            <i class="fa fa-1x fa-quote-left rounded float-left bg-o-color-2 s_blockquote_icon"/>
+                            <div class="s_blockquote_content o_cc1">
+                                <p>Write a quote here from one of your customers. Quotes are a great way to build confidence in your products or services.</p>
+                                <footer class="blockquote-footer">
+                                    <img src="/web/image/website.s_quotes_carousel_demo_image_5" class="s_blockquote_avatar img rounded-circle mr-2" alt=""/>
+                                    <span class="s_blockquote_author"><b>Iris DOE</b> &#8226; CEO of MyCompany</span>
+                                </footer>
+                            </div>
+                        </blockquote>
+                    </div>
+                </div>
+            </div>
+            <!-- Controls -->
+            <div class="carousel-control-prev o_not_editable" t-attf-data-target="#myQuoteCarousel{{uniq}}" data-slide="prev" role="img" aria-label="Previous" title="Previous">
+                <span class="carousel-control-prev-icon"/>
+                <span class="sr-only">Previous</span>
+            </div>
+            <div class="carousel-control-next o_not_editable" t-attf-data-target="#myQuoteCarousel{{uniq}}" data-slide="next" role="img" aria-label="Next" title="Next">
+                <span class="carousel-control-next-icon"/>
+                <span class="sr-only">Next</span>
+            </div>
+        </div>
+    </section>
+</template>
+
+<record id="website.s_quotes_carousel_000_scss" model="ir.asset">
+    <field name="name">Quotes carousel 000 SCSS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website/static/src/snippets/s_quotes_carousel/000.scss</field>
+    <field name="active" eval="False"/>
+</record>
+
+<record id="website.s_quotes_carousel_001_scss" model="ir.asset">
+    <field name="name">Quotes carousel 001 SCSS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website/static/src/snippets/s_quotes_carousel/001.scss</field>
+</record>
+
+</odoo>

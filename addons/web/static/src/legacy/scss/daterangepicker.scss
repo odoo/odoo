@@ -1,0 +1,86 @@
+// Match DateTimePicker styling
+
+.daterangepicker {
+    font-family: inherit;
+
+    .calendar-table {
+        td, th {
+            border-bottom-color: $table-border-color;
+
+            &, &.start-date.end-date {
+                border-radius: 0;
+            }
+
+            &:not(.active) {
+                color: gray('900');
+            }
+
+            &.prev, &.next, &.off.ends {
+                @include o-hover-opacity(.5);
+            }
+        }
+
+        td {
+            font-size: ($font-size-base + $font-size-sm) * .5;
+
+            &.today {
+                position: relative;
+
+                &:before {
+                    content: '';
+                    display: inline-block;
+                    position: absolute;
+                    bottom: 4px;
+                    right: 4px;
+                    border: solid transparent;
+                    border-width: 0 0 7px 7px;
+                    border-bottom-color: $o-brand-primary;
+                    border-top-color: $dropdown-border-color;
+                }
+            }
+
+            &.in-range {
+                background-color: rgba($o-brand-odoo, 0.3);
+                color: $o-main-text-color;
+                text-shadow: none;
+            }
+
+            &.active,
+            &.active:hover {
+                background-color: $o-brand-odoo;
+                color: $white;
+                text-shadow: 0 1px 0 rgba(0, 0, 0, 0.25);
+            }
+        }
+
+        thead tr {
+            &:nth-child(1) th {
+                height: 30px;
+                line-height: 30px;
+
+                &.month {
+                    font-size: $font-size-lg;
+                }
+            }
+            &:nth-child(2) th {
+                background-color: gray('100');
+                font-size: $font-size-sm;
+                font-weight: $font-weight-bold;
+                color: $o-main-text-color;
+            }
+        }
+    }
+
+    .calendar-time select {
+        &.hourselect, &.minuteselect, &.secondselect, &.ampmselect {
+            display: initial;
+            -webkit-appearance: menulist-button;
+            -moz-appearance: menulist-button;
+            appearance: menulist-button;
+        }
+    }
+
+    .drp-buttons .drp-selected {
+        display: none;
+    }
+}

@@ -1,0 +1,58 @@
+.o_report_reception {
+
+    .o_priority {
+        &.o_priority_star {
+            font-size: 1.35em;
+            &.fa-star {
+                color: gold;
+            }
+        }
+    }
+    & .btn {
+        &.btn-primary {
+            height: 31px;
+            background-color: $o-brand-primary;
+            border-color: $o-brand-primary;
+            &:hover:not([disabled]) {
+                background-color: darken($o-brand-primary, 10%);
+            }
+            &.o_report_reception_assign,
+            &.o_report_reception_unassign {
+                width: 78px;
+            }
+            & .o_print_label_text {
+                width: 73px;
+            }
+        }
+    }
+    & .badge {
+        line-height: .75;
+    }
+
+    @each $-name, $-bg-color in $theme-colors {
+        $-safe-text-color: color-yiq(mix($-bg-color, $o-view-background-color));
+        @include bg-variant(".bg-#{$-name}-light", rgba(theme-color($-name), 0.5), $-safe-text-color);
+    }
+}
+
+.o_label_page {
+    margin-left: -3mm;
+    margin-right: -3mm;
+    overflow: hidden;
+    page-break-before: always;
+    padding: 1mm 0mm 0mm;
+
+    &.o_label_dymo {
+        font-size:80%;
+        width: 57mm;
+        height: 32mm;
+        & span, div {
+            line-height: 1;
+            white-space: nowrap;
+        }
+    }
+
+    span[itemprop="name"] {
+        font-weight: bold;
+    }
+}

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="slides.course.unsubscribe.modal">
+        <div>
+            <div class="o_w_slide_unsubscribe_modal_container">
+                <t t-call="slides.course.unsubscribe.modal.subscription"/>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="slides.course.unsubscribe.modal.subscription">
+        <form class="clearfix">
+            <div class="form-group row">
+                <div class="controls mt8 ml-3">
+                    <input id="subscribed" name="subscribed" type="checkbox"/>
+                    <label for="subscribed" class="col-form-label font-weight-normal">Be notified when a new content is added.</label>
+                </div>
+            </div>
+        </form>
+    </t>
+
+    <t t-name="slides.course.unsubscribe.modal.leave">
+        <p>Do you really want to leave the course?</p>
+        <p>All completed classes and earned karma will be lost.</p>
+    </t>
+
+</templates>

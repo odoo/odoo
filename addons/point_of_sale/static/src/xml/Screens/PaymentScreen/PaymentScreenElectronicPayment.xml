@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="PaymentScreenElectronicPayment" owl="1">
+        <div class="paymentline electronic_payment">
+            <t t-if="props.line.payment_status == 'pending'">
+                <div>
+                    Payment request pending
+                </div>
+                <div class="button send_payment_request highlight" title="Send Payment Request" t-on-click="trigger('send-payment-request', props.line)">
+                    Send
+                </div>
+            </t>
+            <t t-elif="props.line.payment_status == 'retry'">
+                <div>
+                    Transaction cancelled
+                </div>
+                <div class="button send_payment_request highlight" title="Send Payment Request" t-on-click="trigger('send-payment-request', props.line)">
+                    Retry
+                </div>
+            </t>
+            <t t-elif="props.line.payment_status == 'force_done'">
+                <div>
+                    Connection error
+                </div>
+                <div class="button send_force_done" title="Force Done" t-on-click="trigger('send-force-done', props.line)">
+                    Force done
+                </div>
+            </t>
+            <t t-elif="props.line.payment_status == 'waitingCard'">
+                <div>
+                    Waiting for card
+                </div>
+                <div class="button send_payment_cancel" title="Cancel Payment Request" t-on-click="trigger('send-payment-cancel', props.line)">
+                    Cancel
+                </div>
+            </t>
+            <t t-elif="['waiting', 'waitingCancel'].includes(props.line.payment_status)">
+                <div>
+                    Request sent
+                </div>
+                <div>
+                    <i class="fa fa-circle-o-notch fa-spin" role="img" />
+                </div>
+            </t>
+            <t t-elif="props.line.payment_status == 'reversing'">
+                <div>
+                    Reversal request sent to terminal
+                </div>
+                <div>
+                    <i class="fa fa-circle-o-notch fa-spin" role="img" />
+                </div>
+            </t>
+            <t t-elif="props.line.payment_status == 'done'">
+                <div>
+                    Payment Successful
+                </div>
+                <t t-if="props.line.can_be_reversed">
+                    <div class="button send_payment_reversal" title="Reverse Payment" t-on-click="trigger('send-payment-reverse', props.line)">
+                        Reverse
+                    </div>
+                </t>
+                <t t-else="">
+                    <div></div>
+                </t>
+            </t>
+            <t t-elif="props.line.payment_status == 'reversed'">
+                <div>
+                    Payment reversed
+                </div>
+                <div></div>
+            </t>
+        </div>
+    </t>
+
+</templates>

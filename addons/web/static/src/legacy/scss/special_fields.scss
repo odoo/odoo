@@ -1,0 +1,55 @@
+/*
+ IFRAME WRAPPER SCSS
+ */
+
+$preview_height: 1123 + 32;
+$preview_width: 794;
+$preview_scale: 0.50;
+
+@mixin o_preview_iframe_styling($scale) {
+
+  .o_preview_iframe_wrapper {
+    padding: 0;
+    overflow: hidden;
+    width: ($preview_width * $scale) + 0px;
+    height: ($preview_height * $scale) + 0px;
+    position: relative;
+  }
+
+  .o_preview_iframe {
+    width: $preview_width + 0px;
+    height: $preview_height + 0px;
+    border: 2px solid lightgrey;
+    overflow: hidden;
+
+    padding-top: 16px;
+    padding-bottom: 16px;
+
+    -ms-zoom: 0.5;
+    -moz-transform: scale($scale);
+    -moz-transform-origin: 0 0;
+    -o-transform: scale($scale);
+    -o-transform-origin: 0 0;
+    -webkit-transform: scale($scale);
+    -webkit-transform-origin: 0 0;
+  }
+
+  .o_iframe_wrapper_spinner {
+    position: absolute;
+    left: (($preview_width * $scale) / 2) - 40 + 0px;
+    top: (($preview_height * $scale) / 2) - 40 + 0px;
+    // -40 for width/2 and height/2 of the spinner
+  }
+
+}
+
+
+@include o_preview_iframe_styling($preview_scale)
+
+@media (max-width: 1488px) {
+  @include o_preview_iframe_styling($preview_scale * 0.80)
+}
+
+@media (max-width: 600px) {
+  @include o_preview_iframe_styling($preview_scale * 0.60)
+}

@@ -1,0 +1,328 @@
+.oe-floating {
+    box-shadow: 0px 3px 18px rgba(0, 0, 0, .23);
+    border-radius: 4px;
+    position: absolute;
+}
+
+/* toolbar styling */
+
+.oe-toolbar {
+    box-sizing: border-box;
+    position: absolute;
+    visibility: hidden;
+    height: fit-content;
+    width: fit-content;
+    padding-left: 5px;
+    padding-right: 5px;
+    background: #222222;
+    color: white;
+    border-radius: 8px;
+}
+.oe-toolbar.toolbar-bottom::before {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 0;
+    left: var(--arrow-left-pos);
+    top: var(--arrow-top-pos);
+    border: transparent 10px solid;
+    border-bottom: #222222 10px solid;
+    z-index: 0;
+}
+.oe-toolbar:not(.toolbar-bottom)::before {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 0;
+    left: var(--arrow-left-pos);
+    top: var(--arrow-top-pos);
+    border: transparent 10px solid;
+    border-top: #222222 10px solid;
+    z-index: 0;
+    pointer-events: none;
+}
+.oe-toolbar .button-group {
+    display: inline-block;
+    margin-right: 13px;
+}
+.oe-toolbar .button-group:last-of-type {
+    margin-right: 0;
+}
+.oe-toolbar .btn {
+    position: relative;
+    box-sizing: content-box;
+    display: inline-block;
+    padding: 7px;
+    color: white;
+}
+.oe-toolbar .btn:not(.disabled):hover {
+    background: #868686;
+}
+.oe-toolbar .dropdown-menu .btn {
+    background: #222222;
+}
+.oe-toolbar .btn.active {
+    background: #555555;
+}
+.oe-tablepicker-dropdown .oe-tablepicker {
+    margin: -3px 2px -6px 2px;
+}
+.oe-tablepicker {
+    width: max-content;
+    width: -webkit-max-content;
+}
+.oe-tablepicker-wrapper.oe-floating {
+    padding: 3px;
+    z-index: 1051;
+    background: white;
+}
+.oe-tablepicker-row {
+    line-height: 0;
+}
+.oe-tablepicker .oe-tablepicker-row .oe-tablepicker-cell {
+    display: inline-block;
+    background:  #EFEFEE;
+    width: 19px;
+    height: 19px;
+    padding: 0;
+    margin-right: 3px;
+    margin-bottom: 3px;
+}
+.oe-tablepicker .oe-tablepicker-row .oe-tablepicker-cell:last-of-type {
+    margin-right: 0;
+}
+.oe-tablepicker .oe-tablepicker-row .oe-tablepicker-cell.active {
+    background: #d3d1cb;
+}
+.oe-tablepicker-size {
+    text-align: center;
+    margin-top: 7px;
+}
+.oe-tablepicker-dropdown .oe-tablepicker-size {
+    color: white;
+}
+.oe-toolbar .dropdown-toggle {
+    background: transparent;
+    border: none;
+    padding: 7px;
+}
+.oe-toolbar .dropdown-toggle[aria-expanded="true"] {
+    background: #555555;
+}
+.oe-toolbar .dropdown-menu {
+    background: #222222;
+    min-width: max-content;
+    min-width: -webkit-max-content;
+    text-align: center;
+}
+.oe-toolbar .dropdown-item {
+    background: transparent;
+    color: white;
+}
+.oe-toolbar .dropdown-item pre,
+.oe-toolbar .dropdown-item h1,
+.oe-toolbar .dropdown-item h2,
+.oe-toolbar .dropdown-item h3,
+.oe-toolbar .dropdown-item h4,
+.oe-toolbar .dropdown-item h5,
+.oe-toolbar .dropdown-item h6,
+.oe-toolbar .dropdown-item blockquote {
+    margin: 0;
+    color: white;
+}
+.oe-toolbar li > a.dropdown-item {
+    color: white;
+}
+.oe-toolbar .dropdown-item:hover, .oe-toolbar .dropdown-item:focus {
+    color: white;
+    background: #868686;
+}
+.oe-toolbar .dropdown-item.active, .oe-toolbar .dropdown-item:active {
+    color: white;
+    background: #555555;
+}
+
+.oe-toolbar label {
+    display: inline-block;
+}
+
+.oe-toolbar label span {
+    display: inline-block;
+}
+
+.oe-toolbar input[type="color"] {
+    width: 0;
+    height: 0;
+    padding: 0;
+    border: none;
+    box-sizing: border-box;
+    position: absolute;
+    opacity: 0;
+    top: 100%;
+    margin: 2px 0 0;
+}
+
+.oe-toolbar #colorInputButtonGroup label {
+    margin-bottom: 0;
+}
+.oe-toolbar .color-indicator {
+    background-color: transparent;
+    padding-bottom: 4px;
+}
+.oe-toolbar .color-indicator.fore-color {
+    border-bottom: 2px solid var(--fore-color);
+    padding: 5px;
+}
+.oe-toolbar .color-indicator.hilite-color {
+    border-bottom: 2px solid var(--hilite-color);
+    padding: 5px;
+}
+.oe-toolbar #style .dropdown-menu {
+    text-align: left;
+}
+@media only screen and (max-width: 767px) {
+    .oe-toolbar {
+        position: relative;
+        visibility: visible;
+        width: 100%;
+        border-radius: 0;
+        background-color: white;
+    }
+    .oe-toolbar .btn {
+        color: black;
+    }
+}
+/* Content styling */
+
+li.oe-nested {
+    display: block;
+}
+.oe-commandbar-wrapper {
+    position: absolute;
+    z-index: 1051;
+    border: black;
+    background-color: white;
+    max-height: 40vh;
+    box-sizing: border-box;
+    max-width: 100%;
+    box-shadow: 0px 3px 18px rgba(0, 0, 0, .23);
+    border-radius: 4px;
+    overflow: hidden;
+    display: flex;
+}
+.oe-commandbar-mainWrapper {
+    flex: 1 1 auto;
+    overflow: auto;
+    padding: 5px 0;
+    overscroll-behavior: contain;
+}
+
+.oe-commandbar-groupName,  .oe-commandbar-noResult {
+    margin: 10px;
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 11px;
+}
+.oe-commandbar-groupName {
+    text-transform: uppercase;
+}
+.oe-commandbar-noResult {
+    font-size: 15px;
+}
+
+.oe-commandbar-commandWrapper {
+    display: flex;
+    padding: 3px 10px;
+    cursor: pointer;
+}
+
+.oe-commandbar-commandWrapper.active {
+    background: #EFEFEE;
+}
+
+i.oe-commandbar-commandImg {
+    display: flex;
+    height: 50px;
+    width: 50px;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    color: rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    font-size: 25px;
+}
+
+.oe-commandbar-commandTitle {
+    margin-top: 6px;
+    font-size: 14px;
+}
+
+.oe-commandbar-commandDescription {
+    color: rgba(0, 0, 0, 0.5);
+    font-size: 12px;
+    margin: 4px 0;
+}
+
+.oe-commandbar-commandRightCol {
+    margin: 0 10px;
+}
+
+.oe-commandbar-wrapper ::-webkit-scrollbar {
+    background: transparent;
+}
+.oe-commandbar-wrapper ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+.oe-commandbar-wrapper ::-webkit-scrollbar-thumb {
+    background: #D3D1CB;
+}
+.oe-commandbar-wrapper ::-webkit-scrollbar-track {
+    background: #EDECE9;
+}
+
+/* Command hints */
+
+.oe-hint {
+    position: relative;
+    caret-color: rgb(55, 53, 47);
+}
+.oe-hint:before {
+    content: attr(placeholder);
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    color: inherit;
+    opacity: 0.4;
+    pointer-events: none;
+    text-align: inherit;
+    width: 100%;
+}
+
+/* Collaboration cursor */
+.oe-collaboration-selections-container {
+    position: absolute;
+    isolation: isolate;
+    height: 0;
+    width: 0;
+    z-index: 1;
+}
+.oe-collaboration-caret-top-square {
+    min-height: 5px;
+    min-width: 5px;
+    color: #fff;
+    text-shadow: 0 0 5px #000;
+    position: absolute;
+    bottom: 100%;
+    left: -4px;
+    white-space: nowrap;
+}
+
+.oe-collaboration-caret-top-square:hover::before {
+    content: attr(data-client-name);
+}
+.oe-collaboration-caret-top-square:hover {
+    border-radius: 2px;
+    padding: 0.3em 0.6em;
+}

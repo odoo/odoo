@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_inventory">
+            <t t-call="web.html_container">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <br/>
+                        <h2>Inventory Count Sheet</h2>
+                        <t t-set="locations" t-value="docs.mapped('location_id')"/>
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th groups="stock.group_stock_multi_locations"><strong>Location</strong></th>
+                                    <th><strong>Product</strong></th>
+                                    <th groups="stock.group_production_lot"><strong>Lot/Serial Number</strong></th>
+                                    <th groups="stock.group_tracking_lot"><strong>Package</strong></th>
+                                    <th class="text-right"><strong>Available Quantity</strong></th>
+                                    <th class="text-right"><strong>On hand Quantity</strong></th>
+                                    <th class="text-right"><strong>Counted Quantity</strong></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="locations" t-as="location">
+                                    <tr groups="stock.group_stock_multi_locations">
+                                        <td colspan="2"><strong t-esc="location.display_name"/></td>
+                                        <td groups="stock.group_production_lot"></td>
+                                        <td groups="stock.group_tracking_lot"></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr t-foreach="docs.filtered(lambda quant: quant.location_id.id == location.id)" t-as="line">
+                                        <td groups="stock.group_stock_multi_locations"></td>
+                                        <td><span t-field="line.product_id"/></td>
+                                        <td groups="stock.group_production_lot"><span t-field="line.lot_id"/></td>
+                                        <td groups="stock.group_tracking_lot"><span t-field="line.package_id"/></td>
+                                        <td class="text-right"><span t-field="line.available_quantity"/> <span t-field="line.product_uom_id" groups="uom.group_uom"/></td>
+                                        <td class="text-right"><span t-field="line.quantity"/> <span t-field="line.product_uom_id" groups="uom.group_uom"/></td>
+                                        <td class="text-right">
+                                            <!-- If 0, then leave blank so users have space to write a number -->
+                                            <t t-if="line.inventory_quantity == 0"><span></span></t>
+                                            <t t-else=""><span t-field="line.inventory_quantity"/></t>
+                                            <span t-field="line.product_uom_id" groups="uom.group_uom"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

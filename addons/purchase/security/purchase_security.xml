@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+
+    <record model="ir.module.category" id="base.module_category_inventory_purchase">
+        <field name="description">Helps you manage your purchase-related processes such as requests for quotations, supplier bills, etc...</field>
+        <field name="sequence">8</field>
+    </record>
+
+    <record id="group_purchase_user" model="res.groups">
+        <field name="name">User</field>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="category_id" ref="base.module_category_inventory_purchase"/>
+    </record>
+
+    <record id="group_purchase_manager" model="res.groups">
+        <field name="name">Administrator</field>
+        <field name="category_id" ref="base.module_category_inventory_purchase"/>
+        <field name="implied_ids" eval="[(4, ref('group_purchase_user'))]"/>
+        <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+    </record>
+
+    <record id="group_warning_purchase" model="res.groups">
+        <field name="name">A warning can be set on a product or a customer (Purchase)</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
+    <record id="group_send_reminder" model="res.groups">
+        <field name="name">Send an automatic reminder email to confirm delivery</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
+</data>
+<data noupdate="1">
+    <record model="res.groups" id="base.group_user">
+        <field name="implied_ids" eval="[(4, ref('purchase.group_send_reminder'))]"/>
+    </record>
+
+    <record id="base.default_user" model="res.users">
+        <field name="groups_id" eval="[(4,ref('purchase.group_purchase_manager'))]"/>
+    </record>
+
+    <record model="ir.rule" id="purchase_order_comp_rule">
+        <field name="name">Purchase Order multi-company</field>
+        <field name="model_id" ref="model_purchase_order"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record model="ir.rule" id="purchase_order_line_comp_rule">
+        <field name="name">Purchase Order Line multi-company</field>
+        <field name="model_id" ref="model_purchase_order_line"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="portal_purchase_order_user_rule" model="ir.rule">
+        <field name="name">Portal Purchase Orders</field>
+        <field name="model_id" ref="purchase.model_purchase_order"/>
+        <field name="domain_force">['|', ('message_partner_ids','child_of',[user.commercial_partner_id.id]),('partner_id', 'child_of', [user.commercial_partner_id.id])]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+        <field name="perm_unlink" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_create" eval="0"/>
+    </record>
+
+    <record id="purchase_user_account_move_line_rule" model="ir.rule">
+        <field name="name">Purchase User Account Move Line</field>
+        <field name="model_id" ref="account.model_account_move_line"/>
+        <field name="domain_force">[('move_id.move_type', 'in', ('in_invoice', 'in_refund', 'in_receipt'))]</field>
+        <field name="groups" eval="[(4, ref('purchase.group_purchase_user'))]"/>
+    </record>
+    <record id="purchase_user_account_move_rule" model="ir.rule">
+        <field name="name">Purchase User Account Move</field>
+        <field name="model_id" ref="account.model_account_move"/>
+        <field name="domain_force">[('move_type', 'in', ('in_invoice', 'in_refund', 'in_receipt'))]</field>
+        <field name="groups" eval="[(4, ref('purchase.group_purchase_user'))]"/>
+    </record>
+    <record id="portal_purchase_order_line_rule" model="ir.rule">
+        <field name="name">Portal Purchase Order Lines</field>
+        <field name="model_id" ref="purchase.model_purchase_order_line"/>
+        <field name="domain_force">['|',('order_id.message_partner_ids','child_of',[user.commercial_partner_id.id]),('order_id.partner_id','child_of',[user.commercial_partner_id.id])]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+    </record>
+    <record model="ir.rule" id="purchase_bill_union_comp_rule">
+        <field name="name">Purchases &amp; Bills Union multi-company</field>
+        <field name="model_id" ref="model_purchase_bill_union"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="purchase_order_report_comp_rule" model="ir.rule">
+        <field name="name">Purchase Order Report multi-company</field>
+        <field name="model_id" ref="model_purchase_report"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+    </record>
+
+</data>
+</odoo>

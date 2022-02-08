@@ -1,0 +1,12 @@
+<?xml version="1.0" ?>
+<odoo>
+    <data noupdate="1">
+        <record id="sms_template_data_hr_presence" model="sms.template">
+            <field name="name">Employee: Presence Reminder</field>
+            <field name="model_id" ref="hr.model_hr_employee"/>
+            <field name="body">Exception made if there was a mistake of ours, it seems that you are not at your office and there is not request of time off from you.
+Please, take appropriate measures in order to carry out this work absence.
+Do not hesitate to contact your manager or the human resource department.</field>
+        </record>
+    </data>
+</odoo>

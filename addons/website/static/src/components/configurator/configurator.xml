@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="website.Configurator.SkipButton" owl="1">
+        <div class="container-fluid py-2 pb-md-3 text-right pr-lg-5">
+            <button class="btn btn-link" t-on-click="skip()">Skip and start from scratch</button>
+        </div>
+    </t>
+
+    <t t-name="website.Configurator.WelcomeScreen" owl="1">
+        <div class="o_configurator_screen h-100 d-flex flex-column o_welcome_screen">
+            <div class="container-fluid pt-3 pb-2">
+                <img class="ml-lg-5" style="height: 31px; width: 99px;" src="/website/static/src/img/odoo_logo.svg" title="Odoo Logo"/>
+            </div>
+            <div class="o_configurator_screen_content d-flex h-100">
+                <div class="container align-self-center o_configurator_show">
+                    <div class="display-4 mb-2">Ready to build the<br class="d-none d-lg-inline"/>
+                    <b>perfect website?</b>
+                </div>
+                <div class="lead font-weight-normal mb-4 text-600">We'll set you up and running in <b>4 steps</b>
+                </div>
+                <button class="o_configurator_show btn btn-primary btn-lg px-4 py-2" t-on-click="goToDescription()">Let's do it</button>
+            </div>
+        </div>
+        <SkipButton/>
+    </div>
+</t>
+
+<t t-name="website.Configurator.DescriptionScreen" owl="1">
+    <div class="o_configurator_screen h-100 d-flex flex-column o_description_screen">
+        <div class="container-fluid pt-3 pb-2">
+            <img class="ml-lg-5" style="height: 31px; width: 99px;" src="/website/static/src/img/odoo_logo.svg" title="Odoo Logo"/>
+        </div>
+        <div class="o_configurator_screen_content d-flex h-100 flex-grow-1">
+            <div class="container align-self-center">
+                <div class="o_configurator_typing_text d-inline d-md-block mb-md-2 mb-lg-4 o_configurator_show">
+                    <span>I want </span>
+                    <div t-attf-class="dropdown o_configurator_type_dd d-inline-block {{state.selectedType ? 'o_step_completed' : 'o_step_todo show'}}">
+                        <div class="w-100 px-2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <a class="d-flex align-items-center">
+                                <i class="text-primary" t-if="state.selectedType">
+                                    <t t-esc="getters.getSelectedType(state.selectedType).label" />
+                                </i>
+                                <i class="fa fa-angle-down text-black-50 ml-auto pl-2" role="img"/>
+                            </a>
+                        </div>
+                        <div t-attf-class="dropdown-menu border-0 shadow-lg {{state.selectedType ? 'o_step_completed' : 'o_step_todo show'}}" role="menu">
+                            <t t-foreach="getters.getWebsiteTypes()" t-as="type" t-key="type.name">
+                                <a t-att-title="type.name" t-att-data-id="type.id" t-on-click="selectWebsiteType" class="dropdown-item o_change_website_type">
+                                    <t t-esc="type.label"/>
+                                </a>
+                            </t>
+                        </div>
+                    </div>
+                    <span t-attf-class="mr-2 {{!state.selectedType ? 'o_configurator_hide' : 'o_configurator_show'}}"> for my</span>
+                </div>
+                <div t-attf-class="o_configurator_typing_text d-inline d-md-flex align-items-center o_configurator_industry mb-md-2 mb-lg-4 {{!state.selectedType ? 'o_configurator_hide' : 'o_configurator_show'}}">
+                    <label class="o_configurator_industry_wrapper mr-2">
+                        <input t-on-blur="_blurIndustrySelection" t-ref="industrySelection"/>
+                    </label>
+                    <span> business</span>
+                    <span t-att-class="!state.selectedIndustry ? 'o_configurator_hide' : 'o_configurator_show'">,</span>
+                </div>
+                <div t-attf-class="o_configurator_typing_text d-inline d-md-block mb-md-2 mb-lg-4 {{!state.selectedIndustry ? 'o_configurator_hide' : 'o_configurator_show'}}">
+                    <span>with the main objective to </span>
+                    <div t-attf-class="dropdown d-inline-block o_configurator_purpose_dd {{state.selectedPurpose ? 'o_step_completed' : 'o_step_todo'}}">
+                        <div class="w-100 px-2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <a class="d-flex align-items-center">
+                                <t t-if="state.selectedPurpose">
+                                    <t t-esc="getters.getSelectedPurpose(state.selectedPurpose).label" />
+                                </t>
+                                <i class="fa fa-angle-down text-black-50 ml-auto pl-2" role="img"/>
+                            </a>
+                        </div>
+                        <div class="dropdown-menu border-0 shadow-lg" role="menu">
+                            <t t-foreach="getters.getWebsitePurpose()" t-as="type" t-key="type.name">
+                                <a t-att-title="type.name" t-att-data-id="type.id" t-on-click="selectWebsitePurpose" class="dropdown-item o_change_website_purpose">
+                                    <t t-esc="type.label"/>
+                                </a>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <SkipButton/>
+    </div>
+</t>
+
+<t t-name="website.Configurator.PaletteSelectionScreen" owl="1">
+    <div class="o_configurator_screen h-100 d-flex flex-column o_palette_selection_screen">
+        <div class="container-fluid pt-3 pb-2">
+            <img class="ml-lg-5" style="height: 31px; width: 99px;" src="/website/static/src/img/odoo_logo.svg" title="Odoo Logo"/>
+        </div>
+        <div class="o_configurator_screen_content container palette_selection d-flex flex-grow-1 h-100">
+            <div class="d-flex flex-column flex-lg-row w-100 h-100 h-lg-auto align-self-md-center o_configurator_show">
+                <div class="w-100 w-lg-25 order-lg-3 my-4 my-md-0 d-flex flex-column">
+                    <div class="h4 text-center">
+                        <b>Detect</b> from Logo</div>
+                    <div class="d-flex flex-column flex-grow-1 py-4">
+                        <div t-on-click="uploadLogo" t-attf-class="o_configurator_logo_upload position-relative btn-link rounded bg-100 overflow-hidden d-flex flex-grow-1 justify-content-center align-items-center text-decoration-none {{state.logo? 'h-50' : ''}}">
+                            <input type="file" class="logo_selection_input" t-on-change="changeLogo" style="display:none" name="logo_selection" t-ref="logoSelectionInput" accept="image/*"/>
+                            <div class="o_configurator_logo_button text-center">
+                                <i t-attf-class="fa fa-cloud-upload {{state.logo? 'fa-4x' : 'fa-6x'}}"></i>
+                                <div class="text-center">Upload <span t-if="state.logo">a new image</span>
+                                </div>
+                            </div>
+                            <div t-if="state.logo" class="o_configurator_logo_wrapper position-absolute d-flex justify-content-center align-items-center bg-white w-100 h-100">
+                                <img style="height: 120px" t-attf-src="{{state.logo}}"/>
+                            </div>
+                        </div>
+                        <div t-if="state.recommendedPalette" class="w-75 mx-auto px-2 pt-3" style="max-width: 184px;">
+                            <div t-attf-class="palette_card rounded-pill overflow-hidden d-flex {{getters.getSelectedPaletteName() == 'recommendedPalette' ? 'selected' : ''}}"
+                                 t-on-click="selectPalette('recommendedPalette')" t-attf-style="background-color: {{state.recommendedPalette.color3}}">
+                                <div class="color_sample w-100" t-attf-style="background-color: {{state.recommendedPalette.color1}}"/>
+                                <div class="color_sample w-100" t-attf-style="background-color: {{state.recommendedPalette.color3}}"/>
+                                <div class="color_sample w-100" t-attf-style="background-color: {{state.recommendedPalette.color2}}"/>
+                            </div>
+                            <button class="btn btn-primary text-nowrap mt-3 d-block mx-auto" t-on-click="selectPalette('recommendedPalette')">
+                                Let's go!<i class="fa fa-angle-right text-white-50 pl-2" role="img"/>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="position-relative d-flex justify-content-center order-lg-2 w-100 w-lg-0 py-3 py-lg-0 px-lg-5 mb-4 mb-lg-0">
+                    <div class="border-top w-100"></div>
+                    <b class="palette_selection_or bg-white text-muted w-lg-100 text-center px-3 py-lg-3">OR</b>
+                    <div class="border-left d-none d-lg-inline h-100 mx-auto w-0"></div>
+                </div>
+                <div class="w-100 w-lg-auto flex-grow-1 o_configurator_show_fast">
+                    <div class="h4 text-center">
+                        <b>Choose</b> a pre-made Palette</div>
+                    <div class="d-flex flex-wrap align-items-end">
+                        <t t-foreach="getters.getPalettes()" t-as="palette" t-key="palette_index">
+                            <div class="w-50 w-md-25 px-2 pt-3">
+                                <div t-attf-class="palette_card rounded-pill overflow-hidden d-flex {{getters.getSelectedPaletteName() == palette.name ? 'selected' : ''}}"
+                                     t-on-click="selectPalette(palette.name)" t-attf-style="background-color: {{palette.color3}}">
+                                    <div class="color_sample w-100" t-attf-style="background-color: {{palette.color1}}"/>
+                                    <div class="color_sample w-100" t-attf-style="background-color: {{palette.color3}}"/>
+                                    <div class="color_sample w-100" t-attf-style="background-color: {{palette.color2}}"/>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <SkipButton/>
+    </div>
+</t>
+
+<t t-name="website.Configurator.FeatureSelection" owl="1">
+    <div class="o_configurator_screen h-100 d-flex flex-column o_feature_selection_screen">
+        <div class="container-fluid pt-3 pb-2">
+            <img class="ml-lg-5" style="height: 31px; width: 99px;" src="/website/static/src/img/odoo_logo.svg" title="Odoo Logo"/>
+        </div>
+        <div class="o_configurator_screen_content overflow-hidden container d-flex flex-grow-1 align-items-center">
+            <div class="m-auto d-flex mh-100 flex-column">
+                <div class="o_configurator_typing_text o_configurator_show_fast">Add <b class="text-info">Pages</b> and <b class="text-warning">Features</b></div>
+                <h5 class="o_configurator_show_fast text-muted pb-lg-3">You'll be able to create your pages later on.</h5>
+                <div class="page_feature_selection o_configurator_show overflow-auto mt-lg-3 mx-n2">
+                    <div class="w-100 page_feature_selection d-flex flex-wrap">
+                        <t t-foreach="getters.getFeatures()" t-as="feature" t-key="feature_index">
+                            <t t-set='isInstalled' t-value="feature.module_state == 'installed'"/>
+                            <div class="p-2 w-100 w-md-50 w-lg-25" t-if="feature.type != 'empty'">
+                                <div t-attf-class="card h-100 {{isInstalled ? 'card_installed' : (feature.selected ? 'border-success' : '')}}" t-on-click="dispatch('toggleFeature', feature.id)">
+                                    <div class="card-body py-2">
+                                        <t t-if="isInstalled">
+                                            <i t-attf-class="o_configurator_feature_status fa fa-info-circle text-muted" title="Already installed"/>
+                                        </t>
+                                        <t t-else="">
+                                            <i t-attf-class="o_configurator_feature_status fa {{feature.selected ? 'fa-check-circle text-success' : 'fa-circle-o text-300'}}" />
+                                        </t>
+                                        <h5 t-attf-class="card-title d-flex align-items-center {{isInstalled ? 'text-muted' : ''}}">
+                                            <i t-attf-class="mr-2 small fa {{feature.icon}} {{isInstalled ? 'text-muted' : (feature.type == 'page' ? 'text-info' : 'text-warning')}}"/>
+                                            <t t-esc="feature.name"/>
+                                        </h5>
+                                        <p class="card-text small text-muted" t-esc="feature.description"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+                <div class="text-right border-top pt-2">
+                    <button class="btn btn-primary btn-lg ml-3" t-on-click="buildWebsite()">Build my website</button>
+                </div>
+            </div>
+        </div>
+        <SkipButton/>
+    </div>
+</t>
+
+<t t-name="website.Configurator.ThemeSelectionScreen" owl="1">
+    <div class="o_configurator_screen h-100 d-flex flex-column o_theme_selection_screen">
+        <div class="container-fluid pt-3 pb-2">
+            <img class="ml-lg-5" style="height: 31px; width: 99px;" src="/website/static/src/img/odoo_logo.svg" title="Odoo Logo"/>
+        </div>
+        <div class="o_configurator_screen_content d-flex flex-column flex-grow-1 align-items-center">
+            <div class="m-auto w-100 w-md-75 w-xl-100">
+                <div class="o_configurator_typing_text text-center mt-4 mb-lg-4">Choose your favorite <b>Theme</b>
+                </div>
+                <div class="container">
+                    <div class="row pb-4 pt-5">
+                        <div class="col-12 col-lg-4 d-flex align-items-end mb-4 mb-lg-0">
+                            <t t-if="getters.getThemeName(1)">
+                                <div class="theme_preview border rounded position-relative w-100 small o_configurator_show_fast">
+                                    <h6 class="theme_preview_tip text-center text-muted">Click to select</h6>
+                                    <div class="theme_svg_container rounded overflow-hidden" t-ref="ThemePreview2"/>
+                                    <div class="button_area" t-on-click="chooseTheme(getters.getThemeName(1))"/>
+                                </div>
+                            </t>
+                        </div>
+                        <div class="col-12 col-lg-4 d-flex align-items-end mb-4 mb-lg-0">
+                            <t t-if="getters.getThemeName(0)">
+                                <div class="theme_preview border rounded position-relative w-100 o_configurator_show">
+                                    <h6 class="theme_preview_tip text-center text-muted">Click to select</h6>
+                                    <div class="theme_svg_container rounded overflow-hidden" t-ref="ThemePreview1"/>
+                                    <div class="button_area" t-on-click="chooseTheme(getters.getThemeName(0))"/>
+                                </div>
+                            </t>
+                        </div>
+                        <div class="col-12 col-lg-4 d-flex align-items-end">
+                            <t t-if="getters.getThemeName(2)">
+                                <div class="theme_preview border rounded position-relative w-100 small o_configurator_show_fast">
+                                    <h6 class="theme_preview_tip text-center text-muted">Click to select</h6>
+                                    <div class="theme_svg_container rounded overflow-hidden" t-ref="ThemePreview3"/>
+                                    <div class="button_area" t-on-click="chooseTheme(getters.getThemeName(2))"/>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</t>
+
+<t t-name="website.Configurator.App">
+    <div class="o_configurator_container">
+        <RouteComponent />
+    </div>
+</t>
+
+</templates>

@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Common form view between the coupon programs and the promotion programs -->
+    <record id="coupon_program_view_form_common" model="ir.ui.view">
+        <field name="name">coupon.program.common.form</field>
+        <field name="model">coupon.program</field>
+        <field name="arch" type="xml">
+            <form string="Coupon Program">
+                <sheet>
+                    <div class="oe_button_box" name="button_box" />
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <div name="title" class="oe_left mw-100">
+                    </div>
+                    <group>
+                        <group name="conditions" string="Conditions">
+                            <field name="active" invisible="1"/>
+                            <field name="program_type" invisible="1"/>
+                            <field name="rule_products_domain" placeholder="Select product" widget="domain" options="{'model': 'product.product', 'in_dialog': true}"/>
+                            <label string="Quantity" for="rule_min_quantity" attrs="{'invisible': [('rule_products_domain', '=', False)]}"/>
+                            <div attrs="{'invisible': [('rule_products_domain', '=',False)]}">
+                                <field name="rule_min_quantity" class="oe_inline"/>
+                            </div>
+                            <label string="Minimum Purchase Of" for="rule_minimum_amount" />
+                            <div name="rule_minimum_amount" class="o_row">
+                                <field name="currency_id" invisible="1"/>
+                                <field name="rule_minimum_amount" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                                <field name="rule_minimum_amount_tax_inclusion" required="1"/>
+                            </div>
+                            <field name="company_id" placeholder="Select company" groups="base.group_multi_company"></field>
+                        </group>
+                        <group name="validity" string="Validity"/>
+                    </group>
+                    <group string="Rewards">
+                        <group name='reward'>
+                            <field name="reward_type" string="Reward" widget="radio"/>
+                            <field name="discount_line_product_id" attrs="{'invisible': [('discount_line_product_id', '=', False)]}" readonly="True"/>
+                        </group>
+                        <group>
+                            <field name="reward_product_id" attrs="{'invisible': [('reward_type', 'in', ('discount', 'free_shipping'))], 'required': [('reward_type', '=', 'product')]}" placeholder="Select reward product"/>
+                            <label string="Quantity" for="reward_product_quantity" attrs="{'invisible': ['|', ('reward_type', 'in', ('discount', 'free_shipping')), ('reward_product_id', '=',False)]}"/>
+                            <div attrs="{'invisible': ['|', ('reward_type', 'in', ('discount', 'free_shipping')),('reward_product_id', '=',False)]}">
+                                <field name="reward_product_quantity" class="oe_inline"/>
+                                <field name="reward_product_uom_id" class="oe_inline"/>
+                            </div>
+                            <label string="Apply Discount" for="discount_type" attrs="{'invisible': [('reward_type', 'in', ('product', 'free_shipping'))]}"/>
+                            <div attrs="{'invisible': [('reward_type', 'in', ('product', 'free_shipping'))]}">
+                                <field name="discount_type" class="oe_inline" attrs="{'required': [('reward_type','=','discount')]}"/>
+                                <field name="discount_percentage" attrs="{'invisible': [('discount_type', '!=', 'percentage')],'required': [('discount_type', '=', 'percentage')]}" class="oe_inline"/>
+                                <span attrs="{'invisible': [('discount_type', '!=', 'percentage')],'required': [('discount_type', '=', 'percentage')]}" class="oe_inline">%</span>
+                            </div>
+                            <label string="Fixed Amount" for="discount_fixed_amount" attrs="{'invisible': ['|',('discount_type', '!=', 'fixed_amount'), ('reward_type', '!=', 'discount')]}" />
+                            <div attrs="{'invisible': ['|',('discount_type', '!=', 'fixed_amount'), ('reward_type', '!=', 'discount')]}">
+                                <field name="discount_fixed_amount" class="oe_inline" attrs="{'required':[('discount_type', '=', 'fixed_amount')]}" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                            </div>
+                            <field name="discount_apply_on" attrs="{'invisible':
+                            ['|', ('reward_type', 'in', ('product', 'free_shipping')), ('discount_type', '!=', 'percentage')]}" widget="radio"/>
+                            <field name="discount_specific_product_ids" widget='many2many_tags' attrs="{'invisible': ['|', '|', ('discount_apply_on', '!=', 'specific_products'),('discount_type', '!=', 'percentage'), ('reward_type', 'in', ('product', 'free_shipping'))], 'required': [('reward_type', '=', 'discount'),('discount_apply_on', '=', 'specific_products'),('discount_type', '=', 'percentage')]}" placeholder="Select products"/>
+                            <label for="discount_max_amount" string="Max Discount Amount" attrs="{'invisible': ['|', ('reward_type', 'in', ('product', 'free_shipping')), ('discount_type', '!=', 'percentage')]}"/>
+                            <div attrs="{'invisible': ['|', ('reward_type', 'in', ('product', 'free_shipping')), ('discount_type', '!=', 'percentage')]}">
+                                <field name="discount_max_amount" class="oe_inline" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                                <span class="oe_grey"> if 0, no limit</span>
+                            </div>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Coupon Program -->
+
+    <record id="coupon_program_view_coupon_program_form" model="ir.ui.view">
+        <field name="name">coupon.program.form</field>
+        <field name="model">coupon.program</field>
+        <field name="inherit_id" ref="coupon_program_view_form_common"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="before">
+                <header>
+                    <button type="action" name="%(coupon.coupon_generate_action)d"
+                            string="Generate Coupon" attrs="{'invisible': [('active', '=', False)]}"/>
+                    <button type="action" name="%(coupon.coupon_generate_action)d"
+                            string="Generate Coupon" attrs="{'invisible': [('active', '=', True)]}" class="oe_highlight"/>
+                </header>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button class="oe_stat_button" type="action" icon="fa-ticket" name="%(coupon.coupon_action)d">
+                    <field name="coupon_count" string="Coupons" widget="statinfo"/>
+                </button>
+            </xpath>
+            <xpath expr="//div[@name='title']" position="inside">
+                <label for="name" string="Program Name"/>
+                <h1><field name="name" class="oe_title" height="20px"/></h1>
+            </xpath>
+            <xpath expr="//group[@name='validity']" position="inside">
+                <label for="validity_duration" string="Validity Duration"/>
+                <div>
+                    <field name="validity_duration" class="oe_inline"/>
+                    <span class="o_form_label oe_inline"> Days</span> <span class="oe_grey">if 0, infinite use</span>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="coupon_program_view_tree" model="ir.ui.view">
+        <field name="name">coupon.program.tree</field>
+        <field name="model">coupon.program</field>
+        <field name="arch" type="xml">
+            <tree sample="1">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="active"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="coupon_program_view_search" model="ir.ui.view">
+        <field name="name">coupon.program.search</field>
+        <field name="model">coupon.program</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <filter string="Expired" name="expired" domain="[('rule_date_to', '&lt;', datetime.datetime.now())]" help="Expired Programs"/>
+                <separator/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_coupon_program_kanban" model="ir.ui.view">
+        <field name="name">coupon.program.kanban</field>
+        <field name="model">coupon.program</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" sample="1">
+               <field name="name" />
+                <field name="active"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                            <div class="text-center oe_kanban_details">
+                               <strong><span><field name="name"/></span></strong>
+                            </div>
+                            <hr class="mt4 mb4"/>
+                            <div class="row">
+                                <div class="col-4 text-center coupon-count-label"><strong>Coupons</strong></div>
+                                <div class="col-4 text-center active-label"><strong>Active</strong></div>
+                                <div class="col-4 text-center coupon-count-value"><field name="coupon_count"/></div>
+                                <div class="col-4 text-center active-value">
+                                    <field name="active" widget="boolean"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="coupon_program_action_coupon_program" model="ir.actions.act_window">
+        <field name="name">Coupon Programs</field>
+        <field name="res_model">coupon.program</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="search_view_id" ref="coupon_program_view_search"/>
+        <field name="view_ids" eval="[
+            (5, 0, 0),
+            (0, 0, {'view_mode': 'tree'}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('coupon_program_view_coupon_program_form')})]"/>
+        <field name="domain">[('program_type','=', 'coupon_program')]</field>
+        <field name="context">{
+            'default_program_type': 'coupon_program',
+            'promo_code_usage': 'code_needed',
+            'search_default_opened': 1
+            }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new coupon program
+            </p><p>
+                Generate and share coupon codes with your customers to get discounts or free products.
+             </p>
+        </field>
+    </record>
+
+    <!-- Promotion Program -->
+
+    <record id="coupon_program_view_promo_program_form" model="ir.ui.view">
+        <field name="name">coupon.promotion.program.form</field>
+        <field name="model">coupon.program</field>
+        <field name="inherit_id" ref="coupon_program_view_form_common"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='title']" position="inside">
+                <label for="name" string="Program Name"/>
+                <h1><field name="name" class="oe_title o_text_overflow" placeholder="e.g. 10% Discount" height="20px"/></h1>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button class="oe_stat_button" type="action" icon="fa-ticket" name="%(coupon.coupon_action)d" attrs="{'invisible': [('promo_applicability', '=', 'on_current_order')]}">
+                    <field name="coupon_count" string="Coupons" widget="statinfo"/>
+                </button>
+            </xpath>
+            <xpath expr="//group[@name='reward']" position="before">
+                <field name="sequence" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='program_type']" position="after">
+                <field name="rule_partners_domain" placeholder="Select customer" widget="domain" options="{'model': 'res.partner', 'in_dialog': true}"/>
+            </xpath>
+            <xpath expr="//div[@name='rule_minimum_amount']" position="after">
+                <field name="promo_code_usage" widget="radio"/>
+                <field name="promo_code" attrs="{'required': [('promo_code_usage', '=', 'code_needed')], 'invisible': [('promo_code_usage', '=', 'no_code_needed')]}"/>
+            </xpath>
+            <xpath expr="//group[@name='validity']" position="inside">
+                <label string="Apply on First" for="maximum_use_number" class="oe_inline"/>
+                <div>
+                    <field name="maximum_use_number" class="oe_inline"/>
+                    <span> Orders</span>
+                    <span class="oe_grey"> if 0, infinite use</span>
+                </div>
+                <field name="rule_date_from" class="oe_inline"/>
+                <field name="rule_date_to" class="oe_inline"/>
+                <label string="Coupon Validity" for="validity_duration" class="oe_inline" attrs="{'invisible': [('promo_applicability', '=', 'on_current_order')]}"/>
+                <div attrs="{'invisible': [('promo_applicability', '=', 'on_current_order')]}">
+                    <field name="validity_duration" class="oe_inline"/>
+                    <span> Days</span>
+                    <span class="oe_grey"> if 0, coupon doesn't expire</span>
+                </div>
+            </xpath>
+            <xpath expr="//group[@name='reward']" position="before">
+                <group>
+                    <field name="promo_applicability" widget="radio"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="coupon_program_view_promo_program_tree" model="ir.ui.view">
+        <field name="name">coupon.promotion.program.tree</field>
+        <field name="model">coupon.program</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="promo_code_usage"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="coupon_program_view_promo_program_search" model="ir.ui.view">
+        <field name="name">coupon.promotion.program.search</field>
+        <field name="model">coupon.program</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <separator/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="coupon_program_action_promo_program" model="ir.actions.act_window">
+        <field name="name">Promotion Programs</field>
+        <field name="res_model">coupon.program</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="view_ids" eval="[
+            (5, 0, 0),
+            (0, 0, {'view_mode': 'tree'}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('coupon_program_view_promo_program_form')})]"/>
+        <field name="search_view_id" ref="coupon_program_view_promo_program_search"/>
+        <field name="domain">[('program_type', '=', 'promotion_program')]</field>
+        <field name="context">{
+            'default_program_type': 'promotion_program',
+            'default_promo_code_usage': 'no_code_needed',
+            'default_validity_duration': 0,
+            'search_default_opened': 1
+            }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new promotion program
+            </p><p>
+                Build up promotion programs to attract more customers with discounts, free products, free delivery, etc.
+                You can share promotion codes or grant the promotions automatically if some conditions are met.
+             </p>
+        </field>
+    </record>
+</odoo>

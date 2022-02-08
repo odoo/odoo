@@ -1,0 +1,14 @@
+
+$o-theme-color-palette: map-remove($o-theme-color-palette, 'primary', 'secondary', 'success', 'info', 'warning', 'danger', 'light', 'dark');
+$o-gray-color-palette: map-remove($o-gray-color-palette, '100', '200', '300', '400', '500', '600', '700', '800', '900');
+
+$o-btn-bg-colors: () !default;
+$o-btn-bg-colors: map-merge((
+    'primary': null,
+    'secondary': null,
+), $o-btn-bg-colors);
+$o-btn-border-colors: () !default;
+$o-btn-border-colors: map-merge((
+    'primary': null,
+    'secondary': null,
+), $o-btn-border-colors);

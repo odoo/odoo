@@ -1,0 +1,387 @@
+.o_list_view {
+    position: relative;
+    height: 100%;
+
+    .o_list_table {
+        position: relative;
+        cursor: pointer;
+        background-color: $o-view-background-color;
+        margin-bottom: 0px;
+
+        // Don't understand why but without those, the list view appears broken
+        // in both form views and standalone list views.
+        border-collapse: initial;
+        border-spacing: 0;
+
+        thead {
+            color: $table-head-color;
+            border-bottom: 1px solid #cacaca;
+            > tr > th:not(.o_list_record_selector) {
+                border-left: 1px solid #dfdfdf;
+                @include o-text-overflow(table-cell);
+                &:not(.o_column_sortable):hover {
+                    cursor: default;
+                }
+                &.o_list_number_th {
+                    text-align: right;
+                }
+            }
+        }
+        tbody > tr > td:not(.o_list_record_selector) {
+            &:not(.o_handle_cell):not(.o_list_button):not(.o_state_selection_cell) {
+                @include o-text-overflow(table-cell);
+                &.o_list_text {
+                    white-space: pre-wrap;
+                }
+            }
+
+            &.o_list_number {
+                text-align: right;
+            }
+            &.o_list_text {
+                word-break: break-word;
+            }
+            &.o_list_char.o_color_cell .o_field_color {
+                width: 17px;
+                height: 17px;
+            }
+            &.o_list_button {
+                white-space: nowrap;
+                > button {
+                    padding: 0 5px;
+                    &:not(:last-child) {
+                        margin-right: 3px;
+                    }
+                }
+            }
+        }
+        &.o_list_computing_widths {
+            > tbody > tr > td {
+                &.o_list_text, // text field, className on the td
+                > .o_field_text { // text field with widget, className inside the td
+                    white-space: pre !important;
+                }
+            }
+        }
+
+        tfoot {
+            cursor: default;
+            color: $o-list-footer-color;
+            background-color: $o-list-footer-bg-color;
+            font-weight: $o-list-footer-font-weight;
+            border-top: 2px solid #cacaca;
+            border-bottom: 1px solid #cacaca;
+
+            > tr > td {
+                @include o-text-overflow(table-cell);
+            }
+            .o_list_number {
+                text-align: right;
+            }
+        }
+
+        .o_column_sortable:not(.o_handle_cell) {
+            position: relative;
+            user-select: none;  // Prevent unwanted selection while sorting
+
+            &::after {
+                font-family: FontAwesome;
+                content: "\f0d7";
+                opacity: 0;
+            }
+            &:not(:empty)::after {
+                margin-left: 6px;
+            }
+            &.o-sort-up {
+                cursor: n-resize;
+                &::after {
+                    content: "\f0d7";
+                }
+            }
+            &.o-sort-down {
+                cursor: s-resize;
+                &::after {
+                    content: "\f0d8";
+                }
+            }
+            &:hover::after {
+                opacity: 0.3;
+            }
+            &.o-sort-up, &.o-sort-down {
+                color: $headings-color;
+                &::after {
+                    opacity: 1;
+                }
+            }
+        }
+
+        .o_list_record_selector {
+            width: 40px;
+            padding-left: $o-horizontal-padding;
+            .custom-control-label {
+                cursor: pointer;
+            }
+        }
+        .o_list_record_remove, .o_handle_cell {
+            width: 1px;  // to prevent the column to expand
+        }
+
+        .o_list_record_remove button {
+            padding: 0px;
+            background: none;
+            border-style: none;
+            display: table-cell;
+            cursor: pointer;
+        }
+
+        // Grouped list views
+        tbody > tr.o_group_header {
+            > th, > td {
+                vertical-align: middle;
+                padding-top: 5px;
+                padding-bottom: 5px;
+            }
+            .o_group_name {
+                @include o-text-overflow(table-cell);
+            }
+            .o_group_buttons {
+                display: inline-block;
+                margin-left: 10px;
+
+                > button {
+                    @include o-hover-text-color($o-brand-primary, darken($o-brand-primary, 20%));
+                    background-color: transparent;
+                    border: none;
+                    padding-top: 0;
+                    padding-bottom: 0;
+                }
+            }
+            .o_pager {
+                cursor: text;
+                user-select: none;
+                text-align: right;
+                padding-top: 0 !important;
+                padding-bottom: 0 !important;
+                margin-top: -2px;
+                margin-bottom: -2px;
+
+                input.o_pager_value {
+                    display: inline-block;
+                }
+
+                .o_pager_previous, .o_pager_next {
+                    max-height: 30px;
+                    padding: 0 5px;
+                    background-color: lighten($o-brand-lightsecondary, 10%);
+                    &:hover {
+                        background-color: $o-brand-lightsecondary;
+                    }
+                }
+            }
+        }
+        tbody + tbody {
+            border-top: none;  // Override bootstrap for grouped list views
+        }
+
+        &, &.table-striped {
+            tr:focus-within {
+                background-color: lighten($o-form-lightsecondary, 10%);
+            }
+        }
+        thead th:focus-within,
+        tbody.o_keyboard_navigation td:focus-within {
+            background-color: $o-form-lightsecondary;
+            outline: none;
+        }
+
+        .o_data_cell.o_text_overflow,
+        .o_data_cell.o_invisible_modifier {
+            // Override display: none to keep table cells aligned. Note: cannot use
+            // 'initial' as it will force them to 'inline', not 'table-cell'.
+            display: table-cell!important;
+        }
+
+        &.o_resizing tr > :not(.o_column_resizing) {
+            opacity: 0.5;
+        }
+
+        &.o_empty_list {
+            table-layout: fixed;
+        }
+
+        th {
+            position: relative;
+        }
+
+        span.o_resize {
+            bottom: 0;
+            cursor: col-resize;
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 10px;
+            z-index: 1; // must be over the sort caret (::after pseudo-element)
+        }
+
+        .o_list_record_remove_header {
+            width: 32px;
+        }
+
+        .o_data_row.o_list_no_open {
+            cursor: default;
+        }
+
+        .o_data_row:not(.o_selected_row) .o_data_cell {
+
+            // Boolean fields in non-selected rows completely disabled.
+            .custom-checkbox {
+                pointer-events: none;
+            }
+
+            // These widgets enable the checkbox if there is no readonly modifier.
+            &.o_boolean_button_cell,
+            &.o_boolean_favorite_cell,
+            &.o_boolean_toggle_cell,
+            &.o_toggle_button_cell {
+
+                &:not(.o_readonly_modifier) .custom-checkbox {
+                    pointer-events: auto;
+                }
+            }
+            &.o_many2many_avatar_user_cell {
+                .o_field_many2manytags {
+                    > span {
+                        margin-right: 2px;
+                    }
+                }
+            }
+        }
+
+        .o_data_row:not(.o_selected_row) {
+            .o_list_many2one,
+            .o_list_char,
+            .o_list_number {
+                white-space: nowrap;
+                .o_field_widget:not(.o_row_handle):not(.o_field_badge) {
+                    display: inline;
+                }
+            }
+        }
+
+        .o_data_row.o_selected_row > .o_data_cell:not(.o_readonly_modifier):not(.o_invisible_modifier) {
+            position: relative; // for o_field_translate
+            &:not(.o_handle_cell) {
+                background-color: white;
+            }
+            .o_input {
+                border: none;
+                padding: 0;
+            }
+            > .o_field_text {
+                vertical-align: top;
+            }
+            > .o_field_widget {
+                width: 100%;
+                .o_external_button {
+                    padding: 0;
+                    border: none;
+                    background-color: inherit;
+                    margin-left: 5px;
+                    font-size: 12px;
+                }
+            }
+            > .o_field_monetary input {
+                width: 0; // override width: 100px and let flex makes this input grow
+                margin: 0 4px;
+            }
+            > .o_field_many2manytags > .o_field_many2one {
+                // reduce basis to prevent many2one input from going to the next line to often
+                flex-basis: 40px;
+            }
+            .o_input_dropdown, .o_datepicker {
+                > .o_input {
+                    padding-right: 15px; // to prevent caret overlapping
+                }
+                > .o_dropdown_button, .o_datepicker_button {
+                    margin-right: 5px;
+                    @include o-position-absolute(0, 0);
+                }
+            }
+            > input.o_field_translate, textarea.o_field_translate {
+                padding-right: 25px;
+                + span.o_field_translate {
+                    margin-left: -35px;
+                    padding: 0px 1px;
+                    text-align: right;
+                    width: 35px;
+                    vertical-align: top;
+                    font-size: 12px;
+                }
+            }
+            > .o_row_handle {
+                visibility: hidden; // hide sequence when editing
+            }
+            > .o_field_badge {
+                width: auto; // override width: 100% to keep the optimal badge width
+            }
+        }
+
+        .o_field_x2many_list_row_add, .o_group_field_row_add {
+            a:focus, a:active {
+                color: $link-hover-color;
+                outline: none;
+            }
+        }
+    }
+
+    // Optional fields
+    &.o_list_optional_columns {
+        th:last-child {
+            padding-right: 15px;
+        }
+    }
+
+    .o_optional_columns_dropdown_toggle,.o_optional_columns {
+        @include o-position-absolute($top: 0, $right: 0);
+    }
+
+    .o_optional_columns_dropdown_toggle {
+        cursor: pointer;
+        padding: 0 5px;
+        text-align: center;
+        line-height: 30px;
+        z-index: 1; // must be over the resize handle
+    }
+
+    .o_optional_columns {
+        .o_optional_columns_dropdown {
+            margin-top: 30px;
+            user-select: none;
+            .dropdown-item {
+                label {
+                    padding-left: 10px;
+                }
+            }
+        }
+    }
+}
+
+.o_view_controller > .o_content > .o_list_view > .table-responsive {
+    // in main list views, let .o_content scroll
+    overflow: visible;
+}
+
+// Buttons in ControlPanel
+.o_list_buttons {
+    .o_list_button_save, .o_list_button_discard {
+        display: none;
+    }
+    &.o-editing { // for list view editable
+        .o_list_button_add {
+            display: none
+        }
+        .o_list_button_save, .o_list_button_discard {
+            display: inline-block
+        }
+    }
+}

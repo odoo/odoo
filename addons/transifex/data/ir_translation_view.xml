@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ir_translation_view_tree_transifex" model="ir.ui.view">
+        <field name="name">ir.translation.transifex</field>
+        <field name="model">ir.translation</field>
+        <field name="inherit_id" ref="base.view_translation_tree"/>
+        <field name="arch" type="xml">
+            <field name="state" position="after">
+                <field name="transifex_url"
+                       widget="url"
+                       text="Contribute"
+                       string="Transifex" />
+            </field>
+        </field>
+    </record>
+
+    <record id="ir_translation_dialog_view_tree_transifex" model="ir.ui.view">
+        <field name="name">ir.translation.transifex</field>
+        <field name="model">ir.translation</field>
+        <field name="inherit_id" ref="base.view_translation_dialog_tree"/>
+        <field name="arch" type="xml">
+            <field name="state" position="after">
+                <field name="transifex_url"
+                       widget="url"
+                       text="Contribute"
+                       string="Transifex" />
+            </field>
+        </field>
+    </record>
+
+    <record id="ir_translation_dialog_view_src_value_tree_transifex" model="ir.ui.view">
+        <field name="name">ir.translation.src.value.transifex</field>
+        <field name="model">ir.translation</field>
+        <field name="inherit_id" ref="base.view_translation_lang_src_value_tree"/>
+        <field name="arch" type="xml">
+            <field name="value" position="after">
+                <field name="transifex_url"
+                       widget="url"
+                       text="Contribute"
+                       string="Transifex" />
+            </field>
+        </field>
+    </record>
+
+</odoo>

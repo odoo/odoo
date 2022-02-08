@@ -1,0 +1,129 @@
+.o_form_view .o_ace_view_editor {
+    background: transparent;
+}
+
+.o_profiling_qweb_view {
+    user-select: none;
+    .o_select_view_profiling {
+        margin-bottom: 10px;
+        .dropdown-menu {
+            overflow: auto;
+            max-height: 240px;
+        }
+        a {
+            margin: 3px 0;
+            display: block;
+            .o_delay, .o_query {
+                font-size: 0.8em;
+                display: inline-block;
+                color: $body-color;
+                text-align: right;
+                width: 50px;
+                margin-right: 10px;
+                white-space: nowrap;
+            }
+            .o_key {
+                display: inline-block;
+                margin-left: 10px;
+                font-size: 0.8em;
+            }
+        }
+    }
+    .ace_editor {
+        overflow: visible;
+        .ace_qweb, .ace_tag-name {
+            cursor: default;
+            pointer-events: all;
+            position: relative;
+            .o_info {
+                display: none;
+                left: 8px;
+                top: 14px;
+                width: 100px;
+                .o_delay span, .o_query span {
+                    text-align: left;
+                    display: inline-block;
+                    width: 40px;
+                }
+            }
+            &:hover .o_info {
+                display: block;
+                &:hover {
+                    display: none;
+                }
+            }
+        }
+        .ace_gutter {
+            overflow: visible;
+        }
+        .ace_gutter-layer {
+            width: 134px !important;
+            overflow: visible;
+        }
+        .ace_gutter-cell .o_info {
+            display: block;
+            float: left;
+            font-size: 0.8em;
+            white-space: nowrap;
+            .o_more {
+                float: left;
+                position: relative;
+                span {
+                    color: orange !important;
+                    cursor: default;
+                    margin-left: -12px;
+                }
+                .o_detail {
+                    left: 30px;
+                    top: -30px;
+                    min-width: 120px;
+                    display: none;
+                    th {
+                        text-align: center;
+                    }
+                    td {
+                        min-width: 60px;
+                        vertical-align: top;
+                        text-align: left;
+                    }
+                    tr td:first-child {
+                        padding-right: 10px;
+                        white-space: nowrap;
+                    }
+                    tr th:last-child, tr td:last-child {
+                        padding-left: 10px;
+                    }
+                }
+                &:hover > .o_detail {
+                    display: block;
+                    &:hover {
+                        display: none;
+                    }
+                }
+            }
+            .o_delay, .o_query {
+                display: block;
+                float: left;
+                margin-right: 10px;
+                width: 30px;
+            }
+        }
+        .ace_line {
+            border-bottom: 1px #dddddd dotted;
+        }
+        .ace_scrollbar-h {
+            z-index: 3;
+        }
+
+        .o_detail {
+            position: absolute;
+            z-index: 1;
+            background: #ffedcb;
+            color: orange !important;
+            border: 1px orange solid;
+            padding: 6px;
+            white-space: normal;
+            text-align: right;
+        }
+    }
+}

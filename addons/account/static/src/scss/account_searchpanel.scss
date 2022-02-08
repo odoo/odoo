@@ -1,0 +1,26 @@
+.o_search_panel.account_root {
+    flex: 0 0 50px;
+    padding: 6px;
+    scrollbar-width: thin;
+    .o_search_panel_section_header {
+        display: none;
+    }
+    .list-group-item span.o_search_panel_label_title {
+        display: contents;
+    }
+    .o_search_panel_category_value {
+        header {
+            margin-left: 0;
+            padding-left: 0;
+        }
+        .o_search_panel_category_value .o_toggle_fold {
+            width: 0.3rem;
+        }
+    }
+    &::-webkit-scrollbar {
+        width: 4px;
+    }
+    &::-webkit-scrollbar-thumb {
+        background: lightgray;
+    }
+}

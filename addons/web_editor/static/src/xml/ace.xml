@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+
+<t t-name="web_editor.ace_view_editor">
+    <div class="o_ace_view_editor">
+        <div class="form-inline o_ace_view_editor_title">
+            <div class="btn-group o_ace_type_switcher">
+                <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown">XML (HTML)</button>
+                <div class="dropdown-menu" role="menu">
+                    <a role="menuitem" href="#" class="dropdown-item o_ace_type_switcher_choice" data-type="xml">XML (HTML)</a>
+                    <a role="menuitem" href="#" class="dropdown-item o_ace_type_switcher_choice" data-type="scss">SCSS (CSS)</a>
+                    <a role="menuitem" href="#" class="dropdown-item o_ace_type_switcher_choice" data-type="js">JS</a>
+                </div>
+            </div>
+            <select id="ace-view-list" class="o_res_list"/>
+            <select id="ace-scss-list" class="o_res_list d-none"/>
+            <select id="ace-js-list" class="o_res_list d-none"/>
+            <label class="o_include_option oe_include_bundles">
+                <div class="dropdown">
+                    <button class="btn btn-primary dropdown-toggle" type="button" id="o_dropdown_filter_views" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Filter
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="o_dropdown_filter_views">
+                        <a class="dropdown-item o_ace_filter active" data-type="xml" data-value="default" href="#">Only Views</a>
+                        <a class="dropdown-item o_ace_filter" data-type="xml" data-value="all" href="#">Views and Assets bundles</a>
+                    </div>
+                </div>
+            </label>
+            <label class="o_include_option o_include_all_scss d-none">
+                <div class="dropdown">
+                    <button class="btn btn-primary dropdown-toggle" type="button" id="o_dropdown_filter_assets" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Filter
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="o_dropdown_filter_assets">
+                        <a class="dropdown-item o_ace_filter active" data-type="scss" data-value="custom" href="#">Only Custom SCSS Files</a>
+                        <a class="dropdown-item o_ace_filter" data-type="scss" data-value="restricted" href="#">Only Page SCSS Files</a>
+                        <a class="dropdown-item o_ace_filter" data-type="scss" data-value="all" href="#">All SCSS Files</a>
+                    </div>
+                </div>
+            </label>
+            <div class="o_button_section">
+                <button data-action="save" type="submit" class="btn btn-primary">Save</button>
+                <button data-action="close" type="button" class="btn btn-secondary">Close</button>
+            </div>
+        </div>
+        <div id="ace-view-id">
+            <div class="float-right mb-2">
+                <button data-action="reset" type="button" class="btn btn-sm btn-danger"><i class="fa fa-undo"/> Reset</button>
+                <button data-action="format" type="button" class="btn btn-sm btn-link">Format</button>
+            </div>
+            <span class="o_ace_editor_resource_info"/>
+            <div class="alert alert-warning alert-dismissible mt-2 mb-0" role="alert">
+                Editing a built-in file through this editor is not advised, as it will prevent it from being updated during future App upgrades.
+                <button type="button" class="close" aria-label="Close">
+                    <span>×</span>
+                </button>
+            </div>
+        </div>
+        <div id="ace-view-editor"/>
+    </div>
+</t>
+
+</templates>

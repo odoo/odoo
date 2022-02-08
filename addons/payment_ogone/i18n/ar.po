@@ -1,0 +1,141 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_ingenico
+# 
+# Translators:
+# Mustafa Rawi <mustafa@cubexco.com>, 2019
+# Mustafa J. Kadhem <safi2266@gmail.com>, 2019
+# hoxhe Aits <hoxhe0@gmail.com>, 2019
+# Osama Ahmaro <osamaahmaro@gmail.com>, 2019
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~12.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2019-08-26 09:12+0000\n"
+"Last-Translator: Osama Ahmaro <osamaahmaro@gmail.com>, 2019\n"
+"Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#. module: payment_ingenico
+#: code:addons/payment_ingenico/models/payment.py:0
+#, python-format
+msgid "; multiple order found"
+msgstr "؛ تم العثور على طلبات متعددة"
+
+#. module: payment_ingenico
+#: code:addons/payment_ingenico/models/payment.py:0
+#, python-format
+msgid "; no order found"
+msgstr "; لم يُعثر على طلبات"
+
+#. module: payment_ingenico
+#: model:ir.model.fields,field_description:payment_ingenico.field_payment_acquirer__ogone_userid
+msgid "API User ID"
+msgstr "معرف مستخدم واجهة برمجة التطبيقات"
+
+#. module: payment_ingenico
+#: model:ir.model.fields,field_description:payment_ingenico.field_payment_acquirer__ogone_password
+msgid "API User Password"
+msgstr "كلمة مرور المستخدم الخاصة بواجهة برمجة التطبيقات"
+
+#. module: payment_ingenico
+#: model:ir.model.fields,field_description:payment_ingenico.field_payment_acquirer__ogone_alias_usage
+msgid "Alias Usage"
+msgstr "استخدام اللقب"
+
+#. module: payment_ingenico
+#: model_terms:ir.ui.view,arch_db:payment_ingenico.ogone_s2s_form
+msgid "CVC"
+msgstr "رمز التحقق من البطاقة"
+
+#. module: payment_ingenico
+#: model_terms:ir.ui.view,arch_db:payment_ingenico.ogone_s2s_form
+msgid "Card number"
+msgstr "رقم البطاقة"
+
+#. module: payment_ingenico
+#: model_terms:ir.ui.view,arch_db:payment_ingenico.ogone_s2s_form
+msgid "Cardholder name"
+msgstr "اسم حامل البطاقة"
+
+#. module: payment_ingenico
+#: model_terms:ir.ui.view,arch_db:payment_ingenico.ogone_s2s_form
+msgid "Expires (MM / YY)"
+msgstr "تنتهي صلاحيته في (MM / YY)"
+
+#. module: payment_ingenico
+#: model:ir.model.fields,help:payment_ingenico.field_payment_acquirer__ogone_alias_usage
+msgid ""
+"If you want to use Ogone Aliases, this default Alias Usage will be presented"
+" to the customer as the reason you want to keep his payment data"
+msgstr ""
+"إذا أردت استخدام ألقاب Ogone، سيتم تقديم استخدام اللقب الافتراضي هذا للعميل "
+"كسبب لرغبتك في الاحتفاظ ببيانات عمليات السداد التي يقوم بها"
+
+#. module: payment_ingenico
+#: model:ir.model.fields.selection,name:payment_ingenico.selection__payment_acquirer__provider__ogone
+msgid "Ingenico"
+msgstr "Ingenico"
+
+#. module: payment_ingenico
+#: code:addons/payment_ingenico/models/payment.py:0
+#, python-format
+msgid "Ogone: invalid shasign, received %s, computed %s, for data %s"
+msgstr "Ogone: shasign غير صالح، المستلم %s, المحسوب %s, للبيانات %s"
+
+#. module: payment_ingenico
+#: code:addons/payment_ingenico/models/payment.py:0
+#, python-format
+msgid "Ogone: received data for reference %s"
+msgstr "Ogone: البيانات المستلمة لرقم الإشارة %s"
+
+#. module: payment_ingenico
+#: code:addons/payment_ingenico/models/payment.py:0
+#, python-format
+msgid ""
+"Ogone: received data with missing reference (%s) or pay_id (%s) or shasign "
+"(%s)"
+msgstr ""
+"Ogone: البيانات المستلمة ينقصها رقم إشارة (%s) أو pay_id (%s) أو shasign "
+"(%s)"
+
+#. module: payment_ingenico
+#: model:ir.model.fields,field_description:payment_ingenico.field_payment_acquirer__ogone_pspid
+msgid "PSPID"
+msgstr "PSPID"
+
+#. module: payment_ingenico
+#: model:ir.model,name:payment_ingenico.model_payment_acquirer
+msgid "Payment Acquirer"
+msgstr "معالج السداد"
+
+#. module: payment_ingenico
+#: model:ir.model,name:payment_ingenico.model_payment_token
+msgid "Payment Token"
+msgstr "كلمة سر السداد"
+
+#. module: payment_ingenico
+#: model:ir.model,name:payment_ingenico.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "معاملة السداد"
+
+#. module: payment_ingenico
+#: model:ir.model.fields,field_description:payment_ingenico.field_payment_acquirer__provider
+msgid "Provider"
+msgstr "المزود"
+
+#. module: payment_ingenico
+#: model:ir.model.fields,field_description:payment_ingenico.field_payment_acquirer__ogone_shakey_in
+msgid "SHA Key IN"
+msgstr "SHA Key IN"
+
+#. module: payment_ingenico
+#: model:ir.model.fields,field_description:payment_ingenico.field_payment_acquirer__ogone_shakey_out
+msgid "SHA Key OUT"
+msgstr "SHA Key OUT"

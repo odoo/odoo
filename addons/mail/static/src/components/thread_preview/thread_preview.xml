@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.ThreadPreview" owl="1">
+        <!--
+            The preview template is used by the discuss in mobile, and by the systray
+            menu in order to show preview of threads.
+        -->
+        <div class="o_ThreadPreview" t-att-class="{ 'o-muted': threadPreviewView and threadPreviewView.thread.localMessageUnreadCounter === 0 }" t-attf-class="{{ className }}" t-on-click="_onClick" t-att-data-thread-local-id="threadPreviewView ? threadPreviewView.thread.localId : undefined" t-ref="root">
+            <t t-if="threadPreviewView">
+                <div class="o_ThreadPreview_sidebar">
+                    <div class="o_ThreadPreview_imageContainer o_ThreadPreview_sidebarItem">
+                        <img class="o_ThreadPreview_image rounded-circle" t-att-src="image()" alt="Thread Image"/>
+                        <t t-if="threadPreviewView.thread.correspondent and threadPreviewView.thread.correspondent.im_status">
+                            <PartnerImStatusIcon
+                                className="'o_ThreadPreview_partnerImStatusIcon'"
+                                classNameObj="{
+                                    'o-mobile': messaging.device.isMobile,
+                                    'o-muted': threadPreviewView.thread.localMessageUnreadCounter === 0,
+                                }"
+                                partnerLocalId="threadPreviewView.thread.correspondent.localId"
+                            />
+                        </t>
+                    </div>
+                </div>
+                <div class="o_ThreadPreview_content">
+                    <div class="o_ThreadPreview_header align-items-baseline">
+                        <span class="o_ThreadPreview_name text-truncate" t-att-class="{ 'o-mobile': messaging.device.isMobile, 'o-muted': threadPreviewView.thread.localMessageUnreadCounter === 0 }">
+                            <t t-esc="threadPreviewView.thread.displayName"/>
+                        </span>
+                        <t t-if="threadPreviewView.thread.localMessageUnreadCounter > 0">
+                            <span class="o_ThreadPreview_counter" t-att-class="{ 'o-muted': threadPreviewView.thread.localMessageUnreadCounter === 0 }">
+                                (<t t-esc="threadPreviewView.thread.localMessageUnreadCounter"/>)
+                            </span>
+                        </t>
+                        <t t-if="threadPreviewView.thread.rtcSessions.length > 0">
+                            <span class="o_ThreadPreview_callIndicator fa fa-volume-up mx-2" t-att-class="{ 'o-isCalling': threadPreviewView.thread.rtc }"/>
+                        </t>
+                        <span class="o-autogrow"/>
+                        <t t-if="threadPreviewView.thread.lastMessage and threadPreviewView.thread.lastMessage.date">
+                            <span class="o_ThreadPreview_date" t-att-class="{ 'o-muted': threadPreviewView.thread.localMessageUnreadCounter === 0 }">
+                                <t t-esc="threadPreviewView.thread.lastMessage.date.fromNow()"/>
+                            </span>
+                        </t>
+                    </div>
+                    <div class="o_ThreadPreview_core">
+                        <span class="o_ThreadPreview_coreItem o_ThreadPreview_inlineText text-truncate" t-att-class="{ 'o-empty': inlineLastMessageBody.length === 0 }">
+                            <t t-if="threadPreviewView.thread.lastMessage and threadPreviewView.thread.lastMessage.author">
+                                <MessageAuthorPrefix
+                                    messageLocalId="threadPreviewView.thread.lastMessage.localId"
+                                    threadLocalId="threadPreviewView.thread.localId"
+                                />
+                            </t>
+                            <t t-esc="inlineLastMessageBody"/>
+                        </span>
+                        <span class="o-autogrow"/>
+                        <t t-if="threadPreviewView.thread.localMessageUnreadCounter > 0">
+                            <span class="o_ThreadPreview_coreItem o_ThreadPreview_markAsRead fa fa-check" title="Mark as Read" t-on-click="_onClickMarkAsRead" t-ref="markAsRead"/>
+                        </t>
+                    </div>
+                </div>
+            </t>
+        </div>
+    </t>
+
+</templates>

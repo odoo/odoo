@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="forum_forum_view_form" model="ir.ui.view">
+        <field name="name">forum.forum.view.form.inherit.slides</field>
+        <field name="model">forum.forum</field>
+        <field name="inherit_id" ref="website_forum.view_forum_forum_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='group_order']" position="after">
+                <group string="eLearning" name="group_slides" attrs="{'invisible': [('slide_channel_id', '=', False)]}">
+                    <field name="slide_channel_id" readonly="True"/>
+                </group>
+            </xpath>
+            <xpath expr="//field[@name='privacy']" position="attributes">
+                <attribute name="attrs">{'invisible': [('slide_channel_id', '!=', False)], 'required': [('slide_channel_id', '!=', 'False')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='authorized_group_id']" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', ('privacy', '!=', 'private'), ('slide_channel_id', '!=', False)], 'required': [('privacy', '=', 'private')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='privacy']" position="before">
+                <field name="visibility" attrs="{'invisible': [('slide_channel_id', '=', False)]}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="forum_forum_view_tree_slides" model="ir.ui.view">
+        <field name="name">forum.forum.view.tree.slides</field>
+        <field name="model">forum.forum</field>
+        <field name="mode">primary</field>
+        <field name="priority" eval="20"/>
+        <field name="inherit_id" ref="website_forum.view_forum_forum_list"/>
+        <field name="arch" type="xml">
+            <field name="website_id" position="after">
+                <field name="slide_channel_id"/>
+                <field name="visibility"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="forum_forum_action_channel" model="ir.actions.act_window">
+        <field name="name">Forums</field>
+        <field name="res_model">forum.forum</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('slide_channel_ids', '!=', 'False')]</field>
+        <field name="view_id" ref="forum_forum_view_tree_slides"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a Forum
+            </p>
+            <p>Forums allow your attendees to ask questions to your community.</p>
+        </field>
+    </record>
+
+    <record id="forum_post_action_channel" model="ir.actions.act_window">
+        <field name="name">Forum Posts</field>
+        <field name="res_model">forum.post</field>
+        <field name="view_mode">tree,graph,pivot,form</field>
+        <field name="domain">[('forum_id.slide_channel_ids', '!=', 'False')]</field>
+        <field name="context">{'search_default_questions': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No Forum Post yet!
+            </p>
+            <p>Come back later to monitor and moderate what is posted on your Forums.</p>
+        </field>
+    </record>
+
+    <record id="forum_post_view_graph_slides" model="ir.ui.view">
+        <field name="name">forum.post.view.graph.slides</field>
+        <field name="model">forum.post</field>
+        <field name="arch" type="xml">
+            <graph string="eLearning Forum Posts" sample="1">
+                <field name="create_date" interval="month"/>
+                <field name="forum_id"/>
+            </graph>
+        </field>
+    </record>
+
+</odoo>

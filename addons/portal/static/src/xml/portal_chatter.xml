@@ -1,0 +1,156 @@
+<templates id="template" xml:space="preserve">
+
+    <t t-name="portal.chatter_message_count">
+        <t t-set="count" t-value="widget.get('message_count')"/>
+        <div class="o_message_counter">
+            <t t-if="count">
+                <span class="fa fa-comments" />
+                <span class="o_message_count"> <t t-esc="count"/></span>
+                <t t-if="count == 1">comment</t>
+                <t t-else="">comments</t>
+            </t>
+            <t t-else="">
+                There are no comments for now.
+            </t>
+        </div>
+    </t>
+
+    <!--
+        Widget PortalComposer (standalone)
+
+        required many options: token, res_model, res_id, ...
+    -->
+    <t t-name="portal.Composer">
+        <div class="o_portal_chatter_composer" t-if="widget.options['allow_composer']">
+            <t t-set="discussion_url" t-value="window.encodeURI(window.location.href.split('#')[0] + '#discussion')"/>
+            <t t-if="!widget.options['display_composer']">
+                <h4>Leave a comment</h4>
+                <p>You must be <a t-attf-href="/web/login?redirect=#{discussion_url}">logged in</a> to post a comment.</p>
+            </t>
+            <t t-if="widget.options['display_composer']">
+                <div class="alert alert-danger mb8 d-none o_portal_chatter_composer_error" role="alert">
+                    Oops! Something went wrong. Try to reload the page and log in.
+                </div>
+                <div class="media">
+                    <img alt="Avatar" class="o_portal_chatter_avatar" t-attf-src="/web/image/res.partner/#{widget.options['partner_id']}/avatar_128/50x50"
+                         t-if="!widget.options['is_user_public'] or !widget.options['token']"/>
+                    <div class="media-body">
+                        <div class="o_portal_chatter_composer_input">
+                            <div class="o_portal_chatter_composer_body mb32">
+                                <textarea rows="4" name="message" class="form-control" placeholder="Write a message..."></textarea>
+                                <div class="o_portal_chatter_attachments mt-3"/>
+                                <div class="mt8">
+                                    <button t-attf-data-action="/mail/chatter_post" class="o_portal_chatter_composer_btn btn btn-primary" type="submit">Send</button>
+                                    <button class="o_portal_chatter_attachment_btn btn btn-secondary" type="button" title="Add attachment">
+                                        <i class="fa fa-paperclip"/>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-none">
+                            <input type="file" class="o_portal_chatter_file_input" multiple="multiple"/>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="portal.Chatter.Attachments">
+        <div t-if="attachments.length" class="row">
+            <div t-foreach="attachments" t-as="attachment" class="col-lg-2 col-md-3 col-sm-6">
+                <div class="o_portal_chatter_attachment mb-2 position-relative text-center" t-att-data-id="attachment.id">
+                    <button t-if="showDelete and attachment.state == 'pending'" class="o_portal_chatter_attachment_delete btn btn-sm btn-outline-danger" title="Delete">
+                        <i class="fa fa-times"/>
+                    </button>
+                    <a t-attf-href="/web/content/#{attachment.id}?download=true&amp;access_token=#{attachment.access_token}" target="_blank">
+                        <div class='oe_attachment_embedded o_image' t-att-title="attachment.name" t-att-data-mimetype="attachment.mimetype"/>
+                        <div class='o_portal_chatter_attachment_name'><t t-esc='attachment.name'/></div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <!--
+        Widget PortalChatter, and subtemplates
+    -->
+
+    <t t-name="portal.chatter_messages">
+        <div class="o_portal_chatter_messages">
+            <t t-foreach="widget.get('messages') || []" t-as="message">
+                <div class="media o_portal_chatter_message" t-att-id="'message-' + message.id">
+                    <img class="o_portal_chatter_avatar" t-att-src="message.author_avatar_url" alt="avatar"/>
+                    <div class="media-body">
+                        <t t-call="portal.chatter_internal_toggle" t-if="widget.options['is_user_employee']"/>
+
+                        <div class="o_portal_chatter_message_title">
+                            <h5 class='mb-1'><t t-esc="message.author_id[1]"/></h5>
+                            <p class="o_portal_chatter_puslished_date"><t t-esc="message.published_date_str"/></p>
+                        </div>
+                        <t t-out="message.body"/>
+
+                        <div class="o_portal_chatter_attachments">
+                            <t t-call="portal.Chatter.Attachments">
+                                <t t-set="attachments" t-value="message.attachment_ids"/>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </div>
+    </t>
+
+    <!-- Chatter: internal toggle widget -->
+    <t t-name="portal.chatter_internal_toggle">
+        <div t-attf-class="float-right o_portal_chatter_js_is_internal #{message.is_internal and 'o_portal_message_internal_on' or 'o_portal_message_internal_off'}"
+                t-att-data-message-id="message.id"
+                t-att-data-is-internal="message.is_internal">
+            <button class="btn btn-danger"
+                title="Currently restricted to internal employees, click to make it available to everyone viewing this document.">Employees Only</button>
+            <button class="btn btn-success"
+                title="Currently available to everyone viewing this document, click to restrict to internal employees.">Visible</button>
+        </div>
+    </t>
+
+    <t t-name="portal.pager">
+        <div class="o_portal_chatter_pager">
+            <t t-if="!_.isEmpty(widget.get('pager'))">
+                <ul class="pagination" t-if="widget.get('pager')['pages'].length &gt; 1">
+                    <li t-if="widget.get('pager')['page'] != widget.get('pager')['page_previous']" t-att-data-page="widget.get('pager')['page_previous']" class="page-item o_portal_chatter_pager_btn">
+                        <a href="#" class="page-link"><i class="fa fa-chevron-left" role="img" aria-label="Previous" title="Previous"/></a>
+                    </li>
+                    <t t-foreach="widget.get('pager')['pages']" t-as="page">
+                        <li t-att-data-page="page" t-attf-class="page-item #{page == widget.get('pager')['page'] ? 'o_portal_chatter_pager_btn active' : 'o_portal_chatter_pager_btn'}">
+                            <a href="#" class="page-link"><t t-esc="page"/></a>
+                        </li>
+                    </t>
+                    <li t-if="widget.get('pager')['page'] != widget.get('pager')['page_next']" t-att-data-page="widget.get('pager')['page_next']" class="page-item o_portal_chatter_pager_btn">
+                        <a href="#" class="page-link"><i class="fa fa-chevron-right" role="img" aria-label="Next" title="Next"/></a>
+                    </li>
+                </ul>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="portal.Chatter">
+        <t t-set="two_columns" t-value="widget.options['two_columns']"/>
+        <div t-attf-class="o_portal_chatter p-0 #{two_columns and 'row' or ''}">
+            <div t-attf-class="#{two_columns and 'col-lg-5' or ''}">
+                <div class="o_portal_chatter_header">
+                    <t t-call="portal.chatter_message_count"/>
+                </div>
+                <hr t-if="widget.options['allow_composer']"/>
+                <div class="o_portal_chatter_composer"/>
+            </div>
+            <hr t-if="!two_columns"/>
+            <div t-attf-class="#{two_columns and 'offset-lg-1 col-lg-6' or ''}">
+                <t t-call="portal.chatter_messages"/>
+                <div class="o_portal_chatter_footer">
+                    <t t-call="portal.pager"/>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

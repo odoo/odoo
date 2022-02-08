@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data noupdate="1">
+    <!-- Tax template for sale and purchase -->
+    <record id="tax_group_15" model="account.tax.group">
+        <field name="name">Tax 15%</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+</data>
+<data>
+    <!-- Chart template account links -->
+    <record id="configurable_chart_template" model="account.chart.template">
+        <field name="complete_tax_set" eval="False"/>
+        <field name="use_anglo_saxon" eval="True"/>
+
+        <field name="property_account_receivable_id" ref="receivable"/>
+        <field name="property_account_payable_id" ref="payable"/>
+
+        <field name="property_account_expense_categ_id" ref="expense"/>
+        <field name="property_account_income_categ_id" ref="income"/>
+
+        <field name="property_stock_account_input_categ_id" ref="stock_in"/>
+        <field name="property_stock_account_output_categ_id" ref="stock_out"/>
+        <field name="property_stock_valuation_account_id" ref="stock_valuation"/>
+
+        <field name="income_currency_exchange_account_id" ref="income_currency_exchange"/>
+        <field name="expense_currency_exchange_account_id" ref="expense_currency_exchange"/>
+
+        <field name="default_cash_difference_income_account_id" ref="cash_diff_income"/>
+        <field name="default_cash_difference_expense_account_id" ref="cash_diff_expense"/>
+        <field name="default_pos_receivable_account_id" ref="pos_receivable"/>
+
+        <field name="property_tax_payable_account_id" ref="tax_payable"/>
+        <field name="property_tax_receivable_account_id" ref="tax_receivable"/>
+    </record>
+
+    <record id="sale_tax_template" model="account.tax.template">
+        <field name="chart_template_id" ref="configurable_chart_template"/>
+        <field name="name">Tax 15%</field>
+        <field name="amount">15</field>
+        <field name="type_tax_use">sale</field>
+        <field name="tax_group_id" ref="tax_group_15"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('tax_received'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('tax_received'),
+            }),
+        ]"/>
+    </record>
+
+   <record id="purchase_tax_template" model="account.tax.template">
+        <field name="chart_template_id" ref="configurable_chart_template"/>
+        <field name="name">Purchase Tax 15%</field>
+        <field name="amount">15</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="tax_group_id" ref="tax_group_15"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('tax_paid'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('tax_paid'),
+            }),
+        ]"/>
+    </record>
+
+    <!-- Try to instanciate for relevant companies -->
+</data>
+<data noupdate="1">
+    <function model="account.chart.template" name="try_loading">
+        <value eval="[ref('l10n_generic_coa.configurable_chart_template')]"/>
+    </function>
+</data>
+</odoo>

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!--
+            Integrate Livechat Conversation in the Discuss
+        -->
+        <!--
+            Template rendering the external HTML support page
+        -->
+        <template id="support_page" name="Livechat : Support Page">
+            &lt;!DOCTYPE html&gt;
+            <html style="height: 100%">
+                <head>
+                    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+                    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+                    <title><t t-esc="channel_name"/> Livechat Support Page</title>
+
+                    <!-- Call the external Bundle to render the css, js, and js loader tags -->
+                    <t t-out="channel.script_external"/>
+
+                    <style type="text/css">
+                        body {
+                            height: 100%;
+                            font-size: 16px;
+                            font-weight: 400;
+                            font-family: "Lato", "Lucida Grande", "Helvetica neue", "Helvetica", "Verdana", "Arial", sans-serif;
+                            overflow: hidden;
+                            overflow-y: auto;
+                            display: block;
+                            margin: 0;
+                            padding: 0;
+                            border: none;
+                            width: 100%;
+                            height: 100%;
+                            background: #C9C8E0;
+                            background-image: -webkit-linear-gradient(top, #7c7bad, #ddddee);
+                            background-image: -moz-linear-gradient(top, #7c7bad, #ddddee);
+                            background-image: -ms-linear-gradient(top, #7c7bad, #ddddee);
+                            background-image: -o-linear-gradient(top, #7c7bad, #ddddee);
+                            background-image: linear-gradient(to bottom, #7c7bad, #ddddee);
+                            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#7c7bad', endColorstr='#ddddee',GradientType=0 );
+                            -webkit-background-size: cover;
+                            -moz-background-size: cover;
+                            -o-background-size: cover;
+                            background-size: cover;
+                            background-repeat: no-repeat;
+                            background-attachment: fixed;
+                        }
+                        .main {
+                            position: absolute;
+                            opacity: 0;
+                            top: 50%;
+                            width: 100%;
+                            margin-top: -150px;
+                            color: white;
+                            text-shadow: 0 1px 0 rgba(34, 52, 72, 0.2);
+                            text-align: center;
+                        }
+                        .main h1 {
+                            font-size: 54px;
+                        }
+                        .main div {
+                            font-style: italic;
+                        }
+                    </style>
+                </head>
+
+                <body>
+                     <div class="main" style="opacity: 1;">
+                        <h1 class="channel_name"><t t-esc="channel.name"/></h1>
+                        <div>Website Live Chat Powered by <strong>Odoo</strong>.</div>
+                    </div>
+                </body>
+            </html>
+        </template>
+
+        <!--
+            Template rendering all the scripts required to execute the Livechat from an external page (which not contain Odoo)
+        -->
+        <template id="external_loader" name="Livechat : external_script field of livechat channel">
+            <!-- css style -->
+            <link t-attf-href="{{url}}/im_livechat/external_lib.css" rel="stylesheet"/>
+            <!-- js of all the required lib (internal and external) -->
+            <script t-attf-src="{{url}}/im_livechat/external_lib.js" type="text/javascript" />
+            <!-- the loader -->
+            <script t-attf-src="{{url}}/im_livechat/loader/{{channel_id}}" type="text/javascript"/>
+        </template>
+
+        <!-- the js code to initialize the LiveSupport object -->
+        <template id="loader" name="Livechat : Javascript appending the livechat button">
+            <t t-translation="off">
+                window.addEventListener('load', function () {
+                    <t t-if="web_session_required">
+                    odoo.define('web.session', function (require) {
+                        var Session = require('web.Session');
+                        var modules = odoo._modules;
+                        return new Session(undefined, "<t t-esc="info['server_url']"/>", {modules:modules, use_cors: true});
+                    });
+                    </t>
+
+                    odoo.define('im_livechat.livesupport', function (require) {
+            <t t-if="info['available']" t-translation="off">
+                        var rootWidget = require('root.widget');
+                        var im_livechat = require('im_livechat.legacy.im_livechat.im_livechat');
+                        var button = new im_livechat.LivechatButton(
+                            rootWidget,
+                            "<t t-esc="info['server_url']"/>",
+                            <t t-out="json.dumps(info.get('options', {}))"/>
+                        );
+                        button.appendTo(document.body);
+                        window.livechat_button = button;
+            </t>
+                    });
+                });
+            </t>
+        </template>
+
+
+    </data>
+</odoo>

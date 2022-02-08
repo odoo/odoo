@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+
+<template id="report_generic_barcode">
+    <t t-call="web.html_container">
+        <t t-set='nRows' t-value='8'/>
+        <t t-set='nCols' t-value='3'/>
+        <div t-foreach="[docs[x:x + nRows * nCols] for x in range(0, len(docs), nRows * nCols)]" t-as="page_docs" class="page article">
+        <t t-if="title">
+          <h2 style="text-align: center; font-size: 3em"><t t-esc="title"/></h2>
+        </t>
+        <table>
+            <t t-foreach="range(nRows)" t-as="row">
+                <tr>
+                    <t t-foreach="range(nCols)" t-as="col">
+                        <t t-set="barcode_index" t-value="(row * nCols + col)"/>
+                        <t t-if="barcode_index &lt; len(page_docs)">
+                            <t t-set="o" t-value="page_docs[barcode_index]"/>
+                        </t>
+                        <t t-else="">
+                            <t t-set="o" t-value="page_docs[0]"/>
+                        </t>
+                        <td t-att-style="barcode_index &gt;= len(page_docs) and 'visibility:hidden'">
+                            <div style="text-align: center; font-size: 2em"><span t-esc="o.name"/></div>
+                            <div t-if="o.barcode" t-field="o.barcode" t-options="{'widget': 'barcode', 'humanreadable': 1, 'width': 400, 'height': 100}"/>
+                        </td>
+                    </t>
+                </tr>
+            </t>
+        </table>
+      </div>
+    </t>
+</template>
+
+<template id="report_location_barcode">
+    <t t-set="title">Locations</t>
+    <t t-call="stock.report_generic_barcode"/>
+</template>
+</data>
+</odoo>

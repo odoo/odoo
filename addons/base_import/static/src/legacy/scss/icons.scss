@@ -1,0 +1,100 @@
+@mixin o-import-sprite-icon($x: 0, $y: 0) {
+    background-position: $x $y;
+}
+
+/*
+ * Override select style
+ */
+
+/* Field Type Dropdown */
+.oe_import_dropdown.oe_import_match_field {
+    .o_import_field_icon {
+        padding-left: 34px;
+
+        abbr {
+            top: 6px;
+        }
+
+        /* Show icon */
+        &:before {
+            width: 30px;
+            height: 26px;
+            display: block;
+            float: left;
+            margin: 0px 5px 0 0;
+            border-right: 1px solid #a0abb9;
+            background-color: white;
+            content: "";
+            position: absolute;
+            left: -1px;
+            top: -1px;
+            border-bottom-left-radius: 4px;
+            border-top-left-radius: 4px;
+            border: 1px solid darkgrey;
+        }
+        &:after{
+            background-image: url('/base_import/static/src/legacy/img/ui/studio_icons.png');
+            background-repeat: no-repeat;
+            content: '';
+            width: 20px;
+            height: 20px;
+            position: absolute;
+            top: 2px;
+            left: 4px;
+            bottom: auto;
+            right: auto;
+        }
+    }
+}
+
+.o_import_field_binary:after {
+    @include o-import-sprite-icon(0, 0);
+}
+
+.o_import_field_boolean:after {
+    @include o-import-sprite-icon(0, -20px);
+}
+
+.o_import_field_char:after {
+    @include o-import-sprite-icon(0, -40px);
+}
+
+.o_import_field_date:after {
+    @include o-import-sprite-icon(0, -80px);
+}
+
+.o_import_field_datetime:after {
+    @include o-import-sprite-icon(0, -100px);
+}
+
+.o_import_field_float:after {
+    @include o-import-sprite-icon(0, -120px);
+}
+
+.o_import_field_html:after {
+    @include o-import-sprite-icon(0, -140px);
+}
+
+.o_import_field_integer:after {
+    @include o-import-sprite-icon(0, -180px);
+}
+
+.o_import_field_many2many:after {
+    @include o-import-sprite-icon(0, -200px);
+}
+
+.o_import_field_many2one:after {
+    @include o-import-sprite-icon(0, -220px);
+}
+
+.o_import_field_one2many:after {
+    @include o-import-sprite-icon(0, -260px);
+}
+
+.o_import_field_selection:after {
+    @include o-import-sprite-icon(0, -280px);
+}
+
+.o_import_field_text:after {
+    @include o-import-sprite-icon(0, -340px);
+}

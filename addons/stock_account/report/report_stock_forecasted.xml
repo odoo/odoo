@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="stock_account_report_product_product_replenishment" inherit_id="stock.report_replenishment_header">
+        <xpath expr="//div[@name='pending_forecasted']" position="after">
+            <div t-attf-class="mx-3 text-center" t-if="env.user.has_group('stock.group_stock_manager')">
+                <div class="h3">
+                    <t t-esc="docs['value']"/>
+                </div>
+                <div>On Hand Value</div>
+            </div>
+        </xpath>
+    </template>
+</odoo>

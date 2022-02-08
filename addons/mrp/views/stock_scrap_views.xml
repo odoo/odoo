@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="stock_scrap_view_form2_mrp_inherit_mrp" model="ir.ui.view">
+        <field name="name">stock.scrap.view.form2.inherit.mrp</field>
+        <field name="model">stock.scrap</field>
+        <field name="inherit_id" ref="stock.stock_scrap_form_view2"/>
+        <field name="arch" type="xml">
+            <field name="owner_id" position="after">
+                <field name="workorder_id" invisible="1"/>
+                <field name="production_id" invisible="1"/>
+            </field>
+        </field>
+    </record>
+    <record id="stock_scrap_view_form_mrp_inherit_mrp" model="ir.ui.view">
+        <field name="name">stock.scrap.view.form.inherit.mrp</field>
+        <field name="model">stock.scrap</field>
+        <field name="inherit_id" ref="stock.stock_scrap_form_view"/>
+        <field name="arch" type="xml">
+            <field name="owner_id" position="after">
+                <field name="workorder_id" domain="[('production_id', '=', product_id)]" attrs="{'invisible': [('workorder_id', '=', False)]}"/>
+                <field name="production_id" domain="[('company_id', '=', company_id)]" attrs="{'invisible': [('production_id', '=', False)]}"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="stock_scrap_search_view_inherit_mrp" model="ir.ui.view">
+        <field name="name">stock.scrap.search.inherit.mrp</field>
+        <field name="model">stock.scrap</field>
+        <field name="inherit_id" ref="stock.stock_scrap_search_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='transfer']" position="after">
+                <filter string="Manufacturing Order" name="production_id" domain="[]" context="{'group_by':'production_id'}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

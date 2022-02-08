@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.Chatter" owl="1">
+        <div class="o_Chatter" t-attf-class="{{ className }}" t-ref="root">
+            <t t-if="chatter">
+                <div class="o_Chatter_fixedPanel">
+                    <ChatterTopbar
+                        className="'o_Chatter_topbar'"
+                        chatterLocalId="chatter.localId"
+                    />
+                    <t t-if="chatter.composerView">
+                        <Composer
+                            className="'o_Chatter_composer'"
+                            classNameObj="{ 'o-bordered': chatter.hasExternalBorder }"
+                            localId="chatter.composerView.localId"
+                            hasFollowers="true"
+                            hasMentionSuggestionsBelowPosition="true"
+                            isCompact="false"
+                            isExpandable="true"
+                        />
+                    </t>
+                </div>
+                <div class="o_Chatter_scrollPanel" t-on-scroll="chatter.onScrollScrollPanel" t-ref="scrollPanel">
+                    <t t-if="chatter.attachmentBoxView">
+                        <AttachmentBox
+                            className="'o_Chatter_attachmentBox'"
+                            localId="chatter.attachmentBoxView.localId"
+                        />
+                    </t>
+                    <t t-if="chatter.activityBoxView">
+                        <ActivityBox
+                            className="'o_Chatter_activityBox'"
+                            localId="chatter.activityBoxView.localId"
+                        />
+                    </t>
+                    <t t-if="chatter.threadView">
+                        <ThreadView
+                            className="'o_Chatter_thread'"
+                            getScrollableElement="getScrollableElement"
+                            hasScrollAdjust="chatter.hasMessageListScrollAdjust"
+                            localId="chatter.threadView.localId"
+                        />
+                    </t>
+                </div>
+            </t>
+        </div>
+    </t>
+
+</templates>

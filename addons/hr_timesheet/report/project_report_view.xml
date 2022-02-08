@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_task_project_user_graph_inherited" model="ir.ui.view">
+            <field name="name">report.project.task.user.graph.inherited</field>
+            <field name="model">report.project.task.user</field>
+            <field name="inherit_id" ref="project.view_task_project_user_graph" />
+            <field name="arch" type="xml">
+                <xpath expr="//graph" position="attributes">
+                    <attribute name="js_class">hr_timesheet_graphview</attribute>
+                </xpath>
+                <xpath expr="//field[@name='project_id']" position='after'>
+                    <field name="hours_planned" widget="timesheet_uom" type="measure"/>
+                    <field name="hours_effective" widget="timesheet_uom" type="measure"/>
+                    <field name="remaining_hours" widget="timesheet_uom" type="measure"/>
+                </xpath>
+             </field>
+        </record>
+
+        <record id="view_task_project_user_pivot_inherited" model="ir.ui.view">
+            <field name="name">report.project.task.user.pivot.inherited</field>
+            <field name="model">report.project.task.user</field>
+            <field name="inherit_id" ref="project.view_task_project_user_pivot"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='project_id']" position='after'>
+                    <field name="hours_planned" widget="timesheet_uom" type="measure"/>
+                    <field name="hours_effective" widget="timesheet_uom" type="measure"/>
+                    <field name="remaining_hours" widget="timesheet_uom" type="measure"/>
+                </xpath>
+             </field>
+        </record>
+
+        <record id="report_project_task_user_view_search" model="ir.ui.view">
+            <field name="name">report.project.task.user.view.search.inherit.hr.timesheet</field>
+            <field name="model">report.project.task.user</field>
+            <field name="inherit_id" ref="project.view_task_project_user_search" />
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='late']" position="after">
+                    <filter string="Tasks in Overtime" name="overtime" domain="[('task_id.overtime', '&gt;', 0)]"/>
+                </xpath>
+                <xpath expr="//filter[@name='my_tasks']" position="before">
+                    <filter string="My Team's Projects" name="my_team_projects"  domain="[('project_id.user_id.employee_id.parent_id.user_id', '=', uid), ('project_id.user_id', '!=', uid), ('user_ids', '!=', uid), ('user_ids', '!=', False)]"/>
+                </xpath>
+                <xpath expr="//filter[@name='my_tasks']" position="after">
+                    <filter string="My Team's Tasks" name="my_team_tasks" domain="[('task_id.user_ids.employee_id.parent_id.user_id', '=', uid)]" />
+                </xpath>
+             </field>
+         </record>
+
+        <record id="report_project_task_user_view_tree" model="ir.ui.view">
+            <field name="name">report.project.task.user.view.tree.inherit.hr.timesheet</field>
+            <field name="model">report.project.task.user</field>
+            <field name="inherit_id" ref="project.report_project_task_user_view_tree"/>
+            <field name="arch" type="xml">
+                <field name="user_ids" position="after">
+                    <field name="hours_effective" optional="hide" widget="float_time"/>
+                    <field name="progress" optional="hide" widget="progressbar"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

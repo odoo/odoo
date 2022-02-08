@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="web.CheckBox" owl="1">
+    <div class="custom-control custom-checkbox">
+        <input
+            t-att-id="props.id or id"
+            type="checkbox"
+            class="custom-control-input"
+            t-att-disabled="props.disabled"
+            t-att-checked="props.value"
+            />
+        <label t-att-for="props.id or id" class="custom-control-label">
+            <t t-slot="default"/>
+        </label>
+    </div>
+</t>
+
+</templates>

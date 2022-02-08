@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.Discuss" owl="1">
+        <div class="o_Discuss" t-attf-class="{{ className }}"
+            t-att-class="{
+                'o-adding-item': discussView ? discussView.discuss.isAddingChannel or discussView.discuss.isAddingChat : false,
+                'o-mobile': messaging ? messaging.device.isMobile : false,
+            }"
+            t-ref="root"
+        >
+            <t t-if="discussView">
+                <t t-if="!messaging.device.isMobile">
+                    <DiscussSidebar className="'o_Discuss_sidebar bg-light border-right'" localId="discussView.localId"/>
+                </t>
+                <t t-if="messaging.device.isMobile" t-call="mail.Discuss.content"/>
+                <t t-else="">
+                    <div class="o_Discuss_content">
+                        <t t-call="mail.Discuss.content"/>
+                    </div>
+                </t>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="mail.Discuss.content" owl="1">
+        <t t-if="messaging.device.isMobile and discussView.discuss.activeMobileNavbarTabId === 'mailbox'">
+            <DiscussMobileMailboxSelection className="'o_Discuss_mobileMailboxSelection border-bottom'"/>
+        </t>
+        <t t-if="messaging.device.isMobile and (discussView.discuss.isAddingChannel or discussView.discuss.isAddingChat)">
+            <div class="o_Discuss_mobileAddItemHeader border-bottom">
+                <AutocompleteInput
+                    className="'o_Discuss_mobileAddItemHeaderInput'"
+                    isFocusOnMount="true"
+                    isHtml="discussView.discuss.isAddingChannel"
+                    placeholder="discussView.discuss.isAddingChannel ? addChannelInputPlaceholder : addChatInputPlaceholder"
+                    select="_onMobileAddItemHeaderInputSelect"
+                    source="_onMobileAddItemHeaderInputSource"
+                    onHide="_onHideMobileAddItemHeader"
+                />
+            </div>
+        </t>
+        <t t-if="discussView.discuss.threadView">
+            <t name="beforeThread"/>
+            <ThreadView
+                className="'o_Discuss_thread'"
+                classNameObj="{ 'o-mobile': messaging.device.isMobile }"
+                hasComposerCurrentPartnerAvatar="!messaging.device.isMobile"
+                hasComposerDiscardButton="discussView.discuss.thread === messaging.inbox"
+                hasComposerThreadName="discussView.discuss.thread === messaging.inbox"
+                hasComposerThreadTyping="true"
+                localId="discussView.discuss.threadView.localId"
+            />
+        </t>
+        <t t-if="!discussView.discuss.thread and (!messaging.device.isMobile or discussView.discuss.activeMobileNavbarTabId === 'mailbox')">
+            <div class="o_Discuss_noThread">
+                No conversation selected.
+            </div>
+        </t>
+        <t t-if="messaging.device.isMobile and discussView.discuss.activeMobileNavbarTabId !== 'mailbox'">
+            <t t-if="discussView.discuss.activeMobileNavbarTabId === 'chat'">
+                <button class="o_Discuss_mobileNewChatButton btn btn-secondary" t-on-click="discussView.discuss.onClickMobileNewChatButton">
+                    Start a conversation
+                </button>
+            </t>
+            <t t-if="discussView.discuss.activeMobileNavbarTabId === 'channel'">
+                <button class="o_Discuss_mobileNewChannelButton btn btn-secondary" t-on-click="discussView.discuss.onClickMobileNewChannelButton">
+                    New Channel
+                </button>
+            </t>
+        </t>
+        <t t-if="discussView.discuss.notificationListView">
+            <NotificationList className="'o_Discuss_notificationList'" localId="discussView.discuss.notificationListView.localId"/>
+        </t>
+        <t t-if="discussView.discuss.mobileMessagingNavbarView">
+            <MobileMessagingNavbar
+                className="'o_Discuss_mobileNavbar'"
+                localId="discussView.discuss.mobileMessagingNavbarView.localId"
+            />
+        </t>
+    </t>
+
+</templates>

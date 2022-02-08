@@ -1,0 +1,2149 @@
+
+//------------------------------------------------------------------------------
+// Colors
+//------------------------------------------------------------------------------
+
+$o-base-color-palette: map-merge($o-base-color-palette, (
+    'body': $o-portal-default-body-bg,
+    'menu': 1, // o_cc1
+    'menu-custom': null,
+    'menu-border-color': null, // Default to classes used on the template
+    'header-boxed': null,
+    'header-boxed-custom': '200',
+    'footer': 5, // o_cc5
+    'footer-custom': null,
+    'copyright': null,
+    'copyright-custom': null,
+));
+
+// By default, all user color palette values are null. Each null value is
+// automatically replaced with corresponsing color of chosen color palette.
+$o-user-color-palette: () !default;
+
+// By default, all user gray color palette values are null. Each null value
+// is automatically replaced with corresponsing color of chosen gray color
+// palette.
+$o-user-gray-color-palette: () !default;
+
+// By default, all user theme color palette values are null. Each null value
+// is automatically replaced with corresponsing color of chosen theme color
+// palette.
+$o-user-theme-color-palette: () !default;
+
+$o-social-colors: (
+    'facebook': #3B5999,
+    'twitter': #55ACEE,
+    'linkedin': #0077B5,
+    'google-plus': #DD4B39,
+    'youtube': #ff0000,
+    'github': #1a1e22,
+    'instagram': #cf2872,
+    'whatsapp': #25d366,
+    'pinterest': #C8232C,
+);
+
+$o-theme-figcaption-opacity: 0.6;
+
+$o-color-palettes: map-merge($o-color-palettes,
+    (
+        'base-1': map-merge(map-get($o-color-palettes, 'base-1'), (
+            'copyright-custom': 'black-15',
+        )),
+        'base-2': map-merge(map-get($o-color-palettes, 'base-2'), (
+            'menu': 2,
+            'footer': 2,
+            'copyright': 5,
+        )),
+        'default-1': o-make-palette(#38383B, null, (
+            'menu': 4,
+            'footer': 4,
+            'copyright-custom': 'black-15',
+        )),
+        'default-2': o-make-palette(#0F5132, null, (
+            'menu': 4,
+            'footer': 4,
+            'copyright-custom': 'black-15',
+        )),
+        'default-3': o-make-palette(#6CB14F, #114B5F, (
+            'menu': 3,
+            'footer': 3,
+            'copyright-custom': 'black-15',
+        )),
+        'default-4': o-make-palette(#20C997, #426A5A, (
+            'menu': 2,
+            'footer': 2,
+        )),
+        'default-5': o-make-palette(#79DFC1, null, (
+            'footer': 1,
+        )),
+        'default-6':  o-make-palette(#3DD5F3),
+        'default-7':  o-make-palette(#6EA8FE, #474973),
+        'default-8':  o-make-palette(#0AA2C0),
+        'default-9':  o-make-palette(#0A58CA),
+        'default-10': o-make-palette(#6610F2, #C97064),
+        'default-11': o-make-palette(#6F42C1, #114B5F),
+        'default-12': o-make-palette(#A370F7, #504746),
+        'default-13': o-make-palette(#e36ff7, #233D4D),
+        'default-14': o-make-palette(#E56B6B, #4C5B5C),
+        'default-15': o-make-palette(#8B1E3F, #23395B),
+        'default-16': o-make-palette(#DE6528),
+        'default-17': o-make-palette(#E17726, #51344D),
+        'default-19': o-make-palette(#FAB803, #1A1423, (
+            'menu': 3,
+            'footer': 3,
+            'copyright-custom': 'black-15',
+        )),
+        'default-18': o-make-palette(#DFA400),
+        'default-20': o-make-palette(#B99253, #495867),
+
+        'generic-1': (
+            'o-color-1': #984c46,
+            'o-color-2': #23323b,
+            'o-color-3': #eceae4,
+            'o-color-4': #FFFFFF,
+            'o-color-5': #16121f,
+
+            'menu': 3,
+            'footer': 3,
+            'copyright-custom': 'black-15',
+        ),
+        'generic-2': (
+            'o-color-1': #B99932,
+            'o-color-2': #DED1C1,
+            'o-color-3': #F5F5F5,
+            'o-color-4': #FFFFFF,
+            'o-color-5': #373737,
+
+            'menu': 5,
+            'copyright': 4,
+        ),
+        'generic-3': (
+            'o-color-1': #f8882f,
+            'o-color-2': #6a7c8f,
+            'o-color-3': #fdf8ef,
+            'o-color-4': #FFFFFF,
+            'o-color-5': #212c39,
+
+            'copyright-custom': 'black-15',
+        ),
+        'generic-4': (
+            'o-color-1': #6E7993,
+            'o-color-2': #96848C,
+            'o-color-3': #8F9AA2,
+            'o-color-4': #D5D5D5,
+            'o-color-5': #313347,
+
+            'menu': 5,
+            'copyright-custom': 'black-15',
+        ),
+        'generic-5': (
+            'o-color-1': #F7CF41,
+            'o-color-2': #1A2930,
+            'o-color-3': #989898,
+            'o-color-4': #FFFFFF,
+            'o-color-5': #0B1612,
+
+            'menu': 3,
+            'footer': 3,
+            'copyright-custom': 'black-15',
+        ),
+        'generic-6': (
+            'o-color-1': #45859A,
+            'o-color-2': #B57D4D,
+            'o-color-3': #F5F5F5,
+            'o-color-4': #FFFFFF,
+            'o-color-5': #10273C,
+
+            'menu': 2,
+            'footer': 2,
+            'copyright': 5,
+        ),
+        'generic-7': (
+            'o-color-1': #1a547a,
+            'o-color-2': #ddc76a,
+            'o-color-3': #D6E6F1,
+            'o-color-4': #FFFFFF,
+            'o-color-5': #2b3442,
+
+            'o-cc5-link': 'o-color-4',
+            'o-cc5-text': #9b9ba0,
+
+            'menu': 5,
+            'footer': 5,
+            'copyright': 3,
+        ),
+        'generic-8': (
+            'o-color-1': #763240,
+            'o-color-2': #C19F7F,
+            'o-color-3': #FFFFFF,
+            'o-color-4': #EAEAEA,
+            'o-color-5': #2F2F2F,
+
+            'o-cc4-headings': 'o-color-3',
+            'o-cc4-link': 'o-color-3',
+            'o-cc4-text': rgba(#fff, .8),
+
+            'o-cc5-headings': 'o-color-3',
+            'o-cc5-link': 'o-color-3',
+            'o-cc5-text': rgba(#fff, .8),
+
+            'footer': 1,
+            'copyright': 4,
+        ),
+        'generic-9': (
+            'o-color-1': #4DC5C1,
+            'o-color-2': #EC576B,
+            'o-color-3': #E5E337,
+            'o-color-4': #FFFFFF,
+            'o-color-5': #000000,
+
+            'menu': 5,
+            'copyright-custom': 'black-15',
+        ),
+        'generic-10': (
+            'o-color-1': #b56355,
+            'o-color-2': #6ba17a,
+            'o-color-3': #ebe6ea,
+            'o-color-4': #FFFFFF,
+            'o-color-5': #343733,
+
+            'footer': 2,
+            'copyright-custom': 'black-15',
+        ),
+        'generic-11': (
+            'o-color-1': #01ACAB,
+            'o-color-2': #FEDC3D,
+            'o-color-3': #FAE8E0,
+            'o-color-4': #FFFFFF,
+            'o-color-5': #000000,
+
+            'footer': 1,
+            'copyright-custom': 'black-15',
+        ),
+        'generic-12': (
+            'o-color-1': #926190,
+            'o-color-2': #F3E0CD,
+            'o-color-3': #F9EFE9,
+            'o-color-4': #FFFFFF,
+            'o-color-5': #291528,
+
+            'o-cc4-headings': 'o-color-4',
+            'o-cc4-link': 'o-color-4',
+            'o-cc4-text': rgba(#fff, .8),
+
+            'o-cc5-headings': 'o-color-4',
+            'o-cc5-link': 'o-color-4',
+            'o-cc5-text': rgba(#fff, .6),
+
+            'copyright-custom': 'black-15',
+        ),
+        'generic-13': (
+            'o-color-1': #478FA2,
+            'o-color-2': #CECECE,
+            'o-color-3': #E8E9E9,
+            'o-color-4': #FFFFFF,
+            'o-color-5': #173F54,
+
+            'footer': 1,
+            'copyright': 1,
+        ),
+        'generic-14': (
+            'o-color-1': #3CC37C,
+            'o-color-2': #E9C893,
+            'o-color-3': #F5F5F5,
+            'o-color-4': #FFFFFF,
+            'o-color-5': #1F3A2A,
+
+            'footer': 1,
+            'copyright': 5,
+        ),
+        'generic-15': (
+            'o-color-1': #01524B,
+            'o-color-2': #1993A3,
+            'o-color-3': #dddde6,
+            'o-color-4': #FFFFFF,
+            'o-color-5': #011D1B,
+
+            'o-cc4-btn-primary': 'o-color-4',
+            'o-cc4-link': 'o-color-4',
+            'o-cc4-text': rgba(#fff, .8),
+
+            'o-cc5-btn-primary': 'o-color-4',
+            'o-cc5-link': 'o-color-4',
+            'o-cc5-text': rgba(#fff, .6),
+
+            'footer': 2,
+            'copyright': 5,
+        ),
+        'generic-16': (
+            'o-color-1': #464D77,
+            'o-color-2': #36827f,
+            'o-color-3': #f2f0ec,
+            'o-color-4': #FFFFFF,
+            'o-color-5': #22263c,
+
+            'o-cc4-btn-primary': 'o-color-4',
+            'o-cc4-link': 'o-color-4',
+            'o-cc4-text': rgba(#fff, .8),
+
+            'o-cc5-btn-primary': 'o-color-4',
+            'o-cc5-btn-secondary': #d6d4d0,
+            'o-cc5-link': 'o-color-4',
+            'o-cc5-text': rgba(#fff, .6),
+
+            'menu': 2,
+            'footer': 2,
+            'copyright': 5,
+        ),
+        'generic-17': (
+            'o-color-1': #4717f6,
+            'o-color-2': #A43ACB,
+            'o-color-3': #FAFAFA,
+            'o-color-4': #FFFFFF,
+            'o-color-5': #0F0A19,
+
+            'menu': 5,
+            'footer': 5,
+            'copyright-custom': 'black-15',
+        ),
+        'anelusia-1': (
+            'o-color-1': #000000,
+            'o-color-2': #e4e4e4,
+            'o-color-3': #00459e,
+            'o-color-4': #ffffff,
+            'o-color-5': #444444,
+
+            'o-cc2-headings': 'o-color-4',
+            'o-cc2-link': 'o-color-4',
+            'o-cc2-btn-primary': 'o-color-4',
+
+            'o-cc4-headings': 'o-color-4',
+            'o-cc4-btn-primary': 'o-color-4',
+            'o-cc4-text': 'o-color-2',
+            'o-cc4-link': 'o-color-4',
+
+            'o-cc5-text': 'o-color-2',
+            'o-cc5-link': 'o-color-4',
+
+            'menu': 4,
+            'footer': 4,
+            'copyright': 4,
+        ),
+        'anelusia-2': (
+            'o-color-1': #d4ab0a,
+            'o-color-2': #444444,
+            'o-color-3': #ececec,
+            'o-color-4': #ffffff,
+            'o-color-5': #000000,
+
+            'menu': 4,
+            'footer': 1,
+            'copyright': 2,
+        ),
+        'anelusia-3': (
+            'o-color-1': #005699,
+            'o-color-2': #ac5e82,
+            'o-color-3': #d8eff1,
+            'o-color-4': #ffffff,
+            'o-color-5': #222222,
+
+            'o-cc5-link': #218bdf,
+            'o-cc5-btn-primary': #218bdf,
+
+            'copyright-custom': 'black-15',
+        ),
+        'anelusia-4': (
+            'o-color-1': #dc143c,
+            'o-color-2': #7e2839,
+            'o-color-3': #faf7e1,
+            'o-color-4': #ffffff,
+            'o-color-5': #222222,
+
+            'copyright-custom': 'black-15',
+        ),
+        'anelusia-5': (
+            'o-color-1': #32c0c9,
+            'o-color-2': #cfcfcf,
+            'o-color-3': #cee6e7,
+            'o-color-4': #ffffff,
+            'o-color-5': #2e2e2e,
+
+            'footer': 1,
+            'copyright-custom': 'black-15',
+        ),
+        'anelusia-6': (
+            'o-color-1': #e27b92,
+            'o-color-2': #e4e4e4,
+            'o-color-3': #465548,
+            'o-color-4': #ffffff,
+            'o-color-5': #222222,
+
+            'o-cc2-headings': 'o-color-4',
+            'o-cc5-text': 'o-color-2',
+
+            'menu': 2,
+            'footer': 2,
+            'copyright-custom': 'black-15',
+        ),
+        'artists-1': (
+            'o-color-1': #6930C3,
+            'o-color-2': #333038,
+            'o-color-3': #e5e5e5,
+            'o-color-4': #ffffff,
+            'o-color-5': #110d16,
+
+            'o-cc5-text': 'o-color-3',
+
+            'menu': 5,
+            'copyright-custom': 'black-15',
+        ),
+        'artists-2': (
+            'o-color-1': #1ad68f,
+            'o-color-2': #2e2e2e,
+            'o-color-3': #cfcfcf,
+            'o-color-4': #ffffff,
+            'o-color-5': #000000,
+
+            'menu': 2,
+            'copyright-custom': 'black-15',
+        ),
+        'artists-3': (
+            'o-color-1': #007882,
+            'o-color-2': #052286,
+            'o-color-3': #f9ede6,
+            'o-color-4': #ffffff,
+            'o-color-5': #33302e,
+
+            'o-cc5-link': #48d9e5,
+
+            'footer': 1,
+            'copyright': 1,
+        ),
+        'artists-4': (
+            'o-color-1': #0061df,
+            'o-color-2': #1b1b1b,
+            'o-color-3': #e8e6dc,
+            'o-color-4': #ffffff,
+            'o-color-5': #000000,
+
+            'menu': 2,
+            'footer': 2,
+            'copyright-custom': 'black-15',
+        ),
+        'artists-5': (
+            'o-color-1': #f48847,
+            'o-color-2': #282d30,
+            'o-color-3': #e9ceb0,
+            'o-color-4': #ffffff,
+            'o-color-5': #000000,
+
+            'footer': 3,
+            'copyright-custom': 'black-15',
+        ),
+        'artists-6': (
+            'o-color-1': #95d2e5,
+            'o-color-2': #454545,
+            'o-color-3': #f6f4f2,
+            'o-color-4': #ffffff,
+            'o-color-5': #000000,
+
+            'menu': 2,
+            'footer': 2,
+            'copyright-custom': 'black-15',
+        ),
+        'avantgarde-1': (
+            'o-color-1': #ee4980,
+            'o-color-2': #5f5458,
+            'o-color-3': #f7f7f7,
+            'o-color-4': #FFFFFF,
+            'o-color-5': #000000,
+
+            'o-cc1-headings': 'o-color-1',
+            'o-cc5-headings': 'o-color-1',
+
+            'body': 'o-color-3',
+            'footer': 1,
+            'copyright': 1,
+        ),
+        'avantgarde-2': (
+            'o-color-1': #38383b,
+            'o-color-2': #918f8b,
+            'o-color-3': #dfe0e1,
+            'o-color-4': #FFFFFF,
+            'o-color-5': #000000,
+
+            'o-cc4-headings': 'o-color-3',
+            'o-cc5-headings': 'o-color-2',
+
+            'o-cc4-btn-primary': 'o-color-3',
+            'o-cc5-btn-primary': 'o-color-2',
+
+            'menu': 4,
+            'footer': 4,
+            'copyright-custom': 'black-15',
+        ),
+        'avantgarde-3': (
+            'o-color-1': #f08e80,
+            'o-color-2': #0b0d63,
+            'o-color-3': #fdf0e6,
+            'o-color-4': #FFFFFF,
+            'o-color-5': #4e4d4d,
+
+            'o-cc2-headings': 'o-color-2',
+            'o-cc3-headings': 'o-color-3',
+            'o-cc4-headings': 'o-color-5',
+            'o-cc5-headings': 'o-color-1',
+
+            'menu': 3,
+            'footer': 4,
+            'copyright': 4,
+        ),
+        'avantgarde-4': (
+            'o-color-1': #f78f4a,
+            'o-color-2': #94583a,
+            'o-color-3': #F7EFBA,
+            'o-color-4': #FFFFFF,
+            'o-color-5': #312b24,
+
+            'o-cc2-headings': 'o-color-2',
+            'o-cc3-headings': 'o-color-3',
+            'o-cc4-headings': 'o-color-5',
+            'o-cc5-headings': 'o-color-1',
+
+            'o-cc2-btn-primary': 'o-color-2',
+            'o-cc3-btn-primary': 'o-color-3',
+
+            'footer': 1,
+            'copyright': 1,
+        ),
+        'avantgarde-5': (
+            'o-color-1': #AC578C,
+            'o-color-2': #69355D,
+            'o-color-3': #F7EFBA,
+            'o-color-4': #FFFFFF,
+            'o-color-5': #000000,
+
+            'o-cc2-headings': 'o-color-2',
+            'o-cc3-headings': 'o-color-3',
+            'o-cc4-headings': 'o-color-5',
+            'o-cc5-headings': 'o-color-1',
+
+            'o-cc2-btn-primary': 'o-color-2',
+            'o-cc3-btn-primary': 'o-color-3',
+
+            'footer': 1,
+            'copyright': 1,
+        ),
+        'avantgarde-6': (
+            'o-color-1': #f3b65b,
+            'o-color-2': #3c4e3c,
+            'o-color-3': #e7d1b5,
+            'o-color-4': #FFFFFF,
+            'o-color-5': #000000,
+
+            'o-cc2-headings': 'o-color-2',
+            'o-cc3-headings': 'o-color-3',
+            'o-cc5-headings': 'o-color-1',
+
+            'copyright-custom': 'black-15',
+        ),
+        'avantgarde-7': (
+            'o-color-1': #f48847,
+            'o-color-2': #282d30,
+            'o-color-3': #e9ceb0,
+            'o-color-4': #FFFFFF,
+            'o-color-5': #000000,
+
+            'o-cc2-headings': 'o-color-1',
+            'o-cc5-headings': 'o-color-1',
+
+            'copyright-custom': 'black-15',
+        ),
+        'avantgarde-8': (
+            'o-color-1': #278f84,
+            'o-color-2': #494048,
+            'o-color-3': #ebe1ea,
+            'o-color-4': #FFFFFF,
+            'o-color-5': #201c20,
+
+            'o-cc2-headings': 'o-color-1',
+            'o-cc5-headings': 'o-color-1',
+
+            'copyright-custom': 'black-15',
+        ),
+        'beauty-1': (
+            'o-color-1': #df699c,
+            'o-color-2': #590046,
+            'o-color-3': #dbe8ed,
+            'o-color-4': #ffffff,
+            'o-color-5': #222222,
+
+            'o-cc2-text': 'o-color-1',
+
+            'menu': 5,
+            'footer': 5,
+            'copyright': 5,
+        ),
+        'beauty-2': (
+            'o-color-1': #4fda89,
+            'o-color-2': #714e9c,
+            'o-color-3': #dadbdb,
+            'o-color-4': #ffffff,
+            'o-color-5': #242327,
+
+            'o-cc2-link': 'o-color-5',
+
+            'menu': 4,
+            'footer': 4,
+            'copyright': 2,
+        ),
+        'beauty-3': (
+            'o-color-1': #009083,
+            'o-color-2': #8ba1a0,
+            'o-color-3': #e9e9e9,
+            'o-color-4': #ffffff,
+            'o-color-5': #1e222f,
+
+            'footer': 2,
+            'copyright': 2,
+        ),
+        'beauty-4': (
+            'o-color-1': #b6977d,
+            'o-color-2': #585832,
+            'o-color-3': #e7e5e5,
+            'o-color-4': #ffffff,
+            'o-color-5': #000000,
+
+            'footer': 1,
+            'copyright': 1,
+        ),
+        'beauty-5': (
+            'o-color-1': #1ad68f,
+            'o-color-2': #2e2e2e,
+            'o-color-3': #e9e9e9,
+            'o-color-4': #ffffff,
+            'o-color-5': #000000,
+
+            'o-cc2-link': 'o-color-5',
+
+            'menu': 3,
+            'footer': 3,
+            'copyright': 3,
+        ),
+        'beauty-6': (
+            'o-color-1': #b3b862,
+            'o-color-2': #1e493b,
+            'o-color-3': #e3e7e9,
+            'o-color-4': #ffffff,
+            'o-color-5': #112625,
+
+            'o-cc2-link': 'o-color-5',
+
+            'copyright-custom': 'black-15',
+        ),
+        'bewise-1': (
+            'o-color-1': #162238,
+            'o-color-2': #b4904f,
+            'o-color-3': #f0f4f4,
+            'o-color-4': #ffffff,
+            'o-color-5': #222222,
+
+            'body': 'o-color-3',
+            'menu': 3,
+            'footer': 1,
+            'copyright': 1,
+        ),
+        'bewise-2': (
+            'o-color-1': #f74b94,
+            'o-color-2': #45AADA,
+            'o-color-3': #edf2f4,
+            'o-color-4': #ffffff,
+            'o-color-5': #333333,
+
+            'footer': 1,
+            'copyright': 1,
+        ),
+        'bewise-3': (
+            'o-color-1': #dbb132,
+            'o-color-2': #8578b9,
+            'o-color-3': #f4f4f4,
+            'o-color-4': #ffffff,
+            'o-color-5': #333333,
+
+            'footer': 1,
+            'copyright': 1,
+        ),
+        'bistro-1': (
+            'o-color-1': #68b581,
+            'o-color-2': #046380,
+            'o-color-3': #e8e6d1,
+            'o-color-4': #ffffff,
+            'o-color-5': #1d2127,
+
+            'o-cc1-text': 'o-color-5',
+
+            'menu': 1,
+            'footer': 5,
+            'copyright': 4,
+        ),
+        'bistro-2': (
+            'o-color-1': #8cc850,
+            'o-color-2': #cc4452,
+            'o-color-3': #f6f4e1,
+            'o-color-4': #ffffff,
+            'o-color-5': #4c4545,
+
+            'o-cc1-text': 'o-color-5',
+            'o-cc3-link': 'o-color-4',
+            'o-cc4-link': 'o-color-4',
+            'o-cc5-btn-secondary': 'o-color-2',
+
+            'menu': 5,
+            'footer': 5,
+            'copyright': 4,
+        ),
+        'bistro-3': (
+            'o-color-1': #e2ad3b,
+            'o-color-2': #1a2a41,
+            'o-color-3': #f2ebd5,
+            'o-color-4': #ffffff,
+            'o-color-5': #d26400,
+
+            'o-cc1-text': 'o-color-2',
+            'o-cc2-headings': 'o-color-2',
+            'o-cc2-link': 'o-color-2',
+            'o-cc3-headings': 'o-color-3',
+            'o-cc5-link': 'o-color-3',
+
+            'menu': 3,
+            'footer': 3,
+            'copyright': 4,
+        ),
+        'bistro-4': (
+            'o-color-1': #0092b2,
+            'o-color-2': #046380,
+            'o-color-3': #f2ebd5,
+            'o-color-4': #ffffff,
+            'o-color-5': #a8c545,
+
+            'o-cc1-text': #002737,
+            'o-cc2-headings': 'o-color-2',
+            'o-cc3-headings': 'o-color-3',
+            'o-cc3-link': 'o-color-3',
+            'o-cc4-link': 'o-color-3',
+            'o-cc4-btn-primary': 'o-color-3',
+            'o-cc4-btn-secondary': 'o-color-2',
+            'o-cc5-link': 'o-color-2',
+            'o-cc5-btn-secondary': 'o-color-2',
+
+            'preheader': 4,
+            'menu': 1,
+            'footer': 3,
+            'copyright': 4,
+        ),
+        'bistro-5': (
+            'o-color-1': #dd7e43,
+            'o-color-2': #658791,
+            'o-color-3': #9cc264,
+            'o-color-4': #ffffff,
+            'o-color-5': #2b2d33,
+
+            'o-cc1-text': 'o-color-5',
+            'o-cc2-headings': 'o-color-4',
+            'o-cc2-btn-primary': 'o-color-4',
+            'o-cc2-link': 'o-color-4',
+            'o-cc3-btn-primary': 'o-color-4',
+            'o-cc3-btn-secondary': 'o-color-5',
+            'o-cc3-link': 'o-color-4',
+            'o-cc4-btn-primary': 'o-color-4',
+            'o-cc4-btn-secondary': 'o-color-5',
+            'o-cc4-link': 'o-color-4',
+            'o-cc5-btn-secondary': 'o-color-2',
+            'o-cc5-link': 'o-color-1',
+
+            'preheader': 4,
+            'menu': 5,
+            'footer': 5,
+            'copyright': 4,
+        ),
+        'bistro-6': (
+            'o-color-1': #92b475,
+            'o-color-2': #8c7d77,
+            'o-color-3': #efefed,
+            'o-color-4': #ffffff,
+            'o-color-5': #011a33,
+
+            'o-cc1-text': 'o-color-5',
+            'o-cc3-link': 'o-color-4',
+            'o-cc3-btn-secondary': 'o-color-4',
+            'o-cc4-link': 'o-color-4',
+            'o-cc4-btn-secondary': 'o-color-4',
+            'o-cc5-btn-secondary': 'o-color-4',
+
+            'menu': 2,
+            'footer': 5,
+            'copyright': 4,
+        ),
+        'bookstore-1': (
+            'o-color-1': #a1a52f,
+            'o-color-2': #66555c,
+            'o-color-3': #f7f7f7,
+            'o-color-4': #ffffff,
+            'o-color-5': #242327,
+
+            'o-cc2-link': 'o-color-5',
+            'o-cc5-link': 'o-color-4',
+            'o-cc5-btn-primary': 'o-color-4',
+            'o-cc5-btn-secondary': 'o-color-5',
+
+            'menu': 5,
+            'footer': 5,
+            'copyright': 5,
+        ),
+        'bookstore-2': (
+            'o-color-1': #679b96,
+            'o-color-2': #345552,
+            'o-color-3': #e9e9e9,
+            'o-color-4': #ffffff,
+            'o-color-5': #1e222f,
+
+            'o-cc2-link': 'o-color-5',
+            'o-cc2-headings': 'o-color-5',
+
+            'menu': 2,
+            'footer': 2,
+            'copyright': 2,
+        ),
+        'bookstore-3': (
+            'o-color-1': #df699c,
+            'o-color-2': #590046,
+            'o-color-3': #dbe8ed,
+            'o-color-4': #ffffff,
+            'o-color-5': #222222,
+
+            'o-cc2-link': 'o-color-5',
+            'o-cc2-headings': 'o-color-5',
+
+            'menu': 2,
+            'footer': 2,
+            'copyright': 2,
+        ),
+        'bookstore-4': (
+            'o-color-1': #b29964,
+            'o-color-2': #62624c,
+            'o-color-3': #f5f4f4,
+            'o-color-4': #ffffff,
+            'o-color-5': #333333,
+
+            'o-cc2-link': 'o-color-5',
+
+            'menu': 4,
+            'footer': 4,
+            'copyright': 4,
+        ),
+        'bookstore-5': (
+            'o-color-1': #1ad68f,
+            'o-color-2': #2e2e2e,
+            'o-color-3': #f7f7f7,
+            'o-color-4': #ffffff,
+            'o-color-5': #000000,
+
+            'o-cc2-link': 'o-color-5',
+            'o-cc4-link': 'o-color-5',
+            'o-cc4-text': 'o-color-5',
+
+            'menu': 4,
+            'footer': 4,
+            'copyright': 4,
+        ),
+        'bookstore-6': (
+            'o-color-1': #cfd744,
+            'o-color-2': #3d504a,
+            'o-color-3': #f0f1f1,
+            'o-color-4': #ffffff,
+            'o-color-5': #112625,
+
+            'o-cc2-link': 'o-color-5',
+            'o-cc4-link': 'o-color-5',
+            'o-cc4-text': 'o-color-5',
+
+            'menu': 4,
+            'footer': 4,
+            'copyright': 4,
+        ),
+        'clean-1': (
+            'o-color-1': #3498db,
+            'o-color-2': #34495e,
+            'o-color-3': #e5edf2,
+            'o-color-4': #ffffff,
+            'o-color-5': #333333,
+
+            'menu': 2,
+            'footer': 2,
+            'copyright': 2,
+        ),
+        'clean-2': (
+            'o-color-1': #7a58b2,
+            'o-color-2': #4e3575,
+            'o-color-3': #ecece4,
+            'o-color-4': #ffffff,
+            'o-color-5': #2c3e50,
+
+            'o-cc1-headings': 'o-color-5',
+            'o-cc5-link': #b9a1df,
+
+            'menu': 2,
+            'footer': 2,
+            'copyright': 2,
+        ),
+        'clean-3': (
+            'o-color-1': #f85fa6,
+            'o-color-2': #a3416f,
+            'o-color-3': #e0e9f2,
+            'o-color-4': #ffffff,
+            'o-color-5': #222222,
+
+            'menu': 2,
+            'footer': 2,
+            'copyright': 2,
+        ),
+        'clean-4': (
+            'o-color-1': #3d91db,
+            'o-color-2': #995528,
+            'o-color-3': #f0edeb,
+            'o-color-4': #ffffff,
+            'o-color-5': #222222,
+
+            'o-cc3-bg': #583e2d,
+
+            'menu': 2,
+            'footer': 2,
+            'copyright': 2,
+        ),
+        'clean-5': (
+            'o-color-1': #53aeb4,
+            'o-color-2': #7f8c8d,
+            'o-color-3': #eef3f6,
+            'o-color-4': #ffffff,
+            'o-color-5': #34495e,
+
+            'menu': 2,
+            'footer': 2,
+            'copyright': 2,
+        ),
+        'cobalt-1': (
+            'o-color-1': #116466,
+            'o-color-2': #2B3737,
+            'o-color-3': #F6F4F2,
+            'o-color-4': #ffffff,
+            'o-color-5': #a9bcbc,
+
+            'o-cc3-headings': 'o-color-3',
+            'o-cc3-text': 'o-color-5',
+            'o-cc3-link': 'o-color-4',
+            'o-cc3-btn-primary': 'o-color-4',
+            'o-cc3-btn-secondary': 'o-color-5',
+
+            'header': 1,
+            'footer': 3,
+            'copyright-custom': 'black-15',
+        ),
+        'enark-1': (
+            'o-color-1': #7b97af,
+            'o-color-2': #464d53,
+            'o-color-3': #f2f2f2,
+            'o-color-4': #FFFFFF,
+            'o-color-5': #191919,
+
+            'o-cc1-text': 'o-color-2',
+            'o-cc1-btn-primary': 'o-color-2',
+            'o-cc5-link': 'o-color-4',
+
+            'copyright-custom': 'black-15',
+        ),
+        'enark-2': (
+            'o-color-1': #41cb7a,
+            'o-color-2': #0f4c26,
+            'o-color-3': #fafafa,
+            'o-color-4': #FFFFFF,
+            'o-color-5': #000000,
+
+            'menu': 2,
+            'footer': 2,
+            'copyright': 2,
+        ),
+        'enark-3': (
+            'o-color-1': #F2A679,
+            'o-color-2': #4f6b8c,
+            'o-color-3': #f4f2f2,
+            'o-color-4': #FFFFFF,
+            'o-color-5': #000000,
+
+            'o-cc4-text': 'o-color-5',
+
+            'menu': 4,
+            'footer': 4,
+            'copyright': 4,
+        ),
+        'enark-4': (
+            'o-color-1': #FFC513,
+            'o-color-2': #022859,
+            'o-color-3': #f4f2f2,
+            'o-color-4': #FFFFFF,
+            'o-color-5': #000000,
+
+            'o-cc4-text': 'o-color-5',
+
+            'menu': 4,
+            'footer': 4,
+            'copyright': 4,
+        ),
+        'enark-5': (
+            'o-color-1': #41cbb4,
+            'o-color-2': #0f4c4c,
+            'o-color-3': #f2f2ef,
+            'o-color-4': #FFFFFF,
+            'o-color-5': #000000,
+
+            'o-cc4-text': 'o-color-5',
+
+            'footer': 4,
+            'copyright': 4,
+        ),
+        'graphene-1': (
+            'o-color-1': #30cbb2,
+            'o-color-2': #3c4e5e,
+            'o-color-3': #f4f5f6,
+            'o-color-4': #ffffff,
+            'o-color-5': #192028,
+
+            'o-cc1-link': #04957e,
+            'o-cc5-text': #b2b2b2,
+
+            'body': 'black-15',
+            'menu': 1,
+            'footer': 5,
+            'copyright-custom': 'black-25',
+        ),
+        'graphene-2': (
+            'o-color-1': #c8a47e,
+            'o-color-2': #32273b,
+            'o-color-3': #f1f1ef,
+            'o-color-4': #ffffff,
+            'o-color-5': #252424,
+
+            'o-cc3-text': #b2b2b2,
+            'o-cc4-text': 'o-color-4',
+            'o-cc3-headings': 'o-color-4',
+            'o-cc4-headings': 'o-color-5',
+            'o-cc5-text': #b2b2b2,
+
+            'copyright-custom': 'black-15',
+        ),
+        'graphene-3': (
+            'o-color-1': #39588e,
+            'o-color-2': #d2b683,
+            'o-color-3': #e0dfdb,
+            'o-color-4': #f4f5f6,
+            'o-color-5': #2a282a,
+
+            'o-cc5-link': #7a9edc,
+
+            'menu': 2,
+            'footer': 2,
+            'copyright-custom': 'black-15',
+        ),
+        'graphene-4': (
+            'o-color-1': #f48747,
+            'o-color-2': #e9ceb0,
+            'o-color-3': #f1ebe5,
+            'o-color-4': #fbfaf8,
+            'o-color-5': #282d30,
+
+            'menu': 5,
+            'copyright-custom': 'black-15',
+        ),
+        'kea-1': (
+            'o-color-1': #e991a3,
+            'o-color-2': #575757,
+            'o-color-3': #f6f5f5,
+            'o-color-4': #ffffff,
+            'o-color-5': #333333,
+
+            'menu': 5,
+            'footer': 5,
+            'copyright': 5,
+        ),
+        'kea-2': (
+            'o-color-1': #f7a58e,
+            'o-color-2': #4b6272,
+            'o-color-3': #ecf0f2,
+            'o-color-4': #ffffff,
+            'o-color-5': #374249,
+
+            'menu': 4,
+            'footer': 4,
+            'copyright': 4,
+        ),
+        'kea-3': (
+            'o-color-1': #f9a646,
+            'o-color-2': #68635d,
+            'o-color-3': #f0efee,
+            'o-color-4': #ffffff,
+            'o-color-5': #333333,
+
+            'menu': 4,
+            'footer': 4,
+            'copyright': 4,
+        ),
+        'kea-4': (
+            'o-color-1': #ed6639,
+            'o-color-2': #385b9f,
+            'o-color-3': #d5dee3,
+            'o-color-4': #ffffff,
+            'o-color-5': #333333,
+
+            'o-cc4-link': 'o-color-4',
+            'o-cc4-btn-primary': 'o-color-4',
+
+            'menu': 4,
+            'footer': 4,
+            'copyright': 4,
+        ),
+        'kiddo-1': (
+            'o-color-1': #f3997b,
+            'o-color-2': #a7c7d5,
+            'o-color-3': #e3f0ee,
+            'o-color-4': #FFFFFF,
+            'o-color-5': #47464b,
+
+            'o-cc2-headings': null,
+
+            'menu': 4,
+            'footer': 4,
+            'copyright': 4,
+        ),
+        'kiddo-2': (
+            'o-color-1': #637bbe,
+            'o-color-2': #8eb9c7,
+            'o-color-3': #f6f0ea,
+            'o-color-4': #FFFFFF,
+            'o-color-5': #343643,
+
+            'menu': 2,
+            'footer': 2,
+            'copyright': 2,
+        ),
+        'kiddo-3': (
+            'o-color-1': #684672,
+            'o-color-2': #639C8E,
+            'o-color-3': #f8ebd6,
+            'o-color-4': #FFFFFF,
+            'o-color-5': #302633,
+
+            'menu': 2,
+            'footer': 2,
+            'copyright': 2,
+            'o-cc1-headings': 'o-color-1',
+            'o-cc1-btn-secondary': 'o-color-3',
+        ),
+        'kiddo-4': (
+            'o-color-1': #c54545,
+            'o-color-2': #364481,
+            'o-color-3': #ccd7c5,
+            'o-color-4': #ffffff,
+            'o-color-5': #1f2230,
+
+            'menu': 2,
+            'footer': 2,
+            'copyright': 2,
+        ),
+        'loftspace-1': (
+            'o-color-1': #a1a52f,
+            'o-color-2': #66555c,
+            'o-color-3': #f7f7f7,
+            'o-color-4': #ffffff,
+            'o-color-5': #242327,
+
+            'menu': 5,
+            'footer': 5,
+            'copyright': 5,
+        ),
+        'loftspace-2': (
+            'o-color-1': #679b96,
+            'o-color-2': #345552,
+            'o-color-3': #e9e9e9,
+            'o-color-4': #ffffff,
+            'o-color-5': #1e222f,
+
+            'menu': 5,
+            'footer': 5,
+            'copyright': 5,
+        ),
+        'loftspace-3': (
+            'o-color-1': #df699c,
+            'o-color-2': #590046,
+            'o-color-3': #dbe8ed,
+            'o-color-4': #ffffff,
+            'o-color-5': #222222,
+
+            'menu': 5,
+            'footer': 5,
+            'copyright': 5,
+        ),
+        'loftspace-4': (
+            'o-color-1': #b29964,
+            'o-color-2': #62624c,
+            'o-color-3': #f5f4f4,
+            'o-color-4': #ffffff,
+            'o-color-5': #333333,
+
+            'menu': 5,
+            'footer': 5,
+            'copyright': 5,
+        ),
+        'loftspace-5': (
+            'o-color-1': #1ad68f,
+            'o-color-2': #2e2e2e,
+            'o-color-3': #f7f7f7,
+            'o-color-4': #ffffff,
+            'o-color-5': #000000,
+
+            'menu': 5,
+            'footer': 5,
+            'copyright': 5,
+        ),
+        'loftspace-6': (
+            'o-color-1': #cfd744,
+            'o-color-2': #3d504a,
+            'o-color-3': #f0f1f1,
+            'o-color-4': #ffffff,
+            'o-color-5': #112625,
+
+            'menu': 5,
+            'footer': 5,
+            'copyright': 5,
+        ),
+        'monglia-1': (
+            'o-color-1': #ed145b,
+            'o-color-2': #9CD6FA,
+            'o-color-3': #f5f5f5,
+            'o-color-4': #ffffff,
+            'o-color-5': #111111,
+
+            'copyright-custom': 'black-15',
+        ),
+        'monglia-2': (
+            'o-color-1': #8f8747,
+            'o-color-2': #5b4645,
+            'o-color-3': #f0ecdb,
+            'o-color-4': #ffffff,
+            'o-color-5': #21263a,
+
+            'copyright-custom': 'black-15',
+        ),
+        'monglia-3': (
+            'o-color-1': #c0ce75,
+            'o-color-2': #704562,
+            'o-color-3': #dedede,
+            'o-color-4': #ffffff,
+            'o-color-5': #3e3e3e,
+
+            'copyright-custom': 'black-15',
+        ),
+        'monglia-4': (
+            'o-color-1': #1ad68f,
+            'o-color-2': #2e2e2e,
+            'o-color-3': #cfcfcf,
+            'o-color-4': #ffffff,
+            'o-color-5': #000000,
+
+            'copyright-custom': 'black-15',
+        ),
+        'monglia-5': (
+            'o-color-1': #c5ca60,
+            'o-color-2': #40a181,
+            'o-color-3': #bfddec,
+            'o-color-4': #ffffff,
+            'o-color-5': #112625,
+
+            'footer': 1,
+            'copyright': 1,
+        ),
+        'monglia-6': (
+            'o-color-1': #da557d,
+            'o-color-2': #6d4046,
+            'o-color-3': #fffddc,
+            'o-color-4': #ffffff,
+            'o-color-5': #3e3f43,
+
+            'footer': 1,
+            'copyright': 1,
+        ),
+        'nano-1': (
+            'o-color-1': #ed8558,
+            'o-color-2': #74bcc5,
+            'o-color-3': #efe9e0,
+            'o-color-4': #ffffff,
+            'o-color-5': #23262b,
+
+            'o-cc2-headings': 'o-color-5',
+            'o-cc3-btn-primary': 'o-color-4',
+            'o-cc3-link': 'o-color-4',
+            'o-cc4-link': 'o-color-4',
+            'o-cc5-btn-secondary': 'o-color-2',
+
+            'body': 'o-color-5',
+            'preheader': 4,
+            'menu': 5,
+            'footer': 2,
+            'copyright': 5,
+        ),
+        'nano-2': (
+            'o-color-1': #e77557,
+            'o-color-2': #213047,
+            'o-color-3': #f2f2f2,
+            'o-color-4': #ffffff,
+            'o-color-5': #23262b,
+
+            'o-cc2-headings': 'o-color-2',
+            'o-cc4-link': 'o-color-4',
+
+            'menu': 3,
+            'footer': 2,
+            'copyright': 2,
+        ),
+        'nano-3': (
+            'o-color-1': #85bf4b,
+            'o-color-2': #74bcc5,
+            'o-color-3': #eaf2df,
+            'o-color-4': #ffffff,
+            'o-color-5': #23262b,
+
+            'o-cc2-headings': 'o-color-5',
+            'o-cc3-btn-primary': 'o-color-5',
+            'o-cc3-link': 'o-color-4',
+            'o-cc4-link': 'o-color-4',
+            'o-cc5-btn-secondary': 'o-color-2',
+
+            'menu': 5,
+            'footer': 5,
+            'copyright': 5,
+        ),
+        'nano-4': (
+            'o-color-1': #16c6cc,
+            'o-color-2': #d72d3c,
+            'o-color-3': #e9ecef,
+            'o-color-4': #ffffff,
+            'o-color-5': #23262b,
+
+            'o-cc2-headings': 'o-color-5',
+            'o-cc3-link': 'o-color-4',
+            'o-cc4-link': 'o-color-4',
+
+            'menu': 5,
+            'footer': 2,
+            'copyright': 4,
+        ),
+        'nano-5': (
+            'o-color-1': #c7db58,
+            'o-color-2': #413659,
+            'o-color-3': #efefed,
+            'o-color-4': #ffffff,
+            'o-color-5': #23262b,
+
+            'o-cc2-headings': 'o-color-5',
+            'o-cc2-link': 'o-color-2',
+            'o-cc3-link': 'o-color-1',
+            'o-cc5-link': 'o-color-1',
+
+            'menu': 3,
+            'footer': 2,
+            'copyright': 3,
+        ),
+        'nano-6': (
+            'o-color-1': #db5d6b,
+            'o-color-2': #5acaaf,
+            'o-color-3': #efefed,
+            'o-color-4': #ffffff,
+            'o-color-5': #23262b,
+
+            'o-cc3-link': 'o-color-3',
+            'o-cc3-btn-primary': 'o-color-5',
+            'o-cc4-link': 'o-color-3',
+            'o-cc5-headings': 'o-color-1',
+            'o-cc5-link': 'o-color-1',
+
+            'menu': 5,
+            'footer': 2,
+            'copyright': 5,
+
+            'o-cc2-headings': 'o-color-5',
+        ),
+        'notes-1': (
+            'o-color-1': #a1c005,
+            'o-color-2': #9B96B4,
+            'o-color-3': #f7f7f7,
+            'o-color-4': #ffffff,
+            'o-color-5': #212121,
+
+            'o-cc2-headings': 'o-color-5',
+
+            'menu': 5,
+            'copyright': 4,
+        ),
+        'notes-2': (
+            'o-color-1': #5191f0,
+            'o-color-2': #394b44,
+            'o-color-3': #f6f3ef,
+            'o-color-4': #ffffff,
+            'o-color-5': #212523,
+
+            'menu': 3,
+            'footer': 3,
+            'copyright': 4,
+        ),
+        'notes-3': (
+            'o-color-1': #DE8642,
+            'o-color-2': #B9B1A8,
+            'o-color-3': #f7f7f7,
+            'o-color-4': #ffffff,
+            'o-color-5': #4B4D52,
+
+            'menu': 4,
+            'footer': 4,
+            'copyright': 5,
+        ),
+        'notes-4': (
+            'o-color-1': #ebd425,
+            'o-color-2': #48372f,
+            'o-color-3': #f7f7f7,
+            'o-color-4': #ffffff,
+            'o-color-5': #352e2e,
+
+            'o-cc2-headings': 'o-color-5',
+            'o-cc4-text': 'o-color-5',
+
+            'menu': 3,
+            'footer': 3,
+            'copyright': 4,
+        ),
+        'odoo-experts-1': (
+            'o-color-1': #278f84,
+            'o-color-2': #494048,
+            'o-color-3': #f9f9f9,
+            'o-color-4': #FFFFFF,
+            'o-color-5': #201c20,
+
+            'o-cc5-link': #65e4d7,
+
+            'menu': 1,
+            'footer': 5,
+            'copyright': 5,
+        ),
+        'odoo-experts-2': (
+            'o-color-1': #414f8a,
+            'o-color-2': #888888,
+            'o-color-3': #f9f9f9,
+            'o-color-4': #FFFFFF,
+            'o-color-5': #222222,
+
+            'o-cc5-text': #b8b7b7,
+            'o-cc5-link': 'o-color-4',
+
+            'menu': 5,
+            'footer': 5,
+            'copyright': 5,
+        ),
+        'odoo-experts-3': (
+            'o-color-1': #dfcc60,
+            'o-color-2': #7f6262,
+            'o-color-3': #f9f9f9,
+            'o-color-4': #FFFFFF,
+            'o-color-5': #352626,
+
+            'menu': 4,
+            'footer': 4,
+            'copyright': 4,
+        ),
+        'odoo-experts-4': (
+            'o-color-1': #01e0b5,
+            'o-color-2': #5c7aff,
+            'o-color-3': #f9f9f9,
+            'o-color-4': #FFFFFF,
+            'o-color-5': #444444,
+
+            'o-cc2-link': 'o-color-5',
+
+            'menu': 3,
+            'footer': 3,
+            'copyright': 3,
+        ),
+        'orchid-1': (
+            'o-color-1': #a1a52f,
+            'o-color-2': #66555c,
+            'o-color-3': #f7f7f7,
+            'o-color-4': #ffffff,
+            'o-color-5': #242327,
+
+            'footer': 4,
+            'copyright': 4,
+        ),
+        'orchid-2': (
+            'o-color-1': #679b96,
+            'o-color-2': #345552,
+            'o-color-3': #e9e9e9,
+            'o-color-4': #ffffff,
+            'o-color-5': #1e222f,
+
+            'footer': 1,
+            'copyright': 4,
+        ),
+        'orchid-3': (
+            'o-color-1': #df699c,
+            'o-color-2': #590046,
+            'o-color-3': #dbe8ed,
+            'o-color-4': #ffffff,
+            'o-color-5': #222222,
+
+            'footer': 1,
+            'copyright': 4,
+        ),
+        'orchid-4': (
+            'o-color-1': #b29964,
+            'o-color-2': #62624c,
+            'o-color-3': #f5f4f4,
+            'o-color-4': #ffffff,
+            'o-color-5': #333333,
+
+            'footer': 1,
+            'copyright': 4,
+        ),
+        'orchid-5': (
+            'o-color-1': #1ad68f,
+            'o-color-2': #2e2e2e,
+            'o-color-3': #f7f7f7,
+            'o-color-4': #ffffff,
+            'o-color-5': #000000,
+
+            'footer': 1,
+            'copyright': 4,
+        ),
+        'orchid-6': (
+            'o-color-1': #cfd744,
+            'o-color-2': #3d504a,
+            'o-color-3': #f0f1f1,
+            'o-color-4': #ffffff,
+            'o-color-5': #112625,
+
+            'menu': 4,
+            'footer': 4,
+            'copyright': 5,
+        ),
+        'orchid-7': (
+            'o-color-1': #007564,
+            'o-color-2': #fcb752,
+            'o-color-3': #f8f8f8,
+            'o-color-4': #ffffff,
+            'o-color-5': #011a16,
+        ),
+        'paptic-1': (
+            'o-color-1': #6772E5,
+            'o-color-2': #F5F9F9,
+            'o-color-3': #34B885,
+            'o-color-4': #ffffff,
+            'o-color-5': #9BA9BB,
+
+            'o-cc1-headings': 'o-color-5',
+            'o-cc1-link': 'o-color-1',
+            'o-cc1-btn-secondary': 'o-color-5',
+            'o-cc1-btn-secondary-border': 'o-color-5',
+
+            'o-cc2-headings': 'o-color-2',
+            'o-cc2-link': #40fffb,
+
+            'o-cc3-headings': 'o-color-3',
+
+            'o-cc4-link': #40fffb,
+            'o-cc5-link': #40fffb,
+
+            'header': 1,
+            'footer': 1,
+            'copyright': 3,
+        ),
+        'real-estate-1': (
+            'o-color-1': #539b80,
+            'o-color-2': #2e2e2e,
+            'o-color-3': #f4f4f4,
+            'o-color-4': #ffffff,
+            'o-color-5': #000000,
+
+            'o-cc1-btn-primary': #1ad68f,
+            'o-cc5-link': #1ad68f,
+
+            'menu': 2,
+            'footer': 2,
+            'copyright': 2,
+        ),
+        'real-estate-2': (
+            'o-color-1': #006bff,
+            'o-color-2': #fda400,
+            'o-color-3': #F1F1F4,
+            'o-color-4': #ffffff,
+            'o-color-5': #2A2A33,
+
+            'footer': 1,
+            'copyright': 1,
+        ),
+        'real-estate-3': (
+            'o-color-1': #cddf66,
+            'o-color-2': #b62682,
+            'o-color-3': #f4f5f2,
+            'o-color-4': #ffffff,
+            'o-color-5': #000000,
+
+            'footer': 1,
+            'copyright': 1,
+        ),
+        'real-estate-4': (
+            'o-color-1': #007882,
+            'o-color-2': #48578a,
+            'o-color-3': #f4efeb,
+            'o-color-4': #ffffff,
+            'o-color-5': #33302e,
+
+            'o-cc5-link': #70c7cf,
+
+            'menu': 5,
+            'copyright-custom': 'black-15',
+        ),
+        'treehouse-1': (
+            'o-color-1': #68b581,
+            'o-color-2': #046380,
+            'o-color-3': #e8e6d1,
+            'o-color-4': #ffffff,
+            'o-color-5': #1d2127,
+
+            'o-cc1-text': 'o-color-5',
+            'o-cc4-btn-primary': 'o-color-4',
+            'o-cc4-link': 'o-color-4',
+
+            'menu': 1,
+            'footer': 5,
+            'copyright': 4,
+        ),
+        'treehouse-2': (
+            'o-color-1': #8cc850,
+            'o-color-2': #cc4452,
+            'o-color-3': #f6f4e1,
+            'o-color-4': #ffffff,
+            'o-color-5': #4c4545,
+
+            'o-cc1-text': 'o-color-5',
+            'o-cc3-link': 'o-color-4',
+            'o-cc4-link': 'o-color-4',
+            'o-cc5-btn-secondary': 'o-color-2',
+
+            'menu': 5,
+            'footer': 5,
+            'copyright': 4,
+        ),
+        'treehouse-3': (
+            'o-color-1': #e2ad3b,
+            'o-color-2': #1a2a41,
+            'o-color-3': #f2ebd5,
+            'o-color-4': #ffffff,
+            'o-color-5': #d26400,
+
+            'o-cc1-text': 'o-color-2',
+            'o-cc2-headings': 'o-color-2',
+            'o-cc2-link': 'o-color-2',
+            'o-cc3-headings': 'o-color-3',
+            'o-cc5-link': 'o-color-3',
+
+            'menu': 3,
+            'footer': 3,
+            'copyright': 4,
+        ),
+        'treehouse-4': (
+            'o-color-1': #0092b2,
+            'o-color-2': #046380,
+            'o-color-3': #f2ebd5,
+            'o-color-4': #ffffff,
+            'o-color-5': #a8c545,
+
+            'o-cc1-text': #002737,
+            'o-cc2-headings': 'o-color-2',
+            'o-cc3-headings': 'o-color-3',
+            'o-cc3-link': 'o-color-3',
+            'o-cc4-link': 'o-color-3',
+            'o-cc4-btn-primary': 'o-color-3',
+            'o-cc4-btn-secondary': 'o-color-2',
+            'o-cc5-link': 'o-color-2',
+            'o-cc5-btn-secondary': 'o-color-2',
+
+            'menu': 1,
+            'footer': 3,
+            'copyright': 4,
+        ),
+        'treehouse-5': (
+            'o-color-1': #dd7e43,
+            'o-color-2': #658791,
+            'o-color-3': #e3e9eb,
+            'o-color-4': #ffffff,
+            'o-color-5': #d45c45,
+
+            'o-cc2-headings': 'o-color-2',
+            'o-cc3-link': 'o-color-3',
+            'o-cc4-link': 'o-color-4',
+            'o-cc5-btn-secondary': 'o-color-4',
+            'o-cc5-link': 'o-color-4',
+
+            'menu': 1,
+            'footer': 2,
+            'copyright': 4,
+        ),
+        'treehouse-6': (
+            'o-color-1': #92b475,
+            'o-color-2': #8c7d77,
+            'o-color-3': #efefed,
+            'o-color-4': #ffffff,
+            'o-color-5': #011a33,
+
+            'o-cc1-text': 'o-color-5',
+            'o-cc3-link': 'o-color-4',
+            'o-cc3-btn-secondary': 'o-color-4',
+            'o-cc4-link': 'o-color-4',
+            'o-cc4-btn-secondary': 'o-color-4',
+            'o-cc5-btn-secondary': 'o-color-4',
+
+            'menu': 2,
+            'footer': 5,
+            'copyright': 4,
+        ),
+        'vehicle-1': (
+            'o-color-1': #9e160d,
+            'o-color-2': #543b3b,
+            'o-color-3': #f7f6f6,
+            'o-color-4': #ffffff,
+            'o-color-5': #242424,
+
+            'footer': 1,
+            'copyright': 1,
+        ),
+        'vehicle-2': (
+            'o-color-1': #3e7ae9,
+            'o-color-2': #000000,
+            'o-color-3': #f3f3f3,
+            'o-color-4': #ffffff,
+            'o-color-5': #222222,
+
+            'menu': 2,
+            'footer': 2,
+            'copyright': 2,
+        ),
+        'yes-1': (
+            'o-color-1': #e991a3,
+            'o-color-2': #575757,
+            'o-color-3': #f6f5f5,
+            'o-color-4': #ffffff,
+            'o-color-5': #333333,
+
+            'footer': 1,
+            'copyright': 1,
+        ),
+        'yes-2': (
+            'o-color-1': #f7a58e,
+            'o-color-2': #4b6272,
+            'o-color-3': #ecf0f2,
+            'o-color-4': #ffffff,
+            'o-color-5': #374249,
+
+            'footer': 4,
+            'copyright': 4,
+        ),
+        'yes-3': (
+            'o-color-1': #92657e,
+            'o-color-2': #bbd3c1,
+            'o-color-3': #eeeeef,
+            'o-color-4': #ffffff,
+            'o-color-5': #574656,
+        ),
+        'yes-4': (
+            'o-color-1': #ed6639,
+            'o-color-2': #385b9f,
+            'o-color-3': #d5dee3,
+            'o-color-4': #ffffff,
+            'o-color-5': #333333,
+
+            'footer': 1,
+            'copyright': 4,
+        ),
+        'zap-1': (
+            'o-color-1': #337ab7,
+            'o-color-2': #5cb85c,
+            'o-color-3': #eceef1,
+            'o-color-4': #ffffff,
+            'o-color-5': #1d2127,
+
+            'o-cc1-text': 'o-color-5',
+            'o-cc3-link': 'o-color-4',
+            'o-cc4-link': 'o-color-4',
+            'o-cc5-headings': 'o-color-1',
+
+            'menu': 2,
+            'footer': 2,
+            'copyright': 4,
+        ),
+        'zap-2': (
+            'o-color-1': #ed8c2b,
+            'o-color-2': #a8c545,
+            'o-color-3': #8e3557,
+            'o-color-4': #efecca,
+            'o-color-5': #35203b,
+
+            'o-cc1-bg': #ffffff,
+            'o-cc1-text': #1d2127,
+            'o-cc3-link': 'o-color-4',
+            'o-cc3-btn-primary': 'o-color-5',
+            'o-cc4-link': 'o-color-4',
+
+            'menu': 5,
+            'footer': 5,
+            'copyright': 4,
+        ),
+        'zap-3': (
+            'o-color-1': #79bd8f,
+            'o-color-2': #046380,
+            'o-color-3': #beeb9f,
+            'o-color-4': #ffffff,
+            'o-color-5': #000000,
+
+            'o-cc1-text': #222222,
+            'o-cc2-headings': 'o-color-2',
+            'o-cc2-link': 'o-color-2',
+            'o-cc4-link': 'o-color-4',
+            'o-cc5-headings': 'o-color-3',
+            'o-cc5-link': 'o-color-3',
+
+            'menu': 1,
+            'footer': 5,
+            'copyright': 4,
+        ),
+        'zap-4': (
+            'o-color-1': #00b3c5,
+            'o-color-2': #d72d3c,
+            'o-color-3': #ebeef1,
+            'o-color-4': #ffffff,
+            'o-color-5': #000000,
+
+            'o-cc1-text': #1d2127,
+            'o-cc2-headings': 'o-cc1-text',
+            'o-cc3-link': 'o-color-4',
+            'o-cc4-link': 'o-color-4',
+
+            'menu': 2,
+            'footer': 2,
+            'copyright': 4,
+        ),
+        'zap-5': (
+            'o-color-1': #413659,
+            'o-color-2': #c9de55,
+            'o-color-3': #bdd4de,
+            'o-color-4': #ffffff,
+            'o-color-5': #14212b,
+
+            'o-cc1-text': 'o-color-5',
+            'o-cc2-btn-secondary': 'o-color-4',
+            'o-cc3-btn-secondary': 'o-color-4',
+            'o-cc4-btn-primary': 'o-color-2',
+            'o-cc4-btn-secondary': 'o-color-4',
+            'o-cc4-link': 'o-color-3',
+            'o-cc5-headings': 'o-color-2',
+            'o-cc5-btn-primary': 'o-color-4',
+            'o-cc5-btn-secondary': 'o-color-2',
+            'o-cc5-link': 'o-color-3',
+
+            'menu': 2,
+            'footer': 2,
+            'copyright': 4,
+        ),
+        'zap-6': (
+            'o-color-1': #F25244,
+            'o-color-2': #45858C,
+            'o-color-3': #e8f1ff,
+            'o-color-4': #ffffff,
+            'o-color-5': #000000,
+
+            'o-cc1-text': #323a49,
+            'o-cc2-headings': 'o-cc1-text',
+            'o-cc3-link': 'o-color-4',
+            'o-cc3-btn-primary': 'o-color-5',
+            'o-cc4-link': 'o-color-4',
+
+            'menu': 2,
+            'footer': 5,
+            'copyright': 4,
+        ),
+    )
+);
+
+// This map is used to support the old color palettes system. Previously, color
+// palettes were stored in a list and the selected one was retrieved using its
+// index. Now color palettes are stored in maps and retrieved using their key.
+// This map allows to convert the old palette index to the corresponding key.
+// Since the color palettes list was different for each theme, this
+// compatibility map is overridden by each theme.
+$o-color-palettes-compatibility-indexes: (
+    1: 'base-1',
+    2: 'base-2',
+    3: 'generic-1',
+    4: 'generic-2',
+    5: 'generic-3',
+    6: 'generic-4',
+    7: 'generic-5',
+    8: 'generic-6',
+    9: 'generic-7',
+    10: 'generic-8',
+    11: 'generic-9',
+    12: 'generic-10',
+    13: 'generic-11',
+    14: 'generic-12',
+    15: 'generic-13',
+    16: 'generic-14',
+    17: 'generic-15',
+    18: 'generic-16',
+    19: 'generic-17',
+);
+$o-gray-color-palettes-compatibility-indexes: null; // Default to the color one above
+$o-theme-color-palettes-compatibility-indexes: null; // Default to the color one above
+
+// Create the list of palettes proposed by the UI
+$o-selected-color-palettes-names: (
+    // Proposed by the configurator
+    'default-1',
+    'default-2',
+    'default-3',
+    'default-4',
+    'default-5',
+    'default-6',
+    'default-7',
+    'default-8',
+    'default-9',
+    'default-10',
+    'default-11',
+    'default-12',
+    'default-13',
+    'default-14',
+    'default-15',
+    'default-16',
+    'default-17',
+    'default-18',
+    'default-19',
+    'default-20',
+
+    // System default
+    'base-1',
+    'base-2',
+);
+
+//------------------------------------------------------------------------------
+// Website customizations
+//------------------------------------------------------------------------------
+
+$o-base-website-values-palette: (
+    'font-size-base': 1rem, // Need a set value as the value is used in bootstrap_overridden files
+    'google-fonts': null,
+
+    'body-image': null,
+    'body-image-type': 'image', // 'image' or 'pattern'
+
+    'layout': 'full', // 'full' / 'boxed'
+    'color-palettes-name': null, // Default to the individual variables for each color palette type
+
+    'btn-primary-outline': false,
+    'btn-secondary-outline': false,
+    'link-underline': 'hover', // 'never' / 'hover' / 'always'
+    'btn-ripple': false,
+
+    'btn-padding-y': null, // Default to BS
+    'btn-padding-x': null, // Default to BS
+    'btn-font-size': null, // Default to BS
+    'btn-padding-y-sm': null, // Default to portal value
+    'btn-padding-x-sm': null, // Default to portal value
+    'btn-font-size-sm': null, // Default to BS
+    'btn-padding-y-lg': null, // Default to BS
+    'btn-padding-x-lg': null, // Default to BS
+    'btn-font-size-lg': null, // Default to BS
+    'btn-border-width': null, // Default to BS
+    'btn-border-radius': null, // Default to BS
+    'btn-border-radius-sm': null, // Default to BS
+    'btn-border-radius-lg': null, // Default to BS
+
+    'input-padding-y': null, // Default to BS
+    'input-padding-x': null, // Default to BS
+    'input-font-size': null, // Default to BS
+    'input-padding-y-sm': null, // Default to BS
+    'input-padding-x-sm': null, // Default to BS
+    'input-font-size-sm': null, // Default to BS
+    'input-padding-y-lg': null, // Default to BS
+    'input-padding-x-lg': null, // Default to BS
+    'input-font-size-lg': null, // Default to BS
+    'input-border-width': null, // Default to BS
+    'input-border-radius': null, // Default to BS
+    'input-border-radius-sm': null, // Default to BS
+    'input-border-radius-lg': null, // Default to BS
+
+    // A key from the $o-theme-font-configs map (null = default to the first key)
+    'font': null,
+    'headings-font': null,
+    'navbar-font': null,
+    'buttons-font': null,
+
+    // Gradients
+    'menu-gradient': null,
+    'header-boxed-gradient': null,
+    'footer-gradient': null,
+    'copyright-gradient': null,
+
+    'header-template': 'default', // 'default' / 'hamburger' / 'vertical' / 'sidebar'
+    'header-font-size': null, // Default to BS (normal font-size)
+    'header-links-style': 'default', // 'default' / 'fill' / 'outline' / 'pills' / 'block' / 'border-bottom'
+    'logo-height': null, // Default to navbar height (see portal)
+    'hamburger-type': 'default', // 'default' / 'off-canvas'
+    'hamburger-position': 'left', // 'left' / 'center' / 'right'
+    'menu-border-width': null, // Default to classes used on the template
+    'menu-border-style': solid, // Default to classes used on the template
+    'menu-border-radius': null, // Default to classes used on the template
+    'menu-box-shadow': null, // Default to classes used on the template
+    'sidebar-width': 18.75rem, // 300px
+
+    'footer-template': 'default',
+    'footer-effect': null, // null / 'slideout_slide_hover' / 'slideout_shadow'
+    'footer-scrolltop': false,
+);
+$o-font-aliases-to-keys: (
+    'base': 'font',
+    'headings': 'headings-font',
+    'navbar': 'navbar-font',
+    'buttons': 'buttons-font',
+);
+$o-website-values-palettes: (
+    (
+        'headings-font': 'Source Sans Pro',
+        'navbar-font': 'Source Sans Pro',
+        'buttons-font': 'Source Sans Pro',
+    ),
+) !default;
+$o-website-values-palette-number: 1 !default;
+
+// By default, all user website values are null. Each null value is
+// automatically replaced with corresponsing value of chosen values palette.
+$o-user-website-values: () !default;
+
+//------------------------------------------------------------------------------
+// Fonts
+//------------------------------------------------------------------------------
+
+// Those are BS values, except BS hardcodes them inside the $hx-font-size
+// variables directly and don't make them customizable.
+$o-theme-h1-font-size-multiplier: 2.5 !default;
+$o-theme-h2-font-size-multiplier: 2 !default;
+$o-theme-h3-font-size-multiplier: 1.75 !default;
+$o-theme-h4-font-size-multiplier: 1.5 !default;
+$o-theme-h5-font-size-multiplier: 1.25 !default;
+$o-theme-h6-font-size-multiplier: 1 !default;
+
+// Map:
+// <font-name>: (
+//     'family': <css font family list>,
+//     'url': <related part of google fonts URL>,
+//     'properties' (optional): (
+//         <font-alias>: (
+//             <website-value-key>: <value>,
+//             ...,
+//         ),
+//         ...,
+//     )
+// )
+$o-theme-font-configs: (
+    'Roboto': (
+        'family': ('Roboto', sans-serif),
+        'url': 'Roboto:300,300i,400,400i,700,700i',
+    ),
+    'Open Sans': (
+        'family': ('Open Sans', sans-serif),
+        'url': 'Open+Sans:300,300i,400,400i,700,700i',
+    ),
+    'Source Sans Pro': (
+        'family': ('Source Sans Pro', sans-serif),
+        'url': 'Source+Sans+Pro:300,300i,400,400i,700,700i',
+    ),
+    'Raleway': (
+        'family': ('Raleway', sans-serif),
+        'url': 'Raleway:300,300i,400,400i,700,700i',
+    ),
+    'Noto Serif': (
+        'family': ('Noto Serif', serif),
+        'url': 'Noto+Serif:300,300i,400,400i,700,700i',
+    ),
+    'Arvo': (
+        'family': ('Arvo', Times, serif),
+        'url': 'Arvo:300,300i,400,400i,700,700i',
+    ),
+) !default;
+
+//------------------------------------------------------------------------------
+// Mixins
+//------------------------------------------------------------------------------
+
+@mixin o-ribbon-right() {
+    @include o-position-absolute($top: 0, $right: 0);
+    padding: 0.5rem $ribbon-padding;
+    // 0.708 is 1 - cos(45deg)
+    // Transforms are applied right-to-left
+    // Cannot use matrix because of the use of % values.
+    transform: translateX(calc(-0.708 * (100% - #{2 * $ribbon-padding}))) rotate(45deg) translateX(calc(100% - #{$ribbon-padding}));
+    transform-origin: top right;
+};
+
+@mixin o-ribbon-left() {
+    @include o-position-absolute($top: 0, $left: 0);
+    padding: 0.5rem $ribbon-padding;
+    transform: translateX(calc(0.708 * (100% - #{2 * $ribbon-padding}) - 100%)) rotate(-45deg) translateX($ribbon-padding);
+    transform-origin: top right;
+};
+
+@mixin o-tag-right() {
+    @include o-position-absolute($top: 0, $right: 0);
+    padding: 0.25rem 1rem;
+};
+
+@mixin o-tag-left() {
+    @include o-position-absolute($top: 0, $left: 0);
+    padding: 0.25rem 1rem;
+};
+
+@mixin o-add-gradient($key) {
+    $-gradient: o-website-value($key);
+    @if $-gradient {
+        background-color: rgba(0, 0, 0, 0);
+        background-image: $-gradient;
+    }
+};
+
+// Replaces 'NULL' string values in a map by the sass null value (this is useful
+// as a "hack" to allow users to define null values in their custom palette as
+// normal null values are immediately removed to act as "removing the user custo
+// and resetting to theme default": ideally, we should review that system to
+// actually removing the custos in those cases instead of setting a null value
+// but this cannot be migrated at the moment).
+@function o-map-force-nulls($map) {
+    $-map: ();
+    @each $key, $value in $map {
+        $-map: map-merge($-map, (
+            $key: if($value == 'NULL', null, $value),
+        ));
+    }
+    @return $-map;
+}

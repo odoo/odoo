@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <div t-name="mail.EmojisDropdown" class="o_mail_emojis_dropdown o_mail_add_emoji dropdown position-relative">
+        <button class="btn btn-block dropdown-toggle px-3 py-1"
+            type="button"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+            title="Add an emoji">
+            <i class="fa fa-smile-o"/>
+        </button>
+        <div class="dropdown-menu dropdown-menu-right border-0 p-2" style="width: 406px">
+            <t t-call="mail.legacy.Composer.emojis">
+                <t t-set="emojis" t-value="widget.emojis"></t>
+            </t>
+        </div>
+    </div>
+</templates>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.PopoverView" owl="1">
+        <div class="o_PopoverView" t-attf-class="{{ className }}" t-ref="root">
+            <t t-if="popoverView">
+                <t
+                    t-component="constructor.components[popoverView.contentComponentName]"
+                    className="popoverView.contentClassName"
+                    t-props="{ localId: popoverView.content.localId }"
+                />
+            </t>
+        </div>
+    </t>
+
+</templates>

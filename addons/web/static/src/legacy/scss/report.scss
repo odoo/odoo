@@ -1,0 +1,117 @@
+$o-default-report-font: 'Lato' !default;
+$o-default-report-primary-color: rgb(0, 0, 0) !default;
+$o-default-report-secondary-color: rgb(0, 0, 0) !default;
+
+html, body {
+    height: 100%;
+    direction: ltr;
+}
+
+body {
+    color: #000 !important;
+    word-wrap: break-word;
+    font-family: $o-default-report-font;
+}
+
+span.o_force_ltr {
+    display: inline;
+}
+.o_force_ltr, .o_field_phone {
+    unicode-bidi: embed; // ensure element has level of embedding for direction
+    /*rtl:ignore*/
+    direction: ltr;
+}
+
+.border-black td, .border-black th {
+    border-top: 1px solid black !important;
+}
+
+/* See https://github.com/wkhtmltopdf/wkhtmltopdf/issues/1524 */
+.table-sm {
+    > thead > tr > th {
+        border-bottom: none !important;
+    }
+    > tbody > tr {
+        page-break-inside: avoid !important;
+        border-top: none !important;
+    }
+}
+.zero_min_height {
+    min-height: 0px !important;
+}
+
+/* To avoid broken snippets in report rendering */
+.jumbotron, .panel, .carousel, section{
+    page-break-inside: avoid;
+}
+
+/* Wkhtmltopdf doesn't support very well the media-print CSS (depends on the version) */
+.d-print-none{
+    display: none;
+}
+
+.o_bold {
+    font-weight: bolder;
+}
+.o_italic {
+    font-style: italic;
+}
+.o_underline {
+    text-decoration: underline;
+}
+
+/*Total table*/
+div#total {
+    page-break-inside: avoid;
+    table {
+        tr {
+            &.o_subtotal,
+            &.o_total {
+                td {
+                    border-top: 1px solid black !important;
+                }
+                &.o_border_bottom {
+                    td {
+                        border-bottom: 1px solid black !important;
+                    }
+                }
+            }
+        }
+    }
+}
+
+table {
+    thead {
+        &.o_black_border {
+            tr {
+                th {
+                    border-bottom: 2px solid black !important;
+                }
+            }
+        }
+    }
+}
+
+// TODO: investigate further for proper fix
+// By default there is 40px padding on the lists (both <ol> and <ul>) and it is
+// also the case with HTML reports, but when PDFs are rendered with Wkhtmltopdf,
+// the padding is not applied on <ol>, it is strangely applied on <ul> only.
+// So we simply remove the left padding, and apply left margin instead which
+// seems to do the job while not breaking layout in both html/pdf.
+ol {
+    margin-left: 40px;
+    padding-left: 0;
+}
+
+// Wkhtmltopdf doesn't handle flexbox properly, both the content
+// of columns and columns themselves does not wrap over new lines
+// when needed: the font of the pdf will reduce to make the content
+// fit the page format.
+// A (weak) solution is to force the content on one line and
+// impose the width, so to have evenly size columns.
+// This should work fine in most cases, but will yield ugly results
+// when 6+ columns are rendered
+.col-auto{
+    -webkit-box-flex: 1 !important;
+    width: 100% !important;
+}

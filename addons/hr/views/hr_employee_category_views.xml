@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_employee_category_form" model="ir.ui.view">
+             <field name="name">hr.employee.category.form</field>
+             <field name="model">hr.employee.category</field>
+             <field name="arch" type="xml">
+                 <form string="Employee Tags">
+                     <sheet>
+                         <group>
+                             <field name="name"/>
+                         </group>
+                     </sheet>
+                 </form>
+             </field>
+         </record>
+
+         <record id="view_employee_category_list" model="ir.ui.view">
+             <field name="name">hr.employee.category.list</field>
+             <field name="model">hr.employee.category</field>
+             <field eval="8" name="priority"/>
+             <field name="arch" type="xml">
+                 <tree string="Employees Tags" editable="bottom">
+                     <field name="name"/>
+                 </tree>
+             </field>
+         </record>
+
+         <record id="open_view_categ_form" model="ir.actions.act_window">
+             <field name="name">Employee Tags</field>
+             <field name="res_model">hr.employee.category</field>
+             <field name="view_mode">tree,form</field>
+         </record>
+
+     </data>
+ </odoo>

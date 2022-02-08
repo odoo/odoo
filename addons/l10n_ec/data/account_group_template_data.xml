@@ -1,0 +1,794 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="ec1" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">1</field>
+            <field name="name">Activo</field>
+        </record>
+
+        <record id="ec11" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">11</field>
+            <field name="name">Activo corriente</field>
+            <field name="parent_id" ref="ec1"/>
+        </record>
+
+        <record id="ec1101" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">1101</field>
+            <field name="name">Efectivo y equivalentes al efectivo</field>
+            <field name="parent_id" ref="ec11"/>
+        </record>
+
+        <record id="ec110101" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">110101</field>
+            <field name="name">Efectivo</field>
+            <field name="parent_id" ref="ec1101"/>
+        </record>
+
+        <record id="ec110102" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">110102</field>
+            <field name="name">Bancos</field>
+            <field name="parent_id" ref="ec1101"/>
+        </record>
+
+        <record id="ec110103" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">110103</field>
+            <field name="name">Transferencias</field>
+            <field name="parent_id" ref="ec1101"/>
+        </record>
+
+        <record id="ec110104" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">110104</field>
+            <field name="name">Valores en custodia</field>
+            <field name="parent_id" ref="ec1101"/>
+        </record>
+
+        <record id="ec1102" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">1102</field>
+            <field name="name">Activos financieros</field>
+            <field name="parent_id" ref="ec11"/>
+        </record>
+
+        <record id="ec110205" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">110205</field>
+            <field name="name">Documentos y cuentas por cobrar cliente no relacionados</field>
+            <field name="parent_id" ref="ec1102"/>
+        </record>
+
+        <record id="ec11020501" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">11020501</field>
+            <field name="name">Documentos y cuentas por cobrar cliente no relacionados de actividades ordinarias que no
+                generen intereses
+            </field>
+            <field name="parent_id" ref="ec110205"/>
+        </record>
+
+        <record id="ec110206" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">110206</field>
+            <field name="name">Documentos y cuentas por cobrar cliente relacionados</field>
+            <field name="parent_id" ref="ec1102"/>
+        </record>
+
+        <record id="ec110207" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">110207</field>
+            <field name="name">Cuentas por cobrar empleados</field>
+            <field name="parent_id" ref="ec1102"/>
+        </record>
+
+        <record id="ec1103" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">1103</field>
+            <field name="name">Inventarios</field>
+            <field name="parent_id" ref="ec11"/>
+        </record>
+
+        <record id="ec1104" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">1104</field>
+            <field name="name">Servicios y otros pagos anticipados</field>
+            <field name="parent_id" ref="ec11"/>
+        </record>
+
+        <record id="ec110404" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">110404</field>
+            <field name="name">Otros anticipos entregados</field>
+            <field name="parent_id" ref="ec1104"/>
+        </record>
+
+        <record id="ec1105" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">1105</field>
+            <field name="name">Activos por impuestos corrientes</field>
+            <field name="parent_id" ref="ec11"/>
+        </record>
+
+        <record id="ec110501" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">110501</field>
+            <field name="name">Credito tributario a favor de la empresa(iva)</field>
+            <field name="parent_id" ref="ec1105"/>
+        </record>
+
+        <record id="ec12" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">12</field>
+            <field name="name">Activo no corriente</field>
+            <field name="parent_id" ref="ec1"/>
+        </record>
+
+        <record id="ec1201" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">1201</field>
+            <field name="name">Propiedades, planta y equipo</field>
+            <field name="parent_id" ref="ec12"/>
+        </record>
+
+        <record id="ec120112" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">120112</field>
+            <field name="name">Depreciacion acumulada propiedades, planta y equipo</field>
+            <field name="parent_id" ref="ec1201"/>
+        </record>
+
+        <record id="ec120113" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">120113</field>
+            <field name="name">Deterioro acumulado de propiedades, planta y equipo</field>
+            <field name="parent_id" ref="ec1201"/>
+        </record>
+
+        <record id="ec1202" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">1202</field>
+            <field name="name">Propiedades de inversion</field>
+            <field name="parent_id" ref="ec12"/>
+        </record>
+
+        <record id="ec1203" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">1203</field>
+            <field name="name">Activos biologicos</field>
+            <field name="parent_id" ref="ec12"/>
+        </record>
+
+        <record id="ec1204" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">1204</field>
+            <field name="name">Activo intangible</field>
+            <field name="parent_id" ref="ec12"/>
+        </record>
+
+        <record id="ec1205" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">1205</field>
+            <field name="name">Activos por impuestos diferidos</field>
+            <field name="parent_id" ref="ec12"/>
+        </record>
+
+        <record id="ec1206" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">1206</field>
+            <field name="name">Activos financieros no corrientes</field>
+            <field name="parent_id" ref="ec12"/>
+        </record>
+
+        <record id="ec1207" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">1207</field>
+            <field name="name">Otros activos no corrientes</field>
+            <field name="parent_id" ref="ec12"/>
+        </record>
+
+        <record id="ec2" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">2</field>
+            <field name="name">Pasivo</field>
+        </record>
+
+        <record id="ec21" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">21</field>
+            <field name="name">Pasivo corriente</field>
+            <field name="parent_id" ref="ec2"/>
+        </record>
+
+        <record id="ec2103" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">2103</field>
+            <field name="name">Cuentas y documentos por pagar</field>
+            <field name="parent_id" ref="ec21"/>
+        </record>
+
+        <record id="ec2104" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">2104</field>
+            <field name="name">Obligaciones con instituciones financieras</field>
+            <field name="parent_id" ref="ec21"/>
+        </record>
+
+        <record id="ec2105" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">2105</field>
+            <field name="name">Provisiones</field>
+            <field name="parent_id" ref="ec21"/>
+        </record>
+
+        <record id="ec210501" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">210501</field>
+            <field name="name">Provisiones locales</field>
+            <field name="parent_id" ref="ec2105"/>
+        </record>
+
+        <record id="ec21050101" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">21050101</field>
+            <field name="name">Provisiones a favor de los empleados</field>
+            <field name="parent_id" ref="ec210501"/>
+        </record>
+
+        <record id="ec2107" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">2107</field>
+            <field name="name">Otras obligaciones corrientes</field>
+            <field name="parent_id" ref="ec21"/>
+        </record>
+
+        <record id="ec210701" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">210701</field>
+            <field name="name">Otras obligaciones corrientes con la administracion tributaria</field>
+            <field name="parent_id" ref="ec2107"/>
+        </record>
+
+        <record id="ec210703" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">210703</field>
+            <field name="name">Otras obligaciones corrientes con el iess</field>
+            <field name="parent_id" ref="ec2107"/>
+        </record>
+
+        <record id="ec210704" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">210704</field>
+            <field name="name">Otras obligaciones corrientes por beneficios de ley a empleados</field>
+            <field name="parent_id" ref="ec2107"/>
+        </record>
+
+        <record id="ec2112" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">2112</field>
+            <field name="name">Porcion corriente de provisiones por beneficios a empleados</field>
+            <field name="parent_id" ref="ec21"/>
+        </record>
+
+        <record id="ec2113" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">2113</field>
+            <field name="name">Otros pasivos corrientes</field>
+            <field name="parent_id" ref="ec21"/>
+        </record>
+
+        <record id="ec2114" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">2114</field>
+            <field name="name">Obligaciones tributarias</field>
+            <field name="parent_id" ref="ec21"/>
+        </record>
+
+        <record id="ec211401" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">211401</field>
+            <field name="name">Impuestos</field>
+            <field name="parent_id" ref="ec2114"/>
+        </record>
+
+        <record id="ec21140101" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">21140101</field>
+            <field name="name">Iva cobrado</field>
+            <field name="parent_id" ref="ec211401"/>
+        </record>
+
+        <record id="ec21140102" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">21140102</field>
+            <field name="name">Retenciones de la fuente</field>
+            <field name="parent_id" ref="ec211401"/>
+        </record>
+
+        <record id="ec21140103" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">21140103</field>
+            <field name="name">Retenciones de iva</field>
+            <field name="parent_id" ref="ec211401"/>
+        </record>
+
+        <record id="ec22" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">22</field>
+            <field name="name">Pasivo no corriente</field>
+            <field name="parent_id" ref="ec2"/>
+        </record>
+
+        <record id="ec2202" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">2202</field>
+            <field name="name">Cuentas y documentos por pagar</field>
+            <field name="parent_id" ref="ec22"/>
+        </record>
+
+        <record id="ec2203" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">2203</field>
+            <field name="name">Obligaciones con instituciones financieras</field>
+            <field name="parent_id" ref="ec22"/>
+        </record>
+
+        <record id="ec2204" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">2204</field>
+            <field name="name">Cuentas por pagar diversas/relacionadas</field>
+            <field name="parent_id" ref="ec22"/>
+        </record>
+
+        <record id="ec2207" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">2207</field>
+            <field name="name">Provisiones por beneficios a empleados</field>
+            <field name="parent_id" ref="ec22"/>
+        </record>
+
+        <record id="ec2209" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">2209</field>
+            <field name="name">Pasivo diferido</field>
+            <field name="parent_id" ref="ec22"/>
+        </record>
+
+        <record id="ec3" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">3</field>
+            <field name="name">Patrimonio neto</field>
+        </record>
+
+        <record id="ec31" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">31</field>
+            <field name="name">Capital</field>
+            <field name="parent_id" ref="ec3"/>
+        </record>
+
+        <record id="ec34" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">34</field>
+            <field name="name">Reservas</field>
+            <field name="parent_id" ref="ec3"/>
+        </record>
+
+        <record id="ec35" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">35</field>
+            <field name="name">Otros resultados integrales</field>
+            <field name="parent_id" ref="ec3"/>
+        </record>
+
+        <record id="ec36" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">36</field>
+            <field name="name">Resultados acumulados</field>
+            <field name="parent_id" ref="ec3"/>
+        </record>
+
+        <record id="ec37" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">37</field>
+            <field name="name">Resultados del ejercicio</field>
+            <field name="parent_id" ref="ec3"/>
+        </record>
+
+        <record id="ec4" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">4</field>
+            <field name="name">Ingresos</field>
+        </record>
+
+        <record id="ec41" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">41</field>
+            <field name="name">Ingresos de actividades ordinarias</field>
+            <field name="parent_id" ref="ec4"/>
+        </record>
+
+        <record id="ec4101" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">4101</field>
+            <field name="name">Venta de bienes</field>
+            <field name="parent_id" ref="ec41"/>
+        </record>
+
+        <record id="ec4102" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">4102</field>
+            <field name="name">Prestacion de servicios</field>
+            <field name="parent_id" ref="ec41"/>
+        </record>
+
+        <record id="ec43" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">43</field>
+            <field name="name">Otros ingresos</field>
+            <field name="parent_id" ref="ec4"/>
+        </record>
+
+        <record id="ec4305" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">4305</field>
+            <field name="name">Otras rentas</field>
+            <field name="parent_id" ref="ec43"/>
+        </record>
+
+        <record id="ec5" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">5</field>
+            <field name="name">Egresos</field>
+        </record>
+
+        <record id="ec51" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">51</field>
+            <field name="name">Costo de ventas y produccion</field>
+            <field name="parent_id" ref="ec5"/>
+        </record>
+
+        <record id="ec5101" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">5101</field>
+            <field name="name">Materiales utilizados o productos vendidos</field>
+            <field name="parent_id" ref="ec51"/>
+        </record>
+
+        <record id="ec5102" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">5102</field>
+            <field name="name">Mano de obra directa</field>
+            <field name="parent_id" ref="ec51"/>
+        </record>
+
+        <record id="ec510201" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">510201</field>
+            <field name="name">Sueldos, salarios y demas remuneraciones</field>
+            <field name="parent_id" ref="ec5102"/>
+        </record>
+
+        <record id="ec510202" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">510202</field>
+            <field name="name">Gasto planes de beneficios a empleados</field>
+            <field name="parent_id" ref="ec5102"/>
+        </record>
+
+        <record id="ec51020205" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">51020205</field>
+            <field name="name">Otros gastos de planes de beneficios a empleados</field>
+            <field name="parent_id" ref="ec510202"/>
+        </record>
+
+        <record id="ec510203" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">510203</field>
+            <field name="name">Aportes a la seguridad social</field>
+            <field name="parent_id" ref="ec5102"/>
+        </record>
+
+        <record id="ec510204" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">510204</field>
+            <field name="name">Beneficios sociales e indemnizaciones</field>
+            <field name="parent_id" ref="ec5102"/>
+        </record>
+
+        <record id="ec5103" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">5103</field>
+            <field name="name">Mano de obra indirecta</field>
+            <field name="parent_id" ref="ec51"/>
+        </record>
+
+        <record id="ec510301" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">510301</field>
+            <field name="name">Sueldos, salarios y demas remuneraciones</field>
+            <field name="parent_id" ref="ec5103"/>
+        </record>
+
+        <record id="ec510302" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">510302</field>
+            <field name="name">Gasto planes de beneficios a empleados</field>
+            <field name="parent_id" ref="ec5103"/>
+        </record>
+
+        <record id="ec51030205" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">51030205</field>
+            <field name="name">Otros gastos de planes de beneficios a empleados</field>
+            <field name="parent_id" ref="ec510302"/>
+        </record>
+
+        <record id="ec510303" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">510303</field>
+            <field name="name">Aportes a la seguridad social (incluido fondo de reserva)</field>
+            <field name="parent_id" ref="ec5103"/>
+        </record>
+
+        <record id="ec510304" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">510304</field>
+            <field name="name">Beneficios sociales e indemnizaciones</field>
+            <field name="parent_id" ref="ec5103"/>
+        </record>
+
+        <record id="ec5104" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">5104</field>
+            <field name="name">Otros costos indirectos de fabricacion</field>
+            <field name="parent_id" ref="ec51"/>
+        </record>
+
+        <record id="ec510401" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">510401</field>
+            <field name="name">Depreciacion propiedades, planta y equipo</field>
+            <field name="parent_id" ref="ec5104"/>
+        </record>
+
+        <record id="ec510403" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">510403</field>
+            <field name="name">Deterioro de propiedad, planta y equipo</field>
+            <field name="parent_id" ref="ec5104"/>
+        </record>
+
+        <record id="ec510408" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">510408</field>
+            <field name="name">Otros costos de produccion</field>
+            <field name="parent_id" ref="ec5104"/>
+        </record>
+
+        <record id="ec52" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">52</field>
+            <field name="name">Gastos</field>
+            <field name="parent_id" ref="ec5"/>
+        </record>
+
+        <record id="ec5201" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">5201</field>
+            <field name="name">Gastos de ventas</field>
+            <field name="parent_id" ref="ec52"/>
+        </record>
+
+        <record id="ec520101" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">520101</field>
+            <field name="name">Sueldos, salarios y demas remuneraciones</field>
+            <field name="parent_id" ref="ec5201"/>
+        </record>
+
+        <record id="ec520102" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">520102</field>
+            <field name="name">Aportes a la seguridad social (incluido fondo de reserva)</field>
+            <field name="parent_id" ref="ec5201"/>
+        </record>
+
+        <record id="ec520103" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">520103</field>
+            <field name="name">Beneficios sociales e indemnizaciones</field>
+            <field name="parent_id" ref="ec5201"/>
+        </record>
+
+        <record id="ec520104" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">520104</field>
+            <field name="name">Gasto planes de beneficios a empleados</field>
+            <field name="parent_id" ref="ec5201"/>
+        </record>
+
+        <record id="ec52010405" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">52010405</field>
+            <field name="name">Otros gastos de planes de beneficios a empleados</field>
+            <field name="parent_id" ref="ec520104"/>
+        </record>
+
+        <record id="ec520118" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">520118</field>
+            <field name="name">Agua, energia, luz, y telecomunicaciones</field>
+            <field name="parent_id" ref="ec5201"/>
+        </record>
+
+        <record id="ec520121" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">520121</field>
+            <field name="name">Depreciaciones</field>
+            <field name="parent_id" ref="ec5201"/>
+        </record>
+
+        <record id="ec52012101" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">52012101</field>
+            <field name="name">Propiedades, planta y equipo</field>
+            <field name="parent_id" ref="ec520121"/>
+        </record>
+
+        <record id="ec520122" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">520122</field>
+            <field name="name">Amortizaciones</field>
+            <field name="parent_id" ref="ec5201"/>
+        </record>
+
+        <record id="ec520123" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">520123</field>
+            <field name="name">Gasto deterioro</field>
+            <field name="parent_id" ref="ec5201"/>
+        </record>
+
+        <record id="ec52012301" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">52012301</field>
+            <field name="name">Propiedades, planta y equipo</field>
+            <field name="parent_id" ref="ec520123"/>
+        </record>
+
+        <record id="ec520127" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">520127</field>
+            <field name="name">Otros gastos</field>
+            <field name="parent_id" ref="ec5201"/>
+        </record>
+
+        <record id="ec5202" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">5202</field>
+            <field name="name">Gastos administrativos</field>
+            <field name="parent_id" ref="ec52"/>
+        </record>
+
+        <record id="ec520201" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">520201</field>
+            <field name="name">Sueldos, salarios y demas remuneraciones</field>
+            <field name="parent_id" ref="ec5202"/>
+        </record>
+
+        <record id="ec520202" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">520202</field>
+            <field name="name">Aportes a la seguridad social</field>
+            <field name="parent_id" ref="ec5202"/>
+        </record>
+
+        <record id="ec520203" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">520203</field>
+            <field name="name">Beneficios sociales e indemnizaciones</field>
+            <field name="parent_id" ref="ec5202"/>
+        </record>
+
+        <record id="ec520204" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">520204</field>
+            <field name="name">Gasto planes de beneficios a empleados</field>
+            <field name="parent_id" ref="ec5202"/>
+        </record>
+
+        <record id="ec520218" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">520218</field>
+            <field name="name">Agua, energia, luz, y telecomunicaciones</field>
+            <field name="parent_id" ref="ec5202"/>
+        </record>
+
+        <record id="ec520220" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">520220</field>
+            <field name="name">Impuestos, contribuciones y otros</field>
+            <field name="parent_id" ref="ec5202"/>
+        </record>
+
+        <record id="ec520221" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">520221</field>
+            <field name="name">Depreciaciones</field>
+            <field name="parent_id" ref="ec5202"/>
+        </record>
+
+        <record id="ec52022101" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">52022101</field>
+            <field name="name">Propiedades, planta y equipo</field>
+            <field name="parent_id" ref="ec520221"/>
+        </record>
+
+        <record id="ec520222" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">520222</field>
+            <field name="name">Amortizaciones</field>
+            <field name="parent_id" ref="ec5202"/>
+        </record>
+
+        <record id="ec520223" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">520223</field>
+            <field name="name">Gasto deterioro</field>
+            <field name="parent_id" ref="ec5202"/>
+        </record>
+
+        <record id="ec52022301" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">52022301</field>
+            <field name="name">Propiedades, planta y equipo</field>
+            <field name="parent_id" ref="ec520223"/>
+        </record>
+
+        <record id="ec520228" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">520228</field>
+            <field name="name">Otros gastos</field>
+            <field name="parent_id" ref="ec5202"/>
+        </record>
+
+        <record id="ec52022818" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">52022818</field>
+            <field name="name">Gnd gastos no deducibles</field>
+            <field name="parent_id" ref="ec520228"/>
+        </record>
+
+        <record id="ec5203" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">5203</field>
+            <field name="name">Gastos financieros</field>
+            <field name="parent_id" ref="ec52"/>
+        </record>
+
+        <record id="ec5204" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">5204</field>
+            <field name="name">Otros gastos</field>
+            <field name="parent_id" ref="ec52"/>
+        </record>
+
+        <record id="ec520402" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">520402</field>
+            <field name="name">Otros</field>
+            <field name="parent_id" ref="ec5204"/>
+        </record>
+
+    </data>
+</odoo>

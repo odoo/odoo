@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="website.user_custom_bootstrap_overridden_scss" model="ir.asset">
+            <field name="name">User custom bootstrap overridden SCSS</field>
+            <field name="bundle">web._assets_frontend_helpers</field>
+            <field name="directive">prepend</field>
+            <field name="path">website/static/src/scss/user_custom_bootstrap_overridden.scss</field>
+            <field name="sequence" eval="99"/>
+        </record>
+
+        <record id="website.user_custom_rules_scss" model="ir.asset">
+            <field name="name">User custom rules SCSS</field>
+            <field name="bundle">web.assets_frontend</field>
+            <field name="path">website/static/src/scss/user_custom_rules.scss</field>
+            <field name="sequence" eval="99"/>
+        </record>
+
+        <record id="website.bs3_for_12_0_scss" model="ir.asset">
+            <field name="name">Bs3 for 12 0 SCSS</field>
+            <field name="bundle">web.assets_frontend</field>
+            <field name="path">website/static/src/scss/compatibility/bs3_for_12_0.scss</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="website.configurator_tour" model="ir.asset">
+            <field name="key">website.configurator_tour</field>
+            <field name="name">Website Configurator Tour</field>
+            <field name="bundle">website.assets_editor</field>
+            <field name="path">website/static/src/js/tours/configurator_tour.js</field>
+            <field name="active" eval="False"/>
+        </record>
+
+    </data>
+</odoo>

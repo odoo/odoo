@@ -1,0 +1,186 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account
+#
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid ""
+"<span attrs=\"{'invisible': ['|', '|', ('type', '!=', 'out_invoice'), ('state', '!=', 'draft'), ('name', '!=', '/')]}\">Draft Invoice</span>\n"
+"                                <span attrs=\"{'invisible': ['|', '|', ('type', '!=', 'out_refund'), ('state', '!=', 'draft'), ('name', '!=', '/')]}\">Draft Credit Note</span>\n"
+"                                <span attrs=\"{'invisible': ['|', '|', ('type', '!=', 'in_invoice'), ('state', '!=', 'draft'), ('name', '!=', '/')]}\">Draft Bill</span>\n"
+"                                <span attrs=\"{'invisible': ['|', '|', ('type', '!=', 'in_refund'), ('state', '!=', 'draft'), ('name', '!=', '/')]}\">Draft Refund</span>\n"
+"                                <span attrs=\"{'invisible': ['|', '|', ('type', '!=', 'out_receipt'), ('state', '!=', 'draft'), ('name', '!=', '/')]}\">Draft Sales Receipt</span>\n"
+"                                <span attrs=\"{'invisible': ['|', '|', ('type', '!=', 'in_receipt'), ('state', '!=', 'draft'), ('name', '!=', '/')]}\">Draft Purchase Receipt</span>"
+msgstr ""
+"<span attrs=\"{'invisible': ['|', '|', ('type', '!=', 'out_invoice'), ('state', '!=', 'draft'), ('name', '!=', '/')]}\">Borrador de factura</span>\n"
+"<span attrs=\"{'invisible': ['|', '|', ('type', '!=', 'out_refund'), ('state', '!=', 'draft'), ('name', '!=', '/')]}\">Borrador de Nota de crédito</span>\n"
+"<span attrs=\"{'invisible': ['|', '|', ('type', '!=', 'in_invoice'), ('state', '!=', 'draft'), ('name', '!=', '/')]}\">Borrador de recibo</span>\n"
+"<span attrs=\"{'invisible': ['|', '|', ('type', '!=', 'in_refund'), ('state', '!=', 'draft'), ('name', '!=', '/')]}\">Borrador de reembolso</span>\n"
+"<span attrs=\"{'invisible': ['|', '|', ('type', '!=', 'out_receipt'), ('state', '!=', 'draft'), ('name', '!=', '/')]}\">Borrador de recibo de venta</span>\n"
+"<span attrs=\"{'invisible': ['|', '|', ('type', '!=', 'in_receipt'), ('state', '!=', 'draft'), ('name', '!=', '/')]}\">Borrador de recibo de compra</span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "Add Credit Note"
+msgstr "Agregar Nota de crédito"
+
+#. module: account
+#: model:ir.filters,name:account.filter_invoice_refund
+msgid "By Credit Note"
+msgstr "Por Nota de crédito"
+
+#. module: account
+#: model_terms:ir.actions.act_window,help:account.action_move_out_refund_type
+msgid "Create a credit note"
+msgstr "Crear una Nota de crédito"
+
+#. module: account
+#: model_terms:ir.actions.act_window,help:account.action_move_in_refund_type
+msgid "Create a vendor credit note"
+msgstr "Crear una Nota de crédito de proveedor"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_move.py:0
+#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+#, python-format
+msgid "Credit Note"
+msgstr "Nota de crédito"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Credit Note Created"
+msgstr "Nota de crédito creada"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_journal__refund_sequence_id
+msgid "Credit Note Entry Sequence"
+msgstr "Secuencia de numeración para Nota de crédito"
+
+#. module: account
+#: code:addons/account/models/account_payment.py:0
+#: model:ir.model.fields.selection,name:account.selection__account_invoice_report__type__out_refund
+#: model:ir.model.fields.selection,name:account.selection__account_move__type__out_refund
+#, python-format
+msgid "Customer Credit Note"
+msgstr "Nota de crédito de cliente"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Draft Credit Note"
+msgstr "Borrador de Nota de crédito"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Draft Vendor Credit Note"
+msgstr "Borrador de Nota de crédito de proveedor"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"Duplicated vendor reference detected. You probably encoded twice the same vendor bill/credit note:\n"
+"%s"
+msgstr ""
+"Referencia de proveedor duplicada detectada. Probablemente registró dos veces la misma factura / Nota de crédito del proveedor:\n"
+"%s"
+
+#. module: account
+#: code:addons/account/models/account.py:0
+#, python-format
+msgid ""
+"Invoice and credit note repartition should each contain exactly one line for"
+" the base."
+msgstr ""
+"La distribución de factura y Nota de crédito debe contener exactamente"
+" una línea para la base."
+
+#. module: account
+#: code:addons/account/models/account.py:0
+#, python-format
+msgid ""
+"Invoice and credit note repartition should have the same number of lines."
+msgstr ""
+"La distribución de factura y Nota de crédito debe contener el mismo "
+"número de líneas."
+
+#. module: account
+#: code:addons/account/models/account.py:0
+#, python-format
+msgid ""
+"Invoice and credit note repartitions should match (same percentages, in the "
+"same order)."
+msgstr ""
+"La distribución de factura y Nota de crédito deben coincidir (los "
+"mismos porcentajes, en el mismo orden)."
+
+#. module: account
+#: model_terms:ir.actions.act_window,help:account.action_move_in_refund_type
+msgid ""
+"Note that the easiest way to create a vendor credit note it to do it "
+"directly from the vendor bill."
+msgstr ""
+"Tenga en cuenta que la forma más sencilla de crear una Nota de crédito"
+" de proveedor es crearlo directamente desde la factura del proveedor. "
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_move_in_refund_type
+#: model:ir.ui.menu,name:account.menu_action_move_in_refund_type
+#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+msgid "Refund"
+msgstr "Nota de crédito"
+
+#. module: account
+#: model:ir.actions.server,name:account.action_move_switch_invoice_to_credit_note
+msgid "Switch into refund/credit note"
+msgstr "Cambiar a reembolso/Nota de crédito"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
+msgid "The credit note is auto-validated and reconciled with the invoice."
+msgstr ""
+"La Nota de crédito se valida automáticamente y se concilia con la "
+"factura."
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
+msgid ""
+"The credit note is auto-validated and reconciled with the invoice.\n"
+"                               The original invoice is duplicated as a new draft."
+msgstr ""
+"La Nota de crédito se valida automáticamente y se concilia con la factura.\n"
+"                               La factura original se duplica como un nuevo borrador."
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
+msgid ""
+"The credit note is created in draft and can be edited before being issued."
+msgstr ""
+"La Nota de crédito se crea en borrador y puede ser editada antes de "
+"expedirse."
+
+#. module: account
+#: code:addons/account/models/account_payment.py:0
+#: model:ir.model.fields.selection,name:account.selection__account_invoice_report__type__in_refund
+#: model:ir.model.fields.selection,name:account.selection__account_move__type__in_refund
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+#, python-format
+msgid "Vendor Credit Note"
+msgstr "Nota de crédito de proveedor"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"You cannot validate an invoice with a negative total amount. You should "
+"create a credit note instead. Use the action menu to transform it into a "
+"credit note or refund."
+msgstr ""
+"No puede validar una factura con un importe total negativo. En su lugar, "
+"debe crear una Nota de crédito. Use el menú de acciones para "
+"transformarlo en una Nota de crédito o reembolso."

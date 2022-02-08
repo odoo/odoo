@@ -1,0 +1,96 @@
+// ------------------------------------------------------------------
+// Base layout rules, use the 'webclient.scss' file for styling
+// ------------------------------------------------------------------
+html {
+  height: 100%;
+
+  .o_web_client {
+    height: 100%;
+    display: flex;
+    flex-flow: column nowrap;
+
+    > .o_action_manager {
+      direction: ltr; //Define direction attribute here so when rtlcss preprocessor run, it converts it to rtl
+      flex: 1 1 auto;
+      height: 100%;
+      overflow: hidden;
+
+      > .o_action {
+        height: 100%;
+        display: flex;
+        flex-flow: column nowrap;
+
+        @include media-breakpoint-up(lg) {
+          overflow: auto;
+
+          -ms-overflow-style: none; // IE and Edge
+          scrollbar-width: none;    // Firefox
+
+          &::-webkit-scrollbar {    // Chrome, Safari and Opera
+            display: none;
+          }
+        }
+
+        > .o_control_panel {
+          flex: 0 0 auto;
+        }
+        > .o_content {
+          flex: 1 1 auto;
+          position: relative; // Allow to redistribute the 100% height to its child
+          overflow: auto;
+          height: 100%;
+        }
+      }
+    }
+
+    &.o_fullscreen {
+      .o_main_navbar {
+        display: none;
+      }
+    }
+
+    .o_main_navbar {
+      flex: 0 0 auto;
+    }
+
+    .o_control_panel {
+      flex: 0 0 auto;
+    }
+
+    .o_content {
+      direction: ltr; //Define direction attribute here so when rtlcss preprocessor run, it converts it to rtl
+      flex: 1 1 auto;
+      position: relative; // Allow to redistribute the 100% height to its child
+
+      > .o_view_controller {
+        position: absolute; // Get the 100% height of its flex parent
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        height: 100%;
+        direction: ltr;
+      }
+    }
+  }
+
+  .o_loading > span {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    z-index: $zindex-modal + 1;
+  }
+}
+
+@media print {
+  html .o_web_client {
+    .o_main_navbar {
+      display: none;
+    }
+    .o_content {
+      position: static;
+      overflow: visible;
+      height: auto;
+    }
+  }
+}

@@ -1,0 +1,133 @@
+.o_activity_view {
+    height: 100%;
+    > table {
+        background-color: white;
+        thead > tr > th:first-of-type {
+            min-width: 300px;
+        }
+        tbody > tr > td, tfoot > tr > td {
+            cursor: pointer;
+        }
+    }
+    .o_activity_summary_cell {
+        background-color: #FFF;
+        &.planned {
+            background-color: theme-color('success');
+        }
+        &.overdue {
+            background-color: theme-color('danger');
+        }
+        &.today {
+            background-color: theme-color('warning');
+        }
+        .o_kanban_inline_block {
+            min-height: 42px;
+        }
+        .dropdown-toggle {
+            cursor: pointer;
+            .o_closest_deadline {
+                height: 42px;
+                width: 100%;
+                color: #FFF;
+                text-align: center;
+                line-height: 42px;
+            }
+        }
+        &.o_activity_empty_cell {
+            > i {
+                display: none;
+            }
+            &:hover {
+                background-color: #eee;
+
+                > i {
+                    color: gray;
+                    display: block;
+                }
+            }
+        }
+        .o_activity_btn > .badge {
+            @include o-position-absolute($bottom: 0, $right: 0);
+
+            &.planned {
+                @extend .text-success;
+            }
+            &.overdue {
+                @extend .text-danger;
+            }
+            &.today {
+                @extend .text-warning;
+            }
+        }
+    }
+
+    // it contains a kanban card representing the record
+    .o_activity_record {
+        display: flex;
+        flex: 1 1 auto;
+        align-items: center;
+        padding: 8px 8px;
+        cursor: pointer;
+
+        .o_m2o_avatar > img, > img {
+            width: 32px;
+            height: 32px;
+            max-height: 32px;
+            margin-right: 16px;
+        }
+
+        > div {
+            max-width: 200px;
+
+            .o_text_block {
+                @include o-text-overflow;
+                display: block;
+            }
+        }
+
+        .o_text_bold {
+            font-weight: bold;
+        }
+
+        .o_text_block {
+            display: block;
+        }
+    }
+    .o_activity_filter_planned {
+        background-color: mix(theme-color('success'), $o-webclient-background-color, 5%);
+    }
+    .o_activity_filter_today {
+        background-color: mix(theme-color('warning'), $o-webclient-background-color, 5%);
+    }
+    .o_activity_filter_overdue {
+        background-color: mix(theme-color('danger'), $o-webclient-background-color, 5%);
+    }
+    .o_record_selector {
+        color: $o-enterprise-primary-color;
+    }
+    .o_activity_type_cell {
+        padding:10px;
+        min-width:100px;
+        .fa-ellipsis-v {
+            cursor: pointer;
+        }
+
+        .o_template_element {
+            white-space: nowrap;
+            padding:5px;
+            cursor: pointer;
+            &:hover {
+                color: o-text-color('success');
+            }
+        }
+        .o_kanban_counter {
+            margin: 5px 0 0 0;
+            > .o_kanban_counter_progress {
+                width: 100%;
+                > div.active {
+                    border: 1px solid;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,165 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+.o_RtcCallParticipantCard {
+    padding: map-get($spacers, 1);
+    display: flex;
+    position: relative;
+}
+
+.o_RtcCallParticipantCard_avatarFrame {
+    display: flex;
+    user-select: none;
+    aspect-ratio: 16/9;
+
+    &.o-isMinimized {
+        aspect-ratio: 1;
+    }
+}
+
+.o_RtcCallParticipantCard_avatarImage {
+    max-height: #{"min(100%, 100px)"}; // interpolated as not supported by Sass
+    max-width: #{"min(100%, 100px)"};
+    aspect-ratio: 1;
+    object-fit: cover;
+    border: 5px solid gray('700');
+
+    &.o-isTalking {
+        border: 5px solid darken($o-enterprise-primary-color, 5%);
+    }
+
+    &.o-isInvitation:not(:hover) {
+        animation: o_RtcCallParticipantCard_avatarImag_borderPulse 3s linear infinite;
+    }
+
+    &.o-isInvitation:hover {
+        border: 5px solid theme-color('danger');
+    }
+}
+
+@keyframes o_RtcCallParticipantCard_avatarImag_borderPulse {
+    0% { border: 5px solid white }
+    20% { border: 5px solid gray('600') }
+    35% { border: 5px solid gray('100') }
+    50% { border: 5px solid gray('600') }
+    70% { border: 5px solid gray('100') }
+    85% { border: 5px solid gray('700') }
+}
+
+.o_RtcCallParticipantCard_container {
+    margin: map-get($spacers, 0);
+    width: 100% - map-get($spacers, 0);
+    height: 100% - map-get($spacers, 0);
+    display: flex;
+    position: relative;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.o_RtcCallParticipantCard_liveIndicator {
+    display: flex;
+    margin-inline-end: 5%;
+    align-items: center;
+
+    &.o-isMinimized {
+        font-size: 0.7rem;
+    }
+}
+
+.o_RtcCallParticipantCard_name {
+    padding: map-get($spacers, 1);
+}
+
+.o_RtcCallParticipantCard_overlayBottom {
+    position: absolute;
+    display: flex;
+    pointer-events: none;
+    margin: map-get($spacers, 1);
+    max-width: 50%;
+    overflow: hidden;
+    bottom: 0;
+    left: 0;
+}
+
+.o_RtcCallParticipantCard_overlayTop {
+    position: absolute;
+    display: flex;
+    flex-direction: row-reverse;
+    margin: map-get($spacers, 2);
+    right: 0%;
+    top: 0%;
+}
+
+.o_RtcCallParticipantCard_overlayTopElement {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    margin-inline-end: 5%;
+    padding: map-get($spacers, 2);
+
+    &.o-isMinimized {
+        padding: map-get($spacers, 1);
+    }
+}
+
+.o_RtcCallParticipantCard_volumeMenuAnchor {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+}
+
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+.o_RtcCallParticipantCard {
+    border-radius: $o-mail-rounded-rectangle-border-radius-sm;
+
+    &.o-isClickable {
+        cursor: pointer;
+    }
+
+    &.o-isTalking {
+        box-shadow: inset 0 0 0 map-get($spacers, 1) darken($o-enterprise-primary-color, 5%);
+    }
+
+    &.o-isInvitation {
+        opacity: 0.6;
+    }
+}
+
+.o_RtcCallParticipantCard_avatarFrame {
+    border-radius: $o-mail-rounded-rectangle-border-radius-sm;
+    &:not(.o-isMinimized) {
+        background-color: $o-brand-secondary;
+    }
+}
+
+.o_RtcCallParticipantCard_connectionState {
+    color: theme-color('warning');
+}
+
+.o_RtcCallParticipantCard_container {
+    border-radius: $o-mail-rounded-rectangle-border-radius-sm;
+}
+
+.o_RtcCallParticipantCard_liveIndicator {
+    background-color: theme-color('danger');
+    color: white;
+    user-select: none;
+    font-weight: bold;
+}
+
+.o_RtcCallParticipantCard_name {
+    @include text-truncate();
+    color: white;
+    background-color: rgba(black, 0.8);
+    border-radius: $o-mail-rounded-rectangle-border-radius-sm;
+}
+
+.o_RtcCallParticipantCard_overlayTopElement {
+    color: white;
+    border-radius: 50%;
+    background-color: gray('900');
+}

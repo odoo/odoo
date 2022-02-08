@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="mail_activity_view_form_popup" model="ir.ui.view">
+        <field name="name">mail.activity.form.inherit.calendar</field>
+        <field name="model">mail.activity</field>
+        <field name="inherit_id" ref="mail.mail_activity_view_form_popup"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='date_deadline']" position="attributes">
+                  <attribute name="attrs">{'invisible': [('activity_category', '=', 'meeting')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='user_id']" position="attributes">
+                  <attribute name="attrs">{'invisible': [('activity_category', '=', 'meeting')]}</attribute>
+            </xpath>
+            <xpath expr="//button[@id='mail_activity_schedule']" position="attributes">
+                  <attribute name="attrs">{'invisible': ['|', ('activity_category', 'in', ['meeting', 'phonecall']), ('id', '!=', False)]}</attribute>
+            </xpath>
+            <xpath expr="//button[@id='mail_activity_save']" position="attributes">
+                  <attribute name="attrs">{'invisible': [('activity_category', '!=', 'phonecall'), ('id', '=', False)]}</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_done']" position="attributes">
+                  <attribute name="attrs">{'invisible': ['|', ('activity_category', '=', 'meeting'), ('chaining_type', '=', 'trigger')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='note']" position="attributes">
+                  <attribute name="attrs">{'invisible': [('activity_category', '=', 'meeting')]}</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_close_dialog']" position="before">
+                <button string="Open Calendar"
+                    attrs="{'invisible': ['|', ('activity_category', 'not in', ['meeting', 'phonecall']), ('id', '!=', False)]}"
+                    name="action_create_calendar_event"
+                    type="object"
+                    class="btn-primary"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

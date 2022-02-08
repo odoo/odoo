@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_document_type_conf_form" model="ir.ui.view">
+        <field name="name">view.document.type.conf.form</field>
+        <field name="model">l10n_latam.document.type</field>
+        <field name="inherit_id" ref="l10n_latam_invoice_document.view_document_type_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group" position="after">
+                <group string="Ecuadorian Configuration" col="2" colspan="2">
+                    <field name="l10n_ec_check_format"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_document_type_conf_tree" model="ir.ui.view">
+        <field name="name">view.document.type.conf.tree</field>
+        <field name="model">l10n_latam.document.type</field>
+        <field name="inherit_id" ref="l10n_latam_invoice_document.view_document_type_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='internal_type']" position="after">
+                <field name="l10n_ec_check_format"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

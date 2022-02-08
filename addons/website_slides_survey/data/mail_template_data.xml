@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="mail_template_user_input_certification_failed" model="mail.template">
+            <field name="name">Certification failed email</field>
+            <field name="model_id" ref="model_survey_user_input" />
+            <field name="subject">You have failed the course: {{ object.slide_partner_id.channel_id.name }}</field>
+            <field name="partner_to">{{ object.partner_id.id }}</field>
+            <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px; font-size: 13px;">
+    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+        Dear <t t-out="object.partner_id.name or 'participant' or ''">participant</t><br/><br/>
+        Unfortunately, you have failed the certification and are no longer a member of the course: <t t-out="object.slide_partner_id.channel_id.name or ''">Basics of Gardening</t>.<br/><br/>
+        Don't hesitate to enroll again!
+        <div style="margin: 16px 0px 16px 0px;">
+            <a t-att-href="(object.slide_partner_id.channel_id.website_url)"
+                style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">
+                Enroll now
+            </a>
+        </div>
+        Thank you for your participation.
+    </p>
+</div>
+            </field>
+            <field name="lang">{{ object.partner_id.lang }}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+    </data>
+</odoo>

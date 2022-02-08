@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record model="ir.actions.act_window" id="action_mrp_production_moves">
+            <field name="name">Inventory Moves</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">stock.move.line</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">['|', ('move_id.raw_material_production_id', '=', active_id), ('move_id.production_id', '=', active_id)]</field>
+        </record>
+
+        <record id="view_stock_move_operations_raw" model="ir.ui.view">
+            <field name="name">stock.move.operations.raw.form</field>
+            <field name="model">stock.move</field>
+            <field name="priority">1</field>
+            <field name="mode">primary</field>
+            <field name="inherit_id" ref="stock.view_stock_move_operations" />
+            <field name="arch" type="xml">
+                <xpath expr="//label[@for='product_uom_qty']" position="attributes">
+		    <attribute name="string">Total To Consume</attribute>
+                </xpath>
+                <xpath expr="//label[@for='quantity_done']" position="attributes">
+		    <attribute name="string">Consumed</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_stock_move_operations_finished" model="ir.ui.view">
+            <field name="name">stock.move.operations.finished.form</field>
+            <field name="model">stock.move</field>
+            <field name="priority">1</field>
+            <field name="mode">primary</field>
+            <field name="inherit_id" ref="stock.view_stock_move_operations" />
+            <field name="arch" type="xml">
+                <xpath expr="//label[@for='product_uom_qty']" position="attributes">
+		    <attribute name="string">To Produce</attribute>
+                </xpath>
+                <xpath expr="//label[@for='quantity_done']" position="attributes">
+		    <attribute name="string">Produced</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="stock_move_line_view_search" model="ir.ui.view">
+            <field name="name">stock.move.line.search</field>
+            <field name="model">stock.move.line</field>
+            <field name="inherit_id" ref="stock.stock_move_line_view_search" />
+            <field name="arch" type="xml">
+                <filter name="manufacturing" position="attributes">
+                    <attribute name="invisible">0</attribute>
+                    <attribute name="domain">[('move_id.production_id', '!=', False)]</attribute>
+                </filter>
+            </field>
+        </record>
+
+    <menuitem id="menu_mrp_traceability"
+          name="Lots/Serial Numbers"
+          parent="menu_mrp_bom"
+          action="stock.action_production_lot_form"
+          groups="stock.group_production_lot"
+          sequence="15"/>
+
+    <menuitem id="menu_mrp_scrap"
+            name="Scrap"
+            parent="menu_mrp_manufacturing"
+            action="stock.action_stock_scrap"
+            sequence="25"/>
+
+    <menuitem id="menu_procurement_compute_mrp"
+        action="stock.action_procurement_compute"
+        parent="mrp_planning_menu_root"
+        sequence="135"/>
+
+</odoo>

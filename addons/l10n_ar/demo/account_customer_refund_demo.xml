@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="True">
+
+    <!-- Create draft refund for invoice 3 -->
+    <record id="demo_refund_invoice_3" model="account.move.reversal" context="{'allowed_company_ids': [ref('company_ri')]}">
+        <field name="reason">Mercadería defectuosa</field>
+        <field name="refund_method">refund</field>
+        <field name="move_ids" eval="[(4, ref('demo_invoice_3'), 0)]"/>
+        <field name="journal_id" search="[('company_id', '=', ref('l10n_ar.company_ri')), ('type', '=', 'sale')]"/>
+        <field name="date" eval="time.strftime('%Y-%m')+'-01'"/>
+    </record>
+
+    <function model="account.move.reversal" name="reverse_moves" eval="[ref('demo_refund_invoice_3')]"/>
+
+    <!-- Create draft refund for invoice 4 -->
+    <record id="demo_refund_invoice_4" model="account.move.reversal" context="{'allowed_company_ids': [ref('company_ri')]}">
+        <field name="reason">Venta cancelada</field>
+        <field name="refund_method">cancel</field>
+        <field name="move_ids" eval="[(4, ref('demo_invoice_4'), 0)]"/>
+        <field name="journal_id" search="[('company_id', '=', ref('l10n_ar.company_ri')), ('type', '=', 'sale')]"/>
+        <field name="date" eval="time.strftime('%Y-%m')+'-01'"/>
+    </record>
+
+    <function model="account.move.reversal" name="reverse_moves" eval="[ref('demo_refund_invoice_4')]"/>
+
+    <!-- Create cancel refund for expo invoice 16 (las nc/nd expo invoice no requiere parametro permiso existennte, por eso agregamos este ejemplo) -->
+    <record id="demo_refund_invoice_16" model="account.move.reversal" context="{'allowed_company_ids': [ref('company_ri')]}">
+        <field name="reason">Venta cancelada</field>
+        <field name="refund_method">cancel</field>
+        <field name="move_ids" eval="[(4, ref('demo_invoice_16'), 0)]"/>
+        <field name="journal_id" search="[('company_id', '=', ref('l10n_ar.company_ri')), ('type', '=', 'sale')]"/>
+        <field name="date" eval="time.strftime('%Y-%m')+'-01'"/>
+    </record>
+
+    <function model="account.move.reversal" name="reverse_moves" eval="[ref('demo_refund_invoice_16')]"/>
+
+</odoo>

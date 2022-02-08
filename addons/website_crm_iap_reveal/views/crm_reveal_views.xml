@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="crm_reveal_rule_form" model="ir.ui.view">
+        <field name="name">crm.reveal.rule.form</field>
+        <field name="model">crm.reveal.rule</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_get_opportunity_tree_view" class="oe_stat_button" type="object" icon="fa-star" attrs="{'invisible': [('lead_type', '!=', 'opportunity'), ('opportunity_count', '=' , 0)]}">
+                            <div class="o_stat_info">
+                                <field name="opportunity_count"/>
+                                <span class="o_stat_text"> Opportunities </span>
+                            </div>
+                        </button>
+                        <button name="action_get_lead_tree_view" class="oe_stat_button" type="object" icon="fa-star" groups="crm.group_use_lead" attrs="{'invisible': [('lead_type', '!=', 'lead'), ('lead_count', '=' , 0)]}">
+                            <div class="o_stat_info">
+                                <field name="lead_count"/>
+                                <span class="o_stat_text"> Leads </span>
+                            </div>
+                        </button>
+                    </div>
+                    <div class="oe_title mb8">
+                        <label for="name"/>
+                        <h1 class="o_row">
+                            <field name="name" placeholder="e.g. US Visitors"/>
+                        </h1>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <group>
+                                <field name="lead_for" widget="radio"/>
+                                <field name="active" widget="boolean_toggle"/>
+                            </group>
+                            <group string="Website Traffic Conditions">
+                                <field name="country_ids" widget="many2many_tags" options="{'no_open': True, 'no_create': True}"/>
+                                <field name="website_id" options="{'no_open': True, 'no_create_edit': True}" groups="website.group_multi_website"/>
+                                <field name="state_ids" widget="many2many_tags" attrs="{'invisible': [('country_ids', '=', [])]}" domain="[('country_id', 'in', country_ids)]"/>
+                                <field name="regex_url" widget="website_urls" placeholder="e.g. /page"/>
+                                <field name="sequence"/>
+                            </group>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="alert alert-info" role="alert">
+                                1 credit is consumed per visitor matching the website traffic conditions and whose company can be identified.<br/>
+                                <span attrs="{'invisible': [('lead_for', '!=', 'people')]}">Up to <field name="extra_contacts" readonly="1" class="mb0"/> additional credit(s) are consumed if the company matches this rule.</span>
+                            </div>
+                            <div class="alert alert-info" role="alert" attrs="{'invisible': [('lead_for', '!=', 'people')]}">
+                                Make sure you know if you have to be GDPR compliant for storing personal data.
+                            </div>
+                        </div>
+                    </div>
+                    <group>
+                        <group string="Opportunity Generation Conditions">
+                            <field name="industry_tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True, 'no_quick_create': True}"/>
+                            <field name="filter_on_size"/>
+                            <label for="company_size_min" attrs="{'invisible': [('filter_on_size', '=', False)]}"/>
+                            <div attrs="{'invisible': [('filter_on_size', '=', False)]}">
+                                From <field name="company_size_min" class="oe_inline col-sm-3" />
+                                to <field name="company_size_max" class="oe_inline col-sm-3" />
+                                employees
+                            </div>
+                        </group>
+                        <group string="Contact Filter" attrs="{'invisible': [('lead_for', '!=', 'people')]}">
+                            <field name="extra_contacts"/>
+                            <field name="contact_filter_type" widget="radio"/>
+                            <field name="preferred_role_id" attrs="{'invisible': [('contact_filter_type','!=', 'role')]}" options="{'no_create_edit': True, 'no_quick_create': True}"/>
+                            <field name="other_role_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True, 'no_quick_create': True}" attrs="{'invisible': ['|', ('preferred_role_id','=', False), ('contact_filter_type','!=', 'role')]}"/>
+                            <field name="seniority_id" attrs="{'invisible': [('contact_filter_type','!=', 'seniority')]}" options="{'no_create_edit': True, 'no_quick_create': True}"/>
+                        </group>
+                    </group>
+                    <separator attrs="{'invisible': [('lead_type', '!=', 'lead')]}" string="Lead Data" />
+                    <separator attrs="{'invisible': [('lead_type', '!=', 'opportunity')]}" string="Opportunity Data" />
+                    <group>
+                        <group>
+                            <field name="lead_type" groups="crm.group_use_lead"/>
+                            <field name="suffix"/>
+                            <field name="team_id" kanban_view_ref="%(sales_team.crm_team_view_kanban)s"/>
+                            <field name="user_id" domain="[('share', '=', False)]"/>
+                        </group>
+                        <group>
+                            <field name="tag_ids" widget="many2many_tags"/>
+                            <field name="priority" widget="priority"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="crm_reveal_rule_tree" model="ir.ui.view">
+        <field name="name">crm.reveal.rule.tree</field>
+        <field name="model">crm.reveal.rule</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="lead_type"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="crm_reveal_rule_view_search" model="ir.ui.view">
+        <field name="name">crm.reveal.rule.view.search</field>
+        <field name="model">crm.reveal.rule</field>
+        <field name="arch" type="xml">
+            <search string="Search CRM Reveal Rule">
+                <field string="Rule" name="name"/>
+                <separator/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="crm_reveal_rule_action" model="ir.actions.act_window">
+        <field name="name">Visits to Leads Rules</field>
+        <field name="res_model">crm.reveal.rule</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="crm_reveal_rule_view_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a conversion rule
+            </p><p>
+                Create rules to generate B2B leads/opportunities from your website visitors.
+            </p>
+        </field>
+    </record>
+
+    <record id="crm_reveal_view_form" model="ir.ui.view">
+        <field name="name">crm.reveal.view.form</field>
+        <field name="model">crm.reveal.view</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field name="reveal_state" widget="statusbar" options="{'clickable': '1'}"/>
+                </header>
+                <sheet>
+                    <group>
+                        <field name="reveal_ip"/>
+                        <field name="reveal_rule_id"/>
+                        <field name="create_date"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="crm_reveal_view_tree" model="ir.ui.view">
+        <field name="name">crm.reveal.view.tree</field>
+        <field name="model">crm.reveal.view</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="reveal_ip"/>
+                <field name="reveal_rule_id"/>
+                <field name="reveal_state"/>
+                <field name="create_date"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="crm_reveal_view_action" model="ir.actions.act_window">
+        <field name="name">Lead Generation Views</field>
+        <field name="res_model">crm.reveal.view</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

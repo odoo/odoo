@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_order_form_inherit_l10n_in_sale" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit.l10n.in.sale</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="l10n_in_company_country_code" invisible="1"/>
+                <field name="l10n_in_reseller_partner_id" groups="l10n_in.group_l10n_in_reseller"
+                    attrs="{'invisible': [('l10n_in_company_country_code','!=', 'IN')]}"/>
+                <field name="l10n_in_gst_treatment"
+                    attrs="{'invisible':[('l10n_in_company_country_code','!=','IN')],'required':[('l10n_in_company_country_code','=','IN')]}"/>
+            </xpath>
+            <xpath expr="//group[@name='sale_info']//field[@name='invoice_status']" position="after">
+                <field name="l10n_in_journal_id" domain="[('company_id', '=', company_id), ('type','=','sale')]" options="{'no_create': True}" attrs="{'invisible': [('l10n_in_company_country_code','!=', 'IN')]}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

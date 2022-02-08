@@ -1,0 +1,140 @@
+//## Website Sale frontent design
+//## ----------------------------
+
+// Theming variables
+$o-wsale-wizard-thickness: 0.125rem;
+$o-wsale-wizard-dot-size: 0.625rem;
+$o-wsale-wizard-dot-active-glow: 0.25rem;
+
+$o-wsale-wizard-color-inner: white;
+$o-wsale-wizard-color-default: gray('200');
+
+$o-wsale-wizard-dot-active: theme-color('primary');
+$o-wsale-wizard-dot-completed: theme-color('success');
+
+$o-wsale-wizard-label-default: $text-muted;
+$o-wsale-wizard-label-active: $body-color;
+$o-wsale-wizard-label-completed: $success;
+
+.progress-wizard {
+    // Scoped variables
+    $tmp-dot-radius: ($o-wsale-wizard-dot-size + $o-wsale-wizard-thickness)*0.5;
+    $tmp-check-size: max($font-size-base, $o-wsale-wizard-dot-size + $o-wsale-wizard-thickness + $o-wsale-wizard-dot-active-glow*2);
+    $tmp-check-pos: $o-wsale-wizard-dot-size*0.5 - $tmp-check-size*0.5;
+
+    margin-top: $grid-gutter-width*0.5;
+    padding: 0 $grid-gutter-width*0.5;
+
+    @include media-breakpoint-up(md) {
+        padding: 0;
+    }
+
+    .progress-wizard-step {
+        position: relative;
+
+        @include media-breakpoint-up(md) {
+            margin-top: $tmp-dot-radius + $o-wsale-wizard-thickness*3.5;
+            float: left;
+            width: percentage(1/3);
+
+            .o_wizard_has_extra_step + & {
+                width: percentage(1/4);
+            }
+        }
+        @include media-breakpoint-down(sm) {
+            &.disabled, &.complete {
+                display:none;
+            }
+        }
+        .progress-wizard-dot {
+            width: $o-wsale-wizard-dot-size;
+            height: $o-wsale-wizard-dot-size;
+            position: relative;
+            display: inline-block;
+            background-color: $o-wsale-wizard-color-inner;
+            border-radius: 50%;
+            box-shadow: 0 0 0 $o-wsale-wizard-thickness $o-wsale-wizard-color-default;
+
+            @include media-breakpoint-up(md) {
+                @include o-position-absolute($left: 50%);
+                margin: (-$tmp-dot-radius) 0 0 (-$o-wsale-wizard-dot-size*0.5);
+            }
+        }
+
+        .progress-wizard-steplabel {
+            color: $o-wsale-wizard-label-default;
+            margin: 5px 0 5px 5px;
+            font-size: $font-size-base;
+            display: inline-block;
+
+            @include media-breakpoint-up(md) {
+                display: block;
+                margin: (0.625rem + $tmp-dot-radius) 0 20px 0;
+            }
+            @include media-breakpoint-down(sm) {
+                margin-left: -15px;
+                font-size: 24px;
+            }
+        }
+
+        .progress-wizard-bar {
+            height: $o-wsale-wizard-thickness;
+            background-color: $o-wsale-wizard-color-default;
+        }
+
+        &.active {
+            .progress-wizard-dot {
+                animation: fadeIn 1s ease 0s 1 normal none running;
+                background: $o-wsale-wizard-dot-active;
+                box-shadow: 0 0 0 ($o-wsale-wizard-dot-active-glow - 0.0625rem) $o-wsale-wizard-color-inner,
+                            0 0 0 $o-wsale-wizard-dot-active-glow rgba($o-wsale-wizard-dot-active, 0.5);
+            }
+
+            .progress-wizard-steplabel {
+                color: $o-wsale-wizard-label-active;
+                font-weight: bolder;
+            }
+        }
+
+        &.complete {
+            .progress-wizard-dot {
+                background: none;
+                box-shadow: none;
+
+                &:after {
+                    @include o-position-absolute($tmp-check-pos, $left: $tmp-check-pos);
+                    width: $tmp-check-size;
+                    height: $tmp-check-size;
+                    border-radius: 100%;
+
+                    background: $o-wsale-wizard-color-inner;
+                    color: $o-wsale-wizard-dot-completed;
+                    text-align: center;
+                    line-height: 1;
+                    font-size: $tmp-check-size;
+                    font-family: FontAwesome;
+
+                    content: "\f058";
+                }
+            }
+
+            .progress-wizard-steplabel {
+                color: $o-wsale-wizard-label-completed;
+            }
+
+            &:hover:not(.disabled) {
+                .progress-wizard-dot:after {
+                    color: $o-wsale-wizard-label-completed;
+                }
+
+                .progress-wizard-steplabel {
+                    color: $o-wsale-wizard-label-active;
+                }
+            }
+        }
+
+        &.disabled {
+            cursor: default;
+        }
+    }
+}

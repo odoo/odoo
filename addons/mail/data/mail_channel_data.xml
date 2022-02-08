@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record model="mail.channel" id="channel_all_employees">
+            <field name="name">general</field>
+            <field name="description">General announcements for all employees.</field>
+        </record>
+
+        <!-- notify all employees of module installation -->
+        <record model="mail.message" id="module_install_notification">
+            <field name="model">mail.channel</field>
+            <field name="res_id" ref="mail.channel_all_employees"/>
+            <field name="message_type">email</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+            <field name="subject">Welcome to Odoo!</field>
+            <field name="body"><![CDATA[<p>Welcome to the #general channel.</p>
+            <p>This channel is accessible to all users to <b>easily share company information</b>.</p>]]></field>
+        </record>
+
+        <record model="mail.channel.partner" id="channel_partner_general_channel_for_admin">
+            <field name="partner_id" ref="base.partner_admin"/>
+            <field name="channel_id" ref="mail.channel_all_employees"/>
+            <field name="fetched_message_id" ref="mail.module_install_notification"/>
+            <field name="seen_message_id" ref="mail.module_install_notification"/>
+        </record>
+
+        <record model="mail.channel" id="mail.channel_all_employees">
+            <field name="group_ids" eval="[Command.link(ref('base.group_user'))]"/>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,28 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+.o_AttachmentImage {
+    min-width: 20px;
+    min-height: 20px;
+
+    img {
+        object-fit: contain;
+    }
+}
+
+.o_AttachmentImageUploading {
+    @include o-position-absolute(0, 0, 0, 0);
+}
+
+.o_AttachmentImage_imageOverlay {
+    @include o-position-absolute(0, 0, 0, 0);
+}
+
+
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+.o_AttachmentImage {
+    cursor: zoom-in;
+}

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- add VAT, codice fiscal and tax system for main company -->
+        <record id="l10n_it.demo_company_it" model="res.company">
+            <field name="l10n_it_codice_fiscale">09814700101</field>
+            <field name="l10n_it_tax_system">RF01</field>
+            <field name="zip">12345</field>
+        </record>
+
+        <record id="partner_demo_it" model="res.partner">
+            <field name="name">Palazzo dell'Arte</field>
+            <field name="vat">IT00000010215</field>
+            <field name="street">Piazza Marconi 5</field>
+            <field name="city">Cremona</field>
+            <field name="country_id" ref="base.it"/>
+            <field name="state_id" ref="base.state_it_cr"/>
+            <field name="zip">26000</field>
+            <field name="email">info@partner.itexample.com</field>
+            <field name="website">www.itexample.com</field>
+        </record>
+
+        <record id="base.res_partner_2" model="res.partner">
+            <field name="vat">IT00079760328</field>
+            <field name="l10n_it_pa_index">XS00001</field>
+        </record>
+        <record id="base.res_partner_12" model="res.partner">
+            <field name="vat">IT00140390501</field>
+            <field name="l10n_it_pa_index">XS00001</field>
+        </record>
+
+    </data>
+</odoo>

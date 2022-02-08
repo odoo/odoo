@@ -1,0 +1,97 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+.o_RtcConfigurationMenu {
+    display: flex;
+    overflow-y: auto;
+    flex-direction: column;
+    margin-left: map-get($spacers, 2);
+    user-select: none;
+}
+
+.o_RtcConfigurationMenu_option {
+    min-height: 40px;
+    padding: map-get($spacers, 1);
+    margin: map-get($spacers, 2);
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.o_RtcConfigurationMenu_optionDeviceSelect {
+    padding: map-get($spacers, 1);
+    padding-right: map-get($spacers, 3);
+}
+
+.o_RtcConfigurationMenu_optionInputGroup {
+   display: flex;
+   width: 100%;
+}
+
+.o_RtcConfigurationMenu_optionInputGroupInput {
+    flex-grow: 2;
+}
+
+.o_RtcConfigurationMenu_optionInputGroupValue {
+    padding: map-get($spacers, 1);
+}
+
+.o_RtcConfigurationMenu_optionLabel {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    max-width: 100%;
+}
+
+.o_RtcConfigurationMenu_optionName {
+    @include text-truncate();
+    margin-inline-end: map-get($spacers, 2);
+}
+
+.o_RtcConfigurationMenu_optionPushToTalkGroup {
+    display: flex;
+}
+
+.o_RtcConfigurationMenu_optionPushToTalkGroupKey {
+    padding-left: map-get($spacers, 3);
+    padding-right: map-get($spacers, 3);
+    margin-left: map-get($spacers, 1);
+}
+
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+.o_RtcConfigurationMenu_button {
+    background: none;
+    border: none;
+    outline: none;
+
+    @include hover-focus () {
+        outline: none;
+    }
+
+    &:hover {
+        color: black;
+    }
+}
+
+.o_RtcConfigurationMenu_optionLabel {
+    cursor: pointer;
+}
+
+.o_RtcConfigurationMenu_optionName {
+    font-weight: bold;
+}
+
+.o_RtcConfigurationMenu_optionPushToTalkGroupKey {
+    font-size: 1.4em;
+    font-weight: bold;
+    border-radius: 3px;
+    border: 2px solid $o-brand-primary;
+
+    &.o-isRegistering {
+        border-color: theme-color('danger');
+    }
+}

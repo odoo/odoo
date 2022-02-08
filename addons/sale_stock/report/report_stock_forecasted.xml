@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="sale_report_product_product_replenishment" inherit_id="stock.report_product_product_replenishment">
+        <xpath expr="//tr[@name='draft_picking_out']" position="after">
+            <tr t-if="docs['draft_sale_qty']" name="draft_so_out" t-attf-class="#{docs['draft_sale_orders_matched'] and 'o_grid_match'}">
+                <td colspan="2">Quotations</td>
+                <td t-esc="-docs['draft_sale_qty']" t-options="{'widget': 'float', 'precision': precision}" class="text-right"/>
+                <td>
+                    <t t-foreach="docs['draft_sale_orders']" t-as="sale_order">
+                        <t t-if="sale_order_index > 0">|</t>
+                        <a t-attf-href="#" t-esc="sale_order.name"
+                            class="font-weight-bold" view-type="form"
+                            t-att-res-model="sale_order._name"
+                            t-att-res-id="sale_order.id"/>
+                    </t>
+                </td>
+            </tr>
+        </xpath>
+        <xpath expr="//td[@name='usedby_cell']" position="inside">
+            <span t-if="line['move_out'] and line['move_out'].picking_id and line['move_out'].picking_id.sale_id">
+                | <span t-esc="line['move_out'].picking_id.sale_id.amount_untaxed" t-options="{'widget': 'monetary', 'display_currency': line['move_out'].picking_id.sale_id.currency_id}" class="font-weight-bold"/>
+                | <span t-esc="line['move_out'].picking_id.sale_id.partner_id.name"/>
+            </span>
+        </xpath>
+   </template>
+</odoo>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mailing_mailing_view_form" model="ir.ui.view">
+        <field name="name">mailing.mailing.view.form.inherit.crm</field>
+        <field name="model">mailing.mailing</field>
+        <field name="inherit_id" ref="mass_mailing.view_mail_mass_mailing_form"/>
+        <field name="arch" type="xml">
+    		<xpath expr="//button[@id='button_view_delivered']" position="before">
+                <button name="action_redirect_to_leads_and_opportunities"
+                    type="object"
+                    icon="fa-star"
+                    class="oe_stat_button"
+                    attrs="{'invisible': [('state', '=', 'draft')]}">
+                    <div class="o_field_widget o_stat_info">
+                        <field name="use_leads" invisible="1"/>
+                        <span class="o_stat_value"><field nolabel="1" name="crm_lead_count"/></span>
+                        <span class="o_stat_text" attrs="{'invisible': [('use_leads', '=', False)]}">Leads</span>
+                        <span class="o_stat_text" attrs="{'invisible': [('use_leads', '=', True)]}">Opportunities</span>
+                    </div>
+                </button>
+    		</xpath>
+        </field>
+    </record>
+</odoo>

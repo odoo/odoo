@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Chart template for en -->
+
+    <record id="ca_en_chart_template_en" model="account.chart.template">
+        <field name="name">Canada - Chart of Accounts</field>
+        <field name="cash_account_code_prefix">111</field>
+        <field name="bank_account_code_prefix">112</field>
+        <field name="transfer_account_code_prefix">113</field>
+        <field name="currency_id" ref="base.CAD"/>
+        <field name="use_anglo_saxon" eval="True"/>
+        <field name="spoken_languages" eval="'fr_FR;fr_CA'"/>
+        <field name="country_id" ref="base.ca"/>
+    </record>
+</odoo>

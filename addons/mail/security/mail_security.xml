@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+        <!-- RULES -->
+        <record id="mail_channel_rule" model="ir.rule">
+            <field name="name">Mail.channel: access only public and joined groups</field>
+            <field name="model_id" ref="model_mail_channel"/>
+            <field name="groups" eval="[Command.link(ref('base.group_user')), Command.link(ref('base.group_portal')), Command.link(ref('base.group_public'))]"/>
+            <field name="domain_force">['|', '|',
+('public', '=', 'public'),
+'&amp;', ('public', '=', 'private'), ('channel_partner_ids', 'in', [user.partner_id.id]),
+'&amp;', ('public', '=', 'groups'), ('group_public_id', 'in', [g.id for g in user.groups_id])]</field>
+            <field name="perm_create" eval="False"/>
+        </record>
+
+        <record id="ir_rule_mail_channel_partner_group_user" model="ir.rule">
+            <field name="name">mail.channel.partner: write its own entries</field>
+            <field name="model_id" ref="model_mail_channel_partner"/>
+            <field name="groups" eval="[(4, ref('base.group_user')), (4, ref('base.group_portal'))]"/>
+            <field name="domain_force">['|', '|',
+('channel_id.public', '=', 'public'),
+'&amp;', ('channel_id.public', '=', 'private'), ('channel_id.channel_partner_ids', 'in', [user.partner_id.id]),
+'&amp;', ('channel_id.public', '=', 'groups'), ('channel_id.group_public_id', 'in', [g.id for g in user.groups_id])]</field>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <record id="ir_rule_mail_notifications_group_user" model="ir.rule">
+            <field name="name">mail.notifications: group_user: write its own entries</field>
+            <field name="model_id" ref="model_mail_notification"/>
+            <field name="groups" eval="[Command.link(ref('base.group_user')), Command.link(ref('base.group_portal'))]"/>
+            <field name="domain_force">[('res_partner_id', '=', user.partner_id.id)]</field>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+            <field name="perm_read" eval="False"/>
+        </record>
+
+        <record id="mail_message_subtype_rule_public" model="ir.rule">
+            <field name="name">mail.message.subtype: portal/public: read public subtypes</field>
+            <field name="model_id" ref="model_mail_message_subtype"/>
+            <field name="domain_force">[('internal', '=', False)]</field>
+            <field name="groups" eval="[Command.link(ref('base.group_portal')), Command.link(ref('base.group_public'))]"/>
+        </record>
+
+        <record id="mail_activity_rule_user" model="ir.rule">
+            <field name="name">mail.activity: user: write/unlink only (created or assigned)</field>
+            <field name="model_id" ref="model_mail_activity"/>
+            <field name="domain_force">['|', ('user_id', '=', user.id), ('create_uid', '=', user.id)]</field>
+            <field name="groups" eval="[Command.link(ref('base.group_user'))]"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <record id="mail_compose_message_rule" model="ir.rule">
+            <field name="name">Mail Compose Message Rule</field>
+            <field name="model_id" ref="model_mail_compose_message"/>
+            <field name="domain_force">[('create_uid', '=', user.id)]</field>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="res_users_settings_rule_admin" model="ir.rule">
+            <field name="name">Administrators can access all User Settings.</field>
+            <field name="model_id" ref="model_res_users_settings"/>
+            <field name="groups" eval="[Command.link(ref('base.group_system'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <record id="res_users_settings_rule_user" model="ir.rule">
+            <field name="name">res.users.settings: access their own entries</field>
+            <field name="model_id" ref="model_res_users_settings"/>
+            <field name="groups" eval="[Command.link(ref('base.group_user'))]"/>
+            <field name="domain_force">[('user_id', '=', user.id)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <record id="res_users_settings_volumes_rule_user" model="ir.rule">
+            <field name="name">res.users.settings.volumes: access their own entries</field>
+            <field name="model_id" ref="model_res_users_settings_volumes"/>
+            <field name="groups" eval="[Command.link(ref('base.group_user'))]"/>
+            <field name="domain_force">[('user_setting_id.user_id', '=', user.id)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <record id="res_users_settings_volumes_rule_admin" model="ir.rule">
+            <field name="name">Administrators can access all User Settings volumes.</field>
+            <field name="model_id" ref="model_res_users_settings_volumes"/>
+            <field name="groups" eval="[Command.link(ref('base.group_system'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+</odoo>

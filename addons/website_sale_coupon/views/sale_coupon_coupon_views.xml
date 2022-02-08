@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="coupon_view_tree" model="ir.ui.view">
+        <field name="name">coupon.coupon.tree</field>
+        <field name="model">coupon.coupon</field>
+        <field name="inherit_id" ref="coupon.coupon_view_tree"/>
+        <field name="arch" type="xml">
+            <button name="action_coupon_send" position="after">
+                <button name="action_coupon_share" string="Share" type="object" icon="fa-share-alt" attrs="{'invisible': [('state', 'not in', ['new', 'sent'])]}"/>
+            </button>
+        </field>
+    </record>
+</odoo>

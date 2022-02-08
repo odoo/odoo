@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_expense_form_view_inherit_sale_expense" model="ir.ui.view">
+        <field name="name">hr.expense.form.inherit.sale.expense</field>
+        <field name="model">hr.expense</field>
+        <field name="inherit_id" ref="hr_expense.hr_expense_view_form"/>
+        <field name="priority">30</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='analytic_account_id']" position="before">
+                <field name="sale_order_id" attrs="{'invisible': [('can_be_reinvoiced', '=', False)]}" options="{'no_create_edit': True, 'no_create': True, 'no_open': True}" context="{'sale_show_partner_name': True, 'sale_expense_all_order': True}" widget="sale_order_many2one"/>
+                <field name="can_be_reinvoiced" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="hr_expense_tree_view_inherit_sale_expense" model="ir.ui.view">
+        <field name="name">hr.expense.tree.inherit.sale.expense</field>
+        <field name="model">hr.expense</field>
+        <field name="inherit_id" ref="hr_expense.view_expenses_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='reference']" position="after">
+                <field name="sale_order_id" optional="hide" attrs="{'invisible': [('can_be_reinvoiced', '=', False)]}" options="{'no_create_edit': True, 'no_create': True, 'no_open': True}"  context="{'sale_show_partner_name': True, 'sale_expense_all_order': True}"/>
+                <field name="can_be_reinvoiced" invisible="1" readonly="1"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="hr_expense_form_view_inherit_account_manager" model="ir.ui.view">
+        <field name="name">hr.expense.form.inherit.sale.expense</field>
+        <field name="model">hr.expense</field>
+        <field name="inherit_id" ref="sale_expense.hr_expense_form_view_inherit_sale_expense"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='sale_order_id']" position="attributes">
+                <attribute name="attrs">{'invisible':[['can_be_reinvoiced','=',False]],'readonly':[['state','in',['done']]]}</attribute>
+                <attribute name="widget">many2one</attribute>
+            </xpath>
+        </field>
+        <field name="groups_id" eval="[(6, 0, [ref('account.group_account_manager')])]"/>
+    </record>
+    <record id="hr_expense_form_view_inherit_saleman" model="ir.ui.view">
+        <field name="name">hr.expense.form.inherit.saleman</field>
+        <field name="model">hr.expense</field>
+        <field name="inherit_id" ref="sale_expense.hr_expense_form_view_inherit_sale_expense"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='sale_order_id']" position="attributes">
+                <attribute name="options">{'no_create_edit': True, 'no_create': True}</attribute>
+                <attribute name="widget">many2one</attribute>
+            </xpath>
+        </field>
+        <field name="groups_id" eval="[(6, 0, [ref('sales_team.group_sale_salesman')])]"/>
+    </record>
+
+    <record id="hr_expense_sheet_form_view_inherit_sale_expense" model="ir.ui.view">
+        <field name="name">hr.expense.sheet.form.inherit.sale.expense</field>
+        <field name="model">hr.expense.sheet</field>
+        <field name="inherit_id" ref="hr_expense.view_hr_expense_sheet_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='expense_line_ids']/tree/field[@name='name']" position="after">
+                <field name="sale_order_id" attrs="{'invisible': [('can_be_reinvoiced', '=', False)]}" optional="show" options="{'no_create_edit': True, 'no_create': True, 'no_open': True}" context="{'sale_show_partner_name': True, 'sale_expense_all_order': True}"/>
+                <field name="can_be_reinvoiced" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_expense_action_from_sale_order" model="ir.actions.act_window">
+        <field name="name">Expenses</field>
+        <field name="res_model">hr.expense</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('sale_order_id', '=', active_id)]</field>
+        <field name="context">{'default_sale_order_id': active_id}</field>
+    </record>
+
+</odoo>

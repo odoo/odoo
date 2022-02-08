@@ -1,0 +1,42 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+.o_DiscussSidebar {
+    display: flex;
+    flex-flow: column;
+    width: $o-mail-chat-sidebar-width;
+
+    @include media-breakpoint-up(xl) {
+        width: $o-mail-chat-sidebar-width + 50px;
+    }
+}
+
+.o_DiscussSidebar_category {
+    display: flex;
+    flex-flow: column;
+    flex: 0 0 auto;
+}
+
+.o_DiscussSidebar_quickSearch {
+    border-radius: 10px;
+    margin: 0 $o-mail-discuss-sidebar-scrollbar-width 10px;
+    padding: 3px 10px;
+}
+
+.o_DiscussSidebar_separator {
+    width: 100%;
+}
+
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+.o_DiscussSidebar_quickSearch {
+    border: none;
+    outline: none;
+}
+
+.o_DiscussSidebar_separator {
+    background-color: $border-color;
+}

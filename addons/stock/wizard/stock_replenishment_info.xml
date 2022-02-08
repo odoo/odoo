@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_stock_replenishment_info" model="ir.ui.view">
+        <field name="name">Stock Replenishment Information</field>
+        <field name="model">stock.replenishment.info</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="orderpoint_id" invisible="1"/>
+                <field name="qty_to_order" invisible="1"/>
+                <div class="row ml8">
+                    <group class="col-6">
+                        <field nolabel="1" name="json_lead_days" widget="json_widget"/>
+                    </group>
+                    <group class="col-6">
+                        <field nolabel="1" name="json_replenishment_history" widget="json_widget"/>
+                    </group>
+                </div>
+                <footer>
+                    <button string="Close" class="btn-default" special="cancel" data-hotkey="z"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_stock_replenishment_info" model="ir.actions.act_window">
+        <field name="name">Replenishment Information</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">stock.replenishment.info</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_stock_replenishment_info"/>
+        <field name="context">{'default_orderpoint_id': active_id}</field>
+        <field name="target">new</field>
+    </record>
+</odoo>
