@@ -3,7 +3,6 @@
 import { ActionContainer } from "./actions/action_container";
 import { NavBar } from "./navbar/navbar";
 import { useBus, useEffect, useService } from "@web/core/utils/hooks";
-import { useTooltip } from "@web/core/tooltip/tooltip_hook";
 import { NotUpdatable } from "../core/utils/components";
 import { MainComponentsContainer } from "../core/main_components_container";
 import { useOwnDebugContext } from "../core/debug/debug_context";
@@ -46,7 +45,6 @@ export class WebClient extends Component {
             () => []
         );
         useExternalListener(window, "click", this.onGlobalClick, { capture: true });
-        useTooltip();
     }
 
     mounted() {
