@@ -21,7 +21,7 @@ class GiftCard(models.Model):
     def _compute_balance(self):
         super()._compute_balance()
         for record in self:
-            confirmed_line = record.redeem_pos_order_line_ids.filtered(
+            confirmed_line = record.redeem_pos_order_line_ids.sudo().filtered(
                 lambda l: l.order_id.state in ('paid', 'done', 'invoiced')
             )
             balance = record.balance
