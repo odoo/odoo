@@ -1560,6 +1560,7 @@ class AccountMove(models.Model):
                 payments_widget_vals['content'].append({
                     'journal_name': line.ref or line.move_id.name,
                     'amount': amount,
+                    'date': move.date,
                     'currency': move.currency_id.symbol,
                     'id': line.id,
                     'move_id': line.move_id.id,
@@ -1571,7 +1572,7 @@ class AccountMove(models.Model):
             if not payments_widget_vals['content']:
                 continue
 
-            move.invoice_outstanding_credits_debits_widget = json.dumps(payments_widget_vals)
+            move.invoice_outstanding_credits_debits_widget = json.dumps(payments_widget_vals, default=date_utils.json_default)
             move.invoice_has_outstanding = True
 
     def _get_reconciled_info_JSON_values(self):
