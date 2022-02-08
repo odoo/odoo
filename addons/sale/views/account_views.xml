@@ -31,9 +31,6 @@
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='invoice_line_ids']//field[@name='discount']" position="attributes">
-                <attribute name="groups">product.group_discount_per_so_line</attribute>
-            </xpath>
             <xpath expr="//group[@name='sale_info_group']/field[@name='invoice_user_id']" position="after">
                 <field name="team_id" kanban_view_ref="%(sales_team.crm_team_view_kanban)s"/>
             </xpath>
