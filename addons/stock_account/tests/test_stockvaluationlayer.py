@@ -675,6 +675,16 @@ class TestStockValuationFIFO(TestStockValuationCommon):
         self.assertEqual(self.product1.quantity_svl, 2)
         self.assertEqual(orig_standard_price, self.product1.standard_price)
 
+    def test_return_delivery_2(self):
+        self._make_in_move(self.product1, 1, unit_cost=10)
+        self._make_in_move(self.product1, 1, unit_cost=0)
+
+        self._make_out_move(self.product1, 1)
+        out_move02 = self._make_out_move(self.product1, 1, create_picking=True)
+
+        returned = self._make_return(out_move02, 1)
+        self.assertEqual(returned.stock_valuation_layer_ids.value, 0)
+
 
 class TestStockValuationChangeCostMethod(TestStockValuationCommon):
     def test_standard_to_fifo_1(self):
