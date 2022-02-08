@@ -108,7 +108,7 @@
         # This bundle includes the main pos assets.
         'point_of_sale.assets': [
             'web/static/fonts/fonts.scss',
-            'web/static/lib/fontawesome/css/font-awesome.css',
+            'web/static/src/libs/fontawesome/css/font-awesome.css',
             'web/static/lib/daterangepicker/daterangepicker.css',
             'point_of_sale/static/src/css/pos.css',
             'point_of_sale/static/src/css/pos_receipts.css',

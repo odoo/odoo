@@ -1061,20 +1061,20 @@ QUnit.module("ActionManager", (hooks) => {
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 3);
         assert.hasClass(
-            $(webClient.el).find(".o_control_panel  .fa-bar-chart-o")[0],
+            $(webClient.el).find(".o_control_panel [data-mode='bar']")[0],
             "active",
             "bar chart button is active"
         );
         assert.doesNotHaveClass(
-            $(webClient.el).find(".o_control_panel  .fa-area-chart")[0],
+            $(webClient.el).find(".o_control_panel [data-mode='line']")[0],
             "active",
             "line chart button is not active"
         );
         // display line chart
-        await testUtils.dom.click($(webClient.el).find(".o_control_panel  .fa-area-chart"));
+        await testUtils.dom.click($(webClient.el).find(".o_control_panel [data-mode='line']"));
         await legacyExtraNextTick();
         assert.hasClass(
-            $(webClient.el).find(".o_control_panel  .fa-area-chart")[0],
+            $(webClient.el).find(".o_control_panel [data-mode='line']")[0],
             "active",
             "line chart button is now active"
         );
@@ -1083,13 +1083,13 @@ QUnit.module("ActionManager", (hooks) => {
         await legacyExtraNextTick();
         assert.containsNone(
             webClient.el,
-            ".o_control_panel  .fa-area-chart",
+            ".o_control_panel [data-mode='line']",
             "graph buttons are no longer in control panel"
         );
         await cpHelpers.switchView(webClient.el, "graph");
         await legacyExtraNextTick();
         assert.hasClass(
-            $(webClient.el).find(".o_control_panel  .fa-area-chart")[0],
+            $(webClient.el).find(".o_control_panel [data-mode='line']")[0],
             "active",
             "line chart button is still active"
         );

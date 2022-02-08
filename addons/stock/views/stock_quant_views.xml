@@ -341,7 +341,7 @@
                 <field name="priority" widget="priority" nolabel="1" optional="hidden"/>
                 <field name="product_id" attrs="{'readonly': [('id', '!=', False)]}" readonly="context.get('single_product', False)" force_save="1" options="{'no_create': True}"/>
                 <field name="product_categ_id" optional="hide"/>
-                <button name="action_warning_duplicated_sn" type="object" attrs="{'invisible': [('sn_duplicated', '=', False)]}" title="This lot/serial number is already in another location" class="btn btn-secondary text-warning pull-right" icon="fa-warning"/>
+                <button name="action_warning_duplicated_sn" type="object" attrs="{'invisible': [('sn_duplicated', '=', False)]}" title="This lot/serial number is already in another location" class="btn btn-secondary text-warning float-end" icon="fa-warning"/>
                 <field name="lot_id" groups="stock.group_production_lot"
                     attrs="{'readonly': ['|', ('tracking', 'not in', ['serial', 'lot']), '&amp;', ('id', '!=', False), '|', ('lot_id', '!=', False), ('quantity', '!=', 0)]}"
                     invisible="context.get('hide_lot', False)"
