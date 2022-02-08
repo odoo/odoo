@@ -758,9 +758,15 @@ class Project(models.Model):
             'sequence': 3,
         }]
         if self.user_has_groups('project.group_project_rating'):
+            if self.rating_avg >= 3.66:
+                icon = 'smile-o text-success'
+            elif self.rating_avg >= 2.33:
+                icon = 'meh-o text-warning'
+            else:
+                icon = 'frown-o text-danger'
             buttons.append({
-                'icon': 'smile-o',
-                'text': _lt('Satisfaction'),
+                'icon': icon,
+                'text': _('Satisfaction'),
                 'number': f'{round(100 * self.rating_avg_percentage, 2)} %',
                 'action_type': 'object',
                 'action': 'action_view_all_rating',
