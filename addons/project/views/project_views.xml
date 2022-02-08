@@ -871,7 +871,7 @@
                                     <field name="name"/>
                                     <field name="display_project_id" string="Project" optional="hide"/>
                                     <field name="partner_id" optional="hide"/>
-                                    <field name="user_ids" widget="many2many_avatar_user" optional="show" domain="[('active', '=', True)]"/>
+                                    <field name="user_ids" widget="many2many_avatar_user" optional="show" domain="[('share', '=', False), ('active', '=', True)]"/>
                                     <field name="company_id" groups="base.group_multi_company" optional="hide"/>
                                     <field name="activity_ids" widget="list_activity" optional="hide"/>
                                     <field name="date_deadline" attrs="{'invisible': [('is_closed', '=', True)]}" optional="show"/>
@@ -888,7 +888,7 @@
                                     <field name="is_closed" invisible="1" />
                                     <field name="name" />
                                     <field name="project_id" optional="hide" />
-                                    <field name="user_ids" widget="many2many_avatar_user" optional="show" domain="[('active', '=', True)]"/>
+                                    <field name="user_ids" widget="many2many_avatar_user" optional="show" domain="[('share', '=', False), ('active', '=', True)]"/>
                                     <field name="company_id" optional="hide" groups="base.group_multi_company" />
                                     <field name="activity_ids" widget="list_activity" optional="hide"/>
                                     <field name="date_deadline" attrs="{'invisible': [('is_closed', '=', True)]}" optional="show" />
@@ -1126,7 +1126,7 @@
                     <field name="project_id" optional="show" readonly="1"/>
                     <field name="partner_id" optional="hide"/>
                     <field name="parent_id" optional="hide" attrs="{'invisible': [('allow_subtasks', '=', False)]}" groups="base.group_no_one"/>
-                    <field name="user_ids" optional="show" widget="many2many_avatar_user" domain="[('active', '=', True)]"/>
+                    <field name="user_ids" optional="show" widget="many2many_avatar_user" domain="[('share', '=', False), ('active', '=', True)]"/>
                     <field name="company_id" groups="base.group_multi_company" optional="show"/>
                     <field name="activity_ids" widget="list_activity" optional="show"/>
                     <field name="date_deadline" optional="hide" widget="remaining_days" attrs="{'invisible': [('is_closed', '=', True)]}"/>
