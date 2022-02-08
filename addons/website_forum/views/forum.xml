@@ -16,13 +16,6 @@
             <field name="domain">[('forum_id', '=', active_id), ('parent_id', '=', False), ('state', 'in', ('active', 'close'))]</field>
         </record>
 
-        <!-- MAIN FORUM MENU -->
-        <menuitem name="Forum" id="menu_website_forum"
-            parent="website.menu_website_configuration" sequence="50" groups="website.group_website_designer"/>
-
-        <menuitem name="Forum" id="menu_website_forum_global"
-            parent="website.menu_website_global_configuration" sequence="170" groups="website.group_website_designer"/>
-
         <!-- FORUM VIEWS -->
         <record id="view_forum_forum_list" model="ir.ui.view">
             <field name="name">forum.forum.list</field>
@@ -176,8 +169,6 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem id="menu_forum_global" parent="menu_website_forum_global" name="Forums" action="action_forum_forum" sequence="10"/>
-
         <!-- POST VIEWS -->
         <record id="view_forum_post_list" model="ir.ui.view">
             <field name="name">forum.post.list</field>
@@ -316,8 +307,6 @@
             </field>
         </record>
 
-        <menuitem id="menu_forum_posts" parent="menu_website_forum" name="Posts" action="action_forum_post" sequence="20"/>
-
         <!-- TAG VIEWS -->
         <record id="forum_tag_view_list" model="ir.ui.view">
             <field name="name">forum.tag.list</field>
@@ -360,8 +349,6 @@
             </field>
         </record>
 
-        <menuitem id="menu_forum_tag_global" parent="menu_website_forum_global" name="Tags" action="forum_tag_action" sequence="30"/>
-
         <!-- POST REASON VIEWS -->
         <record id="forum_post_reason_view_list" model="ir.ui.view">
             <field name="name">forum.post.reason.list</field>
@@ -381,8 +368,15 @@
         </record>
 
 
-        <menuitem id="menu_forum_rank_global" parent="menu_website_forum_global" name="Ranks" action="gamification.gamification_karma_ranks_action" sequence="5"/>
-        <menuitem id="menu_forum_badges" parent="menu_website_forum_global" name="Badges" action="gamification.badge_list_action" sequence="40"/>
-        <menuitem id="menu_forum_post_reasons" parent="menu_website_forum_global" name="Close Reasons" action="forum_post_reasons_action" sequence="50"/>
+        <!-- FORUM MENUS -->
+        <menuitem name="Forum" id="menu_website_forum_global"
+            parent="website.menu_website_global_configuration" sequence="170" groups="website.group_website_designer"/>
+
+        <menuitem id="menu_forum_global" parent="menu_website_forum_global" name="Forums" action="action_forum_forum" sequence="10"/>
+        <menuitem id="menu_forum_posts" parent="menu_website_forum_global" name="Forum Post" action="action_forum_post" sequence="20"/>
+        <menuitem id="menu_forum_rank_global" parent="menu_website_forum_global" name="Ranks" action="gamification.gamification_karma_ranks_action" sequence="30"/>
+        <menuitem id="menu_forum_tag_global" parent="menu_website_forum_global" name="Tags" action="forum_tag_action" sequence="40"/>
+        <menuitem id="menu_forum_badges" parent="menu_website_forum_global" name="Badges" action="gamification.badge_list_action" sequence="50"/>
+        <menuitem id="menu_forum_post_reasons" parent="menu_website_forum_global" name="Close Reasons" action="forum_post_reasons_action" sequence="60"/>
     </data>
 </odoo>
