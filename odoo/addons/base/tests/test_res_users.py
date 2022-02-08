@@ -217,6 +217,30 @@ class TestUsers2(TransactionCase):
         warning = (group_manager_foo | group_manager_bar).check_group_inheritance()
         self.assertFalse(warning)
 
+    def test_user_group_parent_inheritance_no_warning(self):
+        cat_foo = self.env['ir.module.category'].create({'name': 'Foo'})
+        cat_bar = self.env['ir.module.category'].create({'name': 'Bar'})
+
+        group_visitor_foo, group_user_foo, group_manager_foo = self.env['res.groups'].create([
+            {'name': name, 'category_id': cat_foo.id}
+            for name in ('Visitor', 'User', 'Manager')
+        ])
+
+        group_user_bar, group_manager_bar = self.env['res.groups'].create([
+            {'name': name, 'category_id': cat_bar.id}
+            for name in ('User', 'Manager')
+        ])
+
+        group_manager_foo.implied_ids = group_user_foo
+        group_user_foo.implied_ids = group_visitor_foo
+
+        group_manager_bar.implied_ids = group_user_bar
+        group_user_bar.implied_ids = group_visitor_foo
+
+        warning = (group_manager_foo | group_user_bar).check_group_inheritance()
+
+        self.assertFalse(warning)
+
     def test_user_group_inheritance_warning(self):
         cat_foo = self.env['ir.module.category'].create({'name': 'Foo'})
         cat_bar = self.env['ir.module.category'].create({'name': 'Bar'})
