@@ -1215,9 +1215,6 @@
                               groups="sale.group_delivery_invoice_address"
                               attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund', 'out_receipt'))]}"/>
                    </xpath>
-                    <xpath expr="//field[@name='invoice_line_ids']//field[@name='discount']" position="attributes">
-                        <attribute name="groups">product.group_discount_per_so_line</attribute>
-                    </xpath>
                     <xpath expr="//group[@name='sale_info_group']/field[@name='invoice_user_id']" position="after">
                         <field name="team_id" kanban_view_ref="%(sales_team.crm_team_view_kanban)s"/>
                     </xpath>
