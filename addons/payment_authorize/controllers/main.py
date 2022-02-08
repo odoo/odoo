@@ -57,3 +57,7 @@ class AuthorizeController(http.Controller):
             reference, pprint.pformat(response_content)
         )
         tx_sudo._handle_notification_data('authorize', {'response': response_content})
+
+    @http.route('/payment/authorize/webhook', type='http', auth='public')
+    def authorize_notification(self):
+        return ''
