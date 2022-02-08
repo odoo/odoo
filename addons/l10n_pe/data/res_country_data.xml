@@ -9,22 +9,16 @@
                 <div class="o_address_format">
                     <field name="parent_id" invisible="1"/>
                     <field name="type" invisible="1"/>
-                    <field name="street_name" placeholder="Street Name..." attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}" class="oe_read_only"/>
-                    <field name="street" placeholder="Street" class="oe_edit_only"/>
-                    <field name="street2" placeholder="Street2" invisible="1"/>
-                    <div class="o_row">
-                        <label for="street_number" class="oe_edit_only"/>
-                        <field name="street_number" attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
-                        <span> </span>
-                        <label for="street_number2" class="oe_edit_only"/>
-                        <field name="street_number2" attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
-                    </div>
-                    <field name="l10n_pe_district" placeholder="District..."/>
-                    <field name="city" placeholder="Province..." invisible="1"/>
-                    <field name="city_id" placeholder="Province..."/>
-                    <field name="state_id" class="o_address_state" placeholder="State..." options='{"no_open": True}'/>
-                    <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
-                    <field name="zip" placeholder="ZIP" class="o_address_zip"/>
+                    <field name="street" placeholder="Street" class="o_address_street"
+                           attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                    <field name="l10n_pe_district" placeholder="District..." class="o_address_street"/>
+                    <field name="city"/>
+                    <field name="state_id" class="o_address_state" placeholder="State..." options='{"no_open": True}'
+                           attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                    <field name="zip" placeholder="ZIP" class="o_address_zip"
+                           attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                    <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'
+                           attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
                 </div>
             </form>
         </field>
