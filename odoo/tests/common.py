@@ -417,6 +417,13 @@ class BaseCase(unittest.TestCase, metaclass=MetaCase):
         patcher.start()
         self.addCleanup(patcher.stop)
 
+    @classmethod
+    def classPatch(cls, obj, key, val):
+        """ Do the patch ``setattr(obj, key, val)``, and prepare cleanup. """
+        patcher = patch.object(obj, key, val)   # this is unittest.mock.patch
+        patcher.start()
+        cls.addClassCleanup(patcher.stop)
+
     @contextmanager
     def with_user(self, login):
         """ Change user for a given test, like with self.with_user() ... """
@@ -1556,7 +1563,7 @@ class HttpCase(TransactionCase):
             odoo.tools.misc.dumpstacks()
 
     def logout(self, keep_db=True):
-        self.session.logout(keep_db=True)
+        self.session.logout(keep_db=keep_db)
         odoo.http.root.session_store.save(self.session)
 
     def authenticate(self, user, password):
