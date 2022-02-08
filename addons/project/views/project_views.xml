@@ -371,17 +371,14 @@
                                     <field name="privacy_visibility" widget="radio"/>
                                 </group>
                                 <group>
-                                    <div name="alias_def" colspan="2" attrs="{'invisible': [('alias_domain', '=', False)]}">
+                                    <div name="alias_def" colspan="2" class="pb-2" attrs="{'invisible': [('alias_domain', '=', False)]}">
                                         <!-- Always display the whole alias in edit mode. It depends in read only -->
                                         <field name="alias_enabled" invisible="1"/>
-                                        <span class="oe_read_only" attrs="{'invisible': [('alias_name', '!=', False)]}">Create tasks by sending an email to </span>
-                                        <span class="font-weight-bold oe_read_only" attrs="{'invisible': [('alias_name', '=', False)]}">Create tasks by sending an email to </span>
-                                        <span class="font-weight-bold oe_edit_only">Create tasks by sending an email to </span>
-                                            <field name="alias_value" class="oe_read_only d-inline" readonly="1" widget="email" attrs="{'invisible':  [('alias_name', '=', False)]}" />
-                                            <span class="oe_edit_only">
-                                                <field name="alias_name" class="oe_inline"/>@
-                                                <field name="alias_domain" class="oe_inline" readonly="1"/>
-                                            </span>
+                                        <label for="alias_name" class="font-weight-bold o_form_label" string="Create tasks by sending an email to"/>
+                                        <field name="alias_value" class="oe_read_only d-inline" readonly="1" widget="email" attrs="{'invisible':  [('alias_name', '=', False)]}" />
+                                        <span class="oe_edit_only">
+                                            <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
+                                        </span>
                                     </div>
                                     <!-- the alias contact must appear when the user start typing and it must disappear
                                         when the string is deleted. -->
