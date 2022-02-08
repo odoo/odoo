@@ -1,5 +1,11 @@
 <?xml version="1.0"?>
 <odoo noupdate="1">
+    <record id="ir_rule_note_note_multi_company" model="ir.rule">
+        <field name="name">Note - Multi-Company</field>
+        <field name="model_id" ref="model_note_note"/>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+    </record>
+
     <record id="note_note_rule_global" model="ir.rule">
         <field name="name">Only followers can access a sticky notes</field>
         <field name="model_id" ref="model_note_note"/>
