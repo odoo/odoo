@@ -5,15 +5,14 @@ import { CheckBox } from "@web/core/checkbox/checkbox";
 import { registry } from "@web/core/registry";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 
-const { Component, useRef, useState } = owl;
+const { Component, useState } = owl;
 
 const favoriteMenuRegistry = registry.category("favoriteMenu");
 
 export class CustomFavoriteItem extends Component {
     setup() {
         this.notificationService = useService("notification");
-        this.descriptionRef = useRef("description");
-        useAutofocus("description");
+        this.descriptionRef = useAutofocus();
         this.state = useState({
             description: this.env.config.getDisplayName(),
             isDefault: false,

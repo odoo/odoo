@@ -7,7 +7,7 @@ odoo.define('web.CustomFavoriteItem', function (require) {
     const { useAutofocus } = require("@web/core/utils/hooks");
     const { useModel } = require('web.Model');
 
-    const { Component, useRef, useState } = owl;
+    const { Component, useState } = owl;
 
     let favoriteId = 0;
 
@@ -35,17 +35,14 @@ odoo.define('web.CustomFavoriteItem', function (require) {
             const favId = favoriteId++;
             this.useByDefaultId = `o_favorite_use_by_default_${favId}`;
             this.shareAllUsersId = `o_favorite_share_all_users_${favId}`;
-
-            this.descriptionRef = useRef('description');
-            this.model = useModel('searchModel');
+            this.descriptionRef = useAutofocus();
+            this.model = useModel("searchModel");
             this.interactive = true;
             this.state = useState({
                 description: this.env.action.name || "",
                 isDefault: false,
                 isShared: false,
             });
-
-            useAutofocus("description");
         }
 
         //---------------------------------------------------------------------
