@@ -7,7 +7,7 @@ import { KeepLast } from "@web/core/utils/concurrency";
 import { useAutofocus, useBus, useService } from "@web/core/utils/hooks";
 import { fuzzyTest } from "@web/core/utils/search";
 
-const { Component, useExternalListener, useRef, useState } = owl;
+const { Component, useExternalListener, useState } = owl;
 const parsers = registry.category("parsers");
 
 const CHAR_FIELDS = ["char", "html", "many2many", "many2one", "one2many", "text"];
@@ -34,9 +34,7 @@ export class SearchBar extends Component {
 
         this.keepLast = new KeepLast();
 
-        this.focusOnUpdate = useAutofocus("search-input");
-
-        this.inputRef = useRef("search-input");
+        this.inputRef = useAutofocus();
 
         useBus(this.env.bus, "FOCUS-SEARCH-BAR", () => {
             this.inputRef.el.focus();
@@ -237,12 +235,12 @@ export class SearchBar extends Component {
      */
     removeFacet(facet) {
         this.env.searchModel.deactivateGroup(facet.groupId);
-        this.focusOnUpdate();
+        this.inputRef.el.focus();
     }
 
     resetState() {
         this.computeState({ expanded: [], focusedIndex: 0, query: "", subItems: [] });
-        this.focusOnUpdate();
+        this.inputRef.el.focus();
     }
 
     /**

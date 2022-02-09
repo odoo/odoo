@@ -3,10 +3,10 @@
 import { uiService } from "@web/core/ui/ui_service";
 import { useAutofocus, useBus, useListener, useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
-import { makeTestEnv } from "../../helpers/mock_env";
-import { click, destroy, getFixture, mount, nextTick } from "../../helpers/utils";
+import { makeTestEnv } from "@web/../tests/helpers/mock_env";
+import { click, destroy, getFixture, mount, nextTick } from "@web/../tests/helpers/utils";
 
-const { Component, xml, useRef } = owl;
+const { Component, xml } = owl;
 const serviceRegistry = registry.category("services");
 
 QUnit.module("utils", () => {
@@ -16,8 +16,7 @@ QUnit.module("utils", () => {
         QUnit.test("useAutofocus: simple usecase", async function (assert) {
             class MyComponent extends Component {
                 setup() {
-                    useAutofocus();
-                    this.inputRef = useRef("autofocus");
+                    this.inputRef = useAutofocus();
                 }
             }
             MyComponent.template = xml`
@@ -43,14 +42,13 @@ QUnit.module("utils", () => {
         QUnit.test("useAutofocus: conditional autofocus", async function (assert) {
             class MyComponent extends Component {
                 setup() {
-                    this.forceFocus = useAutofocus("input");
-                    this.inputRef = useRef("input");
+                    this.inputRef = useAutofocus();
                     this.showInput = true;
                 }
             }
             MyComponent.template = xml`
                 <span>
-                    <input t-if="showInput" type="text" t-ref="input" />
+                    <input t-if="showInput" type="text" t-ref="autofocus" />
                 </span>
             `;
 
@@ -64,13 +62,11 @@ QUnit.module("utils", () => {
             assert.strictEqual(document.activeElement, comp.inputRef.el);
 
             comp.showInput = false;
-            comp.forceFocus();
             comp.render();
             await nextTick();
             assert.notStrictEqual(document.activeElement, comp.inputRef.el);
 
             comp.showInput = true;
-            comp.forceFocus();
             comp.render();
             await nextTick();
             assert.strictEqual(document.activeElement, comp.inputRef.el);

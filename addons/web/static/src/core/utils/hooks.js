@@ -24,13 +24,12 @@ const { status, useComponent, useEffect, useRef } = owl;
 // -----------------------------------------------------------------------------
 
 /**
- * Focus a dom element with provided ref as soon as it appears in the DOM and if it was not
- * displayed before. If it is an input|textarea, set the selection
- * at the end.
- * @param {string} [refName="autofocus"]
- * @returns {Function} function that forces the focus on the next update if visible.
+ * Focus an element referenced by a t-ref="autofocus" in the current component
+ * as soon as it appears in the DOM and if it was not displayed before.
+ * If it is an input/textarea, set the selection at the end.
+ * @returns {Object} the element reference
  */
-export function useAutofocus(refName = "autofocus") {
+export function useAutofocus() {
     const comp = useComponent();
     // Prevent autofocus in mobile
     if (comp.env.isSmall) {
@@ -41,8 +40,7 @@ export function useAutofocus(refName = "autofocus") {
         return () => {};
     }
     // LEGACY
-    let ref = useRef(refName);
-    let forceFocusCount = 0;
+    let ref = useRef("autofocus");
     useEffect(
         (el) => {
             if (el) {
@@ -52,11 +50,9 @@ export function useAutofocus(refName = "autofocus") {
                 }
             }
         },
-        () => [ref.el, forceFocusCount]
+        () => [ref.el]
     );
-    return function focusOnUpdate() {
-        forceFocusCount++; // force the effect to rerun on next patch
-    };
+    return ref;
 }
 
 // -----------------------------------------------------------------------------

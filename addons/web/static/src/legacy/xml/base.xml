@@ -129,7 +129,7 @@
             t-att-placeholder="props.placeholder"
             t-attf-data-target="#{{ datePickerId }}"
             t-att-readonly="props.readonly"
-            t-ref="input"
+            t-ref="autofocus"
             t-on-change="_onInputChange"
             t-on-click="_onInputClick"
         />
@@ -362,7 +362,7 @@
             placeholder="Search..."
             role="searchbox"
             title="Search for records"
-            t-ref="search-input"
+            t-ref="autofocus"
             t-on-keydown="_onSearchKeydown"
             t-on-input="_onSearchInput"
         />
