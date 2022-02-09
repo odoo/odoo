@@ -20,17 +20,25 @@ class CustomerPortal(CustomerPortal):
 
         SaleOrder = request.env['sale.order']
         if 'quotation_count' in counters:
-            values['quotation_count'] = SaleOrder.search_count([
-                ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
-                ('state', 'in', ['sent', 'cancel'])
-            ]) if SaleOrder.check_access_rights('read', raise_exception=False) else 0
+            values['quotation_count'] = SaleOrder.search_count(self._prepare_quotations_domain(partner)) \
+                if SaleOrder.check_access_rights('read', raise_exception=False) else 0
         if 'order_count' in counters:
-            values['order_count'] = SaleOrder.search_count([
-                ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
-                ('state', 'in', ['sale', 'done'])
-            ]) if SaleOrder.check_access_rights('read', raise_exception=False) else 0
+            values['order_count'] = SaleOrder.search_count(self._prepare_orders_domain(partner)) \
+                if SaleOrder.check_access_rights('read', raise_exception=False) else 0
 
         return values
+
+    def _prepare_quotations_domain(self, partner):
+        return [
+            ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
+            ('state', 'in', ['sent', 'cancel'])
+        ]
+
+    def _prepare_orders_domain(self, partner):
+        return [
+            ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
+            ('state', 'in', ['sale', 'done'])
+        ]
 
     def _order_get_page_view_values(self, order, access_token, **kwargs):
         values = {
@@ -75,10 +83,7 @@ class CustomerPortal(CustomerPortal):
         partner = request.env.user.partner_id
         SaleOrder = request.env['sale.order']
 
-        domain = [
-            ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
-            ('state', 'in', ['sent', 'cancel'])
-        ]
+        domain = self._prepare_quotations_domain(partner)
 
         searchbar_sortings = {
             'date': {'label': _('Order Date'), 'order': 'date_order desc'},
@@ -125,10 +130,7 @@ class CustomerPortal(CustomerPortal):
         partner = request.env.user.partner_id
         SaleOrder = request.env['sale.order']
 
-        domain = [
-            ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
-            ('state', 'in', ['sale', 'done'])
-        ]
+        domain = self._prepare_orders_domain(partner)
 
         searchbar_sortings = {
             'date': {'label': _('Order Date'), 'order': 'date_order desc'},
