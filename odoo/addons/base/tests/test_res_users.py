@@ -198,6 +198,26 @@ class TestUsers2(TransactionCase):
         self.assertTrue(user_form.share, 'The groups_id onchange should have been triggered')
 
     def test_user_group_inheritance_no_warning(self):
+        """
+            Category:
+                Sales
+                ├── Manager
+                └── User
+                Field Service
+                ├── Manager
+                └── User
+
+            Groups:
+                Sales Manager
+                └── Sales User
+
+                Field Service Manager
+                ├── Sales Manager
+                └── Field Service User
+
+            When User tries to change the Sales and Field Service Groups as Manager, warning
+            should not be raise.
+        """
         cat_foo = self.env['ir.module.category'].create({'name': 'Foo'})
         cat_bar = self.env['ir.module.category'].create({'name': 'Bar'})
 
@@ -218,6 +238,30 @@ class TestUsers2(TransactionCase):
         self.assertFalse(warning)
 
     def test_user_group_parent_inheritance_no_warning(self):
+        """
+            Category:
+                Timesheets
+                ├── Administrator
+                ├── User: all timesheets
+                └── User: own timesheets only
+                Field Service
+                ├── Manager
+                └── User
+
+            Groups:
+                Timesheets Administrator
+                └── Timesheets User: all timesheets
+                    └── Timesheets User: own timesheets only
+
+                Field Service Manager
+                └── Field Service User
+                    └── Timesheets User: own timesheets only
+
+            Here, Field Service User will automatically apply the Timesheets User: own timesheets only
+            User has Timesheets Administrator group and make changes For Field Service User.
+            now, User already have Timesheet Administrator group so it will automatially Apply User Own timesheet,
+            so in that case warning shouldn't be raised.
+        """
         cat_foo = self.env['ir.module.category'].create({'name': 'Foo'})
         cat_bar = self.env['ir.module.category'].create({'name': 'Bar'})
 
@@ -242,6 +286,27 @@ class TestUsers2(TransactionCase):
         self.assertFalse(warning)
 
     def test_user_group_inheritance_warning(self):
+        """
+            Category:
+                Sales
+                ├── Manager
+                └── User
+                Field Service
+                ├── Manager
+                └── User
+
+            Groups:
+                Sales Manager
+                └── Sales User
+
+                Field Service Manager
+                ├── Sales Manager
+                └── Field Service User
+
+            Here Sales Manager is required when We have Field service as a Manager.
+            so, When user tries to change the Sales as a user, it will show the warning
+            about Sales Manager required since we have Field service as a manager
+        """
         cat_foo = self.env['ir.module.category'].create({'name': 'Foo'})
         cat_bar = self.env['ir.module.category'].create({'name': 'Bar'})
 
@@ -264,6 +329,36 @@ class TestUsers2(TransactionCase):
         self.assertEqual(warning[group_user_foo.id], 'Since you are a/an Bar Manager, you cannot have Foo right lower than Manager')
 
     def test_user_multi_group_inheritance_warning(self):
+        """
+            Category:
+                Sales
+                ├── Manager
+                └── User
+                Project
+                ├── Manager
+                └── User
+                Field Service
+                ├── Manager
+                └── User
+
+            Groups:
+                Sales Manager
+                └── Sales User
+
+                Project Manager
+                └── Project User
+
+                Field Service Manager
+                ├── Sales Manager
+                ├── Project Manager
+                └── Field Service User
+
+            Here, If user has Field service manager then it will automatically apply
+            the Sales Manager and Project manager.
+            Now, User has Sales, Project and Field Service as user and make changes in
+            Field Service as a Manager, it will show the Warning in Both Project and
+            Sales for group inconsistency.
+        """
         cat_foo = self.env['ir.module.category'].create({'name': 'Foo'})
         cat_bar = self.env['ir.module.category'].create({'name': 'Bar'})
         cat_baz = self.env['ir.module.category'].create({'name': 'Baz'})

@@ -238,6 +238,7 @@ class Groups(models.Model):
             return {}
         inherited_groups = {}
         for group in self:
+            # Filter out the groups which are applying current groups due to group inheritance
             inherited_groups[group] = self.filtered(
                 lambda grp:
                 group.category_id in grp.implied_ids.category_id and
@@ -246,12 +247,14 @@ class Groups(models.Model):
         warnings = {}
         for key, value in inherited_groups.items():
             if value:
+                # Filter out the group which will be applied upon saving record
                 parent_group = value.implied_ids.filtered(
                     lambda grp:
                     grp.category_id == key.category_id and
                     grp not in (key | key.implied_ids | self)
                 )
                 if parent_group:
+                    # Get all the Parent groups which may add current group in hierarchy
                     parent_ids = parent_group._get_parent_group_ids()
                     if not any([gid in parent_ids for gid in self.ids]):
                         warnings[key.id] = _("Since you are a/an %s %s, you cannot have %s right lower than %s") % (value[0].category_id.name, value[0].name, parent_group[0].category_id.name, parent_group[0].name)
