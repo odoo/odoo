@@ -2161,7 +2161,7 @@ const ListUserValueWidget = UserValueWidget.extend({
     _onAddCustomItemClick() {
         let id;
         if (this.el.dataset.generateIdForNewItems) {
-            id = generateHTMLId(30);
+            id = generateHTMLId();
         }
         if (this.el.dataset.newElementsToggled) {
             this.selected.push(id);
