@@ -37,6 +37,7 @@ class EventBoothCategory(models.Model):
             if category.product_id and category.product_id.list_price:
                 category.price = category.product_id.list_price + category.product_id.price_extra
 
+    @api.depends_context('pricelist', 'quantity')
     @api.depends('product_id', 'price')
     def _compute_price_reduce(self):
         for category in self:
