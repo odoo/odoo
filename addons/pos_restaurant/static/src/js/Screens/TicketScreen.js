@@ -142,7 +142,7 @@ odoo.define('pos_restaurant.TicketScreen', function (require) {
             super.setup();
             this.state = useState({ isEditing: false });
             this.orderUiState = this.props.order.uiState.TipScreen;
-            useAutofocus({ selector: 'input' });
+            useAutofocus();
         }
         get tipAmountStr() {
             return this.env.pos.format_currency(parse.float(this.orderUiState.inputTipAmount || '0'));

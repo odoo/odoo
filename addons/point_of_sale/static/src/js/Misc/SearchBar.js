@@ -1,7 +1,7 @@
 odoo.define('point_of_sale.SearchBar', function (require) {
     'use strict';
 
-    const { useListener } = require("@web/core/utils/hooks");
+    const { useAutofocus, useListener } = require("@web/core/utils/hooks");
     const PosComponent = require('point_of_sale.PosComponent');
     const Registries = require('point_of_sale.Registries');
 
@@ -33,6 +33,7 @@ odoo.define('point_of_sale.SearchBar', function (require) {
     class SearchBar extends PosComponent {
         setup() {
             super.setup();
+            useAutofocus();
             useExternalListener(window, 'click', this._hideOptions);
             useListener('click-search-field', this._onClickSearchField);
             useListener('select-filter', this._onSelectFilter);
