@@ -7,6 +7,22 @@ class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
     is_edi_proxy_active = fields.Boolean(compute='_compute_is_edi_proxy_active')
+    l10n_it_edi_sdicoop_demo_mode = fields.Selection(
+        [('demo', 'Demo'),
+         ('test', 'Test (experimental)'),
+         ('prod', 'Official')],
+        compute='_compute_l10n_it_edi_sdicoop_demo_mode',
+        inverse='_set_l10n_it_edi_sdicoop_demo_mode',
+        readonly=False)
+
+    @api.depends("is_edi_proxy_active")
+    def _compute_l10n_it_edi_sdicoop_demo_mode(self):
+        for config in self:
+            config.l10n_it_edi_sdicoop_demo_mode = self.env['account_edi_proxy_client.user']._get_demo_state()
+
+    def _set_l10n_it_edi_sdicoop_demo_mode(self):
+        for config in self:
+            self.env['ir.config_parameter'].set_param('account_edi_proxy_client.demo', config.l10n_it_edi_sdicoop_demo_mode)
 
     @api.depends('company_id.account_edi_proxy_client_ids', 'company_id.account_edi_proxy_client_ids.active')
     def _compute_is_edi_proxy_active(self):
