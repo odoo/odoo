@@ -89,7 +89,10 @@ class AccountEdiFormat(models.Model):
         res.extend(self._l10n_it_edi_check_invoice_configuration(move))
 
         if not self._get_proxy_user(move.company_id):
-            res.append(_("You must accept the terms and conditions in the settings to use FatturaPA."))
+            res.append(_("You need to register before you can use FatturaPA"
+                         " to send and receive electronic invoices.\n\n"
+                         "Select from the menu:\n"
+                         "Settings -> Electronic Document Invoicing -> Register"))
 
         return res
 
