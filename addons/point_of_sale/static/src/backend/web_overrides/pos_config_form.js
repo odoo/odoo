@@ -4,27 +4,30 @@ odoo.define('point_of_sale.pos_config_form', function (require) {
     var FormController = require('web.FormController');
     var FormView = require('web.FormView');
     var viewRegistry = require('web.view_registry');
+    var rpc = require('web.rpc');
 
     var PosConfigFormController = FormController.extend({
-        _enableButtons: function (changedFields) {
+        saveRecord: async function (recordID) {
+            const _super = this._super;
+            const record = this.model.localData[recordID || this.handle];
+            const fieldsToChange = Object.keys(
+                this.model._generateChanges(record, { viewType: undefined, changesOnly: true })
+            );
             let shouldReload = false;
-            if (Array.isArray(changedFields)) {
-                for (let field of (changedFields)) {
-                    if (
-                        field.startsWith('module_') ||
-                        field.startsWith('group_') ||
-                        field === 'is_posbox'
-                    ) {
-                        shouldReload = true;
-                        break;
-                    }
-                }
+            if (fieldsToChange.length) {
+                shouldReload = await rpc.query(
+                    rpc.buildQuery({
+                        model: 'pos.config',
+                        method: 'are_there_uninstalled_modules',
+                        args: [fieldsToChange],
+                    })
+                );
             }
+            const result = await _super.apply(this, arguments);
             if (shouldReload) {
                 window.location.reload();
-            } else {
-                this._super.apply(this, arguments);
             }
+            return result;
         },
     });
 
