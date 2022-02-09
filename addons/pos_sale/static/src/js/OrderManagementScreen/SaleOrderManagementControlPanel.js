@@ -32,7 +32,7 @@ odoo.define('pos_sale.SaleOrderManagementControlPanel', function (require) {
             super.setup();
             this.orderManagementContext = useState(contexts.orderManagement);
             useListener('clear-search', this._onClearSearch);
-            useAutofocus({ selector: 'input' });
+            useAutofocus();
 
             let currentClient = this.env.pos.get_order().get_client();
             if (currentClient) {
