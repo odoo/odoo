@@ -76,13 +76,11 @@
                         </div>
                         <group>
                             <field name="l10n_it_has_eco_index" string="Company listed on the register of companies"/>
-                        </group>
-                        <group attrs="{'invisible': [('l10n_it_has_eco_index', '=', False)]}">
-                            <field name="l10n_it_eco_index_office"/>
-                            <field name="l10n_it_eco_index_number"/>
-                            <field name="l10n_it_eco_index_share_capital"/>
-                            <field name="l10n_it_eco_index_sole_shareholder"/>
-                            <field name="l10n_it_eco_index_liquidation_state"/>
+                            <field name="l10n_it_eco_index_office" attrs="{'invisible': [('l10n_it_has_eco_index', '=', False)]}"/>
+                            <field name="l10n_it_eco_index_number" attrs="{'invisible': [('l10n_it_has_eco_index', '=', False)]}"/>
+                            <field name="l10n_it_eco_index_share_capital" attrs="{'invisible': [('l10n_it_has_eco_index', '=', False)]}"/>
+                            <field name="l10n_it_eco_index_sole_shareholder" attrs="{'invisible': [('l10n_it_has_eco_index', '=', False)]}"/>
+                            <field name="l10n_it_eco_index_liquidation_state" attrs="{'invisible': [('l10n_it_has_eco_index', '=', False)]}"/>
                         </group>
                     </group>
                     <group>
@@ -93,9 +91,7 @@
                         </div>
                         <group>
                             <field name="l10n_it_has_tax_representative" string="Company have a tax representative"/>
-                        </group>
-                        <group attrs="{'invisible': [('l10n_it_has_tax_representative', '=', False)]}">
-                            <field name="l10n_it_tax_representative_partner_id"/>
+                            <field name="l10n_it_tax_representative_partner_id" attrs="{'invisible': [('l10n_it_has_tax_representative', '=', False)]}"/>
                         </group>
                     </group>
                 </page>
