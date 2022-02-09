@@ -2,9 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.event_booth.tests.common import TestEventBoothCommon
+from odoo.addons.sales_team.tests.common import TestSalesCommon
 
 
-class TestEventBoothSaleCommon(TestEventBoothCommon):
+class TestEventBoothSaleCommon(TestEventBoothCommon, TestSalesCommon):
 
     @classmethod
     def setUpClass(cls):
