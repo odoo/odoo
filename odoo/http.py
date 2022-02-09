@@ -181,7 +181,8 @@ babel.core.LOCALE_ALIASES['nb'] = 'nb_NO'
 # Const
 # =========================================================
 
-...
+# The validity duration of a preflight response, one day.
+CORS_MAX_AGE = 60 * 60 * 24
 
 # The default lang to use when the browser doesn't specify it
 DEFAULT_LANG = 'en_US'
@@ -281,6 +282,11 @@ def db_filter(dbs, host=None):
         return sorted(exposed_dbs.intersection(dbs))
 
     return list(dbs)
+
+...
+
+def is_cors_preflight(request, endpoint):
+    return request.httprequest.method == 'OPTIONS' and endpoint.routing.get('cors', False)
 
 def send_file(filepath_or_fp, filename=None, mimetype=None, mtime=None,
               as_attachment=False, cache_timeout=STATIC_CACHE):
@@ -613,6 +619,13 @@ class FilesystemSessionStore(sessions.FilesystemSessionStore):
                 os.rename(old_path, session_path)
         return super().get(sid)
 
+    def rotate(self, session, env):
+        self.delete(session)
+        session.sid = self.generate_key()
+        if session.uid and env:
+            session.session_token = security.compute_session_token(session, env)
+        self.save(session)
+
     def vacuum(self):
         threshold = time.time() - SESSION_LIFETIME
         for fname in glob.iglob(os.path.join(root.session_store.path, '*', '*')):
@@ -679,7 +692,16 @@ class FutureResponse:
     werkzeug.Response mock class that only serves as placeholder for
     headers to be injected in the final response.
     """
-    ...
+    # used by werkzeug.Response.set_cookie
+    charset = 'utf-8'
+    max_cookie_size = 4093
+
+    def __init__(self):
+        self.headers = werkzeug.datastructures.Headers()
+
+    @functools.wraps(werkzeug.Response.set_cookie)
+    def set_cookie(self, *args, **kwargs):
+        werkzeug.Response.set_cookie(self, *args, **kwargs)
 
 
 class Request:
@@ -690,8 +712,9 @@ class Request:
 
     def __init__(self, httprequest):
         self.httprequest = httprequest
+        self.future_response = FutureResponse()
+        self.dispatcher = _dispatchers['http'](self)  # until we match
         ...
-
 
         self.session = self._get_session()
         self.db = self._get_dbname()
@@ -770,6 +793,48 @@ class Request:
 
     ...
 
+    def _inject_future_response(self, response):
+        response.headers.extend(self.future_response.headers)
+        return response
+
+    ...
+
+    def _save_session(self):
+        """ Save a modified session on disk. """
+        if not self.session.can_save:
+            return
+
+        if self.session.should_rotate:
+            root.session_store.rotate(self.session, self.env)  # it saves
+        elif json.dumps(self.session) != self.session.json_data:
+            root.session_store.save(self.session)
+
+        # We must not set the cookie if the session id was specified
+        # using a http header or a GET parameter.
+        # There are two reasons to this:
+        # - When using one of those two means we consider that we are
+        #   overriding the cookie, which means creating a new session on
+        #   top of an already existing session and we don't want to
+        #   create a mess with the 'normal' session (the one using the
+        #   cookie). That is a special feature of the Javascript Session.
+        # - It could allow session fixation attacks.
+        cookie_sid = self.httprequest.cookies.get('session_id')
+        if (cookie_sid != self.session.sid and not self.session.is_explicit):
+            self.future_response.set_cookie('session_id', self.session.sid, max_age=SESSION_LIFETIME, httponly=True)
+
+    def _set_request_dispatcher(self, rule):
+        routing = rule.endpoint.routing
+        dispatcher_cls = _dispatchers[routing['type']]
+        if (not is_cors_preflight(self, rule.endpoint)
+            and not dispatcher_cls.is_compatible_with(self)):
+            compatible_dispatchers = [
+                disp.routing_type
+                for disp in _dispatchers.values()
+                if disp.is_compatible_with(self)
+            ]
+            raise BadRequest(f"Request inferred type is compatible with {compatible_dispatchers} but {routing['routes'][0]!r} is type={routing['type']!r}.")
+        self.dispatcher = dispatcher_cls(self)
+
     # =====================================================
     # Routing
     # =====================================================
@@ -786,7 +851,17 @@ class Request:
             raise NotFound(f'File "{path}" not found in module {module}.\n')
 
     def _serve_nodb(self):
-        ...
+        """
+        Dispatch the request to its matching controller in a
+        database-free environment.
+        """
+        router = root.nodb_routing_map.bind_to_environ(self.httprequest.environ)
+        rule, args = router.match(return_rule=True)
+        self._set_request_dispatcher(rule)
+        self.dispatcher.pre_dispatch(rule, args)
+        response = self.dispatcher.dispatch(rule.endpoint, args)
+        self.dispatcher.post_dispatch(response)
+        return response
 
     def _serve_db(self):
         ...
@@ -806,7 +881,66 @@ class Dispatcher(ABC):
         super().__init_subclass__()
         _dispatchers[cls.routing_type] = cls
 
-    ...
+    def __init__(self, request):
+        self.request = request
+
+    @classmethod
+    @abstractmethod
+    def is_compatible_with(cls, request):
+        """
+        Determine if the current request is compatible with this
+        dispatcher.
+        """
+
+    def pre_dispatch(self, rule, args):
+        """
+        Prepare the system before dispatching the request to its
+        controller. This method is often overridden in ir.http to
+        extract some info from the request query-string or headers and
+        to save them in the session or in the context.
+        """
+        routing = rule.endpoint.routing
+        self.request.session.can_save = routing.get('save_session', True)
+
+        set_header = self.request.future_response.headers.set
+        cors = routing.get('cors')
+        if cors:
+            set_header('Access-Control-Allow-Origin', cors)
+            set_header('Access-Control-Allow-Methods', (
+                'POST' if routing['type'] == 'json'
+                else ', '.join(routing['methods'] or ['GET', 'POST'])
+            ))
+
+        if cors and self.request.httprequest.method == 'OPTIONS':
+            set_header('Access-Control-Max-Age', CORS_MAX_AGE)
+            set_header('Access-Control-Allow-Headers',
+                       'Origin, X-Requested-With, Content-Type, Accept, Authorization')
+            werkzeug.exceptions.abort(Response(status=204))
+
+    @abstractmethod
+    def dispatch(self, endpoint, args):
+        """
+        Extract the params from the request's body and call the
+        endpoint. While it is prefered to override ir.http._pre_dispatch
+        and ir.http._post_dispatch, this method can be override to have
+        a tight control over the dispatching.
+        """
+
+    def post_dispatch(self, response):
+        """
+        Manipulate the HTTP response to inject various headers, also
+        save the session when it is dirty.
+        """
+        self.request._save_session()
+        self.request._inject_future_response(response)
+        root.set_csp(response)
+
+    @abstractmethod
+    def handle_error(self, exc):
+        """
+        Transform the exception into a valid HTTP response. Called upon
+        any exception while serving a request.
+        """
 
 
 class HttpDispatcher(Dispatcher):
@@ -867,6 +1001,17 @@ class Application:
         if not db:
             return self.nodb_routing_map
         return request.registry['ir.http'].routing_map()
+
+    def set_csp(self, response):
+        headers = response.headers
+        if 'Content-Security-Policy' in headers:
+            return
+
+        mime, _params = cgi.parse_header(headers.get('Content-Type', ''))
+        if not mime.startswith('image/'):
+            return
+
+        headers['Content-Security-Policy'] = "default-src 'none'"
 
     def __call__(self, environ, start_response):
         """
