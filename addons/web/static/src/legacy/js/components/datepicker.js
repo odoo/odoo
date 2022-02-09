@@ -12,7 +12,6 @@ odoo.define('web.DatePickerOwl', function (require) {
         onWillUnmount,
         onWillUpdateProps,
         useExternalListener,
-        useRef,
         useState,
     } = owl;
 
@@ -38,10 +37,8 @@ odoo.define('web.DatePickerOwl', function (require) {
             this.datePickerId = `o_datepicker_${datePickerId++}`;
             this.typeOfDate = 'date';
 
-            useAutofocus("input");
+            this.inputRef = useAutofocus();
             useExternalListener(window, 'scroll', this._onWindowScroll);
-
-            this.inputRef = useRef('input');
 
             onMounted(() => {
                 $(this.el).on('show.datetimepicker', this._onDateTimePickerShow.bind(this));

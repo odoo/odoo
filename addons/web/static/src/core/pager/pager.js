@@ -2,7 +2,7 @@
 
 import { useAutofocus } from "../utils/hooks";
 
-const { Component, useExternalListener, useRef, useState } = owl;
+const { Component, useExternalListener, useState } = owl;
 
 /**
  * Pager
@@ -23,11 +23,8 @@ export class Pager extends Component {
             isEditing: false,
             isDisabled: false,
         });
-
-        this.inputRef = useRef("input");
+        this.inputRef = useAutofocus();
         useExternalListener(document, "mousedown", this.onClickAway, { capture: true });
-
-        this.forceFocus = useAutofocus("input");
     }
 
     /**
@@ -146,7 +143,9 @@ export class Pager extends Component {
     }
     onValueClick() {
         if (this.props.isEditable && !this.state.isEditing && !this.state.isDisabled) {
-            this.forceFocus();
+            if (this.inputRef.el) {
+                this.inputRef.el.focus();
+            }
             this.state.isEditing = true;
         }
     }
