@@ -36,6 +36,22 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <div class="content-group">
+                                    <span class="o_form_label">
+                                        Fattura Elettronica mode
+                                    </span>
+                                    <div class="text-muted">
+                                        In demo mode Odoo will just simulate the sending of invoices to the government.<br/>
+                                        In test mode (experimental) Odoo will send the invoices to a non-production service.
+                                    </div>
+                                    <field name="l10n_it_edi_sdicoop_demo_mode"
+                                           widget="radio"
+                                           options="{'horizontal': true}"/>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </xpath>
