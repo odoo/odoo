@@ -59,7 +59,7 @@ const FormEditor = options.Class.extend({
      * @returns {string} The new ID
      */
     _generateUniqueID() {
-        return Math.random().toString(36).substring(2, 15);
+        return `o${Math.random().toString(36).substring(2, 15)}`;
     },
     /**
      * Returns a field object
