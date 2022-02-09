@@ -108,6 +108,9 @@
 <data noupdate="0">
     <template id="ab_testing_description" name="Mass Mailing: A/B Test Description">
         <div name="ab_testing_description" class="mb-2">
+            <t t-if="mailing.state == 'done' and mailing.sent == 0 and mailing.failed == 0 and mailing.canceled == 0">
+                <span>There wasn't enough recipients left for this mailing</span>
+            </t>
             <t t-if="mailing.ab_testing_completed">
                 <p t-if="mailing.ab_testing_is_winner_mailing">
                     This <t t-out="mailing.mailing_type_description"/> is the winner of the A/B testing campaign and has been sent to all remaining recipients.
