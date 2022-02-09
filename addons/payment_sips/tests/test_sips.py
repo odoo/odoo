@@ -71,12 +71,12 @@ class SipsTest(SipsCommon, PaymentHttpCommon):
         # Unknown transaction
         with self.assertRaises(ValidationError):
             self.env['payment.transaction']._handle_notification_data(
-                'sips', self.NOTIFICATION_DATA
+                'sips', self.notification_data
             )
 
         # Confirmed transaction
         tx = self.create_transaction('redirect')
-        self.env['payment.transaction']._handle_notification_data('sips', self.NOTIFICATION_DATA)
+        self.env['payment.transaction']._handle_notification_data('sips', self.notification_data)
         self.assertEqual(tx.state, 'done')
         self.assertEqual(tx.acquirer_reference, self.reference)
 
@@ -85,8 +85,8 @@ class SipsTest(SipsCommon, PaymentHttpCommon):
         self.reference = 'Test Transaction 2'
         tx = self.create_transaction('redirect')
         payload = dict(
-            self.NOTIFICATION_DATA,
-            Data=self.NOTIFICATION_DATA['Data'].replace(old_reference, self.reference)
+            self.notification_data,
+            Data=self.notification_data['Data'].replace(old_reference, self.reference)
                                                .replace('responseCode=00', 'responseCode=12')
         )
         self.env['payment.transaction']._handle_notification_data('sips', payload)
@@ -101,7 +101,7 @@ class SipsTest(SipsCommon, PaymentHttpCommon):
             'odoo.addons.payment_sips.controllers.main.SipsController'
             '._verify_notification_signature'
         ):
-            self._make_http_post_request(url, data=self.NOTIFICATION_DATA)
+            self._make_http_post_request(url, data=self.notification_data)
         self.assertEqual(tx.state, 'done')
 
     @mute_logger('odoo.addons.payment_sips.controllers.main')
@@ -116,28 +116,28 @@ class SipsTest(SipsCommon, PaymentHttpCommon):
             'odoo.addons.payment.models.payment_transaction.PaymentTransaction'
             '._handle_notification_data'
         ):
-            self._make_http_post_request(url, data=self.NOTIFICATION_DATA)
+            self._make_http_post_request(url, data=self.notification_data)
             self.assertEqual(signature_check_mock.call_count, 1)
 
     def test_accept_notification_with_valid_signature(self):
         """ Test the verification of a notification with a valid signature. """
         tx = self.create_transaction('redirect')
         self._assert_does_not_raise(
-            Forbidden, SipsController._verify_notification_signature, self.NOTIFICATION_DATA, tx
+            Forbidden, SipsController._verify_notification_signature, self.notification_data, tx
         )
 
     @mute_logger('odoo.addons.payment_sips.controllers.main')
     def test_reject_notification_with_missing_signature(self):
         """ Test the verification of a notification with a missing signature. """
         tx = self.create_transaction('redirect')
-        payload = dict(self.NOTIFICATION_DATA, Seal=None)
+        payload = dict(self.notification_data, Seal=None)
         self.assertRaises(Forbidden, SipsController._verify_notification_signature, payload, tx)
 
     @mute_logger('odoo.addons.payment_sips.controllers.main')
     def test_reject_notification_with_invalid_signature(self):
         """ Test the verification of a notification with an invalid signature. """
         tx = self.create_transaction('redirect')
-        payload = dict(self.NOTIFICATION_DATA, Seal='dummy')
+        payload = dict(self.notification_data, Seal='dummy')
         self.assertRaises(Forbidden, SipsController._verify_notification_signature, payload, tx)
 
     def test_sips_neutralize(self):

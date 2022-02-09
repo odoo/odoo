@@ -64,7 +64,7 @@ class PayUMoneyTest(PayumoneyCommon, PaymentHttpCommon):
         self._assert_does_not_raise(
             Forbidden,
             PayUMoneyController._verify_notification_signature,
-            self.NOTIFICATION_DATA,
+            self.notification_data,
             tx,
         )
 
@@ -72,7 +72,7 @@ class PayUMoneyTest(PayumoneyCommon, PaymentHttpCommon):
     def test_reject_notification_with_missing_signature(self):
         """ Test the verification of a notification with a missing signature. """
         tx = self.create_transaction('redirect')
-        payload = dict(self.NOTIFICATION_DATA, hash=None)
+        payload = dict(self.notification_data, hash=None)
         self.assertRaises(
             Forbidden, PayUMoneyController._verify_notification_signature, payload, tx
         )
@@ -81,7 +81,7 @@ class PayUMoneyTest(PayumoneyCommon, PaymentHttpCommon):
     def test_reject_notification_with_invalid_signature(self):
         """ Test the verification of a notification with an invalid signature. """
         tx = self.create_transaction('redirect')
-        payload = dict(self.NOTIFICATION_DATA, hash='dummy')
+        payload = dict(self.notification_data, hash='dummy')
         self.assertRaises(
             Forbidden, PayUMoneyController._verify_notification_signature, payload, tx
         )

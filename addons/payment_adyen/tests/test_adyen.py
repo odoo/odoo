@@ -81,7 +81,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
             'odoo.addons.payment_adyen.controllers.main.AdyenController'
             '._verify_notification_signature'
         ):
-            self._make_json_request(url, data=self.WEBHOOK_NOTIFICATION_BATCH_DATA)
+            self._make_json_request(url, data=self.webhook_notification_batch_data)
         self.assertEqual(tx.state, 'done')
 
     @mute_logger('odoo.addons.payment_adyen.controllers.main')
@@ -96,7 +96,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
             'odoo.addons.payment.models.payment_transaction.PaymentTransaction'
             '._handle_notification_data'
         ):
-            self._make_json_request(url, data=self.WEBHOOK_NOTIFICATION_BATCH_DATA)
+            self._make_json_request(url, data=self.webhook_notification_batch_data)
             self.assertEqual(signature_check_mock.call_count, 1)
 
     def test_accept_webhook_notification_with_valid_signature(self):
@@ -105,21 +105,21 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
         self._assert_does_not_raise(
             Forbidden,
             AdyenController._verify_notification_signature,
-            self.WEBHOOK_NOTIFICATION_PAYLOAD,
+            self.webhook_notification_payload,
             tx,
         )
 
     @mute_logger('odoo.addons.payment_adyen.controllers.main')
     def test_reject_webhook_notification_with_missing_signature(self):
         """ Test the verification of a webhook notification with a missing signature. """
-        payload = dict(self.WEBHOOK_NOTIFICATION_PAYLOAD, additionalData={'hmacSignature': None})
+        payload = dict(self.webhook_notification_payload, additionalData={'hmacSignature': None})
         tx = self.create_transaction('direct')
         self.assertRaises(Forbidden, AdyenController._verify_notification_signature, payload, tx)
 
     @mute_logger('odoo.addons.payment_adyen.controllers.main')
     def test_reject_webhook_notification_with_invalid_signature(self):
         """ Test the verification of a webhook notification with an invalid signature. """
-        payload = dict(self.WEBHOOK_NOTIFICATION_PAYLOAD, additionalData={'hmacSignature': 'dummy'})
+        payload = dict(self.webhook_notification_payload, additionalData={'hmacSignature': 'dummy'})
         tx = self.create_transaction('direct')
         self.assertRaises(Forbidden, AdyenController._verify_notification_signature, payload, tx)
 
