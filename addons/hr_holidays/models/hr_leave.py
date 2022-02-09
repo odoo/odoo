@@ -76,7 +76,7 @@ class HolidaysRequest(models.Model):
         lt = LeaveType.search([('valid', '=', True)], limit=1)
 
         defaults['holiday_status_id'] = lt.id if lt else defaults.get('holiday_status_id')
-        defaults['state'] = 'confirm' if lt and lt.validation_type != 'no_validation' else 'draft'
+        defaults['state'] = 'confirm'
         return defaults
 
     def _default_employee(self):
