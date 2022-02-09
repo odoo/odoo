@@ -43,8 +43,8 @@
                         </t>
                     </t>
                 </div>
-                <div t-if="len(languages) > 1" class="d-inline-block pr-2 align-top">
-                    <t id="language_selector_call" t-call="portal.language_selector">
+                <div t-if="languages and len(languages) > 1" class="d-inline-block pr-2 align-top">
+                    <t id="language_selector_call" t-call="http_routing.language_selector">
                         <t t-set="_div_classes" t-value="(_div_classes or '') + ' dropup'"/>
                     </t>
                 </div>

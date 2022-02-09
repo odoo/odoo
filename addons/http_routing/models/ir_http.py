@@ -329,6 +329,8 @@ class IrHttp(models.AbstractModel):
 
     @classmethod
     def _get_frontend_langs(cls):
+        if request and request.is_frontend:
+            return [lang[0] for lang in filter(lambda l: l[3], request.env['res.lang'].get_available())]
         return [code for code, _ in request.env['res.lang'].get_installed()]
 
     @classmethod

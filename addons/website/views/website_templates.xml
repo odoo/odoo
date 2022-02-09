@@ -1950,7 +1950,7 @@
     </a>
 </template>
 
-<template id="language_selector" inherit_id="portal.language_selector">
+<template id="language_selector" inherit_id="http_routing.language_selector">
     <xpath expr="//t[@t-set='active_lang']" position="before">
         <t t-if="lang not in (lg[0] for lg in languages)">
             <t t-set="lang" t-value="website.default_lang_id.code"/>
@@ -2013,7 +2013,7 @@
 
 <template id="header_language_selector" inherit_id="website.placeholder_header_language_selector" name="Header Language Selector" active="False">
     <xpath expr="." position="inside">
-        <t id="header_language_selector_call" t-call="portal.language_selector">
+        <t id="header_language_selector_call" t-call="http_routing.language_selector">
             <t t-set="_div_classes" t-value="(_div_classes or '') + ' dropdown'"/>
         </t>
     </xpath>
