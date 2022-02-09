@@ -86,34 +86,50 @@ odoo.define('hr_holidays.dashboard.view_custo', function(require) {
         // Handlers
         //--------------------------------------------------------------------------
 
+        _getNewTimeOffContext: function() {
+            let date_from = moment().set({
+                'hour': 0,
+                'minute': 0,
+                'second': 0
+            });
+            date_from.subtract(this.getSession().getTZOffset(date_from), 'minutes');
+            date_from = date_from.locale('en').format('YYYY-MM-DD HH:mm:ss');
+            let date_to = moment().set({
+                'hour': 23,
+                'minute': 59,
+                'second': 59
+            });
+            date_to.subtract(this.getSession().getTZOffset(date_to), 'minutes');
+            date_to = date_to.locale('en').format('YYYY-MM-DD HH:mm:ss');
+            return {
+                'default_date_from': date_from,
+                'default_date_to': date_to,
+                'lang': this.context.lang
+            }
+        },
+
         /**
          * Action: create a new time off request
          *
          * @private
          */
         _onNewTimeOff: function () {
-            let self = this;
-
-            self._rpc({
+            this._rpc({
                 model: 'ir.ui.view',
                 method: 'get_view_id',
                 args: ['hr_holidays.hr_leave_view_form_dashboard_new_time_off'],
-            }).then(function(ids) {
-                self.timeOffDialog = new dialogs.FormViewDialog(self, {
+            }).then((ids) => {
+                this.timeOffDialog = new dialogs.FormViewDialog(this, {
                     res_model: "hr.leave",
                     view_id: ids,
-                    context: {
-                        'default_date_from': moment().locale('en').format('YYYY-MM-DD'),
-                        'default_date_to': moment().add(1, 'days').locale('en').format('YYYY-MM-DD'),
-                        'lang': self.context.lang,
-                    },
+                    context: this._getNewTimeOffContext(),
                     title: _t("New time off"),
                     disable_multiple_selection: true,
-                    on_saved: function() {
-                        self.reload();
+                    on_saved: () => {
+                        this.reload();
                     },
                 });
-                self.timeOffDialog.open();
+                this.timeOffDialog.open();
             });
         },
 
