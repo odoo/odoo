@@ -73,7 +73,7 @@
                         <field name="state" readonly="1" widget="statusbar"/>
                     </header>
                     <div class="alert alert-info text-center" role="alert"
-                        attrs="{'invisible': ['&amp;','&amp;','&amp;','&amp;','&amp;',('state', '!=', 'in_queue'),('sent', '=', 0),('canceled', '=', 0),('scheduled', '=', 0),('failed', '=', 0),('warning_message', '=', False)]}">
+                        attrs="{'invisible': ['&amp;','&amp;','&amp;','&amp;','&amp;',('state', 'not in', ['in_queue', 'done']),('sent', '=', 0),('canceled', '=', 0),('scheduled', '=', 0),('failed', '=', 0),('warning_message', '=', False)]}">
                         <div class="o_mails_canceled" attrs="{'invisible': [('canceled', '=', 0)]}">
                             <button class="btn-link py-0"
                                     name="action_view_traces_canceled"
@@ -103,6 +103,9 @@
                                     <span name="sent">emails have been sent.</span>
                                 </strong>
                             </button>
+                            <strong class="d-block" attrs="{'invisible': [('ab_testing_enabled', '=', False), ('sent', '!=', 0)]}">
+                                <span name="ab_test_text">There wasn't enough recipients given to test this mailing in the A/B testing campaign.</span>
+                            </strong>
                         </div>
                         <div class="o_mails_failed" attrs="{'invisible': ['|', ('state', '!=', 'done'), ('failed', '=', 0)]}">
                             <button class="btn-link py-0"

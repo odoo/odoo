@@ -751,6 +751,8 @@ class MassMailing(models.Model):
         final_mailing = self.copy({
             'ab_testing_pc': 100,
         })
+        # Add suffix on name to show it's the final mailing
+        final_mailing.name = "%s %s" % (self.subject, _('(final)'))
         final_mailing.action_launch()
         action = self.env['ir.actions.act_window']._for_xml_id('mass_mailing.action_ab_testing_open_winner_mailing')
         action['res_id'] = final_mailing.id
