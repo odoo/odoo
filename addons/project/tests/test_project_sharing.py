@@ -141,6 +141,7 @@ class TestProjectSharing(TestProjectSharingCommon):
             3) Give the 'edit' access mode to a portal user in a project and try to create task with this user.
             3.1) Try to change the project of the new task with this user.
             3.2) Create a sub-task
+            3.3) Create a second sub-task
         """
         # 1) Give the 'read' access mode to a portal user in a project and try to create task with this user.
         with self.assertRaises(AccessError, msg="Should not accept the portal user create a task in the project when he has not the edit access right."):
@@ -189,6 +190,12 @@ class TestProjectSharing(TestProjectSharingCommon):
             .with_user(self.user_portal) \
             .create({'name': 'Test'})
         self.assertFalse(task2.portal_user_names, 'the portal user should not be assigned when the portal user creates a task into the project shared.')
+
+        # 3.3) Create a second sub-task
+        with self.get_project_sharing_form_view(task, self.user_portal) as form:
+            with form.child_ids.new() as subtask_form:
+                subtask_form.name = 'Test Subtask'
+        self.assertEqual(len(task.child_ids), 2, 'Check 2 subtasks has correctly been created by the user portal.')
 
     def test_portal_user_cannot_see_all_assignees(self):
         """ Test when the portal sees a task he cannot see all the assignees.
