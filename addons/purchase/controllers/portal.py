@@ -19,10 +19,18 @@ class CustomerPortal(CustomerPortal):
     def _prepare_home_portal_values(self, counters):
         values = super()._prepare_home_portal_values(counters)
         if 'purchase_count' in counters:
-            values['purchase_count'] = request.env['purchase.order'].search_count([
-                ('state', 'in', ['purchase', 'done', 'cancel'])
-            ]) if request.env['purchase.order'].check_access_rights('read', raise_exception=False) else 0
+            values['purchase_count'] = request.env['purchase.order'].search_count(
+                self._prepare_purchase_orders_domain()
+            ) if request.env['purchase.order'].check_access_rights('read', raise_exception=False) else 0
         return values
+
+    def _prepare_purchase_orders_domain(self):
+        return [
+            ('state', 'in', ['purchase', 'done', 'cancel'])
+        ]
+
+    def _prepare_purchase_order_base_domain(self):
+        return []
 
     def _purchase_order_get_page_view_values(self, order, access_token, **kwargs):
         #
@@ -42,7 +50,7 @@ class CustomerPortal(CustomerPortal):
         values = self._prepare_portal_layout_values()
         PurchaseOrder = request.env['purchase.order']
 
-        domain = []
+        domain = self._prepare_purchase_order_base_domain()
 
         if date_begin and date_end:
             domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
