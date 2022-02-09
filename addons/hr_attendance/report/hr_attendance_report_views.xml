@@ -20,7 +20,7 @@
         <field name="name">hr.attendance.report.view.pivot</field>
         <field name="model">hr.attendance.report</field>
         <field name="arch" type="xml">
-            <pivot string="Attendance" disable_linking="1">
+            <pivot string="Attendance" js_class="attendance_report_pivot">
                 <field name="employee_id" type="row"/>
                 <field name="check_in" type="col"/>
                 <field name="worked_hours" type="measure"/>
