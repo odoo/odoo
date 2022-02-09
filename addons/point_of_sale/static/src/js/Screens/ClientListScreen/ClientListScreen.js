@@ -5,6 +5,7 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
     const PosComponent = require('point_of_sale.PosComponent');
     const Registries = require('point_of_sale.Registries');
     const { useListener } = require('web.custom_hooks');
+    const { isRpcError } = require('point_of_sale.utils');
 
     /**
      * Render this screen using `showTempScreen` to select client.
@@ -160,7 +161,7 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
                 this.state.detailIsShown = false;
                 this.render();
             } catch (error) {
-                if (error.message.code < 0) {
+                if (isRpcError(error) && error.message.code < 0) {
                     await this.showPopup('OfflineErrorPopup', {
                         title: this.env._t('Offline'),
                         body: this.env._t('Unable to save changes.'),

@@ -199,7 +199,8 @@ class AccountMove(models.Model):
 
         to_review = self.filtered(
             lambda x: x.journal_id.type == 'sale' and x.l10n_latam_document_type_id and x.l10n_latam_document_number and
-            (x.l10n_latam_manual_document_number or not x.highest_name))
+            (x.l10n_latam_manual_document_number or not x.highest_name)
+            and x.l10n_latam_document_type_id.country_id.code == 'AR')
         for rec in to_review:
             number = rec.l10n_latam_document_type_id._format_document_number(rec.l10n_latam_document_number)
             current_pos = int(number.split("-")[0])
@@ -247,7 +248,7 @@ class AccountMove(models.Model):
         sign = -1 if (company_currency and self.is_inbound()) else 1
 
         # if we are on a document that works invoice and refund and it's a refund, we need to export it as negative
-        sign = -sign if self.type in ('out_refund', 'in_refund') and\
+        sign = -sign if self.move_type in ('out_refund', 'in_refund') and\
             self.l10n_latam_document_type_id.code in self._get_l10n_ar_codes_used_for_inv_and_ref() else sign
 
         tax_lines = self.line_ids.filtered('tax_line_id')
@@ -283,7 +284,7 @@ class AccountMove(models.Model):
         sign = -1 if (company_currency and self.is_inbound()) else 1
 
         # if we are on a document that works invoice and refund and it's a refund, we need to export it as negative
-        sign = -sign if self.type in ('out_refund', 'in_refund') and\
+        sign = -sign if self.move_type in ('out_refund', 'in_refund') and\
             self.l10n_latam_document_type_id.code in self._get_l10n_ar_codes_used_for_inv_and_ref() else sign
 
         res = []

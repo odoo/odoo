@@ -45,7 +45,7 @@ class CouponProgram(models.Model):
             message = {'error': _('The promotional offer is already applied on this order')}
         elif not self.active:
             message = {'error': _('Promo code is invalid')}
-        elif self.rule_date_from and self.rule_date_from > order.date_order or self.rule_date_to and order.date_order > self.rule_date_to:
+        elif self.rule_date_from and self.rule_date_from > fields.Datetime.now() or self.rule_date_to and fields.Datetime.now() > self.rule_date_to:
             message = {'error': _('Promo code is expired')}
         elif order.promo_code and self.promo_code_usage == 'code_needed':
             message = {'error': _('Promotionals codes are not cumulative.')}
@@ -92,9 +92,9 @@ class CouponProgram(models.Model):
     @api.model
     def _filter_on_validity_dates(self, order):
         return self.filtered(lambda program:
-            (not program.rule_date_from or program.rule_date_from <= order.date_order)
+            (not program.rule_date_from or program.rule_date_from <= fields.Datetime.now())
             and
-            (not program.rule_date_to or program.rule_date_to >= order.date_order)
+            (not program.rule_date_to or program.rule_date_to >= fields.Datetime.now())
         )
 
     @api.model
@@ -103,7 +103,12 @@ class CouponProgram(models.Model):
         return self.filtered(lambda program: program.promo_code_usage == 'code_needed' and program.promo_code != order.promo_code)
 
     def _filter_unexpired_programs(self, order):
-        return self.filtered(lambda program: program.maximum_use_number == 0 or program.order_count < program.maximum_use_number)
+        return self.filtered(
+            lambda program: program.maximum_use_number == 0
+            or program.order_count < program.maximum_use_number
+            or program
+            in (order.code_promo_program_id + order.no_code_promo_program_ids)
+        )
 
     def _filter_programs_on_partners(self, order):
         return self.filtered(lambda program: program._is_valid_partner(order.partner_id))
@@ -121,7 +126,7 @@ class CouponProgram(models.Model):
             products_qties[line.product_id] += line.product_uom_qty
         valid_program_ids = list()
         for program in self:
-            if not program.rule_products_domain:
+            if not program.rule_products_domain or program.rule_products_domain == "[]":
                 valid_program_ids.append(program.id)
                 continue
             valid_products = program._get_valid_products(products)
@@ -142,14 +147,17 @@ class CouponProgram(models.Model):
         Returns the programs when the reward is actually in the order lines
         """
         programs = self.env['coupon.program']
+        order_products = order.order_line.product_id
         for program in self:
-            if program.reward_type == 'product' and \
-               not order.order_line.filtered(lambda line: line.product_id == program.reward_product_id):
+            if program.reward_type == 'product' and program.reward_product_id not in order_products:
                 continue
-            elif program.reward_type == 'discount' and program.discount_apply_on == 'specific_products' and \
-               not order.order_line.filtered(lambda line: line.product_id in program.discount_specific_product_ids):
+            elif (
+                program.reward_type == 'discount'
+                and program.discount_apply_on == 'specific_products'
+                and not any(discount_product in order_products for discount_product in program.discount_specific_product_ids)
+            ):
                 continue
-            programs |= program
+            programs += program
         return programs
 
     @api.model

@@ -582,3 +582,11 @@ class TestSaleOrder(TestSaleCommon):
         # (541,26 / 1,15) * ,98 * 38 = 17527,410782609 ~= 17527.41
         self.assertEqual(line.price_subtotal, 17527.41)
         self.assertEqual(line.untaxed_amount_to_invoice, line.price_subtotal)
+
+    def test_sol_name_search(self):
+        # Shouldn't raise
+        self.env['sale.order']._search([('order_line', 'ilike', 'acoustic')])
+
+        name_search_data = self.env['sale.order.line'].name_search(name=self.sale_order.name)
+        sol_ids_found = dict(name_search_data).keys()
+        self.assertEqual(list(sol_ids_found), self.sale_order.order_line.ids)
