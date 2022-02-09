@@ -183,6 +183,15 @@ babel.core.LOCALE_ALIASES['nb'] = 'nb_NO'
 
 ...
 
+# The @route arguments to propagate from the decorated method to the
+# routing rule.
+ROUTING_KEYS = {
+    'defaults', 'subdomain', 'build_only', 'strict_slashes', 'redirect_to',
+    'alias', 'host', 'methods',
+}
+
+...
+
 
 # The cache duration for static content from the filesystem, one week.
 STATIC_CACHE = 60 * 60 * 24 * 7
@@ -287,14 +296,110 @@ class Controller:
     """
     Class mixin that provide module controllers the ability to serve
     content over http and to be extended in child modules.
+
+    Each class :ref:`inheriting <python:tut-inheritance>` from
+    :class:`~odoo.http.Controller` can use the :func:`~odoo.http.route`:
+    decorator to route matching incoming web requests to decorated
+    methods.
+
+    Like models, controllers can be extended by other modules. The
+    extension mechanism is different because controllers can work in a
+    database-free environment and therefore cannot use
+    :class:~odoo.api.Registry:.
+
+    To *override* a controller, :ref:`inherit <python:tut-inheritance>`
+    from its class, override relevant methods and re-expose them with
+    :func:`~odoo.http.route`:. Please note that the decorators of all
+    methods are combined, if the overriding method’s decorator has no
+    argument all previous ones will be kept, any provided argument will
+    override previously defined ones.
+
+    .. code-block:
+
+        class GreetingController(odoo.http.Controller):
+            @route('/greet', type='http', auth='public')
+            def greeting(self):
+                return 'Hello'
+
+        class UserGreetingController(GreetingController):
+            @route(auth='user')  # override auth, keep path and type
+            def greeting(self):
+                return super().handler()
     """
+    children_classes = collections.defaultdict(list)  # indexed by module
+
+    @classmethod
+    def __init_subclass__(cls):
+        super().__init_subclass__()
+        if Controller in cls.__bases__:
+            path = cls.__module__.split('.')
+            module = path[2] if path[:2] == ['odoo', 'addons'] else ''
+            Controller.children_classes[module].append(cls)
 
 
 def route(route=None, **routing):
     """
     Decorate a controller method in order to route incoming requests
     matching the given URL and options to the decorated method.
+
+    .. warning::
+        It is mandatory to re-decorate any method that is overridden in
+        controller extensions but the arguments can be omitted. See
+        :class:`~odoo.http.Controller` for more details.
+
+    :param Union[str, Iterable[str]] route: The paths that the decorated
+        method is serving. Incoming HTTP request paths matching this
+        route will be routed to this decorated method. See `werkzeug
+        routing documentation <http://werkzeug.pocoo.org/docs/routing/>`_
+        for the format of route expressions.
+    :param str type: The type of request, either ``'json'`` or
+        ``'http'``. It describes where to find the request parameters
+        and how to serialize the response.
+    :param str auth: The authentication method, one of the following:
+         * ``'user'``: The user must be authenticated and the current
+           request will be executed using the rights of the user.
+         * ``'public'``: The user may or may not be authenticated. If he
+           isn't, the current request will be executed using the shared
+           Public user.
+         * ``'none'``: The method is always active, even if there is no
+           database. Mainly used by the framework and authentication
+           modules. There request code will not have any facilities to
+           access the current user.
+    :param Iterable[str] methods: A list of http methods (verbs) this
+        route applies to. If not specified, all methods are allowed.
+    :param str cors: The Access-Control-Allow-Origin cors directive value.
+    :param bool csrf: Whether CSRF protection should be enabled for the
+        route. Enabled by default for ``'http'``-type requests, disabled
+        by default for ``'json'``-type requests. See
+        :ref:`CSRF Protection <csrf>` for more.
     """
+    def decorator(endpoint):
+        fname = f"<function {endpoint.__module__}.{endpoint.__name__}>"
+
+        # Sanitize the routing
+        assert routing.get('type', 'http') in _dispatchers.keys()
+        if route:
+            routing['routes'] = route if isinstance(route, list) else [route]
+        wrong = routing.pop('method', None)
+        if wrong is not None:
+            _logger.warning("%s defined with invalid routing parameter 'method', assuming 'methods'", fname)
+            routing['methods'] = wrong
+
+        @functools.wraps(endpoint)
+        def route_wrapper(self, *args, **params):
+            params_ok = filter_kwargs(endpoint, params)
+            params_ko = set(params) - set(params_ok)
+            if params_ko:
+                _logger.warning("%s called ignoring args %s", fname, params_ko)
+
+            result = endpoint(self, *args, **params_ok)
+            ...
+            return result
+
+        route_wrapper.original_routing = routing
+        route_wrapper.original_endpoint = endpoint
+        return route_wrapper
+    return decorator
 
 def _generate_routing_rules(modules, nodb_only, converters=None):
     """
@@ -304,7 +409,98 @@ def _generate_routing_rules(modules, nodb_only, converters=None):
     arguments of said method with the @route arguments of the method it
     overrides.
     """
-    ...
+    def is_valid(cls):
+        """ Determine if the class is defined in an addon. """
+        path = cls.__module__.split('.')
+        return path[:2] == ['odoo', 'addons'] and path[2] in modules
+
+    def get_leaf_classes(cls):
+        """
+        Find the classes that have no child and that have ``cls`` as
+        ancestor.
+        """
+        result = []
+        for subcls in cls.__subclasses__():
+            if is_valid(subcls):
+                result.extend(get_leaf_classes(subcls))
+        if not result and is_valid(cls):
+            result.append(cls)
+        return result
+
+    def build_controllers():
+        """
+        Create dummy controllers that inherit only from the controllers
+        defined at the given ``modules`` (often system wide modules or
+        installed modules). Modules in this context are Odoo addons.
+        """
+        highest_controllers = []
+        for module in modules:
+            highest_controllers.extend(Controller.children_classes.get(module, []))
+
+        for top_ctrl in highest_controllers:
+            leaf_controllers = list(unique(get_leaf_classes(top_ctrl)))
+            name = '{} (extended by {})'.format(
+                top_ctrl.__name__,
+                ', '.join(bot_ctrl.__name__ for bot_ctrl in leaf_controllers),
+            )
+            Ctrl = type(name, tuple(reversed(leaf_controllers)), {})
+            yield Ctrl()
+
+    for ctrl in build_controllers():
+        for method_name, method in inspect.getmembers(ctrl, inspect.ismethod):
+
+            # Skip this method if it is not @route decorated anywhere in
+            # the hierarchy
+            def is_method_a_route(cls):
+                return resolve_attr(cls, f'{method_name}.original_routing', None) is not None
+            if not any(map(is_method_a_route, type(ctrl).mro())):
+                continue
+
+            merged_routing = {
+                # 'type': 'http',  # set below
+                'auth': 'user',
+                'methods': None,
+                'routes': [],
+                'readonly': False,
+            }
+
+            for cls in unique(reversed(type(ctrl).mro())):  # ancestors first
+                submethod = getattr(cls, method_name, None)
+                if submethod is None:
+                    continue
+
+                if not hasattr(submethod, 'original_routing'):
+                    _logger.warning("The endpoint %s is not decorated by @route(), decorating it myself.", f'{cls.__module__}.{cls.__name__}.{method_name}')
+                    submethod = route()(submethod)
+
+                # Ensure "type" is defined on each method's own routing,
+                # also ensure overrides don't change the routing type.
+                default_type = submethod.original_routing.get('type', 'http')
+                routing_type = merged_routing.setdefault('type', default_type)
+                if submethod.original_routing.get('type') not in (None, routing_type):
+                    _logger.warning("The endpoint %s changes the route type, using the original type: %r.", f'{cls.__module__}.{cls.__name__}.{method_name}', routing_type)
+                submethod.original_routing['type'] = routing_type
+
+                merged_routing.update(submethod.original_routing)
+
+            if not merged_routing['routes']:
+                _logger.warning("%s is a controller endpoint without any route, skipping.", f'{cls.__module__}.{cls.__name__}.{method_name}')
+                continue
+
+            if nodb_only and merged_routing['auth'] != "none":
+                continue
+
+            for url in merged_routing['routes']:
+                # duplicates the function (partial) with a copy of the
+                # original __dict__ (update_wrapper) to keep a reference
+                # to `original_routing` and `original_endpoint`, assign
+                # the merged routing ONLY on the duplicated function to
+                # ensure method's immutability.
+                endpoint = functools.partial(method)
+                functools.update_wrapper(endpoint, method)
+                endpoint.routing = merged_routing
+
+                yield (url, endpoint)
 
 
 # =========================================================
@@ -441,6 +637,24 @@ class Application:
                         and os.path.isdir(static_path)):
                     mod2path[module] = static_path
         return mod2path
+
+    @lazy_property
+    def nodb_routing_map(self):
+        nodb_routing_map = werkzeug.routing.Map(strict_slashes=False, converters=None)
+        for url, endpoint in _generate_routing_rules([''] + odoo.conf.server_wide_modules, nodb_only=True):
+            routing = submap(endpoint.routing, ROUTING_KEYS)
+            if routing['methods'] is not None and 'OPTIONS' not in routing['methods']:
+                routing['methods'] = routing['methods'] + ['OPTIONS']
+            rule = werkzeug.routing.Rule(url, endpoint=endpoint, **routing)
+            rule.merge_slashes = False
+            nodb_routing_map.add(rule)
+
+        return nodb_routing_map
+
+    def get_db_router(self, db):
+        if not db:
+            return self.nodb_routing_map
+        return request.registry['ir.http'].routing_map()
 
     def __call__(self, environ, start_response):
         """
