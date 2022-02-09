@@ -262,6 +262,46 @@ class TestVariants(common.TestProductCommon):
         self.assertTrue(variant_1.active)
         self.assertTrue(template.active)
 
+    def test_template_barcode(self):
+        template = self.env['product.template'].create({
+            'name': 'template',
+            'barcode': 'test',
+        })
+        self.assertEqual(len(template.product_variant_ids), 1)
+        self.assertEqual(template.barcode, 'test')
+
+        template.product_variant_ids.action_archive()
+        self.assertFalse(template.active)
+        template.invalidate_cache(['barcode'])
+        self.assertEqual(template.barcode, 'test')
+        template.product_variant_ids.action_unarchive()
+        template.action_unarchive()
+
+        template.write({
+            'attribute_line_ids': [(0, False, {
+                'attribute_id': self.size_attr.id,
+                'value_ids': [
+                    (4, self.size_attr.value_ids[0].id, self.size_attr_value_s),
+                    (4, self.size_attr.value_ids[1].id, self.size_attr_value_m)
+                ],
+            })]
+        })
+        self.assertFalse(template.barcode)  # 2 active variants --> no barcode on template
+
+        variant_1 = template.product_variant_ids[0]
+        variant_2 = template.product_variant_ids[1]
+
+        variant_1.barcode = 'v1_barcode'
+        variant_2.barcode = 'v2_barcode'
+
+        variant_1.action_archive()
+        template.invalidate_cache(['barcode'])
+        self.assertEqual(template.barcode, variant_2.barcode)  # 1 active variant --> barcode on template
+
+        variant_1.action_unarchive()
+        template.invalidate_cache(['barcode'])
+        self.assertFalse(template.barcode)  # 2 active variants --> no barcode on template
+
     def test_archive_all_variants(self):
         template = self.env['product.template'].create({
             'name': 'template'
