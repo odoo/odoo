@@ -35,6 +35,7 @@ actions(Check in/Check out) performed by them.
     'application': True,
     'assets': {
         'web.assets_backend': [
+            'hr_attendance/static/src/js/attendance_report_pivot_view.js',
             'hr_attendance/static/src/js/employee_kanban_view_handler.js',
             'hr_attendance/static/src/js/greeting_message.js',
             'hr_attendance/static/src/js/kiosk_mode.js',
