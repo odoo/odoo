@@ -891,6 +891,11 @@ class HolidaysRequest(models.Model):
             if any(hol.date_from.date() < fields.Date.today() and hol.employee_id.leave_manager_id != self.env.user for hol in self):
                 raise UserError(_('You must have manager rights to modify/validate a time off that already begun'))
 
+        # Unlink existing resource.calendar.leaves for validated time off
+        if 'state' in values and values['state'] != 'validate':
+            validated_leaves = self.filtered(lambda l: l.state == 'validate')
+            validated_leaves._remove_resource_leave()
+
         employee_id = values.get('employee_id', False)
         if not self.env.context.get('leave_fast_create'):
             if values.get('state'):
@@ -910,6 +915,7 @@ class HolidaysRequest(models.Model):
             for holiday in self:
                 if employee_id:
                     holiday.add_follower(employee_id)
+
         return result
 
     @api.ondelete(at_uninstall=False)
@@ -1228,7 +1234,6 @@ class HolidaysRequest(models.Model):
                     body=_('Your %(leave_type)s planned on %(date)s has been refused', leave_type=holiday.holiday_status_id.display_name, date=holiday.date_from),
                     partner_ids=holiday.employee_id.user_id.partner_id.ids)
 
-        self._remove_resource_leave()
         self.activity_update()
         return True
 
