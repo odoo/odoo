@@ -695,7 +695,8 @@ class Meeting(models.Model):
                 res_id = values.get('res_id', defaults.get('res_id'))
                 user_id = values.get('user_id', defaults.get('user_id'))
                 if not defaults.get('activity_ids') and res_model_id and res_id:
-                    if hasattr(self.env[self.env['ir.model'].sudo().browse(res_model_id).model], 'activity_ids'):
+                    res_model_name = self.env['ir.model'].sudo().browse(res_model_id).model
+                    if res_model_name in self.env and hasattr(self.env[res_model_name], 'activity_ids'):
                         meeting_activity_type = self.env['mail.activity.type'].search([('category', '=', 'meeting')], limit=1)
                         if meeting_activity_type:
                             activity_vals = {
