@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from addons.account.tests.account_test_savepoint import AccountTestInvoicingCommon
 from odoo import fields
-from odoo.tests import tagged
+from odoo.tests import tagged, Form
 
 
 @tagged('post_install', '-at_install')
@@ -25,8 +25,6 @@ class PortugalQRCodeTest(AccountTestInvoicingCommon):
             'phone': '+47 11 11 11 11',
             'country_id': cls.env.ref('base.pt').id
         })
-
-        cls.product = cls.env['product.product'].create({'name': 'Product :-)', 'standard_price': 100.0, 'lst_price': 100.0})
 
         cls.partner_a['country_id'] = cls.env.ref('base.be').id
         
@@ -75,6 +73,7 @@ class PortugalQRCodeTest(AccountTestInvoicingCommon):
         })
 
     def test_pt_qr_code_multiple_taxes(self):
+        """Ensures that all possible taxes are correctly computed and exported"""
         self.invoice.preview_invoice()  # Triggers the _compute_qr_code_str method
         self.assertEqual(self.invoice.l10n_pt_qr_code_str,
                          'A:123456789*B:999999990*C:BE*D:FT*E:N*F:20220101*G:out_invoice INV/2022/0001*H:0'
@@ -82,9 +81,28 @@ class PortugalQRCodeTest(AccountTestInvoicingCommon):
                          '*N:88.00*O:688.00*Q:TODO*R:TODO')
 
     def test_pt_qr_code_different_currency(self):
-        pass
+        """Ensures that any foreign currency is correctly converted to EUR"""
+        self.env['res.currency.rate'].create({
+            'name': '2022-01-01',
+            'rate': 1.25,
+            'currency_id': self.env.ref('base.USD').id,
+            'company_id': self.company_data['company'].id,
+        })
+
+        move_form = Form(self.invoice)
+        move_form.date = '2022-01-01'
+        move_form.currency_id = self.env.ref('base.USD')
+        move_form.save()
+
+        self.invoice.preview_invoice()
+        self.assertEqual(self.invoice.l10n_pt_qr_code_str,
+                         'A:123456789*B:999999990*C:BE*D:FT*E:N*F:20220101*G:out_invoice INV/2022/0001*H:0'
+                         '*I1:PT*I2:80.00*I3:80.00*I4:4.80*I5:80.00*I6:10.40*I7:240.00*I8:55.20'
+                         '*N:70.40*O:550.40*Q:TODO*R:TODO')
+
 
     def test_pt_qr_code_credit_note(self):
+        """Test different types of moves, e.g. a credit note"""
         move_reversal = self.env['account.move.reversal'].with_context(active_model='account.move', active_ids=self.invoice.ids).create({
             'date': fields.Date.from_string('2022-01-01'),
             'reason': 'no reason',
