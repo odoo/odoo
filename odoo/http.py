@@ -183,6 +183,27 @@ babel.core.LOCALE_ALIASES['nb'] = 'nb_NO'
 
 ...
 
+# The default lang to use when the browser doesn't specify it
+DEFAULT_LANG = 'en_US'
+
+# The dictionnary to initialise a new session with.
+DEFAULT_SESSION = {
+    'context': {
+        #'lang': request.default_lang()  # must be set at runtime
+    },
+    'db': None,
+    'debug': '',
+    'login': None,
+    'uid': None,
+    'session_token': None,
+    # profiling
+    'profile_session': None,
+    'profile_collectors': None,
+    'profile_params': None,
+}
+
+...
+
 # The @route arguments to propagate from the decorated method to the
 # routing rule.
 ROUTING_KEYS = {
@@ -192,6 +213,9 @@ ROUTING_KEYS = {
 
 ...
 
+# The duration of a user session before it is considered expired,
+# three months.
+SESSION_LIFETIME = 60 * 60 * 24 * 90
 
 # The cache duration for static content from the filesystem, one week.
 STATIC_CACHE = 60 * 60 * 24 * 7
@@ -205,6 +229,58 @@ STATIC_CACHE_LONG = 60 * 60 * 24 * 365
 # =========================================================
 
 ...
+
+def db_list(force=False, host=None):
+    """
+    Get the list of available databases.
+
+    :param bool force: See :func:`~odoo.service.db.list_dbs`:
+    :param host: The Host used to replace %h and %d in the dbfilters
+        regexp. Taken from the current request when omitted.
+    :returns: the list of available databases
+    :rtype: List[str]
+    """
+    dbs = odoo.service.db.list_dbs(force)
+    return db_filter(dbs, host)
+
+def db_filter(dbs, host=None):
+    """
+    Return the subset of ``dbs`` that match the dbfilter or the dbname
+    server configuration. In case neither are configured, return ``dbs``
+    as-is.
+
+    :param Iterable[str] dbs: The list of database names to filter.
+    :param host: The Host used to replace %h and %d in the dbfilters
+        regexp. Taken from the current request when omitted.
+    :returns: The original list filtered.
+    :rtype: List[str]
+    """
+
+    if config['dbfilter']:
+        #        host
+        #     -----------
+        # www.example.com:80
+        #     -------
+        #     domain
+        if host is None:
+            host = request.httprequest.environ.get('HTTP_HOST', '')
+        host = host.partition(':')[0]
+        if host.startswith('www.'):
+            host = host[4:]
+        domain = host.partition('.')[0]
+
+        dbfilter_re = re.compile(
+            config["dbfilter"].replace("%h", re.escape(host))
+                              .replace("%d", re.escape(domain)))
+        return [db for db in dbs if dbfilter_re.match(db)]
+
+    if config['db_name']:
+        # In case --db-filter is not provided and --database is passed, Odoo will
+        # use the value of --database as a comma separated list of exposed databases.
+        exposed_dbs = {db.strip() for db in config['db_name'].split(',')}
+        return sorted(exposed_dbs.intersection(dbs))
+
+    return list(dbs)
 
 def send_file(filepath_or_fp, filename=None, mimetype=None, mtime=None,
               as_attachment=False, cache_timeout=STATIC_CACHE):
@@ -509,10 +585,74 @@ def _generate_routing_rules(modules, nodb_only, converters=None):
 
 class FilesystemSessionStore(sessions.FilesystemSessionStore):
     """ Place where to load and save session objects. """
+    def get_session_filename(self, sid):
+        # scatter sessions across 256 directories
+        sha_dir = sid[:2]
+        dirname = os.path.join(self.path, sha_dir)
+        session_path = os.path.join(dirname, sid)
+        return session_path
+
+    def save(self, session):
+        session_path = self.get_session_filename(session.sid)
+        dirname = os.path.dirname(session_path)
+        if not os.path.isdir(dirname):
+            with contextlib.suppress(OSError):
+                os.mkdir(dirname, 0o0755)
+        super().save(session)
+
+    def get(self, sid):
+        # retro compatibility
+        old_path = super().get_session_filename(sid)
+        session_path = self.get_session_filename(sid)
+        if os.path.isfile(old_path) and not os.path.isfile(session_path):
+            dirname = os.path.dirname(session_path)
+            if not os.path.isdir(dirname):
+                with contextlib.suppress(OSError):
+                    os.mkdir(dirname, 0o0755)
+            with contextlib.suppress(OSError):
+                os.rename(old_path, session_path)
+        return super().get(sid)
+
+    def vacuum(self):
+        threshold = time.time() - SESSION_LIFETIME
+        for fname in glob.iglob(os.path.join(root.session_store.path, '*', '*')):
+            path = os.path.join(root.session_store.path, fname)
+            with contextlib.suppress(OSError):
+                if os.path.getmtime(path) < threshold:
+                    os.unlink(path)
 
 
-class Session(sessions.Session):
+class Session(dict):
     """ Structure containing data persisted across requests. """
+    __slots__ = ('can_save', 'is_explicit', 'json_data', 'new', 'should_rotate', 'sid')
+
+    def __init__(self, data, sid, new=False):
+        super().__init__(data)
+        object.__setattr__(self, 'can_save', True)
+        object.__setattr__(self, 'is_explicit', False)
+        object.__setattr__(self, 'json_data', json.dumps(data))
+        object.__setattr__(self, 'new', new)
+        object.__setattr__(self, 'should_rotate', False)
+        object.__setattr__(self, 'sid', sid)
+
+    def __getattr__(self, attr):
+        return self.get(attr, None)
+
+    def __setattr__(self, key, val):
+        if key in self.__slots__:
+            object.__setattr__(self, key, val)
+        else:
+            self[key] = val
+
+    ...
+
+    def logout(self, keep_db=False):
+        db = self.db if keep_db else DEFAULT_SESSION['db']  # None
+        debug = self.debug
+        self.clear()
+        self.update(DEFAULT_SESSION, db=db, debug=debug)
+        self.context['lang'] = request.default_lang() if request else DEFAULT_LANG
+        self.should_rotate = True
 
 
 # =========================================================
@@ -552,7 +692,56 @@ class Request:
         self.httprequest = httprequest
         ...
 
-    ...
+
+        self.session = self._get_session()
+        self.db = self._get_dbname()
+        self.registry = None
+        self.env = None
+
+        if self.session.db != self.db:
+            if self.session.db:
+                _logger.warning("Logged into database %r, but dbfilter rejects it; logging session out.", self.session.db)
+                self.session.logout(keep_db=False)
+            self.session.db = self.db
+
+    def _get_session(self):
+        # The session is explicit when it comes from the query-string or
+        # the header. It is implicit when it comes from the cookie or
+        # that is does not exist yet. The explicit session should be
+        # used in this request only, it should not be saved on the
+        # response cookie.
+        sid = (self.httprequest.args.get('session_id')
+            or self.httprequest.headers.get("X-Openerp-Session-Id"))
+        if sid:
+            is_explicit = True
+        else:
+            sid = self.httprequest.cookies.get('session_id')
+            is_explicit = False
+
+        if sid is None:
+            session = root.session_store.new()
+        else:
+            session = root.session_store.get(sid)
+
+        session.is_explicit = is_explicit
+        for key, val in DEFAULT_SESSION.items():
+            session.setdefault(key, val)
+        if not session.context.get('lang'):
+            session.context['lang'] = self.default_lang()
+
+        return session
+
+    def _get_dbname(self):
+        if self.session.db and db_filter([self.session.db], host=self.httprequest.environ['HTTP_HOST']):
+            return self.session.db
+
+        # monodb
+        all_dbs = db_list(force=True, host=self.httprequest.environ['HTTP_HOST'])
+        if len(all_dbs) == 1:
+            return all_dbs[0]
+
+        # nodb
+        return None
 
     # =====================================================
     # Getters and setters
@@ -562,6 +751,23 @@ class Request:
     # =====================================================
     # Helpers
     # =====================================================
+    ...
+
+    def default_lang(self):
+        lang = self.httprequest.accept_languages.best
+        if not lang:
+            return DEFAULT_LANG
+
+        try:
+            code, territory, _, _ = babel.core.parse_locale(lang, sep='-')
+            if territory:
+                lang = f'{code}_{territory}'
+            else:
+                lang = babel.core.LOCALE_ALIASES[code]
+            return lang
+        except (ValueError, KeyError):
+            return DEFAULT_LANG
+
     ...
 
     # =====================================================
@@ -651,6 +857,12 @@ class Application:
 
         return nodb_routing_map
 
+    @lazy_property
+    def session_store(self):
+        path = odoo.tools.config.session_dir
+        _logger.debug('HTTP sessions stored in: %s', path)
+        return FilesystemSessionStore(path, session_class=Session, renew_missing=True)
+
     def get_db_router(self, db):
         if not db:
             return self.nodb_routing_map
@@ -682,7 +894,12 @@ class Application:
                     response = request._serve_static()
                     return response(environ, start_response)
 
-            ...
+            if request.db:
+                ...
+                response = request._serve_db()
+            else:
+                response = request._serve_nodb()
+            return response(environ, start_response)
 
         except Exception as exc:
             ...
