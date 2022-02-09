@@ -3407,8 +3407,6 @@ class One2many(_RelationalMulti):
     :param bool auto_join: whether JOINs are generated upon search through that
         field (default: ``False``)
 
-    :param int limit: optional limit to use upon read
-
     The attributes ``comodel_name`` and ``inverse_name`` are mandatory except in
     the case of related fields or field extensions.
     """
@@ -3416,7 +3414,6 @@ class One2many(_RelationalMulti):
 
     inverse_name = None                 # name of the inverse field
     auto_join = False                   # whether joins are generated upon search
-    limit = None                        # optional limit to use upon read
     copy = False                        # o2m are not copied by default
 
     def __init__(self, comodel_name=Default, inverse_name=Default, string=Default, **kwargs):
@@ -3473,7 +3470,7 @@ class One2many(_RelationalMulti):
         inverse_field = comodel._fields[inverse]
         get_id = (lambda rec: rec.id) if inverse_field.type == 'many2one' else int
         domain = self.get_domain_list(records) + [(inverse, 'in', records.ids)]
-        lines = comodel.search(domain, limit=self.limit)
+        lines = comodel.search(domain)
 
         # group lines by inverse field (without prefetching other fields)
         group = defaultdict(list)
@@ -3710,7 +3707,6 @@ class Many2many(_RelationalMulti):
         :meth:`~odoo.models.Model._check_company`. Add a default company
         domain depending on the field attributes.
 
-    :param int limit: optional limit to use upon read
     """
     type = 'many2many'
 
@@ -3719,7 +3715,6 @@ class Many2many(_RelationalMulti):
     column1 = None                      # column of table referring to model
     column2 = None                      # column of table referring to comodel
     auto_join = False                   # whether joins are generated upon search
-    limit = None                        # optional limit to use upon read
     ondelete = None                     # optional ondelete for the column2 fkey
 
     def __init__(self, comodel_name=Default, relation=Default, column1=Default,
@@ -3845,11 +3840,10 @@ class Many2many(_RelationalMulti):
         from_c, where_c, where_params = wquery.get_sql()
         query = """ SELECT {rel}.{id1}, {rel}.{id2} FROM {rel}, {from_c}
                     WHERE {where_c} AND {rel}.{id1} IN %s AND {rel}.{id2} = {tbl}.id
-                    {order_by} {limit} OFFSET {offset}
+                    {order_by}
                 """.format(rel=self.relation, id1=self.column1, id2=self.column2,
                            tbl=comodel._table, from_c=from_c, where_c=where_c or '1=1',
-                           limit=(' LIMIT %d' % self.limit) if self.limit else '',
-                           offset=0, order_by=order_by)
+                           order_by=order_by)
         where_params.append(tuple(records.ids))
 
         # retrieve lines and group them by record
