@@ -2952,7 +2952,7 @@ class BaseModel(metaclass=MetaModel):
                 if not field.required:
                     _logger.warning("Field %s with delegate=True must be required.", field)
                     field.required = True
-                if field.ondelete.lower() not in ('cascade', 'restrict'):
+                if (field.ondelete or "").lower() not in ('cascade', 'restrict'):
                     field.ondelete = 'cascade'
                 type(self)._inherits = {**self._inherits, field.comodel_name: field.name}
                 self.pool[field.comodel_name]._inherits_children.add(self._name)
