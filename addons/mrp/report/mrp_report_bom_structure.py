@@ -74,6 +74,7 @@ class ReportBomStructure(models.AbstractModel):
             'bom_id': bom_id,
             'currency': self.env.company.currency_id,
             'byproducts': lines,
+            'extra_column_count': self._get_extra_column_count(),
         }
         return self.env.ref('mrp.report_mrp_byproduct_line')._render({'data': values})
 
