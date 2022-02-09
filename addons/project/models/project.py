@@ -43,13 +43,13 @@ PROJECT_TASK_READABLE_FIELDS = {
     'legend_normal',
     'legend_blocked',
     'legend_done',
+    'user_ids',
 }
 
 PROJECT_TASK_WRITABLE_FIELDS = {
     'name',
     'partner_id',
     'partner_email',
-    'user_ids',
     'date_deadline',
     'tag_ids',
     'sequence',
