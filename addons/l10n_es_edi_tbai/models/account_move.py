@@ -111,19 +111,39 @@ class AccountMove(models.Model):
         for record in self:
             record.l10n_es_tbai_qr_escaped = url_quote(record.l10n_es_tbai_qr)
 
+    def _update_l10n_es_tbai_submitted_xml(self, xml_doc, cancel):
+        doc = self.l10n_es_tbai_cancel_xml if cancel else self.l10n_es_tbai_post_xml
+        if not doc:
+            doc = self.env['ir.attachment'].create({
+                'type': 'binary',
+                'name': self.name + ('_cancel' if cancel else '_post') + '.xml',
+                'raw': b'' if xml_doc is None else etree.tostring(xml_doc, encoding='UTF-8'),
+                'mimetype': 'application/xml',
+                'res_id': self.id,
+                'res_model': 'account.move',
+            })
+        else:
+            doc = self.env['ir.attachment'].update({
+                'name': self.name + ('_cancel' if cancel else '_post') + '.xml',
+                'raw': b'' if xml_doc is None else etree.tostring(xml_doc, encoding='UTF-8'),
+                'res_id': self.id,
+            })
+        if cancel:
+            self.l10n_es_tbai_cancel_xml = doc
+        else:
+            self.l10n_es_tbai_post_xml = doc
+
     def _get_l10n_es_tbai_submitted_xml(self, cancel=False):
         doc = self.l10n_es_tbai_cancel_xml if cancel else self.l10n_es_tbai_post_xml
         doc_raw = doc.with_context(bin_size=False).raw  # Without bin_size=False, size is returned instead of content
         if not doc_raw:
-            print("Invoice {}: no doc".format(self.name))
-            return False
-        print("Invoice {}: has doc".format(self.name))
+            return None
         return etree.fromstring(doc_raw.decode())
 
     def _get_l10n_es_tbai_values_from_xml(self, xpaths):
         res = {key: '' for key in xpaths.keys()}
         doc_xml = self._get_l10n_es_tbai_submitted_xml()  # values are in post, not cancel
-        if not doc_xml:
+        if doc_xml is None:
             return res
         for key, value in xpaths.items():
             res[key] = doc_xml.find(value).text

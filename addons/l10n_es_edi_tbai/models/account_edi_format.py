@@ -92,16 +92,6 @@ class AccountEdiFormat(models.Model):
         if 'error' in res[invoice]:
             return res
 
-        # Store the XML as attachment to ensure it is never lost (even in case of timeout error)
-        invoice.l10n_es_tbai_post_xml = self.env['ir.attachment'].create({
-            'type': 'binary',
-            'name': invoice.name + '_post.xml',
-            'raw': etree.tostring(inv_xml, encoding='UTF-8'),
-            'mimetype': 'application/xml',
-            'res_id': invoice.id,
-            'res_model': 'account.move',
-        })
-
         # Call the web service and get response
         res.update(self._l10n_es_tbai_post_to_web_service(invoice, inv_xml))
         response_xml = res[invoice]['response']
@@ -123,7 +113,7 @@ class AccountEdiFormat(models.Model):
 
         # FAILURE
         else:
-            invoice.l10n_es_tbai_post_xml = False  # will need to be re-created
+            invoice._update_l10n_es_tbai_submitted_xml(xml_doc=None, cancel=False)
 
         return res
 
@@ -147,16 +137,6 @@ class AccountEdiFormat(models.Model):
         if 'error' in res[invoice]:
             return res
 
-        # Store the XML as attachment to ensure it is never lost (even in case of timeout error)
-        invoice.l10n_es_tbai_cancel_xml = self.env['ir.attachment'].create({
-            'type': 'binary',
-            'name': invoice.name + '_cancel.xml',
-            'raw': etree.tostring(cancel_xml, encoding='UTF-8'),
-            'mimetype': 'application/xml',
-            'res_id': invoice.id,
-            'res_model': 'account.move',
-        })
-
         # Call the web service and get response
         res.update(self._l10n_es_tbai_post_to_web_service(invoice, cancel_xml, cancel=True))
         response_xml = res[invoice]['response']
@@ -178,7 +158,7 @@ class AccountEdiFormat(models.Model):
 
         # FAILURE
         else:
-            invoice.l10n_es_tbai_cancel_xml = False  # will need to be re-created
+            invoice._update_l10n_es_tbai_submitted_xml(xml_doc=None, cancel=True)  # will need to be re-created
 
         return res
 
@@ -204,9 +184,9 @@ class AccountEdiFormat(models.Model):
     # -------------------------------------------------------------------------
 
     def _l10n_es_tbai_get_invoice_xml(self, invoice, cancel=False):
-        # If peviously generated XML was posted not rejected (success or timeout), reuse it
+        # If peviously generated XML was posted and not rejected (success or timeout), reuse it
         doc = invoice._get_l10n_es_tbai_submitted_xml(cancel)
-        if doc:
+        if doc is not None:
             return doc
 
         # Otherwise, generate a new XML
@@ -225,6 +205,9 @@ class AccountEdiFormat(models.Model):
         xml_str = self.env.ref('l10n_es_edi_tbai.template_invoice_main')._render(values)
         xml_doc = self.env['l10n_es.edi.tbai.util']._cleanup_xml_content(xml_str, is_string=True)
         self._l10n_es_tbai_sign_invoice(invoice, xml_doc)
+
+        # Store the XML as attachment to ensure it is never lost (even in case of timeout error)
+        invoice._update_l10n_es_tbai_submitted_xml(xml_doc=xml_doc, cancel=cancel)
 
         return xml_doc
 
