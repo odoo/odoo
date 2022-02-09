@@ -5,7 +5,7 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
     const Registries = require('point_of_sale.Registries');
     const IndependentToOrderScreen = require('point_of_sale.IndependentToOrderScreen');
     const NumberBuffer = require('point_of_sale.NumberBuffer');
-    const { useAutofocus, useListener } = require("@web/core/utils/hooks");
+    const { useListener } = require("@web/core/utils/hooks");
     const { parse } = require('web.field_utils');
 
     const { onMounted, onWillUnmount, useState } = owl;
@@ -26,7 +26,6 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
             useListener('click-refund-order-uid', this._onClickRefundOrderUid);
             useListener('update-selected-orderline', this._onUpdateSelectedOrderline);
             useListener('do-refund', this._onDoRefund);
-            useAutofocus({ selector: '.search input' });
             NumberBuffer.use({
                 nonKeyboardInputEvent: 'numpad-click-input',
                 triggerAtInput: 'update-selected-orderline',
