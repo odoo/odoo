@@ -666,9 +666,14 @@ def split_every(n, iterable, piece_maker=tuple):
         piece = piece_maker(islice(iterator, n))
 
 # port of python 2.6's attrgetter with support for dotted notation
-def resolve_attr(obj, attr):
+raise_error = object()  # sentinel
+def resolve_attr(obj, attr, default=raise_error):
     for name in attr.split("."):
-        obj = getattr(obj, name)
+        obj = getattr(obj, name, default)
+        if obj is raise_error:
+            raise AttributeError(f"'{obj}' object has no attribute '{name}'")
+        if obj == default:
+            break
     return obj
 
 def attrgetter(*items):
@@ -1217,6 +1222,17 @@ def unique(it):
         if e not in seen:
             seen.add(e)
             yield e
+
+def submap(mapping, keys):
+    """
+    Get a filtered copy of the mapping where only some keys are present.
+
+    :param Mapping mapping: the original dict-like structure to filter
+    :param Iterable keys: the list of keys to keep
+    :return dict: a filtered dict copy of the original mapping
+    """
+    keys = frozenset(keys)
+    return {key: mapping[key] for key in mapping if key in keys}
 
 class Reverse(object):
     """ Wraps a value and reverses its ordering, useful in key functions when
