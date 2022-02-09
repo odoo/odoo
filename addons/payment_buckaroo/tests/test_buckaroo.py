@@ -41,7 +41,7 @@ class BuckarooTest(BuckarooCommon, PaymentHttpCommon):
 
     @mute_logger('odoo.addons.payment_buckaroo.models.payment_transaction')
     def test_feedback_processing(self):
-        notification_data = BuckarooController._normalize_data_keys(self.SYNC_NOTIFICATION_DATA)
+        notification_data = BuckarooController._normalize_data_keys(self.sync_notification_data)
         tx = self.create_transaction(flow='redirect')
         tx._handle_notification_data('buckaroo', notification_data)
         self.assertEqual(tx.state, 'done')
@@ -53,7 +53,7 @@ class BuckarooTest(BuckarooCommon, PaymentHttpCommon):
         self.reference = 'Test Transaction 2'
         tx = self.create_transaction(flow='redirect')
         notification_data = BuckarooController._normalize_data_keys(dict(
-            self.SYNC_NOTIFICATION_DATA,
+            self.sync_notification_data,
             brq_invoicenumber=self.reference,
             brq_statuscode='2',
             brq_signature='b8e54e26b2b5a5e697b8ed5085329ea712fd48b2',
@@ -70,7 +70,7 @@ class BuckarooTest(BuckarooCommon, PaymentHttpCommon):
             'odoo.addons.payment_buckaroo.controllers.main.BuckarooController'
             '._verify_notification_signature'
         ):
-            self._make_http_post_request(url, data=self.ASYNC_NOTIFICATION_DATA)
+            self._make_http_post_request(url, data=self.async_notification_data)
         self.assertEqual(tx.state, 'done')
 
     def test_accept_notification_with_valid_signature(self):
@@ -79,8 +79,8 @@ class BuckarooTest(BuckarooCommon, PaymentHttpCommon):
         self._assert_does_not_raise(
             Forbidden,
             BuckarooController._verify_notification_signature,
-            self.ASYNC_NOTIFICATION_DATA,
-            self.ASYNC_NOTIFICATION_DATA['brq_signature'],
+            self.async_notification_data,
+            self.async_notification_data['brq_signature'],
             tx,
         )
 
@@ -91,7 +91,7 @@ class BuckarooTest(BuckarooCommon, PaymentHttpCommon):
         self.assertRaises(
             Forbidden,
             BuckarooController._verify_notification_signature,
-            self.ASYNC_NOTIFICATION_DATA,
+            self.async_notification_data,
             None,
             tx,
         )
@@ -103,7 +103,7 @@ class BuckarooTest(BuckarooCommon, PaymentHttpCommon):
         self.assertRaises(
             Forbidden,
             BuckarooController._verify_notification_signature,
-            self.ASYNC_NOTIFICATION_DATA,
+            self.async_notification_data,
             'dummy',
             tx,
         )
