@@ -5,41 +5,6 @@ from odoo.addons.payment.tests.common import PaymentCommon
 
 class PaypalCommon(PaymentCommon):
 
-    NOTIFICATION_DATA = {
-        'PayerID': '59XDVNACRAZZK',
-        'address_city': 'Scranton',
-        'address_country_code': 'US',
-        'address_name': 'Mitchell Admin',
-        'address_state': 'Pennsylvania',
-        'address_street': '215 Vine St',
-        'address_zip': '18503',
-        'first_name': 'Norbert',
-        'handling_amount': '0.00',
-        'item_name': 'YourCompany: Test Transaction',
-        'item_number': 'Test Transaction',  # Shamefully copy-pasted from payment
-        'last_name': 'Buyer',
-        'mc_currency': 'USD',
-        'mc_fee': '2.00',
-        'mc_gross': '50.00',
-        'notify_version': 'UNVERSIONED',
-        'payer_email': 'test-buyer@mail.odoo.com',
-        'payer_id': '59XDVNACRAZZK',
-        'payer_status': 'VERIFIED',
-        'payment_date': '2022-01-19T08:38:06Z',
-        'payment_fee': '2.00',
-        'payment_gross': '50.00',
-        'payment_status': 'Completed',
-        'payment_type': 'instant',
-        'protection_eligibility': 'ELIGIBLE',
-        'quantity': '1',
-        'receiver_id': 'BEQE89VH6257B',
-        'residence_country': 'US',
-        'shipping': '0.00',
-        'txn_id': '1H89255869624041K',
-        'txn_type': 'web_accept',
-        'verify_sign': 'dummy',
-    }
-
     @classmethod
     def setUpClass(cls, chart_template_ref=None):
         super().setUpClass(chart_template_ref=chart_template_ref)
@@ -52,3 +17,38 @@ class PaypalCommon(PaymentCommon):
         # Override default values
         cls.acquirer = cls.paypal
         cls.currency = cls.currency_euro
+
+        cls.notification_data = {
+            'PayerID': '59XDVNACRAZZK',
+            'address_city': 'Scranton',
+            'address_country_code': 'US',
+            'address_name': 'Mitchell Admin',
+            'address_state': 'Pennsylvania',
+            'address_street': '215 Vine St',
+            'address_zip': '18503',
+            'first_name': 'Norbert',
+            'handling_amount': '0.00',
+            'item_name': 'YourCompany: Test Transaction',
+            'item_number': cls.reference,
+            'last_name': 'Buyer',
+            'mc_currency': 'USD',
+            'mc_fee': '2.00',
+            'mc_gross': '50.00',
+            'notify_version': 'UNVERSIONED',
+            'payer_email': 'test-buyer@mail.odoo.com',
+            'payer_id': '59XDVNACRAZZK',
+            'payer_status': 'VERIFIED',
+            'payment_date': '2022-01-19T08:38:06Z',
+            'payment_fee': '2.00',
+            'payment_gross': '50.00',
+            'payment_status': 'Completed',
+            'payment_type': 'instant',
+            'protection_eligibility': 'ELIGIBLE',
+            'quantity': '1',
+            'receiver_id': 'BEQE89VH6257B',
+            'residence_country': 'US',
+            'shipping': '0.00',
+            'txn_id': '1H89255869624041K',
+            'txn_type': 'web_accept',
+            'verify_sign': 'dummy',
+        }
