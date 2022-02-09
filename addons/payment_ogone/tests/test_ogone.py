@@ -109,7 +109,7 @@ class OgoneTest(OgoneCommon, PaymentHttpCommon):
             'odoo.addons.payment_ogone.controllers.main.OgoneController'
             '._verify_notification_signature'
         ):
-            self._make_http_post_request(url, data=self.NOTIFICATION_DATA)
+            self._make_http_post_request(url, data=self.notification_data)
         self.assertEqual(tx.state, 'done')
 
     @mute_logger('odoo.addons.payment_ogone.controllers.main')
@@ -124,7 +124,7 @@ class OgoneTest(OgoneCommon, PaymentHttpCommon):
             'odoo.addons.payment.models.payment_transaction.PaymentTransaction'
             '._handle_notification_data'
         ):
-            self._make_http_post_request(url, data=self.NOTIFICATION_DATA)
+            self._make_http_post_request(url, data=self.notification_data)
             self.assertEqual(signature_check_mock.call_count, 1)
 
     def test_accept_notification_with_valid_signature(self):
@@ -133,8 +133,8 @@ class OgoneTest(OgoneCommon, PaymentHttpCommon):
         self._assert_does_not_raise(
             Forbidden,
             OgoneController._verify_notification_signature,
-            self.NOTIFICATION_DATA,
-            self.NOTIFICATION_DATA['SHASIGN'],
+            self.notification_data,
+            self.notification_data['SHASIGN'],
             tx,
         )
 
@@ -145,7 +145,7 @@ class OgoneTest(OgoneCommon, PaymentHttpCommon):
         self.assertRaises(
             Forbidden,
             OgoneController._verify_notification_signature,
-            self.NOTIFICATION_DATA,
+            self.notification_data,
             None,
             tx,
         )
@@ -157,7 +157,7 @@ class OgoneTest(OgoneCommon, PaymentHttpCommon):
         self.assertRaises(
             Forbidden,
             OgoneController._verify_notification_signature,
-            self.NOTIFICATION_DATA,
+            self.notification_data,
             'dummy',
             tx,
         )

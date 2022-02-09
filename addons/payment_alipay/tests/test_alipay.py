@@ -142,20 +142,20 @@ class AlipayTest(AlipayCommon, PaymentHttpCommon):
         # Unknown transaction
         with self.assertRaises(ValidationError):
             self.env['payment.transaction']._handle_notification_data(
-                'alipay', self.NOTIFICATION_DATA
+                'alipay', self.notification_data
             )
 
         # Confirmed transaction
         tx = self.create_transaction('redirect')
-        self.env['payment.transaction']._handle_notification_data('alipay', self.NOTIFICATION_DATA)
+        self.env['payment.transaction']._handle_notification_data('alipay', self.notification_data)
         self.assertEqual(tx.state, 'done')
-        self.assertEqual(tx.acquirer_reference, self.NOTIFICATION_DATA['trade_no'])
+        self.assertEqual(tx.acquirer_reference, self.notification_data['trade_no'])
 
         # Pending transaction
         self.reference = 'Test Transaction 2'
         tx = self.create_transaction('redirect')
         payload = dict(
-            self.NOTIFICATION_DATA, out_trade_no=self.reference, trade_status='TRADE_CLOSED'
+            self.notification_data, out_trade_no=self.reference, trade_status='TRADE_CLOSED'
         )
         self.env['payment.transaction']._handle_notification_data('alipay', payload)
         self.assertEqual(tx.state, 'cancel')
@@ -173,7 +173,7 @@ class AlipayTest(AlipayCommon, PaymentHttpCommon):
             'odoo.addons.payment_alipay.controllers.main.AlipayController'
             '._verify_notification_signature'
         ):
-            self._make_http_post_request(url, data=self.NOTIFICATION_DATA)
+            self._make_http_post_request(url, data=self.notification_data)
         self.assertEqual(tx.state, 'done')
 
     @mute_logger('odoo.addons.payment_alipay.controllers.main')
@@ -192,7 +192,7 @@ class AlipayTest(AlipayCommon, PaymentHttpCommon):
             'odoo.addons.payment.models.payment_transaction.PaymentTransaction'
             '._handle_notification_data'
         ):
-            self._make_http_post_request(url, data=self.NOTIFICATION_DATA)
+            self._make_http_post_request(url, data=self.notification_data)
             self.assertEqual(origin_check_mock.call_count, 1)
             self.assertEqual(signature_check_mock.call_count, 1)
 
@@ -200,21 +200,21 @@ class AlipayTest(AlipayCommon, PaymentHttpCommon):
         """ Test the verification of a notification with a valid signature. """
         tx = self.create_transaction('redirect')
         self._assert_does_not_raise(
-            Forbidden, AlipayController._verify_notification_signature, self.NOTIFICATION_DATA, tx
+            Forbidden, AlipayController._verify_notification_signature, self.notification_data, tx
         )
 
     @mute_logger('odoo.addons.payment_alipay.controllers.main')
     def test_reject_notification_with_missing_signature(self):
         """ Test the verification of a notification with a missing signature. """
         tx = self.create_transaction('redirect')
-        payload = dict(self.NOTIFICATION_DATA, sign=None)
+        payload = dict(self.notification_data, sign=None)
         self.assertRaises(Forbidden, AlipayController._verify_notification_signature, payload, tx)
 
     @mute_logger('odoo.addons.payment_alipay.controllers.main')
     def test_reject_notification_with_invalid_signature(self):
         """ Test the verification of a notification with an invalid signature. """
         tx = self.create_transaction('redirect')
-        payload = dict(self.NOTIFICATION_DATA, sign='dummy')
+        payload = dict(self.notification_data, sign='dummy')
         self.assertRaises(Forbidden, AlipayController._verify_notification_signature, payload, tx)
 
     def test_alipay_neutralize(self):

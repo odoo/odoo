@@ -43,7 +43,7 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
             '._stripe_make_request',
             return_value={'status': 'succeeded'},
         ):
-            self._make_json_request(url, data=self.NOTIFICATION_DATA)
+            self._make_json_request(url, data=self.notification_data)
         self.assertEqual(tx.state, 'done')
 
     @mute_logger('odoo.addons.payment_stripe.controllers.main')
@@ -62,7 +62,7 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
             'odoo.addons.payment.models.payment_transaction.PaymentTransaction'
             '._handle_notification_data'
         ):
-            self._make_json_request(url, data=self.NOTIFICATION_DATA)
+            self._make_json_request(url, data=self.notification_data)
             self.assertEqual(signature_check_mock.call_count, 1)
 
     def test_stripe_neutralize(self):

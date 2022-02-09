@@ -83,19 +83,19 @@ class PaypalTest(PaypalCommon, PaymentHttpCommon):
     def test_feedback_processing(self):
         # Unknown transaction
         with self.assertRaises(ValidationError):
-            self.env['payment.transaction']._handle_notification_data('paypal', self.NOTIFICATION_DATA)
+            self.env['payment.transaction']._handle_notification_data('paypal', self.notification_data)
 
         # Confirmed transaction
         tx = self.create_transaction('redirect')
-        self.env['payment.transaction']._handle_notification_data('paypal', self.NOTIFICATION_DATA)
+        self.env['payment.transaction']._handle_notification_data('paypal', self.notification_data)
         self.assertEqual(tx.state, 'done')
-        self.assertEqual(tx.acquirer_reference, self.NOTIFICATION_DATA['txn_id'])
+        self.assertEqual(tx.acquirer_reference, self.notification_data['txn_id'])
 
         # Pending transaction
         self.reference = 'Test Transaction 2'
         tx = self.create_transaction('redirect')
         payload = dict(
-            self.NOTIFICATION_DATA,
+            self.notification_data,
             item_number=self.reference,
             payment_status='Pending',
             pending_reason='multi_currency',
@@ -137,7 +137,7 @@ class PaypalTest(PaypalCommon, PaymentHttpCommon):
             'odoo.addons.payment_paypal.controllers.main.PaypalController'
             '._verify_webhook_notification_origin'
         ):
-            self._make_http_post_request(url, data=self.NOTIFICATION_DATA)
+            self._make_http_post_request(url, data=self.notification_data)
         self.assertEqual(tx.state, 'done')
 
     @mute_logger('odoo.addons.payment_paypal.controllers.main')
@@ -152,7 +152,7 @@ class PaypalTest(PaypalCommon, PaymentHttpCommon):
             'odoo.addons.payment.models.payment_transaction.PaymentTransaction'
             '._handle_notification_data'
         ):
-            self._make_http_post_request(url, data=self.NOTIFICATION_DATA)
+            self._make_http_post_request(url, data=self.notification_data)
             self.assertEqual(origin_check_mock.call_count, 1)
 
     def test_paypal_neutralize(self):
