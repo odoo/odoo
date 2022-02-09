@@ -564,7 +564,6 @@ class IrAttachment(models.Model):
         return super(IrAttachment, self).write(vals)
 
     def copy(self, default=None):
-        self.check('write')
         if not (default or {}).keys() & {'datas', 'db_datas', 'raw'}:
             # ensure the content is kept and recomputes checksum/store_fname
             default = dict(default or {}, raw=self.raw)
@@ -615,9 +614,11 @@ class IrAttachment(models.Model):
             # creating multiple attachments on a single record.
             record_tuple = (values.get('res_model'), values.get('res_id'))
             record_tuple_set.add(record_tuple)
-        for record_tuple in record_tuple_set:
-            (res_model, res_id) = record_tuple
-            self.check('create', values={'res_model':res_model, 'res_id':res_id})
+
+        # don't use possible contextual recordset for check, see commit for details
+        Attachments = self.browse()
+        for res_model, res_id in record_tuple_set:
+            Attachments.check('create', values={'res_model':res_model, 'res_id':res_id})
         return super(IrAttachment, self).create(vals_list)
 
     def _post_add_create(self):
