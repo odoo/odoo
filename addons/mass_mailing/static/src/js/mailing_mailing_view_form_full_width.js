@@ -10,6 +10,7 @@ import config from 'web.config';
 const MassMailingFullWidthFormController = FormController.extend({
     custom_events: _.extend({}, FormController.prototype.custom_events,{
         iframe_updated: '_onIframeUpdated',
+        themes_loaded: '_onThemesLoaded',
     }),
 
     /**
@@ -37,9 +38,57 @@ const MassMailingFullWidthFormController = FormController.extend({
         this._super(...arguments);
     },
 
+    /**
+     * If we change the "mailing_model_id" in the form view, we want to update
+     * the mass mailing widget, because some templates might be hidden / displayed
+     * depending on if they belong to the new selected model.
+     *
+     * @override
+     */
+    _applyChanges: function (dataPointID, changes, event) {
+        if (changes.mailing_model_id) {
+            this._hideIrrelevantTemplates(changes.mailing_model_id);
+        }
+        return this._super(...arguments);
+    },
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
+    /**
+     * This method will take the model in argument and will hide all mailing template
+     * in the mass mailing widget that do not belong to this model.
+     *
+     * This will also update the help message in the same widget to include the
+     * new model name.
+     *
+     * @params {id: <model id>, display_name: <model name>}
+     *
+     * @private
+     */
+    _hideIrrelevantTemplates: function (model) {
+        const iframeContent = $('.o_field_widget[name="body_arch"] iframe').contents();
+
+        iframeContent
+            .find(`.o_mail_template_preview[model-id!="${model.id}"]`)
+            .addClass('d-none')
+            .removeClass('d-inline-block');
+
+        const sameModelTemplates = iframeContent
+            .find(`.o_mail_template_preview[model-id="${model.id}"]`);
+
+        sameModelTemplates
+            .removeClass('d-none')
+            .addClass('d-inline-block');
+
+        // Hide or show the help message if some templates are visible
+        if (sameModelTemplates.length) {
+            iframeContent.find('.o_mailing_template_message').addClass('d-none');
+        } else {
+            iframeContent.find('.o_mailing_template_message').removeClass('d-none');
+            iframeContent.find('.o_mailing_template_message span').text(model.display_name);
+        }
+    },
 
     /**
      * Resize the mailing editor's iframe container so its height fits its
@@ -150,6 +199,14 @@ const MassMailingFullWidthFormController = FormController.extend({
                 'flex-direction': isFullscreen ? '' : 'column',
             });
         }
+    },
+
+    /**
+     * The themes have been loaded by the mass mailing widget.
+     */
+    _onThemesLoaded() {
+        const model = this.initialState.data.mailing_model_id.data;
+        this._hideIrrelevantTemplates(model);
     },
     /**
      * Switch "scrolling modes" on toggle fullscreen mode: in fullscreen mode,
