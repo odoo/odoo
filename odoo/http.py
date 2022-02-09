@@ -183,9 +183,98 @@ babel.core.LOCALE_ALIASES['nb'] = 'nb_NO'
 
 ...
 
+
+# The cache duration for static content from the filesystem, one week.
+STATIC_CACHE = 60 * 60 * 24 * 7
+
+# The cache duration for content where the url uniquely identifies the
+# content (usually using a hash), one year.
+STATIC_CACHE_LONG = 60 * 60 * 24 * 365
+
 # =========================================================
 # Helpers
 # =========================================================
+
+...
+
+def send_file(filepath_or_fp, filename=None, mimetype=None, mtime=None,
+              as_attachment=False, cache_timeout=STATIC_CACHE):
+    """
+    Fle streaming utility with mime and cache handling, it takes a
+    file-object or immediately the content as bytes/str.
+
+    Sends the content of a file to the client. This will use the most
+    efficient method available and configured. By default it will try to
+    use the WSGI server's file_wrapper support.
+
+    If filename of file.name is provided it will try to guess the
+    mimetype for you, but you can also explicitly provide one.
+
+    For extra security you probably want to send certain files as
+    attachment (e.g. HTML).
+
+    :param Union[os.PathLike,io.FileIO] filepath_or_fp: the filename of
+        the file to send.  Alternatively a file object might be provided
+        in which case `X-Sendfile` might not work and fall back to the
+        traditional method. Make sure that the file pointer is position-
+        ed at the start of data to send before calling :func:`send_file`
+    :param str filename: optional if file has a 'name' attribute, used
+        for attachment name and mimetype guess.
+    :param str mimetype: the mimetype of the file if provided, otherwise
+        auto detection happens based on the name.
+    :param datetime mtime: optional if file has a 'name' attribute, last
+        modification time used for conditional response.
+    :param bool as_attachment: set to `True` if you want to send this
+        file with a ``Content-Disposition: attachment`` header.
+    :param int cache_timeout: set to `False` to disable etags and
+        conditional response handling (last modified and etags)
+    :returns: the HTTP response that streams the file.
+    """
+    if isinstance(filepath_or_fp, str):
+        if not filename:
+            filename = os.path.basename(filepath_or_fp)
+        file = open(filepath_or_fp, 'rb')
+    else:
+        file = filepath_or_fp
+        if not filename:
+            filename = getattr(file, 'name', None)
+
+    # Only used when filename or mtime argument is not provided
+    path = getattr(file, 'name', 'file.bin')
+
+    if not filename:
+        filename = os.path.basename(path)
+
+    if not mimetype:
+        mimetype = mimetypes.guess_type(filename)[0] or 'application/octet-stream'
+
+    file.seek(0, 2)
+    size = file.tell()
+    file.seek(0)
+
+    data = werkzeug.wsgi.wrap_file(request.httprequest.environ, file)
+
+    res = werkzeug.wrappers.Response(data, mimetype=mimetype, direct_passthrough=True)
+    res.content_length = size
+
+    if as_attachment:
+        res.headers.add('Content-Disposition', 'attachment', filename=filename)
+
+    if cache_timeout:
+        if not mtime:
+            with contextlib.suppress(FileNotFoundError):
+                mtime = datetime.fromtimestamp(os.path.getmtime(path))
+        if mtime:
+            res.last_modified = mtime
+        crc = zlib.adler32(filename.encode('utf-8') if isinstance(filename, str) else filename) & 0xffffffff
+        etag = f'odoo-{mtime}-{size}-{crc}'
+        if not werkzeug.http.is_resource_modified(request.httprequest.environ, etag, last_modified=mtime):
+            res = werkzeug.wrappers.Response(status=304)
+        else:
+            res.cache_control.public = True
+            res.cache_control.max_age = cache_timeout
+            res.set_etag(etag)
+    return res
 
 ...
 
@@ -259,7 +348,7 @@ class FutureResponse:
 
 class Request:
     """
-    Wrapper around the incomming HTTP request with deserialized requ@est
+    Wrapper around the incomming HTTP request with deserialized request
     parameters, session utilities and request dispatching logic.
     """
 
@@ -283,7 +372,16 @@ class Request:
     # Routing
     # =====================================================
     def _serve_static(self):
-        ...
+        """ Serve a static file from the file system. """
+        module, _, path = self.httprequest.path[1:].partition('/static/')
+        try:
+            directory = root.statics[module]
+            filepath = werkzeug.security.safe_join(directory, path)
+            return send_file(filepath)
+        except KeyError:
+            raise NotFound(f'Module "{module}" not found.\n')
+        except OSError:  # cover both missing file and invalid permissions
+            raise NotFound(f'File "{path}" not found in module {module}.\n')
 
     def _serve_nodb(self):
         ...
@@ -327,6 +425,23 @@ class Application:
     """ Odoo WSGI application """
     # See also: https://www.python.org/dev/peps/pep-3333
 
+    @lazy_property
+    def statics(self):
+        """
+        Map module names to their absolute ``static`` path on the file
+        system.
+        """
+        mod2path = {}
+        for addons_path in odoo.addons.__path__:
+            for module in os.listdir(addons_path):
+                manifest = get_manifest(module)
+                static_path = opj(addons_path, module, 'static')
+                if (manifest
+                        and (manifest['installable'] or manifest['assets'])
+                        and os.path.isdir(static_path)):
+                    mod2path[module] = static_path
+        return mod2path
+
     def __call__(self, environ, start_response):
         """
         WSGI application entry point.
@@ -347,8 +462,13 @@ class Application:
         ...
 
         try:
-            response = ...
-            return response(environ, start_response)
+            segments = httprequest.path.split('/')
+            if len(segments) >= 4 and segments[2] == 'static':
+                with contextlib.suppress(NotFound):
+                    response = request._serve_static()
+                    return response(environ, start_response)
+
+            ...
 
         except Exception as exc:
             ...
