@@ -142,9 +142,11 @@ export function computePositioning(reference, popper, options) {
 
             // Abort if outside container boundaries
             const directionOverflow =
-                directionValue < directionMin || directionValue + directionSize > directionMax;
+                Math.ceil(directionValue) < Math.ceil(directionMin) ||
+                Math.ceil(directionValue + directionSize) > Math.ceil(directionMax);
             const variantOverflow =
-                variantValue < variantMin || variantValue + variantSize > variantMax;
+                Math.ceil(variantValue) < Math.ceil(variantMin) ||
+                Math.ceil(variantValue + variantSize) > Math.ceil(variantMax);
             if (directionOverflow || variantOverflow) {
                 return null;
             }
