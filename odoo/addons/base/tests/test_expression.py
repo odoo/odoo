@@ -22,11 +22,10 @@ class TestExpression(SavepointCaseWithUserDemo):
         cls._load_partners_set()
         cls.env['res.currency'].with_context({'active_test': False}).search([('name', 'in', ['EUR', 'USD'])]).write({'active': True})
 
-    def _search(self, obj, domain, init_domain=[]):
-        sql = obj.search(domain)
-        allobj = obj.search(init_domain)
-        fil = allobj.filtered_domain(domain)
-        self.assertEqual(sql, fil, "filtered_domain do not match SQL search for domain: "+str(domain))
+    def _search(self, model, domain, init_domain=None):
+        sql = model.search(domain, order="id")
+        fil = model.search(init_domain or [], order="id").filtered_domain(domain)
+        self.assertEqual(sql._ids, fil._ids, f"filtered_domain do not match SQL search for domain: {domain}")
         return sql
 
     def test_00_in_not_in_m2m(self):
@@ -872,6 +871,16 @@ class TestExpression(SavepointCaseWithUserDemo):
         # again, trying the other way around
         countries = countries.browse(reversed(countries._ids))
         self.assertEqual(countries.filtered_domain(domain)._ids, countries._ids)
+
+    def test_filtered_domain_order2(self):
+        countries = self.env['res.country'].search([])
+        # match the first two countries, in order
+        expected = countries[:2]
+        id1, id2 = expected._ids
+        domain = ['|', ('id', '=', id1), ('id', '=', id2)]
+        self.assertEqual(countries.filtered_domain(domain)._ids, expected._ids)
+        domain = ['|', ('id', '=', id2), ('id', '=', id1)]
+        self.assertEqual(countries.filtered_domain(domain)._ids, expected._ids)
 
 
 class TestExpression2(TransactionCase):

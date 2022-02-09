@@ -5520,28 +5520,36 @@ Fields:
         return self.browse([rec.id for rec in self if func(rec)])
 
     def filtered_domain(self, domain):
-        if not domain: return self
-        result = []
-        for d in reversed(domain):
-            if d == '|':
-                result.append(result.pop() | result.pop())
-            elif d == '!':
-                result.append(self - result.pop())
-            elif d == '&':
-                result.append(result.pop() & result.pop())
-            elif d == expression.TRUE_LEAF:
-                result.append(self)
-            elif d == expression.FALSE_LEAF:
-                result.append(self.browse())
+        """Return the records in ``self`` satisfying the domain and keeping the same order.
+
+        :param domain: :ref:`A search domain <reference/orm/domains>`.
+        """
+        if not domain or not self:
+            return self
+
+        stack = []
+        for leaf in reversed(domain):
+            if leaf == '|':
+                stack.append(stack.pop() | stack.pop())
+            elif leaf == '!':
+                stack.append(set(self._ids) - stack.pop())
+            elif leaf == '&':
+                stack.append(stack.pop() & stack.pop())
+            elif leaf == expression.TRUE_LEAF:
+                stack.append(set(self._ids))
+            elif leaf == expression.FALSE_LEAF:
+                stack.append(set())
             else:
-                (key, comparator, value) = d
+                (key, comparator, value) = leaf
                 if comparator in ('child_of', 'parent_of'):
-                    result.append(self.search([('id', 'in', self.ids), d]))
+                    stack.append(set(self.search([('id', 'in', self.ids), leaf], order='id')._ids))
                     continue
+
                 if key.endswith('.id'):
                     key = key[:-3]
                 if key == 'id':
                     key = ''
+
                 # determine the field with the final type for values
                 field = None
                 if key:
@@ -5549,76 +5557,81 @@ Fields:
                     for fname in key.split('.'):
                         field = model._fields[fname]
                         model = model[fname]
+
                 if comparator in ('like', 'ilike', '=like', '=ilike', 'not ilike', 'not like'):
                     value_esc = value.replace('_', '?').replace('%', '*').replace('[', '?')
-                records_ids = OrderedSet()
-                for rec in self:
-                    data = rec.mapped(key)
+                if comparator in ('in', 'not in'):
+                    if isinstance(value, (list, tuple)):
+                        value = set(value)
+                    else:
+                        value = (value,)
+                    if field and field.type in ('date', 'datetime'):
+                        value = {Datetime.to_datetime(v) for v in value}
+                elif field and field.type in ('date', 'datetime'):
+                    value = Datetime.to_datetime(value)
+
+                matching_ids = set()
+                for record in self:
+                    data = record.mapped(key)
                     if isinstance(data, BaseModel):
                         v = value
-                        if (isinstance(value, list) or isinstance(value, tuple)) and len(value):
-                            v = value[0]
+                        if isinstance(value, (list, tuple, set)) and value:
+                            v = next(iter(value))
                         if isinstance(v, str):
                             data = data.mapped('display_name')
                         else:
                             data = data and data.ids or [False]
                     elif field and field.type in ('date', 'datetime'):
-                        # convert all date and datetime values to datetime
-                        normalize = Datetime.to_datetime
-                        if isinstance(value, (list, tuple)):
-                            value = [normalize(v) for v in value]
-                        else:
-                            value = normalize(value)
-                        data = [normalize(d) for d in data]
-                    if comparator in ('in', 'not in'):
-                        if not (isinstance(value, list) or isinstance(value, tuple)):
-                            value = [value]
+                        data = [Datetime.to_datetime(d) for d in data]
 
                     if comparator == '=':
                         ok = value in data
-                    elif comparator == 'in':
-                        ok = any(map(lambda x: x in data, value))
-                    elif comparator == '<':
-                        ok = any(map(lambda x: x is not None and x < value, data))
-                    elif comparator == '>':
-                        ok = any(map(lambda x: x is not None and x > value, data))
-                    elif comparator == '<=':
-                        ok = any(map(lambda x: x is not None and x <= value, data))
-                    elif comparator == '>=':
-                        ok = any(map(lambda x: x is not None and x >= value, data))
                     elif comparator in ('!=', '<>'):
                         ok = value not in data
+                    elif comparator == '=?':
+                        ok = not value or (value in data)
+                    elif comparator == 'in':
+                        ok = value and any(x in value for x in data)
                     elif comparator == 'not in':
-                        ok = all(map(lambda x: x not in data, value))
-                    elif comparator == 'not ilike':
-                        data = [(x or "") for x in data]
-                        ok = all(map(lambda x: value.lower() not in x.lower(), data))
+                        ok = not (value and any(x in value for x in data))
+                    elif comparator == '<':
+                        ok = any(x is not None and x < value for x in data)
+                    elif comparator == '>':
+                        ok = any(x is not None and x > value for x in data)
+                    elif comparator == '<=':
+                        ok = any(x is not None and x <= value for x in data)
+                    elif comparator == '>=':
+                        ok = any(x is not None and x >= value for x in data)
                     elif comparator == 'ilike':
                         data = [(x or "").lower() for x in data]
-                        ok = bool(fnmatch.filter(data, '*'+(value_esc or '').lower()+'*'))
-                    elif comparator == 'not like':
-                        data = [(x or "") for x in data]
-                        ok = all(map(lambda x: value not in x, data))
+                        ok = fnmatch.filter(data, '*' + (value_esc or '').lower() + '*')
+                    elif comparator == 'not ilike':
+                        value = value.lower()
+                        ok = not any(value in (x or "").lower() for x in data)
                     elif comparator == 'like':
                         data = [(x or "") for x in data]
-                        ok = bool(fnmatch.filter(data, value and '*'+value_esc+'*'))
-                    elif comparator == '=?':
-                        ok = (value in data) or not value
-                    elif comparator in ('=like'):
+                        ok = fnmatch.filter(data, value and '*' + value_esc + '*')
+                    elif comparator == 'not like':
+                        ok = not any(value in (x or "") for x in data)
+                    elif comparator == '=like':
                         data = [(x or "") for x in data]
-                        ok = bool(fnmatch.filter(data, value_esc))
-                    elif comparator in ('=ilike'):
+                        ok = fnmatch.filter(data, value_esc)
+                    elif comparator == '=ilike':
                         data = [(x or "").lower() for x in data]
-                        ok = bool(fnmatch.filter(data, value and value_esc.lower()))
+                        ok = fnmatch.filter(data, value and value_esc.lower())
                     else:
-                        raise ValueError
-                    if ok:
-                       records_ids.add(rec.id)
-                result.append(self.browse(records_ids))
-        while len(result)>1:
-            result.append(result.pop() & result.pop())
-        return result[0]
+                        raise ValueError(f"Invalid term domain '{leaf}', operator '{comparator}' doesn't exist.")
 
+                    if ok:
+                        matching_ids.add(record.id)
+
+                stack.append(matching_ids)
+
+        while len(stack) > 1:
+            stack.append(stack.pop() & stack.pop())
+
+        [result_ids] = stack
+        return self.browse(id_ for id_ in self._ids if id_ in result_ids)
 
     def sorted(self, key=None, reverse=False):
         """Return the recordset ``self`` ordered by ``key``.
