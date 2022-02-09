@@ -5,29 +5,6 @@ from odoo.addons.payment.tests.common import PaymentCommon
 
 class AdyenCommon(PaymentCommon):
 
-    WEBHOOK_NOTIFICATION_PAYLOAD = {
-        'additionalData': {
-            'hmacSignature': 'kK6vSQvfWP3AtT2TTK1ePj9e7XPb7bF5jHC7jDWyU5c='
-        },
-        'amount': {
-            'currency': 'USD',
-            'value': 999,
-        },
-        'eventCode': 'AUTHORISATION',
-        'merchantAccountCode': 'DuckSACom123',
-        'merchantReference': 'Test Transaction',  # Shamefully copy-pasted from payment
-        'originalReference': 'FEDCBA9876543210',
-        'pspReference': '0123456789ABCDEF',
-        'success': 'true',
-    }  # Include all keys used in the computation of the signature to the payload
-    WEBHOOK_NOTIFICATION_BATCH_DATA = {
-        'notificationItems': [
-            {
-                'NotificationRequestItem': WEBHOOK_NOTIFICATION_PAYLOAD,
-            }
-        ]
-    }
-
     @classmethod
     def setUpClass(cls, chart_template_ref=None):
         super().setUpClass(chart_template_ref=chart_template_ref)
@@ -43,3 +20,26 @@ class AdyenCommon(PaymentCommon):
 
         # Override default values
         cls.acquirer = cls.adyen
+
+        cls.webhook_notification_payload = {
+            'additionalData': {
+                'hmacSignature': 'kK6vSQvfWP3AtT2TTK1ePj9e7XPb7bF5jHC7jDWyU5c='
+            },
+            'amount': {
+                'currency': 'USD',
+                'value': 999,
+            },
+            'eventCode': 'AUTHORISATION',
+            'merchantAccountCode': 'DuckSACom123',
+            'merchantReference': cls.reference,
+            'originalReference': 'FEDCBA9876543210',
+            'pspReference': '0123456789ABCDEF',
+            'success': 'true',
+        }  # Include all keys used in the computation of the signature to the payload
+        cls.webhook_notification_batch_data = {
+            'notificationItems': [
+                {
+                    'NotificationRequestItem': cls.webhook_notification_payload,
+                }
+            ]
+        }
