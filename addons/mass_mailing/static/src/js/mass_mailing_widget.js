@@ -371,14 +371,22 @@ var MassMailingFieldHtml = FieldHtml.extend({
 
         this.wysiwyg.$iframeBody.find('.iframe-utils-zone').addClass('d-none');
 
+        // Filter the fetched templates based on the current model
+        const args = this.nodeOptions.filterTemplates
+            ? [[['mailing_model_id', '=', this.recordData.mailing_model_id.res_id]]]
+            : [];
+
         // Templates taken from old mailings
         const result = await this._rpc({
             model: 'mailing.mailing',
             method: 'action_fetch_favorites',
+            args: args,
         });
         const templatesParams = result.map(values => {
             return {
                 id: values.id,
+                modelId: values.mailing_model_id[0],
+                modelName: values.mailing_model_id[1],
                 name: `template_${values.id}`,
                 nowrap: true,
                 subject: values.subject,
@@ -458,6 +466,7 @@ var MassMailingFieldHtml = FieldHtml.extend({
         const $themeSelectorNew = $(core.qweb.render("mass_mailing.theme_selector_new", {
             themes: themesParams,
             templates: templatesParams,
+            modelName: this.recordData.mailing_model_id.data.display_name || '',
         }));
 
 
@@ -604,6 +613,8 @@ var MassMailingFieldHtml = FieldHtml.extend({
         }
 
         this.wysiwyg.$iframeBody.find('.iframe-utils-zone').removeClass('d-none');
+
+        this.trigger_up('themes_loaded');
     },
     /**
      * @override

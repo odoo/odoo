@@ -1250,16 +1250,20 @@ class MassMailing(models.Model):
         return body_html
 
     @api.model
-    def action_fetch_favorites(self):
+    def action_fetch_favorites(self, extra_domain=None):
         """Return all mailings set as favorite and skip mailings with empty body.
 
         Return archived mailing templates as well, so the user can archive the templates
         while keeping using it, without cluttering the Kanban view if they're a lot of
         templates.
         """
+        domain = [('favorite', '=', True)]
+        if extra_domain:
+            domain = expression.AND([domain, extra_domain])
+
         values_list = self.with_context(active_test=False).search_read(
-            domain=[('favorite', '=', True)],
-            fields=['id', 'subject', 'body_arch', 'user_id'],
+            domain=domain,
+            fields=['id', 'subject', 'body_arch', 'user_id', 'mailing_model_id'],
             order='favorite_date DESC',
         )
 
