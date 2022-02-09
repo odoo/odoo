@@ -18,6 +18,7 @@ _logger = logging.getLogger(__name__)
 
 
 DEFAULT_SERVER_URL = 'https://l10n-it-edi.api.odoo.com'
+TEST_SERVER_URL = 'https://l10n-it-edi-demo.api.odoo.com'
 TIMEOUT = 30
 
 
