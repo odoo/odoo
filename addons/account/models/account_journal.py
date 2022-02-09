@@ -28,6 +28,9 @@ class AccountJournalGroup(models.Model):
         check_company=True)
     sequence = fields.Integer(default=10)
 
+    _sql_constraints = [
+        ('uniq_name', 'unique(company_id, name)', 'A journal group name must be unique per company.'),
+    ]
 
 class AccountJournal(models.Model):
     _name = "account.journal"
