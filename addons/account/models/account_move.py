@@ -1623,7 +1623,6 @@ class AccountMove(models.Model):
                 move.amount_by_group = []
                 continue
 
-            lang_env = move.with_context(lang=move.partner_id.lang).env
             balance_multiplicator = -1 if move.is_inbound() else 1
 
             tax_lines = move.line_ids.filtered('tax_line_id')
@@ -1663,8 +1662,8 @@ class AccountMove(models.Model):
                     tax_group.name,
                     tax_group_vals['tax_amount'],
                     tax_group_vals['base_amount'],
-                    formatLang(lang_env, tax_group_vals['tax_amount'], currency_obj=move.currency_id),
-                    formatLang(lang_env, tax_group_vals['base_amount'], currency_obj=move.currency_id),
+                    formatLang(self.env, tax_group_vals['tax_amount'], currency_obj=move.currency_id),
+                    formatLang(self.env, tax_group_vals['base_amount'], currency_obj=move.currency_id),
                     len(tax_group_mapping),
                     tax_group.id
                 ))
