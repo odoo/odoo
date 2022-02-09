@@ -9,7 +9,7 @@ options.registry.SocialMedia = options.Class.extend({
      * @override
      */
     async willStart() {
-        this.$target[0].querySelectorAll(':scope > a').forEach(el => el.setAttribute('id', generateHTMLId(30)));
+        this.$target[0].querySelectorAll(':scope > a').forEach(el => el.setAttribute('id', generateHTMLId()));
         await this._super(...arguments);
         let websiteId;
         this.trigger_up('context_get', {
