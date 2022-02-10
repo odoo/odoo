@@ -3970,7 +3970,7 @@ Fields:
         The new records are initialized using the values from the list of dicts
         ``vals_list``, and if necessary those from :meth:`~.default_get`.
 
-        :param list vals_list:
+        :param Union[list[dict], dict] vals_list:
             values for the model's fields, as a list of dictionaries::
 
                 [{'field_name': field_value, ...}, ...]
