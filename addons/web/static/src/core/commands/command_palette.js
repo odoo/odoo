@@ -9,7 +9,7 @@ import { fuzzyLookup } from "@web/core/utils/search";
 import { debounce } from "@web/core/utils/timing";
 import { escapeRegExp } from "../utils/strings";
 
-const { Component, onWillStart, useRef, useState } = owl;
+const { Component, onWillStart, useRef, useState, markRaw } = owl;
 
 const DEFAULT_PLACEHOLDER = _lt("Search...");
 const DEFAULT_EMPTY_MESSAGE = _lt("No result found");
@@ -178,11 +178,13 @@ export class CommandPalette extends Component {
             }
         }
 
-        this.state.commands = commands.map((command) => ({
-            ...command,
-            keyId: this.keyId++,
-            splitName: splitCommandName(command.name, options.searchValue),
-        }));
+        this.state.commands = markRaw(
+            commands.map((command) => ({
+                ...command,
+                keyId: this.keyId++,
+                splitName: splitCommandName(command.name, options.searchValue),
+            }))
+        );
         this.selectCommand(this.state.commands.length ? 0 : -1);
         this.mouseSelectionActive = false;
         this.state.emptyMessage =
@@ -195,7 +197,7 @@ export class CommandPalette extends Component {
             this.state.selectedCommand = null;
             return;
         }
-        this.state.selectedCommand = this.state.commands[index];
+        this.state.selectedCommand = markRaw(this.state.commands[index]);
     }
 
     selectCommandAndScrollTo(type) {
