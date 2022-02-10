@@ -191,12 +191,30 @@
                                 <b attrs="{'invisible': [('is_company', '=', False)]}">Address</b>
                             </span>
                             <div class="o_address_format">
-                                <field name="street" placeholder="Street..." class="o_address_street"
-                                    attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                                <field name="country_enforce_cities" invisible="1"/>
+                                <field name="country_extended_address" invisible="1"/>
+                                <field name="street" placeholder="Street..." class="o_address_street oe_read_only"
+                                       attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                                    <div class="oe_edit_only o_row">
+                                        <field name="street_name" placeholder="Street" style="flex: 3 1 auto"
+                                               attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                                        <span> </span>
+                                        <field name="street_number" placeholder="House #" style="flex: 1 1 auto"
+                                               attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                                        <span> - </span>
+                                        <field name="street_number2" placeholder="Door #" style="flex: 1 1 auto"
+                                               attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                                    </div>
                                 <field name="street2" placeholder="Street 2..." class="o_address_street"
                                     attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                                <field name="city_id" placeholder="City" class="o_address_city"
+                                       domain="[('country_id', '=', country_id)]"
+                                       attrs="{'invisible': [('country_enforce_cities', '=', False)],
+                                               'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"
+                                       context="{'default_country_id': country_id, 'default_state_id': state_id, 'default_zipcode': zip}"/>
                                 <field name="city" placeholder="City" class="o_address_city"
-                                    attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                                    attrs="{'invisible': [('country_enforce_cities', '=', True), '|', ('city_id', '!=', False), ('city', 'in', ('',False))],
+                                            'readonly': [('type', '=', 'contact'), ('parent_id', '!=', False)]}"/>
                                 <field name="state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}"
                                     attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}" context="{'country_id': country_id, 'default_country_id': country_id, 'zip': zip}"/>
                                 <field name="zip" placeholder="ZIP" class="o_address_zip"

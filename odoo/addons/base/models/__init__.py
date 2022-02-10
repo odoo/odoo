@@ -36,6 +36,7 @@ from . import ir_profile
 from . import image_mixin
 from . import avatar_mixin
 
+from . import res_city
 from . import res_country
 from . import res_lang
 from . import res_partner

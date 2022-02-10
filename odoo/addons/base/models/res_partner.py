@@ -29,6 +29,8 @@ WARNING_HELP = 'Selecting the "Warning" option will notify user with the message
 
 
 ADDRESS_FIELDS = ('street', 'street2', 'zip', 'city', 'state_id', 'country_id')
+ADDRESS_REGEX = re.compile(r'^(.*?)(\s[0-9][0-9\S]*)?( - (.+))?$')
+
 @api.model
 def _lang_get(self):
     return self.env['res.lang'].get_installed()
@@ -191,11 +193,19 @@ class Partner(models.Model):
         default='contact',
         help="Invoice & Delivery addresses are used in sales orders. Private addresses are only visible by authorized users.")
     # address fields
-    street = fields.Char()
-    street2 = fields.Char()
-    zip = fields.Char(change_default=True)
-    city = fields.Char()
-    state_id = fields.Many2one("res.country.state", string='State', ondelete='restrict', domain="[('country_id', '=?', country_id)]")
+    street = fields.Char(compute='_compute_street', inverse='_inverse_street', store=True)
+    street2 = fields.Char(compute='_compute_street2', inverse='_inverse_street2', store=True)
+    street_name = fields.Char('Street Name')
+    street_number = fields.Char('House')
+    street_number2 = fields.Char('Door')
+    country_extended_address = fields.Boolean(related='country_id.extended_address')
+    zip = fields.Char(change_default=True, compute='_compute_zip', inverse='_inverse_zip', store=True)
+    city = fields.Char(compute='_compute_city', inverse='_inverse_city', store=True)
+    city_id = fields.Many2one(comodel_name='res.city', string='City ID')
+    country_enforce_cities = fields.Boolean(related='country_id.enforce_cities')
+    state_id = fields.Many2one("res.country.state", string='State', ondelete='restrict',
+                               domain="[('country_id', '=?', country_id)]", compute='_compute_state_id',
+                               inverse='_inverse_state_id', store=True)
     country_id = fields.Many2one('res.country', string='Country', ondelete='restrict')
     country_code = fields.Char(related='country_id.code', string="Country Code")
     partner_latitude = fields.Float(string='Geo Latitude', digits=(10, 7))
@@ -242,7 +252,12 @@ class Partner(models.Model):
 
     def _get_street_split(self):
         self.ensure_one()
-        return tools.street_split(self.street or '')
+        results = ADDRESS_REGEX.match(self.street or '').groups('')
+        return {
+            'street_name': results[0].strip(),
+            'street_number': results[1].strip(),
+            'street_number2': results[3]
+        }
 
     @api.depends('name', 'user_ids.share', 'image_1920', 'is_company', 'type')
     def _compute_avatar_1920(self):
@@ -343,6 +358,56 @@ class Partner(models.Model):
         for partner in self:
             p = partner.commercial_partner_id
             partner.commercial_company_name = p.is_company and p.name or partner.company_name
+
+    # hooks for overriding address fields other modules
+    @api.depends("street_name", "street_number", "street_number2", "country_extended_address")
+    def _compute_street(self):
+        for partner in self.filtered(lambda rec: rec.country_extended_address):
+            street = ((partner.street_name or '') + " " + (partner.street_number or '')).strip()
+            if partner.street_number2:
+                street = street + " - " + partner.street_number2
+            partner.street = street
+
+    def _inverse_street(self):
+        for partner in self.filtered(lambda rec: rec.country_extended_address):
+            partner.update(partner._get_street_split())
+
+    def _compute_street2(self):
+        pass
+
+    def _inverse_street2(self):
+        pass
+
+    @api.depends("city_id", "country_enforce_cities")
+    def _compute_city(self):
+        for partner in self.filtered(lambda rec: rec.country_enforce_cities):
+            partner.city = self.city_id.name or ''
+
+    def _inverse_city(self):
+        pass
+
+    @api.depends("city_id", "country_enforce_cities")
+    def _compute_state_id(self):
+        for partner in self.filtered(lambda rec: rec.country_enforce_cities and rec.city_id):
+            partner.state_id = self.city_id.state_id
+
+    def _inverse_state_id(self):
+        for partner in self.filtered(lambda rec: rec.country_enforce_cities):
+            if partner.city_id.state_id != partner.state_id:
+                partner.city_id = False
+
+    @api.depends("city_id", "country_enforce_cities")
+    def _compute_zip(self):
+        for partner in self.filtered(lambda rec: rec.country_enforce_cities and rec.city_id):
+            partner.city = self.city_id.zipcode
+
+    def _inverse_zip(self):
+        # should be optimized obviously
+        City = self.env["res.city"]
+        for partner in self.filtered(lambda rec: rec.country_enforce_cities):
+            city = City.search([('state_id', '=', partner.state_id), ('zip', '=', partner.zip)])
+            if city:
+                partner.city_id = city
 
     @api.model
     def _fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
