@@ -629,6 +629,18 @@ function formatTables($editable) {
             cell.style.verticalAlign = 'bottom';
         }
     }
+    // Tables don't properly inherit alignments from their ancestors in Outlook.
+    for (const table of editable.querySelectorAll('table')) {
+        if (table.style.textAlign === 'inherit') {
+            let ancestor = table;
+            while (ancestor && (!ancestor.style.textAlign || ancestor.style.textAlign === 'inherit')) {
+                ancestor = ancestor.parentElement;
+            }
+            if (ancestor) {
+                table.style.setProperty('text-align', ancestor.style.textAlign);
+            }
+        }
+    }
 }
 /**
  * Parse through the given document's stylesheets, preprocess(*) them and return
