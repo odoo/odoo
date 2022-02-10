@@ -99,11 +99,12 @@ class ChannelUsersRelation(models.Model):
         for record in self:
             template = record.channel_id.completed_template_id
             if template:
-                records = template_to_records.setdefault(template, self.env['slide.channel.partner'])
-                records += record
+                template_to_records.setdefault(template, self.env['slide.channel.partner'])
+                template_to_records[template] += record
 
+        record_email_values = dict()
         for template, records in template_to_records.items():
-            record_email_values = template.generate_email(self.ids, ['subject', 'body_html', 'email_from', 'partner_to'])
+            record_email_values.update(template.generate_email(records.ids, ['subject', 'body_html', 'email_from', 'partner_to']))
 
         mail_mail_values = []
         for record in self:
