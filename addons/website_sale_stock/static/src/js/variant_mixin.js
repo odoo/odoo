@@ -8,11 +8,11 @@ var ajax = require('web.ajax');
 var core = require('web.core');
 var QWeb = core.qweb;
 
-const loadXml = async () => {
+require('website_sale.website_sale');
+
+VariantMixin.loadStockXML = async () => {
     return ajax.loadXML('/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml', QWeb);
 };
-
-require('website_sale.website_sale');
 
 /**
  * Addition to the variant_mixin._onChangeCombination
@@ -42,7 +42,7 @@ VariantMixin._onChangeCombinationStock = function (ev, $parent, combination) {
         combination.product_id === parseInt(product_id);
 
     if (!this.isWebsite || !isMainProduct) {
-        return;
+        return VariantMixin.loadStockXML();
     }
 
     const $addQtyInput = $parent.find('input[name="add_qty"]');
@@ -67,7 +67,7 @@ VariantMixin._onChangeCombinationStock = function (ev, $parent, combination) {
         }
     }
 
-    loadXml().then(function (result) {
+    return VariantMixin.loadStockXML().then(function (result) {
         $('.oe_website_sale')
             .find('.availability_message_' + combination.product_template)
             .remove();
