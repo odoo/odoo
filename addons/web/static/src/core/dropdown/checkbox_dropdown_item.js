@@ -5,4 +5,5 @@ import { DropdownItem } from "./dropdown_item";
 
 export class CheckBoxDropdownItem extends DropdownItem {}
 CheckBoxDropdownItem.template = "web.CheckBoxDropdownItem";
+CheckBoxDropdownItem.components = { CheckBox };
 CheckBoxDropdownItem.props = { ...DropdownItem.props, ...CheckBox.props };
