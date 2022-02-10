@@ -76,6 +76,17 @@ class AccountMove(models.Model):
                 ('id', 'in', self.env.registry.populated_models['res.partner']),
             ]).ids
 
+        @lru_cache()
+        def search_tax_ids(company_id):
+            """Search all taxes for a company.
+
+            This method is cached, only one search is done per company_id.
+            :param company_id (int): the company to search taxes for.
+            """
+            return self.env['account.tax'].search([
+                '|', ('company_id', '=', company_id), ('company_id', '=', False)
+            ]).ids
+
         def get_invoice_date(values, **kwargs):
             """Get the invoice date date.
 
@@ -86,6 +97,11 @@ class AccountMove(models.Model):
             if values['move_type'] in self.get_invoice_types(include_receipts=True):
                 return values['date']
             return False
+
+        def get_taxes(random, values, **kwargs):
+            company_id = values['company_id']
+            taxes = [(4, random.choice(search_tax_ids(company_id)), 0)]
+            return taxes
 
         def get_lines(random, values, **kwargs):
             """Build the dictionary of account.move.line.
@@ -107,6 +123,7 @@ class AccountMove(models.Model):
                     'account_id': account.id,
                     'partner_id': partner_id,
                     'currency_id': currency_id,
+                    'tax_ids': get_taxes(random, values),
                     'amount_currency': amount_currency,
                     'exclude_from_invoice_tab': exclude_from_invoice_tab,
                 })
