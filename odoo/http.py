@@ -845,7 +845,47 @@ class Request:
     # =====================================================
     # Getters and setters
     # =====================================================
-    ...
+    def update_env(self, user=None, context=None, su=None):
+        """ Update the environment of the current request. """
+        cr = None  # None is a sentinel, it keeps the same cursor
+        self.env = self.env(cr, user, context, su)
+        threading.current_thread().uid = self.env.uid
+
+    def update_context(self, **overrides):
+        """
+        Override the environment context of the current request with the
+        values of ``overrides``. To replace the entire context, please
+        use :meth:`~update_env`: instead.
+        """
+        self.update_env(context=dict(self.env.context, **overrides))
+
+    @property
+    def context(self):
+        return self.env.context
+
+    @context.setter
+    def context(self, value):
+        raise NotImplementedError("Use request.update_context instead.")
+
+    @property
+    def uid(self):
+        return self.env.uid
+
+    @uid.setter
+    def uid(self, value):
+        raise NotImplementedError("Use request.update_env instead.")
+
+    @property
+    def cr(self):
+        return self.env.cr
+
+    @cr.setter
+    def cr(self, value):
+        if value is None:
+            raise NotImplementedError("Close the cursor instead.")
+        raise ValueError("You cannot replace the cursor attached to the current request.")
+
+    _cr = cr
 
     # =====================================================
     # Helpers
@@ -957,6 +997,34 @@ class Request:
         return response
 
     def _serve_db(self):
+        """
+        Prepare the user session and load the ORM before forwarding the
+        request to ``_serve_ir_http``.
+        """
+        try:
+            self.registry = Registry(self.db)
+            self.registry.check_signaling()
+        except (AttributeError, psycopg2.OperationalError, psycopg2.ProgrammingError):
+            # psycopg2 error or attribute error while constructing
+            # the registry. That means either
+            #  - the database probably does not exists anymore, or
+            #  - the database is corrupted, or
+            #  - the database version doesnt match the server version.
+            # So remove the database from the cookie
+            self.db = None
+            self.session.db = None
+            root.session_store.save(self.session)
+            return self.redirect('/web/database/selector')
+
+        with contextlib.closing(self.registry.cursor()) as cr:
+            self.env = odoo.api.Environment(cr, self.session.uid, self.session.context)
+            threading.current_thread().uid = self.env.uid
+            try:
+                return service_model.retrying(self._serve_ir_http, self.env)
+            except Exception as exc:
+                ...
+
+    def _serve_ir_http(self):
         ...
 
 
