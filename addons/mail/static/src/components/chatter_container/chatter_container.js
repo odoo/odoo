@@ -43,7 +43,7 @@ export class ChatterContainer extends Component {
      * @override
      */
     _onWillDestroy() {
-        if (this.chatter) {
+        if (this.chatter && this.chatter.exists()) {
             this.chatter.delete();
         }
     }
