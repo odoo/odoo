@@ -6,36 +6,9 @@ import re
 import subprocess
 from unittest import skipIf
 from odoo import tools
+from odoo.modules.module import get_resource_path
 
 from . import lint_case
-
-RULES = ('{'
-        '"no-undef": "error",'
-        '"no-restricted-globals": ["error", "event", "self"],'
-        '"no-const-assign": ["error"],'
-        '"no-debugger": ["error"],'
-        '"no-dupe-class-members": ["error"]'
-        '}'
-)
-PARSER_OPTIONS = '{ecmaVersion: 2019, sourceType: module}'
-GLOBAL = ','.join([
-        'owl',
-        'odoo',
-        '$',
-        'jQuery',
-        '_',
-        'Chart',
-        'fuzzy',
-        'QWeb2',
-        'Popover',
-        'StackTrace',
-        'QUnit',
-        'luxon',
-        'moment',
-        'py',
-        'ClipboardJS',
-        'globalThis',
-])
 
 _logger = logging.getLogger(__name__)
 
@@ -49,16 +22,17 @@ class TestESLint(lint_case.LintCase):
 
     longMessage = True
 
-    def test_eslint_version(self):
+    def test_eslint(self):
         """ Test that there are no eslint errors in javascript files """
 
         files_to_check = [
             p for p in self.iter_module_files('**/static/**/*.js')
             if not re.match('.*/libs?/.*', p)  # don't check libraries
         ]
+        eslintrc_path = get_resource_path('test_lint', 'tests', 'eslintrc')
 
         _logger.info('Testing %s js files', len(files_to_check))
         # https://eslint.org/docs/user-guide/command-line-interface
-        cmd = [eslint, '--no-eslintrc', '--env', 'browser', '--env', 'es2017', '--parser-options', PARSER_OPTIONS, '--rule', RULES, '--global', GLOBAL] + files_to_check
-        process = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, check=False)
+        cmd = [eslint, '--no-eslintrc', '-c', eslintrc_path] + files_to_check
+        process = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False)
         self.assertEqual(process.returncode, 0, msg=process.stdout.decode())
