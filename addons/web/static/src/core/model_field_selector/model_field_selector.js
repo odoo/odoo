@@ -4,7 +4,7 @@ import { usePopover } from "@web/core/popover/popover_hook";
 import { useModelField } from "./model_field_hook";
 import { ModelFieldSelectorPopover } from "./model_field_selector_popover";
 
-const { Component } = owl;
+const { Component, onWillStart, onWillUpdateProps } = owl;
 
 function useUniquePopover() {
     const popover = usePopover();
@@ -28,12 +28,13 @@ export class ModelFieldSelector extends Component {
         this.popover = useUniquePopover();
         this.modelField = useModelField();
         this.chain = [];
-    }
-    async willStart() {
-        this.chain = await this.loadChain(this.props.resModel, this.props.fieldName);
-    }
-    async willUpdateProps(nextProps) {
-        this.chain = await this.loadChain(nextProps.resModel, nextProps.fieldName);
+
+        onWillStart(async () => {
+            this.chain = await this.loadChain(this.props.resModel, this.props.fieldName);
+        });
+        onWillUpdateProps(async (nextProps) => {
+            this.chain = await this.loadChain(nextProps.resModel, nextProps.fieldName);
+        });
     }
 
     get fieldNameChain() {

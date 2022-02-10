@@ -19,7 +19,7 @@
                     title="Close"
                     role="img"
                     aria-label="Close"
-                    t-on-click="trigger('popover-closed')"
+                    t-on-click="() => this.trigger('popover-closed')"
                 />
 
                 <t t-if="props.showSearchInput">
@@ -33,7 +33,7 @@
                     <t t-foreach="fieldKeys" t-as="fieldKey" t-key="fieldKey">
                         <t t-set="field" t-value="fields[fieldKey]" />
                         <t t-if="field.searchable and props.filter(field)">
-                            <li class="o_field_selector_item" t-on-click="onFieldSelected({ ...field, name: fieldKey })">
+                            <li class="o_field_selector_item" t-on-click="() => this.onFieldSelected({ ...field, name: fieldKey })">
                                 <t t-esc="field.string" />
                                 <t t-if="field.relation">
                                     <i

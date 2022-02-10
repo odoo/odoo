@@ -5,7 +5,7 @@ import { useModelField } from "./model_field_hook";
 
 import { fuzzyLookup } from "@web/core/utils/search";
 
-const { Component } = owl;
+const { Component, onWillStart } = owl;
 
 export class ModelFieldSelectorPopover extends Component {
     setup() {
@@ -15,9 +15,10 @@ export class ModelFieldSelectorPopover extends Component {
         this.fieldKeys = [];
         this.searchValue = "";
         this.fullFieldName = this.fieldNameChain.join(".");
-    }
-    async willStart() {
-        await this.loadFields();
+
+        onWillStart(async () => {
+            await this.loadFields();
+        });
     }
 
     get currentNode() {
