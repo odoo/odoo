@@ -1,26 +1,72 @@
-# -*- encoding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import contextlib
 from lxml import etree
 from unittest.mock import Mock, MagicMock, patch
 
-import werkzeug
+from werkzeug.exceptions import NotFound
+from werkzeug.test import EnvironBuilder
 
 import odoo
-from odoo.tools.misc import DotDict
-
-
-def werkzeugRaiseNotFound(*args, **kwargs):
-    raise werkzeug.exceptions.NotFound()
+from odoo.tests.common import HttpCase, HOST
+from odoo.tools.misc import DotDict, frozendict
 
 
 @contextlib.contextmanager
 def MockRequest(
-        env, *, routing=True, multilang=True,
-        context=None,
-        cookies=None, country_code=None, website=None, sale_order_id=None,
-        website_sale_current_pl=None,
+        env, *, path='/mockrequest/', routing=True, multilang=True,
+        context=frozendict(), cookies=frozendict(), country_code=None,
+        website=None, sale_order_id=None, website_sale_current_pl=None,
 ):
+
+    lang_code = context.get('lang', env.context.get('lang', 'en_US'))
+    env = env(context=dict(context, lang=lang_code))
+
+    request = Mock(
+        # request
+        httprequest=Mock(
+            host='localhost',
+            path=path,
+            app=odoo.http.root,
+            environ=dict(
+                EnvironBuilder(
+                    path=path,
+                    base_url=HttpCase.base_url()
+                ).get_environ(),
+                REMOTE_ADDR=HOST,
+            ),
+            cookies=cookies,
+            referrer='',
+        ),
+        type='http',
+        future_response=odoo.http.FutureResponse(),
+        params={},
+        redirect=env['ir.http']._redirect,
+        session=DotDict(
+            odoo.http.DEFAULT_SESSION,
+            geoip={'country_code': country_code},
+            sale_order_id=sale_order_id,
+            website_sale_current_pl=website_sale_current_pl,
+        ),
+        db=None,
+        env=env,
+        registry=env.registry,
+        cr=env.cr,
+        uid=env.uid,
+        context=env.context,
+        lang=env['res.lang']._lang_get(lang_code),
+        website=website,
+    )
+    if website:
+        request.website_routing = website.id
+
+    # The following code mocks match() to return a fake rule with a fake
+    # 'routing' attribute (routing=True) or to raise a NotFound
+    # exception (routing=False).
+    #
+    #   router = odoo.http.root.get_db_router()
+    #   rule, args = router.bind(...).match(path)
+    #   # arg routing is True => rule.endpoint.routing == {...}
+    #   # arg routing is False => NotFound exception
     router = MagicMock()
     match = router.return_value.bind.return_value.match
     if routing:
@@ -30,36 +76,7 @@ def MockRequest(
             'multilang': multilang
         }
     else:
-        match.side_effect = werkzeugRaiseNotFound
-
-    if context is None:
-        context = {}
-    lang_code = context.get('lang', env.context.get('lang', 'en_US'))
-    context.setdefault('lang', lang_code)
-
-    request = Mock(
-        context=context,
-        db=None,
-        endpoint=match.return_value[0] if routing else None,
-        env=env,
-        httprequest=Mock(
-            host='localhost',
-            path='/hello/',
-            app=odoo.http.root,
-            environ={'REMOTE_ADDR': '127.0.0.1'},
-            cookies=cookies or {},
-            referrer='',
-        ),
-        lang=env['res.lang']._lang_get(lang_code),
-        redirect=env['ir.http']._redirect,
-        session=DotDict(
-            geoip={'country_code': country_code},
-            debug=False,
-            sale_order_id=sale_order_id,
-            website_sale_current_pl=website_sale_current_pl,
-        ),
-        website=website
-    )
+        match.side_effect = NotFound
 
     with contextlib.ExitStack() as s:
         odoo.http._request_stack.push(request)

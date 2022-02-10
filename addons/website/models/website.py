@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
@@ -16,7 +15,7 @@ from werkzeug.datastructures import OrderedMultiDict
 from werkzeug.exceptions import NotFound
 
 from odoo import api, fields, models, tools, http, release, registry
-from odoo.addons.http_routing.models.ir_http import slugify, _guess_mimetype, url_for
+from odoo.addons.http_routing.models.ir_http import RequestUID, slugify, _guess_mimetype, url_for
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.website.tools import similarity_score, text_from_html
 from odoo.addons.portal.controllers.portal import pager
@@ -925,7 +924,7 @@ class Website(models.Model):
         # The format of `httprequest.host` is `domain:port`
         domain_name = request and request.httprequest.host or ''
 
-        country = request.session.geoip.get('country_code') if request and request.session.geoip else False
+        country = request.session.geoip.get('country_code') if request and 'geoip' in request.session else False
         country_id = False
         if country:
             country_id = self.env['res.country'].search([('code', '=', country)], limit=1).id
@@ -1116,7 +1115,7 @@ class Website(models.Model):
             return False
 
         # dont't list routes without argument having no default value or converter
-        sign = inspect.signature(endpoint.method.original_func)
+        sign = inspect.signature(endpoint.original_endpoint)
         params = list(sign.parameters.values())[1:]  # skip self
         supported_kinds = (inspect.Parameter.POSITIONAL_ONLY,
                            inspect.Parameter.POSITIONAL_OR_KEYWORD)
@@ -1138,7 +1137,6 @@ class Website(models.Model):
                       of the same.
             :rtype: list({name: str, url: str})
         """
-
         router = http.root.get_db_router(request.db)
         # Force enumeration to be performed as public user
         url_set = set()
@@ -1295,30 +1293,35 @@ class Website(models.Model):
         """Returns the canonical URL for the current request with translatable
         elements appropriately translated in `lang`.
 
-        If `request.endpoint` is not true, returns the current `path` instead.
+        If it is not possible to rebuild a path, use the current one instead.
 
         `url_quote_plus` is applied on the returned path.
         """
         self.ensure_one()
-        if request.endpoint:
-            router = http.root.get_db_router(request.db).bind('')
-            arguments = dict(request.endpoint_arguments)
-            for key, val in list(arguments.items()):
+        try:
+            # Re-match the controller where the request path routes.
+            rule, args = self.env['ir.http']._match(request.httprequest.path)
+            for key, val in list(args.items()):
                 if isinstance(val, models.BaseModel):
+                    if isinstance(val._uid, RequestUID):
+                        args[key] = val = val.with_user(request.uid)
                     if val.env.context.get('lang') != lang.code:
-                        arguments[key] = val.with_context(lang=lang.code)
-            path = router.build(request.endpoint, arguments)
-        else:
+                        args[key] = val = val.with_context(lang=lang.code)
+
+            router = http.root.get_db_router(request.db).bind('')
+            path = router.build(rule.endpoint, args)
+        except (NotFound, AccessError):
             # The build method returns a quoted URL so convert in this case for consistency.
             path = urls.url_quote_plus(request.httprequest.path, safe='/')
-        lang_path = ('/' + lang.url_code) if lang != self.default_lang_id else ''
-        canonical_query_string = '?%s' % urls.url_encode(canonical_params) if canonical_params else ''
+        lang_path = f'/{lang.url_code}' if lang != self.default_lang_id else ''
+        canonical_query_string = f'?{urls.url_encode(canonical_params)}' if canonical_params else ''
         return self.get_base_url() + lang_path + path + canonical_query_string
 
     def _get_canonical_url(self, canonical_params):
         """Returns the canonical URL for the current request."""
         self.ensure_one()
-        return self._get_canonical_url_localized(lang=request.lang, canonical_params=canonical_params)
+        lang = getattr(request, 'lang', self.env['ir.http']._get_default_lang())
+        return self._get_canonical_url_localized(lang=lang, canonical_params=canonical_params)
 
     def _is_canonical_url(self, canonical_params):
         """Returns whether the current request URL is canonical."""
@@ -1329,10 +1332,10 @@ class Website(models.Model):
         canonical_params = canonical_params or OrderedMultiDict()
         if params != canonical_params:
             return False
-        # Compare URL at the first rerouting iteration (if available) because
-        # it's the one with the language in the path.
-        # It is important to also test the domain of the current URL.
-        current_url = request.httprequest.url_root[:-1] + (hasattr(request, 'rerouting') and request.rerouting[0] or request.httprequest.path)
+        # Compare URL at the first routing iteration because it's the one with
+        # the language in the path. It is important to also test the domain of
+        # the current URL.
+        current_url = request.httprequest.url_root[:-1] + request.httprequest.environ['REQUEST_URI']
         canonical_url = self._get_canonical_url_localized(lang=request.lang, canonical_params=None)
         # A request path with quotable characters (such as ",") is never
         # canonical because request.httprequest.base_url is always unquoted,
