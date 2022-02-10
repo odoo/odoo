@@ -7,7 +7,7 @@
             <div class="pos-topheader" t-att-class="{ oe_hidden: state.uiState !== 'READY' }">
                 <div t-if="tempScreen.isShown" class="block-top-header" />
                 <div class="pos-branding" t-if= "!env.isMobile">
-                    <img class="pos-logo" t-on-click="trigger('toggle-debug-widget')"
+                    <img class="pos-logo" t-on-click="() => this.trigger('toggle-debug-widget')"
                          src="/point_of_sale/static/src/img/logo.png" alt="Logo" />
                     <CashMoveButton t-if="showCashMoveButton()" />
                     <TicketButton isTicketScreenShown="isTicketScreenShown" />
@@ -40,22 +40,26 @@
                             </div>
                         </div>
                     </div>
-                    <DebugWidget t-if="env.isDebug() and state.debugWidgetIsShown" t-transition="fade" />
+                    <Transition t-if="env.isDebug()" visible="state.debugWidgetIsShown" name="'o-fade'" leaveDuration="200" t-slot-scope="transition">
+                        <DebugWidget className="transition.className"/>
+                    </Transition>
                 </div>
             </t>
 
-            <div t-if="['LOADING', 'CLOSING'].includes(state.uiState)" class="loader" t-transition="swing">
-                <div class="loader-feedback">
-                    <!-- spinner from https://loading.io/css/ -->
-                    <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
-                    <t t-if="state.loadingSkipButtonIsShown">
-                        <h1 class="message">Connecting to devices</h1>
-                        <div class="button skip" t-on-click="trigger('loading-skip-callback')">
-                            Skip
-                        </div>
-                    </t>
+            <Transition visible="['LOADING', 'CLOSING'].includes(state.uiState)" name="'o-swing'" leaveDuration="800" t-slot-scope="transition">
+                <div class="loader" t-att-class="transition.className">
+                    <div class="loader-feedback">
+                        <!-- spinner from https://loading.io/css/ -->
+                        <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+                        <t t-if="state.loadingSkipButtonIsShown">
+                            <h1 class="message">Connecting to devices</h1>
+                            <div class="button skip" t-on-click="() => this.trigger('loading-skip-callback')">
+                                Skip
+                            </div>
+                        </t>
+                    </div>
                 </div>
-            </div>
+            </Transition>
 
             <!-- Allow popups to be visible at any state of the ui. -->
             <div t-if="popup.isShown" class="popups">
@@ -63,7 +67,9 @@
                    t-key="popup.name" />
             </div>
 
-            <Notification t-if="state.notification.isShown" message="state.notification.message" duration="state.notification.duration" t-transition="fade"/>
+            <Transition name="'o-fade'" visible="state.notification.isShown" leaveDuration="200" t-slot-scope="transition">
+                <Notification message="state.notification.message" duration="state.notification.duration" className="transition.className"/>
+            </Transition>
 
             <NotificationSound t-if="state.sound.src" sound="state.sound" />
         </div>

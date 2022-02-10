@@ -1,158 +1,2267 @@
 (function (exports) {
     'use strict';
 
+    function filterOutModifiersFromData(dataList) {
+        dataList = dataList.slice();
+        const modifiers = [];
+        let elm;
+        while ((elm = dataList[0]) && typeof elm === "string") {
+            modifiers.push(dataList.shift());
+        }
+        return { modifiers, data: dataList };
+    }
+    const config = {
+        // whether or not blockdom should normalize DOM whenever a block is created.
+        // Normalizing dom mean removing empty text nodes (or containing only spaces)
+        shouldNormalizeDom: true,
+        // this is the main event handler. Every event handler registered with blockdom
+        // will go through this function, giving it the data registered in the block
+        // and the event
+        mainEventHandler: (data, ev, currentTarget) => {
+            if (typeof data === "function") {
+                data(ev);
+            }
+            else if (Array.isArray(data)) {
+                data = filterOutModifiersFromData(data).data;
+                data[0](data[1], ev);
+            }
+            return false;
+        },
+    };
+
+    // -----------------------------------------------------------------------------
+    // Toggler node
+    // -----------------------------------------------------------------------------
+    class VToggler {
+        constructor(key, child) {
+            this.key = key;
+            this.child = child;
+        }
+        mount(parent, afterNode) {
+            this.parentEl = parent;
+            this.child.mount(parent, afterNode);
+        }
+        moveBefore(other, afterNode) {
+            this.child.moveBefore(other ? other.child : null, afterNode);
+        }
+        patch(other, withBeforeRemove) {
+            if (this === other) {
+                return;
+            }
+            let child1 = this.child;
+            let child2 = other.child;
+            if (this.key === other.key) {
+                child1.patch(child2, withBeforeRemove);
+            }
+            else {
+                child2.mount(this.parentEl, child1.firstNode());
+                if (withBeforeRemove) {
+                    child1.beforeRemove();
+                }
+                child1.remove();
+                this.child = child2;
+                this.key = other.key;
+            }
+        }
+        beforeRemove() {
+            this.child.beforeRemove();
+        }
+        remove() {
+            this.child.remove();
+        }
+        firstNode() {
+            return this.child.firstNode();
+        }
+        toString() {
+            return this.child.toString();
+        }
+    }
+    function toggler(key, child) {
+        return new VToggler(key, child);
+    }
+
+    const { setAttribute: elemSetAttribute, removeAttribute } = Element.prototype;
+    const tokenList = DOMTokenList.prototype;
+    const tokenListAdd = tokenList.add;
+    const tokenListRemove = tokenList.remove;
+    const isArray = Array.isArray;
+    const { split, trim } = String.prototype;
+    const wordRegexp = /\s+/;
     /**
-     * We define here a simple event bus: it can
-     * - emit events
-     * - add/remove listeners.
-     *
-     * This is a useful pattern of communication in many cases.  For OWL, each
-     * components and stores are event buses.
+     * We regroup here all code related to updating attributes in a very loose sense:
+     * attributes, properties and classs are all managed by the functions in this
+     * file.
      */
-    //------------------------------------------------------------------------------
-    // EventBus
-    //------------------------------------------------------------------------------
-    class EventBus {
-        constructor() {
-            this.subscriptions = {};
+    function setAttribute(key, value) {
+        switch (value) {
+            case false:
+            case undefined:
+                removeAttribute.call(this, key);
+                break;
+            case true:
+                elemSetAttribute.call(this, key, "");
+                break;
+            default:
+                elemSetAttribute.call(this, key, value);
         }
-        /**
-         * Add a listener for the 'eventType' events.
-         *
-         * Note that the 'owner' of this event can be anything, but will more likely
-         * be a component or a class. The idea is that the callback will be called with
-         * the proper owner bound.
-         *
-         * Also, the owner should be kind of unique. This will be used to remove the
-         * listener.
-         */
-        on(eventType, owner, callback) {
-            if (!callback) {
-                throw new Error("Missing callback");
-            }
-            if (!this.subscriptions[eventType]) {
-                this.subscriptions[eventType] = [];
-            }
-            this.subscriptions[eventType].push({
-                owner,
-                callback,
-            });
+    }
+    function createAttrUpdater(attr) {
+        return function (value) {
+            setAttribute.call(this, attr, value);
+        };
+    }
+    function attrsSetter(attrs) {
+        if (isArray(attrs)) {
+            setAttribute.call(this, attrs[0], attrs[1]);
         }
-        /**
-         * Remove a listener
-         */
-        off(eventType, owner) {
-            const subs = this.subscriptions[eventType];
-            if (subs) {
-                this.subscriptions[eventType] = subs.filter((s) => s.owner !== owner);
+        else {
+            for (let k in attrs) {
+                setAttribute.call(this, k, attrs[k]);
             }
         }
-        /**
-         * Emit an event of type 'eventType'.  Any extra arguments will be passed to
-         * the listeners callback.
-         */
-        trigger(eventType, ...args) {
-            const subs = this.subscriptions[eventType] || [];
-            for (let i = 0, iLen = subs.length; i < iLen; i++) {
-                const sub = subs[i];
-                sub.callback.call(sub.owner, ...args);
+    }
+    function attrsUpdater(attrs, oldAttrs) {
+        if (isArray(attrs)) {
+            const name = attrs[0];
+            const val = attrs[1];
+            if (name === oldAttrs[0]) {
+                if (val === oldAttrs[1]) {
+                    return;
+                }
+                setAttribute.call(this, name, val);
+            }
+            else {
+                removeAttribute.call(this, oldAttrs[0]);
+                setAttribute.call(this, name, val);
             }
         }
-        /**
-         * Remove all subscriptions.
-         */
-        clear() {
-            this.subscriptions = {};
+        else {
+            for (let k in oldAttrs) {
+                if (!(k in attrs)) {
+                    removeAttribute.call(this, k);
+                }
+            }
+            for (let k in attrs) {
+                const val = attrs[k];
+                if (val !== oldAttrs[k]) {
+                    setAttribute.call(this, k, val);
+                }
+            }
+        }
+    }
+    function toClassObj(expr) {
+        const result = {};
+        switch (typeof expr) {
+            case "string":
+                // we transform here a list of classes into an object:
+                //  'hey you' becomes {hey: true, you: true}
+                const str = trim.call(expr);
+                if (!str) {
+                    return {};
+                }
+                let words = split.call(str, wordRegexp);
+                for (let i = 0, l = words.length; i < l; i++) {
+                    result[words[i]] = true;
+                }
+                return result;
+            case "object":
+                // this is already an object but we may need to split keys:
+                // {'a': true, 'b c': true} should become {a: true, b: true, c: true}
+                for (let key in expr) {
+                    const value = expr[key];
+                    if (value) {
+                        const words = split.call(key, wordRegexp);
+                        for (let word of words) {
+                            result[word] = value;
+                        }
+                    }
+                }
+                return result;
+            case "undefined":
+                return {};
+            case "number":
+                return { [expr]: true };
+            default:
+                return { [expr]: true };
+        }
+    }
+    function setClass(val) {
+        val = val === "" ? {} : toClassObj(val);
+        // add classes
+        const cl = this.classList;
+        for (let c in val) {
+            tokenListAdd.call(cl, c);
+        }
+    }
+    function updateClass(val, oldVal) {
+        oldVal = oldVal === "" ? {} : toClassObj(oldVal);
+        val = val === "" ? {} : toClassObj(val);
+        const cl = this.classList;
+        // remove classes
+        for (let c in oldVal) {
+            if (!(c in val)) {
+                tokenListRemove.call(cl, c);
+            }
+        }
+        // add classes
+        for (let c in val) {
+            if (!(c in oldVal)) {
+                tokenListAdd.call(cl, c);
+            }
+        }
+    }
+    function makePropSetter(name) {
+        return function setProp(value) {
+            this[name] = value;
+        };
+    }
+    function isProp(tag, key) {
+        switch (tag) {
+            case "input":
+                return (key === "checked" ||
+                    key === "indeterminate" ||
+                    key === "value" ||
+                    key === "readonly" ||
+                    key === "disabled");
+            case "option":
+                return key === "selected" || key === "disabled";
+            case "textarea":
+                return key === "value" || key === "readonly" || key === "disabled";
+            case "select":
+                return key === "value" || key === "disabled";
+            case "button":
+            case "optgroup":
+                return key === "disabled";
+        }
+        return false;
+    }
+
+    function createEventHandler(rawEvent) {
+        const eventName = rawEvent.split(".")[0];
+        const capture = rawEvent.includes(".capture");
+        if (rawEvent.includes(".synthetic")) {
+            return createSyntheticHandler(eventName, capture);
+        }
+        else {
+            return createElementHandler(eventName, capture);
+        }
+    }
+    // Native listener
+    let nextNativeEventId = 1;
+    function createElementHandler(evName, capture = false) {
+        let eventKey = `__event__${evName}_${nextNativeEventId++}`;
+        if (capture) {
+            eventKey = `${eventKey}_capture`;
+        }
+        function listener(ev) {
+            const currentTarget = ev.currentTarget;
+            if (!currentTarget || !document.contains(currentTarget))
+                return;
+            const data = currentTarget[eventKey];
+            if (!data)
+                return;
+            config.mainEventHandler(data, ev, currentTarget);
+        }
+        function setup(data) {
+            this[eventKey] = data;
+            this.addEventListener(evName, listener, { capture });
+        }
+        function update(data) {
+            this[eventKey] = data;
+        }
+        return { setup, update };
+    }
+    // Synthetic handler: a form of event delegation that allows placing only one
+    // listener per event type.
+    let nextSyntheticEventId = 1;
+    function createSyntheticHandler(evName, capture = false) {
+        let eventKey = `__event__synthetic_${evName}`;
+        if (capture) {
+            eventKey = `${eventKey}_capture`;
+        }
+        setupSyntheticEvent(evName, eventKey, capture);
+        const currentId = nextSyntheticEventId++;
+        function setup(data) {
+            const _data = this[eventKey] || {};
+            _data[currentId] = data;
+            this[eventKey] = _data;
+        }
+        return { setup, update: setup };
+    }
+    function nativeToSyntheticEvent(eventKey, event) {
+        let dom = event.target;
+        while (dom !== null) {
+            const _data = dom[eventKey];
+            if (_data) {
+                for (const data of Object.values(_data)) {
+                    const stopped = config.mainEventHandler(data, event, dom);
+                    if (stopped)
+                        return;
+                }
+            }
+            dom = dom.parentNode;
+        }
+    }
+    const CONFIGURED_SYNTHETIC_EVENTS = {};
+    function setupSyntheticEvent(evName, eventKey, capture = false) {
+        if (CONFIGURED_SYNTHETIC_EVENTS[eventKey]) {
+            return;
+        }
+        document.addEventListener(evName, (event) => nativeToSyntheticEvent(eventKey, event), {
+            capture,
+        });
+        CONFIGURED_SYNTHETIC_EVENTS[eventKey] = true;
+    }
+
+    const getDescriptor$3 = (o, p) => Object.getOwnPropertyDescriptor(o, p);
+    const nodeProto$4 = Node.prototype;
+    const nodeInsertBefore$3 = nodeProto$4.insertBefore;
+    const nodeSetTextContent$1 = getDescriptor$3(nodeProto$4, "textContent").set;
+    const nodeRemoveChild$3 = nodeProto$4.removeChild;
+    // -----------------------------------------------------------------------------
+    // Multi NODE
+    // -----------------------------------------------------------------------------
+    class VMulti {
+        constructor(children) {
+            this.children = children;
+        }
+        mount(parent, afterNode) {
+            const children = this.children;
+            const l = children.length;
+            const anchors = new Array(l);
+            for (let i = 0; i < l; i++) {
+                let child = children[i];
+                if (child) {
+                    child.mount(parent, afterNode);
+                }
+                else {
+                    const childAnchor = document.createTextNode("");
+                    anchors[i] = childAnchor;
+                    nodeInsertBefore$3.call(parent, childAnchor, afterNode);
+                }
+            }
+            this.anchors = anchors;
+            this.parentEl = parent;
+        }
+        moveBefore(other, afterNode) {
+            if (other) {
+                const next = other.children[0];
+                afterNode = (next ? next.firstNode() : other.anchors[0]) || null;
+            }
+            const children = this.children;
+            const parent = this.parentEl;
+            const anchors = this.anchors;
+            for (let i = 0, l = children.length; i < l; i++) {
+                let child = children[i];
+                if (child) {
+                    child.moveBefore(null, afterNode);
+                }
+                else {
+                    const anchor = anchors[i];
+                    nodeInsertBefore$3.call(parent, anchor, afterNode);
+                }
+            }
+        }
+        patch(other, withBeforeRemove) {
+            if (this === other) {
+                return;
+            }
+            const children1 = this.children;
+            const children2 = other.children;
+            const anchors = this.anchors;
+            const parentEl = this.parentEl;
+            for (let i = 0, l = children1.length; i < l; i++) {
+                const vn1 = children1[i];
+                const vn2 = children2[i];
+                if (vn1) {
+                    if (vn2) {
+                        vn1.patch(vn2, withBeforeRemove);
+                    }
+                    else {
+                        const afterNode = vn1.firstNode();
+                        const anchor = document.createTextNode("");
+                        anchors[i] = anchor;
+                        nodeInsertBefore$3.call(parentEl, anchor, afterNode);
+                        if (withBeforeRemove) {
+                            vn1.beforeRemove();
+                        }
+                        vn1.remove();
+                        children1[i] = undefined;
+                    }
+                }
+                else if (vn2) {
+                    children1[i] = vn2;
+                    const anchor = anchors[i];
+                    vn2.mount(parentEl, anchor);
+                    nodeRemoveChild$3.call(parentEl, anchor);
+                }
+            }
+        }
+        beforeRemove() {
+            const children = this.children;
+            for (let i = 0, l = children.length; i < l; i++) {
+                const child = children[i];
+                if (child) {
+                    child.beforeRemove();
+                }
+            }
+        }
+        remove() {
+            const parentEl = this.parentEl;
+            if (this.isOnlyChild) {
+                nodeSetTextContent$1.call(parentEl, "");
+            }
+            else {
+                const children = this.children;
+                const anchors = this.anchors;
+                for (let i = 0, l = children.length; i < l; i++) {
+                    const child = children[i];
+                    if (child) {
+                        child.remove();
+                    }
+                    else {
+                        nodeRemoveChild$3.call(parentEl, anchors[i]);
+                    }
+                }
+            }
+        }
+        firstNode() {
+            const child = this.children[0];
+            return child ? child.firstNode() : this.anchors[0];
+        }
+        toString() {
+            return this.children.map((c) => (c ? c.toString() : "")).join("");
+        }
+    }
+    function multi(children) {
+        return new VMulti(children);
+    }
+
+    const getDescriptor$2 = (o, p) => Object.getOwnPropertyDescriptor(o, p);
+    const nodeProto$3 = Node.prototype;
+    const characterDataProto$1 = CharacterData.prototype;
+    const nodeInsertBefore$2 = nodeProto$3.insertBefore;
+    const characterDataSetData$1 = getDescriptor$2(characterDataProto$1, "data").set;
+    const nodeRemoveChild$2 = nodeProto$3.removeChild;
+    class VSimpleNode {
+        constructor(text) {
+            this.text = text;
+        }
+        mountNode(node, parent, afterNode) {
+            this.parentEl = parent;
+            nodeInsertBefore$2.call(parent, node, afterNode);
+            this.el = node;
+        }
+        moveBefore(other, afterNode) {
+            const target = other ? other.el : afterNode;
+            nodeInsertBefore$2.call(this.parentEl, this.el, target);
+        }
+        beforeRemove() { }
+        remove() {
+            nodeRemoveChild$2.call(this.parentEl, this.el);
+        }
+        firstNode() {
+            return this.el;
+        }
+        toString() {
+            return this.text;
+        }
+    }
+    class VText$1 extends VSimpleNode {
+        mount(parent, afterNode) {
+            this.mountNode(document.createTextNode(toText(this.text)), parent, afterNode);
+        }
+        patch(other) {
+            const text2 = other.text;
+            if (this.text !== text2) {
+                characterDataSetData$1.call(this.el, toText(text2));
+                this.text = text2;
+            }
+        }
+    }
+    class VComment extends VSimpleNode {
+        mount(parent, afterNode) {
+            this.mountNode(document.createComment(toText(this.text)), parent, afterNode);
+        }
+        patch() { }
+    }
+    function text(str) {
+        return new VText$1(str);
+    }
+    function comment(str) {
+        return new VComment(str);
+    }
+    function toText(value) {
+        switch (typeof value) {
+            case "string":
+                return value;
+            case "number":
+                return String(value);
+            case "boolean":
+                return value ? "true" : "false";
+            default:
+                return value || "";
         }
     }
 
+    const getDescriptor$1 = (o, p) => Object.getOwnPropertyDescriptor(o, p);
+    const nodeProto$2 = Node.prototype;
+    const elementProto = Element.prototype;
+    const characterDataProto = CharacterData.prototype;
+    const characterDataSetData = getDescriptor$1(characterDataProto, "data").set;
+    const nodeGetFirstChild = getDescriptor$1(nodeProto$2, "firstChild").get;
+    const nodeGetNextSibling = getDescriptor$1(nodeProto$2, "nextSibling").get;
+    const NO_OP$1 = () => { };
+    const cache$1 = {};
     /**
-     * Owl Observer
+     * Compiling blocks is a multi-step process:
      *
-     * This code contains the logic that allows Owl to observe and react to state
-     * changes.
+     * 1. build an IntermediateTree from the HTML element. This intermediate tree
+     *    is a binary tree structure that encode dynamic info sub nodes, and the
+     *    path required to reach them
+     * 2. process the tree to build a block context, which is an object that aggregate
+     *    all dynamic info in a list, and also, all ref indexes.
+     * 3. process the context to build appropriate builder/setter functions
+     * 4. make a dynamic block class, which will efficiently collect references and
+     *    create/update dynamic locations/children
      *
-     * This is a Observer class that can observe any JS values.  The way it works
-     * can be summarized thusly:
-     * - primitive values are not observed at all
-     * - Objects and arrays are observed by replacing them with a Proxy
-     * - each object/array metadata are tracked in a weakmap, and keep a revision
-     *   number
-     *
-     * Note that this code is loosely inspired by Vue.
+     * @param str
+     * @returns a new block type, that can build concrete blocks
      */
-    //------------------------------------------------------------------------------
-    // Observer
-    //------------------------------------------------------------------------------
-    class Observer {
-        constructor() {
-            this.rev = 1;
-            this.allowMutations = true;
-            this.weakMap = new WeakMap();
+    function createBlock(str) {
+        if (str in cache$1) {
+            return cache$1[str];
         }
-        notifyCB() { }
-        observe(value, parent) {
-            if (value === null ||
-                typeof value !== "object" ||
-                value instanceof Date ||
-                value instanceof Promise) {
-                // fun fact: typeof null === 'object'
-                return value;
+        // step 0: prepare html base element
+        const doc = new DOMParser().parseFromString(`<t>${str}</t>`, "text/xml");
+        const node = doc.firstChild.firstChild;
+        if (config.shouldNormalizeDom) {
+            normalizeNode(node);
+        }
+        // step 1: prepare intermediate tree
+        const tree = buildTree(node);
+        // step 2: prepare block context
+        const context = buildContext(tree);
+        // step 3: build the final block class
+        const template = tree.el;
+        const Block = buildBlock(template, context);
+        cache$1[str] = Block;
+        return Block;
+    }
+    // -----------------------------------------------------------------------------
+    // Helper
+    // -----------------------------------------------------------------------------
+    function normalizeNode(node) {
+        if (node.nodeType === Node.TEXT_NODE) {
+            if (!/\S/.test(node.textContent)) {
+                node.remove();
+                return;
             }
-            let metadata = this.weakMap.get(value) || this._observe(value, parent);
-            return metadata.proxy;
         }
-        revNumber(value) {
-            const metadata = this.weakMap.get(value);
-            return metadata ? metadata.rev : 0;
+        if (node.nodeType === Node.ELEMENT_NODE) {
+            if (node.tagName === "pre") {
+                return;
+            }
         }
-        _observe(value, parent) {
-            var self = this;
-            const proxy = new Proxy(value, {
-                get(target, k) {
-                    const targetValue = target[k];
-                    return self.observe(targetValue, value);
-                },
-                set(target, key, newVal) {
-                    const value = target[key];
-                    if (newVal !== value) {
-                        if (!self.allowMutations) {
-                            throw new Error(`Observed state cannot be changed here! (key: "${key}", val: "${newVal}")`);
+        for (let i = node.childNodes.length - 1; i >= 0; --i) {
+            normalizeNode(node.childNodes.item(i));
+        }
+    }
+    function buildTree(node, parent = null, domParentTree = null) {
+        switch (node.nodeType) {
+            case Node.ELEMENT_NODE: {
+                // HTMLElement
+                let currentNS = domParentTree && domParentTree.currentNS;
+                const tagName = node.tagName;
+                let el = undefined;
+                const info = [];
+                if (tagName.startsWith("block-text-")) {
+                    const index = parseInt(tagName.slice(11), 10);
+                    info.push({ type: "text", idx: index });
+                    el = document.createTextNode("");
+                }
+                if (tagName.startsWith("block-child-")) {
+                    if (!domParentTree.isRef) {
+                        addRef(domParentTree);
+                    }
+                    const index = parseInt(tagName.slice(12), 10);
+                    info.push({ type: "child", idx: index });
+                    el = document.createTextNode("");
+                }
+                const attrs = node.attributes;
+                const ns = attrs.getNamedItem("block-ns");
+                if (ns) {
+                    attrs.removeNamedItem("block-ns");
+                    currentNS = ns.value;
+                }
+                if (!el) {
+                    el = currentNS
+                        ? document.createElementNS(currentNS, tagName)
+                        : document.createElement(tagName);
+                }
+                if (el instanceof Element) {
+                    for (let i = 0; i < attrs.length; i++) {
+                        const attrName = attrs[i].name;
+                        const attrValue = attrs[i].value;
+                        if (attrName.startsWith("block-handler-")) {
+                            const idx = parseInt(attrName.slice(14), 10);
+                            info.push({
+                                type: "handler",
+                                idx,
+                                event: attrValue,
+                            });
                         }
-                        self._updateRevNumber(target);
-                        target[key] = newVal;
-                        self.notifyCB();
+                        else if (attrName.startsWith("block-attribute-")) {
+                            const idx = parseInt(attrName.slice(16), 10);
+                            info.push({
+                                type: "attribute",
+                                idx,
+                                name: attrValue,
+                                tag: tagName,
+                            });
+                        }
+                        else if (attrName === "block-attributes") {
+                            info.push({
+                                type: "attributes",
+                                idx: parseInt(attrValue, 10),
+                            });
+                        }
+                        else if (attrName === "block-ref") {
+                            info.push({
+                                type: "ref",
+                                idx: parseInt(attrValue, 10),
+                            });
+                        }
+                        else {
+                            el.setAttribute(attrs[i].name, attrValue);
+                        }
                     }
-                    return true;
-                },
-                deleteProperty(target, key) {
-                    if (key in target) {
-                        delete target[key];
-                        self._updateRevNumber(target);
-                        self.notifyCB();
+                }
+                const tree = {
+                    parent,
+                    firstChild: null,
+                    nextSibling: null,
+                    el,
+                    info,
+                    refN: 0,
+                    currentNS,
+                };
+                if (node.firstChild) {
+                    const childNode = node.childNodes[0];
+                    if (node.childNodes.length === 1 &&
+                        childNode.nodeType === Node.ELEMENT_NODE &&
+                        childNode.tagName.startsWith("block-child-")) {
+                        const tagName = childNode.tagName;
+                        const index = parseInt(tagName.slice(12), 10);
+                        info.push({ idx: index, type: "child", isOnlyChild: true });
                     }
-                    return true;
-                },
-            });
-            const metadata = {
-                value,
-                proxy,
-                rev: this.rev,
-                parent,
+                    else {
+                        tree.firstChild = buildTree(node.firstChild, tree, tree);
+                        el.appendChild(tree.firstChild.el);
+                        let curNode = node.firstChild;
+                        let curTree = tree.firstChild;
+                        while ((curNode = curNode.nextSibling)) {
+                            curTree.nextSibling = buildTree(curNode, curTree, tree);
+                            el.appendChild(curTree.nextSibling.el);
+                            curTree = curTree.nextSibling;
+                        }
+                    }
+                }
+                if (tree.info.length) {
+                    addRef(tree);
+                }
+                return tree;
+            }
+            case Node.TEXT_NODE:
+            case Node.COMMENT_NODE: {
+                // text node or comment node
+                const el = node.nodeType === Node.TEXT_NODE
+                    ? document.createTextNode(node.textContent)
+                    : document.createComment(node.textContent);
+                return {
+                    parent: parent,
+                    firstChild: null,
+                    nextSibling: null,
+                    el,
+                    info: [],
+                    refN: 0,
+                    currentNS: null,
+                };
+            }
+        }
+        throw new Error("boom");
+    }
+    function addRef(tree) {
+        tree.isRef = true;
+        do {
+            tree.refN++;
+        } while ((tree = tree.parent));
+    }
+    function parentTree(tree) {
+        let parent = tree.parent;
+        while (parent && parent.nextSibling === tree) {
+            tree = parent;
+            parent = parent.parent;
+        }
+        return parent;
+    }
+    function buildContext(tree, ctx, fromIdx) {
+        if (!ctx) {
+            const children = new Array(tree.info.filter((v) => v.type === "child").length);
+            ctx = { collectors: [], locations: [], children, cbRefs: [], refN: tree.refN, refList: [] };
+            fromIdx = 0;
+        }
+        if (tree.refN) {
+            const initialIdx = fromIdx;
+            const isRef = tree.isRef;
+            const firstChild = tree.firstChild ? tree.firstChild.refN : 0;
+            const nextSibling = tree.nextSibling ? tree.nextSibling.refN : 0;
+            //node
+            if (isRef) {
+                for (let info of tree.info) {
+                    info.refIdx = initialIdx;
+                }
+                tree.refIdx = initialIdx;
+                updateCtx(ctx, tree);
+                fromIdx++;
+            }
+            // right
+            if (nextSibling) {
+                const idx = fromIdx + firstChild;
+                ctx.collectors.push({ idx, prevIdx: initialIdx, getVal: nodeGetNextSibling });
+                buildContext(tree.nextSibling, ctx, idx);
+            }
+            // left
+            if (firstChild) {
+                ctx.collectors.push({ idx: fromIdx, prevIdx: initialIdx, getVal: nodeGetFirstChild });
+                buildContext(tree.firstChild, ctx, fromIdx);
+            }
+        }
+        return ctx;
+    }
+    function updateCtx(ctx, tree) {
+        for (let info of tree.info) {
+            switch (info.type) {
+                case "text":
+                    ctx.locations.push({
+                        idx: info.idx,
+                        refIdx: info.refIdx,
+                        setData: setText,
+                        updateData: setText,
+                    });
+                    break;
+                case "child":
+                    if (info.isOnlyChild) {
+                        // tree is the parentnode here
+                        ctx.children[info.idx] = {
+                            parentRefIdx: info.refIdx,
+                            isOnlyChild: true,
+                        };
+                    }
+                    else {
+                        // tree is the anchor text node
+                        ctx.children[info.idx] = {
+                            parentRefIdx: parentTree(tree).refIdx,
+                            afterRefIdx: info.refIdx,
+                        };
+                    }
+                    break;
+                case "attribute": {
+                    const refIdx = info.refIdx;
+                    let updater;
+                    let setter;
+                    if (isProp(info.tag, info.name)) {
+                        const setProp = makePropSetter(info.name);
+                        setter = setProp;
+                        updater = setProp;
+                    }
+                    else if (info.name === "class") {
+                        setter = setClass;
+                        updater = updateClass;
+                    }
+                    else {
+                        setter = createAttrUpdater(info.name);
+                        updater = setter;
+                    }
+                    ctx.locations.push({
+                        idx: info.idx,
+                        refIdx,
+                        setData: setter,
+                        updateData: updater,
+                    });
+                    break;
+                }
+                case "attributes":
+                    ctx.locations.push({
+                        idx: info.idx,
+                        refIdx: info.refIdx,
+                        setData: attrsSetter,
+                        updateData: attrsUpdater,
+                    });
+                    break;
+                case "handler": {
+                    const { setup, update } = createEventHandler(info.event);
+                    ctx.locations.push({
+                        idx: info.idx,
+                        refIdx: info.refIdx,
+                        setData: setup,
+                        updateData: update,
+                    });
+                    break;
+                }
+                case "ref":
+                    const index = ctx.cbRefs.push(info.idx) - 1;
+                    ctx.locations.push({
+                        idx: info.idx,
+                        refIdx: info.refIdx,
+                        setData: makeRefSetter(index, ctx.refList),
+                        updateData: NO_OP$1,
+                    });
+            }
+        }
+    }
+    // -----------------------------------------------------------------------------
+    // building the concrete block class
+    // -----------------------------------------------------------------------------
+    function buildBlock(template, ctx) {
+        let B = createBlockClass(template, ctx);
+        if (ctx.cbRefs.length) {
+            const cbRefs = ctx.cbRefs;
+            const refList = ctx.refList;
+            let cbRefsNumber = cbRefs.length;
+            B = class extends B {
+                mount(parent, afterNode) {
+                    refList.push(new Array(cbRefsNumber));
+                    super.mount(parent, afterNode);
+                    for (let cbRef of refList.pop()) {
+                        cbRef();
+                    }
+                }
+                remove() {
+                    super.remove();
+                    for (let cbRef of cbRefs) {
+                        let fn = this.data[cbRef];
+                        fn(null);
+                    }
+                }
             };
-            this.weakMap.set(value, metadata);
-            this.weakMap.set(metadata.proxy, metadata);
-            return metadata;
         }
-        _updateRevNumber(target) {
-            this.rev++;
-            let metadata = this.weakMap.get(target);
-            let parent = target;
-            do {
-                metadata = this.weakMap.get(parent);
-                metadata.rev++;
-            } while ((parent = metadata.parent) && parent !== target);
+        if (ctx.children.length) {
+            B = class extends B {
+                constructor(data, children) {
+                    super(data);
+                    this.children = children;
+                }
+            };
+            B.prototype.beforeRemove = VMulti.prototype.beforeRemove;
+            return (data, children = []) => new B(data, children);
         }
+        return (data) => new B(data);
+    }
+    function createBlockClass(template, ctx) {
+        const { refN, collectors, children } = ctx;
+        const colN = collectors.length;
+        ctx.locations.sort((a, b) => a.idx - b.idx);
+        const locations = ctx.locations.map((loc) => ({
+            refIdx: loc.refIdx,
+            setData: loc.setData,
+            updateData: loc.updateData,
+        }));
+        const locN = locations.length;
+        const childN = children.length;
+        const childrenLocs = children;
+        const isDynamic = refN > 0;
+        // these values are defined here to make them faster to lookup in the class
+        // block scope
+        const nodeCloneNode = nodeProto$2.cloneNode;
+        const nodeInsertBefore = nodeProto$2.insertBefore;
+        const elementRemove = elementProto.remove;
+        class Block {
+            constructor(data) {
+                this.data = data;
+            }
+            beforeRemove() { }
+            remove() {
+                elementRemove.call(this.el);
+            }
+            firstNode() {
+                return this.el;
+            }
+            moveBefore(other, afterNode) {
+                const target = other ? other.el : afterNode;
+                nodeInsertBefore.call(this.parentEl, this.el, target);
+            }
+            toString() {
+                const div = document.createElement("div");
+                this.mount(div, null);
+                return div.innerHTML;
+            }
+            mount(parent, afterNode) {
+                const el = nodeCloneNode.call(template, true);
+                nodeInsertBefore.call(parent, el, afterNode);
+                this.el = el;
+                this.parentEl = parent;
+            }
+            patch(other, withBeforeRemove) { }
+        }
+        if (isDynamic) {
+            Block.prototype.mount = function mount(parent, afterNode) {
+                const el = nodeCloneNode.call(template, true);
+                // collecting references
+                const refs = new Array(refN);
+                this.refs = refs;
+                refs[0] = el;
+                for (let i = 0; i < colN; i++) {
+                    const w = collectors[i];
+                    refs[w.idx] = w.getVal.call(refs[w.prevIdx]);
+                }
+                // applying data to all update points
+                if (locN) {
+                    const data = this.data;
+                    for (let i = 0; i < locN; i++) {
+                        const loc = locations[i];
+                        loc.setData.call(refs[loc.refIdx], data[i]);
+                    }
+                }
+                nodeInsertBefore.call(parent, el, afterNode);
+                // preparing all children
+                if (childN) {
+                    const children = this.children;
+                    for (let i = 0; i < childN; i++) {
+                        const child = children[i];
+                        if (child) {
+                            const loc = childrenLocs[i];
+                            const afterNode = loc.afterRefIdx ? refs[loc.afterRefIdx] : null;
+                            child.isOnlyChild = loc.isOnlyChild;
+                            child.mount(refs[loc.parentRefIdx], afterNode);
+                        }
+                    }
+                }
+                this.el = el;
+                this.parentEl = parent;
+            };
+            Block.prototype.patch = function patch(other, withBeforeRemove) {
+                if (this === other) {
+                    return;
+                }
+                const refs = this.refs;
+                // update texts/attributes/
+                if (locN) {
+                    const data1 = this.data;
+                    const data2 = other.data;
+                    for (let i = 0; i < locN; i++) {
+                        const val1 = data1[i];
+                        const val2 = data2[i];
+                        if (val1 !== val2) {
+                            const loc = locations[i];
+                            loc.updateData.call(refs[loc.refIdx], val2, val1);
+                        }
+                    }
+                    this.data = data2;
+                }
+                // update children
+                if (childN) {
+                    let children1 = this.children;
+                    const children2 = other.children;
+                    for (let i = 0; i < childN; i++) {
+                        const child1 = children1[i];
+                        const child2 = children2[i];
+                        if (child1) {
+                            if (child2) {
+                                child1.patch(child2, withBeforeRemove);
+                            }
+                            else {
+                                if (withBeforeRemove) {
+                                    child1.beforeRemove();
+                                }
+                                child1.remove();
+                                children1[i] = undefined;
+                            }
+                        }
+                        else if (child2) {
+                            const loc = childrenLocs[i];
+                            const afterNode = loc.afterRefIdx ? refs[loc.afterRefIdx] : null;
+                            child2.mount(refs[loc.parentRefIdx], afterNode);
+                            children1[i] = child2;
+                        }
+                    }
+                }
+            };
+        }
+        return Block;
+    }
+    function setText(value) {
+        characterDataSetData.call(this, toText(value));
+    }
+    function makeRefSetter(index, refs) {
+        return function setRef(fn) {
+            refs[refs.length - 1][index] = () => fn(this);
+        };
+    }
+
+    const getDescriptor = (o, p) => Object.getOwnPropertyDescriptor(o, p);
+    const nodeProto$1 = Node.prototype;
+    const nodeInsertBefore$1 = nodeProto$1.insertBefore;
+    const nodeAppendChild = nodeProto$1.appendChild;
+    const nodeRemoveChild$1 = nodeProto$1.removeChild;
+    const nodeSetTextContent = getDescriptor(nodeProto$1, "textContent").set;
+    // -----------------------------------------------------------------------------
+    // List Node
+    // -----------------------------------------------------------------------------
+    class VList {
+        constructor(children) {
+            this.children = children;
+        }
+        mount(parent, afterNode) {
+            const children = this.children;
+            const _anchor = document.createTextNode("");
+            this.anchor = _anchor;
+            nodeInsertBefore$1.call(parent, _anchor, afterNode);
+            const l = children.length;
+            if (l) {
+                const mount = children[0].mount;
+                for (let i = 0; i < l; i++) {
+                    mount.call(children[i], parent, _anchor);
+                }
+            }
+            this.parentEl = parent;
+        }
+        moveBefore(other, afterNode) {
+            if (other) {
+                const next = other.children[0];
+                afterNode = (next ? next.firstNode() : other.anchor) || null;
+            }
+            const children = this.children;
+            for (let i = 0, l = children.length; i < l; i++) {
+                children[i].moveBefore(null, afterNode);
+            }
+            this.parentEl.insertBefore(this.anchor, afterNode);
+        }
+        patch(other, withBeforeRemove) {
+            if (this === other) {
+                return;
+            }
+            const ch1 = this.children;
+            const ch2 = other.children;
+            if (ch2.length === 0 && ch1.length === 0) {
+                return;
+            }
+            this.children = ch2;
+            const proto = ch2[0] || ch1[0];
+            const { mount: cMount, patch: cPatch, remove: cRemove, beforeRemove, moveBefore: cMoveBefore, firstNode: cFirstNode, } = proto;
+            const _anchor = this.anchor;
+            const isOnlyChild = this.isOnlyChild;
+            const parent = this.parentEl;
+            // fast path: no new child => only remove
+            if (ch2.length === 0 && isOnlyChild) {
+                if (withBeforeRemove) {
+                    for (let i = 0, l = ch1.length; i < l; i++) {
+                        beforeRemove.call(ch1[i]);
+                    }
+                }
+                nodeSetTextContent.call(parent, "");
+                nodeAppendChild.call(parent, _anchor);
+                return;
+            }
+            let startIdx1 = 0;
+            let startIdx2 = 0;
+            let startVn1 = ch1[0];
+            let startVn2 = ch2[0];
+            let endIdx1 = ch1.length - 1;
+            let endIdx2 = ch2.length - 1;
+            let endVn1 = ch1[endIdx1];
+            let endVn2 = ch2[endIdx2];
+            let mapping = undefined;
+            while (startIdx1 <= endIdx1 && startIdx2 <= endIdx2) {
+                // -------------------------------------------------------------------
+                if (startVn1 === null) {
+                    startVn1 = ch1[++startIdx1];
+                    continue;
+                }
+                // -------------------------------------------------------------------
+                if (endVn1 === null) {
+                    endVn1 = ch1[--endIdx1];
+                    continue;
+                }
+                // -------------------------------------------------------------------
+                let startKey1 = startVn1.key;
+                let startKey2 = startVn2.key;
+                if (startKey1 === startKey2) {
+                    cPatch.call(startVn1, startVn2, withBeforeRemove);
+                    ch2[startIdx2] = startVn1;
+                    startVn1 = ch1[++startIdx1];
+                    startVn2 = ch2[++startIdx2];
+                    continue;
+                }
+                // -------------------------------------------------------------------
+                let endKey1 = endVn1.key;
+                let endKey2 = endVn2.key;
+                if (endKey1 === endKey2) {
+                    cPatch.call(endVn1, endVn2, withBeforeRemove);
+                    ch2[endIdx2] = endVn1;
+                    endVn1 = ch1[--endIdx1];
+                    endVn2 = ch2[--endIdx2];
+                    continue;
+                }
+                // -------------------------------------------------------------------
+                if (startKey1 === endKey2) {
+                    // bnode moved right
+                    cPatch.call(startVn1, endVn2, withBeforeRemove);
+                    ch2[endIdx2] = startVn1;
+                    const nextChild = ch2[endIdx2 + 1];
+                    cMoveBefore.call(startVn1, nextChild, _anchor);
+                    startVn1 = ch1[++startIdx1];
+                    endVn2 = ch2[--endIdx2];
+                    continue;
+                }
+                // -------------------------------------------------------------------
+                if (endKey1 === startKey2) {
+                    // bnode moved left
+                    cPatch.call(endVn1, startVn2, withBeforeRemove);
+                    ch2[startIdx2] = endVn1;
+                    const nextChild = ch1[startIdx1];
+                    cMoveBefore.call(endVn1, nextChild, _anchor);
+                    endVn1 = ch1[--endIdx1];
+                    startVn2 = ch2[++startIdx2];
+                    continue;
+                }
+                // -------------------------------------------------------------------
+                mapping = mapping || createMapping(ch1, startIdx1, endIdx1);
+                let idxInOld = mapping[startKey2];
+                if (idxInOld === undefined) {
+                    cMount.call(startVn2, parent, cFirstNode.call(startVn1) || null);
+                }
+                else {
+                    const elmToMove = ch1[idxInOld];
+                    cMoveBefore.call(elmToMove, startVn1, null);
+                    cPatch.call(elmToMove, startVn2, withBeforeRemove);
+                    ch2[startIdx2] = elmToMove;
+                    ch1[idxInOld] = null;
+                }
+                startVn2 = ch2[++startIdx2];
+            }
+            // ---------------------------------------------------------------------
+            if (startIdx1 <= endIdx1 || startIdx2 <= endIdx2) {
+                if (startIdx1 > endIdx1) {
+                    const nextChild = ch2[endIdx2 + 1];
+                    const anchor = nextChild ? cFirstNode.call(nextChild) || null : _anchor;
+                    for (let i = startIdx2; i <= endIdx2; i++) {
+                        cMount.call(ch2[i], parent, anchor);
+                    }
+                }
+                else {
+                    for (let i = startIdx1; i <= endIdx1; i++) {
+                        let ch = ch1[i];
+                        if (ch) {
+                            if (withBeforeRemove) {
+                                beforeRemove.call(ch);
+                            }
+                            cRemove.call(ch);
+                        }
+                    }
+                }
+            }
+        }
+        beforeRemove() {
+            const children = this.children;
+            const l = children.length;
+            if (l) {
+                const beforeRemove = children[0].beforeRemove;
+                for (let i = 0; i < l; i++) {
+                    beforeRemove.call(children[i]);
+                }
+            }
+        }
+        remove() {
+            const { parentEl, anchor } = this;
+            if (this.isOnlyChild) {
+                nodeSetTextContent.call(parentEl, "");
+            }
+            else {
+                const children = this.children;
+                const l = children.length;
+                if (l) {
+                    const remove = children[0].remove;
+                    for (let i = 0; i < l; i++) {
+                        remove.call(children[i]);
+                    }
+                }
+                nodeRemoveChild$1.call(parentEl, anchor);
+            }
+        }
+        firstNode() {
+            const child = this.children[0];
+            return child ? child.firstNode() : undefined;
+        }
+        toString() {
+            return this.children.map((c) => c.toString()).join("");
+        }
+    }
+    function list(children) {
+        return new VList(children);
+    }
+    function createMapping(ch1, startIdx1, endIdx2) {
+        let mapping = {};
+        for (let i = startIdx1; i <= endIdx2; i++) {
+            mapping[ch1[i].key] = i;
+        }
+        return mapping;
+    }
+
+    const nodeProto = Node.prototype;
+    const nodeInsertBefore = nodeProto.insertBefore;
+    const nodeRemoveChild = nodeProto.removeChild;
+    class VHtml {
+        constructor(html) {
+            this.content = [];
+            this.html = html;
+        }
+        mount(parent, afterNode) {
+            this.parentEl = parent;
+            const template = document.createElement("template");
+            template.innerHTML = this.html;
+            this.content = [...template.content.childNodes];
+            for (let elem of this.content) {
+                nodeInsertBefore.call(parent, elem, afterNode);
+            }
+            if (!this.content.length) {
+                const textNode = document.createTextNode("");
+                this.content.push(textNode);
+                nodeInsertBefore.call(parent, textNode, afterNode);
+            }
+        }
+        moveBefore(other, afterNode) {
+            const target = other ? other.content[0] : afterNode;
+            const parent = this.parentEl;
+            for (let elem of this.content) {
+                nodeInsertBefore.call(parent, elem, target);
+            }
+        }
+        patch(other) {
+            if (this === other) {
+                return;
+            }
+            const html2 = other.html;
+            if (this.html !== html2) {
+                const parent = this.parentEl;
+                // insert new html in front of current
+                const afterNode = this.content[0];
+                const template = document.createElement("template");
+                template.innerHTML = html2;
+                const content = [...template.content.childNodes];
+                for (let elem of content) {
+                    nodeInsertBefore.call(parent, elem, afterNode);
+                }
+                if (!content.length) {
+                    const textNode = document.createTextNode("");
+                    content.push(textNode);
+                    nodeInsertBefore.call(parent, textNode, afterNode);
+                }
+                // remove current content
+                this.remove();
+                this.content = content;
+                this.html = other.html;
+            }
+        }
+        beforeRemove() { }
+        remove() {
+            const parent = this.parentEl;
+            for (let elem of this.content) {
+                nodeRemoveChild.call(parent, elem);
+            }
+        }
+        firstNode() {
+            return this.content[0];
+        }
+        toString() {
+            return this.html;
+        }
+    }
+    function html(str) {
+        return new VHtml(str);
+    }
+
+    function mount$1(vnode, fixture, afterNode = null) {
+        vnode.mount(fixture, afterNode);
+    }
+    function patch(vnode1, vnode2, withBeforeRemove = false) {
+        vnode1.patch(vnode2, withBeforeRemove);
+    }
+    function remove(vnode, withBeforeRemove = false) {
+        if (withBeforeRemove) {
+            vnode.beforeRemove();
+        }
+        vnode.remove();
+    }
+
+    /**
+     * Apply default props (only top level).
+     *
+     * Note that this method does modify in place the props
+     */
+    function applyDefaultProps(props, ComponentClass) {
+        const defaultProps = ComponentClass.defaultProps;
+        if (defaultProps) {
+            for (let propName in defaultProps) {
+                if (props[propName] === undefined) {
+                    props[propName] = defaultProps[propName];
+                }
+            }
+        }
+    }
+    //------------------------------------------------------------------------------
+    // Prop validation helper
+    //------------------------------------------------------------------------------
+    function getPropDescription(staticProps) {
+        if (staticProps instanceof Array) {
+            return Object.fromEntries(staticProps.map((p) => (p.endsWith("?") ? [p.slice(0, -1), false] : [p, true])));
+        }
+        return staticProps || { "*": true };
+    }
+    /**
+     * Validate the component props (or next props) against the (static) props
+     * description.  This is potentially an expensive operation: it may needs to
+     * visit recursively the props and all the children to check if they are valid.
+     * This is why it is only done in 'dev' mode.
+     */
+    function validateProps(name, props, parent) {
+        const ComponentClass = typeof name !== "string"
+            ? name
+            : parent.constructor.components[name];
+        if (!ComponentClass) {
+            // this is an error, wrong component. We silently return here instead so the
+            // error is triggered by the usual path ('component' function)
+            return;
+        }
+        applyDefaultProps(props, ComponentClass);
+        const defaultProps = ComponentClass.defaultProps || {};
+        let propsDef = getPropDescription(ComponentClass.props);
+        const allowAdditionalProps = "*" in propsDef;
+        for (let propName in propsDef) {
+            if (propName === "*") {
+                continue;
+            }
+            const propDef = propsDef[propName];
+            let isMandatory = !!propDef;
+            if (typeof propDef === "object" && "optional" in propDef) {
+                isMandatory = !propDef.optional;
+            }
+            if (isMandatory && propName in defaultProps) {
+                throw new Error(`A default value cannot be defined for a mandatory prop (name: '${propName}', component: ${ComponentClass.name})`);
+            }
+            if (props[propName] === undefined) {
+                if (isMandatory) {
+                    throw new Error(`Missing props '${propName}' (component '${ComponentClass.name}')`);
+                }
+                else {
+                    continue;
+                }
+            }
+            let isValid;
+            try {
+                isValid = isValidProp(props[propName], propDef);
+            }
+            catch (e) {
+                e.message = `Invalid prop '${propName}' in component ${ComponentClass.name} (${e.message})`;
+                throw e;
+            }
+            if (!isValid) {
+                throw new Error(`Invalid Prop '${propName}' in component '${ComponentClass.name}'`);
+            }
+        }
+        if (!allowAdditionalProps) {
+            for (let propName in props) {
+                if (!(propName in propsDef)) {
+                    throw new Error(`Unknown prop '${propName}' given to component '${ComponentClass.name}'`);
+                }
+            }
+        }
+    }
+    /**
+     * Check if an invidual prop value matches its (static) prop definition
+     */
+    function isValidProp(prop, propDef) {
+        if (propDef === true) {
+            return true;
+        }
+        if (typeof propDef === "function") {
+            // Check if a value is constructed by some Constructor.  Note that there is a
+            // slight abuse of language: we want to consider primitive values as well.
+            //
+            // So, even though 1 is not an instance of Number, we want to consider that
+            // it is valid.
+            if (typeof prop === "object") {
+                return prop instanceof propDef;
+            }
+            return typeof prop === propDef.name.toLowerCase();
+        }
+        else if (propDef instanceof Array) {
+            // If this code is executed, this means that we want to check if a prop
+            // matches at least one of its descriptor.
+            let result = false;
+            for (let i = 0, iLen = propDef.length; i < iLen; i++) {
+                result = result || isValidProp(prop, propDef[i]);
+            }
+            return result;
+        }
+        // propsDef is an object
+        if (propDef.optional && prop === undefined) {
+            return true;
+        }
+        let result = propDef.type ? isValidProp(prop, propDef.type) : true;
+        if (propDef.validate) {
+            result = result && propDef.validate(prop);
+        }
+        if (propDef.type === Array && propDef.element) {
+            for (let i = 0, iLen = prop.length; i < iLen; i++) {
+                result = result && isValidProp(prop[i], propDef.element);
+            }
+        }
+        if (propDef.type === Object && propDef.shape) {
+            const shape = propDef.shape;
+            for (let key in shape) {
+                result = result && isValidProp(prop[key], shape[key]);
+            }
+            if (result) {
+                for (let propName in prop) {
+                    if (!(propName in shape)) {
+                        throw new Error(`unknown prop '${propName}'`);
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Creates a batched version of a callback so that all calls to it in the same
+     * microtick will only call the original callback once.
+     *
+     * @param callback the callback to batch
+     * @returns a batched version of the original callback
+     */
+    function batched(callback) {
+        let called = false;
+        return async () => {
+            // This await blocks all calls to the callback here, then releases them sequentially
+            // in the next microtick. This line decides the granularity of the batch.
+            await Promise.resolve();
+            if (!called) {
+                called = true;
+                callback();
+                // wait for all calls in this microtick to fall through before resetting "called"
+                // so that only the first call to the batched function calls the original callback
+                await Promise.resolve();
+                called = false;
+            }
+        };
+    }
+    function validateTarget(target) {
+        if (!(target instanceof HTMLElement)) {
+            throw new Error("Cannot mount component: the target is not a valid DOM element");
+        }
+        if (!document.body.contains(target)) {
+            throw new Error("Cannot mount a component on a detached dom node");
+        }
+    }
+    class EventBus extends EventTarget {
+        trigger(name, payload) {
+            this.dispatchEvent(new CustomEvent(name, { detail: payload }));
+        }
+    }
+    function whenReady(fn) {
+        return new Promise(function (resolve) {
+            if (document.readyState !== "loading") {
+                resolve(true);
+            }
+            else {
+                document.addEventListener("DOMContentLoaded", resolve, false);
+            }
+        }).then(fn || function () { });
+    }
+    async function loadFile(url) {
+        const result = await fetch(url);
+        if (!result.ok) {
+            throw new Error("Error while fetching xml templates");
+        }
+        return await result.text();
+    }
+    /*
+     * This class just transports the fact that a string is safe
+     * to be injected as HTML. Overriding a JS primitive is quite painful though
+     * so we need to redfine toString and valueOf.
+     */
+    class Markup extends String {
+    }
+    /*
+     * Marks a value as safe, that is, a value that can be injected as HTML directly.
+     * It should be used to wrap the value passed to a t-out directive to allow a raw rendering.
+     */
+    function markup(value) {
+        return new Markup(value);
+    }
+
+    /**
+     * This file contains utility functions that will be injected in each template,
+     * to perform various useful tasks in the compiled code.
+     */
+    function withDefault(value, defaultValue) {
+        return value === undefined || value === null || value === false ? defaultValue : value;
+    }
+    function callSlot(ctx, parent, key, name, dynamic, extra, defaultContent) {
+        key = key + "__slot_" + name;
+        const slots = (ctx.props && ctx.props.slots) || {};
+        const { __render, __ctx, __scope } = slots[name] || {};
+        const slotScope = Object.create(__ctx || {});
+        if (__scope) {
+            slotScope[__scope] = extra || {};
+        }
+        const slotBDom = __render ? __render.call(__ctx.__owl__.component, slotScope, parent, key) : null;
+        if (defaultContent) {
+            let child1 = undefined;
+            let child2 = undefined;
+            if (slotBDom) {
+                child1 = dynamic ? toggler(name, slotBDom) : slotBDom;
+            }
+            else {
+                child2 = defaultContent.call(ctx.__owl__.component, ctx, parent, key);
+            }
+            return multi([child1, child2]);
+        }
+        return slotBDom || text("");
+    }
+    function capture(ctx) {
+        const component = ctx.__owl__.component;
+        const result = Object.create(component);
+        for (let k in ctx) {
+            result[k] = ctx[k];
+        }
+        return result;
+    }
+    function withKey(elem, k) {
+        elem.key = k;
+        return elem;
+    }
+    function prepareList(collection) {
+        let keys;
+        let values;
+        if (Array.isArray(collection)) {
+            keys = collection;
+            values = collection;
+        }
+        else if (collection) {
+            values = Object.keys(collection);
+            keys = Object.values(collection);
+        }
+        else {
+            throw new Error("Invalid loop expression");
+        }
+        const n = values.length;
+        return [keys, values, n, new Array(n)];
+    }
+    const isBoundary = Symbol("isBoundary");
+    function setContextValue(ctx, key, value) {
+        const ctx0 = ctx;
+        while (!ctx.hasOwnProperty(key) && !ctx.hasOwnProperty(isBoundary)) {
+            const newCtx = ctx.__proto__;
+            if (!newCtx) {
+                ctx = ctx0;
+                break;
+            }
+            ctx = newCtx;
+        }
+        ctx[key] = value;
+    }
+    function toNumber(val) {
+        const n = parseFloat(val);
+        return isNaN(n) ? val : n;
+    }
+    function shallowEqual$1(l1, l2) {
+        for (let i = 0, l = l1.length; i < l; i++) {
+            if (l1[i] !== l2[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+    class LazyValue {
+        constructor(fn, ctx, node) {
+            this.fn = fn;
+            this.ctx = capture(ctx);
+            this.node = node;
+        }
+        evaluate() {
+            return this.fn(this.ctx, this.node);
+        }
+        toString() {
+            return this.evaluate().toString();
+        }
+    }
+    /*
+     * Safely outputs `value` as a block depending on the nature of `value`
+     */
+    function safeOutput(value) {
+        if (!value) {
+            return value;
+        }
+        let safeKey;
+        let block;
+        if (value instanceof Markup) {
+            safeKey = `string_safe`;
+            block = html(value);
+        }
+        else if (value instanceof LazyValue) {
+            safeKey = `lazy_value`;
+            block = value.evaluate();
+        }
+        else if (value instanceof String || typeof value === "string") {
+            safeKey = "string_unsafe";
+            block = text(value);
+        }
+        else {
+            // Assuming it is a block
+            safeKey = "block_safe";
+            block = value;
+        }
+        return toggler(safeKey, block);
+    }
+    let boundFunctions = new WeakMap();
+    function bind(ctx, fn) {
+        let component = ctx.__owl__.component;
+        let boundFnMap = boundFunctions.get(component);
+        if (!boundFnMap) {
+            boundFnMap = new WeakMap();
+            boundFunctions.set(component, boundFnMap);
+        }
+        let boundFn = boundFnMap.get(fn);
+        if (!boundFn) {
+            boundFn = fn.bind(component);
+            boundFnMap.set(fn, boundFn);
+        }
+        return boundFn;
+    }
+    function multiRefSetter(refs, name) {
+        let count = 0;
+        return (el) => {
+            if (el) {
+                count++;
+                if (count > 1) {
+                    throw new Error("Cannot have 2 elements with same ref name at the same time");
+                }
+            }
+            if (count === 0 || el) {
+                refs[name] = el;
+            }
+        };
+    }
+    const UTILS = {
+        withDefault,
+        zero: Symbol("zero"),
+        isBoundary,
+        callSlot,
+        capture,
+        withKey,
+        prepareList,
+        setContextValue,
+        multiRefSetter,
+        shallowEqual: shallowEqual$1,
+        toNumber,
+        validateProps,
+        LazyValue,
+        safeOutput,
+        bind,
+    };
+
+    const mainEventHandler = (data, ev, currentTarget) => {
+        const { data: _data, modifiers } = filterOutModifiersFromData(data);
+        data = _data;
+        let stopped = false;
+        if (modifiers.length) {
+            let selfMode = false;
+            const isSelf = ev.target === currentTarget;
+            for (const mod of modifiers) {
+                switch (mod) {
+                    case "self":
+                        selfMode = true;
+                        if (isSelf) {
+                            continue;
+                        }
+                        else {
+                            return stopped;
+                        }
+                    case "prevent":
+                        if ((selfMode && isSelf) || !selfMode)
+                            ev.preventDefault();
+                        continue;
+                    case "stop":
+                        if ((selfMode && isSelf) || !selfMode)
+                            ev.stopPropagation();
+                        stopped = true;
+                        continue;
+                }
+            }
+        }
+        // If handler is empty, the array slot 0 will also be empty, and data will not have the property 0
+        // We check this rather than data[0] being truthy (or typeof function) so that it crashes
+        // as expected when there is a handler expression that evaluates to a falsy value
+        if (Object.hasOwnProperty.call(data, 0)) {
+            const handler = data[0];
+            if (typeof handler !== "function") {
+                throw new Error(`Invalid handler (expected a function, received: '${handler}')`);
+            }
+            let node = data[1] ? data[1].__owl__ : null;
+            if (node ? node.status === 1 /* MOUNTED */ : true) {
+                handler.call(node ? node.component : null, ev);
+            }
+        }
+        return stopped;
+    };
+
+    // Maps fibers to thrown errors
+    const fibersInError = new WeakMap();
+    const nodeErrorHandlers = new WeakMap();
+    function _handleError(node, error, isFirstRound = false) {
+        if (!node) {
+            return false;
+        }
+        const fiber = node.fiber;
+        if (fiber) {
+            fibersInError.set(fiber, error);
+        }
+        const errorHandlers = nodeErrorHandlers.get(node);
+        if (errorHandlers) {
+            let stopped = false;
+            // execute in the opposite order
+            for (let i = errorHandlers.length - 1; i >= 0; i--) {
+                try {
+                    errorHandlers[i](error);
+                    stopped = true;
+                    break;
+                }
+                catch (e) {
+                    error = e;
+                }
+            }
+            if (stopped) {
+                if (isFirstRound && fiber && fiber.node.fiber) {
+                    fiber.root.counter--;
+                }
+                return true;
+            }
+        }
+        return _handleError(node.parent, error);
+    }
+    function handleError(params) {
+        const error = params.error;
+        const node = "node" in params ? params.node : params.fiber.node;
+        const fiber = "fiber" in params ? params.fiber : node.fiber;
+        // resets the fibers on components if possible. This is important so that
+        // new renderings can be properly included in the initial one, if any.
+        let current = fiber;
+        do {
+            current.node.fiber = current;
+            current = current.parent;
+        } while (current);
+        fibersInError.set(fiber.root, error);
+        const handled = _handleError(node, error, true);
+        if (!handled) {
+            console.warn(`[Owl] Unhandled error. Destroying the root component`);
+            try {
+                node.app.destroy();
+            }
+            catch (e) {
+                console.error(e);
+            }
+        }
+    }
+
+    function makeChildFiber(node, parent) {
+        let current = node.fiber;
+        if (current) {
+            let root = parent.root;
+            cancelFibers(root, current.children);
+            current.root = null;
+        }
+        return new Fiber(node, parent);
+    }
+    function makeRootFiber(node) {
+        let current = node.fiber;
+        if (current) {
+            let root = current.root;
+            root.counter -= cancelFibers(root, current.children);
+            current.children = [];
+            root.counter++;
+            current.bdom = null;
+            if (fibersInError.has(current)) {
+                fibersInError.delete(current);
+                fibersInError.delete(root);
+                current.appliedToDom = false;
+            }
+            return current;
+        }
+        const fiber = new RootFiber(node, null);
+        if (node.willPatch.length) {
+            fiber.willPatch.push(fiber);
+        }
+        if (node.patched.length) {
+            fiber.patched.push(fiber);
+        }
+        return fiber;
+    }
+    /**
+     * @returns number of not-yet rendered fibers cancelled
+     */
+    function cancelFibers(root, fibers) {
+        let result = 0;
+        for (let fiber of fibers) {
+            fiber.node.fiber = null;
+            fiber.root = root;
+            if (!fiber.bdom) {
+                result++;
+            }
+            result += cancelFibers(root, fiber.children);
+        }
+        return result;
+    }
+    class Fiber {
+        constructor(node, parent) {
+            this.bdom = null;
+            this.children = [];
+            this.appliedToDom = false;
+            this.node = node;
+            this.parent = parent;
+            if (parent) {
+                const root = parent.root;
+                root.counter++;
+                this.root = root;
+                parent.children.push(this);
+            }
+            else {
+                this.root = this;
+            }
+        }
+    }
+    class RootFiber extends Fiber {
+        constructor() {
+            super(...arguments);
+            this.counter = 1;
+            // only add stuff in this if they have registered some hooks
+            this.willPatch = [];
+            this.patched = [];
+            this.mounted = [];
+            // A fiber is typically locked when it is completing and the patch has not, or is being applied.
+            // i.e.: render triggered in onWillUnmount or in willPatch will be delayed
+            this.locked = false;
+        }
+        complete() {
+            const node = this.node;
+            this.locked = true;
+            let current = undefined;
+            try {
+                // Step 1: calling all willPatch lifecycle hooks
+                for (current of this.willPatch) {
+                    // because of the asynchronous nature of the rendering, some parts of the
+                    // UI may have been rendered, then deleted in a followup rendering, and we
+                    // do not want to call onWillPatch in that case.
+                    let node = current.node;
+                    if (node.fiber === current) {
+                        const component = node.component;
+                        for (let cb of node.willPatch) {
+                            cb.call(component);
+                        }
+                    }
+                }
+                current = undefined;
+                // Step 2: patching the dom
+                node.patch();
+                this.locked = false;
+                // Step 4: calling all mounted lifecycle hooks
+                let mountedFibers = this.mounted;
+                while ((current = mountedFibers.pop())) {
+                    current = current;
+                    if (current.appliedToDom) {
+                        for (let cb of current.node.mounted) {
+                            cb();
+                        }
+                    }
+                }
+                // Step 5: calling all patched hooks
+                let patchedFibers = this.patched;
+                while ((current = patchedFibers.pop())) {
+                    current = current;
+                    if (current.appliedToDom) {
+                        for (let cb of current.node.patched) {
+                            cb();
+                        }
+                    }
+                }
+            }
+            catch (e) {
+                this.locked = false;
+                handleError({ fiber: current || this, error: e });
+            }
+        }
+    }
+    class MountFiber extends RootFiber {
+        constructor(node, target, options = {}) {
+            super(node, null);
+            this.target = target;
+            this.position = options.position || "last-child";
+        }
+        complete() {
+            let current = this;
+            try {
+                const node = this.node;
+                node.app.constructor.validateTarget(this.target);
+                if (node.bdom) {
+                    // this is a complicated situation: if we mount a fiber with an existing
+                    // bdom, this means that this same fiber was already completed, mounted,
+                    // but a crash occurred in some mounted hook. Then, it was handled and
+                    // the new rendering is being applied.
+                    node.updateDom();
+                }
+                else {
+                    node.bdom = this.bdom;
+                    if (this.position === "last-child" || this.target.childNodes.length === 0) {
+                        mount$1(node.bdom, this.target);
+                    }
+                    else {
+                        const firstChild = this.target.childNodes[0];
+                        mount$1(node.bdom, this.target, firstChild);
+                    }
+                }
+                // unregistering the fiber before mounted since it can do another render
+                // and that the current rendering is obviously completed
+                node.fiber = null;
+                node.status = 1 /* MOUNTED */;
+                this.appliedToDom = true;
+                let mountedFibers = this.mounted;
+                while ((current = mountedFibers.pop())) {
+                    if (current.appliedToDom) {
+                        for (let cb of current.node.mounted) {
+                            cb();
+                        }
+                    }
+                }
+            }
+            catch (e) {
+                handleError({ fiber: current, error: e });
+            }
+        }
+    }
+
+    let currentNode = null;
+    function getCurrent() {
+        if (!currentNode) {
+            throw new Error("No active component (a hook function should only be called in 'setup')");
+        }
+        return currentNode;
+    }
+    function useComponent() {
+        return currentNode.component;
+    }
+    function component(name, props, key, ctx, parent) {
+        let node = ctx.children[key];
+        let isDynamic = typeof name !== "string";
+        if (node) {
+            if (node.status < 1 /* MOUNTED */) {
+                node.destroy();
+                node = undefined;
+            }
+            else if (node.status === 2 /* DESTROYED */) {
+                node = undefined;
+            }
+        }
+        if (isDynamic && node && node.component.constructor !== name) {
+            node = undefined;
+        }
+        const parentFiber = ctx.fiber;
+        if (node) {
+            node.updateAndRender(props, parentFiber);
+        }
+        else {
+            // new component
+            let C;
+            if (isDynamic) {
+                C = name;
+            }
+            else {
+                C = parent.constructor.components[name];
+                if (!C) {
+                    throw new Error(`Cannot find the definition of component "${name}"`);
+                }
+            }
+            node = new ComponentNode(C, props, ctx.app, ctx);
+            ctx.children[key] = node;
+            const fiber = makeChildFiber(node, parentFiber);
+            node.initiateRender(fiber);
+        }
+        return node;
+    }
+    class ComponentNode {
+        constructor(C, props, app, parent) {
+            this.fiber = null;
+            this.bdom = null;
+            this.status = 0 /* NEW */;
+            this.children = Object.create(null);
+            this.refs = {};
+            this.willStart = [];
+            this.willUpdateProps = [];
+            this.willUnmount = [];
+            this.mounted = [];
+            this.willPatch = [];
+            this.patched = [];
+            this.willDestroy = [];
+            currentNode = this;
+            this.app = app;
+            this.parent = parent || null;
+            this.level = parent ? parent.level + 1 : 0;
+            applyDefaultProps(props, C);
+            const env = (parent && parent.childEnv) || app.env;
+            this.childEnv = env;
+            this.component = new C(props, env, this);
+            this.renderFn = app.getTemplate(C.template).bind(this.component, this.component, this);
+            this.component.setup();
+            currentNode = null;
+        }
+        mountComponent(target, options) {
+            const fiber = new MountFiber(this, target, options);
+            this.app.scheduler.addFiber(fiber);
+            this.initiateRender(fiber);
+        }
+        async initiateRender(fiber) {
+            this.fiber = fiber;
+            if (this.mounted.length) {
+                fiber.root.mounted.push(fiber);
+            }
+            const component = this.component;
+            try {
+                await Promise.all(this.willStart.map((f) => f.call(component)));
+            }
+            catch (e) {
+                handleError({ node: this, error: e });
+                return;
+            }
+            if (this.status === 0 /* NEW */ && this.fiber === fiber) {
+                this._render(fiber);
+            }
+        }
+        async render() {
+            let current = this.fiber;
+            if (current && current.root.locked) {
+                await Promise.resolve();
+                // situation may have changed after the microtask tick
+                current = this.fiber;
+            }
+            if (current && !current.bdom && !fibersInError.has(current)) {
+                return;
+            }
+            if (!this.bdom && !current) {
+                return;
+            }
+            const fiber = makeRootFiber(this);
+            this.fiber = fiber;
+            this.app.scheduler.addFiber(fiber);
+            await Promise.resolve();
+            if (this.status === 2 /* DESTROYED */) {
+                return;
+            }
+            // We only want to actually render the component if the following two
+            // conditions are true:
+            // * this.fiber: it could be null, in which case the render has been cancelled
+            // * (current || !fiber.parent): if current is not null, this means that the
+            //   render function was called when a render was already occurring. In this
+            //   case, the pending rendering was cancelled, and the fiber needs to be
+            //   rendered to complete the work.  If current is null, we check that the
+            //   fiber has no parent.  If that is the case, the fiber was downgraded from
+            //   a root fiber to a child fiber in the previous microtick, because it was
+            //   embedded in a rendering coming from above, so the fiber will be rendered
+            //   in the next microtick anyway, so we should not render it again.
+            if (this.fiber === fiber && (current || !fiber.parent)) {
+                this._render(fiber);
+            }
+        }
+        _render(fiber) {
+            try {
+                fiber.bdom = this.renderFn();
+                fiber.root.counter--;
+            }
+            catch (e) {
+                handleError({ node: this, error: e });
+            }
+        }
+        destroy() {
+            let shouldRemove = this.status === 1 /* MOUNTED */;
+            this._destroy();
+            if (shouldRemove) {
+                this.bdom.remove();
+            }
+        }
+        _destroy() {
+            const component = this.component;
+            if (this.status === 1 /* MOUNTED */) {
+                for (let cb of this.willUnmount) {
+                    cb.call(component);
+                }
+            }
+            for (let child of Object.values(this.children)) {
+                child._destroy();
+            }
+            for (let cb of this.willDestroy) {
+                cb.call(component);
+            }
+            this.status = 2 /* DESTROYED */;
+        }
+        async updateAndRender(props, parentFiber) {
+            // update
+            const fiber = makeChildFiber(this, parentFiber);
+            this.fiber = fiber;
+            const component = this.component;
+            applyDefaultProps(props, component.constructor);
+            const prom = Promise.all(this.willUpdateProps.map((f) => f.call(component, props)));
+            await prom;
+            if (fiber !== this.fiber) {
+                return;
+            }
+            component.props = props;
+            this._render(fiber);
+            const parentRoot = parentFiber.root;
+            if (this.willPatch.length) {
+                parentRoot.willPatch.push(fiber);
+            }
+            if (this.patched.length) {
+                parentRoot.patched.push(fiber);
+            }
+        }
+        /**
+         * Finds a child that has dom that is not yet updated, and update it. This
+         * method is meant to be used only in the context of repatching the dom after
+         * a mounted hook failed and was handled.
+         */
+        updateDom() {
+            if (!this.fiber) {
+                return;
+            }
+            if (this.bdom === this.fiber.bdom) {
+                // If the error was handled by some child component, we need to find it to
+                // apply its change
+                for (let k in this.children) {
+                    const child = this.children[k];
+                    child.updateDom();
+                }
+            }
+            else {
+                // if we get here, this is the component that handled the error and rerendered
+                // itself, so we can simply patch the dom
+                this.bdom.patch(this.fiber.bdom, false);
+                this.fiber.appliedToDom = true;
+                this.fiber = null;
+            }
+        }
+        // ---------------------------------------------------------------------------
+        // Block DOM methods
+        // ---------------------------------------------------------------------------
+        firstNode() {
+            const bdom = this.bdom;
+            return bdom ? bdom.firstNode() : undefined;
+        }
+        mount(parent, anchor) {
+            const bdom = this.fiber.bdom;
+            this.bdom = bdom;
+            bdom.mount(parent, anchor);
+            this.status = 1 /* MOUNTED */;
+            this.fiber.appliedToDom = true;
+            this.fiber = null;
+        }
+        moveBefore(other, afterNode) {
+            this.bdom.moveBefore(other ? other.bdom : null, afterNode);
+        }
+        patch() {
+            const hasChildren = Object.keys(this.children).length > 0;
+            this.bdom.patch(this.fiber.bdom, hasChildren);
+            if (hasChildren) {
+                this.cleanOutdatedChildren();
+            }
+            this.fiber.appliedToDom = true;
+            this.fiber = null;
+        }
+        beforeRemove() {
+            this._destroy();
+        }
+        remove() {
+            this.bdom.remove();
+        }
+        cleanOutdatedChildren() {
+            const children = this.children;
+            for (const key in children) {
+                const node = children[key];
+                const status = node.status;
+                if (status !== 1 /* MOUNTED */) {
+                    delete children[key];
+                    if (status !== 2 /* DESTROYED */) {
+                        node.destroy();
+                    }
+                }
+            }
+        }
+    }
+
+    // -----------------------------------------------------------------------------
+    //  hooks
+    // -----------------------------------------------------------------------------
+    function onWillStart(fn) {
+        const node = getCurrent();
+        node.willStart.push(fn.bind(node.component));
+    }
+    function onWillUpdateProps(fn) {
+        const node = getCurrent();
+        node.willUpdateProps.push(fn.bind(node.component));
+    }
+    function onMounted(fn) {
+        const node = getCurrent();
+        node.mounted.push(fn.bind(node.component));
+    }
+    function onWillPatch(fn) {
+        const node = getCurrent();
+        node.willPatch.unshift(fn.bind(node.component));
+    }
+    function onPatched(fn) {
+        const node = getCurrent();
+        node.patched.push(fn.bind(node.component));
+    }
+    function onWillUnmount(fn) {
+        const node = getCurrent();
+        node.willUnmount.unshift(fn.bind(node.component));
+    }
+    function onWillDestroy(fn) {
+        const node = getCurrent();
+        node.willDestroy.push(fn.bind(node.component));
+    }
+    function onWillRender(fn) {
+        const node = getCurrent();
+        const renderFn = node.renderFn;
+        node.renderFn = () => {
+            fn.call(node.component);
+            return renderFn();
+        };
+    }
+    function onRendered(fn) {
+        const node = getCurrent();
+        const renderFn = node.renderFn;
+        node.renderFn = () => {
+            const result = renderFn();
+            fn.call(node.component);
+            return result;
+        };
+    }
+    function onError(callback) {
+        const node = getCurrent();
+        let handlers = nodeErrorHandlers.get(node);
+        if (!handlers) {
+            handlers = [];
+            nodeErrorHandlers.set(node, handlers);
+        }
+        handlers.push(callback.bind(node.component));
     }
 
     /**
@@ -358,9 +2467,8 @@
      * the arrow operator, then we add the current (or some previous tokens) token to
      * the list of variables so it does not get replaced by a lookup in the context
      */
-    function compileExprToArray(expr, scope) {
+    function compileExprToArray(expr) {
         const localVars = new Set();
-        scope = Object.create(scope);
         const tokens = tokenize(expr);
         let i = 0;
         let stack = []; // to track last opening [ or {
@@ -385,7 +2493,7 @@
                     if (groupType === "LEFT_BRACE" &&
                         isLeftSeparator(prevToken) &&
                         isRightSeparator(nextToken)) {
-                        tokens.splice(i + 1, 0, { type: "COLON", value: ":" }, Object.assign({}, token));
+                        tokens.splice(i + 1, 0, { type: "COLON", value: ":" }, { ...token });
                         nextToken = tokens[i + 1];
                     }
                     if (prevToken.type === "OPERATOR" && prevToken.value === ".") {
@@ -399,7 +2507,7 @@
                 }
             }
             if (token.type === "TEMPLATE_STRING") {
-                token.value = token.replace((expr) => compileExpr(expr, scope));
+                token.value = token.replace((expr) => compileExpr(expr));
             }
             if (nextToken && nextToken.type === "OPERATOR" && nextToken.value === "=>") {
                 if (token.type === "RIGHT_PAREN") {
@@ -407,25 +2515,20 @@
                     while (j > 0 && tokens[j].type !== "LEFT_PAREN") {
                         if (tokens[j].type === "SYMBOL" && tokens[j].originalValue) {
                             tokens[j].value = tokens[j].originalValue;
-                            scope[tokens[j].value] = { id: tokens[j].value, expr: tokens[j].value };
-                            localVars.add(tokens[j].value);
+                            localVars.add(tokens[j].value); //] = { id: tokens[j].value, expr: tokens[j].value };
                         }
                         j--;
                     }
                 }
                 else {
-                    scope[token.value] = { id: token.value, expr: token.value };
-                    localVars.add(token.value);
+                    localVars.add(token.value); //] = { id: token.value, expr: token.value };
                 }
             }
             if (isVar) {
                 token.varName = token.value;
-                if (token.value in scope && "id" in scope[token.value]) {
-                    token.value = scope[token.value].expr;
-                }
-                else {
+                if (!localVars.has(token.value)) {
                     token.originalValue = token.value;
-                    token.value = `scope['${token.value}']`;
+                    token.value = `ctx['${token.value}']`;
                 }
             }
             i++;
@@ -433,1111 +2536,1853 @@
         // Mark all variables that have been used locally.
         // This assumes the expression has only one scope (incorrect but "good enough for now")
         for (const token of tokens) {
-            if (token.type === "SYMBOL" && localVars.has(token.value)) {
+            if (token.type === "SYMBOL" && token.varName && localVars.has(token.value)) {
+                token.originalValue = token.value;
+                token.value = `_${token.value}`;
                 token.isLocal = true;
             }
         }
         return tokens;
     }
-    function compileExpr(expr, scope) {
-        return compileExprToArray(expr, scope)
+    function compileExpr(expr) {
+        return compileExprToArray(expr)
             .map((t) => t.value)
             .join("");
     }
-
     const INTERP_REGEXP = /\{\{.*?\}\}/g;
-    //------------------------------------------------------------------------------
-    // Compilation Context
-    //------------------------------------------------------------------------------
-    class CompilationContext {
+    const INTERP_GROUP_REGEXP = /\{\{.*?\}\}/g;
+    function interpolate(s) {
+        let matches = s.match(INTERP_REGEXP);
+        if (matches && matches[0].length === s.length) {
+            return `(${compileExpr(s.slice(2, -2))})`;
+        }
+        let r = s.replace(INTERP_GROUP_REGEXP, (s) => "${" + compileExpr(s.slice(2, -2)) + "}");
+        return "`" + r + "`";
+    }
+
+    // using a non-html document so that <inner/outer>HTML serializes as XML instead
+    // of HTML (as we will parse it as xml later)
+    const xmlDoc = document.implementation.createDocument(null, null, null);
+    const MODS = new Set(["stop", "capture", "prevent", "self", "synthetic"]);
+    // -----------------------------------------------------------------------------
+    // BlockDescription
+    // -----------------------------------------------------------------------------
+    class BlockDescription {
+        constructor(target, type) {
+            this.dynamicTagName = null;
+            this.isRoot = false;
+            this.hasDynamicChildren = false;
+            this.children = [];
+            this.data = [];
+            this.childNumber = 0;
+            this.parentVar = "";
+            this.id = BlockDescription.nextBlockId++;
+            this.varName = "b" + this.id;
+            this.blockName = "block" + this.id;
+            this.target = target;
+            this.type = type;
+        }
+        static generateId(prefix) {
+            this.nextDataIds[prefix] = (this.nextDataIds[prefix] || 0) + 1;
+            return prefix + this.nextDataIds[prefix];
+        }
+        insertData(str, prefix = "d") {
+            const id = BlockDescription.generateId(prefix);
+            this.target.addLine(`let ${id} = ${str};`);
+            return this.data.push(id) - 1;
+        }
+        insert(dom) {
+            if (this.currentDom) {
+                this.currentDom.appendChild(dom);
+            }
+            else {
+                this.dom = dom;
+            }
+        }
+        generateExpr(expr) {
+            if (this.type === "block") {
+                const hasChildren = this.children.length;
+                let params = this.data.length ? `[${this.data.join(", ")}]` : hasChildren ? "[]" : "";
+                if (hasChildren) {
+                    params += ", [" + this.children.map((c) => c.varName).join(", ") + "]";
+                }
+                if (this.dynamicTagName) {
+                    return `toggler(${this.dynamicTagName}, ${this.blockName}(${this.dynamicTagName})(${params}))`;
+                }
+                return `${this.blockName}(${params})`;
+            }
+            else if (this.type === "list") {
+                return `list(c_block${this.id})`;
+            }
+            return expr;
+        }
+        asXmlString() {
+            // Can't use outerHTML on text/comment nodes
+            // append dom to any element and use innerHTML instead
+            const t = xmlDoc.createElement("t");
+            t.appendChild(this.dom);
+            return t.innerHTML;
+        }
+    }
+    BlockDescription.nextBlockId = 1;
+    BlockDescription.nextDataIds = {};
+    function createContext(parentCtx, params) {
+        return Object.assign({
+            block: null,
+            index: 0,
+            forceNewBlock: true,
+            translate: parentCtx.translate,
+            tKeyExpr: null,
+            nameSpace: parentCtx.nameSpace,
+            tModelSelectedExpr: parentCtx.tModelSelectedExpr,
+        }, params);
+    }
+    class CodeTarget {
         constructor(name) {
-            this.code = [];
-            this.variables = {};
-            this.escaping = false;
-            this.parentNode = null;
-            this.parentTextNode = null;
-            this.rootNode = null;
             this.indentLevel = 0;
-            this.shouldDefineParent = false;
-            this.shouldDefineScope = false;
-            this.protectedScopeNumber = 0;
-            this.shouldDefineQWeb = false;
-            this.shouldDefineUtils = false;
-            this.shouldDefineRefs = false;
-            this.shouldDefineResult = true;
-            this.loopNumber = 0;
-            this.inPreTag = false;
-            this.allowMultipleRoots = false;
-            this.hasParentWidget = false;
-            this.hasKey0 = false;
-            this.keyStack = [];
-            this.rootContext = this;
-            this.templateName = name || "noname";
-            this.addLine("let h = this.h;");
+            this.loopLevel = 0;
+            this.code = [];
+            this.hasRoot = false;
+            this.hasCache = false;
+            this.hasRef = false;
+            // maps ref name to [id, expr]
+            this.refInfo = {};
+            this.shouldProtectScope = false;
+            this.name = name;
         }
-        generateID() {
-            return CompilationContext.nextID++;
-        }
-        /**
-         * This method generates a "template key", which is basically a unique key
-         * which depends on the currently set keys, and on the iteration numbers (if
-         * we are in a loop).
-         *
-         * Such a key is necessary when we need to associate an id to some element
-         * generated by a template (for example, a component)
-         */
-        generateTemplateKey(prefix = "") {
-            const id = this.generateID();
-            if (this.loopNumber === 0 && !this.hasKey0) {
-                return `'${prefix}__${id}__'`;
+        addLine(line, idx) {
+            const prefix = new Array(this.indentLevel + 2).join("  ");
+            if (idx === undefined) {
+                this.code.push(prefix + line);
             }
-            let key = `\`${prefix}__${id}__`;
-            let start = this.hasKey0 ? 0 : 1;
-            for (let i = start; i < this.loopNumber + 1; i++) {
-                key += `\${key${i}}__`;
+            else {
+                this.code.splice(idx, 0, prefix + line);
             }
-            this.addLine(`let k${id} = ${key}\`;`);
-            return `k${id}`;
         }
         generateCode() {
-            if (this.shouldDefineResult) {
-                this.code.unshift("    let result;");
-            }
-            if (this.shouldDefineScope) {
-                this.code.unshift("    let scope = Object.create(context);");
-            }
-            if (this.shouldDefineRefs) {
-                this.code.unshift("    context.__owl__.refs = context.__owl__.refs || {};");
-            }
-            if (this.shouldDefineParent) {
-                if (this.hasParentWidget) {
-                    this.code.unshift("    let parent = extra.parent;");
-                }
-                else {
-                    this.code.unshift("    let parent = context;");
+            let result = [];
+            result.push(`function ${this.name}(ctx, node, key = "") {`);
+            if (this.hasRef) {
+                result.push(`  const refs = ctx.__owl__.refs;`);
+                for (let name in this.refInfo) {
+                    const [id, expr] = this.refInfo[name];
+                    result.push(`  const ${id} = ${expr};`);
                 }
             }
-            if (this.shouldDefineQWeb) {
-                this.code.unshift("    let QWeb = this.constructor;");
+            if (this.shouldProtectScope) {
+                result.push(`  ctx = Object.create(ctx);`);
+                result.push(`  ctx[isBoundary] = 1`);
             }
-            if (this.shouldDefineUtils) {
-                this.code.unshift("    let utils = this.constructor.utils;");
+            if (this.hasCache) {
+                result.push(`  let cache = ctx.cache || {};`);
+                result.push(`  let nextCache = ctx.cache = {};`);
             }
-            return this.code;
+            for (let line of this.code) {
+                result.push(line);
+            }
+            if (!this.hasRoot) {
+                result.push(`return text('');`);
+            }
+            result.push(`}`);
+            return result.join("\n  ");
         }
-        withParent(node) {
-            if (!this.allowMultipleRoots &&
-                this === this.rootContext &&
-                (this.parentNode || this.parentTextNode)) {
-                throw new Error("A template should not have more than one root node");
+    }
+    const TRANSLATABLE_ATTRS = ["label", "title", "placeholder", "alt"];
+    const translationRE = /^(\s*)([\s\S]+?)(\s*)$/;
+    class CodeGenerator {
+        constructor(ast, options) {
+            this.blocks = [];
+            this.ids = {};
+            this.nextBlockId = 1;
+            this.isDebug = false;
+            this.targets = [];
+            this.target = new CodeTarget("template");
+            this.translatableAttributes = TRANSLATABLE_ATTRS;
+            this.staticCalls = [];
+            this.helpers = new Set();
+            this.translateFn = options.translateFn || ((s) => s);
+            if (options.translatableAttributes) {
+                const attrs = new Set(TRANSLATABLE_ATTRS);
+                for (let attr of options.translatableAttributes) {
+                    if (attr.startsWith("-")) {
+                        attrs.delete(attr.slice(1));
+                    }
+                    else {
+                        attrs.add(attr);
+                    }
+                }
+                this.translatableAttributes = [...attrs];
             }
-            if (!this.rootContext.rootNode) {
-                this.rootContext.rootNode = node;
+            this.hasSafeContext = options.hasSafeContext || false;
+            this.dev = options.dev || false;
+            this.ast = ast;
+            this.templateName = options.name;
+        }
+        generateCode() {
+            const ast = this.ast;
+            this.isDebug = ast.type === 12 /* TDebug */;
+            BlockDescription.nextBlockId = 1;
+            BlockDescription.nextDataIds = {};
+            this.compileAST(ast, {
+                block: null,
+                index: 0,
+                forceNewBlock: false,
+                isLast: true,
+                translate: true,
+                tKeyExpr: null,
+            });
+            // define blocks and utility functions
+            let mainCode = [
+                `  let { text, createBlock, list, multi, html, toggler, component, comment } = bdom;`,
+            ];
+            if (this.helpers.size) {
+                mainCode.push(`let { ${[...this.helpers].join(", ")} } = helpers;`);
             }
-            if (!this.parentNode && this.rootContext.shouldDefineResult) {
-                this.addLine(`result = vn${node};`);
+            if (this.templateName) {
+                mainCode.push(`// Template name: "${this.templateName}"`);
             }
-            return this.subContext("parentNode", node);
+            for (let { id, template } of this.staticCalls) {
+                mainCode.push(`const ${id} = getTemplate(${template});`);
+            }
+            // define all blocks
+            if (this.blocks.length) {
+                mainCode.push(``);
+                for (let block of this.blocks) {
+                    if (block.dom) {
+                        let xmlString = block.asXmlString();
+                        if (block.dynamicTagName) {
+                            xmlString = xmlString.replace(/^<\w+/, `<\${tag || '${block.dom.nodeName}'}`);
+                            xmlString = xmlString.replace(/\w+>$/, `\${tag || '${block.dom.nodeName}'}>`);
+                            mainCode.push(`let ${block.blockName} = tag => createBlock(\`${xmlString}\`);`);
+                        }
+                        else {
+                            mainCode.push(`let ${block.blockName} = createBlock(\`${xmlString}\`);`);
+                        }
+                    }
+                }
+            }
+            // define all slots/defaultcontent function
+            if (this.targets.length) {
+                for (let fn of this.targets) {
+                    mainCode.push("");
+                    mainCode = mainCode.concat(fn.generateCode());
+                }
+            }
+            // generate main code
+            mainCode.push("");
+            mainCode = mainCode.concat("return " + this.target.generateCode());
+            const code = mainCode.join("\n  ");
+            if (this.isDebug) {
+                const msg = `[Owl Debug]\n${code}`;
+                console.log(msg);
+            }
+            return code;
         }
-        subContext(key, value) {
-            const newContext = Object.create(this);
-            newContext[key] = value;
-            return newContext;
-        }
-        indent() {
-            this.rootContext.indentLevel++;
-        }
-        dedent() {
-            this.rootContext.indentLevel--;
+        compileInNewTarget(prefix, ast, ctx) {
+            const name = this.generateId(prefix);
+            const initialTarget = this.target;
+            const target = new CodeTarget(name);
+            this.targets.push(target);
+            this.target = target;
+            const subCtx = createContext(ctx);
+            this.compileAST(ast, subCtx);
+            this.target = initialTarget;
+            return name;
         }
         addLine(line) {
-            const prefix = new Array(this.indentLevel + 2).join("    ");
-            this.code.push(prefix + line);
-            return this.code.length - 1;
+            this.target.addLine(line);
         }
-        addIf(condition) {
-            this.addLine(`if (${condition}) {`);
-            this.indent();
+        generateId(prefix = "") {
+            this.ids[prefix] = (this.ids[prefix] || 0) + 1;
+            return prefix + this.ids[prefix];
         }
-        addElse() {
-            this.dedent();
-            this.addLine("} else {");
-            this.indent();
+        insertAnchor(block) {
+            const tag = `block-child-${block.children.length}`;
+            const anchor = xmlDoc.createElement(tag);
+            block.insert(anchor);
         }
-        closeIf() {
-            this.dedent();
-            this.addLine("}");
+        createBlock(parentBlock, type, ctx) {
+            const hasRoot = this.target.hasRoot;
+            const block = new BlockDescription(this.target, type);
+            if (!hasRoot && !ctx.preventRoot) {
+                this.target.hasRoot = true;
+                block.isRoot = true;
+            }
+            if (parentBlock) {
+                parentBlock.children.push(block);
+                if (parentBlock.type === "list") {
+                    block.parentVar = `c_block${parentBlock.id}`;
+                }
+            }
+            return block;
         }
-        getValue(val) {
-            return val in this.variables ? this.getValue(this.variables[val]) : val;
+        insertBlock(expression, block, ctx) {
+            let blockExpr = block.generateExpr(expression);
+            const tKeyExpr = ctx.tKeyExpr;
+            if (block.parentVar) {
+                let keyArg = `key${this.target.loopLevel}`;
+                if (tKeyExpr) {
+                    keyArg = `${tKeyExpr} + ${keyArg}`;
+                }
+                this.helpers.add("withKey");
+                this.addLine(`${block.parentVar}[${ctx.index}] = withKey(${blockExpr}, ${keyArg});`);
+                return;
+            }
+            if (tKeyExpr) {
+                blockExpr = `toggler(${tKeyExpr}, ${blockExpr})`;
+            }
+            if (block.isRoot && !ctx.preventRoot) {
+                this.addLine(`return ${blockExpr};`);
+            }
+            else {
+                this.addLine(`let ${block.varName} = ${blockExpr};`);
+            }
         }
         /**
-         * Prepare an expression for being consumed at render time.  Its main job
-         * is to
-         * - replace unknown variables by a lookup in the context
-         * - replace already defined variables by their internal name
+         * Captures variables that are used inside of an expression. This is useful
+         * because in compiled code, almost all variables are accessed through the ctx
+         * object. In the case of functions, that lookup in the context can be delayed
+         * which can cause issues if the value has changed since the function was
+         * defined.
+         *
+         * @param expr the expression to capture
+         * @param forceCapture whether the expression should capture its scope even if
+         *  it doesn't contain a function. Useful when the expression will be used as
+         *  a function body.
+         * @returns a new expression that uses the captured values
          */
-        formatExpression(expr) {
-            this.rootContext.shouldDefineScope = true;
-            return compileExpr(expr, this.variables);
-        }
-        captureExpression(expr) {
-            this.rootContext.shouldDefineScope = true;
-            const argId = this.generateID();
-            const tokens = compileExprToArray(expr, this.variables);
-            const done = new Set();
+        captureExpression(expr, forceCapture = false) {
+            if (!forceCapture && !expr.includes("=>")) {
+                return compileExpr(expr);
+            }
+            const tokens = compileExprToArray(expr);
+            const mapping = new Map();
             return tokens
-                .map((tok, i) => {
-                // "this" in captured expressions should be the current component
-                if (tok.value === "this") {
-                    if (!done.has("this")) {
-                        done.add("this");
-                        this.addLine(`const this_${argId} = utils.getComponent(context);`);
+                .map((tok) => {
+                    if (tok.varName && !tok.isLocal) {
+                        if (!mapping.has(tok.varName)) {
+                            const varId = this.generateId("v");
+                            mapping.set(tok.varName, varId);
+                            this.addLine(`const ${varId} = ${tok.value};`);
+                        }
+                        tok.value = mapping.get(tok.varName);
                     }
-                    tok.value = `this_${argId}`;
-                }
-                // Variables that should be looked up in the scope. isLocal is for arrow
-                // function arguments that should stay untouched (eg "ev => ev" should
-                // not become "const ev_1 = scope['ev']; ev_1 => ev_1")
-                if (tok.varName &&
-                    !tok.isLocal &&
-                    // HACK: for backwards compatibility, we don't capture bare methods
-                    // this allows them to be called with the rendering context/scope
-                    // as their this value.
-                    (!tokens[i + 1] || tokens[i + 1].type !== "LEFT_PAREN")) {
-                    if (!done.has(tok.varName)) {
-                        done.add(tok.varName);
-                        this.addLine(`const ${tok.varName}_${argId} = ${tok.value};`);
-                    }
-                    tok.value = `${tok.varName}_${argId}`;
-                }
-                return tok.value;
-            })
+                    return tok.value;
+                })
                 .join("");
         }
+        compileAST(ast, ctx) {
+            switch (ast.type) {
+                case 1 /* Comment */:
+                    this.compileComment(ast, ctx);
+                    break;
+                case 0 /* Text */:
+                    this.compileText(ast, ctx);
+                    break;
+                case 2 /* DomNode */:
+                    this.compileTDomNode(ast, ctx);
+                    break;
+                case 4 /* TEsc */:
+                    this.compileTEsc(ast, ctx);
+                    break;
+                case 8 /* TOut */:
+                    this.compileTOut(ast, ctx);
+                    break;
+                case 5 /* TIf */:
+                    this.compileTIf(ast, ctx);
+                    break;
+                case 9 /* TForEach */:
+                    this.compileTForeach(ast, ctx);
+                    break;
+                case 10 /* TKey */:
+                    this.compileTKey(ast, ctx);
+                    break;
+                case 3 /* Multi */:
+                    this.compileMulti(ast, ctx);
+                    break;
+                case 7 /* TCall */:
+                    this.compileTCall(ast, ctx);
+                    break;
+                case 15 /* TCallBlock */:
+                    this.compileTCallBlock(ast, ctx);
+                    break;
+                case 6 /* TSet */:
+                    this.compileTSet(ast, ctx);
+                    break;
+                case 11 /* TComponent */:
+                    this.compileComponent(ast, ctx);
+                    break;
+                case 12 /* TDebug */:
+                    this.compileDebug(ast, ctx);
+                    break;
+                case 13 /* TLog */:
+                    this.compileLog(ast, ctx);
+                    break;
+                case 14 /* TSlot */:
+                    this.compileTSlot(ast, ctx);
+                    break;
+                case 16 /* TTranslation */:
+                    this.compileTTranslation(ast, ctx);
+                    break;
+                case 17 /* TPortal */:
+                    this.compileTPortal(ast, ctx);
+            }
+        }
+        compileDebug(ast, ctx) {
+            this.addLine(`debugger;`);
+            if (ast.content) {
+                this.compileAST(ast.content, ctx);
+            }
+        }
+        compileLog(ast, ctx) {
+            this.addLine(`console.log(${compileExpr(ast.expr)});`);
+            if (ast.content) {
+                this.compileAST(ast.content, ctx);
+            }
+        }
+        compileComment(ast, ctx) {
+            let { block, forceNewBlock } = ctx;
+            const isNewBlock = !block || forceNewBlock;
+            if (isNewBlock) {
+                block = this.createBlock(block, "comment", ctx);
+                this.insertBlock(`comment(\`${ast.value}\`)`, block, {
+                    ...ctx,
+                    forceNewBlock: forceNewBlock && !block,
+                });
+            }
+            else {
+                const text = xmlDoc.createComment(ast.value);
+                block.insert(text);
+            }
+        }
+        compileText(ast, ctx) {
+            let { block, forceNewBlock } = ctx;
+            let value = ast.value;
+            if (value && ctx.translate !== false) {
+                const match = translationRE.exec(value);
+                value = match[1] + this.translateFn(match[2]) + match[3];
+            }
+            if (!block || forceNewBlock) {
+                block = this.createBlock(block, "text", ctx);
+                this.insertBlock(`text(\`${value}\`)`, block, {
+                    ...ctx,
+                    forceNewBlock: forceNewBlock && !block,
+                });
+            }
+            else {
+                const createFn = ast.type === 0 /* Text */ ? xmlDoc.createTextNode : xmlDoc.createComment;
+                block.insert(createFn.call(xmlDoc, value));
+            }
+        }
+        generateHandlerCode(rawEvent, handler) {
+            const modifiers = rawEvent
+                .split(".")
+                .slice(1)
+                .map((m) => {
+                    if (!MODS.has(m)) {
+                        throw new Error(`Unknown event modifier: '${m}'`);
+                    }
+                    return `"${m}"`;
+                });
+            let modifiersCode = "";
+            if (modifiers.length) {
+                modifiersCode = `${modifiers.join(",")}, `;
+            }
+            return `[${modifiersCode}${this.captureExpression(handler)}, ctx]`;
+        }
+        compileTDomNode(ast, ctx) {
+            let { block, forceNewBlock } = ctx;
+            const isNewBlock = !block || forceNewBlock || ast.dynamicTag !== null || ast.ns;
+            let codeIdx = this.target.code.length;
+            if (isNewBlock) {
+                if ((ast.dynamicTag || ctx.tKeyExpr || ast.ns) && ctx.block) {
+                    this.insertAnchor(ctx.block);
+                }
+                block = this.createBlock(block, "block", ctx);
+                this.blocks.push(block);
+                if (ast.dynamicTag) {
+                    const tagExpr = this.generateId("tag");
+                    this.addLine(`let ${tagExpr} = ${compileExpr(ast.dynamicTag)};`);
+                    block.dynamicTagName = tagExpr;
+                }
+            }
+            // attributes
+            const attrs = {};
+            const nameSpace = ast.ns || ctx.nameSpace;
+            if (nameSpace && isNewBlock) {
+                // specific namespace uri
+                attrs["block-ns"] = nameSpace;
+            }
+            for (let key in ast.attrs) {
+                let expr, attrName;
+                if (key.startsWith("t-attf")) {
+                    expr = interpolate(ast.attrs[key]);
+                    const idx = block.insertData(expr, "attr");
+                    attrName = key.slice(7);
+                    attrs["block-attribute-" + idx] = attrName;
+                }
+                else if (key.startsWith("t-att")) {
+                    expr = compileExpr(ast.attrs[key]);
+                    const idx = block.insertData(expr, "attr");
+                    if (key === "t-att") {
+                        attrs[`block-attributes`] = String(idx);
+                    }
+                    else {
+                        attrName = key.slice(6);
+                        attrs[`block-attribute-${idx}`] = attrName;
+                    }
+                }
+                else if (this.translatableAttributes.includes(key)) {
+                    attrs[key] = this.translateFn(ast.attrs[key]);
+                }
+                else {
+                    expr = `"${ast.attrs[key]}"`;
+                    attrName = key;
+                    attrs[key] = ast.attrs[key];
+                }
+                if (attrName === "value" && ctx.tModelSelectedExpr) {
+                    let selectedId = block.insertData(`${ctx.tModelSelectedExpr} === ${expr}`, "attr");
+                    attrs[`block-attribute-${selectedId}`] = "selected";
+                }
+            }
+            // event handlers
+            for (let ev in ast.on) {
+                const name = this.generateHandlerCode(ev, ast.on[ev]);
+                const idx = block.insertData(name, "hdlr");
+                attrs[`block-handler-${idx}`] = ev;
+            }
+            // t-ref
+            if (ast.ref) {
+                this.target.hasRef = true;
+                const isDynamic = INTERP_REGEXP.test(ast.ref);
+                if (isDynamic) {
+                    const str = ast.ref.replace(INTERP_REGEXP, (expr) => "${" + this.captureExpression(expr.slice(2, -2), true) + "}");
+                    const idx = block.insertData(`(el) => refs[\`${str}\`] = el`, "ref");
+                    attrs["block-ref"] = String(idx);
+                }
+                else {
+                    let name = ast.ref;
+                    if (name in this.target.refInfo) {
+                        // ref has already been defined
+                        this.helpers.add("multiRefSetter");
+                        const info = this.target.refInfo[name];
+                        const index = block.data.push(info[0]) - 1;
+                        attrs["block-ref"] = String(index);
+                        info[1] = `multiRefSetter(refs, \`${name}\`)`;
+                    }
+                    else {
+                        let id = this.generateId("ref");
+                        this.target.refInfo[name] = [id, `(el) => refs[\`${name}\`] = el`];
+                        const index = block.data.push(id) - 1;
+                        attrs["block-ref"] = String(index);
+                    }
+                }
+            }
+            // t-model
+            let tModelSelectedExpr;
+            if (ast.model) {
+                const { hasDynamicChildren, baseExpr, expr, eventType, shouldNumberize, shouldTrim, targetAttr, specialInitTargetAttr, } = ast.model;
+                const baseExpression = compileExpr(baseExpr);
+                const bExprId = this.generateId("bExpr");
+                this.addLine(`const ${bExprId} = ${baseExpression};`);
+                const expression = compileExpr(expr);
+                const exprId = this.generateId("expr");
+                this.addLine(`const ${exprId} = ${expression};`);
+                const fullExpression = `${bExprId}[${exprId}]`;
+                let idx;
+                if (specialInitTargetAttr) {
+                    idx = block.insertData(`${fullExpression} === '${attrs[targetAttr]}'`, "attr");
+                    attrs[`block-attribute-${idx}`] = specialInitTargetAttr;
+                }
+                else if (hasDynamicChildren) {
+                    const bValueId = this.generateId("bValue");
+                    tModelSelectedExpr = `${bValueId}`;
+                    this.addLine(`let ${tModelSelectedExpr} = ${fullExpression}`);
+                }
+                else {
+                    idx = block.insertData(`${fullExpression}`, "attr");
+                    attrs[`block-attribute-${idx}`] = targetAttr;
+                }
+                this.helpers.add("toNumber");
+                let valueCode = `ev.target.${targetAttr}`;
+                valueCode = shouldTrim ? `${valueCode}.trim()` : valueCode;
+                valueCode = shouldNumberize ? `toNumber(${valueCode})` : valueCode;
+                const handler = `[(ev) => { ${fullExpression} = ${valueCode}; }]`;
+                idx = block.insertData(handler, "hdlr");
+                attrs[`block-handler-${idx}`] = eventType;
+            }
+            const dom = xmlDoc.createElement(ast.tag);
+            for (const [attr, val] of Object.entries(attrs)) {
+                if (!(attr === "class" && val === "")) {
+                    dom.setAttribute(attr, val);
+                }
+            }
+            block.insert(dom);
+            if (ast.content.length) {
+                const initialDom = block.currentDom;
+                block.currentDom = dom;
+                const children = ast.content;
+                for (let i = 0; i < children.length; i++) {
+                    const child = ast.content[i];
+                    const subCtx = createContext(ctx, {
+                        block,
+                        index: block.childNumber,
+                        forceNewBlock: false,
+                        isLast: ctx.isLast && i === children.length - 1,
+                        tKeyExpr: ctx.tKeyExpr,
+                        nameSpace,
+                        tModelSelectedExpr,
+                    });
+                    this.compileAST(child, subCtx);
+                }
+                block.currentDom = initialDom;
+            }
+            if (isNewBlock) {
+                this.insertBlock(`${block.blockName}(ddd)`, block, ctx);
+                // may need to rewrite code!
+                if (block.children.length && block.hasDynamicChildren) {
+                    const code = this.target.code;
+                    const children = block.children.slice();
+                    let current = children.shift();
+                    for (let i = codeIdx; i < code.length; i++) {
+                        if (code[i].trimStart().startsWith(`let ${current.varName} `)) {
+                            code[i] = code[i].replace(`let ${current.varName}`, current.varName);
+                            current = children.shift();
+                            if (!current)
+                                break;
+                        }
+                    }
+                    this.target.addLine(`let ${block.children.map((c) => c.varName)};`, codeIdx);
+                }
+            }
+        }
+        compileTEsc(ast, ctx) {
+            let { block, forceNewBlock } = ctx;
+            let expr;
+            if (ast.expr === "0") {
+                this.helpers.add("zero");
+                expr = `ctx[zero]`;
+            }
+            else {
+                expr = compileExpr(ast.expr);
+                if (ast.defaultValue) {
+                    this.helpers.add("withDefault");
+                    expr = `withDefault(${expr}, \`${ast.defaultValue}\`)`;
+                }
+            }
+            if (!block || forceNewBlock) {
+                block = this.createBlock(block, "text", ctx);
+                this.insertBlock(`text(${expr})`, block, { ...ctx, forceNewBlock: forceNewBlock && !block });
+            }
+            else {
+                const idx = block.insertData(expr, "txt");
+                const text = xmlDoc.createElement(`block-text-${idx}`);
+                block.insert(text);
+            }
+        }
+        compileTOut(ast, ctx) {
+            let { block } = ctx;
+            if (block) {
+                this.insertAnchor(block);
+            }
+            block = this.createBlock(block, "html", ctx);
+            this.helpers.add(ast.expr === "0" ? "zero" : "safeOutput");
+            let expr = ast.expr === "0" ? "ctx[zero]" : `safeOutput(${compileExpr(ast.expr)})`;
+            if (ast.body) {
+                const nextId = BlockDescription.nextBlockId;
+                const subCtx = createContext(ctx);
+                this.compileAST({ type: 3 /* Multi */, content: ast.body }, subCtx);
+                this.helpers.add("withDefault");
+                expr = `withDefault(${expr}, b${nextId})`;
+            }
+            this.insertBlock(`${expr}`, block, ctx);
+        }
+        compileTIf(ast, ctx, nextNode) {
+            let { block, forceNewBlock, index } = ctx;
+            let currentIndex = index;
+            const codeIdx = this.target.code.length;
+            const isNewBlock = !block || (block.type !== "multi" && forceNewBlock);
+            if (block) {
+                block.hasDynamicChildren = true;
+            }
+            if (!block || (block.type !== "multi" && forceNewBlock)) {
+                block = this.createBlock(block, "multi", ctx);
+            }
+            this.addLine(`if (${compileExpr(ast.condition)}) {`);
+            this.target.indentLevel++;
+            this.insertAnchor(block);
+            const subCtx = createContext(ctx, { block, index: currentIndex });
+            this.compileAST(ast.content, subCtx);
+            this.target.indentLevel--;
+            if (ast.tElif) {
+                for (let clause of ast.tElif) {
+                    this.addLine(`} else if (${compileExpr(clause.condition)}) {`);
+                    this.target.indentLevel++;
+                    this.insertAnchor(block);
+                    const subCtx = createContext(ctx, { block, index: currentIndex });
+                    this.compileAST(clause.content, subCtx);
+                    this.target.indentLevel--;
+                }
+            }
+            if (ast.tElse) {
+                this.addLine(`} else {`);
+                this.target.indentLevel++;
+                this.insertAnchor(block);
+                const subCtx = createContext(ctx, { block, index: currentIndex });
+                this.compileAST(ast.tElse, subCtx);
+                this.target.indentLevel--;
+            }
+            this.addLine("}");
+            if (isNewBlock) {
+                // note: this part is duplicated from end of compiledomnode:
+                if (block.children.length) {
+                    const code = this.target.code;
+                    const children = block.children.slice();
+                    let current = children.shift();
+                    for (let i = codeIdx; i < code.length; i++) {
+                        if (code[i].trimStart().startsWith(`let ${current.varName} `)) {
+                            code[i] = code[i].replace(`let ${current.varName}`, current.varName);
+                            current = children.shift();
+                            if (!current)
+                                break;
+                        }
+                    }
+                    this.target.addLine(`let ${block.children.map((c) => c.varName)};`, codeIdx);
+                }
+                // note: this part is duplicated from end of compilemulti:
+                const args = block.children.map((c) => c.varName).join(", ");
+                this.insertBlock(`multi([${args}])`, block, ctx);
+            }
+        }
+        compileTForeach(ast, ctx) {
+            let { block } = ctx;
+            if (block) {
+                this.insertAnchor(block);
+            }
+            block = this.createBlock(block, "list", ctx);
+            this.target.loopLevel++;
+            const loopVar = `i${this.target.loopLevel}`;
+            this.addLine(`ctx = Object.create(ctx);`);
+            const vals = `v_block${block.id}`;
+            const keys = `k_block${block.id}`;
+            const l = `l_block${block.id}`;
+            const c = `c_block${block.id}`;
+            this.helpers.add("prepareList");
+            this.addLine(`const [${keys}, ${vals}, ${l}, ${c}] = prepareList(${compileExpr(ast.collection)});`);
+            // Throw errors on duplicate keys in dev mode
+            if (this.dev) {
+                this.addLine(`const keys${block.id} = new Set();`);
+            }
+            this.addLine(`for (let ${loopVar} = 0; ${loopVar} < ${l}; ${loopVar}++) {`);
+            this.target.indentLevel++;
+            this.addLine(`ctx[\`${ast.elem}\`] = ${vals}[${loopVar}];`);
+            if (!ast.hasNoFirst) {
+                this.addLine(`ctx[\`${ast.elem}_first\`] = ${loopVar} === 0;`);
+            }
+            if (!ast.hasNoLast) {
+                this.addLine(`ctx[\`${ast.elem}_last\`] = ${loopVar} === ${vals}.length - 1;`);
+            }
+            if (!ast.hasNoIndex) {
+                this.addLine(`ctx[\`${ast.elem}_index\`] = ${loopVar};`);
+            }
+            if (!ast.hasNoValue) {
+                this.addLine(`ctx[\`${ast.elem}_value\`] = ${keys}[${loopVar}];`);
+            }
+            this.addLine(`let key${this.target.loopLevel} = ${ast.key ? compileExpr(ast.key) : loopVar};`);
+            if (this.dev) {
+                // Throw error on duplicate keys in dev mode
+                this.addLine(`if (keys${block.id}.has(key${this.target.loopLevel})) { throw new Error(\`Got duplicate key in t-foreach: \${key${this.target.loopLevel}}\`)}`);
+                this.addLine(`keys${block.id}.add(key${this.target.loopLevel});`);
+            }
+            let id;
+            if (ast.memo) {
+                this.target.hasCache = true;
+                id = this.generateId();
+                this.addLine(`let memo${id} = ${compileExpr(ast.memo)}`);
+                this.addLine(`let vnode${id} = cache[key${this.target.loopLevel}];`);
+                this.addLine(`if (vnode${id}) {`);
+                this.target.indentLevel++;
+                this.addLine(`if (shallowEqual(vnode${id}.memo, memo${id})) {`);
+                this.target.indentLevel++;
+                this.addLine(`${c}[${loopVar}] = vnode${id};`);
+                this.addLine(`nextCache[key${this.target.loopLevel}] = vnode${id};`);
+                this.addLine(`continue;`);
+                this.target.indentLevel--;
+                this.addLine("}");
+                this.target.indentLevel--;
+                this.addLine("}");
+            }
+            const subCtx = createContext(ctx, { block, index: loopVar });
+            this.compileAST(ast.body, subCtx);
+            if (ast.memo) {
+                this.addLine(`nextCache[key${this.target.loopLevel}] = Object.assign(${c}[${loopVar}], {memo: memo${id}});`);
+            }
+            this.target.indentLevel--;
+            this.target.loopLevel--;
+            this.addLine(`}`);
+            if (!ctx.isLast) {
+                this.addLine(`ctx = ctx.__proto__;`);
+            }
+            this.insertBlock("l", block, ctx);
+        }
+        compileTKey(ast, ctx) {
+            const tKeyExpr = this.generateId("tKey_");
+            this.addLine(`const ${tKeyExpr} = ${compileExpr(ast.expr)};`);
+            ctx = createContext(ctx, {
+                tKeyExpr,
+                block: ctx.block,
+                index: ctx.index,
+            });
+            this.compileAST(ast.content, ctx);
+        }
+        compileMulti(ast, ctx) {
+            let { block, forceNewBlock } = ctx;
+            const isNewBlock = !block || forceNewBlock;
+            let codeIdx = this.target.code.length;
+            if (isNewBlock) {
+                const n = ast.content.filter((c) => c.type !== 6 /* TSet */).length;
+                if (n <= 1) {
+                    for (let child of ast.content) {
+                        this.compileAST(child, ctx);
+                    }
+                    return;
+                }
+                block = this.createBlock(block, "multi", ctx);
+            }
+            let index = 0;
+            for (let i = 0, l = ast.content.length; i < l; i++) {
+                const child = ast.content[i];
+                const isTSet = child.type === 6 /* TSet */;
+                const subCtx = createContext(ctx, {
+                    block,
+                    index,
+                    forceNewBlock: !isTSet,
+                    preventRoot: ctx.preventRoot,
+                    isLast: ctx.isLast && i === l - 1,
+                });
+                this.compileAST(child, subCtx);
+                if (!isTSet) {
+                    index++;
+                }
+            }
+            if (isNewBlock) {
+                if (block.hasDynamicChildren) {
+                    if (block.children.length) {
+                        const code = this.target.code;
+                        const children = block.children.slice();
+                        let current = children.shift();
+                        for (let i = codeIdx; i < code.length; i++) {
+                            if (code[i].trimStart().startsWith(`let ${current.varName} `)) {
+                                code[i] = code[i].replace(`let ${current.varName}`, current.varName);
+                                current = children.shift();
+                                if (!current)
+                                    break;
+                            }
+                        }
+                        this.target.addLine(`let ${block.children.map((c) => c.varName)};`, codeIdx);
+                    }
+                }
+                const args = block.children.map((c) => c.varName).join(", ");
+                this.insertBlock(`multi([${args}])`, block, ctx);
+            }
+        }
+        compileTCall(ast, ctx) {
+            let { block, forceNewBlock } = ctx;
+            if (ast.body) {
+                this.addLine(`ctx = Object.create(ctx);`);
+                this.addLine(`ctx[isBoundary] = 1;`);
+                this.helpers.add("isBoundary");
+                const nextId = BlockDescription.nextBlockId;
+                const subCtx = createContext(ctx, { preventRoot: true });
+                this.compileAST({ type: 3 /* Multi */, content: ast.body }, subCtx);
+                if (nextId !== BlockDescription.nextBlockId) {
+                    this.helpers.add("zero");
+                    this.addLine(`ctx[zero] = b${nextId};`);
+                }
+            }
+            const isDynamic = INTERP_REGEXP.test(ast.name);
+            const subTemplate = isDynamic ? interpolate(ast.name) : "`" + ast.name + "`";
+            if (block) {
+                if (!forceNewBlock) {
+                    this.insertAnchor(block);
+                }
+            }
+            const key = `key + \`${this.generateComponentKey()}\``;
+            if (isDynamic) {
+                const templateVar = this.generateId("template");
+                this.addLine(`const ${templateVar} = ${subTemplate};`);
+                block = this.createBlock(block, "multi", ctx);
+                this.helpers.add("call");
+                this.insertBlock(`call(this, ${templateVar}, ctx, node, ${key})`, block, {
+                    ...ctx,
+                    forceNewBlock: !block,
+                });
+            }
+            else {
+                const id = this.generateId(`callTemplate_`);
+                this.helpers.add("getTemplate");
+                this.staticCalls.push({ id, template: subTemplate });
+                block = this.createBlock(block, "multi", ctx);
+                this.insertBlock(`${id}.call(this, ctx, node, ${key})`, block, {
+                    ...ctx,
+                    forceNewBlock: !block,
+                });
+            }
+            if (ast.body && !ctx.isLast) {
+                this.addLine(`ctx = ctx.__proto__;`);
+            }
+        }
+        compileTCallBlock(ast, ctx) {
+            let { block, forceNewBlock } = ctx;
+            if (block) {
+                if (!forceNewBlock) {
+                    this.insertAnchor(block);
+                }
+            }
+            block = this.createBlock(block, "multi", ctx);
+            this.insertBlock(compileExpr(ast.name), block, { ...ctx, forceNewBlock: !block });
+        }
+        compileTSet(ast, ctx) {
+            this.target.shouldProtectScope = true;
+            this.helpers.add("isBoundary").add("withDefault");
+            const expr = ast.value ? compileExpr(ast.value || "") : "null";
+            if (ast.body) {
+                this.helpers.add("LazyValue");
+                const bodyAst = { type: 3 /* Multi */, content: ast.body };
+                const name = this.compileInNewTarget("value", bodyAst, ctx);
+                let value = `new LazyValue(${name}, ctx, node)`;
+                value = ast.value ? (value ? `withDefault(${expr}, ${value})` : expr) : value;
+                this.addLine(`ctx[\`${ast.name}\`] = ${value};`);
+            }
+            else {
+                let value;
+                if (ast.defaultValue) {
+                    if (ast.value) {
+                        value = `withDefault(${expr}, \`${ast.defaultValue}\`)`;
+                    }
+                    else {
+                        value = `\`${ast.defaultValue}\``;
+                    }
+                }
+                else {
+                    value = expr;
+                }
+                this.helpers.add("setContextValue");
+                this.addLine(`setContextValue(ctx, "${ast.name}", ${value});`);
+            }
+        }
+        generateComponentKey() {
+            const parts = [this.generateId("__")];
+            for (let i = 0; i < this.target.loopLevel; i++) {
+                parts.push(`\${key${i + 1}}`);
+            }
+            return parts.join("__");
+        }
         /**
-         * Perform string interpolation on the given string. Note that if the whole
-         * string is an expression, it simply returns it (formatted and enclosed in
-         * parentheses).
-         * For instance:
-         *   'Hello {{x}}!' -> `Hello ${x}`
-         *   '{{x ? 'a': 'b'}}' -> (x ? 'a' : 'b')
+         * Formats a prop name and value into a string suitable to be inserted in the
+         * generated code. For example:
+         *
+         * Name              Value            Result
+         * ---------------------------------------------------------
+         * "number"          "state"          "number: ctx['state']"
+         * "something"       ""               "something: undefined"
+         * "some-prop"       "state"          "'some-prop': ctx['state']"
+         * "onClick.bind"    "onClick"        "onClick: bind(ctx, ctx['onClick'])"
          */
-        interpolate(s) {
-            let matches = s.match(INTERP_REGEXP);
-            if (matches && matches[0].length === s.length) {
-                return `(${this.formatExpression(s.slice(2, -2))})`;
-            }
-            let r = s.replace(/\{\{.*?\}\}/g, (s) => "${" + this.formatExpression(s.slice(2, -2)) + "}");
-            return "`" + r + "`";
-        }
-        startProtectScope(codeBlock) {
-            const protectID = this.generateID();
-            this.rootContext.protectedScopeNumber++;
-            this.rootContext.shouldDefineScope = true;
-            const scopeExpr = `Object.create(scope);`;
-            this.addLine(`let _origScope${protectID} = scope;`);
-            this.addLine(`scope = ${scopeExpr}`);
-            if (!codeBlock) {
-                this.addLine(`scope.__access_mode__ = 'ro';`);
-            }
-            return protectID;
-        }
-        stopProtectScope(protectID) {
-            this.rootContext.protectedScopeNumber--;
-            this.addLine(`scope = _origScope${protectID};`);
-        }
-    }
-    CompilationContext.nextID = 1;
-
-    //------------------------------------------------------------------------------
-    // module/props.ts
-    //------------------------------------------------------------------------------
-    function updateProps(oldVnode, vnode) {
-        var key, cur, old, elm = vnode.elm, oldProps = oldVnode.data.props, props = vnode.data.props;
-        if (!oldProps && !props)
-            return;
-        if (oldProps === props)
-            return;
-        oldProps = oldProps || {};
-        props = props || {};
-        for (key in oldProps) {
-            if (!props[key]) {
-                delete elm[key];
-            }
-        }
-        for (key in props) {
-            cur = props[key];
-            old = oldProps[key];
-            if (old !== cur && (key !== "value" || elm[key] !== cur)) {
-                elm[key] = cur;
-            }
-        }
-    }
-    const propsModule = {
-        create: updateProps,
-        update: updateProps,
-    };
-    //------------------------------------------------------------------------------
-    // module/eventlisteners.ts
-    //------------------------------------------------------------------------------
-    function invokeHandler(handler, vnode, event) {
-        if (typeof handler === "function") {
-            // call function handler
-            handler.call(vnode, event, vnode);
-        }
-        else if (typeof handler === "object") {
-            // call handler with arguments
-            if (typeof handler[0] === "function") {
-                // special case for single argument for performance
-                if (handler.length === 2) {
-                    handler[0].call(vnode, handler[1], event, vnode);
+        formatProp(name, value) {
+            value = this.captureExpression(value);
+            if (name.includes(".")) {
+                let [_name, suffix] = name.split(".");
+                if (suffix === "bind") {
+                    this.helpers.add("bind");
+                    name = _name;
+                    value = `bind(ctx, ${value || undefined})`;
                 }
                 else {
-                    var args = handler.slice(1);
-                    args.push(event);
-                    args.push(vnode);
-                    handler[0].apply(vnode, args);
+                    throw new Error("Invalid prop suffix");
                 }
             }
-            else {
-                // call multiple handlers
-                for (let i = 0, iLen = handler.length; i < iLen; i++) {
-                    invokeHandler(handler[i], vnode, event);
+            name = /^[a-z_]+$/i.test(name) ? name : `'${name}'`;
+            return `${name}: ${value || undefined}`;
+        }
+        formatPropObject(obj) {
+            const params = [];
+            for (const [n, v] of Object.entries(obj)) {
+                params.push(this.formatProp(n, v));
+            }
+            return params.join(", ");
+        }
+        compileComponent(ast, ctx) {
+            let { block } = ctx;
+            // props
+            const hasSlotsProp = "slots" in ast.props;
+            const props = [];
+            const propExpr = this.formatPropObject(ast.props);
+            if (propExpr) {
+                props.push(propExpr);
+            }
+            // slots
+            const hasSlot = !!Object.keys(ast.slots).length;
+            let slotDef = "";
+            if (hasSlot) {
+                let ctxStr = "ctx";
+                if (this.target.loopLevel || !this.hasSafeContext) {
+                    ctxStr = this.generateId("ctx");
+                    this.helpers.add("capture");
+                    this.addLine(`const ${ctxStr} = capture(ctx);`);
                 }
-            }
-        }
-    }
-    function handleEvent(event, vnode) {
-        var name = event.type, on = vnode.data.on;
-        // call event handler(s) if exists
-        if (on) {
-            if (on[name]) {
-                invokeHandler(on[name], vnode, event);
-            }
-            else if (on["!" + name]) {
-                invokeHandler(on["!" + name], vnode, event);
-            }
-        }
-    }
-    function createListener() {
-        return function handler(event) {
-            handleEvent(event, handler.vnode);
-        };
-    }
-    function updateEventListeners(oldVnode, vnode) {
-        var oldOn = oldVnode.data.on, oldListener = oldVnode.listener, oldElm = oldVnode.elm, on = vnode && vnode.data.on, elm = (vnode && vnode.elm), name;
-        // optimization for reused immutable handlers
-        if (oldOn === on) {
-            return;
-        }
-        // remove existing listeners which no longer used
-        if (oldOn && oldListener) {
-            // if element changed or deleted we remove all existing listeners unconditionally
-            if (!on) {
-                for (name in oldOn) {
-                    // remove listener if element was changed or existing listeners removed
-                    const capture = name.charAt(0) === "!";
-                    name = capture ? name.slice(1) : name;
-                    oldElm.removeEventListener(name, oldListener, capture);
-                }
-            }
-            else {
-                for (name in oldOn) {
-                    // remove listener if existing listener removed
-                    if (!on[name]) {
-                        const capture = name.charAt(0) === "!";
-                        name = capture ? name.slice(1) : name;
-                        oldElm.removeEventListener(name, oldListener, capture);
+                let slotStr = [];
+                for (let slotName in ast.slots) {
+                    const slotAst = ast.slots[slotName].content;
+                    const name = this.compileInNewTarget("slot", slotAst, ctx);
+                    const params = [`__render: ${name}, __ctx: ${ctxStr}`];
+                    const scope = ast.slots[slotName].scope;
+                    if (scope) {
+                        params.push(`__scope: "${scope}"`);
                     }
-                }
-            }
-        }
-        // add new listeners which has not already attached
-        if (on) {
-            // reuse existing listener or create new
-            var listener = (vnode.listener = oldVnode.listener || createListener());
-            // update vnode for listener
-            listener.vnode = vnode;
-            // if element changed or added we add all needed listeners unconditionally
-            if (!oldOn) {
-                for (name in on) {
-                    // add listener if element was changed or new listeners added
-                    const capture = name.charAt(0) === "!";
-                    name = capture ? name.slice(1) : name;
-                    elm.addEventListener(name, listener, capture);
-                }
-            }
-            else {
-                for (name in on) {
-                    // add listener if new listener added
-                    if (!oldOn[name]) {
-                        const capture = name.charAt(0) === "!";
-                        name = capture ? name.slice(1) : name;
-                        elm.addEventListener(name, listener, capture);
+                    if (ast.slots[slotName].attrs) {
+                        params.push(this.formatPropObject(ast.slots[slotName].attrs));
                     }
+                    const slotInfo = `{${params.join(", ")}}`;
+                    slotStr.push(`'${slotName}': ${slotInfo}`);
                 }
+                slotDef = `{${slotStr.join(", ")}}`;
             }
-        }
-    }
-    const eventListenersModule = {
-        create: updateEventListeners,
-        update: updateEventListeners,
-        destroy: updateEventListeners,
-    };
-    //------------------------------------------------------------------------------
-    // attributes.ts
-    //------------------------------------------------------------------------------
-    const xlinkNS = "http://www.w3.org/1999/xlink";
-    const xmlNS = "http://www.w3.org/XML/1998/namespace";
-    const colonChar = 58;
-    const xChar = 120;
-    function updateAttrs(oldVnode, vnode) {
-        var key, elm = vnode.elm, oldAttrs = oldVnode.data.attrs, attrs = vnode.data.attrs;
-        if (!oldAttrs && !attrs)
-            return;
-        if (oldAttrs === attrs)
-            return;
-        oldAttrs = oldAttrs || {};
-        attrs = attrs || {};
-        // update modified attributes, add new attributes
-        for (key in attrs) {
-            const cur = attrs[key];
-            const old = oldAttrs[key];
-            if (old !== cur) {
-                if (cur === true) {
-                    elm.setAttribute(key, "");
-                }
-                else if (cur === false) {
-                    elm.removeAttribute(key);
+            if (slotDef && !(ast.dynamicProps || hasSlotsProp)) {
+                props.push(`slots: ${slotDef}`);
+            }
+            const propStr = `{${props.join(",")}}`;
+            let propString = propStr;
+            if (ast.dynamicProps) {
+                if (!props.length) {
+                    propString = `Object.assign({}, ${compileExpr(ast.dynamicProps)})`;
                 }
                 else {
-                    if (key.charCodeAt(0) !== xChar) {
-                        elm.setAttribute(key, cur);
-                    }
-                    else if (key.charCodeAt(3) === colonChar) {
-                        // Assume xml namespace
-                        elm.setAttributeNS(xmlNS, key, cur);
-                    }
-                    else if (key.charCodeAt(5) === colonChar) {
-                        // Assume xlink namespace
-                        elm.setAttributeNS(xlinkNS, key, cur);
-                    }
-                    else {
-                        elm.setAttribute(key, cur);
-                    }
+                    propString = `Object.assign({}, ${compileExpr(ast.dynamicProps)}, ${propStr})`;
                 }
             }
-        }
-        // remove removed attributes
-        // use `in` operator since the previous `for` iteration uses it (.i.e. add even attributes with undefined value)
-        // the other option is to remove all attributes with value == undefined
-        for (key in oldAttrs) {
-            if (!(key in attrs)) {
-                elm.removeAttribute(key);
+            let propVar;
+            if ((slotDef && (ast.dynamicProps || hasSlotsProp)) || this.dev) {
+                propVar = this.generateId("props");
+                this.addLine(`const ${propVar} = ${propString};`);
+                propString = propVar;
             }
-        }
-    }
-    const attrsModule = {
-        create: updateAttrs,
-        update: updateAttrs,
-    };
-    //------------------------------------------------------------------------------
-    // class.ts
-    //------------------------------------------------------------------------------
-    function updateClass(oldVnode, vnode) {
-        var cur, name, elm, oldClass = oldVnode.data.class, klass = vnode.data.class;
-        if (!oldClass && !klass)
-            return;
-        if (oldClass === klass)
-            return;
-        oldClass = oldClass || {};
-        klass = klass || {};
-        elm = vnode.elm;
-        for (name in oldClass) {
-            if (name && !klass[name] && !Object.prototype.hasOwnProperty.call(klass, name)) {
-                // was `true` and now not provided
-                elm.classList.remove(name);
+            if (slotDef && (ast.dynamicProps || hasSlotsProp)) {
+                this.addLine(`${propVar}.slots = Object.assign(${slotDef}, ${propVar}.slots)`);
             }
-        }
-        for (name in klass) {
-            cur = klass[name];
-            if (cur !== oldClass[name]) {
-                elm.classList[cur ? "add" : "remove"](name);
-            }
-        }
-    }
-    const classModule = { create: updateClass, update: updateClass };
-
-    /**
-     * Owl VDOM
-     *
-     * This file contains an implementation of a virtual DOM, which is a system that
-     * can generate in-memory representations of a DOM tree, compare them, and
-     * eventually change a concrete DOM tree to match its representation, in an
-     * hopefully efficient way.
-     *
-     * Note that this code is a fork of Snabbdom, slightly tweaked/optimized for our
-     * needs (see https://github.com/snabbdom/snabbdom).
-     *
-     * The main exported values are:
-     * - interface VNode
-     * - h function (a helper function to generate a vnode)
-     * - patch function (to apply a vnode to an actual DOM node)
-     */
-    function vnode(sel, data, children, text, elm) {
-        let key = data === undefined ? undefined : data.key;
-        return { sel, data, children, text, elm, key };
-    }
-    //------------------------------------------------------------------------------
-    // snabbdom.ts
-    //------------------------------------------------------------------------------
-    function isUndef(s) {
-        return s === undefined;
-    }
-    function isDef(s) {
-        return s !== undefined;
-    }
-    const emptyNode = vnode("", {}, [], undefined, undefined);
-    function sameVnode(vnode1, vnode2) {
-        return vnode1.key === vnode2.key && vnode1.sel === vnode2.sel;
-    }
-    function isVnode(vnode) {
-        return vnode.sel !== undefined;
-    }
-    function createKeyToOldIdx(children, beginIdx, endIdx) {
-        let i, map = {}, key, ch;
-        for (i = beginIdx; i <= endIdx; ++i) {
-            ch = children[i];
-            if (ch != null) {
-                key = ch.key;
-                if (key !== undefined)
-                    map[key] = i;
-            }
-        }
-        return map;
-    }
-    const hooks$1 = ["create", "update", "remove", "destroy", "pre", "post"];
-    function init(modules, domApi) {
-        let i, j, cbs = {};
-        const api = domApi !== undefined ? domApi : htmlDomApi;
-        for (i = 0; i < hooks$1.length; ++i) {
-            cbs[hooks$1[i]] = [];
-            for (j = 0; j < modules.length; ++j) {
-                const hook = modules[j][hooks$1[i]];
-                if (hook !== undefined) {
-                    cbs[hooks$1[i]].push(hook);
-                }
-            }
-        }
-        function emptyNodeAt(elm) {
-            const id = elm.id ? "#" + elm.id : "";
-            const c = elm.className ? "." + elm.className.split(" ").join(".") : "";
-            return vnode(api.tagName(elm).toLowerCase() + id + c, {}, [], undefined, elm);
-        }
-        function createRmCb(childElm, listeners) {
-            return function rmCb() {
-                if (--listeners === 0) {
-                    const parent = api.parentNode(childElm);
-                    api.removeChild(parent, childElm);
-                }
-            };
-        }
-        function createElm(vnode, insertedVnodeQueue) {
-            let i, iLen, data = vnode.data;
-            if (data !== undefined) {
-                if (isDef((i = data.hook)) && isDef((i = i.init))) {
-                    i(vnode);
-                    data = vnode.data;
-                }
-            }
-            let children = vnode.children, sel = vnode.sel;
-            if (sel === "!") {
-                if (isUndef(vnode.text)) {
-                    vnode.text = "";
-                }
-                vnode.elm = api.createComment(vnode.text);
-            }
-            else if (sel !== undefined) {
-                const elm = vnode.elm ||
-                    (vnode.elm =
-                        isDef(data) && isDef((i = data.ns))
-                            ? api.createElementNS(i, sel)
-                            : api.createElement(sel));
-                for (i = 0, iLen = cbs.create.length; i < iLen; ++i)
-                    cbs.create[i](emptyNode, vnode);
-                if (array(children)) {
-                    for (i = 0, iLen = children.length; i < iLen; ++i) {
-                        const ch = children[i];
-                        if (ch != null) {
-                            api.appendChild(elm, createElm(ch, insertedVnodeQueue));
-                        }
-                    }
-                }
-                else if (primitive(vnode.text)) {
-                    api.appendChild(elm, api.createTextNode(vnode.text));
-                }
-                i = vnode.data.hook; // Reuse variable
-                if (isDef(i)) {
-                    if (i.create)
-                        i.create(emptyNode, vnode);
-                    if (i.insert)
-                        insertedVnodeQueue.push(vnode);
-                }
+            // cmap key
+            const key = this.generateComponentKey();
+            let expr;
+            if (ast.isDynamic) {
+                expr = this.generateId("Comp");
+                this.addLine(`let ${expr} = ${compileExpr(ast.name)};`);
             }
             else {
-                vnode.elm = api.createTextNode(vnode.text);
+                expr = `\`${ast.name}\``;
             }
-            return vnode.elm;
-        }
-        function addVnodes(parentElm, before, vnodes, startIdx, endIdx, insertedVnodeQueue) {
-            for (; startIdx <= endIdx; ++startIdx) {
-                const ch = vnodes[startIdx];
-                if (ch != null) {
-                    api.insertBefore(parentElm, createElm(ch, insertedVnodeQueue), before);
-                }
+            if (this.dev) {
+                this.addLine(`helpers.validateProps(${expr}, ${propVar}, ctx);`);
             }
-        }
-        function invokeDestroyHook(vnode) {
-            let i, iLen, j, jLen, data = vnode.data;
-            if (data !== undefined) {
-                if (isDef((i = data.hook)) && isDef((i = i.destroy)))
-                    i(vnode);
-                for (i = 0, iLen = cbs.destroy.length; i < iLen; ++i)
-                    cbs.destroy[i](vnode);
-                if (vnode.children !== undefined) {
-                    for (j = 0, jLen = vnode.children.length; j < jLen; ++j) {
-                        i = vnode.children[j];
-                        if (i != null && typeof i !== "string") {
-                            invokeDestroyHook(i);
-                        }
-                    }
-                }
+            if (block && (ctx.forceNewBlock === false || ctx.tKeyExpr)) {
+                // todo: check the forcenewblock condition
+                this.insertAnchor(block);
             }
-        }
-        function removeVnodes(parentElm, vnodes, startIdx, endIdx) {
-            for (; startIdx <= endIdx; ++startIdx) {
-                let i, iLen, listeners, rm, ch = vnodes[startIdx];
-                if (ch != null) {
-                    if (isDef(ch.sel)) {
-                        invokeDestroyHook(ch);
-                        listeners = cbs.remove.length + 1;
-                        rm = createRmCb(ch.elm, listeners);
-                        for (i = 0, iLen = cbs.remove.length; i < iLen; ++i)
-                            cbs.remove[i](ch, rm);
-                        if (isDef((i = ch.data)) && isDef((i = i.hook)) && isDef((i = i.remove))) {
-                            i(ch, rm);
-                        }
-                        else {
-                            rm();
-                        }
-                    }
-                    else {
-                        // Text node
-                        api.removeChild(parentElm, ch.elm);
-                    }
-                }
+            let keyArg = `key + \`${key}\``;
+            if (ctx.tKeyExpr) {
+                keyArg = `${ctx.tKeyExpr} + ${keyArg}`;
             }
+            const blockArgs = `${expr}, ${propString}, ${keyArg}, node, ctx`;
+            let blockExpr = `component(${blockArgs})`;
+            if (ast.isDynamic) {
+                blockExpr = `toggler(${expr}, ${blockExpr})`;
+            }
+            block = this.createBlock(block, "multi", ctx);
+            this.insertBlock(blockExpr, block, ctx);
         }
-        function updateChildren(parentElm, oldCh, newCh, insertedVnodeQueue) {
-            let oldStartIdx = 0, newStartIdx = 0;
-            let oldEndIdx = oldCh.length - 1;
-            let oldStartVnode = oldCh[0];
-            let oldEndVnode = oldCh[oldEndIdx];
-            let newEndIdx = newCh.length - 1;
-            let newStartVnode = newCh[0];
-            let newEndVnode = newCh[newEndIdx];
-            let oldKeyToIdx;
-            let idxInOld;
-            let elmToMove;
-            let before;
-            while (oldStartIdx <= oldEndIdx && newStartIdx <= newEndIdx) {
-                if (oldStartVnode == null) {
-                    oldStartVnode = oldCh[++oldStartIdx]; // Vnode might have been moved left
-                }
-                else if (oldEndVnode == null) {
-                    oldEndVnode = oldCh[--oldEndIdx];
-                }
-                else if (newStartVnode == null) {
-                    newStartVnode = newCh[++newStartIdx];
-                }
-                else if (newEndVnode == null) {
-                    newEndVnode = newCh[--newEndIdx];
-                }
-                else if (sameVnode(oldStartVnode, newStartVnode)) {
-                    patchVnode(oldStartVnode, newStartVnode, insertedVnodeQueue);
-                    oldStartVnode = oldCh[++oldStartIdx];
-                    newStartVnode = newCh[++newStartIdx];
-                }
-                else if (sameVnode(oldEndVnode, newEndVnode)) {
-                    patchVnode(oldEndVnode, newEndVnode, insertedVnodeQueue);
-                    oldEndVnode = oldCh[--oldEndIdx];
-                    newEndVnode = newCh[--newEndIdx];
-                }
-                else if (sameVnode(oldStartVnode, newEndVnode)) {
-                    // Vnode moved right
-                    patchVnode(oldStartVnode, newEndVnode, insertedVnodeQueue);
-                    api.insertBefore(parentElm, oldStartVnode.elm, api.nextSibling(oldEndVnode.elm));
-                    oldStartVnode = oldCh[++oldStartIdx];
-                    newEndVnode = newCh[--newEndIdx];
-                }
-                else if (sameVnode(oldEndVnode, newStartVnode)) {
-                    // Vnode moved left
-                    patchVnode(oldEndVnode, newStartVnode, insertedVnodeQueue);
-                    api.insertBefore(parentElm, oldEndVnode.elm, oldStartVnode.elm);
-                    oldEndVnode = oldCh[--oldEndIdx];
-                    newStartVnode = newCh[++newStartIdx];
+        compileTSlot(ast, ctx) {
+            this.helpers.add("callSlot");
+            let { block } = ctx;
+            let blockString;
+            let slotName;
+            let dynamic = false;
+            if (ast.name.match(INTERP_REGEXP)) {
+                dynamic = true;
+                slotName = interpolate(ast.name);
+            }
+            else {
+                slotName = "'" + ast.name + "'";
+            }
+            const scope = ast.attrs ? `{${this.formatPropObject(ast.attrs)}}` : null;
+            if (ast.defaultContent) {
+                const name = this.compileInNewTarget("defaultContent", ast.defaultContent, ctx);
+                blockString = `callSlot(ctx, node, key, ${slotName}, ${dynamic}, ${scope}, ${name})`;
+            }
+            else {
+                if (dynamic) {
+                    let name = this.generateId("slot");
+                    this.addLine(`const ${name} = ${slotName};`);
+                    blockString = `toggler(${name}, callSlot(ctx, node, key, ${name}), ${dynamic}, ${scope})`;
                 }
                 else {
-                    if (oldKeyToIdx === undefined) {
-                        oldKeyToIdx = createKeyToOldIdx(oldCh, oldStartIdx, oldEndIdx);
-                    }
-                    idxInOld = oldKeyToIdx[newStartVnode.key];
-                    if (isUndef(idxInOld)) {
-                        // New element
-                        api.insertBefore(parentElm, createElm(newStartVnode, insertedVnodeQueue), oldStartVnode.elm);
-                        newStartVnode = newCh[++newStartIdx];
-                    }
-                    else {
-                        elmToMove = oldCh[idxInOld];
-                        if (elmToMove.sel !== newStartVnode.sel) {
-                            api.insertBefore(parentElm, createElm(newStartVnode, insertedVnodeQueue), oldStartVnode.elm);
-                        }
-                        else {
-                            patchVnode(elmToMove, newStartVnode, insertedVnodeQueue);
-                            oldCh[idxInOld] = undefined;
-                            api.insertBefore(parentElm, elmToMove.elm, oldStartVnode.elm);
-                        }
-                        newStartVnode = newCh[++newStartIdx];
-                    }
+                    blockString = `callSlot(ctx, node, key, ${slotName}, ${dynamic}, ${scope})`;
                 }
             }
-            if (oldStartIdx <= oldEndIdx || newStartIdx <= newEndIdx) {
-                if (oldStartIdx > oldEndIdx) {
-                    before = newCh[newEndIdx + 1] == null ? null : newCh[newEndIdx + 1].elm;
-                    addVnodes(parentElm, before, newCh, newStartIdx, newEndIdx, insertedVnodeQueue);
-                }
-                else {
-                    removeVnodes(parentElm, oldCh, oldStartIdx, oldEndIdx);
-                }
+            if (block) {
+                this.insertAnchor(block);
+            }
+            block = this.createBlock(block, "multi", ctx);
+            this.insertBlock(blockString, block, { ...ctx, forceNewBlock: false });
+        }
+        compileTTranslation(ast, ctx) {
+            if (ast.content) {
+                this.compileAST(ast.content, Object.assign({}, ctx, { translate: false }));
             }
         }
-        function patchVnode(oldVnode, vnode, insertedVnodeQueue) {
-            let i, iLen, hook;
-            if (isDef((i = vnode.data)) && isDef((hook = i.hook)) && isDef((i = hook.prepatch))) {
-                i(oldVnode, vnode);
+        compileTPortal(ast, ctx) {
+            this.helpers.add("Portal");
+            let { block } = ctx;
+            const name = this.compileInNewTarget("slot", ast.content, ctx);
+            const key = this.generateComponentKey();
+            let ctxStr = "ctx";
+            if (this.target.loopLevel || !this.hasSafeContext) {
+                ctxStr = this.generateId("ctx");
+                this.helpers.add("capture");
+                this.addLine(`const ${ctxStr} = capture(ctx);`);
             }
-            const elm = (vnode.elm = oldVnode.elm);
-            let oldCh = oldVnode.children;
-            let ch = vnode.children;
-            if (oldVnode === vnode)
-                return;
-            if (vnode.data !== undefined) {
-                for (i = 0, iLen = cbs.update.length; i < iLen; ++i)
-                    cbs.update[i](oldVnode, vnode);
-                i = vnode.data.hook;
-                if (isDef(i) && isDef((i = i.update)))
-                    i(oldVnode, vnode);
+            const blockString = `component(Portal, {target: ${ast.target},slots: {'default': {__render: ${name}, __ctx: ${ctxStr}}}}, key + \`${key}\`, node, ctx)`;
+            if (block) {
+                this.insertAnchor(block);
             }
-            if (isUndef(vnode.text)) {
-                if (isDef(oldCh) && isDef(ch)) {
-                    if (oldCh !== ch)
-                        updateChildren(elm, oldCh, ch, insertedVnodeQueue);
-                }
-                else if (isDef(ch)) {
-                    if (isDef(oldVnode.text))
-                        api.setTextContent(elm, "");
-                    addVnodes(elm, null, ch, 0, ch.length - 1, insertedVnodeQueue);
-                }
-                else if (isDef(oldCh)) {
-                    removeVnodes(elm, oldCh, 0, oldCh.length - 1);
-                }
-                else if (isDef(oldVnode.text)) {
-                    api.setTextContent(elm, "");
-                }
-            }
-            else if (oldVnode.text !== vnode.text) {
-                if (isDef(oldCh)) {
-                    removeVnodes(elm, oldCh, 0, oldCh.length - 1);
-                }
-                api.setTextContent(elm, vnode.text);
-            }
-            if (isDef(hook) && isDef((i = hook.postpatch))) {
-                i(oldVnode, vnode);
-            }
+            block = this.createBlock(block, "multi", ctx);
+            this.insertBlock(blockString, block, { ...ctx, forceNewBlock: false });
         }
-        return function patch(oldVnode, vnode) {
-            let i, iLen, elm, parent;
-            const insertedVnodeQueue = [];
-            for (i = 0, iLen = cbs.pre.length; i < iLen; ++i)
-                cbs.pre[i]();
-            if (!isVnode(oldVnode)) {
-                oldVnode = emptyNodeAt(oldVnode);
-            }
-            if (sameVnode(oldVnode, vnode)) {
-                patchVnode(oldVnode, vnode, insertedVnodeQueue);
-            }
-            else {
-                elm = oldVnode.elm;
-                parent = api.parentNode(elm);
-                createElm(vnode, insertedVnodeQueue);
-                if (parent !== null) {
-                    api.insertBefore(parent, vnode.elm, api.nextSibling(elm));
-                    removeVnodes(parent, [oldVnode], 0, 0);
-                }
-            }
-            for (i = 0, iLen = insertedVnodeQueue.length; i < iLen; ++i) {
-                insertedVnodeQueue[i].data.hook.insert(insertedVnodeQueue[i]);
-            }
-            for (i = 0, iLen = cbs.post.length; i < iLen; ++i)
-                cbs.post[i]();
-            return vnode;
-        };
-    }
-    //------------------------------------------------------------------------------
-    // is.ts
-    //------------------------------------------------------------------------------
-    const array = Array.isArray;
-    function primitive(s) {
-        return typeof s === "string" || typeof s === "number";
-    }
-    function createElement(tagName) {
-        return document.createElement(tagName);
-    }
-    function createElementNS(namespaceURI, qualifiedName) {
-        return document.createElementNS(namespaceURI, qualifiedName);
-    }
-    function createTextNode(text) {
-        return document.createTextNode(text);
-    }
-    function createComment(text) {
-        return document.createComment(text);
-    }
-    function insertBefore(parentNode, newNode, referenceNode) {
-        parentNode.insertBefore(newNode, referenceNode);
-    }
-    function removeChild(node, child) {
-        node.removeChild(child);
-    }
-    function appendChild(node, child) {
-        node.appendChild(child);
-    }
-    function parentNode(node) {
-        return node.parentNode;
-    }
-    function nextSibling(node) {
-        return node.nextSibling;
-    }
-    function tagName(elm) {
-        return elm.tagName;
-    }
-    function setTextContent(node, text) {
-        node.textContent = text;
-    }
-    const htmlDomApi = {
-        createElement,
-        createElementNS,
-        createTextNode,
-        createComment,
-        insertBefore,
-        removeChild,
-        appendChild,
-        parentNode,
-        nextSibling,
-        tagName,
-        setTextContent,
-    };
-    function addNS(data, children, sel) {
-        if (sel === "dummy") {
-            // we do not need to add the namespace on dummy elements, they come from a
-            // subcomponent, which will handle the namespace itself
-            return;
-        }
-        data.ns = "http://www.w3.org/2000/svg";
-        if (sel !== "foreignObject" && children !== undefined) {
-            for (let i = 0, iLen = children.length; i < iLen; ++i) {
-                const child = children[i];
-                let childData = child.data;
-                if (childData !== undefined) {
-                    addNS(childData, child.children, child.sel);
-                }
-            }
-        }
-    }
-    function h(sel, b, c) {
-        var data = {}, children, text, i, iLen;
-        if (c !== undefined) {
-            data = b;
-            if (array(c)) {
-                children = c;
-            }
-            else if (primitive(c)) {
-                text = c;
-            }
-            else if (c && c.sel) {
-                children = [c];
-            }
-        }
-        else if (b !== undefined) {
-            if (array(b)) {
-                children = b;
-            }
-            else if (primitive(b)) {
-                text = b;
-            }
-            else if (b && b.sel) {
-                children = [b];
-            }
-            else {
-                data = b;
-            }
-        }
-        if (children !== undefined) {
-            for (i = 0, iLen = children.length; i < iLen; ++i) {
-                if (primitive(children[i]))
-                    children[i] = vnode(undefined, undefined, undefined, children[i], undefined);
-            }
-        }
-        return vnode(sel, data, children, text, undefined);
     }
 
-    const patch = init([eventListenersModule, attrsModule, propsModule, classModule]);
-
-    let localStorage = null;
-    const browser = {
-        setTimeout: window.setTimeout.bind(window),
-        clearTimeout: window.clearTimeout.bind(window),
-        setInterval: window.setInterval.bind(window),
-        clearInterval: window.clearInterval.bind(window),
-        requestAnimationFrame: window.requestAnimationFrame.bind(window),
-        random: Math.random,
-        Date: window.Date,
-        fetch: (window.fetch || (() => { })).bind(window),
-        get localStorage() {
-            return localStorage || window.localStorage;
-        },
-        set localStorage(newLocalStorage) {
-            localStorage = newLocalStorage;
-        },
-    };
-
-    /**
-     * Owl Utils
-     *
-     * We have here a small collection of utility functions:
-     *
-     * - whenReady
-     * - loadJS
-     * - loadFile
-     * - escape
-     * - debounce
-     */
-    function whenReady(fn) {
-        return new Promise(function (resolve) {
-            if (document.readyState !== "loading") {
-                resolve();
-            }
-            else {
-                document.addEventListener("DOMContentLoaded", resolve, false);
-            }
-        }).then(fn || function () { });
-    }
-    const loadedScripts = {};
-    function loadJS(url) {
-        if (url in loadedScripts) {
-            return loadedScripts[url];
+    // -----------------------------------------------------------------------------
+    // AST Type definition
+    // -----------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------
+    // Parser
+    // -----------------------------------------------------------------------------
+    const cache = new WeakMap();
+    function parse(xml) {
+        if (typeof xml === "string") {
+            const elem = parseXML$1(`<t>${xml}</t>`).firstChild;
+            return _parse(elem);
         }
-        const promise = new Promise(function (resolve, reject) {
-            const script = document.createElement("script");
-            script.type = "text/javascript";
-            script.src = url;
-            script.onload = function () {
-                resolve();
-            };
-            script.onerror = function () {
-                reject(`Error loading file '${url}'`);
-            };
-            const head = document.head || document.getElementsByTagName("head")[0];
-            head.appendChild(script);
-        });
-        loadedScripts[url] = promise;
-        return promise;
-    }
-    async function loadFile(url) {
-        const result = await browser.fetch(url);
-        if (!result.ok) {
-            throw new Error("Error while fetching xml templates");
+        let ast = cache.get(xml);
+        if (!ast) {
+            // we clone here the xml to prevent modifying it in place
+            ast = _parse(xml.cloneNode(true));
+            cache.set(xml, ast);
         }
-        return await result.text();
+        return ast;
     }
-    function escape(str) {
-        if (str === undefined) {
-            return "";
+    function _parse(xml) {
+        normalizeXML(xml);
+        const ctx = { inPreTag: false, inSVG: false };
+        return parseNode(xml, ctx) || { type: 0 /* Text */, value: "" };
+    }
+    function parseNode(node, ctx) {
+        if (!(node instanceof Element)) {
+            return parseTextCommentNode(node, ctx);
         }
-        if (typeof str === "number") {
-            return String(str);
+        return (parseTDebugLog(node, ctx) ||
+            parseTForEach(node, ctx) ||
+            parseTIf(node, ctx) ||
+            parseTPortal(node, ctx) ||
+            parseTCall(node, ctx) ||
+            parseTCallBlock(node) ||
+            parseTEscNode(node, ctx) ||
+            parseTKey(node, ctx) ||
+            parseTTranslation(node, ctx) ||
+            parseTSlot(node, ctx) ||
+            parseTOutNode(node, ctx) ||
+            parseComponent(node, ctx) ||
+            parseDOMNode(node, ctx) ||
+            parseTSetNode(node, ctx) ||
+            parseTNode(node, ctx));
+    }
+    // -----------------------------------------------------------------------------
+    // <t /> tag
+    // -----------------------------------------------------------------------------
+    function parseTNode(node, ctx) {
+        if (node.tagName !== "t") {
+            return null;
         }
-        const p = document.createElement("p");
-        p.textContent = str;
-        return p.innerHTML;
+        return parseChildNodes(node, ctx);
     }
-    /**
-     * Returns a function, that, as long as it continues to be invoked, will not
-     * be triggered. The function will be called after it stops being called for
-     * N milliseconds. If `immediate` is passed, trigger the function on the
-     * leading edge, instead of the trailing.
-     *
-     * Inspired by https://davidwalsh.name/javascript-debounce-function
-     */
-    function debounce(func, wait, immediate) {
-        let timeout;
-        return function () {
-            const context = this;
-            const args = arguments;
-            function later() {
-                timeout = null;
-                if (!immediate) {
-                    func.apply(context, args);
-                }
-            }
-            const callNow = immediate && !timeout;
-            browser.clearTimeout(timeout);
-            timeout = browser.setTimeout(later, wait);
-            if (callNow) {
-                func.apply(context, args);
-            }
-        };
-    }
-    function shallowEqual(p1, p2) {
-        for (let k in p1) {
-            if (p1[k] !== p2[k]) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    var _utils = /*#__PURE__*/Object.freeze({
-        __proto__: null,
-        whenReady: whenReady,
-        loadJS: loadJS,
-        loadFile: loadFile,
-        escape: escape,
-        debounce: debounce,
-        shallowEqual: shallowEqual
-    });
-
-    //------------------------------------------------------------------------------
-    // Const/global stuff/helpers
-    //------------------------------------------------------------------------------
-    const TRANSLATABLE_ATTRS = ["label", "title", "placeholder", "alt"];
+    // -----------------------------------------------------------------------------
+    // Text and Comment Nodes
+    // -----------------------------------------------------------------------------
     const lineBreakRE = /[\r\n]/;
     const whitespaceRE = /\s+/g;
-    const translationRE = /^(\s*)([\s\S]+?)(\s*)$/;
-    const NODE_HOOKS_PARAMS = {
-        create: "(_, n)",
-        insert: "vn",
-        remove: "(vn, rm)",
-        destroy: "()",
-    };
-    function isComponent(obj) {
-        return obj && obj.hasOwnProperty("__owl__");
-    }
-    class VDomArray extends Array {
-        toString() {
-            return vDomToString(this);
+    function parseTextCommentNode(node, ctx) {
+        if (node.nodeType === Node.TEXT_NODE) {
+            let value = node.textContent || "";
+            if (!ctx.inPreTag) {
+                if (lineBreakRE.test(value) && !value.trim()) {
+                    return null;
+                }
+                value = value.replace(whitespaceRE, " ");
+            }
+            return { type: 0 /* Text */, value };
         }
+        else if (node.nodeType === Node.COMMENT_NODE) {
+            return { type: 1 /* Comment */, value: node.textContent || "" };
+        }
+        return null;
     }
-    function vDomToString(vdom) {
-        return vdom
-            .map((vnode) => {
-            if (vnode.sel) {
-                const node = document.createElement(vnode.sel);
-                const result = patch(node, vnode);
-                return result.elm.outerHTML;
+    // -----------------------------------------------------------------------------
+    // debugging
+    // -----------------------------------------------------------------------------
+    function parseTDebugLog(node, ctx) {
+        if (node.hasAttribute("t-debug")) {
+            node.removeAttribute("t-debug");
+            return {
+                type: 12 /* TDebug */,
+                content: parseNode(node, ctx),
+            };
+        }
+        if (node.hasAttribute("t-log")) {
+            const expr = node.getAttribute("t-log");
+            node.removeAttribute("t-log");
+            return {
+                type: 13 /* TLog */,
+                expr,
+                content: parseNode(node, ctx),
+            };
+        }
+        return null;
+    }
+    // -----------------------------------------------------------------------------
+    // Regular dom node
+    // -----------------------------------------------------------------------------
+    const hasDotAtTheEnd = /\.[\w_]+\s*$/;
+    const hasBracketsAtTheEnd = /\[[^\[]+\]\s*$/;
+    const ROOT_SVG_TAGS = new Set(["svg", "g", "path"]);
+    function parseDOMNode(node, ctx) {
+        const { tagName } = node;
+        const dynamicTag = node.getAttribute("t-tag");
+        node.removeAttribute("t-tag");
+        if (tagName === "t" && !dynamicTag) {
+            return null;
+        }
+        ctx = Object.assign({}, ctx);
+        if (tagName === "pre") {
+            ctx.inPreTag = true;
+        }
+        const shouldAddSVGNS = ROOT_SVG_TAGS.has(tagName) && !ctx.inSVG;
+        ctx.inSVG = ctx.inSVG || shouldAddSVGNS;
+        const ns = shouldAddSVGNS ? "http://www.w3.org/2000/svg" : null;
+        const ref = node.getAttribute("t-ref");
+        node.removeAttribute("t-ref");
+        const nodeAttrsNames = node.getAttributeNames();
+        const attrs = {};
+        const on = {};
+        let model = null;
+        for (let attr of nodeAttrsNames) {
+            const value = node.getAttribute(attr);
+            if (attr.startsWith("t-on")) {
+                if (attr === "t-on") {
+                    throw new Error("Missing event name with t-on directive");
+                }
+                on[attr.slice(5)] = value;
+            }
+            else if (attr.startsWith("t-model")) {
+                if (!["input", "select", "textarea"].includes(tagName)) {
+                    throw new Error("The t-model directive only works with <input>, <textarea> and <select>");
+                }
+                let baseExpr, expr;
+                if (hasDotAtTheEnd.test(value)) {
+                    const index = value.lastIndexOf(".");
+                    baseExpr = value.slice(0, index);
+                    expr = `'${value.slice(index + 1)}'`;
+                }
+                else if (hasBracketsAtTheEnd.test(value)) {
+                    const index = value.lastIndexOf("[");
+                    baseExpr = value.slice(0, index);
+                    expr = value.slice(index + 1, -1);
+                }
+                else {
+                    throw new Error(`Invalid t-model expression: "${value}" (it should be assignable)`);
+                }
+                const typeAttr = node.getAttribute("type");
+                const isInput = tagName === "input";
+                const isSelect = tagName === "select";
+                const isTextarea = tagName === "textarea";
+                const isCheckboxInput = isInput && typeAttr === "checkbox";
+                const isRadioInput = isInput && typeAttr === "radio";
+                const isOtherInput = isInput && !isCheckboxInput && !isRadioInput;
+                const hasLazyMod = attr.includes(".lazy");
+                const hasNumberMod = attr.includes(".number");
+                const hasTrimMod = attr.includes(".trim");
+                const eventType = isRadioInput ? "click" : isSelect || hasLazyMod ? "change" : "input";
+                model = {
+                    baseExpr,
+                    expr,
+                    targetAttr: isCheckboxInput ? "checked" : "value",
+                    specialInitTargetAttr: isRadioInput ? "checked" : null,
+                    eventType,
+                    shouldTrim: hasTrimMod && (isOtherInput || isTextarea),
+                    shouldNumberize: hasNumberMod && (isOtherInput || isTextarea),
+                };
+                if (isSelect) {
+                    // don't pollute the original ctx
+                    ctx = Object.assign({}, ctx);
+                    ctx.tModelInfo = model;
+                }
+            }
+            else if (attr !== "t-name") {
+                if (attr.startsWith("t-") && !attr.startsWith("t-att")) {
+                    throw new Error(`Unknown QWeb directive: '${attr}'`);
+                }
+                const tModel = ctx.tModelInfo;
+                if (tModel && ["t-att-value", "t-attf-value"].includes(attr)) {
+                    tModel.hasDynamicChildren = true;
+                }
+                attrs[attr] = value;
+            }
+        }
+        const children = parseChildren(node, ctx);
+        return {
+            type: 2 /* DomNode */,
+            tag: tagName,
+            dynamicTag,
+            attrs,
+            on,
+            ref,
+            content: children,
+            model,
+            ns,
+        };
+    }
+    // -----------------------------------------------------------------------------
+    // t-esc
+    // -----------------------------------------------------------------------------
+    function parseTEscNode(node, ctx) {
+        if (!node.hasAttribute("t-esc")) {
+            return null;
+        }
+        const escValue = node.getAttribute("t-esc");
+        node.removeAttribute("t-esc");
+        const tesc = {
+            type: 4 /* TEsc */,
+            expr: escValue,
+            defaultValue: node.textContent || "",
+        };
+        let ref = node.getAttribute("t-ref");
+        node.removeAttribute("t-ref");
+        const ast = parseNode(node, ctx);
+        if (!ast) {
+            return tesc;
+        }
+        if (ast.type === 2 /* DomNode */) {
+            return {
+                ...ast,
+                ref,
+                content: [tesc],
+            };
+        }
+        if (ast.type === 11 /* TComponent */) {
+            throw new Error("t-esc is not supported on Component nodes");
+        }
+        return tesc;
+    }
+    // -----------------------------------------------------------------------------
+    // t-out
+    // -----------------------------------------------------------------------------
+    function parseTOutNode(node, ctx) {
+        if (!node.hasAttribute("t-out") && !node.hasAttribute("t-raw")) {
+            return null;
+        }
+        if (node.hasAttribute("t-raw")) {
+            console.warn(`t-raw has been deprecated in favor of t-out. If the value to render is not wrapped by the "markup" function, it will be escaped`);
+        }
+        const expr = (node.getAttribute("t-out") || node.getAttribute("t-raw"));
+        node.removeAttribute("t-out");
+        node.removeAttribute("t-raw");
+        const tOut = { type: 8 /* TOut */, expr, body: null };
+        const ref = node.getAttribute("t-ref");
+        node.removeAttribute("t-ref");
+        const ast = parseNode(node, ctx);
+        if (!ast) {
+            return tOut;
+        }
+        if (ast.type === 2 /* DomNode */) {
+            tOut.body = ast.content.length ? ast.content : null;
+            return {
+                ...ast,
+                ref,
+                content: [tOut],
+            };
+        }
+        return tOut;
+    }
+    // -----------------------------------------------------------------------------
+    // t-foreach and t-key
+    // -----------------------------------------------------------------------------
+    function parseTForEach(node, ctx) {
+        if (!node.hasAttribute("t-foreach")) {
+            return null;
+        }
+        const html = node.outerHTML;
+        const collection = node.getAttribute("t-foreach");
+        node.removeAttribute("t-foreach");
+        const elem = node.getAttribute("t-as") || "";
+        node.removeAttribute("t-as");
+        const key = node.getAttribute("t-key");
+        if (!key) {
+            throw new Error(`"Directive t-foreach should always be used with a t-key!" (expression: t-foreach="${collection}" t-as="${elem}")`);
+        }
+        node.removeAttribute("t-key");
+        const memo = node.getAttribute("t-memo") || "";
+        node.removeAttribute("t-memo");
+        const body = parseNode(node, ctx);
+        if (!body) {
+            return null;
+        }
+        const hasNoTCall = !html.includes("t-call");
+        const hasNoFirst = hasNoTCall && !html.includes(`${elem}_first`);
+        const hasNoLast = hasNoTCall && !html.includes(`${elem}_last`);
+        const hasNoIndex = hasNoTCall && !html.includes(`${elem}_index`);
+        const hasNoValue = hasNoTCall && !html.includes(`${elem}_value`);
+        return {
+            type: 9 /* TForEach */,
+            collection,
+            elem,
+            body,
+            memo,
+            key,
+            hasNoFirst,
+            hasNoLast,
+            hasNoIndex,
+            hasNoValue,
+        };
+    }
+    function parseTKey(node, ctx) {
+        if (!node.hasAttribute("t-key")) {
+            return null;
+        }
+        const key = node.getAttribute("t-key");
+        node.removeAttribute("t-key");
+        const body = parseNode(node, ctx);
+        if (!body) {
+            return null;
+        }
+        return { type: 10 /* TKey */, expr: key, content: body };
+    }
+    // -----------------------------------------------------------------------------
+    // t-call
+    // -----------------------------------------------------------------------------
+    function parseTCall(node, ctx) {
+        if (!node.hasAttribute("t-call")) {
+            return null;
+        }
+        const subTemplate = node.getAttribute("t-call");
+        node.removeAttribute("t-call");
+        if (node.tagName !== "t") {
+            const ast = parseNode(node, ctx);
+            const tcall = { type: 7 /* TCall */, name: subTemplate, body: null };
+            if (ast && ast.type === 2 /* DomNode */) {
+                ast.content = [tcall];
+                return ast;
+            }
+            if (ast && ast.type === 11 /* TComponent */) {
+                return {
+                    ...ast,
+                    slots: { default: { content: tcall } },
+                };
+            }
+        }
+        const body = parseChildren(node, ctx);
+        return {
+            type: 7 /* TCall */,
+            name: subTemplate,
+            body: body.length ? body : null,
+        };
+    }
+    // -----------------------------------------------------------------------------
+    // t-call-block
+    // -----------------------------------------------------------------------------
+    function parseTCallBlock(node, ctx) {
+        if (!node.hasAttribute("t-call-block")) {
+            return null;
+        }
+        const name = node.getAttribute("t-call-block");
+        return {
+            type: 15 /* TCallBlock */,
+            name,
+        };
+    }
+    // -----------------------------------------------------------------------------
+    // t-if
+    // -----------------------------------------------------------------------------
+    function parseTIf(node, ctx) {
+        if (!node.hasAttribute("t-if")) {
+            return null;
+        }
+        const condition = node.getAttribute("t-if");
+        node.removeAttribute("t-if");
+        const content = parseNode(node, ctx) || { type: 0 /* Text */, value: "" };
+        let nextElement = node.nextElementSibling;
+        // t-elifs
+        const tElifs = [];
+        while (nextElement && nextElement.hasAttribute("t-elif")) {
+            const condition = nextElement.getAttribute("t-elif");
+            nextElement.removeAttribute("t-elif");
+            const tElif = parseNode(nextElement, ctx);
+            const next = nextElement.nextElementSibling;
+            nextElement.remove();
+            nextElement = next;
+            if (tElif) {
+                tElifs.push({ condition, content: tElif });
+            }
+        }
+        // t-else
+        let tElse = null;
+        if (nextElement && nextElement.hasAttribute("t-else")) {
+            nextElement.removeAttribute("t-else");
+            tElse = parseNode(nextElement, ctx);
+            nextElement.remove();
+        }
+        return {
+            type: 5 /* TIf */,
+            condition,
+            content,
+            tElif: tElifs.length ? tElifs : null,
+            tElse,
+        };
+    }
+    // -----------------------------------------------------------------------------
+    // t-set directive
+    // -----------------------------------------------------------------------------
+    function parseTSetNode(node, ctx) {
+        if (!node.hasAttribute("t-set")) {
+            return null;
+        }
+        const name = node.getAttribute("t-set");
+        const value = node.getAttribute("t-value") || null;
+        const defaultValue = node.innerHTML === node.textContent ? node.textContent || null : null;
+        let body = null;
+        if (node.textContent !== node.innerHTML) {
+            body = parseChildren(node, ctx);
+        }
+        return { type: 6 /* TSet */, name, value, defaultValue, body };
+    }
+    // -----------------------------------------------------------------------------
+    // Components
+    // -----------------------------------------------------------------------------
+    // Error messages when trying to use an unsupported directive on a component
+    const directiveErrorMap = new Map([
+        ["t-on", "t-on is no longer supported on components. Consider passing a callback in props."],
+        [
+            "t-ref",
+            "t-ref is no longer supported on components. Consider exposing only the public part of the component's API through a callback prop.",
+        ],
+        ["t-att", "t-att makes no sense on component: props are already treated as expressions"],
+        [
+            "t-attf",
+            "t-attf is not supported on components: use template strings for string interpolation in props",
+        ],
+    ]);
+    function parseComponent(node, ctx) {
+        let name = node.tagName;
+        const firstLetter = name[0];
+        let isDynamic = node.hasAttribute("t-component");
+        if (isDynamic && name !== "t") {
+            throw new Error(`Directive 't-component' can only be used on <t> nodes (used on a <${name}>)`);
+        }
+        if (!(firstLetter === firstLetter.toUpperCase() || isDynamic)) {
+            return null;
+        }
+        if (isDynamic) {
+            name = node.getAttribute("t-component");
+            node.removeAttribute("t-component");
+        }
+        const dynamicProps = node.getAttribute("t-props");
+        node.removeAttribute("t-props");
+        const defaultSlotScope = node.getAttribute("t-slot-scope");
+        node.removeAttribute("t-slot-scope");
+        const props = {};
+        for (let name of node.getAttributeNames()) {
+            const value = node.getAttribute(name);
+            if (name.startsWith("t-")) {
+                const message = directiveErrorMap.get(name.split("-").slice(0, 2).join("-"));
+                throw new Error(message || `unsupported directive on Component: ${name}`);
             }
             else {
-                return vnode.text;
+                props[name] = value;
             }
-        })
-            .join("");
+        }
+        const slots = {};
+        if (node.hasChildNodes()) {
+            const clone = node.cloneNode(true);
+            // named slots
+            const slotNodes = Array.from(clone.querySelectorAll("[t-set-slot]"));
+            for (let slotNode of slotNodes) {
+                if (slotNode.tagName !== "t") {
+                    throw new Error(`Directive 't-set-slot' can only be used on <t> nodes (used on a <${slotNode.tagName}>)`);
+                }
+                const name = slotNode.getAttribute("t-set-slot");
+                // check if this is defined in a sub component (in which case it should
+                // be ignored)
+                let el = slotNode.parentElement;
+                let isInSubComponent = false;
+                while (el !== clone) {
+                    if (el.hasAttribute("t-component") || el.tagName[0] === el.tagName[0].toUpperCase()) {
+                        isInSubComponent = true;
+                        break;
+                    }
+                    el = el.parentElement;
+                }
+                if (isInSubComponent) {
+                    continue;
+                }
+                slotNode.removeAttribute("t-set-slot");
+                slotNode.remove();
+                const slotAst = parseNode(slotNode, ctx);
+                if (slotAst) {
+                    const slotInfo = { content: slotAst };
+                    const attrs = {};
+                    for (let attributeName of slotNode.getAttributeNames()) {
+                        const value = slotNode.getAttribute(attributeName);
+                        if (attributeName === "t-slot-scope") {
+                            slotInfo.scope = value;
+                            continue;
+                        }
+                        attrs[attributeName] = value;
+                    }
+                    if (Object.keys(attrs).length) {
+                        slotInfo.attrs = attrs;
+                    }
+                    slots[name] = slotInfo;
+                }
+            }
+            // default slot
+            const defaultContent = parseChildNodes(clone, ctx);
+            if (defaultContent) {
+                slots.default = { content: defaultContent };
+                if (defaultSlotScope) {
+                    slots.default.scope = defaultSlotScope;
+                }
+            }
+        }
+        return { type: 11 /* TComponent */, name, isDynamic, dynamicProps, props, slots };
     }
-    const UTILS = {
-        zero: Symbol("zero"),
-        toClassObj(expr) {
-            const result = {};
-            if (typeof expr === "string") {
-                // we transform here a list of classes into an object:
-                //  'hey you' becomes {hey: true, you: true}
-                expr = expr.trim();
-                if (!expr) {
-                    return {};
+    // -----------------------------------------------------------------------------
+    // Slots
+    // -----------------------------------------------------------------------------
+    function parseTSlot(node, ctx) {
+        if (!node.hasAttribute("t-slot")) {
+            return null;
+        }
+        const name = node.getAttribute("t-slot");
+        node.removeAttribute("t-slot");
+        const attrs = {};
+        for (let attributeName of node.getAttributeNames()) {
+            const value = node.getAttribute(attributeName);
+            attrs[attributeName] = value;
+        }
+        return {
+            type: 14 /* TSlot */,
+            name,
+            attrs,
+            defaultContent: parseChildNodes(node, ctx),
+        };
+    }
+    function parseTTranslation(node, ctx) {
+        if (node.getAttribute("t-translation") !== "off") {
+            return null;
+        }
+        node.removeAttribute("t-translation");
+        return {
+            type: 16 /* TTranslation */,
+            content: parseNode(node, ctx),
+        };
+    }
+    // -----------------------------------------------------------------------------
+    // Portal
+    // -----------------------------------------------------------------------------
+    function parseTPortal(node, ctx) {
+        if (!node.hasAttribute("t-portal")) {
+            return null;
+        }
+        const target = node.getAttribute("t-portal");
+        node.removeAttribute("t-portal");
+        const content = parseNode(node, ctx);
+        if (!content) {
+            return {
+                type: 0 /* Text */,
+                value: "",
+            };
+        }
+        return {
+            type: 17 /* TPortal */,
+            target,
+            content,
+        };
+    }
+    // -----------------------------------------------------------------------------
+    // helpers
+    // -----------------------------------------------------------------------------
+    /**
+     * Parse all the child nodes of a given node and return a list of ast elements
+     */
+    function parseChildren(node, ctx) {
+        const children = [];
+        for (let child of node.childNodes) {
+            const childAst = parseNode(child, ctx);
+            if (childAst) {
+                if (childAst.type === 3 /* Multi */) {
+                    children.push(...childAst.content);
                 }
-                let words = expr.split(/\s+/);
-                for (let i = 0; i < words.length; i++) {
-                    result[words[i]] = true;
-                }
-                return result;
-            }
-            // this is already an object, but we may need to split keys:
-            // {'a b': true, 'a c': false} should become {a: true, b: true, c: false}
-            for (let key in expr) {
-                const value = expr[key];
-                const words = key.split(/\s+/);
-                for (let word of words) {
-                    result[word] = result[word] || value;
+                else {
+                    children.push(childAst);
                 }
             }
-            return result;
-        },
-        /**
-         * This method combines the current context with the variables defined in a
-         * scope for use in a slot.
-         *
-         * The implementation is kind of tricky because we want to preserve the
-         * prototype chain structure of the cloned result. So we need to traverse the
-         * prototype chain, cloning each level respectively.
-         */
-        combine(context, scope) {
-            let clone = context;
-            const scopeStack = [];
-            while (!isComponent(scope)) {
-                scopeStack.push(scope);
-                scope = scope.__proto__;
-            }
-            while (scopeStack.length) {
-                let scope = scopeStack.pop();
-                clone = Object.create(clone);
-                Object.assign(clone, scope);
-            }
-            return clone;
-        },
-        shallowEqual,
-        addNameSpace(vnode) {
-            addNS(vnode.data, vnode.children, vnode.sel);
-        },
-        VDomArray,
-        vDomToString,
-        getComponent(obj) {
-            while (obj && !isComponent(obj)) {
-                obj = obj.__proto__;
-            }
-            return obj;
-        },
-        getScope(obj, property) {
-            const obj0 = obj;
-            while (obj &&
-                !obj.hasOwnProperty(property) &&
-                !(obj.hasOwnProperty("__access_mode__") && obj.__access_mode__ === "ro")) {
-                const newObj = obj.__proto__;
-                if (!newObj || isComponent(newObj)) {
-                    return obj0;
+        }
+        return children;
+    }
+    /**
+     * Parse all the child nodes of a given node and return an ast if possible.
+     * In the case there are multiple children, they are wrapped in a astmulti.
+     */
+    function parseChildNodes(node, ctx) {
+        const children = parseChildren(node, ctx);
+        switch (children.length) {
+            case 0:
+                return null;
+            case 1:
+                return children[0];
+            default:
+                return { type: 3 /* Multi */, content: children };
+        }
+    }
+    /**
+     * Normalizes the content of an Element so that t-if/t-elif/t-else directives
+     * immediately follow one another (by removing empty text nodes or comments).
+     * Throws an error when a conditional branching statement is malformed. This
+     * function modifies the Element in place.
+     *
+     * @param el the element containing the tree that should be normalized
+     */
+    function normalizeTIf(el) {
+        let tbranch = el.querySelectorAll("[t-elif], [t-else]");
+        for (let i = 0, ilen = tbranch.length; i < ilen; i++) {
+            let node = tbranch[i];
+            let prevElem = node.previousElementSibling;
+            let pattr = (name) => prevElem.getAttribute(name);
+            let nattr = (name) => +!!node.getAttribute(name);
+            if (prevElem && (pattr("t-if") || pattr("t-elif"))) {
+                if (pattr("t-foreach")) {
+                    throw new Error("t-if cannot stay at the same level as t-foreach when using t-elif or t-else");
                 }
-                obj = newObj;
+                if (["t-if", "t-elif", "t-else"].map(nattr).reduce(function (a, b) {
+                    return a + b;
+                }) > 1) {
+                    throw new Error("Only one conditional branching directive is allowed per node");
+                }
+                // All text (with only spaces) and comment nodes (nodeType 8) between
+                // branch nodes are removed
+                let textNode;
+                while ((textNode = node.previousSibling) !== prevElem) {
+                    if (textNode.nodeValue.trim().length && textNode.nodeType !== 8) {
+                        throw new Error("text is not allowed between branching directives");
+                    }
+                    textNode.remove();
+                }
             }
-            return obj;
-        },
-    };
+            else {
+                throw new Error("t-elif and t-else directives must be preceded by a t-if or t-elif directive");
+            }
+        }
+    }
+    /**
+     * Normalizes the content of an Element so that t-esc directives on components
+     * are removed and instead places a <t t-esc=""> as the default slot of the
+     * component. Also throws if the component already has content. This function
+     * modifies the Element in place.
+     *
+     * @param el the element containing the tree that should be normalized
+     */
+    function normalizeTEsc(el) {
+        const elements = [...el.querySelectorAll("[t-esc]")].filter((el) => el.tagName[0] === el.tagName[0].toUpperCase() || el.hasAttribute("t-component"));
+        for (const el of elements) {
+            if (el.childNodes.length) {
+                throw new Error("Cannot have t-esc on a component that already has content");
+            }
+            const value = el.getAttribute("t-esc");
+            el.removeAttribute("t-esc");
+            const t = el.ownerDocument.createElement("t");
+            if (value != null) {
+                t.setAttribute("t-esc", value);
+            }
+            el.appendChild(t);
+        }
+    }
+    /**
+     * Normalizes the tree inside a given element and do some preliminary validation
+     * on it. This function modifies the Element in place.
+     *
+     * @param el the element containing the tree that should be normalized
+     */
+    function normalizeXML(el) {
+        normalizeTIf(el);
+        normalizeTEsc(el);
+    }
+    /**
+     * Parses an XML string into an XML document, throwing errors on parser errors
+     * instead of returning an XML document containing the parseerror.
+     *
+     * @param xml the string to parse
+     * @returns an XML document corresponding to the content of the string
+     */
+    function parseXML$1(xml) {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(xml, "text/xml");
+        if (doc.getElementsByTagName("parsererror").length) {
+            let msg = "Invalid XML in template.";
+            const parsererrorText = doc.getElementsByTagName("parsererror")[0].textContent;
+            if (parsererrorText) {
+                msg += "\nThe parser has produced the following error message:\n" + parsererrorText;
+                const re = /\d+/g;
+                const firstMatch = re.exec(parsererrorText);
+                if (firstMatch) {
+                    const lineNumber = Number(firstMatch[0]);
+                    const line = xml.split("\n")[lineNumber - 1];
+                    const secondMatch = re.exec(parsererrorText);
+                    if (line && secondMatch) {
+                        const columnIndex = Number(secondMatch[0]) - 1;
+                        if (line[columnIndex]) {
+                            msg +=
+                                `\nThe error might be located at xml line ${lineNumber} column ${columnIndex}\n` +
+                                `${line}\n${"-".repeat(columnIndex - 1)}^`;
+                        }
+                    }
+                }
+            }
+            throw new Error(msg);
+        }
+        return doc;
+    }
+
+    function compile(template, options = {}) {
+        // parsing
+        const ast = parse(template);
+        // some work
+        const hasSafeContext = template instanceof Node
+            ? !(template instanceof Element) || template.querySelector("[t-set], [t-call]") === null
+            : !template.includes("t-set") && !template.includes("t-call");
+        // code generation
+        const codeGenerator = new CodeGenerator(ast, { ...options, hasSafeContext });
+        const code = codeGenerator.generateCode();
+        // template function
+        return new Function("bdom, helpers", code);
+    }
+
+    const bdom = { text, createBlock, list, multi, html, toggler, component, comment };
+    const globalTemplates = {};
     function parseXML(xml) {
         const parser = new DOMParser();
         const doc = parser.parseFromString(xml, "text/xml");
@@ -1557,7 +4402,7 @@
                         if (line[columnIndex]) {
                             msg +=
                                 `\nThe error might be located at xml line ${lineNumber} column ${columnIndex}\n` +
-                                    `${line}\n${"-".repeat(columnIndex - 1)}^`;
+                                `${line}\n${"-".repeat(columnIndex - 1)}^`;
                         }
                     }
                 }
@@ -1566,1888 +4411,164 @@
         }
         return doc;
     }
-    function escapeQuotes(str) {
-        return str.replace(/\'/g, "\\'");
-    }
-    //------------------------------------------------------------------------------
-    // QWeb rendering engine
-    //------------------------------------------------------------------------------
-    class QWeb extends EventBus {
+    class TemplateSet {
         constructor(config = {}) {
-            super();
-            this.h = h;
-            // subTemplates are stored in two objects: a (local) mapping from a name to an
-            // id, and a (global) mapping from an id to the compiled function.  This is
-            // necessary to ensure that global templates can be called with more than one
-            // QWeb instance.
-            this.subTemplates = {};
-            this.isUpdating = false;
-            this.templates = Object.create(QWeb.TEMPLATES);
+            this.rawTemplates = Object.create(globalTemplates);
+            this.templates = {};
+            this.utils = Object.assign({}, UTILS, {
+                call: (owner, subTemplate, ctx, parent, key) => {
+                    const template = this.getTemplate(subTemplate);
+                    return toggler(subTemplate, template.call(owner, ctx, parent, key));
+                },
+                getTemplate: (name) => this.getTemplate(name),
+            });
+            this.dev = config.dev || false;
+            this.translateFn = config.translateFn;
+            this.translatableAttributes = config.translatableAttributes;
             if (config.templates) {
                 this.addTemplates(config.templates);
             }
-            if (config.translateFn) {
-                this.translateFn = config.translateFn;
-            }
         }
-        static addDirective(directive) {
-            if (directive.name in QWeb.DIRECTIVE_NAMES) {
-                throw new Error(`Directive "${directive.name} already registered`);
-            }
-            QWeb.DIRECTIVES.push(directive);
-            QWeb.DIRECTIVE_NAMES[directive.name] = 1;
-            QWeb.DIRECTIVES.sort((d1, d2) => d1.priority - d2.priority);
-            if (directive.extraNames) {
-                directive.extraNames.forEach((n) => (QWeb.DIRECTIVE_NAMES[n] = 1));
-            }
-        }
-        static registerComponent(name, Component) {
-            if (QWeb.components[name]) {
-                throw new Error(`Component '${name}' has already been registered`);
-            }
-            QWeb.components[name] = Component;
-        }
-        /**
-         * Register globally a template.  All QWeb instances will obtain their
-         * templates from their own template map, and then, from the global static
-         * TEMPLATES property.
-         */
-        static registerTemplate(name, template) {
-            if (QWeb.TEMPLATES[name]) {
-                throw new Error(`Template '${name}' has already been registered`);
-            }
-            const qweb = new QWeb();
-            qweb.addTemplate(name, template);
-            QWeb.TEMPLATES[name] = qweb.templates[name];
-        }
-        /**
-         * Add a template to the internal template map.  Note that it is not
-         * immediately compiled.
-         */
-        addTemplate(name, xmlString, allowDuplicate) {
-            if (allowDuplicate && name in this.templates) {
-                return;
-            }
-            const doc = parseXML(xmlString);
-            if (!doc.firstChild) {
-                throw new Error("Invalid template (should not be empty)");
-            }
-            this._addTemplate(name, doc.firstChild);
-        }
-        /**
-         * Load templates from a xml (as a string or xml document).  This will look up
-         * for the first <templates> tag, and will consider each child of this as a
-         * template, with the name given by the t-name attribute.
-         */
-        addTemplates(xmlstr) {
-            if (!xmlstr) {
-                return;
-            }
-            const doc = typeof xmlstr === "string" ? parseXML(xmlstr) : xmlstr;
-            const templates = doc.getElementsByTagName("templates")[0];
-            if (!templates) {
-                return;
-            }
-            for (let elem of templates.children) {
-                const name = elem.getAttribute("t-name");
-                this._addTemplate(name, elem);
-            }
-        }
-        _addTemplate(name, elem) {
-            if (name in this.templates) {
+        addTemplate(name, template, options = {}) {
+            if (name in this.rawTemplates && !options.allowDuplicate) {
                 throw new Error(`Template ${name} already defined`);
             }
-            this._processTemplate(elem);
-            const template = {
-                elem,
-                fn: function (context, extra) {
-                    const compiledFunction = this._compile(name);
-                    template.fn = compiledFunction;
-                    return compiledFunction.call(this, context, extra);
-                },
-            };
-            this.templates[name] = template;
+            this.rawTemplates[name] = template;
         }
-        _processTemplate(elem) {
-            let tbranch = elem.querySelectorAll("[t-elif], [t-else]");
-            for (let i = 0, ilen = tbranch.length; i < ilen; i++) {
-                let node = tbranch[i];
-                let prevElem = node.previousElementSibling;
-                let pattr = function (name) {
-                    return prevElem.getAttribute(name);
+        addTemplates(xml, options = {}) {
+            if (!xml) {
+                // empty string
+                return;
+            }
+            xml = xml instanceof Document ? xml : parseXML(xml);
+            for (const template of xml.querySelectorAll("[t-name]")) {
+                const name = template.getAttribute("t-name");
+                this.addTemplate(name, template, options);
+            }
+        }
+        getTemplate(name) {
+            if (!(name in this.templates)) {
+                const rawTemplate = this.rawTemplates[name];
+                if (rawTemplate === undefined) {
+                    throw new Error(`Missing template: "${name}"`);
+                }
+                const templateFn = this._compileTemplate(name, rawTemplate);
+                // first add a function to lazily get the template, in case there is a
+                // recursive call to the template name
+                const templates = this.templates;
+                this.templates[name] = function (context, parent) {
+                    return templates[name].call(this, context, parent);
                 };
-                let nattr = function (name) {
-                    return +!!node.getAttribute(name);
-                };
-                if (prevElem && (pattr("t-if") || pattr("t-elif"))) {
-                    if (pattr("t-foreach")) {
-                        throw new Error("t-if cannot stay at the same level as t-foreach when using t-elif or t-else");
-                    }
-                    if (["t-if", "t-elif", "t-else"].map(nattr).reduce(function (a, b) {
-                        return a + b;
-                    }) > 1) {
-                        throw new Error("Only one conditional branching directive is allowed per node");
-                    }
-                    // All text (with only spaces) and comment nodes (nodeType 8) between
-                    // branch nodes are removed
-                    let textNode;
-                    while ((textNode = node.previousSibling) !== prevElem) {
-                        if (textNode.nodeValue.trim().length && textNode.nodeType !== 8) {
-                            throw new Error("text is not allowed between branching directives");
-                        }
-                        textNode.remove();
-                    }
+                const template = templateFn(bdom, this.utils);
+                this.templates[name] = template;
+            }
+            return this.templates[name];
+        }
+        _compileTemplate(name, template) {
+            return compile(template, {
+                name,
+                dev: this.dev,
+                translateFn: this.translateFn,
+                translatableAttributes: this.translatableAttributes,
+            });
+        }
+    }
+    // -----------------------------------------------------------------------------
+    //  xml tag helper
+    // -----------------------------------------------------------------------------
+    function xml(...args) {
+        const name = `__template__${xml.nextId++}`;
+        const value = String.raw(...args);
+        globalTemplates[name] = value;
+        return name;
+    }
+    xml.nextId = 1;
+
+    class Component {
+        constructor(props, env, node) {
+            this.props = props;
+            this.env = env;
+            this.__owl__ = node;
+        }
+        setup() { }
+        render() {
+            this.__owl__.render();
+        }
+    }
+    Component.template = "";
+
+    const VText = text("").constructor;
+    class VPortal extends VText {
+        constructor(selector, realBDom) {
+            super("");
+            this.target = null;
+            this.selector = selector;
+            this.realBDom = realBDom;
+        }
+        mount(parent, anchor) {
+            super.mount(parent, anchor);
+            this.target = document.querySelector(this.selector);
+            if (!this.target) {
+                let el = this.el;
+                while (el && el.parentElement instanceof HTMLElement) {
+                    el = el.parentElement;
                 }
-                else {
-                    throw new Error("t-elif and t-else directives must be preceded by a t-if or t-elif directive");
+                this.target = el && el.querySelector(this.selector);
+                if (!this.target) {
+                    throw new Error("invalid portal target");
                 }
+            }
+            this.realBDom.mount(this.target, null);
+        }
+        beforeRemove() {
+            this.realBDom.beforeRemove();
+        }
+        remove() {
+            if (this.realBDom) {
+                super.remove();
+                this.realBDom.remove();
+                this.realBDom = null;
             }
         }
-        /**
-         * Render a template
-         *
-         * @param {string} name the template should already have been added
-         */
-        render(name, context = {}, extra = null) {
-            const template = this.templates[name];
-            if (!template) {
-                throw new Error(`Template ${name} does not exist`);
+        patch(other) {
+            super.patch(other);
+            if (this.realBDom) {
+                this.realBDom.patch(other.realBDom, true);
             }
-            return template.fn.call(this, context, extra);
+            else {
+                this.realBDom = other.realBDom;
+                this.realBDom.mount(this.target, null);
+            }
         }
-        /**
-         * Render a template to a html string.
-         *
-         * Note that this is more limited than the `render` method: it is not suitable
-         * to render a full component tree, since this is an asynchronous operation.
-         * This method can only render templates without components.
-         */
-        renderToString(name, context = {}, extra) {
-            const vnode = this.render(name, context, extra);
-            if (vnode.sel === undefined) {
-                return vnode.text;
-            }
-            const node = document.createElement(vnode.sel);
-            const elem = patch(node, vnode).elm;
-            function escapeTextNodes(node) {
-                if (node.nodeType === 3) {
-                    node.textContent = escape(node.textContent);
-                }
-                for (let n of node.childNodes) {
-                    escapeTextNodes(n);
-                }
-            }
-            escapeTextNodes(elem);
-            return elem.outerHTML;
-        }
-        /**
-         * Force all widgets connected to this QWeb instance to rerender themselves.
-         *
-         * This method is mostly useful for external code that want to modify the
-         * application in some cases.  For example, a router plugin.
-         */
-        forceUpdate() {
-            this.isUpdating = true;
-            Promise.resolve().then(() => {
-                if (this.isUpdating) {
-                    this.isUpdating = false;
-                    this.trigger("update");
+    }
+    class Portal extends Component {
+        setup() {
+            const node = this.__owl__;
+            const renderFn = node.renderFn;
+            node.renderFn = () => new VPortal(this.props.target, renderFn());
+            onWillUnmount(() => {
+                if (node.bdom) {
+                    node.bdom.remove();
                 }
             });
         }
-        _compile(name, options = {}) {
-            const elem = options.elem || this.templates[name].elem;
-            const isDebug = elem.attributes.hasOwnProperty("t-debug");
-            const ctx = new CompilationContext(name);
-            if (elem.tagName !== "t") {
-                ctx.shouldDefineResult = false;
-            }
-            if (options.hasParent) {
-                ctx.variables = Object.create(null);
-                ctx.parentNode = ctx.generateID();
-                ctx.allowMultipleRoots = true;
-                ctx.shouldDefineParent = true;
-                ctx.hasParentWidget = true;
-                ctx.shouldDefineResult = false;
-                ctx.addLine(`let c${ctx.parentNode} = extra.parentNode;`);
-                if (options.defineKey) {
-                    ctx.addLine(`let key0 = extra.key || "";`);
-                    ctx.hasKey0 = true;
-                }
-            }
-            this._compileNode(elem, ctx);
-            if (!options.hasParent) {
-                if (ctx.shouldDefineResult) {
-                    ctx.addLine(`return result;`);
-                }
-                else {
-                    if (!ctx.rootNode) {
-                        throw new Error(`A template should have one root node (${ctx.templateName})`);
-                    }
-                    ctx.addLine(`return vn${ctx.rootNode};`);
-                }
-            }
-            let code = ctx.generateCode();
-            const templateName = ctx.templateName.replace(/`/g, "'").slice(0, 200);
-            code.unshift(`    // Template name: "${templateName}"`);
-            let template;
-            try {
-                template = new Function("context, extra", code.join("\n"));
-            }
-            catch (e) {
-                console.groupCollapsed(`Invalid Code generated by ${templateName}`);
-                console.warn(code.join("\n"));
-                console.groupEnd();
-                throw new Error(`Invalid generated code while compiling template '${templateName}': ${e.message}`);
-            }
-            if (isDebug) {
-                const tpl = this.templates[name];
-                if (tpl) {
-                    const msg = `Template: ${tpl.elem.outerHTML}\nCompiled code:\n${template.toString()}`;
-                    console.log(msg);
-                }
-            }
-            return template;
-        }
-        /**
-         * Generate code from an xml node
-         *
-         */
-        _compileNode(node, ctx) {
-            if (!(node instanceof Element)) {
-                // this is a text node, there are no directive to apply
-                let text = node.textContent;
-                if (!ctx.inPreTag) {
-                    if (lineBreakRE.test(text) && !text.trim()) {
-                        return;
-                    }
-                    text = text.replace(whitespaceRE, " ");
-                }
-                if (this.translateFn) {
-                    if (node.parentNode.getAttribute("t-translation") !== "off") {
-                        const match = translationRE.exec(text);
-                        text = match[1] + this.translateFn(match[2]) + match[3];
-                    }
-                }
-                if (ctx.parentNode) {
-                    if (node.nodeType === 3) {
-                        ctx.addLine(`c${ctx.parentNode}.push({text: \`${text}\`});`);
-                    }
-                    else if (node.nodeType === 8) {
-                        ctx.addLine(`c${ctx.parentNode}.push(h('!', \`${text}\`));`);
-                    }
-                }
-                else if (ctx.parentTextNode) {
-                    ctx.addLine(`vn${ctx.parentTextNode}.text += \`${text}\`;`);
-                }
-                else {
-                    // this is an unusual situation: this text node is the result of the
-                    // template rendering.
-                    let nodeID = ctx.generateID();
-                    ctx.addLine(`let vn${nodeID} = {text: \`${text}\`};`);
-                    ctx.addLine(`result = vn${nodeID};`);
-                    ctx.rootContext.rootNode = nodeID;
-                    ctx.rootContext.parentTextNode = nodeID;
-                }
-                return;
-            }
-            if (node.tagName !== "t" && node.hasAttribute("t-call")) {
-                const tCallNode = document.implementation.createDocument("http://www.w3.org/1999/xhtml", "t", null).documentElement;
-                tCallNode.setAttribute("t-call", node.getAttribute("t-call"));
-                node.removeAttribute("t-call");
-                node.prepend(tCallNode);
-            }
-            const firstLetter = node.tagName[0];
-            if (firstLetter === firstLetter.toUpperCase()) {
-                // this is a component, we modify in place the xml document to change
-                // <SomeComponent ... /> to <SomeComponent t-component="SomeComponent" ... />
-                node.setAttribute("t-component", node.tagName);
-            }
-            else if (node.tagName !== "t" && node.hasAttribute("t-component")) {
-                throw new Error(`Directive 't-component' can only be used on <t> nodes (used on a <${node.tagName}>)`);
-            }
-            const attributes = node.attributes;
-            const validDirectives = [];
-            const finalizers = [];
-            // maybe this is not optimal: we iterate on all attributes here, and again
-            // just after for each directive.
-            for (let i = 0; i < attributes.length; i++) {
-                let attrName = attributes[i].name;
-                if (attrName.startsWith("t-")) {
-                    let dName = attrName.slice(2).split(/-|\./)[0];
-                    if (!(dName in QWeb.DIRECTIVE_NAMES)) {
-                        throw new Error(`Unknown QWeb directive: '${attrName}'`);
-                    }
-                    if (node.tagName !== "t" && (attrName === "t-esc" || attrName === "t-raw")) {
-                        const tNode = document.implementation.createDocument("http://www.w3.org/1999/xhtml", "t", null).documentElement;
-                        tNode.setAttribute(attrName, node.getAttribute(attrName));
-                        for (let child of Array.from(node.childNodes)) {
-                            tNode.appendChild(child);
-                        }
-                        node.appendChild(tNode);
-                        node.removeAttribute(attrName);
-                    }
-                }
-            }
-            const DIR_N = QWeb.DIRECTIVES.length;
-            const ATTR_N = attributes.length;
-            let withHandlers = false;
-            for (let i = 0; i < DIR_N; i++) {
-                let directive = QWeb.DIRECTIVES[i];
-                let fullName;
-                let value;
-                for (let j = 0; j < ATTR_N; j++) {
-                    const name = attributes[j].name;
-                    if (name === "t-" + directive.name ||
-                        name.startsWith("t-" + directive.name + "-") ||
-                        name.startsWith("t-" + directive.name + ".")) {
-                        fullName = name;
-                        value = attributes[j].textContent;
-                        validDirectives.push({ directive, value, fullName });
-                        if (directive.name === "on" || directive.name === "model") {
-                            withHandlers = true;
-                        }
-                    }
-                }
-            }
-            for (let { directive, value, fullName } of validDirectives) {
-                if (directive.finalize) {
-                    finalizers.push({ directive, value, fullName });
-                }
-                if (directive.atNodeEncounter) {
-                    const isDone = directive.atNodeEncounter({
-                        node,
-                        qweb: this,
-                        ctx,
-                        fullName,
-                        value,
-                    });
-                    if (isDone) {
-                        for (let { directive, value, fullName } of finalizers) {
-                            directive.finalize({ node, qweb: this, ctx, fullName, value });
-                        }
-                        return;
-                    }
-                }
-            }
-            if (node.nodeName !== "t" || node.hasAttribute("t-tag")) {
-                let nodeHooks = {};
-                let addNodeHook = function (hook, handler) {
-                    nodeHooks[hook] = nodeHooks[hook] || [];
-                    nodeHooks[hook].push(handler);
-                };
-                if (node.tagName === "select" && node.hasAttribute("t-att-value")) {
-                    const value = node.getAttribute("t-att-value");
-                    let exprId = ctx.generateID();
-                    ctx.addLine(`let expr${exprId} = ${ctx.formatExpression(value)};`);
-                    let expr = `expr${exprId}`;
-                    node.setAttribute("t-att-value", expr);
-                    addNodeHook("create", `n.elm.value=${expr};`);
-                }
-                let nodeID = this._compileGenericNode(node, ctx, withHandlers);
-                ctx = ctx.withParent(nodeID);
-                for (let { directive, value, fullName } of validDirectives) {
-                    if (directive.atNodeCreation) {
-                        directive.atNodeCreation({
-                            node,
-                            qweb: this,
-                            ctx,
-                            fullName,
-                            value,
-                            nodeID,
-                            addNodeHook,
-                        });
-                    }
-                }
-                if (Object.keys(nodeHooks).length) {
-                    ctx.addLine(`p${nodeID}.hook = {`);
-                    for (let hook in nodeHooks) {
-                        ctx.addLine(`  ${hook}: ${NODE_HOOKS_PARAMS[hook]} => {`);
-                        for (let handler of nodeHooks[hook]) {
-                            ctx.addLine(`    ${handler}`);
-                        }
-                        ctx.addLine(`  },`);
-                    }
-                    ctx.addLine(`};`);
-                }
-            }
-            if (node.nodeName === "pre") {
-                ctx = ctx.subContext("inPreTag", true);
-            }
-            this._compileChildren(node, ctx);
-            // svg support
-            // we hadd svg namespace if it is a svg or if it is a g, but only if it is
-            // the root node.  This is the easiest way to support svg sub components:
-            // they need to have a g tag as root. Otherwise, we would need a complete
-            // list of allowed svg tags.
-            const shouldAddNS = node.nodeName === "svg" || (node.nodeName === "g" && ctx.rootNode === ctx.parentNode);
-            if (shouldAddNS) {
-                ctx.rootContext.shouldDefineUtils = true;
-                ctx.addLine(`utils.addNameSpace(vn${ctx.parentNode});`);
-            }
-            for (let { directive, value, fullName } of finalizers) {
-                directive.finalize({ node, qweb: this, ctx, fullName, value });
-            }
-        }
-        _compileGenericNode(node, ctx, withHandlers = true) {
-            // nodeType 1 is generic tag
-            if (node.nodeType !== 1) {
-                throw new Error("unsupported node type");
-            }
-            const attributes = node.attributes;
-            const attrs = [];
-            const props = [];
-            const tattrs = [];
-            function handleProperties(key, val) {
-                let isProp = false;
-                switch (node.nodeName) {
-                    case "input":
-                        let type = node.getAttribute("type");
-                        if (type === "checkbox" || type === "radio") {
-                            if (key === "checked" || key === "indeterminate") {
-                                isProp = true;
-                            }
-                        }
-                        if (key === "value" || key === "readonly" || key === "disabled") {
-                            isProp = true;
-                        }
-                        break;
-                    case "option":
-                        isProp = key === "selected" || key === "disabled";
-                        break;
-                    case "textarea":
-                        isProp = key === "readonly" || key === "disabled" || key === "value";
-                        break;
-                    case "select":
-                        isProp = key === "disabled" || key === "value";
-                        break;
-                    case "button":
-                    case "optgroup":
-                        isProp = key === "disabled";
-                        break;
-                }
-                if (isProp) {
-                    props.push(`${key}: ${val}`);
-                }
-            }
-            let classObj = "";
-            for (let i = 0; i < attributes.length; i++) {
-                let name = attributes[i].name;
-                let value = attributes[i].textContent;
-                if (this.translateFn && TRANSLATABLE_ATTRS.includes(name)) {
-                    value = this.translateFn(value);
-                }
-                // regular attributes
-                if (!name.startsWith("t-") && !node.getAttribute("t-attf-" + name)) {
-                    const attID = ctx.generateID();
-                    if (name === "class") {
-                        if ((value = value.trim())) {
-                            let classDef = value
-                                .split(/\s+/)
-                                .map((a) => `'${escapeQuotes(a)}':true`)
-                                .join(",");
-                            if (classObj) {
-                                ctx.addLine(`Object.assign(${classObj}, {${classDef}})`);
-                            }
-                            else {
-                                classObj = `_${ctx.generateID()}`;
-                                ctx.addLine(`let ${classObj} = {${classDef}};`);
-                            }
-                        }
-                    }
-                    else {
-                        ctx.addLine(`let _${attID} = '${escapeQuotes(value)}';`);
-                        if (!name.match(/^[a-zA-Z]+$/)) {
-                            // attribute contains 'non letters' => we want to quote it
-                            name = '"' + name + '"';
-                        }
-                        attrs.push(`${name}: _${attID}`);
-                        handleProperties(name, `_${attID}`);
-                    }
-                }
-                // dynamic attributes
-                if (name.startsWith("t-att-")) {
-                    let attName = name.slice(6);
-                    const v = ctx.getValue(value);
-                    let formattedValue = typeof v === "string" ? ctx.formatExpression(v) : `scope.${v.id}`;
-                    if (attName === "class") {
-                        ctx.rootContext.shouldDefineUtils = true;
-                        formattedValue = `utils.toClassObj(${formattedValue})`;
-                        if (classObj) {
-                            ctx.addLine(`Object.assign(${classObj}, ${formattedValue})`);
-                        }
-                        else {
-                            classObj = `_${ctx.generateID()}`;
-                            ctx.addLine(`let ${classObj} = ${formattedValue};`);
-                        }
-                    }
-                    else {
-                        const attID = ctx.generateID();
-                        if (!attName.match(/^[a-zA-Z]+$/)) {
-                            // attribute contains 'non letters' => we want to quote it
-                            attName = '"' + attName + '"';
-                        }
-                        // we need to combine dynamic with non dynamic attributes:
-                        // class="a" t-att-class="'yop'" should be rendered as class="a yop"
-                        const attValue = node.getAttribute(attName);
-                        if (attValue) {
-                            const attValueID = ctx.generateID();
-                            ctx.addLine(`let _${attValueID} = ${formattedValue};`);
-                            formattedValue = `'${attValue}' + (_${attValueID} ? ' ' + _${attValueID} : '')`;
-                            const attrIndex = attrs.findIndex((att) => att.startsWith(attName + ":"));
-                            attrs.splice(attrIndex, 1);
-                        }
-                        if (node.nodeName === "select" && attName === "value") {
-                            attrs.push(`${attName}: ${v}`);
-                            handleProperties(attName, v);
-                        }
-                        else {
-                            ctx.addLine(`let _${attID} = ${formattedValue};`);
-                            attrs.push(`${attName}: _${attID}`);
-                            handleProperties(attName, "_" + attID);
-                        }
-                    }
-                }
-                if (name.startsWith("t-attf-")) {
-                    let attName = name.slice(7);
-                    if (!attName.match(/^[a-zA-Z]+$/)) {
-                        // attribute contains 'non letters' => we want to quote it
-                        attName = '"' + attName + '"';
-                    }
-                    const formattedExpr = ctx.interpolate(value);
-                    const attID = ctx.generateID();
-                    let staticVal = node.getAttribute(attName);
-                    if (staticVal) {
-                        ctx.addLine(`let _${attID} = '${staticVal} ' + ${formattedExpr};`);
-                    }
-                    else {
-                        ctx.addLine(`let _${attID} = ${formattedExpr};`);
-                    }
-                    attrs.push(`${attName}: _${attID}`);
-                }
-                // t-att= attributes
-                if (name === "t-att") {
-                    let id = ctx.generateID();
-                    ctx.addLine(`let _${id} = ${ctx.formatExpression(value)};`);
-                    tattrs.push(id);
-                }
-            }
-            let nodeID = ctx.generateID();
-            let key = ctx.loopNumber || ctx.hasKey0 ? `\`\${key${ctx.loopNumber}}_${nodeID}\`` : nodeID;
-            const parts = [`key:${key}`];
-            if (attrs.length + tattrs.length > 0) {
-                parts.push(`attrs:{${attrs.join(",")}}`);
-            }
-            if (props.length > 0) {
-                parts.push(`props:{${props.join(",")}}`);
-            }
-            if (classObj) {
-                parts.push(`class:${classObj}`);
-            }
-            if (withHandlers) {
-                parts.push(`on:{}`);
-            }
-            ctx.addLine(`let c${nodeID} = [], p${nodeID} = {${parts.join(",")}};`);
-            for (let id of tattrs) {
-                ctx.addIf(`_${id} instanceof Array`);
-                ctx.addLine(`p${nodeID}.attrs[_${id}[0]] = _${id}[1];`);
-                ctx.addElse();
-                ctx.addLine(`for (let key in _${id}) {`);
-                ctx.indent();
-                ctx.addLine(`p${nodeID}.attrs[key] = _${id}[key];`);
-                ctx.dedent();
-                ctx.addLine(`}`);
-                ctx.closeIf();
-            }
-            let nodeName = `'${node.nodeName}'`;
-            if (node.hasAttribute("t-tag")) {
-                const tagExpr = node.getAttribute("t-tag");
-                node.removeAttribute("t-tag");
-                nodeName = `tag${ctx.generateID()}`;
-                ctx.addLine(`let ${nodeName} = ${ctx.formatExpression(tagExpr)};`);
-            }
-            ctx.addLine(`let vn${nodeID} = h(${nodeName}, p${nodeID}, c${nodeID});`);
-            if (ctx.parentNode) {
-                ctx.addLine(`c${ctx.parentNode}.push(vn${nodeID});`);
-            }
-            else if (ctx.loopNumber || ctx.hasKey0) {
-                ctx.rootContext.shouldDefineResult = true;
-                ctx.addLine(`result = vn${nodeID};`);
-            }
-            return nodeID;
-        }
-        _compileChildren(node, ctx) {
-            if (node.childNodes.length > 0) {
-                for (let child of Array.from(node.childNodes)) {
-                    this._compileNode(child, ctx);
-                }
-            }
-        }
     }
-    QWeb.utils = UTILS;
-    QWeb.components = Object.create(null);
-    QWeb.DIRECTIVE_NAMES = {
-        name: 1,
-        att: 1,
-        attf: 1,
-        translation: 1,
-        tag: 1,
+    Portal.template = xml`<t t-slot="default"/>`;
+    Portal.props = {
+        target: {
+            type: String,
+        },
+        slots: true,
     };
-    QWeb.DIRECTIVES = [];
-    QWeb.TEMPLATES = {};
-    QWeb.nextId = 1;
-    // dev mode enables better error messages or more costly validations
-    QWeb.dev = false;
-    QWeb.enableTransitions = true;
-    // slots contains sub templates defined with t-set inside t-component nodes, and
-    // are meant to be used by the t-slot directive.
-    QWeb.slots = {};
-    QWeb.nextSlotId = 1;
-    QWeb.subTemplates = {};
 
-    const parser = new DOMParser();
-    function htmlToVDOM(html) {
-        const doc = parser.parseFromString(html, "text/html");
-        const result = [];
-        for (let child of doc.body.childNodes) {
-            result.push(htmlToVNode(child));
-        }
-        return result;
-    }
-    function htmlToVNode(node) {
-        if (!(node instanceof Element)) {
-            if (node instanceof Comment) {
-                return h("!", node.textContent);
-            }
-            return { text: node.textContent };
-        }
-        const attrs = {};
-        for (let attr of node.attributes) {
-            attrs[attr.name] = attr.textContent;
-        }
-        const children = [];
-        for (let c of node.childNodes) {
-            children.push(htmlToVNode(c));
-        }
-        const vnode = h(node.tagName, { attrs }, children);
-        if (vnode.sel === "svg") {
-            addNS(vnode.data, vnode.children, vnode.sel);
-        }
-        return vnode;
-    }
-
-    /**
-     * Owl QWeb Directives
-     *
-     * This file contains the implementation of most standard QWeb directives:
-     * - t-esc
-     * - t-raw
-     * - t-set/t-value
-     * - t-if/t-elif/t-else
-     * - t-call
-     * - t-foreach/t-as
-     * - t-debug
-     * - t-log
-     */
-    //------------------------------------------------------------------------------
-    // t-esc and t-raw
-    //------------------------------------------------------------------------------
-    QWeb.utils.htmlToVDOM = htmlToVDOM;
-    function compileValueNode(value, node, qweb, ctx) {
-        ctx.rootContext.shouldDefineScope = true;
-        if (value === "0") {
-            if (ctx.parentNode) {
-                // the 'zero' magical symbol is where we can find the result of the rendering
-                // of  the body of the t-call.
-                ctx.rootContext.shouldDefineUtils = true;
-                const zeroArgs = ctx.escaping
-                    ? `{text: utils.vDomToString(scope[utils.zero])}`
-                    : `...scope[utils.zero]`;
-                ctx.addLine(`c${ctx.parentNode}.push(${zeroArgs});`);
-            }
-            return;
-        }
-        let exprID;
-        if (typeof value === "string") {
-            exprID = `_${ctx.generateID()}`;
-            ctx.addLine(`let ${exprID} = ${ctx.formatExpression(value)};`);
-        }
-        else {
-            exprID = `scope.${value.id}`;
-        }
-        ctx.addIf(`${exprID} != null`);
-        if (ctx.escaping) {
-            let protectID;
-            if (value.hasBody) {
-                ctx.rootContext.shouldDefineUtils = true;
-                protectID = ctx.startProtectScope();
-                ctx.addLine(`${exprID} = ${exprID} instanceof utils.VDomArray ? utils.vDomToString(${exprID}) : ${exprID};`);
-            }
-            if (ctx.parentTextNode) {
-                ctx.addLine(`vn${ctx.parentTextNode}.text += ${exprID};`);
-            }
-            else if (ctx.parentNode) {
-                ctx.addLine(`c${ctx.parentNode}.push({text: ${exprID}});`);
-            }
-            else {
-                let nodeID = ctx.generateID();
-                ctx.rootContext.rootNode = nodeID;
-                ctx.rootContext.parentTextNode = nodeID;
-                ctx.addLine(`let vn${nodeID} = {text: ${exprID}};`);
-                if (ctx.rootContext.shouldDefineResult) {
-                    ctx.addLine(`result = vn${nodeID}`);
-                }
-            }
-            if (value.hasBody) {
-                ctx.stopProtectScope(protectID);
-            }
-        }
-        else {
-            ctx.rootContext.shouldDefineUtils = true;
-            if (value.hasBody) {
-                ctx.addLine(`const vnodeArray = ${exprID} instanceof utils.VDomArray ? ${exprID} : utils.htmlToVDOM(${exprID});`);
-                ctx.addLine(`c${ctx.parentNode}.push(...vnodeArray);`);
-            }
-            else {
-                ctx.addLine(`c${ctx.parentNode}.push(...utils.htmlToVDOM(${exprID}));`);
-            }
-        }
-        if (node.childNodes.length) {
-            ctx.addElse();
-            qweb._compileChildren(node, ctx);
-        }
-        ctx.closeIf();
-    }
-    QWeb.addDirective({
-        name: "esc",
-        priority: 70,
-        atNodeEncounter({ node, qweb, ctx }) {
-            let value = ctx.getValue(node.getAttribute("t-esc"));
-            compileValueNode(value, node, qweb, ctx.subContext("escaping", true));
-            return true;
-        },
-    });
-    QWeb.addDirective({
-        name: "raw",
-        priority: 80,
-        atNodeEncounter({ node, qweb, ctx }) {
-            let value = ctx.getValue(node.getAttribute("t-raw"));
-            compileValueNode(value, node, qweb, ctx);
-            return true;
-        },
-    });
-    //------------------------------------------------------------------------------
-    // t-set
-    //------------------------------------------------------------------------------
-    QWeb.addDirective({
-        name: "set",
-        extraNames: ["value"],
-        priority: 60,
-        atNodeEncounter({ node, qweb, ctx }) {
-            ctx.rootContext.shouldDefineScope = true;
-            const variable = node.getAttribute("t-set");
-            let value = node.getAttribute("t-value");
-            ctx.variables[variable] = ctx.variables[variable] || {};
-            let qwebvar = ctx.variables[variable];
-            const hasBody = node.hasChildNodes();
-            qwebvar.id = variable;
-            qwebvar.expr = `scope.${variable}`;
-            if (value) {
-                const formattedValue = ctx.formatExpression(value);
-                let scopeExpr = `scope`;
-                if (ctx.protectedScopeNumber) {
-                    ctx.rootContext.shouldDefineUtils = true;
-                    scopeExpr = `utils.getScope(scope, '${variable}')`;
-                }
-                ctx.addLine(`${scopeExpr}.${variable} = ${formattedValue};`);
-                qwebvar.value = formattedValue;
-            }
-            if (hasBody) {
-                ctx.rootContext.shouldDefineUtils = true;
-                if (value) {
-                    ctx.addIf(`!(${qwebvar.expr})`);
-                }
-                const tempParentNodeID = ctx.generateID();
-                const _parentNode = ctx.parentNode;
-                ctx.parentNode = tempParentNodeID;
-                ctx.addLine(`let c${tempParentNodeID} = new utils.VDomArray();`);
-                const nodeCopy = node.cloneNode(true);
-                for (let attr of ["t-set", "t-value", "t-if", "t-else", "t-elif"]) {
-                    nodeCopy.removeAttribute(attr);
-                }
-                qweb._compileNode(nodeCopy, ctx);
-                ctx.addLine(`${qwebvar.expr} = c${tempParentNodeID}`);
-                qwebvar.value = `c${tempParentNodeID}`;
-                qwebvar.hasBody = true;
-                ctx.parentNode = _parentNode;
-                if (value) {
-                    ctx.closeIf();
-                }
-            }
-            return true;
-        },
-    });
-    //------------------------------------------------------------------------------
-    // t-if, t-elif, t-else
-    //------------------------------------------------------------------------------
-    QWeb.addDirective({
-        name: "if",
-        priority: 20,
-        atNodeEncounter({ node, ctx }) {
-            let cond = ctx.getValue(node.getAttribute("t-if"));
-            ctx.addIf(typeof cond === "string" ? ctx.formatExpression(cond) : `scope.${cond.id}`);
-            return false;
-        },
-        finalize({ ctx }) {
-            ctx.closeIf();
-        },
-    });
-    QWeb.addDirective({
-        name: "elif",
-        priority: 30,
-        atNodeEncounter({ node, ctx }) {
-            let cond = ctx.getValue(node.getAttribute("t-elif"));
-            ctx.addLine(`else if (${typeof cond === "string" ? ctx.formatExpression(cond) : `scope.${cond.id}`}) {`);
-            ctx.indent();
-            return false;
-        },
-        finalize({ ctx }) {
-            ctx.closeIf();
-        },
-    });
-    QWeb.addDirective({
-        name: "else",
-        priority: 40,
-        atNodeEncounter({ ctx }) {
-            ctx.addLine(`else {`);
-            ctx.indent();
-            return false;
-        },
-        finalize({ ctx }) {
-            ctx.closeIf();
-        },
-    });
-    //------------------------------------------------------------------------------
-    // t-call
-    //------------------------------------------------------------------------------
-    QWeb.addDirective({
-        name: "call",
-        priority: 50,
-        atNodeEncounter({ node, qweb, ctx }) {
-            // Step 1: sanity checks
-            // ------------------------------------------------
-            ctx.rootContext.shouldDefineScope = true;
-            ctx.rootContext.shouldDefineUtils = true;
-            const subTemplate = node.getAttribute("t-call");
-            const isDynamic = INTERP_REGEXP.test(subTemplate);
-            const nodeTemplate = qweb.templates[subTemplate];
-            if (!isDynamic && !nodeTemplate) {
-                throw new Error(`Cannot find template "${subTemplate}" (t-call)`);
-            }
-            // Step 2: compile target template in sub templates
-            // ------------------------------------------------
-            let subIdstr;
-            if (isDynamic) {
-                const _id = ctx.generateID();
-                ctx.addLine(`let tname${_id} = ${ctx.interpolate(subTemplate)};`);
-                ctx.addLine(`let tid${_id} = this.subTemplates[tname${_id}];`);
-                ctx.addIf(`!tid${_id}`);
-                ctx.addLine(`tid${_id} = this.constructor.nextId++;`);
-                ctx.addLine(`this.subTemplates[tname${_id}] = tid${_id};`);
-                ctx.addLine(`this.constructor.subTemplates[tid${_id}] = this._compile(tname${_id}, {hasParent: true, defineKey: true});`);
-                ctx.closeIf();
-                subIdstr = `tid${_id}`;
-            }
-            else {
-                let subId = qweb.subTemplates[subTemplate];
-                if (!subId) {
-                    subId = QWeb.nextId++;
-                    qweb.subTemplates[subTemplate] = subId;
-                    const subTemplateFn = qweb._compile(subTemplate, { hasParent: true, defineKey: true });
-                    QWeb.subTemplates[subId] = subTemplateFn;
-                }
-                subIdstr = `'${subId}'`;
-            }
-            // Step 3: compile t-call body if necessary
-            // ------------------------------------------------
-            let hasBody = node.hasChildNodes();
-            const protectID = ctx.startProtectScope();
-            if (hasBody) {
-                // we add a sub scope to protect the ambient scope
-                ctx.addLine(`{`);
-                ctx.indent();
-                const nodeCopy = node.cloneNode(true);
-                for (let attr of ["t-if", "t-else", "t-elif", "t-call"]) {
-                    nodeCopy.removeAttribute(attr);
-                }
-                // this local scope is intended to trap c__0
-                ctx.addLine(`{`);
-                ctx.indent();
-                ctx.addLine("let c__0 = [];");
-                qweb._compileNode(nodeCopy, ctx.subContext("parentNode", "__0"));
-                ctx.rootContext.shouldDefineUtils = true;
-                ctx.addLine("scope[utils.zero] = c__0;");
-                ctx.dedent();
-                ctx.addLine(`}`);
-            }
-            // Step 4: add the appropriate function call to current component
-            // ------------------------------------------------
-            const parentComponent = ctx.rootContext.shouldDefineParent
-                ? `parent`
-                : `utils.getComponent(context)`;
-            const key = ctx.generateTemplateKey();
-            const parentNode = ctx.parentNode ? `c${ctx.parentNode}` : "result";
-            const extra = `Object.assign({}, extra, {parentNode: ${parentNode}, parent: ${parentComponent}, key: ${key}})`;
-            if (ctx.parentNode) {
-                ctx.addLine(`this.constructor.subTemplates[${subIdstr}].call(this, scope, ${extra});`);
-            }
-            else {
-                // this is a t-call with no parentnode, we need to extract the result
-                ctx.rootContext.shouldDefineResult = true;
-                ctx.addLine(`result = []`);
-                ctx.addLine(`this.constructor.subTemplates[${subIdstr}].call(this, scope, ${extra});`);
-                ctx.addLine(`result = result[0]`);
-            }
-            // Step 5: restore previous scope
-            // ------------------------------------------------
-            if (hasBody) {
-                ctx.dedent();
-                ctx.addLine(`}`);
-            }
-            ctx.stopProtectScope(protectID);
-            return true;
-        },
-    });
-    //------------------------------------------------------------------------------
-    // t-foreach
-    //------------------------------------------------------------------------------
-    QWeb.addDirective({
-        name: "foreach",
-        extraNames: ["as"],
-        priority: 10,
-        atNodeEncounter({ node, qweb, ctx }) {
-            ctx.rootContext.shouldDefineScope = true;
-            ctx = ctx.subContext("loopNumber", ctx.loopNumber + 1);
-            const elems = node.getAttribute("t-foreach");
-            const name = node.getAttribute("t-as");
-            let arrayID = ctx.generateID();
-            ctx.addLine(`let _${arrayID} = ${ctx.formatExpression(elems)};`);
-            ctx.addLine(`if (!_${arrayID}) { throw new Error('QWeb error: Invalid loop expression')}`);
-            let keysID = ctx.generateID();
-            let valuesID = ctx.generateID();
-            ctx.addLine(`let _${keysID} = _${arrayID};`);
-            ctx.addLine(`let _${valuesID} = _${arrayID};`);
-            ctx.addIf(`!(_${arrayID} instanceof Array)`);
-            ctx.addLine(`_${keysID} = Object.keys(_${arrayID});`);
-            ctx.addLine(`_${valuesID} = Object.values(_${arrayID});`);
-            ctx.closeIf();
-            ctx.addLine(`let _length${keysID} = _${keysID}.length;`);
-            let varsID = ctx.startProtectScope(true);
-            const loopVar = `i${ctx.loopNumber}`;
-            ctx.addLine(`for (let ${loopVar} = 0; ${loopVar} < _length${keysID}; ${loopVar}++) {`);
-            ctx.indent();
-            ctx.addLine(`scope.${name}_first = ${loopVar} === 0`);
-            ctx.addLine(`scope.${name}_last = ${loopVar} === _length${keysID} - 1`);
-            ctx.addLine(`scope.${name}_index = ${loopVar}`);
-            ctx.addLine(`scope.${name} = _${keysID}[${loopVar}]`);
-            ctx.addLine(`scope.${name}_value = _${valuesID}[${loopVar}]`);
-            const nodeCopy = node.cloneNode(true);
-            let shouldWarn = !nodeCopy.hasAttribute("t-key") &&
-                node.children.length === 1 &&
-                node.children[0].tagName !== "t" &&
-                !node.children[0].hasAttribute("t-key");
-            if (shouldWarn) {
-                console.warn(`Directive t-foreach should always be used with a t-key! (in template: '${ctx.templateName}')`);
-            }
-            if (nodeCopy.hasAttribute("t-key")) {
-                const expr = ctx.formatExpression(nodeCopy.getAttribute("t-key"));
-                ctx.addLine(`let key${ctx.loopNumber} = ${expr};`);
-                nodeCopy.removeAttribute("t-key");
-            }
-            else {
-                ctx.addLine(`let key${ctx.loopNumber} = i${ctx.loopNumber};`);
-            }
-            nodeCopy.removeAttribute("t-foreach");
-            qweb._compileNode(nodeCopy, ctx);
-            ctx.dedent();
-            ctx.addLine("}");
-            ctx.stopProtectScope(varsID);
-            return true;
-        },
-    });
-    //------------------------------------------------------------------------------
-    // t-debug
-    //------------------------------------------------------------------------------
-    QWeb.addDirective({
-        name: "debug",
-        priority: 1,
-        atNodeEncounter({ ctx }) {
-            ctx.addLine("debugger;");
-        },
-    });
-    //------------------------------------------------------------------------------
-    // t-log
-    //------------------------------------------------------------------------------
-    QWeb.addDirective({
-        name: "log",
-        priority: 1,
-        atNodeEncounter({ ctx, value }) {
-            const expr = ctx.formatExpression(value);
-            ctx.addLine(`console.log(${expr})`);
-        },
-    });
-
-    /**
-     * Owl QWeb Extensions
-     *
-     * This file contains the implementation of non standard QWeb directives, added
-     * by Owl and that will only work on Owl projects:
-     *
-     * - t-on
-     * - t-ref
-     * - t-transition
-     * - t-mounted
-     * - t-slot
-     * - t-model
-     */
-    //------------------------------------------------------------------------------
-    // t-on
-    //------------------------------------------------------------------------------
-    // these are pieces of code that will be injected into the event handler if
-    // modifiers are specified
-    const MODS_CODE = {
-        prevent: "e.preventDefault();",
-        self: "if (e.target !== this.elm) {return}",
-        stop: "e.stopPropagation();",
-    };
-    const FNAMEREGEXP = /^[$A-Z_][0-9A-Z_$]*$/i;
-    function makeHandlerCode(ctx, fullName, value, putInCache, modcodes = MODS_CODE) {
-        let [event, ...mods] = fullName.slice(5).split(".");
-        if (mods.includes("capture")) {
-            event = "!" + event;
-        }
-        if (!event) {
-            throw new Error("Missing event name with t-on directive");
-        }
-        let code;
-        // check if it is a method with no args, a method with args or an expression
-        let args = "";
-        const name = value.replace(/\(.*\)/, function (_args) {
-            args = _args.slice(1, -1);
-            return "";
-        });
-        const isMethodCall = name.match(FNAMEREGEXP);
-        // then generate code
-        if (isMethodCall) {
-            ctx.rootContext.shouldDefineUtils = true;
-            const comp = `utils.getComponent(context)`;
-            if (args) {
-                const argId = ctx.generateID();
-                ctx.addLine(`let args${argId} = [${ctx.formatExpression(args)}];`);
-                code = `${comp}['${name}'](...args${argId}, e);`;
-                putInCache = false;
-            }
-            else {
-                code = `${comp}['${name}'](e);`;
-            }
-        }
-        else {
-            // if we get here, then it is an expression
-            // we need to capture every variable in it
-            putInCache = false;
-            code = ctx.captureExpression(value);
-            code = `const res = (() => { return ${code} })(); if (typeof res === 'function') { res(e) }`;
-        }
-        const modCode = mods.map((mod) => modcodes[mod]).join("");
-        let handler = `function (e) {if (context.__owl__.status === ${5 /* DESTROYED */}){return}${modCode}${code}}`;
-        if (putInCache) {
-            const key = ctx.generateTemplateKey(event);
-            ctx.addLine(`extra.handlers[${key}] = extra.handlers[${key}] || ${handler};`);
-            handler = `extra.handlers[${key}]`;
-        }
-        return { event, handler };
-    }
-    QWeb.addDirective({
-        name: "on",
-        priority: 90,
-        atNodeCreation({ ctx, fullName, value, nodeID }) {
-            const { event, handler } = makeHandlerCode(ctx, fullName, value, true);
-            ctx.addLine(`p${nodeID}.on['${event}'] = ${handler};`);
-        },
-    });
-    //------------------------------------------------------------------------------
-    // t-ref
-    //------------------------------------------------------------------------------
-    QWeb.addDirective({
-        name: "ref",
-        priority: 95,
-        atNodeCreation({ ctx, value, addNodeHook }) {
-            ctx.rootContext.shouldDefineRefs = true;
-            const refKey = `ref${ctx.generateID()}`;
-            ctx.addLine(`const ${refKey} = ${ctx.interpolate(value)};`);
-            addNodeHook("create", `context.__owl__.refs[${refKey}] = n.elm;`);
-            addNodeHook("destroy", `delete context.__owl__.refs[${refKey}];`);
-        },
-    });
-    //------------------------------------------------------------------------------
-    // t-transition
-    //------------------------------------------------------------------------------
-    QWeb.utils.nextFrame = function (cb) {
-        requestAnimationFrame(() => requestAnimationFrame(cb));
-    };
-    QWeb.utils.transitionInsert = function (vn, name) {
-        const elm = vn.elm;
-        // remove potential duplicated vnode that is currently being removed, to
-        // prevent from having twice the same node in the DOM during an animation
-        const dup = elm.parentElement && elm.parentElement.querySelector(`*[data-owl-key='${vn.key}']`);
-        if (dup) {
-            dup.remove();
-        }
-        elm.classList.add(name + "-enter");
-        elm.classList.add(name + "-enter-active");
-        elm.classList.remove(name + "-leave-active");
-        elm.classList.remove(name + "-leave-to");
-        const finalize = () => {
-            elm.classList.remove(name + "-enter-active");
-            elm.classList.remove(name + "-enter-to");
-        };
-        this.nextFrame(() => {
-            elm.classList.remove(name + "-enter");
-            elm.classList.add(name + "-enter-to");
-            whenTransitionEnd(elm, finalize);
-        });
-    };
-    QWeb.utils.transitionRemove = function (vn, name, rm) {
-        const elm = vn.elm;
-        elm.setAttribute("data-owl-key", vn.key);
-        elm.classList.add(name + "-leave");
-        elm.classList.add(name + "-leave-active");
-        const finalize = () => {
-            if (!elm.classList.contains(name + "-leave-active")) {
-                return;
-            }
-            elm.classList.remove(name + "-leave-active");
-            elm.classList.remove(name + "-leave-to");
-            rm();
-        };
-        this.nextFrame(() => {
-            elm.classList.remove(name + "-leave");
-            elm.classList.add(name + "-leave-to");
-            whenTransitionEnd(elm, finalize);
-        });
-    };
-    function getTimeout(delays, durations) {
-        /* istanbul ignore next */
-        while (delays.length < durations.length) {
-            delays = delays.concat(delays);
-        }
-        return Math.max.apply(null, durations.map((d, i) => {
-            return toMs(d) + toMs(delays[i]);
-        }));
-    }
-    // Old versions of Chromium (below 61.0.3163.100) formats floating pointer numbers
-    // in a locale-dependent way, using a comma instead of a dot.
-    // If comma is not replaced with a dot, the input will be rounded down (i.e. acting
-    // as a floor function) causing unexpected behaviors
-    function toMs(s) {
-        return Number(s.slice(0, -1).replace(",", ".")) * 1000;
-    }
-    function whenTransitionEnd(elm, cb) {
-        if (!elm.parentNode) {
-            // if we get here, this means that the element was removed for some other
-            // reasons, and in that case, we don't want to work on animation since nothing
-            // will be displayed anyway.
-            return;
-        }
-        const styles = window.getComputedStyle(elm);
-        const delays = (styles.transitionDelay || "").split(", ");
-        const durations = (styles.transitionDuration || "").split(", ");
-        const timeout = getTimeout(delays, durations);
-        if (timeout > 0) {
-            const transitionEndCB = () => {
-                if (!elm.parentNode)
-                    return;
-                cb();
-                browser.clearTimeout(fallbackTimeout);
-                elm.removeEventListener("transitionend", transitionEndCB);
-            };
-            elm.addEventListener("transitionend", transitionEndCB, { once: true });
-            const fallbackTimeout = browser.setTimeout(transitionEndCB, timeout + 1);
-        }
-        else {
-            cb();
-        }
-    }
-    QWeb.addDirective({
-        name: "transition",
-        priority: 96,
-        atNodeCreation({ ctx, value, addNodeHook }) {
-            if (!QWeb.enableTransitions) {
-                return;
-            }
-            ctx.rootContext.shouldDefineUtils = true;
-            let name = value;
-            const hooks = {
-                insert: `utils.transitionInsert(vn, '${name}');`,
-                remove: `utils.transitionRemove(vn, '${name}', rm);`,
-            };
-            for (let hookName in hooks) {
-                addNodeHook(hookName, hooks[hookName]);
-            }
-        },
-    });
-    //------------------------------------------------------------------------------
-    // t-slot
-    //------------------------------------------------------------------------------
-    QWeb.addDirective({
-        name: "slot",
-        priority: 80,
-        atNodeEncounter({ ctx, value, node, qweb }) {
-            const slotKey = ctx.generateID();
-            const valueExpr = value.match(INTERP_REGEXP) ? ctx.interpolate(value) : `'${value}'`;
-            ctx.addLine(`const slot${slotKey} = this.constructor.slots[context.__owl__.slotId + '_' + ${valueExpr}];`);
-            ctx.addIf(`slot${slotKey}`);
-            let parentNode = `c${ctx.parentNode}`;
-            if (!ctx.parentNode) {
-                ctx.rootContext.shouldDefineResult = true;
-                ctx.rootContext.shouldDefineUtils = true;
-                parentNode = `children${ctx.generateID()}`;
-                ctx.addLine(`let ${parentNode}= []`);
-                ctx.addLine(`result = {}`);
-            }
-            ctx.addLine(`slot${slotKey}.call(this, context.__owl__.scope, Object.assign({}, extra, {parentNode: ${parentNode}, parent: extra.parent || context}));`);
-            if (!ctx.parentNode) {
-                ctx.addLine(`utils.defineProxy(result, ${parentNode}[0]);`);
-            }
-            if (node.hasChildNodes()) {
-                ctx.addElse();
-                const nodeCopy = node.cloneNode(true);
-                nodeCopy.removeAttribute("t-slot");
-                qweb._compileNode(nodeCopy, ctx);
-            }
-            ctx.closeIf();
-            return true;
-        },
-    });
-    //------------------------------------------------------------------------------
-    // t-model
-    //------------------------------------------------------------------------------
-    QWeb.utils.toNumber = function (val) {
-        const n = parseFloat(val);
-        return isNaN(n) ? val : n;
-    };
-    const hasDotAtTheEnd = /\.[\w_]+\s*$/;
-    const hasBracketsAtTheEnd = /\[[^\[]+\]\s*$/;
-    QWeb.addDirective({
-        name: "model",
-        priority: 42,
-        atNodeCreation({ ctx, nodeID, value, node, fullName, addNodeHook }) {
-            const type = node.getAttribute("type");
-            let handler;
-            let event = fullName.includes(".lazy") ? "change" : "input";
-            // First step: we need to understand the structure of the expression, and
-            // from it, extract a base expression (that we can capture, which is
-            // important because it will be used in a handler later) and a formatted
-            // expression (which uses the captured base expression)
-            //
-            // Also, we support 2 kinds of values: some.expr.value or some.expr[value]
-            // For the first one, we have:
-            // - base expression = scope[some].expr
-            // - expression = exprX.value (where exprX is the var that captures the base expr)
-            // and for the expression with brackets:
-            // - base expression = scope[some].expr
-            // - expression = exprX[keyX] (where exprX is the var that captures the base expr
-            //        and keyX captures scope[value])
-            let expr;
-            let baseExpr;
-            if (hasDotAtTheEnd.test(value)) {
-                // we manage the case where the expr has a dot: some.expr.value
-                const index = value.lastIndexOf(".");
-                baseExpr = value.slice(0, index);
-                ctx.addLine(`let expr${nodeID} = ${ctx.formatExpression(baseExpr)};`);
-                expr = `expr${nodeID}${value.slice(index)}`;
-            }
-            else if (hasBracketsAtTheEnd.test(value)) {
-                // we manage here the case where the expr ends in a bracket expression:
-                //    some.expr[value]
-                const index = value.lastIndexOf("[");
-                baseExpr = value.slice(0, index);
-                ctx.addLine(`let expr${nodeID} = ${ctx.formatExpression(baseExpr)};`);
-                let exprKey = value.trimRight().slice(index + 1, -1);
-                ctx.addLine(`let exprKey${nodeID} = ${ctx.formatExpression(exprKey)};`);
-                expr = `expr${nodeID}[exprKey${nodeID}]`;
-            }
-            else {
-                throw new Error(`Invalid t-model expression: "${value}" (it should be assignable)`);
-            }
-            const key = ctx.generateTemplateKey();
-            if (node.tagName === "select") {
-                ctx.addLine(`p${nodeID}.props = {value: ${expr}};`);
-                addNodeHook("create", `n.elm.value=${expr};`);
-                event = "change";
-                handler = `(ev) => {${expr} = ev.target.value}`;
-            }
-            else if (type === "checkbox") {
-                ctx.addLine(`p${nodeID}.props = {checked: ${expr}};`);
-                handler = `(ev) => {${expr} = ev.target.checked}`;
-            }
-            else if (type === "radio") {
-                const nodeValue = node.getAttribute("value");
-                ctx.addLine(`p${nodeID}.props = {checked:${expr} === '${nodeValue}'};`);
-                handler = `(ev) => {${expr} = ev.target.value}`;
-                event = "click";
-            }
-            else {
-                ctx.addLine(`p${nodeID}.props = {value: ${expr}};`);
-                const trimCode = fullName.includes(".trim") ? ".trim()" : "";
-                let valueCode = `ev.target.value${trimCode}`;
-                if (fullName.includes(".number")) {
-                    ctx.rootContext.shouldDefineUtils = true;
-                    valueCode = `utils.toNumber(${valueCode})`;
-                }
-                handler = `(ev) => {${expr} = ${valueCode}}`;
-            }
-            ctx.addLine(`extra.handlers[${key}] = extra.handlers[${key}] || (${handler});`);
-            ctx.addLine(`p${nodeID}.on['${event}'] = extra.handlers[${key}];`);
-        },
-    });
-    //------------------------------------------------------------------------------
-    // t-key
-    //------------------------------------------------------------------------------
-    QWeb.addDirective({
-        name: "key",
-        priority: 45,
-        atNodeEncounter({ ctx, value, node }) {
-            if (ctx.loopNumber === 0) {
-                ctx.keyStack.push(ctx.rootContext.hasKey0);
-                ctx.rootContext.hasKey0 = true;
-            }
-            ctx.addLine("{");
-            ctx.indent();
-            ctx.addLine(`let key${ctx.loopNumber} = ${ctx.formatExpression(value)};`);
-        },
-        finalize({ ctx }) {
-            ctx.dedent();
-            ctx.addLine("}");
-            if (ctx.loopNumber === 0) {
-                ctx.rootContext.hasKey0 = ctx.keyStack.pop();
-            }
-        },
-    });
-
-    const config = {
-        translatableAttributes: TRANSLATABLE_ATTRS,
-    };
-    Object.defineProperty(config, "mode", {
-        get() {
-            return QWeb.dev ? "dev" : "prod";
-        },
-        set(mode) {
-            QWeb.dev = mode === "dev";
-            if (QWeb.dev) {
-                console.info(`Owl is running in 'dev' mode.
-
-This is not suitable for production use.
-See https://github.com/odoo/owl/blob/master/doc/reference/config.md#mode for more information.`);
-            }
-        },
-    });
-    Object.defineProperty(config, "enableTransitions", {
-        get() {
-            return QWeb.enableTransitions;
-        },
-        set(value) {
-            QWeb.enableTransitions = value;
-        },
-    });
-
-    /**
-     * We define here OwlEvent, a subclass of CustomEvent, with an additional
-     * attribute:
-     *  - originalComponent: the component that triggered the event
-     */
-    class OwlEvent extends CustomEvent {
-        constructor(component, eventType, options) {
-            super(eventType, options);
-            this.originalComponent = component;
-        }
-    }
-
-    //------------------------------------------------------------------------------
-    // t-component
-    //------------------------------------------------------------------------------
-    const T_COMPONENT_MODS_CODE = Object.assign({}, MODS_CODE, {
-        self: "if (e.target !== vn.elm) {return}",
-    });
-    QWeb.utils.defineProxy = function defineProxy(target, source) {
-        for (let k in source) {
-            Object.defineProperty(target, k, {
-                get() {
-                    return source[k];
-                },
-                set(val) {
-                    source[k] = val;
-                },
-            });
-        }
-    };
-    QWeb.utils.assignHooks = function assignHooks(dataObj, hooks) {
-        if ("hook" in dataObj) {
-            const hookObject = dataObj.hook;
-            for (let name in hooks) {
-                const current = hookObject[name];
-                const fn = hooks[name];
-                if (current) {
-                    hookObject[name] = (...args) => {
-                        current(...args);
-                        fn(...args);
-                    };
-                }
-                else {
-                    hookObject[name] = fn;
-                }
-            }
-        }
-        else {
-            dataObj.hook = hooks;
-        }
-    };
-    /**
-     * The t-component directive is certainly a complicated and hard to maintain piece
-     * of code.  To help you, fellow developer, if you have to maintain it, I offer
-     * you this advice: Good luck...
-     *
-     * Since it is not 'direct' code, but rather code that generates other code, it
-     * is not easy to understand.  To help you, here  is a detailed and commented
-     * explanation of the code generated by the t-component directive for the following
-     * situation:
-     * ```xml
-     *   <Child
-     *      t-key="'somestring'"
-     *      flag="state.flag"
-     *      t-transition="fade"/>
-     * ```
-     *
-     * ```js
-     * // we assign utils on top of the function because it will be useful for
-     * // each components
-     * let utils = this.utils;
-     *
-     * // this is the virtual node representing the parent div
-     * let c1 = [], p1 = { key: 1 };
-     * var vn1 = h("div", p1, c1);
-     *
-     * // t-component directive: we start by evaluating the expression given by t-key:
-     * let key5 = "somestring";
-     *
-     * // def3 is the promise that will contain later either the new component
-     * // creation, or the props update...
-     * let def3;
-     *
-     * // this is kind of tricky: we need here to find if the component was already
-     * // created by a previous rendering.  This is done by checking the internal
-     * // `cmap` (children map) of the parent component: it maps keys to component ids,
-     * // and, then, if there is an id, we look into the children list to get the
-     * // instance
-     * let w4 =
-     *   key5 in context.__owl__.cmap
-     *   ? context.__owl__.children[context.__owl__.cmap[key5]]
-     *   : false;
-     *
-     * // We keep the index of the position of the component in the closure.  We push
-     * // null to reserve the slot, and will replace it later by the component vnode,
-     * // when it will be ready (do not forget that preparing/rendering a component is
-     * // asynchronous)
-     * let _2_index = c1.length;
-     * c1.push(null);
-     *
-     * // we evaluate here the props given to the component. It is done here to be
-     * // able to easily reference it later, and also, it might be an expensive
-     * // computation, so it is certainly better to do it only once
-     * let props4 = { flag: context["state"].flag };
-     *
-     * // If we have a component, currently rendering, but not ready yet, we do not want
-     * // to wait for it to be ready if we can avoid it
-     * if (w4 && w4.__owl__.renderPromise && !w4.__owl__.vnode) {
-     *   // we check if the props are the same.  In that case, we can simply reuse
-     *   // the previous rendering and skip all useless work
-     *   if (utils.shallowEqual(props4, w4.__owl__.renderProps)) {
-     *     def3 = w4.__owl__.renderPromise;
-     *   } else {
-     *     // if the props are not the same, we destroy the component and starts anew.
-     *     // this will be faster than waiting for its rendering, then updating it
-     *     w4.destroy();
-     *     w4 = false;
-     *   }
-     * }
-     *
-     * if (!w4) {
-     *   // in this situation, we need to create a new component.  First step is
-     *   // to get a reference to the class, then create an instance with
-     *   // current context as parent, and the props.
-     *   let W4 = context.component && context.components[componentKey4] || QWeb.component[componentKey4];
-
-     *   if (!W4) {
-     *     throw new Error("Cannot find the definition of component 'child'");
-     *   }
-     *   w4 = new W4(owner, props4);
-     *
-     *   // Whenever we rerender the parent component, we need to be sure that we
-     *   // are able to find the component instance. To do that, we register it to
-     *   // the parent cmap (children map).  Note that the 'template' key is
-     *   // used here, since this is what identify the component from the template
-     *   // perspective.
-     *   context.__owl__.cmap[key5] = w4.__owl__.id;
-     *
-     *   // __prepare is called, to basically call willStart, then render the
-     *   // component
-     *   def3 = w4.__prepare();
-     *
-     *   def3 = def3.then(vnode => {
-     *     // we create here a virtual node for the parent (NOT the component). This
-     *     // means that the vdom of the parent will be stopped here, and from
-     *     // the parent's perspective, it simply is a vnode with no children.
-     *     // However, it shares the same dom element with the component root
-     *     // vnode.
-     *     let pvnode = h(vnode.sel, { key: key5 });
-     *
-     *     // we add hooks to the parent vnode so we can interact with the new
-     *     // component at the proper time
-     *     pvnode.data.hook = {
-     *       insert(vn) {
-     *         // the __mount method will patch the component vdom into the elm vn.elm,
-     *         // then call the mounted hooks. However, suprisingly, the snabbdom
-     *         // patch method actually replace the elm by a new elm, so we need
-     *         // to synchronise the pvnode elm with the resulting elm
-     *         let nvn = w4.__mount(vnode, vn.elm);
-     *         pvnode.elm = nvn.elm;
-     *         // what follows is only present if there are animations on the component
-     *         utils.transitionInsert(vn, "fade");
-     *       },
-     *       remove() {
-     *         // override with empty function to prevent from removing the node
-     *         // directly. It will be removed when destroy is called anyway, which
-     *         // delays the removal if there are animations.
-     *       },
-     *       destroy() {
-     *         // if there are animations, we delay the call to destroy on the
-     *         // component, if not, we call it directly.
-     *         let finalize = () => {
-     *           w4.destroy();
-     *         };
-     *         utils.transitionRemove(vn, "fade", finalize);
-     *       }
-     *     };
-     *     // the pvnode is inserted at the correct position in the div's children
-     *     c1[_2_index] = pvnode;
-     *
-     *     // we keep here a reference to the parent vnode (representing the
-     *     // component, so we can reuse it later whenever we update the component
-     *     w4.__owl__.pvnode = pvnode;
-     *   });
-     * } else {
-     *   // this is the 'update' path of the directive.
-     *   // the call to __updateProps is the actual component update
-     *   // Note that we only update the props if we cannot reuse the previous
-     *   // rendering work (in the case it was rendered with the same props)
-     *   def3 = def3 || w4.__updateProps(props4, extra.forceUpdate, extra.patchQueue);
-     *   def3 = def3.then(() => {
-     *     // if component was destroyed in the meantime, we do nothing (so, this
-     *     // means that the parent's element children list will have a null in
-     *     // the component's position, which will cause the pvnode to be removed
-     *     // when it is patched.
-     *     if (w4.__owl__.isDestroyed) {
-     *       return;
-     *     }
-     *     // like above, we register the pvnode to the children list, so it
-     *     // will not be patched out of the dom.
-     *     let pvnode = w4.__owl__.pvnode;
-     *     c1[_2_index] = pvnode;
-     *   });
-     * }
-     *
-     * // we register the deferred here so the parent can coordinate its patch operation
-     * // with all the children.
-     * extra.promises.push(def3);
-     * return vn1;
-     * ```
-     */
-    QWeb.addDirective({
-        name: "component",
-        extraNames: ["props"],
-        priority: 100,
-        atNodeEncounter({ ctx, value, node, qweb }) {
-            ctx.addLine(`// Component '${value}'`);
-            ctx.rootContext.shouldDefineQWeb = true;
-            ctx.rootContext.shouldDefineParent = true;
-            ctx.rootContext.shouldDefineUtils = true;
-            ctx.rootContext.shouldDefineScope = true;
-            let hasDynamicProps = node.getAttribute("t-props") ? true : false;
-            // t-on- events and t-transition
-            const events = [];
-            let transition = "";
-            const attributes = node.attributes;
-            const props = {};
-            for (let i = 0; i < attributes.length; i++) {
-                const name = attributes[i].name;
-                const value = attributes[i].textContent;
-                if (name.startsWith("t-on-")) {
-                    events.push([name, value]);
-                }
-                else if (name === "t-transition") {
-                    if (QWeb.enableTransitions) {
-                        transition = value;
-                    }
-                }
-                else if (!name.startsWith("t-")) {
-                    if (name !== "class" && name !== "style") {
-                        // this is a prop!
-                        if (value.includes("=>")) {
-                            props[name] = ctx.captureExpression(value);
-                        }
-                        else {
-                            props[name] = ctx.formatExpression(value) || "undefined";
-                        }
-                    }
-                }
-            }
-            // computing the props string representing the props object
-            let propStr = Object.keys(props)
-                .map((k) => k + ":" + props[k])
-                .join(",");
-            let componentID = ctx.generateID();
-            let hasDefinedKey = false;
-            let templateKey;
-            if (node.tagName === "t" && !node.hasAttribute("t-key") && value.match(INTERP_REGEXP)) {
-                defineComponentKey();
-                const id = ctx.generateID();
-                // the ___ is to make sure we have no possible conflict with normal
-                // template keys
-                ctx.addLine(`let k${id} = '___' + componentKey${componentID}`);
-                templateKey = `k${id}`;
-            }
-            else {
-                templateKey = ctx.generateTemplateKey();
-            }
-            let ref = node.getAttribute("t-ref");
-            let refExpr = "";
-            let refKey = "";
-            if (ref) {
-                ctx.rootContext.shouldDefineRefs = true;
-                refKey = `ref${ctx.generateID()}`;
-                ctx.addLine(`const ${refKey} = ${ctx.interpolate(ref)};`);
-                refExpr = `context.__owl__.refs[${refKey}] = w${componentID};`;
-            }
-            let finalizeComponentCode = `w${componentID}.destroy();`;
-            if (ref) {
-                finalizeComponentCode += `delete context.__owl__.refs[${refKey}];`;
-            }
-            if (transition) {
-                finalizeComponentCode = `let finalize = () => {
-          ${finalizeComponentCode}
-        };
-        delete w${componentID}.__owl__.transitionInserted;
-        utils.transitionRemove(vn, '${transition}', finalize);`;
-            }
-            let createHook = "";
-            let classAttr = node.getAttribute("class");
-            let tattClass = node.getAttribute("t-att-class");
-            let styleAttr = node.getAttribute("style");
-            let tattStyle = node.getAttribute("t-att-style");
-            if (tattStyle) {
-                const attVar = `_${ctx.generateID()}`;
-                ctx.addLine(`const ${attVar} = ${ctx.formatExpression(tattStyle)};`);
-                tattStyle = attVar;
-            }
-            let classObj = "";
-            if (classAttr || tattClass || styleAttr || tattStyle || events.length) {
-                if (classAttr) {
-                    let classDef = classAttr
-                        .trim()
-                        .split(/\s+/)
-                        .map((a) => `'${a}':true`)
-                        .join(",");
-                    classObj = `_${ctx.generateID()}`;
-                    ctx.addLine(`let ${classObj} = {${classDef}};`);
-                }
-                if (tattClass) {
-                    let tattExpr = ctx.formatExpression(tattClass);
-                    if (tattExpr[0] !== "{" || tattExpr[tattExpr.length - 1] !== "}") {
-                        tattExpr = `utils.toClassObj(${tattExpr})`;
-                    }
-                    if (classAttr) {
-                        ctx.addLine(`Object.assign(${classObj}, ${tattExpr})`);
-                    }
-                    else {
-                        classObj = `_${ctx.generateID()}`;
-                        ctx.addLine(`let ${classObj} = ${tattExpr};`);
-                    }
-                }
-                let eventsCode = events
-                    .map(function ([name, value]) {
-                    const capture = name.match(/\.capture/);
-                    name = capture ? name.replace(/\.capture/, "") : name;
-                    const { event, handler } = makeHandlerCode(ctx, name, value, false, T_COMPONENT_MODS_CODE);
-                    if (capture) {
-                        return `vn.elm.addEventListener('${event}', ${handler}, true);`;
-                    }
-                    return `vn.elm.addEventListener('${event}', ${handler});`;
-                })
-                    .join("");
-                const styleExpr = tattStyle || (styleAttr ? `'${styleAttr}'` : false);
-                const styleCode = styleExpr ? `vn.elm.style = ${styleExpr};` : "";
-                createHook = `utils.assignHooks(vnode.data, {create(_, vn){${styleCode}${eventsCode}}});`;
-            }
-            ctx.addLine(`let w${componentID} = ${templateKey} in parent.__owl__.cmap ? parent.__owl__.children[parent.__owl__.cmap[${templateKey}]] : false;`);
-            let shouldProxy = !ctx.parentNode;
-            if (shouldProxy) {
-                let id = ctx.generateID();
-                ctx.rootContext.rootNode = id;
-                shouldProxy = true;
-                ctx.rootContext.shouldDefineResult = true;
-                ctx.addLine(`let vn${id} = {};`);
-                ctx.addLine(`result = vn${id};`);
-            }
-            if (hasDynamicProps) {
-                const dynamicProp = ctx.formatExpression(node.getAttribute("t-props"));
-                ctx.addLine(`let props${componentID} = Object.assign({}, ${dynamicProp}, {${propStr}});`);
-            }
-            else {
-                ctx.addLine(`let props${componentID} = {${propStr}};`);
-            }
-            ctx.addIf(`w${componentID} && w${componentID}.__owl__.currentFiber && !w${componentID}.__owl__.vnode`);
-            ctx.addLine(`w${componentID}.destroy();`);
-            ctx.addLine(`w${componentID} = false;`);
-            ctx.closeIf();
-            let registerCode = "";
-            if (shouldProxy) {
-                registerCode = `utils.defineProxy(vn${ctx.rootNode}, pvnode);`;
-            }
-            // SLOTS
-            const hasSlots = node.childNodes.length;
-            let scope = hasSlots ? `utils.combine(context, scope)` : "undefined";
-            ctx.addIf(`w${componentID}`);
-            // need to update component
-            let styleCode = "";
-            if (tattStyle) {
-                styleCode = `.then(()=>{if (w${componentID}.__owl__.status === ${5 /* DESTROYED */}) {return};w${componentID}.el.style=${tattStyle};});`;
-            }
-            ctx.addLine(`w${componentID}.__updateProps(props${componentID}, extra.fiber, ${scope})${styleCode};`);
-            ctx.addLine(`let pvnode = w${componentID}.__owl__.pvnode;`);
-            if (registerCode) {
-                ctx.addLine(registerCode);
-            }
-            if (ctx.parentNode) {
-                ctx.addLine(`c${ctx.parentNode}.push(pvnode);`);
-            }
-            ctx.addElse();
-            // new component
-            function defineComponentKey() {
-                if (!hasDefinedKey) {
-                    const interpValue = ctx.interpolate(value);
-                    ctx.addLine(`let componentKey${componentID} = ${interpValue};`);
-                    hasDefinedKey = true;
-                }
-            }
-            defineComponentKey();
-            const contextualValue = value.match(INTERP_REGEXP) ? "false" : ctx.formatExpression(value);
-            ctx.addLine(`let W${componentID} = ${contextualValue} || context.constructor.components[componentKey${componentID}] || QWeb.components[componentKey${componentID}];`);
-            // maybe only do this in dev mode...
-            ctx.addLine(`if (!W${componentID}) {throw new Error('Cannot find the definition of component "' + componentKey${componentID} + '"')}`);
-            ctx.addLine(`w${componentID} = new W${componentID}(parent, props${componentID});`);
-            if (transition) {
-                ctx.addLine(`const __patch${componentID} = w${componentID}.__patch;`);
-                ctx.addLine(`w${componentID}.__patch = (t, vn) => {__patch${componentID}.call(w${componentID}, t, vn); if(!w${componentID}.__owl__.transitionInserted){w${componentID}.__owl__.transitionInserted = true;utils.transitionInsert(w${componentID}.__owl__.vnode, '${transition}');}};`);
-            }
-            ctx.addLine(`parent.__owl__.cmap[${templateKey}] = w${componentID}.__owl__.id;`);
-            if (hasSlots) {
-                const clone = node.cloneNode(true);
-                // The next code is a fallback for compatibility reason. It accepts t-set
-                // elements that are direct children with a non empty body as nodes defining
-                // the content of a slot.
-                //
-                // This is wrong, but is necessary to prevent breaking all existing Owl
-                // code using slots. This will be removed in v2.0 someday. Meanwhile,
-                // please use t-set-slot everywhere you need to set the content of a
-                // slot.
-                for (let node of clone.children) {
-                    if (node.hasAttribute("t-set") && node.hasChildNodes()) {
-                        node.setAttribute("t-set-slot", node.getAttribute("t-set"));
-                        node.removeAttribute("t-set");
-                    }
-                }
-                const slotNodes = Array.from(clone.querySelectorAll("[t-set-slot]"));
-                const slotNames = new Set();
-                const slotId = QWeb.nextSlotId++;
-                ctx.addLine(`w${componentID}.__owl__.slotId = ${slotId};`);
-                if (slotNodes.length) {
-                    for (let i = 0, length = slotNodes.length; i < length; i++) {
-                        const slotNode = slotNodes[i];
-                        // check if this is defined in a sub component (in which case it should
-                        // be ignored)
-                        let el = slotNode.parentElement;
-                        let isInSubComponent = false;
-                        while (el !== clone) {
-                            if (el.hasAttribute("t-component") ||
-                                el.tagName[0] === el.tagName[0].toUpperCase()) {
-                                isInSubComponent = true;
-                                break;
-                            }
-                            el = el.parentElement;
-                        }
-                        if (isInSubComponent) {
-                            continue;
-                        }
-                        let key = slotNode.getAttribute("t-set-slot");
-                        if (slotNames.has(key)) {
-                            continue;
-                        }
-                        slotNames.add(key);
-                        slotNode.removeAttribute("t-set-slot");
-                        slotNode.parentElement.removeChild(slotNode);
-                        const slotFn = qweb._compile(`slot_${key}_template`, { elem: slotNode, hasParent: true });
-                        QWeb.slots[`${slotId}_${key}`] = slotFn;
-                    }
-                }
-                if (clone.childNodes.length) {
-                    let hasContent = false;
-                    const t = clone.ownerDocument.createElement("t");
-                    for (let child of Object.values(clone.childNodes)) {
-                        hasContent =
-                            hasContent || (child instanceof Text ? Boolean(child.textContent.trim().length) : true);
-                        t.appendChild(child);
-                    }
-                    if (hasContent) {
-                        const slotFn = qweb._compile(`slot_default_template`, { elem: t, hasParent: true });
-                        QWeb.slots[`${slotId}_default`] = slotFn;
-                    }
-                }
-            }
-            ctx.addLine(`let fiber = w${componentID}.__prepare(extra.fiber, ${scope}, () => { const vnode = fiber.vnode; pvnode.sel = vnode.sel; ${createHook}});`);
-            // hack: specify empty remove hook to prevent the node from being removed from the DOM
-            const insertHook = refExpr ? `insert(vn) {${refExpr}},` : "";
-            ctx.addLine(`let pvnode = h('dummy', {key: ${templateKey}, hook: {${insertHook}remove() {},destroy(vn) {${finalizeComponentCode}}}});`);
-            if (registerCode) {
-                ctx.addLine(registerCode);
-            }
-            if (ctx.parentNode) {
-                ctx.addLine(`c${ctx.parentNode}.push(pvnode);`);
-            }
-            ctx.addLine(`w${componentID}.__owl__.pvnode = pvnode;`);
-            ctx.closeIf();
-            if (classObj) {
-                ctx.addLine(`w${componentID}.__owl__.classObj=${classObj};`);
-            }
-            ctx.addLine(`w${componentID}.__owl__.parentLastFiberId = extra.fiber.id;`);
-            return true;
-        },
-    });
-
+    // -----------------------------------------------------------------------------
+    //  Scheduler
+    // -----------------------------------------------------------------------------
     class Scheduler {
-        constructor(requestAnimationFrame) {
-            this.tasks = [];
+        constructor() {
+            this.tasks = new Set();
             this.isRunning = false;
-            this.requestAnimationFrame = requestAnimationFrame;
+            this.requestAnimationFrame = Scheduler.requestAnimationFrame;
         }
         start() {
             this.isRunning = true;
@@ -3457,35 +4578,9 @@ See https://github.com/odoo/owl/blob/master/doc/reference/config.md#mode for mor
             this.isRunning = false;
         }
         addFiber(fiber) {
-            // if the fiber was remapped into a larger rendering fiber, it may not be a
-            // root fiber.  But we only want to register root fibers
-            fiber = fiber.root;
-            return new Promise((resolve, reject) => {
-                if (fiber.error) {
-                    return reject(fiber.error);
-                }
-                this.tasks.push({
-                    fiber,
-                    callback: () => {
-                        if (fiber.error) {
-                            return reject(fiber.error);
-                        }
-                        resolve();
-                    },
-                });
-                if (!this.isRunning) {
-                    this.start();
-                }
-            });
-        }
-        rejectFiber(fiber, reason) {
-            fiber = fiber.root;
-            const index = this.tasks.findIndex((t) => t.fiber === fiber);
-            if (index >= 0) {
-                const [task] = this.tasks.splice(index, 1);
-                fiber.cancel();
-                fiber.error = new Error(reason);
-                task.callback();
+            this.tasks.add(fiber.root);
+            if (!this.isRunning) {
+                this.start();
             }
         }
         /**
@@ -3493,29 +4588,28 @@ See https://github.com/odoo/owl/blob/master/doc/reference/config.md#mode for mor
          * Other tasks are left unchanged.
          */
         flush() {
-            let tasks = this.tasks;
-            this.tasks = [];
-            tasks = tasks.filter((task) => {
-                if (task.fiber.isCompleted) {
-                    task.callback();
-                    return false;
+            this.tasks.forEach((fiber) => {
+                if (fiber.root !== fiber) {
+                    this.tasks.delete(fiber);
+                    return;
                 }
-                if (task.fiber.counter === 0) {
-                    if (!task.fiber.error) {
-                        try {
-                            task.fiber.complete();
-                        }
-                        catch (e) {
-                            task.fiber.handleError(e);
-                        }
+                const hasError = fibersInError.has(fiber);
+                if (hasError && fiber.counter !== 0) {
+                    this.tasks.delete(fiber);
+                    return;
+                }
+                if (fiber.node.status === 2 /* DESTROYED */) {
+                    this.tasks.delete(fiber);
+                    return;
+                }
+                if (fiber.counter === 0) {
+                    if (!hasError) {
+                        fiber.complete();
                     }
-                    task.callback();
-                    return false;
+                    this.tasks.delete(fiber);
                 }
-                return true;
             });
-            this.tasks = tasks.concat(this.tasks);
-            if (this.tasks.length === 0) {
+            if (this.tasks.size === 0) {
                 this.stop();
             }
         }
@@ -3528,1395 +4622,432 @@ See https://github.com/odoo/owl/blob/master/doc/reference/config.md#mode for mor
             });
         }
     }
-    const scheduler = new Scheduler(browser.requestAnimationFrame);
+    // capture the value of requestAnimationFrame as soon as possible, to avoid
+    // interactions with other code, such as test frameworks that override them
+    Scheduler.requestAnimationFrame = window.requestAnimationFrame.bind(window);
 
-    /**
-     * Owl Fiber Class
-     *
-     * Fibers are small abstractions designed to contain all the internal state
-     * associated with a "rendering work unit", relative to a specific component.
-     *
-     * A rendering will cause the creation of a fiber for each impacted components.
-     *
-     * Fibers capture all that necessary information, which is critical to owl
-     * asynchronous rendering pipeline. Fibers can be cancelled, can be in different
-     * states and in general determine the state of the rendering.
-     */
-    class Fiber {
-        constructor(parent, component, force, target, position) {
-            this.id = Fiber.nextId++;
-            // isCompleted means that the rendering corresponding to this fiber's work is
-            // done, either because the component has been mounted or patched, or because
-            // fiber has been cancelled.
-            this.isCompleted = false;
-            // the fibers corresponding to component updates (updateProps) need to call
-            // the willPatch and patched hooks from the corresponding component. However,
-            // fibers corresponding to a new component do not need to do that. So, the
-            // shouldPatch hook is the boolean that we check whenever we need to apply
-            // a patch.
-            this.shouldPatch = true;
-            // isRendered is the last state of a fiber. If true, this means that it has
-            // been rendered and is inert (so, it should not be taken into account when
-            // counting the number of active fibers).
-            this.isRendered = false;
-            // the counter number is a critical information. It is only necessary for a
-            // root fiber.  For that fiber, this number counts the number of active sub
-            // fibers.  When that number reaches 0, the fiber can be applied by the
-            // scheduler.
-            this.counter = 0;
-            this.vnode = null;
-            this.child = null;
-            this.sibling = null;
-            this.lastChild = null;
-            this.parent = null;
-            this.component = component;
-            this.force = force;
-            this.target = target;
-            this.position = position;
-            const __owl__ = component.__owl__;
-            this.scope = __owl__.scope;
-            this.root = parent ? parent.root : this;
-            this.parent = parent;
-            let oldFiber = __owl__.currentFiber;
-            if (oldFiber && !oldFiber.isCompleted) {
-                this.force = true;
-                if (oldFiber.root === oldFiber && !parent) {
-                    // both oldFiber and this fiber are root fibers
-                    this._reuseFiber(oldFiber);
-                    return oldFiber;
-                }
-                else {
-                    this._remapFiber(oldFiber);
-                }
+    const DEV_MSG = `Owl is running in 'dev' mode.
+
+This is not suitable for production use.
+See https://github.com/odoo/owl/blob/master/doc/reference/config.md#mode for more information.`;
+    class App extends TemplateSet {
+        constructor(Root, config = {}) {
+            super(config);
+            this.scheduler = new Scheduler();
+            this.root = null;
+            this.Root = Root;
+            if (config.test) {
+                this.dev = true;
             }
-            this.root.counter++;
-            __owl__.currentFiber = this;
+            if (this.dev && !config.test) {
+                console.info(DEV_MSG);
+            }
+            const descrs = Object.getOwnPropertyDescriptors(config.env || {});
+            this.env = Object.freeze(Object.defineProperties({}, descrs));
+            this.props = config.props || {};
         }
-        /**
-         * When the oldFiber is not completed yet, and both oldFiber and this fiber
-         * are root fibers, we want to reuse the oldFiber instead of creating a new
-         * one. Doing so will guarantee that the initiator(s) of those renderings will
-         * be notified (the promise will resolve) when the last rendering will be done.
-         *
-         * This function thus assumes that oldFiber is a root fiber.
-         */
-        _reuseFiber(oldFiber) {
-            oldFiber.cancel(); // cancel children fibers
-            oldFiber.target = this.target || oldFiber.target;
-            oldFiber.position = this.position || oldFiber.position;
-            oldFiber.isCompleted = false; // keep the root fiber alive
-            oldFiber.isRendered = false; // the fiber has to be re-rendered
-            if (oldFiber.child) {
-                // remove relation to children
-                oldFiber.child.parent = null;
-                oldFiber.child = null;
-                oldFiber.lastChild = null;
-            }
-            oldFiber.counter = 1; // re-initialize counter
-            oldFiber.id = Fiber.nextId++;
+        mount(target, options) {
+            App.validateTarget(target);
+            const node = this.makeNode(this.Root, this.props);
+            const prom = this.mountNode(node, target, options);
+            this.root = node;
+            return prom;
         }
-        /**
-         * In some cases, a rendering initiated at some component can detect that it
-         * should be part of a larger rendering initiated somewhere up the component
-         * tree.  In that case, it needs to cancel the previous rendering and
-         * remap itself as a part of the current parent rendering.
-         */
-        _remapFiber(oldFiber) {
-            oldFiber.cancel();
-            this.shouldPatch = oldFiber.shouldPatch;
-            if (oldFiber === oldFiber.root) {
-                oldFiber.counter++;
-            }
-            if (oldFiber.parent && !this.parent) {
-                // re-map links
-                this.parent = oldFiber.parent;
-                this.root = this.parent.root;
-                this.sibling = oldFiber.sibling;
-                if (this.parent.lastChild === oldFiber) {
-                    this.parent.lastChild = this;
-                }
-                if (this.parent.child === oldFiber) {
-                    this.parent.child = this;
-                }
-                else {
-                    let current = this.parent.child;
-                    while (true) {
-                        if (current.sibling === oldFiber) {
-                            current.sibling = this;
-                            break;
-                        }
-                        current = current.sibling;
-                    }
-                }
-            }
+        makeNode(Component, props) {
+            return new ComponentNode(Component, props, this);
         }
-        /**
-         * This function has been taken from
-         * https://medium.com/react-in-depth/the-how-and-why-on-reacts-usage-of-linked-list-in-fiber-67f1014d0eb7
-         */
-        _walk(doWork) {
-            let root = this;
-            let current = this;
-            while (true) {
-                const child = doWork(current);
-                if (child) {
-                    current = child;
-                    continue;
+        mountNode(node, target, options) {
+            const promise = new Promise((resolve, reject) => {
+                let isResolved = false;
+                // manually set a onMounted callback.
+                // that way, we are independant from the current node.
+                node.mounted.push(() => {
+                    resolve(node.component);
+                    isResolved = true;
+                });
+                // Manually add the last resort error handler on the node
+                let handlers = nodeErrorHandlers.get(node);
+                if (!handlers) {
+                    handlers = [];
+                    nodeErrorHandlers.set(node, handlers);
                 }
-                if (current === root) {
-                    return;
-                }
-                while (!current.sibling) {
-                    if (!current.parent || current.parent === root) {
-                        return;
-                    }
-                    current = current.parent;
-                }
-                current = current.sibling;
-            }
-        }
-        /**
-         * Successfully complete the work of the fiber: call the mount or patch hooks
-         * and patch the DOM. This function is called once the fiber and its children
-         * are ready, and the scheduler decides to process it.
-         */
-        complete() {
-            let component = this.component;
-            this.isCompleted = true;
-            const status = component.__owl__.status;
-            if (status === 5 /* DESTROYED */) {
-                return;
-            }
-            // build patchQueue
-            const patchQueue = [];
-            const doWork = function (f) {
-                f.component.__owl__.currentFiber = null;
-                patchQueue.push(f);
-                return f.child;
-            };
-            this._walk(doWork);
-            const patchLen = patchQueue.length;
-            // call willPatch hook on each fiber of patchQueue
-            if (status === 3 /* MOUNTED */) {
-                for (let i = 0; i < patchLen; i++) {
-                    const fiber = patchQueue[i];
-                    if (fiber.shouldPatch) {
-                        component = fiber.component;
-                        if (component.__owl__.willPatchCB) {
-                            component.__owl__.willPatchCB();
-                        }
-                        component.willPatch();
-                    }
-                }
-            }
-            // call __patch on each fiber of (reversed) patchQueue
-            for (let i = patchLen - 1; i >= 0; i--) {
-                const fiber = patchQueue[i];
-                component = fiber.component;
-                if (fiber.target && i === 0) {
-                    let target;
-                    if (fiber.position === "self") {
-                        target = fiber.target;
-                        if (target.tagName.toLowerCase() !== fiber.vnode.sel) {
-                            throw new Error(`Cannot attach '${component.constructor.name}' to target node (not same tag name)`);
-                        }
-                        // In self mode, we *know* we are to take possession of the target
-                        // Hence we manually create the corresponding VNode and copy the "key" in data
-                        const selfVnodeData = fiber.vnode.data ? { key: fiber.vnode.data.key } : {};
-                        const selfVnode = h(fiber.vnode.sel, selfVnodeData);
-                        selfVnode.elm = target;
-                        target = selfVnode;
+                handlers.unshift((e) => {
+                    if (isResolved) {
+                        console.error(e);
                     }
                     else {
-                        target = component.__owl__.vnode || document.createElement(fiber.vnode.sel);
+                        reject(e);
                     }
-                    component.__patch(target, fiber.vnode);
-                }
-                else {
-                    const vnode = component.__owl__.vnode;
-                    if (fiber.shouldPatch && vnode) {
-                        component.__patch(vnode, fiber.vnode);
-                        // When updating a Component's props (in directive),
-                        // the component has a pvnode AND should be patched.
-                        // However, its pvnode.elm may have changed if it is a High Order Component
-                        if (component.__owl__.pvnode) {
-                            component.__owl__.pvnode.elm = component.__owl__.vnode.elm;
-                        }
-                    }
-                    else {
-                        component.__patch(document.createElement(fiber.vnode.sel), fiber.vnode);
-                        component.__owl__.pvnode.elm = component.__owl__.vnode.elm;
-                    }
-                }
-            }
-            // insert into the DOM (mount case)
-            let inDOM = false;
-            if (this.target) {
-                switch (this.position) {
-                    case "first-child":
-                        this.target.prepend(this.component.el);
-                        break;
-                    case "last-child":
-                        this.target.appendChild(this.component.el);
-                        break;
-                }
-                inDOM = document.body.contains(this.component.el);
-                this.component.env.qweb.trigger("dom-appended");
-            }
-            // call patched/mounted hook on each fiber of (reversed) patchQueue
-            if (status === 3 /* MOUNTED */ || inDOM) {
-                for (let i = patchLen - 1; i >= 0; i--) {
-                    const fiber = patchQueue[i];
-                    component = fiber.component;
-                    if (fiber.shouldPatch && !this.target) {
-                        component.patched();
-                        if (component.__owl__.patchedCB) {
-                            component.__owl__.patchedCB();
-                        }
-                    }
-                    else {
-                        component.__callMounted();
-                    }
-                }
-            }
-            else {
-                for (let i = patchLen - 1; i >= 0; i--) {
-                    const fiber = patchQueue[i];
-                    component = fiber.component;
-                    component.__owl__.status = 4 /* UNMOUNTED */;
-                }
-            }
-        }
-        /**
-         * Cancel a fiber and all its children.
-         */
-        cancel() {
-            this._walk((f) => {
-                if (!f.isRendered) {
-                    f.root.counter--;
-                }
-                f.isCompleted = true;
-                return f.child;
+                    throw e;
+                });
             });
+            node.mountComponent(target, options);
+            return promise;
         }
-        /**
-         * This is the global error handler for errors occurring in Owl main lifecycle
-         * methods.  Caught errors are triggered on the QWeb instance, and are
-         * potentially given to some parent component which implements `catchError`.
-         *
-         * If there are no such component, we destroy everything. This is better than
-         * being in a corrupted state.
-         */
-        handleError(error) {
-            let component = this.component;
-            this.vnode = component.__owl__.vnode || h("div");
-            const qweb = component.env.qweb;
-            let root = component;
-            function handle(error) {
-                let canCatch = false;
-                qweb.trigger("error", error);
-                while (component && !(canCatch = !!component.catchError)) {
-                    root = component;
-                    component = component.__owl__.parent;
+        destroy() {
+            if (this.root) {
+                this.root.destroy();
+            }
+        }
+    }
+    App.validateTarget = validateTarget;
+    async function mount(C, target, config = {}) {
+        return new App(C, config).mount(target, config);
+    }
+
+    function status(component) {
+        switch (component.__owl__.status) {
+            case 0 /* NEW */:
+                return "new";
+            case 1 /* MOUNTED */:
+                return "mounted";
+            case 2 /* DESTROYED */:
+                return "destroyed";
+        }
+    }
+
+    class Memo extends Component {
+        constructor(props, env, node) {
+            super(props, env, node);
+            // prevent patching process conditionally
+            let applyPatch = false;
+            const patchFn = node.patch;
+            node.patch = () => {
+                if (applyPatch) {
+                    patchFn.call(node);
+                    applyPatch = false;
                 }
-                if (canCatch) {
-                    try {
-                        component.catchError(error);
-                    }
-                    catch (e) {
-                        root = component;
-                        component = component.__owl__.parent;
-                        return handle(e);
-                    }
-                    return true;
+            };
+            // check props change, and render/apply patch if it changed
+            let prevProps = props;
+            const updateAndRender = node.updateAndRender;
+            node.updateAndRender = function (props, parentFiber) {
+                const shouldUpdate = !shallowEqual(prevProps, props);
+                if (shouldUpdate) {
+                    prevProps = props;
+                    updateAndRender.call(node, props, parentFiber);
+                    applyPatch = true;
                 }
+                return Promise.resolve();
+            };
+        }
+    }
+    Memo.template = xml`<t t-slot="default"/>`;
+    /**
+     * we assume that each object have the same set of keys
+     */
+    function shallowEqual(p1, p2) {
+        for (let k in p1) {
+            if (k !== "slots" && p1[k] !== p2[k]) {
                 return false;
             }
-            let isHandled = handle(error);
-            if (!isHandled) {
-                // the 3 next lines aim to mark the root fiber as being in error, and
-                // to force it to end, without waiting for its children
-                this.root.counter = 0;
-                this.root.error = error;
-                scheduler.flush();
-                // at this point, the state of the application is corrupted and we could
-                // have a lot of issues or crashes. So we destroy the application in a try
-                // catch and swallow these errors because the fiber is already in error,
-                // and this is the actual issue that needs to be solved, not those followup
-                // errors.
-                try {
-                    root.destroy();
-                }
-                catch (e) { }
-            }
         }
-    }
-    Fiber.nextId = 1;
-
-    //------------------------------------------------------------------------------
-    // Prop validation helper
-    //------------------------------------------------------------------------------
-    /**
-     * Validate the component props (or next props) against the (static) props
-     * description.  This is potentially an expensive operation: it may needs to
-     * visit recursively the props and all the children to check if they are valid.
-     * This is why it is only done in 'dev' mode.
-     */
-    QWeb.utils.validateProps = function (Widget, props) {
-        const propsDef = Widget.props;
-        if (propsDef instanceof Array) {
-            // list of strings (prop names)
-            for (let i = 0, l = propsDef.length; i < l; i++) {
-                const propName = propsDef[i];
-                if (propName[propName.length - 1] === "?") {
-                    // optional prop
-                    break;
-                }
-                if (!(propName in props)) {
-                    throw new Error(`Missing props '${propsDef[i]}' (component '${Widget.name}')`);
-                }
-            }
-            for (let key in props) {
-                if (!propsDef.includes(key) && !propsDef.includes(key + "?")) {
-                    throw new Error(`Unknown prop '${key}' given to component '${Widget.name}'`);
-                }
-            }
-        }
-        else if (propsDef) {
-            // propsDef is an object now
-            for (let propName in propsDef) {
-                if (props[propName] === undefined) {
-                    if (propsDef[propName] && !propsDef[propName].optional) {
-                        throw new Error(`Missing props '${propName}' (component '${Widget.name}')`);
-                    }
-                    else {
-                        continue;
-                    }
-                }
-                let isValid;
-                try {
-                    isValid = isValidProp(props[propName], propsDef[propName]);
-                }
-                catch (e) {
-                    e.message = `Invalid prop '${propName}' in component ${Widget.name} (${e.message})`;
-                    throw e;
-                }
-                if (!isValid) {
-                    throw new Error(`Invalid Prop '${propName}' in component '${Widget.name}'`);
-                }
-            }
-            for (let propName in props) {
-                if (!(propName in propsDef)) {
-                    throw new Error(`Unknown prop '${propName}' given to component '${Widget.name}'`);
-                }
-            }
-        }
-    };
-    /**
-     * Check if an invidual prop value matches its (static) prop definition
-     */
-    function isValidProp(prop, propDef) {
-        if (propDef === true) {
-            return true;
-        }
-        if (typeof propDef === "function") {
-            // Check if a value is constructed by some Constructor.  Note that there is a
-            // slight abuse of language: we want to consider primitive values as well.
-            //
-            // So, even though 1 is not an instance of Number, we want to consider that
-            // it is valid.
-            if (typeof prop === "object") {
-                return prop instanceof propDef;
-            }
-            return typeof prop === propDef.name.toLowerCase();
-        }
-        else if (propDef instanceof Array) {
-            // If this code is executed, this means that we want to check if a prop
-            // matches at least one of its descriptor.
-            let result = false;
-            for (let i = 0, iLen = propDef.length; i < iLen; i++) {
-                result = result || isValidProp(prop, propDef[i]);
-            }
-            return result;
-        }
-        // propsDef is an object
-        if (propDef.optional && prop === undefined) {
-            return true;
-        }
-        let result = propDef.type ? isValidProp(prop, propDef.type) : true;
-        if (propDef.validate) {
-            result = result && propDef.validate(prop);
-        }
-        if (propDef.type === Array && propDef.element) {
-            for (let i = 0, iLen = prop.length; i < iLen; i++) {
-                result = result && isValidProp(prop[i], propDef.element);
-            }
-        }
-        if (propDef.type === Object && propDef.shape) {
-            const shape = propDef.shape;
-            for (let key in shape) {
-                result = result && isValidProp(prop[key], shape[key]);
-            }
-            if (result) {
-                for (let propName in prop) {
-                    if (!(propName in shape)) {
-                        throw new Error(`unknown prop '${propName}'`);
-                    }
-                }
-            }
-        }
-        return result;
+        return true;
     }
 
+    // Allows to get the target of a Reactive (used for making a new Reactive from the underlying object)
+    const TARGET = Symbol("Target");
+    // Escape hatch to prevent reactivity system to turn something into a reactive
+    const SKIP = Symbol("Skip");
+    // Special key to subscribe to, to be notified of key creation/deletion
+    const KEYCHANGES = Symbol("Key changes");
+    const objectToString = Object.prototype.toString;
     /**
-     * Owl Style System
+     * Checks whether a given value can be made into a reactive object.
      *
-     * This files contains the Owl code related to processing (extended) css strings
-     * and creating/adding <style> tags to the document head.
+     * @param value the value to check
+     * @returns whether the value can be made reactive
      */
-    const STYLESHEETS = {};
-    function processSheet(str) {
-        const tokens = str.split(/(\{|\}|;)/).map((s) => s.trim());
-        const selectorStack = [];
-        const parts = [];
-        let rules = [];
-        function generateSelector(stackIndex, parentSelector) {
-            const parts = [];
-            for (const selector of selectorStack[stackIndex]) {
-                let part = (parentSelector && parentSelector + " " + selector) || selector;
-                if (part.includes("&")) {
-                    part = selector.replace(/&/g, parentSelector || "");
-                }
-                if (stackIndex < selectorStack.length - 1) {
-                    part = generateSelector(stackIndex + 1, part);
-                }
-                parts.push(part);
-            }
-            return parts.join(", ");
+    function canBeMadeReactive(value) {
+        if (typeof value !== "object") {
+            return false;
         }
-        function generateRules() {
-            if (rules.length) {
-                parts.push(generateSelector(0) + " {");
-                parts.push(...rules);
-                parts.push("}");
-                rules = [];
-            }
-        }
-        while (tokens.length) {
-            let token = tokens.shift();
-            if (token === "}") {
-                generateRules();
-                selectorStack.pop();
-            }
-            else {
-                if (tokens[0] === "{") {
-                    generateRules();
-                    selectorStack.push(token.split(/\s*,\s*/));
-                    tokens.shift();
-                }
-                if (tokens[0] === ";") {
-                    rules.push("  " + token + ";");
-                }
-            }
-        }
-        return parts.join("\n");
+        // extract "RawType" from strings like "[object RawType]" => this lets us
+        // ignore many native objects such as Promise (whose toString is [object Promise])
+        // or Date ([object Date]).
+        const rawType = objectToString.call(value).slice(8, -1);
+        return rawType === "Object" || rawType === "Array";
     }
-    function registerSheet(id, css) {
-        const sheet = document.createElement("style");
-        sheet.innerHTML = processSheet(css);
-        STYLESHEETS[id] = sheet;
+    /**
+     * Mark an object or array so that it is ignored by the reactivity system
+     *
+     * @param value the value to mark
+     * @returns the object itself
+     */
+    function markRaw(value) {
+        value[SKIP] = true;
+        return value;
     }
-    function activateSheet(id, name) {
-        const sheet = STYLESHEETS[id];
-        if (!sheet) {
-            throw new Error(`Invalid css stylesheet for component '${name}'. Did you forget to use the 'css' tag helper?`);
-        }
-        sheet.setAttribute("component", name);
-        document.head.appendChild(sheet);
+    /**
+     * Given a reactive objet, return the raw (non reactive) underlying object
+     *
+     * @param value a reactive value
+     * @returns the underlying value
+     */
+    function toRaw(value) {
+        return value[TARGET];
     }
-
-    var STATUS;
-    (function (STATUS) {
-        STATUS[STATUS["CREATED"] = 0] = "CREATED";
-        STATUS[STATUS["WILLSTARTED"] = 1] = "WILLSTARTED";
-        STATUS[STATUS["RENDERED"] = 2] = "RENDERED";
-        STATUS[STATUS["MOUNTED"] = 3] = "MOUNTED";
-        STATUS[STATUS["UNMOUNTED"] = 4] = "UNMOUNTED";
-        STATUS[STATUS["DESTROYED"] = 5] = "DESTROYED";
-    })(STATUS || (STATUS = {}));
-    const portalSymbol = Symbol("portal"); // FIXME
-    //------------------------------------------------------------------------------
-    // Component
-    //------------------------------------------------------------------------------
-    let nextId = 1;
-    class Component {
-        //--------------------------------------------------------------------------
-        // Lifecycle
-        //--------------------------------------------------------------------------
-        /**
-         * Creates an instance of Component.
-         *
-         * Note that most of the time, only the root component needs to be created by
-         * hand.  Other components should be created automatically by the framework (with
-         * the t-component directive in a template)
-         */
-        constructor(parent, props) {
-            Component.current = this;
-            let constr = this.constructor;
-            const defaultProps = constr.defaultProps;
-            if (defaultProps) {
-                props = props || {};
-                this.__applyDefaultProps(props, defaultProps);
-            }
-            this.props = props;
-            if (QWeb.dev) {
-                QWeb.utils.validateProps(constr, this.props);
-            }
-            const id = nextId++;
-            let depth;
-            if (parent) {
-                this.env = parent.env;
-                const __powl__ = parent.__owl__;
-                __powl__.children[id] = this;
-                depth = __powl__.depth + 1;
-            }
-            else {
-                // we are the root component
-                this.env = this.constructor.env;
-                if (!this.env.qweb) {
-                    this.env.qweb = new QWeb();
-                }
-                // TODO: remove this in owl 2.0
-                if (!this.env.browser) {
-                    this.env.browser = browser;
-                }
-                this.env.qweb.on("update", this, () => {
-                    switch (this.__owl__.status) {
-                        case 3 /* MOUNTED */:
-                            this.render(true);
-                            break;
-                        case 5 /* DESTROYED */:
-                            // this is unlikely to happen, but if a root widget is destroyed,
-                            // we want to remove our subscription.  The usual way to do that
-                            // would be to perform some check in the destroy method, but since
-                            // it is very performance sensitive, and since this is a rare event,
-                            // we simply do it lazily
-                            this.env.qweb.off("update", this);
-                            break;
-                    }
-                });
-                depth = 0;
-            }
-            const qweb = this.env.qweb;
-            const template = constr.template || this.__getTemplate(qweb);
-            this.__owl__ = {
-                id: id,
-                depth: depth,
-                vnode: null,
-                pvnode: null,
-                status: 0 /* CREATED */,
-                parent: parent || null,
-                children: {},
-                cmap: {},
-                currentFiber: null,
-                parentLastFiberId: 0,
-                boundHandlers: {},
-                mountedCB: null,
-                willUnmountCB: null,
-                willPatchCB: null,
-                patchedCB: null,
-                willStartCB: null,
-                willUpdatePropsCB: null,
-                observer: null,
-                renderFn: qweb.render.bind(qweb, template),
-                classObj: null,
-                refs: null,
-                scope: null,
-            };
-            if (constr.style) {
-                this.__applyStyles(constr);
-            }
-            this.setup();
+    const targetToKeysToCallbacks = new WeakMap();
+    /**
+     * Observes a given key on a target with an callback. The callback will be
+     * called when the given key changes on the target.
+     *
+     * @param target the target whose key should be observed
+     * @param key the key to observe (or Symbol(KEYCHANGES) for key creation
+     *  or deletion)
+     * @param callback the function to call when the key changes
+     */
+    function observeTargetKey(target, key, callback) {
+        if (!targetToKeysToCallbacks.get(target)) {
+            targetToKeysToCallbacks.set(target, new Map());
         }
-        /**
-         * The `el` is the root element of the component.  Note that it could be null:
-         * this is the case if the component is not mounted yet, or is destroyed.
-         */
-        get el() {
-            return this.__owl__.vnode ? this.__owl__.vnode.elm : null;
+        const keyToCallbacks = targetToKeysToCallbacks.get(target);
+        if (!keyToCallbacks.get(key)) {
+            keyToCallbacks.set(key, new Set());
         }
-        /**
-         * setup is run just after the component is constructed. This is the standard
-         * location where the component can setup its hooks. It has some advantages
-         * over the constructor:
-         *  - it can be patched (useful in odoo ecosystem)
-         *  - it does not need to propagate the arguments to the super call
-         *
-         * Note: this method should not be called manually.
-         */
-        setup() { }
-        /**
-         * willStart is an asynchronous hook that can be implemented to perform some
-         * action before the initial rendering of a component.
-         *
-         * It will be called exactly once before the initial rendering. It is useful
-         * in some cases, for example, to load external assets (such as a JS library)
-         * before the component is rendered.
-         *
-         * Note that a slow willStart method will slow down the rendering of the user
-         * interface.  Therefore, some effort should be made to make this method as
-         * fast as possible.
-         *
-         * Note: this method should not be called manually.
-         */
-        async willStart() { }
-        /**
-         * mounted is a hook that is called each time a component is attached to the
-         * DOM. This is a good place to add some listeners, or to interact with the
-         * DOM, if the component needs to perform some measure for example.
-         *
-         * Note: this method should not be called manually.
-         *
-         * @see willUnmount
-         */
-        mounted() { }
-        /**
-         * The willUpdateProps is an asynchronous hook, called just before new props
-         * are set. This is useful if the component needs some asynchronous task
-         * performed, depending on the props (for example, assuming that the props are
-         * some record Id, fetching the record data).
-         *
-         * This hook is not called during the first render (but willStart is called
-         * and performs a similar job).
-         */
-        async willUpdateProps(nextProps) { }
-        /**
-         * The willPatch hook is called just before the DOM patching process starts.
-         * It is not called on the initial render.  This is useful to get some
-         * information which are in the DOM.  For example, the current position of the
-         * scrollbar
-         */
-        willPatch() { }
-        /**
-         * This hook is called whenever a component did actually update its props,
-         * state or env.
-         *
-         * This method is not called on the initial render. It is useful to interact
-         * with the DOM (for example, through an external library) whenever the
-         * component was updated.
-         *
-         * Updating the component state in this hook is possible, but not encouraged.
-         * One need to be careful, because updates here will cause rerender, which in
-         * turn will cause other calls to updated. So, we need to be particularly
-         * careful at avoiding endless cycles.
-         */
-        patched() { }
-        /**
-         * willUnmount is a hook that is called each time just before a component is
-         * unmounted from the DOM. This is a good place to remove some listeners, for
-         * example.
-         *
-         * Note: this method should not be called manually.
-         *
-         * @see mounted
-         */
-        willUnmount() { }
-        //--------------------------------------------------------------------------
-        // Public
-        //--------------------------------------------------------------------------
-        /**
-         * Mount the component to a target element.
-         *
-         * This should only be done if the component was created manually. Components
-         * created declaratively in templates are managed by the Owl system.
-         *
-         * Note that a component can be mounted an unmounted several times
-         */
-        async mount(target, options = {}) {
-            if (!(target instanceof HTMLElement || target instanceof DocumentFragment)) {
-                let message = `Component '${this.constructor.name}' cannot be mounted: the target is not a valid DOM node.`;
-                message += `\nMaybe the DOM is not ready yet? (in that case, you can use owl.utils.whenReady)`;
-                throw new Error(message);
+        keyToCallbacks.get(key).add(callback);
+        if (!callbacksToTargets.has(callback)) {
+            callbacksToTargets.set(callback, new Set());
+        }
+        callbacksToTargets.get(callback).add(target);
+    }
+    /**
+     * Notify Reactives that are observing a given target that a key has changed on
+     * the target.
+     *
+     * @param target target whose Reactives should be notified that the target was
+     *  changed.
+     * @param key the key that changed (or Symbol `KEYCHANGES` if a key was created
+     *   or deleted)
+     */
+    function notifyReactives(target, key) {
+        const keyToCallbacks = targetToKeysToCallbacks.get(target);
+        if (!keyToCallbacks) {
+            return;
+        }
+        const callbacks = keyToCallbacks.get(key);
+        if (!callbacks) {
+            return;
+        }
+        // Loop on copy because clearReactivesForCallback will modify the set in place
+        for (const callback of [...callbacks]) {
+            clearReactivesForCallback(callback);
+            callback();
+        }
+    }
+    const callbacksToTargets = new WeakMap();
+    /**
+     * Clears all subscriptions of the Reactives associated with a given callback.
+     *
+     * @param callback the callback for which the reactives need to be cleared
+     */
+    function clearReactivesForCallback(callback) {
+        const targetsToClear = callbacksToTargets.get(callback);
+        if (!targetsToClear) {
+            return;
+        }
+        for (const target of targetsToClear) {
+            const observedKeys = targetToKeysToCallbacks.get(target);
+            if (!observedKeys) {
+                continue;
             }
-            const position = options.position || "last-child";
-            const __owl__ = this.__owl__;
-            const currentFiber = __owl__.currentFiber;
-            switch (__owl__.status) {
-                case 0 /* CREATED */: {
-                    const fiber = new Fiber(null, this, true, target, position);
-                    fiber.shouldPatch = false;
-                    this.__prepareAndRender(fiber, () => { });
-                    return scheduler.addFiber(fiber);
-                }
-                case 1 /* WILLSTARTED */:
-                case 2 /* RENDERED */:
-                    currentFiber.target = target;
-                    currentFiber.position = position;
-                    return scheduler.addFiber(currentFiber);
-                case 4 /* UNMOUNTED */: {
-                    const fiber = new Fiber(null, this, true, target, position);
-                    fiber.shouldPatch = false;
-                    this.__render(fiber);
-                    return scheduler.addFiber(fiber);
-                }
-                case 3 /* MOUNTED */: {
-                    if (position !== "self" && this.el.parentNode !== target) {
-                        const fiber = new Fiber(null, this, true, target, position);
-                        fiber.shouldPatch = false;
-                        this.__render(fiber);
-                        return scheduler.addFiber(fiber);
-                    }
-                    else {
-                        return Promise.resolve();
-                    }
-                }
-                case 5 /* DESTROYED */:
-                    throw new Error("Cannot mount a destroyed component");
+            for (const callbacks of observedKeys.values()) {
+                callbacks.delete(callback);
             }
         }
-        /**
-         * The unmount method is the opposite of the mount method.  It is useful
-         * to call willUnmount calls and remove the component from the DOM.
-         */
-        unmount() {
-            if (this.__owl__.status === 3 /* MOUNTED */) {
-                this.__callWillUnmount();
-                this.el.remove();
-            }
+        targetsToClear.clear();
+    }
+    const reactiveCache = new WeakMap();
+    /**
+     * Creates a reactive proxy for an object. Reading data on the reactive object
+     * subscribes to changes to the data. Writing data on the object will cause the
+     * notify callback to be called if there are suscriptions to that data. Nested
+     * objects and arrays are automatically made reactive as well.
+     *
+     * Whenever you are notified of a change, all subscriptions are cleared, and if
+     * you would like to be notified of any further changes, you should go read
+     * the underlying data again. We assume that if you don't go read it again after
+     * being notified, it means that you are no longer interested in that data.
+     *
+     * Subscriptions:
+     * + Reading a property on an object will subscribe you to changes in the value
+     *    of that property.
+     * + Accessing an object keys (eg with Object.keys or with `for..in`) will
+     *    subscribe you to the creation/deletion of keys. Checking the presence of a
+     *    key on the object with 'in' has the same effect.
+     * - getOwnPropertyDescriptor does not currently subscribe you to the property.
+     *    This is a choice that was made because changing a key's value will trigger
+     *    this trap and we do not want to subscribe by writes. This also means that
+     *    Object.hasOwnProperty doesn't subscribe as it goes through this trap.
+     *
+     * @param target the object for which to create a reactive proxy
+     * @param callback the function to call when an observed property of the
+     *  reactive has changed
+     * @returns a proxy that tracks changes to it
+     */
+    function reactive(target, callback = () => { }) {
+        if (!canBeMadeReactive(target)) {
+            throw new Error(`Cannot make the given value reactive`);
         }
-        /**
-         * The render method is the main entry point to render a component (once it
-         * is ready. This method is not initially called when the component is
-         * rendered the first time).
-         *
-         * This method will cause all its sub components to potentially rerender
-         * themselves.  Note that `render` is not called if a component is updated via
-         * its props.
-         */
-        async render(force = false) {
-            const __owl__ = this.__owl__;
-            const currentFiber = __owl__.currentFiber;
-            if (!__owl__.vnode && !currentFiber) {
-                return;
-            }
-            if (currentFiber && !currentFiber.isRendered && !currentFiber.isCompleted) {
-                return scheduler.addFiber(currentFiber.root);
-            }
-            // if we aren't mounted at this point, it implies that there is a
-            // currentFiber that is already rendered (isRendered is true), so we are
-            // about to be mounted
-            const status = __owl__.status;
-            const fiber = new Fiber(null, this, force, null, null);
-            Promise.resolve().then(() => {
-                if (__owl__.status === 3 /* MOUNTED */ || status !== 3 /* MOUNTED */) {
-                    if (fiber.isCompleted || fiber.isRendered) {
-                        return;
+        if (SKIP in target) {
+            return target;
+        }
+        const originalTarget = target[TARGET];
+        if (originalTarget) {
+            return reactive(originalTarget, callback);
+        }
+        if (!reactiveCache.has(target)) {
+            reactiveCache.set(target, new Map());
+        }
+        const reactivesForTarget = reactiveCache.get(target);
+        if (!reactivesForTarget.has(callback)) {
+            const proxy = new Proxy(target, {
+                get(target, key, proxy) {
+                    if (key === TARGET) {
+                        return target;
                     }
-                    this.__render(fiber);
-                }
-                else {
-                    // we were mounted when render was called, but we aren't anymore, so we
-                    // were actually about to be unmounted ; we can thus forget about this
-                    // fiber
-                    fiber.isCompleted = true;
-                    __owl__.currentFiber = null;
-                }
+                    observeTargetKey(target, key, callback);
+                    const value = Reflect.get(target, key, proxy);
+                    if (!canBeMadeReactive(value)) {
+                        return value;
+                    }
+                    return reactive(value, callback);
+                },
+                set(target, key, value, proxy) {
+                    const isNewKey = !Object.hasOwnProperty.call(target, key);
+                    const originalValue = Reflect.get(target, key, proxy);
+                    const ret = Reflect.set(target, key, value, proxy);
+                    if (isNewKey) {
+                        notifyReactives(target, KEYCHANGES);
+                    }
+                    // While Array length may trigger the set trap, it's not actually set by this
+                    // method but is updated behind the scenes, and the trap is not called with the
+                    // new value. We disable the "same-value-optimization" for it because of that.
+                    if (originalValue !== value || (Array.isArray(target) && key === "length")) {
+                        notifyReactives(target, key);
+                    }
+                    return ret;
+                },
+                deleteProperty(target, key) {
+                    const ret = Reflect.deleteProperty(target, key);
+                    notifyReactives(target, KEYCHANGES);
+                    notifyReactives(target, key);
+                    return ret;
+                },
+                ownKeys(target) {
+                    observeTargetKey(target, KEYCHANGES, callback);
+                    return Reflect.ownKeys(target);
+                },
+                has(target, key) {
+                    // TODO: this observes all key changes instead of only the presence of the argument key
+                    observeTargetKey(target, KEYCHANGES, callback);
+                    return Reflect.has(target, key);
+                },
             });
-            return scheduler.addFiber(fiber);
+            reactivesForTarget.set(callback, proxy);
         }
-        /**
-         * Destroy the component.  This operation is quite complex:
-         *  - it recursively destroy all children
-         *  - call the willUnmount hooks if necessary
-         *  - remove the dom node from the dom
-         *
-         * This should only be called manually if you created the component.  Most
-         * components will be automatically destroyed.
-         */
-        destroy() {
-            const __owl__ = this.__owl__;
-            if (__owl__.status !== 5 /* DESTROYED */) {
-                const el = this.el;
-                this.__destroy(__owl__.parent);
-                if (el) {
-                    el.remove();
-                }
-            }
-        }
-        /**
-         * This method is called by the component system whenever its props are
-         * updated. If it returns true, then the component will be rendered.
-         * Otherwise, it will skip the rendering (also, its props will not be updated)
-         */
-        shouldUpdate(nextProps) {
-            return true;
-        }
-        /**
-         * Emit a custom event of type 'eventType' with the given 'payload' on the
-         * component's el, if it exists. However, note that the event will only bubble
-         * up to the parent DOM nodes. Thus, it must be called between mounted() and
-         * willUnmount().
-         */
-        trigger(eventType, payload) {
-            this.__trigger(this, eventType, payload);
-        }
-        //--------------------------------------------------------------------------
-        // Private
-        //--------------------------------------------------------------------------
-        /**
-         * Private helper to perform a full destroy, from the point of view of an Owl
-         * component. It does not remove the el (this is done only once on the top
-         * level destroyed component, for performance reasons).
-         *
-         * The job of this method is mostly to call willUnmount hooks, and to perform
-         * all necessary internal cleanup.
-         *
-         * Note that it does not call the __callWillUnmount method to avoid visiting
-         * all children many times.
-         */
-        __destroy(parent) {
-            const __owl__ = this.__owl__;
-            if (__owl__.status === 3 /* MOUNTED */) {
-                if (__owl__.willUnmountCB) {
-                    __owl__.willUnmountCB();
-                }
-                this.willUnmount();
-                __owl__.status = 4 /* UNMOUNTED */;
-            }
-            const children = __owl__.children;
-            for (let key in children) {
-                children[key].__destroy(this);
-            }
-            if (parent) {
-                let id = __owl__.id;
-                delete parent.__owl__.children[id];
-                __owl__.parent = null;
-            }
-            __owl__.status = 5 /* DESTROYED */;
-            delete __owl__.vnode;
-            if (__owl__.currentFiber) {
-                __owl__.currentFiber.isCompleted = true;
-            }
-        }
-        __callMounted() {
-            const __owl__ = this.__owl__;
-            __owl__.status = 3 /* MOUNTED */;
-            this.mounted();
-            if (__owl__.mountedCB) {
-                __owl__.mountedCB();
-            }
-        }
-        __callWillUnmount() {
-            const __owl__ = this.__owl__;
-            if (__owl__.willUnmountCB) {
-                __owl__.willUnmountCB();
-            }
-            this.willUnmount();
-            __owl__.status = 4 /* UNMOUNTED */;
-            if (__owl__.currentFiber) {
-                __owl__.currentFiber.isCompleted = true;
-                __owl__.currentFiber.root.counter = 0;
-            }
-            const children = __owl__.children;
-            for (let id in children) {
-                const comp = children[id];
-                if (comp.__owl__.status === 3 /* MOUNTED */) {
-                    comp.__callWillUnmount();
-                }
-            }
-        }
-        /**
-         * Private trigger method, allows to choose the component which triggered
-         * the event in the first place
-         */
-        __trigger(component, eventType, payload) {
-            if (this.el) {
-                const ev = new OwlEvent(component, eventType, {
-                    bubbles: true,
-                    cancelable: true,
-                    detail: payload,
-                });
-                const triggerHook = this.env[portalSymbol];
-                if (triggerHook) {
-                    triggerHook(ev);
-                }
-                this.el.dispatchEvent(ev);
-            }
-        }
-        /**
-         * The __updateProps method is called by the t-component directive whenever
-         * it updates a component (so, when the parent template is rerendered).
-         */
-        async __updateProps(nextProps, parentFiber, scope) {
-            this.__owl__.scope = scope;
-            const shouldUpdate = parentFiber.force || this.shouldUpdate(nextProps);
-            if (shouldUpdate) {
-                const __owl__ = this.__owl__;
-                const fiber = new Fiber(parentFiber, this, parentFiber.force, null, null);
-                if (!parentFiber.child) {
-                    parentFiber.child = fiber;
-                }
-                else {
-                    parentFiber.lastChild.sibling = fiber;
-                }
-                parentFiber.lastChild = fiber;
-                const defaultProps = this.constructor.defaultProps;
-                if (defaultProps) {
-                    this.__applyDefaultProps(nextProps, defaultProps);
-                }
-                if (QWeb.dev) {
-                    QWeb.utils.validateProps(this.constructor, nextProps);
-                }
-                await Promise.all([
-                    this.willUpdateProps(nextProps),
-                    __owl__.willUpdatePropsCB && __owl__.willUpdatePropsCB(nextProps),
-                ]);
-                if (fiber.isCompleted) {
-                    return;
-                }
-                this.props = nextProps;
-                this.__render(fiber);
-            }
-        }
-        /**
-         * Main patching method. We call the virtual dom patch method here to convert
-         * a virtual dom vnode into some actual dom.
-         */
-        __patch(target, vnode) {
-            this.__owl__.vnode = patch(target, vnode);
-        }
-        /**
-         * The __prepare method is only called by the t-component directive, when a
-         * subcomponent is created. It gets its scope, if any, from the
-         * parent template.
-         */
-        __prepare(parentFiber, scope, cb) {
-            this.__owl__.scope = scope;
-            const fiber = new Fiber(parentFiber, this, parentFiber.force, null, null);
-            fiber.shouldPatch = false;
-            if (!parentFiber.child) {
-                parentFiber.child = fiber;
-            }
-            else {
-                parentFiber.lastChild.sibling = fiber;
-            }
-            parentFiber.lastChild = fiber;
-            this.__prepareAndRender(fiber, cb);
-            return fiber;
-        }
-        /**
-         * Apply the stylesheets defined by the component. Note that we need to make
-         * sure all inherited stylesheets are applied as well.  We then delete the
-         * `style` key from the constructor to make sure we do not apply it again.
-         */
-        __applyStyles(constr) {
-            while (constr && constr.style) {
-                if (constr.hasOwnProperty("style")) {
-                    activateSheet(constr.style, constr.name);
-                    delete constr.style;
-                }
-                constr = constr.__proto__;
-            }
-        }
-        __getTemplate(qweb) {
-            let p = this.constructor;
-            if (!p.hasOwnProperty("_template")) {
-                // here, the component and none of its superclasses defines a static `template`
-                // key. So we fall back on looking for a template matching its name (or
-                // one of its subclass).
-                let template = p.name;
-                while (!(template in qweb.templates) && p !== Component) {
-                    p = p.__proto__;
-                    template = p.name;
-                }
-                if (p === Component) {
-                    throw new Error(`Could not find template for component "${this.constructor.name}"`);
-                }
-                else {
-                    p._template = template;
-                }
-            }
-            return p._template;
-        }
-        async __prepareAndRender(fiber, cb) {
-            try {
-                const proms = Promise.all([
-                    this.willStart(),
-                    this.__owl__.willStartCB && this.__owl__.willStartCB(),
-                ]);
-                this.__owl__.status = 1 /* WILLSTARTED */;
-                await proms;
-                if (this.__owl__.status === 5 /* DESTROYED */) {
-                    return Promise.resolve();
-                }
-            }
-            catch (e) {
-                fiber.handleError(e);
-                return Promise.resolve();
-            }
-            if (!fiber.isCompleted) {
-                this.__render(fiber);
-                this.__owl__.status = 2 /* RENDERED */;
-                cb();
-            }
-        }
-        __render(fiber) {
-            const __owl__ = this.__owl__;
-            if (__owl__.observer) {
-                __owl__.observer.allowMutations = false;
-            }
-            let error;
-            try {
-                let vnode = __owl__.renderFn(this, {
-                    handlers: __owl__.boundHandlers,
-                    fiber: fiber,
-                });
-                // we iterate over the children to detect those that no longer belong to the
-                // current rendering: those ones, if not mounted yet, can (and have to) be
-                // destroyed right now, because they are not in the DOM, and thus we won't
-                // be notified later on (when patching), that they are removed from the DOM
-                for (let childKey in __owl__.children) {
-                    const child = __owl__.children[childKey];
-                    const childOwl = child.__owl__;
-                    if (childOwl.status !== 3 /* MOUNTED */ && childOwl.parentLastFiberId < fiber.id) {
-                        // we only do here a "soft" destroy, meaning that we leave the child
-                        // dom node alone, without removing it.  Most of the time, it does not
-                        // matter, because the child component is already unmounted.  However,
-                        // if some of its parent have been unmounted, the child could actually
-                        // still be attached to its parent, and this may be important if we
-                        // want to remount the parent, because the vdom need to match the
-                        // actual DOM
-                        child.__destroy(childOwl.parent);
-                        if (childOwl.pvnode) {
-                            // we remove the key here to make sure that the patching algorithm
-                            // is able to make the difference between this pvnode and an eventual
-                            // other instance of the same component
-                            delete childOwl.pvnode.key;
-                            // Since the component has been unmounted, we do not want to actually
-                            // call a remove hook.  This is pretty important, since the t-component
-                            // directive actually disabled it, so the vdom algorithm will just
-                            // not remove the child elm if we don't remove the hook.
-                            delete childOwl.pvnode.data.hook.remove;
-                        }
-                    }
-                }
-                if (!vnode) {
-                    throw new Error(`Rendering '${this.constructor.name}' did not return anything`);
-                }
-                fiber.vnode = vnode;
-                // we apply here the class information described on the component by the
-                // template (so, something like <MyComponent class="..."/>) to the actual
-                // root vnode
-                if (__owl__.classObj) {
-                    const data = vnode.data;
-                    data.class = Object.assign(data.class || {}, __owl__.classObj);
-                }
-            }
-            catch (e) {
-                error = e;
-            }
-            if (__owl__.observer) {
-                __owl__.observer.allowMutations = true;
-            }
-            fiber.root.counter--;
-            fiber.isRendered = true;
-            if (error) {
-                fiber.handleError(error);
-            }
-        }
-        /**
-         * Apply default props (only top level).
-         *
-         * Note that this method does modify in place the props
-         */
-        __applyDefaultProps(props, defaultProps) {
-            for (let propName in defaultProps) {
-                if (props[propName] === undefined) {
-                    props[propName] = defaultProps[propName];
-                }
-            }
-        }
+        return reactivesForTarget.get(callback);
     }
-    Component.template = null;
-    Component._template = null;
-    Component.current = null;
-    Component.components = {};
-    Component.env = {};
-    // expose scheduler s.t. it can be mocked for testing purposes
-    Component.scheduler = scheduler;
-    async function mount(C, params) {
-        const { env, props, target } = params;
-        let origEnv = C.hasOwnProperty("env") ? C.env : null;
-        if (env) {
-            C.env = env;
+    const batchedRenderFunctions = new WeakMap();
+    /**
+     * Creates a reactive object that will be observed by the current component.
+     * Reading data from the returned object (eg during rendering) will cause the
+     * component to subscribe to that data and be rerendered when it changes.
+     *
+     * @param state the state to observe
+     * @returns a reactive object that will cause the component to re-render on
+     *  relevant changes
+     * @see reactive
+     */
+    function useState(state) {
+        const node = getCurrent();
+        if (!batchedRenderFunctions.has(node)) {
+            batchedRenderFunctions.set(node, batched(() => node.render()));
+            onWillDestroy(() => clearReactivesForCallback(render));
         }
-        const component = new C(null, props);
-        if (origEnv) {
-            C.env = origEnv;
-        }
-        else {
-            delete C.env;
-        }
-        const position = params.position || "last-child";
-        await component.mount(target, { position });
-        return component;
+        const render = batchedRenderFunctions.get(node);
+        const reactiveState = reactive(state, render);
+        return reactiveState;
     }
 
-    /**
-     * The `Context` object provides a way to share data between an arbitrary number
-     * of component. Usually, data is passed from a parent to its children component,
-     * but when we have to deal with some mostly global information, this can be
-     * annoying, since each component will need to pass the information to each
-     * children, even though some or most of them will not use the information.
-     *
-     * With a `Context` object, each component can subscribe (with the `useContext`
-     * hook) to its state, and will be updated whenever the context state is updated.
-     */
-    function partitionBy(arr, fn) {
-        let lastGroup = false;
-        let lastValue;
-        return arr.reduce((acc, cur) => {
-            let curVal = fn(cur);
-            if (lastGroup) {
-                if (curVal === lastValue) {
-                    lastGroup.push(cur);
-                }
-                else {
-                    lastGroup = false;
-                }
-            }
-            if (!lastGroup) {
-                lastGroup = [cur];
-                acc.push(lastGroup);
-            }
-            lastValue = curVal;
-            return acc;
-        }, []);
-    }
-    class Context$1 extends EventBus {
-        constructor(state = {}) {
-            super();
-            this.rev = 1;
-            // mapping from component id to last observed context id
-            this.mapping = {};
-            this.observer = new Observer();
-            this.observer.notifyCB = () => {
-                // notify components in the next microtask tick to ensure that subscribers
-                // are notified only once for all changes that occur in the same micro tick
-                let rev = this.rev;
-                return Promise.resolve().then(() => {
-                    if (rev === this.rev) {
-                        this.__notifyComponents();
-                    }
-                });
-            };
-            this.state = this.observer.observe(state);
-            this.subscriptions.update = [];
-        }
-        /**
-         * Instead of using trigger to emit an update event, we actually implement
-         * our own function to do that.  The reason is that we need to be smarter than
-         * a simple trigger function: we need to wait for parent components to be
-         * done before doing children components.  More precisely, if an update
-         * as an effect of destroying a children, we do not want to call any code
-         * from the child, and certainly not render it.
-         *
-         * This method implements a simple grouping algorithm by depth. If we have
-         * connected components of depths [2, 4,4,4,4, 3,8,8], the Context will notify
-         * them in the following groups: [2], [4,4,4,4], [3], [8,8]. Each group will
-         * be updated sequentially, but each components in a given group will be done in
-         * parallel.
-         *
-         * This is a very simple algorithm, but it avoids checking if a given
-         * component is a child of another.
-         */
-        async __notifyComponents() {
-            const rev = ++this.rev;
-            const subscriptions = this.subscriptions.update;
-            const groups = partitionBy(subscriptions, (s) => (s.owner ? s.owner.__owl__.depth : -1));
-            for (let group of groups) {
-                const proms = group.map((sub) => sub.callback.call(sub.owner, rev));
-                // at this point, each component in the current group has registered a
-                // top level fiber in the scheduler. It could happen that rendering these
-                // components is done (if they have no children).  This is why we manually
-                // flush the scheduler.  This will force the scheduler to check
-                // immediately if they are done, which will cause their rendering
-                // promise to resolve earlier, which means that there is a chance of
-                // processing the next group in the same frame.
-                scheduler.flush();
-                await Promise.all(proms);
-            }
-        }
-    }
-    /**
-     * The`useContext` hook is the normal way for a component to register themselve
-     * to context state changes. The `useContext` method returns the context state
-     */
-    function useContext(ctx) {
-        const component = Component.current;
-        return useContextWithCB(ctx, component, component.render.bind(component));
-    }
-    function useContextWithCB(ctx, component, method) {
-        const __owl__ = component.__owl__;
-        const id = __owl__.id;
-        const mapping = ctx.mapping;
-        if (id in mapping) {
-            return ctx.state;
-        }
-        if (!__owl__.observer) {
-            __owl__.observer = new Observer();
-            __owl__.observer.notifyCB = component.render.bind(component);
-        }
-        mapping[id] = 0;
-        const renderFn = __owl__.renderFn;
-        __owl__.renderFn = function (comp, params) {
-            mapping[id] = ctx.rev;
-            return renderFn(comp, params);
-        };
-        ctx.on("update", component, async (contextRev) => {
-            if (mapping[id] < contextRev) {
-                mapping[id] = contextRev;
-                await method();
-            }
-        });
-        const __destroy = component.__destroy;
-        component.__destroy = (parent) => {
-            ctx.off("update", component);
-            delete mapping[id];
-            __destroy.call(component, parent);
-        };
-        return ctx.state;
-    }
-
-    /**
-     * Owl Hook System
-     *
-     * This file introduces the concept of hooks, similar to React or Vue hooks.
-     * We have currently an implementation of:
-     * - useState (reactive state)
-     * - onMounted
-     * - onWillUnmount
-     * - useRef
-     */
     // -----------------------------------------------------------------------------
-    // useState
+    // useRef
     // -----------------------------------------------------------------------------
     /**
-     * This is the main way a component can be made reactive.  The useState hook
-     * will return an observed object (or array).  Changes to that value will then
-     * trigger a rerendering of the current component.
+     * The purpose of this hook is to allow components to get a reference to a sub
+     * html node or component.
      */
-    function useState$1(state) {
-        const component = Component.current;
-        const __owl__ = component.__owl__;
-        if (!__owl__.observer) {
-            __owl__.observer = new Observer();
-            __owl__.observer.notifyCB = component.render.bind(component);
-        }
-        return __owl__.observer.observe(state);
-    }
-    // -----------------------------------------------------------------------------
-    // Life cycle hooks
-    // -----------------------------------------------------------------------------
-    function makeLifecycleHook(method, reverse = false) {
-        if (reverse) {
-            return function (cb) {
-                const component = Component.current;
-                if (component.__owl__[method]) {
-                    const current = component.__owl__[method];
-                    component.__owl__[method] = function () {
-                        current.call(component);
-                        cb.call(component);
-                    };
-                }
-                else {
-                    component.__owl__[method] = cb;
-                }
-            };
-        }
-        else {
-            return function (cb) {
-                const component = Component.current;
-                if (component.__owl__[method]) {
-                    const current = component.__owl__[method];
-                    component.__owl__[method] = function () {
-                        cb.call(component);
-                        current.call(component);
-                    };
-                }
-                else {
-                    component.__owl__[method] = cb;
-                }
-            };
-        }
-    }
-    function makeAsyncHook(method) {
-        return function (cb) {
-            const component = Component.current;
-            if (component.__owl__[method]) {
-                const current = component.__owl__[method];
-                component.__owl__[method] = function (...args) {
-                    return Promise.all([current.call(component, ...args), cb.call(component, ...args)]);
-                };
-            }
-            else {
-                component.__owl__[method] = cb;
-            }
-        };
-    }
-    const onMounted = makeLifecycleHook("mountedCB", true);
-    const onWillUnmount = makeLifecycleHook("willUnmountCB");
-    const onWillPatch = makeLifecycleHook("willPatchCB");
-    const onPatched = makeLifecycleHook("patchedCB", true);
-    const onWillStart = makeAsyncHook("willStartCB");
-    const onWillUpdateProps = makeAsyncHook("willUpdatePropsCB");
     function useRef(name) {
-        const __owl__ = Component.current.__owl__;
+        const node = getCurrent();
+        const refs = node.refs;
         return {
             get el() {
-                const val = __owl__.refs && __owl__.refs[name];
-                if (val instanceof HTMLElement) {
-                    return val;
-                }
-                else if (val instanceof Component) {
-                    return val.el;
-                }
-                return null;
-            },
-            get comp() {
-                const val = __owl__.refs && __owl__.refs[name];
-                return val instanceof Component ? val : null;
+                return refs[name] || null;
             },
         };
     }
     // -----------------------------------------------------------------------------
-    // "Builder" hooks
+    // useEnv and useSubEnv
     // -----------------------------------------------------------------------------
-    /**
-     * This hook is useful as a building block for some customized hooks, that may
-     * need a reference to the component calling them.
-     */
-    function useComponent() {
-        return Component.current;
-    }
     /**
      * This hook is useful as a building block for some customized hooks, that may
      * need a reference to the env of the component calling them.
      */
     function useEnv() {
-        return Component.current.env;
+        return getCurrent().component.env;
     }
-    // -----------------------------------------------------------------------------
-    // useSubEnv
-    // -----------------------------------------------------------------------------
+    function extendEnv(currentEnv, extension) {
+        const env = Object.create(currentEnv);
+        const descrs = Object.getOwnPropertyDescriptors(extension);
+        return Object.freeze(Object.defineProperties(env, descrs));
+    }
     /**
      * This hook is a simple way to let components use a sub environment.  Note that
      * like for all hooks, it is important that this is only called in the
      * constructor method.
      */
-    function useSubEnv(nextEnv) {
-        const component = Component.current;
-        component.env = Object.assign(Object.create(component.env), nextEnv);
+    function useSubEnv(envExtension) {
+        const node = getCurrent();
+        node.component.env = extendEnv(node.component.env, envExtension);
+        useChildSubEnv(envExtension);
+    }
+    function useChildSubEnv(envExtension) {
+        const node = getCurrent();
+        node.childEnv = extendEnv(node.childEnv, envExtension);
+    }
+    // -----------------------------------------------------------------------------
+    // useEffect
+    // -----------------------------------------------------------------------------
+    const NO_OP = () => { };
+    /**
+     * This hook will run a callback when a component is mounted and patched, and
+     * will run a cleanup function before patching and before unmounting the
+     * the component.
+     *
+     * @param {Effect} effect the effect to run on component mount and/or patch
+     * @param {()=>any[]} [computeDependencies=()=>[NaN]] a callback to compute
+     *      dependencies that will decide if the effect needs to be cleaned up and
+     *      run again. If the dependencies did not change, the effect will not run
+     *      again. The default value returns an array containing only NaN because
+     *      NaN !== NaN, which will cause the effect to rerun on every patch.
+     */
+    function useEffect(effect, computeDependencies = () => [NaN]) {
+        let cleanup;
+        let dependencies;
+        onMounted(() => {
+            dependencies = computeDependencies();
+            cleanup = effect(...dependencies) || NO_OP;
+        });
+        onPatched(() => {
+            const newDeps = computeDependencies();
+            const shouldReapply = newDeps.some((val, i) => val !== dependencies[i]);
+            if (shouldReapply) {
+                dependencies = newDeps;
+                cleanup();
+                cleanup = effect(...dependencies) || NO_OP;
+            }
+        });
+        onWillUnmount(() => cleanup());
     }
     // -----------------------------------------------------------------------------
     // useExternalListener
@@ -4935,651 +5066,72 @@ See https://github.com/odoo/owl/blob/master/doc/reference/config.md#mode for mor
      *  `useExternalListener(window, 'click', this._doSomething);`
      * */
     function useExternalListener(target, eventName, handler, eventParams) {
-        const boundHandler = handler.bind(Component.current);
+        const node = getCurrent();
+        const boundHandler = handler.bind(node.component);
         onMounted(() => target.addEventListener(eventName, boundHandler, eventParams));
         onWillUnmount(() => target.removeEventListener(eventName, boundHandler, eventParams));
     }
 
-    var _hooks = /*#__PURE__*/Object.freeze({
-        __proto__: null,
-        useState: useState$1,
-        onMounted: onMounted,
-        onWillUnmount: onWillUnmount,
-        onWillPatch: onWillPatch,
-        onPatched: onPatched,
-        onWillStart: onWillStart,
-        onWillUpdateProps: onWillUpdateProps,
-        useRef: useRef,
-        useComponent: useComponent,
-        useEnv: useEnv,
-        useSubEnv: useSubEnv,
-        useExternalListener: useExternalListener
-    });
-
-    class Store$1 extends Context$1 {
-        constructor(config) {
-            super(config.state);
-            this.actions = config.actions;
-            this.env = config.env;
-            this.getters = {};
-            this.updateFunctions = [];
-            if (config.getters) {
-                const firstArg = {
-                    state: this.state,
-                    getters: this.getters,
-                };
-                for (let g in config.getters) {
-                    this.getters[g] = config.getters[g].bind(this, firstArg);
-                }
-            }
-        }
-        dispatch(action, ...payload) {
-            if (!this.actions[action]) {
-                throw new Error(`[Error] action ${action} is undefined`);
-            }
-            const result = this.actions[action]({
-                dispatch: this.dispatch.bind(this),
-                env: this.env,
-                state: this.state,
-                getters: this.getters,
-            }, ...payload);
-            return result;
-        }
-        __notifyComponents() {
-            this.trigger("before-update");
-            return super.__notifyComponents();
-        }
-    }
-    const isStrictEqual = (a, b) => a === b;
-    function useStore(selector, options = {}) {
-        const component = Component.current;
-        const componentId = component.__owl__.id;
-        const store = options.store || component.env.store;
-        if (!(store instanceof Store$1)) {
-            throw new Error(`No store found when connecting '${component.constructor.name}'`);
-        }
-        let result = selector(store.state, component.props);
-        const hashFn = store.observer.revNumber.bind(store.observer);
-        let revNumber = hashFn(result);
-        const isEqual = options.isEqual || isStrictEqual;
-        if (!store.updateFunctions[componentId]) {
-            store.updateFunctions[componentId] = [];
-        }
-        function selectCompareUpdate(state, props) {
-            const oldResult = result;
-            result = selector(state, props);
-            const newRevNumber = hashFn(result);
-            if ((newRevNumber > 0 && revNumber !== newRevNumber) || !isEqual(oldResult, result)) {
-                revNumber = newRevNumber;
-                return true;
-            }
-            return false;
-        }
-        if (options.onUpdate) {
-            store.on("before-update", component, () => {
-                const newValue = selector(store.state, component.props);
-                options.onUpdate(newValue);
-            });
-        }
-        store.updateFunctions[componentId].push(function () {
-            return selectCompareUpdate(store.state, component.props);
-        });
-        useContextWithCB(store, component, function () {
-            let shouldRender = false;
-            for (let fn of store.updateFunctions[componentId]) {
-                shouldRender = fn() || shouldRender;
-            }
-            if (shouldRender) {
-                return component.render();
-            }
-        });
-        onWillUpdateProps((props) => {
-            selectCompareUpdate(store.state, props);
-        });
-        const __destroy = component.__destroy;
-        component.__destroy = (parent) => {
-            delete store.updateFunctions[componentId];
-            if (options.onUpdate) {
-                store.off("before-update", component);
-            }
-            __destroy.call(component, parent);
-        };
-        if (typeof result !== "object" || result === null) {
-            return result;
-        }
-        return new Proxy(result, {
-            get(target, k) {
-                return result[k];
-            },
-            set(target, k, v) {
-                throw new Error("Store state should only be modified through actions");
-            },
-            has(target, k) {
-                return k in result;
-            },
-        });
-    }
-    function useDispatch(store) {
-        store = store || Component.current.env.store;
-        return store.dispatch.bind(store);
-    }
-    function useGetters(store) {
-        store = store || Component.current.env.store;
-        return store.getters;
-    }
-
-    /**
-     * Owl Tags
-     *
-     * We have here a (very) small collection of tag functions:
-     *
-     * - xml
-     *
-     * The plan is to add a few other tags such as css, globalcss.
-     */
-    /**
-     * XML tag helper for defining templates.  With this, one can simply define
-     * an inline template with just the template xml:
-     * ```js
-     *   class A extends Component {
-     *     static template = xml`<div>some template</div>`;
-     *   }
-     * ```
-     */
-    function xml(strings, ...args) {
-        const name = `__template__${QWeb.nextId++}`;
-        const value = String.raw(strings, ...args);
-        QWeb.registerTemplate(name, value);
-        return name;
-    }
-    /**
-     * CSS tag helper for defining inline stylesheets.  With this, one can simply define
-     * an inline stylesheet with just the following code:
-     * ```js
-     *   class A extends Component {
-     *     static style = css`.component-a { color: red; }`;
-     *   }
-     * ```
-     */
-    function css(strings, ...args) {
-        const name = `__sheet__${QWeb.nextId++}`;
-        const value = String.raw(strings, ...args);
-        registerSheet(name, value);
-        return name;
-    }
-
-    var _tags = /*#__PURE__*/Object.freeze({
-        __proto__: null,
-        xml: xml,
-        css: css
-    });
-
-    /**
-     * AsyncRoot
-     *
-     * Owl is by default asynchronous, and the user interface will wait for all its
-     * subcomponents to be rendered before updating the DOM. This is most of the
-     * time what we want, but in some cases, it makes sense to "detach" a component
-     * from this coordination.  This is the goal of the AsyncRoot component.
-     */
-    class AsyncRoot extends Component {
-        async __updateProps(nextProps, parentFiber) {
-            this.render(parentFiber.force);
-        }
-    }
-    AsyncRoot.template = xml `<t t-slot="default"/>`;
-
-    class Portal extends Component {
-        constructor(parent, props) {
-            super(parent, props);
-            // boolean to indicate whether or not we must listen to 'dom-appended' event
-            // to hook on the moment when the target is inserted into the DOM (because it
-            // is not when the portal is rendered)
-            this.doTargetLookUp = true;
-            // set of encountered events that need to be redirected
-            this._handledEvents = new Set();
-            // function that will be the event's tunnel (needs to be an arrow function to
-            // avoid having to rebind `this`)
-            this._handlerTunnel = (ev) => {
-                ev.stopPropagation();
-                this.__trigger(ev.originalComponent, ev.type, ev.detail);
-            };
-            // Storing the parent's env
-            this.parentEnv = null;
-            // represents the element that is moved somewhere else
-            this.portal = null;
-            // the target where we will move `portal`
-            this.target = null;
-            this.parentEnv = parent ? parent.env : {};
-            // put a callback in the env that is propagated to children s.t. portal can
-            // register an handler to those events just before children will trigger them
-            useSubEnv({
-                [portalSymbol]: (ev) => {
-                    if (!this._handledEvents.has(ev.type)) {
-                        this.portal.elm.addEventListener(ev.type, this._handlerTunnel);
-                        this._handledEvents.add(ev.type);
-                    }
-                },
-            });
-        }
-        /**
-         * Override to revert back to a classic Component's structure
-         *
-         * @override
-         */
-        __callWillUnmount() {
-            super.__callWillUnmount();
-            this.el.appendChild(this.portal.elm);
-            this.doTargetLookUp = true;
-        }
-        /**
-         * At each DOM change, we must ensure that the portal contains exactly one
-         * child
-         */
-        __checkVNodeStructure(vnode) {
-            const children = vnode.children;
-            let countRealNodes = 0;
-            for (let child of children) {
-                if (child.sel) {
-                    countRealNodes++;
-                }
-            }
-            if (countRealNodes !== 1) {
-                throw new Error(`Portal must have exactly one non-text child (has ${countRealNodes})`);
-            }
-        }
-        /**
-         * Ensure the target is still there at whichever time we render
-         */
-        __checkTargetPresence() {
-            if (!this.target || !document.contains(this.target)) {
-                throw new Error(`Could not find any match for "${this.props.target}"`);
-            }
-        }
-        /**
-         * Move the portal's element to the target
-         */
-        __deployPortal() {
-            this.__checkTargetPresence();
-            this.target.appendChild(this.portal.elm);
-        }
-        /**
-         * Override to remove from the DOM the element we have teleported
-         *
-         * @override
-         */
-        __destroy(parent) {
-            if (this.portal && this.portal.elm) {
-                const displacedElm = this.portal.elm;
-                const parent = displacedElm.parentNode;
-                if (parent) {
-                    parent.removeChild(displacedElm);
-                }
-            }
-            super.__destroy(parent);
-        }
-        /**
-         * Override to patch the element that has been teleported
-         *
-         * @override
-         */
-        __patch(target, vnode) {
-            if (this.doTargetLookUp) {
-                const target = document.querySelector(this.props.target);
-                if (!target) {
-                    this.env.qweb.on("dom-appended", this, () => {
-                        this.doTargetLookUp = false;
-                        this.env.qweb.off("dom-appended", this);
-                        this.target = document.querySelector(this.props.target);
-                        this.__deployPortal();
-                    });
-                }
-                else {
-                    this.doTargetLookUp = false;
-                    this.target = target;
-                }
-            }
-            this.__checkVNodeStructure(vnode);
-            const shouldDeploy = (!this.portal || this.el.contains(this.portal.elm)) && !this.doTargetLookUp;
-            if (!this.doTargetLookUp && !shouldDeploy) {
-                // Only on pure patching, provided the
-                // this.target's parent has not been unmounted
-                this.__checkTargetPresence();
-            }
-            const portalPatch = this.portal ? this.portal : document.createElement(vnode.children[0].sel);
-            this.portal = patch(portalPatch, vnode.children[0]);
-            vnode.children = [];
-            super.__patch(target, vnode);
-            if (shouldDeploy) {
-                this.__deployPortal();
-            }
-        }
-        /**
-         * Override to set the env
-         */
-        __trigger(component, eventType, payload) {
-            const env = this.env;
-            this.env = this.parentEnv;
-            super.__trigger(component, eventType, payload);
-            this.env = env;
-        }
-    }
-    Portal.template = xml `<portal><t t-slot="default"/></portal>`;
-    Portal.props = {
-        target: {
-            type: String,
-        },
+    config.shouldNormalizeDom = false;
+    config.mainEventHandler = mainEventHandler;
+    UTILS.Portal = Portal;
+    const blockDom = {
+        config,
+        // bdom entry points
+        mount: mount$1,
+        patch,
+        remove,
+        // bdom block types
+        list,
+        multi,
+        text,
+        toggler,
+        createBlock,
+        html,
+        comment,
     };
-
-    class Link extends Component {
-        constructor() {
-            super(...arguments);
-            this.href = this.env.router.destToPath(this.props);
-        }
-        async willUpdateProps(nextProps) {
-            this.href = this.env.router.destToPath(nextProps);
-        }
-        get isActive() {
-            if (this.env.router.mode === "hash") {
-                return document.location.hash === this.href;
-            }
-            return document.location.pathname === this.href;
-        }
-        navigate(ev) {
-            // don't redirect with control keys
-            if (ev.metaKey || ev.altKey || ev.ctrlKey || ev.shiftKey) {
-                return;
-            }
-            // don't redirect on right click
-            if (ev.button !== undefined && ev.button !== 0) {
-                return;
-            }
-            // don't redirect if `target="_blank"`
-            if (ev.currentTarget && ev.currentTarget.getAttribute) {
-                const target = ev.currentTarget.getAttribute("target");
-                if (/\b_blank\b/i.test(target)) {
-                    return;
-                }
-            }
-            ev.preventDefault();
-            this.env.router.navigate(this.props);
-        }
-    }
-    Link.template = xml `
-    <a  t-att-class="{'router-link-active': isActive }"
-        t-att-href="href"
-        t-on-click="navigate">
-        <t t-slot="default"/>
-    </a>
-  `;
-
-    class RouteComponent extends Component {
-        get routeComponent() {
-            return this.env.router.currentRoute && this.env.router.currentRoute.component;
-        }
-    }
-    RouteComponent.template = xml `
-    <t>
-        <t
-            t-if="routeComponent"
-            t-component="routeComponent"
-            t-key="env.router.currentRouteName"
-            t-props="env.router.currentParams" />
-    </t>
-  `;
-
-    const paramRegexp = /\{\{(.*?)\}\}/;
-    const globalParamRegexp = new RegExp(paramRegexp.source, "g");
-    class Router {
-        constructor(env, routes, options = { mode: "history" }) {
-            this.currentRoute = null;
-            this.currentParams = null;
-            env.router = this;
-            this.mode = options.mode;
-            this.env = env;
-            this.routes = {};
-            this.routeIds = [];
-            let nextId = 1;
-            for (let partialRoute of routes) {
-                if (!partialRoute.name) {
-                    partialRoute.name = "__route__" + nextId++;
-                }
-                if (partialRoute.component) {
-                    QWeb.registerComponent("__component__" + partialRoute.name, partialRoute.component);
-                }
-                if (partialRoute.redirect) {
-                    this.validateDestination(partialRoute.redirect);
-                }
-                partialRoute.params = partialRoute.path ? findParams(partialRoute.path) : [];
-                partialRoute.extractionRegExp = makeExtractionRegExp(partialRoute.path);
-                this.routes[partialRoute.name] = partialRoute;
-                this.routeIds.push(partialRoute.name);
-            }
-        }
-        //--------------------------------------------------------------------------
-        // Public API
-        //--------------------------------------------------------------------------
-        async start() {
-            this._listener = (ev) => this._navigate(this.currentPath(), ev);
-            window.addEventListener("popstate", this._listener);
-            if (this.mode === "hash") {
-                window.addEventListener("hashchange", this._listener);
-            }
-            const result = await this.matchAndApplyRules(this.currentPath());
-            if (result.type === "match") {
-                this.currentRoute = result.route;
-                this.currentParams = result.params;
-                const currentPath = this.routeToPath(result.route, result.params);
-                if (currentPath !== this.currentPath()) {
-                    this.setUrlFromPath(currentPath);
-                }
-            }
-        }
-        async navigate(to) {
-            const path = this.destToPath(to);
-            return this._navigate(path);
-        }
-        async _navigate(path, ev) {
-            const initialName = this.currentRouteName;
-            const initialParams = this.currentParams;
-            const result = await this.matchAndApplyRules(path);
-            if (result.type === "match") {
-                let finalPath = this.routeToPath(result.route, result.params);
-                if (path.indexOf("?") > -1) {
-                    finalPath += "?" + path.split("?")[1];
-                }
-                const isPopStateEvent = ev && ev instanceof PopStateEvent;
-                if (!isPopStateEvent) {
-                    this.setUrlFromPath(finalPath);
-                }
-                this.currentRoute = result.route;
-                this.currentParams = result.params;
-            }
-            else if (result.type === "nomatch") {
-                this.currentRoute = null;
-                this.currentParams = null;
-            }
-            const didChange = this.currentRouteName !== initialName || !shallowEqual(this.currentParams, initialParams);
-            if (didChange) {
-                this.env.qweb.forceUpdate();
-                return true;
-            }
-            return false;
-        }
-        destToPath(dest) {
-            this.validateDestination(dest);
-            return dest.path || this.routeToPath(this.routes[dest.to], dest.params);
-        }
-        get currentRouteName() {
-            return this.currentRoute && this.currentRoute.name;
-        }
-        //--------------------------------------------------------------------------
-        // Private helpers
-        //--------------------------------------------------------------------------
-        setUrlFromPath(path) {
-            const separator = this.mode === "hash" ? location.pathname : "";
-            const url = location.origin + separator + path;
-            if (url !== window.location.href) {
-                window.history.pushState({}, path, url);
-            }
-        }
-        validateDestination(dest) {
-            if ((!dest.path && !dest.to) || (dest.path && dest.to)) {
-                throw new Error(`Invalid destination: ${JSON.stringify(dest)}`);
-            }
-        }
-        routeToPath(route, params) {
-            const prefix = this.mode === "hash" ? "#" : "";
-            return (prefix +
-                route.path.replace(globalParamRegexp, (match, param) => {
-                    const [key] = param.split(".");
-                    return params[key];
-                }));
-        }
-        currentPath() {
-            let result = this.mode === "history" ? window.location.pathname : window.location.hash.slice(1);
-            return result || "/";
-        }
-        match(path) {
-            for (let routeId of this.routeIds) {
-                let route = this.routes[routeId];
-                let params = this.getRouteParams(route, path);
-                if (params) {
-                    return {
-                        type: "match",
-                        route: route,
-                        params: params,
-                    };
-                }
-            }
-            return { type: "nomatch" };
-        }
-        async matchAndApplyRules(path) {
-            const result = this.match(path);
-            if (result.type === "match") {
-                return this.applyRules(result);
-            }
-            return result;
-        }
-        async applyRules(matchResult) {
-            const route = matchResult.route;
-            if (route.redirect) {
-                const path = this.destToPath(route.redirect);
-                return this.matchAndApplyRules(path);
-            }
-            if (route.beforeRouteEnter) {
-                const result = await route.beforeRouteEnter({
-                    env: this.env,
-                    from: this.currentRoute,
-                    to: route,
-                });
-                if (result === false) {
-                    return { type: "cancelled" };
-                }
-                else if (result !== true) {
-                    // we want to navigate to another destination
-                    const path = this.destToPath(result);
-                    return this.matchAndApplyRules(path);
-                }
-            }
-            return matchResult;
-        }
-        getRouteParams(route, path) {
-            if (route.path === "*") {
-                return {};
-            }
-            if (path.indexOf("?") > -1) {
-                path = path.split("?")[0];
-            }
-            if (path.startsWith("#")) {
-                path = path.slice(1);
-            }
-            const paramsMatch = path.match(route.extractionRegExp);
-            if (!paramsMatch) {
-                return false;
-            }
-            const result = {};
-            route.params.forEach((param, index) => {
-                const [key, suffix] = param.split(".");
-                const paramValue = paramsMatch[index + 1];
-                if (suffix === "number") {
-                    return (result[key] = parseInt(paramValue, 10));
-                }
-                return (result[key] = paramValue);
-            });
-            return result;
-        }
-    }
-    function findParams(str) {
-        const result = [];
-        let m;
-        do {
-            m = globalParamRegexp.exec(str);
-            if (m) {
-                result.push(m[1]);
-            }
-        } while (m);
-        return result;
-    }
-    function escapeRegExp(str) {
-        return str.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
-    }
-    function makeExtractionRegExp(path) {
-        // replace param strings with capture groups so that we can build a regex to match over the path
-        const extractionString = path
-            .split(paramRegexp)
-            .map((part, index) => {
-            return index % 2 ? "(.*)" : escapeRegExp(part);
-        })
-            .join("");
-        // Example: /home/{{param1}}/{{param2}} => ^\/home\/(.*)\/(.*)$
-        return new RegExp(`^${extractionString}$`);
-    }
-
-    /**
-     * This file is the main file packaged by rollup (see rollup.config.js).  From
-     * this file, we export all public owl elements.
-     *
-     * Note that dynamic values, such as a date or a commit hash are added by rollup
-     */
-    const Context = Context$1;
-    const useState = useState$1;
-    const core = { EventBus, Observer };
-    const router = { Router, RouteComponent, Link };
-    const Store = Store$1;
-    const utils = _utils;
-    const tags = _tags;
-    const misc = { AsyncRoot, Portal };
-    const hooks = Object.assign({}, _hooks, {
-        useContext: useContext,
-        useDispatch: useDispatch,
-        useGetters: useGetters,
-        useStore: useStore,
-    });
     const __info__ = {};
 
+    exports.App = App;
     exports.Component = Component;
-    exports.Context = Context;
-    exports.QWeb = QWeb;
-    exports.Store = Store;
+    exports.EventBus = EventBus;
+    exports.Memo = Memo;
     exports.__info__ = __info__;
-    exports.browser = browser;
-    exports.config = config;
-    exports.core = core;
-    exports.hooks = hooks;
-    exports.misc = misc;
+    exports.blockDom = blockDom;
+    exports.loadFile = loadFile;
+    exports.markRaw = markRaw;
+    exports.markup = markup;
     exports.mount = mount;
-    exports.router = router;
-    exports.tags = tags;
+    exports.onError = onError;
+    exports.onMounted = onMounted;
+    exports.onPatched = onPatched;
+    exports.onRendered = onRendered;
+    exports.onWillDestroy = onWillDestroy;
+    exports.onWillPatch = onWillPatch;
+    exports.onWillRender = onWillRender;
+    exports.onWillStart = onWillStart;
+    exports.onWillUnmount = onWillUnmount;
+    exports.onWillUpdateProps = onWillUpdateProps;
+    exports.reactive = reactive;
+    exports.status = status;
+    exports.toRaw = toRaw;
+    exports.useChildSubEnv = useChildSubEnv;
+    exports.useComponent = useComponent;
+    exports.useEffect = useEffect;
+    exports.useEnv = useEnv;
+    exports.useExternalListener = useExternalListener;
+    exports.useRef = useRef;
     exports.useState = useState;
-    exports.utils = utils;
+    exports.useSubEnv = useSubEnv;
+    exports.whenReady = whenReady;
+    exports.xml = xml;
 
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '1.4.10';
-    __info__.date = '2021-12-07T14:32:29.551Z';
-    __info__.hash = 'bc04f72';
+    __info__.version = '2.0.0-alpha.1';
+    __info__.date = '2022-02-09T09:24:08.644Z';
+    __info__.hash = '67fe89f';
     __info__.url = 'https://github.com/odoo/owl';
 
 

@@ -1,7 +1,7 @@
 odoo.define('point_of_sale.custom_hooks', function (require) {
     'use strict';
 
-    const { Component, onMounted, onPatched, onWillUnmount } = owl;
+    const { onMounted, onPatched, onWillUnmount, useComponent } = owl;
 
     /**
      * Introduce error handlers in the component.
@@ -10,7 +10,7 @@ odoo.define('point_of_sale.custom_hooks', function (require) {
      * the error when the order failed to sync.
      */
     function useErrorHandlers() {
-        const component = Component.current;
+        const component = useComponent();
 
         component._handlePushOrderError = async function (error) {
             // This error handler receives `error` equivalent to `error.message` of the rpc error.
@@ -58,7 +58,7 @@ odoo.define('point_of_sale.custom_hooks', function (require) {
     }
 
     function useAutoFocusToLast() {
-        const current = Component.current;
+        const current = useComponent();
         let target = null;
         function autofocus() {
             const prevTarget = target;
@@ -74,7 +74,7 @@ odoo.define('point_of_sale.custom_hooks', function (require) {
     }
 
     function useBarcodeReader(callbackMap, exclusive = false) {
-        const current = Component.current;
+        const current = useComponent();
         const barcodeReader = current.env.barcode_reader;
         for (let [key, callback] of Object.entries(callbackMap)) {
             callbackMap[key] = callback.bind(current);

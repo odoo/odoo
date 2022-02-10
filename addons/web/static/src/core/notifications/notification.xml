@@ -6,17 +6,16 @@
         role="alert" aria-live="assertive" aria-atomic="true">
             <div class="o_notification_body">
                 <button type="button" class="close o_notification_close"
-                aria-label="Close" t-on-click="trigger('close')">
+                aria-label="Close" t-on-click="props.close">
                     <span class="d-inline" aria-hidden="true">×</span>
                 </button>
                 <div t-if="props.title" class="font-weight-bold o_notification_title mb-1" t-esc="props.title"/>
                 <div t-if="props.message" class="mr-auto o_notification_content">
-                    <t t-if="props.messageIsHtml" t-raw="props.message"/>
-                    <t t-else="" t-esc="props.message"/>
+                    <t t-out="props.message"/>
                 </div>
                 <div t-if="props.buttons.length" class="mt-2 o_notification_buttons">
-                    <button t-foreach="props.buttons" t-as="button" type="button"
-                    t-attf-class="btn {{button.primary ? 'btn-primary' : 'btn-link'}}" t-on-click="button.onClick()">
+                    <button t-foreach="props.buttons" t-as="button" type="button" t-key="button_index"
+                    t-attf-class="btn {{button.primary ? 'btn-primary' : 'btn-link'}}" t-on-click="button.onClick">
                     <t t-if="button.icon">
                         <i t-if="button.icon.indexOf('fa-') === 0" role="img"
                         t-att-aria-label="button.name" t-att-title="button.name"

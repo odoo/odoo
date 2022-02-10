@@ -11,7 +11,7 @@ odoo.define('web.ControlPanel', function (require) {
     const SearchBar = require('web.SearchBar');
     const { useModel } = require('web.Model');
 
-    const { Component, useRef, useSubEnv } = owl;
+    const { Component, onMounted, onPatched, onWillDestroy, onWillUpdateProps, useRef, useSubEnv } = owl;
 
     /**
      * TODO: remove this whole mechanism as soon as `cp_content` is completely removed.
@@ -96,15 +96,16 @@ odoo.define('web.ControlPanel', function (require) {
      * @extends Component
      */
     class ControlPanel extends Component {
-        constructor() {
-            super(...arguments);
-
+        setup() {
             this.additionalContent = getAdditionalContent(this.props);
 
+            let subEnvView = this.props.view;
             useSubEnv({
                 action: this.props.action,
                 searchModel: this.props.searchModel,
-                view: this.props.view,
+                get view() {
+                    return subEnvView;
+                },
             });
 
             // Connect to the model
@@ -124,27 +125,40 @@ odoo.define('web.ControlPanel', function (require) {
             this.fields = this._formatFields(this.props.fields);
 
             this.sprintf = _.str.sprintf;
-        }
 
-        mounted() {
-            this._attachAdditionalContent();
-        }
+            onWillDestroy(() => {
+                const content = this.props.cp_content;
+                if (content) {
+                    if (content.$buttons) {
+                        content.$buttons.remove();
+                    }
+                    if (content.$searchview) {
+                        content.$searchview.remove();
+                    }
+                    if (content.$pager) {
+                        content.$pager.remove();
+                    }
+                    if (content.$searchview_buttons) {
+                        content.$searchview_buttons.remove();
+                    }
+                }
+            });
 
-        patched() {
-            this._attachAdditionalContent();
-        }
-
-        async willUpdateProps(nextProps) {
-            // Note: action and searchModel are not likely to change during
-            // the lifespan of a ControlPanel instance, so we only need to update
-            // the view information.
-            if ('view' in nextProps) {
-                this.env.view = nextProps.view;
-            }
-            if ('fields' in nextProps) {
-                this.fields = this._formatFields(nextProps.fields);
-            }
-            this.additionalContent = getAdditionalContent(nextProps);
+            // Cannot use useEffect. See prepareForFinish in owl_compatibility.js
+            onMounted(() => this._attachAdditionalContent());
+            onPatched(() => this._attachAdditionalContent());
+            onWillUpdateProps((nextProps) => {
+                // Note: action and searchModel are not likely to change during
+                // the lifespan of a ControlPanel instance, so we only need to update
+                // the view information.
+                if ("view" in nextProps) {
+                    subEnvView = nextProps.view;
+                }
+                if ("fields" in nextProps) {
+                    this.fields = this._formatFields(nextProps.fields);
+                }
+                this.additionalContent = getAdditionalContent(nextProps);
+            });
         }
 
         //---------------------------------------------------------------------
@@ -202,18 +216,18 @@ odoo.define('web.ControlPanel', function (require) {
     };
     ControlPanel.props = {
         action: Object,
-        breadcrumbs: Array,
+        breadcrumbs: { type: Array, optional: true },
         searchModel: ActionModel,
         cp_content: { type: Object, optional: 1 },
-        fields: Object,
+        fields: { type: Object, optional: true },
         pager: { validate: p => typeof p === 'object' || p === null, optional: 1 },
-        searchMenuTypes: Array,
+        searchMenuTypes: { type: Array, optional: true },
         actionMenus: { validate: s => typeof s === 'object' || s === null, optional: 1 },
         title: { type: String, optional: 1 },
         view: { type: Object, optional: 1 },
-        views: Array,
-        withBreadcrumbs: Boolean,
-        withSearchBar: Boolean,
+        views: { type: Array, optional: true },
+        withBreadcrumbs: { type: Boolean, optional: true },
+        withSearchBar: { type: Boolean, optional: true },
     };
     ControlPanel.template = 'web.Legacy.ControlPanel';
 

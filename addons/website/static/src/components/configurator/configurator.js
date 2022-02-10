@@ -8,8 +8,16 @@ import {ColorpickerWidget} from 'web.Colorpicker';
 import {_t, _lt} from 'web.core';
 import {svgToPNG} from 'website.utils';
 import {useService} from "@web/core/utils/hooks";
+import {renderToString} from "@web/core/utils/render";
 
-const { Component, QWeb, RouteComponent, Router, Store, loadFile, mount, useDispatch, useGetters, useRef, useStore, whenReady } = owl;
+const { App, Component, onMounted, reactive, useEnv, useRef, useState, whenReady } = owl;
+
+const ROUTES = {
+    descriptionScreen: 2,
+    paletteSelectionScreen: 3,
+    featuresSelectionScreen: 4,
+    themeSelectionScreen: 5,
+};
 
 const WEBSITE_TYPES = {
     1: {id: 1, label: _lt("a business website"), name: 'business'},
@@ -69,13 +77,13 @@ class SkipButton extends Component {
 SkipButton.template = 'website.Configurator.SkipButton';
 
 class WelcomeScreen extends Component {
-    constructor() {
-        super(...arguments);
-        this.dispatch = useDispatch();
+    setup() {
+        this.state = useStore();
+        this.router = useRouter();
     }
 
     goToDescription() {
-        this.env.router.navigate({to: 'CONFIGURATOR_DESCRIPTION_SCREEN'});
+        this.router.navigate(ROUTES.descriptionScreen);
     }
 }
 
@@ -85,18 +93,18 @@ Object.assign(WelcomeScreen, {
 });
 
 class DescriptionScreen extends Component {
-    constructor() {
-        super(...arguments);
+    setup() {
         this.industrySelection = useRef('industrySelection');
-        this.state = useStore((state) => state);
+        this.state = useStore();
+        this.router = useRouter();
         this.labelToId = {};
-        this.getters = useGetters();
-        this.dispatch = useDispatch();
         this.autocompleteHasResults = true;
+
+        onMounted(() => this.onMounted());
     }
 
-    mounted() {
-        this.dispatch('selectWebsitePurpose', undefined);
+    onMounted() {
+        this.selectWebsitePurpose();
         $(this.industrySelection.el).autocomplete({
             appendTo: '.o_configurator_industry_wrapper',
             delay: 400,
@@ -124,7 +132,7 @@ class DescriptionScreen extends Component {
     _clearIndustrySelection() {
         this.industrySelection.el.value = '';
         this.industrySelection.el.parentNode.dataset.value = '';
-        this.dispatch('selectIndustry', undefined, undefined);
+        this.state.selectIndustry();
     }
 
     /**
@@ -137,7 +145,7 @@ class DescriptionScreen extends Component {
     _setSelectedIndustry(label) {
         this.industrySelection.el.parentNode.dataset.value = label;
         const id = this.labelToId[label];
-        this.dispatch('selectIndustry', label, id);
+        this.state.selectIndustry(label, id);
         this.checkDescriptionCompletion();
     }
 
@@ -236,25 +244,23 @@ class DescriptionScreen extends Component {
         }
     }
 
-    selectWebsiteType(ev) {
-        const {id} = ev.target.dataset;
-        this.dispatch('selectWebsiteType', id);
+    selectWebsiteType(id) {
+        this.state.selectWebsiteType(id);
         setTimeout(() => {
             this.industrySelection.el.focus();
         });
         this.checkDescriptionCompletion();
     }
 
-    selectWebsitePurpose(ev) {
-        const {id} = ev.target.dataset;
-        this.dispatch('selectWebsitePurpose', id);
+    selectWebsitePurpose(id) {
+        this.state.selectWebsitePurpose(id);
         this.checkDescriptionCompletion();
     }
 
     checkDescriptionCompletion() {
         const {selectedType, selectedPurpose, selectedIndustry} = this.state;
         if (selectedType && selectedPurpose && selectedIndustry) {
-            this.env.router.navigate({to: 'CONFIGURATOR_PALETTE_SELECTION_SCREEN'});
+            this.router.navigate(ROUTES.paletteSelectionScreen);
         }
     }
 }
@@ -265,19 +271,17 @@ Object.assign(DescriptionScreen, {
 });
 
 class PaletteSelectionScreen extends Component {
-    constructor() {
-        super(...arguments);
-        this.state = useStore((state) => state);
-        this.getters = useGetters();
-        this.dispatch = useDispatch();
+    setup() {
+        this.state = useStore();
+        this.router = useRouter();
         this.logoInputRef = useRef('logoSelectionInput');
         this.notification = useService("notification");
-    }
 
-    mounted() {
-        if (this.state.logo) {
-            this.updatePalettes();
-        }
+        onMounted(() => {
+            if (this.state.logo) {
+                this.updatePalettes();
+            }
+        });
     }
 
     uploadLogo() {
@@ -298,7 +302,7 @@ class PaletteSelectionScreen extends Component {
                 }
             });
             if (!attachment.error) {
-                this.dispatch('changeLogo', data, attachment.id);
+                this.state.changeLogo(data, attachment.id);
                 this.updatePalettes();
             } else {
                 this.notification.notify({
@@ -321,12 +325,12 @@ class PaletteSelectionScreen extends Component {
             args: [img],
             kwargs: {mitigate: 255},
         });
-        this.dispatch('setRecommendedPalette', color1, color2);
+        this.state.setRecommendedPalette(color1, color2);
     }
 
     selectPalette(paletteName) {
-        this.dispatch('selectPalette', paletteName);
-        this.env.router.navigate({to: 'CONFIGURATOR_FEATURES_SELECTION_SCREEN'});
+        this.state.selectPalette(paletteName);
+        this.router.navigate(ROUTES.featuresSelectionScreen);
     }
 }
 
@@ -336,18 +340,15 @@ Object.assign(PaletteSelectionScreen, {
 });
 
 class FeaturesSelectionScreen extends Component {
-    constructor() {
-        super(...arguments);
-        this.state = useStore((state) => state);
-        this.getters = useGetters();
-        this.dispatch = useDispatch();
+    setup() {
+        this.state = useStore();
+        this.router = useRouter();
     }
 
     async buildWebsite() {
         const industryId = this.state.selectedIndustry && this.state.selectedIndustry.id;
         if (!industryId) {
-            this.env.router.navigate({to: 'CONFIGURATOR_DESCRIPTION_SCREEN'});
-            return;
+            return this.router.navigate(ROUTES.descriptionScreen);
         }
         const params = {
             industry_id: industryId,
@@ -362,8 +363,8 @@ class FeaturesSelectionScreen extends Component {
         if (!themes.length) {
             await applyConfigurator(this, 'theme_default');
         } else {
-            this.dispatch('updateRecommendedThemes', themes);
-            this.env.router.navigate({to: 'CONFIGURATOR_THEME_SELECTION_SCREEN'});
+            this.state.updateRecommendedThemes(themes);
+            this.router.navigate(ROUTES.themeSelectionScreen);
         }
     }
 }
@@ -374,16 +375,15 @@ Object.assign(FeaturesSelectionScreen, {
 });
 
 class ThemeSelectionScreen extends Component {
-    constructor() {
-        super(...arguments);
-        this.state = useStore((state) => state);
-        this.getters = useGetters();
+    setup() {
+        this.state = useStore();
+        this.router = useRouter();
         this.themeSVGPreviews = [useRef('ThemePreview1'), useRef('ThemePreview2'), useRef('ThemePreview3')];
-    }
 
-    mounted() {
-        this.state.themes.forEach((theme, idx) => {
-            $(this.themeSVGPreviews[idx].el).append(theme.svg);
+        onMounted(() => {
+            this.state.themes.forEach((theme, idx) => {
+                $(this.themeSVGPreviews[idx].el).append(theme.svg);
+            });
         });
     }
 
@@ -394,107 +394,139 @@ class ThemeSelectionScreen extends Component {
 
 ThemeSelectionScreen.template = 'website.Configurator.ThemeSelectionScreen';
 
-class App extends Component {}
+class Configurator extends Component {
+    setup() {
+        this.router = useRouter();
+    }
+}
 
-Object.assign(App, {
-    components: {RouteComponent},
-    template: 'website.Configurator.App',
+Object.assign(Configurator, {
+    components: {
+        WelcomeScreen,
+        DescriptionScreen,
+        PaletteSelectionScreen,
+        FeaturesSelectionScreen,
+        ThemeSelectionScreen,
+    },
+    template: 'website.Configurator.Configurator',
 });
 
 //---------------------------------------------------------
-// Routes
+// Router
 //---------------------------------------------------------
 
-const ROUTES = [
-    {name: 'CONFIGURATOR_WELCOME_SCREEN', path: '/website/configurator', component: WelcomeScreen},
-    {name: 'CONFIGURATOR_WELCOME_SCREEN_FALLBACK', path: '/website/configurator/1', component: WelcomeScreen},
-    {name: 'CONFIGURATOR_DESCRIPTION_SCREEN', path: '/website/configurator/2', component: DescriptionScreen},
-    {name: 'CONFIGURATOR_PALETTE_SELECTION_SCREEN', path: '/website/configurator/3', component: PaletteSelectionScreen},
-    {name: 'CONFIGURATOR_FEATURES_SELECTION_SCREEN', path: '/website/configurator/4', component: FeaturesSelectionScreen},
-    {name: 'CONFIGURATOR_THEME_SELECTION_SCREEN', path: '/website/configurator/5', component: ThemeSelectionScreen},
-];
+class Router {
+    constructor() {
+        this.location = window.location.pathname;
+    }
+
+    navigate(id) {
+        this.location = `/website/configurator${id ? '/' + id : ''}`;
+        history.pushState({}, '', window.location.origin + this.location);
+    }
+}
+
+const useRouter = () => {
+    const env = useEnv();
+    return useState(env.router);
+};
 
 //---------------------------------------------------------
 // Store
 //---------------------------------------------------------
 
-const getters = {
+class Store {
+    async start() {
+        Object.assign(this, await getInitialState());
+    }
+
+    //-------------------------------------------------------------------------
+    // Getters
+    //-------------------------------------------------------------------------
+
     getWebsiteTypes() {
         return Object.values(WEBSITE_TYPES);
-    },
+    }
 
-    getSelectedType(_, id) {
-        return id ? WEBSITE_TYPES[id] : undefined;
-    },
+    getSelectedType(id) {
+        return id && WEBSITE_TYPES[id];
+    }
 
     getWebsitePurpose() {
         return Object.values(WEBSITE_PURPOSES);
-    },
+    }
 
-    getSelectedPurpose(_, id) {
-        return id ? WEBSITE_PURPOSES[id] : undefined;
-    },
+    getSelectedPurpose(id) {
+        return id && WEBSITE_PURPOSES[id];
+    }
 
-    getFeatures({state}) {
-        return Object.values(state.features);
-    },
+    getFeatures() {
+        return Object.values(this.features);
+    }
 
-    getPalettes({state}) {
-        return Object.values(state.palettes);
-    },
+    getPalettes() {
+        return Object.values(this.palettes);
+    }
 
-    getThemeName({state}, idx) {
-        return state.themes.length > idx ? state.themes[idx].name : undefined;
-    },
+    getThemeName(idx) {
+        return this.themes.length > idx && this.themes[idx].name;
+    }
+
     /**
-     * @param {Object} obj
-     * @param {string|undefined} [obj.state]
-     * @returns {string|false}
+     * @returns {string | false}
      */
-    getSelectedPaletteName({state}) {
-        const palette = state.selectedPalette;
+    getSelectedPaletteName() {
+        const palette = this.selectedPalette;
         return palette ? (palette.name || 'recommendedPalette') : false;
-    },
-};
+    }
 
-const actions = {
-    selectWebsiteType({state}, id) {
-        Object.values(state.features).filter((feature) => feature.module_state !== 'installed').forEach((feature) => {
+    //-------------------------------------------------------------------------
+    // Actions
+    //-------------------------------------------------------------------------
+
+    selectWebsiteType(id) {
+        Object.values(this.features).filter((feature) => feature.module_state !== 'installed').forEach((feature) => {
             feature.selected = feature.website_config_preselection.includes(WEBSITE_TYPES[id].name);
         });
-        state.selectedType = id;
-    },
-    selectWebsitePurpose({state}, id) {
-        Object.values(state.features).filter((feature) => feature.module_state !== 'installed').forEach((feature) => {
+        this.selectedType = id;
+    }
+
+    selectWebsitePurpose(id) {
+        Object.values(this.features).filter((feature) => feature.module_state !== 'installed').forEach((feature) => {
             // need to check id, since we set to undefined in mount() to avoid the auto next screen on back button
             feature.selected |= id && feature.website_config_preselection.includes(WEBSITE_PURPOSES[id].name);
         });
-        state.selectedPurpose = id;
-    },
-    selectIndustry({state}, label, id) {
+        this.selectedPurpose = id;
+    }
+
+    selectIndustry(label, id) {
         if (!label || !id) {
-            state.selectedIndustry = undefined;
+            this.selectedIndustry = undefined;
         } else {
-            state.selectedIndustry = {id, label};
+            this.selectedIndustry = { id, label };
         }
-    },
-    changeLogo({state}, data, attachmentId) {
-        state.logo = data;
-        state.logoAttachmentId = attachmentId;
-    },
-    selectPalette({state}, paletteName) {
+    }
+
+    changeLogo(data, attachmentId) {
+        this.logo = data;
+        this.logoAttachmentId = attachmentId;
+    }
+
+    selectPalette(paletteName) {
         if (paletteName === 'recommendedPalette') {
-            state.selectedPalette = state.recommendedPalette;
+            this.selectedPalette = this.recommendedPalette;
         } else {
-            state.selectedPalette = state.palettes[paletteName];
+            this.selectedPalette = this.palettes[paletteName];
         }
-    },
-    toggleFeature({state}, featureId) {
-        const feature = state.features[featureId];
+    }
+
+    toggleFeature(featureId) {
+        const feature = this.features[featureId];
         const isModuleInstalled = feature.module_state === 'installed';
         feature.selected = !feature.selected || isModuleInstalled;
-    },
-    setRecommendedPalette({state}, color1, color2) {
+    }
+
+    setRecommendedPalette(color1, color2) {
         if (color1 && color2) {
             if (color1 === color2) {
                 color2 = ColorpickerWidget.mixCssColors('#FFFFFF', color1, 0.2);
@@ -507,20 +539,20 @@ const actions = {
                 color5: ColorpickerWidget.mixCssColors(color1, '#000000', 0.75),
             };
             CUSTOM_BG_COLOR_ATTRS.forEach((attr) => {
-                recommendedPalette[attr] = recommendedPalette[state.defaultColors[attr]];
+                recommendedPalette[attr] = recommendedPalette[this.defaultColors[attr]];
             });
-            state.recommendedPalette = recommendedPalette;
+            this.recommendedPalette = recommendedPalette;
         } else {
-            state.recommendedPalette = undefined;
+            this.recommendedPalette = undefined;
         }
-    },
-    updateRecommendedThemes({state}, themes) {
-        state.themes = themes.slice(0, 3);
     }
-};
+
+    updateRecommendedThemes(themes) {
+        this.themes = themes.slice(0, 3);
+    }
+}
 
 async function getInitialState() {
-
     // Load values from python and iap
     var results = await rpc.query({
         model: 'website',
@@ -596,6 +628,15 @@ async function getInitialState() {
     });
 }
 
+const useStore = () => {
+    const env = useEnv();
+    return useState(env.state);
+};
+
+//-----------------------------------------------------------------------------
+// Helpers
+//-----------------------------------------------------------------------------
+
 async function skipConfigurator() {
     await rpc.query({
         model: 'website',
@@ -607,16 +648,15 @@ async function skipConfigurator() {
 
 async function applyConfigurator(self, themeName) {
     if (!self.state.selectedIndustry) {
-        self.env.router.navigate({to: 'CONFIGURATOR_DESCRIPTION_SCREEN'});
-        return;
+        return self.router.navigate(ROUTES.descriptionScreen);
     }
     if (!self.state.selectedPalette) {
-        self.env.router.navigate({to: 'CONFIGURATOR_PALETTE_SELECTION_SCREEN'});
-        return;
+        return self.router.navigate(ROUTES.paletteSelectionScreen);
     }
     if (themeName !== undefined) {
-        $('body').append(self.env.loader);
-        const selectedFeatures = Object.values(self.state.features).filter((feature) => feature.selected).map((feature) => feature.id);
+        const loader = renderToString('website.ThemePreview.Loader', {showTips: true});
+        $('body').append(loader);
+        const selectedFeatures = Object.values(self.state.features).filter((feature) => feature.selected).map((feature) => feature.id)
         let selectedPalette = self.state.selectedPalette.name;
         if (!selectedPalette) {
             selectedPalette = [
@@ -644,48 +684,57 @@ async function applyConfigurator(self, themeName) {
         window.sessionStorage.removeItem(SESSION_STORAGE_ITEM_NAME);
         window.location = resp.url;
     }
+};
+
+function updateStorage(state) {
+    const newState = JSON.stringify({
+        defaultColors: state.defaultColors,
+        features: state.features,
+        logo: state.logo,
+        logoAttachmentId: state.logoAttachmentId,
+        selectedIndustry: state.selectedIndustry,
+        selectedPalette: state.selectedPalette,
+        selectedPurpose: state.selectedPurpose,
+        selectedType: state.selectedType,
+        recommendedPalette: state.recommendedPalette,
+    });
+    window.sessionStorage.setItem(SESSION_STORAGE_ITEM_NAME, newState);
 }
 
 async function makeEnvironment() {
-    const env = {};
-    const router = new Router(env, ROUTES);
-    await router.start();
-    const state = await getInitialState();
-    const store = new Store({state, actions, getters});
-    store.on("update", null, () => {
-        const newState = {
-            selectedType: store.state.selectedType,
-            selectedPurpose: store.state.selectedPurpose,
-            selectedIndustry: store.state.selectedIndustry,
-            selectedPalette: store.state.selectedPalette,
-            recommendedPalette: store.state.recommendedPalette,
-            defaultColors: store.state.defaultColors,
-            features: store.state.features,
-            logo: store.state.logo,
-            logoAttachmentId: store.state.logoAttachmentId,
-        };
-        window.sessionStorage.setItem(SESSION_STORAGE_ITEM_NAME, JSON.stringify(newState));
-    });
+    const state = reactive(new Store(), () => updateStorage(state));
+    await state.start();
+    updateStorage(state);
+    const env = {
+        state,
+        router: reactive(new Router()),
+        services: Component.env.services,
+    };
     await session.is_bound;
-    const qweb = new QWeb({translateFn: _t});
-    const loaderTemplate = await loadFile('/website/static/src/xml/theme_preview.xml');
-    const configuratorTemplates = await loadFile('/website/static/src/components/configurator/configurator.xml');
-    qweb.addTemplates(loaderTemplate);
-    qweb.addTemplates(configuratorTemplates);
-
-    env.loader = qweb.renderToString('website.ThemePreview.Loader', {
-        showTips: true
-    });
-    const services = Component.env.services;
-    return Object.assign(env, {router, store, qweb, services});
+    return env;
 }
+
+//-----------------------------------------------------------------------------
+// Setup
+//-----------------------------------------------------------------------------
 
 async function setup() {
     const env = await makeEnvironment();
-    if (!env.store.state.industries) {
+    if (!env.state.industries) {
         await skipConfigurator();
     } else {
-        mount(App, {target: document.body, env});
+        const templates = await (await fetch('/website/static/src/components/configurator/configurator.xml')).text();
+        const app = new App(Configurator, {
+            env,
+            dev: env.debug,
+            templates,
+            translatableAttributes: ["data-tooltip"],
+            translateFn: _t,
+        });
+        const loaderTemplate = await (await fetch('/website/static/src/xml/theme_preview.xml')).text();
+        app.addTemplates(loaderTemplate);
+        renderToString.app = app;
+        await app.mount(document.body);
     }
 }
 

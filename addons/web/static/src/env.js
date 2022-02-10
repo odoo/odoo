@@ -2,7 +2,7 @@
 
 import { registry } from "./core/registry";
 
-const { EventBus, QWeb } = owl;
+const { EventBus } = owl;
 
 // -----------------------------------------------------------------------------
 // Types
@@ -29,7 +29,6 @@ const { EventBus, QWeb } = owl;
  */
 export function makeEnv() {
     return {
-        qweb: new QWeb(),
         bus: new EventBus(),
         services: {},
         debug: odoo.debug,
@@ -59,12 +58,12 @@ export const SERVICES_METADATA = {};
  */
 export async function startServices(env) {
     const toStart = new Set();
-    serviceRegistry.on("UPDATE", null, async (payload) => {
+    serviceRegistry.addEventListener("UPDATE", async (ev) => {
         // Wait for all synchronous code so that if new services that depend on
         // one another are added to the registry, they're all present before we
         // start them regardless of the order they're added to the registry.
         await Promise.resolve();
-        const { operation, key: name, value: service } = payload;
+        const { operation, key: name, value: service } = ev.detail;
         if (operation === "delete") {
             // We hardly see why it would be usefull to remove a service.
             // Furthermore we could encounter problems with dependencies.

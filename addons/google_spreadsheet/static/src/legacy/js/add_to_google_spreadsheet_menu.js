@@ -2,6 +2,7 @@ odoo.define('board.AddToGoogleSpreadsheetMenu', function (require) {
     "use strict";
 
     const Domain = require('web.Domain');
+    const { DropdownItem } = require('@web/core/dropdown/dropdown_item');
     const FavoriteMenu = require('web.FavoriteMenu');
 
     const { Component } = owl;
@@ -56,6 +57,7 @@ odoo.define('board.AddToGoogleSpreadsheetMenu', function (require) {
 
     AddToGoogleSpreadsheetMenu.props = {};
     AddToGoogleSpreadsheetMenu.template = "google_spreadsheet.AddToGoogleSpreadsheet";
+    AddToGoogleSpreadsheetMenu.components = { DropdownItem };
 
     FavoriteMenu.registry.add('add-to-google-spreadsheet-menu', AddToGoogleSpreadsheetMenu, 20);
 

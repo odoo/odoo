@@ -19,14 +19,14 @@
                         </div>
                         <div class="subpads">
                             <t t-set="_actionName">Payment</t>
-                            <ActionpadWidget client="client" actionName="_actionName" t-on-switchpane="switchPane" />
+                            <ActionpadWidget client="client" actionName="_actionName" onSwitchPane.bind="switchPane" />
                             <NumpadWidget activeMode="env.pos.numpadMode" />
                         </div>
                     </div>
                 </div>
                 <div class="rightpane" t-if="!env.isMobile || state.mobile_pane === 'right'">
                     <ProductsWidget mobileSearchBarIsShown="props.mobileSearchBarIsShown"/>
-                    <MobileOrderWidget t-if="env.isMobile" pane="state.mobile_pane" t-on-switchpane="switchPane"/>
+                    <MobileOrderWidget t-if="env.isMobile" pane="state.mobile_pane" onSwitchPane.bind="switchPane"/>
                 </div>
             </div>
         </div>

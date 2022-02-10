@@ -7,7 +7,7 @@
                     <t t-if="line.selected">
                         <div class="paymentline selected"
                              t-att-class="selectedLineClass(line)"
-                             t-on-click="trigger('select-payment-line', { cid: line.cid })">
+                             t-on-click="() => this.trigger('select-payment-line', { cid: line.cid })">
                              <div class="payment-name">
                                  <t t-esc="line.payment_method.name" />
                              </div>
@@ -21,7 +21,7 @@
                             </div>
                             <t t-if="!line.payment_status or !['done', 'reversed'].includes(line.payment_status)">
                                 <div class="delete-button"
-                                    t-on-click="trigger('delete-payment-line', { cid: line.cid })"
+                                    t-on-click="() => this.trigger('delete-payment-line', { cid: line.cid })"
                                     aria-label="Delete" title="Delete">
                                     <i class="fa fa-times-circle" />
                                 </div>
@@ -34,7 +34,7 @@
                     <t t-else="">
                         <div class="paymentline"
                              t-att-class="unselectedLineClass(line)"
-                             t-on-click="trigger('select-payment-line', { cid: line.cid })">
+                             t-on-click="() => this.trigger('select-payment-line', { cid: line.cid })">
                              <div class="payment-name">
                                  <t t-esc="line.payment_method.name" />
                              </div>
@@ -48,7 +48,7 @@
                             </div>
                             <t t-if="!line.payment_status or !['done', 'reversed'].includes(line.payment_status)">
                                 <div class="delete-button"
-                                    t-on-click="trigger('delete-payment-line', { cid: line.cid })"
+                                    t-on-click="() => this.trigger('delete-payment-line', { cid: line.cid })"
                                     aria-label="Delete" title="Delete">
                                     <i class="fa fa-times-circle" />
                                 </div>

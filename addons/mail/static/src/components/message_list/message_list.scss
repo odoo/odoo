@@ -123,11 +123,8 @@
 // ------------------------------------------------------------------
 
 .o_MessageList_separatorNewMessages:not(.o-disable-animation) {
-    &.fade-leave-active {
-        transition: opacity 0.5s;
-    }
-
-    &.fade-leave-to {
+    transition: opacity 0.5s;
+    &.o-fade-leave {
         opacity: 0;
     }
 }

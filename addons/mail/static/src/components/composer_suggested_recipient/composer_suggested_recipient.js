@@ -10,13 +10,23 @@ const { Component, useRef } = owl;
 
 class FormViewDialogComponentAdapter extends ComponentAdapter {
 
-    renderWidget() {
+    async renderWidget() {
         // Ensure the dialog is properly reconstructed. Without this line, it is
         // impossible to open the dialog again after having it closed a first
         // time, because the DOM of the dialog has disappeared.
-        return this.willStart();
+        await this.onWillStart();
+        this.props.setFormViewDialogWidget(this.widget);
     }
 
+    updateWidget() {
+        // This component should never be re-rendered but because shouldUpdate was removed,
+        // when the Composer is rerendered, so is the ComposerSuggestedRecipients even
+        // though its props haven't changed and there is nothing to do.
+    }
+
+    get widgetArgs() {
+        return [this.props.params];
+    }
 }
 
 export class ComposerSuggestedRecipient extends Component {
@@ -42,7 +52,9 @@ export class ComposerSuggestedRecipient extends Component {
          * Reference of the partner creation dialog. Useful to open it, for
          * compatibility with old code.
          */
-        this._dialogRef = useRef('dialog');
+        this.setFormViewDialogWidget = (widget) => {
+            this._dialogWidget = widget;
+        };
         /**
          * Whether the dialog is currently open. `_dialogRef` cannot be trusted
          * to know if the dialog is open due to manually calling `open` and
@@ -110,12 +122,12 @@ export class ComposerSuggestedRecipient extends Component {
             // Recipients must always be partners. On selecting a suggested
             // recipient that does not have a partner, the partner creation form
             // should be opened.
-            if (isChecked && this._dialogRef && !this._isDialogOpen) {
+            if (isChecked && this._dialogWidget && !this._isDialogOpen) {
                 this._isDialogOpen = true;
-                this._dialogRef.comp.widget.on('closed', this, () => {
+                this._dialogWidget.on('closed', this, () => {
                     this._isDialogOpen = false;
                 });
-                this._dialogRef.comp.widget.open();
+                this._dialogWidget.open();
             }
         }
     }

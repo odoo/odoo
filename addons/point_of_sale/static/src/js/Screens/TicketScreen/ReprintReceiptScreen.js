@@ -6,7 +6,11 @@ odoo.define('point_of_sale.ReprintReceiptScreen', function (require) {
 
     const ReprintReceiptScreen = (AbstractReceiptScreen) => {
         class ReprintReceiptScreen extends AbstractReceiptScreen {
-            mounted() {
+            setup() {
+                super.setup();
+                owl.onMounted(this.onMounted);
+            }
+            onMounted() {
                 this.printReceipt();
             }
             confirm() {

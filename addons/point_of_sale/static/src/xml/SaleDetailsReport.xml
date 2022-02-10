@@ -39,7 +39,7 @@
             <div>
                 Payments:
             </div>
-            <div t-foreach="payments" t-as="payment">
+            <div t-foreach="payments" t-as="payment" t-key="payment_index">
                 <t t-esc="payment.name" />
                 <span t-esc="pos.format_currency_no_symbol(payment.total)" class="pos-receipt-right-align"/>
             </div>
@@ -51,7 +51,7 @@
             <div>
                 Taxes:
             </div>
-            <div t-foreach="taxes" t-as="tax">
+            <div t-foreach="taxes" t-as="tax" t-key="tax_index">
                 <t t-esc="tax.name" />
                 <span t-esc="pos.format_currency_no_symbol(tax.tax_amount)" class="pos-receipt-right-align"/>
             </div>

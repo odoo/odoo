@@ -137,8 +137,14 @@ Object.assign(ChatWindowHeader, {
     },
     props: {
         chatWindowLocalId: String,
-        hasCloseAsBackButton: Boolean,
-        isExpandable: Boolean,
+        hasCloseAsBackButton: {
+            type: Boolean,
+            optional: true,
+        },
+        isExpandable: {
+            type: Boolean,
+            optional: true,
+        },
         onClicked: {
             type: Function,
             optional: true,

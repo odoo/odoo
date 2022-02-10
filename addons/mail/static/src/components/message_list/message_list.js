@@ -5,6 +5,8 @@ import { useComponentToModel } from '@mail/component_hooks/use_component_to_mode
 import { useRenderedValues } from '@mail/component_hooks/use_rendered_values/use_rendered_values';
 import { useUpdate } from '@mail/component_hooks/use_update/use_update';
 
+import { Transition } from "@web/core/transition";
+
 const { Component, onWillPatch, useRef } = owl;
 
 export class MessageList extends Component {
@@ -385,6 +387,7 @@ export class MessageList extends Component {
 }
 
 Object.assign(MessageList, {
+    components: { Transition },
     defaultProps: {
         hasScrollAdjust: true,
     },
@@ -397,7 +400,10 @@ Object.assign(MessageList, {
             type: Function,
             optional: true,
         },
-        hasScrollAdjust: Boolean,
+        hasScrollAdjust: {
+            type: Boolean,
+            optional: true,
+        },
         localId: String,
     },
     template: 'mail.MessageList',

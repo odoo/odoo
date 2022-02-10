@@ -2,7 +2,7 @@
 
 import { clear } from '@mail/model/model_field_command';
 
-const { onWillUpdateProps, useComponent, useRef } = owl;
+const { onWillDestroy, onWillUpdateProps, useComponent, useRef } = owl;
 
 /**
  * This hook provides support for saving the result of useRef directly into the
@@ -32,12 +32,10 @@ export function useRefToModel({ fieldName, modelName, refName }) {
             nextRecord.update({ [fieldName]: ref });
         }
     });
-    const __destroy = component.__destroy;
-    component.__destroy = parent => {
+    onWillDestroy(() => {
         const record = modelManager.models[modelName].get(component.props.localId);
         if (record) {
             record.update({ [fieldName]: clear() });
         }
-        __destroy.call(component, parent);
-    };
+    });
 }

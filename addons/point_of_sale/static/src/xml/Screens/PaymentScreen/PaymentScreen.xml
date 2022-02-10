@@ -7,13 +7,13 @@
                 <t t-if="!env.isMobile">
                     <div class="top-content">
                         <div class="button back"
-                              t-on-click="showScreen('ProductScreen')">
+                              t-on-click="() => this.showScreen('ProductScreen')">
                             <i class="fa fa-angle-double-left fa-fw"></i>
                             <span class="back_text">Back</span>
                         </div>
                         <div class="top-content-center"><h1>Payment</h1></div>
                         <div class="button next" t-att-class="{ highlight: currentOrder.is_paid() and currentOrder._isValidEmptyOrder() }"
-                            t-on-click="trigger('validate-order')">
+                            t-on-click="() => this.trigger('validate-order')">
                             <span class="next_text">Validate</span>
                             <i class="fa fa-angle-double-right fa-fw"></i>
                         </div>
@@ -81,7 +81,7 @@
                                     </div>
                                     <div t-if="env.pos.config.ship_later" class="button"
                                          t-att-class="{ highlight: currentOrder.is_to_ship() }"
-                                         t-on-click="toggleIsToShip()">
+                                         t-on-click="toggleIsToShip">
                                         <i class="fa fa-clock-o" /> Ship Later
                                     </div>
                                 </div>
@@ -93,10 +93,10 @@
                     <div class="switchpane">
                         <button class="btn-switchpane"
                             t-att-class="{ secondary: !(currentOrder.is_paid() and currentOrder._isValidEmptyOrder()) }"
-                            t-on-click="trigger('validate-order')">
+                            t-on-click="() => this.trigger('validate-order')">
                             <h1>Validate</h1>
                         </button>
-                        <button class="btn-switchpane secondary" t-on-click="showScreen('ProductScreen', {mobile_pane: 'left'})">
+                        <button class="btn-switchpane secondary" t-on-click="() => this.showScreen('ProductScreen', {mobile_pane: 'left'})">
                             <h1>Review</h1>
                         </button>
                     </div>

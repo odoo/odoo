@@ -157,7 +157,7 @@
          */
         getRenderer(parent, state) {
             state = Object.assign(state || {}, this.rendererParams);
-            return new RendererWrapper(parent, this.config.Renderer, state);
+            return new RendererWrapper(null, this.config.Renderer, state);
         },
     });
     viewRegistry.add("pivot", PivotView);

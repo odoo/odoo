@@ -83,8 +83,6 @@ odoo.define('web.control_panel_tests', function (require) {
                     ["selec", "=", "red"],
                 ]
             );
-
-            controlPanel.destroy();
         });
 
         QUnit.module('Keyboard navigation');
@@ -114,8 +112,6 @@ odoo.define('web.control_panel_tests', function (require) {
 
             // delete nothing (should not crash)
             await testUtils.dom.triggerEvent(searchInput, 'keydown', { key: 'Backspace' });
-
-            controlPanel.destroy();
         });
 
         QUnit.test('fields and filters with groups/invisible attribute', async function (assert) {
@@ -195,8 +191,6 @@ odoo.define('web.control_panel_tests', function (require) {
 
             selectorContainsValue('.o_menu_item', "GA", true);
             selectorContainsValue('.o_menu_item', "GB", false);
-
-            controlPanel.destroy();
         });
 
         QUnit.test('invisible fields and filters with unknown related fields should not be rendered', async function (assert) {
@@ -228,8 +222,6 @@ odoo.define('web.control_panel_tests', function (require) {
                 "there should not be filter dropdown");
             assert.containsNone(controlPanel.el, 'div.o_search_options div.o_group_by_menu',
                 "there should not be groupby dropdown");
-
-            controlPanel.destroy();
         });
 
         QUnit.test('groupby menu is not rendered if searchMenuTypes does not have groupBy', async function (assert) {
@@ -249,8 +241,6 @@ odoo.define('web.control_panel_tests', function (require) {
 
             assert.containsOnce(controlPanel.el, 'div.o_search_options div.o_filter_menu');
             assert.containsNone(controlPanel.el, 'div.o_search_options div.o_group_by_menu');
-
-            controlPanel.destroy();
         });
 
         QUnit.test('search field should be autofocused', async function (assert) {
@@ -270,8 +260,6 @@ odoo.define('web.control_panel_tests', function (require) {
             assert.containsOnce(controlPanel, '.o_searchview_input', "has a search field");
             assert.containsOnce(controlPanel, '.o_searchview_input:focus-within',
                 "has autofocused search field");
-    
-            controlPanel.destroy();
         });
     
         QUnit.test("search field's autofocus should be disabled on mobile device", async function (assert) {
@@ -291,8 +279,6 @@ odoo.define('web.control_panel_tests', function (require) {
             assert.containsOnce(controlPanel, '.o_searchview_input', "has a search field");
             assert.containsNone(controlPanel, '.o_searchview_input:focus-within',
                 "hasn't autofocused search field");
-    
-            controlPanel.destroy();
         });
 
     });

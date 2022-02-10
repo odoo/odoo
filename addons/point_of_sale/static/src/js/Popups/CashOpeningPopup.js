@@ -4,27 +4,25 @@ odoo.define('point_of_sale.CashOpeningPopup', function(require) {
     const AbstractAwaitablePopup = require('point_of_sale.AbstractAwaitablePopup');
     const Registries = require('point_of_sale.Registries');
 
-    const { useRef, useState } = owl;
+    const { useState } = owl;
 
     class CashOpeningPopup extends AbstractAwaitablePopup {
-        constructor() {
-            super(...arguments);
+        setup() {
+            super.setup();
             this.manualInputCashCount = null;
             this.state = useState({
                 notes: "",
                 openingCash: this.env.pos.bank_statement.balance_start || 0,
+                displayMoneyDetailsPopup: false,
             });
-            this.moneyDetailsRef = useRef('moneyDetails');
         }
         openDetailsPopup() {
-            if (this.moneyDetailsRef.comp.isClosed()){
-                this.moneyDetailsRef.comp.openPopup();
-                this.state.openingCash = 0;
-                this.state.notes = "";
-                if (this.manualInputCashCount) {
-                    this.moneyDetailsRef.comp.reset();
-                }
-            }
+            this.state.openingCash = 0;
+            this.state.notes = "";
+            this.state.displayMoneyDetailsPopup = true;
+        }
+        closeDetailsPopup() {
+            this.state.displayMoneyDetailsPopup = false;
         }
         startSession() {
             this.env.pos.bank_statement.balance_start = this.state.openingCash;
@@ -36,13 +34,13 @@ odoo.define('point_of_sale.CashOpeningPopup', function(require) {
                 });
             this.cancel(); // close popup
         }
-        updateCashOpening(event) {
-            const { total, moneyDetailsNotes } = event.detail;
+        updateCashOpening({ total, moneyDetailsNotes }) {
             this.state.openingCash = total;
             if (moneyDetailsNotes) {
                 this.state.notes = moneyDetailsNotes;
             }
             this.manualInputCashCount = false;
+            this.closeDetailsPopup();
         }
         handleInputChange() {
             this.manualInputCashCount = true;

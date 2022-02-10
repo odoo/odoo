@@ -9,7 +9,7 @@ import { clearRegistryWithCleanup, makeTestEnv } from "../../helpers/mock_env";
 import { getFixture, nextTick, patchWithCleanup, triggerEvent } from "../../helpers/utils";
 import { registerCleanup } from "../../helpers/cleanup";
 
-const { Component, mount, useState, xml } = owl;
+const { App, Component, useState, xml } = owl;
 
 const mainComponents = registry.category("main_components");
 
@@ -61,164 +61,170 @@ async function makeParent(Child, options = {}) {
         </div>`;
     Parent.components = { PopoverContainer, Child };
 
-    const parent = await mount(Parent, { env, target });
-    registerCleanup(() => parent.destroy());
-    return parent;
+    const app = new App(Parent, {
+        env,
+        target,
+        templates: window.__OWL_TEMPLATES__,
+        test: true,
+    });
+    registerCleanup(() => app.destroy());
+    for (const [name, template] of Object.entries(options.templates || {})) {
+        app.addTemplate(name, template);
+    }
+
+    return app.mount(target);
 }
 
 let target;
-QUnit.module(
-    "Tooltip service",
-    {
-        beforeEach() {
-            target = getFixture();
-        },
-    },
-    () => {
-        QUnit.test("basic rendering", async (assert) => {
-            class MyComponent extends Component {}
-            MyComponent.template = xml`<button data-tooltip="hello">Action</button>`;
-            let simulateTimeout;
-            const mockSetTimeout = (fn) => {
-                simulateTimeout = fn;
-            };
-            let simulateInterval;
-            const mockSetInterval = (fn) => {
-                simulateInterval = fn;
-            };
-            const parent = await makeParent(MyComponent, { mockSetTimeout, mockSetInterval });
+QUnit.module("Tooltip service", (hooks) => {
+    hooks.beforeEach(() => {
+        target = getFixture();
+    });
 
-            assert.containsNone(parent, ".o_popover_container .o_popover");
-            target.querySelector("button").dispatchEvent(new Event("mouseenter"));
-            await nextTick();
-            assert.containsNone(parent, ".o_popover_container .o_popover");
+    QUnit.test("basic rendering", async (assert) => {
+        class MyComponent extends Component {}
+        MyComponent.template = xml`<button data-tooltip="hello">Action</button>`;
+        let simulateTimeout;
+        const mockSetTimeout = (fn) => {
+            simulateTimeout = fn;
+        };
+        let simulateInterval;
+        const mockSetInterval = (fn) => {
+            simulateInterval = fn;
+        };
+        const parent = await makeParent(MyComponent, { mockSetTimeout, mockSetInterval });
 
-            simulateTimeout();
-            await nextTick();
-            assert.containsOnce(parent, ".o_popover_container .o_popover");
-            assert.strictEqual(
-                target.querySelector(".o_popover_container .o_popover").innerText,
-                "hello"
-            );
+        assert.containsNone(parent, ".o_popover_container .o_popover");
+        target.querySelector("button").dispatchEvent(new Event("mouseenter"));
+        await nextTick();
+        assert.containsNone(parent, ".o_popover_container .o_popover");
 
-            const buttonRect = target.querySelector("button").getBoundingClientRect();
-            const x = buttonRect.right + 10;
-            const y = buttonRect.bottom + 10;
-            await triggerEvent(target, "button", "mousemove", {
-                pageX: x,
-                layerX: x,
-                screenX: x,
-                pageY: y,
-                layerY: y,
-                screenY: y,
-            });
-            assert.containsOnce(parent, ".o_popover_container .o_popover");
-            simulateInterval();
-            await nextTick();
-            assert.containsNone(parent, ".o_popover_container .o_popover");
+        simulateTimeout();
+        await nextTick();
+        assert.containsOnce(parent, ".o_popover_container .o_popover");
+        assert.strictEqual(
+            target.querySelector(".o_popover_container .o_popover").innerText,
+            "hello"
+        );
+
+        const buttonRect = target.querySelector("button").getBoundingClientRect();
+        const x = buttonRect.right + 10;
+        const y = buttonRect.bottom + 10;
+        await triggerEvent(target, "button", "mousemove", {
+            pageX: x,
+            layerX: x,
+            screenX: x,
+            pageY: y,
+            layerY: y,
+            screenY: y,
         });
+        assert.containsOnce(parent, ".o_popover_container .o_popover");
+        simulateInterval();
+        await nextTick();
+        assert.containsNone(parent, ".o_popover_container .o_popover");
+    });
 
-        QUnit.test("basic rendering 2", async (assert) => {
-            class MyComponent extends Component {}
-            MyComponent.template = xml`<span data-tooltip="hello" class="our_span"><span class="our_span">Action</span></span>`;
-            let simulateTimeout;
-            const mockSetTimeout = (fn) => {
-                simulateTimeout = fn;
-            };
-            let simulateInterval;
-            const mockSetInterval = (fn) => {
-                simulateInterval = fn;
-            };
-            const parent = await makeParent(MyComponent, { mockSetTimeout, mockSetInterval });
+    QUnit.test("basic rendering 2", async (assert) => {
+        class MyComponent extends Component {}
+        MyComponent.template = xml`<span data-tooltip="hello" class="our_span"><span class="our_span">Action</span></span>`;
+        let simulateTimeout;
+        const mockSetTimeout = (fn) => {
+            simulateTimeout = fn;
+        };
+        let simulateInterval;
+        const mockSetInterval = (fn) => {
+            simulateInterval = fn;
+        };
+        const parent = await makeParent(MyComponent, { mockSetTimeout, mockSetInterval });
 
-            assert.containsNone(parent, ".o_popover_container .o_popover");
-            let [outerSpan, innerSpan] = target.querySelectorAll("span.our_span");
-            outerSpan.dispatchEvent(new Event("mouseenter"));
-            innerSpan.dispatchEvent(new Event("mouseenter"));
-            await nextTick();
-            assert.containsNone(parent, ".o_popover_container .o_popover");
+        assert.containsNone(parent, ".o_popover_container .o_popover");
+        let [outerSpan, innerSpan] = target.querySelectorAll("span.our_span");
+        outerSpan.dispatchEvent(new Event("mouseenter"));
+        innerSpan.dispatchEvent(new Event("mouseenter"));
+        await nextTick();
+        assert.containsNone(parent, ".o_popover_container .o_popover");
 
-            simulateTimeout();
-            await nextTick();
-            assert.containsOnce(parent, ".o_popover_container .o_popover");
-            assert.strictEqual(
-                target.querySelector(".o_popover_container .o_popover").innerText,
-                "hello"
-            );
+        simulateTimeout();
+        await nextTick();
+        assert.containsOnce(parent, ".o_popover_container .o_popover");
+        assert.strictEqual(
+            target.querySelector(".o_popover_container .o_popover").innerText,
+            "hello"
+        );
 
-            const outerSpanRect = outerSpan.getBoundingClientRect();
-            const x = outerSpanRect.right + 10;
-            const y = outerSpanRect.bottom + 10;
-            await triggerEvent(target, 'span[data-tooltip="hello"]', "mousemove", {
-                pageX: x,
-                layerX: x,
-                screenX: x,
-                pageY: y,
-                layerY: y,
-                screenY: y,
-            });
-            assert.containsOnce(parent, ".o_popover_container .o_popover");
-            simulateInterval();
-            await nextTick();
-            assert.containsNone(parent, ".o_popover_container .o_popover");
+        const outerSpanRect = outerSpan.getBoundingClientRect();
+        const x = outerSpanRect.right + 10;
+        const y = outerSpanRect.bottom + 10;
+        await triggerEvent(target, 'span[data-tooltip="hello"]', "mousemove", {
+            pageX: x,
+            layerX: x,
+            screenX: x,
+            pageY: y,
+            layerY: y,
+            screenY: y,
         });
+        assert.containsOnce(parent, ".o_popover_container .o_popover");
+        simulateInterval();
+        await nextTick();
+        assert.containsNone(parent, ".o_popover_container .o_popover");
+    });
 
-        QUnit.test("remove element with opened tooltip", async (assert) => {
-            let compState;
-            class MyComponent extends Component {
-                setup() {
-                    this.state = useState({ visible: true });
-                    compState = this.state;
-                }
+    QUnit.test("remove element with opened tooltip", async (assert) => {
+        let compState;
+        class MyComponent extends Component {
+            setup() {
+                this.state = useState({ visible: true });
+                compState = this.state;
             }
-            MyComponent.template = xml`
+        }
+        MyComponent.template = xml`
             <div>
                 <button t-if="state.visible" data-tooltip="hello">Action</button>
             </div>`;
-            let simulateInterval;
-            const mockSetInterval = (fn) => {
-                simulateInterval = fn;
-            };
-            const parent = await makeParent(MyComponent, { mockSetInterval });
+        let simulateInterval;
+        const mockSetInterval = (fn) => {
+            simulateInterval = fn;
+        };
+        const parent = await makeParent(MyComponent, { mockSetInterval });
 
-            assert.containsOnce(parent, "button");
-            assert.containsNone(parent, ".o_popover_container .o_popover");
-            target.querySelector("button").dispatchEvent(new Event("mouseenter"));
-            await nextTick();
-            assert.containsOnce(parent, ".o_popover_container .o_popover");
+        assert.containsOnce(parent, "button");
+        assert.containsNone(parent, ".o_popover_container .o_popover");
+        target.querySelector("button").dispatchEvent(new Event("mouseenter"));
+        await nextTick();
+        assert.containsOnce(parent, ".o_popover_container .o_popover");
 
-            compState.visible = false;
-            await nextTick();
-            assert.containsNone(parent, "button");
-            simulateInterval();
-            await nextTick();
-            assert.containsNone(parent, ".o_popover_container .o_popover");
-        });
+        compState.visible = false;
+        await nextTick();
+        assert.containsNone(parent, "button");
+        simulateInterval();
+        await nextTick();
+        assert.containsNone(parent, ".o_popover_container .o_popover");
+    });
 
-        QUnit.test("rendering with several tooltips", async (assert) => {
-            class MyComponent extends Component {}
-            MyComponent.template = xml`
+    QUnit.test("rendering with several tooltips", async (assert) => {
+        class MyComponent extends Component {}
+        MyComponent.template = xml`
             <div>
                 <button class="button_1" data-tooltip="tooltip 1">Action 1</button>
                 <button class="button_2" data-tooltip="tooltip 2">Action 2</button>
             </div>`;
-            const parent = await makeParent(MyComponent);
+        const parent = await makeParent(MyComponent);
 
-            assert.containsNone(parent, ".o_popover_container .o_popover");
-            target.querySelector("button.button_1").dispatchEvent(new Event("mouseenter"));
-            await nextTick();
-            assert.containsOnce(parent, ".o_popover_container .o_popover");
-            assert.strictEqual(target.querySelector(".o_popover").innerText, "tooltip 1");
-            target.querySelector("button.button_1").dispatchEvent(new Event("mouseleave"));
-            target.querySelector("button.button_2").dispatchEvent(new Event("mouseenter"));
-            await nextTick();
-            assert.containsOnce(parent, ".o_popover_container .o_popover");
-            assert.strictEqual(target.querySelector(".o_popover").innerText, "tooltip 2");
-        });
+        assert.containsNone(parent, ".o_popover_container .o_popover");
+        target.querySelector("button.button_1").dispatchEvent(new Event("mouseenter"));
+        await nextTick();
+        assert.containsOnce(parent, ".o_popover_container .o_popover");
+        assert.strictEqual(target.querySelector(".o_popover").innerText, "tooltip 1");
+        target.querySelector("button.button_1").dispatchEvent(new Event("mouseleave"));
+        target.querySelector("button.button_2").dispatchEvent(new Event("mouseenter"));
+        await nextTick();
+        assert.containsOnce(parent, ".o_popover_container .o_popover");
+        assert.strictEqual(target.querySelector(".o_popover").innerText, "tooltip 2");
+    });
 
-        QUnit.test("positionning", async (assert) => {
-            class MyComponent extends Component {}
-            MyComponent.template = xml`
+    QUnit.test("positionning", async (assert) => {
+        class MyComponent extends Component {}
+        MyComponent.template = xml`
             <div style="height: 400px; padding: 40px">
                 <button class="default" data-tooltip="default">Default</button>
                 <button class="top" data-tooltip="top" data-tooltip-position="top">Top</button>
@@ -226,67 +232,69 @@ QUnit.module(
                 <button class="bottom" data-tooltip="bottom" data-tooltip-position="bottom">Bottom</button>
                 <button class="left" data-tooltip="left" data-tooltip-position="left">Left</button>
             </div>`;
-            const parent = await makeParent(MyComponent);
+        const parent = await makeParent(MyComponent);
 
-            // default
-            target.querySelector("button.default").dispatchEvent(new Event("mouseenter"));
-            await nextTick();
-            assert.containsOnce(parent, ".o_popover_container .o_popover");
-            assert.strictEqual(target.querySelector(".o_popover").innerText, "default");
-            assert.hasClass(target.querySelector(".o_popover"), "o-popper-position--bm");
+        // default
+        target.querySelector("button.default").dispatchEvent(new Event("mouseenter"));
+        await nextTick();
+        assert.containsOnce(parent, ".o_popover_container .o_popover");
+        assert.strictEqual(target.querySelector(".o_popover").innerText, "default");
+        assert.hasClass(target.querySelector(".o_popover"), "o-popper-position--bm");
 
-            // top
-            target.querySelector("button.top").dispatchEvent(new Event("mouseenter"));
-            await nextTick();
-            assert.containsOnce(parent, ".o_popover_container .o_popover");
-            assert.strictEqual(target.querySelector(".o_popover").innerText, "top");
-            assert.hasClass(target.querySelector(".o_popover"), "o-popper-position--tm");
+        // top
+        target.querySelector("button.top").dispatchEvent(new Event("mouseenter"));
+        await nextTick();
+        assert.containsOnce(parent, ".o_popover_container .o_popover");
+        assert.strictEqual(target.querySelector(".o_popover").innerText, "top");
+        assert.hasClass(target.querySelector(".o_popover"), "o-popper-position--tm");
 
-            // right
-            target.querySelector("button.right").dispatchEvent(new Event("mouseenter"));
-            await nextTick();
-            assert.containsOnce(parent, ".o_popover_container .o_popover");
-            assert.strictEqual(target.querySelector(".o_popover").innerText, "right");
-            assert.hasClass(target.querySelector(".o_popover"), "o-popper-position--rm");
+        // right
+        target.querySelector("button.right").dispatchEvent(new Event("mouseenter"));
+        await nextTick();
+        assert.containsOnce(parent, ".o_popover_container .o_popover");
+        assert.strictEqual(target.querySelector(".o_popover").innerText, "right");
+        assert.hasClass(target.querySelector(".o_popover"), "o-popper-position--rm");
 
-            // bottom
-            target.querySelector("button.bottom").dispatchEvent(new Event("mouseenter"));
-            await nextTick();
-            assert.containsOnce(parent, ".o_popover_container .o_popover");
-            assert.strictEqual(target.querySelector(".o_popover").innerText, "bottom");
-            assert.hasClass(target.querySelector(".o_popover"), "o-popper-position--bm");
+        // bottom
+        target.querySelector("button.bottom").dispatchEvent(new Event("mouseenter"));
+        await nextTick();
+        assert.containsOnce(parent, ".o_popover_container .o_popover");
+        assert.strictEqual(target.querySelector(".o_popover").innerText, "bottom");
+        assert.hasClass(target.querySelector(".o_popover"), "o-popper-position--bm");
 
-            // left
-            target.querySelector("button.left").dispatchEvent(new Event("mouseenter"));
-            await nextTick();
-            assert.containsOnce(parent, ".o_popover_container .o_popover");
-            assert.strictEqual(target.querySelector(".o_popover").innerText, "left");
-            assert.hasClass(target.querySelector(".o_popover"), "o-popper-position--lm");
-        });
+        // left
+        target.querySelector("button.left").dispatchEvent(new Event("mouseenter"));
+        await nextTick();
+        assert.containsOnce(parent, ".o_popover_container .o_popover");
+        assert.strictEqual(target.querySelector(".o_popover").innerText, "left");
+        assert.hasClass(target.querySelector(".o_popover"), "o-popper-position--lm");
+    });
 
-        QUnit.test("tooltip with a template, no info", async (assert) => {
-            class MyComponent extends Component {}
-            MyComponent.template = xml`
+    QUnit.test("tooltip with a template, no info", async (assert) => {
+        class MyComponent extends Component {}
+        MyComponent.template = xml`
             <button data-tooltip-template="my_tooltip_template">Action</button>
         `;
 
-            const parent = await makeParent(MyComponent);
-            parent.env.qweb.addTemplate("my_tooltip_template", "<i>tooltip</i>");
+        const templates = {
+            my_tooltip_template: "<i>tooltip</i>",
+        };
+        const parent = await makeParent(MyComponent, { templates });
 
-            assert.containsNone(parent, ".o_popover_container .o-tooltip");
-            target.querySelector("button").dispatchEvent(new Event("mouseenter"));
-            await nextTick();
-            assert.containsOnce(parent, ".o_popover_container .o-tooltip");
-            assert.strictEqual(target.querySelector(".o-tooltip").innerHTML, "<i>tooltip</i>");
-        });
+        assert.containsNone(parent, ".o_popover_container .o-tooltip");
+        target.querySelector("button").dispatchEvent(new Event("mouseenter"));
+        await nextTick();
+        assert.containsOnce(parent, ".o_popover_container .o-tooltip");
+        assert.strictEqual(target.querySelector(".o-tooltip").innerHTML, "<i>tooltip</i>");
+    });
 
-        QUnit.test("tooltip with a template and info", async (assert) => {
-            class MyComponent extends Component {
-                get info() {
-                    return JSON.stringify({ x: 3, y: "abc" });
-                }
+    QUnit.test("tooltip with a template and info", async (assert) => {
+        class MyComponent extends Component {
+            get info() {
+                return JSON.stringify({ x: 3, y: "abc" });
             }
-            MyComponent.template = xml`
+        }
+        MyComponent.template = xml`
             <button
                 data-tooltip-template="my_tooltip_template"
                 t-att-data-tooltip-info="info">
@@ -294,25 +302,23 @@ QUnit.module(
             </button>
         `;
 
-            const parent = await makeParent(MyComponent);
-            parent.env.qweb.addTemplate(
-                "my_tooltip_template",
-                `
-                    <ul>
-                        <li>X: <t t-esc="info.x"/></li>
-                        <li>Y: <t t-esc="info.y"/></li>
-                    </ul>
-                `
-            );
+        const templates = {
+            my_tooltip_template: `
+                <ul>
+                    <li>X: <t t-esc="info.x"/></li>
+                    <li>Y: <t t-esc="info.y"/></li>
+                </ul>
+            `,
+        };
+        const parent = await makeParent(MyComponent, { templates });
 
-            assert.containsNone(parent, ".o_popover_container .o-tooltip");
-            target.querySelector("button").dispatchEvent(new Event("mouseenter"));
-            await nextTick();
-            assert.containsOnce(parent, ".o_popover_container .o-tooltip");
-            assert.strictEqual(
-                target.querySelector(".o-tooltip").innerHTML,
-                "<ul><li>X: 3</li><li>Y: abc</li></ul>"
-            );
-        });
-    }
-);
+        assert.containsNone(parent, ".o_popover_container .o-tooltip");
+        target.querySelector("button").dispatchEvent(new Event("mouseenter"));
+        await nextTick();
+        assert.containsOnce(parent, ".o_popover_container .o-tooltip");
+        assert.strictEqual(
+            target.querySelector(".o-tooltip").innerHTML,
+            "<ul><li>X: 3</li><li>Y: abc</li></ul>"
+        );
+    });
+});

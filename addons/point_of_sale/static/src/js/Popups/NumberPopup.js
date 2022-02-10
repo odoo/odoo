@@ -5,7 +5,7 @@ odoo.define('point_of_sale.NumberPopup', function(require) {
 
     const AbstractAwaitablePopup = require('point_of_sale.AbstractAwaitablePopup');
     const NumberBuffer = require('point_of_sale.NumberBuffer');
-    const { useListener } = require('web.custom_hooks');
+    const { useListener } = require("@web/core/utils/hooks");
     const Registries = require('point_of_sale.Registries');
 
     const { useState } = owl;
@@ -22,8 +22,8 @@ odoo.define('point_of_sale.NumberPopup', function(require) {
          * @confirmed {Boolean}
          * @payload {String}
          */
-        constructor() {
-            super(...arguments);
+        setup() {
+            super.setup();
             useListener('accept-input', this.confirm);
             useListener('close-this-popup', this.cancel);
             let startingBuffer = '';

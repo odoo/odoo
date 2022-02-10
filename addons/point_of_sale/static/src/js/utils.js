@@ -63,5 +63,29 @@ odoo.define('point_of_sale.utils', function (require) {
         return errorToHandle || error;
     }
 
-    return { getFileAsText, nextFrame, identifyError, isConnectionError };
+    /**
+     * Creates a batched version of a callback so that all calls to it in the same
+     * microtick will only call the original callback once.
+     *
+     * @param callback the callback to batch
+     * @returns a batched version of the original callback
+     */
+    function batched(callback) {
+        let called = false;
+        return async () => {
+            // This await blocks all calls to the callback here, then releases them sequentially
+            // in the next microtick. This line decides the granularity of the batch.
+            await Promise.resolve();
+            if (!called) {
+                called = true;
+                callback();
+                // wait for all calls in this microtick to fall through before resetting "called"
+                // so that only the first call to the batched function calls the original callback
+                await Promise.resolve();
+                called = false;
+            }
+        };
+    }
+
+    return { getFileAsText, nextFrame, identifyError, isConnectionError, batched };
 });

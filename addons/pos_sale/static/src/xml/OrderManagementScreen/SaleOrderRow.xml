@@ -4,7 +4,7 @@
     <t t-name="SaleOrderRow" owl="1">
         <div class="order-row"
         t-att-class="{ highlight: highlighted }"
-        t-on-click="trigger('click-sale-order', props.order)">
+        t-on-click="() => this.trigger('click-sale-order', props.order)">
             <div class="col name">
                 <div t-if="env.isMobile">Order</div>
                 <div><t t-esc="name"/></div>

@@ -9,7 +9,7 @@
                 <path d="M310,170a140,140,0,0,0-280,0" style="stroke:#80D8FF;"/>
                 <path d="M330,170a160,160,0,0,0-320,0" style="stroke:#c794ba;"/>
             </svg>
-            <div class="o_reward_stars" t-foreach="[1, 2, 3, 4]" t-as="star">
+            <div class="o_reward_stars" t-foreach="[1, 2, 3, 4]" t-as="star" t-key="star_index">
                 <t t-call="web.RainbowMan.Star">
                     <t t-set="class" t-value="star"/>
                 </t>
@@ -36,8 +36,7 @@
                         <div class="o_reward_msg_card">
                             <div class="o_reward_msg_content">
                                 <t t-if="!props.Component">
-                                    <t t-if="props.messageIsHtml" t-raw="props.message" />
-                                    <t t-else="" t-esc="props.message" />
+                                    <t t-out="props.message"/>
                                 </t>
                                 <t t-else="" t-component="props.Component" t-props="props.props"/>
                             </div>

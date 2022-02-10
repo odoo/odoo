@@ -10,7 +10,7 @@
                         <t t-if="!env.isMobile"> Discard</t>
                     </div>
                     <div t-if="!state.detailIsShown &amp;&amp; !state.selectedClient" class="button new-customer" role="img" aria-label="Add a customer"
-                            t-on-click="trigger('activate-edit-mode', { isNewClient: true })"
+                            t-on-click="() => this.trigger('activate-edit-mode', { isNewClient: true })"
                             title="Add a customer">
                         <i class="fa fa-plus"/>
                         <t t-if="!env.isMobile"> Create</t>
@@ -25,7 +25,7 @@
                             <i t-elif="nextButton.command === 'set'" class="fa fa-check"/>
                         </t>
                     </div>
-                    <div class="button" t-if="state.detailIsShown" t-on-click="trigger('click-save')">
+                    <div class="button" t-if="state.detailIsShown" t-on-click="() => this.trigger('click-save')">
                         <i class="fa fa-floppy-o"/>
                         <t t-if="!env.isMobile">
                             <span> Save</span>
@@ -35,7 +35,7 @@
                         <input placeholder="Search Customers" size="1" t-on-keyup="updateClientList" />
                         <span class="search-clear-client"></span>
                     </div>
-                    <div class="button back" t-on-click="searchClient()" t-if="!state.detailIsShown">
+                    <div class="button back" t-on-click="searchClient" t-if="!state.detailIsShown">
                         <span class="database-icon">
                             <i class="fa fa-database"/>
                         </span>
@@ -51,8 +51,7 @@
                         <section class="subwindow collapsed">
                             <div class="subwindow-container collapsed">
                                 <div t-if="state.detailIsShown" class="client-details-contents subwindow-container-fix">
-                                    <ClientDetailsEdit t-props="state.editModeProps"
-                                                       t-on-cancel-edit="cancelEdit"/>
+                                    <ClientDetailsEdit t-props="state.editModeProps" />
                                 </div>
                             </div>
                         </section>
@@ -76,7 +75,7 @@
                                                 <ClientLine partner="partner"
                                                             selectedClient="state.selectedClient"
                                                             detailIsShown="state.detailIsShown"
-                                                            t-on-click-client="clickClient" />
+                                                            onClickClient.bind="clickClient"/>
                                             </t>
                                         </tbody>
                                     </table>

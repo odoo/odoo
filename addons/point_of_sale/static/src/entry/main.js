@@ -6,7 +6,7 @@ import { ChromeAdapter } from "@point_of_sale/entry/chrome_adapter";
 import Registries from "point_of_sale.Registries";
 import { registry } from "@web/core/registry";
 
-const { Component, Portal, xml } = owl;
+const { Component, xml } = owl;
 
 // For consistency's sake, we should trigger"WEB_CLIENT_READY" on the bus when PosApp is mounted
 // But we can't since mail and some other poll react on that cue, and we don't want those services started
@@ -28,7 +28,6 @@ PosApp.template = xml`
 PosApp.components = { ChromeAdapter };
 
 function startPosApp() {
-    Registries.Component.add(Portal);
     Registries.Component.freeze();
     Registries.Model.freeze();
     startWebClient(PosApp);

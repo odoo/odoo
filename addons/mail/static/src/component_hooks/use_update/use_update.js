@@ -2,7 +2,7 @@
 
 import { Listener } from '@mail/model/model_listener';
 
-const { onMounted, onPatched, useComponent } = owl;
+const { onMounted, onPatched, onWillDestroy, useComponent } = owl;
 
 /**
  * This hook provides support for executing code after update (render or patch).
@@ -29,11 +29,9 @@ export function useUpdate({ func }) {
     }
     onMounted(onUpdate);
     onPatched(onUpdate);
-    const __destroy = component.__destroy;
-    component.__destroy = parent => {
+    onWillDestroy(() => {
         if (modelManager) {
             modelManager.removeListener(listener);
         }
-        __destroy.call(component, parent);
-    };
+    });
 }

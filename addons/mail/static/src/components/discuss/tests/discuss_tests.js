@@ -28,9 +28,9 @@ QUnit.module('discuss_tests.js', {
                 data: this.data,
                 hasDiscuss: true,
             }));
-            const { afterEvent, components, env, widget } = res;
+            const { afterEvent, apps, env, widget } = res;
             this.afterEvent = afterEvent;
-            this.components = components;
+            this.apps = apps;
             this.env = env;
             this.widget = widget;
             return res;

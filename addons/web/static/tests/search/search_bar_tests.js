@@ -16,6 +16,8 @@ function getDomain(controlPanel) {
     return controlPanel.env.searchModel.domain;
 }
 
+const { onWillUpdateProps } = owl;
+
 let serverData;
 QUnit.module("Search", (hooks) => {
     hooks.beforeEach(async () => {
@@ -294,9 +296,11 @@ QUnit.module("Search", (hooks) => {
 
         let updateCount = 0;
         patchWithCleanup(ControlPanel.prototype, {
-            async willUpdateProps() {
-                updateCount++;
-                await this._super(...arguments);
+            setup() {
+                this._super();
+                onWillUpdateProps(() => {
+                    updateCount++;
+                });
             },
         });
 
@@ -350,9 +354,11 @@ QUnit.module("Search", (hooks) => {
 
         let updateCount = 0;
         patchWithCleanup(ControlPanel.prototype, {
-            async willUpdateProps() {
-                updateCount++;
-                await this._super(...arguments);
+            setup() {
+                this._super();
+                onWillUpdateProps(() => {
+                    updateCount++;
+                });
             },
         });
 

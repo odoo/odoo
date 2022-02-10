@@ -4,14 +4,12 @@ import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { SwitchCompanyMenu } from "@web/webclient/switch_company_menu/switch_company_menu";
-import { registerCleanup } from "../helpers/cleanup";
 import { makeTestEnv } from "../helpers/mock_env";
 import { companyService } from "@web/webclient/company_service";
-import { click, getFixture, makeDeferred, patchWithCleanup } from "../helpers/utils";
+import { click, getFixture, makeDeferred, mount, patchWithCleanup } from "../helpers/utils";
 import { uiService } from "@web/core/ui/ui_service";
 import { session } from "@web/session";
 
-const { mount } = owl;
 const serviceRegistry = registry.category("services");
 
 async function createSwitchCompanyMenu(routerParams = {}, toggleDelay = 0) {
@@ -31,8 +29,7 @@ async function createSwitchCompanyMenu(routerParams = {}, toggleDelay = 0) {
     }
     const env = await makeTestEnv();
     const target = getFixture();
-    const scMenu = await mount(SwitchCompanyMenu, { env, target });
-    registerCleanup(() => scMenu.destroy());
+    const scMenu = await mount(SwitchCompanyMenu, target, { env });
     return scMenu;
 }
 
