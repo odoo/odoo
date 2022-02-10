@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import contextlib
 import logging
 from lxml import etree
 import os
@@ -15,7 +15,7 @@ from functools import partial
 
 import odoo
 from odoo import api, models
-from odoo import registry, SUPERUSER_ID
+from odoo import SUPERUSER_ID
 from odoo.exceptions import AccessError, MissingError
 from odoo.http import request
 from odoo.tools.safe_eval import safe_eval
@@ -69,8 +69,8 @@ class Http(models.AbstractModel):
 
     @classmethod
     def clear_caches(cls):
-        super(Http, cls)._clear_routing_map()
-        return super(Http, cls).clear_caches()
+        super()._clear_routing_map()
+        return super().clear_caches()
 
     @classmethod
     def _slug_matching(cls, adapter, endpoint, **kw):
@@ -81,11 +81,6 @@ class Http(models.AbstractModel):
         return adapter.build(endpoint, kw) + (qs and '?%s' % qs or '')
 
     @classmethod
-    def _match(cls, path_info, key=None):
-        key = key or (request and request.website_routing)
-        return super(Http, cls)._match(path_info, key=key)
-
-    @classmethod
     def _generate_routing_rules(cls, modules, converters):
         website_id = request.website_routing
         logger.debug("_generate_routing_rules for website: %s", website_id)
@@ -94,25 +89,24 @@ class Http(models.AbstractModel):
         rewrites = dict([(x.url_from, x) for x in request.env['website.rewrite'].sudo().search(domain)])
         cls._rewrite_len[website_id] = len(rewrites)
 
-        for url, endpoint, routing in super(Http, cls)._generate_routing_rules(modules, converters):
-            routing = dict(routing)
+        for url, endpoint in super()._generate_routing_rules(modules, converters):
             if url in rewrites:
                 rewrite = rewrites[url]
                 url_to = rewrite.url_to
                 if rewrite.redirect_type == '308':
                     logger.debug('Add rule %s for %s' % (url_to, website_id))
-                    yield url_to, endpoint, routing  # yield new url
+                    yield url_to, endpoint  # yield new url
 
                     if url != url_to:
                         logger.debug('Redirect from %s to %s for website %s' % (url, url_to, website_id))
                         _slug_matching = partial(cls._slug_matching, endpoint=endpoint)
-                        routing['redirect_to'] = _slug_matching
-                        yield url, endpoint, routing  # yield original redirected to new url
+                        endpoint.routing['redirect_to'] = _slug_matching
+                        yield url, endpoint  # yield original redirected to new url
                 elif rewrite.redirect_type == '404':
                     logger.debug('Return 404 for %s for website %s' % (url, website_id))
                     continue
             else:
-                yield url, endpoint, routing
+                yield url, endpoint
 
     @classmethod
     def _get_converters(cls):
@@ -120,7 +114,7 @@ class Http(models.AbstractModel):
             match Rule. This override adds the website ones.
         """
         return dict(
-            super(Http, cls)._get_converters(),
+            super()._get_converters(),
             model=ModelConverter,
         )
 
@@ -128,16 +122,14 @@ class Http(models.AbstractModel):
     def _auth_method_public(cls):
         """ If no user logged, set the public user of current website, or default
             public user as request uid.
-            After this method `request.env` can be called, since the `request.uid` is
-            set. The `env` lazy property of `request` will be correct.
         """
         if not request.session.uid:
-            env = api.Environment(request.cr, SUPERUSER_ID, request.context)
-            website = env['website'].get_current_website()
-            request.uid = website and website._get_cached('user_id')
+            website = request.env(user=SUPERUSER_ID)['website'].get_current_website()  # sudo
+            if website:
+                request.update_env(user=website._get_cached('user_id'))
 
         if not request.uid:
-            super(Http, cls)._auth_method_public()
+            super()._auth_method_public()
 
     @classmethod
     def _register_website_track(cls, response):
@@ -159,104 +151,95 @@ class Http(models.AbstractModel):
         return False
 
     @classmethod
-    def _postprocess_args(cls, arguments, rule):
-        processing = super()._postprocess_args(arguments, rule)
-        if processing:
-            return processing
+    def _match(cls, path):
+        if not hasattr(request, 'website_routing'):
+            website = request.env['website'].get_current_website()
+            request.website_routing = website.id
+
+        return super()._match(path)
+
+    @classmethod
+    def _pre_dispatch(cls, rule, arguments):
+        super()._pre_dispatch(rule, arguments)
 
         for record in arguments.values():
             if isinstance(record, models.BaseModel) and hasattr(record, 'can_access_from_current_website'):
                 try:
                     if not record.can_access_from_current_website():
-                        return request.env['ir.http']._handle_exception(werkzeug.exceptions.NotFound())
+                        raise werkzeug.exceptions.NotFound()
                 except AccessError:
-                    # record.website_id might not be readable as unpublished `event.event` due to ir.rule,
-                    # return 403 instead of using `sudo()` for perfs as this is low level
-                    return request.env['ir.http']._handle_exception(werkzeug.exceptions.Forbidden())
+                    # record.website_id might not be readable as
+                    # unpublished `event.event` due to ir.rule, return
+                    # 403 instead of using `sudo()` for perfs as this is
+                    # low level.
+                    raise werkzeug.exceptions.Forbidden()
 
     @classmethod
-    def _dispatch(cls):
-        """
-        In case of rerouting for translate (e.g. when visiting odoo.com/fr_BE/),
-        _dispatch calls reroute() that returns _dispatch with altered request properties.
-        The second _dispatch will continue until end of process. When second _dispatch is finished, the first _dispatch
-        call receive the new altered request and continue.
-        At the end, 2 calls of _dispatch (and this override) are made with exact same request properties, instead of one.
-        As the response has not been sent back to the client, the visitor cookie does not exist yet when second _dispatch call
-        is treated in _handle_webpage_dispatch, leading to create 2 visitors with exact same properties.
-        To avoid this, we check if, !!! before calling super !!!, we are in a rerouting request. If not, it means that we are
-        handling the original request, in which we should create the visitor. We ignore every other rerouting requests.
-        """
-        is_rerouting = hasattr(request, 'routing_iteration')
+    def _get_web_editor_context(cls):
+        ctx = super()._get_web_editor_context()
+        if request.is_frontend_multilang and request.lang == cls._get_default_lang():
+            ctx['edit_translations'] = False
+        return ctx
 
-        if request.session.db:
-            reg = registry(request.session.db)
-            with reg.cursor() as cr:
-                env = api.Environment(cr, SUPERUSER_ID, {})
-                request.website_routing = env['website'].get_current_website().id
+    @classmethod
+    def _frontend_pre_dispatch(cls):
+        super()._frontend_pre_dispatch()
 
-        response = super(Http, cls)._dispatch()
+        if not request.context.get('tz'):
+            with contextlib.suppress(pytz.UnknownTimeZoneError):
+                tz = request.session.get('geoip', {}).get('time_zone', '')
+                request.update_context(tz=pytz.timezone(tz).zone)
 
-        if not is_rerouting:
-            cls._register_website_track(response)
+        website = request.env['website'].get_current_website()
+        user = request.env.user
+
+        # This is mainly to avoid access errors in website controllers
+        # where there is no context (eg: /shop), and it's not going to
+        # propagate to the global context of the tab. If the company of
+        # the website is not in the allowed companies of the user, set
+        # the main company of the user.
+        company_id = website._get_cached('company_id')
+        request.update_context(
+            allowed_company_ids=(
+                [company_id] if company_id in user.company_ids.ids else user.company_id.ids
+            ),
+            website_id=website.id,
+            **cls._get_web_editor_context(),
+        )
+
+        request.website = website.with_context(request.context)
+
+    @classmethod
+    def _dispatch(cls, endpoint):
+        response = super()._dispatch(endpoint)
+        cls._register_website_track(response)
         return response
 
     @classmethod
-    def _add_dispatch_parameters(cls, func):
-
-        # DEPRECATED for /website/force/<website_id> - remove me in master~saas-14.4
-        # Force website with query string paramater, typically set from website selector in frontend navbar and inside tests
-        force_website_id = request.httprequest.args.get('fw')
-        if (force_website_id and request.session.get('force_website_id') != force_website_id
-                and request.env.user.has_group('website.group_multi_website')
-                and request.env.user.has_group('website.group_website_publisher')):
-            request.env['website']._force_website(request.httprequest.args.get('fw'))
-
-        context = {}
-        if not request.context.get('tz'):
-            context['tz'] = request.session.get('geoip', {}).get('time_zone')
-            try:
-                pytz.timezone(context['tz'] or '')
-            except pytz.UnknownTimeZoneError:
-                context.pop('tz')
-
-        request.website = request.env['website'].get_current_website()  # can use `request.env` since auth methods are called
-        context['website_id'] = request.website.id
-        # This is mainly to avoid access errors in website controllers where there is no
-        # context (eg: /shop), and it's not going to propagate to the global context of the tab
-        # If the company of the website is not in the allowed companies of the user, set the main
-        # company of the user.
-        website_company_id = request.website._get_cached('company_id')
-        if website_company_id in request.env.user.company_ids.ids:
-            context['allowed_company_ids'] = [website_company_id]
-        else:
-            context['allowed_company_ids'] = request.env.user.company_id.ids
-
-        # modify bound context
-        request.context = dict(request.context, **context)
-
-        super(Http, cls)._add_dispatch_parameters(func)
-
-        if request.routing_iteration == 1:
-            request.website = request.website.with_context(request.context)
-
-    @classmethod
     def _get_frontend_langs(cls):
-        if get_request_website():
-            return [code for code, *_ in request.env['res.lang'].get_available()]
+        # _get_frontend_langs() is used by @http_routing:IrHttp._match
+        # where is_frontend is not yet set and when no backend endpoint
+        # matched. We have to assume we are going to match a frontend
+        # route, hence the default True. Elsewhere, request.is_frontend
+        # is set.
+        if getattr(request, 'is_frontend', True):
+            website_id = request.env.get('website_id', request.website_routing)
+            res_lang = request.env['res.lang'].with_context(website_id=website_id)
+            return [code for code, *_ in res_lang.get_available()]
         else:
             return super()._get_frontend_langs()
 
     @classmethod
     def _get_default_lang(cls):
-        if getattr(request, 'website', False):
-            return request.env['res.lang'].browse(request.website._get_cached('default_lang_id'))
-        return super(Http, cls)._get_default_lang()
+        if getattr(request, 'is_frontend', True):
+            website = request.env['website'].sudo().get_current_website()
+            return request.env['res.lang'].browse([website._get_cached('default_lang_id')])
+        return super()._get_default_lang()
 
     @classmethod
     def _get_translation_frontend_modules_name(cls):
-        mods = super(Http, cls)._get_translation_frontend_modules_name()
-        installed = request.registry._init_modules | set(odoo.conf.server_wide_modules)
+        mods = super()._get_translation_frontend_modules_name()
+        installed = request.registry._init_modules.union(odoo.conf.server_wide_modules)
         return mods + [mod for mod in installed if mod.startswith('website')]
 
     @classmethod
@@ -289,7 +272,7 @@ class Http(models.AbstractModel):
                 page.cache_time  # cache > 0
                 and request.httprequest.method == "GET"
                 and request.env.user._is_public()    # only cache for unlogged user
-                and 'nocache' not in request.params  # allow bypass cache / debug
+                and 'nocache' not in request.httprequest.args  # allow bypass cache / debug
                 and not request.session.debug
                 and len(cache_key) and cache_key[-1] is not None  # nocache via expr
             ):
@@ -333,15 +316,22 @@ class Http(models.AbstractModel):
         return request.env['website.rewrite'].sudo().search(domain, limit=1)
 
     @classmethod
-    def _serve_fallback(cls, exception):
+    def _serve_fallback(cls):
         # serve attachment before
-        parent = super(Http, cls)._serve_fallback(exception)
+        parent = super()._serve_fallback()
         if parent:  # attachment
             return parent
-        if not request.is_frontend:
-            return False
+
+        # minimal setup to serve frontend pages
+        if not request.uid:
+            cls._auth_method_public()
+        cls._frontend_pre_dispatch()
+        request.params = request.get_http_params()
+
         website_page = cls._serve_page()
         if website_page:
+            website_page.flatten()
+            cls._register_website_track(website_page)
             return website_page
 
         redirect = cls._serve_redirect()
@@ -351,11 +341,9 @@ class Http(models.AbstractModel):
                 code=redirect.redirect_type,
                 local=False)  # safe because only designers can specify redirects
 
-        return False
-
     @classmethod
     def _get_exception_code_values(cls, exception):
-        code, values = super(Http, cls)._get_exception_code_values(exception)
+        code, values = super()._get_exception_code_values(exception)
         if isinstance(exception, werkzeug.exceptions.NotFound) and request.website.is_publisher():
             code = 'page_404'
             values['path'] = request.httprequest.path[1:]
@@ -368,7 +356,7 @@ class Http(models.AbstractModel):
     @classmethod
     def _get_values_500_error(cls, env, values, exception):
         View = env["ir.ui.view"]
-        values = super(Http, cls)._get_values_500_error(env, values, exception)
+        values = super()._get_values_500_error(env, values, exception)
         if 'qweb_exception' in values:
             try:
                 # exception.name might be int, string
@@ -398,7 +386,7 @@ class Http(models.AbstractModel):
     def _get_error_html(cls, env, code, values):
         if code in ('page_404', 'protected_403'):
             return code.split('_')[1], env['ir.ui.view']._render_template('website.%s' % code, values)
-        return super(Http, cls)._get_error_html(env, code, values)
+        return super()._get_error_html(env, code, values)
 
     def binary_content(self, xmlid=None, model='ir.attachment', id=None, field='datas',
                        unique=False, filename=None, filename_field='name', download=False,
@@ -433,7 +421,7 @@ class Http(models.AbstractModel):
             if obj:
                 return obj[0]
 
-        return super(Http, cls)._xmlid_to_obj(env, xmlid)
+        return super()._xmlid_to_obj(env, xmlid)
 
     @api.model
     def get_frontend_session_info(self):
