@@ -453,10 +453,11 @@ class ProductTemplate(models.Model):
         for product, data in zip(self, results_data):
             if with_price:
                 combination_info = product._get_combination_info(only_template=True)
-                monetary_options = {'display_currency': mapping['detail']['display_currency']}
-                data['price'] = self.env['ir.qweb.field.monetary'].value_to_html(combination_info['price'], monetary_options)
-                if combination_info['has_discounted_price']:
-                    data['list_price'] = self.env['ir.qweb.field.monetary'].value_to_html(combination_info['list_price'], monetary_options)
+                data['price'], list_price = self._search_render_results_prices(
+                    mapping, combination_info
+                )
+                if list_price:
+                    data['list_price'] = list_price
             if with_image:
                 data['image_url'] = '/web/image/product.template/%s/image_128' % data['id']
             if with_category and product.public_categ_ids:
@@ -465,6 +466,18 @@ class ProductTemplate(models.Model):
                     {'categories': product.public_categ_ids, 'slug': slug}
                 )
         return results_data
+
+    def _search_render_results_prices(self, mapping, combination_info):
+        monetary_options = {'display_currency': mapping['detail']['display_currency']}
+        price = self.env['ir.qweb.field.monetary'].value_to_html(
+            combination_info['price'], monetary_options
+        )
+        if combination_info['has_discounted_price']:
+            list_price = self.env['ir.qweb.field.monetary'].value_to_html(
+                combination_info['list_price'], monetary_options
+            )
+
+        return price, list_price if combination_info['has_discounted_price'] else None
 
     @api.model
     def get_google_analytics_data(self, combination):
@@ -487,3 +500,6 @@ class ProductTemplate(models.Model):
         if website:
             return website.get_current_pricelist()
         return pricelist
+
+    def _website_show_quick_add(self):
+        return self.sale_ok

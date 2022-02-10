@@ -26,6 +26,7 @@ class SaleOrder(models.Model):
     cart_recovery_email_sent = fields.Boolean('Cart recovery email already sent')
     website_id = fields.Many2one('website', string='Website', readonly=True,
                                  help='Website through which this order was placed.')
+    shop_warning = fields.Char('Warning')
 
     def _compute_user_id(self):
         """Do not assign self.env.user as salesman for e-commerce orders
@@ -382,3 +383,10 @@ class SaleOrder(models.Model):
             if not order.transaction_ids and not order.amount_total and self._context.get('send_email'):
                 order._send_order_confirmation_mail()
         return res
+
+    def _get_shop_warning(self, clear=True):
+        self.ensure_one()
+        warn = self.shop_warning
+        if clear:
+            self.shop_warning = ''
+        return warn

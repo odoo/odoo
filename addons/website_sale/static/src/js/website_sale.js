@@ -555,15 +555,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
 
         return productReady.then(function (productId) {
             $form.find(productSelector.join(', ')).val(productId);
-
-            self.rootProduct = {
-                product_id: productId,
-                quantity: parseFloat($form.find('input[name="add_qty"]').val() || 1),
-                product_custom_attribute_values: self.getCustomVariantValues($form.find('.js_product')),
-                variant_values: self.getSelectedVariantValues($form.find('.js_product')),
-                no_variant_attribute_values: self.getNoVariantAttributeValues($form.find('.js_product'))
-            };
-
+            self._updateRootProduct($form, productId);
             return self._onProductReady();
         });
     },
@@ -593,13 +585,14 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
         params.add_qty = params.quantity;
         params.product_custom_attribute_values = JSON.stringify(params.product_custom_attribute_values);
         params.no_variant_attribute_values = JSON.stringify(params.no_variant_attribute_values);
+        delete params.quantity;
         return this.addToCart(params);
     },
     /**
      * @private
      * @param {MouseEvent} ev
      */
-    _onClickAddCartJSON: function (ev){
+    _onClickAddCartJSON: function (ev) {
         this.onClickAddCartJSON(ev);
     },
     /**
@@ -656,13 +649,13 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
             ev.preventDefault();
             $aSubmit.closest('form').submit();
         }
-        if ($aSubmit.hasClass('a-submit-disable')){
+        if ($aSubmit.hasClass('a-submit-disable')) {
             $aSubmit.addClass("disabled");
         }
-        if ($aSubmit.hasClass('a-submit-loading')){
+        if ($aSubmit.hasClass('a-submit-loading')) {
             var loading = '<span class="fa fa-cog fa-spin"/>';
             var fa_span = $aSubmit.find('span[class*="fa"]');
-            if (fa_span.length){
+            if (fa_span.length) {
                 fa_span.replaceWith(loading);
             } else {
                 $aSubmit.append(loading);
@@ -801,6 +794,26 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
      */
     _onClickReviewsLink: function () {
         $('#o_product_page_reviews_content').collapse('show');
+    },
+
+    // -------------------------------------
+    // Utils
+    // -------------------------------------
+    /**
+     * Update the root product during an Add process.
+     *
+     * @private
+     * @param {Object} $form
+     * @param {Number} productId
+     */
+    _updateRootProduct($form, productId) {
+        this.rootProduct = {
+            product_id: productId,
+            quantity: parseFloat($form.find('input[name="add_qty"]').val() || 1),
+            product_custom_attribute_values: this.getCustomVariantValues($form.find('.js_product')),
+            variant_values: this.getSelectedVariantValues($form.find('.js_product')),
+            no_variant_attribute_values: this.getNoVariantAttributeValues($form.find('.js_product'))
+        };
     },
 });
 
