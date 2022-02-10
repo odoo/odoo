@@ -88,7 +88,7 @@ class AccountEdiProxyClientUser(models.Model):
         proxy_error = response['result'].pop('proxy_error', False)
         if proxy_error:
             error_code = proxy_error['code']
-            if error_code == 'refresh_token_expired':
+            if error_code in ('refresh_token_expired', 'invalid_signature'):
                 self._renew_token()
                 return self._make_request(url, params)
             if error_code == 'no_such_user':
