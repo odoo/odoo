@@ -1521,7 +1521,7 @@ class Website(models.Model):
             fuzzy_term = self._search_find_fuzzy_term(search_details, search)
             if fuzzy_term:
                 count, results = self._search_exact(search_details, fuzzy_term, limit, order)
-                if fuzzy_term == search:
+                if fuzzy_term.lower() == search.lower():
                     fuzzy_term = False
             else:
                 count, results = self._search_exact(search_details, search, limit, order)
