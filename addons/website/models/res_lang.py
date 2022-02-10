@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models, tools, _
@@ -19,8 +18,6 @@ class Lang(models.Model):
     @api.model
     @tools.ormcache_context(keys=("website_id",))
     def get_available(self):
-        website = ir_http.get_request_website()
-        if not website:
-            return super().get_available()
-        # Return the website-available ones in this case
-        return request.website.language_ids.get_sorted()
+        if request and getattr(request, 'is_frontend', True):
+            return self.env['website'].get_current_website().language_ids.get_sorted()
+        return super().get_available()
