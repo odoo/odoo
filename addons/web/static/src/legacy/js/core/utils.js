@@ -633,7 +633,7 @@ var utils = Object.assign({
 
         if (typeof(node) === 'string') {
             return sindent + node.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-        } else if (typeof(node.tag) !== 'string' || !node.children instanceof Array || !node.attrs instanceof Object) {
+        } else if (typeof(node.tag) !== 'string' || node.children && !(node.children instanceof Array) || node.attrs && !(node.attrs instanceof Object)) {
             throw new Error(
                 _.str.sprintf(_t("Node [%s] is not a JSONified XML node"),
                             JSON.stringify(node)));

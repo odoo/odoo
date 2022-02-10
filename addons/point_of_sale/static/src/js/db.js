@@ -185,7 +185,7 @@ var PosDB = core.Class.extend({
     add_products: function(products){
         var stored_categories = this.product_by_category_id;
 
-        if(!products instanceof Array){
+        if(!(products instanceof Array)){
             products = [products];
         }
         for(var i = 0, len = products.length; i < len; i++){
