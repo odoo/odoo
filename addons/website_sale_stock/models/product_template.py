@@ -30,7 +30,7 @@ class ProductTemplate(models.Model):
                 'product_type': product.type,
                 'product_template': self.id,
                 'available_threshold': self.available_threshold,
-                'cart_qty': product.cart_qty,
+                'cart_qty': product._get_cart_qty(website),
                 'uom_name': product.uom_id.name,
                 'allow_out_of_stock_order': self.allow_out_of_stock_order,
                 'show_availability': self.show_availability,

@@ -12,7 +12,7 @@
                 Only <t t-esc='free_qty'/> <t t-esc="uom_name" /> left in stock.
             </div>
 
-            <div t-if="!allow_out_of_stock_order and show_availability and cart_qty" t-attf-class="availability_message_#{product_template} text-warning mt8">
+            <div id="already_in_cart_message" t-if="!allow_out_of_stock_order and show_availability and cart_qty" t-attf-class="availability_message_#{product_template} text-warning mt8">
                 <t t-if='!free_qty'>
                     You already added all the available product in your cart.
                 </t>
