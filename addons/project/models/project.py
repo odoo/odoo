@@ -41,13 +41,13 @@ PROJECT_TASK_READABLE_FIELDS = {
     'legend_normal',
     'legend_blocked',
     'legend_done',
+    'user_ids',
 }
 
 PROJECT_TASK_WRITABLE_FIELDS = {
     'name',
     'partner_id',
     'partner_email',
-    'user_ids',
     'date_deadline',
     'tag_ids',
     'sequence',
@@ -151,15 +151,21 @@ class Project(models.Model):
     _check_company_auto = True
 
     def _compute_attached_docs_count(self):
-        Attachment = self.env['ir.attachment']
+        self.env.cr.execute(
+            """
+            SELECT coalesce(task.project_id, project.id), count(*)
+              FROM ir_attachment attachment
+              LEFT JOIN project_task task ON attachment.res_model = 'project.task' AND task.id = attachment.res_id
+              LEFT JOIN project_project project ON attachment.res_model = 'project.project' AND project.id = attachment.res_id
+             WHERE project.id IN %(project_ids)s
+                OR task.project_id IN %(project_ids)s
+             GROUP BY coalesce(task.project_id, project.id)
+            """,
+            {"project_ids": tuple(self.ids)}
+        )
+        docs_count = dict(self.env.cr.fetchall())
         for project in self:
-            project.doc_count = Attachment.search_count([
-                '|',
-                '&',
-                ('res_model', '=', 'project.project'), ('res_id', '=', project.id),
-                '&',
-                ('res_model', '=', 'project.task'), ('res_id', 'in', project.task_ids.ids)
-            ])
+            project.doc_count = docs_count.get(project.id, 0)
 
     def _compute_task_count(self):
         task_data = self.env['project.task'].read_group(
@@ -921,7 +927,7 @@ class Task(models.Model):
         help="Sum of the time planned of all the sub-tasks linked to this task. Usually less than or equal to the initially planned time of this task.")
     # Tracking of this field is done in the write function
     user_ids = fields.Many2many('res.users', relation='project_task_user_rel', column1='task_id', column2='user_id',
-        string='Assignees', default=lambda self: self.env.user, context={'active_test': False}, tracking=True)
+        string='Assignees', default=lambda self: not self.env.user.share and self.env.user, context={'active_test': False}, tracking=True)
     # User names displayed in project sharing views
     portal_user_names = fields.Char(compute='_compute_portal_user_names', compute_sudo=True, search='_search_portal_user_names')
     # Second Many2many containing the actual personal stage for the current user
@@ -1396,8 +1402,9 @@ class Task(models.Model):
             (In other words, this compute is only used in project sharing views to see all assignees for each task)
         """
         if self.ids:
-            # fetch 'user_ids' in superuser mode (and override value in cache)
-            self._read(['user_ids'])
+            # fetch 'user_ids' in superuser mode (and override value in cache
+            # browse is useful to avoid miscache because of the newIds contained in self
+            self.browse(self.ids)._read(['user_ids'])
         for task in self.with_context(prefetch_fields=False):
             task.portal_user_names = ', '.join(task.user_ids.mapped('name'))
 

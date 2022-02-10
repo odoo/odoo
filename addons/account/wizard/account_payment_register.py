@@ -456,6 +456,11 @@ class AccountPaymentRegister(models.TransientModel):
                     "The register payment wizard should only be called on account.move or account.move.line records."
                 ))
 
+            if 'journal_id' in res and not self.env['account.journal'].browse(res['journal_id'])\
+                    .filtered_domain([('company_id', '=', lines.company_id.id), ('type', 'in', ('bank', 'cash'))]):
+                # default can be inherited from the list view, should be computed instead
+                del res['journal_id']
+
             # Keep lines having a residual amount to pay.
             available_lines = self.env['account.move.line']
             for line in lines:

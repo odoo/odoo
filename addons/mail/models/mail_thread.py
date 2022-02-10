@@ -22,6 +22,7 @@ from email import message_from_string, policy
 from lxml import etree
 from werkzeug import urls
 from xmlrpc import client as xmlrpclib
+from markupsafe import Markup
 
 from odoo import _, api, exceptions, fields, models, tools, registry, SUPERUSER_ID, Command
 from odoo.exceptions import MissingError
@@ -2345,9 +2346,8 @@ class MailThread(models.AbstractModel):
             user = author_user
             if add_sign:
                 signature = user.signature
-        else:
-            if add_sign:
-                signature = "<p>-- <br/>%s</p>" % author.name
+        elif add_sign and author.name:
+                signature = Markup("<p>-- <br/>%s</p>") % author.name
 
         # company value should fall back on env.company if:
         # - no company_id field on record
@@ -2566,10 +2566,7 @@ class MailThread(models.AbstractModel):
         for group_name, group_func, group_data in groups:
             group_data.setdefault('notification_group_name', group_name)
             group_data.setdefault('notification_is_customer', False)
-            is_thread_notification = msg_vals and (
-                    msg_vals.get('model', self._name) != 'mail.thread' and
-                    (msg_vals.get('res_id', self.ids[0] if self.ids else False) is not False)
-            )
+            is_thread_notification = self._notify_get_recipients_thread_info(msg_vals=msg_vals)['is_thread_notification']
             group_data.setdefault('has_button_access', is_thread_notification)
             group_button_access = group_data.setdefault('button_access', {})
             group_button_access.setdefault('url', access_link)
@@ -2590,6 +2587,15 @@ class MailThread(models.AbstractModel):
                 result.append(group_data)
 
         return result
+
+    def _notify_get_recipients_thread_info(self, msg_vals=None):
+        """ Tool method to compute thread info used in ``_notify_classify_recipients``
+        and its sub-methods. """
+        res_model = msg_vals['model'] if msg_vals and 'model' in msg_vals else self._name
+        res_id = msg_vals['res_id'] if msg_vals and 'res_id' in msg_vals else self.ids[0] if self.ids else False
+        return {
+            'is_thread_notification': res_model and (res_model != 'mail.thread') and res_id
+        }
 
     def _notify_email_recipient_values(self, recipient_ids):
         """ Format email notification recipient values to store on the notification

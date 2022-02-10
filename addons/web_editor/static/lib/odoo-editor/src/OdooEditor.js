@@ -68,6 +68,7 @@ const KEYBOARD_TYPES = { VIRTUAL: 'VIRTUAL', PHYSICAL: 'PHYSICAL', UNKNOWN: 'UKN
 const IS_KEYBOARD_EVENT_UNDO = ev => ev.key === 'z' && (ev.ctrlKey || ev.metaKey);
 const IS_KEYBOARD_EVENT_REDO = ev => ev.key === 'y' && (ev.ctrlKey || ev.metaKey);
 const IS_KEYBOARD_EVENT_BOLD = ev => ev.key === 'b' && (ev.ctrlKey || ev.metaKey);
+const IS_KEYBOARD_EVENT_STRIKETHROUGH = ev => ev.key === '5' && (ev.ctrlKey || ev.metaKey);
 
 const CLIPBOARD_BLACKLISTS = {
     unwrap: ['.Apple-interchange-newline', 'DIV'], // These elements' children will be unwrapped.
@@ -176,6 +177,7 @@ export class OdooEditor extends EventTarget {
         // --------------
 
         this.document = options.document || document;
+        this.isDestroyed = false;
 
         this.isMobile = matchMedia('(max-width: 767px)').matches;
         this.isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
@@ -345,6 +347,7 @@ export class OdooEditor extends EventTarget {
         this._resizeObserver.disconnect();
         clearInterval(this._snapshotInterval);
         this._pluginCall('destroy', []);
+        this.isDestroyed = true;
     }
 
     sanitize() {
@@ -2238,6 +2241,11 @@ export class OdooEditor extends EventTarget {
             ev.preventDefault();
             ev.stopPropagation();
             this.execCommand('bold');
+        } else if (IS_KEYBOARD_EVENT_STRIKETHROUGH(ev)) {
+            // Ctrl-5 / Ctrl-shift-(
+            ev.preventDefault();
+            ev.stopPropagation();
+            this.execCommand('strikeThrough');
         }
     }
     /**
@@ -2287,7 +2295,7 @@ export class OdooEditor extends EventTarget {
 
     clean() {
         this.observerUnactive();
-        for (const hint of this.document.querySelectorAll('.oe-hint')) {
+        for (const hint of this.editable.querySelectorAll('.oe-hint')) {
             hint.classList.remove('oe-hint', 'oe-command-temporary-hint');
             hint.removeAttribute('placeholder');
         }

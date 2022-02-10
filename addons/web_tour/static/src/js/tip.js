@@ -58,7 +58,7 @@ var Tip = Widget.extend({
      * Attaches the tip to the provided $anchor and $altAnchor.
      * $altAnchor is an alternative trigger that can consume the step. The tip is
      * however only displayed on the $anchor.
-     * 
+     *
      * Note that the returned promise stays pending if the Tip widget was
      * destroyed in the meantime.
      *
@@ -115,6 +115,10 @@ var Tip = Widget.extend({
         this.$el.toggleClass('d-none', !!this.info.hidden);
         this.el.classList.add('o_tooltip_visible');
         core.bus.on("resize", this, _.debounce(function () {
+            if (this.isDestroyed()) {
+                // Because of the debounce, destroy() might have been called in the meantime.
+                return;
+            }
             if (this.tip_opened) {
                 this._to_bubble_mode(true);
             } else {
@@ -176,6 +180,17 @@ var Tip = Widget.extend({
     },
 
     //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @return {boolean} true if tip is visible
+     */
+    isShown() {
+        return this.el && !this.info.hidden;
+    },
+
+    //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
@@ -203,6 +218,11 @@ var Tip = Widget.extend({
      */
     _updatePosition: function (forceReposition = false) {
         if (this.info.hidden) {
+            return;
+        }
+        if (this.isDestroyed()) {
+            // TODO This should not be needed if the chain of events leading
+            // here was fully cancelled by destroy().
             return;
         }
         let halfHeight = 0;
@@ -430,6 +450,10 @@ var Tip = Widget.extend({
         }
         $consumeEventAnchors.on(consumeEvent + ".anchor", (function (e) {
             if (e.type !== "mousedown" || e.which === 1) { // only left click
+                if (this.info.consumeVisibleOnly && !this.isShown()) {
+                    // Do not consume non-displayed tips.
+                    return;
+                }
                 this.trigger("tip_consumed");
                 this._unbind_anchor_events();
             }

@@ -17,9 +17,8 @@ const ProjectFormController = FormController.extend({
     _onDomUpdated() {
         const $editable = this.$el.find('.note-editable');
         if ($editable.length) {
-            const resizerHeight = this.$el.find('.o_wysiwyg_resizer').outerHeight();
-            const newHeight = window.innerHeight - $editable.offset().top - resizerHeight - 1;
-            $editable.outerHeight(newHeight);
+            const minHeight = window.innerHeight - $editable.offset().top - 42;
+            $editable.css('min-height', minHeight + 'px');
         }
     },
     on_detach_callback() {

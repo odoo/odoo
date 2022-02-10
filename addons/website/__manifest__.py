@@ -123,6 +123,7 @@
             'website/static/src/scss/website.ui.scss',
             'website/static/src/js/utils.js',
             'website/static/src/js/content/website_root.js',
+            'website/static/src/js/widgets/dialog.js',
             'website/static/src/js/widgets/fullscreen_indication.js',
             'website/static/src/js/content/compatibility.js',
             'website/static/src/js/content/menu.js',

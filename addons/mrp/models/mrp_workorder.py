@@ -488,8 +488,12 @@ class MrpWorkorder(models.Model):
         return self.production_id.move_finished_ids.filtered(lambda x: (x.product_id.id != self.production_id.product_id.id) and (x.state not in ('done', 'cancel')))
 
     def _start_nextworkorder(self):
-        if self.state == 'done' and self.next_work_order_id.state == 'pending':
-            self.next_work_order_id.state = 'ready' if self.next_work_order_id.production_availability == 'assigned' else 'waiting'
+        if self.state == 'done':
+            next_order = self.next_work_order_id
+            while next_order and next_order.state == 'cancel':
+                next_order = next_order.next_work_order_id
+            if next_order.state == 'pending':
+                next_order.state = 'ready' if next_order.production_availability == 'assigned' else 'waiting'
 
     @api.model
     def gantt_unavailability(self, start_date, end_date, scale, group_bys=None, rows=None):

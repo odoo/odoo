@@ -16,6 +16,9 @@ function factory(dependencies) {
             this.update({
                 isHighlighted: true,
                 highlightTimeout: this.env.browser.setTimeout(() => {
+                    if (!this.exists()) {
+                        return;
+                    }
                     this.update({ isHighlighted: false });
                 }, 2000),
             });
@@ -53,6 +56,7 @@ function factory(dependencies) {
             this.update({
                 composerForEditing: insertAndReplace({
                     isLastStateChangeProgrammatic: true,
+                    mentionedPartners: replace(this.message.recipients),
                     textInputContent,
                     textInputCursorEnd: textInputContent.length,
                     textInputCursorStart: textInputContent.length,

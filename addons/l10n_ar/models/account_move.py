@@ -46,13 +46,14 @@ class AccountMove(models.Model):
         """ LATAM module define that we are not able to use debit_note or invoice document types in an invoice refunds,
         However for Argentinian Document Type's 99 (internal type = invoice) we are able to used in a refund invoices.
 
-        In this method we exclude the argentinian document type 99 from the generic constraint """
-        ar_doctype_99 = self.filtered(
+        In this method we exclude the argentinian documents that can be used as invoice and refund from the generic
+        constraint """
+        docs_used_for_inv_and_ref = self.filtered(
             lambda x: x.country_code == 'AR' and
-            x.l10n_latam_document_type_id.code == '99' and
+            x.l10n_latam_document_type_id.code in self._get_l10n_ar_codes_used_for_inv_and_ref() and
             x.move_type in ['out_refund', 'in_refund'])
 
-        super(AccountMove, self - ar_doctype_99)._check_invoice_type_document_type()
+        super(AccountMove, self - docs_used_for_inv_and_ref)._check_invoice_type_document_type()
 
     def _get_afip_invoice_concepts(self):
         """ Return the list of values of the selection field. """
@@ -85,6 +86,13 @@ class AccountMove(models.Model):
             afip_concept = '3'
         return afip_concept
 
+    @api.model
+    def _get_l10n_ar_codes_used_for_inv_and_ref(self):
+        """ List of document types that can be used as an invoice and refund. This list can be increased once needed
+        and demonstrated. As far as we've checked document types of wsfev1 don't allow negative amounts so, for example
+        document 60 and 61 could not be used as refunds. """
+        return ['99', '186', '188', '189']
+
     def _get_l10n_latam_documents_domain(self):
         self.ensure_one()
         domain = super()._get_l10n_latam_documents_domain()
@@ -95,7 +103,7 @@ class AccountMove(models.Model):
             if codes:
                 domain.append(('code', 'in', codes))
             if self.move_type == 'in_refund':
-                domain = ['|', ('code', 'in', ['99'])] + domain
+                domain = ['|', ('code', 'in', self._get_l10n_ar_codes_used_for_inv_and_ref())] + domain
         return domain
 
     def _check_argentinean_invoice_taxes(self):
@@ -164,7 +172,7 @@ class AccountMove(models.Model):
                 rec.l10n_ar_currency_rate = 1.0
             elif not rec.l10n_ar_currency_rate:
                 rec.l10n_ar_currency_rate = rec.currency_id._convert(
-                    1.0, rec.company_id.currency_id, rec.company_id, rec.invoice_date or fields.Date.today(), round=False)
+                    1.0, rec.company_id.currency_id, rec.company_id, rec.date, round=False)
 
         # We make validations here and not with a constraint because we want validation before sending electronic
         # data on l10n_ar_edi
@@ -239,6 +247,11 @@ class AccountMove(models.Model):
         amount_field = company_currency and 'balance' or 'price_subtotal'
         # if we use balance we need to correct sign (on price_subtotal is positive for refunds and invoices)
         sign = -1 if (company_currency and self.is_inbound()) else 1
+
+        # if we are on a document that works invoice and refund and it's a refund, we need to export it as negative
+        sign = -sign if self.move_type in ('out_refund', 'in_refund') and\
+            self.l10n_latam_document_type_id.code in self._get_l10n_ar_codes_used_for_inv_and_ref() else sign
+
         tax_lines = self.line_ids.filtered('tax_line_id')
         vat_taxes = tax_lines.filtered(lambda r: r.tax_line_id.tax_group_id.l10n_ar_vat_afip_code)
 
@@ -267,6 +280,10 @@ class AccountMove(models.Model):
 
     def _get_vat(self):
         """ Applies on wsfe web service and in the VAT digital books """
+        # if we are on a document that works invoice and refund and it's a refund, we need to export it as negative
+        sign = -1 if self.move_type in ('out_refund', 'in_refund') and\
+            self.l10n_latam_document_type_id.code in self._get_l10n_ar_codes_used_for_inv_and_ref() else 1
+
         res = []
         vat_taxable = self.env['account.move.line']
         # get all invoice lines that are vat taxable
@@ -277,8 +294,8 @@ class AccountMove(models.Model):
             base_imp = sum(self.invoice_line_ids.filtered(lambda x: x.tax_ids.filtered(lambda y: y.tax_group_id.l10n_ar_vat_afip_code == tax_group.l10n_ar_vat_afip_code)).mapped('price_subtotal'))
             imp = sum(vat_taxable.filtered(lambda x: x.tax_group_id.l10n_ar_vat_afip_code == tax_group.l10n_ar_vat_afip_code).mapped('price_subtotal'))
             res += [{'Id': tax_group.l10n_ar_vat_afip_code,
-                     'BaseImp': base_imp,
-                     'Importe': imp}]
+                     'BaseImp': sign * base_imp,
+                     'Importe': sign * imp}]
 
         # Report vat 0%
         vat_base_0 = sum(self.invoice_line_ids.filtered(lambda x: x.tax_ids.filtered(lambda y: y.tax_group_id.l10n_ar_vat_afip_code == '3')).mapped('price_subtotal'))

@@ -1374,12 +1374,17 @@ MockServer.include({
             const trackingValueIds = this._getRecords('mail.tracking.value', [
                 ['id', 'in', message.tracking_value_ids],
             ]);
+            const partners = this._getRecords(
+                'res.partner',
+                [['id', 'in', message.partner_ids]],
+            );
             const response = Object.assign({}, message, {
                 attachment_ids: formattedAttachments,
                 author_id: formattedAuthor,
                 history_partner_ids: historyPartnerIds,
                 needaction_partner_ids: needactionPartnerIds,
                 notifications,
+                recipients: partners.map(p => ({ id: p.id, name: p.name })),
                 tracking_value_ids: trackingValueIds,
             });
             if (message.subtype_id) {

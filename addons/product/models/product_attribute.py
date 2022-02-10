@@ -554,7 +554,9 @@ class ProductTemplateAttributeValue(models.Model):
 
     def _get_combination_name(self):
         """Exclude values from single value lines or from no_variant attributes."""
-        return ", ".join([ptav.name for ptav in self._without_no_variant_attributes()._filter_single_value_lines()])
+        ptavs = self._without_no_variant_attributes().with_prefetch(self._prefetch_ids)
+        ptavs = ptavs._filter_single_value_lines().with_prefetch(self._prefetch_ids)
+        return ", ".join([ptav.name for ptav in ptavs])
 
     def _filter_single_value_lines(self):
         """Return `self` with values from single value lines filtered out

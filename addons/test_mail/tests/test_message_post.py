@@ -15,6 +15,8 @@ from odoo.tests import tagged
 from odoo.tools import mute_logger, formataddr
 from odoo.tests.common import users
 
+from markupsafe import escape
+
 
 @tagged('mail_post')
 class TestMessagePost(TestMailCommon, TestRecipients):
@@ -97,6 +99,18 @@ class TestMessagePost(TestMailCommon, TestRecipients):
         self.assertEqual(found_mail.body_html.count(signature), 0)
 
     @users('employee')
+    def test_notify_mail_add_signature_no_author_user_or_no_user(self):
+        self.test_message.author_id = self.env['res.partner'].sudo().create({
+            'name': 'Steve',
+        }).id
+        template_values = self.test_record._notify_prepare_template_context(self.test_message, {})
+        self.assertNotEqual(escape(template_values['signature']), escape('<p>-- <br/>Steve</p>'))
+
+        self.test_message.author_id = None
+        template_values = self.test_record._notify_prepare_template_context(self.test_message, {})
+        self.assertEqual(template_values['signature'], '')
+
+    @users('employee')
     def test_notify_prepare_template_context_company_value(self):
         """ Verify that the template context company value is right
         after switching the env company or if a company_id is set
@@ -164,6 +178,40 @@ class TestMessagePost(TestMailCommon, TestRecipients):
         self.assertIn('res_id=%s' % self.test_record.id, emp_info['button_access']['url'])
         self.assertNotIn('body', emp_info['button_access']['url'])
         self.assertNotIn('subject', emp_info['button_access']['url'])
+
+        # test when notifying on non-records (e.g. MailThread._message_notify())
+        for model, res_id in ((self.test_record._name, False),
+                              (self.test_record._name, 0),  # browse(0) does not return a valid recordset
+                              (False, self.test_record.id),
+                              (False, False),
+                              ('mail.thread', False),
+                              ('mail.thread', self.test_record.id)):
+            msg_vals.update({
+                'model': model,
+                'res_id': res_id,
+            })
+            # note that msg_vals wins over record on which method is called
+            notify_msg_vals = dict(msg_vals, **link_vals)
+            classify_res = self.test_record._notify_classify_recipients(
+                pdata, 'Test', msg_vals=notify_msg_vals)
+            # find back information for partner
+            partner_info = next(item for item in classify_res if item['recipients'] == self.partner_1.ids)
+            emp_info = next(item for item in classify_res if item['recipients'] == self.partner_employee.ids)
+            # check there is no access button
+            self.assertFalse(partner_info['has_button_access'])
+            self.assertFalse(emp_info['has_button_access'])
+
+            # test on falsy records (False model cannot be browsed, skipped)
+            if model:
+                record_falsy = self.env[model].browse(res_id)
+                classify_res = record_falsy._notify_classify_recipients(
+                    pdata, 'Test', msg_vals=notify_msg_vals)
+                # find back information for partner
+                partner_info = next(item for item in classify_res if item['recipients'] == self.partner_1.ids)
+                emp_info = next(item for item in classify_res if item['recipients'] == self.partner_employee.ids)
+                # check there is no access button
+                self.assertFalse(partner_info['has_button_access'])
+                self.assertFalse(emp_info['has_button_access'])
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_post_needaction(self):
@@ -502,27 +550,6 @@ class TestMessagePost(TestMailCommon, TestRecipients):
             subject='About %s' % test_record.name,
             body_content=test_record.name,
             attachments=[])
-
-    def test_post_notify_no_button(self):
-        pdata = self._generate_notify_recipients(self.partner_employee)
-        msg_vals = {
-            'body': 'Message body',
-            'model': False,
-            'res_id': False,
-            'subject': 'Message subject',
-        }
-        link_vals = {
-            'token': 'token_val',
-            'access_token': 'access_token_val',
-            'auth_signup_token': 'auth_signup_token_val',
-            'auth_login': 'auth_login_val',
-        }
-        notify_msg_vals = dict(msg_vals, **link_vals)
-        classify_res = self.env[self.test_record._name]._notify_classify_recipients(pdata, 'Test', msg_vals=notify_msg_vals)
-        # find back information for partner
-        partner_info = next(item for item in classify_res)
-        # check there is sno access button
-        self.assertFalse(partner_info['has_button_access'])
 
 
 @tagged('mail_post', 'post_install', '-at_install')

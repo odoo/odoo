@@ -152,7 +152,7 @@
             <form string="Project Sharing: Task" class="o_form_project_tasks">
                 <header>
                     <button name="action_assign_to_me" string="Assign to Me" type="object" class="oe_highlight"
-                            attrs="{'invisible' : &quot;[('user_ids', 'in', [uid])]&quot;}" data-hotkey="q"/>
+                            attrs="{'invisible' : &quot;[('user_ids', 'in', [uid])]&quot;}" data-hotkey="q" groups="base.group_user"/>
                     <button name="action_unassign_me" string="Unassign Me" type="object" class="oe_highlight"
                             attrs="{'invisible' : &quot;[('user_ids', 'not in', [uid])]&quot;}" data-hotkey="q"/>
                     <field name="stage_id" widget="statusbar" options="{'clickable': '1', 'fold_field': 'fold'}" attrs="{'invisible': [('project_id', '=', False), ('stage_id', '=', False)]}" />
@@ -197,7 +197,7 @@
                             <field name="description" type="html" options="{'collaborative': true}"/>
                         </page>
                         <page name="sub_tasks_page" string="Sub-tasks" attrs="{'invisible': [('allow_subtasks', '=', False)]}">
-                            <field name="child_ids" context="{'default_project_id': project_id if not parent_id or not display_project_id else display_project_id, 'default_user_ids': [(6, 0, [uid])], 'default_parent_id': id, 'default_partner_id': partner_id, 'form_view_ref' : 'project.project_sharing_project_task_view_form'}">
+                            <field name="child_ids" context="{'default_project_id': project_id if not parent_id or not display_project_id else display_project_id, 'default_parent_id': id, 'default_partner_id': partner_id, 'form_view_ref' : 'project.project_sharing_project_task_view_form'}">
                                 <tree editable="bottom">
                                     <field name="project_id" invisible="1"/>
                                     <field name="is_closed" invisible="1"/>
