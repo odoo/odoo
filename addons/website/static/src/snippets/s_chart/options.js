@@ -479,18 +479,7 @@ options.registry.InnerChart = options.Class.extend({
      * @param {Event} ev
      */
     _onMatrixInputFocusOut: function (ev) {
-        // Sometimes, an input is focusout for internal reason (like an undo
-        // recording) then focused again manually in the same JS stack
-        // execution. In that case, the blur should not trigger an option
-        // selection as the user did not leave the input. We thus defer the blur
-        // handling to then check that the target is indeed still blurred before
-        // executing the actual option selection.
-        setTimeout(() => {
-            if (ev.currentTarget === document.activeElement) {
-                return;
-            }
-            this._reloadGraph();
-        });
+        this._reloadGraph();
     },
     /**
      * Set the selected cell/header and display the related remove button
