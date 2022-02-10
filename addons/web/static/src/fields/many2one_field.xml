@@ -38,10 +38,10 @@
                             value="displayName"
                             placeholder="'AutoComplete'"
                             sources="sources"
-                            onSelect="(option) => this.onSelect(option)"
+                            onSelect.bind="onSelect"
                             autoSelect="true"
-                            onInput="(value) => this.onInput(value)"
-                            onChange="(value) => this.onChange(value)"
+                            onInput.bind="onInput"
+                            onChange.bind="onChange"
                         />
                         <a role="button" class="o_dropdown_button" draggable="false" />
                     </div>

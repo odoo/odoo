@@ -6,7 +6,6 @@ import { _lt } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
 import { standardFieldProps } from "./standard_field_props";
-import { Domain } from "@web/core/domain";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 
 const { Component, onWillStart, onWillUpdateProps, useState } = owl;

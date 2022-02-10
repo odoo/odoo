@@ -3,10 +3,10 @@
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "./standard_field_props";
 
-const { Component, hooks } = owl;
+const { Component, useRef } = owl;
 export class FloatField extends Component {
     setup() {
-        this.inputRef = hooks.useRef("input");
+        this.inputRef = useRef("input");
     }
 
     onChange(ev) {
