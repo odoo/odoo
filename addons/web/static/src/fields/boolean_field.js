@@ -38,7 +38,7 @@ Object.assign(BooleanField, {
     isEmpty() {
         return false;
     },
-    components: { CheckBox }
+    components: { CheckBox },
 });
 
 registry.category("fields").add("boolean", BooleanField);

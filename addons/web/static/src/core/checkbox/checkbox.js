@@ -53,4 +53,8 @@ CheckBox.props = {
         type: Function,
         optional: true,
     },
+    className: {
+        type: String,
+        optional: true,
+    },
 };

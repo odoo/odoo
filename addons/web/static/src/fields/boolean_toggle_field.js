@@ -3,6 +3,7 @@
 import { registry } from "@web/core/registry";
 import { _lt } from "@web/core/l10n/translation";
 import { standardFieldProps } from "./standard_field_props";
+import { CheckBox } from "@web/core/checkbox/checkbox";
 
 const { Component } = owl;
 
@@ -10,16 +11,15 @@ export class BooleanToggleField extends Component {
     /**
      * @param {Event} ev
      */
-    onChange(ev) {
-        this.props.update(ev.target.checked);
+    onChange(newValue) {
+        this.props.update(newValue);
     }
     /**
      * @param {MouseEvent} ev
      */
-    onKeydown(ev) {
-        switch (ev.key) {
+    onKeydown({ key }) {
+        switch (key) {
             case "Enter":
-                ev.preventDefault();
                 this.props.update(!this.props.value);
                 break;
         }
@@ -38,6 +38,7 @@ Object.assign(BooleanToggleField, {
     isEmpty() {
         return false;
     },
+    components: { CheckBox },
 });
 
 registry.category("fields").add("boolean_toggle", BooleanToggleField);
