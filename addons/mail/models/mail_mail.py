@@ -14,11 +14,14 @@ import pytz
 from collections import defaultdict
 from dateutil.parser import parse
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models, _, _lt
 from odoo import tools
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
 
 _logger = logging.getLogger(__name__)
+
+MAILMAIL_NO_RECIPIENTS = _lt('Error without exception. Probably due to sending an email without computed recipients.')
+NOTIF_NO_RECIPIENTS = _lt('Error without exception. Probably due to concurrent access update of notification records. Please see with an administrator.')
 
 
 class MailMail(models.Model):
@@ -243,14 +246,42 @@ class MailMail(models.Model):
         self.env['mail.mail'].sudo().search([('to_delete', '=', True)]).unlink()
         return res
 
-    def _postprocess_sent_message(self, success_pids, failure_reason=False, failure_type=None):
-        """Perform any post-processing necessary after sending ``mail``
-        successfully, including deleting it completely along with its
-        attachment if the ``auto_delete`` flag of the mail was set.
+    def _postprocess_sent_message(self, success, success_pids, failure_reason=False, failure_type=None):
+        """Perform any post-processing necessary after sending ``self`` successfully.
+        It deletes it completely along with its attachments if the ``auto_delete``
+        flag is set and if there was no real failure (aka no failure or 'email missing'
+        failure that has no interest in a 'send again' flow).
+
         Overridden by subclasses for extra post-processing behaviors.
+
+        :param bool success: whether mail sending is considered as a success (no
+          global resend planned);
+        :param list success_pids: recipients (partner IDs) successfully emailed.
+          Allows to update notifications;
+        :param str failure_reason: a complete message linked to the error, used
+          in combination with failure_type;
+        :param str failure_type: if there was a failure, short code of it (see
+          MailMail and MailNotification failure_type field);
 
         :return: True
         """
+        # if we have any other error than invalid or missing email we want to keep
+        # the mail to resend/analyze
+        mail_to_delete = self.env['mail.mail']
+        if not failure_type or failure_type in ['mail_email_invalid', 'mail_email_missing']:
+            mail_to_delete = self.filtered(lambda mail: mail.auto_delete)
+
+        # success is managed by send method, update only if an issue happens during
+        # send process. Update only when having failures for performance reasons
+        # and filter-out those we are going to unlink anyway (see mail_to_delete)
+        # (caller has to ensure success is correctly handled)
+        if success is False:
+            self.filtered(lambda mail: mail not in mail_to_delete).write({
+                'state': 'exception',
+                'failure_reason': failure_reason,
+                'failure_type': failure_type,
+            })
+
         notif_mails_ids = [mail.id for mail in self if mail.is_notification]
         if notif_mails_ids:
             notifications = self.env['mail.notification'].search([
@@ -277,9 +308,9 @@ class MailMail(models.Model):
                     messages = notifications.mapped('mail_message_id').filtered(lambda m: m.is_thread_message())
                     # TDE TODO: could be great to notify message-based, not notifications-based, to lessen number of notifs
                     messages._notify_message_notification_update()  # notify user that we have a failure
-        if not failure_type or failure_type in ['mail_email_invalid', 'mail_email_missing']:  # if we have another error, we want to keep the mail.
-            self.filtered(lambda mail: mail.auto_delete).to_delete = True
 
+        if mail_to_delete:
+            mail_to_delete.to_delete = True
         return True
 
     def _parse_scheduled_datetime(self, scheduled_datetime):
@@ -415,14 +446,18 @@ class MailMail(models.Model):
                     # exceptions, it is encapsulated into an Odoo MailDeliveryException
                     raise MailDeliveryException(_('Unable to connect to SMTP Server'), exc)
                 else:
-                    batch = self.browse(batch_ids)
-                    batch.write({'state': 'exception', 'failure_reason': exc})
-                    batch._postprocess_sent_message(success_pids=[], failure_type="mail_smtp")
+                    self.browse(batch_ids)._postprocess_sent_message(
+                        False,
+                        success_pids=[],
+                        failure_reason=exc,
+                        failure_type="mail_smtp",
+                    )
             else:
                 self.browse(batch_ids)._send(
                     auto_commit=auto_commit,
                     raise_exception=raise_exception,
-                    smtp_session=smtp_session)
+                    smtp_session=smtp_session,
+                )
                 _logger.info(
                     'Sent batch %s emails via mail server ID #%s',
                     len(batch_ids), mail_server_id)
@@ -482,7 +517,8 @@ class MailMail(models.Model):
                 # To avoid sending twice the same email, provoke the failure earlier
                 mail.write({
                     'state': 'exception',
-                    'failure_reason': _('Error without exception. Probably due to sending an email without computed recipients.'),
+                    'failure_reason': MAILMAIL_NO_RECIPIENTS,
+                    'failure_type': 'unknown',
                 })
                 # Update notification in a transient exception state to avoid concurrent
                 # update in case an email bounces while sending all emails related to current
@@ -493,11 +529,10 @@ class MailMail(models.Model):
                     ('notification_status', 'not in', ('sent', 'canceled'))
                 ])
                 if notifs:
-                    notif_msg = _('Error without exception. Probably due to concurrent access update of notification records. Please see with an administrator.')
                     notifs.sudo().write({
                         'notification_status': 'exception',
+                        'failure_reason': NOTIF_NO_RECIPIENTS,
                         'failure_type': 'unknown',
-                        'failure_reason': notif_msg,
                     })
                     # `test_mail_bounce_during_send`, force immediate update to obtain the lock.
                     # see rev. 56596e5240ef920df14d99087451ce6f06ac6d36
@@ -546,11 +581,16 @@ class MailMail(models.Model):
                         else:
                             raise
                 if res:  # mail has been sent at least once, no major exception occurred
-                    mail.write({'state': 'sent', 'message_id': res, 'failure_reason': False})
+                    mail.write({'state': 'sent', 'message_id': res, 'failure_reason': False, 'failure_type': False})
                     _logger.info('Mail with ID %r and Message-Id %r successfully sent', mail.id, mail.message_id)
                     # /!\ can't use mail.state here, as mail.refresh() will cause an error
                     # see revid:odo@openerp.com-20120622152536-42b2s28lvdv3odyr in 6.1
-                mail._postprocess_sent_message(success_pids=success_pids, failure_type=failure_type)
+                mail._postprocess_sent_message(
+                    bool(res),
+                    success_pids=success_pids,
+                    failure_reason=MAILMAIL_NO_RECIPIENTS,
+                    failure_type=failure_type,
+                )
             except MemoryError:
                 # prevent catching transient MemoryErrors, bubble up to notify user or abort cron job
                 # instead of marking the mail as failed
@@ -569,8 +609,12 @@ class MailMail(models.Model):
             except Exception as e:
                 failure_reason = tools.ustr(e)
                 _logger.exception('failed sending mail (id: %s) due to %s', mail.id, failure_reason)
-                mail.write({'state': 'exception', 'failure_reason': failure_reason})
-                mail._postprocess_sent_message(success_pids=success_pids, failure_reason=failure_reason, failure_type='unknown')
+                mail._postprocess_sent_message(
+                    False,
+                    success_pids=success_pids,
+                    failure_reason=failure_reason,
+                    failure_type='unknown'
+                )
                 if raise_exception:
                     if isinstance(e, (AssertionError, UnicodeEncodeError)):
                         if isinstance(e, UnicodeEncodeError):
