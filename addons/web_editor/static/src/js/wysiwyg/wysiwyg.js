@@ -1216,6 +1216,10 @@ const Wysiwyg = Widget.extend({
             const eventName = elem.dataset.eventName;
             let colorpicker = null;
             const mutex = new concurrency.MutexedDropPrevious();
+            if (!elem.ownerDocument.defaultView) {
+                // In case the element is not in the DOM, don't do anything with it.
+                continue;
+            }
             // If the element is within an iframe, access the jquery loaded in
             // the iframe because it is the one who will trigger the dropdown
             // events (i.e hide.bs.dropdown and show.bs.dropdown).
