@@ -10,6 +10,7 @@
             t-att-disabled="props.disabled"
             t-att-checked="props.value"
             t-on-change="(ev) => props.onChange(ev.target.checked)"
+            t-on-keydown="(ev) => props.onKeydown({ key: ev.key })"
             />
         <label t-att-for="props.id or id" class="custom-control-label">
             <t t-slot="default"/>

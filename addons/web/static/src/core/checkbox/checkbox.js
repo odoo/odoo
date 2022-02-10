@@ -26,6 +26,7 @@ CheckBox.template = "web.CheckBox";
 CheckBox.nextId = 1;
 CheckBox.defaultProps = {
     onChange: () => {},
+    onKeydown: () => {},
 };
 CheckBox.props = {
     id: {
@@ -40,12 +41,16 @@ CheckBox.props = {
         type: Boolean,
         optional: true,
     },
+    slots: {
+        type: Object,
+        optional: true,
+    },
     onChange: {
         type: Function,
         optional: true,
     },
-    slots: {
-        type: Object,
+    onKeydown: {
+        type: Function,
         optional: true,
     },
 };
