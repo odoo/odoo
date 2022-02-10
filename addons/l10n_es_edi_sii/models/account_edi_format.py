@@ -297,10 +297,11 @@ class AccountEdiFormat(models.Model):
                 else:
                     invoice_node['FechaRegContable'] = fields.Date.context_today(self).strftime('%d-%m-%Y')
 
-                if not com_partner.country_id or com_partner.country_id.code == 'ES':
+                country_code = com_partner.country_id.code
+                if not country_code or country_code == 'ES' or country_code not in eu_country_codes:
                     invoice_node['ClaveRegimenEspecialOTrascendencia'] = '01'
                 else:
-                    invoice_node['ClaveRegimenEspecialOTrascendencia'] = '09'
+                    invoice_node['ClaveRegimenEspecialOTrascendencia'] = '09' # For Intra-Com
 
             if invoice.move_type == 'out_invoice':
                 invoice_node['TipoFactura'] = 'F2' if is_simplified else 'F1'
