@@ -173,7 +173,7 @@ class SaleCouponProgram(models.Model):
             message = {'error': _('The promotional offer is already applied on this order')}
         elif not self.active:
             message = {'error': _('Promo code is invalid')}
-        elif self.rule_date_from and self.rule_date_from > order.date_order or self.rule_date_to and order.date_order > self.rule_date_to:
+        elif self.rule_date_from and self.rule_date_from > fields.Datetime.now() or self.rule_date_to and fields.Datetime.now() > self.rule_date_to:
             message = {'error': _('Promo code is expired')}
         elif order.promo_code and self.promo_code_usage == 'code_needed':
             message = {'error': _('Promotionals codes are not cumulative.')}
@@ -226,9 +226,9 @@ class SaleCouponProgram(models.Model):
     @api.model
     def _filter_on_validity_dates(self, order):
         return self.filtered(lambda program:
-            (not program.rule_date_from or program.rule_date_from <= order.date_order)
+            (not program.rule_date_from or program.rule_date_from <= fields.Datetime.now())
             and
-            (not program.rule_date_to or program.rule_date_to >= order.date_order)
+            (not program.rule_date_to or program.rule_date_to >= fields.Datetime.now())
         )
 
     @api.model
@@ -237,7 +237,12 @@ class SaleCouponProgram(models.Model):
         return self.filtered(lambda program: program.promo_code_usage == 'code_needed' and program.promo_code != order.promo_code)
 
     def _filter_unexpired_programs(self, order):
-        return self.filtered(lambda program: program.maximum_use_number == 0 or program.order_count < program.maximum_use_number)
+        return self.filtered(
+            lambda program: program.maximum_use_number == 0
+            or program.order_count < program.maximum_use_number
+            or program
+            in (order.code_promo_program_id + order.no_code_promo_program_ids)
+        )
 
     def _filter_programs_on_partners(self, order):
         return self.filtered(lambda program: program._is_valid_partner(order.partner_id))

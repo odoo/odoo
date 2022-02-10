@@ -61,6 +61,7 @@ class PaymentAcquirerPayulatam(models.Model):
             currency=values['currency'].name,
             buyerEmail=values['partner_email'],
             responseUrl=urls.url_join(self.get_base_url(), '/payment/payulatam/response'),
+            confirmationUrl=urls.url_join(self.get_base_url(), '/payment/payulatam/webhook'),
         )
         payulatam_values['signature'] = self._payulatam_generate_sign("in", payulatam_values)
         return payulatam_values

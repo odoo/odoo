@@ -3,17 +3,19 @@
 
 import base64
 from datetime import timedelta
+from freezegun import freeze_time
 
 from odoo.addons.account.tests.account_test_savepoint import AccountTestInvoicingCommon
 from odoo.tests import tagged
 from odoo import fields
 
 
+@freeze_time('2021-05-02')
 @tagged('post_install', '-at_install')
 class TestAccountFrFec(AccountTestInvoicingCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
+    def setUpClass(cls, chart_template_ref='l10n_fr.l10n_fr_pcg_chart_template'):
         super().setUpClass(chart_template_ref=chart_template_ref)
 
         company = cls.company_data['company']
@@ -42,19 +44,17 @@ class TestAccountFrFec(AccountTestInvoicingCommon):
             'date_from': fields.Date.today() - timedelta(days=1),
             'date_to': fields.Date.today() + timedelta(days=1),
             'export_type': 'official',
-            'test_file': True,
         })
 
     def test_generate_fec_sanitize_pieceref(self):
         self.wizard.generate_fec()
-        today = fields.Date.today().strftime('%Y%m%d')
         expected_content = (
             "JournalCode|JournalLib|EcritureNum|EcritureDate|CompteNum|CompteLib|CompAuxNum|CompAuxLib|PieceRef|PieceDate|EcritureLib|Debit|Credit|EcritureLet|DateLet|ValidDate|Montantdevise|Idevise\r\n"
-            f"INV|Customer Invoices|INV/2021/0001|{today}|400000|Product Sales|||-|{today}|Hello Darkness|0,00| 000000000001437,12|||{today}||\r\n"
-            f"INV|Customer Invoices|INV/2021/0001|{today}|400000|Product Sales|||-|{today}|my old friend|0,00| 000000000001676,64|||{today}||\r\n"
-            f"INV|Customer Invoices|INV/2021/0001|{today}|400000|Product Sales|||-|{today}|/|0,00| 000000000003353,28|||{today}||\r\n"
-            f"INV|Customer Invoices|INV/2021/0001|{today}|251000|Tax Received|||-|{today}|Tax 15.00%|0,00| 000000000000970,06|||{today}||\r\n"
-            f"INV|Customer Invoices|INV/2021/0001|{today}|121000|Account Receivable|{self.partner_a.id}|partner_a|-|{today}|INV/2021/0001| 000000000007437,10|0,00|||{today}||"
+            "INV|Customer Invoices|INV/2021/0001|20210502|701100|Ventes de produits finis (ou groupe) A|||-|20210502|Hello Darkness|0,00| 000000000001437,12|||20210502||\r\n"
+            "INV|Customer Invoices|INV/2021/0001|20210502|701100|Ventes de produits finis (ou groupe) A|||-|20210502|my old friend|0,00| 000000000001676,64|||20210502||\r\n"
+            "INV|Customer Invoices|INV/2021/0001|20210502|701100|Ventes de produits finis (ou groupe) A|||-|20210502|/|0,00| 000000000003353,28|||20210502||\r\n"
+            "INV|Customer Invoices|INV/2021/0001|20210502|445710|TVA collectée|||-|20210502|TVA collectée (vente) 20,0%|0,00| 000000000001293,41|||20210502||\r\n"
+            f"INV|Customer Invoices|INV/2021/0001|20210502|411100|Clients - Ventes de biens ou de prestations de services|{self.partner_a.id}|partner_a|-|20210502|INV/2021/0001| 000000000007760,45|0,00|||20210502||"
         )
         content = base64.b64decode(self.wizard.fec_data).decode()
         self.assertEqual(expected_content, content)
