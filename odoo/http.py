@@ -203,7 +203,8 @@ DEFAULT_SESSION = {
     'profile_params': None,
 }
 
-...
+# The request mimetypes that transport JSON in their body.
+JSON_MIMETYPES = ('application/json', 'application/json-rpc')
 
 # The @route arguments to propagate from the decorated method to the
 # routing rule.
@@ -475,7 +476,8 @@ def route(route=None, **routing):
                 _logger.warning("%s called ignoring args %s", fname, params_ko)
 
             result = endpoint(self, *args, **params_ok)
-            ...
+            if routing['type'] == 'http':  # _generate_routing_rules() ensures type is set
+                return Response.load(result)
             return result
 
         route_wrapper.original_routing = routing
@@ -683,8 +685,82 @@ class Response(werkzeug.wrappers.Response):
     In addition to the :class:`werkzeug.wrappers.Response` parameters,
     this class's constructor can take the following additional
     parameters for QWeb Lazy Rendering.
+
+    :param basestring template: template to render
+    :param dict qcontext: Rendering context to use
+    :param int uid: User id to use for the ir.ui.view render call,
+        ``None`` to use the request's user (the default)
+
+    these attributes are available as parameters on the Response object
+    and can be altered at any time before rendering
+
+    Also exposes all the attributes and methods of
+    :class:`werkzeug.wrappers.Response`.
     """
-    ...
+    default_mimetype = 'text/html'
+
+    def __init__(self, *args, **kw):
+        template = kw.pop('template', None)
+        qcontext = kw.pop('qcontext', None)
+        uid = kw.pop('uid', None)
+        super().__init__(*args, **kw)
+        self.set_default(template, qcontext, uid)
+
+    @classmethod
+    def load(cls, result, fname="<function>"):
+        """
+        Convert the return value of an endpoint into a Response.
+
+        :param result: The endpoint return value to load the Response from.
+        :type result: Union[Response, werkzeug.wrappers.BaseResponse,
+            werkzeug.exceptions.HTTPException, str, bytes, NoneType]
+        :param str fname: The endpoint function name wherefrom the
+            result emanated, used for logging.
+        :returns: The created :class:`~odoo.http.Response`.
+        :rtype: Response
+        :raises TypeError: When ``result`` type is none of the above-
+            mentioned type.
+        """
+        if isinstance(result, Response):
+            return result
+
+        if isinstance(result, werkzeug.exceptions.HTTPException):
+            _logger.warning("%s returns an HTTPException instead of raising it.", fname)
+            raise result
+
+        if isinstance(result, werkzeug.wrappers.BaseResponse):
+            response = cls.force_type(result)
+            response.set_default()
+            return response
+
+        if isinstance(result, (bytes, str, type(None))):
+            return cls(result)
+
+        raise TypeError(f"{fname} returns an invalid value: {result}")
+
+    def set_default(self, template=None, qcontext=None, uid=None):
+        self.template = template
+        self.qcontext = qcontext or dict()
+        self.qcontext['response_template'] = self.template
+        self.uid = uid
+
+    @property
+    def is_qweb(self):
+        return self.template is not None
+
+    def render(self):
+        """ Renders the Response's template, returns the result. """
+        self.qcontext['request'] = request
+        return request.env["ir.ui.view"]._render_template(self.template, self.qcontext)
+
+    def flatten(self):
+        """
+        Forces the rendering of the response's template, sets the result
+        as response body and unsets :attr:`.template`
+        """
+        if self.template:
+            self.response.append(self.render())
+            self.template = None
 
 
 class FutureResponse:
@@ -790,6 +866,23 @@ class Request:
             return lang
         except (ValueError, KeyError):
             return DEFAULT_LANG
+
+    def get_http_params(self):
+        """
+        Extract key=value pairs from the query string and the forms
+        present in the body (both application/x-www-form-urlencoded and
+        multipart/form-data).
+
+        :returns: The merged key-value pairs.
+        :rtype: dict
+        """
+        params = {
+            **self.httprequest.args,
+            **self.httprequest.form,
+            **self.httprequest.files
+        }
+        params.pop('session_id', None)
+        return params
 
     ...
 
@@ -945,7 +1038,31 @@ class Dispatcher(ABC):
 
 class HttpDispatcher(Dispatcher):
     routing_type = 'http'
-    ...
+
+    @classmethod
+    def is_compatible_with(cls, request):
+        return request.httprequest.mimetype not in JSON_MIMETYPES
+
+    def dispatch(self, endpoint, args):
+        """
+        Perform http-related actions such as deserializing the request
+        body and query-string and checking cors/csrf while dispatching a
+        request to a ``type='http'`` route.
+
+        See :meth:`~odoo.http.Response.load`: method for the compatible
+        endpoint return types.
+        """
+        self.request.params = dict(self.request.get_http_params(), **args)
+
+        ...
+
+        if self.request.db:
+            ...
+        else:
+            return endpoint(**self.request.params)
+
+    def handle_error(self, exc):
+        ...
 
 
 class JsonRPCDispatcher(Dispatcher):
