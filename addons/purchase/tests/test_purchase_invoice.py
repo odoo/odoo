@@ -327,3 +327,71 @@ class TestPurchaseToInvoice(AccountTestInvoicingCommon):
 
         aml = self.env['account.move.line'].search([('purchase_line_id', '=', purchase_order.order_line.id)])
         self.assertRecordValues(aml, [{'analytic_account_id': analytic_account_manual.id}])
+
+    def test_multicompany_partner_bank(self):
+        """ Test that in a multiple company environment, the bank account of the invoice
+            is the one corresponding to the active company. """
+        company_a = self.env.user.company_id
+        company_b = self.env['res.company'].create({
+            'name': 'Company B',
+        })
+        self.env.ref('l10n_generic_coa.configurable_chart_template')._load(15.0, 15.0, company_b)
+
+        partner = self.env['res.partner'].create({
+            'name': 'AAAAA',
+        })
+        partner_bank_a = self.env['res.partner.bank'].create({
+            'acc_number': "BE01 23456789 10",
+            'partner_id': partner.id,
+            'company_id': company_a.id,
+            'acc_type': 'bank'
+        })
+        partner_bank_b = self.env['res.partner.bank'].create({
+            'acc_number': "BE10 98765432 10",
+            'partner_id': partner.id,
+            'company_id': company_b.id,
+            'acc_type': 'bank'
+        })
+        partner.bank_ids = [partner_bank_a.id, partner_bank_b.id]
+
+        PurchaseOrder = self.env['purchase.order'].with_context(tracking_disable=True)
+        po_a = PurchaseOrder.with_company(company_a).create({
+            'partner_id': partner.id,
+            'company_id': company_a.id,
+            'currency_id': company_a.currency_id.id,
+            'date_order': '2019-01-01',
+        })
+        po_b = PurchaseOrder.with_company(company_b).create({
+            'partner_id': partner.id,
+            'company_id': company_b.id,
+            'currency_id': company_b.currency_id.id,
+            'date_order': '2019-01-01',
+        })
+
+        vals_pol = {
+            'name': self.product_deliver.name,
+            'product_id': self.product_deliver.id,
+            'product_qty': 10.0,
+            'product_uom': self.product_deliver.uom_id.id,
+            'price_unit': self.product_deliver.list_price,
+            'order_id': po_a.id,
+            'taxes_id': False,
+        }
+        PurchaseOrderLine = self.env['purchase.order.line'].with_context(tracking_disable=True)
+        PurchaseOrderLine.create(vals_pol)
+        vals_pol['order_id'] = po_b.id
+        PurchaseOrderLine.create(vals_pol)
+
+        po_a.button_confirm()
+        po_b.button_confirm()
+
+        po_a.order_line.qty_received = po_b.order_line.qty_received = 10
+
+        po_a.with_company(company_a).action_create_invoice()
+        po_b.with_company(company_b).action_create_invoice()
+
+        self.assertEqual(po_a.invoice_ids.company_id, company_a)
+        self.assertEqual(po_a.invoice_ids.partner_bank_id, partner_bank_a)
+
+        self.assertEqual(po_b.invoice_ids.company_id, company_b)
+        self.assertEqual(po_b.invoice_ids.partner_bank_id, partner_bank_b)
