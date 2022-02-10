@@ -61,7 +61,7 @@ const applyDefaultAttributes = (kanbanBox) => {
     kanbanBox.setAttribute("t-att-class", "getRecordClasses(record,groupOrRecord.group)");
     kanbanBox.setAttribute("t-att-data-id", "recordsDraggable and record.id");
     if (hasClass(kanbanBox, ...KANBAN_CLICK_CLASSES)) {
-        kanbanBox.setAttribute("t-on-click", "onRecordClick(record)");
+        kanbanBox.setAttribute("t-on-click", "ev => this.onRecordClick(record, ev)");
     }
     return kanbanBox;
 };
@@ -228,7 +228,10 @@ export class KanbanArchParser extends XMLParser {
                 const strParams = Object.keys(params)
                     .map((k) => `${k}:"${params[k]}"`)
                     .join(",");
-                el.setAttribute("t-on-click", `triggerAction(record,group,{${strParams}})`);
+                el.setAttribute(
+                    "t-on-click",
+                    `() => this.triggerAction(record,group,{${strParams}})`
+                );
             }
         }
 
