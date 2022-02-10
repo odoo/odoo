@@ -439,7 +439,7 @@ class HolidaysRequest(models.Model):
                 tz = leave.department_id.company_id.resource_calendar_id.tz
             elif leave.holiday_type == 'company':
                 tz = leave.mode_company_id.resource_calendar_id.tz
-            tz = tz or self.env.user.company_id.resource_calendar_id.tz or self.env.user.tz or 'UTC'
+            tz = tz or self.env.company.resource_calendar_id.tz or self.env.user.tz or 'UTC'
             leave.tz = tz
 
     @api.depends('number_of_days')

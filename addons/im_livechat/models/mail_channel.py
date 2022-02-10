@@ -163,7 +163,7 @@ class MailChannel(models.Model):
         return 'livechat_channel_id'
 
     def _email_livechat_transcript(self, email):
-        company = self.env.user.company_id
+        company = self.env.company
         render_context = {
             "company": company,
             "channel": self,

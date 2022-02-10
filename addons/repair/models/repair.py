@@ -309,7 +309,7 @@ class Repair(models.Model):
             narration = repair.quotation_notes
             currency = repair.pricelist_id.currency_id
             # Fallback on the user company as the 'company_id' is not required.
-            company = repair.company_id or self.env.user.company_id
+            company = repair.company_id or self.env.company
 
             journal = self.env['account.move'].with_context(force_company=company.id, type='out_invoice')._get_default_journal()
             if not journal:
