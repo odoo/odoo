@@ -17,7 +17,7 @@ import { RelationalModel } from "@web/views/relational_model";
 import { useViewButtons } from "@web/views/view_button/hook";
 import { Field } from "@web/fields/field";
 
-const { Component, onWillStart, useEffect, useRef, useState } = owl;
+const { Component, onWillStart, useEffect, useRef, useState, onRendered } = owl;
 
 const viewRegistry = registry.category("views");
 
@@ -123,14 +123,10 @@ class FormView extends Component {
         onWillStart(async () => {
             await this.loadSubViews();
         });
-    }
 
-    /**
-     * FIXME: in owl2, will use hook "onRender"
-     */
-    __render() {
-        this.env.config.setDisplayName(this.model.root.data.display_name || this.env._t("New"));
-        return super.__render(...arguments);
+        onRendered(() => {
+            this.env.config.setDisplayName(this.model.root.data.display_name || this.env._t("New"));
+        });
     }
 
     async loadSubViews() {
