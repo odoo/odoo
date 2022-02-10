@@ -7,6 +7,8 @@ import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { Field } from "@web/fields/field";
 import { ViewButton } from "@web/views/view_button/view_button";
+import { CheckBox } from "@web/core/checkbox/checkbox";
+import { Dropdown } from "@web/core/dropdown/dropdown";
 
 const { Component, useExternalListener, useRef, useState } = owl;
 
@@ -396,4 +398,4 @@ export class ListRenderer extends Component {
 }
 
 ListRenderer.template = "web.ListRenderer";
-ListRenderer.components = { CheckBoxDropdownItem, Field, ViewButton };
+ListRenderer.components = { CheckBoxDropdownItem, Field, ViewButton, CheckBox, Dropdown };
