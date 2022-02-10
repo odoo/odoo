@@ -84,7 +84,7 @@ class ResUsers(models.Model):
                 partner_user.write(values)
                 if not partner_user.login_date:
                     partner_user._notify_inviter()
-                return (self.env.cr.dbname, partner_user.login, values.get('password'))
+                return (partner_user.login, values.get('password'))
             else:
                 # user does not exist: sign up invited user
                 values.update({
@@ -102,7 +102,7 @@ class ResUsers(models.Model):
             values['email'] = values.get('email') or values.get('login')
             self._signup_create_user(values)
 
-        return (self.env.cr.dbname, values.get('login'), values.get('password'))
+        return (values.get('login'), values.get('password'))
 
     @api.model
     def _get_signup_invitation_scope(self):

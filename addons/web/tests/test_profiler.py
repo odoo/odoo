@@ -24,7 +24,7 @@ class ProfilingHttpCase(HttpCase):
 
     def profile_rpc(self, params=None):
         params = params or {}
-        return self.url_open(
+        req = self.url_open(
             '/web/dataset/call_kw/ir.profile/set_profiling', # use model and method in route has web client does
             headers={'Content-Type': 'application/json'},
             data=json.dumps({'params':{
@@ -33,12 +33,13 @@ class ProfilingHttpCase(HttpCase):
                 'args': [],
                 'kwargs': params,
             }})
-        ).json()
+        )
+        req.raise_for_status()
+        return req.json()
 
 
 @tagged('post_install', '-at_install', 'profiling')
 class TestProfilingWeb(ProfilingHttpCase):
-    @mute_logger('odoo.http')
     def test_profiling_enabled(self):
         # since profiling will use a direct connection to the database patch 'db_connect' to ensure we are using the test cursor
         self.authenticate('admin', 'admin')
@@ -64,7 +65,6 @@ class TestProfilingWeb(ProfilingHttpCase):
 
 @tagged('post_install', '-at_install', 'profiling')
 class TestProfilingModes(ProfilingHttpCase):
-    @mute_logger('odoo.http')
     def test_profile_collectors(self):
         expiration = datetime.datetime.now() + datetime.timedelta(seconds=50)
         self.env['ir.config_parameter'].set_param('base.profiling_enabled_until', expiration)
