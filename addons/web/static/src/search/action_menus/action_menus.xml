@@ -13,7 +13,7 @@
                     <span class="o_dropdown_title">Print</span>
                 </t>
                 <t t-foreach="printItems" t-as="item" t-key="item.key">
-                    <DropdownItem class="o_menu_item" onSelected="() => this.onItemSelected(item)">
+                    <DropdownItem class="'o_menu_item'" onSelected="() => this.onItemSelected(item)">
                         <t t-esc="item.description"/>
                     </DropdownItem>
                 </t>
@@ -29,7 +29,7 @@
                     <span class="o_dropdown_title">Action</span>
                 </t>
                 <t t-foreach="actionItems" t-as="item" t-key="item.key">
-                    <DropdownItem class="o_menu_item" onSelected="() => this.onItemSelected(item)">
+                    <DropdownItem class="'o_menu_item'" onSelected="() => this.onItemSelected(item)">
                         <t t-esc="item.description"/>
                     </DropdownItem>
                 </t>
