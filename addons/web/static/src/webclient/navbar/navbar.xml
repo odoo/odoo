@@ -29,7 +29,7 @@
 
         <!-- Systray -->
         <div class="o_menu_systray d-flex flex-shrink-0 ml-auto" role="menu">
-          <t t-foreach="systrayItems" t-as="item" t-key="item.key">
+          <t t-foreach="getSystrayItems()" t-as="item" t-key="item.key">
             <ErrorHandler onError="error => this.handleItemError(error, item)">
                 <t t-component="item.Component" t-props="item.props"/>
             </ErrorHandler>

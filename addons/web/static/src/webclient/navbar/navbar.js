@@ -78,7 +78,7 @@ export class NavBar extends Component {
         );
     }
 
-    get systrayItems() {
+    getSystrayItems() {
         return systrayRegistry
             .getEntries()
             .map(([key, value]) => ({ key, ...value }))

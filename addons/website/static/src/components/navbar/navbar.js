@@ -23,7 +23,7 @@ patch(NavBar.prototype, 'website_navbar', {
     /**
      * @override
      */
-    get systrayItems() {
+    getSystrayItems() {
         if (this.websiteService.currentWebsite) {
             return websiteSystrayRegistry
                 .getEntries()
@@ -32,5 +32,5 @@ patch(NavBar.prototype, 'website_navbar', {
                 .reverse();
         }
         return this._super();
-    }
+    },
 });
