@@ -345,19 +345,23 @@ class PricelistItem(models.Model):
     def _compute_price(self, product, quantity, uom, date, currency=None):
         """Compute the unit price of a product in the context of a pricelist application.
 
+        Note: self and self.ensure_one()
+
         :param product: recordset of product (product.product/product.template)
         :param float qty: quantity of products requested (in given uom)
         :param uom: unit of measure (uom.uom record)
         :param datetime date: date to use for price computation and currency conversions
-        :param currency: pricelist currency (for the specific case where self is empty)
+        :param currency: currency (for the case where self is empty)
 
-        :returns: price according to pricelist rule, expressed in pricelist currency
+        :returns: price according to pricelist rule or the product price, expressed in the param
+                  currency, the pricelist currency or the company currency
         :rtype: float
         """
+        self and self.ensure_one()  # self is at most one record
         product.ensure_one()
         uom.ensure_one()
 
-        currency = currency or self.currency_id
+        currency = currency or self.currency_id or self.env.company.currency_id
         currency.ensure_one()
 
         # Pricelist specific values are specified according to product UoM
@@ -410,7 +414,9 @@ class PricelistItem(models.Model):
 
         rule_base = self.base or 'list_price'
         if rule_base == 'pricelist' and self.base_pricelist_id:
-            price = self.base_pricelist_id._get_product_price(product, quantity, uom, date)
+            price = self.base_pricelist_id._get_product_price(
+                product, quantity, currency=self.currency_id, uom=uom, date=date
+            )
             src_currency = self.base_pricelist_id.currency_id
         elif rule_base == "standard_price":
             src_currency = product.cost_currency_id

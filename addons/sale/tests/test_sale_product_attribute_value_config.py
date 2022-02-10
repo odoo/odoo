@@ -9,6 +9,13 @@ from odoo.tests import tagged
 class TestSaleProductAttributeValueCommon(TestProductAttributeValueCommon):
 
     @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls.env['product.pricelist'].sudo().search([]).action_archive()
+        cls.env['product.pricelist'].create({'name': 'Base Pricelist'})
+
+    @classmethod
     def _setup_currency(cls, currency_ratio=2):
         """Get or create a currency. This makes the test non-reliant on demo.
 

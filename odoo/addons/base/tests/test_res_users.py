@@ -427,7 +427,7 @@ class TestUsersGroupWarning(TransactionCase):
         # 97 requests if only base is installed
         # 412 runbot community
         # 549 runbot enterprise
-        with self.assertQueryCount(__system__=436), \
+        with self.assertQueryCount(__system__=437), \
              Form(self.test_group_user.with_context(show_user_group_warning=True), view='base.view_users_form') as UserForm:
             UserForm._values[self.sales_categ_field] = self.group_sales_user.id
             UserForm._perform_onchange([self.sales_categ_field])

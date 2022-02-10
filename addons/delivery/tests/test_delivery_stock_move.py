@@ -16,7 +16,6 @@ class StockMoveInvoice(AccountTestInvoicingCommon):
         cls.AccountJournal = cls.env['account.journal']
 
         cls.partner_18 = cls.env['res.partner'].create({'name': 'My Test Customer'})
-        cls.pricelist_id = cls.env.ref('product.list0')
         cls.product_11 = cls.env['product.product'].create({'name': 'A product to deliver'})
         cls.product_cable_management_box = cls.env['product.product'].create({
             'name': 'Another product to deliver',
@@ -44,7 +43,6 @@ class StockMoveInvoice(AccountTestInvoicingCommon):
             'partner_id': self.partner_18.id,
             'partner_invoice_id': self.partner_18.id,
             'partner_shipping_id': self.partner_18.id,
-            'pricelist_id': self.pricelist_id.id,
             'order_line': [(0, 0, {
                 'name': 'Cable Management Box',
                 'product_id': self.product_cable_management_box.id,
@@ -113,7 +111,6 @@ class StockMoveInvoice(AccountTestInvoicingCommon):
             'partner_id': self.partner_18.id,
             'partner_invoice_id': self.partner_18.id,
             'partner_shipping_id': self.partner_18.id,
-            'pricelist_id': self.pricelist_id.id,
             'order_line': [(0, 0, {
                 'name': 'Cable Management Box',
                 'product_id': self.product_cable_management_box.id,

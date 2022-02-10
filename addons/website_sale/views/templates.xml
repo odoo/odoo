@@ -854,9 +854,9 @@
             </label>
             <input type="range" multiple="multiple"
                    t-attf-class="form-range range-with-input {{_classes_input}}"
-                   t-att-data-currency="pricelist.currency_id.symbol"
-                   t-att-data-currency-position="pricelist.currency_id.position"
-                   t-att-step="pricelist.currency_id.rounding" t-att-min="'%f' % (available_min_price)"
+                   t-att-data-currency="website.currency_id.symbol"
+                   t-att-data-currency-position="website.currency_id.position"
+                   t-att-step="website.currency_id.rounding" t-att-min="'%f' % (available_min_price)"
                    t-att-max="'%f' % (available_max_price)" t-att-value="'%f,%f' % (min_price, max_price)"/>
         </div>
     </template>
@@ -2079,7 +2079,7 @@
         <div class="card">
             <div class="card-body p-xl-0">
                 <div class="toggle_summary d-xl-none">
-                    <b>Your order: </b> <span id="amount_total_summary" class="monetary_field" t-field="website_sale_order.amount_total" t-options='{"widget": "monetary", "display_currency": website_sale_order.pricelist_id.currency_id}'/>
+                    <b>Your order: </b> <span id="amount_total_summary" class="monetary_field" t-field="website_sale_order.amount_total" t-options='{"widget": "monetary", "display_currency": website_sale_order.currency_id}'/>
                     <span class='fa fa-chevron-down fa-border float-end' role="img" aria-label="Details" title="Details"></span>
                 </div>
                 <div t-if="not website_sale_order or not website_sale_order.website_order_line" class="alert alert-info">
@@ -2180,7 +2180,7 @@
                                                 <strong>Total:</strong>
                                             </td>
                                             <td class="text-end" width="100">
-                                                <strong t-field="payment_tx_id.amount" t-options="{'widget': 'monetary', 'display_currency': order.pricelist_id.currency_id}" />
+                                                <strong t-field="payment_tx_id.amount" t-options="{'widget': 'monetary', 'display_currency': order.currency_id}" />
                                             </td>
                                         </tr>
                                     </tbody>
@@ -2234,7 +2234,7 @@
                       <td class="text-end border-top border-bottom-0"><strong>Total:</strong></td>
                       <td class="text-xl-end border-top border-bottom-0">
                           <strong t-field="website_sale_order.amount_total" class="monetary_field"
-                              t-options='{"widget": "monetary", "display_currency": website_sale_order.pricelist_id.currency_id}'/>
+                              t-options='{"widget": "monetary", "display_currency": website_sale_order.currency_id}'/>
                       </td>
                   </tr>
             </table>

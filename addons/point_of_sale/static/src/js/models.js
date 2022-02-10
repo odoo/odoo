@@ -1470,13 +1470,16 @@ export class Product extends PosModel {
     // product.pricelist.item records are loaded with a search_read
     // and were automatically sorted based on their _order by the
     // ORM. After that they are added in this order to the pricelists.
-    get_price(pricelist, quantity, price_extra) {
+    get_price(pricelist, quantity, price_extra, recurring=false) {
         var self = this;
         var date = moment();
 
         // In case of nested pricelists, it is necessary that all pricelists are made available in
-        // the POS. Display a basic alert to the user in this case.
-        if (!pricelist) {
+        // the POS. Display a basic alert to the user in the case where there is a pricelist item
+        // but we can't load the base pricelist to get the price when calling this method again.
+        // As this method is also call without pricelist available in the POS, we can't just check
+        // the absence of pricelist.
+        if (recurring && !pricelist) {
             alert(
                 _t(
                     "An error occurred when loading product prices. " +
@@ -1492,16 +1495,18 @@ export class Product extends PosModel {
             category = category.parent;
         }
 
-        var pricelist_items = _.filter(
-            self.applicablePricelistItems[pricelist.id],
-            function (item) {
+        var pricelist_items = [];
+        if (pricelist) {
+            var pricelist_items = _.filter(
+                self.applicablePricelistItems[pricelist.id],
+                function (item) {
                 return (
                     (!item.categ_id || _.contains(category_ids, item.categ_id[0])) &&
                     (!item.date_start || moment.utc(item.date_start).isSameOrBefore(date)) &&
                     (!item.date_end || moment.utc(item.date_end).isSameOrAfter(date))
                 );
-            }
-        );
+            });
+        }
 
         var price = self.lst_price;
         if (price_extra) {
@@ -1517,7 +1522,7 @@ export class Product extends PosModel {
                     return pricelist.id === rule.base_pricelist_id[0];
                 });
                 if (base_pricelist) {
-                    price = self.get_price(base_pricelist, quantity);
+                    price = self.get_price(base_pricelist, quantity, undefined, true);
                 }
             } else if (rule.base === "standard_price") {
                 price = self.standard_price;
@@ -2227,7 +2232,7 @@ export class Orderline extends PosModel {
         };
     }
     display_discount_policy() {
-        return this.order.pricelist.discount_policy;
+        return (this.order.pricelist ? this.order.pricelist.discount_policy : "with_discount" );
     }
     compute_fixed_price(price) {
         var order = this.order;

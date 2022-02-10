@@ -14,9 +14,7 @@ class WebsiteSaleWishlist(WebsiteSale):
         pricelist = website.pricelist_id
         product = request.env['product.product'].browse(product_id)
 
-        price = product._get_combination_info_variant(
-            pricelist=website.pricelist_id,
-        )['price']
+        price = product._get_combination_info_variant(pricelist=website.pricelist_id)['price']
 
         Wishlist = request.env['product.wishlist']
         if request.website.is_public_user():

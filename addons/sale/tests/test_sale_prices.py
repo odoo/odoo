@@ -486,6 +486,7 @@ class TestSalePrices(SaleCommon):
         """
         sale_order = self.sale_order
         so_amount = sale_order.amount_total
+        start_so_amount = so_amount
         sale_order._recompute_prices()
         self.assertEqual(
             sale_order.amount_total, so_amount,
@@ -511,6 +512,17 @@ class TestSalePrices(SaleCommon):
         self.assertTrue(all(line.discount == 0 for line in sale_order.order_line))
         self.assertEqual(sale_order.amount_undiscounted, so_amount)
         self.assertEqual(sale_order.amount_total, 0.95*so_amount)
+
+        # Test taking off the pricelist
+        sale_order.pricelist_id = False
+        sale_order._recompute_prices()
+
+        self.assertTrue(all(line.discount == 0 for line in sale_order.order_line))
+        self.assertEqual(sale_order.amount_undiscounted, so_amount)
+        self.assertEqual(
+            sale_order.amount_total, start_so_amount,
+            "The SO amount without pricelist should be the same than with an empty pricelist"
+        )
 
     # Taxes tests:
     # We do not rely on accounting common on purpose to avoid

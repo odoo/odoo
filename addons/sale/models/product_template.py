@@ -157,7 +157,10 @@ class ProductTemplate(models.Model):
                 }]
         return res
 
-    def _get_combination_info(self, combination=False, product_id=False, add_qty=1, pricelist=False, parent_combination=False, only_template=False):
+    def _get_combination_info(
+            self, combination=False, product_id=False, add_qty=1, pricelist=False,
+            parent_combination=False, only_template=False
+    ):
         """ Return info about a given combination.
 
         Note: this method does not take into account whether the combination is
@@ -209,11 +212,12 @@ class ProductTemplate(models.Model):
         # get the name before the change of context to benefit from prefetch
         display_name = self.display_name
 
-        display_image = True
         quantity = self.env.context.get('quantity', add_qty)
         product_template = self
 
         combination = combination or product_template.env['product.template.attribute.value']
+
+        pricelist = pricelist or self.env['product.pricelist']
 
         if not product_id and not combination and not only_template:
             combination = product_template._get_first_possible_combination(parent_combination)
@@ -242,10 +246,7 @@ class ProductTemplate(models.Model):
                     no_variant_attributes_price_extra=tuple(no_variant_attributes_price_extra)
                 )
             list_price = product.price_compute('list_price')[product.id]
-            if pricelist:
-                price = pricelist._get_product_price(product, quantity)
-            else:
-                price = list_price
+            price = pricelist._get_product_price(product, quantity)
             display_image = bool(product.image_128)
             display_name = product.display_name
             price_extra = (product.price_extra or 0.0) + (sum(no_variant_attributes_price_extra) or 0.0)
@@ -254,28 +255,26 @@ class ProductTemplate(models.Model):
             product_template = product_template.with_context(current_attributes_price_extra=current_attributes_price_extra)
             price_extra = sum(current_attributes_price_extra)
             list_price = product_template.price_compute('list_price')[product_template.id]
-            if pricelist:
-                price = pricelist._get_product_price(product_template, quantity)
-            else:
-                price = list_price
+            price = pricelist._get_product_price(product_template, quantity)
             display_image = bool(product_template.image_128)
 
             combination_name = combination._get_combination_name()
             if combination_name:
                 display_name = "%s (%s)" % (display_name, combination_name)
 
-        if pricelist and pricelist.currency_id != product_template.currency_id:
+        currency = pricelist.currency_id or self.env.company.currency_id
+        if currency != product_template.currency_id:
             list_price = product_template.currency_id._convert(
-                list_price, pricelist.currency_id, product_template._get_current_company(pricelist=pricelist),
+                list_price, currency, product_template._get_current_company(pricelist=pricelist),
                 fields.Date.today()
             )
             price_extra = product_template.currency_id._convert(
-                price_extra, pricelist.currency_id, product_template._get_current_company(pricelist=pricelist),
+                price_extra, currency, product_template._get_current_company(pricelist=pricelist),
                 fields.Date.today()
             )
 
         price_without_discount = list_price if pricelist and pricelist.discount_policy == 'without_discount' else price
-        has_discounted_price = (pricelist or product_template).currency_id.compare_amounts(price_without_discount, price) == 1
+        has_discounted_price = currency.compare_amounts(price_without_discount, price) == 1
 
         return {
             'product_id': product.id,

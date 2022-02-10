@@ -62,6 +62,7 @@ class TestWebsiteEventBoothSale(HttpCase, TestWebsiteEventSaleCommon):
         })
 
     def test_tour(self):
+        self.env['product.pricelist'].sudo().search([]).action_archive()
         self.start_tour('/event', 'website_event_booth_tour', login='portal')
 
     def test_booth_pricelists_different_currencies(self):

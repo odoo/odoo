@@ -8,6 +8,6 @@ from odoo.addons.website_sale.controllers.variant import WebsiteSaleVariantContr
 class WebsiteSaleStockWishlistVariantController(WebsiteSaleVariantController):
     @http.route()
     def get_combination_info_website(self, product_template_id, product_id, combination, add_qty, **kw):
-        kw['context'] = kw.get('context', {})
+        kw['context'] = kw.get('context') or {}  # context may be passed as None in some cases
         kw['context'].update(website_sale_stock_wishlist_get_wish=True)
         return super().get_combination_info_website(product_template_id, product_id, combination, add_qty, **kw)

@@ -10,10 +10,10 @@
                          t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.get_current_pricelist().currency_id}"/>
                 </t>
                 <span t-field="booth_category.price_reduce" class="fw-normal text-muted"
-                      t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.pricelist_id.currency_id}"
+                      t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.currency_id}"
                       groups="account.group_show_line_subtotals_tax_excluded"/>
                 <span t-field="booth_category.price_reduce_taxinc" class="fw-normal text-muted"
-                      t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.pricelist_id.currency_id}"
+                      t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.currency_id}"
                       groups="account.group_show_line_subtotals_tax_included"/>
             </t>
             <span t-else="" class="fw-normal text-muted">Free</span>
@@ -35,7 +35,7 @@
                 </div>
                 <div class="col-sm-6">
                     <span class="fw-bold" t-out="float(0)"
-                          t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.pricelist_id.currency_id}"/>
+                          t-options="{'widget': 'monetary', 'from_currency': event.company_id.sudo().currency_id, 'display_currency': website.currency_id}"/>
                 </div>
             </div>
         </xpath>

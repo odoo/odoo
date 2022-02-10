@@ -24,9 +24,19 @@ class SetPricelistButton extends PosComponent {
         const selectionList = this.env.pos.pricelists.map((pricelist) => ({
             id: pricelist.id,
             label: pricelist.name,
-            isSelected: pricelist.id === this.currentOrder.pricelist.id,
+            isSelected: this.currentOrder.pricelist
+                        && pricelist.id === this.currentOrder.pricelist.id,
             item: pricelist,
         }));
+
+        if (!this.env.pos.default_pricelist) {
+            selectionList.push({
+                id: null,
+                label: this.env._t('Default Price'),
+                isSelected: !this.currentOrder.pricelist,
+                item: null,
+            })
+        }
 
         const { confirmed, payload: selectedPricelist } = await this.showPopup("SelectionPopup", {
             title: this.env._t("Select the pricelist"),
@@ -43,7 +53,7 @@ SetPricelistButton.template = "SetPricelistButton";
 ProductScreen.addControlButton({
     component: SetPricelistButton,
     condition: function () {
-        return this.env.pos.config.use_pricelist && this.env.pos.pricelists.length > 1;
+        return this.env.pos.config.use_pricelist && this.env.pos.pricelists.length > 0;
     },
 });
 

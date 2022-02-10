@@ -210,7 +210,7 @@ class CustomerPortal(portal.CustomerPortal):
                 providers_sudo, logged_in=logged_in, sale_order_id=order_sudo.id
             ),
             'amount': order_sudo.amount_total,
-            'currency': order_sudo.pricelist_id.currency_id,
+            'currency': order_sudo.currency_id,
             'partner_id': order_sudo.partner_id.id,
             'access_token': order_sudo.access_token,
             'transaction_route': order_sudo.get_portal_url(suffix='/transaction'),
