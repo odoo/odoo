@@ -98,8 +98,11 @@
                                 <div class="oe_kanban_bottom_right" t-if="!selection_mode">
                                     <span t-if="record.portal_user_names.raw_value.length > 0" class="pr-2" t-att-title="record.portal_user_names.raw_value">
                                         <t t-set="user_count" t-value="record.portal_user_names.raw_value.split(',').length"/>
-                                        <t t-set="display_nb_assignees" t-value="user_count + ' assignee' + (user_count > 1 ? 's' : '')"/>
-                                        <t t-out="display_nb_assignees"/>
+                                        <t t-out="user_count"/>
+                                        <t t-if="user_count > 1"> assignees</t>
+                                        <t t-else=""> assignee</t>
+                                        <t t-if="1 == 0" t-set="display_nb_assignees" t-value="user_count + ' assignee' + (user_count > 1 ? 's' : '')"/>
+                                        <t t-if="1 == 0" t-out="display_nb_assignees"/>
                                     </span>
                                     <field name="kanban_state" widget="state_selection"/>
                                     <!-- TODO: [XBO] remove me in master -->
