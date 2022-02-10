@@ -11506,10 +11506,10 @@ QUnit.module("Fields", (hooks) => {
         patch(ControlPanel.prototype, "cp_patch_mock", {
             setup() {
                 this._super(...arguments);
-                owl.hooks.onMounted(() => {
+                owl.onMounted(() => {
                     assert.step("mounted");
                 });
-                owl.hooks.onWillUnmount(() => {
+                owl.onWillUnmount(() => {
                     assert.step("willUnmount");
                 });
             },
@@ -13374,11 +13374,11 @@ QUnit.module("Fields", (hooks) => {
                 setup() {
                     super.setup();
                     const ID = testInst++;
-                    owl.hooks.onMounted(() => {
+                    owl.onMounted(() => {
                         assert.step(`mounted ${ID}`);
                     });
 
-                    owl.hooks.onWillUnmount(() => {
+                    owl.onWillUnmount(() => {
                         assert.step(`willUnmount ${ID}`);
                     });
                 }
@@ -13387,7 +13387,7 @@ QUnit.module("Fields", (hooks) => {
                 }
             }
 
-            TestField.template = owl.tags.xml`<span>test</span>`;
+            TestField.template = owl.xml`<span>test</span>`;
             fieldRegistryOwl.add("test_field", TestField);
 
             const def = testUtils.makeTestPromise();

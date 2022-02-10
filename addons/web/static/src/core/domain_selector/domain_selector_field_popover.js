@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
-const { Component } = owl;
-const { useState } = owl.hooks;
+const { Component, useState } = owl;
 
 export class DomainSelectorFieldPopover extends Component {
     setup() {

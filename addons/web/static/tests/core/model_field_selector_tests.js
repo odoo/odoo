@@ -11,8 +11,7 @@ import { click, getFixture, triggerEvent } from "../helpers/utils";
 import { registerCleanup } from "../helpers/cleanup";
 import { makeFakeLocalizationService, makeFakeUserService } from "../helpers/mock_services";
 
-const { Component, mount } = owl;
-const { xml } = owl.tags;
+const { Component, mount, xml } = owl;
 
 let env;
 let target;

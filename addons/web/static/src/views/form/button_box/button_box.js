@@ -1,7 +1,8 @@
 /** @odoo-module  */
 
-// import { useEffect, useService } from "@web/core/utils/hooks";
+// import { useService } from "@web/core/utils/hooks";
 // import { Dropdown } from "@web/core/dropdown/dropdown";
+// const { useEffect } = owl;
 
 // class ButtonBoxDropdown extends Dropdown {
 //     setup() {
@@ -30,7 +31,7 @@ export class ButtonBox extends owl.Component {
         // const getMaxButtons = () => {
         //     return [2, 2, 2, 4, 7, 8, 8][ui.size];
         // };
-        // const dropdown = owl.hooks.useRef("dropdown");
+        // const dropdown = owl.useRef("dropdown");
         // let visibleButtons, dropDownButtons;
         // useEffect(() => {
         //     const maxButtonsInBox = getMaxButtons();

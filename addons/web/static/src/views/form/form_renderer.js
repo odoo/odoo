@@ -6,9 +6,7 @@ import { FormCompiler } from "@web/views/form/form_compiler";
 import { useViewCompiler } from "@web/views/helpers/view_compiler";
 import { ViewButton } from "@web/views/view_button/view_button";
 
-const { Component, hooks, tags } = owl;
-const { useSubEnv, useState } = hooks;
-const { xml } = tags;
+const { Component, useSubEnv, useState, xml } = owl;
 
 export class FormRenderer extends Component {
     setup() {

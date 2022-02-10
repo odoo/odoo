@@ -6,8 +6,7 @@ import { url } from "@web/core/utils/urls";
 import { standardFieldProps } from "./standard_field_props";
 import { FileDownloader, FileUploader } from "./file_handler";
 
-const { Component } = owl;
-const { onWillUpdateProps, useState } = owl.hooks;
+const { Component, onWillUpdateProps, useState } = owl;
 
 export class PdfViewerField extends Component {
     setup() {

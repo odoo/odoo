@@ -3,11 +3,8 @@
 import { Domain } from "@web/core/domain";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { combineAttributes } from "@web/core/utils/xml";
-import { Field } from "@web/fields/field";
 
-const { Component, hooks, tags } = owl;
-const { useComponent } = hooks;
-const { xml } = tags;
+const { Component, useComponent, xml } = owl;
 
 const templateIds = Object.create(null);
 

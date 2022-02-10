@@ -5,8 +5,7 @@ import { session } from "@web/session";
 import { sprintf } from "@web/core/utils/strings";
 import { formatFloat } from "./formatters";
 
-const { Component } = owl;
-const { useRef, useState } = owl.hooks;
+const { Component, useRef, useState } = owl;
 
 export const fileTypeMagicWordMap = {
     "/": "jpg",

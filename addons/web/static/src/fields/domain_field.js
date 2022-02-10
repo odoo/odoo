@@ -7,8 +7,7 @@ import { Domain } from "@web/core/domain";
 import { CharField } from "./char_field";
 import { standardFieldProps } from "./standard_field_props";
 
-const { Component } = owl;
-const { onWillStart, onWillUpdateProps, useState } = owl.hooks;
+const { Component, onWillStart, onWillUpdateProps, useState } = owl;
 
 export class DomainField extends Component {
     setup() {

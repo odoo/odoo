@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
-const { Component } = owl;
-const { useRef } = owl.hooks;
+const { Component, useRef } = owl;
 
 export class DomainSelectorFieldInputWithTags extends Component {
     setup() {

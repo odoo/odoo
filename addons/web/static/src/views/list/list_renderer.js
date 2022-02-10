@@ -8,8 +8,7 @@ import { registry } from "@web/core/registry";
 import { Field } from "@web/fields/field";
 import { ViewButton } from "@web/views/view_button/view_button";
 
-const { Component, hooks, useState } = owl;
-const { useExternalListener, useRef } = hooks;
+const { Component, useExternalListener, useRef, useState } = owl;
 
 const formatterRegistry = registry.category("formatters");
 

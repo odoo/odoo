@@ -6,11 +6,9 @@ import {
     convertHslToRgb,
     convertRGBToHEX,
 } from "./colorpicker_utils";
-import { useEffect } from "@web/core/utils/hooks";
 import { clamp } from "@web/core/utils/numbers";
 
-const { Component, useState } = owl;
-const { useRef } = owl.hooks;
+const { Component, useEffect, useState, useRef } = owl;
 
 export class ColorPicker extends Component {
     setup() {

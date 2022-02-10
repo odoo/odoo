@@ -997,7 +997,7 @@ QUnit.module("Components", ({ beforeEach }) => {
             }
         }
         Parent.components = { CheckBoxDropdownItem };
-        Parent.template = owl.tags.xml`
+        Parent.template = owl.xml`
             <Dropdown>
                 <CheckBoxDropdownItem onSelected="() => onItemSelected()"/>
             </Dropdown>
@@ -1013,7 +1013,7 @@ QUnit.module("Components", ({ beforeEach }) => {
         assert.expect(2);
 
         class MyComponent extends owl.Component {}
-        MyComponent.template = owl.tags.xml`
+        MyComponent.template = owl.xml`
             <Dropdown tooltip="'My tooltip'">
                 <DropdownItem/>
             </Dropdown>`;

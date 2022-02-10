@@ -6,8 +6,7 @@ import { download } from "@web/core/network/download";
 import { standardFieldProps } from "./standard_field_props";
 import { FileDownloader, FileUploader } from "./file_handler";
 
-const { Component } = owl;
-const { onWillUpdateProps, useState } = owl.hooks;
+const { Component, onWillUpdateProps, useState } = owl;
 
 function isBinarySize(value) {
     return /^\d+(\.\d*)? [^0-9]+$/.test(value);

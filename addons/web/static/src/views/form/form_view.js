@@ -3,7 +3,7 @@
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { makeContext } from "@web/core/context";
 import { registry } from "@web/core/registry";
-import { useEffect, useService } from "@web/core/utils/hooks";
+import { useService } from "@web/core/utils/hooks";
 import { XMLParser } from "@web/core/utils/xml";
 import { ActionMenus } from "@web/search/action_menus/action_menus";
 import { usePager } from "@web/search/pager_hook";
@@ -17,8 +17,7 @@ import { RelationalModel } from "@web/views/relational_model";
 import { useViewButtons } from "@web/views/view_button/hook";
 import { Field } from "@web/fields/field";
 
-const { Component, hooks, useState } = owl;
-const { onWillStart, useRef } = hooks;
+const { Component, onWillStart, useEffect, useRef, useState } = owl;
 
 const viewRegistry = registry.category("views");
 

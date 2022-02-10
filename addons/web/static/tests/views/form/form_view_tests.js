@@ -2800,7 +2800,7 @@ QUnit.module("Views", (hooks) => {
             assert.deepEqual(attrs.options, { horizontal: true });
             return { horizontal: attrs.options.horizontal };
         };
-        MyField.template = owl.tags.xml`<div>ok</div>`;
+        MyField.template = owl.xml`<div>ok</div>`;
         fieldRegistry.add("my_field", MyField);
 
         const form = await makeView({
@@ -9507,7 +9507,7 @@ QUnit.module("Views", (hooks) => {
                 return JSON.stringify(this.props.record.data);
             }
         }
-        MyComponent.template = owl.tags.xml`<div t-esc="value"/>`;
+        MyComponent.template = owl.xml`<div t-esc="value"/>`;
         widgetRegistryOwl.add("test", MyComponent);
 
         const form = await makeView({

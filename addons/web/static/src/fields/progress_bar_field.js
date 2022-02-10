@@ -6,8 +6,7 @@ import { useService } from "@web/core/utils/hooks";
 import { standardFieldProps } from "./standard_field_props";
 import { PercentageEditor, PercentageViewer } from "./percentage";
 
-const { Component } = owl;
-const { onWillUnmount, onWillUpdateProps, useState } = owl.hooks;
+const { Component, onWillUnmount, onWillUpdateProps, useState } = owl;
 
 export class ProgressBarField extends Component {
     setup() {

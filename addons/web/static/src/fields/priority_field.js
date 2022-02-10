@@ -4,8 +4,7 @@ import { registry } from "@web/core/registry";
 import { _lt } from "@web/core/l10n/translation";
 import { standardFieldProps } from "./standard_field_props";
 
-const { Component } = owl;
-const { useState } = owl.hooks;
+const { Component, useState } = owl;
 
 export class PriorityField extends Component {
     setup() {

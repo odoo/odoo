@@ -7,8 +7,7 @@ import { _lt } from "@web/core/l10n/translation";
 import { FileUploader } from "./file_handler";
 import { standardFieldProps } from "./standard_field_props";
 
-const { Component } = owl;
-const { useState } = owl.hooks;
+const { Component, useState } = owl;
 
 export const fileTypeMagicWordMap = {
     "/": "jpg",

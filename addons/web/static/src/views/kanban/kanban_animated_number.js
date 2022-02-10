@@ -2,8 +2,7 @@
 
 import { registry } from "@web/core/registry";
 
-const { Component, hooks } = owl;
-const { onWillUpdateProps, onWillUnmount, useState } = hooks;
+const { Component, onWillUpdateProps, onWillUnmount, useState } = owl;
 
 export class KanbanAnimatedNumber extends Component {
     setup() {

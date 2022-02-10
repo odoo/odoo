@@ -2,11 +2,9 @@
 
 import { registry } from "@web/core/registry";
 import { _lt } from "@web/core/l10n/translation";
-import { useEffect } from "@web/core/utils/hooks";
 import { standardFieldProps } from "./standard_field_props";
 
-const { Component } = owl;
-const { useRef } = owl.hooks;
+const { Component, useEffect, useRef } = owl;
 
 export class TextField extends Component {
     setup() {

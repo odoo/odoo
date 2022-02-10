@@ -18,7 +18,7 @@ function disableButtons(el) {
 
 export function useViewButtons(model, beforeExecuteAction = () => {}) {
     const action = useService("action");
-    const comp = owl.hooks.useComponent();
+    const comp = owl.useComponent();
 
     async function handler(ev) {
         const manuallyDisabledButtons = disableButtons(comp.el);

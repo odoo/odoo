@@ -19,8 +19,7 @@ import { getActiveActions, getDecoration, processButton } from "../helpers/view_
 import { RelationalModel } from "../relational_model";
 import { ListRenderer } from "./list_renderer";
 
-const { hooks } = owl;
-const { onWillStart, useSubEnv } = hooks;
+const { onWillStart, useSubEnv } = owl;
 
 export class ListViewHeaderButton extends ViewButton {
     async onClick() {

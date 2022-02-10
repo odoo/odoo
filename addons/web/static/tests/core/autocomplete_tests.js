@@ -8,9 +8,7 @@ import { makeTestEnv } from "../helpers/mock_env";
 import { click, getFixture, patchWithCleanup, triggerEvent, triggerEvents } from "../helpers/utils";
 import { registerCleanup } from "../helpers/cleanup";
 
-const { Component, mount } = owl;
-const { useState } = owl.hooks;
-const { xml } = owl.tags;
+const { Component, mount, useState, xml } = owl;
 
 const serviceRegistry = registry.category("services");
 

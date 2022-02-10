@@ -1,10 +1,8 @@
 /** @odoo-module **/
 
 import { useListener } from "@web/core/utils/hooks";
-import { useEffect } from "../../core/utils/hooks";
 
-const { hooks } = owl;
-const { onWillUnmount, useComponent, useExternalListener } = hooks;
+const { onWillUnmount, useComponent, useEffect, useExternalListener } = owl;
 
 const cancelEvent = (ev) => {
     ev.stopPropagation();

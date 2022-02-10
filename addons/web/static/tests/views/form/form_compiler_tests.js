@@ -239,7 +239,7 @@ QUnit.module("Form Renderer", (hooks) => {
                 assert.strictEqual(this.props.placeholder, "e.g. Contact's Name or //someinfo...");
             }
         }
-        CharField.template = owl.tags.xml`<div/>`;
+        CharField.template = owl.xml`<div/>`;
 
         registry.category("fields").add("char", CharField, { force: true });
 

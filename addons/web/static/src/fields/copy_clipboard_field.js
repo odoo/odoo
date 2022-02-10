@@ -2,10 +2,8 @@
 
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "./standard_field_props";
-import { useEffect } from "@web/core/utils/hooks";
 
-const { Component } = owl;
-const { useRef, useState } = owl.hooks;
+const { Component, useEffect, useRef, useState } = owl;
 
 class CopyClipboard extends Component {
     setup() {

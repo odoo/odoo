@@ -16,8 +16,7 @@ import { createWebClient, doAction } from "../webclient/helpers";
 import FormView from "web.FormView";
 import legacyViewRegistry from "web.view_registry";
 
-const { Component, mount } = owl;
-const { xml } = owl.tags;
+const { Component, mount, xml } = owl;
 
 let serverData;
 let env;

@@ -9,8 +9,7 @@ import { standardFieldProps } from "./standard_field_props";
 import { Domain } from "@web/core/domain";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 
-const { Component } = owl;
-const { onWillStart, onWillUpdateProps, useState } = owl.hooks;
+const { Component, onWillStart, onWillUpdateProps, useState } = owl;
 
 export class Many2OneField extends Component {
     setup() {

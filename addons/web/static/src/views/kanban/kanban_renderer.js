@@ -16,8 +16,7 @@ import { KanbanCompiler } from "@web/views/kanban/kanban_compiler";
 import { useSortable } from "@web/views/kanban/kanban_sortable";
 import { ViewButton } from "@web/views/view_button/view_button";
 
-const { Component, hooks } = owl;
-const { useExternalListener, useState } = hooks;
+const { Component, useExternalListener, useState } = owl;
 const { RECORD_COLORS } = ColorPickerField;
 
 const GLOBAL_CLICK_CANCEL_SELECTORS = ["a", ".dropdown", ".oe_kanban_action"];

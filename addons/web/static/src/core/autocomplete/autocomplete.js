@@ -3,8 +3,7 @@
 import { useService } from "@web/core/utils/hooks";
 import { debounce } from "@web/core/utils/timing";
 
-const { Component } = owl;
-const { useExternalListener, useRef, useState } = owl.hooks;
+const { Component, useExternalListener, useRef, useState } = owl;
 
 export class AutoComplete extends Component {
     setup() {
