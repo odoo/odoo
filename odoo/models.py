@@ -5287,9 +5287,7 @@ Fields:
             The returned recordset has the same prefetch object as ``self``.
 
         """
-        if not isinstance(flag, bool):
-            _logger.warning("deprecated use of sudo(user), use with_user(user) instead", stack_info=True)
-            return self.with_user(flag)
+        assert isinstance(flag, bool)
         return self.with_env(self.env(su=flag))
 
     def with_user(self, user):
@@ -5769,7 +5767,8 @@ Fields:
 
     def __bool__(self):
         """ Test whether ``self`` is nonempty. """
-        return bool(getattr(self, '_ids', True))
+        return True if self._ids else False  # fast version of bool(self._ids)
+
     __nonzero__ = __bool__
 
     def __len__(self):
@@ -5915,13 +5914,10 @@ Fields:
         return self.id or 0
 
     def __repr__(self):
-        return "%s%s" % (self._name, getattr(self, '_ids', ""))
+        return f"{self._name}{self._ids}"
 
     def __hash__(self):
-        if hasattr(self, '_ids'):
-            return hash((self._name, frozenset(self._ids)))
-        else:
-            return hash(self._name)
+        return hash((self._name, frozenset(self._ids)))
 
     def __getitem__(self, key):
         """ If ``key`` is an integer or a slice, return the corresponding record
