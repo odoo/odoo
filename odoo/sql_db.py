@@ -430,7 +430,8 @@ class Cursor(BaseCursor):
             self.sql_log = previous
 
     def close(self):
-        return self._close(False)
+        if not self._closed:
+            return self._close(False)
 
     def _close(self, leak=False):
         global sql_counter

@@ -38,9 +38,7 @@ class PortalChatter(mail.PortalChatter):
     def portal_message_fetch(self, res_model, res_id, domain=False, limit=False, offset=False, **kw):
         # add 'rating_include' in context, to fetch them in portal_message_format
         if kw.get('rating_include'):
-            context = dict(request.context)
-            context['rating_include'] = True
-            request.context = context
+            request.update_context(rating_include=True)
         result = super(PortalChatter, self).portal_message_fetch(res_model, res_id, domain=domain, limit=limit, offset=offset, **kw)
         result.update(self._portal_rating_stats(res_model, res_id, **kw))
         return result

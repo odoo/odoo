@@ -324,7 +324,7 @@ class Web_Editor(http.Controller):
         # avoid allowed_company_ids which may erroneously restrict based on website
         context = dict(request.context)
         context.pop('allowed_company_ids', None)
-        request.context = context
+        request.update_env(context=context)
 
     @http.route("/web_editor/get_assets_editor_resources", type="json", auth="user", website=True)
     def get_assets_editor_resources(self, key, get_views=True, get_scss=True, get_js=True, bundles=False, bundles_restriction=[], only_user_custom_files=True):
@@ -507,7 +507,7 @@ class Web_Editor(http.Controller):
         request.env['web_editor.assets'].reset_asset(url, bundle)
 
     @http.route("/web_editor/public_render_template", type="json", auth="public", website=True)
-    def public_render_template(self, args):
+    def public_render_template(self, args, kwargs):  # pylint: disable=unused-argument
         # args[0]: xml id of the template to render
         # args[1]: optional dict of rendering values, only trusted keys are supported
         len_args = len(args)

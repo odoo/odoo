@@ -190,13 +190,6 @@ class RecordCapturer:
 # ------------------------------------------------------------
 class OdooSuite(unittest.suite.TestSuite):
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        from odoo.http import root
-        if not root._loaded:
-            root.load_addons()
-            root._loaded = True
-
     if sys.version_info < (3, 8):
         # Partial backport of bpo-24412, merged in CPython 3.8
 
@@ -826,6 +819,7 @@ class ChromeBrowserException(Exception):
 
 class ChromeBrowser:
     """ Helper object to control a Chrome headless process. """
+    remote_debugging_port = 0  # 9222, change it in a non-git-tracked file
 
     def __init__(self, logger, window_size, test_class):
         self._logger = logger
@@ -984,13 +978,14 @@ class ChromeBrowser:
             '--autoplay-policy': 'no-user-gesture-required',
             '--window-size': self.window_size,
             '--remote-debugging-address': HOST,
-            '--remote-debugging-port': '0',
+            '--remote-debugging-port': str(self.remote_debugging_port),
             '--no-sandbox': '',
             '--disable-gpu': '',
             # required for tests that depends on the jquery.touchSwipe library, which detects
             # touch capabilities using "'ontouchstart' in window"
             '--touch-events':'',
         }
+
         cmd = [self.executable]
         cmd += ['%s=%s' % (k, v) if v else k for k, v in switches.items()]
         url = 'about:blank'
@@ -1573,12 +1568,12 @@ class HttpCase(TransactionCase):
         odoo.http.root.session_store.save(self.session)
 
     def authenticate(self, user, password):
-        db = get_db_name()
         if getattr(self, 'session', None):
             odoo.http.root.session_store.delete(self.session)
 
-        self.session = session  = odoo.http.root.session_store.new()
-        session.db = db
+        self.session = session = odoo.http.root.session_store.new()
+        session.update(odoo.http.DEFAULT_SESSION, db=get_db_name())
+        session.context['lang'] = odoo.http.DEFAULT_LANG
 
         if user: # if authenticated
             # Flush and clear the current transaction.  This is useful, because
@@ -1586,14 +1581,12 @@ class HttpCase(TransactionCase):
             # than this transaction.
             self.cr.flush()
             self.cr.clear()
-            uid = self.registry['res.users'].authenticate(db, user, password, {'interactive': False})
+            uid = self.registry['res.users'].authenticate(session.db, user, password, {'interactive': False})
             env = api.Environment(self.cr, uid, {})
             session.uid = uid
             session.login = user
             session.session_token = uid and security.compute_session_token(session, env)
-            session.context = dict(env['res.users'].context_get() or {})
-            session.context['uid'] = uid
-            session._fix_lang(session.context)
+            session.context = dict(env['res.users'].context_get())
 
         odoo.http.root.session_store.save(session)
         # Reset the opener: turns out when we set cookies['foo'] we're really

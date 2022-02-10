@@ -9,4 +9,4 @@ class TestBusController(HttpCase):
         self.assertEqual(response.status_code, 200)
         payload = response.json()
         self.assertEqual(payload['status'], 'pass')
-        self.assertNotIn('session_id', response.cookies)
+        self.assertFalse(response.cookies.get('session_id'))

@@ -66,7 +66,7 @@ class Authenticate(http.Controller):
         auth_message = self._get_auth_code_data(auth_code)
         if not auth_message:
             return {"error": "Invalid code"}
-        request.uid = auth_message['uid']
+        request.update_env(user=auth_message['uid'])
         scope = 'odoo.plugin.' + auth_message.get('scope', '')
         api_key = request.env['res.users.apikeys']._generate(scope, auth_message['name'])
         return {'access_token': api_key}

@@ -1488,7 +1488,7 @@ class Binary(http.Controller):
         uid = (request.session.uid if dbname else None) or odoo.SUPERUSER_ID
 
         if not dbname:
-            response = http.send_filepath(placeholder(imgname + imgext))
+            response = http.send_file(placeholder(imgname + imgext))
         else:
             try:
                 # create an empty registry
@@ -1517,7 +1517,7 @@ class Binary(http.Controller):
                             imgext = '.svg'
                         response = http.send_file(image_data, filename=imgname + imgext, mimetype=mimetype, mtime=row[1])
                     else:
-                        response = http.send_filepath(placeholder('nologo.png'))
+                        response = http.send_file(placeholder('nologo.png'))
             except Exception:
                 response = http.send_file(placeholder(imgname + imgext))
 

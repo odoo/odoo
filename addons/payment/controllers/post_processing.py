@@ -35,7 +35,7 @@ class PaymentPostProcessing(http.Controller):
         return request.render('payment.payment_status')
 
     @http.route('/payment/status/poll', type='json', auth='public')
-    def poll_status(self):
+    def poll_status(self, **_kwargs):
         """ Fetch the transactions to display on the status page and finalize their post-processing.
 
         :return: The post-processing values of the transactions

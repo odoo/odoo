@@ -2,14 +2,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
-import unittest
 from html.parser import HTMLParser
 from unittest.mock import patch
 from urllib.parse import urlparse
 from socket import gethostbyname
 
 import odoo
-from odoo.http import WebRequest
+from odoo.http import Request
 from odoo.tests import tagged
 from odoo.tests.common import HOST, HttpCase, new_test_user
 from odoo.tools import config, file_open, mute_logger
@@ -70,11 +69,9 @@ class TestHttpBase(HttpCase):
 
     def nodb_url_open(self, url, *args, allow_redirects=False, **kwargs):
         with patch('odoo.http.db_list') as db_list, \
-             patch('odoo.http.db_filter') as db_filter, \
-             patch('odoo.http.db_monodb') as db_monodb:
+             patch('odoo.http.db_filter') as db_filter:
             db_list.return_value = []
             db_filter.return_value = []
-            db_monodb.return_value = None
             return self.url_open(url, *args, allow_redirects=allow_redirects, **kwargs)
 
 
@@ -150,7 +147,7 @@ class TestHttpStatic(TestHttpBase):
         res = self.nodb_url_open("/test_http/static/src/img/gizeh.svg")
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.headers.get('Content-Length'), '1529')
-        self.assertEqual(res.headers.get('Content-Type'), 'image/svg+xml')
+        self.assertEqual(res.headers.get('Content-Type'), 'image/svg+xml; charset=utf-8')
         cache_control = set(res.headers.get('Cache-Control', '').split(', '))
         self.assertEqual(cache_control, {'public', 'max-age=604800'})  # one week
         with file_open('test_http/static/src/img/gizeh.svg', 'rb') as file:
@@ -205,7 +202,6 @@ class TestHttpEchoReplyHttpNoDB(TestHttpBase):
         res = self.nodb_url_open('/test_http/echo-http-post', data='{}', headers=CT_JSON)
         self.assertIn("Bad Request", res.text)
 
-    @unittest.skip("Broken in master, fixed in httpocalypse.")
     def test_echohttp5_post_csrf(self):
         res = self.nodb_url_open('/test_http/echo-http-csrf?race=Asgard', data={'commander': 'Thor'})
         self.assertEqual(res.status_code, 303)
@@ -280,7 +276,7 @@ class TestHttpEchoReplyHttpWithDB(TestHttpBase):
 
     @mute_logger('odoo.http')
     def test_echohttp7_post_good_csrf(self):
-        res = self.db_url_open('/test_http/echo-http-csrf?race=Asgard', data={'commander': 'Thor', 'csrf_token': WebRequest.csrf_token(self)})
+        res = self.db_url_open('/test_http/echo-http-csrf?race=Asgard', data={'commander': 'Thor', 'csrf_token': Request.csrf_token(self)})
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.text, "{'race': 'Asgard', 'commander': 'Thor'}")
 
@@ -355,7 +351,7 @@ class TestHttpModels(TestHttpBase):
                 ''')
             )
 
-    @unittest.skip('500 without website, 404 with website, 400 in httpocalypse. Cmon master...')
+    @mute_logger('odoo.http')
     def test_models1_galaxy_ko(self):
         res = self.url_open("/test_http/404")  # unknown galaxy
         self.assertEqual(res.status_code, 400)
@@ -379,7 +375,7 @@ class TestHttpModels(TestHttpBase):
             ''')
         )
 
-    @unittest.skip('500 without website, 404 with website, 400 in httpocalypse. Cmon master...')
+    @mute_logger('odoo.http')
     def test_models3_stargate_ko(self):
         milky_way = self.env.ref('test_http.milky_way')
         res = self.url_open(f'/test_http/{milky_way.id}/9999')  # unknown gate
@@ -389,7 +385,6 @@ class TestHttpModels(TestHttpBase):
 
 @tagged('post_install', '-at_install')
 class TestHttpMisc(TestHttpBase):
-    @unittest.skip('In master it is in the http_routing override')
     def test_misc0_redirect(self):
         res = self.nodb_url_open('/test_http//greeting')
         self.assertEqual(res.status_code, 301)
@@ -438,7 +433,6 @@ class TestHttpCors(TestHttpBase):
         self.assertEqual(res_get.headers.get('Access-Control-Allow-Origin'), '*')
         self.assertEqual(res_get.headers.get('Access-Control-Allow-Methods'), 'GET, POST')
 
-    @unittest.skip("Broken in master, fixed in httpocalypse.")
     def test_cors1_http_methods(self):
         res_opt = self.opener.options(f'{self.base_url()}/test_http/cors_http_methods', timeout=10, allow_redirects=False)
         self.assertIn(res_opt.status_code, (200, 204))

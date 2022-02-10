@@ -334,8 +334,6 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
         raise
     except werkzeug.exceptions.HTTPException:
         raise
-    except odoo.http.AuthenticationError:
-        raise
     except OperationalError:
         # Do not hide PostgreSQL low-level exceptions, to let the auto-replay
         # of serialized transactions work its magic

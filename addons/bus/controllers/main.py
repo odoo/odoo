@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
+import logging
 
 from odoo import exceptions, _
 from odoo.http import Controller, request, route
@@ -16,8 +17,7 @@ class BusController(Controller):
         # update the user presence
         if request.session.uid and 'bus_inactivity' in options:
             request.env['bus.presence'].update(inactivity_period=options.get('bus_inactivity'), identity_field='user_id', identity_value=request.session.uid)
-        request.cr.close()
-        request._cr = None
+        request.env.cr.close()
         return dispatch.poll(dbname, channels, last, options)
 
     @route('/longpolling/poll', type="json", auth="public", cors="*")
@@ -29,7 +29,9 @@ class BusController(Controller):
         if [c for c in channels if not isinstance(c, str)]:
             raise Exception("bus.Bus only string channels are allowed.")
         if request.registry.in_test_mode():
-            raise exceptions.UserError(_("bus.Bus not available in test mode"))
+            exc = exceptions.UserError(_("bus.Bus not available in test mode"))
+            exc.loglevel = logging.INFO
+            raise exc
         return self._poll(request.db, channels, last, options)
 
     @route('/longpolling/im_status', type="json", auth="user")

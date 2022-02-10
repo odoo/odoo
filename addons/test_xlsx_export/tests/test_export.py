@@ -56,8 +56,7 @@ class XlsxCreatorCase(common.HttpCase):
         with patch.object(ExportXlsxWriter, 'write', self._mock_write):
             self.url_open('/web/export/xlsx', data={
                 'data': json.dumps(dict(self.default_params, **params)),
-                'token': 'dummy',
-                'csrf_token': http.WebRequest.csrf_token(self),
+                'csrf_token': http.Request.csrf_token(self),
             })
         return self.worksheet
 
