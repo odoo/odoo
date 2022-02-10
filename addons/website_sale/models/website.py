@@ -6,6 +6,7 @@ import logging
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 
 from odoo.http import request
+from odoo.osv import expression
 from odoo.addons.http_routing.models.ir_http import url_for
 
 _logger = logging.getLogger(__name__)
@@ -254,7 +255,10 @@ class Website(models.Model):
         return pricelist
 
     def sale_product_domain(self):
-        return [("sale_ok", "=", True)] + self.get_current_website().website_domain()
+        return expression.AND([self._product_domain(), self.get_current_website().website_domain()])
+
+    def _product_domain(self):
+        return [('sale_ok', '=', True)]
 
     def sale_get_order(self, force_create=False, update_pricelist=False):
         """ Return the current sales order after mofications specified by params.
