@@ -58,7 +58,7 @@
         <div class="o_timeoff_info">
             <Popover position="'right'" popoverClass="'o_timeoff_popover'">
                 <span class="fa fa-question-circle-o"/>
-                <t t-set="opened">
+                <t t-set-slot="opened">
                     <ul>
                         <li>Allocated: <span t-esc="props.allocated"/></li>
                         <li>Approved: <span t-esc="props.approved"/></li>
