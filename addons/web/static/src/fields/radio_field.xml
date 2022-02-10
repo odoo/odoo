@@ -18,7 +18,7 @@
                         t-att-data-value="item[0]"
                         t-att-data-index="item_index"
                         t-att-id="`${id}_${item[0]}`"
-                        t-on-change="onChange(item)"
+                        t-on-change="() => this.onChange(item)"
                     />
                     <label class="custom-control-label o_form_label" t-att-for="`${id}_${item[0]}`" t-esc="item[1]" />
                 </div>
