@@ -43,7 +43,7 @@
                     <t t-if="field">
                         <div>
                             <select class="o_domain_leaf_operator_select o_input" t-on-change="onOperatorChange">
-                                <t t-foreach="field.getOperators()" t-as="operator" t-key="operator">
+                                <t t-foreach="field.getOperators()" t-as="operator" t-key="operator.value">
                                     <option
                                         t-att-value="operator_index"
                                         t-att-selected="operator.matches({ fieldInfo, operator: props.node.operator, value: props.node.operands[1] })"
