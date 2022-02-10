@@ -73,7 +73,6 @@ class AccountMove(models.Model):
 
         self.purchase_id = False
         self._onchange_currency()
-        self.partner_bank_id = self.bank_partner_id.bank_ids and self.bank_partner_id.bank_ids[0]
 
     @api.onchange('partner_id', 'company_id')
     def _onchange_partner_id(self):
