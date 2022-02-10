@@ -16,7 +16,7 @@ from odoo.http import request
 from odoo import registry as registry_get
 
 from odoo.addons.auth_signup.controllers.main import AuthSignupHome as Home
-from odoo.addons.web.controllers.main import db_monodb, ensure_db, set_cookie_and_redirect, login_and_redirect
+from odoo.addons.web.controllers.main import ensure_db, _get_login_redirect_url
 
 
 _logger = logging.getLogger(__name__)
@@ -130,7 +130,7 @@ class OAuthController(http.Controller):
         with registry.cursor() as cr:
             try:
                 env = api.Environment(cr, SUPERUSER_ID, context)
-                credentials = env['res.users'].sudo().auth_oauth(provider, kw)
+                db, login, key = env['res.users'].sudo().auth_oauth(provider, kw)
                 cr.commit()
                 action = state.get('a')
                 menu = state.get('m')
@@ -142,7 +142,11 @@ class OAuthController(http.Controller):
                     url = '/web#action=%s' % action
                 elif menu:
                     url = '/web#menu_id=%s' % menu
-                resp = login_and_redirect(*credentials, redirect_url=url)
+
+                pre_uid = request.session.authenticate(db, login, key)
+                resp = request.redirect(_get_login_redirect_url(pre_uid, url), 303)
+                resp.autocorrect_location_header = False
+
                 # Since /web is hardcoded, verify user has right to land on it
                 if werkzeug.urls.url_parse(resp.location).path == '/web' and not request.env.user.has_group('base.group_user'):
                     resp.location = '/'
@@ -163,18 +167,20 @@ class OAuthController(http.Controller):
                 _logger.exception("OAuth2: %s" % str(e))
                 url = "/web/login?oauth_error=2"
 
-        return set_cookie_and_redirect(url)
+        redirect = request.redirect(url, 303)
+        redirect.autocorrect_location_header = False
+        return redirect
 
     @http.route('/auth_oauth/oea', type='http', auth='none')
     def oea(self, **kw):
         """login user via Odoo Account provider"""
         dbname = kw.pop('db', None)
         if not dbname:
-            dbname = db_monodb()
+            dbname = request.db
         if not dbname:
-            return BadRequest()
+            raise BadRequest()
         if not http.db_filter([dbname]):
-            return BadRequest()
+            raise BadRequest()
 
         registry = registry_get(dbname)
         with registry.cursor() as cr:
@@ -182,7 +188,9 @@ class OAuthController(http.Controller):
                 env = api.Environment(cr, SUPERUSER_ID, {})
                 provider = env.ref('auth_oauth.provider_openerp')
             except ValueError:
-                return set_cookie_and_redirect('/web?db=%s' % dbname)
+                redirect = request.redirect(f'/web?db={dbname}', 303)
+                redirect.autocorrect_location_header = False
+                return redirect
             assert provider._name == 'auth.oauth.provider'
 
         state = {

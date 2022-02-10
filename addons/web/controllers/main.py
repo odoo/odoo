@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
@@ -30,19 +29,21 @@ from werkzeug.urls import url_encode, url_parse, iri_to_uri
 
 import odoo
 import odoo.modules.registry
+from odoo import http
 from odoo.api import call_kw
-from odoo.addons.base.models.ir_qweb import render as qweb_render
 from odoo.modules import get_resource_path, module, get_manifest
+from odoo.exceptions import AccessError, UserError, AccessDenied
+from odoo.http import content_disposition, request
+from odoo.models import check_method_name
+from odoo.service import db, dispatch_rpc, security
 from odoo.tools import html_escape, pycompat, ustr, apply_inheritance_specs, lazy_property, float_repr, osutil
 from odoo.tools.mimetypes import guess_mimetype
-from odoo.tools.translate import _
 from odoo.tools.misc import str2bool, xlsxwriter, file_open, file_path
 from odoo.tools.safe_eval import safe_eval, time
-from odoo import http
-from odoo.http import content_disposition, dispatch_rpc, request, serialize_exception as _serialize_exception
-from odoo.exceptions import AccessError, UserError, AccessDenied
-from odoo.models import check_method_name
-from odoo.service import db, security
+from odoo.tools.translate import _
+
+from odoo.addons.base.models.ir_qweb import render as qweb_render
+
 
 _logger = logging.getLogger(__name__)
 
@@ -86,10 +87,6 @@ OPERATOR_MAPPING = {
 # Odoo Web helpers
 #----------------------------------------------------------
 
-db_list = http.db_list
-
-db_monodb = http.db_monodb
-
 def clean(name): return name.replace('\x3c', '')
 def serialize_exception(f):
     @functools.wraps(f)
@@ -98,7 +95,7 @@ def serialize_exception(f):
             return f(*args, **kwargs)
         except Exception as e:
             _logger.exception("An exception occurred during an http request")
-            se = _serialize_exception(e)
+            se = http.serialize_exception(e)
             error = {
                 'code': 200,
                 'message': "Odoo Server Error",
@@ -106,11 +103,6 @@ def serialize_exception(f):
             }
             return werkzeug.exceptions.InternalServerError(json.dumps(error))
     return wrap
-
-def abort_and_redirect(url):
-    response = request.redirect(url, 302)
-    response = http.root.get_response(request.httprequest, response, explicit_session=False)
-    werkzeug.exceptions.abort(response)
 
 def ensure_db(redirect='/web/database/selector'):
     # This helper should be used in web client auth="none" routes
@@ -140,7 +132,7 @@ def ensure_db(redirect='/web/database/selector'):
             query_string = iri_to_uri(r.query_string)
             url_redirect = url_redirect.replace(query=query_string)
         request.session.db = db
-        abort_and_redirect(url_redirect.to_url())
+        werkzeug.exceptions.abort(request.redirect(url_redirect.to_url(), 302))
 
     # if db not provided, use the session one
     if not db and request.session.db and http.db_filter([request.session.db]):
@@ -148,7 +140,9 @@ def ensure_db(redirect='/web/database/selector'):
 
     # if no database provided and no database in session, use monodb
     if not db:
-        db = db_monodb(request.httprequest)
+        all_dbs = http.db_list(force=True)
+        if len(all_dbs) == 1:
+            db = all_dbs[0]
 
     # if no db can be found til here, send to the database selector
     # the database selector will redirect to database manager if needed
@@ -157,10 +151,10 @@ def ensure_db(redirect='/web/database/selector'):
 
     # always switch the session to the computed db
     if db != request.session.db:
-        request.session.logout()
-        abort_and_redirect(request.httprequest.url)
-
-    request.session.db = db
+        request.session = http.root.session_store.new()
+        request.session.update(http.DEFAULT_SESSION, db=db)
+        request.session.context['lang'] = request.default_lang()
+        werkzeug.exceptions.abort(request.redirect(request.httprequest.url, 302))
 
 def fs2web(path):
     """convert FS path into web path"""
@@ -218,16 +212,6 @@ def _get_login_redirect_url(uid, redirect=None):
     qs = parsed.decode_query()
     qs['redirect'] = redirect
     return parsed.replace(query=werkzeug.urls.url_encode(qs)).to_url()
-
-def login_and_redirect(db, login, key, redirect_url='/web'):
-    uid = request.session.authenticate(db, login, key)
-    redirect_url = _get_login_redirect_url(uid, redirect_url)
-    return set_cookie_and_redirect(redirect_url)
-
-def set_cookie_and_redirect(redirect_url):
-    redirect = request.redirect(redirect_url, 303)
-    redirect.autocorrect_location_header = False
-    return redirect
 
 def clean_action(action, env):
     action_type = action.setdefault('type', 'ir.actions.act_window_close')
@@ -820,13 +804,21 @@ class Home(http.Controller):
     # ideally, this route should be `auth="user"` but that don't work in non-monodb mode.
     @http.route('/web', type='http', auth="none")
     def web_client(self, s_action=None, **kw):
+
+        # Ensure we have both a database and a user
         ensure_db()
         if not request.session.uid:
             return request.redirect('/web/login', 303)
         if kw.get('redirect'):
             return request.redirect(kw.get('redirect'), 303)
+        if not security.check_session(request.session, request.env):
+            raise http.SessionExpiredException("Session expired")
 
-        request.uid = request.session.uid
+        # Side-effect, refresh the session lifetime
+        request.session.should_touch = True
+
+        # Restore the user on the environment, it was lost due to auth="none"
+        request.update_env(user=request.session.uid)
         try:
             context = request.env['ir.http'].webclient_rendering_context()
             response = request.render('web.webclient_bootstrap', qcontext=context)
@@ -862,8 +854,9 @@ class Home(http.Controller):
         if request.httprequest.method == 'GET' and redirect and request.session.uid:
             return request.redirect(redirect)
 
+        # so it is correct if overloaded with auth="public"
         if not request.uid:
-            request.uid = odoo.SUPERUSER_ID
+            request.update_env(user=odoo.SUPERUSER_ID)
 
         values = {k: v for k, v in request.params.items() if k in SIGN_UP_REQUEST_PARAMS}
         try:
@@ -872,13 +865,11 @@ class Home(http.Controller):
             values['databases'] = None
 
         if request.httprequest.method == 'POST':
-            old_uid = request.uid
             try:
-                uid = request.session.authenticate(request.session.db, request.params['login'], request.params['password'])
+                uid = request.session.authenticate(request.db, request.params['login'], request.params['password'])
                 request.params['login_success'] = True
                 return request.redirect(self._login_redirect(uid, redirect=redirect))
             except odoo.exceptions.AccessDenied as e:
-                request.uid = old_uid
                 if e.args == odoo.exceptions.AccessDenied().args:
                     values['error'] = _("Wrong login/password")
                 else:
@@ -944,10 +935,8 @@ class WebClient(http.Controller):
 
     @http.route('/web/webclient/qweb/<string:unique>', type='http', auth="none", cors="*")
     def qweb(self, unique, mods=None, db=None, bundle=None):
-
         if not request.db and mods is None:
             mods = odoo.conf.server_wide_modules or []
-
         content = HomeStaticTemplateHelpers.get_qweb_templates(mods, db, debug=request.session.debug, bundle=bundle)
 
         return request.make_response(content, [
@@ -964,14 +953,12 @@ class WebClient(http.Controller):
         # For performance reasons we only load a single translation, so for
         # sub-languages (that should only be partially translated) we load the
         # main language PO instead - that should be enough for the login screen.
-        context = dict(request.context)
-        request.session._fix_lang(context)
-        lang = context['lang'].split('_')[0]
+        lang = request.env.context['lang'].partition('_')[0]
 
         if mods is None:
             mods = odoo.conf.server_wide_modules or []
             if request.db:
-                mods = request.env.registry._init_modules | set(mods)
+                mods = request.env.registry._init_modules.union(mods)
 
         translations_per_module = {}
         for addon_name in mods:
@@ -995,8 +982,6 @@ class WebClient(http.Controller):
         :param lang: the language of the user
         :return:
         """
-        request.disable_db = False
-
         if mods:
             mods = mods.split(',')
         elif mods is None:
@@ -1047,23 +1032,6 @@ class WebClient(http.Controller):
         return request.make_response(data, [('Content-Type', 'application/json')])
 
 
-class Proxy(http.Controller):
-
-    @http.route('/web/proxy/post/<path:path>', type='http', auth='user', methods=['GET'])
-    def post(self, path):
-        """Effectively execute a POST request that was hooked through user login"""
-        with request.session.load_request_data() as data:
-            if not data:
-                raise werkzeug.exceptions.BadRequest()
-            from werkzeug.test import Client
-            from werkzeug.wrappers import BaseResponse
-            base_url = request.httprequest.base_url
-            query_string = request.httprequest.query_string
-            client = Client(http.root, BaseResponse)
-            headers = {'X-Openerp-Session-Id': request.session.sid}
-            return client.post('/' + path, base_url=base_url, query_string=query_string,
-                               headers=headers, data=data)
-
 class Database(http.Controller):
 
     def _render_template(self, **d):
@@ -1074,14 +1042,11 @@ class Database(http.Controller):
         d['countries'] = odoo.service.db.exp_list_countries()
         d['pattern'] = DBNAME_PATTERN
         # databases list
-        d['databases'] = []
         try:
             d['databases'] = http.db_list()
             d['incompatible_databases'] = odoo.service.db.list_db_incompatible(d['databases'])
         except odoo.exceptions.AccessDenied:
-            monodb = db_monodb()
-            if monodb:
-                d['databases'] = [monodb]
+            d['databases'] = [request.db] if request.db else []
 
         templates = {}
 
@@ -1100,12 +1065,14 @@ class Database(http.Controller):
 
     @http.route('/web/database/selector', type='http', auth="none")
     def selector(self, **kw):
-        request._cr = None
+        if request.db:
+            request.env.cr.close()
         return self._render_template(manage=False)
 
     @http.route('/web/database/manager', type='http', auth="none")
     def manager(self, **kw):
-        request._cr = None
+        if request.db:
+            request.env.cr.close()
         return self._render_template()
 
     @http.route('/web/database/create', type='http', auth="none", methods=['POST'], csrf=False)
@@ -1120,8 +1087,10 @@ class Database(http.Controller):
             country_code = post.get('country_code') or False
             dispatch_rpc('db', 'create_database', [master_pwd, name, bool(post.get('demo')), lang, password, post['login'], country_code, post['phone']])
             request.session.authenticate(name, post['login'], password)
+            request.session.db = name
             return request.redirect('/web')
         except Exception as e:
+            _logger.exception("Database creation error.")
             error = "Database creation error: %s" % (str(e) or repr(e))
         return self._render_template(error=error)
 
@@ -1134,9 +1103,11 @@ class Database(http.Controller):
             if not re.match(DBNAME_PATTERN, new_name):
                 raise Exception(_('Invalid database name. Only alphanumerical characters, underscore, hyphen and dot are allowed.'))
             dispatch_rpc('db', 'duplicate_database', [master_pwd, name, new_name])
-            request._cr = None  # duplicating a database leads to an unusable cursor
+            if request.db == name:
+                request.env.cr.close()  # duplicating a database leads to an unusable cursor
             return request.redirect('/web/database/manager')
         except Exception as e:
+            _logger.exception("Database duplication error.")
             error = "Database duplication error: %s" % (str(e) or repr(e))
             return self._render_template(error=error)
 
@@ -1146,16 +1117,14 @@ class Database(http.Controller):
         if insecure and master_pwd:
             dispatch_rpc('db', 'change_admin_password', ["admin", master_pwd])
         try:
-            dispatch_rpc('db','drop', [master_pwd, name])
-            request._cr = None  # dropping a database leads to an unusable cursor
-            # if the user is connected to the dropped database, redirect will raise an operational error
-            # trying to access the registry of this database.
-            # Removing db from this request will prevent an invalid error message. (logout looks like a good idea in this case)
-            # https://github.com/odoo/odoo/pull/54102 is proposing a complete fix for this issue.
+            dispatch_rpc('db', 'drop', [master_pwd, name])
+            if request.db == name:
+                request.env.cr._closed = True  # the underlying connection was closed
             if request.session.db == name:
                 request.session.logout()
             return request.redirect('/web/database/manager')
         except Exception as e:
+            _logger.exception("Database deletion error.")
             error = "Database deletion error: %s" % (str(e) or repr(e))
             return self._render_template(error=error)
 
@@ -1219,17 +1188,23 @@ class Database(http.Controller):
 
 class Session(http.Controller):
 
-    @http.route('/web/session/get_session_info', type='json', auth="none")
+    @http.route('/web/session/get_session_info', type='json', auth="user")
     def get_session_info(self):
-        request.session.check_security()
-        request.uid = request.session.uid
-        request.disable_db = False
         return request.env['ir.http'].session_info()
 
     @http.route('/web/session/authenticate', type='json', auth="none")
     def authenticate(self, db, login, password, base_location=None):
-        request.session.authenticate(db, login, password)
-        return request.env['ir.http'].session_info()
+        if not http.db_filter([db]):
+            raise AccessError("Database not found.")
+        pre_uid = request.session.authenticate(db, login, password)
+        if pre_uid != request.session.uid:
+            raise AccessError("Reniewing an expired session for user that has multi-factor-authentication is not supported. Please use /web/login instead.")
+
+        request.session.db = db
+        registry = odoo.modules.registry.Registry(db)
+        with registry.cursor() as cr:
+            env = odoo.api.Environment(cr, request.session.uid, request.session.context)
+            return env['ir.http'].session_info()
 
     @http.route('/web/session/change_password', type='json', auth="user")
     def change_password(self, fields):
@@ -1262,39 +1237,11 @@ class Session(http.Controller):
     @http.route('/web/session/modules', type='json', auth="user")
     def modules(self):
         # return all installed modules. Web client is smart enough to not load a module twice
-        return list(request.env.registry._init_modules | set([module.current_test] if module.current_test else []))
-
-    @http.route('/web/session/save_session_action', type='json', auth="user")
-    def save_session_action(self, the_action):
-        """
-        This method store an action object in the session object and returns an integer
-        identifying that action. The method get_session_action() can be used to get
-        back the action.
-
-        :param the_action: The action to save in the session.
-        :type the_action: anything
-        :return: A key identifying the saved action.
-        :rtype: integer
-        """
-        return request.session.save_action(the_action)
-
-    @http.route('/web/session/get_session_action', type='json', auth="user")
-    def get_session_action(self, key):
-        """
-        Gets back a previously saved action. This method can return None if the action
-        was saved since too much time (this case should be handled in a smart way).
-
-        :param key: The key given by save_session_action()
-        :type key: integer
-        :return: The saved action or None.
-        :rtype: anything
-        """
-        return request.session.get_action(key)
+        return list(request.env.registry._init_modules.union([module.current_test] if module.current_test else []))
 
     @http.route('/web/session/check', type='json', auth="user")
     def check(self):
-        request.session.check_security()
-        return None
+        return  # ir.http@_authenticate does the job
 
     @http.route('/web/session/account', type='json', auth="user")
     def account(self):
@@ -1315,7 +1262,6 @@ class Session(http.Controller):
     def logout(self, redirect='/web'):
         request.session.logout(keep_db=True)
         return request.redirect(redirect, 303)
-
 
 class DataSet(http.Controller):
 
@@ -1538,18 +1484,11 @@ class Binary(http.Controller):
         imgname = 'logo'
         imgext = '.png'
         placeholder = functools.partial(get_resource_path, 'web', 'static', 'img')
-        uid = None
-        if request.session.db:
-            dbname = request.session.db
-            uid = request.session.uid
-        elif dbname is None:
-            dbname = db_monodb()
-
-        if not uid:
-            uid = odoo.SUPERUSER_ID
+        dbname = request.db
+        uid = (request.session.uid if dbname else None) or odoo.SUPERUSER_ID
 
         if not dbname:
-            response = http.send_file(placeholder(imgname + imgext))
+            response = http.send_filepath(placeholder(imgname + imgext))
         else:
             try:
                 # create an empty registry
@@ -1578,7 +1517,7 @@ class Binary(http.Controller):
                             imgext = '.svg'
                         response = http.send_file(image_data, filename=imgname + imgext, mimetype=mimetype, mtime=row[1])
                     else:
-                        response = http.send_file(placeholder('nologo.png'))
+                        response = http.send_filepath(placeholder('nologo.png'))
             except Exception:
                 response = http.send_file(placeholder(imgname + imgext))
 
@@ -1628,13 +1567,11 @@ class Action(http.Controller):
 
         base_action = Actions.browse([action_id]).sudo().read(['type'])
         if base_action:
-            ctx = dict(request.context)
             action_type = base_action[0]['type']
             if action_type == 'ir.actions.report':
-                ctx.update({'bin_size': True})
+                request.update_context(bin_size=True)
             if additional_context:
-                ctx.update(additional_context)
-            request.context = ctx
+                request.update_context(**additional_context)
             action = request.env[action_type].sudo().browse([action_id]).read()
             if action:
                 value = clean_action(action[0], env=request.env)
@@ -1937,7 +1874,6 @@ class ExcelExport(ExportFormat, http.Controller):
 
         return xlsx_writer.value
 
-
 class ReportController(http.Controller):
 
     #------------------------------------------------------
@@ -2007,7 +1943,7 @@ class ReportController(http.Controller):
         return request.make_response(barcode, headers=[('Content-Type', 'image/png')])
 
     @http.route(['/report/download'], type='http', auth="user")
-    def report_download(self, data, context=None):
+    def report_download(self, data, context=None, token=None):  # pylint: disable=unused-argument
         """This function is used by 'action_manager_report.js' in order to trigger the download of
         a pdf/controller report.
 
@@ -2057,7 +1993,7 @@ class ReportController(http.Controller):
                 return
         except Exception as e:
             _logger.exception("Error while generating report %s", reportname)
-            se = _serialize_exception(e)
+            se = http.serialize_exception(e)
             error = {
                 'code': 200,
                 'message': "Odoo Server Error",
