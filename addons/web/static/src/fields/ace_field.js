@@ -4,7 +4,7 @@ import { loadAssets } from "@web/core/assets";
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "./standard_field_props";
 
-const { onWillStart, useEffect, useRef } = owl;
+const { Component, onWillStart, useEffect, useRef } = owl;
 
 export class AceField extends Component {
     setup() {

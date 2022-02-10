@@ -10,7 +10,7 @@ import { getX2MViewModes, X2M_TYPES } from "@web/views/helpers/view_utils";
 import { getFieldClassFromRegistry } from "./utils";
 import { DefaultField } from "./default";
 
-const { Component, tags } = owl;
+const { Component, xml } = owl;
 
 const viewRegistry = registry.category("views");
 
@@ -145,7 +145,7 @@ export class Field extends Component {
         }
     }
 }
-Field.template = tags.xml/* xml */ `
+Field.template = xml/* xml */ `
     <div t-att-name="props.name" t-att-class="classNames">
         <t t-component="FieldComponent" t-props="fieldComponentProps" t-key="props.record.id"/>
     </div>`;

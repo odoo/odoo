@@ -1,7 +1,6 @@
 /* @odoo-module */
 
-import { useListener } from "web.custom_hooks";
-import { useService } from "@web/core/utils/hooks";
+import { useListener, useService } from "@web/core/utils/hooks";
 import { evaluateExpr } from "@web/core/py_js/py";
 
 function disableButtons(el) {

@@ -19,7 +19,7 @@ import { registry } from "../core/registry";
 const { DateTime } = luxon;
 const preloadedDataRegistry = registry.category("preloadedData");
 
-const { tags } = owl;
+const { xml } = owl;
 
 class WarningDialog extends Dialog {
     setup() {
@@ -27,7 +27,7 @@ class WarningDialog extends Dialog {
         this.title = this.props.title;
     }
 }
-WarningDialog.bodyTemplate = tags.xml`<t t-esc="props.message"/>`;
+WarningDialog.bodyTemplate = xml`<t t-esc="props.message"/>`;
 
 function orderByToString(orderBy) {
     return orderBy.map((o) => `${o.name} ${o.asc ? "ASC" : "DESC"}`).join(", ");
