@@ -1067,7 +1067,84 @@ class HttpDispatcher(Dispatcher):
 
 class JsonRPCDispatcher(Dispatcher):
     routing_type = 'json'
-    ...
+
+    def __init__(self, request):
+        super().__init__(request)
+        self.jsonrequest = {}
+
+    @classmethod
+    def is_compatible_with(cls, request):
+        return request.httprequest.mimetype in JSON_MIMETYPES
+
+    def dispatch(self, endpoint, args):
+        """
+        `JSON-RPC 2 <http://www.jsonrpc.org/specification>`_ over HTTP.
+
+        Our implementation differs from the specification on two points:
+
+        1. The ``method`` member of the JSON-RPC request payload is
+           ignored as the HTTP path is already used to route the request
+           to the controller.
+        2. We only support parameter structures by-name, i.e. the
+           ``params`` member of the JSON-RPC request payload MUST be a
+           JSON Object and not a JSON Array.
+
+        In addition, it is possible to pass a context that replaces
+        the session context via a special ``context`` argument that is
+        removed prior to calling the endpoint.
+
+        Sucessful request::
+
+          --> {"jsonrpc": "2.0", "method": "call", "params": {"context": {}, "arg1": "val1" }, "id": null}
+
+          <-- {"jsonrpc": "2.0", "result": { "res1": "val1" }, "id": null}
+
+        Request producing a error::
+
+          --> {"jsonrpc": "2.0", "method": "call", "params": {"context": {}, "arg1": "val1" }, "id": null}
+
+          <-- {"jsonrpc": "2.0", "error": {"code": 1, "message": "End user error message.", "data": {"code": "codestring", "debug": "traceback" } }, "id": null}
+
+        """
+        httprequest = self.request.httprequest
+        body = httprequest.get_data().decode(httprequest.charset)
+        try:
+            self.jsonrequest = json.loads(body)
+        except ValueError:
+            _logger.info('%s: Invalid JSON data\n%s', httprequest.path,
+                         body)
+            raise werkzeug.exceptions.BadRequest(f"Invalid JSON data:\n{body}")
+
+        self.request.params = dict(self.jsonrequest.get('params', {}), **args)
+        ctx = self.request.params.pop('context', None)
+        if ctx is not None and self.request.db:
+            self.request.update_env(context=ctx)
+
+        if self.request.db:
+            ...
+        else:
+            result = endpoint(**self.request.params)
+        return self._response(result)
+
+    def handle_error(self, exc):
+        ...
+
+    def _response(self, result=None, error=None):
+        request_id = self.jsonrequest.get('id')
+        status = 200
+        response = {'jsonrpc': '2.0', 'id': request_id}
+        if error is not None:
+            response['error'] = error
+            status = error.pop('http_status', 200)
+        if result is not None:
+            response['result'] = result
+
+        body = json.dumps(response, default=date_utils.json_default)
+
+        return Response(body, status=status, headers=[
+            ('Content-Type', 'application/json'),
+            ('Content-Length', len(body)),
+        ])
 
 
 # =========================================================
