@@ -1566,12 +1566,17 @@ class PrecomputeMonetary(models.Model):
         self.currency_id = 1  # EUR
 
 
-class PrefetchTranslateField(models.Model):
-    _name = 'test_new_api.prefetch.translate'
-    _description = 'A model with some translate fields to check prefetch'
+class Prefetch(models.Model):
+    _name = 'test_new_api.prefetch'
+    _description = 'A model to check the prefetching of fields (translated and group)'
 
     name = fields.Char('Name', translate=True)
     description = fields.Char('Description', translate=True, prefetch=True)
     html_description = fields.Html('Styled description', translate=True, prefetch=True)
     rare_description = fields.Char('Rare Description', translate=True)
     rare_html_description = fields.Html('Rare Styled description', translate=True)
+    harry = fields.Integer('Harry Potter', prefetch='Harry Potter')
+    hermione = fields.Char('Hermione Granger', prefetch='Harry Potter')
+    ron = fields.Float('Ron Weasley', prefetch='Harry Potter')
+    hansel = fields.Integer('Hansel', prefetch="Hansel and Gretel")
+    gretel = fields.Char('Gretel', prefetch="Hansel and Gretel")
