@@ -17,11 +17,11 @@ class EventStage(models.Model):
         string='End Stage', default=False,
         help='Events will automatically be moved into this stage when they are finished. The event moved into this stage will automatically be set as green.')
     legend_blocked = fields.Char(
-        'Red Kanban Label', default=lambda s: _('Blocked'), translate=True, required=True,
+        'Red Kanban Label', default=lambda s: _('Blocked'), translate=True, prefetch='legend', required=True,
         help='Override the default value displayed for the blocked state for kanban selection.')
     legend_done = fields.Char(
-        'Green Kanban Label', default=lambda s: _('Ready for Next Stage'), translate=True, required=True,
+        'Green Kanban Label', default=lambda s: _('Ready for Next Stage'), translate=True, prefetch='legend', required=True,
         help='Override the default value displayed for the done state for kanban selection.')
     legend_normal = fields.Char(
-        'Grey Kanban Label', default=lambda s: _('In Progress'), translate=True, required=True,
+        'Grey Kanban Label', default=lambda s: _('In Progress'), translate=True, prefetch='legend', required=True,
         help='Override the default value displayed for the normal state for kanban selection.')

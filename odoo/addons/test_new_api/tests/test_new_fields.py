@@ -2523,7 +2523,7 @@ class TestFields(TransactionCaseWithUserDemo):
             record_user.read(['tags'])
 
     def test_98_prefetch_translate(self):
-        Model = self.registry['test_new_api.prefetch.translate']
+        Model = self.registry['test_new_api.prefetch']
 
         # translated '_rec_name' field should be prefetched
         self.assertTrue(Model.name.prefetch)
@@ -2535,6 +2535,58 @@ class TestFields(TransactionCaseWithUserDemo):
         # translated fields should be prefetch=False by default
         self.assertFalse(Model.rare_description.prefetch)
         self.assertFalse(Model.rare_html_description.prefetch)
+
+    def test_99_prefetch_group(self):
+        records = self.env['test_new_api.prefetch'].create([{} for _ in range(10)])
+        records.flush()
+        records.invalidate_cache()
+
+        with self.assertQueries(["""
+            SELECT
+                "test_new_api_prefetch"."id" AS "id",
+                "test_new_api_prefetch"."name" AS "name",
+                "test_new_api_prefetch"."description" AS "description",
+                "test_new_api_prefetch"."html_description" AS "html_description",
+                "test_new_api_prefetch"."create_uid" AS "create_uid",
+                "test_new_api_prefetch"."create_date" AS "create_date",
+                "test_new_api_prefetch"."write_uid" AS "write_uid",
+                "test_new_api_prefetch"."write_date" AS "write_date"
+            FROM "test_new_api_prefetch"
+            WHERE "test_new_api_prefetch".id IN %s
+        """]):
+            records.mapped('name')  # fetch all fields with prefetch=True
+
+        with self.assertQueries(["""
+            SELECT
+                "test_new_api_prefetch"."id" AS "id",
+                "test_new_api_prefetch"."harry" AS "harry",
+                "test_new_api_prefetch"."hermione" AS "hermione",
+                "test_new_api_prefetch"."ron" AS "ron"
+            FROM "test_new_api_prefetch"
+            WHERE "test_new_api_prefetch".id IN %s
+        """]):
+            records.mapped('harry')  # fetch all fields with prefetch='Harry Potter'
+            records.mapped('hermione')  # fetched already
+            records.mapped('ron')  # fetched already
+
+        with self.assertQueries(["""
+            SELECT
+                "test_new_api_prefetch"."id" AS "id",
+                "test_new_api_prefetch"."hansel" AS "hansel",
+                "test_new_api_prefetch"."gretel" AS "gretel"
+            FROM "test_new_api_prefetch"
+            WHERE "test_new_api_prefetch".id IN %s
+        """]):
+            records.mapped('hansel')  # fetch all fields with prefetch='Hansel and Gretel'
+            records.mapped('gretel')  # fetched already
+
+        records.invalidate_cache()
+
+        with self.assertQueryCount(4):
+            records.mapped('name')  # fetch all fields with prefetch=True
+            records.mapped('hansel')  # fetch all fields with prefetch='Hansel and Gretel'
+            records.mapped('harry')  # fetch all fields with prefetch='Harry Potter'
+            records.mapped('rare_description')  # fetch that field only
 
 
 class TestX2many(common.TransactionCase):

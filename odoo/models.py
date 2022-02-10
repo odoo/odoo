@@ -3227,7 +3227,7 @@ Fields:
         fields = self.check_field_access_rights('read', fields)
 
         # fetch stored fields from the database to the cache
-        stored_fields = set()
+        stored_fields = OrderedSet()
         for name in fields:
             field = self._fields.get(name)
             if not field:
@@ -3238,7 +3238,7 @@ Fields:
                 # optimization: prefetch direct field dependencies
                 for dotname in self.pool.field_depends[field]:
                     f = self._fields[dotname.split('.')[0]]
-                    if f.prefetch and (not f.groups or self.user_has_groups(f.groups)):
+                    if f.prefetch is True and (not f.groups or self.user_has_groups(f.groups)):
                         stored_fields.add(f.name)
         self._read(stored_fields)
 
@@ -3279,8 +3279,8 @@ Fields:
             fnames = [
                 name
                 for name, f in self._fields.items()
-                # select fields that can be prefetched
-                if f.prefetch
+                # select fields with the same prefetch group
+                if f.prefetch == field.prefetch
                 # discard fields with groups that the user may not access
                 if not (f.groups and not self.user_has_groups(f.groups))
                 # discard fields that must be recomputed

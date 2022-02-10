@@ -21,9 +21,9 @@ class SeoMetadata(models.AbstractModel):
     _description = 'SEO metadata'
 
     is_seo_optimized = fields.Boolean("SEO optimized", compute='_compute_is_seo_optimized')
-    website_meta_title = fields.Char("Website meta title", translate=True)
-    website_meta_description = fields.Text("Website meta description", translate=True)
-    website_meta_keywords = fields.Char("Website meta keywords", translate=True)
+    website_meta_title = fields.Char("Website meta title", translate=True, prefetch="website_meta")
+    website_meta_description = fields.Text("Website meta description", translate=True, prefetch="website_meta")
+    website_meta_keywords = fields.Char("Website meta keywords", translate=True, prefetch="website_meta")
     website_meta_og_img = fields.Char("Website opengraph image")
     seo_name = fields.Char("Seo name", translate=True, prefetch=True)
 
