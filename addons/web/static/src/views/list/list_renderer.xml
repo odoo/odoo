@@ -7,7 +7,7 @@
                 <thead>
                     <tr>
                         <th t-if="props.hasSelectors" class="o_list_record_selector" t-on-click.stop="toggleSelection">
-                            <CheckBox disabled="!!props.editedRecordId" value="selectAll" t-on-change="toggleSelection"  t-on-click.stop=""/>
+                            <CheckBox disabled="!!props.editedRecordId" value="selectAll" onChange.bind="toggleSelection" />
                         </th>
                         <t t-foreach="state.columns" t-as="column" t-key="column.name">
                             <th t-if="column.type === 'field'" t-att-class="getColumnClass(column)" t-on-click="onClickSortColumn(column)">
@@ -111,7 +111,7 @@
     <t t-name="web.ListRenderer.RecordRow" owl="1">
         <tr class="o_data_row" t-att-class="getRowClass(record)" t-on-click="onRowClicked(record)">
             <td t-if="props.hasSelectors" class="o_list_record_selector" t-on-click.stop="toggleRecordSelection(record)">
-                <CheckBox disabled="!!props.editedRecordId" value="record.selected" t-on-change="toggleRecordSelection(record)" t-on-click.stop=""/>
+                <CheckBox disabled="!!props.editedRecordId" value="record.selected" onChange="() => this.toggleRecordSelection(record)" />
             </td>
             <t t-foreach="state.columns" t-as="column" t-key="column.name">
                 <t t-if="column.type === 'field'">

@@ -3,6 +3,7 @@
 import { Domain } from "@web/core/domain";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { combineAttributes } from "@web/core/utils/xml";
+import { Field } from "@web/fields/field";
 
 const { Component, useComponent, xml } = owl;
 
@@ -453,14 +454,8 @@ export class ViewCompiler {
 
     handleEmpty(compiled, params) {
         // handle Empty field
-        let emptyClass;
-        if (compiled.nodeName === "Field") {
-            emptyClass = "o_field_empty";
-        } else if (compiled.nodeName === "label") {
-            emptyClass = "o_form_label_empty";
-        }
-        if (emptyClass) {
-            const tAttClass = `${emptyClass}: record.resId and isFieldEmpty(record,"${params.fieldName}")`;
+        if (compiled.nodeName === "label") {
+            const tAttClass = `o_form_label_empty: record.resId and isFieldEmpty(record,"${params.fieldName}")`;
             appendAttr(compiled, "class", tAttClass);
         }
     }
@@ -731,11 +726,7 @@ export const useViewCompiler = (ViewCompiler, templateKey, fields, xmlDoc) => {
                 return ToImplement;
             },
             isFieldEmpty(record, fieldName) {
-                const cls = record.activeFields[fieldName].FieldComponent;
-                if ("isEmpty" in cls) {
-                    return cls.isEmpty(record, fieldName);
-                }
-                return !record.data[fieldName];
+                return Field.isEmpty(record, fieldName);
             },
         },
         ViewCompiler.specialFunctions

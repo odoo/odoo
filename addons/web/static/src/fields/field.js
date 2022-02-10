@@ -45,6 +45,7 @@ export class Field extends Component {
             o_readonly_modifier: this.evalModifier("readonly"),
             o_required_modifier: this.evalModifier("required"),
             o_field_invalid: this.props.record.isInvalid(this.props.name),
+            o_field_empty: Field.isEmpty(this.props.record, this.props.name),
             [`o_field_${this.type}`]: true,
         };
 
@@ -166,6 +167,14 @@ const EXCLUDED_ATTRS = [
     "invisible",
     "on_change",
 ];
+
+Field.isEmpty = function (record, fieldName) {
+    const cls = record.activeFields[fieldName].FieldComponent;
+    if ("isEmpty" in cls) {
+        return cls.isEmpty(record, fieldName);
+    }
+    return !record.data[fieldName];
+};
 
 Field.parseFieldNode = function (node, fields, viewType) {
     const name = node.getAttribute("name");
