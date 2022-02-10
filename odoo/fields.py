@@ -288,7 +288,7 @@ class Field(MetaField('DummyField', (object,), {})):
     related_field = None                # corresponding related field
     group_operator = None               # operator for aggregating values
     group_expand = None                 # name of method to expand groups in read_group()
-    prefetch = True                     # whether the field is prefetched
+    prefetch = True                     # the prefetch group (False means no group)
 
     def __init__(self, string=Default, **kwargs):
         kwargs['string'] = string
