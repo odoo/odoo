@@ -346,20 +346,23 @@ class PricelistItem(models.Model):
 
         return res
 
-    def _compute_price(self, product, quantity, uom, date):
+    def _compute_price(self, product, quantity, uom, date, currency=None):
         """Compute the unit price of a product in the context of a pricelist application.
 
         :param product: recordset of product (product.product/product.template)
         :param float qty: quantity of products requested (in given uom)
         :param uom: unit of measure (uom.uom record)
         :param datetime date: date to use for price computation and currency conversions
+        :param currency: pricelist currency (for the specific case where self is empty)
 
         :returns: price according to pricelist rule, expressed in pricelist currency
         :rtype: float
         """
-        self.ensure_one()
         product.ensure_one()
         uom.ensure_one()
+
+        currency = currency or self.currency_id
+        currency.ensure_one()
 
         # Pricelist specific values are specified according to product UoM
         # and must be multiplied according to the factor between uoms
@@ -372,10 +375,10 @@ class PricelistItem(models.Model):
         if self.compute_price == 'fixed':
             price = convert(self.fixed_price)
         elif self.compute_price == 'percentage':
-            base_price = self._compute_base_price(product, quantity, uom=uom, date=date)
+            base_price = self._compute_base_price(product, quantity, uom, date, currency)
             price = (base_price - (base_price * (self.percent_price / 100))) or 0.0
-        else:
-            base_price = self._compute_base_price(product, quantity, uom=uom, date=date)
+        elif self.compute_price == 'formula':
+            base_price = self._compute_base_price(product, quantity, uom, date, currency)
             # complete formula
             price_limit = base_price
             price = (base_price - (base_price * (self.price_discount / 100))) or 0.0
@@ -390,32 +393,36 @@ class PricelistItem(models.Model):
 
             if self.price_max_margin:
                 price = min(price, price_limit + convert(self.price_max_margin))
+        else:  # empty self, or extended pricelist price computation logic
+            price = self._compute_base_price(product, quantity, uom, date, currency)
+
         return price
 
-    def _compute_base_price(self, product, quantity, uom, date):
+    def _compute_base_price(self, product, quantity, uom, date, target_currency):
         """ Compute the base price for a given rule
 
         :param product: recordset of product (product.product/product.template)
         :param float qty: quantity of products requested (in given uom)
         :param uom: unit of measure (uom.uom record)
         :param datetime date: date to use for price computation and currency conversions
+        :param target_currency: pricelist currency
 
-        :returns: base price, expressed in pricelist currency
+        :returns: base price, expressed in provided pricelist currency
         :rtype: float
         """
-        rule_base = self.base
+        target_currency.ensure_one()
+
+        rule_base = self.base or 'list_price'
         if rule_base == 'pricelist' and self.base_pricelist_id:
-            price = self.base_pricelist_id._get_product_price(
-                product, quantity, uom, date)
+            price = self.base_pricelist_id._get_product_price(product, quantity, uom, date)
             src_currency = self.base_pricelist_id.currency_id
         elif rule_base == "standard_price":
             src_currency = product.cost_currency_id
             price = product.price_compute(rule_base, uom=uom, date=date)[product.id]
-        else: # lst_price
+        else: # list_price
             src_currency = product.currency_id
             price = product.price_compute(rule_base, uom=uom, date=date)[product.id]
 
-        target_currency = self.pricelist_id.currency_id
         if src_currency != target_currency:
             price = src_currency._convert(price, target_currency, self.env.company, date, round=False)
 
