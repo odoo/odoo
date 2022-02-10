@@ -194,7 +194,7 @@ class MailComposer(models.TransientModel):
         result, subject = {}, False
         if values.get('parent_id'):
             parent = self.env['mail.message'].browse(values.get('parent_id'))
-            result['record_name'] = parent.record_name,
+            result['record_name'] = parent.record_name
             subject = tools.ustr(parent.subject or parent.record_name or '')
             if not values.get('model'):
                 result['model'] = parent.model
