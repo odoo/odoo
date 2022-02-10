@@ -1,7 +1,9 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import { groupBy } from "../core/utils/arrays";
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { groupBy } from "@web/core/utils/arrays";
 import { standardFieldProps } from "./standard_field_props";
 
 const { Component } = owl;
@@ -9,6 +11,14 @@ const { Component } = owl;
 export class StatusBarField extends Component {
     get isDisabled() {
         return !this.props.clickable;
+    }
+
+    get dropdownClassNames() {
+        const classNames = ["btn", "btn-secondary", "o_arrow_button"];
+        if (this.isDisabled) {
+            classNames.push("disabled");
+        }
+        return classNames.join(" ");
     }
 
     getVisibleMany2Ones() {
@@ -77,6 +87,10 @@ Object.assign(StatusBarField, {
         ...standardFieldProps,
         clickable: { type: Boolean, optional: true },
         visibleSelection: { type: Array, optional: true },
+    },
+    components: {
+        Dropdown,
+        DropdownItem,
     },
 
     supportedTypes: ["many2one", "selection"],

@@ -501,7 +501,7 @@ QUnit.module("Fields", (hooks) => {
             });
 
             await click(form.el, ".o_form_button_edit");
-            await click(form.el, ".dropdown-toggle");
+            await click(form.el, ".o_statusbar_status .dropdown-toggle");
 
             const status = form.el.querySelectorAll(".o_statusbar_status");
             assert.containsOnce(status[0], ".dropdown-item.disabled");
