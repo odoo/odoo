@@ -44,9 +44,14 @@ class AccountMove(models.Model):
         E.g.: A:509445535*B:123456823*C:BE*D:FT*E:N*F:20220103*G:FT 01P2022/1*H:0*I1:PT*I7:325.20*I8:74.80*N:74.80*O:400.00*P:0.00*Q:P0FE*R:2230
         """
 
-        def get_local_monetary(amount, account_move):
+        def convert_to_eur(amount, account_move):
+            """Convert amount to EUR based on the rate of a given account_move's date"""
             pt_currency = self.env.ref('base.EUR')
-            return float_repr(account_move.currency_id._convert(amount, pt_currency, account_move.company_id, account_move.date), pt_currency.decimal_places)
+            return account_move.currency_id._convert(amount, pt_currency, account_move.company_id, account_move.date)
+
+        def format_amount(amount):
+            """Format amount to 2 decimals as per SAF-T (PT) requirements"""
+            return float_repr(amount, 2)
 
         def get_base_and_vat(account_move, vat_name):
             """Returns the base and value tax for each type of tax"""
@@ -56,8 +61,8 @@ class AccountMove(models.Model):
             if vat_name not in vat_names:
                 return False
             index = vat_names.index(vat_name)
-            return {'base': get_local_monetary(vat_bases[index], account_move),
-                    'vat': get_local_monetary(vat_values[index], account_move)}
+            return {'base': convert_to_eur(vat_bases[index], account_move),
+                    'vat': convert_to_eur(vat_values[index], account_move)}
 
         for move in self:  # record is of type account.move
             if move.company_id.country_id.code != "PT":
@@ -79,34 +84,40 @@ class AccountMove(models.Model):
             qr_code_str += f"G:{(move.type + ' ' + move.name)[:60]}*"
             qr_code_str += f"H:0*"
             qr_code_str += f"I1:{move.company_id.country_id.code}*"
-            base_vat_exempt = get_base_and_vat(move, 'IVA 0%')
-            base_vat_reduced = get_base_and_vat(move, 'IVA 6%')
-            base_vat_intermediate = get_base_and_vat(move, 'IVA 13%')
-            base_vat_normal = get_base_and_vat(move, 'IVA 23%')
+
             amount_tax = 0.0
             amount_total = 0.0
+
+            base_vat_exempt = get_base_and_vat(move, 'IVA 0%')
             if base_vat_exempt:
-                qr_code_str += f"I2:{base_vat_exempt['base']}*"
-                amount_total += float(base_vat_exempt['base'])
+                qr_code_str += f"I2:{format_amount(base_vat_exempt['base'])}*"
+                amount_total += base_vat_exempt['base']
+
+            base_vat_reduced = get_base_and_vat(move, 'IVA 6%')
             if base_vat_reduced:
-                qr_code_str += f"I3:{base_vat_reduced['base']}*"
-                qr_code_str += f"I4:{base_vat_reduced['vat']}*"
-                amount_total += float(base_vat_reduced['base']) + float(base_vat_reduced['vat'])
-                amount_tax += float(base_vat_reduced['vat'])
+                qr_code_str += f"I3:{format_amount(base_vat_reduced['base'])}*"
+                qr_code_str += f"I4:{format_amount(base_vat_reduced['vat'])}*"
+                amount_total += base_vat_reduced['base'] + base_vat_reduced['vat']
+                amount_tax += base_vat_reduced['vat']
+
+            base_vat_intermediate = get_base_and_vat(move, 'IVA 13%')
             if base_vat_intermediate:
-                qr_code_str += f"I5:{base_vat_intermediate['base']}*"
-                qr_code_str += f"I6:{base_vat_intermediate['vat']}*"
-                amount_total += float(base_vat_intermediate['base']) + float(base_vat_intermediate['vat'])
-                amount_tax += float(base_vat_intermediate['vat'])
+                qr_code_str += f"I5:{format_amount(base_vat_intermediate['base'])}*"
+                qr_code_str += f"I6:{format_amount(base_vat_intermediate['vat'])}*"
+                amount_total += base_vat_intermediate['base'] + base_vat_intermediate['vat']
+                amount_tax += base_vat_intermediate['vat']
+
+            base_vat_normal = get_base_and_vat(move, 'IVA 23%')
             if base_vat_normal:
-                qr_code_str += f"I7:{base_vat_normal['base']}*"
-                qr_code_str += f"I8:{base_vat_normal['vat']}*"
-                amount_total += float(base_vat_normal['base']) + float(base_vat_normal['vat'])
-                amount_tax += float(base_vat_normal['vat'])
-            qr_code_str += f"N:{float_repr(amount_tax, move.company_id.currency_id.decimal_places)}*"
-            qr_code_str += f"O:{float_repr(amount_total, move.company_id.currency_id.decimal_places)}*"
+                qr_code_str += f"I7:{format_amount(base_vat_normal['base'])}*"
+                qr_code_str += f"I8:{format_amount(base_vat_normal['vat'])}*"
+                amount_total += base_vat_normal['base'] + base_vat_normal['vat']
+                amount_tax += base_vat_normal['vat']
+
+            qr_code_str += f"N:{format_amount(amount_tax)}*"
+            qr_code_str += f"O:{format_amount(amount_total)}*"
             qr_code_str += f"Q:TODO*"
-            qr_code_str += f"R:TODO*"
+            qr_code_str += f"R:0*"  # TODO: Fill Certifiate number
 
             if qr_code_str[-1] == "*":
                 qr_code_str = qr_code_str[:-1]
