@@ -386,6 +386,7 @@ var SelectCreateDialog = ViewDialog.extend({
             _.extend(viewOptions, {
                 noDefaultGroupby: true,
                 selectionMode: this.options.selectionMode || false,
+                isDialog: true,
             });
             selectCreateController = select_create_controllers_registry.SelectCreateKanbanController;
         }
