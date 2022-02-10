@@ -14,7 +14,6 @@ var Widget = require('web.Widget');
 var widgetRegistry = require('web.widget_registry');
 const widgetRegistryOwl = require('web.widgetRegistry');
 const { LegacyComponent } = require("@web/legacy/legacy_component");
-const {Markup} = require('web.utils');
 const { registry } = require('@web/core/registry');
 const legacyViewRegistry = require('web.view_registry');
 
