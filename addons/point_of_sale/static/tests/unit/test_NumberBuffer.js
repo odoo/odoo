@@ -4,6 +4,7 @@ odoo.define('point_of_sale.tests.NumberBuffer', function(require) {
     const NumberBuffer = require('point_of_sale.NumberBuffer');
     const makeTestEnvironment = require('web.test_env');
     const testUtils = require('web.test_utils');
+    const { mount } = require('@web/../tests/helpers/utils');
 
     const { Component, useState, xml } = owl;
 
@@ -13,10 +14,11 @@ odoo.define('point_of_sale.tests.NumberBuffer', function(require) {
 
     QUnit.test('simple fast inputs with capture in between', async function(assert) {
         assert.expect(3);
+        const target = testUtils.prepareTarget();
+        const env = makeTestEnvironment();
 
         class Root extends Component {
-            constructor() {
-                super();
+            setup() {
                 this.state = useState({ buffer: '' });
                 NumberBuffer.activate();
                 NumberBuffer.use({
@@ -28,24 +30,28 @@ odoo.define('point_of_sale.tests.NumberBuffer', function(require) {
                 NumberBuffer.capture();
                 NumberBuffer.reset();
             }
+            onClickOne() {
+                this.trigger('numpad-click-input', { key: '1' });
+            }
+            onClickTwo() {
+                this.trigger('numpad-click-input', { key: '2' });
+            }
         }
-        Root.env = makeTestEnvironment();
         Root.template = xml/* html */ `
             <div>
                 <p><t t-esc="state.buffer" /></p>
-                <button class="one" t-on-click="trigger('numpad-click-input', { key: '1' })">1</button>
-                <button class="two" t-on-click="trigger('numpad-click-input', { key: '2' })">2</button>
+                <button class="one" t-on-click="onClickOne">1</button>
+                <button class="two" t-on-click="onClickTwo">2</button>
                 <button class="reset" t-on-click="resetBuffer">reset</button>
             </div>
         `;
 
-        const root = new Root();
-        await root.mount(testUtils.prepareTarget());
+        await mount(Root, target, { env });
 
-        const oneButton = root.el.querySelector('button.one');
-        const twoButton = root.el.querySelector('button.two');
-        const resetButton = root.el.querySelector('button.reset');
-        const bufferEl = root.el.querySelector('p');
+        const oneButton = target.querySelector('button.one');
+        const twoButton = target.querySelector('button.two');
+        const resetButton = target.querySelector('button.reset');
+        const bufferEl = target.querySelector('p');
 
         testUtils.dom.click(oneButton);
         testUtils.dom.click(twoButton);
@@ -58,8 +64,5 @@ odoo.define('point_of_sale.tests.NumberBuffer', function(require) {
         testUtils.dom.click(oneButton);
         await testUtils.nextTick();
         assert.strictEqual(bufferEl.textContent, '21');
-
-        root.unmount();
-        root.destroy();
     });
 });

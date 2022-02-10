@@ -16,7 +16,7 @@
                 'o-squashed': messageView and messageView.isSquashed,
                 'o-starred': messageView and messageView.message.isStarred,
                 'mt-3': messageView and !messageView.isSquashed and messageView.threadView,
-            }" t-attf-class="{{ messageView and messageView.extraClass }} {{ className }}" t-on-click="_onClick" t-on-mouseenter="state.isHovered = true" t-on-mouseleave="state.isHovered = false" t-att-data-message-local-id="messageView and messageView.message.localId"
+            }" t-attf-class="{{ messageView and messageView.extraClass }} {{ className }}" t-on-click="_onClick" t-on-mouseenter="() => state.isHovered = true" t-on-mouseleave="() => state.isHovered = false" t-att-data-message-local-id="messageView and messageView.message.localId"
             t-ref="root"
         >
             <t t-if="messageView" name="rootCondition">
@@ -111,7 +111,7 @@
                                             <span class="o_Message_notificationIconClickable">
                                                 <i name="notificationIcon" class="o_Message_notificationIcon fa fa-envelope-o"/>
                                             </span>
-                                            <t t-set="opened">
+                                            <t t-set-slot="opened">
                                                 <NotificationPopover
                                                     messageViewLocalId="messageView.localId"
                                                 />

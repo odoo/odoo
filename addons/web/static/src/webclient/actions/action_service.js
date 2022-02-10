@@ -14,7 +14,7 @@ import { View } from "@web/views/view";
 import { ActionDialog } from "./action_dialog";
 import { CallbackRecorder } from "./action_hook";
 
-const { Component, useSubEnv, xml } = owl;
+const { Component, markup, onMounted, onWillUnmount, onError, useChildSubEnv, xml } = owl;
 
 const actionHandlersRegistry = registry.category("action_handlers");
 const actionRegistry = registry.category("actions");
@@ -91,7 +91,7 @@ function makeActionManager(env) {
         _loadAction(actionRequest, options.additionalContext);
     }
 
-    env.bus.on("CLEAR-CACHES", null, () => {
+    env.bus.addEventListener("CLEAR-CACHES", () => {
         actionCache = {};
     });
 
@@ -153,13 +153,19 @@ function makeActionManager(env) {
                 active_model: context.active_model,
             };
             const key = `${JSON.stringify(actionRequest)},${JSON.stringify(additional_context)}`;
+            let action;
             if (!actionCache[key]) {
                 actionCache[key] = env.services.rpc("/web/action/load", {
                     action_id: actionRequest,
                     additional_context,
                 });
+                action = await actionCache[key];
+                if (action.help) {
+                    action.help = markup(action.help);
+                }
+            } else {
+                action = await actionCache[key];
             }
-            const action = await actionCache[key];
             if (!action) {
                 return {
                     type: "ir.actions.client",
@@ -190,6 +196,13 @@ function makeActionManager(env) {
                           Object.assign({}, env.services.user.context, action.context)
                       )
                     : domain;
+        }
+        if (action.help) {
+            const htmlHelp = document.createElement("div");
+            htmlHelp.innerHTML = action.help;
+            if (!htmlHelp.innerText.trim()) {
+                delete action.help;
+            }
         }
         action = { ...action }; // manipulate a copy to keep cached action unmodified
         action.jsId = `action_${++id}`;
@@ -551,24 +564,31 @@ function makeActionManager(env) {
                 this.Component = controller.Component;
                 this.titleService = useService("title");
                 useDebugCategory("action", { action });
-                useSubEnv({ config: controller.config });
+                useChildSubEnv({
+                    config: controller.config,
+                });
                 if (action.target !== "new") {
                     this.__beforeLeave__ = new CallbackRecorder();
                     this.__getGlobalState__ = new CallbackRecorder();
                     this.__getLocalState__ = new CallbackRecorder();
-                    useBus(env.bus, "CLEAR-UNCOMMITTED-CHANGES", (callbacks) => {
+                    useBus(env.bus, "CLEAR-UNCOMMITTED-CHANGES", (ev) => {
+                        const callbacks = ev.detail;
                         const beforeLeaveFns = this.__beforeLeave__.callbacks;
                         callbacks.push(...beforeLeaveFns);
                     });
-                    useSubEnv({
+                    useChildSubEnv({
                         __beforeLeave__: this.__beforeLeave__,
                         __getGlobalState__: this.__getGlobalState__,
                         __getLocalState__: this.__getLocalState__,
                     });
                 }
                 this.isMounted = false;
+
+                onMounted(this.onMounted);
+                onWillUnmount(this.onWillUnmount);
+                onError(this.onError);
             }
-            catchError(error) {
+            onError(error) {
                 reject(error);
                 cleanDomFromBootstrap();
                 if (action.target === "new") {
@@ -596,7 +616,7 @@ function makeActionManager(env) {
                     env.bus.trigger("ACTION_MANAGER:UPDATE", info);
                 }
             }
-            mounted() {
+            onMounted() {
                 if (action.target === "new") {
                     dialogCloseProm = new Promise((_r) => {
                         dialogCloseResolve = _r;
@@ -652,7 +672,7 @@ function makeActionManager(env) {
                 env.bus.trigger("ACTION_MANAGER:UI-UPDATED", _getActionMode(action));
                 this.isMounted = true;
             }
-            willUnmount() {
+            onWillUnmount() {
                 if (action.target === "new" && dialogCloseResolve) {
                     dialogCloseResolve();
                 }

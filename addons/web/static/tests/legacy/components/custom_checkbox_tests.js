@@ -25,8 +25,6 @@ odoo.define('web.custom_checkbox_tests', function (require) {
 
             await testUtilsDom.click(checkbox.el.querySelector('label'));
             assert.ok(input.checked, 'checkbox should be checked');
-
-            checkbox.destroy();
         });
 
         QUnit.test('test checkbox: custom values', async function(assert) {
@@ -49,8 +47,6 @@ odoo.define('web.custom_checkbox_tests', function (require) {
             assert.ok(input.checked, 'checkbox should be checked');
             assert.strictEqual(input.id, 'my-custom-checkbox');
             assert.ok(input.checked, 'checkbox should be checked');
-
-            checkbox.destroy();
         });
     });
 });

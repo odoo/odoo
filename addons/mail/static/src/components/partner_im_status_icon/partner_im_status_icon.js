@@ -41,12 +41,12 @@ Object.assign(PartnerImStatusIcon, {
     },
     props: {
         partnerLocalId: String,
-        hasBackground: Boolean,
+        hasBackground: { type: Boolean, optional: true },
         /**
          * Determines whether a click on `this` should open a chat with
          * `this.partner`.
          */
-        hasOpenChat: Boolean,
+        hasOpenChat: { type: Boolean, optional: true },
     },
     template: 'mail.PartnerImStatusIcon',
 });

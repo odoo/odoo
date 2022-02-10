@@ -4,7 +4,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
     const PosComponent = require('point_of_sale.PosComponent');
     const ControlButtonsMixin = require('point_of_sale.ControlButtonsMixin');
     const NumberBuffer = require('point_of_sale.NumberBuffer');
-    const { useListener } = require('web.custom_hooks');
+    const { useListener } = require("@web/core/utils/hooks");
     const Registries = require('point_of_sale.Registries');
     const { useBarcodeReader } = require('point_of_sale.custom_hooks');
     const { isConnectionError } = require('point_of_sale.utils');
@@ -13,8 +13,8 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
     const { onMounted, useState } = owl;
 
     class ProductScreen extends ControlButtonsMixin(PosComponent) {
-        constructor() {
-            super(...arguments);
+        setup() {
+            super.setup();
             useListener('update-selected-orderline', this._updateSelectedOrderline);
             useListener('set-numpad-mode', this._setNumpadMode);
             useListener('click-product', this._clickProduct);
@@ -33,6 +33,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                 triggerAtInput: 'update-selected-orderline',
                 useWithBarcode: true,
             });
+            onMounted(this.onMounted);
             // Call `reset` when the `onMounted` callback in `NumberBuffer.use` is done.
             // We don't do this in the `mounted` lifecycle method because it is called before
             // the callbacks in `onMounted` hook.
@@ -41,7 +42,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                 mobile_pane: this.props.mobile_pane || 'right',
             });
         }
-        mounted() {
+        onMounted() {
             this.env.posbus.trigger('start-cash-control');
         }
         /**

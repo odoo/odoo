@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 
@@ -41,6 +42,7 @@ export class AddToGoogleSpreadsheet extends Component {
 }
 
 AddToGoogleSpreadsheet.template = "google_spreadsheet.AddToGoogleSpreadsheet";
+AddToGoogleSpreadsheet.components = { DropdownItem };
 
 const addToGoogleSpreadsheetItem = {
     Component: AddToGoogleSpreadsheet,

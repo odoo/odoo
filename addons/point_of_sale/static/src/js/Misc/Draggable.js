@@ -1,11 +1,11 @@
 odoo.define('point_of_sale.Draggable', function(require) {
     'use strict';
 
-    const { useListener } = require('web.custom_hooks');
+    const { useListener } = require("@web/core/utils/hooks");
     const PosComponent = require('point_of_sale.PosComponent');
     const Registries = require('point_of_sale.Registries');
 
-    const { useExternalListener } = owl;
+    const { onMounted, useExternalListener } = owl;
 
     /**
      * Wrap an element or a component with { position: absolute } to make it
@@ -30,8 +30,8 @@ odoo.define('point_of_sale.Draggable', function(require) {
      * @trigger 'drag-end' when dragging ended with payload `{ loc: { top, left } }`
      */
     class Draggable extends PosComponent {
-        constructor() {
-            super(...arguments);
+        setup() {
+            super.setup();
             this.isDragging = false;
             this.dx = 0;
             this.dy = 0;
@@ -44,33 +44,34 @@ odoo.define('point_of_sale.Draggable', function(require) {
 
             useListener('mousedown', '.drag-handle', this.startDrag);
             useListener('touchstart', '.drag-handle', this.startDrag);
-        }
-        mounted() {
-            this.limitArea = this.props.limitArea
-                ? document.querySelector(this.props.limitArea)
-                : this.el.offsetParent;
-            this.limitAreaBoundingRect = this.limitArea.getBoundingClientRect();
-            if (this.limitArea === this.el.offsetParent) {
-                this.limitLeft = 0;
-                this.limitTop = 0;
-                this.limitRight = this.limitAreaBoundingRect.width;
-                this.limitBottom = this.limitAreaBoundingRect.height;
-            } else {
-                this.limitLeft = -this.el.offsetParent.offsetLeft;
-                this.limitTop = -this.el.offsetParent.offsetTop;
-                this.limitRight =
-                    this.limitAreaBoundingRect.width - this.el.offsetParent.offsetLeft;
-                this.limitBottom =
-                    this.limitAreaBoundingRect.height - this.el.offsetParent.offsetTop;
-            }
-            this.limitAreaWidth = this.limitAreaBoundingRect.width;
-            this.limitAreaHeight = this.limitAreaBoundingRect.height;
 
-            // absolutely position the element then remove the transform.
-            const elBoundingRect = this.el.getBoundingClientRect();
-            this.el.style.top = `${elBoundingRect.top}px`;
-            this.el.style.left = `${elBoundingRect.left}px`;
-            this.el.style.transform = 'none';
+            onMounted(() => {
+                this.limitArea = this.props.limitArea
+                    ? document.querySelector(this.props.limitArea)
+                    : this.el.offsetParent;
+                this.limitAreaBoundingRect = this.limitArea.getBoundingClientRect();
+                if (this.limitArea === this.el.offsetParent) {
+                    this.limitLeft = 0;
+                    this.limitTop = 0;
+                    this.limitRight = this.limitAreaBoundingRect.width;
+                    this.limitBottom = this.limitAreaBoundingRect.height;
+                } else {
+                    this.limitLeft = -this.el.offsetParent.offsetLeft;
+                    this.limitTop = -this.el.offsetParent.offsetTop;
+                    this.limitRight =
+                        this.limitAreaBoundingRect.width - this.el.offsetParent.offsetLeft;
+                    this.limitBottom =
+                        this.limitAreaBoundingRect.height - this.el.offsetParent.offsetTop;
+                }
+                this.limitAreaWidth = this.limitAreaBoundingRect.width;
+                this.limitAreaHeight = this.limitAreaBoundingRect.height;
+    
+                // absolutely position the element then remove the transform.
+                const elBoundingRect = this.el.getBoundingClientRect();
+                this.el.style.top = `${elBoundingRect.top}px`;
+                this.el.style.left = `${elBoundingRect.left}px`;
+                this.el.style.transform = 'none';
+            });
         }
         startDrag(event) {
             let realEvent;

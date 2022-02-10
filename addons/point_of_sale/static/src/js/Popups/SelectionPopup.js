@@ -26,8 +26,8 @@ odoo.define('point_of_sale.SelectionPopup', function (require) {
          *          item: any,
          *      }
          */
-        constructor() {
-            super(...arguments);
+        setup() {
+            super.setup();
             this.state = useState({ selectedId: this.props.list.find((item) => item.isSelected) });
         }
         selectItem(itemId) {

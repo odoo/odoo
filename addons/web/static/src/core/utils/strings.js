@@ -1,6 +1,25 @@
 /** @odoo-module **/
 
 /**
+ * Escapes a string for HTML.
+ * Note that it doesn't work for escaping node attributes.
+ *
+ * @param {string | number} [str] the string to escape
+ * @returns an escaped string
+ */
+export function escape(str) {
+    if (str === undefined) {
+        return "";
+    }
+    if (typeof str === "number") {
+        return String(str);
+    }
+    const p = document.createElement("p");
+    p.textContent = str;
+    return p.innerHTML;
+}
+
+/**
  * Escapes a string to use as a RegExp.
  * @url https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions#Escaping
  *
@@ -89,6 +108,7 @@ export function capitalize(s) {
     return s ? s[0].toUpperCase() + s.slice(1) : "";
 }
 
+// prettier-ignore
 const diacriticsMap = {
 '\u0041': 'A','\u24B6': 'A','\uFF21': 'A','\u00C0': 'A','\u00C1': 'A','\u00C2': 'A','\u1EA6': 'A','\u1EA4': 'A','\u1EAA': 'A','\u1EA8': 'A',
 '\u00C3': 'A','\u0100': 'A','\u0102': 'A','\u1EB0': 'A','\u1EAE': 'A','\u1EB4': 'A','\u1EB2': 'A','\u0226': 'A','\u01E0': 'A','\u00C4': 'A',

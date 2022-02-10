@@ -11,7 +11,7 @@
                     <div class="selection scrollable-y">
                         <t t-foreach="props.list" t-as="item" t-key="item.id">
                             <div class="selection-item" t-att-class="{ selected: item.isSelected }"
-                                 t-on-click="selectItem(item.id)">
+                                 t-on-click="() => this.selectItem(item.id)">
                                 <t t-esc="item.label" />
                             </div>
                         </t>

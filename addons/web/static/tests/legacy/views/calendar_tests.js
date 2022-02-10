@@ -15,7 +15,7 @@ var testUtils = require('web.test_utils');
 var session = require('web.session');
 const Widget = require('web.Widget');
 
-const { patchWithCleanup } = require("@web/../tests/helpers/utils");
+const { getFixture, patchWithCleanup } = require("@web/../tests/helpers/utils");
 
 const { createWebClient, doAction } = require('@web/../tests/webclient/helpers');
 let serverData;
@@ -2905,10 +2905,11 @@ QUnit.module('Views', {
             },
         };
 
+        const target = getFixture();
         const webClient = await createWebClient({ serverData });
 
         await doAction(webClient, 1);
-        assert.containsNone($(webClient.el).find('.o_control_panel .o_search_options span.fa.fa-bars'),
+        assert.containsNone(target, ".o_control_panel .o_search_options .o_group_by_menu",
             "the control panel has no groupBy menu");
     });
 

@@ -98,7 +98,7 @@
                                             <td><span t-esc="variant.name" class="table-name"/>:</td>
                                             <td class="table-value">
                                                 <t t-foreach="variant.values" t-as="attribute_value" t-key="attribute_value.name">
-                                                    <span class="searchable" t-on-click="searchProduct(attribute_value.search)"><t t-esc="attribute_value.name"/></span> <t t-if="attribute_value_index lt variant.values.length - 1">, </t>
+                                                    <span class="searchable" t-on-click="() => this.searchProduct(attribute_value.search)"><t t-esc="attribute_value.name"/></span> <t t-if="attribute_value_index lt variant.values.length - 1">, </t>
                                                 </t>
                                             </td>
                                         </tr>

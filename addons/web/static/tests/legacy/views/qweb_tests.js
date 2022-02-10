@@ -3,6 +3,7 @@ odoo.define('web.qweb_view_tests', function (require) {
 
 const utils = require('web.test_utils');
 const { createWebClient, doAction } = require('@web/../tests/webclient/helpers');
+const { getFixture } = require("@web/../tests/helpers/utils");
 
 QUnit.module("Views", {
 
@@ -46,7 +47,8 @@ QUnit.module("Views", {
             }
         };
 
-        const webClient = await createWebClient({serverData, mockRPC});
+        const target = getFixture();
+        const webClient = await createWebClient({ serverData, mockRPC});
 
         let resolved = false;
         const doActionProm = doAction(webClient, {
@@ -59,7 +61,7 @@ QUnit.module("Views", {
         await doActionProm;
         assert.ok(resolved, "Action is resolved asynchronously");
 
-        const content = webClient.el.querySelector('.o_content');
+        const content = target.querySelector('.o_content');
         assert.ok(/^\s*foo/.test(content.textContent));
         await utils.dom.click(content.querySelector('[type=toggle]'));
         assert.equal(content.querySelector('div#sub').textContent, 'ok', 'should have unfolded the sub-item');

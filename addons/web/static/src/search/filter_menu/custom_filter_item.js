@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DatePicker, DateTimePicker } from "@web/core/datepicker/datepicker";
 import { Domain } from "@web/core/domain";
 import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
@@ -312,5 +313,5 @@ export class CustomFilterItem extends Component {
     }
 }
 
-CustomFilterItem.components = { DatePicker, DateTimePicker };
+CustomFilterItem.components = { DatePicker, DateTimePicker, Dropdown };
 CustomFilterItem.template = "web.CustomFilterItem";

@@ -2,7 +2,7 @@
 
 import { useService } from "@web/core/utils/hooks";
 
-const { onWillUnmount, useComponent } = owl;
+const { onWillUnmount, status, useComponent } = owl;
 
 export function usePopover() {
     const removeFns = new Set();
@@ -33,7 +33,7 @@ export function usePopover() {
             const newOptions = Object.create(options);
             newOptions.onClose = function () {
                 removeFns.delete(removeFn);
-                if (options.onClose && component.__owl__.status !== 5 /* DESTROYED */) {
+                if (options.onClose && status(component) !== "destroyed") {
                     options.onClose();
                 }
             };

@@ -6,7 +6,7 @@ import { formatDateTime, parseDateTime } from "@web/core/l10n/dates";
 import { formatMany2one } from "@web/fields/formatters";
 import { registry } from "@web/core/registry";
 
-const { useState } = owl;
+const { onWillStart, useState } = owl;
 
 const debugRegistry = registry.category("debug");
 
@@ -14,9 +14,10 @@ class GetMetadataDialog extends Dialog {
     setup() {
         super.setup();
         this.state = useState({});
+        onWillStart(this.onWillStart);
     }
 
-    async willStart() {
+    async onWillStart() {
         await this.getMetadata();
     }
 

@@ -1,8 +1,9 @@
 /** @odoo-module **/
 
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { CustomGroupByItem } from "./custom_group_by_item";
 import { FACET_ICONS, GROUPABLE_TYPES } from "../utils/misc";
-import { Dropdown } from "@web/core/dropdown/dropdown";
 import { sortBy } from "@web/core/utils/arrays";
 import { useBus } from "@web/core/utils/hooks";
 
@@ -58,15 +59,14 @@ export class GroupByMenu extends Component {
     }
 
     /**
-     * @param {CustomEvent} ev
+     * @param {string} fieldName
      */
-    onAddCustomGroup(ev) {
-        const { fieldName } = ev.detail;
+    onAddCustomGroup(fieldName) {
         this.env.searchModel.createNewGroupBy(fieldName);
     }
 }
 
-GroupByMenu.components = { CustomGroupByItem };
+GroupByMenu.components = { CustomGroupByItem, Dropdown, DropdownItem };
 GroupByMenu.template = "web.GroupByMenu";
 GroupByMenu.defaultProps = {
     showActiveItems: true,

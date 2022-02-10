@@ -28,7 +28,7 @@
                 <KanbanColumnProgressBarAdapter Component="widgetComponents.KanbanColumnProgressBar"
                     widgetArgs="[getProgressBarOptions(type[0]), getProgressBarColumnState(type[0])]"
                     t-if="activityTypeIds.includes(type[0])"
-                    t-on-set-progress-bar-state="_onSetProgressBarState"/>
+                    onSetProgressBarState.bind="_onSetProgressBarState"/>
                 <div t-else="" class="mt24"/>
             </th>
         </tr>
@@ -75,7 +75,7 @@
 <t t-name="mail.ActivityViewFooter" owl="1">
     <tfoot>
         <tr class="o_data_row">
-            <td class="o_record_selector p-3" t-on-click.prevent.stop="trigger('schedule_activity')">
+            <td class="o_record_selector p-3" t-on-click.prevent.stop="() => this.trigger('schedule_activity')">
                 <span class="fa fa-plus pr-2"/><span>Schedule activity</span>
             </td>
         </tr>

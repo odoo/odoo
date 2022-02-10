@@ -1,7 +1,7 @@
 odoo.define('point_of_sale.Gui', function (require) {
     'use strict';
 
-    const { Component, component } = owl;
+    const { status } = owl;
 
     /**
      * This module bridges the data classes (such as those defined in
@@ -52,7 +52,7 @@ odoo.define('point_of_sale.Gui', function (require) {
         get(target, key) {
             const { component, availableMethods } = target;
             if (!component) throw new Error(`Call 'configureGui' before using Gui.`);
-            const isMounted = component.__owl__.status === 3 /* mounted */;
+            const isMounted = status(component) === 'mounted';
             if (availableMethods.has(key) && isMounted) {
                 return component[key].bind(component);
             }

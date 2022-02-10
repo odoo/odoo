@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.DebugMenu.SetDefaultFooter" owl="1">
-        <button class="btn btn-secondary" t-on-click="trigger('dialog-closed')">Close</button>
+        <button class="btn btn-secondary" t-on-click="() => this.trigger('dialog-closed')">Close</button>
         <button class="btn btn-secondary" t-on-click="saveDefault">Save default</button>
     </t>
 

@@ -48,11 +48,11 @@
                 <!-- MESSAGES -->
                 <t t-set="current_day" t-value="0"/>
                 <t t-foreach="messageListView.threadViewOwner.messageViews" t-as="messageView" t-key="messageView.localId">
-                    <t t-if="messageView.message === messageListView.threadViewOwner.thread.messageAfterNewMessageSeparator">
-                        <div class="o_MessageList_separator o_MessageList_separatorNewMessages o_MessageList_item" t-att-class="{ 'o-disable-animation': messaging.disableAnimation }" t-transition="fade">
+                    <Transition visible="messageView.message === messageListView.threadViewOwner.thread.messageAfterNewMessageSeparator" name="'o-fade'" t-slot-scope="transition">
+                        <div class="o_MessageList_separator o_MessageList_separatorNewMessages o_MessageList_item" t-att-class="{ 'o-disable-animation': messaging.disableAnimation }" t-attf-class="{{transition.className}}">
                             <hr class="o_MessageList_separatorLine o_MessageList_separatorLineNewMessages"/><span class="o_MessageList_separatorLabel o_MessageList_separatorLabelNewMessages">New messages</span>
                         </div>
-                    </t>
+                    </Transition>
                     <t t-if="!messageView.message.isEmpty">
                         <t t-set="message_day" t-value="messageView.message.dateDay"/>
                         <t t-if="current_day !== message_day">

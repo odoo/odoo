@@ -30,7 +30,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr t-foreach="tours" t-as="tour">
+                <tr t-foreach="tours" t-as="tour" t-key="tour.name">
                     <td><t t-esc="tour.sequence"/></td>
                     <td><t t-esc="tour.name"/></td>
                     <td><t t-esc="tour.url"/></td>

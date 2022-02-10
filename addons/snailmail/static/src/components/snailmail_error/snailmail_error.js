@@ -11,7 +11,6 @@ export class SnailmailError extends Component {
      * @override
      */
     setup() {
-        super.setup();
         useComponentToModel({ fieldName: 'component', modelName: 'SnailmailErrorView' });
     }
 

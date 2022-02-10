@@ -3,6 +3,7 @@ odoo.define('point_of_sale.SaleDetailsButton', function(require) {
 
     const PosComponent = require('point_of_sale.PosComponent');
     const Registries = require('point_of_sale.Registries');
+    const { renderToString } = require('@web/core/utils/render');
 
     class SaleDetailsButton extends PosComponent {
         async onClick() {
@@ -14,7 +15,7 @@ odoo.define('point_of_sale.SaleDetailsButton', function(require) {
                 method: 'get_sale_details',
                 args: [false, false, false, [this.env.pos.pos_session.id]],
             });
-            const report = this.env.qweb.renderToString(
+            const report = renderToString(
                 'SaleDetailsReport',
                 Object.assign({}, saleDetails, {
                     date: new Date().toLocaleString(),

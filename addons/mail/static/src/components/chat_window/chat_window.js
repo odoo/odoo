@@ -19,7 +19,7 @@ export class ChatWindow extends Component {
          * Useful when focusing this chat window, which consists of focusing
          * this input.
          */
-        this._inputRef = useRef('input');
+        this._inputRef = { el: null };
         // the following are passed as props to children
         this._onAutocompleteSelect = this._onAutocompleteSelect.bind(this);
         this._onAutocompleteSource = this._onAutocompleteSource.bind(this);
@@ -109,8 +109,8 @@ export class ChatWindow extends Component {
         }
         if (this.chatWindow.isDoFocus) {
             this.chatWindow.update({ isDoFocus: false });
-            if (this._inputRef.comp) {
-                this._inputRef.comp.focus();
+            if (this._inputRef.el) {
+                this._inputRef.el.focus();
             }
         }
         this._applyVisibleOffset();
@@ -254,9 +254,9 @@ Object.assign(ChatWindow, {
     },
     props: {
         localId: String,
-        hasCloseAsBackButton: Boolean,
-        isExpandable: Boolean,
-        isFullscreen: Boolean,
+        hasCloseAsBackButton: { type: Boolean, optional: true },
+        isExpandable: { type: Boolean, optional: true },
+        isFullscreen: { type: Boolean, optional: true },
     },
     template: 'mail.ChatWindow',
 });

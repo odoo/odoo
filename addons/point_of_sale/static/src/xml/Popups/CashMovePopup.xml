@@ -8,10 +8,10 @@
                     <main class="body">
                         <div class="cash-move">
                             <div class="input-amount">
-                                <span t-on-click="onClickButton('in')" class="input-type" t-att-class="{ highlight: state.inputType == 'in' }">
+                                <span t-on-click="() => this.onClickButton('in')" class="input-type" t-att-class="{ highlight: state.inputType == 'in' }">
                                     Cash In
                                 </span>
-                                <span t-on-click="onClickButton('out')" class="input-type" t-att-class="{ highlight: state.inputType == 'out' }">
+                                <span t-on-click="() => this.onClickButton('out')" class="input-type" t-att-class="{ highlight: state.inputType == 'out' }">
                                     Cash Out
                                 </span>
                                 <div class="input-field">

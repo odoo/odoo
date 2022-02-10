@@ -247,7 +247,6 @@ var ServicesMixin = {
      * @param {string} [options.type='warning'] 'info', 'success', 'warning', 'danger' or ''
      * @param {boolean} [options.sticky=false]
      * @param {string} [options.className]
-     * @param {boolean} [options.messageIsHtml=false]
      */
     displayNotification: function (options) {
         return this.call('notification', 'notify', options);

@@ -1,16 +1,15 @@
 odoo.define('pos_restaurant.Resizeable', function(require) {
     'use strict';
 
-    const { useListener } = require('web.custom_hooks');
+    const { useListener } = require("@web/core/utils/hooks");
     const PosComponent = require('point_of_sale.PosComponent');
     const Registries = require('point_of_sale.Registries');
 
-    const { useExternalListener } = owl;
+    const { onMounted, useExternalListener } = owl;
 
     class Resizeable extends PosComponent {
-        constructor() {
-            super(...arguments);
-
+        setup() {
+            super.setup();
             useExternalListener(document, 'mousemove', this.resizeN);
             useExternalListener(document, 'mouseup', this.endResizeN);
             useListener('mousedown', '.resize-handle-n', this.startResizeN);
@@ -78,27 +77,28 @@ odoo.define('pos_restaurant.Resizeable', function(require) {
             this.size = { height: 0, width: 0 };
             this.loc = { top: 0, left: 0 };
             this.tempSize = {};
-        }
-        mounted() {
-            this.limitArea = this.props.limitArea
-                ? document.querySelector(this.props.limitArea)
-                : this.el.offsetParent;
-            this.limitAreaBoundingRect = this.limitArea.getBoundingClientRect();
-            if (this.limitArea === this.el.offsetParent) {
-                this.limitLeft = 0;
-                this.limitTop = 0;
-                this.limitRight = this.limitAreaBoundingRect.width;
-                this.limitBottom = this.limitAreaBoundingRect.height;
-            } else {
-                this.limitLeft = -this.el.offsetParent.offsetLeft;
-                this.limitTop = -this.el.offsetParent.offsetTop;
-                this.limitRight =
-                    this.limitAreaBoundingRect.width - this.el.offsetParent.offsetLeft;
-                this.limitBottom =
-                    this.limitAreaBoundingRect.height - this.el.offsetParent.offsetTop;
-            }
-            this.limitAreaWidth = this.limitAreaBoundingRect.width;
-            this.limitAreaHeight = this.limitAreaBoundingRect.height;
+
+            onMounted(() => {
+                this.limitArea = this.props.limitArea
+                    ? document.querySelector(this.props.limitArea)
+                    : this.el.offsetParent;
+                this.limitAreaBoundingRect = this.limitArea.getBoundingClientRect();
+                if (this.limitArea === this.el.offsetParent) {
+                    this.limitLeft = 0;
+                    this.limitTop = 0;
+                    this.limitRight = this.limitAreaBoundingRect.width;
+                    this.limitBottom = this.limitAreaBoundingRect.height;
+                } else {
+                    this.limitLeft = -this.el.offsetParent.offsetLeft;
+                    this.limitTop = -this.el.offsetParent.offsetTop;
+                    this.limitRight =
+                        this.limitAreaBoundingRect.width - this.el.offsetParent.offsetLeft;
+                    this.limitBottom =
+                        this.limitAreaBoundingRect.height - this.el.offsetParent.offsetTop;
+                }
+                this.limitAreaWidth = this.limitAreaBoundingRect.width;
+                this.limitAreaHeight = this.limitAreaBoundingRect.height;
+            });
         }
         startResizeN(event) {
             let realEvent;

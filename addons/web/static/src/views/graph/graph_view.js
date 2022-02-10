@@ -1,5 +1,7 @@
 /** @odoo-module **/
 
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
@@ -135,7 +137,7 @@ export class GraphView extends Component {
 GraphView.template = "web.GraphView";
 GraphView.buttonTemplate = "web.GraphView.Buttons";
 
-GraphView.components = { GroupByMenu, Renderer: GraphRenderer, Layout };
+GraphView.components = { Dropdown, DropdownItem, GroupByMenu, Renderer: GraphRenderer, Layout };
 
 GraphView.defaultProps = {
     additionalMeasures: [],

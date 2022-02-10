@@ -3,8 +3,9 @@
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
+import { Transition } from "@web/core/transition";
 
-const { Component, useState } = owl;
+const { Component, onWillDestroy, useState } = owl;
 
 /**
  * Loading Indicator
@@ -23,12 +24,16 @@ export class LoadingIndicator extends Component {
             show: false,
         });
         this.rpcIds = new Set();
-        this.env.bus.on("RPC:REQUEST", this, this.requestCall);
-        this.env.bus.on("RPC:RESPONSE", this, this.responseCall);
+        this.env.bus.addEventListener("RPC:REQUEST", this.requestCall.bind(this));
+        this.env.bus.addEventListener("RPC:RESPONSE", this.responseCall.bind(this));
+        onWillDestroy(() => {
+            this.env.bus.removeEventListener("RPC:REQUEST", this.requestCall.bind(this));
+            this.env.bus.removeEventListener("RPC:RESPONSE", this.responseCall.bind(this));
+        });
         this.uiService = useService("ui");
     }
 
-    requestCall(rpcId) {
+    requestCall({ detail: rpcId }) {
         if (this.state.count === 0) {
             this.state.show = true;
             this.blockUITimer = browser.setTimeout(() => {
@@ -40,7 +45,7 @@ export class LoadingIndicator extends Component {
         this.state.count++;
     }
 
-    responseCall(rpcId) {
+    responseCall({ detail: rpcId }) {
         this.rpcIds.delete(rpcId);
         this.state.count = this.rpcIds.size;
         if (this.state.count === 0) {
@@ -56,6 +61,7 @@ export class LoadingIndicator extends Component {
 }
 
 LoadingIndicator.template = "web.LoadingIndicator";
+LoadingIndicator.components = { Transition };
 
 registry.category("main_components").add("LoadingIndicator", {
     Component: LoadingIndicator,

@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.FavoriteMenu" owl="1">
-        <Dropdown class="o_favorite_menu btn-group" togglerClass="'btn btn-light'">
+        <Dropdown class="'o_favorite_menu btn-group'" togglerClass="'btn btn-light'">
             <t t-set-slot="toggler">
                 <i class="oi-small mr-1" t-att-class="icon"/>
                 <span class="o_dropdown_title">Favorites</span>
@@ -13,16 +13,15 @@
                     <div role="separator" class="dropdown-divider"/>
                 </t>
                 <t t-if="item.type ==='favorite'">
-                    <DropdownItem class="o_menu_item"
-                        t-att-class="{ selected: item.isActive }"
+                    <DropdownItem class="{ o_menu_item: true, selected: item.isActive }"
                         parentClosingMode="'none'"
                         onSelected="() => this.onFavoriteSelected(item.id)"
-                    >
+                        >
                         <span class="d-flex p-0 align-items-center justify-content-between">
                             <t t-esc="item.description"/>
                             <i class="o_icon_right fa fa-trash-o"
                                 title="Delete item"
-                                t-on-click.stop="openConfirmationDialog(item.id)"
+                                t-on-click.stop="() => this.openConfirmationDialog(item.id)"
                             />
                         </span>
                     </DropdownItem>

@@ -1,12 +1,15 @@
 /** @odoo-module **/
 
 import { createWebClient, doAction, getActionManagerServerData } from "./../helpers";
+import { getFixture } from "../../helpers/utils";
 
 let serverData;
+let target;
 
 QUnit.module("ActionManager", (hooks) => {
     hooks.beforeEach(() => {
         serverData = getActionManagerServerData();
+        target = getFixture();
     });
 
     QUnit.module("Server actions");
@@ -22,8 +25,8 @@ QUnit.module("ActionManager", (hooks) => {
         };
         const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 2);
-        assert.containsOnce(webClient, ".o_control_panel", "should have rendered a control panel");
-        assert.containsOnce(webClient, ".o_kanban_view", "should have rendered a kanban view");
+        assert.containsOnce(target, ".o_control_panel", "should have rendered a control panel");
+        assert.containsOnce(target, ".o_kanban_view", "should have rendered a kanban view");
         assert.verifySteps([
             "/web/webclient/load_menus",
             "/web/action/load",

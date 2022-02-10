@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="OrderlineDetails" owl="1">
-        <li class="orderline" t-on-click="trigger('click-order-line', props.line)" t-att-class="{ selected: props.isSelected }">
+        <li class="orderline" t-on-click="() => this.trigger('click-order-line', props.line)" t-att-class="{ selected: props.isSelected }">
             <span class="product-name">
                 <t t-esc="productName" />
             </span>
@@ -35,7 +35,7 @@
                         <t t-set="_destinationOrderUid" t-value="getToRefundDetail().destinationOrderUid"/>
                         <t t-if="_destinationOrderUid">
                             <t t-esc="getRefundingMessage()" />
-                            <span t-esc="_destinationOrderUid" class="order-link" t-on-click.stop="trigger('click-refund-order-uid', _destinationOrderUid)" />
+                            <span t-esc="_destinationOrderUid" class="order-link" t-on-click.stop="() => this.trigger('click-refund-order-uid', _destinationOrderUid)" />
                         </t>
                         <t t-else="">
                             <t t-esc="getToRefundMessage()" />

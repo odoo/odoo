@@ -201,7 +201,7 @@
             <t t-set="head">
                 <t t-call-assets="web.assets_common" t-js="false"/>
                 <t t-call-assets="web.assets_backend" t-js="false"/>
-                <t t-call-assets="web.assets_common" t-css="false"/>
+                <t t-call-assets="web.tests_assets_common" t-css="false"/>
                 <t t-call-assets="web.assets_backend" t-css="false"/>
 
                 <t t-call="web.test_helpers"/>
@@ -220,9 +220,10 @@
             <t t-set="title">Web Mobile Tests</t>
             <t t-set="head">
                 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+
                 <t t-call-assets="web.assets_common" t-js="false"/>
                 <t t-call-assets="web.assets_backend" t-js="false"/>
-                <t t-call-assets="web.assets_common" t-css="false"/>
+                <t t-call-assets="web.tests_assets_common" t-css="false"/>
                 <t t-call-assets="web.assets_backend" t-css="false"/>
 
                 <t t-call="web.test_helpers"/>

@@ -3,7 +3,7 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
 
     const { sprintf } = require('web.utils');
     const { parse } = require('web.field_utils');
-    const { useListener } = require('web.custom_hooks');
+    const { useListener } = require("@web/core/utils/hooks");
     const ControlButtonsMixin = require('point_of_sale.ControlButtonsMixin');
     const NumberBuffer = require('point_of_sale.NumberBuffer');
     const Registries = require('point_of_sale.Registries');
@@ -12,11 +12,11 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
     const contexts = require('point_of_sale.PosContext');
     const { Orderline } = require('point_of_sale.models');
 
-    const { useContext } = owl;
+    const { onMounted, onWillUnmount, useState } = owl;
 
     class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentToOrderScreen) {
-        constructor() {
-            super(...arguments);
+        setup() {
+            super.setup();
             useListener('close-screen', this.close);
             useListener('click-sale-order', this._onClickSaleOrder);
             useListener('next-page', this._onNextPage);
@@ -24,9 +24,12 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
             useListener('search', this._onSearch);
 
             SaleOrderFetcher.setComponent(this);
-            this.orderManagementContext = useContext(contexts.orderManagement);
+            this.orderManagementContext = useState(contexts.orderManagement);
+
+            onMounted(this.onMounted);
+            onWillUnmount(this.onWillUnmount);
         }
-        mounted() {
+        onMounted() {
             SaleOrderFetcher.on('update', this, this.render);
 
             // calculate how many can fit in the screen.
@@ -45,7 +48,7 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
             // is shown while fetching.
             setTimeout(() => SaleOrderFetcher.fetch(), 0);
         }
-        willUnmount() {
+        onWillUnmount() {
             SaleOrderFetcher.off('update', this);
         }
         get selectedClient() {

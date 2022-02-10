@@ -4,7 +4,7 @@
         <table class="o_dow_widget">
             <thead>
                 <tr>
-                    <th t-foreach="widget.labels" t-as="label">
+                    <th t-foreach="widget.labels" t-as="label" t-key="label_index">
                         <t t-esc="label"/>
                     </th>
                 </tr>
@@ -37,7 +37,7 @@
         <div class="o_rightpanel_section">
             <div class="o_form_view">
                 <div class="oe_button_box o_full">
-                    <t t-foreach="state.data.buttons" t-as="button" t-key="button.order">
+                    <t t-foreach="state.data.buttons" t-as="button" t-key="button.action">
                         <button class="btn oe_stat_button" t-if="button.show"
                             t-on-click="onProjectActionClick" 
                             t-att-data-action="button.action"
@@ -67,12 +67,12 @@
                     Milestones
                 </div>
                 <span class="o_rightpanel_button">
-                    <AddMilestone context="context"/>
+                    <AddMilestone context="context" onMilestoneUpdate.bind="_loadQwebContext"/>
                 </span>
             </div>
             <div class="o_rightpanel_data">
                 <div t-foreach="milestones.data" t-as="milestone" t-key="milestone.id" class="o_rightpanel_data_row">
-                    <OpenMilestone context="context" milestone="milestone" t-key="milestone.id"/>
+                    <OpenMilestone context="context" milestone="milestone" onMilestoneUpdate.bind="_loadQwebContext"/>
                 </div>
                 <span t-if="milestones.data.length === 0" class="text-muted font-italic">
                     Track major progress points that must be reached to achieve success.
@@ -84,21 +84,6 @@
     <t t-name="project.AddMilestone" owl="1">
         <div class="o_add_milestone">
             <a t-on-click="onAddMilestoneClick">Add Milestone</a>
-            <span t-if="state.openDialog" class="o_rightpanel_hidden">
-                <ComponentAdapter
-                    Component="FormViewDialog"
-                    params="{
-                        context: context,
-                        _createContext: _createContext,
-                        on_saved: _onDialogSaved,
-                        res_id: false,
-                        res_model: 'project.milestone',
-                        title: NEW_PROJECT_MILESTONE,
-                        multi_select: true,
-                    }"
-                    t-ref="dialog"
-                />
-            </span>
         </div>
     </t>
 
@@ -117,21 +102,6 @@
             </div>
             <span class="o_rightpanel_right_col">
                 <a class="o_delete_icon" t-on-click="onDeleteMilestone" title="Delete Milestone"><i class="fa fa-trash"></i></a>
-            </span>
-            <span t-if="state.openDialog" class="o_rightpanel_hidden">
-                <ComponentAdapter
-                    Component="FormViewDialog"
-                    params="{
-                        context: context,
-                        on_saved: _onDialogSaved,
-                        res_id: milestone.id,
-                        res_model: 'project.milestone',
-                        title: OPEN_PROJECT_MILESTONE,
-                        disable_multiple_selection: true,
-                        deletable: true
-                    }"
-                    t-ref="dialog"
-                />
             </span>
         </div>
     </t>

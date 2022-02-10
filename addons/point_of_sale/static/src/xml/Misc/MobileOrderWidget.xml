@@ -3,11 +3,11 @@
 
     <t t-name="MobileOrderWidget" owl="1">
         <div class="switchpane">
-            <button class="btn-switchpane" t-on-click="trigger('click-pay')">
+            <button class="btn-switchpane" t-on-click="() => this.trigger('click-pay')">
                 <h1>Pay</h1>
                 <span><t t-esc="total" /></span>
             </button>
-            <button class="btn-switchpane secondary" t-on-click="trigger('switchpane')">
+            <button class="btn-switchpane secondary" t-on-click="props.onSwitchPane">
                 <h1>Review</h1>
                 <span><t t-esc="items_number"/> items</span>
             </button>

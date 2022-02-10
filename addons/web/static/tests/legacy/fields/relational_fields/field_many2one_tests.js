@@ -2,7 +2,6 @@ odoo.define('web.field_many_to_one_tests', function (require) {
 "use strict";
 
 var BasicModel = require('web.BasicModel');
-var FormController = require('web.FormController');
 var FormView = require('web.FormView');
 var ListView = require('web.ListView');
 var relationalFields = require('web.relational_fields');

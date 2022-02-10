@@ -2,15 +2,15 @@ odoo.define('pos_restaurant.SplitBillScreen', function(require) {
     'use strict';
 
     const PosComponent = require('point_of_sale.PosComponent');
-    const { useListener } = require('web.custom_hooks');
+    const { useListener } = require("@web/core/utils/hooks");
     const { Order } = require('point_of_sale.models');
     const Registries = require('point_of_sale.Registries');
 
     const { useState, onMounted } = owl;
 
     class SplitBillScreen extends PosComponent {
-        constructor() {
-            super(...arguments);
+        setup() {
+            super.setup();
             useListener('click-line', this.onClickLine);
             this.splitlines = useState(this._initSplitLines(this.env.pos.get_order()));
             this.newOrderLines = {};

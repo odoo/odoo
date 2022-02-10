@@ -14,8 +14,8 @@ QUnit.module('activity_tests.js', {
 
         this.start = async params => {
             const res = await start({ ...params, data: this.data });
-            const { components, env, widget } = res;
-            this.components = components;
+            const { apps, env, widget } = res;
+            this.apps = apps;
             this.env = env;
             this.widget = widget;
             return res;

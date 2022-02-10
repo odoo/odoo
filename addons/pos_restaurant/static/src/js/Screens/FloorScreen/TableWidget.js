@@ -5,7 +5,10 @@ odoo.define('pos_restaurant.TableWidget', function(require) {
     const Registries = require('point_of_sale.Registries');
 
     class TableWidget extends PosComponent {
-        mounted() {
+        setup() {
+            owl.onMounted(this.onMounted);
+        }
+        onMounted() {
             const table = this.props.table;
             function unit(val) {
                 return `${val}px`;

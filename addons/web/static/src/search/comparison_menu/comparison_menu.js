@@ -1,5 +1,7 @@
 /** @odoo-module **/
 
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { FACET_ICONS } from "../utils/misc";
 import { useBus } from "@web/core/utils/hooks";
 
@@ -30,3 +32,4 @@ export class ComparisonMenu extends Component {
 }
 
 ComparisonMenu.template = "web.ComparisonMenu";
+ComparisonMenu.components = { Dropdown, DropdownItem };

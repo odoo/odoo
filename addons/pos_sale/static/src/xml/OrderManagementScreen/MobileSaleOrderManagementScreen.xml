@@ -15,7 +15,7 @@
                     <NumpadWidget />
                 </div>
             </div>
-            <div class="back-to-list" t-on-click="mobileState.showDetails = false">
+            <div class="back-to-list" t-on-click="() => { mobileState.showDetails = false; }">
                 <span>Back to list</span>
             </div>
         </div>

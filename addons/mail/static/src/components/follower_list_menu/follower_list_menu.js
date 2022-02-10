@@ -117,7 +117,7 @@ Object.assign(FollowerListMenu, {
         isDisabled: false,
     },
     props: {
-        isDisabled: Boolean,
+        isDisabled: { type: Boolean, optional: true },
         threadLocalId: String,
     },
     template: 'mail.FollowerListMenu',

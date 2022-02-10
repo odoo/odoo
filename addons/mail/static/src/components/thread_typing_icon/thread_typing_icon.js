@@ -15,10 +15,12 @@ Object.assign(ThreadTypingIcon, {
         animation: {
             type: String,
             validate: prop => ['bounce', 'none', 'pulse'].includes(prop),
+            optional: true,
         },
         size: {
             type: String,
             validate: prop => ['small', 'medium'].includes(prop),
+            optional: true,
         },
         title: {
             type: String,

@@ -61,7 +61,6 @@ odoo.define('web.dropdown_menu_mobile_tests', function (require) {
                 "should display the dropdown menu at the left screen");
 
             dropdown.el.parentNode.classList.remove('clearfix');
-            dropdown.destroy();
             viewPort.style.position = '';
 
         });

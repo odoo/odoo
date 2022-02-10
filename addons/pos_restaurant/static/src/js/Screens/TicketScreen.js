@@ -4,7 +4,7 @@ odoo.define('pos_restaurant.TicketScreen', function (require) {
     const PosComponent = require('point_of_sale.PosComponent');
     const TicketScreen = require('point_of_sale.TicketScreen');
     const Registries = require('point_of_sale.Registries');
-    const { useAutofocus } = require('web.custom_hooks');
+    const { useAutofocus } = require("@web/core/utils/hooks");
     const { parse } = require('web.field_utils');
 
     const { useState } = owl;
@@ -138,8 +138,8 @@ odoo.define('pos_restaurant.TicketScreen', function (require) {
     Registries.Component.extend(TicketScreen, PosResTicketScreen);
 
     class TipCell extends PosComponent {
-        constructor() {
-            super(...arguments);
+        setup() {
+            super.setup();
             this.state = useState({ isEditing: false });
             this.orderUiState = this.props.order.uiState.TipScreen;
             useAutofocus({ selector: 'input' });

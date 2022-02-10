@@ -1,7 +1,7 @@
 odoo.define('point_of_sale.SearchBar', function (require) {
     'use strict';
 
-    const { useListener } = require('web.custom_hooks');
+    const { useListener } = require("@web/core/utils/hooks");
     const PosComponent = require('point_of_sale.PosComponent');
     const Registries = require('point_of_sale.Registries');
 
@@ -31,8 +31,8 @@ odoo.define('point_of_sale.SearchBar', function (require) {
      * field of the event.
      */
     class SearchBar extends PosComponent {
-        constructor() {
-            super(...arguments);
+        setup() {
+            super.setup();
             useExternalListener(window, 'click', this._hideOptions);
             useListener('click-search-field', this._onClickSearchField);
             useListener('select-filter', this._onSelectFilter);

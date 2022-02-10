@@ -1,12 +1,12 @@
 /** @odoo-module **/
 
-import { useEffect, useService } from "@web/core/utils/hooks";
+import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { debounce } from "@web/core/utils/timing";
 import { BlockUI } from "./block_ui";
 import { browser } from "@web/core/browser/browser";
 
-const { Component, EventBus, useRef } = owl;
+const { EventBus, useComponent, useEffect, useRef } = owl;
 
 export const SIZES = { XS: 0, VSM: 1, SM: 2, MD: 3, LG: 4, XL: 5, XXL: 6 };
 
@@ -23,13 +23,15 @@ export const SIZES = { XS: 0, VSM: 1, SM: 2, MD: 3, LG: 4, XL: 5, XXL: 6 };
  */
 export function useActiveElement(refName = null) {
     const uiService = useService("ui");
-    const owner = refName ? useRef(refName) : Component.current;
+    const owner = refName ? useRef(refName) : useComponent();
     useEffect(
-        () => {
-            uiService.activateElement(owner.el);
-            return () => uiService.deactivateElement(owner.el);
+        (el) => {
+            if (el) {
+                uiService.activateElement(el);
+                return () => uiService.deactivateElement(el);
+            }
         },
-        () => []
+        () => [owner.el]
     );
 }
 

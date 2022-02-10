@@ -2,7 +2,7 @@ odoo.define('point_of_sale.Chrome', function(require) {
     'use strict';
 
     const { loadCSS } = require('web.ajax');
-    const { useListener } = require('web.custom_hooks');
+    const { useListener } = require("@web/core/utils/hooks");
     const { BarcodeEvents } = require('barcodes.BarcodeEvents');
     const BarcodeParser = require('barcodes.BarcodeParser');
     const PosComponent = require('point_of_sale.PosComponent');
@@ -14,16 +14,26 @@ odoo.define('point_of_sale.Chrome', function(require) {
     const { odooExceptionTitleMap } = require("@web/core/errors/error_dialogs");
     const { ConnectionLostError, ConnectionAbortedError, RPCError } = require('@web/core/network/rpc_service');
     const { useBus } = require("@web/core/utils/hooks");
-    const reactivity = require("@point_of_sale/js/reactivity");
+    const { debounce } = require("@web/core/utils/timing");
+    const { Transition } = require("@web/core/transition");
 
-    const { debounce, useExternalListener, useRef, useState } = owl;
+    const {
+        onError,
+        onMounted,
+        onWillDestroy,
+        onWillUnmount,
+        useExternalListener,
+        useRef,
+        useState,
+        useSubEnv,
+    } = owl;
 
     /**
      * Chrome is the root component of the PoS App.
      */
     class Chrome extends PopupControllerMixin(PosComponent) {
-        constructor() {
-            super(...arguments);
+        setup() {
+            super.setup();
             useExternalListener(window, 'beforeunload', this._onBeforeUnload);
             useListener('show-main-screen', this.__showScreen);
             useListener('toggle-debug-widget', debounce(this._toggleDebugWidget, 100));
@@ -64,29 +74,31 @@ odoo.define('point_of_sale.Chrome', function(require) {
 
             this.previous_touch_y_coordinate = -1;
 
-            this.env.pos = reactivity.useState(this.env.pos);
-        }
+            useSubEnv({ pos: useState(this.env.pos) });
 
-        // OVERLOADED METHODS //
+            onMounted(() => {
+                // remove default webclient handlers that induce click delay
+                $(document).off();
+                $(window).off();
+                $('html').off();
+                $('body').off();
+                // The above lines removed the bindings, but we really need them for the barcode
+                BarcodeEvents.start();
+            });
 
-        mounted() {
-            // remove default webclient handlers that induce click delay
-            $(document).off();
-            $(window).off();
-            $('html').off();
-            $('body').off();
-            // The above lines removed the bindings, but we really need them for the barcode
-            BarcodeEvents.start();
-        }
-        willUnmount() {
-            BarcodeEvents.stop();
-        }
-        destroy() {
-            super.destroy(...arguments);
-            this.env.pos.destroy();
-        }
-        catchError(error) {
-            console.error(error);
+            onWillUnmount(() => {
+                BarcodeEvents.stop();
+            });
+
+            onWillDestroy(() => {
+                this.env.pos.destroy();
+            });
+
+            onError((error) => {
+                console.error(error);
+            });
+
+            this.props.setupIsDone(this);
         }
 
         // GETTERS //
@@ -362,7 +374,6 @@ odoo.define('point_of_sale.Chrome', function(require) {
         }
         _onCloseNotification() {
             this.state.notification.isShown = false;
-            this.state.notification.message = '';
         }
         /**
          * Save `env.pos.toRefundLines` in localStorage on beforeunload - closing the
@@ -535,6 +546,11 @@ odoo.define('point_of_sale.Chrome', function(require) {
         }
     }
     Chrome.template = 'Chrome';
+    Object.defineProperty(Chrome, "components", {
+        get () {
+            return Object.assign({ Transition }, PosComponent.components);
+        }
+    })
 
     Registries.Component.add(Chrome);
 

@@ -38,8 +38,6 @@ odoo.define('web.groupby_menu_tests', function (require) {
             const controlPanel = await createControlPanel(params);
 
             assert.containsNone(controlPanel, '.o_menu_item, .dropdown-divider, .o_add_custom_group_menu');
-
-            controlPanel.destroy();
         });
 
         QUnit.test('simple rendering with no groupby', async function (assert) {
@@ -62,8 +60,6 @@ odoo.define('web.groupby_menu_tests', function (require) {
             assert.strictEqual(optionEls[1].innerText.trim(), 'Date');
             assert.strictEqual(optionEls[2].innerText.trim(), 'Foo');
             assert.strictEqual(optionEls[3].innerText.trim(), 'Many2Many');
-
-            controlPanel.destroy();
         });
 
         QUnit.test('simple rendering with a single groupby', async function (assert) {
@@ -84,8 +80,6 @@ odoo.define('web.groupby_menu_tests', function (require) {
             assert.strictEqual(controlPanel.el.querySelector('.o_menu_item').innerText.trim(), "Groupby Foo");
             assert.containsOnce(controlPanel, '.dropdown-divider');
             assert.containsOnce(controlPanel, '.o_add_custom_group_menu');
-
-            controlPanel.destroy();
         });
 
         QUnit.test('toggle a "simple" groupby in groupby menu works', async function (assert) {
@@ -120,8 +114,6 @@ odoo.define('web.groupby_menu_tests', function (require) {
             await cpHelpers.toggleMenuItem(controlPanel, 0);
             assert.deepEqual(cpHelpers.getFacetTexts(controlPanel), []);
             assert.notOk(cpHelpers.isItemSelected(controlPanel, 0));
-
-            controlPanel.destroy();
         });
 
         QUnit.test('toggle a "simple" groupby quickly does not crash', async function (assert) {
@@ -143,7 +135,6 @@ odoo.define('web.groupby_menu_tests', function (require) {
             cpHelpers.toggleMenuItem(controlPanel, 0);
 
             assert.ok(true);
-            controlPanel.destroy();
         });
 
         QUnit.test('remove a "Group By" facet properly unchecks groupbys in groupby menu', async function (assert) {
@@ -177,8 +168,6 @@ odoo.define('web.groupby_menu_tests', function (require) {
             assert.containsNone(controlPanel, '.o_searchview .o_searchview_facet');
             await cpHelpers.toggleGroupByMenu(controlPanel);
             assert.notOk(cpHelpers.isItemSelected(controlPanel, 0));
-
-            controlPanel.destroy();
         });
 
         QUnit.test('group by a date field using interval works', async function (assert) {
@@ -247,7 +236,6 @@ odoo.define('web.groupby_menu_tests', function (require) {
                     assert.ok(cpHelpers.isOptionSelected(controlPanel, 0, index));
                 });
             }
-            controlPanel.destroy();
         });
 
         QUnit.test('interval options are correctly grouped and ordered', async function (assert) {
@@ -307,8 +295,6 @@ odoo.define('web.groupby_menu_tests', function (require) {
             await cpHelpers.toggleMenuItem(controlPanel, 'Date');
             await cpHelpers.toggleMenuItemOption(controlPanel, 'Date', 'Week');
             assert.deepEqual(cpHelpers.getFacetTexts(controlPanel), ['Date: Year>Date: Quarter>Date: Day>Foo']);
-
-            controlPanel.destroy();
         });
 
         QUnit.test('the ID field should not be proposed in "Add Custom Group" menu', async function (assert) {
@@ -330,8 +316,6 @@ odoo.define('web.groupby_menu_tests', function (require) {
             const optionEls = controlPanel.el.querySelectorAll('.o_add_custom_group_menu select option');
             assert.strictEqual(optionEls.length, 1);
             assert.strictEqual(optionEls[0].innerText.trim(), "Foo");
-
-            controlPanel.destroy();
         });
 
         QUnit.test('add a date field in "Add Custome Group" activate a groupby with global default option "month"', async function (assert) {
@@ -360,8 +344,6 @@ odoo.define('web.groupby_menu_tests', function (require) {
             assert.ok(cpHelpers.isItemSelected(controlPanel, "Date"));
             await cpHelpers.toggleMenuItem(controlPanel, "Date");
             assert.ok(cpHelpers.isOptionSelected(controlPanel, "Date", "Month"));
-
-            controlPanel.destroy();
         });
 
         QUnit.test('default groupbys can be ordered', async function (assert) {
@@ -388,8 +370,6 @@ odoo.define('web.groupby_menu_tests', function (require) {
             const { groupBy } = controlPanel.getQuery();
             assert.deepEqual(groupBy, ['date_field:week', 'birthday:month']);
             assert.deepEqual(cpHelpers.getFacetTexts(controlPanel), ['Date: Week>Birthday: Month']);
-
-            controlPanel.destroy();
         });
 
         QUnit.test('a separator in groupbys does not cause problems', async function (assert) {
@@ -452,8 +432,6 @@ odoo.define('web.groupby_menu_tests', function (require) {
             assert.notOk(cpHelpers.isItemSelected(controlPanel, 1));
             assert.notOk(cpHelpers.isOptionSelected(controlPanel, 0, 1), 'selected');
             assert.notOk(cpHelpers.isOptionSelected(controlPanel, 0, 4), 'selected');
-
-            controlPanel.destroy();
         });
 
         QUnit.test('falsy search default groupbys are not activated', async function (assert) {
@@ -478,8 +456,6 @@ odoo.define('web.groupby_menu_tests', function (require) {
             const { groupBy } = controlPanel.getQuery();
             assert.deepEqual(groupBy, []);
             assert.deepEqual(cpHelpers.getFacetTexts(controlPanel), []);
-
-            controlPanel.destroy();
         });
     });
 });

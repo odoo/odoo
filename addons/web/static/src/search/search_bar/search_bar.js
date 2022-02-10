@@ -27,14 +27,14 @@ export class SearchBar extends Component {
         });
 
         // derived state
-        this.items = [];
+        this.items = useState([]);
         this.subItems = {};
 
         this.orm = useService("orm");
 
         this.keepLast = new KeepLast();
 
-        this.focusOnUpdate = useAutofocus();
+        this.focusOnUpdate = useAutofocus("search-input");
 
         this.inputRef = useRef("search-input");
 
@@ -92,8 +92,7 @@ export class SearchBar extends Component {
 
         const trimmedQuery = this.state.query.trim();
 
-        this.items = [];
-
+        this.items.length = 0;
         if (!trimmedQuery) {
             return;
         }

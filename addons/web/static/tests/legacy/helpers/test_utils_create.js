@@ -13,15 +13,17 @@ odoo.define('web.test_utils_create', function (require) {
     const ActionMenus = require('web.ActionMenus');
     const concurrency = require('web.concurrency');
     const ControlPanel = require('web.ControlPanel');
-    const customHooks = require('web.custom_hooks');
+    const { useListener } = require("@web/core/utils/hooks");
     const dom = require('web.dom');
     const makeTestEnvironment = require('web.test_env');
     const ActionModel = require('web.ActionModel');
     const Registry = require('web.Registry');
     const testUtilsMock = require('web.test_utils_mock');
     const Widget = require('web.Widget');
+    const { destroy, getFixture, mount, useChild } = require('@web/../tests/helpers/utils');
+    const { registerCleanup } = require("@web/../tests/helpers/cleanup");
 
-    const { Component, useRef, useState, xml } = owl;
+    const { Component, onMounted, onWillStart, useState, xml } = owl;
 
     /**
      * Similar as createView, but specific for calendar views. Some calendar
@@ -81,27 +83,25 @@ odoo.define('web.test_utils_create', function (require) {
         }
         const cleanUp = await testUtilsMock.addMockEnvironmentOwl(Component, params);
         class Parent extends Component {
-            constructor() {
-                super(...arguments);
+            setup() {
                 this.Component = constructor;
                 this.state = useState(params.props || {});
-                this.component = useRef('component');
                 for (const eventName in params.intercepts || {}) {
-                    customHooks.useListener(eventName, params.intercepts[eventName]);
+                    useListener(eventName, params.intercepts[eventName]);
                 }
+                useChild();
             }
         }
-        Parent.template = xml`<t t-component="Component" t-props="state" t-ref="component"/>`;
-        const parent = new Parent();
-        await parent.mount(prepareTarget(params.debug), { position: 'first-child' });
-        const child = parent.component.comp;
-        const originalDestroy = child.destroy;
-        child.destroy = function () {
-            child.destroy = originalDestroy;
-            cleanUp();
-            parent.destroy();
-        };
-        return child;
+        Parent.template = xml`<t t-component="Component" t-props="state"/>`;
+
+        const target = getFixture();
+        const env = Component.env;
+        const parent = await mount(Parent, target, { env });
+        registerCleanup(cleanUp);
+        registerCleanup(() => {
+            destroy(parent);
+        });
+        return parent.child;
     }
 
     /**
@@ -121,7 +121,6 @@ odoo.define('web.test_utils_create', function (require) {
      *    available helpers)
      */
     async function createControlPanel(params = {}) {
-        const debug = params.debug || false;
         const env = makeTestEnvironment(params.env || {});
         const props = Object.assign({
             action: {},
@@ -159,44 +158,38 @@ odoo.define('web.test_utils_create', function (require) {
         };
 
         class Parent extends Component {
-            constructor() {
-                super();
+            setup() {
                 this.searchModel = new ActionModel(extensions, globalConfig);
                 this.state = useState(props);
-            }
-            async willStart() {
-                await this.searchModel.load();
-            }
-            mounted() {
-                if (params['get-controller-query-params']) {
-                    this.searchModel.on('get-controller-query-params', this,
-                        params['get-controller-query-params']);
-                }
-                if (params.search) {
-                    this.searchModel.on('search', this, params.search);
-                }
-                this.controlPanel = Object.values(this.__owl__.children)[0];
+                useChild();
+                onWillStart(async () => {
+                    await this.searchModel.load();
+                });
+                onMounted(() => {
+                    if (params['get-controller-query-params']) {
+                        this.searchModel.on('get-controller-query-params', this,
+                            params['get-controller-query-params']);
+                    }
+                    if (params.search) {
+                        this.searchModel.on('search', this, params.search);
+                    }
+                });
             }
         }
         Parent.components = { ControlPanel };
-        Parent.env = env;
         Parent.template = xml`
             <ControlPanel
                 t-props="state"
                 searchModel="searchModel"
             />`;
 
-        const parent = new Parent();
-        await parent.mount(prepareTarget(debug), { position: 'first-child' });
-
-        const controlPanel = parent.controlPanel;
-        const destroy = controlPanel.destroy;
-        controlPanel.destroy = function () {
-            controlPanel.destroy = destroy;
-            parent.destroy();
-        };
-        controlPanel.getQuery = () => parent.searchModel.get('query');
-
+        const target = getFixture();
+        const parent = await mount(Parent, target, { env });
+        const controlPanel = parent.child;
+        controlPanel.getQuery = () => parent.searchModel.get("query");
+        registerCleanup(() => {
+            destroy(parent);
+        });
         return controlPanel;
     }
 

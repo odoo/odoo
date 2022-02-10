@@ -9,7 +9,7 @@ import { WithSearch } from "@web/search/with_search/with_search";
 import { useActionLinks } from "@web/views/helpers/view_hook";
 import { extractLayoutComponents } from "@web/views/layout";
 
-const { Component, useSubEnv } = owl;
+const { Component, onWillUpdateProps, onWillStart, useSubEnv } = owl;
 const viewRegistry = registry.category("views");
 
 /** @typedef {Object} Config
@@ -151,10 +151,14 @@ export class View extends Component {
                 ...this.env.config,
             },
         });
+
         useActionLinks({ resModel });
+
+        onWillStart(this.onWillStart);
+        onWillUpdateProps(this.onWillUpdateProps);
     }
 
-    async willStart() {
+    async onWillStart() {
         // determine view type
         let ViewClass = viewRegistry.get(this.props.type);
         const type = ViewClass.type;
@@ -250,6 +254,7 @@ export class View extends Component {
         const viewProps = {
             info: { actionMenus, mode: this.props.display.mode },
             arch,
+            className: "o_action o_view_controller",
             fields,
             resModel,
             useSampleModel: false,
@@ -271,12 +276,8 @@ export class View extends Component {
         }
 
         let { noContentHelp } = this.props;
-        if (noContentHelp !== undefined) {
-            const htmlHelp = document.createElement("div");
-            htmlHelp.innerHTML = noContentHelp;
-            if (htmlHelp.innerText.trim()) {
-                viewProps.info.noContentHelp = noContentHelp;
-            }
+        if (noContentHelp) {
+            viewProps.info.noContentHelp = noContentHelp;
         }
 
         // prepare the WithSearch component props
@@ -311,7 +312,7 @@ export class View extends Component {
         }
     }
 
-    async willUpdateProps(nextProps) {
+    async onWillUpdateProps(nextProps) {
         // we assume that nextProps can only vary in the search keys:
         // comparison, context, domain, groupBy, orderBy
         const { comparison, context, domain, groupBy, orderBy } = nextProps;

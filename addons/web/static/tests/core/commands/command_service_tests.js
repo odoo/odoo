@@ -11,13 +11,20 @@ import { registry } from "@web/core/registry";
 import { uiService, useActiveElement } from "@web/core/ui/ui_service";
 import testUtils from "web.test_utils";
 import { clearRegistryWithCleanup, makeTestEnv } from "../../helpers/mock_env";
-import { click, getFixture, nextTick, patchWithCleanup, triggerHotkey } from "../../helpers/utils";
+import {
+    click,
+    destroy,
+    getFixture,
+    mount,
+    nextTick,
+    patchWithCleanup,
+    triggerHotkey,
+} from "../../helpers/utils";
 
-const { Component, mount, xml } = owl;
+const { Component, xml } = owl;
 
 let env;
 let target;
-let testComponent;
 const serviceRegistry = registry.category("services");
 const commandCategoryRegistry = registry.category("command_categories");
 const commandProviderRegistry = registry.category("command_provider");
@@ -36,7 +43,6 @@ class TestComponent extends Component {
 }
 TestComponent.template = xml`
   <div>
-    <div class="o_dialog_container"/>
     <t t-component="DialogContainer.Component" t-props="DialogContainer.props" />
   </div>
 `;
@@ -70,11 +76,6 @@ QUnit.module("Command Service", {
         env = await makeTestEnv();
         target = getFixture();
     },
-    afterEach() {
-        if (testComponent) {
-            testComponent.destroy();
-        }
-    },
 });
 
 QUnit.test("commands evilness 👹", async (assert) => {
@@ -103,23 +104,23 @@ QUnit.test("useCommand hook", async (assert) => {
 
     class MyComponent extends TestComponent {
         setup() {
-            super.setup();
             useCommand("Take the throne", () => {
                 assert.step("Hodor");
             });
         }
     }
-    testComponent = await mount(MyComponent, { env, target });
+    const comp = await mount(MyComponent, target, { env });
 
     triggerHotkey("control+k");
     await nextTick();
     assert.containsOnce(target, ".o_command");
+
     assert.deepEqual(target.querySelector(".o_command").textContent, "Take the throne");
 
     await click(target, ".o_command");
     assert.verifySteps(["Hodor"]);
 
-    testComponent.unmount();
+    destroy(comp);
     triggerHotkey("control+k");
     await nextTick();
     assert.containsNone(target, ".o_command");
@@ -143,7 +144,7 @@ QUnit.test("useCommand hook when the activeElement change", async (assert) => {
     }
     OtherComponent.template = xml`<div></div>`;
 
-    await mount(MyComponent, { env, target });
+    await mount(MyComponent, target, { env });
     triggerHotkey("control+k");
     await nextTick();
     assert.containsN(target, ".o_command", 2);
@@ -153,7 +154,7 @@ QUnit.test("useCommand hook when the activeElement change", async (assert) => {
     );
     triggerHotkey("escape");
 
-    await mount(OtherComponent, { env, target });
+    await mount(OtherComponent, target, { env });
 
     triggerHotkey("control+k");
     await nextTick();
@@ -204,7 +205,7 @@ QUnit.test("global command with hotkey", async (assert) => {
         }
     }
     MyComponent.template = xml`<div></div>`;
-    await mount(MyComponent, { env, target });
+    await mount(MyComponent, target, { env });
 
     triggerHotkey("a");
     await nextTick();
@@ -230,7 +231,7 @@ QUnit.test("data-hotkey added to command palette", async (assert) => {
       <TestComponent />
     </div>
   `;
-    testComponent = await mount(MyComponent, { env, target });
+    await mount(MyComponent, target, { env });
 
     // Open palette
     triggerHotkey("control+k");
@@ -292,7 +293,7 @@ QUnit.test("access to hotkeys from the command palette", async (assert) => {
       <TestComponent />
     </div>
   `;
-    testComponent = await mount(MyComponent, { env, target });
+    await mount(MyComponent, target, { env });
 
     // Open palette
     triggerHotkey("control+k");
@@ -333,7 +334,7 @@ QUnit.test("access to hotkeys from the command palette", async (assert) => {
 QUnit.test("can be searched", async (assert) => {
     assert.expect(4);
 
-    testComponent = await mount(TestComponent, { env, target });
+    await mount(TestComponent, target, { env });
 
     // Register some commands
     function action() {}
@@ -402,7 +403,7 @@ QUnit.test("configure the empty message based on the namespace", async (assert) 
         emptyMessage: "Empty @",
     });
 
-    testComponent = await mount(TestComponent, { env, target });
+    await mount(TestComponent, target, { env });
 
     // Open palette
     triggerHotkey("control+k");
@@ -452,7 +453,7 @@ QUnit.test("footer displays the right tips", async (assert) => {
         name: "FirstName",
     });
 
-    testComponent = await mount(TestComponent, { env, target });
+    await mount(TestComponent, target, { env });
 
     // Open palette
     triggerHotkey("control+k");
@@ -513,7 +514,7 @@ QUnit.test("defined multiple providers with the same namespace", async (assert) 
             })),
     });
 
-    testComponent = await mount(TestComponent, { env, target });
+    await mount(TestComponent, target, { env });
 
     // Open palette
     triggerHotkey("control+k");
@@ -557,7 +558,7 @@ QUnit.test("can switch between command providers", async (assert) => {
             })),
     });
 
-    testComponent = await mount(TestComponent, { env, target });
+    await mount(TestComponent, target, { env });
 
     // Open palette
     triggerHotkey("control+k");
@@ -622,7 +623,7 @@ QUnit.test("multi level commands", async (assert) => {
             })),
     });
 
-    testComponent = await mount(TestComponent, { env, target });
+    await mount(TestComponent, target, { env });
 
     // Open palette
     triggerHotkey("control+k");
@@ -696,7 +697,7 @@ QUnit.test("multi level commands with hotkey", async (assert) => {
         ],
     });
 
-    testComponent = await mount(TestComponent, { env, target });
+    await mount(TestComponent, target, { env });
 
     // Open palette
     triggerHotkey("control+k");
@@ -737,7 +738,7 @@ QUnit.test("multi level commands with hotkey", async (assert) => {
 });
 
 QUnit.test("command categories", async (assert) => {
-    testComponent = await mount(TestComponent, { env, target });
+    await mount(TestComponent, target, { env });
 
     // Register some commands
     function action() {}
@@ -776,7 +777,7 @@ QUnit.test("data-command-category", async (assert) => {
       <TestComponent />
     </div>
   `;
-    testComponent = await mount(MyComponent, { env, target });
+    await mount(MyComponent, target, { env });
 
     // Open palette
     triggerHotkey("control+k");
@@ -811,7 +812,7 @@ QUnit.test("display shortcuts correctly for non-MacOS ", async (assert) => {
     </div>
   `;
 
-    testComponent = await mount(MyComponent, { env, target });
+    await mount(MyComponent, target, { env });
 
     // Register some commands
     function action() {}
@@ -852,7 +853,7 @@ QUnit.test("display shortcuts correctly for MacOS ", async (assert) => {
         </div>
     `;
 
-    testComponent = await mount(MyComponent, { env, target });
+    await mount(MyComponent, target, { env });
 
     // Register some commands
     function action() {}
@@ -894,7 +895,7 @@ QUnit.test(
     </div>
   `;
 
-        testComponent = await mount(MyComponent, { env, target });
+        await mount(MyComponent, target, { env });
         // Open palette
         triggerHotkey("control+k");
         await nextTick();
@@ -927,7 +928,7 @@ QUnit.test("display shortcuts correctly for MacOS with a new overlayModifier", a
     </div>
   `;
 
-    testComponent = await mount(MyComponent, { env, target });
+    await mount(MyComponent, target, { env });
     // Open palette
     triggerHotkey("control+k");
     await nextTick();

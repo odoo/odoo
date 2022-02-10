@@ -42,8 +42,8 @@ export class BlockUI extends Component {
             line2: "",
         });
 
-        this.props.bus.on("BLOCK", this, this.block);
-        this.props.bus.on("UNBLOCK", this, this.unblock);
+        this.props.bus.addEventListener("BLOCK", this.block.bind(this));
+        this.props.bus.addEventListener("UNBLOCK", this.unblock.bind(this));
     }
 
     replaceMessage(index) {

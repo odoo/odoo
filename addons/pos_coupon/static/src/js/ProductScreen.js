@@ -7,8 +7,8 @@ odoo.define('pos_coupon.ProductScreen', function (require) {
 
     const PosCouponProductScreen = (ProductScreen) =>
         class extends ProductScreen {
-            constructor() {
-                super(...arguments);
+            setup() {
+                super.setup();
                 useBarcodeReader({
                     coupon: this._onCouponScan,
                 });

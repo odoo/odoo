@@ -126,15 +126,10 @@ var AbstractView = Factory.extend({
         // button when the graph view is embedded.
         var isEmbedded = params.isEmbedded || false;
 
-        // The noContentHelper's message can be empty, i.e. either a real empty string
-        // or an empty html tag. In both cases, we consider the helper empty.
-        var help = params.noContentHelp || "";
-        var htmlHelp = document.createElement("div");
-        htmlHelp.innerHTML = help;
         this.rendererParams = {
             arch: this.arch,
             isEmbedded: isEmbedded,
-            noContentHelp: htmlHelp.innerText.trim() ? help : "",
+            noContentHelp: params.noContentHelp,
         };
 
         this.controllerParams = {

@@ -5,9 +5,11 @@ const {_t} = require('web.core');
 const {Markup} = require('web.utils');
 var tour = require('web_tour.tour');
 
+const { markup } = owl;
+
 tour.register('hr_recruitment_tour',{
     url: "/web",
-    rainbowManMessage: _t("<div>Great job! You hired a new colleague!</div><div>Try the Website app to publish job offers online.</div>"),
+    rainbowManMessage: markup(_t("<div>Great job! You hired a new colleague!</div><div>Try the Website app to publish job offers online.</div>")),
     fadeout: 'very_slow',
     sequence: 230,
 }, [tour.stepUtils.showAppsMenuItem(), {

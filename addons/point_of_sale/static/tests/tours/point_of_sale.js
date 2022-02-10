@@ -38,7 +38,7 @@ odoo.define('point_of_sale.tour.pricelist', function (require) {
     var steps = [{ // Leave category displayed by default
         content: 'waiting for loading to finish',
         extra_trigger: 'body .pos:not(:has(.loader))', // Pos has finished loading
-        trigger: '.o_loading_indicator:not(.o_loading)', // WebClient has finished Loading
+        trigger: 'body:not(:has(.o_loading_indicator))', // WebClient has finished Loading
         run: function () {
             var product_wall_shelf = posmodel.db.search_product_in_category(0, 'Wall Shelf Unit')[0];
             var product_small_shelf = posmodel.db.search_product_in_category(0, 'Small Shelf')[0];

@@ -22,7 +22,6 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
     }),
     custom_events: _.extend({}, AbstractController.prototype.custom_events, FieldManagerMixin.custom_events, {
         discard_changes: '_onDiscardChanges',
-        pager_changed: '_onPagerChanged',
         reload: '_onReload',
         resequence_records: '_onResequenceRecords',
         set_dirty: '_onSetDirty',
@@ -551,6 +550,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
             currentMinimum: (isGrouped ? state.groupsOffset : state.offset) + 1,
             limit: isGrouped ? state.groupsLimit : state.limit,
             size: isGrouped ? state.groupsCount : state.count,
+            onPagerChanged: this._onPagerChanged.bind(this),
         };
     },
     /**
@@ -801,9 +801,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      * @private
      * @param {OdooEvent} ev
      */
-    _onPagerChanged: async function (ev) {
-        ev.stopPropagation();
-        const { currentMinimum, limit } = ev.data;
+    _onPagerChanged: async function ({ currentMinimum, limit }) {
         const state = this.model.get(this.handle, { raw: true });
         const reloadParams = state.groupedBy && state.groupedBy.length ? {
                 groupsLimit: limit,

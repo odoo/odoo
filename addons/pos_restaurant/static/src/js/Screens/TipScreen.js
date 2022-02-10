@@ -4,15 +4,19 @@ odoo.define('pos_restaurant.TipScreen', function (require) {
     const Registries = require('point_of_sale.Registries');
     const PosComponent = require('point_of_sale.PosComponent');
     const { parse } = require('web.field_utils');
+    const { renderToString } = require('@web/core/utils/render');
+
+    const { onMounted } = owl;
 
     class TipScreen extends PosComponent {
-        constructor() {
-            super(...arguments);
+        setup() {
+            super.setup();
             this.state = this.currentOrder.uiState.TipScreen;
             this._totalAmount = this.currentOrder.get_total_with_tax();
-        }
-        mounted () {
-            this.printTipReceipt();
+
+            onMounted(() => {
+                this.printTipReceipt();
+            });
         }
         get overallAmountStr() {
             const tipAmount = parse.float(this.state.inputTipAmount || '0');
@@ -108,7 +112,7 @@ odoo.define('pos_restaurant.TipScreen', function (require) {
 
             for (let i = 0; i < receipts.length; i++) {
                 const data = receipts[i];
-                var receipt = this.env.qweb.renderToString('TipReceipt', {
+                var receipt = renderToString('TipReceipt', {
                     receipt: this.currentOrder.getOrderReceiptEnv().receipt,
                     data: data,
                     total: this.env.pos.format_currency(this.totalAmount),

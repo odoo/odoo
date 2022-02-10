@@ -219,16 +219,34 @@ Object.assign(Composer, {
     },
     props: {
         localId: String,
-        hasCurrentPartnerAvatar: Boolean,
-        hasDiscardButton: Boolean,
-        hasFollowers: Boolean,
+        hasCurrentPartnerAvatar: {
+            type: Boolean,
+            optional: true,
+        },
+        hasDiscardButton: {
+            type: Boolean,
+            optional: true,
+        },
+        hasFollowers: {
+            type: Boolean,
+            optional: true,
+        },
         hasMentionSuggestionsBelowPosition: {
             type: Boolean,
             optional: true,
         },
-        hasSendButton: Boolean,
-        hasThreadName: Boolean,
-        hasThreadTyping: Boolean,
+        hasSendButton: {
+            type: Boolean,
+            optional: true,
+        },
+        hasThreadName: {
+            type: Boolean,
+            optional: true,
+        },
+        hasThreadTyping: {
+            type: Boolean,
+            optional: true,
+        },
         showAttachmentsExtensions: {
             type: Boolean,
             optional: true,
@@ -237,8 +255,14 @@ Object.assign(Composer, {
             type: Boolean,
             optional: true,
         },
-        isCompact: Boolean,
-        isExpandable: Boolean,
+        isCompact: {
+            type: Boolean,
+            optional: true,
+        },
+        isExpandable: {
+            type: Boolean,
+            optional: true,
+        },
     },
     template: 'mail.Composer',
 });

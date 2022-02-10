@@ -8,7 +8,7 @@
                     <div class="controls">
                         <t t-if="!env.isMobile || !state.showSearchBar">
                             <div class="buttons">
-                                <button class="discard" t-on-click="trigger('close-screen')">
+                                <button class="discard" t-on-click="() => this.trigger('close-screen')">
                                     <span class="search-icon">
                                         <i class="fa fa-angle-double-left"/>
                                     </span>
@@ -16,19 +16,19 @@
                                         Back
                                     </t>
                                 </button>
-                                <button t-if="shouldShowNewOrderButton()" class="highlight" t-on-click="trigger('create-new-order')">New Order</button>
+                                <button t-if="shouldShowNewOrderButton()" class="highlight" t-on-click="() => this.trigger('create-new-order')">New Order</button>
                             </div>
                         </t>
                         <t t-if="env.isMobile">
                             <t t-if="state.showSearchBar">
-                                <button class="arrow-left" t-on-click="state.showSearchBar = !state.showSearchBar;">
+                                <button class="arrow-left" t-on-click="() => { state.showSearchBar = !state.showSearchBar }">
                                     <span class="search-icon">
                                         <i class="fa fa-angle-double-left"/>
                                     </span>
                                 </button>
                             </t>
                             <t t-else="">
-                                <button class="search" t-on-click="state.showSearchBar = !state.showSearchBar;">
+                                <button class="search" t-on-click="() => { state.showSearchBar = !state.showSearchBar }">
                                     <span class="search-icon">
                                         <i class="fa fa-search"/>
                                     </span>
@@ -39,10 +39,10 @@
                         <SearchBar t-if="state.showSearchBar" config="getSearchBarConfig()" placeholder="_placeholder" />
                         <div t-if="shouldShowPageControls()" class="item">
                             <div class="page-controls">
-                                <div class="previous" t-on-click="trigger('prev-page')">
+                                <div class="previous" t-on-click="() => this.trigger('prev-page')">
                                     <i class="fa fa-fw fa-caret-left" role="img" aria-label="Previous Order List" title="Previous Order List"></i>
                                 </div>
-                                <div class="next" t-on-click="trigger('next-page')">
+                                <div class="next" t-on-click="() => this.trigger('next-page')">
                                     <i class="fa fa-fw fa-caret-right" role="img" aria-label="Next Order List" title="Next Order List"></i>
                                 </div>
                             </div>
@@ -65,7 +65,7 @@
                                 <div class="col very-narrow" name="delete"></div>
                             </div>
                             <t t-foreach="_filteredOrderList" t-as="order" t-key="order.cid">
-                                <div class="order-row" t-att-class="{ highlight: isHighlighted(order) }" t-on-click="trigger('click-order', order)">
+                                <div class="order-row" t-att-class="{ highlight: isHighlighted(order) }" t-on-click="() => this.trigger('click-order', order)">
                                     <div class="col wide">
                                         <div t-if="env.isMobile">Date</div>
                                         <div><t t-esc="getDate(order)"></t></div>
@@ -94,7 +94,7 @@
                                         <div t-if="env.isMobile">Status</div>
                                         <div><t t-esc="getStatus(order)"></t></div>
                                     </div>
-                                    <div t-if="!shouldHideDeleteButton(order)" class="col very-narrow delete-button" name="delete" t-on-click.stop="trigger('delete-order', order)">
+                                    <div t-if="!shouldHideDeleteButton(order)" class="col very-narrow delete-button" name="delete" t-on-click.stop="() => this.trigger('delete-order', order)">
                                         <i class="fa fa-trash" aria-hidden="true"/><t t-if="env.isMobile"> Delete</t>
                                     </div>
                                     <div t-else="" class="col very-narrow"></div>
