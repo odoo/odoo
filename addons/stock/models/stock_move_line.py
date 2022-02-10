@@ -208,6 +208,8 @@ class StockMoveLine(models.Model):
                 packaging=self.move_id.product_packaging_id, additional_qty=additional_qty)
 
     def _get_default_dest_location(self):
+        if not self.user_has_groups('stock.group_stock_storage_categories'):
+            return self.location_dest_id[:1]
         if self.env.context.get('default_location_dest_id'):
             return self.env['stock.location'].browse([self.env.context.get('default_location_dest_id')])
         return (self.move_id.location_dest_id or self.picking_id.location_dest_id or self.location_dest_id)[0]
