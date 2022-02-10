@@ -31,9 +31,9 @@
                                 <li
                                     class="o-autocomplete--dropdown-item ui-menu-item"
                                     t-att-class="option.classList"
-                                    t-on-mouseenter="onOptionMouseEnter([source_index, option_index])"
-                                    t-on-mouseleave="onOptionMouseLeave([source_index, option_index])"
-                                    t-on-click="onOptionClick([source_index, option_index])"
+                                    t-on-mouseenter="() => this.onOptionMouseEnter([source_index, option_index])"
+                                    t-on-mouseleave="() => this.onOptionMouseLeave([source_index, option_index])"
+                                    t-on-click="() => this.onOptionClick([source_index, option_index])"
                                 >
                                     <a
                                         href="#"

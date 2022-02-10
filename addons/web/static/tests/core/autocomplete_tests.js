@@ -5,16 +5,22 @@ import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { registry } from "@web/core/registry";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { makeTestEnv } from "../helpers/mock_env";
-import { click, getFixture, patchWithCleanup, triggerEvent, triggerEvents } from "../helpers/utils";
+import {
+    click,
+    getFixture,
+    mount,
+    patchWithCleanup,
+    triggerEvent,
+    triggerEvents,
+} from "../helpers/utils";
 import { registerCleanup } from "../helpers/cleanup";
 
-const { Component, mount, useState, xml } = owl;
+const { Component, useState, xml } = owl;
 
 const serviceRegistry = registry.category("services");
 
 let env;
 let target;
-let parent;
 
 QUnit.module("Components", (hooks) => {
     hooks.beforeEach(async () => {
@@ -24,7 +30,6 @@ QUnit.module("Components", (hooks) => {
         patchWithCleanup(browser, {
             setTimeout: (fn) => fn(),
         });
-        registerCleanup(() => parent.destroy());
     });
 
     QUnit.module("AutoComplete");
@@ -40,7 +45,7 @@ QUnit.module("Components", (hooks) => {
             />
         `;
 
-        parent = await mount(Parent, { env, target });
+        await mount(Parent, target, { env });
         assert.containsOnce(target, ".o-autocomplete");
         assert.containsNone(target, ".o-autocomplete--dropdown-menu");
 
@@ -82,7 +87,7 @@ QUnit.module("Components", (hooks) => {
             />
         `;
 
-        parent = await mount(Parent, { env, target });
+        await mount(Parent, target, { env });
         assert.strictEqual(target.querySelector(".o-autocomplete--input").value, "Hello");
 
         await click(target, ".o-autocomplete--input");
@@ -107,7 +112,7 @@ QUnit.module("Components", (hooks) => {
             />
         `;
 
-        parent = await mount(Parent, { env, target });
+        await mount(Parent, target, { env });
 
         assert.containsNone(target, ".o-autocomplete--dropdown-menu");
         await triggerEvent(target, ".o-autocomplete--input", "input");
@@ -125,7 +130,7 @@ QUnit.module("Components", (hooks) => {
             />
         `;
 
-        parent = await mount(Parent, { env, target });
+        await mount(Parent, target, { env });
         assert.containsNone(target, ".o-autocomplete--dropdown-menu");
 
         await triggerEvents(target, ".o-autocomplete--input", ["focus", "click"]);
@@ -146,7 +151,7 @@ QUnit.module("Components", (hooks) => {
             />
         `;
 
-        parent = await mount(Parent, { env, target });
+        await mount(Parent, target, { env });
         assert.containsNone(target, ".o-autocomplete--dropdown-menu");
 
         await click(target, ".o-autocomplete--input");
@@ -167,7 +172,7 @@ QUnit.module("Components", (hooks) => {
             />
         `;
 
-        parent = await mount(Parent, { env, target });
+        await mount(Parent, target, { env });
         assert.containsNone(target, ".o-autocomplete--dropdown-menu");
 
         await click(target, ".o-autocomplete--input");
@@ -188,7 +193,7 @@ QUnit.module("Components", (hooks) => {
             />
         `;
 
-        parent = await mount(Parent, { env, target });
+        await mount(Parent, target, { env });
         assert.containsNone(target, ".o-autocomplete--dropdown-menu");
 
         await triggerEvents(target, ".o-autocomplete--input", ["focus", "click"]);
