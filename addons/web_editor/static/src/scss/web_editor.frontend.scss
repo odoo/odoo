@@ -4,15 +4,18 @@
     }
 }
 
+%loading-background-effect {
+    background-image: url('/web_editor/shape/web_editor/loading.svg?c1=o-color-1');
+    background-position: center center;
+    background-repeat: no-repeat;
+}
+
 .o_wysiwyg_loader {
+    @extend %loading-background-effect;
     @extend :disabled;
     pointer-events: none;
     min-height: 100px;
     color: transparent;
-}
-.o_wysiwyg_loading {
-    @include o-position-absolute($top: 50%, $left: 50%);
-    transform: translate(-50%, -50%)
 }
 
 .ui-autocomplete {

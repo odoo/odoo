@@ -97,9 +97,6 @@ Odoo Web Editor widget.
             'web_editor/static/src/js/frontend/loader.js',
             'web_editor/static/src/js/backend/**/*',
         ],
-        'web.assets_frontend_minimal': [
-            'web_editor/static/src/js/frontend/loader_loading.js',
-        ],
         'web.assets_frontend': [
             'web_editor/static/src/scss/web_editor.common.scss',
             'web_editor/static/src/scss/web_editor.frontend.scss',

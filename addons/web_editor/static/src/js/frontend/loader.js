@@ -41,6 +41,8 @@ exports.createWysiwyg = async (parent, options, additionnalAssets = []) => {
 
 exports.loadFromTextarea = async (parent, textarea, options) => {
     const $textarea = $(textarea);
+    const $form = $textarea.closest('form');
+
     const currentOptions = Object.assign({}, options);
     currentOptions.value = currentOptions.value || $textarea.val() || '';
     if (!currentOptions.value.trim()) {
@@ -48,16 +50,14 @@ exports.loadFromTextarea = async (parent, textarea, options) => {
     }
     const wysiwyg = await exports.createWysiwyg(parent, currentOptions);
 
-    const $wysiwygWrapper = $textarea.closest('.o_wysiwyg_textarea_wrapper');
-    const $form = $textarea.closest('form');
-
-    // hide and append the $textarea in $form so it's value will be send
-    // through the form.
-    $textarea.hide();
-    $form.append($textarea);
-    $wysiwygWrapper.html('');
-
-    await wysiwyg.appendTo($wysiwygWrapper);
+    // Instantiate the editor by first creating a special wrapper div after the
+    // textarea, adding the editor widget inside then finish by hiding the
+    // textarea (leave it there to send is value with the form).
+    const wrapperEl = document.createElement('div');
+    wrapperEl.classList.add('position-relative', 'o_wysiwyg_textarea_wrapper');
+    textarea.after(wrapperEl);
+    await wysiwyg.appendTo(wrapperEl);
+    textarea.classList.add('d-none');
     $form.find('.note-editable').data('wysiwyg', wysiwyg);
 
     // o_we_selected_image has not always been removed when
