@@ -8,15 +8,14 @@ import { popoverService } from "@web/core/popover/popover_service";
 import { registry } from "@web/core/registry";
 import { uiService } from "@web/core/ui/ui_service";
 import { makeTestEnv } from "../helpers/mock_env";
-import { click, getFixture, triggerEvent } from "../helpers/utils";
-import { registerCleanup } from "../helpers/cleanup";
+import { click, getFixture, mount, triggerEvent } from "../helpers/utils";
 import { makeFakeLocalizationService } from "../helpers/mock_services";
 import { createWebClient, doAction } from "../webclient/helpers";
 
 import FormView from "web.FormView";
 import legacyViewRegistry from "web.view_registry";
 
-const { Component, mount, xml } = owl;
+const { Component, xml } = owl;
 
 let serverData;
 let env;
@@ -67,12 +66,7 @@ QUnit.module("Components", (hooks) => {
         env = await makeTestEnv({ serverData });
         target = getFixture();
 
-        const mainComponentsContainer = await mount(MainComponentsContainer, {
-            env,
-            target,
-        });
-        registerCleanup(() => mainComponentsContainer.destroy());
-        registerCleanup(() => domainSelector.destroy());
+        await mount(MainComponentsContainer, target, { env });
     });
 
     QUnit.module("DomainSelector");
@@ -101,9 +95,8 @@ QUnit.module("Components", (hooks) => {
         `;
 
         // Create the domain selector and its mock environment
-        domainSelector = await mount(Parent, {
+        domainSelector = await mount(Parent, target, {
             env,
-            target,
             props: {
                 resModel: "partner",
                 value: "[]",
@@ -206,9 +199,8 @@ QUnit.module("Components", (hooks) => {
         assert.expect(2);
 
         // Create the domain selector and its mock environment
-        domainSelector = await mount(DomainSelector, {
+        domainSelector = await mount(DomainSelector, target, {
             env,
-            target,
             props: {
                 resModel: "partner",
                 value: `[("datetime", "=", "2017-03-27 15:42:00")]`,
@@ -241,9 +233,8 @@ QUnit.module("Components", (hooks) => {
         assert.expect(1);
 
         // Create the domain selector and its mock environment
-        domainSelector = await mount(DomainSelector, {
+        domainSelector = await mount(DomainSelector, target, {
             env,
-            target,
             props: {
                 resModel: "partner",
                 value: `[("product_id", "ilike", 1)]`,
@@ -268,9 +259,8 @@ QUnit.module("Components", (hooks) => {
         assert.expect(1);
 
         // Create the domain selector and its mock environment
-        domainSelector = await mount(DomainSelector, {
+        domainSelector = await mount(DomainSelector, target, {
             env,
-            target,
             props: {
                 resModel: "product",
                 value: `[("name", "=", parent.foo)]`,
@@ -290,9 +280,8 @@ QUnit.module("Components", (hooks) => {
         assert.expect(1);
 
         // Create the domain selector and its mock environment
-        domainSelector = await mount(DomainSelector, {
+        domainSelector = await mount(DomainSelector, target, {
             env,
-            target,
             props: {
                 resModel: "partner",
                 value: "[]",
@@ -374,7 +363,7 @@ QUnit.module("Components", (hooks) => {
             />
         `;
         // Create the domain selector and its mock environment
-        domainSelector = await mount(Parent, { env, target });
+        domainSelector = await mount(Parent, target, { env });
 
         assert.containsOnce(
             domainSelector.el,
