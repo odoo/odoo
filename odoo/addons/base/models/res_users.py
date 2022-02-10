@@ -205,12 +205,10 @@ class Groups(models.Model):
                     rgir.gid
                 FROM
                     res_groups_implied_rel rgir
-                LEFT JOIN
-                    res_groups_implied_rel rgirr ON rgirr.hid=rgir.gid
                 JOIN
                     res_groups rg ON rg.id=rgir.gid
                 WHERE
-                    rgir.hid IN %s and rg.category_id IN %s
+                    rgir.hid IN %s and rg.category_id = %s
 
                 UNION ALL
 
@@ -221,16 +219,16 @@ class Groups(models.Model):
                 JOIN
                     group_implied_tree git ON git.gid = rgirr.hid
                 JOIN
-                    res_groups rg ON rg.id=git.gid
+                    res_groups rg ON rg.id=rgirr.gid
                 WHERE
-                    rg.category_id IN %s
+                    rg.category_id = %s
             )
             SELECT
                 gid
             FROM
                 group_implied_tree;
         """
-        self.env.cr.execute(query, [tuple(self.ids), tuple(self.category_id.ids), tuple(self.category_id.ids)])
+        self.env.cr.execute(query, [tuple(self.ids), self.category_id.id, self.category_id.id])
         return [x[0] for x in self.env.cr.fetchall()]
 
     def check_group_inheritance(self):
