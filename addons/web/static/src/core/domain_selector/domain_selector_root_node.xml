@@ -5,14 +5,14 @@
         <div
             class="o_domain_node o_domain_tree o_domain_selector"
             aria-atomic="true"
-            t-att-class="props.readonly ? 'o_read_mode' : 'o_edit_mode'"
+            t-attf-class="{{ props.className }} {{ props.readonly ? 'o_read_mode' : 'o_edit_mode'}}"
         >
             <t t-if="!hasNode">
                 <span>Match <strong>All records</strong></span>
                 <t t-if="!props.readonly">
                     <button
                         class="btn btn-sm btn-primary o_domain_add_first_node_button"
-                        t-on-click="insertNode('leaf')"
+                        t-on-click="() => this.insertNode('leaf')"
                     >
                         <i class="fa fa-plus"/> Add filter
                     </button>

@@ -190,12 +190,13 @@ Object.assign(DomainSelector, {
         DomainSelectorRootNode,
     },
     props: {
+        className: { type: String, optional: true },
         resModel: String,
         value: String,
-        readonly: Boolean,
-        update: Function,
-        isDebugMode: Boolean,
-        defaultLeafValue: Array,
+        readonly: { type: Boolean, optional: true },
+        update: { type: Function, optional: true },
+        isDebugMode: { type: Boolean, optional: true },
+        defaultLeafValue: { type: Array, optional: true },
     },
     defaultProps: {
         readonly: true,

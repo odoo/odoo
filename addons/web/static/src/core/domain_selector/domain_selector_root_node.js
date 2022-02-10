@@ -25,6 +25,9 @@ export class DomainSelectorRootNode extends Component {
         this.props.node.update(ev.target.value, true);
     }
 }
+DomainSelectorBranchNode.props = {
+    className: { type: String, optional: true },
+};
 DomainSelectorRootNode.template = "web.DomainSelectorRootNode";
 DomainSelectorRootNode.components = {
     DomainSelectorBranchNode,

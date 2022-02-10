@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web._DomainSelector" owl="1">
-        <t t-set="tree" t-value="buildTree()" />
+        <t t-set="tree" t-value="() => this.buildTree()" /> <!-- WOWL don't know how to adapt this -->
         <t t-if="tree">
             <DomainSelectorRootNode
                 value="props.value"
@@ -10,10 +10,11 @@
                 readonly="props.readonly"
                 resModel="props.resModel"
                 isDebugMode="props.isDebugMode"
+                className="props.className"
             />
         </t>
         <t t-else="">
-            <div>This domain is not supported.</div>
+            <div class="props.className">This domain is not supported.</div>
         </t>
     </t>
 

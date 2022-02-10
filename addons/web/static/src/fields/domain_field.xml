@@ -10,7 +10,7 @@
                     readonly="props.readonly"
                     update="(newDomain) => props.update(newDomain)"
                     isDebugMode="!!env.debug"
-                    t-att-class="props.readonly ? 'o_read_mode' : 'o_edit_mode'"
+                    className="props.readonly ? 'o_read_mode' : 'o_edit_mode'"
                 />
                 <div class="o_field_domain_panel">
                     <t t-if="state.recordCount !== null">
