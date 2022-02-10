@@ -92,6 +92,10 @@ export class NavBar extends Component {
             .reverse();
     }
 
+    // This dummy setter is only here to prevent conflicts between the
+    // Enterprise NavBar extension and the Website NavBar patch.
+    set systrayItems(_) {}
+
     /**
      * Adapt will check the available width for the app sections to get displayed.
      * If not enough space is available, it will replace by a "more" menu

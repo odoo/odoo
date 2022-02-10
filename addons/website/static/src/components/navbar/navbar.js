@@ -35,5 +35,5 @@ patch(NavBar.prototype, 'website_navbar', {
                 .reverse();
         }
         return this._super();
-    }
+    },
 });
