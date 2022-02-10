@@ -239,14 +239,13 @@ class Web_Editor(http.Controller):
         removal_blocked_by = {}
 
         for attachment in Attachment.browse(ids):
-            # in-document URLs are html-escaped, a straight search will not
-            # find them
-            url = tools.html_escape(attachment.local_url)
-            views = Views.search([
-                "|",
-                ('arch_db', 'like', '"%s"' % url),
-                ('arch_db', 'like', "'%s'" % url)
-            ])
+            if attachment.image_src:
+                # in-document URLs are html-escaped, a straight search will not
+                # find them
+                src = str(tools.html_escape(attachment.image_src))
+                views = Views.search([('arch_db', 'like', '%s' % src)])
+            else:
+                views = Views.search([('arch_db', 'like', 'web/content/%s?' % attachment.id)])
 
             if views:
                 removal_blocked_by[attachment.id] = views.read(['name'])

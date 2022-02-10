@@ -16,7 +16,7 @@
                     <t t-foreach="state.images" t-as="image" t-key="image.src">
                         <MetaImage active="image.active" custom="image.custom" src="image.src" selectImage="src => this.selectImage(src)"/>
                     </t>
-                    <div class="o_meta_img_upload m-1" title="Click to choose more images">
+                    <div class="o_meta_img_upload m-1" title="Click to choose more images" t-on-click="openMediaDialog">
                         <i class="fa fa-upload"/>
                     </div>
                 </div>
