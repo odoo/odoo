@@ -251,7 +251,7 @@ class AdyenController(http.Controller):
         :return: The '[accepted]' string to acknowledge the notification
         :rtype: str
         """
-        data = request.jsonrequest
+        data = request.dispatcher.jsonrequest
         for notification_item in data['notificationItems']:
             notification_data = notification_item['NotificationRequestItem']
 

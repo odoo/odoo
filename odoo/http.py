@@ -243,7 +243,8 @@ ROUTING_KEYS = {
     'alias', 'host', 'methods',
 }
 
-...
+# The mimetypes of safe image types
+SAFE_IMAGE_MIMETYPES = {'image/jpeg', 'image/png', 'image/gif', 'image/x-icon'}
 
 # The duration of a user session before it is considered expired,
 # three months.
@@ -263,7 +264,10 @@ STATIC_CACHE_LONG = 60 * 60 * 24 * 365
 class SessionExpiredException(Exception):
     pass
 
-...
+def content_disposition(filename):
+    return "attachment; filename*=UTF-8''{}".format(
+        url_quote(filename, safe='')
+    )
 
 def db_list(force=False, host=None):
     """
@@ -316,8 +320,6 @@ def db_filter(dbs, host=None):
         return sorted(exposed_dbs.intersection(dbs))
 
     return list(dbs)
-
-...
 
 def is_cors_preflight(request, endpoint):
     return request.httprequest.method == 'OPTIONS' and endpoint.routing.get('cors', False)
@@ -413,7 +415,20 @@ def serialize_exception(exception):
         'context': getattr(exception, 'context', {}),
     }
 
-...
+def set_safe_image_headers(headers, content):
+    """Return new headers based on `headers` but with `Content-Length` and
+    `Content-Type` set appropriately depending on the given `content` only if it
+    is safe to do, as well as `X-Content-Type-Options: nosniff` so that if the
+    file is of an unsafe type, it is not interpreted as that type if the
+    `Content-type` header was already set to a different mimetype
+    """
+    headers = werkzeug.datastructures.Headers(headers)
+    content_type = guess_mimetype(content)
+    if content_type in SAFE_IMAGE_MIMETYPES:
+        headers['Content-Type'] = content_type
+    headers['X-Content-Type-Options'] = 'nosniff'
+    headers['Content-Length'] = len(content)
+    return list(headers)
 
 
 # =========================================================
@@ -896,7 +911,7 @@ class Request:
         self.httprequest = httprequest
         self.future_response = FutureResponse()
         self.dispatcher = _dispatchers['http'](self)  # until we match
-        ...
+        #self.params = {}  # set by the Dispatcher
 
         self.session = self._get_session()
         self.db = self._get_dbname()
@@ -1078,13 +1093,69 @@ class Request:
         params.pop('session_id', None)
         return params
 
-    ...
+    def _get_profiler_context_manager(self):
+        """
+        Get a profiler when the profiling is enabled and the requested
+        URL is profile-safe. Otherwise, get a context-manager that does
+        nothing.
+        """
+        if self.session.profile_session and self.db:
+            if self.session.profile_expiration < str(datetime.now()):
+                # avoid having session profiling for too long if user forgets to disable profiling
+                self.session.profile_session = None
+                _logger.warning("Profiling expiration reached, disabling profiling")
+            elif 'set_profiling' in self.httprequest.path:
+                _logger.debug("Profiling disabled on set_profiling route")
+            elif self.httprequest.path.startswith('/longpolling'):
+                _logger.debug("Profiling disabled for longpolling")
+            elif odoo.evented:
+                # only longpolling should be in a evented server, but this is an additional safety
+                _logger.debug("Profiling disabled for evented server")
+            else:
+                try:
+                    return profiler.Profiler(
+                        db=self.db,
+                        description=self.httprequest.full_path,
+                        profile_session=self.session.profile_session,
+                        collectors=self.session.profile_collectors,
+                        params=self.session.profile_params,
+                    )
+                except Exception:
+                    _logger.exception("Failure during Profiler creation")
+                    self.session.profile_session = None
+
+        return contextlib.nullcontext()
 
     def _inject_future_response(self, response):
         response.headers.extend(self.future_response.headers)
         return response
 
-    ...
+    def make_response(self, data, headers=None, cookies=None):
+        """ Helper for non-HTML responses, or HTML responses with custom
+        response headers or cookies.
+
+        While handlers can just return the HTML markup of a page they want to
+        send as a string if non-HTML data is returned they need to create a
+        complete response object, or the returned data will not be correctly
+        interpreted by the clients.
+
+        :param basestring data: response body
+        :param headers: HTTP headers to set on the response
+        :type headers: ``[(name, value)]``
+        :param collections.Mapping cookies: cookies to set on the client
+        """
+        response = Response(data, headers=headers)
+        if cookies:
+            for k, v in cookies.items():
+                response.set_cookie(k, v)
+        return response
+
+    def not_found(self, description=None):
+        """ Shortcut for a `HTTP 404
+        <http://tools.ietf.org/html/rfc7231#section-6.5.4>`_ (Not Found)
+        response
+        """
+        return NotFound(description)
 
     def redirect(self, location, code=303, local=True):
         # compatibility, Werkzeug support URL as location
@@ -1101,7 +1172,23 @@ class Request:
             location += '?' + url_encode(query)
         return self.redirect(location, code=code, local=local)
 
-    ...
+    def render(self, template, qcontext=None, lazy=True, **kw):
+        """ Lazy render of a QWeb template.
+
+        The actual rendering of the given template will occur at then end of
+        the dispatching. Meanwhile, the template and/or qcontext can be
+        altered or even replaced by a static response.
+
+        :param basestring template: template to render
+        :param dict qcontext: Rendering context to use
+        :param bool lazy: whether the template rendering should be deferred
+                          until the last possible moment
+        :param kw: forwarded to werkzeug's Response object
+        """
+        response = Response(template=template, qcontext=qcontext, **kw)
+        if not lazy:
+            return response.render()
+        return response
 
     def _save_session(self):
         """ Save a modified session on disk. """
@@ -1546,13 +1633,34 @@ class Application:
             server that this application must call in order to send the
             HTTP response status line and the response headers.
         """
-        ...
+        current_thread = threading.current_thread()
+        current_thread.query_count = 0
+        current_thread.query_time = 0
+        current_thread.perf_t0 = time.time()
+
+        if odoo.tools.config['proxy_mode'] and environ.get("HTTP_X_FORWARDED_HOST"):
+            # The ProxyFix middleware has a side effect of updating the
+            # environ, see https://github.com/pallets/werkzeug/pull/2184
+            def fake_app(environ, start_response):
+                return []
+            def fake_start_response(status, headers):
+                return
+            ProxyFix(fake_app)(environ, fake_start_response)
+
+        # Some URLs in website are concatened, first url ends with /,
+        # second url starts with /, resulting url contains two following
+        # slashes that must be merged.
+        if environ['REQUEST_METHOD'] == 'GET' and '//' in environ['PATH_INFO']:
+            response = werkzeug.utils.redirect(
+                environ['PATH_INFO'].replace('//', '/'), 301)
+            return response(environ, start_response)
 
         httprequest = werkzeug.wrappers.Request(environ)
-        ...
+        httprequest.parameter_storage_class = (
+            werkzeug.datastructures.ImmutableOrderedMultiDict)
         request = Request(httprequest)
         _request_stack.push(request)
-        ...
+        current_thread.url = httprequest.url
 
         try:
             segments = httprequest.path.split('/')
@@ -1562,8 +1670,8 @@ class Application:
                     return response(environ, start_response)
 
             if request.db:
-                ...
-                response = request._serve_db()
+                with request._get_profiler_context_manager():
+                    response = request._serve_db()
             else:
                 response = request._serve_nodb()
             return response(environ, start_response)

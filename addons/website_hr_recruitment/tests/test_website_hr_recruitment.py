@@ -12,10 +12,11 @@ class TestWebsiteHrRecruitmentForm(odoo.tests.HttpCase):
             'is_published': True,
         })
 
-        self.start_tour("/", 'website_hr_recruitment_tour')
+        with odoo.tests.RecordCapturer(self.env['hr.applicant'], []) as capt:
+            self.start_tour("/", 'website_hr_recruitment_tour')
 
         # check result
-        record = self.env['hr.applicant'].search([('description', '=', '### HR RECRUITMENT TEST DATA ###')])
+        record = capt.records
         self.assertEqual(len(record), 1)
         self.assertEqual(record.partner_name, "John Smith")
         self.assertEqual(record.email_from, "john@smith.com")

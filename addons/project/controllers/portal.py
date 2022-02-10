@@ -126,7 +126,7 @@ class ProjectCustomerPortal(CustomerPortal):
 
     def _prepare_project_sharing_session_info(self, project, task=None):
         session_info = request.env['ir.http'].session_info()
-        user_context = request.session.get_context() if request.session.uid else {}
+        user_context = dict(request.env.context) if request.session.uid else {}
         mods = conf.server_wide_modules or []
         qweb_checksum = HomeStaticTemplateHelpers.get_qweb_templates_checksum(debug=request.session.debug, bundle="project.assets_qweb")
         lang = user_context.get("lang")

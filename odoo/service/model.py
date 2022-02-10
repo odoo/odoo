@@ -44,6 +44,7 @@ def dispatch(method, params):
 
 def execute_cr(cr, uid, obj, method, *args, **kw):
     # clean cache etc if we retry the same transaction
+    cr.reset()
     env = odoo.api.Environment(cr, uid, {})
     recs = env.get(obj)
     if recs is None:

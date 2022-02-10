@@ -577,7 +577,7 @@ class Website(Home):
         return request.render("website.list_website_pages", values)
 
     @http.route(['/website/add', '/website/add/<path:path>'], type='http', auth="user", website=True, methods=['POST'])
-    def pagenew(self, path="", noredirect=False, add_menu=False, template=False, **kwargs):
+    def pagenew(self, path="", add_menu=False, template=False, **kwargs):
         # for supported mimetype, get correct default template
         _, ext = os.path.splitext(path)
         ext_special_case = ext and ext in _guess_mimetype() and ext != '.html'
@@ -590,8 +590,6 @@ class Website(Home):
         template = template and dict(template=template) or {}
         page = request.env['website'].new_page(path, add_menu=add_menu, **template)
         url = page['url']
-        if noredirect:
-            return werkzeug.wrappers.Response(url, mimetype='text/plain')
 
         if ext_special_case:  # redirect non html pages to backend to edit
             return werkzeug.utils.redirect('/web#id=' + str(page.get('view_id')) + '&view_type=form&model=ir.ui.view')

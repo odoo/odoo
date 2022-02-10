@@ -283,7 +283,7 @@ class IrAsset(models.Model):
         # Main source: the current registry list
         # Second source of modules: server wide modules
         # Third source: the currently loading module from the context (similar to ir_ui_view)
-        return self.env.registry._init_modules | set(odoo.conf.server_wide_modules or []) | set(self.env.context.get('install_module', []))
+        return self.env.registry._init_modules.union(odoo.conf.server_wide_modules or []).union(self.env.context.get('install_module', []))
 
     def _get_paths(self, path_def, installed, extensions=None):
         """
