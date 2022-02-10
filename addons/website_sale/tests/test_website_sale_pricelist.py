@@ -36,7 +36,8 @@ class TestWebsitePriceList(TransactionCase):
         self.website = self.env.ref('website.default_website')
         self.website.user_id = self.env.user
 
-        (self.env['product.pricelist'].search([]) - self.env.ref('product.list0')).write({'website_id': False, 'active': False})
+        self.env['product.pricelist'].search([]).action_archive()
+        self.env['product.pricelist'].create({'name': 'Public Pricelist'})
         self.benelux = self.env['res.country.group'].create({
             'name': 'BeNeLux',
             'country_ids': [(6, 0, (self.env.ref('base.be') + self.env.ref('base.lu') + self.env.ref('base.nl')).ids)]
@@ -84,8 +85,6 @@ class TestWebsitePriceList(TransactionCase):
             'compute_price': 'formula',
             'base': 'list_price',
         })
-        self.env.ref('product.list0').website_id = self.website.id
-        self.website.pricelist_id = self.ref('product.list0')
 
         ca_group = self.env['res.country.group'].create({
             'name': 'Canada',
@@ -228,7 +227,8 @@ class TestWebsitePriceList(TransactionCase):
                 'product_uom': product.uom_id.id,
                 'price_unit': product.list_price,
                 'tax_id': False,
-            })]
+            })],
+            'website_id': current_website.id,
         })
         sol = so.order_line
         self.assertEqual(sol.price_total, 100.0)

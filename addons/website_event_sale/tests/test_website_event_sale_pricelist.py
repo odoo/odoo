@@ -17,7 +17,7 @@ class TestWebsiteEventPriceList(TestWebsiteEventSaleCommon):
         cls.WebsiteSaleController = WebsiteSale()
 
     def test_pricelist_different_currency(self):
-
+        self.env['product.pricelist'].search([('id', '!=', self.pricelist.id)]).action_archive()
         so_line = self.env['sale.order.line'].create({
             'event_id': self.event.id,
             'event_ticket_id': self.ticket.id,

@@ -28,7 +28,7 @@
                         <td name="td_option_price_unit">
                             <strong class="text-end">
                                 <div t-field="option.price_unit"
-                                    t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'
+                                    t-options='{"widget": "monetary", "display_currency": doc.currency_id}'
                                     t-att-style="option.discount and 'text-decoration: line-through' or None"
                                     t-att-class="option.discount and 'text-danger' or None"/>
                                 <div t-if="option.discount">

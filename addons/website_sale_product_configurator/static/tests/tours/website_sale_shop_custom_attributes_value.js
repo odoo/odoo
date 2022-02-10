@@ -14,10 +14,7 @@ tour.register("a_shop_custom_attribute_value", {
     trigger: 'a.js_add_cart_json:has(i.fa-plus)',
     run: 'click',
 }, {
-    trigger: 'span.text-danger span:contains(750)',
-    run: function (){}, // check
-}, {
-    trigger: 'span.oe_price span:contains(600)',
+    trigger: 'span.oe_currency_value:contains(750)',
     run: function (){}, // check
 }, {
     id: 'add_cart_step',
@@ -53,7 +50,7 @@ tour.register("a_shop_custom_attribute_value", {
     extra_trigger: '.oe_advanced_configurator_modal .js_product:has(strong:contains(Chair floor protection))',
     run: 'click'
 }, {
-    trigger: 'span:contains(1,257.00)',
+    trigger: 'span:contains(1,557.00)',
     run: function (){}, // check
 }, {
     trigger: 'button:has(span:contains(Proceed to Checkout))',

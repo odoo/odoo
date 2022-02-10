@@ -89,6 +89,7 @@ class TestUi(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon):
         # - that this test awaits for hardcoded USDs amount
         # we have to force company currency as USDs only for this test
         self.cr.execute("UPDATE res_company SET currency_id = %s WHERE id = %s", [self.env.ref('base.USD').id, self.env.ref('base.main_company').id])
+        self.env['product.pricelist'].create({'name': "Public Pricelist"})
 
         transfer_provider = self.env.ref('payment.payment_provider_transfer')
         transfer_provider.write({
@@ -109,6 +110,9 @@ class TestUi(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon):
             'is_published': True,
         })
         transfer_provider._transfer_ensure_pending_msg_is_set()
+
+        #  Ensure the use of USD (company currency)
+        self.env['product.pricelist'].create({'name': "Public Pricelist"})
 
         self.start_tour("/", 'event_buy_tickets', login="demo")
 

@@ -36,9 +36,6 @@ class PosConfig(models.Model):
                 ('journal_id.currency_id', 'in', (False, self.env.company.currency_id.id)),
         ])
 
-    def _default_pricelist(self):
-        return self.env['product.pricelist'].search([('company_id', 'in', (False, self.env.company.id)), ('currency_id', '=', self.env.company.currency_id.id)], limit=1)
-
     def _get_group_pos_manager(self):
         return self.env.ref('point_of_sale.group_pos_manager')
 
@@ -112,9 +109,9 @@ class PosConfig(models.Model):
     pos_session_username = fields.Char(compute='_compute_current_session_user')
     pos_session_state = fields.Char(compute='_compute_current_session_user')
     pos_session_duration = fields.Char(compute='_compute_current_session_user')
-    pricelist_id = fields.Many2one('product.pricelist', string='Default Pricelist', required=True, default=_default_pricelist,
-        help="The pricelist used if no customer is selected or if the customer has no Sale Pricelist configured.")
-    available_pricelist_ids = fields.Many2many('product.pricelist', string='Available Pricelists', default=_default_pricelist,
+    pricelist_id = fields.Many2one('product.pricelist', string='Default Pricelist',
+        help="The pricelist used if no customer is selected or if the customer has no Sale Pricelist configured if any.")
+    available_pricelist_ids = fields.Many2many('product.pricelist', string='Available Pricelists',
         help="Make several pricelists available in the Point of Sale. You can also apply a pricelist to specific customers from their contact form (in Sales tab). To be valid, this pricelist must be listed here as an available pricelist. Otherwise the default pricelist will apply.")
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.company)
     group_pos_manager_id = fields.Many2one('res.groups', string='Point of Sale Manager Group', default=_get_group_pos_manager,
@@ -302,7 +299,7 @@ class PosConfig(models.Model):
     @api.constrains('pricelist_id', 'use_pricelist', 'available_pricelist_ids', 'journal_id', 'invoice_journal_id', 'payment_method_ids')
     def _check_currencies(self):
         for config in self:
-            if config.use_pricelist and config.pricelist_id not in config.available_pricelist_ids:
+            if config.use_pricelist and config.pricelist_id and config.pricelist_id not in config.available_pricelist_ids:
                 raise ValidationError(_("The default pricelist must be included in the available pricelists."))
 
             # Check if the config's payment methods are compatible with its currency

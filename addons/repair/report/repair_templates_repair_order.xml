@@ -84,7 +84,7 @@
                                             <span t-esc="','.join(map( lambda x: x.name, line.tax_id))"/>
                                         </td>
                                         <td class="text-end o_price_total">
-                                            <span t-field="line.price_subtotal" t-options='{"widget": "monetary", "display_currency": o.pricelist_id.currency_id}'/>
+                                            <span t-field="line.price_subtotal" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                                        </td>
                                     </t>
                                 </tr>
@@ -108,7 +108,7 @@
                                         </td>
                                         <td class="text-end o_price_total">
                                             <span t-field="fees.price_subtotal"
-                                                t-options='{"widget": "monetary", "display_currency": o.pricelist_id.currency_id}'/>
+                                                t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                                        </td>
                                     </t>
                                 </tr>
@@ -124,21 +124,21 @@
                                         <td><strong>Total Without Taxes</strong></td>
                                         <td class="text-end">
                                             <span t-field="o.amount_untaxed"
-                                                t-options='{"widget": "monetary", "display_currency": o.pricelist_id.currency_id}'/>
+                                                t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>Taxes</td>
                                         <td class="text-end o_price_total">
                                             <span t-field="o.amount_tax"
-                                                t-options='{"widget": "monetary", "display_currency": o.pricelist_id.currency_id}'/>
+                                                t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                                         </td>
                                     </tr>
                                     <tr class="border-black o_total">
                                         <td><strong>Total</strong></td>
                                         <td class="text-end o_price_total">
                                             <span t-field="o.amount_total"
-                                                t-options='{"widget": "monetary", "display_currency": o.pricelist_id.currency_id}'/>
+                                                t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                                         </td>
                                     </tr>
                                 </t>

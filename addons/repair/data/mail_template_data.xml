@@ -14,7 +14,7 @@
         Hello <t t-out="object.partner_id.name or ''">Brandon Freeman</t>,<br/>
         Here is your repair order <strong t-out="object.name or ''">RO/00004</strong>
         <t t-if="object.invoice_method != 'none'">
-            amounting in <strong><t t-out="format_amount(object.amount_total, object.pricelist_id.currency_id) or ''">$ 100.00</t>.</strong><br/>
+            amounting in <strong><t t-out="format_amount(object.amount_total, object.currency_id) or ''">$ 100.00</t>.</strong><br/>
         </t>
         <t t-else="">
             .<br/>

@@ -1089,7 +1089,6 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
                 'product_uom': product.uom_id.id,
                 'price_unit': product.list_price
             })],
-            'pricelist_id': self.env.ref('product.list0').id,
         })
         so.action_confirm()
         self.assertEqual(so.state, 'done')

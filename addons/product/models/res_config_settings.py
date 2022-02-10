@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 
 
 class ResConfigSettings(models.TransientModel):
@@ -43,8 +43,16 @@ class ResConfigSettings(models.TransientModel):
 
     @api.onchange('group_product_pricelist')
     def _onchange_group_sale_pricelist(self):
-        if not self.group_product_pricelist and self.group_sale_pricelist:
-            self.group_sale_pricelist = False
+        if not self.group_product_pricelist:
+            if self.group_sale_pricelist:
+                self.group_sale_pricelist = False
+            active_pricelist = self.env['product.pricelist'].sudo().search([('active', '=', True)])
+            if active_pricelist:
+                return {
+                    'warning': {
+                    'message': _("You are deactivating the pricelist feature. "
+                                 "Every active pricelist will be archived.")
+                }}
 
     @api.onchange('product_pricelist_setting')
     def _onchange_product_pricelist_setting(self):
@@ -58,3 +66,8 @@ class ResConfigSettings(models.TransientModel):
         if not self.group_discount_per_so_line:
             pl = self.env['product.pricelist'].search([('discount_policy', '=', 'without_discount')])
             pl.write({'discount_policy': 'with_discount'})
+
+        if self.group_product_pricelist:
+            self.env['res.company']._activate_or_create_pricelists()
+        else:
+            self.env['product.pricelist'].sudo().search([]).action_archive()

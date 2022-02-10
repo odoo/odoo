@@ -172,15 +172,18 @@ class SaleOrder(models.Model):
         comodel_name='product.pricelist',
         string="Pricelist",
         compute='_compute_pricelist_id',
-        store=True, readonly=False, precompute=True, check_company=True, required=True,  # Unrequired company
+        store=True, readonly=False, precompute=True, check_company=True,  # Unrequired company
         states=READONLY_FIELD_STATES,
         tracking=1,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
         help="If you change the pricelist, only newly added lines will be affected.")
     currency_id = fields.Many2one(
-        related='pricelist_id.currency_id',
-        depends=["pricelist_id"],
-        store=True, precompute=True, ondelete="restrict")
+        comodel_name='res.currency',
+        compute='_compute_currency_id',
+        store=True,
+        precompute=True,
+        ondelete='restrict'
+    )
     currency_rate = fields.Float(
         string="Currency Rate",
         compute='_compute_currency_rate',
@@ -284,9 +287,10 @@ class SaleOrder(models.Model):
 
     show_update_fpos = fields.Boolean(
         string="Has Fiscal Position Changed", store=False)  # True if the fiscal position was changed
+    has_active_pricelist = fields.Boolean(
+        compute='_compute_has_active_pricelist')
     show_update_pricelist = fields.Boolean(
         string="Has Pricelist Changed", store=False)  # True if the pricelist was changed
-
 
     def init(self):
         create_index(self._cr, 'sale_order_date_order_id_idx', 'sale_order', ["date_order desc", "id desc"])
@@ -368,14 +372,21 @@ class SaleOrder(models.Model):
             order = order.with_company(order.company_id)
             order.payment_term_id = order.partner_id.property_payment_term_id
 
-    @api.depends('partner_id')
+    @api.depends('partner_id', 'company_id')
     def _compute_pricelist_id(self):
         for order in self:
+            if order.state != 'draft':
+                continue
             if not order.partner_id:
                 order.pricelist_id = False
                 continue
             order = order.with_company(order.company_id)
             order.pricelist_id = order.partner_id.property_product_pricelist
+
+    @api.depends('pricelist_id', 'company_id')
+    def _compute_currency_id(self):
+        for order in self:
+            order.currency_id = order.pricelist_id.currency_id or order.company_id.currency_id
 
     @api.depends('currency_id', 'date_order', 'company_id')
     def _compute_currency_rate(self):
@@ -397,6 +408,14 @@ class SaleOrder(models.Model):
                         date=order_date,
                     )
                 order.currency_rate = cache[key]
+
+    @api.depends('company_id')
+    def _compute_has_active_pricelist(self):
+        for order in self:
+            order.has_active_pricelist = bool(self.env['product.pricelist'].search(
+                [('company_id', 'in', (False, order.company_id.id)), ('active', '=', True)],
+                limit=1,
+            ))
 
     @api.depends('partner_id')
     def _compute_user_id(self):
@@ -619,6 +638,19 @@ class SaleOrder(models.Model):
                 }
             }
 
+    @api.onchange('company_id')
+    def _onchange_company_id_warning(self):
+        self.show_update_pricelist = True
+        if self.order_line and self.state == 'draft':
+            return {
+                'warning': {
+                    'title': _("Warning for the change of your quotation's company"),
+                    'message': _("Changing the company of an existing quotation might need some "
+                                 "manual adjustments in the details of the lines. You might "
+                                 "consider updating the prices."),
+                }
+            }
+
     @api.onchange('fiscal_position_id')
     def _onchange_fpos_id_show_update_fpos(self):
         if self.order_line and (
@@ -655,8 +687,7 @@ class SaleOrder(models.Model):
 
     @api.onchange('pricelist_id')
     def _onchange_pricelist_id_show_update_prices(self):
-        if self.order_line and self.pricelist_id and self._origin.pricelist_id != self.pricelist_id:
-            self.show_update_pricelist = True
+        self.show_update_pricelist = bool(self.order_line)
 
     #=== CRUD METHODS ===#
 
@@ -936,10 +967,13 @@ class SaleOrder(models.Model):
         self._recompute_prices()
 
         if self.pricelist_id:
-            self.message_post(body=_(
+            message = _(
                 "Product prices have been recomputed according to pricelist %s.",
                 self.pricelist_id._get_html_link(),
-            ))
+            )
+        else:
+            message = _("Product prices have been recomputed.")
+        self.message_post(body=message)
 
     def _recompute_prices(self):
         lines_to_recompute = self.order_line.filtered(lambda line: not line.display_type)

@@ -158,7 +158,7 @@
                                     <small><b class="text-muted">Your advantage</b></small>
                                     <small>
                                         <b t-field="sale_order.amount_undiscounted"
-                                            t-options='{"widget": "monetary", "display_currency": sale_order.pricelist_id.currency_id}'
+                                            t-options='{"widget": "monetary", "display_currency": sale_order.currency_id}'
                                             style="text-decoration: line-through"
                                             class="d-block mt-1"
                                             data-id="amount_undiscounted" />
@@ -546,7 +546,7 @@
                                 <td colspan="99">
                                     <strong class="mr16">Subtotal</strong>
                                     <span t-out="current_subtotal"
-                                        t-options='{"widget": "monetary", "display_currency": sale_order.pricelist_id.currency_id}'
+                                        t-options='{"widget": "monetary", "display_currency": sale_order.currency_id}'
                                     />
                                 </td>
                             </tr>
