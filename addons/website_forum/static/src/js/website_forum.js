@@ -16,7 +16,6 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
     selector: '.website_forum',
     xmlDependencies: [
         '/web_editor/static/src/xml/editor.xml',
-        '/website_forum/static/src/xml/website_forum_templates.xml',
         '/website_forum/static/src/xml/website_forum_share_templates.xml',
     ],
     events: {
