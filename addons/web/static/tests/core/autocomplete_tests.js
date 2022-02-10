@@ -13,7 +13,6 @@ import {
     triggerEvent,
     triggerEvents,
 } from "../helpers/utils";
-import { registerCleanup } from "../helpers/cleanup";
 
 const { Component, useState, xml } = owl;
 

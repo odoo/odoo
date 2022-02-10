@@ -3,8 +3,10 @@
 import { makeContext } from "@web/core/context";
 import { session } from "@web/session";
 import { registry } from "@web/core/registry";
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 
-const { Component } = owl;
+const { Component, onWillStart, onWillUpdateProps } = owl;
 let registryActionId = 0;
 /**
  * Action menus (or Action/Print bar, previously called 'Sidebar')
@@ -17,12 +19,13 @@ let registryActionId = 0;
  * @extends Component
  */
 export class ActionMenus extends Component {
-    async willStart() {
-        this.actionItems = await this.setActionItems(this.props);
-    }
-
-    async willUpdateProps(nextProps) {
-        this.actionItems = await this.setActionItems(nextProps);
+    setup() {
+        onWillStart(async () => {
+            this.actionItems = await this.setActionItems(this.props);
+        });
+        onWillUpdateProps(async (nextProps) => {
+            this.actionItems = await this.setActionItems(nextProps);
+        });
     }
 
     get printItems() {
@@ -117,18 +120,22 @@ export class ActionMenus extends Component {
     }
 }
 
+ActionMenus.components = {
+    Dropdown,
+    DropdownItem,
+};
 ActionMenus.props = {
     activeIds: { type: Array, element: [Number, String] }, // virtual IDs are strings.
     context: Object,
     resModel: String,
-    domain: { type: Array, optional: 1 },
-    isDomainSelected: { type: Boolean, optional: 1 },
+    domain: { type: Array, optional: true },
+    isDomainSelected: { type: Boolean, optional: true },
     items: {
         type: Object,
         shape: {
-            action: { type: Array, optional: 1 },
-            print: { type: Array, optional: 1 },
-            other: { type: Array, optional: 1 },
+            action: { type: Array, optional: true },
+            print: { type: Array, optional: true },
+            other: { type: Array, optional: true },
         },
     },
 };
