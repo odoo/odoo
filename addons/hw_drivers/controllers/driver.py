@@ -9,7 +9,6 @@ import subprocess
 import time
 
 from odoo import http, tools
-from odoo.http import send_file
 from odoo.modules.module import get_resource_path
 
 from odoo.addons.hw_drivers.event_manager import event_manager
@@ -102,6 +101,6 @@ class DriverController(http.Controller):
         Downloads the log file
         """
         if tools.config['logfile']:
-            res = send_file(tools.config['logfile'], mimetype="text/plain", as_attachment=True)
+            res = http.send_file(tools.config['logfile'], mimetype="text/plain", as_attachment=True)
             res.headers['Cache-Control'] = 'no-cache'
             return res

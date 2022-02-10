@@ -472,9 +472,7 @@ class ThreadedServer(CommonServer):
             _logger.debug("cron%d started!" % i)
 
     def http_thread(self):
-        def app(e, s):
-            return self.app(e, s)
-        self.httpd = ThreadedWSGIServerReloadable(self.interface, self.port, app)
+        self.httpd = ThreadedWSGIServerReloadable(self.interface, self.port, self.app)
         self.httpd.serve_forever()
 
     def http_spawn(self):
@@ -1134,17 +1132,12 @@ class WorkerCron(Worker):
         return db_names
 
     def process_work(self):
-        rpc_request = logging.getLogger('odoo.netsvc.rpc.request')
-        rpc_request_flag = rpc_request.isEnabledFor(logging.DEBUG)
         _logger.debug("WorkerCron (%s) polling for jobs", self.pid)
         db_names = self._db_list()
         if len(db_names):
             self.db_index = (self.db_index + 1) % len(db_names)
             db_name = db_names[self.db_index]
             self.setproctitle(db_name)
-            if rpc_request_flag:
-                start_time = time.time()
-                start_memory = memory_info(psutil.Process(os.getpid()))
 
             from odoo.addons import base
             base.models.ir_cron.ir_cron._process_jobs(db_name)
@@ -1152,13 +1145,6 @@ class WorkerCron(Worker):
             # dont keep cursors in multi database mode
             if len(db_names) > 1:
                 odoo.sql_db.close_db(db_name)
-            if rpc_request_flag:
-                run_time = time.time() - start_time
-                end_memory = memory_info(psutil.Process(os.getpid()))
-                vms_diff = (end_memory - start_memory) / 1024
-                logline = '%s time:%.3fs mem: %sk -> %sk (diff: %sk)' % \
-                    (db_name, run_time, start_memory / 1024, end_memory / 1024, vms_diff)
-                _logger.debug("WorkerCron (%s) %s", self.pid, logline)
 
             self.request_count += 1
             if self.request_count >= self.request_max and self.request_max < len(db_names):
@@ -1286,12 +1272,12 @@ def start(preload=None, stop=False):
     load_server_wide_modules()
 
     if odoo.evented:
-        server = GeventServer(odoo.service.wsgi_server.application)
+        server = GeventServer(odoo.http.root)
     elif config['workers']:
         if config['test_enable'] or config['test_file']:
             _logger.warning("Unit testing in workers mode could fail; use --workers 0.")
 
-        server = PreforkServer(odoo.service.wsgi_server.application)
+        server = PreforkServer(odoo.http.root)
 
         # Workaround for Python issue24291, fixed in 3.6 (see Python issue26721)
         if sys.version_info[:2] == (3,5):
@@ -1320,7 +1306,7 @@ def start(preload=None, stop=False):
                 assert libc.mallopt(ctypes.c_int(M_ARENA_MAX), ctypes.c_int(2))
             except Exception:
                 _logger.warning("Could not set ARENA_MAX through mallopt()")
-        server = ThreadedServer(odoo.service.wsgi_server.application)
+        server = ThreadedServer(odoo.http.root)
 
     watcher = None
     if 'reload' in config['dev_mode'] and not odoo.evented:

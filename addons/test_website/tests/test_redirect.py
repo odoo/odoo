@@ -57,7 +57,7 @@ class TestRedirect(HttpCase):
         self.assertTrue(country_ad.name in r.text, "Ensure the controller returned the expected value (2)")
         self.assertTrue(redirect_url in r.text, "Ensure the url_for has replaced the href URL in the DOM")
 
-    @mute_logger('odoo.addons.http_routing.models.ir_http')  # mute 403 warning
+    @mute_logger('odoo.http')  # mute 403 warning
     def test_02_redirect_308_RequestUID(self):
         self.env['website.rewrite'].create({
             'name': 'Test Website Redirect',

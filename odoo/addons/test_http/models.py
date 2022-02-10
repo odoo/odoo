@@ -35,7 +35,7 @@ class Stargate(models.Model):
 
     @api.depends('address')
     def _compute_sgc_designation(self):
-        """ Forge a sgc designation that look like a real one. """
+        """ Forge a sgc designation that looks like a real one. """
         for gate in self:
             if gate.galaxy_id.name not in ('Milky Way', 'Pegasus'):
                 gate.sgc_designation = False

@@ -39,6 +39,9 @@ class WebsiteForm(http.Controller):
             # what has been done inside the try clause.
             with request.env.cr.savepoint():
                 if request.env['ir.http']._verify_request_recaptcha_token('website_form'):
+                    # request.params was modified, update kwargs to reflect the changes
+                    kwargs = dict(request.params)
+                    kwargs.pop('model_name')
                     return self._handle_website_form(model_name, **kwargs)
             error = _("Suspicious activity detected by Google reCaptcha.")
         except (ValidationError, UserError) as e:
@@ -55,7 +58,7 @@ class WebsiteForm(http.Controller):
             })
 
         try:
-            data = self.extract_data(model_record, request.params)
+            data = self.extract_data(model_record, kwargs)
         # If we encounter an issue while extracting data
         except ValidationError as e:
             # I couldn't find a cleaner way to pass data to an exception

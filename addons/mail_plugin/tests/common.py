@@ -26,7 +26,7 @@ class TestMailPluginControllerCommon(HttpCase):
         to return the response you want.
         """
         def patched_auth_method_outlook(*args, **kwargs):
-            request.uid = self.user_test.id
+            request.update_env(user=self.user_test.id)
 
         data = {
             "id": 0,
@@ -62,7 +62,7 @@ class TestMailPluginControllerCommon(HttpCase):
         to return the response you want.
         """
         def patched_auth_method_outlook(*args, **kwargs):
-            request.uid = self.user_test.id
+            request.update_env(user=self.user_test.id)
 
         data = {
             "id": 0,

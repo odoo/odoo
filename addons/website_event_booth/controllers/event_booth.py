@@ -31,7 +31,9 @@ class WebsiteEventBoothController(WebsiteEventController):
 
     @http.route('/event/<model("event.event"):event>/booth/register',
                 type='http', auth='public', methods=['POST'], website=True, sitemap=False)
-    def event_booth_register(self, event, booth_category_id):
+    def event_booth_register(self, event, booth_category_id, event_booth_ids):
+        # `event_booth_id` in `requests.params` only contains the first
+        # checkbox, we re-parse the form using getlist to get them all
         event_booth_ids = request.httprequest.form.getlist('event_booth_ids')
 
         return request.redirect(('/event/%s/booth/register_form?' % event.id) + werkzeug.urls.url_encode({

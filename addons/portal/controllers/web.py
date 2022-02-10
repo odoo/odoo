@@ -19,7 +19,7 @@ class Home(main.Home):
             redirect = '/my'
         return super(Home, self)._login_redirect(uid, redirect=redirect)
 
-    @http.route('/web', type='http', auth="none")
+    @http.route()
     def web_client(self, s_action=None, **kw):
         if request.session.uid and not request.env['res.users'].sudo().browse(request.session.uid).has_group('base.group_user'):
             return request.redirect_query('/my', query=request.params)

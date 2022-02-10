@@ -75,15 +75,12 @@ class PaymentHttpCommon(PaymentTestUtils, HttpCase):
         :return: The response of the request
         :rtype: :class:`requests.models.Response`
         """
-        def _build_jsonrpc_payload(_data):
-            return {
-                'jsonrpc': '2.0',
-                'method': 'call',
-                'id': str(uuid4()),
-                'params': _data,
-            }
-
-        return self._make_json_request(url, data=_build_jsonrpc_payload(data))
+        return self.opener.post(url, json={
+            'jsonrpc': '2.0',
+            'method': 'call',
+            'id': str(uuid4()),
+            'params': data,
+        })
 
     def _get_tx_context(self, response, form_name):
         """Extracts txContext & other form info (acquirer & token ids)

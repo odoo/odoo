@@ -251,7 +251,7 @@ class WebsiteSale(http.Controller):
 
         pricelist = website.get_current_pricelist()
 
-        request.context = dict(request.context, pricelist=pricelist.id, partner=request.env.user.partner_id)
+        request.update_context(pricelist=pricelist.id, partner=request.env.user.partner_id)
 
         filter_by_price_enabled = website.is_view_active('website_sale.filter_products_price')
         if filter_by_price_enabled:
