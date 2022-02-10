@@ -36,6 +36,7 @@ const FacebookPageWidget = publicWidget.Widget.extend({
             allowTransparency: 'true',
         });
         this.$el.append(this.$iframe);
+        this.el.classList.remove('o_we_loading_bg_effect');
 
         this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerActive();
         return def;
@@ -47,6 +48,7 @@ const FacebookPageWidget = publicWidget.Widget.extend({
         this._super.apply(this, arguments);
 
         this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerUnactive();
+        this.el.classList.add('o_we_loading_bg_effect');
         if (this.$iframe) {
             this.$iframe.remove();
         }

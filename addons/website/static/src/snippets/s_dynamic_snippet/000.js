@@ -54,6 +54,7 @@ const DynamicSnippet = publicWidget.Widget.extend({
                 this._setupSizeChangedManagement(true);
                 this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerUnactive();
                 this._render();
+                this.el.classList.remove('o_we_loading_bg_effect');
                 this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerActive();
             });
     },
@@ -66,6 +67,7 @@ const DynamicSnippet = publicWidget.Widget.extend({
         this._toggleVisibility(false);
         this._setupSizeChangedManagement(false);
         this._clearContent();
+        this.el.classList.add('o_we_loading_bg_effect');
         this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerActive();
         this._super.apply(this, arguments);
     },

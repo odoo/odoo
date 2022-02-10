@@ -1620,6 +1620,9 @@ var SnippetsMenu = Widget.extend({
         // it should be ensured that DOM is not added in the history.
         $target.find('.s_preview').remove();
         $target.find('.s_to_preview').removeClass('s_to_preview');
+        if ($target[0].classList.contains('s_loading_bg_effect_after_preview')) {
+            $target[0].classList.add('o_we_loading_bg_effect');
+        }
 
         // First call the onBuilt of all options of each item in the snippet
         // (and so build their editor instance first).

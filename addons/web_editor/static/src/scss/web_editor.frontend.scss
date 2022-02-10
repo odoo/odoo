@@ -10,6 +10,17 @@
     background-repeat: no-repeat;
 }
 
+.o_we_loading_bg_effect {
+    position: relative;
+    min-height: 64px;
+
+    &::before {
+        content: "";
+        @include o-position-absolute(0, 0, 0, 0);
+        @extend %loading-background-effect;
+    }
+}
+
 .o_wysiwyg_loader {
     @extend %loading-background-effect;
     @extend :disabled;
