@@ -153,3 +153,35 @@ class TestAccountAccount(AccountTestInvoicingCommon):
         group.code_prefix_end = 401000
 
         self.assertRecordValues(account_1 + account_2, [{'group_id': group.id}, {'group_id': False}])
+
+    def test_name_create(self):
+        """name_create should only be possible when importing
+           Code and Name should be split
+        """
+        with self.assertRaises(ValidationError):
+            self.env['account.account'].name_create('550003 Existing Account')
+        account_id = self.env['account.account'].with_context(import_file=True).name_create('550003 Existing Account')[0]
+        account = self.env['account.account'].browse(account_id)
+        self.assertEqual(account.code, "550003")
+        self.assertEqual(account.name, "Existing Account")
+
+    def test_compute_user_type_id(self):
+        existing_account = self.env['account.account'].search([], limit=1)
+        # user_type_id should be computed
+        new_account_code = self.env['account.account']._search_new_account_code(
+            company=existing_account.company_id,
+            digits=len(existing_account.code),
+            prefix=existing_account.code[:-1])
+        new_account = self.env['account.account'].create({
+            'code': new_account_code,
+            'name': 'A new account'
+        })
+        self.assertEqual(new_account.user_type_id, existing_account.user_type_id)
+        # user_type_id should not be altered
+        alternate_account = self.env['account.account'].search([('user_type_id', '!=', existing_account.user_type_id.id)], limit=1)
+        alternate_code = self.env['account.account']._search_new_account_code(
+            company=alternate_account.company_id,
+            digits=len(alternate_account.code),
+            prefix=alternate_account.code[:-1])
+        new_account.code = alternate_code
+        self.assertEqual(new_account.user_type_id, existing_account.user_type_id)

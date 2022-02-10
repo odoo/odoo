@@ -147,7 +147,7 @@ class Partner(models.Model):
             values['lang'] = values.get('lang') or parent.lang or self.env.lang
         return values
 
-    name = fields.Char(index=True, default_export_compatible=True)
+    name = fields.Char(index=True, default_export_compatible=True, import_key=True)
     display_name = fields.Char(compute='_compute_display_name', recursive=True, store=True, index=True)
     date = fields.Date(index=True)
     title = fields.Many2one('res.partner.title')
@@ -166,7 +166,11 @@ class Partner(models.Model):
     tz_offset = fields.Char(compute='_compute_tz_offset', string='Timezone offset', invisible=True)
     user_id = fields.Many2one('res.users', string='Salesperson',
       help='The internal user in charge of this contact.')
-    vat = fields.Char(string='Tax ID', index=True, help="The Tax Identification Number. Complete it if the contact is subjected to government taxes. Used in some legal statements.")
+    vat = fields.Char(
+        string='Tax ID',
+        index=True,
+        import_key=True,
+        help="The Tax Identification Number. Complete it if the contact is subjected to government taxes. Used in some legal statements.")
     same_vat_partner_id = fields.Many2one('res.partner', string='Partner with same Tax ID', compute='_compute_same_vat_partner_id', store=False)
     bank_ids = fields.One2many('res.partner.bank', 'partner_id', string='Banks')
     website = fields.Char('Website Link')
@@ -196,7 +200,7 @@ class Partner(models.Model):
     country_code = fields.Char(related='country_id.code', string="Country Code")
     partner_latitude = fields.Float(string='Geo Latitude', digits=(10, 7))
     partner_longitude = fields.Float(string='Geo Longitude', digits=(10, 7))
-    email = fields.Char()
+    email = fields.Char(import_key=True)
     email_formatted = fields.Char(
         'Formatted Email', compute='_compute_email_formatted',
         help='Format email address "Name <email@domain>"')
@@ -969,10 +973,10 @@ class Partner(models.Model):
 
     @api.model
     def get_import_templates(self):
-        return [{
+        return {'files': [{
             'label': _('Import Template for Customers'),
-            'template': '/base/static/xls/res_partner.xls'
-        }]
+            'template': '/base/static/xls/res_partner.xls',
+        }]}
 
     @api.model
     def _check_import_consistency(self, vals_list):

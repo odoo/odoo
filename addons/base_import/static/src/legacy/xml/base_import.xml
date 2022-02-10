@@ -10,7 +10,8 @@
                 <t t-call="ImportView.data_matching"/>
             </div>
 
-            <div class="o_view_nocontent">
+            <t t-if="widget.importTemplates.qweb_template" t-call="{{widget.importTemplates.qweb_template}}"/>
+            <div class="o_view_nocontent" t-else="">
                 <div class="o_nocontent_help">
                     <p class="o_view_nocontent_smiling_face">
                         Upload an Excel or CSV file to import
@@ -19,7 +20,7 @@
                         Excel files are recommended as formatting is automatic.
                     </p>
                     <div class="mt16 mb4">Need Help?</div>
-                    <div t-foreach="widget.importTemplates" t-as="template">
+                    <div t-foreach="widget.importTemplates.files" t-as="template">
                         <a t-att-href="template.template" aria-label="Download" title="Download">
                             <i class="fa fa-download"/> <span><t t-esc="template.label"/></span>
                         </a>
@@ -65,6 +66,8 @@
                     <span class="o_single_line_text" title="File Column">File Column</span></td>
                 <td class="oe_import_grid-cell border-0 font-weight-bold" style="width: 15%;" >
                     <span class="o_single_line_text" title="File Column">Odoo Field</span></td>
+                <td class="oe_import_grid-cell border-0 font-weight-bold" style="width: 5%;">
+                    <span class="o_single_line_text" title="File Column">Key</span></td>
                 <td class="oe_import_grid-cell border-0 font-weight-bold">
                     <span class="o_single_line_text" title="File Column">Comments</span></td>
             </tr>
@@ -84,12 +87,20 @@
                 <td class="oe_import_grid-cell oe_import_match_cell">
                     <input class="oe_import_match_field oe_import_dropdown"/>
                 </td>
+                <td class="oe_import_grid-cell oe_import_key_cell">
+                </td>
                 <td class="oe_import_grid-cell oe_import_comment_cell">
                     <div class="oe_import_comments_div"/>
                     <div class="oe_import_options_div d-none"/>
                 </td>
             </tr>
         </tbody>
+    </t>
+
+    <t t-name="ImportView.import_key_input">
+        <div class="oe_import_key_input">
+            <input type="checkbox" class="oe_import_key_checkbox" t-att-value="field_name"/>
+        </div>
     </t>
 
     <t t-name="ImportView.comment_same_mapped_field">
@@ -287,7 +298,7 @@ lines composed only of empty cells">
                 </div>
 
                 <h4 class="mt-3">Help</h4>
-                <div t-foreach="widget.importTemplates" t-as="template">
+                <div t-foreach="widget.importTemplates.files" t-as="template">
                     <a t-att-href="template.template" aria-label="Download" title="Download">
                         <i class="fa fa-download"/> <span>Download Template</span>
                     </a>

@@ -2222,6 +2222,10 @@ class AccountMove(models.Model):
             result.append((move.id, name))
         return result
 
+    @api.model
+    def _get_import_sheet(self, sheet_names):
+        return 'Journal Entries' if 'Journal Entries' in sheet_names else super()._get_import_sheet(sheet_names)
+
     # -------------------------------------------------------------------------
     # RECONCILIATION METHODS
     # -------------------------------------------------------------------------
@@ -4716,6 +4720,10 @@ class AccountMoveLine(models.Model):
             if move_ids:
                 self.env['account.move'].browse(move_ids).invalidate_recordset()
         return super().invalidate_recordset(fnames)
+
+    @api.model
+    def _get_import_sheet(self, sheet_names):
+        return 'Journal Items' if 'Journal Items' in sheet_names else super()._get_import_sheet(sheet_names)
 
     # -------------------------------------------------------------------------
     # TRACKING METHODS

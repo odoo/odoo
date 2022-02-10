@@ -511,6 +511,16 @@ class ResPartner(models.Model):
         help='Technical field holding the amount partners that share the same account number as any set on this partner.',
     )
 
+    @api.model
+    def get_import_templates(self):
+        res = super().get_import_templates()
+        res['files'][0]['template'] = '/account/static/xls/generic_import.xlsx'
+        return res
+
+    @api.model
+    def _get_import_sheet(self, sheet_names):
+        return 'Contacts' if 'Contacts' in sheet_names else super()._get_import_sheet(sheet_names)
+
     def _compute_bank_count(self):
         bank_data = self.env['res.partner.bank']._read_group([('partner_id', 'in', self.ids)], ['partner_id'], ['partner_id'])
         mapped_data = dict([(bank['partner_id'][0], bank['partner_id_count']) for bank in bank_data])

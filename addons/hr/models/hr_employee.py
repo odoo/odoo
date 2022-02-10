@@ -345,7 +345,7 @@ class HrEmployeePrivate(models.Model):
             if account_id:
                 self.env['res.partner.bank'].browse(account_id).partner_id = vals['address_home_id']
         if vals.get('user_id'):
-            # Update the profile pictures with user, except if provided 
+            # Update the profile pictures with user, except if provided
             vals.update(self._sync_user(self.env['res.users'].browse(vals['user_id']),
                                         (bool(self.image_1920))))
         if 'work_permit_expiration_date' in vals:
@@ -452,10 +452,10 @@ class HrEmployeePrivate(models.Model):
 
     @api.model
     def get_import_templates(self):
-        return [{
+        return {'files':[{
             'label': _('Import Template for Employees'),
             'template': '/hr/static/xls/hr_employee.xls'
-        }]
+        }]}
 
     def _post_author(self):
         """

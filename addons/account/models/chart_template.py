@@ -627,7 +627,7 @@ class AccountChartTemplate(models.Model):
         return self.env[model]._load_records(data_list)
 
     @api.model
-    def _load_records(self, data_list, update=False):
+    def _load_records(self, data_list, update=False, key_fields=None):
         # When creating a chart template create, for the liquidity transfer account
         #  - an account.account.template: this allow to define account.reconcile.model.template objects refering that liquidity transfer
         #    account although it's not existing in any xml file

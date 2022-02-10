@@ -53,7 +53,7 @@
     <template id="onboarding_chart_of_account_step">
         <t t-call="base.onboarding_step">
             <t t-set="title">Chart of Accounts</t>
-            <t t-set="description">Setup your chart of accounts and record initial balances.</t>
+            <t t-set="description">Setup your chart of accounts, initial balances, and open items.</t>
             <t t-set="btn_text">Review</t>
             <t t-set="done_text">Chart of accounts set.</t>
             <t t-set="method" t-value="'setting_chart_of_accounts_action'" />
@@ -95,9 +95,9 @@
             <t t-set="close_model" t-value="'res.company'"/>
 
             <t t-call="account.onboarding_fiscal_year_step" name="fiscal_year_step" />
-            <t t-call="account.onboarding_chart_of_account_step" name="chart_of_account_step" />
-            <t t-call="account.onboarding_taxes_step" name="taxes_step" />
             <t t-call="account.onboarding_bank_account_step" name="bank_account_step" />
+            <t t-call="account.onboarding_taxes_step" name="taxes_step" />
+            <t t-call="account.onboarding_chart_of_account_step" name="chart_of_account_step" />
         </t>
     </template>
     <!-- SAMPLE INVOICE EMAIL -->

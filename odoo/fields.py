@@ -293,6 +293,7 @@ class Field(MetaField('DummyField', (object,), {})):
     prefetch = True                     # the prefetch group (False means no group)
 
     default_export_compatible = False   # whether the field must be exported by default in an import-compatible export
+    import_key = False                  # whether the field can be used as a record identifier when importing
 
     def __init__(self, string=Default, **kwargs):
         kwargs['string'] = string
@@ -821,6 +822,7 @@ class Field(MetaField('DummyField', (object,), {})):
     _description_change_default = property(attrgetter('change_default'))
     _description_group_operator = property(attrgetter('group_operator'))
     _description_default_export_compatible = property(attrgetter('default_export_compatible'))
+    _description_import_key = property(attrgetter('import_key'))
 
     def _description_depends(self, env):
         return env.registry.field_depends[self]

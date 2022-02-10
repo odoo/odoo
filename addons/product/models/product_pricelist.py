@@ -271,10 +271,10 @@ class Pricelist(models.Model):
 
     @api.model
     def get_import_templates(self):
-        return [{
+        return {'files': [{
             'label': _('Import Template for Pricelists'),
             'template': '/product/static/xls/product_pricelist.xls'
-        }]
+        }]}
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_used_as_rule_base(self):

@@ -332,10 +332,10 @@ class MrpBom(models.Model):
 
     @api.model
     def get_import_templates(self):
-        return [{
+        return {'files': [{
             'label': _('Import Template for Bills of Materials'),
             'template': '/mrp/static/xls/mrp_bom.xls'
-        }]
+        }]}
 
 
 class MrpBomLine(models.Model):

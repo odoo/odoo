@@ -672,6 +672,14 @@ class AccountJournal(models.Model):
 
         return journals
 
+    @api.model
+    def name_create(self, name):
+        # Only when importing
+        if 'import_file' in self.env.context:
+            code = name[:4]
+            return self.create({'code': code, 'name': name, 'type': 'general'}).name_get()[0]
+        return super().name_create(name)
+
     def set_bank_account(self, acc_number, bank_id=None):
         """ Create a res.partner.bank (if not exists) and set it as value of the field bank_account_id """
         self.ensure_one()

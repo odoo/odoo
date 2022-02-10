@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+    <t t-name="account.import_template">
+        <div class="o_view_nocontent_long">
+            <div class="o_nocontent_help">
+                <p class="o_view_nocontent_smiling_face">
+                    Accounting Import Guide
+                </p>
+                <p>
+                    Use predefined format to import your data faster.
+                </p>
+                <p class="o_nocontent_header">
+                    Excel Import
+                </p>
+                <p>
+                    Use our template of spreadsheets to import your chart of accounts and / or your
+                    journal entries
+                </p>
+                <ol>
+                    <li>Download the
+                        <a t-att-href="widget.importTemplates.files[0].template" aria-label="Download" title="Download">
+                            <i class="fa fa-download"/> <span>Excel Template</span>
+                        </a>
+                    </li>
+                    <li>Fill in your data in the template</li>
+                    <li><a class="o_import_action" action="account.partner_import_action" href="">Import your contacts</a></li>
+                    <li><a class="o_import_action" action="account.account_move_import_action" href="">Optional: Import journal entries </a></li>
+                    <li>Import the Chart of Accounts</li>
+
+                </ol>
+                <p>
+                    Tip 1: to simplify your settings, importing your initial balances (or recording them manually)
+                    should be enough for most companies.
+                </p>
+                <p>
+                    Tip 2: we recommend you to import the initial balances of all accounts, but ONLY the journal
+                    items of receivable &amp; payable accounts that are not reconciled yet.
+                </p>
+            </div>
+        </div>
+    </t>
+</templates>

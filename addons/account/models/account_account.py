@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
+import re
+
 from odoo import api, fields, models, _, tools
 from odoo.osv import expression
 from odoo.exceptions import UserError, ValidationError
 
+ACCOUNT_REGEX = re.compile(r'(\d+)?(.*)$')
 
 class AccountAccountType(models.Model):
     _name = "account.account.type"
@@ -58,19 +61,32 @@ class AccountAccount(models.Model):
                 account_unaffected_earnings = self.browse(res['ids'])
                 raise ValidationError(_('You cannot have more than one account with "Current Year Earnings" as type. (accounts: %s)', [a.code for a in account_unaffected_earnings]))
 
-    name = fields.Char(string="Account Name", required=True, index='trigram', tracking=True)
+    name = fields.Char(string="Account Name", index='trigram', tracking=True)
     currency_id = fields.Many2one('res.currency', string='Account Currency',
         help="Forces all moves for this account to have this account currency.", tracking=True)
-    code = fields.Char(size=64, required=True, index=True, tracking=True)
+    code = fields.Char(size=64, required=True, index=True, tracking=True, import_key=True)
     deprecated = fields.Boolean(default=False, tracking=True)
     used = fields.Boolean(compute='_compute_used', search='_search_used')
-    user_type_id = fields.Many2one('account.account.type', string='Type', required=True, tracking=True,
+    user_type_id = fields.Many2one(
+        comodel_name='account.account.type',
+        string='Type',
+        required=True,
+        tracking=True,
+        store=True,
+        readonly=False,
+        precompute=True,
+        compute='_compute_user_type_id',
         help="Account Type is used for information purpose, to generate country-specific legal reports, and set the rules to close a fiscal year and generate opening entries.")
     internal_type = fields.Selection(related='user_type_id.type', string="Internal Type", store=True, readonly=True)
     internal_group = fields.Selection(related='user_type_id.internal_group', string="Internal Group", store=True, readonly=True)
     #has_unreconciled_entries = fields.Boolean(compute='_compute_has_unreconciled_entries',
     #    help="The account has at least one unreconciled debit and credit since last time the invoices & payments matching was performed.")
-    reconcile = fields.Boolean(string='Allow Reconciliation', default=False, tracking=True,
+    reconcile = fields.Boolean(
+        string='Allow Reconciliation',
+        tracking=True,
+        readonly=False,
+        store=True,
+        compute='_compute_reconcile',
         help="Check this box if this account allows invoices & payments matching of journal items.")
     tax_ids = fields.Many2many('account.tax', 'account_account_tax_default_rel',
         'account_id', 'tax_id', string='Default Taxes',
@@ -87,7 +103,11 @@ class AccountAccount(models.Model):
 
     opening_debit = fields.Monetary(string="Opening Debit", compute='_compute_opening_debit_credit', inverse='_set_opening_debit', help="Opening debit value for this account.")
     opening_credit = fields.Monetary(string="Opening Credit", compute='_compute_opening_debit_credit', inverse='_set_opening_credit', help="Opening credit value for this account.")
-    opening_balance = fields.Monetary(string="Opening Balance", compute='_compute_opening_debit_credit', help="Opening balance value for this account.")
+    opening_balance = fields.Monetary(
+        string="Opening Balance",
+        compute='_compute_opening_debit_credit',
+        inverse='_set_opening_balance',
+        help="Opening balance value for this account.")
 
     is_off_balance = fields.Boolean(compute='_compute_is_off_balance', default=False, store=True, readonly=True)
 
@@ -277,6 +297,57 @@ class AccountAccount(models.Model):
                 journal_ids=journals.ids
             ))
 
+    def _find_account_by_closest_parent_code(self, codes):
+        ''' Finds the account with the closest matching code
+            eg. code 123456 will return 123400 as it is a closer parent than 123756
+            :param codes: a list of string codes to search for
+            :return: a dict with key code and values {original_code: code, match_len: int, account_id: matched account id, account_code: matched account code, user_type_id: matched account type}
+        '''
+        if not codes:
+            return {}
+        sql_vals = ','.join(sum([
+            [f"('{code}', '{code[:i]}%%', {len(code[:i])})" for i in range(1, len(code) + 1)] for code in codes],
+            []))
+        sql = f'''
+            WITH codes AS (
+                SELECT *
+                FROM (VALUES {sql_vals}) AS V(originalcode, searchterm, matchlen)
+            )
+            SELECT DISTINCT ON (codes.originalcode)
+                codes.originalcode as original_code,
+                codes.matchlen as match_len,
+                account.id as account_id,
+                account.code as account_code,
+                account.user_type_id as user_type_id
+            FROM account_account account
+            JOIN codes ON account.code ilike codes.searchterm
+            WHERE codes.matchlen > 0
+            AND account.company_id = %(company_id)s
+            ORDER BY codes.originalcode, match_len DESC, account.id ASC
+        '''
+        self._cr.execute(sql, {
+            'company_id': self.env.company.id,
+        })
+        res = self._cr.dictfetchall()
+        res_by_code = {record['original_code']: record for record in res}
+        return res_by_code
+
+    @api.depends('code')
+    def _compute_user_type_id(self):
+        # only set user_type_id if a new account is being created
+        accounts_to_process = self.filtered(lambda r: r.code and not r.user_type_id)
+        required_codes = accounts_to_process.mapped('code')
+        matches = self._find_account_by_closest_parent_code(required_codes)
+        default_user_type_id = self.env['account.account.type'].search([('internal_group', '=', 'equity')], limit=1).id
+        for account in accounts_to_process:
+            account.user_type_id = matches[account.code]['user_type_id'] if account.code in matches else default_user_type_id
+
+    @api.depends('internal_type')
+    def _compute_reconcile(self):
+        for record in self:
+            # this should also call _toggle_reconcile_to_true and _toggle_reconcile_to_false - TODO: verify
+            record.reconcile = record.internal_type in ('receivable', 'payable')
+
     @api.depends('code')
     def _compute_account_root(self):
         # this computes the first 2 digits of the account.
@@ -367,12 +438,17 @@ class AccountAccount(models.Model):
             account.is_off_balance = account.internal_group == "off_balance"
 
     def _set_opening_debit(self):
-        for record in self:
+        for record in self.filtered(lambda r: r.opening_debit > 0):
             record._set_opening_debit_credit(record.opening_debit, 'debit')
 
     def _set_opening_credit(self):
-        for record in self:
+        for record in self.filtered(lambda r: r.opening_credit > 0):
             record._set_opening_debit_credit(record.opening_credit, 'credit')
+
+    def _set_opening_balance(self):
+        for record in self.filtered(lambda r: abs(r.opening_balance) > 0):
+            side = 'debit' if record.opening_balance > 0 else 'credit'
+            record._set_opening_debit_credit(abs(record.opening_balance), side)
 
     def _set_opening_debit_credit(self, amount, field):
         """ Generic function called by both opening_debit and opening_credit's
@@ -424,6 +500,21 @@ class AccountAccount(models.Model):
                 self.company_id._auto_balance_opening_move()
 
     @api.model
+    def get_import_templates(self):
+        return {
+            'qweb_template': 'account.import_template',
+            'files': [{
+                'label': _('Import Template for Vendor Pricelists'),
+                'template': '/account/static/xls/generic_import.xlsx'
+        }]}
+
+    @api.model
+    def _get_import_sheet(self, sheet_names):
+        if 'Chart of Accounts' in sheet_names:
+            return 'Chart of Accounts'
+        return 'CoA' if 'CoA' in sheet_names else super()._get_import_sheet(sheet_names)
+
+    @api.model
     def default_get(self, default_fields):
         """If we're creating a new account through a many2one, there are chances that we typed the account code
         instead of its name. In that case, switch both fields values.
@@ -465,12 +556,56 @@ class AccountAccount(models.Model):
         elif self.internal_group == 'expense' and not self.tax_ids:
             self.tax_ids = self.company_id.account_purchase_tax_id
 
+    @api.onchange('code')
+    def _onchange_code(self):
+        code, name = self._split_code_name(self.code)
+        if name:
+            self.name = name
+            self.code = code
+
+    @api.onchange('name')
+    def _onchange_name(self):
+        code, name = self._split_code_name(self.name)
+        if code:
+            self.name = name
+            self.code = code
+
     def name_get(self):
         result = []
         for account in self:
-            name = account.code + ' ' + account.name
+            name = account.code + ' ' + (account.name or '')
             result.append((account.id, name))
         return result
+
+    @api.model
+    def name_create(self, name):
+        # Enforce no_quick_create from forms - however name_create is possible when importing from a related model
+        if 'import_file' in self.env.context:
+            code, name = self._split_code_name(name)
+            return self.create({'code': code, 'name': name}).name_get()[0]
+        raise ValidationError(_(
+            "The operation cannot be completed:\n"
+            "- Create/update: a mandatory field is not set.\n"
+            "- Delete: another model requires the record being deleted."
+            " If possible, archive it instead.\n\n"
+            "Model: %(model_name)s (%(model_tech_name)s)\n"
+            "Field: %(field_name)s (%(field_tech_name)s)\n",
+            model_name=self._description,
+            model_tech_name=self._name,
+            field_name='Type',
+            field_tech_name='user_type_id',
+        ))
+
+    def _split_code_name(self, code_name):
+        results = ACCOUNT_REGEX.match(code_name or '').groups('')
+        return results[0].strip(), results[1].strip()
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if 'code' in vals and ('name' not in vals or not vals['name']):
+                vals['code'], vals['name'] = self._split_code_name(vals['code'])
+        return super().create(vals_list)
 
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
@@ -490,12 +625,19 @@ class AccountAccount(models.Model):
         return super(AccountAccount, self).copy(default)
 
     @api.model
-    def load(self, fields, data):
+    def load(self, fields, data, key_fields):
         """ Overridden for better performances when importing a list of account
         with opening debit/credit. In that case, the auto-balance is postpone
         until the whole file has been imported.
         """
-        rslt = super(AccountAccount, self).load(fields, data)
+        if 'code' in fields and 'name' not in fields:
+            code_index = fields.index('code')
+            for idx, d in enumerate(data):
+                code, name = self._split_code_name(d[code_index])
+                data[idx][code_index] = code
+                data[idx].append(name)
+            fields.append('name')
+        rslt = super(AccountAccount, self).load(fields, data, key_fields)
 
         if 'import_file' in self.env.context:
             companies = self.search([('id', 'in', rslt['ids'])]).mapped('company_id')

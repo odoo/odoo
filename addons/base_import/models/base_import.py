@@ -97,10 +97,26 @@ class Base(models.AbstractModel):
         """
         Get the import templates label and path.
 
-        :return: a list(dict) containing label and template path
-                 like ``[{'label': 'foo', 'template': 'path'}]``
+        :return: a dict containing
+                qweb_template: name of the qweb template to display instead of the default content
+                files: list(dict) containing label and template path
+                 like ``{'qweb_template': 'module.template_id', files: [{'label': 'foo', 'template': 'path'}]}``
         """
-        return []
+        return {
+            'qweb_template': None,
+            'files': []
+        }
+
+    @api.model
+    def _get_import_sheet(self, sheet_names):
+        """
+        Get the correct sheet id from the available xls sheet names
+
+        :param: sheet_names contains a list of available sheets
+
+        :return: int specifying the id of the
+        """
+        return sheet_names[0]
 
 class ImportMapping(models.Model):
     """ mapping of previous column:field selections
@@ -300,7 +316,8 @@ class Import(models.TransientModel):
                 'required': bool(field.get('required')),
                 'fields': [],
                 'type': field['type'],
-                'model_name': model
+                'model_name': model,
+                'import_key': bool(field.get('import_key')),
             }
 
             if field['type'] in ('many2many', 'many2one'):
@@ -387,7 +404,7 @@ class Import(models.TransientModel):
     def _read_xls(self, options):
         book = xlrd.open_workbook(file_contents=self.file or b'')
         sheets = options['sheets'] = book.sheet_names()
-        sheet = options['sheet'] = options.get('sheet') or sheets[0]
+        sheet = options['sheet'] = options.get('sheet') or self.env[self.res_model]._get_import_sheet(sheets)
         return self._read_xls_book(book, sheet)
 
     def _read_xls_book(self, book, sheet_name):
@@ -1318,7 +1335,8 @@ class Import(models.TransientModel):
             import_set_empty_fields=options.get('import_set_empty_fields', []),
             import_skip_records=options.get('import_skip_records', []),
             _import_limit=import_limit)
-        import_result = model.load(import_fields, merged_data)
+        key_fields = options.get('import_keys', [])
+        import_result = model.load(import_fields, merged_data, key_fields=key_fields)
         _logger.info('done')
 
         # If transaction aborted, RELEASE SAVEPOINT is going to raise
@@ -1356,13 +1374,15 @@ class Import(models.TransientModel):
                             'column_name': column_name,
                             'field_name': fields[index]
                         })
+        # not 100% sure what the following code does but it fails since model.load might change the import_fields and merged_data
+        # if searching for name in import_fields, we should use merged_data, otherwise look in fields
         if 'name' in import_fields:
             index_of_name = import_fields.index('name')
             skipped = options.get('skip', 0)
             # pad front as data doesn't contain anythig for skipped lines
             r = import_result['name'] = [''] * skipped
             # only add names for the window being imported
-            r.extend(x[index_of_name] for x in input_file_data[:import_limit])
+            r.extend(x[index_of_name] for x in merged_data[:import_limit])
             # pad back (though that's probably not useful)
             r.extend([''] * (len(input_file_data) - (import_limit or 0)))
         else:

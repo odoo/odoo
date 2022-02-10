@@ -139,10 +139,10 @@ class ProductTemplate(models.Model):
         res = super(ProductTemplate, self).get_import_templates()
         if self.env.context.get('sale_multi_pricelist_product_template'):
             if self.user_has_groups('product.group_sale_pricelist'):
-                return [{
+                return {'files': [{
                     'label': _('Import Template for Products'),
                     'template': '/product/static/xls/product_template.xls'
-                }]
+                }]}
         return res
 
     def _get_combination_info(self, combination=False, product_id=False, add_qty=1, pricelist=False, parent_combination=False, only_template=False):

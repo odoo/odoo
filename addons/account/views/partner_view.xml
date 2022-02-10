@@ -223,8 +223,8 @@
                             </group>
                             <group string="Accounting Entries" name="accounting_entries" groups="account.group_account_readonly">
                                 <field name="currency_id" invisible="1"/>
-                                <field name="property_account_receivable_id"/>
-                                <field name="property_account_payable_id"/>
+                                <field name="property_account_receivable_id" options="{'create_name_field': 'code'}"/>
+                                <field name="property_account_payable_id" options="{'create_name_field': 'code'}"/>
                             </group>
                             <group string="Credit Limits"
                                    name="credit_limits"
@@ -300,6 +300,12 @@
                 Odoo helps you easily track all activities related to a supplier.
               </p>
             </field>
+        </record>
+
+        <record id="partner_import_action" model="ir.actions.client">
+            <field name="name">Import Partners</field>
+            <field name="tag">import</field>
+            <field name="params" eval="{'model': 'res.partner'}"/>
         </record>
     </data>
 </odoo>

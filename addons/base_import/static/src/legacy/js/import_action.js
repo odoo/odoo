@@ -132,6 +132,10 @@ var DataImport = AbstractAction.extend({
                 }
             }));
         },
+        'click .o_import_action': function (e) {
+            e.preventDefault();
+            this.do_action($(e.target).attr('action'));
+        },
     },
     init: function (parent, action) {
         this._super.apply(this, arguments);
@@ -141,7 +145,7 @@ var DataImport = AbstractAction.extend({
         // import object id
         this.id = null;
         this.session = session;
-        this._title = _t('Import a File'); // Displayed in the breadcrumbs
+        this._title = this._title || _t('Import a File'); // Displayed in the breadcrumbs
         this.do_not_change_match = false;
         this.sheets = [];
         this.selectionFields = {};  // Used to compute fallback values in backend.
@@ -315,6 +319,9 @@ var DataImport = AbstractAction.extend({
             // start at row 1 = skip 0 lines
             skip: Number(this.$('#oe_import_row_start').val()) - 1 || 0,
             limit: Number(this.$('#oe_import_batch_limit').val()) || null,
+            import_keys: this.$('.oe_import_key_checkbox:checked').map(function (idx, el) {
+                return $(el).val()
+            }).get(),
         };
         _.each(_.union(this.opts, this.spreadsheet_opts), function (opt) {
             options[opt.name] =
@@ -440,7 +447,7 @@ var DataImport = AbstractAction.extend({
         this.$('.oe_import_options').show();
         this.$form.addClass('oe_import_preview_error oe_import_error');
         this.$form.find('.oe_import_box, .oe_import_with_file').removeClass('d-none');
-        this.$form.find('.o_view_nocontent').addClass('d-none');
+        this.$form.find('.o_view_nocontent, .o_view_nocontent_long').addClass('d-none');
         this.$('.oe_import_error_report').html(
                 QWeb.render('ImportView.preview.error', result));
     },
@@ -452,7 +459,7 @@ var DataImport = AbstractAction.extend({
             .blur();
         this.$buttons.filter('.o_import_import, .o_import_validate').removeClass('d-none');
         this.$form.find('.oe_import_box, .oe_import_with_file').removeClass('d-none');
-        this.$form.find('.o_view_nocontent').addClass('d-none');
+        this.$form.find('.o_view_nocontent, .o_view_nocontent_long').addClass('d-none');
         this.$form.addClass('oe_import_preview');
         this.$('input.oe_import_advanced_mode').prop('checked', result.advanced_mode);
         this.$('.oe_import_grid').html(QWeb.render('ImportView.preview', result));
@@ -521,6 +528,7 @@ var DataImport = AbstractAction.extend({
             var updateFieldInformation = function (fieldInfo) {
                 // Get the comment cell on the same row in the table.
                 var $commentCell = $fieldInput.closest('tr.oe_import_grid-row').find('.oe_import_comment_cell');
+                var $keyCell = $fieldInput.closest('tr.oe_import_grid-row').find('.oe_import_key_cell');
                 var $optionsDiv = $commentCell.find('.oe_import_options_div');
                 var isRelational = fieldInfo.type === 'many2many' || fieldInfo.type === 'many2one';
                 var setEmpty = !fieldInfo.required && (isRelational || fieldInfo.type === 'selection');
@@ -573,6 +581,17 @@ var DataImport = AbstractAction.extend({
                 // re-attribute comment cell to the new selected field
                 $commentCell.attr('field', fieldInfo.id || "");
                 $commentCell.attr('model', fieldInfo.comodel_name || fieldInfo.model_name || "");
+
+                //adjust import_key cell based on the selected field
+                if (fieldInfo.import_key){
+                    $keyCell.append(
+                        QWeb.render('ImportView.import_key_input', {
+                            field_name: fieldInfo.id,
+                        })
+                    );
+                } else {
+                    $keyCell.empty();
+                }
 
                 // assign class for field icon
                 var $fieldDropdown = $fieldInput.closest('.oe_import_match_cell').find('.select2-choice');
@@ -799,6 +818,7 @@ var DataImport = AbstractAction.extend({
                 default_value: field.default_value,
                 comodel_name: field.comodel_name,
                 model_name: field.model_name,
+                import_key: field.import_key,
             });
 
             if (advanced_mode){

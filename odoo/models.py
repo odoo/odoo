@@ -1044,7 +1044,7 @@ class BaseModel(metaclass=MetaModel):
         return {'datas': self._export_rows(fields_to_export)}
 
     @api.model
-    def load(self, fields, data):
+    def load(self, fields, data, key_fields=None):
         """
         Attempts to load the data matrix, and returns a list of ids (or
         ``False`` if there was an error and no id could be generated) and a
@@ -1058,6 +1058,8 @@ class BaseModel(metaclass=MetaModel):
         :type fields: list(str)
         :param data: row-major matrix of data to import
         :type data: list(list(str))
+        :param key_fields: list of fields that can be used to match records (TODO: confirm if context is preferred)
+        :type key_fields: list(str)
         :returns: {ids: list(int)|False, messages: [Message][, lastrow: int]}
         """
         self.env.flush_all()
@@ -1072,6 +1074,7 @@ class BaseModel(metaclass=MetaModel):
         cr = self._cr
         sp = cr.savepoint(flush=False)
 
+        key_fields = key_fields or []
         fields = [fix_import_export_id_paths(f) for f in fields]
         fg = self.fields_get()
 
@@ -1125,7 +1128,7 @@ class BaseModel(metaclass=MetaModel):
             # try to create in batch
             try:
                 with cr.savepoint():
-                    recs = self._load_records(data_list, mode == 'update')
+                    recs = self._load_records(data_list, mode == 'update', key_fields=key_fields)
                     ids.extend(recs.ids)
                 return
             except psycopg2.InternalError as e:
@@ -1142,7 +1145,7 @@ class BaseModel(metaclass=MetaModel):
             for i, rec_data in enumerate(data_list, 1):
                 try:
                     with cr.savepoint():
-                        rec = self._load_records([rec_data], mode == 'update')
+                        rec = self._load_records([rec_data], mode == 'update', key_fields=key_fields)
                         ids.append(rec.id)
                 except psycopg2.Warning as e:
                     info = rec_data['info']
@@ -1250,8 +1253,11 @@ class BaseModel(metaclass=MetaModel):
             if fields[fnames[0]].type != 'one2many'
         ])
         # Checks if the provided row has any non-empty one2many fields
-        def only_o2m_values(row):
-            return any(get_o2m_values(row)) and not any(get_nono2m_values(row))
+        # or if the non-relational fields match and the relational fields don't
+        def row_continues(row, index_row_o2m_vals=None, index_row_nono2m_vals=None):
+            o2m_vals = get_o2m_values(row)
+            nono2m_vals = get_nono2m_values(row)
+            return (any(o2m_vals) and not any(nono2m_vals)) or (nono2m_vals == index_row_nono2m_vals and o2m_vals != index_row_o2m_vals)
 
         index = 0
         while index < len(data) and index < limit:
@@ -1263,9 +1269,11 @@ class BaseModel(metaclass=MetaModel):
                       if not is_relational(fnames[0])}
 
             # Get all following rows which have relational values attached to
-            # the current record (no non-relational values)
+            # the current record (no non-relational values or matching non-relational values)
+            o2m_vals = get_o2m_values(row)
+            non_o2m_vals = get_nono2m_values(row)
             record_span = itertools.takewhile(
-                only_o2m_values, itertools.islice(data, index + 1, None))
+                lambda r: row_continues(r, o2m_vals, non_o2m_vals), itertools.islice(data, index + 1, None))
             # stitch record row back on for relational fields
             record_span = list(itertools.chain([row], record_span))
             for relfield in set(fnames[0] for fnames in fields_ if is_relational(fnames[0])):
@@ -1280,6 +1288,9 @@ class BaseModel(metaclass=MetaModel):
                 # return all rows which have at least one value for the
                 # subfields of relfield
                 relfield_data = [it for it in map(itemgetter_tuple(indices), record_span) if any(it)]
+                # or the first row data since the data should be matching on all rows if the field is not one2many
+                if len(relfield_data) > 1 and fields[relfield].type != 'one2many':
+                    relfield_data = list(set(relfield_data)) # [relfield_data[0]]
                 record[relfield] = [
                     subrecord
                     for subrecord, _subinfo in comodel._extract_records(subfields, relfield_data, log=log)
@@ -4506,13 +4517,104 @@ class BaseModel(metaclass=MetaModel):
         self.env.cache.update(records, self._fields['parent_path'], updated.values())
         records.modified(['parent_path'])
 
+    def _find_external_ids(self, data_list, search_fields):
+        ''' Find or create an External ID (xml_id) for each of the records with matching data in the search_fields
+
+            :param data_list: list of dicts with keys `xml_id` and record values
+            :param search_fields: list of technical field names
+
+            :return: `data_list` containing the new/found xml_id
+
+            :raises ValidationError: when multiple records match the search criteria
+        '''
+
+        IMD = self.env['ir.model.data']
+
+        # This is SQL method of finding matching records (to improve the inefficient code below)
+        # TODO: self._module used below is not correct
+        # TODO: verify company restrictions and security rights (the ORM methods takes care of this)
+
+        key_fields = ', '.join(search_fields)
+        prefixed_key_fields = ', '.join([f'r.{field}' for field in search_fields])
+        key_data = [tuple(item['values'][field] for field in search_fields) for item in data_list]
+
+        sql = f"""
+            CREATE TEMP TABLE temp_{self._table}(
+                {', '.join([f'{f} {self._fields[f].column_type[1]}' for f in search_fields])}
+            );
+            INSERT INTO temp_{self._table}
+            VALUES {','.join(['%s' for d in key_data])};
+            WITH rec_count AS (
+                SELECT
+                    ({key_fields}) AS val_tup,
+                    count(*) as cnt
+                FROM
+                    {self._table}
+                {f'WHERE company_id IS NULL or company_id = {self.env.company.id} ' if 'company_id' in self._fields else None}
+                GROUP BY val_tup
+            ), tmp_data AS (
+                SELECT
+                    DISTINCT ({key_fields}) AS val_tup
+                FROM temp_{self._table}
+            )
+            SELECT
+                {prefixed_key_fields},
+                r.id,
+                i.module || '.' || i.name as external_id,
+                c.cnt
+            FROM {self._table} r
+            INNER JOIN tmp_data t ON ({prefixed_key_fields}) = t.val_tup
+            LEFT JOIN rec_count c ON ({prefixed_key_fields}) = c.val_tup
+            LEFT JOIN ir_model_data i ON r.id = i.res_id AND i.model = '{self._name}'
+            {f'WHERE r.company_id IS NULL or company_id = {self.env.company.id} ' if 'company_id' in self._fields else None}
+        """
+        self.env.cr.execute(sql, tuple(key_data))
+        res = self.env.cr.fetchall()
+        res_dict = {row[:len(search_fields)]: row[len(search_fields):] for row in res}
+        self.env.cr.execute(f'DROP TABLE temp_{self._table}')
+
+        for item in data_list:
+            if not item['xml_id']:
+                key = tuple(item['values'][field] or None for field in search_fields)
+                existing_record_info = res_dict.get(key, (0, None, 0))
+
+                if existing_record_info[2] == 1 and existing_record_info[1]: # a record and there is an xml_id
+                    item['xml_id'] = existing_record_info[1]
+                elif existing_record_info[2] == 1 and existing_record_info[0]: # a record with no xml_id
+                    item['xml_id'] = IMD.create({
+                        'model': self._name,
+                        'res_id': existing_record_info[0],
+                        'name': f'__FOUND_{self._table}_{existing_record_info[0]}',
+                        'module': self._module,
+                    }).complete_name
+                elif existing_record_info[2] and existing_record_info[2] > 1:  # existing_record_info[2] might be None
+                    raise ValidationError(_('Multiple records found matching %(key)s', key=key))
+
+        # The following code works but may not be efficient when importing thousands of records
+
+        # for index, data in enumerate(filter(lambda d: not d['xml_id'], data_list)):
+        #     domain = [(field, '=', data['values'][field]) for field in search_fields]
+        #     matching_records = self.search(domain)
+        #     if len(matching_records) > 1:
+        #         # should not update multiple records (especially when data['values'][field] is not set)
+        #         raise ValidationError(_(f'Multiple records found matching {domain}'))
+        #     elif matching_records:
+        #         imd = matching_records.get_external_id()[matching_records.id]
+        #         data_list[index]['xml_id'] = imd if imd else IMD.create({
+        #             'model': self._name,
+        #             'res_id': matching_records.id,
+        #             'name': f'FOUND_{self._table}_{matching_records.id}',
+        #             'module': self._module,
+        #         }).complete_name
+        return data_list
+
     def _load_records_write(self, values):
         self.write(values)
 
     def _load_records_create(self, values):
         return self.create(values)
 
-    def _load_records(self, data_list, update=False):
+    def _load_records(self, data_list, update=False, key_fields=None):
         """ Create or update records of this model, and assign XMLIDs.
 
             :param data_list: list of dicts with keys `xml_id` (XMLID to
@@ -4521,6 +4623,7 @@ class BaseModel(metaclass=MetaModel):
 
             :return: the records corresponding to ``data_list``
         """
+        key_fields = key_fields or []
         original_self = self.browse()
         # records created during installation should not display messages
         self = self.with_context(install_mode=True)
@@ -4530,6 +4633,10 @@ class BaseModel(metaclass=MetaModel):
         # to create, the ones to update, and the others. For each set, we assign
         # data['record'] for each data. All those records are then retrieved for
         # the result.
+
+        # search or create xml_id's based on key_fields
+        if key_fields:
+            data_list = self._find_external_ids(data_list, key_fields)
 
         # determine existing xml_ids
         xml_ids = [data['xml_id'] for data in data_list if data.get('xml_id')]
@@ -7011,7 +7118,7 @@ def itemgetter_tuple(items):
     if len(items) == 0:
         return lambda a: ()
     if len(items) == 1:
-        return lambda gettable: (gettable[items[0]],)
+        return lambda gettable: (gettable[items[0]],) if gettable else ()
     return operator.itemgetter(*items)
 
 def convert_pgerror_not_null(model, fields, info, e):

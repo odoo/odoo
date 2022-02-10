@@ -32,10 +32,10 @@ class ProductTemplate(models.Model):
     def get_import_templates(self):
         res = super(ProductTemplate, self).get_import_templates()
         if self.env.context.get('purchase_product_template'):
-            return [{
+            return {'files': [{
                 'label': _('Import Template for Products'),
                 'template': '/purchase/static/xls/product_purchase.xls'
-            }]
+            }]}
         return res
 
     def action_view_po(self):

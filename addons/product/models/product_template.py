@@ -1273,10 +1273,10 @@ class ProductTemplate(models.Model):
 
     @api.model
     def get_import_templates(self):
-        return [{
+        return {'files': [{
             'label': _('Import Template for Products'),
             'template': '/product/static/xls/product_template.xls'
-        }]
+        }]}
 
     def _get_contextual_price(self, product=None):
         self.ensure_one()
