@@ -264,9 +264,14 @@
                             <label for="date_order" string="Order Date"/>
                         </div>
                         <field name="date_order" attrs="{'required': [('state', 'in', ['sale', 'done'])], 'invisible': [('state', 'in', ['draft', 'sent'])]}" nolabel="1"/>
+                        <field name="has_active_pricelist" invisible="1"/>
                         <field name="show_update_pricelist" invisible="1"/>
-                        <label for="pricelist_id" groups="product.group_product_pricelist"/>
-                        <div groups="product.group_product_pricelist" class="o_row">
+                        <label for="pricelist_id"
+                               groups="product.group_product_pricelist"
+                               attrs="{'invisible': [('has_active_pricelist', '=', False)]}"/>
+                        <div groups="product.group_product_pricelist"
+                             class="o_row"
+                             attrs="{'invisible': [('has_active_pricelist', '=', False)]}">
                             <field name="pricelist_id" options="{'no_open':True,'no_create': True}"/>
                             <button name="action_update_prices" type="object"
                                 string=" Update Prices"

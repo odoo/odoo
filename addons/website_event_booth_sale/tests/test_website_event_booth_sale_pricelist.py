@@ -29,6 +29,7 @@ class TestWebsiteBoothPriceList(TestEventBoothSaleCommon, TestWebsiteEventSaleCo
         })
 
     def test_pricelist_different_currency(self):
+        self.env['product.pricelist'].search([('id', '!=', self.pricelist.id)]).action_archive()
         so_line = self.env['sale.order.line'].create({
             'event_booth_category_id': self.event_booth_category_1.id,
             'event_booth_pending_ids': (self.booth_1 + self.booth_2).ids,

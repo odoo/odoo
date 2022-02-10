@@ -136,7 +136,7 @@
         <span t-out="abs(combination_info_variant['price_extra'])" class="variant_price_extra text-muted fst-italic" style="white-space: nowrap;"
             t-options='{
                 "widget": "monetary",
-                "display_currency": (pricelist or product).currency_id
+                "display_currency": (pricelist or product.env.company).currency_id
             }'/>
         </span>
     </template>

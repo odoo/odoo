@@ -14,8 +14,8 @@ class WebsiteSnippetFilter(models.Model):
 
     @api.model
     def _get_website_currency(self):
-        pricelist = self.env['website'].get_current_website().get_current_pricelist()
-        return pricelist.currency_id
+        website = self.env['website'].get_current_website()
+        return website.currency_id
 
     def _get_hardcoded_sample(self, model):
         samples = super()._get_hardcoded_sample(model)

@@ -396,7 +396,7 @@ class SaleOrderLine(models.Model):
             else:
                 line.pricelist_item_id = line.order_id.pricelist_id._get_product_rule(
                     line.product_id,
-                    line.product_uom_qty or 1.0,
+                    quantity=line.product_uom_qty or 1.0,
                     uom=line.product_uom,
                     date=line.order_id.date_order,
                 )
@@ -408,7 +408,7 @@ class SaleOrderLine(models.Model):
             # manually edited
             if line.qty_invoiced > 0:
                 continue
-            if not line.product_uom or not line.product_id or not line.order_id.pricelist_id:
+            if not line.product_uom or not line.product_id:
                 line.price_unit = 0.0
             else:
                 price = line.with_company(line.company_id)._get_display_price()
@@ -459,11 +459,11 @@ class SaleOrderLine(models.Model):
         pricelist_rule = self.pricelist_item_id
         order_date = self.order_id.date_order or fields.Date.today()
         product = self.product_id.with_context(**self._get_product_price_context())
-        qty = self.product_uom_qty or 1.0
+        quantity = self.product_uom_qty or 1.0
         uom = self.product_uom or self.product_id.uom_id
 
         price = pricelist_rule._compute_price(
-            product, qty, uom, order_date, currency=self.currency_id)
+            product, quantity, uom, order_date, currency=self.currency_id)
 
         return price
 
@@ -502,7 +502,7 @@ class SaleOrderLine(models.Model):
         pricelist_rule = self.pricelist_item_id
         order_date = self.order_id.date_order or fields.Date.today()
         product = self.product_id.with_context(**self._get_product_price_context())
-        qty = self.product_uom_qty or 1.0
+        quantity = self.product_uom_qty or 1.0
         uom = self.product_uom
 
         if pricelist_rule:
@@ -512,14 +512,14 @@ class SaleOrderLine(models.Model):
                 # to show the discount to the customer.
                 while pricelist_item.base == 'pricelist' and pricelist_item.base_pricelist_id.discount_policy == 'without_discount':
                     rule_id = pricelist_item.base_pricelist_id._get_product_rule(
-                        product, qty, uom=uom, date=order_date)
+                        product, quantity, currency=self.currency_id, uom=uom, date=order_date)
                     pricelist_item = self.env['product.pricelist.item'].browse(rule_id)
 
             pricelist_rule = pricelist_item
 
         price = pricelist_rule._compute_base_price(
             product,
-            qty,
+            quantity,
             uom,
             order_date,
             target_currency=self.currency_id,

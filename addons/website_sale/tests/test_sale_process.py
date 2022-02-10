@@ -14,6 +14,7 @@ class TestUi(HttpCaseWithUserDemo):
 
     def setUp(self):
         super(TestUi, self).setUp()
+        self.env['product.pricelist'].sudo().search([]).action_archive()
         product_product_7 = self.env['product.product'].create({
             'name': 'Storage Box',
             'standard_price': 70.0,

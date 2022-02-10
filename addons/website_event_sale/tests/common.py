@@ -52,7 +52,7 @@ class TestWebsiteEventSaleCommon(TransactionCase):
         }])
 
         cls.current_website = cls.env['website'].get_current_website()
-        cls.pricelist = cls.current_website.get_current_pricelist()
+        cls.pricelist = cls.env['product.pricelist'].create({'name': 'Base Pricelist'})
 
         cls.so = cls.env['sale.order'].create({
             'company_id': cls.env.company.id,

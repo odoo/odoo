@@ -26,7 +26,6 @@ class TestFrontend(odoo.tests.HttpCase):
             'printer_ids': [(4, printer.id)],
             'iface_start_categ_id': drinks_category.id,
             'start_category': True,
-            'pricelist_id': self.env.ref('product.list0').id,
         })
 
         main_floor = self.env['restaurant.floor'].create({

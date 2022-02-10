@@ -15,7 +15,7 @@ class ProductWishlist(models.Model):
 
     partner_id = fields.Many2one('res.partner', string='Owner')
     product_id = fields.Many2one('product.product', string='Product', required=True)
-    currency_id = fields.Many2one('res.currency', related='pricelist_id.currency_id', readonly=True)
+    currency_id = fields.Many2one('res.currency', related='website_id.currency_id', readonly=True)
     pricelist_id = fields.Many2one('product.pricelist', string='Pricelist', help='Pricelist when added')
     price = fields.Monetary(currency_field='currency_id', string='Price', help='Price of the product when it has been added in the wishlist')
     website_id = fields.Many2one('website', ondelete='cascade', required=True)

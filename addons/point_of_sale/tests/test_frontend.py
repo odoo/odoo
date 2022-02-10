@@ -439,7 +439,10 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
                                                 'type': 'sale',
                                                 'company_id': main_company.id})
 
-        all_pricelists = env['product.pricelist'].search([('id', '!=', excluded_pricelist.id)])
+        all_pricelists = env['product.pricelist'].search([
+            ('id', '!=', excluded_pricelist.id),
+            '|', ('company_id', '=', main_company.id), ('company_id', '=', False)
+        ])
         all_pricelists.write(dict(currency_id=main_company.currency_id.id))
 
         src_tax = env['account.tax'].create({'name': "SRC", 'amount': 10})

@@ -46,14 +46,14 @@
                                 t-out="combination_info['list_price']"
                                 t-options='{
                                     "widget": "monetary",
-                                    "display_currency": (pricelist or product).currency_id
+                                    "display_currency": (pricelist or product.env.company).currency_id
                                 }'/>
                             <span class="oe_price product_id mt-3" style="white-space: nowrap;"
                                 t-att-data-product-id="product.id"
                                 t-out="combination_info['price']"
                                 t-options='{
                                     "widget": "monetary",
-                                    "display_currency": (pricelist or product).currency_id
+                                    "display_currency": (pricelist or product.env.company).currency_id
                                 }'/>
                         </h2>
                         <t t-if="product.visible_qty_configurator">
@@ -136,7 +136,7 @@
                         t-out="combination_info['list_price']"
                         t-options='{
                             "widget": "monetary",
-                            "display_currency": (pricelist or product).currency_id
+                            "display_currency": (pricelist or product.env.company).currency_id
                         }'
                     />
                     <span class="oe_price product_id" style="white-space: nowrap;"
@@ -144,7 +144,7 @@
                         t-out="combination_info['price']"
                         t-options='{
                             "widget": "monetary",
-                            "display_currency": (pricelist or product).currency_id
+                            "display_currency": (pricelist or product.env.company).currency_id
                         }'/>
                     <span class="js_raw_price d-none" t-out="product._get_contextual_price()"/>
                     <p class="css_not_available_msg alert alert-warning">Option not available</p>
@@ -158,7 +158,7 @@
                         t-out="combination_info['price'] * (add_qty or 1)"
                         t-options='{
                             "widget": "monetary",
-                            "display_currency": (pricelist or product).currency_id
+                            "display_currency": (pricelist or product.env.company).currency_id
                         }'/>
                 </td>
             </tr>
@@ -205,13 +205,13 @@
                             t-out="combination_info['list_price']"
                             t-options='{
                                 "widget": "monetary",
-                                "display_currency": (pricelist or product).currency_id
+                                "display_currency": (pricelist or product.env.company).currency_id
                             }'/>
                         <div class="oe_price" style="white-space: nowrap;"
                             t-out="combination_info['price']"
                             t-options='{
                                 "widget": "monetary",
-                                "display_currency": (pricelist or product).currency_id
+                                "display_currency": (pricelist or product.env.company).currency_id
                             }'/>
                         <span class="js_raw_price d-none" t-out="combination_info['price']" />
                         <p class="css_not_available_msg alert alert-warning">Option not available</p>

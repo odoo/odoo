@@ -330,7 +330,7 @@ class TestEventSale(TestEventSaleCommon):
 
     def test_ticket_price_with_pricelist_and_tax(self):
         self.env.user.partner_id.country_id = False
-        pricelist = self.env['product.pricelist'].search([], limit=1)
+        pricelist = self.env['product.pricelist'].create({'name': 'Base Pricelist'})
 
         tax = self.env['account.tax'].create({
             'name': "Tax 10",

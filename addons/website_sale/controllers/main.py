@@ -215,7 +215,7 @@ class WebsiteSale(http.Controller):
                 yield {'loc': loc}
 
     def _get_search_options(
-        self, category=None, attrib_values=None, pricelist=None, min_price=0.0, max_price=0.0, conversion_rate=1, **post
+        self, category=None, attrib_values=None, min_price=0.0, max_price=0.0, conversion_rate=1, **post
     ):
         return {
             'displayDescription': True,
@@ -228,7 +228,7 @@ class WebsiteSale(http.Controller):
             'min_price': min_price / conversion_rate,
             'max_price': max_price / conversion_rate,
             'attrib_values': attrib_values,
-            'display_currency': pricelist.currency_id,
+            'display_currency': post.get('display_currency'),
         }
 
     def _shop_lookup_products(self, attrib_set, options, post, search, website):
@@ -345,9 +345,9 @@ class WebsiteSale(http.Controller):
         keep = QueryURL('/shop', **self._shop_get_query_url_kwargs(category and int(category), search, min_price, max_price, **post))
 
         now = datetime.timestamp(datetime.now())
-        pricelist = request.env['product.pricelist'].browse(request.session.get('website_sale_current_pl'))
-        if not pricelist or request.session.get('website_sale_pricelist_time', 0) < now - 60*60: # test: 1 hour in session
-            pricelist = website.get_current_pricelist()
+        pricelist = website.get_current_pricelist()
+        if request.session.get('website_sale_pricelist_time', 0) < now - 60*60: # test: 1 hour in session
+            pricelist = website.pricelist_id
             request.session['website_sale_pricelist_time'] = now
             request.session['website_sale_current_pl'] = pricelist.id
 
@@ -357,7 +357,7 @@ class WebsiteSale(http.Controller):
         if filter_by_price_enabled:
             company_currency = website.company_id.currency_id
             conversion_rate = request.env['res.currency']._get_conversion_rate(
-                company_currency, pricelist.currency_id, request.website.company_id, fields.Date.today())
+                company_currency, website.currency_id, request.website.company_id, fields.Date.today())
         else:
             conversion_rate = 1
 
@@ -370,10 +370,10 @@ class WebsiteSale(http.Controller):
         options = self._get_search_options(
             category=category,
             attrib_values=attrib_values,
-            pricelist=pricelist,
             min_price=min_price,
             max_price=max_price,
             conversion_rate=conversion_rate,
+            display_currency=website.currency_id,
             **post
         )
         fuzzy_search_term, product_count, search_product = self._shop_lookup_products(attrib_set, options, post, search, website)
