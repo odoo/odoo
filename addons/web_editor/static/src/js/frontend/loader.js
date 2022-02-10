@@ -40,10 +40,6 @@ exports.createWysiwyg = async (parent, options, additionnalAssets = []) => {
 };
 
 exports.loadFromTextarea = async (parent, textarea, options) => {
-    var loading = textarea.nextElementSibling;
-    if (loading && !loading.classList.contains('o_wysiwyg_loading')) {
-        loading = null;
-    }
     const $textarea = $(textarea);
     const currentOptions = Object.assign({}, options);
     currentOptions.value = currentOptions.value || $textarea.val() || '';
