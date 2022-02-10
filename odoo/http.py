@@ -184,6 +184,12 @@ babel.core.LOCALE_ALIASES['nb'] = 'nb_NO'
 # The validity duration of a preflight response, one day.
 CORS_MAX_AGE = 60 * 60 * 24
 
+# The HTTP methods that do not require a CSRF validation.
+CSRF_FREE_METHODS = ('GET', 'HEAD', 'OPTIONS', 'TRACE')
+
+# The default csrf token lifetime, a salt against BREACH, one year
+CSRF_TOKEN_SALT = 60 * 60 * 24 * 365
+
 # The default lang to use when the browser doesn't specify it
 DEFAULT_LANG = 'en_US'
 
@@ -205,6 +211,30 @@ DEFAULT_SESSION = {
 
 # The request mimetypes that transport JSON in their body.
 JSON_MIMETYPES = ('application/json', 'application/json-rpc')
+
+MISSING_CSRF_WARNING = """\
+No CSRF validation token provided for path %r
+
+Odoo URLs are CSRF-protected by default (when accessed with unsafe
+HTTP methods). See
+https://www.odoo.com/documentation/master/developer/reference/addons/http.html#csrf
+for more details.
+
+* if this endpoint is accessed through Odoo via py-QWeb form, embed a CSRF
+  token in the form, Tokens are available via `request.csrf_token()`
+  can be provided through a hidden input and must be POST-ed named
+  `csrf_token` e.g. in your form add:
+      <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+* if the form is generated or posted in javascript, the token value is
+  available as `csrf_token` on `web.core` and as the `csrf_token`
+  value in the default js-qweb execution context
+
+* if the form is accessed by an external third party (e.g. REST API
+  endpoint, payment gateway callback) you will need to disable CSRF
+  protection (and implement your own protection if necessary) by
+  passing the `csrf=False` parameter to the `route` decorator.
+"""
 
 # The @route arguments to propagate from the decorated method to the
 # routing rule.
@@ -905,7 +935,55 @@ class Request:
     # =====================================================
     # Helpers
     # =====================================================
-    ...
+    def csrf_token(self, time_limit=None):
+        """
+        Generates and returns a CSRF token for the current session
+
+        :param Optional[int] time_limit: the CSRF token should only be
+            valid for the specified duration (in second), by default
+            48h, ``None`` for the token to be valid as long as the
+            current user's session is.
+        :returns: ASCII token string
+        :rtype: str
+        """
+        secret = self.env['ir.config_parameter'].sudo().get_param('database.secret')
+        if not secret:
+            raise ValueError("CSRF protection requires a configured database secret")
+
+        # if no `time_limit` => distant 1y expiry so max_ts acts as salt, e.g. vs BREACH
+        max_ts = int(time.time() + (time_limit or CSRF_TOKEN_SALT))
+        msg = f'{self.session.sid}{max_ts}'.encode('utf-8')
+
+        hm = hmac.new(secret.encode('ascii'), msg, hashlib.sha1).hexdigest()
+        return f'{hm}o{max_ts}'
+
+    def validate_csrf(self, csrf):
+        """
+        Is the given csrf token valid ?
+
+        :param str csrf: The token to validate.
+        :returns: ``True`` when valid, ``False`` when not.
+        :rtype: bool
+        """
+        if not csrf:
+            return False
+
+        secret = self.env['ir.config_parameter'].sudo().get_param('database.secret')
+        if not secret:
+            raise ValueError("CSRF protection requires a configured database secret")
+
+        hm, _, max_ts = csrf.rpartition('o')
+        msg = f'{self.session.sid}{max_ts}'.encode('utf-8')
+
+        if max_ts:
+            try:
+                if int(max_ts) < int(time.time()):
+                    return False
+            except ValueError:
+                return False
+
+        hm_expected = hmac.new(secret.encode('ascii'), msg, hashlib.sha1).hexdigest()
+        return consteq(hm, hm_expected)
 
     def default_lang(self):
         lang = self.httprequest.accept_languages.best
@@ -1062,7 +1140,28 @@ class Request:
                 raise
 
     def _serve_ir_http(self):
-        ...
+        """
+        Delegate most of the processing to the ir.http model that is
+        extensible by applications.
+        """
+        ir_http = self.registry['ir.http']
+
+        try:
+            rule, args = ir_http._match(self.httprequest.path)
+        except NotFound:
+            self.params = self.get_http_params()
+            response = ir_http._serve_fallback()
+            if response:
+                self.dispatcher.post_dispatch(response)
+                return response
+            raise
+
+        self._set_request_dispatcher(rule)
+        ir_http._authenticate(rule.endpoint)
+        ir_http._pre_dispatch(rule, args)
+        response = self.dispatcher.dispatch(rule.endpoint, args)
+        ir_http._post_dispatch(response)
+        return response
 
 
 # =========================================================
@@ -1159,10 +1258,21 @@ class HttpDispatcher(Dispatcher):
         """
         self.request.params = dict(self.request.get_http_params(), **args)
 
-        ...
+        # Check for CSRF token for relevant requests
+        if self.request.httprequest.method not in CSRF_FREE_METHODS and endpoint.routing.get('csrf', True):
+            if not self.request.db:
+                return self.request.redirect('/web/database/selector')
+
+            token = self.request.params.pop('csrf_token', None)
+            if not self.request.validate_csrf(token):
+                if token is not None:
+                    _logger.warning("CSRF validation failed on path '%s'", self.request.httprequest.path)
+                else:
+                    _logger.warning(MISSING_CSRF_WARNING, request.httprequest.path)
+                raise werkzeug.exceptions.BadRequest('Session expired (invalid CSRF token)')
 
         if self.request.db:
-            ...
+            return self.request.registry['ir.http']._dispatch(endpoint)
         else:
             return endpoint(**self.request.params)
 
@@ -1250,7 +1360,7 @@ class JsonRPCDispatcher(Dispatcher):
             self.request.update_env(context=ctx)
 
         if self.request.db:
-            ...
+            result = self.request.registry['ir.http']._dispatch(endpoint)
         else:
             result = endpoint(**self.request.params)
         return self._response(result)

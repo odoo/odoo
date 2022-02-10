@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 #----------------------------------------------------------
 # ir_http modular http routing
 #----------------------------------------------------------
@@ -19,13 +19,11 @@ import werkzeug.utils
 import odoo
 from odoo import api, http, models, tools, SUPERUSER_ID
 from odoo.exceptions import AccessDenied, AccessError, MissingError
-from odoo.http import request, content_disposition, Response
-from odoo.tools import consteq, pycompat
+from odoo.http import request, content_disposition, Response, ROUTING_KEYS
+from odoo.service import security
+from odoo.tools import consteq, submap
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.modules.module import get_resource_path, get_module_path
-
-from odoo.http import ALLOWED_DEBUG_MODES
-from odoo.tools.misc import str2bool
 
 _logger = logging.getLogger(__name__)
 
@@ -87,68 +85,67 @@ class IrHttp(models.AbstractModel):
 
     @classmethod
     def _match(cls, path_info, key=None):
-        return cls.routing_map().bind_to_environ(request.httprequest.environ).match(path_info=path_info, return_rule=True)
+        rule, args = cls.routing_map().bind_to_environ(request.httprequest.environ).match(path_info=path_info, return_rule=True)
+        return rule, args
 
     @classmethod
     def _auth_method_user(cls):
-        request.uid = request.session.uid
-        if not request.uid:
+        if request.env.uid is None:
             raise http.SessionExpiredException("Session expired")
 
     @classmethod
     def _auth_method_none(cls):
-        request.uid = None
+        request.env = api.Environment(request.env.cr, None, request.env.context)
 
     @classmethod
     def _auth_method_public(cls):
-        if not request.session.uid:
-            request.uid = request.env.ref('base.public_user').id
-        else:
-            request.uid = request.session.uid
+        if request.env.uid is None:
+            public_user = request.env.ref('base.public_user')
+            request.update_env(user=public_user.id)
 
     @classmethod
     def _authenticate(cls, endpoint):
-        auth_method = endpoint.routing["auth"]
-        if request._is_cors_preflight(endpoint):
-            auth_method = 'none'
+        auth = 'none' if http.is_cors_preflight(request, endpoint) else endpoint.routing['auth']
+
         try:
-            if request.session.uid:
-                try:
-                    request.session.check_security()
-                    # what if error in security.check()
-                    #   -> res_users.check()
-                    #   -> res_users._check_credentials()
-                except (AccessDenied, http.SessionExpiredException):
-                    # All other exceptions mean undetermined status (e.g. connection pool full),
-                    # let them bubble up
+            if request.session.uid is not None:
+                if not security.check_session(request.session, request.env):
                     request.session.logout(keep_db=True)
-            if request.uid is None:
-                getattr(cls, "_auth_method_%s" % auth_method)()
+                    request.env = api.Environment(request.env.cr, None, request.session.context)
+            getattr(cls, f'_auth_method_{auth}')()
         except (AccessDenied, http.SessionExpiredException, werkzeug.exceptions.HTTPException):
             raise
         except Exception:
             _logger.info("Exception during request Authentication.", exc_info=True)
             raise AccessDenied()
-        return auth_method
 
     @classmethod
-    def _handle_debug(cls):
-        # Store URL debug mode (might be empty) into session
-        if 'debug' in request.httprequest.args:
-            debug_mode = []
-            for debug in request.httprequest.args['debug'].split(','):
-                if debug not in ALLOWED_DEBUG_MODES:
-                    debug = '1' if str2bool(debug, debug) else ''
-                debug_mode.append(debug)
-            debug_mode = ','.join(debug_mode)
+    def _pre_dispatch(cls, rule, args):
+        request.dispatcher.pre_dispatch(rule, args)
 
-            # Write on session only when needed
-            if debug_mode != request.session.debug:
-                request.session.debug = debug_mode
+        # Replace uid placeholder by the current request.env.uid
+        for key, val in list(args.items()):
+            if isinstance(val, models.BaseModel) and isinstance(val._uid, RequestUID):
+                args[key] = val.with_user(request.env.uid)
+
+    @classmethod
+    def _dispatch(cls, endpoint):
+        result = endpoint(**request.params)
+        if isinstance(result, Response) and result.is_qweb:
+            result.flatten()
+        return result
+
+    @classmethod
+    def _post_dispatch(cls, response):
+        request.dispatcher.post_dispatch(response)
+
+    @classmethod
+    def _handle_error(cls, exception):
+        return request.dispatcher.handle_error(exception)
 
     @classmethod
     def _serve_attachment(cls):
-        env = api.Environment(request.cr, SUPERUSER_ID, request.context)
+        env = request.env(user=SUPERUSER_ID)
         attach = env['ir.attachment'].get_serve_attachment(request.httprequest.path, extra_fields=['name', 'checksum'])
         if attach:
             wdate = attach[0]['__last_update']
@@ -174,85 +171,15 @@ class IrHttp(models.AbstractModel):
             return response
 
     @classmethod
-    def _serve_fallback(cls, exception):
+    def _serve_fallback(cls):
         # serve attachment
         attach = cls._serve_attachment()
         if attach:
             return attach
-        return False
-
-    @classmethod
-    def _handle_exception(cls, exception):
-        # in case of Exception, e.g. 404, we don't step into _dispatch
-        cls._handle_debug()
-
-        # If handle_exception returns something different than None, it will be used as a response
-
-        # This is done first as the attachment path may
-        # not match any HTTP controller
-        if (isinstance(exception, werkzeug.exceptions.HTTPException) and exception.code == 404) or \
-           (isinstance(exception, odoo.exceptions.AccessError)):
-            serve = cls._serve_fallback(exception)
-            if serve:
-                return serve
-
-        # Don't handle exception but use werkzeug debugger if server in --dev mode
-        # Don't intercept JSON request to respect the JSON Spec and return exception as JSON
-        # "The Response is expressed as a single JSON Object, with the following members:
-        #   jsonrpc, result, error, id"
-        if ('werkzeug' in tools.config['dev_mode']
-                and not isinstance(exception, werkzeug.exceptions.NotFound)
-                and request._request_type != 'json'):
-            raise exception
-
-        try:
-            return request._handle_exception(exception)
-        except AccessDenied:
-            return werkzeug.exceptions.Forbidden()
-
-    @classmethod
-    def _dispatch(cls):
-        cls._handle_debug()
-
-        # locate the controller method
-        try:
-            rule, arguments = cls._match(request.httprequest.path)
-            func = rule.endpoint
-        except werkzeug.exceptions.NotFound as e:
-            return cls._handle_exception(e)
-
-        # check authentication level
-        try:
-            auth_method = cls._authenticate(func)
-        except Exception as e:
-            return cls._handle_exception(e)
-
-        processing = cls._postprocess_args(arguments, rule)
-        if processing:
-            return processing
-
-        # set and execute handler
-        try:
-            request.set_handler(func, arguments, auth_method)
-            result = request.dispatch()
-            if isinstance(result, Exception):
-                raise result
-        except Exception as e:
-            return cls._handle_exception(e)
-
-        return result
 
     @classmethod
     def _redirect(cls, location, code=303):
         return werkzeug.utils.redirect(location, code=code, Response=Response)
-
-    @classmethod
-    def _postprocess_args(cls, arguments, rule):
-        """ post process arg to set uid on browse records """
-        for key, val in list(arguments.items()):
-            # Replace uid placeholder by the current request.uid
-            if isinstance(val, models.BaseModel) and isinstance(val._uid, RequestUID):
-                arguments[key] = val.with_user(request.uid)
 
     @classmethod
     def _generate_routing_rules(cls, modules, converters):
@@ -267,7 +194,7 @@ class IrHttp(models.AbstractModel):
 
         if key not in cls._routing_map:
             _logger.info("Generating routing map for key %s" % str(key))
-            installed = request.registry._init_modules | set(odoo.conf.server_wide_modules)
+            installed = request.env.registry._init_modules.union(odoo.conf.server_wide_modules)
             if tools.config['test_enable'] and odoo.modules.module.current_test:
                 installed.add(odoo.modules.module.current_test)
             mods = sorted(installed)
@@ -276,10 +203,11 @@ class IrHttp(models.AbstractModel):
             # of the model, each instance will regenared its own routing map and thus
             # regenerate its EndPoint. The routing map should be static.
             routing_map = werkzeug.routing.Map(strict_slashes=False, converters=cls._get_converters())
-            for url, endpoint, routing in cls._generate_routing_rules(mods, converters=cls._get_converters()):
-                xtra_keys = 'defaults subdomain build_only strict_slashes redirect_to alias host'.split()
-                kw = {k: routing[k] for k in xtra_keys if k in routing}
-                rule = werkzeug.routing.Rule(url, endpoint=endpoint, methods=routing['methods'], **kw)
+            for url, endpoint in cls._generate_routing_rules(mods, converters=cls._get_converters()):
+                routing = submap(endpoint.routing, ROUTING_KEYS)
+                if routing['methods'] is not None and 'OPTIONS' not in routing['methods']:
+                    routing['methods'] = routing['methods'] + ['OPTIONS']
+                rule = werkzeug.routing.Rule(url, endpoint=endpoint, **routing)
                 rule.merge_slashes = False
                 routing_map.add(rule)
             cls._routing_map[key] = routing_map
@@ -290,6 +218,10 @@ class IrHttp(models.AbstractModel):
         if hasattr(cls, '_routing_map'):
             cls._routing_map = {}
             _logger.debug("Clear routing map")
+
+    @api.autovacuum
+    def _gc_sessions(self):
+        http.root.session_store.vacuum()
 
     #------------------------------------------------------
     # Binary server
@@ -491,4 +423,4 @@ class IrHttp(models.AbstractModel):
         elif status == 301:
             return request.redirect(content, code=301, local=False)
         elif status != 200:
-            return request.not_found()
+            raise request.not_found()
