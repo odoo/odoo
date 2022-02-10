@@ -11,61 +11,61 @@
                         t-att-data-id="(recordsDraggable or groupsDraggable) and group.id"
                         t-on-mouseenter="() => state.hoveredGroup = group.id"
                         t-on-mouseleave="() => state.hoveredGroup = null"
-                        t-on-click="onGroupClick(group)"
+                        t-on-click="() => this.onGroupClick(group)"
                     >
                         <div class="o_kanban_header">
                             <div class="o_kanban_header_title">
                                 <span class="o_column_title" t-esc="getGroupName(group)" />
                                 <t t-if="!group.isFolded">
-                                    <Dropdown t-if="state.hoveredGroup === group.id" class="o_kanban_config" togglerClass="'btn p-0'">
+                                    <Dropdown t-if="state.hoveredGroup === group.id" class="'o_kanban_config'" togglerClass="'btn p-0'">
                                         <t t-set-slot="toggler">
                                             <i class="fa fa-gear" role="img" aria-label="Settings" title="Settings" />
                                         </t>
                                         <ul class="list-unstyled m-0">
                                             <button role="menuitem"
                                                 class="dropdown-item o_kanban_toggle_fold"
-                                                t-on-click="toggleGroup(group)"
+                                                t-on-click="() => this.toggleGroup(group)"
                                             >
                                                 Fold
                                             </button>
                                             <button t-if="canEditGroup(group)"
                                                 role="menuitem"
                                                 class="dropdown-item o_column_edit"
-                                                t-on-click="editGroup(group)"
+                                                t-on-click="() => this.editGroup(group)"
                                             >
                                                 Edit Stage
                                             </button>
                                             <button t-if="canDeleteGroup(group)"
                                                 role="menuitem"
                                                 class="dropdown-item o_column_delete"
-                                                t-on-click="deleteGroup(group)"
+                                                t-on-click="() => this.deleteGroup(group)"
                                             >
                                                 Delete
                                             </button>
                                             <t t-if="canArchiveGroup(group)">
                                                 <button role="menuitem"
                                                     class="dropdown-item o_column_archive_records"
-                                                    t-on-click="archiveGroup(group)"
+                                                    t-on-click="() => this.archiveGroup(group)"
                                                 >
                                                     Archive All
                                                 </button>
                                                 <button role="menuitem"
                                                     class="dropdown-item o_column_unarchive_records"
-                                                    t-on-click="unarchiveGroup(group)"
+                                                    t-on-click="() => this.unarchiveGroup(group)"
                                                 >
                                                     Unarchive All
                                                 </button>
                                             </t>
                                         </ul>
                                     </Dropdown>
-                                    <span t-if="props.list.canQuickCreate()" class="o_kanban_quick_add" t-on-click="props.list.quickCreate(group)">
+                                    <span t-if="props.list.canQuickCreate()" class="o_kanban_quick_add" t-on-click="() => props.list.quickCreate(group)">
                                         <i class="fa fa-plus" role="img" aria-label="Quick add" title="Quick add" />
                                     </span>
                                 </t>
                                 <span t-else="" class="o_column_unfold">
                                     <i class="fa fa-arrows-h" role="img" aria-label="Unfold" title="Unfold" />
                                 </span>
-                                <span t-if="props.info.quickCreate" class="o_kanban_quick_add" t-on-click="quickCreate(group)">
+                                <span t-if="props.info.quickCreate" class="o_kanban_quick_add" t-on-click="() => this.quickCreate(group)">
                                     <i class="fa fa-plus" role="img" aria-label="Quick add" title="Quick add" />
                                 </span>
                             </div>
@@ -83,13 +83,12 @@
                                             t-att-aria-valuenow="progressData.count"
                                             t-attf-data-tooltip="{{ progressData.count }} {{ progressData.string }}"
                                             data-tooltip-delay="0"
-                                            t-on-click="group.filterProgressValue(progressData.value)"
+                                            t-on-click="() => group.filterProgressValue(progressData.value)"
                                         />
                                     </t>
                                 </div>
                                 <t t-set="aggregate" t-value="getGroupAggregate(group)" />
                                 <KanbanAnimatedNumber
-                                    class="o_kanban_counter_side"
                                     value="aggregate.value"
                                     title="aggregate.title"
                                     duration="1000"
@@ -103,17 +102,17 @@
                                 <div t-if="record.isQuickCreate and props.list.quickCreateInfo"
                                     class="o_kanban_quick_create"
                                     t-att-class="{ o_disabled: state.quickCreateDisabled }"
-                                    t-on-keydown="onQuickCreateKeydown(group)"
+                                    t-on-keydown="() => this.onQuickCreateKeydown(group)"
                                 >
-                                    <FormRenderer class="o_form_view o_xxs_form_view" record="record" fields="props.fields" info="props.list.quickCreateInfo" />
+                                    <FormRenderer class="'o_form_view o_xxs_form_view'" record="record" fields="props.fields" info="props.list.quickCreateInfo" />
                                     <div class="d-flex">
-                                        <button class="btn btn-primary o_kanban_add mr-1 text_truncate" t-on-click="validateQuickCreate(group, false)">
+                                        <button class="btn btn-primary o_kanban_add mr-1 text_truncate" t-on-click="() => this.validateQuickCreate(group, false)">
                                             Add
                                         </button>
-                                        <button class="btn btn-primary o_kanban_edit mr-1 text_truncate" t-on-click="validateQuickCreate(group, true)">
+                                        <button class="btn btn-primary o_kanban_edit mr-1 text_truncate" t-on-click="() => this.validateQuickCreate(group, true)">
                                             Edit
                                         </button>
-                                        <button class="btn btn-secondary o_kanban_cancel ml-auto" t-on-click="cancelQuickCreate(group)">
+                                        <button class="btn btn-secondary o_kanban_cancel ml-auto" t-on-click="() => this.cancelQuickCreate(group)">
                                             <i class="fa fa-trash" />
                                         </button>
                                     </div>
@@ -122,7 +121,7 @@
                             </t>
                             <t t-set="unloadedCount" t-value="!group.isDirty and getGroupUnloadedCount(group)" />
                             <div t-if="unloadedCount > 0" class="o_kanban_load_more">
-                                <a href="#" t-on-click="loadMore(group)">
+                                <a href="#" t-on-click="() => this.loadMore(group)">
                                     Load more... (<t t-esc="unloadedCount" /> remaining)
                                 </a>
                             </div>

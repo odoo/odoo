@@ -10,7 +10,7 @@
                             <CheckBox disabled="!!props.editedRecordId" value="selectAll" onChange.bind="toggleSelection" />
                         </th>
                         <t t-foreach="state.columns" t-as="column" t-key="column.name">
-                            <th t-if="column.type === 'field'" t-att-class="getColumnClass(column)" t-on-click="onClickSortColumn(column)">
+                            <th t-if="column.type === 'field'" t-att-class="getColumnClass(column)" t-on-click="() => this.onClickSortColumn(column)">
                                 <t t-if="column.hasLabel" t-esc="column.label"/>
                             </th>
                             <th t-else=""></th>
@@ -76,7 +76,7 @@
     </t>
 
     <t t-name="web.ListRenderer.GroupRow" owl="1">
-        <tr t-attf-class="{{group.count > 0 ? 'o_group_has_content' : ''}} o_group_header {{!group.isFolded ? 'o_group_open' : ''}}" t-on-click="toggleGroup(group)">
+        <tr t-attf-class="{{group.count > 0 ? 'o_group_has_content' : ''}} o_group_header {{!group.isFolded ? 'o_group_open' : ''}}" t-on-click="() => this.toggleGroup(group)">
             <th class="o_group_name" t-att-colspan="getGroupNameCellColSpan(group)">
                 <span t-attf-class="fa {{group.isLoaded ? 'fa-caret-down' : 'fa-caret-right'}}"
                     t-attf-style="padding-left: {{2 + getGroupLevel(group) * 20}}px; padding-right: 5px"/>
@@ -84,7 +84,7 @@
                 <div t-if="(groupByButtons[group.groupByField.name] and !group.isFolded)" class="o_group_buttons">
                     <t t-foreach="groupByButtons[group.groupByField.name]" t-as="button" t-key="button.id">
                         <t t-if="button.clickParams.type === 'edit'">
-                            <button t-att-title="button.title" class="btn" t-on-click="editGroupRecord(group)">
+                            <button t-att-title="button.title" class="btn" t-on-click="() => this.editGroupRecord(group)">
                                 <i t-attf-class="fa fa-fw {{button.icon}} o_button_icon"/>
                             </button>
                         </t>
@@ -109,8 +109,8 @@
     </t>
 
     <t t-name="web.ListRenderer.RecordRow" owl="1">
-        <tr class="o_data_row" t-att-class="getRowClass(record)" t-on-click="onRowClicked(record)">
-            <td t-if="props.hasSelectors" class="o_list_record_selector" t-on-click.stop="toggleRecordSelection(record)">
+        <tr class="o_data_row" t-att-class="getRowClass(record)" t-on-click="() => this.onRowClicked(record)">
+            <td t-if="props.hasSelectors" class="o_list_record_selector" t-on-click.stop="() => this.toggleRecordSelection(record)">
                 <CheckBox disabled="!!props.editedRecordId" value="record.selected" onChange="() => this.toggleRecordSelection(record)" />
             </td>
             <t t-foreach="state.columns" t-as="column" t-key="column.name">
