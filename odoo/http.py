@@ -684,7 +684,7 @@ class FilesystemSessionStore(sessions.FilesystemSessionStore):
 
 class Session(dict):
     """ Structure containing data persisted across requests. """
-    __slots__ = ('can_save', 'is_explicit', 'json_data', 'new', 'should_rotate', 'sid')
+    __slots__ = ('can_save', 'is_explicit', 'json_data', 'new', 'should_rotate', 'should_touch', 'sid')
 
     def __init__(self, data, sid, new=False):
         super().__init__(data)
@@ -693,6 +693,7 @@ class Session(dict):
         object.__setattr__(self, 'json_data', json.dumps(data))
         object.__setattr__(self, 'new', new)
         object.__setattr__(self, 'should_rotate', False)
+        object.__setattr__(self, 'should_touch', False)
         object.__setattr__(self, 'sid', sid)
 
     def __getattr__(self, attr):
@@ -704,7 +705,67 @@ class Session(dict):
         else:
             self[key] = val
 
-    ...
+    def authenticate(self, dbname, login=None, password=None):
+        """
+        Authenticate the current user with the given db, login and
+        password. If successful, store the authentication parameters in
+        the current session, unless multi-factor-auth (MFA) is
+        activated. In that case, that last part will be done by
+        :ref:`finalize`.
+
+        .. versionchanged:: saas-15.3
+           The current request is no longer updated using the user and
+           context of the session when the authentication is done using
+           a database different than request.db. It is up to the caller
+           to open a new cursor/registry/env on the given database.
+        """
+        wsgienv = {
+            'interactive': True,
+            'base_location': request.httprequest.url_root.rstrip('/'),
+            'HTTP_HOST': request.httprequest.environ['HTTP_HOST'],
+            'REMOTE_ADDR': request.httprequest.environ['REMOTE_ADDR'],
+        }
+
+        registry = Registry(dbname)
+        pre_uid = registry['res.users'].authenticate(dbname, login, password, wsgienv)
+
+        self.uid = None
+        self.pre_login = login
+        self.pre_uid = pre_uid
+
+        with registry.cursor() as cr:
+            env = odoo.api.Environment(cr, pre_uid, {})
+
+            # if 2FA is disabled we finalize immediately
+            user = env['res.users'].browse(pre_uid)
+            if not user._mfa_url():
+                self.finalize(env)
+
+        if request and request.session is self and request.db == dbname:
+            # Like update_env(user=request.session.uid) but works when uid is None
+            request.env = odoo.api.Environment(request.env.cr, self.uid, self.context)
+            request.update_context(**self.context)
+
+        return pre_uid
+
+    def finalize(self, env):
+        """
+        Finalizes a partial session, should be called on MFA validation
+        to convert a partial / pre-session into a logged-in one.
+        """
+        login = self.pop('pre_login')
+        uid = self.pop('pre_uid')
+
+        env = env(user=uid)
+        user_context = dict(env['res.users'].context_get())
+
+        self.should_rotate = True
+        self.update({
+            'login': login,
+            'uid': uid,
+            'context': user_context,
+            'session_token': env.user._compute_session_token(self.sid),
+        })
 
     def logout(self, keep_db=False):
         db = self.db if keep_db else DEFAULT_SESSION['db']  # None
@@ -1044,13 +1105,15 @@ class Request:
 
     def _save_session(self):
         """ Save a modified session on disk. """
-        if not self.session.can_save:
+        sess = self.session
+
+        if not sess.can_save:
             return
 
-        if self.session.should_rotate:
-            root.session_store.rotate(self.session, self.env)  # it saves
-        elif json.dumps(self.session) != self.session.json_data:
-            root.session_store.save(self.session)
+        if sess.should_rotate:
+            root.session_store.rotate(sess, self.env)  # it saves
+        elif sess.should_touch or json.dumps(sess) != sess.json_data:
+            root.session_store.save(sess)
 
         # We must not set the cookie if the session id was specified
         # using a http header or a GET parameter.
@@ -1062,8 +1125,8 @@ class Request:
         #   cookie). That is a special feature of the Javascript Session.
         # - It could allow session fixation attacks.
         cookie_sid = self.httprequest.cookies.get('session_id')
-        if (cookie_sid != self.session.sid and not self.session.is_explicit):
-            self.future_response.set_cookie('session_id', self.session.sid, max_age=SESSION_LIFETIME, httponly=True)
+        if (sess.should_touch or cookie_sid != sess.sid and not sess.is_explicit):
+            self.future_response.set_cookie('session_id', sess.sid, max_age=SESSION_LIFETIME, httponly=True)
 
     def _set_request_dispatcher(self, rule):
         routing = rule.endpoint.routing

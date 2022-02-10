@@ -16,6 +16,7 @@ from hashlib import sha256
 from itertools import chain, repeat
 from markupsafe import Markup
 
+import babel.core
 import decorator
 import pytz
 from lxml import etree
@@ -26,7 +27,7 @@ from psycopg2 import sql
 from odoo import api, fields, models, tools, SUPERUSER_ID, _, Command
 from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 from odoo.exceptions import AccessDenied, AccessError, UserError, ValidationError
-from odoo.http import request
+from odoo.http import request, DEFAULT_LANG
 from odoo.osv import expression
 from odoo.service.db import check_super
 from odoo.tools import is_html_empty, partition, collections, frozendict, lazy_property
@@ -646,10 +647,23 @@ class Users(models.Model):
         # use read() to not read other fields: this must work while modifying
         # the schema of models res.users or res.partner
         values = user.read(list(name_to_key), load=False)[0]
-        return frozendict({
+
+        context = {
             key: values[name]
             for name, key in name_to_key.items()
-        })
+        }
+
+        # ensure the language is set and is compatible with the web client
+        lang = context.get('lang') or (request and request.default_lang()) or DEFAULT_LANG
+        if lang == 'ar_AR':
+            context['lang'] = 'ar'
+        if lang in babel.core.LOCALE_ALIASES:
+            context['lang'] = babel.core.LOCALE_ALIASES[lang]
+
+        # ensure uid is set
+        context['uid'] = self.env.uid
+
+        return frozendict(context)
 
     @api.model
     def action_get(self):

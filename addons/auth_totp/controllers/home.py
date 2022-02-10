@@ -32,7 +32,7 @@ class Home(odoo.addons.web.controllers.main.Home):
             if key:
                 checked_credentials = request.env['auth_totp.device']._check_credentials(scope="browser", key=key)
                 if checked_credentials == user.id:
-                    request.session.finalize()
+                    request.session.finalize(request.env)
                     return request.redirect(self._login_redirect(request.session.uid, redirect=redirect))
 
         elif user and request.httprequest.method == 'POST' and kwargs.get('totp_token'):
@@ -44,7 +44,9 @@ class Home(odoo.addons.web.controllers.main.Home):
             except ValueError:
                 error = _("Invalid authentication code format.")
             else:
-                request.session.finalize()
+                request.session.finalize(request.env)
+                request.update_env(user=request.session.uid)
+                request.update_context(**request.session.context)
                 response = request.redirect(self._login_redirect(request.session.uid, redirect=redirect))
                 if kwargs.get('remember'):
                     name = _("%(browser)s on %(platform)s",

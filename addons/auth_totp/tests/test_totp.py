@@ -8,6 +8,7 @@ from odoo import http
 from odoo.exceptions import AccessDenied
 from odoo.service import common as auth, model
 from odoo.tests import tagged, HttpCase, get_db_name
+from odoo.tools import mute_logger
 
 from ..controllers.home import Home
 
@@ -86,10 +87,11 @@ class TestTOTP(HttpCase):
         self.start_tour('/web', 'totp_admin_disables', login='admin')
         self.start_tour('/', 'totp_login_disabled', login=None)
 
+    @mute_logger('odoo.http')
     def test_totp_authenticate(self):
         """
-        Ensure that JSON-RPC authentication works and don't return the user id
-        without TOTP check
+        Ensure we don't leak the session info from an half-logged-in
+        user.
         """
 
         self.start_tour('/web', 'totp_tour_setup', login='demo')
@@ -112,4 +114,4 @@ class TestTOTP(HttpCase):
         }
         response = self.url_open("/web/session/authenticate", data=json.dumps(payload), headers=headers)
         data = response.json()
-        self.assertEqual(data['result']['uid'], None)
+        self.assertEqual(data['error']['data']['message'], "Reniewing an expired session for user that has multi-factor-authentication is not supported. Please use /web/login instead.")

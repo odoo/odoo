@@ -18,7 +18,7 @@ class AuthSignupHome(Home):
     @http.route()
     def web_login(self, *args, **kw):
         ensure_db()
-        response = super(AuthSignupHome, self).web_login(*args, **kw)
+        response = super().web_login(*args, **kw)
         response.qcontext.update(self.get_auth_signup_config())
         if request.httprequest.method == 'GET' and request.session.uid and request.params.get('redirect'):
             # Redirect if already logged in and redirect param is present
@@ -135,10 +135,10 @@ class AuthSignupHome(Home):
         request.env.cr.commit()
 
     def _signup_with_values(self, token, values):
-        db, login, password = request.env['res.users'].sudo().signup(values, token)
+        login, password = request.env['res.users'].sudo().signup(values, token)
         request.env.cr.commit()     # as authenticate will use its own cursor we need to commit the current transaction
-        uid = request.session.authenticate(db, login, password)
-        if not uid:
+        pre_uid = request.session.authenticate(request.db, login, password)
+        if not pre_uid:
             raise SignupError(_('Authentication Failed.'))
 
 class AuthBaseSetup(BaseSetup):
