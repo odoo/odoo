@@ -32,7 +32,8 @@ class Message(models.Model):
         # generic
         unknown,
         # mail
-        "mail_email_invalid", "mail_smtp", "mail_email_missing"
+        "mail_from_invalid", "mail_email_encoding", "mail_email_invalid",
+        "mail_smtp", "mail_email_missing"
         # sms (SMS addon)
         'sms_number_missing', 'sms_number_format', 'sms_credit',
         'sms_server', 'sms_acc'

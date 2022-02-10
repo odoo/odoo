@@ -84,8 +84,13 @@ class IrMailServer(models.Model):
     _description = 'Mail Server'
     _order = 'sequence'
 
+    NO_VALID_EMAIL_FROM = ("You must either provide a sender address explicitly or configure "
+                           "using the combination of `mail.catchall.domain` and `mail.default.from` "
+                           "ICPs, in the server configuration file or with the "
+                           "--email-from startup parameter.")
     NO_VALID_RECIPIENT = ("At least one valid recipient address should be "
                           "specified for outgoing emails (To/Cc/Bcc)")
+    NO_VALID_SMTP_FROM = ("The Return-Path or From header is required for any outbound email")
 
     name = fields.Char(string='Name', required=True, index=True)
     from_filter = fields.Char(
@@ -442,10 +447,7 @@ class IrMailServer(models.Model):
            :return: the new RFC2822 email message
         """
         email_from = email_from or self._get_default_from_address()
-        assert email_from, "You must either provide a sender address explicitly or configure "\
-                           "using the combination of `mail.catchall.domain` and `mail.default.from` "\
-                           "ICPs, in the server configuration file or with the "\
-                           "--email-from startup parameter."
+        assert email_from, self.NO_VALID_EMAIL_FROM
 
         headers = headers or {}         # need valid dict later
         email_cc = email_cc or []
@@ -553,7 +555,7 @@ class IrMailServer(models.Model):
         # Path (VERP) to detect no-longer valid email addresses.
         bounce_address = message['Return-Path'] or self._get_default_bounce_address() or message['From']
         smtp_from = message['From'] or bounce_address
-        assert smtp_from, "The Return-Path or From header is required for any outbound email"
+        assert smtp_from, self.NO_VALID_SMTP_FROM
 
         email_to = message['To']
         email_cc = message['Cc']
