@@ -220,7 +220,8 @@ class L10nEsTbaiFillSignXml(models.AbstractModel):
     # -------------------------------------------------------------------------
 
     def _random_vat(self, force_new=False):
-        if not force_new and self.env['res.company'].l10n_es_tbai_last_posted_id:
+        # Unless force_new is True, only generate new VAT when no chain exists (tests & demo)
+        if not force_new and self.env['res.company'].get_l10n_es_tbai_last_posted_id():
             return self.company_id.vat
         else:
             vat = randint(0, 99999999)

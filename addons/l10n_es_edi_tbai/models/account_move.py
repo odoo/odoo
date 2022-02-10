@@ -18,6 +18,10 @@ class AccountMove(models.Model):
         string="Is the Bask EDI (TicketBAI) needed",
         compute="_compute_l10n_es_tbai_is_required"
     )
+    l10n_es_tbai_chain_index = fields.Integer(
+        string="Unique number representing invoice index in chain (TicketBai).",
+        store=True, copy=False, readonly=True,
+    )
 
     # Relations
     l10n_es_tbai_post_xml = fields.Many2one(
@@ -70,13 +74,13 @@ class AccountMove(models.Model):
                 and move.country_code == 'ES' \
                 and move.company_id.l10n_es_tbai_tax_agency
 
-    @api.depends('company_id', 'state')
+    @api.depends('company_id', 'edi_state', 'l10n_es_tbai_post_xml')
     def _compute_l10n_es_tbai_id(self):
         for record in self:
             if record.l10n_es_tbai_is_required:
                 # TODO (POS): pre-sign document and store it as EDI document (before posting), only then get signature
                 # rationale: signature changes every time doc is signed, but needs to be consistent across XMLs / TBAI IDs
-                if record.l10n_es_tbai_signature == '':
+                if not record.l10n_es_tbai_signature:
                     record.l10n_es_tbai_id = ''
                 else:
                     company = record.company_id
@@ -114,6 +118,9 @@ class AccountMove(models.Model):
     def _update_l10n_es_tbai_submitted_xml(self, xml_doc, cancel):
         doc = self.l10n_es_tbai_cancel_xml if cancel else self.l10n_es_tbai_post_xml
         if not doc:
+            # First 'post' XML creation: retrieve unique index from sequence
+            if not cancel:
+                self.l10n_es_tbai_chain_index = self.company_id._get_l10n_es_tbai_next_chain_index()
             doc = self.env['ir.attachment'].create({
                 'type': 'binary',
                 'name': self.name + ('_cancel' if cancel else '_post') + '.xml',
@@ -141,26 +148,41 @@ class AccountMove(models.Model):
         return etree.fromstring(doc_raw.decode())
 
     def _get_l10n_es_tbai_values_from_xml(self, xpaths):
+        """
+        This function reads values directly from the 'post' XML submitted to the government \
+            (the 'cancel' XML is ignored).
+        """
         res = {key: '' for key in xpaths.keys()}
-        doc_xml = self._get_l10n_es_tbai_submitted_xml()  # values are in post, not cancel
+        doc_xml = self._get_l10n_es_tbai_submitted_xml()
         if doc_xml is None:
             return res
         for key, value in xpaths.items():
             res[key] = doc_xml.find(value).text
         return res
 
-    @api.depends('edi_document_ids.attachment_id.raw')
+    @api.depends('company_id', 'edi_state', 'l10n_es_tbai_post_xml')
     def _compute_l10n_es_tbai_values(self):
+        """
+        This function reads values directly from the 'post' XMLs submitted to the government \
+            (the 'cancel' XML is ignored).
+        Note about the signature value: if the post XML has \
+            not been validated (yet), the signature value is left blank.
+        """
         for record in self:
             vals = record._get_l10n_es_tbai_values_from_xml({
                 'signature': r'.//{http://www.w3.org/2000/09/xmldsig#}SignatureValue',
                 'registration_date': r'.//CabeceraFactura//FechaExpedicionFactura'
             })
-            record.l10n_es_tbai_signature = vals['signature']
+
+            if record.edi_state not in ('sent', 'cancelled'):
+                # Documents may exist but have not been validated by govt (eg. timeout)
+                record.l10n_es_tbai_signature = ''
+            else:
+                record.l10n_es_tbai_signature = vals['signature']
             if vals['registration_date']:
                 record.l10n_es_tbai_registration_date = datetime.strptime(vals['registration_date'], '%d-%m-%Y').replace(tzinfo=timezone('Europe/Madrid'))
             else:
-                record.l10n_es_tbai_registration_date = None
+                record.l10n_es_tbai_registration_date = False
 
     @api.depends('name')
     def _compute_l10n_es_tbai_sequence(self):

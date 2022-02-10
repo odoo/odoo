@@ -77,12 +77,12 @@ class ResCompany(models.Model):
     )
 
     # === TBAI CHAIN HEAD ===
-    # TODO should we maintain multiple heads, one for each server (tax administration), one for test another for prod ?
-    # otherwise (or perhaps either way), prevent user from changing administration or "test_env" setting once chain exists
-    l10n_es_tbai_last_posted_id = fields.Many2one(
-        string="Last posted invoice",
-        store=True,
-        comodel_name='account.move')
+    l10n_es_tbai_chain_sequence = fields.Many2one(
+        comodel_name='ir.sequence',
+        string='TicketBai account.move chain sequence',
+        readonly=True,
+        copy=False
+    )
 
     # === CERTIFICATES ===
     l10n_es_tbai_certificate_id = fields.Many2one(
@@ -108,6 +108,22 @@ class ResCompany(models.Model):
                 )
             else:
                 company.l10n_es_tbai_certificate_id = False
+
+    def _get_l10n_es_tbai_next_chain_index(self):
+        if not self.l10n_es_tbai_chain_sequence:
+            self.l10n_es_tbai_chain_sequence = self.env['ir.sequence'].create({
+                'name': 'TicetBai account move sequence for {} (id: {})'.format(self.name, self.id),
+                'code': 'l10n_es.edi.tbai.account.move.{}'.format(self.id),
+                'implementation': 'no_gap',
+                'company_id': self.id,
+            })
+        return self.l10n_es_tbai_chain_sequence.next_by_id()
+
+    def get_l10n_es_tbai_last_posted_id(self):
+        return self.env['account.move'].search(
+            [('l10n_es_tbai_chain_index', '!=', False)],
+            limit=1, order='l10n_es_tbai_chain_index desc'
+        )
 
     def write(self, vals):
         # OVERRIDE

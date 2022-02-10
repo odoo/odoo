@@ -41,6 +41,7 @@ class AccountEdiFormat(models.Model):
 
     def _is_compatible_with_journal(self, journal):
         # OVERRIDE
+        # TODO inherit from account_edi_format (SII) and disable SII when TicketBai enabled ? (@Jos)
         if self.code != 'es_tbai':
             return super()._is_compatible_with_journal(journal)
 
@@ -102,9 +103,6 @@ class AccountEdiFormat(models.Model):
 
         # SUCCESS
         elif res[invoice].get('success'):
-            # Track head of chain (last posted invoice)
-            invoice.company_id.write({'l10n_es_tbai_last_posted_id': invoice})
-
             # Attachment: post to chatter and save as EDI document
             invoice.with_context(no_new_invoice=True).message_post(
                 body="<pre>TicketBAI: posted XML\n" + res[invoice]['message'] + "</pre>",
@@ -147,10 +145,6 @@ class AccountEdiFormat(models.Model):
 
         # SUCCESS
         elif res[invoice].get('success'):
-
-            # Track head of chain (last posted invoice)
-            invoice.company_id.write({'l10n_es_tbai_last_posted_id': invoice})
-
             # Put attachment in chatter
             invoice.with_context(no_new_invoice=True).message_post(
                 body="<pre>TicketBAI: posted cancelation XML\n" + res[invoice]['message'] + "</pre>",
@@ -456,7 +450,7 @@ class AccountEdiFormat(models.Model):
         }
 
     def _l10n_es_tbai_get_trail_values(self, invoice, cancel):
-        prev_invoice = invoice.company_id.l10n_es_tbai_last_posted_id
+        prev_invoice = invoice.company_id.get_l10n_es_tbai_last_posted_id()
         if prev_invoice and not cancel:
             return {
                 'chain_prev_invoice': prev_invoice
