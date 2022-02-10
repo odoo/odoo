@@ -26,7 +26,7 @@
                             t-att-data-tooltip="value[1]"
                             t-att-aria-checked="value_index lte index"
                             t-att-aria-label="value[1]"
-                            t-on-click="onStarClicked(value[0])"
+                            t-on-click.prevent.stop="() => this.onStarClicked(value[0])"
                             t-on-mouseenter="() => state.index = value_index"
                             t-on-mouseleave="() => state.index = -1"
                         />

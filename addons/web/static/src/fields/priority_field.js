@@ -25,9 +25,7 @@ export class PriorityField extends Component {
     /**
      * @param {string} value
      */
-    onStarClicked(value, ev) {
-        ev.stopPropagation();
-        ev.preventDefault();
+    onStarClicked(value) {
         const actualValue = this.props.value === value ? this.selection[0][0] : value;
         this.props.update(actualValue);
     }
