@@ -7,8 +7,8 @@
                 <FileUploader
                     acceptedFileExtensions="props.acceptedFileExtensions"
                     fileUploadStyle="sizeStyle"
-                    onUploaded="(info) => onFileUploaded(info)"
-                    onRemove="() => onFileRemove()"
+                    onUploaded.bind="onFileUploaded"
+                    onRemove.bind="onFileRemove"
                     type="'image'"
                 />
             </t>

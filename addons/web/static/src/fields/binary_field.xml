@@ -4,14 +4,14 @@
     <t t-name="web.BinaryField" owl="1">
         <div class="o_field_binary_file" aria-atomic="true">
             <t t-if="props.readonly and file.data">
-                <FileDownloader file="file" onDownload="() => onFileDownload()"/>
+                <FileDownloader file="file" onDownload.bind="onFileDownload"/>
             </t>
             <t t-elif="!props.readonly">
                 <FileUploader
                     acceptedFileExtensions="props.acceptedFileExtensions"
                     file="file"
-                    onUploaded="(info) => onFileUploaded(info)"
-                    onRemove="() => onFileRemove()"
+                    onUploaded.bind="onFileUploaded"
+                    onRemove.bind="onFileRemove"
                 />
             </t>
         </div>

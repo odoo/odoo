@@ -57,8 +57,8 @@
                     <PercentageEditor
                         fieldClass="'o_progressbar_value'"
                         isPercentage="true"
-                        onChange="(ev) => onChangeCurrentValue(ev)"
-                        onKeydown="(ev) => onKeyDownCurrentValue(ev)"
+                        onChange.bind="onChangeCurrentValue"
+                        onKeydown.bind="onKeyDownCurrentValue"
                         value="state.currentValue"
                     />
                 </t>

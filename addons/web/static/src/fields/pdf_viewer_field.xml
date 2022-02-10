@@ -6,8 +6,8 @@
             <t t-if="!props.readonly">
                 <FileUploader
                     file="file"
-                    onUploaded="(info) => onFileUploaded(info)"
-                    onRemove="() => onFileRemove()"
+                    onUploaded.bind="onFileUploaded"
+                    onRemove.bind="onFileRemove"
                     acceptedFileExtensions="'.pdf'"
                 />
             </t>
