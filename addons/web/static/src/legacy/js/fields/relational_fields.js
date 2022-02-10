@@ -88,10 +88,14 @@ var FieldMany2One = AbstractField.extend({
     }),
     events: _.extend({}, AbstractField.prototype.events, {
         'click input': '_onInputClick',
+        'click': '_onLinkClick',
         'focusout input': '_onInputFocusout',
         'keyup input': '_onInputKeyup',
         'click .o_external_button': '_onExternalButtonClick',
     }),
+    quickEditExclusion: [
+        '.o_form_uri',
+    ],
     AUTOCOMPLETE_DELAY: 200,
     SEARCH_MORE_LIMIT: 320,
     isQuickEditable: true,
@@ -749,13 +753,11 @@ var FieldMany2One = AbstractField.extend({
      * @override
      * @param {MouseEvent} event
      */
-    _onClick: function (event) {
+    _onLinkClick: function (event) {
         var self = this;
         if (this.mode === 'readonly') {
             event.preventDefault();
-            if (this.noOpen) {
-                this._super(...arguments);
-            } else {
+            if (!this.noOpen) {
                 event.stopPropagation();
                 this._rpc({
                     model: this.field.relation,
