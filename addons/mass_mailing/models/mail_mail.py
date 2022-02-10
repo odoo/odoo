@@ -35,15 +35,15 @@ class MailMail(models.Model):
         self.ensure_one()
         return tools.hmac(self.env(su=True), 'mass_mailing-mail_mail-open', self.id)
 
-    def _send_prepare_body(self):
-        """ Override to add the tracking URL to the body and to add
-        trace ID in shortened urls """
-        # TDE: temporary addition (mail was parameter) due to semi-new-API
+    def _prepare_outgoing_body(self):
+        """ Override to add the tracking URL to the body and to add trace ID in
+        shortened urls """
         self.ensure_one()
-        body = super(MailMail, self)._send_prepare_body()
+        # super() already cleans pseudo-void content from editor
+        body = super()._prepare_outgoing_body()
 
-        if self.mailing_id and body and self.mailing_trace_ids:
-            for match in set(re.findall(tools.URL_REGEX, self.body_html)):
+        if body and self.mailing_id and self.mailing_trace_ids:
+            for match in set(re.findall(tools.URL_REGEX, body)):
                 href = match[0]
                 url = match[1]
 
@@ -57,31 +57,35 @@ class MailMail(models.Model):
             tracking_url = self._get_tracking_url()
             body = tools.append_content_to_html(
                 body,
-                '<img src="%s"/>' % tracking_url,
+                f'<img src="{tracking_url}"/>',
                 plaintext=False,
             )
-
-        body = self.env['mail.render.mixin']._replace_local_links(body)
-
         return body
 
-    def _send_prepare_values(self, partner=None):
-        # TDE: temporary addition (mail was parameter) due to semi-new-API
-        res = super(MailMail, self)._send_prepare_values(partner)
-        if self.mailing_id and res.get('body') and res.get('email_to'):
-            base_url = self.mailing_id.get_base_url()
-            emails = tools.email_split(res.get('email_to')[0])
-            email_to = emails and emails[0] or False
+    def _prepare_outgoing_list(self):
+        """ Update mailing specific links to add tracking based on res_id """
+        email_list = super()._prepare_outgoing_list()
+        if not self.res_id or not self.mailing_id:
+            return email_list
 
-            urls_to_replace = [
-                (base_url + '/unsubscribe_from_list', self.mailing_id._get_unsubscribe_url(email_to, self.res_id)),
-                (base_url + '/view', self.mailing_id._get_view_url(email_to, self.res_id))
-            ]
+        base_url = self.mailing_id.get_base_url()
+        for email_values in email_list:
+            if tools.is_html_empty(email_values['body']) or not email_values['email_to']:
+                continue
+            emails = tools.email_split(email_values['email_to'][0])
+            email_to = emails[0] if emails else False
 
-            for url_to_replace, new_url in urls_to_replace:
-                if url_to_replace in res['body']:
-                    res['body'] = res['body'].replace(url_to_replace, new_url if new_url else '#')
-        return res
+            if f'{base_url}/unsubscribe_from_list' in email_values['body']:
+                email_values['body'] = email_values['body'].replace(
+                    f'{base_url}/unsubscribe_from_list',
+                    self.mailing_id._get_unsubscribe_url(email_to, self.res_id),
+                )
+            if f'{base_url}/view' in email_values['body']:
+                email_values['body'] = email_values['body'].replace(
+                    f'{base_url}/view',
+                    self.mailing_id._get_view_url(email_to, self.res_id),
+                )
+        return email_list
 
     def _postprocess_sent_message(self, success_pids, failure_reason=False, failure_type=None):
         mail_sent = not failure_type  # we consider that a recipient error is a failure with mass mailling and show them as failed
@@ -91,4 +95,4 @@ class MailMail(models.Model):
                     mail.mailing_trace_ids.set_sent()
                 elif mail_sent is False and mail.mailing_trace_ids:
                     mail.mailing_trace_ids.set_failed(failure_type=failure_type)
-        return super(MailMail, self)._postprocess_sent_message(success_pids, failure_reason=failure_reason, failure_type=failure_type)
+        return super()._postprocess_sent_message(success_pids, failure_reason=failure_reason, failure_type=failure_type)
