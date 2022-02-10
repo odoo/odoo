@@ -15,7 +15,6 @@ const ListView = require('web.ListView');
 const mixins = require('web.mixins');
 const RamStorage = require('web.RamStorage');
 const testUtils = require('web.test_utils');
-var testUtils = require('web.test_utils');
 var KanbanView = require('web.KanbanView');
 const { patch, unpatch } = require('web.utils');
 const widgetRegistry = require('web.widget_registry');
@@ -27,7 +26,6 @@ const ListController = require('web.ListController');
 const { registry } = require('@web/core/registry');
 const legacyViewRegistry = require('web.view_registry');
 
-var _t = core._t;
 const cpHelpers = require('@web/../tests/search/helpers');
 const { LegacyComponent } = require("@web/legacy/legacy_component");
 var createView = testUtils.createView;
