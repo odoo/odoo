@@ -230,6 +230,9 @@ STATIC_CACHE_LONG = 60 * 60 * 24 * 365
 # Helpers
 # =========================================================
 
+class SessionExpiredException(Exception):
+    pass
+
 ...
 
 def db_list(force=False, host=None):
@@ -367,6 +370,18 @@ def send_file(filepath_or_fp, filename=None, mimetype=None, mtime=None,
             res.cache_control.max_age = cache_timeout
             res.set_etag(etag)
     return res
+
+def serialize_exception(exception):
+    name = type(exception).__name__
+    module = type(exception).__module__
+
+    return {
+        'name': f'{module}.{name}' if module else name,
+        'debug': traceback.format_exc(),
+        'message': ustr(exception),
+        'arguments': exception.args,
+        'context': getattr(exception, 'context', {}),
+    }
 
 ...
 
@@ -932,6 +947,23 @@ class Request:
 
     ...
 
+    def redirect(self, location, code=303, local=True):
+        # compatibility, Werkzeug support URL as location
+        if isinstance(location, URL):
+            location = location.to_url()
+        if local:
+            location = url_parse(location).replace(scheme='', netloc='').to_url()
+        if self.db:
+            return self.env['ir.http']._redirect(location, code)
+        return werkzeug.utils.redirect(location, code, Response=Response)
+
+    def redirect_query(self, location, query=None, code=303, local=True):
+        if query:
+            location += '?' + url_encode(query)
+        return self.redirect(location, code=code, local=local)
+
+    ...
+
     def _save_session(self):
         """ Save a modified session on disk. """
         if not self.session.can_save:
@@ -1022,7 +1054,12 @@ class Request:
             try:
                 return service_model.retrying(self._serve_ir_http, self.env)
             except Exception as exc:
-                ...
+                if isinstance(exc, HTTPException) and exc.code is None:
+                    raise  # bubble up to odoo.http.Application.__call__
+                if 'werkzeug' in config['dev_mode']:
+                    raise  # bubble up to werkzeug.debug.DebuggedApplication
+                exc.error_response = self.registry['ir.http']._handle_error(exc)
+                raise
 
     def _serve_ir_http(self):
         ...
@@ -1130,7 +1167,31 @@ class HttpDispatcher(Dispatcher):
             return endpoint(**self.request.params)
 
     def handle_error(self, exc):
-        ...
+        """
+        Handle any exception that occurred while dispatching a request
+        to a `type='http'` route. Also handle exceptions that occurred
+        when no route matched the request path, when no fallback page
+        could be delivered and that the request ``Content-Type`` was not
+        json.
+
+        :param exc Exception: the exception that occured.
+        :returns: an HTTP error response
+        :rtype: werkzeug.wrapper.Response
+        """
+        if isinstance(exc, SessionExpiredException):
+            session = self.request.session
+            session.logout(keep_db=True)
+            response = self.request.redirect_query('/web/login', {'redirect': self.request.httprequest.full_path})
+            if not session.is_explicit:
+                root.session_store.rotate(session, self.request.env)
+                response.set_cookie('session_id', session.sid, max_age=SESSION_LIFETIME, httponly=True)
+            return response
+
+        return (exc if isinstance(exc, HTTPException)
+           else Forbidden(exc.args[0]) if isinstance(exc, (AccessDenied, AccessError))
+           else BadRequest(exc.args[0]) if isinstance(exc, UserError)
+           else InternalServerError()  # hide the real error
+        )
 
 
 class JsonRPCDispatcher(Dispatcher):
@@ -1195,7 +1256,33 @@ class JsonRPCDispatcher(Dispatcher):
         return self._response(result)
 
     def handle_error(self, exc):
-        ...
+        """
+        Handle any exception that occured while dispatching a request to
+        a `type='json'` route. Also handle exceptions that occured when
+        no route matched the request path, that no fallback page could
+        be delivered and that the request ``Content-Type`` was json.
+
+        :param exc Exception: the exception that occured.
+        :returns: an HTTP error response
+        :rtype: Response
+        """
+        error = {
+            'code': 200,  # this code is the JSON-RPC level code, it is
+                          # distinct from the HTTP status code. This
+                          # code is ignored and the value 200 (while
+                          # misleading) is totally arbitrary.
+            'message': "Odoo Server Error",
+            'data': serialize_exception(exc),
+        }
+        if isinstance(exc, NotFound):
+            error['http_status'] = 404
+            error['code'] = 404
+            error['message'] = "404: Not Found"
+        elif isinstance(exc, SessionExpiredException):
+            error['code'] = 100
+            error['message'] = "Odoo Session Expired"
+
+        return self._response(error=error)
 
     def _response(self, result=None, error=None):
         request_id = self.jsonrequest.get('id')
@@ -1309,7 +1396,34 @@ class Application:
             return response(environ, start_response)
 
         except Exception as exc:
-            ...
+            # Valid (2xx/3xx) response returned via werkzeug.exceptions.abort.
+            if isinstance(exc, HTTPException) and exc.code is None:
+                response = exc.get_response()
+                HttpDispatcher(request).post_dispatch(response)
+                return response(environ, start_response)
+
+            # Logs the error here so the traceback starts with ``__call__``.
+            if hasattr(exc, 'loglevel'):
+                _logger.log(exc.loglevel, exc, exc_info=getattr(exc, 'exc_info', None))
+            elif isinstance(exc, HTTPException):
+                pass
+            elif isinstance(exc, SessionExpiredException):
+                _logger.info(exc)
+            elif isinstance(exc, (UserError, AccessError, NotFound)):
+                _logger.warning(exc)
+            else:
+                _logger.error("Exception during request handling.", exc_info=True)
+
+            # Server is running with --dev=werkzeug, bubble the error up
+            # to werkzeug so he can fire up a debugger.
+            if 'werkzeug' in config['dev_mode']:
+                raise
+
+            # Ensure there is always a Response attached to the exception.
+            if not hasattr(exc, 'error_response'):
+                exc.error_response = request.dispatcher.handle_error(exc)
+
+            return exc.error_response(environ, start_response)
 
         finally:
             _request_stack.pop()
