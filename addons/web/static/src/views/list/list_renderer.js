@@ -43,6 +43,10 @@ export class ListRenderer extends Component {
         this.tableRef = useRef("table");
     }
 
+    getColumnKey(column, columnIndex) {
+        return column.type === "field" ? column.name : `button_group_${columnIndex}`;
+    }
+
     editGroupRecord(group) {
         const { resId, resModel } = group.record;
         this.env.services.action.doAction({

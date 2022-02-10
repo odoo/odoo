@@ -7,9 +7,9 @@
                 <thead>
                     <tr>
                         <th t-if="props.hasSelectors" class="o_list_record_selector" t-on-click.stop="toggleSelection">
-                            <CheckBox disabled="!!props.editedRecordId" value="selectAll" onChange.bind="toggleSelection" />
+                            <CheckBox disabled="!!props.editedRecordId" value="selectAll" />
                         </th>
-                        <t t-foreach="state.columns" t-as="column" t-key="column.name">
+                        <t t-foreach="state.columns" t-as="column" t-key="getColumnKey(column, column_index)">
                             <th t-if="column.type === 'field'" t-att-class="getColumnClass(column)" t-on-click="() => this.onClickSortColumn(column)">
                                 <t t-if="column.hasLabel" t-esc="column.label"/>
                             </th>
@@ -25,7 +25,7 @@
                 <tfoot t-on-click="onFooterClick">
                     <tr>
                         <td t-if="props.hasSelectors"/>
-                        <t t-foreach="state.columns" t-as="column" t-key="column.name">
+                        <t t-foreach="state.columns" t-as="column" t-key="getColumnKey(column, column_index)">
                             <t t-set="aggregate" t-value="aggregates[column.name]"/>
                             <td t-if="aggregate" class="o_list_number" t-att-data-tooltip="aggregate.help">
                                 <t t-esc="aggregate.value"/>
@@ -100,7 +100,7 @@
                     </t>
                 </div>
             </th>
-            <td t-foreach="getAggregateColumns(group)" t-as="column" t-key="column.name" class="o_list_number">
+            <td t-foreach="getAggregateColumns(group)" t-as="column" t-key="getColumnKey(column, column_index)" class="o_list_number">
                 <t t-esc="group.aggregates[column.name]"/>
             </td>
             <t t-set="groupPagerColspan" t-value="getGroupPagerCellColspan(group)"/>
@@ -109,11 +109,11 @@
     </t>
 
     <t t-name="web.ListRenderer.RecordRow" owl="1">
-        <tr class="o_data_row" t-att-class="getRowClass(record)" t-on-click="() => this.onRowClicked(record)">
+        <tr class="o_data_row" t-att-class="getRowClass(record)" t-on-click="(ev) => this.onRowClicked(record, ev)">
             <td t-if="props.hasSelectors" class="o_list_record_selector" t-on-click.stop="() => this.toggleRecordSelection(record)">
-                <CheckBox disabled="!!props.editedRecordId" value="record.selected" onChange="() => this.toggleRecordSelection(record)" />
+                <CheckBox disabled="!!props.editedRecordId" value="record.selected" />
             </td>
-            <t t-foreach="state.columns" t-as="column" t-key="column.name">
+            <t t-foreach="state.columns" t-as="column" t-key="getColumnKey(column, column_index)">
                 <t t-if="column.type === 'field'">
                     <td class="o_data_cell" t-att-class="getCellClass(column)" t-att-title="getCellTitle(column, record)">
                         <Field t-if="!evalModifier(column.modifiers.invisible, record)" name="column.name" record="record" readonly="props.editedRecordId !== record.id" type="column.widget" />
