@@ -268,7 +268,6 @@ QUnit.module("Components", (hooks) => {
                 isDebugMode: true,
             },
         });
-
         assert.strictEqual(
             domainSelector.el.textContent,
             "This domain is not supported.",

@@ -3,7 +3,7 @@
 
     <t t-name="web.DomainSelectorDateTimeField" owl="1">
         <div class="o_ds_value_cell">
-            <t t-component="component" date="parsedValue" onDateTimeChanged="(value) => this.onChange(value)" />
+            <t t-component="component" date="parsedValue" onDateTimeChanged.bind="onChange" />
         </div>
     </t>
 

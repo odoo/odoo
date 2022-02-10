@@ -7,9 +7,9 @@
                 <t t-if="!props.readonly">
                     <DomainSelectorControlPanel
                         node="props.node"
-                        onHoverDeleteNodeBtn="(hovering) => this.onHoverDeleteNodeBtn(hovering)"
-                        onHoverInsertLeafNodeBtn="(hovering) => this.onHoverInsertLeafNodeBtn(hovering)"
-                        onHoverInsertBranchNodeBtn="(hovering) => this.onHoverInsertBranchNodeBtn(hovering)"
+                        onHoverDeleteNodeBtn.bind="onHoverDeleteNodeBtn"
+                        onHoverInsertLeafNodeBtn.bind="onHoverInsertLeafNodeBtn"
+                        onHoverInsertBranchNodeBtn.bind="onHoverInsertBranchNodeBtn"
                     />
                 </t>
                 <DomainSelectorBranchOperator node="props.node" readonly="props.readonly" />

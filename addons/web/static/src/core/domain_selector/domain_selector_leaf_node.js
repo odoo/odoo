@@ -5,7 +5,7 @@ import { ModelFieldSelector } from "@web/core/model_field_selector/model_field_s
 import { registry } from "@web/core/registry";
 import { DomainSelectorControlPanel } from "./domain_selector_control_panel";
 
-const { Component } = owl;
+const { Component, onWillStart, onWillUpdateProps } = owl;
 
 export class DomainSelectorLeafNode extends Component {
     setup() {
@@ -14,12 +14,12 @@ export class DomainSelectorLeafNode extends Component {
             type: "integer",
             string: "ID",
         };
-    }
-    async willStart() {
-        this.fieldInfo = await this.loadField(this.props.resModel, this.props.node.operands[0]);
-    }
-    async willUpdateProps(nextProps) {
-        this.fieldInfo = await this.loadField(nextProps.resModel, nextProps.node.operands[0]);
+        onWillStart(async () => {
+            this.fieldInfo = await this.loadField(this.props.resModel, this.props.node.operands[0]);
+        });
+        onWillUpdateProps(async (nextProps) => {
+            this.fieldInfo = await this.loadField(nextProps.resModel, nextProps.node.operands[0]);
+        });
     }
 
     get displayedOperator() {

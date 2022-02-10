@@ -17,7 +17,7 @@
                 class="btn o_domain_add_node_button"
                 title="Add node"
                 aria-label="Add node"
-                t-on-click="insertNode('leaf')"
+                t-on-click="() => this.insertNode('leaf')"
                 t-on-mouseenter="onEnterInsertLeafNodeBtn"
                 t-on-mouseleave="onLeaveInsertLeafNodeBtn"
             >
@@ -28,7 +28,7 @@
                 title="Add branch"
                 aria-label="Add branch"
                 data-branch="1"
-                t-on-click="insertNode('branch')"
+                t-on-click="() => this.insertNode('branch')"
                 t-on-mouseenter="onEnterInsertBranchNodeBtn"
                 t-on-mouseleave="onLeaveInsertBranchNodeBtn"
             >

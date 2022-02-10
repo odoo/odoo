@@ -33,9 +33,9 @@
             <t t-else="">
                 <DomainSelectorControlPanel
                     node="props.node"
-                    onHoverDeleteNodeBtn="(hovering) => this.onHoverDeleteNodeBtn(hovering)"
-                    onHoverInsertLeafNodeBtn="(hovering) => this.onHoverInsertLeafNodeBtn(hovering)"
-                    onHoverInsertBranchNodeBtn="(hovering) => this.onHoverInsertBranchNodeBtn(hovering)"
+                    onHoverDeleteNodeBtn.bind="onHoverDeleteNodeBtn"
+                    onHoverInsertLeafNodeBtn.bind="onHoverInsertLeafNodeBtn"
+                    onHoverInsertBranchNodeBtn.bind="onHoverInsertBranchNodeBtn"
                 />
                 <div class="o_domain_leaf_edition">
                     <ModelFieldSelector fieldName="props.node.operands[0]" resModel="props.resModel" readonly="props.readonly" update="(name) => this.onFieldChange(name)" isDebugMode="props.isDebugMode" />

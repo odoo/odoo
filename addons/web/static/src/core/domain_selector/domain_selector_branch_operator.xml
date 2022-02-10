@@ -10,8 +10,8 @@
                             <t t-elif="props.node.operator === '|'">Any</t>
                             <t t-elif="props.node.operator === '!'">None</t>
                     </t>
-                    <DropdownItem onSelected="() => onOperatorSelected('&amp;')">All</DropdownItem>
-                    <DropdownItem onSelected="() => onOperatorSelected('|')">Any</DropdownItem>
+                    <DropdownItem onSelected="() => this.onOperatorSelected('&amp;')">All</DropdownItem>
+                    <DropdownItem onSelected="() => this.onOperatorSelected('|')">Any</DropdownItem>
                 </Dropdown>
             </div>
         </t>
