@@ -182,11 +182,7 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
         }
         return this._rpc({
             route: "/shop/cart/update_json",
-            params: {
-                product_id: parseInt(productID, 10),
-                add_qty: parseInt(qty, 10),
-                display: false,
-            },
+            params: this._getCartUpdateJsonParams(productID, qty),
         }).then(function (resp) {
             if (resp.warning) {
                 if (! $('#data_warning').length) {
@@ -197,6 +193,19 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
             }
             $('.my_cart_quantity').html(resp.cart_quantity || '<i class="fa fa-warning" /> ');
         });
+    },
+    /**
+     * Get the cart update params.
+     *
+     * @param {string} productId
+     * @param {string} qty
+     */
+    _getCartUpdateJsonParams(productId, qty) {
+        return {
+            product_id: parseInt(productId, 10),
+            add_qty: parseInt(qty, 10),
+            display: false,
+        };
     },
     /**
      * @private
@@ -270,6 +279,10 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
      * @param {Event} ev
      */
     _onClickWishAdd: function (ev) {
+        if (ev.currentTarget.classList.contains('disabled')) {
+            ev.preventDefault();
+            return;
+        }
         var self = this;
         this.$('.wishlist-section .o_wish_add').addClass('disabled');
         this._addOrMoveWish(ev).then(function () {
