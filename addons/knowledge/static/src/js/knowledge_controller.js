@@ -41,24 +41,26 @@ const KnowledgeFormController = FormController.extend({
     },
 
     _onDelete: async function () {
-        const { id } = this.getState();
-        if (typeof id === 'undefined') {
-            return;
-        }
-        const message = _t("Are you sure you want to delete this record?");
-        let dialog;
-        const confirmCallback = () => {
-            this._delete(id).guardedCatch(() => dialog.destroy());
-        };
-        dialog = Dialog.confirm(this, message, { confirm_callback: confirmCallback });
+        this._deleteRecords([this.handle]);
+    },
+
+    /**
+     * @override
+     */
+    _onDeletedRecords: function () {
+        this.do_action('knowledge.action_home_page', {});
     },
 
     _onDuplicate: async function () {
-        const { id } = this.getState();
-        if (typeof id === 'undefined') {
-            return;
-        }
-        await this._duplicate(id);
+        var self = this;
+        this.model.duplicateRecord(this.handle).then(function (handle) {
+            const { res_id } = self.model.get(handle);
+            self.do_action('knowledge.action_home_page', {
+                additional_context: {
+                    res_id: res_id
+                }
+            });
+        });
     },
 
     /**
@@ -176,11 +178,13 @@ const KnowledgeFormController = FormController.extend({
      */
     _create: async function (id, setPrivate) {
         const articleId = await this._rpc({
-            route: `/knowledge/article/create`,
-            params: {
-                target_parent_id: id,
+            model: 'knowledge.article',
+            method: 'article_create',
+            args: [[]],
+            kwargs: {
+                parent_id: id,
                 private: setPrivate
-            }
+            },
         });
         if (!articleId) {
             return;
@@ -206,44 +210,17 @@ const KnowledgeFormController = FormController.extend({
     },
 
     /**
-     * @param {integer} id - Target id
-     */
-    _delete: async function (id) {
-        const result = await this._rpc({
-            route: `/knowledge/article/${id}/delete`
-        });
-        if (result) {
-            this.do_action('knowledge.action_home_page', {});
-        }
-    },
-
-    /**
-     * @param {integer} id - Target id
-     */
-    _duplicate: async function (id) {
-        const articleId = await this._rpc({
-            route: `/knowledge/article/${id}/duplicate`
-        });
-        if (!articleId) {
-            return;
-        }
-        this.do_action('knowledge.action_home_page', {
-            additional_context: {
-                res_id: articleId
-            }
-        });
-    },
-
-    /**
      * @param {integer} src
      * @param {integer} dst
      */
     _move: async function (src, dst) {
         const result = await this._rpc({
-            route: `/knowledge/article/${src}/move`,
-            params: {
-                target_parent_id: dst
-            }
+            model: 'knowledge.article',
+            method: 'move_to',
+            args: [
+                src,
+            ],
+            kwargs: {parent_id: dst},
         });
         const $parent = this.$el.find(`.o_tree [data-article-id="${dst}"]`);
         if (result && $parent.length !== 0) {

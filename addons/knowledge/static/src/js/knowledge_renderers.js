@@ -101,9 +101,9 @@ const KnowledgeFormRenderer = FormRenderer.extend({
         const $li = $(ui.item);
         const $parent = $li.parents('li');
         if ($parent.length !== 0) {
-            params.target_parent_id = $parent.data(key);
+            params.parent_id = $parent.data(key);
         } else {
-            console.log('no parent');
+            params.parent_id = false;
         }
         const $sibling = $li.next();
         if ($sibling.length !== 0) {
@@ -112,10 +112,16 @@ const KnowledgeFormRenderer = FormRenderer.extend({
         if ($li.closest('ul.o_tree_private').length !== 0) {
             params.private = true;
         }
+
         const result = await this._rpc({
-            route: `/knowledge/article/${$li.data(key)}/move`,
-            params
+            model: 'knowledge.article',
+            method: 'move_to',
+            args: [
+                $li.data(key),
+            ],
+            kwargs: params,
         });
+
         if (result) {
             const $tree = $li.closest('.o_tree');
             this._refreshIcons($tree);

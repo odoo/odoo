@@ -100,12 +100,15 @@ commandProviderRegistry.add("knowledge", {
                     Component: Knowledge404Command,
                     async action() {
                         const articleId = await Component.env.services.rpc({
-                            route: `/knowledge/article/create`,
-                            params: {
+                            model: 'knowledge.article',
+                            method: 'article_create',
+                            args: [[]],
+                            kwargs: {
                                 title: options.searchValue,
                                 private: true
-                            }
+                            },
                         });
+
                         env.services.action.doAction('knowledge.action_home_page', {
                             additionalContext: {
                                 res_id: articleId,
