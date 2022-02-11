@@ -2,14 +2,13 @@
 
 import ajax from 'web.ajax';
 import dom from 'web.dom';
-import env from 'web.public_env';
+import legacyEnv from 'web.public_env';
 import session from 'web.session';
 import utils from 'web.utils';
 import publicWidget from 'web.public.widget';
 import { registry } from '@web/core/registry';
 
 import AbstractService from "web.AbstractService";
-import legacyEnv from "web.public_env";
 import lazyloader from "web.public.lazyloader";
 
 import {
@@ -68,7 +67,7 @@ export const PublicRoot = publicWidget.RootWidget.extend({
      */
     init: function () {
         this._super.apply(this, arguments);
-        this.env = env;
+        this.env = legacyEnv;
         this.publicWidgets = [];
     },
     /**
