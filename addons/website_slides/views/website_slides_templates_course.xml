@@ -328,7 +328,7 @@
                 </tr>
                 <tr t-if="channel.total_time">
                     <th class="border-top-0">Completion Time</th>
-                    <td class="border-top-0"><t class="font-weight-bold" t-esc="channel.total_time" t-options="{'widget': 'duration', 'unit': 'hour', 'round': 'minute'}"/></td>
+                    <td class="border-top-0"><t class="font-weight-bold" t-esc="channel.total_time" t-options="{'widget': 'float_time', 'unit': 'hour', 'round': 'minute'}"/></td>
                 </tr>
                 <tr>
                     <th>Members</th>
