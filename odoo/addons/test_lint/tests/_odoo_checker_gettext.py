@@ -12,7 +12,7 @@ class OdooBaseChecker(checkers.BaseChecker):
         'E8502': (
             'Bad usage of _, _lt function.',
             'gettext-variable',
-            'See https://www.odoo.com/documentation/15.0/developer/misc/i18n/translations.html#variables'
+            'See https://www.odoo.com/documentation/saas-15.2/developer/misc/i18n/translations.html#variables'
         )
     }
 
