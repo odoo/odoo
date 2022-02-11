@@ -13,6 +13,7 @@ import {
     isMediaElement,
     getDeepRange,
     isUnbreakable,
+    isUnremovable
 } from './utils.js';
 
 const NOT_A_NUMBER = /[^\d]/g;
@@ -51,11 +52,11 @@ export function areSimilarElements(node, node2) {
     ) {
         return false;
     }
-    if (node.tagName == 'LI' && node.classList.contains('oe-nested')) {
+    if (node.tagName === 'LI' && node.classList.contains('oe-nested')) {
         return (
             node.lastElementChild &&
             node2.firstElementChild &&
-            getListMode(node.lastElementChild) == getListMode(node2.firstElementChild)
+            getListMode(node.lastElementChild) === getListMode(node2.firstElementChild)
         );
     }
     if (['UL', 'OL'].includes(node.tagName)) {
@@ -113,7 +114,7 @@ class Sanitize {
         }
 
         // Remove empty blocks in <li>
-        if (node.nodeName == 'P' && node.parentElement.tagName == 'LI') {
+        if (node.nodeName === 'P' && node.parentElement.tagName === 'LI') {
             const next = node.nextSibling;
             const pnode = node.parentElement;
             if (isEmptyBlock(node)) {
