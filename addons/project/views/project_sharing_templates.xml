@@ -27,7 +27,7 @@
                 <t t-call="web.conditional_assets_tests"/>
             </t>
             <t t-set="head" t-value="head_project_sharing + (head or '')"/>
-            <t t-set="body_classname" t-value="'o_web_client'"/>
+            <t t-set="body_classname" t-value="'o_web_client o_project_sharing'"/>
         </t>
     </template>
 
