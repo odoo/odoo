@@ -293,3 +293,183 @@ class TestPoSProductsWithTax(TestPoSCommon):
         self.assertAlmostEqual(sum(manually_calculated_taxes), sum(tax_lines.mapped('balance')))
         for t1, t2 in zip(sorted(manually_calculated_taxes), sorted(tax_lines.mapped('balance'))):
             self.assertAlmostEqual(t1, t2, msg='Taxes should be correctly combined and should be debit.')
+
+    def test_pos_create_correct_account_move(self):
+        """ Test for orders with global rounding disabled
+
+        Orders
+        ======
+        +---------+----------+-----------+----------+------+----------+------------------+--------+
+        | order   | payments | invoiced? | product  | qty  |  untaxed | tax              |  total |
+        +---------+----------+-----------+----------+------+----------+------------------+--------+
+        | order 1 | cash     | no        | product1 |    1 |     10.0 |  2.10            |  12.10 |
+        |         |          |           | product2 |   -1 |     -5.0 | -1.05            |  -6.05 |
+        +---------+----------+-----------+----------+------+----------+------------------+--------+
+        """
+        tax_21_incl = self.taxes['tax21']
+        product1 = self.create_product(
+            name='Product 1',
+            category=self.categ_basic,
+            lst_price=12.10,
+            tax_ids=tax_21_incl.ids,
+        )
+        product2 = self.create_product(
+            name='Product 2',
+            category=self.categ_basic,
+            lst_price=6.05,
+            tax_ids=tax_21_incl.ids,
+        )
+        self.open_new_session()
+        self.env['pos.order'].create_from_ui([self.create_ui_order_data([
+            (product1, 1),
+            (product2, -1),
+        ])])
+        self.pos_session.action_pos_session_validate()
+
+        lines = self.pos_session.move_id.line_ids.sorted('balance')
+        self.assertEqual(2, len(lines.filtered(lambda l: l.tax_ids)), "Taxes should have been set on 2 lines")
+        self.assertEqual(4, len(lines.filtered(lambda l: l.tax_tag_ids)), "Tags should have been set on 4 lines")
+        self.assertRecordValues(lines, [
+            {'account_id': self.sale_account.id,           'balance': -10.0, 'tax_ids': tax_21_incl.ids, 'tax_tag_ids': self.tax_tag_invoice_base.ids},
+            {'account_id': self.tax_received_account.id,   'balance': -2.10, 'tax_ids': [],              'tax_tag_ids': self.tax_tag_invoice_tax.ids},
+            {'account_id': self.tax_received_account.id,   'balance':  1.05, 'tax_ids': [],              'tax_tag_ids': self.tax_tag_refund_tax.ids},
+            {'account_id': self.sale_account.id,           'balance':  5.00, 'tax_ids': tax_21_incl.ids, 'tax_tag_ids': self.tax_tag_refund_base.ids},
+            {'account_id': self.pos_receivable_account.id, 'balance':  6.05, 'tax_ids': [],              'tax_tag_ids': []},
+        ])
+
+    def test_pos_create_account_move_round_globally(self):
+        """ Test for orders with global rounding enabled
+
+        Orders
+        ======
+        +---------+----------+-----------+----------+------+----------+------------------+--------+
+        | order   | payments | invoiced? | product  | qty  |  untaxed | tax              |  total |
+        +---------+----------+-----------+----------+------+----------+------------------+--------+
+        | order 1 | cash     | no        | product1 |    1 |     10.0 |  2.10            |  12.10 |
+        |         |          |           | product2 |   -1 |     -5.0 | -1.05            |  -6.05 |
+        +---------+----------+-----------+----------+------+----------+------------------+--------+
+        """
+        tax_21_incl = self.taxes['tax21']
+        tax_21_incl.company_id.tax_calculation_rounding_method = 'round_globally'
+
+        product1 = self.create_product(
+            name='Product 1',
+            category=self.categ_basic,
+            lst_price=12.10,
+            tax_ids=tax_21_incl.ids,
+        )
+        product2 = self.create_product(
+            name='Product 2',
+            category=self.categ_basic,
+            lst_price=6.05,
+            tax_ids=tax_21_incl.ids,
+        )
+        self.open_new_session()
+        self.env['pos.order'].create_from_ui([self.create_ui_order_data([
+            (product1, 1),
+            (product2, -1),
+        ])])
+        self.pos_session.action_pos_session_validate()
+
+        lines = self.pos_session.move_id.line_ids.sorted('balance')
+        self.assertEqual(2, len(lines.filtered(lambda l: l.tax_ids)), "Taxes should have been set on 2 lines")
+        self.assertEqual(4, len(lines.filtered(lambda l: l.tax_tag_ids)), "Tags should have been set on 4 lines")
+        self.assertRecordValues(lines, [
+            {'account_id': self.sale_account.id,           'balance': -10.0, 'tax_ids': tax_21_incl.ids, 'tax_tag_ids': self.tax_tag_invoice_base.ids},
+            {'account_id': self.tax_received_account.id,   'balance': -2.10, 'tax_ids': [],              'tax_tag_ids': self.tax_tag_invoice_tax.ids},
+            {'account_id': self.tax_received_account.id,   'balance':  1.05, 'tax_ids': [],              'tax_tag_ids': self.tax_tag_refund_tax.ids},
+            {'account_id': self.sale_account.id,           'balance':  5.00, 'tax_ids': tax_21_incl.ids, 'tax_tag_ids': self.tax_tag_refund_base.ids},
+            {'account_id': self.pos_receivable_account.id, 'balance':  6.05, 'tax_ids': [],              'tax_tag_ids': []},
+        ])
+
+    def test_pos_create_correct_account_move_round_globally_discount(self):
+        """ Test for orders with global rounding enabled
+
+        Orders
+        ======
+        +---------+----------+------+----------+------+---------------------+-----------+---------------------------+---------+--------+--------+
+        | order   | payments | inv? | product  | qty  | original price unit | Discount  | price unit after discount | untaxed | tax    |  total |
+        +---------+----------+------+----------+------+---------------------+-----------+---------------------------+---------+--------+--------+
+        | order 1 | cash     | no   | product1 |    1 |               12.10 |        5% |                     10.89 |    9.00 |   1.89 |  10.89 |
+        |         |          |      | product2 |   -1 |                6.05 |        5% |                      5.45 |   -4.50 |  -0.95 | -5.445 |
+        +---------+----------+------+----------+------+---------------------+-----------+---------------------------+---------+--------+--------+
+        """
+        tax_21_incl = self.taxes['tax21']
+        tax_21_incl.company_id.tax_calculation_rounding_method = 'round_globally'
+
+        product1 = self.create_product(
+            name='Product 1',
+            category=self.categ_basic,
+            lst_price=12.10,
+            tax_ids=tax_21_incl.ids,
+        )
+        product2 = self.create_product(
+            name='Product 2',
+            category=self.categ_basic,
+            lst_price=6.05,
+            tax_ids=tax_21_incl.ids,
+        )
+        self.open_new_session()
+        self.env['pos.order'].create_from_ui([self.create_ui_order_data([
+            (product1, 1, 10),
+            (product2, -1, 10),
+        ])])
+        self.pos_session.action_pos_session_validate()
+
+        lines = self.pos_session.move_id.line_ids.sorted('balance')
+
+        self.assertEqual(2, len(lines.filtered(lambda l: l.tax_ids)), "Taxes should have been set on 2 lines")
+        self.assertEqual(4, len(lines.filtered(lambda l: l.tax_tag_ids)), "Tags should have been set on 4 lines")
+        self.assertRecordValues(lines, [
+            {'account_id': self.sale_account.id,           'balance': - 9.0, 'tax_ids': tax_21_incl.ids, 'tax_tag_ids': self.tax_tag_invoice_base.ids},
+            {'account_id': self.tax_received_account.id,   'balance': -1.89, 'tax_ids': [],              'tax_tag_ids': self.tax_tag_invoice_tax.ids},
+            {'account_id': self.tax_received_account.id,   'balance':  0.95, 'tax_ids': [],              'tax_tag_ids': self.tax_tag_refund_tax.ids},
+            {'account_id': self.sale_account.id,           'balance':   4.5, 'tax_ids': tax_21_incl.ids, 'tax_tag_ids': self.tax_tag_refund_base.ids},
+            {'account_id': self.pos_receivable_account.id, 'balance':  5.44, 'tax_ids': [],              'tax_tag_ids': []},
+        ])
+
+    def test_pos_create_correct_account_move_round_globally_discount_real_use_case(self):
+        """ Test for orders with global rounding enabled
+
+        Orders
+        ======
+        +---------+----------+------+----------+------+---------------------+-----------+---------------------------+---------+--------+--------+
+        | order   | payments | inv? | product  | qty  | original price unit | Discount  | price unit after discount | untaxed | tax    |  total |
+        +---------+----------+------+----------+------+---------------------+-----------+---------------------------+---------+--------+--------+
+        | order 1 | cash     | no   | product1 |    6 |               11.80 |        5% |                     11.21 |   55.59 |  11.67 |  67.26 |
+        |         |          |      | product2 |   -6 |               15.30 |        5% |                    14.535 |  -72.07 | -15.14 | -87.21 |
+        +---------+----------+------+----------+------+---------------------+-----------+---------------------------+---------+--------+--------+
+        """
+        tax_21_incl = self.taxes['tax21']
+        tax_21_incl.company_id.tax_calculation_rounding_method = 'round_globally'
+
+        product1 = self.create_product(
+            name='Product 1',
+            category=self.categ_basic,
+            lst_price=11.80,
+            tax_ids=tax_21_incl.ids,
+        )
+        product2 = self.create_product(
+            name='Product 2',
+            category=self.categ_basic,
+            lst_price=15.30,
+            tax_ids=tax_21_incl.ids,
+        )
+        self.open_new_session()
+        self.env['pos.order'].create_from_ui([self.create_ui_order_data([
+            (product1, 6, 5),
+            (product2, -6, 5),
+        ])])
+        self.pos_session.action_pos_session_validate()
+
+        lines = self.pos_session.move_id.line_ids.sorted('balance')
+
+        self.assertEqual(2, len(lines.filtered(lambda l: l.tax_ids)), "Taxes should have been set on 2 lines")
+        self.assertEqual(4, len(lines.filtered(lambda l: l.tax_tag_ids)), "Tags should have been set on 4 lines")
+        self.assertRecordValues(lines, [
+            {'account_id': self.sale_account.id,           'balance': -55.59, 'tax_ids': tax_21_incl.ids, 'tax_tag_ids': self.tax_tag_invoice_base.ids},
+            {'account_id': self.pos_receivable_account.id, 'balance': -19.95, 'tax_ids': [],              'tax_tag_ids': []},
+            {'account_id': self.tax_received_account.id,   'balance': -11.67, 'tax_ids': [],              'tax_tag_ids': self.tax_tag_invoice_tax.ids},
+            {'account_id': self.tax_received_account.id,   'balance':  15.14, 'tax_ids': [],              'tax_tag_ids': self.tax_tag_refund_tax.ids},
+            {'account_id': self.sale_account.id,           'balance':  72.07, 'tax_ids': tax_21_incl.ids, 'tax_tag_ids': self.tax_tag_refund_base.ids},
+        ])
