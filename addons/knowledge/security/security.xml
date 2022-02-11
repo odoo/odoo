@@ -1,16 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo noupdate="1">
-    <!--<record id="knowledge_user_own_articles" model="ir.rule">-->
-        <!--<field name="name">Private and public articles</field>-->
-        <!--<field name="model_id" ref="model_knowledge_article"/>-->
-        <!--<field name="domain_force">['|', ('owner_id','=',user.id), ('owner_id', '=', False)]</field>-->
-        <!--<field name="groups" eval="[(4, ref('base.group_user'))]"/>-->
-    <!--</record>-->
+    <!-- knowledge article -->
+    <record id="knowledge_system_all_articles" model="ir.rule">
+        <field name="name">All articles</field>
+        <field name="model_id" ref="model_knowledge_article"/>
+        <field name="domain_force">[(1,'=',1)]</field>
+        <field name="groups" eval="[(4, ref('base.group_system'))]"/>
+    </record>
 
-        <!--<record id="knowledge_system_all_articles" model="ir.rule">-->
-        <!--<field name="name">Private and public articles</field>-->
-        <!--<field name="model_id" ref="model_knowledge_article"/>-->
-        <!--<field name="domain_force">[(1,'=',1)]</field>-->
-        <!--<field name="groups" eval="[(4, ref('base.group_system'))]"/>-->
-    <!--</record>-->
+    <record id="knowledge_user_read_articles" model="ir.rule">
+        <field name="name">Read articles</field>
+        <field name="model_id" ref="model_knowledge_article"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+        <field name="domain_force">[('user_has_access', '=', True)]</field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <record id="knowledge_user_write_articles" model="ir.rule">
+        <field name="name">Write articles</field>
+        <field name="model_id" ref="model_knowledge_article"/>
+        <field name="domain_force">[('user_can_write', '=', True)]</field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+    </record>
 </odoo>

@@ -6,7 +6,7 @@
         <section>
             <div class="h4 mb-0">Favourites</div>
             <ul t-if="favourites" class="o_tree_favourite m-0 px-0 py-2">
-                <li t-if="favourite.user_has_access" t-foreach="favourites" t-as="favourite" t-att-data-article-id="favourite.id">
+                <li t-foreach="favourites" t-as="favourite" t-att-data-article-id="favourite.id">
                     <div class="d-flex">
                         <button class="o_article_icon btn btn-link text-secondary p-0" type="button">
                             <i t-attf-class="fa fa-fw #{favourite.icon}"/>

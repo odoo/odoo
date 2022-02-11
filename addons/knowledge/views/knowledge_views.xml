@@ -184,12 +184,9 @@
                 <field name="author_ids"/>
                 <field name="last_edition_id"/>
 
-                <filter name="favourites" string="My Favourites" domain="[('is_user_favourite', '=', True)]"/>
-                <filter name="own_articles" string="My Articles" domain="[('owner_id', '=', uid)]"/>
-                <filter name="shared_articles" string="My Shared Articles" domain="[('category', '=', 'shared')]"/>
-                <!--TODO FABA: Apply record rules to avoid users that are not in partner_ids to access the records in category 'shared'.
-                        + all the other record rules of course :)
-                -->
+                <filter name="favourites" string="My Favourites" domain="[('is_user_favourite', '=', True), ('user_has_access', '=', True)]"/>
+                <filter name="own_articles" string="My Articles" domain="[('owner_id', '=', uid), ('user_has_access', '=', True)]"/>
+                <filter name="shared_articles" string="My Shared Articles" domain="[('category', '=', 'shared'), ('user_has_access', '=', True)]"/>
 
                 <group expand="0" string="Group By">
                   <filter string="Authors" name="author_ids" domain="[]" context="{'group_by':'author_ids'}"/>

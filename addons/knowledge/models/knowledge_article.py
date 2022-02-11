@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, api, _
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.osv import expression
 
 
@@ -20,6 +20,10 @@ class ArticleMembers(models.Model):
     ], required=True, default='read')
     # used to highlight the current user in the share wizard.
     is_current_user = fields.Boolean(string="Is Me ?", compute="_compute_is_current_user")
+
+    _sql_constraints = [
+        ('partner_unique', 'unique(article_id, partner_id)', 'You already added this partner in this article.')
+    ]
 
     def _compute_is_current_user(self):
         for member in self:
@@ -54,8 +58,8 @@ class Article(models.Model):
     partner_ids = fields.Many2many("res.partner", "knowledge_article_member_rel", 'article_id', 'partner_id', string="Article Members", copy=False, depends=['article_member_ids'],
         help="Article members are the partners that have specific access rules on the related article.")
     article_member_ids = fields.One2many('knowledge.article.member', 'article_id', string='Members Information', depends=['partner_ids'])  # groups ?
-    user_has_access = fields.Boolean(string='Has Access', compute="_compute_user_access")
-    user_can_write = fields.Boolean(string='Can Write', compute="_compute_user_access")
+    user_has_access = fields.Boolean(string='Has Access', compute="_compute_user_has_access", search="_search_user_has_access")
+    user_can_write = fields.Boolean(string='Can Write', compute="_compute_user_can_write", search="_search_user_can_write")
     category = fields.Selection([
         ('workspace', 'Workspace'),
         ('private', 'Private'),
@@ -77,8 +81,14 @@ class Article(models.Model):
     # Set default=0 to avoid false values and messed up order
     favourite_count = fields.Integer(string="#Is Favourite", copy=False, default=0)
 
-    # TODO DBE: Add constraints
-    # -> at least one member with write access if internal_permission != 'write'
+    @api.constrains('internal_permission', 'article_member_ids')
+    def _check_members(self):
+        for article in self:
+            if article.internal_permission != 'write':
+                write_members = article.article_member_ids.filtered(
+                        lambda member: member.permission == 'write')
+                if len(write_members) == 0:
+                    raise ValidationError(_("You must have at least one writer."))
 
     ##############################
     # Computes, Searches, Inverses
@@ -86,14 +96,38 @@ class Article(models.Model):
 
     @api.depends_context('uid')
     @api.depends('internal_permission', 'article_member_ids.partner_id', 'article_member_ids.permission')
-    def _compute_user_access(self):
+    def _compute_user_has_access(self):
+        if self.env.user.has_group('base.group_system'):
+            self.user_has_access = True
+            return
+        partner_id = self.env.user.partner_id
+        if not partner_id:
+            self.user_has_access = False
+            return
+        # TODO DBE: check why it doesn't work with self.env['knowledge.article.member'].sudo()
+        result = self.article_member_ids.sudo().search_read([('partner_id', '=', partner_id.id)], ['article_id', 'permission'])
+        articles_permission = {r["article_id"][0]: r["permission"] for r in result}
+        for article in self:
+            article.user_has_access = articles_permission[article.id] != "none" if article.id in articles_permission \
+                else article.internal_permission != 'none'
+
+    @api.depends_context('uid')
+    @api.depends('internal_permission', 'article_member_ids.partner_id', 'article_member_ids.permission')
+    def _compute_user_can_write(self):
+        if self.env.user.has_group('base.group_system'):
+            self.user_can_write = True
+            return
+
+        partner_id = self.env.user.partner_id
+        if not partner_id:
+            self.user_can_write = False
+            return
+        # TODO DBE: check why it doesn't work with self.env['knowledge.article.member'].sudo()
+        result = self.article_member_ids.sudo().search_read([('partner_id', '=', partner_id.id)], ['article_id', 'permission'])
+        articles_permission = {r["article_id"][0]: r["permission"] for r in result}
         for article in self:
             # You cannot have only one member per article.
-            user_member = article.article_member_ids.filtered(
-                lambda member: self.env.user in member.partner_id.user_ids)
-            article.user_has_access = user_member.permission != "none" if user_member \
-                else article.internal_permission != 'none'
-            article.user_can_write = user_member.permission == "write" if user_member \
+            article.user_can_write = articles_permission[article.id] == "write" if article.id in articles_permission \
                 else article.internal_permission == 'write'
 
     @api.depends('internal_permission', 'article_member_ids.permission', 'article_member_ids.partner_id')
@@ -115,10 +149,50 @@ class Article(models.Model):
             members = article.article_member_ids
             if article.internal_permission != 'none':
                 article.owner_id = False
-            elif len(members) == 1 and members.permission == 'write' and not members.partner_id.partner_share:
+            elif len(members) == 1 and members.permission == 'write' and not members.partner_id.partner_share and members.partner_id.user_ids:
                 article.owner_id = next(user for user in members.partner_id.user_ids if not user.share)
             else:
                 article.owner_id = False
+
+    def _search_user_has_access(self, operator, value):
+        if operator not in ('=', '!=') or not isinstance(value, bool):
+            raise ValueError("unsupported search operator")
+        user_members = self.env['knowledge.article.member'].search(
+            [('partner_id', '=', self.env.user.partner_id.id)])
+        articles_with_no_access = user_members.filtered(
+            lambda member: member.permission == 'none').mapped('article_id').ids
+        articles_with_access = user_members.filtered(
+            lambda member: member.permission != 'none').mapped('article_id').ids
+
+        # If searching articles for which user has access.
+        if (value and operator == '=') or (not value and operator == '!='):
+            if self.env.user.has_group('base.group_system'):
+                return expression.TRUE_DOMAIN
+            return ['|', '&', ('internal_permission', '!=', 'none'), ('id', 'not in', articles_with_no_access),
+                         ('id', 'in', articles_with_access)]
+        # If searching articles for which user has NO access.
+        if self.env.user.has_group('base.group_system'):
+            return expression.FALSE_DOMAIN
+        return ['|', '&', ('internal_permission', '=', 'none'), ('id', 'not in', articles_with_access),
+                     ('id', 'in', articles_with_no_access)]
+
+    def _search_user_can_write(self, operator, value):
+        if operator not in ('=', '!=') or not isinstance(value, bool):
+            raise ValueError("unsupported search operator")
+        user_members = self.env['knowledge.article.member'].search(
+            [('partner_id', '=', self.env.user.partner_id.id)])
+        articles_with_no_access = user_members.filtered(
+            lambda member: member.permission != 'write').mapped('article_id').ids
+        articles_with_access = user_members.filtered(
+            lambda member: member.permission == 'write').mapped('article_id').ids
+
+        # If searching articles for which user has write access.
+        if (value and operator == '=') or (not value and operator == '!='):
+            return ['|', '&', ('internal_permission', '=', 'write'), ('id', 'not in', articles_with_no_access),
+                         ('id', 'in', articles_with_access)]
+        # If searching articles for which user has NO write access.
+        return ['|', '&', ('internal_permission', '!=', 'write'), ('id', 'not in', articles_with_access),
+                     ('id', 'in', articles_with_no_access)]
 
     def _search_owner_id(self, operator, value):
         # get the user_id from name
@@ -289,9 +363,9 @@ class Article(models.Model):
 
         result = super(Article, self - wrote_articles).write(vals)
 
-        # Propagate access rules to children
-        # TODO: /!\ What happen if you can write on parent article but not on one of the children ?
-        if self.child_ids:
+        # Propagate access rules to children (only the ones we can write on)
+        write_child_ids = self.child_ids.filtered(lambda child: child.user_can_write)
+        if write_child_ids:
             children_values = {}
             if 'internal_permission' in vals:
                 # Propagate permission to children
@@ -314,7 +388,7 @@ class Article(models.Model):
                         wrote_children |= child
 
             if children_values:
-                (self.child_ids - wrote_children).write(children_values)
+                (write_child_ids - wrote_children).write(children_values)
 
         # use context key to stop reordering loop as "_resequence" calls write method.
         if any(field in ['parent_id', 'sequence'] for field in vals) and not self.env.context.get('resequencing_articles'):
