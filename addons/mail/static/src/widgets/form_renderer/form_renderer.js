@@ -27,6 +27,12 @@ FormRenderer.include({
          * This is set when arch contains `div.oe_chatter`.
          */
         this._chatterContainerTarget = undefined;
+        /**
+         * This jQuery element will be set when rendering the form view, and
+         * used as a hook to insert the ChatterContainer in the right place,
+         * when applying the rendering into the DOM.
+         */
+        this.$chatterContainerHook = undefined;
         // Do not load chatter in form view dialogs
         this._isFromFormViewDialog = params.isFromFormViewDialog;
     },
@@ -105,12 +111,12 @@ FormRenderer.include({
      * @returns {jQuery.Element}
      */
     _makeChatterContainerTarget() {
-        if (this._chatterContainerTarget) {
-            return $(this._chatterContainerTarget);
+        if (!this._chatterContainerTarget) {
+            this._chatterContainerTarget = document.createElement("div");
+            this._chatterContainerTarget.classList.add("o_FormRenderer_chatterContainer");
         }
-        const $el = $('<div class="o_FormRenderer_chatterContainer"/>');
-        this._chatterContainerTarget = $el[0];
-        return $el;
+        this.$chatterContainerHook = $('<div class="o_FormRenderer_chatterContainer"/>');
+        return this.$chatterContainerHook;
     },
     /**
      * Mount the chatter
@@ -141,6 +147,18 @@ FormRenderer.include({
             return this._makeChatterContainerTarget();
         }
         return this._super(...arguments);
+    },
+    /**
+     * The last rendering of the form view has just been applied into the DOM,
+     * so we replace our chatter container hook by the actual chatter container.
+     *
+     * @override
+     */
+    _updateView() {
+        this._super(...arguments);
+        if (this._hasChatter()) {
+            this.$chatterContainerHook.replaceWith(this._chatterContainerTarget);
+        }
     },
     /**
      * Overrides the function to render the chatter once the form view is
