@@ -234,7 +234,7 @@ class FormView extends Component {
             confirm: async () => {
                 await this.model.root.delete();
                 if (!this.model.root.resId) {
-                    this.trigger("history-back");
+                    this.env.config.historyBack();
                 }
             },
             cancel: () => {},
@@ -277,7 +277,7 @@ class FormView extends Component {
         if (this.model.root.resId) {
             this.state.inEditMode = false;
         } else {
-            this.trigger("history-back");
+            this.env.config.historyBack();
         }
     }
 }

@@ -6,6 +6,7 @@ import { CharField } from "@web/fields/char_field";
 import {
     click,
     editInput,
+    getFixture,
     legacyExtraNextTick,
     makeDeferred,
     nextTick,
@@ -1271,25 +1272,26 @@ QUnit.module("Views", (hooks) => {
             },
         };
 
+        const target = getFixture();
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 1);
 
-        await click(webClient.el.querySelector(".o_list_button_add"));
-        assert.containsOnce(webClient, ".o_form_view");
+        await click(target.querySelector(".o_list_button_add"));
+        assert.containsOnce(target, ".o_form_view");
         // sanity check: notebook active page is first page
-        assert.hasClass(webClient.el.querySelector(".o_notebook .nav-link"), "active");
+        assert.hasClass(target.querySelector(".o_notebook .nav-link"), "active");
 
         // click on second page tab
-        await click(webClient.el.querySelectorAll(".o_notebook .nav-link")[1]);
-        assert.hasClass(webClient.el.querySelectorAll(".o_notebook .nav-link")[1], "active");
+        await click(target.querySelectorAll(".o_notebook .nav-link")[1]);
+        assert.hasClass(target.querySelectorAll(".o_notebook .nav-link")[1], "active");
 
-        await click(webClient.el.querySelector(".o_control_panel .o_form_button_cancel"));
-        assert.containsNone(webClient, ".o_form_view");
+        await click(target.querySelector(".o_control_panel .o_form_button_cancel"));
+        assert.containsNone(target, ".o_form_view");
 
-        await click(webClient.el.querySelector(".o_list_button_add"));
-        assert.containsOnce(webClient, ".o_form_view");
+        await click(target.querySelector(".o_list_button_add"));
+        assert.containsOnce(target, ".o_form_view");
         // check notebook active page is first page again
-        assert.hasClass(webClient.el.querySelector(".o_notebook .nav-link"), "active");
+        assert.hasClass(target.querySelector(".o_notebook .nav-link"), "active");
     });
 
     QUnit.test("rendering stat buttons with action", async function (assert) {
@@ -2370,16 +2372,16 @@ QUnit.module("Views", (hooks) => {
 
         let rpcCount = 0;
         class AsyncField extends CharField {
-            willStart() {
-                assert.step("load " + rpcCount);
-                return Promise.resolve();
-            }
-            willUpdateProps() {
-                assert.step("load " + rpcCount);
-                if (rpcCount === 2) {
-                    return new Promise(() => {});
-                }
-                return Promise.resolve();
+            setup() {
+                owl.onWillStart(async () => {
+                    assert.step("load " + rpcCount);
+                });
+                owl.onWillUpdateProps(async () => {
+                    assert.step("load " + rpcCount);
+                    if (rpcCount === 2) {
+                        return () => {};
+                    }
+                });
             }
         }
         fieldRegistry.add("asyncwidget", AsyncField);
@@ -3063,17 +3065,18 @@ QUnit.module("Views", (hooks) => {
             },
         };
 
+        const target = getFixture();
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 1);
 
         assert.strictEqual(
-            webClient.el.querySelector(".o_control_panel .breadcrumb").innerText,
+            target.querySelector(".o_control_panel .breadcrumb").innerText,
             "first record",
             "should have the display name of the record as  title"
         );
-        await click(webClient.el.querySelector(".o_form_button_create"));
+        await click(target.querySelector(".o_form_button_create"));
         assert.strictEqual(
-            webClient.el.querySelector(".o_control_panel .breadcrumb").innerText,
+            target.querySelector(".o_control_panel .breadcrumb").innerText,
             "New",
             "should have the display name of the record as title"
         );
