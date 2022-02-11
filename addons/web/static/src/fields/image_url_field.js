@@ -1,12 +1,17 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
+import { useService } from "@web/core/utils/hooks";
 import { _lt } from "@web/core/l10n/translation";
 import { standardFieldProps } from "./standard_field_props";
 
 const { Component } = owl;
 
 export class ImageUrlField extends Component {
+    setup() {
+        this.notification = useService("notification");
+    }
+
     get sizeStyle() {
         let style = "";
         if (this.props.width) {
@@ -17,6 +22,12 @@ export class ImageUrlField extends Component {
         }
         return style;
     }
+
+    onLoadFailed() {
+        this.notification.add(this.env._t("Could not display the selected pdf"), {
+            type: "danger",
+        });
+    }
 }
 
 Object.assign(ImageUrlField, {
@@ -26,7 +37,8 @@ Object.assign(ImageUrlField, {
         width: { type: Number, optional: true },
         height: { type: Number, optional: true },
     },
-
+    displayName: _lt("Image"),
+    supportedTypes: ["char"],
     convertAttrsToProps(attrs) {
         return {
             width: attrs.options.size && attrs.options.size[0],
