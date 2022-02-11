@@ -3,7 +3,7 @@
 
 from odoo import fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools import datetime, float_repr, format_date
+from odoo.tools import datetime, float_repr
 
 
 class AccountMove(models.Model):
@@ -30,12 +30,12 @@ class AccountMove(models.Model):
         """Initialize the hash of the invoice, once."""
 
         def get_previous_hash():
-            self._cr.execute("SELECT * from account_move WHERE type = 'out_invoice' ORDER BY system_entry_date DESC LIMIT 1")
-            result = self._cr.fetchall()[0]
-            print(result)
-            print(type(result))
-            if result is not None:
-                return result.digital_signature
+            self._cr.execute("SELECT * from account_move WHERE type = 'out_invoice' AND state = 'posted' AND id != %s ORDER BY system_entry_date DESC LIMIT 1", [self.id])
+            result = self._cr.fetchall()
+            if result:
+                result = result[0]  # Get first (and only) element
+                previous_document = self.env['account.move'].browse(result[0])
+                return previous_document.digital_signature
             return ""
 
         self.init_system_entry_date()
