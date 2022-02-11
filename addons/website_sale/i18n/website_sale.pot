@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.1\n"
+"Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-07 10:46+0000\n"
-"PO-Revision-Date: 2021-12-07 10:46+0000\n"
+"POT-Creation-Date: 2022-02-11 14:33+0000\n"
+"PO-Revision-Date: 2022-02-11 14:33+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -352,30 +352,12 @@ msgstr ""
 #. module: website_sale
 #: model:mail.template,body_html:website_sale.mail_template_sale_cart_recovery
 msgid ""
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 0px; background-color: white; color: #454748; border-collapse:separate;\">\n"
 "<tbody>\n"
-"    <!-- HEADER -->\n"
-"    <tr>\n"
-"        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
-"                <tr><td valign=\"middle\">\n"
-"                    <t t-set=\"company\" t-value=\"object.company_id or object.user_id.company_id or user.company_id\"/>\n"
-"                    <span style=\"font-size: 10px;\">Your Cart</span><br/>\n"
-"                    <span style=\"font-size: 20px; font-weight: bold;\" t-out=\"object.name or ''\">S00060</span>\n"
-"                </td><td valign=\"middle\" align=\"right\">\n"
-"                    <img t-attf-src=\"/logo.png?company={{ company.id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"company.name\"/>\n"
-"                </td></tr>\n"
-"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
-"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
-"                </td></tr>\n"
-"            </table>\n"
-"        </td>\n"
-"    </tr>\n"
 "    <!-- CONTENT -->\n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 0px 0px 0px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                    <h1 style=\"color:#A9A9A9;\">THERE'S SOMETHING IN YOUR CART.</h1>\n"
 "                    Would you like to complete your purchase?<br/><br/>\n"
@@ -403,42 +385,13 @@ msgid ""
 "                            Resume order\n"
 "                        </a>\n"
 "                    </div>\n"
+"                    <t t-set=\"company\" t-value=\"object.company_id or object.user_id.company_id or user.company_id\"/>\n"
 "                    <div style=\"text-align: center;\"><strong>Thank you for shopping with <t t-out=\"company.name or ''\">My Company (San Francisco)</t>!</strong></div>\n"
-"                </td></tr>\n"
-"                <tr><td style=\"text-align:center;\">\n"
-"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
-"                </td></tr>\n"
-"            </table>\n"
-"        </td>\n"
-"    </tr>\n"
-"    <!-- FOOTER -->\n"
-"    <tr>\n"
-"        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
-"                <tr><td valign=\"middle\" align=\"left\" t-out=\"company.name or ''\">My Company (San Francisco)</td></tr>\n"
-"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
-"                    <t t-out=\"company.phone or ''\">+1 650-123-4567</t>\n"
-"                    <t t-if=\"company.email\">\n"
-"                        | <a t-attf-href=\"'mailto:%s' % {{ company.email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"company.email or ''\">info@yourcompany.com</a>\n"
-"                    </t>\n"
-"                    <t t-if=\"company.website\">\n"
-"                        | <a t-attf-href=\"'%s' % {{ company.website }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"company.website or ''\">http://www.example.com</a>\n"
-"                    </t>\n"
 "                </td></tr>\n"
 "            </table>\n"
 "        </td>\n"
 "    </tr>\n"
 "</tbody>\n"
-"</table>\n"
-"</td></tr>\n"
-"<!-- POWERED BY -->\n"
-"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
-"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
-"      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
-"        Powered by <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=website\" style=\"color: #875A7B;\">Odoo</a>\n"
-"      </td></tr>\n"
-"    </table>\n"
-"</td></tr>\n"
 "</table>\n"
 "            "
 msgstr ""
@@ -639,6 +592,13 @@ msgid "Apply specific prices per country, discounts, etc."
 msgstr ""
 
 #. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/js/website_sale.editor.js:0
+#, python-format
+msgid "Are you sure you want to delete this badge ?"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Assignment of online orders"
 msgstr ""
@@ -655,6 +615,23 @@ msgstr ""
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #, python-format
 msgid "Average Order"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_template__rating_avg
+msgid "Average Rating"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Badge"
+msgstr ""
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/js/website_sale.editor.js:0
+#, python-format
+msgid "Badge Text"
 msgstr ""
 
 #. module: website_sale
@@ -1004,6 +981,11 @@ msgid "Country..."
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Create"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.product_template_action_website
 msgid "Create a new product"
 msgstr ""
@@ -1109,7 +1091,12 @@ msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "Delete"
+msgid "Delete Badge"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_delivery
+msgid "Delivery Methods"
 msgstr ""
 
 #. module: website_sale
@@ -1252,6 +1239,7 @@ msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Edit"
 msgstr ""
 
@@ -1306,7 +1294,7 @@ msgid "Enter a name for your new product"
 msgstr ""
 
 #. module: website_sale
-#: code:addons/website_sale/models/product_misc.py:0
+#: code:addons/website_sale/models/product_public_category.py:0
 #, python-format
 msgid "Error ! You cannot create recursive categories."
 msgstr ""
@@ -1675,6 +1663,11 @@ msgid "Method"
 msgstr ""
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_delivery
+msgid "Module Website Sale Delivery"
+msgstr ""
+
+#. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/js/website_sale.js:0
 #: model_terms:ir.ui.view,arch_db:website_sale.header_cart_link
@@ -1839,7 +1832,7 @@ msgid "Only Services"
 msgstr ""
 
 #. module: website_sale
-#: code:addons/website_sale/models/product_misc.py:0
+#: code:addons/website_sale/models/product_pricelist.py:0
 #, python-format
 msgid ""
 "Only the company's websites are allowed.\n"
@@ -1872,13 +1865,13 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
-#: code:addons/website_sale/models/sale_order.py:0
+#: code:addons/website_sale/models/sale_order_line.py:0
 #, python-format
 msgid "Option for: %s"
 msgstr ""
 
 #. module: website_sale
-#: code:addons/website_sale/models/sale_order.py:0
+#: code:addons/website_sale/models/sale_order_line.py:0
 #, python-format
 msgid "Option: %s"
 msgstr ""
@@ -2115,6 +2108,7 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.website_product_pricelist3
+#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__group_product_pricelist
 #: model:ir.ui.menu,name:website_sale.menu_catalog_pricelists
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Pricelists"
@@ -2210,6 +2204,17 @@ msgid "Product Public Categories"
 msgstr ""
 
 #. module: website_sale
+#: model:ir.model,name:website_sale.model_product_tag
+msgid "Product Tag"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_ribbon__product_tag_ids
+#: model:ir.ui.menu,name:website_sale.menu_product_tag
+msgid "Product Tags"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model,name:website_sale.model_product_template
 #: model:ir.model.fields,field_description:website_sale.field_product_image__product_tmpl_id
 msgid "Product Template"
@@ -2266,6 +2271,7 @@ msgstr ""
 #: model:ir.ui.menu,name:website_sale.menu_catalog
 #: model:ir.ui.menu,name:website_sale.menu_catalog_products
 #: model:ir.ui.menu,name:website_sale.menu_product_settings
+#: model_terms:ir.ui.view,arch_db:website_sale.product_ribbon_form_view
 #: model_terms:ir.ui.view,arch_db:website_sale.product_searchbar_input_snippet_options
 #: model_terms:ir.ui.view,arch_db:website_sale.products_breadcrumb
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2353,8 +2359,8 @@ msgid "Rating"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_template__rating_avg
-msgid "Rating Average"
+#: model:ir.model.fields,field_description:website_sale.field_product_template__rating_avg_text
+msgid "Rating Avg Text"
 msgstr ""
 
 #. module: website_sale
@@ -2378,8 +2384,18 @@ msgid "Rating Satisfaction"
 msgstr ""
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_template__rating_last_text
+msgid "Rating Text"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__rating_count
 msgid "Rating count"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Re-order"
 msgstr ""
 
 #. module: website_sale
@@ -2432,8 +2448,15 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__website_id
 #: model:ir.model.fields,help:website_sale.field_product_public_category__website_id
+#: model:ir.model.fields,help:website_sale.field_product_tag__website_id
 #: model:ir.model.fields,help:website_sale.field_product_template__website_id
 msgid "Restrict publishing to this website."
+msgstr ""
+
+#. module: website_sale
+#: code:addons/website_sale/models/sale_order.py:0
+#, python-format
+msgid "Resume Order"
 msgstr ""
 
 #. module: website_sale
@@ -2443,8 +2466,8 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__website_ribbon_id
+#: model:ir.model.fields,field_description:website_sale.field_product_tag__ribbon_id
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_ribbon_id
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Ribbon"
 msgstr ""
 
@@ -2860,6 +2883,11 @@ msgid "Tag"
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_template_options
+msgid "Tags"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.total
 msgid "Taxes:"
 msgstr ""
@@ -3095,11 +3123,6 @@ msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "Validate"
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Vertical (2/3)"
 msgstr ""
 
@@ -3171,6 +3194,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_pricelist__website_id
 #: model:ir.model.fields,field_description:website_sale.field_product_product__website_id
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__website_id
+#: model:ir.model.fields,field_description:website_sale.field_product_tag__website_id
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_id
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__website_id
 #: model:ir.model.fields,field_description:website_sale.field_sale_report__website_id
@@ -3290,7 +3314,7 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
-#: code:addons/website_sale/models/product_misc.py:0
+#: code:addons/website_sale/models/product_pricelist.py:0
 #, python-format
 msgid "With this action, '%s' website would not have any pricelist available."
 msgstr ""
@@ -3400,11 +3424,6 @@ msgid "eCommerce Sales"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_delivery
-msgid "eCommerce Shipping Costs"
-msgstr ""
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "eCommerce Shop"
 msgstr ""
@@ -3463,17 +3482,22 @@ msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "⌙ Content"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "⌙ Fill"
 msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "⌙ Mode"
+msgid "⌙ Position"
 msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "⌙ Position"
+msgid "⌙ Style"
 msgstr ""
 
 #. module: website_sale

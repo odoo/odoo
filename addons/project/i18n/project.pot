@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.1\n"
+"Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-07 10:46+0000\n"
-"PO-Revision-Date: 2021-12-07 10:46+0000\n"
+"POT-Creation-Date: 2022-02-11 14:33+0000\n"
+"PO-Revision-Date: 2022-02-11 14:33+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -359,6 +359,15 @@ msgid "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"
 msgstr ""
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+#: model_terms:ir.ui.view,arch_db:project.view_task_form2
+msgid ""
+"<i class=\"fa fa-fw o_button_icon fa-smile-o text-success\" attrs=\"{'invisible': [('rating_avg', '&lt;', 3.66)]}\" title=\"Satisfied\"/>\n"
+"                            <i class=\"fa fa-fw o_button_icon fa-meh-o text-warning\" attrs=\"{'invisible': ['|', ('rating_avg', '&lt;', 2.33), ('rating_avg', '&gt;=', 3.66)]}\" title=\"Okay\"/>\n"
+"                            <i class=\"fa fa-fw o_button_icon fa-frown-o text-danger\" attrs=\"{'invisible': [('rating_avg', '&gt;=', 2.33)]}\" title=\"Dissatisfied\"/>"
+msgstr ""
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_activity
 msgid "<i class=\"fa fa-lock\"/> Private"
 msgstr ""
@@ -368,14 +377,6 @@ msgstr ""
 msgid ""
 "<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only\" aria-label=\"Arrow icon\" title=\"Arrow\"/>\n"
 "                                <i class=\"fa fa-long-arrow-right mx-2 oe_read_only\" aria-label=\"Arrow icon\" title=\"Arrow\" attrs=\"{'invisible': [('date_start', '=', False), ('date', '=', False)]}\"/>"
-msgstr ""
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
-msgid ""
-"<i class=\"fa fa-smile-o\" role=\"img\" aria-label=\"Average satisfaction "
-"rate for the last 30 days.\" title=\"Average satisfaction rate for the last "
-"30 days.\"/>"
 msgstr ""
 
 #. module: project
@@ -430,13 +431,6 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid ""
-"<span class=\"font-weight-bold oe_read_only\" attrs=\"{'invisible':  [('alias_name', '=', False)]}\">Create tasks by sending an email to </span>\n"
-"                                        <span class=\"font-weight-bold oe_edit_only\">Create tasks by sending an email to </span>"
-msgstr ""
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.edit_project
-msgid ""
 "<span class=\"o_stat_text\">\n"
 "                                    Collaborators\n"
 "                                </span>"
@@ -478,7 +472,7 @@ msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
-msgid "<span class=\"o_stat_text\">Satisfaction</span>"
+msgid "<span class=\"o_stat_text\">Rating</span>"
 msgstr ""
 
 #. module: project
@@ -489,6 +483,14 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text\">in Recurrence</span>"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+msgid ""
+"<span class=\"oe_read_only\" attrs=\"{'invisible': [('alias_name', '!=', False)]}\">Create tasks by sending an email to </span>\n"
+"                                        <span class=\"font-weight-bold oe_read_only\" attrs=\"{'invisible': [('alias_name', '=', False)]}\">Create tasks by sending an email to </span>\n"
+"                                        <span class=\"font-weight-bold oe_edit_only\">Create tasks by sending an email to </span>"
 msgstr ""
 
 #. module: project
@@ -765,12 +767,9 @@ msgid "Analytic Account"
 msgstr ""
 
 #. module: project
-#: model:ir.model.fields,field_description:project.field_project_task__analytic_tag_ids
-msgid "Analytic Tag"
-msgstr ""
-
-#. module: project
 #: model:ir.model,name:project.model_account_analytic_tag
+#: model:ir.model.fields,field_description:project.field_project_project__analytic_tag_ids
+#: model:ir.model.fields,field_description:project.field_project_task__analytic_tag_ids
 msgid "Analytic Tags"
 msgstr ""
 
@@ -986,6 +985,35 @@ msgid ""
 msgstr ""
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__rating_avg
+#: model:ir.model.fields,field_description:project.field_project_task__rating_avg
+msgid "Average Rating"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__rating_avg_percentage
+msgid "Average Rating (%)"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_task_kanban
+msgid "Average Rating: Dissatisfied"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_task_kanban
+msgid "Average Rating: Okay"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_task_kanban
+msgid "Average Rating: Satisfied"
+msgstr ""
+
+#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
@@ -1088,6 +1116,12 @@ msgstr ""
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Client Review"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
+#: model_terms:ir.ui.view,arch_db:project.view_task_search_form
+msgid "Closed"
 msgstr ""
 
 #. module: project
@@ -1355,13 +1389,8 @@ msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_status
+#: model:ir.model.fields,field_description:project.field_res_config_settings__rating_status
 msgid "Customer Ratings Status"
-msgstr ""
-
-#. module: project
-#: code:addons/project/models/project.py:0
-#, python-format
-msgid "Customer Satisfaction"
 msgstr ""
 
 #. module: project
@@ -1384,6 +1413,7 @@ msgstr ""
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__daily
+#: model:ir.model.fields.selection,name:project.selection__res_config_settings__rating_status_period__daily
 msgid "Daily"
 msgstr ""
 
@@ -1635,6 +1665,12 @@ msgid "Display Project"
 msgstr ""
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
+#: model_terms:ir.ui.view,arch_db:project.view_task_search_form
+msgid "Dissatisfied"
+msgstr ""
+
+#. module: project
 #: code:addons/project/models/digest.py:0
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
@@ -1821,8 +1857,8 @@ msgid "Followed"
 msgstr ""
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_task_search_form_extended
-msgid "Followed Projects"
+#: model_terms:ir.ui.view,arch_db:project.view_task_search_form
+msgid "Followed Tasks"
 msgstr ""
 
 #. module: project
@@ -1962,6 +1998,7 @@ msgid "Handoff"
 msgstr ""
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Happy face"
 msgstr ""
@@ -2416,21 +2453,6 @@ msgid "Later"
 msgstr ""
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_task_kanban
-msgid "Latest Rating: Dissatisfied"
-msgstr ""
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_task_kanban
-msgid "Latest Rating: Okay"
-msgstr ""
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_task_kanban
-msgid "Latest Rating: Satisfied"
-msgstr ""
-
-#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tours/project.js:0
 #: code:addons/project/static/src/js/tours/project.js:0
@@ -2683,6 +2705,7 @@ msgid "Name of the tasks"
 msgstr ""
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Neutral face"
 msgstr ""
@@ -2783,6 +2806,12 @@ msgid "Next Recurrencies"
 msgstr ""
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
+#: model_terms:ir.ui.view,arch_db:project.view_task_search_form
+msgid "No Rating"
+msgstr ""
+
+#. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "No Subject"
@@ -2847,6 +2876,11 @@ msgstr ""
 #: model:ir.model.fields.selection,name:project.selection__project_task__priority__0
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__priority__1
 msgid "Normal"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_task_search_form
+msgid "Not Starred"
 msgstr ""
 
 #. module: project
@@ -2959,6 +2993,12 @@ msgid "Ok"
 msgstr ""
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
+#: model_terms:ir.ui.view,arch_db:project.view_task_search_form
+msgid "Okay"
+msgstr ""
+
+#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
@@ -2979,12 +3019,18 @@ msgstr ""
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__monthly
+#: model:ir.model.fields.selection,name:project.selection__res_config_settings__rating_status_period__monthly
 msgid "Once a Month"
 msgstr ""
 
 #. module: project
-#: model:ir.model.fields,field_description:project.field_digest_digest__kpi_project_task_opened
+#: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
+msgid "Open"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_digest_digest__kpi_project_task_opened
 msgid "Open Tasks"
 msgstr ""
 
@@ -3083,6 +3129,7 @@ msgstr ""
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status__periodic
+#: model:ir.model.fields.selection,name:project.selection__res_config_settings__rating_status__periodic
 msgid "Periodic rating"
 msgstr ""
 
@@ -3241,6 +3288,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_search_project
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_tree_project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:project.task_type_search
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
@@ -3393,6 +3441,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:project.open_view_project_all_config
 #: model:ir.actions.act_window,name:project.open_view_project_all_group_stage
 #: model:ir.model.fields,field_description:project.field_account_analytic_account__project_ids
+#: model:ir.model.fields,field_description:project.field_account_analytic_tag__project_ids
 #: model:ir.model.fields,field_description:project.field_project_delete_wizard__project_ids
 #: model:ir.model.fields,field_description:project.field_project_task_type__project_ids
 #: model:ir.model.fields,field_description:project.field_project_task_type_delete_wizard__project_ids
@@ -3436,17 +3485,14 @@ msgstr ""
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__quarterly
+#: model:ir.model.fields.selection,name:project.selection__res_config_settings__rating_status_period__quarterly
 msgid "Quarterly"
-msgstr ""
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_task_search_form
-msgid "Rated Tasks"
 msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_ids
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_form_project
+#: model_terms:ir.ui.view,arch_db:project.view_task_tree2
 msgid "Rating"
 msgstr ""
 
@@ -3456,8 +3502,8 @@ msgid "Rating (/5)"
 msgstr ""
 
 #. module: project
-#: model:ir.model.fields,field_description:project.field_project_task__rating_avg
-msgid "Rating Average"
+#: model:ir.model.fields,field_description:project.field_project_task__rating_avg_text
+msgid "Rating Avg Text"
 msgstr ""
 
 #. module: project
@@ -3467,6 +3513,7 @@ msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_status_period
+#: model:ir.model.fields,field_description:project.field_res_config_settings__rating_status_period
 msgid "Rating Frequency"
 msgstr ""
 
@@ -3481,6 +3528,7 @@ msgid "Rating Last Image"
 msgstr ""
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__rating_last_value
 #: model:ir.model.fields,field_description:project.field_project_task__rating_last_value
 msgid "Rating Last Value"
 msgstr ""
@@ -3494,6 +3542,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_project__rating_percentage_satisfaction
 #: model:ir.model.fields,field_description:project.field_project_task__rating_percentage_satisfaction
 msgid "Rating Satisfaction"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task__rating_last_text
+msgid "Rating Text"
 msgstr ""
 
 #. module: project
@@ -3511,7 +3564,13 @@ msgid "Rating count"
 msgstr ""
 
 #. module: project
+#: model:ir.model.fields,help:project.field_project_project__rating_last_value
+msgid "Rating value: 0=Unhappy, 5=Happy"
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status__stage
+#: model:ir.model.fields.selection,name:project.selection__res_config_settings__rating_status__stage
 msgid "Rating when changing stage"
 msgstr ""
 
@@ -3761,6 +3820,7 @@ msgid "SMS Delivery error"
 msgstr ""
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Sad face"
 msgstr ""
@@ -3769,6 +3829,18 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__sat
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__sat
 msgid "Sat"
+msgstr ""
+
+#. module: project
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "Satisfaction"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
+#: model_terms:ir.ui.view,arch_db:project.view_task_search_form
+msgid "Satisfied"
 msgstr ""
 
 #. module: project
@@ -4122,6 +4194,12 @@ msgid "Sub-tasks Planned Hours"
 msgstr ""
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.rating_rating_view_form_project
+#: model_terms:ir.ui.view,arch_db:project.rating_rating_view_search_project
+msgid "Submitted On"
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields,help:project.field_project_task__subtask_planned_hours
 msgid ""
 "Sum of the time planned of all the sub-tasks linked to this task. Usually "
@@ -4399,6 +4477,11 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__personal_stage_type_id
 msgid "The current user's personal task stage."
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_task__date_deadline
+msgid "The deadline for the task, which appears in the calendar view."
 msgstr ""
 
 #. module: project
@@ -4685,6 +4768,7 @@ msgstr ""
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__bimonthly
+#: model:ir.model.fields.selection,name:project.selection__res_config_settings__rating_status_period__bimonthly
 msgid "Twice a Month"
 msgstr ""
 
@@ -4900,6 +4984,7 @@ msgstr ""
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__weekly
+#: model:ir.model.fields.selection,name:project.selection__res_config_settings__rating_status_period__weekly
 msgid "Weekly"
 msgstr ""
 
@@ -4963,6 +5048,7 @@ msgstr ""
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__yearly
+#: model:ir.model.fields.selection,name:project.selection__res_config_settings__rating_status_period__yearly
 msgid "Yearly"
 msgstr ""
 

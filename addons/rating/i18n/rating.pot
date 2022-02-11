@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.5\n"
+"Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-14 10:29+0000\n"
-"PO-Revision-Date: 2021-09-14 10:29+0000\n"
+"POT-Creation-Date: 2022-02-11 14:34+0000\n"
+"PO-Revision-Date: 2022-02-11 14:34+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -34,6 +34,17 @@ msgstr ""
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating__partner_id
 msgid "Author of the rating"
+msgstr ""
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_avg
+#: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__rating_avg
+msgid "Average Rating"
+msgstr ""
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__rating_avg_percentage
+msgid "Average Rating (%)"
 msgstr ""
 
 #. module: rating
@@ -64,6 +75,7 @@ msgstr ""
 
 #. module: rating
 #: code:addons/rating/controllers/main.py:0
+#: model:ir.model.fields.selection,name:rating.selection__rating_mixin__rating_avg_text__ko
 #: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__ko
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 #, python-format
@@ -179,6 +191,7 @@ msgid "Name"
 msgstr ""
 
 #. module: rating
+#: model:ir.model.fields.selection,name:rating.selection__rating_mixin__rating_avg_text__none
 #: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__none
 msgid "No Rating yet"
 msgstr ""
@@ -190,6 +203,7 @@ msgstr ""
 
 #. module: rating
 #: code:addons/rating/controllers/main.py:0
+#: model:ir.model.fields.selection,name:rating.selection__rating_mixin__rating_avg_text__ok
 #: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__ok
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 #, python-format
@@ -251,8 +265,8 @@ msgid "Rating"
 msgstr ""
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_avg
-msgid "Rating Average"
+#: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_avg_text
+msgid "Rating Avg Text"
 msgstr ""
 
 #. module: rating
@@ -267,6 +281,7 @@ msgstr ""
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_last_value
+#: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__rating_last_value
 msgid "Rating Last Value"
 msgstr ""
 
@@ -281,8 +296,14 @@ msgid "Rating Parent Mixin"
 msgstr ""
 
 #. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_percentage_satisfaction
 #: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__rating_percentage_satisfaction
 msgid "Rating Satisfaction"
+msgstr ""
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_last_text
+msgid "Rating Text"
 msgstr ""
 
 #. module: rating
@@ -309,6 +330,7 @@ msgid "Rating should be between 0 and 5"
 msgstr ""
 
 #. module: rating
+#: model:ir.model.fields,help:rating.field_rating_parent_mixin__rating_last_value
 #: model:ir.model.fields,help:rating.field_rating_rating__rating
 msgid "Rating value: 0=Unhappy, 5=Happy"
 msgstr ""
@@ -360,6 +382,7 @@ msgstr ""
 
 #. module: rating
 #: code:addons/rating/controllers/main.py:0
+#: model:ir.model.fields.selection,name:rating.selection__rating_mixin__rating_avg_text__top
 #: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__top
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 #, python-format

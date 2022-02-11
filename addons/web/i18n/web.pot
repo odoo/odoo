@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.1\n"
+"Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-07 10:47+0000\n"
-"PO-Revision-Date: 2021-12-07 10:47+0000\n"
+"POT-Creation-Date: 2022-02-11 14:34+0000\n"
+"PO-Revision-Date: 2022-02-11 14:34+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -2605,6 +2605,13 @@ msgstr ""
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/legacy/js/fields/relational_fields.js:0
+#, python-format
+msgid "Move to %s..."
+msgstr ""
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
 #, python-format
 msgid "Multiline Text"
@@ -2694,7 +2701,10 @@ msgstr ""
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/legacy/js/control_panel/search_bar.js:0
+#: code:addons/web/static/src/legacy/js/views/kanban/kanban_column.js:0
+#: code:addons/web/static/src/legacy/js/views/list/list_renderer.js:0
 #: code:addons/web/static/src/search/search_bar/search_bar.js:0
+#: code:addons/web/static/src/views/pivot/pivot_model.js:0
 #, python-format
 msgid "No"
 msgstr ""
@@ -2725,7 +2735,7 @@ msgstr ""
 #: code:addons/web/static/src/core/commands/default_providers.js:0
 #: code:addons/web/static/src/core/debug/debug_menu.js:0
 #, python-format
-msgid "No commands found"
+msgid "No command found"
 msgstr ""
 
 #. module: web
@@ -2776,7 +2786,7 @@ msgstr ""
 #. openerp-web
 #: code:addons/web/static/src/core/commands/command_palette.js:0
 #, python-format
-msgid "No results found"
+msgid "No result found"
 msgstr ""
 
 #. module: web
@@ -2802,7 +2812,14 @@ msgstr ""
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/legacy/js/views/kanban/kanban_column.js:0
+#: code:addons/web/static/src/legacy/js/views/kanban/kanban_column.js:0
+#: code:addons/web/static/src/legacy/js/views/kanban/kanban_column.js:0
+#: code:addons/web/static/src/legacy/js/views/list/list_renderer.js:0
+#: code:addons/web/static/src/legacy/js/views/list/list_renderer.js:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
+#: code:addons/web/static/src/views/pivot/pivot_model.js:0
+#: code:addons/web/static/src/views/pivot/pivot_model.js:0
 #, python-format
 msgid "None"
 msgstr ""
@@ -3649,6 +3666,7 @@ msgstr ""
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/core/debug/debug_providers.js:0
 #: code:addons/web/static/src/webclient/debug_items.js:0
 #, python-format
 msgid "Run JS Mobile Tests"
@@ -3656,6 +3674,7 @@ msgstr ""
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/core/debug/debug_providers.js:0
 #: code:addons/web/static/src/webclient/debug_items.js:0
 #, python-format
 msgid "Run JS Tests"
@@ -4436,15 +4455,9 @@ msgstr ""
 #: code:addons/web/static/src/legacy/js/views/calendar/calendar_model.js:0
 #: code:addons/web/static/src/legacy/js/views/graph/graph_model.js:0
 #: code:addons/web/static/src/legacy/js/views/graph/graph_renderer.js:0
-#: code:addons/web/static/src/legacy/js/views/kanban/kanban_column.js:0
-#: code:addons/web/static/src/legacy/js/views/kanban/kanban_column.js:0
-#: code:addons/web/static/src/legacy/js/views/list/list_renderer.js:0
-#: code:addons/web/static/src/legacy/js/views/list/list_renderer.js:0
 #: code:addons/web/static/src/legacy/js/views/pivot/pivot_model.js:0
 #: code:addons/web/static/src/views/graph/graph_model.js:0
 #: code:addons/web/static/src/views/graph/graph_model.js:0
-#: code:addons/web/static/src/views/pivot/pivot_model.js:0
-#: code:addons/web/static/src/webclient/actions/action_service.js:0
 #, python-format
 msgid "Undefined"
 msgstr ""
@@ -4488,6 +4501,7 @@ msgstr ""
 #: code:addons/web/static/src/legacy/js/_deprecated/data.js:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
+#: code:addons/web/static/src/search/control_panel/control_panel.xml:0
 #: code:addons/web/static/src/search/control_panel/control_panel.xml:0
 #, python-format
 msgid "Unnamed"
@@ -4794,8 +4808,11 @@ msgstr ""
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/legacy/js/control_panel/search_bar.js:0
+#: code:addons/web/static/src/legacy/js/views/kanban/kanban_column.js:0
+#: code:addons/web/static/src/legacy/js/views/list/list_renderer.js:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/search/search_bar/search_bar.js:0
+#: code:addons/web/static/src/views/pivot/pivot_model.js:0
 #, python-format
 msgid "Yes"
 msgstr ""
@@ -5080,6 +5097,22 @@ msgstr ""
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/legacy/js/control_panel/search_utils.js:0
+#: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
+#, python-format
+msgid "is No"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/legacy/js/control_panel/search_utils.js:0
+#: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
+#, python-format
+msgid "is Yes"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/legacy/js/control_panel/search_utils.js:0
 #: code:addons/web/static/src/legacy/js/control_panel/search_utils.js:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
@@ -5139,14 +5172,6 @@ msgstr ""
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #, python-format
 msgid "is equal to"
-msgstr ""
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/legacy/js/control_panel/search_utils.js:0
-#: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
-#, python-format
-msgid "is false"
 msgstr ""
 
 #. module: web
@@ -5217,14 +5242,6 @@ msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/legacy/js/control_panel/search_utils.js:0
-#: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
-#, python-format
-msgid "is true"
-msgstr ""
-
-#. module: web
-#. openerp-web
 #: code:addons/web/static/src/core/ui/block_ui.js:0
 #, python-format
 msgid "it's still loading..."
@@ -5261,6 +5278,13 @@ msgstr ""
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #, python-format
 msgid "less than or equal to"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/webclient/menus/menu_providers.js:0
+#, python-format
+msgid "menus"
 msgstr ""
 
 #. module: web

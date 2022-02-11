@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.0\n"
+"Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-16 13:18+0000\n"
-"PO-Revision-Date: 2021-11-16 13:18+0000\n"
+"POT-Creation-Date: 2022-02-11 14:33+0000\n"
+"PO-Revision-Date: 2022-02-11 14:33+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -91,10 +91,31 @@ msgid ""
 msgstr ""
 
 #. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
+msgid ""
+"<span attrs=\"{'invisible': [('product_has_tax', '=', False)]}\" "
+"class=\"oe_inline o_form_label ml-1 mr-1\"> ( </span>"
+msgstr ""
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
+msgid ""
+"<span attrs=\"{'invisible': [('product_has_tax', '=', False)]}\" "
+"class=\"oe_inline o_form_label ml-1 mr-3\"> ) </span>"
+msgstr ""
+
+#. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid ""
 "<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
 "specific.\"/>"
+msgstr ""
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
+msgid ""
+"<span class=\"o_form_label\">Expense Journal</span>\n"
+"                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" role=\"img\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
 
 #. module: hr_expense
@@ -130,12 +151,6 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "<strong>Validated By:</strong>"
-msgstr ""
-
-#. module: hr_expense
-#: model:product.product,name:hr_expense.accomodation_expense_product
-#: model:product.template,name:hr_expense.accomodation_expense_product_product_template
-msgid "Accomodation"
 msgstr ""
 
 #. module: hr_expense
@@ -226,11 +241,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__amount_residual
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__amount_residual
 msgid "Amount Due"
-msgstr ""
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__total_amount
-msgid "Amount paid"
 msgstr ""
 
 #. module: hr_expense
@@ -342,11 +352,6 @@ msgid "Attachment Count"
 msgstr ""
 
 #. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_expenses_analysis_tree
-msgid "Attachments"
-msgstr ""
-
-#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__bank_journal_id
 msgid "Bank Journal"
 msgstr ""
@@ -378,12 +383,12 @@ msgstr ""
 #: code:addons/hr_expense/static/src/js/expense_form_view.js:0
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_approve_duplicate_view_form
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 #, python-format
 msgid "Cancel"
 msgstr ""
 
 #. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_id
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Category"
 msgstr ""
@@ -401,6 +406,11 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Certified honest and conform,<br/>(Date and signature).<br/><br/>"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.model,name:hr_expense.model_res_company
+msgid "Companies"
 msgstr ""
 
 #. module: hr_expense
@@ -435,6 +445,13 @@ msgid ""
 msgstr ""
 
 #. module: hr_expense
+#. openerp-web
+#: code:addons/hr_expense/static/src/xml/documents_upload_views.xml:0
+#, python-format
+msgid "Create"
+msgstr ""
+
+#. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_expenses_analysis_tree
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Create Report"
@@ -454,6 +471,20 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_all
 msgid "Create new expenses to get statistics."
+msgstr ""
+
+#. module: hr_expense
+#. openerp-web
+#: code:addons/hr_expense/static/src/xml/documents_upload_views.xml:0
+#, python-format
+msgid "Create record"
+msgstr ""
+
+#. module: hr_expense
+#: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_to_submit
+msgid ""
+"Create the new expense reports from the expenses submitted by the employees "
+"you manage."
 msgstr ""
 
 #. module: hr_expense
@@ -479,21 +510,14 @@ msgid "Currency"
 msgstr ""
 
 #. module: hr_expense
-#: model:product.product,name:hr_expense.allowance_expense_product
-#: model:product.template,name:hr_expense.allowance_expense_product_product_template
-msgid "Daily Allowance"
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__currency_rate
+msgid "Currency Rate"
 msgstr ""
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Date"
-msgstr ""
-
-#. module: hr_expense
-#: model:product.product,uom_name:hr_expense.allowance_expense_product
-#: model:product.template,uom_name:hr_expense.allowance_expense_product_product_template
-msgid "Days"
 msgstr ""
 
 #. module: hr_expense
@@ -504,6 +528,18 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__expense_alias_prefix
 msgid "Default Alias Name for Expenses"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_res_company__expense_journal_id
+#: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__expense_journal_id
+#: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
+msgid "Default Expense Journal"
+msgstr ""
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
+msgid "Default accounting journal for expenses paid by employees."
 msgstr ""
 
 #. module: hr_expense
@@ -546,11 +582,6 @@ msgid ""
 msgstr ""
 
 #. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
-msgid "Documents"
-msgstr ""
-
-#. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense_sheet__state__done
 msgid "Done"
 msgstr ""
@@ -558,6 +589,11 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense_sheet__state__draft
 msgid "Draft"
+msgstr ""
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
+msgid "Draft Expenses"
 msgstr ""
 
 #. module: hr_expense
@@ -662,6 +698,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__sheet_id
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_tree
+#: model_terms:ir.ui.view,arch_db:hr_expense.view_move_form_inherit_expense
 msgid "Expense Report"
 msgstr ""
 
@@ -702,6 +739,18 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all_to_approve
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_department_to_approve
 msgid "Expense Reports to Approve"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all_to_submit
+msgid "Expense Reports to Submit"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_account_bank_statement_line__expense_sheet_id
+#: model:ir.model.fields,field_description:hr_expense.field_account_move__expense_sheet_id
+#: model:ir.model.fields,field_description:hr_expense.field_account_payment__expense_sheet_id
+msgid "Expense Sheet"
 msgstr ""
 
 #. module: hr_expense
@@ -746,15 +795,20 @@ msgid "Expense where the move line come from"
 msgstr ""
 
 #. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:0
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_root
 #: model:product.product,name:hr_expense.product_product_fixed_cost
+#: model:product.product,name:hr_expense.product_product_zero_cost
 #: model:product.template,name:hr_expense.product_product_fixed_cost_product_template
+#: model:product.template,name:hr_expense.product_product_zero_cost_product_template
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_department_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_activity
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_activity
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_expenses_analysis_tree
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
+#, python-format
 msgid "Expenses"
 msgstr ""
 
@@ -787,7 +841,7 @@ msgstr ""
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
-msgid "Expenses must be paid by the same entity (Company or employee)."
+msgid "Expenses must have the same To Reimburse status."
 msgstr ""
 
 #. module: hr_expense
@@ -812,12 +866,6 @@ msgid "Explicitly Refused by manager or accountant"
 msgstr ""
 
 #. module: hr_expense
-#: model:product.product,name:hr_expense.trans_expense_product
-#: model:product.template,name:hr_expense.trans_expense_product_product_template
-msgid "Flights, train, bus, taxi, parking"
-msgstr ""
-
-#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_follower_ids
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_follower_ids
 msgid "Followers"
@@ -833,12 +881,6 @@ msgstr ""
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__activity_type_icon
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr ""
-
-#. module: hr_expense
-#: model:product.product,name:hr_expense.food_expense_product
-#: model:product.template,name:hr_expense.food_expense_product_product_template
-msgid "Food & beverages"
 msgstr ""
 
 #. module: hr_expense
@@ -861,13 +903,7 @@ msgstr ""
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
-msgid "Generated Expense"
-msgstr ""
-
-#. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:0
-#, python-format
-msgid "Generated Expenses"
+msgid "Generate Expenses"
 msgstr ""
 
 #. module: hr_expense
@@ -946,8 +982,18 @@ msgid "In Payment"
 msgstr ""
 
 #. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__tax_ids
+msgid "Included taxes"
+msgstr ""
+
+#. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Incoming Emails"
+msgstr ""
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
+msgid "Internal Note"
 msgstr ""
 
 #. module: hr_expense
@@ -985,6 +1031,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_journal
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
+#: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Journal"
 msgstr ""
 
@@ -1003,11 +1050,6 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__label_convert_rate
 msgid "Label Convert Rate"
-msgstr ""
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__label_total_amount_company
-msgid "Label Total Amount Company"
 msgstr ""
 
 #. module: hr_expense
@@ -1076,12 +1118,6 @@ msgid "Messages"
 msgstr ""
 
 #. module: hr_expense
-#: model:product.product,name:hr_expense.mileage_expense_product
-#: model:product.template,name:hr_expense.mileage_expense_product_product_template
-msgid "Mileage"
-msgstr ""
-
-#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__my_activity_date_deadline
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__my_activity_date_deadline
 msgid "My Activity Deadline"
@@ -1121,6 +1157,12 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "New Expense Report"
+msgstr ""
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "New Expense Reports"
 msgstr ""
 
 #. module: hr_expense
@@ -1187,6 +1229,7 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_to_approve
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_to_pay
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_to_post
+#: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_to_submit
 msgid "No expense reports found"
 msgstr ""
 
@@ -1216,6 +1259,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__attachment_number
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__attachment_number
 msgid "Number of Attachments"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__expense_number
+msgid "Number of Expenses"
 msgstr ""
 
 #. module: hr_expense
@@ -1279,17 +1327,6 @@ msgid "Only Managers and HR Officers can approve expenses"
 msgstr ""
 
 #. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
-msgid "Other Info"
-msgstr ""
-
-#. module: hr_expense
-#: model:product.product,name:hr_expense.other_expense_product
-#: model:product.template,name:hr_expense.other_expense_product_product_template
-msgid "Other expenses"
-msgstr ""
-
-#. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__state__done
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense_sheet__payment_state__paid
 #: model:mail.message.subtype,name:hr_expense.mt_expense_paid
@@ -1311,12 +1348,6 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense_sheet__payment_state__partial
 msgid "Partially Paid"
-msgstr ""
-
-#. module: hr_expense
-#: code:addons/hr_expense/models/account_move.py:0
-#, python-format
-msgid "Payment Cancelled"
 msgstr ""
 
 #. module: hr_expense
@@ -1351,6 +1382,7 @@ msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense_sheet__state__post
+#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "Posted"
 msgstr ""
 
@@ -1372,6 +1404,16 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid "Price:"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_id
+msgid "Product"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_description
+msgid "Product Description"
 msgstr ""
 
 #. module: hr_expense
@@ -1417,11 +1459,6 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
 msgid "Reason to refuse Expense"
-msgstr ""
-
-#. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
-msgid "Receipts"
 msgstr ""
 
 #. module: hr_expense
@@ -1522,6 +1559,11 @@ msgid "Reports to Post"
 msgstr ""
 
 #. module: hr_expense
+#: model:ir.ui.menu,name:hr_expense.menu_hr_expense_sheet_all_to_submit
+msgid "Reports to Submit"
+msgstr ""
+
+#. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "Reset to Draft"
 msgstr ""
@@ -1534,7 +1576,6 @@ msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense_sheet__payment_state__reversed
-#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "Reversed"
 msgstr ""
 
@@ -1554,6 +1595,15 @@ msgstr ""
 #: code:addons/hr_expense/static/src/js/expense_form_view.js:0
 #, python-format
 msgid "Save Anyways"
+msgstr ""
+
+#. module: hr_expense
+#. openerp-web
+#: code:addons/hr_expense/static/src/xml/documents_upload_views.xml:0
+#: code:addons/hr_expense/static/src/xml/documents_upload_views.xml:0
+#: code:addons/hr_expense/static/src/xml/documents_upload_views.xml:0
+#, python-format
+msgid "Scan"
 msgstr ""
 
 #. module: hr_expense
@@ -1627,8 +1677,7 @@ msgstr ""
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
-msgid ""
-"Specify expense journal in tab Other Info to generate accounting entries."
+msgid "Specify expense journal to generate accounting entries."
 msgstr ""
 
 #. module: hr_expense
@@ -1661,6 +1710,11 @@ msgid "Status of the expense."
 msgstr ""
 
 #. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_tree
+msgid "Submit"
+msgstr ""
+
+#. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "Submit to Manager"
 msgstr ""
@@ -1672,19 +1726,41 @@ msgid "Submitted"
 msgstr ""
 
 #. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__untaxed_amount
-msgid "Subtotal"
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__amount_tax_company
+msgid "Tax amount"
 msgstr ""
 
 #. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__tax_ids
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__amount_tax
+msgid "Tax amount in Currency"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.model.fields,help:hr_expense.field_hr_expense__amount_tax_company
+msgid "Tax amount in company currency"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.model.fields,help:hr_expense.field_hr_expense__amount_tax
+msgid "Tax amount in currency"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__total_amount_taxes
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
+#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "Taxes"
 msgstr ""
 
 #. module: hr_expense
 #: model:res.groups,name:hr_expense.group_hr_expense_team_approver
 msgid "Team Approver"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.model.fields,help:hr_expense.field_res_company__expense_journal_id
+#: model:ir.model.fields,help:hr_expense.field_res_config_settings__expense_journal_id
+msgid "The Default journal for the company used when the expense is done."
 msgstr ""
 
 #. module: hr_expense
@@ -1771,6 +1847,7 @@ msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__state__draft
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
 msgid "To Submit"
 msgstr ""
 
@@ -1781,25 +1858,13 @@ msgid "Today Activities"
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:0
-#, python-format
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__total_amount_company
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Total"
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:0
-#, python-format
-msgid "Total %s"
-msgstr ""
-
-#. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__total_amount_company
-msgid "Total (Company Currency)"
-msgstr ""
-
-#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__total_amount
-#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_expenses_analysis_tree
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_tree
 msgid "Total Amount"
 msgstr ""
@@ -1810,6 +1875,16 @@ msgid "Total Company Currency"
 msgstr ""
 
 #. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__total_amount
+msgid "Total In Currency"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__untaxed_amount
+msgid "Total Untaxed Amount In Currency"
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__activity_exception_decoration
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__activity_exception_decoration
 msgid "Type of the exception activity on record."
@@ -1817,8 +1892,14 @@ msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__unit_amount
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_expenses_analysis_tree
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Unit Price"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__unit_amount_display
+msgid "Unit Price Display"
 msgstr ""
 
 #. module: hr_expense
@@ -1827,16 +1908,10 @@ msgid "Unit of Measure"
 msgstr ""
 
 #. module: hr_expense
-#: model:product.product,uom_name:hr_expense.accomodation_expense_product
-#: model:product.product,uom_name:hr_expense.food_expense_product
-#: model:product.product,uom_name:hr_expense.other_expense_product
 #: model:product.product,uom_name:hr_expense.product_product_fixed_cost
-#: model:product.product,uom_name:hr_expense.trans_expense_product
-#: model:product.template,uom_name:hr_expense.accomodation_expense_product_product_template
-#: model:product.template,uom_name:hr_expense.food_expense_product_product_template
-#: model:product.template,uom_name:hr_expense.other_expense_product_product_template
+#: model:product.product,uom_name:hr_expense.product_product_zero_cost
 #: model:product.template,uom_name:hr_expense.product_product_fixed_cost_product_template
-#: model:product.template,uom_name:hr_expense.trans_expense_product_product_template
+#: model:product.template,uom_name:hr_expense.product_product_zero_cost_product_template
 msgid "Units"
 msgstr ""
 
@@ -1853,6 +1928,11 @@ msgid "Unread Messages Counter"
 msgstr ""
 
 #. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__untaxed_amount
+msgid "Untaxed Amount"
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_uom_category_id
 msgid "UoM Category"
 msgstr ""
@@ -1860,15 +1940,8 @@ msgstr ""
 #. module: hr_expense
 #. openerp-web
 #: code:addons/hr_expense/static/src/xml/documents_upload_views.xml:0
-#: code:addons/hr_expense/static/src/xml/documents_upload_views.xml:0
 #, python-format
 msgid "Upload"
-msgstr ""
-
-#. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:0
-#, python-format
-msgid "Uploaded Attachment"
 msgstr ""
 
 #. module: hr_expense
@@ -1924,6 +1997,11 @@ msgid ""
 "quantity. Use a cost different than 0 for expense categories funded by the "
 "company at fixed cost like allowances for mileage, per diem, accomodation or"
 " meal."
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_has_tax
+msgid "Whether tax is defined on a selected product"
 msgstr ""
 
 #. module: hr_expense
@@ -2012,6 +2090,12 @@ msgstr ""
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
+msgid "You cannot report the expenses without amount!"
+msgstr ""
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
 msgid "You cannot report twice the same line!"
 msgstr ""
 
@@ -2051,12 +2135,6 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
 msgid "has been refused"
-msgstr ""
-
-#. module: hr_expense
-#: model:product.product,uom_name:hr_expense.mileage_expense_product
-#: model:product.template,uom_name:hr_expense.mileage_expense_product_product_template
-msgid "km"
 msgstr ""
 
 #. module: hr_expense
