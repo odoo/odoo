@@ -3,16 +3,25 @@
 import { registry } from '@web/core/registry';
 import { useService } from '@web/core/utils/hooks';
 
-const { Component, onWillStart } = owl;
+const { Component, onWillStart, useEffect, useRef } = owl;
 
 export class WebsiteEditorClientAction extends Component {
     setup() {
         super.setup(...arguments);
         this.websiteService = useService('website');
 
+        this.iframe = useRef('iframe');
+
         onWillStart(async () => {
             await this.websiteService.fetchWebsites();
             this.initialUrl = await this.websiteService.sendRequest(`/website/force/${this.websiteId}`, { path: this.path });
+        });
+
+        useEffect(() => {
+            this.iframe.el.addEventListener('load', () => {
+                this.currentUrl = this.iframe.el.contentDocument.location.href;
+                history.pushState({}, this.props.action.display_name, this.currentUrl);
+            });
         });
     }
 
