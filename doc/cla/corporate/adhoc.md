@@ -20,3 +20,4 @@ Pablo Santiago Paez Sheridan pp@adhoc.com.ar https://github.com/PabloPaezSherida
 Juan Ignacio Carreras jc@adhoc.com.ar https://github.com/jcadhoc
 Joel Zilli joz@adhoc.com.ar https://github.com/JoelZilli
 Augusto Weiss awe@adhoc.com.ar https://github.com/augusto-weiss
+Pablo Montenegro pam@adhoc.com.ar https://github.com/pablohmontenegro
