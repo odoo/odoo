@@ -6,7 +6,7 @@ from collections import defaultdict
 from datetime import timedelta
 from operator import itemgetter
 
-from odoo import _, api, fields, models
+from odoo import _, api, Command, fields, models
 from odoo.exceptions import UserError
 from odoo.osv import expression
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
@@ -877,6 +877,10 @@ class StockMove(models.Model):
                 # If quantity can be fully absorbed by a single move, update its quantity and remove the negative move
                 if float_compare(pos_move.product_uom_qty, abs(neg_move.product_uom_qty), precision_rounding=pos_move.product_uom.rounding) >= 0:
                     pos_move.product_uom_qty += neg_move.product_uom_qty
+                    pos_move.write({
+                        'move_dest_ids': [Command.link(m.id) for m in self.mapped('move_dest_ids')],
+                        'move_orig_ids': [Command.link(m.id) for m in self.mapped('move_orig_ids')],
+                    })
                     merged_moves |= pos_move
                     moves_to_unlink |= neg_move
                     break
