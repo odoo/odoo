@@ -198,17 +198,20 @@ export class ViewCompiler {
         if (node.tagName === "button") {
             return;
         }
+
+        const isComponent = isComponentNode(compiled);
         const classes = node.getAttribute("class");
         if (classes) {
             compiled.classList.add(...classes.split(/\s+/).filter(Boolean));
+            if (isComponent) {
+                compiled.className = `'${compiled.className}'`;
+            }
         }
-
-        const isComponent = isComponentNode(compiled);
 
         for (const attName of ["style", "placeholder"]) {
             let att = node.getAttribute(attName);
             if (att) {
-                if (isComponent && attName === "placeholder") {
+                if (isComponent) {
                     att = `"${att}"`;
                 }
                 compiled.setAttribute(attName, att);
@@ -319,7 +322,11 @@ export class ViewCompiler {
                     const colspan = node.hasAttribute("colspan")
                         ? parseInt(node.getAttribute("colspan"), 10)
                         : 1;
-                    compiled.classList.add(`o_group_col_${colSize * colspan}`);
+                    if (isComponentNode(compiled)) {
+                        compiled.classList.add(`'o_group_col_${colSize * colspan}'`);
+                    } else {
+                        compiled.classList.add(`o_group_col_${colSize * colspan}`);
+                    }
                     this.append(group, compiled);
                 }
             }
@@ -605,7 +612,10 @@ export class ViewCompiler {
         header.classList.add("nav-item");
 
         const headerLink = this.document.createElement("a");
-        headerLink.setAttribute("t-on-click.prevent", `state.${params.noteBookId} = "${pageId}"`);
+        headerLink.setAttribute(
+            "t-on-click.prevent",
+            `() => state.${params.noteBookId} = "${pageId}"`
+        );
         headerLink.setAttribute("href", "#");
         headerLink.classList.add("nav-link");
         headerLink.setAttribute("role", "tab");

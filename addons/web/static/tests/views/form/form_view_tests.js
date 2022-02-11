@@ -217,7 +217,7 @@ QUnit.module("Views", (hooks) => {
                     <sheet>
                         <group>
                             <group style="background-color: red">
-                                <field name="foo" style="color: blue"/>
+                                <field name="foo" style="color: blue;"/>
                                 <field name="bar"/>
                                 <field name="int_field" string="f3_description"/>
                                 <field name="qux"/>
@@ -445,7 +445,7 @@ QUnit.module("Views", (hooks) => {
             type: "form",
             resModel: "partner",
             serverData,
-            arch: `<form><field name="foo" style="color: blue" widget="asyncwidget"/></form>`,
+            arch: `<form><field name="foo" style="color: blue;" widget="asyncwidget"/></form>`,
             resId: 2,
         });
         await nextTick();

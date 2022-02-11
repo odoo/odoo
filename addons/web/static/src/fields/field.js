@@ -45,8 +45,10 @@ export class Field extends Component {
             o_readonly_modifier: this.evalModifier("readonly"),
             o_required_modifier: this.evalModifier("required"),
             o_field_invalid: this.props.record.isInvalid(this.props.name),
-            o_field_empty: Field.isEmpty(this.props.record, this.props.name),
+            o_field_empty:
+                this.props.record.resId && Field.isEmpty(this.props.record, this.props.name),
             [`o_field_${this.type}`]: true,
+            [this.props.class]: !!this.props.class,
         };
 
         // generate field decorations classNames (only if field-specific decorations
@@ -84,6 +86,10 @@ export class Field extends Component {
             decorationMap[decoName] = value;
         }
 
+        const props = { ...this.props };
+        delete props.style;
+        delete props.class;
+
         return {
             ...activeField.props,
             required: this.evalModifier("required"), // AAB: does the field really need this?
@@ -98,7 +104,7 @@ export class Field extends Component {
             formatValue: this.formatValue.bind(this),
             parseValue: this.parseValue.bind(this),
             decorations: decorationMap,
-            ...this.props,
+            ...props,
             type: field.type,
             readonly: readonlyFromViewMode || readonlyFromModifiers || false,
         };
@@ -147,7 +153,7 @@ export class Field extends Component {
     }
 }
 Field.template = xml/* xml */ `
-    <div t-att-name="props.name" t-att-class="classNames">
+    <div t-att-name="props.name" t-att-class="classNames" t-att-style="props.style">
         <t t-component="FieldComponent" t-props="fieldComponentProps" t-key="props.record.id"/>
     </div>`;
 
