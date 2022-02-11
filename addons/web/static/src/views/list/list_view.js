@@ -19,7 +19,7 @@ import { getActiveActions, getDecoration, processButton } from "../helpers/view_
 import { RelationalModel } from "../relational_model";
 import { ListRenderer } from "./list_renderer";
 
-const { onWillStart, useSubEnv } = owl;
+const { Component, onWillStart, useSubEnv } = owl;
 
 export class ListViewHeaderButton extends ViewButton {
     async onClick() {
@@ -180,7 +180,7 @@ export class ListArchParser extends XMLParser {
 
 // -----------------------------------------------------------------------------
 
-export class ListView extends owl.Component {
+export class ListView extends Component {
     setup() {
         this.actionService = useService("action");
         this.dialogService = useService("dialog");
