@@ -1146,7 +1146,7 @@ registry.WebsiteAnimate = publicWidget.Widget.extend({
         this.$scrollingElement = $().getScrollingElement(this.ownerDocument);
         // By default, elements are hidden by the css of o_animate.
         // Render elements and trigger the animation then pause it in state 0.
-        this.$animatedElements = this.$target.find('.o_animate');
+        this.$animatedElements = this.$target.find(':not(.s_hoverable) > .o_animate');
         _.each(this.$animatedElements, el => {
             this._resetAnimation($(el));
         });

@@ -2040,6 +2040,10 @@ ul.o_checklist > li.o_checked::after {
         overflow: hidden;
     }
 
+    *:not(:hover) > & > div {
+        animation-name: none !important;
+    }
+
     *:hover > & > div {
         visibility: visible;
     }
