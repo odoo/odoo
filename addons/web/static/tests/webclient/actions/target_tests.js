@@ -515,11 +515,13 @@ QUnit.module("ActionManager", (hooks) => {
         ] = `<form><button name="1" type="action" class="oe_stat_button" /></form>`;
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 6);
-        assert.isVisible(target.querySelector(".o_main_navbar"));
+        assert.containsOnce(target, ".o_main_navbar");
         await click(target.querySelector("button[name='1']"));
-        assert.isNotVisible(target.querySelector(".o_main_navbar"));
+        await nextTick(); // wait for the webclient template to be re-rendered
+        assert.containsNone(target, ".o_main_navbar");
         await click(target.querySelector(".breadcrumb li a"));
-        assert.isVisible(target.querySelector(".o_main_navbar"));
+        await nextTick(); // wait for the webclient template to be re-rendered
+        assert.containsOnce(target, ".o_main_navbar");
     });
 
     QUnit.test('fullscreen on action change: all "fullscreen" actions', async function (assert) {
@@ -547,7 +549,7 @@ QUnit.module("ActionManager", (hooks) => {
             serverData.views["partner,false,form"] =
                 '<form><button name="24" type="action" class="oe_stat_button"/></form>';
             await createWebClient({ serverData });
-            await testUtils.nextTick(); // wait for the load state (default app)
+            await nextTick(); // wait for the load state (default app)
             assert.containsOnce(target, "nav .o_menu_brand");
             assert.strictEqual(target.querySelector("nav .o_menu_brand").innerText, "MAIN APP");
             assert.doesNotHaveClass(target, "o_fullscreen");
