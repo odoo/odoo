@@ -35,7 +35,15 @@ import {
 } from '../../src/utils/utils.js';
 import { BasicEditor, testEditor } from '../utils.js';
 
+const cleanTestHtml = () => {
+    const testElements = document.querySelectorAll('body>div[contenteditable=true]');
+    Array.prototype.forEach.call(testElements, function(node) {
+        node.parentNode.removeChild(node);
+    });
+    return true;
+};
 const insertTestHtml = innerHtml => {
+    cleanTestHtml();
     const container = document.createElement('DIV');
     container.setAttribute('contenteditable', true);
     container.innerHTML = innerHtml;
@@ -1409,6 +1417,7 @@ describe('Utils', () => {
                 const result = isVisible(textNode);
 
                 window.chai.expect(result).to.be.ok;
+                cleanTestHtml();
             });
         });
     });
@@ -1462,6 +1471,13 @@ describe('Utils', () => {
             const result = splitAroundUntil(cde, p.childNodes[1]);
             window.chai.expect(result.every(node => node === undefined)).to.be.ok;
             window.chai.expect(p.outerHTML).to.eql('<p>a<font>b<span>cde</span>f</font>g</p>');
+        });
+    });
+
+    describe('CleanUp Html', () => {
+        it('should not affect future tests => clean', () => {
+            const res = cleanTestHtml();
+            window.chai.expect(res).to.be.true;
         });
     });
 });
