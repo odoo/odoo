@@ -1076,6 +1076,7 @@ export function isContentTextNode(node) {
  * will always return 'true' while it is sometimes invisible.
  *
  * @param {Node} node
+ * @param {boolean} areBlocksAlwaysVisible
  * @returns {boolean}
  */
 export function isVisible(node, areBlocksAlwaysVisible = true) {
@@ -1439,7 +1440,7 @@ export function clearEmpty(node) {
 }
 
 export function setTagName(el, newTagName) {
-    if (el.tagName == newTagName) {
+    if (el.tagName === newTagName) {
         return el;
     }
     var n = document.createElement(newTagName);
@@ -1578,6 +1579,7 @@ export function prepareUpdate(...args) {
  * @param {HTMLElement} el
  * @param {number} offset
  * @param {number} direction @see DIRECTIONS.LEFT @see DIRECTIONS.RIGHT
+ * @param {CTYPES} leftCType
  * @returns {Object}
  */
 export function getState(el, offset, direction, leftCType) {
