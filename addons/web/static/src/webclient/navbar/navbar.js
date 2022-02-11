@@ -84,6 +84,10 @@ export class NavBar extends Component {
         );
     }
 
+    // This dummy setter is only here to prevent conflicts between the
+    // Enterprise NavBar extension and the Website NavBar patch.
+    set currentAppSections(_) {}
+
     get systrayItems() {
         return systrayRegistry
             .getEntries()
