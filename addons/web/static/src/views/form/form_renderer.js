@@ -6,7 +6,7 @@ import { FormCompiler } from "@web/views/form/form_compiler";
 import { useViewCompiler } from "@web/views/helpers/view_compiler";
 import { ViewButton } from "@web/views/view_button/view_button";
 
-const { Component, useSubEnv, useState, xml } = owl;
+const { Component, useSubEnv, useState, useEffect, xml } = owl;
 
 export class FormRenderer extends Component {
     setup() {
@@ -14,6 +14,12 @@ export class FormRenderer extends Component {
         this.state = useState({}); // Used by Form Compiler
         this.templateId = useViewCompiler(FormCompiler, arch, fields, xmlDoc);
         useSubEnv({ model: this.props.record.model });
+        useEffect(() => {
+            if (this.props.class) {
+                // should be done differently
+                this.el.classList.add(...this.props.class.split(/\s+/g));
+            }
+        });
     }
 
     get record() {

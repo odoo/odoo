@@ -15,6 +15,7 @@ import { KanbanAnimatedNumber } from "@web/views/kanban/kanban_animated_number";
 import { KanbanCompiler } from "@web/views/kanban/kanban_compiler";
 import { useSortable } from "@web/views/kanban/kanban_sortable";
 import { ViewButton } from "@web/views/view_button/view_button";
+import { Dropdown } from "@web/core/dropdown/dropdown";
 
 const { Component, useExternalListener, useState } = owl;
 const { RECORD_COLORS } = ColorPickerField;
@@ -506,4 +507,4 @@ export class KanbanRenderer extends Component {
 }
 
 KanbanRenderer.template = "web.KanbanRenderer";
-KanbanRenderer.components = { Field, FormRenderer, ViewButton, KanbanAnimatedNumber };
+KanbanRenderer.components = { Field, FormRenderer, ViewButton, KanbanAnimatedNumber, Dropdown };
