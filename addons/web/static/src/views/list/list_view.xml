@@ -48,7 +48,7 @@
                         defaultRank="button.defaultRank"
                         domain="props.domain"
                         icon="button.icon"
-                        getSelectedResIds="() => this.getSelectedResIds()"
+                        getSelectedResIds.bind="getSelectedResIds"
                         resModel="model.root.resModel"
                         string="button.string"
                         title="button.title"/>

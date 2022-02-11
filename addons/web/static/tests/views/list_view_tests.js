@@ -2459,7 +2459,7 @@ QUnit.module("Views", (hooks) => {
         // select a record
         await click(list.el, ".o_data_row:first-child .o_list_record_selector input");
         assert.containsOnce(list.el.querySelector(".o_cp_buttons"), ".o_list_selection_box");
-        const lastElement = list.el.querySelector(".o_cp_buttons .o_list_buttons").lastChild;
+        const lastElement = list.el.querySelector(".o_cp_buttons .o_list_buttons").lastElementChild;
         assert.strictEqual(
             lastElement,
             list.el.querySelector(".o_cp_buttons .o_list_selection_box"),
