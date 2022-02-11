@@ -25,6 +25,37 @@ mocha.run(failures => {
     } else {
         console.log('test successful');
     }
+
+    // Clean report of successful tests to ease DEV / debug
+    // just add ?clean=1
     const reportEl = document.getElementById('mocha-report');
     window.scrollTo(0, window.scrollY + reportEl.getBoundingClientRect().top);
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('clean')) {
+        console.log('Successful tests have been removed.');
+        const report = document.querySelector("#mocha-report");
+
+        let hr = document.createElement("hr");
+        report.prepend(hr);
+        let h1 = document.createElement("h1");
+        h1.textContent = "Clean : Successfull tests have been removed.";
+        report.prepend(h1);
+
+        const passedTests = report.querySelectorAll('.test.pass');
+        for (let el of passedTests) {
+            el.remove();
+        }
+
+        const cleanUl = function () {
+            const emptyUl = report.querySelectorAll('ul:empty');
+            for (let ul of emptyUl) {
+                ul.parentElement.remove();
+            }
+        };
+        for (let i = 4; i > 0; i--) {
+            cleanUl();
+        }
+
+        report.outerHTML = report.outerHTML.replaceAll('//zws//', '<b class="zws">zws</b>');
+    }
 });
