@@ -269,7 +269,7 @@ QUnit.module("Components", (hooks) => {
             },
         });
         assert.strictEqual(
-            domainSelector.el.textContent,
+            target.lastElementChild.innerHTML,
             "This domain is not supported.",
             "an error message should be displayed because of the `parent` key"
         );
