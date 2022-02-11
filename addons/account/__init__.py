@@ -22,8 +22,8 @@ def _set_fiscal_country(env):
 
 
 def _auto_install_l10n(env):
-    #check the country of the main company (only) and eventually load some module needed in that country
-    env.company.try_loading_coa(env.company._guess_chart_of_account())
+    # Check the country of the main company (only) and eventually load some module needed in that country
+    env['account.chart.template'].try_loading()
     country_code = env.company.country_id.code
     if country_code:
         module_list = []

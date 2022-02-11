@@ -3,26 +3,16 @@
 from datetime import timedelta, datetime, date
 import calendar
 import logging
-from dateutil.relativedelta import relativedelta
 
 from odoo import fields, models, api, _
 from odoo.exceptions import ValidationError, UserError, RedirectWarning
 from odoo.tools.mail import is_html_empty
 from odoo.tools.misc import format_date
 from odoo.tools.float_utils import float_round, float_is_zero
-from odoo.tests.common import Form
+from odoo.addons.account.models import chart_template
 
 _logger = logging.getLogger(__name__)
 
-CHART_TEMPLATES = [
-    ('generic_coa', 'Generic Chart Template', None, []),
-    ('be', 'BE Belgian PCMN', 'base.be', ['l10n_be']),
-    ('fr', 'FR', 'base.fr', ['l10n_fr']),
-    ('ch', 'CH', 'base.ch', ['l10n_ch']),
-    ('de', 'DE', 'base.de', ['l10n_de']),
-]
-CHART_TEMPLATES_MODULES = {ct: modules for ct, string, country, modules in CHART_TEMPLATES}
-CHART_TEMPLATES_COUNTRY = {country: ct for ct, string, country, modules in CHART_TEMPLATES}
 
 
 MONTH_SELECTION = [
@@ -51,13 +41,6 @@ DASHBOARD_ONBOARDING_STATES = ONBOARDING_STEP_STATES + [('closed', 'Closed')]
 class ResCompany(models.Model):
     _name = "res.company"
     _inherit = ["res.company", "mail.thread"]
-
-    def _chart_template_selection(self):
-        result = [(ct, string) for ct, string, country, modules in CHART_TEMPLATES]
-        if self:
-            proposed = self._guess_chart_of_account()
-            result.sort(key=lambda sel: (sel[0] != proposed, sel[1]))
-        return result
 
     #TODO check all the options/fields are in the views (settings + company form view)
     fiscalyear_last_day = fields.Integer(default=31, required=True)
@@ -584,11 +567,6 @@ class ResCompany(models.Model):
             raise RedirectWarning(msg, action.id, _("Go to the configuration panel"))
         return account
 
-    def _guess_chart_of_account(self):
-        if not self.country_id:
-            return 'generic_coa'
-        return CHART_TEMPLATES_COUNTRY.get(self.country_id.get_metadata()[0]['xmlid'], 'generic_coa')
-
     def existing_accounting(self):
         """ Returns True iff some accounting entries have already been made for
         the provided company (meaning hence that its chart of accounts cannot
@@ -618,47 +596,8 @@ class ResCompany(models.Model):
         #     self.env[model].sudo().search([]).with_context(force_delete=True).unlink()
         return bool(self.env['account.move.line'].sudo().search([('company_id', '=', self.id)], limit=1))
 
-    def try_loading_coa(self, template, install_demo=True):
-        """ Installs this chart of accounts for the current company if not chart
-        of accounts had been created for it yet.
-
-        :param company (Model<res.company>): the company we try to load the chart template on.
-            If not provided, it is retrieved from the context.
-        :param install_demo (bool): whether or not we should load demo data right after loading the
-            chart template.
-        """
-        module_ids = self.env['ir.module.module'].search([
-            ('name', 'in', CHART_TEMPLATES_MODULES.get(template)),
-            ('state', '=', 'uninstalled'),
-        ])
-        if module_ids:
-            module_ids.sudo().button_immediate_install()
-            self.env.reset()     # clear the set of environments
-
-        self.chart_template = template
-        with_company = self.env['account.chart.template'].with_context(
-            default_company_id=self.id,
-            allowed_company_ids=[self.id],
-        )
-        # If we don't have any chart of account on this company, install this chart of account
-        if not self.existing_accounting():
-            xml_id = self.get_metadata()[0]['xmlid']
-            if not xml_id:
-                xml_id = f"base.company_{self.id}"
-                with_company.env['ir.model.data']._update_xmlids([{'xml_id': xml_id, 'record': self}])
-            with_company._load_data(with_company._get_chart_template_data())
-            with_company._post_load_data()
-            self.flush()
-            with_company.env.cache.invalidate()
-            # Install the demo data when the first localization is instanciated on the company
-            if install_demo and with_company.env.ref('base.module_account').demo:
-                try:
-                    with with_company.env.cr.savepoint():
-                        with_company._load_data(with_company._get_demo_data())
-                        with_company._post_load_demo_data()
-                except Exception:
-                    # Do not rollback installation of CoA if demo data failed
-                    _logger.exception('Error while loading accounting demo data')
+    def _chart_template_selection(self):
+        return self.env['account.chart.template']._select_chart_template(self)
 
     @api.model
     def _action_check_hash_integrity(self):
@@ -705,9 +644,10 @@ class ResCompany(models.Model):
                 results_by_journal['results'].append(rslt)
                 continue
 
-            previous_hash = u''
+            previous_hash = ''
             start_move_info = []
             hash_corrupted = False
+            move = None
             for move in moves:
                 if move.inalterable_hash != move._compute_hash(previous_hash=previous_hash):
                     rslt.update({'msg_cover': _('Corrupted data on journal entry with id %s.', move.id)})

@@ -5,11 +5,21 @@ from odoo.modules import get_resource_path
 from odoo.addons.base.models.ir_translation import IrTranslationImport
 import csv
 import ast
-from collections import defaultdict, OrderedDict
+from collections import defaultdict
 
 import logging
 
 _logger = logging.getLogger(__name__)
+
+TEMPLATES = [
+    ('generic_coa', 'Generic Chart Template', None, []),
+    ('be', 'BE Belgian PCMN', 'base.be', ['l10n_be']),
+    ('fr', 'FR', 'base.fr', ['l10n_fr']),
+    ('ch', 'CH', 'base.ch', ['l10n_ch']),
+    ('de', 'DE', 'base.de', ['l10n_de']),
+]
+MODULES = {ct: modules for ct, string, country, modules in TEMPLATES}
+COUNTRIES = {country: ct for ct, string, country, modules in TEMPLATES}
 
 
     name = fields.Char(required=True)
@@ -32,6 +42,60 @@ _logger = logging.getLogger(__name__)
     expense_currency_exchange_account_id = fields.Many2one('account.account.template',
         string="Loss Exchange Rate Account", domain=[('internal_type', '=', 'other'), ('deprecated', '=', False)])
     country_id = fields.Many2one(string="Country", comodel_name='res.country', help="The country this chart of accounts belongs to. None if it's generic.")
+
+    def _select_chart_template(self, company=False):
+        company = company or self.env.company
+        result = [(ct, string) for ct, string, country, modules in TEMPLATES]
+        if self:
+            proposed = self._guess_chart_template(company)
+            result.sort(key=lambda sel: (sel[0] != proposed, sel[1]))
+        return result
+
+    def _guess_chart_template(self, company=False):
+        company = company or self.env.company
+        if not company.country_id:
+            return 'generic_coa'
+        return COUNTRIES.get(company.country_id.get_metadata()[0]['xmlid'], 'generic_coa')
+
+    def try_loading(self, template_code=False, company=False, install_demo=True):
+        """ Installs this chart of accounts for the current company if not chart
+        of accounts had been created for it yet.
+
+        :param module (str): name of the module from which to load the chart template.
+        :param company (Model<res.company>): the company we try to load the chart template on.
+            If not provided, it is retrieved from the context.
+        :param install_demo (bool): whether or not we should load demo data right after loading the
+            chart template.
+        """
+        company = company or self.env.company
+        template_code = self.env['account.chart.template']._guess_chart_template(company)
+
+        module_ids = self.env['ir.module.module'].search([('name', 'in', MODULES.get(template_code)), ('state', '=', 'uninstalled')])
+        if module_ids:
+            module_ids.sudo().button_immediate_install()
+            self.env.reset()
+
+        with_company = self.with_context(default_company_id=company.id, allowed_company_ids=[company.id])
+        # If we don't have any chart of account on this company, install this chart of account
+        if not company.existing_accounting():
+            xml_id = company.get_metadata()[0]['xmlid']
+            if not xml_id:
+                xml_id = f"base.company_{company.id}"
+                with_company.env['ir.model.data']._update_xmlids([{'xml_id': xml_id, 'record': self}])
+            data = with_company._get_chart_template_data(template_code, company)
+            with_company._load_data(data)
+            with_company._post_load_data(company)
+            company.flush()
+            with_company.env.cache.invalidate()
+            # Install the demo data when the first localization is instanciated on the company
+            if install_demo and with_company.env.ref('base.module_account').demo:
+                try:
+                    with with_company.env.cr.savepoint():
+                        with_company._load_data(with_company._get_demo_data())
+                        with_company._post_load_demo_data()
+                except Exception:
+                    # Do not rollback installation of CoA if demo data failed
+                    _logger.exception('Error while loading accounting demo data')
 
     def _load_data(self, data):
         def deref(values, model):
@@ -102,7 +166,8 @@ _logger = logging.getLogger(__name__)
                     irt_cursor.push({**translation, 'res_id': record.id})
         irt_cursor.finish()
 
-    def _load_csv(self, module, file_name):
+    def _load_csv(self, module, file_name, company=False):
+        cid = (company or self.env.company).id
         def sanitize_csv(model, row):
             model_fields = model._fields
             return {
@@ -117,42 +182,48 @@ _logger = logging.getLogger(__name__)
                 if key != 'id'
             }
 
-        cid = self.env.company.id
         try:
-            path = get_resource_path('account', 'data', 'template', module, file_name)
+            # should the path be False, open(False, 'r')
+            # then open() takes False as file descriptor "0" and opens STDIN
+            path_parts = [x for x in ('account', 'data', 'template', module, file_name) if x]
+            path = get_resource_path(*path_parts) or ''
             with open(path, 'r', encoding="utf-8") as csv_file:
+                _logger.info('loading %s', '/'.join(path_parts))
                 return {
                     f"{cid}_{data['id']}": sanitize_csv(self.env['.'.join(file_name.split('.')[:-1])], data)
                     for data in csv.DictReader(csv_file)
                 }
         except OSError as e:
-            _logger.warning("Error reading CSV file %s: %s", path, e)
+            if path:
+                _logger.info("Error reading CSV file %s: %s", path, e)
+            else:
+                _logger.info("No file %s found for template '%s'", file_name, module)
             return {}
 
-    def _get_chart_template_data(self):
-        return OrderedDict([
-            ('account.account', self._get_account_account()),
-            ('account.group', self._get_account_group()),
-            ('account.journal', self._get_account_journal()),
-            ('res.company', self._get_res_company()),
-            ('account.tax.group', self._get_tax_group()),
-            ('account.tax', self._get_account_tax()),
-        ])
+    def _get_chart_template_data(self, template_code, company=False):
+        company = company or self.env.company
+        return {
+            'account.account': self._get_account_account(template_code),
+            'account.group': self._get_account_group(template_code),
+            'account.journal': self._get_account_journal(company),
+            'res.company': self._get_res_company(company),
+            'account.tax.group': self._get_tax_group(template_code),
+            'account.tax': self._get_account_tax(company),
+        }
 
+    def _get_account_account(self, template_code):
+        return self._load_csv(template_code, 'account.account.csv')
 
-    def _get_account_account(self):
-        return self._load_csv(self.env.company.chart_template, 'account.account.csv')
+    def _get_account_group(self, template_code):
+        return self._load_csv(template_code, 'account.group.csv')
 
-    def _get_account_group(self):
-        return self._load_csv(self.env.company.chart_template, 'account.group.csv')
+    def _get_tax_group(self, template_code):
+        return self._load_csv(template_code, 'account.tax.group.csv')
 
-    def _get_tax_group(self):
-        return self._load_csv(self.env.company.chart_template, 'account.tax.group.csv')
-
-    def _post_load_data(self):
-        company = self.env.company
+    def _post_load_data(self, company=False):
+        company = (company or self.env.company)
+        cid = company.id
         ref = self.env.ref
-        cid = self.env.company.id
         template_data = self._get_template_data()
         code_digits = template_data.get('code_digits', 6)
         # Set default cash difference account on company
@@ -161,7 +232,7 @@ _logger = logging.getLogger(__name__)
                 'name': _("Bank Suspense Account"),
                 'code': self.env['account.account']._search_new_account_code(company, code_digits, company.bank_account_code_prefix or ''),
                 'user_type_id': self.env.ref('account.data_account_type_current_liabilities').id,
-                'company_id': company.id,
+                'company_id': cid,
             })
 
         account_type_current_assets = self.env.ref('account.data_account_type_current_assets')
@@ -171,7 +242,7 @@ _logger = logging.getLogger(__name__)
                 'code': self.env['account.account']._search_new_account_code(company, code_digits, company.bank_account_code_prefix or ''),
                 'reconcile': True,
                 'user_type_id': account_type_current_assets.id,
-                'company_id': company.id,
+                'company_id': cid,
             })
 
         if not company.account_journal_payment_credit_account_id:
@@ -180,7 +251,7 @@ _logger = logging.getLogger(__name__)
                 'code': self.env['account.account']._search_new_account_code(company, code_digits, company.bank_account_code_prefix or ''),
                 'reconcile': True,
                 'user_type_id': account_type_current_assets.id,
-                'company_id': company.id,
+                'company_id': cid,
             })
 
         if not company.default_cash_difference_expense_account_id:
@@ -189,7 +260,7 @@ _logger = logging.getLogger(__name__)
                 'code': self.env['account.account']._search_new_account_code(company, code_digits, '999'),
                 'user_type_id': self.env.ref('account.data_account_type_expenses').id,
                 'tag_ids': [(6, 0, self.env.ref('account.account_tag_investing').ids)],
-                'company_id': company.id,
+                'company_id': cid,
             })
 
         if not company.default_cash_difference_income_account_id:
@@ -198,13 +269,13 @@ _logger = logging.getLogger(__name__)
                 'code': self.env['account.account']._search_new_account_code(company, code_digits, '999'),
                 'user_type_id': self.env.ref('account.data_account_type_revenue').id,
                 'tag_ids': [(6, 0, self.env.ref('account.account_tag_investing').ids)],
-                'company_id': company.id,
+                'company_id': cid,
             })
 
         # Set the transfer account on the company
         transfer_account_code_prefix = template_data['transfer_account_code_prefix']
         company.transfer_account_id = self.env['account.account'].search([
-            ('code', '=like', transfer_account_code_prefix + '%'), ('company_id', '=', company.id)], limit=1)
+            ('code', '=like', transfer_account_code_prefix + '%'), ('company_id', '=', cid)], limit=1)
 
         # Create the current year earning account if it wasn't present in the CoA
         company.get_unaffected_earnings_account()
@@ -212,12 +283,12 @@ _logger = logging.getLogger(__name__)
         if not company.account_sale_tax_id:
             company.account_sale_tax_id = self.env['account.tax'].search([
                 ('type_tax_use', 'in', ('sale', 'all')),
-                ('company_id', '=', company.id)
+                ('company_id', '=', cid)
             ], limit=1).id
         if not company.account_purchase_tax_id:
             company.account_purchase_tax_id = self.env['account.tax'].search([
                 ('type_tax_use', 'in', ('purchase', 'all')),
-                ('company_id', '=', company.id)
+                ('company_id', '=', cid)
             ], limit=1).id
 
         for field, model in [
@@ -255,8 +326,8 @@ _logger = logging.getLogger(__name__)
             'property_advance_tax_payment_account_id': 'cash_diff_income',  # TODO
         }
 
-    def _get_account_journal(self):
-        cid = self.env.company.id
+    def _get_account_journal(self, company=False):
+        cid = (company or self.env.company).id
         return {
             f"{cid}_sale": {
                 'name': _('Customer Invoices'),
@@ -309,8 +380,8 @@ _logger = logging.getLogger(__name__)
             },
         }
 
-    def _get_account_tax(self):
-        cid = self.env.company.id
+    def _get_account_tax(self, company=False):
+        cid = (company or self.env.company).id
         return {
             f"{cid}_sale_tax_template": {
                 "name": _("Tax 15%"),
@@ -374,8 +445,8 @@ _logger = logging.getLogger(__name__)
             },
         }
 
-    def _get_res_company(self):
-        cid = self.env.company.id
+    def _get_res_company(self, company=False):
+        cid = (company or self.env.company).id
         return {
             self.env.company.get_metadata()[0]['xmlid']: {
                 'currency_id': 'base.USD',
