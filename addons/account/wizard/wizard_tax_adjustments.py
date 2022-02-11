@@ -20,10 +20,23 @@ class TaxAdjustments(models.TransientModel):
                                         domain="[('deprecated', '=', False), ('is_off_balance', '=', False)]")
     amount = fields.Monetary(currency_field='company_currency_id', required=True)
     adjustment_type = fields.Selection([('debit', 'Applied on debit journal item'), ('credit', 'Applied on credit journal item')], string="Adjustment Type", required=True)
-    tax_report_line_id = fields.Many2one(string="Report Line", comodel_name='account.tax.report.line', required=True, help="The report line to make an adjustment for.")
+    tax_report_line_id = fields.Many2one(
+        string="Report Line",
+        comodel_name='account.tax.report.line',
+        required=True,
+        domain="[('tag_name', '!=', None), ('report_id.country_id', 'in', fiscal_country_ids)]",
+        help="The report line to make an adjustment for.",
+    )
     company_currency_id = fields.Many2one('res.currency', readonly=True, default=lambda x: x.env.company.currency_id)
     report_id = fields.Many2one(string="Report", related='tax_report_line_id.report_id')
+    fiscal_country_ids = fields.Many2many('res.country', compute='_compute_fiscal_country_ids', readonly=True)
 
+    @api.depends('journal_id')
+    def _compute_fiscal_country_ids(self):
+        for record in self:
+            fiscal_position_country_ids = record.env['account.fiscal.position'].search(
+                [('company_id', '=', record.journal_id.company_id.id), ('foreign_vat', '!=', False)]).country_id
+            record.fiscal_country_ids = record.journal_id.company_id.country_id + fiscal_position_country_ids
 
     def create_move(self):
         move_line_vals = []
