@@ -1390,7 +1390,7 @@ class HolidaysRequest(models.Model):
             'type': 'ir.actions.act_window',
             'res_model': 'ir.attachment',
             'context': {'create': False},
-            'view_mode': 'list',
+            'view_mode': 'kanban',
             'domain': domain
         }
 
