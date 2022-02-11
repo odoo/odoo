@@ -183,14 +183,19 @@ export const TimeOffCalendarController = CalendarController.extend({
     },
 
     _getTimeOffContext() {
-        let date_from = moment().set({
+        let date_from = moment();
+        if (this.mode === "day") {
+            date_from = this.model.data.start_date;
+        }
+        date_from = date_from.set({
             'hour': 0,
             'minute': 0,
             'second': 0
         });
         date_from.subtract(this.getSession().getTZOffset(date_from), 'minutes');
         date_from = date_from.locale('en').format('YYYY-MM-DD HH:mm:ss');
-        let date_to = moment().set({
+        let date_to = date_from;
+        date_to = date_to.set({
             'hour': 23,
             'minute': 59,
             'second': 59
