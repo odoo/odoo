@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { Domain } from "@web/core/domain";
+import { CheckBox } from "@web/core/checkbox/checkbox";
 import { registry } from "@web/core/registry";
 import { _lt } from "@web/core/l10n/translation";
 import { standardFieldProps } from "./standard_field_props";
@@ -16,9 +17,9 @@ export class Many2ManyCheckboxesField extends Component {
         return this.props.value.resIds.includes(item[0]);
     }
 
-    onChange(resId, ev) {
+    onChange(resId, checked) {
         const resIds = new Set(this.props.value.resIds);
-        resIds[ev.target.checked ? "add" : "delete"](resId);
+        resIds[checked ? "add" : "delete"](resId);
         this.props.update({
             operation: "REPLACE_WITH",
             resIds: [...resIds],
@@ -27,6 +28,7 @@ export class Many2ManyCheckboxesField extends Component {
 }
 
 Object.assign(Many2ManyCheckboxesField, {
+    components: { CheckBox },
     template: "web.Many2ManyCheckboxesField",
     props: {
         ...standardFieldProps,
