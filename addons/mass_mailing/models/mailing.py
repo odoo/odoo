@@ -767,6 +767,7 @@ class MassMailing(models.Model):
         other_ab_testing_pc = sum([mailing.ab_testing_pc for mailing in other_ab_testing_mailings])
         return {
             'mailing': self,
+            'ab_testing_count': self.ab_testing_mailings_count,
             'ab_testing_winner_selection_description': self._get_ab_testing_winner_selection()['description'],
             'other_ab_testing_pc': other_ab_testing_pc,
             'remaining_ab_testing_pc': 100 - (other_ab_testing_pc + self.ab_testing_pc),

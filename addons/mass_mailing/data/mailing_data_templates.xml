@@ -9,10 +9,10 @@
                 </p>
                 <p t-else="">The winner has already been sent. Use <b>Compare Version</b> to get an overview of this A/B testing campaign.</p>
             </t>
-            <t t-elif="mailing.ab_testing_mailings_count >= 2">
+            <t t-elif="ab_testing_count >= 2">
                 <p>
                     A sample of <b><t t-out="mailing.ab_testing_pc"/>% of recipients</b> will receive this <b><t t-out="mailing.mailing_type_description"/></b>, and <t t-out="other_ab_testing_pc"/>% receive one of the
-                    <b><t t-out="mailing.ab_testing_mailings_count - 1"/> other versions</b> from the same campaign.
+                    <b><t t-out="ab_testing_count - 1"/> other versions</b> from the same campaign.
                 </p>
                 <p>
 		    <t t-if="mailing.ab_testing_winner_selection == 'manual'">Don't forget to send your prefered version</t>
