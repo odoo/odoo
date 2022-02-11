@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.0+e\n"
+"Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-25 14:36+0000\n"
-"PO-Revision-Date: 2022-01-25 14:36+0000\n"
+"POT-Creation-Date: 2022-02-11 14:34+0000\n"
+"PO-Revision-Date: 2022-02-11 14:34+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,19 +16,29 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: fetchmail_gmail
+#: model:ir.model.fields,field_description:fetchmail_gmail.field_fetchmail_server__google_gmail_access_token
+msgid "Access Token"
+msgstr ""
+
+#. module: fetchmail_gmail
+#: model:ir.model.fields,field_description:fetchmail_gmail.field_fetchmail_server__google_gmail_access_token_expiration
+msgid "Access Token Expiration Timestamp"
+msgstr ""
+
+#. module: fetchmail_gmail
+#: model:ir.model.fields,field_description:fetchmail_gmail.field_fetchmail_server__google_gmail_authorization_code
 #: model_terms:ir.ui.view,arch_db:fetchmail_gmail.fetchmail_server_view_form
 msgid "Authorization Code"
 msgstr ""
 
 #. module: fetchmail_gmail
 #: model_terms:ir.ui.view,arch_db:fetchmail_gmail.fetchmail_server_view_form
-msgid "Gmail"
+msgid "Get an Authorization Code"
 msgstr ""
 
 #. module: fetchmail_gmail
-#: code:addons/fetchmail_gmail/models/fetchmail_server.py:0
-#, python-format
-msgid "Gmail authentication only supports IMAP server type."
+#: model:ir.model.fields.selection,name:fetchmail_gmail.selection__fetchmail_server__server_type__gmail
+msgid "Gmail OAuth Authentication"
 msgstr ""
 
 #. module: fetchmail_gmail
@@ -37,8 +47,26 @@ msgid "Incoming Mail Server"
 msgstr ""
 
 #. module: fetchmail_gmail
+#: model:ir.model.fields,field_description:fetchmail_gmail.field_fetchmail_server__google_gmail_refresh_token
+msgid "Refresh Token"
+msgstr ""
+
+#. module: fetchmail_gmail
+#: model:ir.model.fields,field_description:fetchmail_gmail.field_fetchmail_server__server_type
+msgid "Server Type"
+msgstr ""
+
+#. module: fetchmail_gmail
 #: model_terms:ir.ui.view,arch_db:fetchmail_gmail.fetchmail_server_view_form
-msgid ""
-"Setup your Gmail API credentials in the general settings to link a Gmail "
-"account."
+msgid "Setup your Gmail API credentials to link a Gmail account."
+msgstr ""
+
+#. module: fetchmail_gmail
+#: model:ir.model.fields,help:fetchmail_gmail.field_fetchmail_server__google_gmail_uri
+msgid "The URL to generate the authorization code from Google"
+msgstr ""
+
+#. module: fetchmail_gmail
+#: model:ir.model.fields,field_description:fetchmail_gmail.field_fetchmail_server__google_gmail_uri
+msgid "URI"
 msgstr ""
