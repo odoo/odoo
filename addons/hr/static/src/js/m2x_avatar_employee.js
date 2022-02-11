@@ -2,9 +2,13 @@
 
 import fieldRegistry from 'web.field_registry';
 
-import { Many2OneAvatarUser, KanbanMany2OneAvatarUser, KanbanMany2ManyAvatarUser, ListMany2ManyAvatarUser } from '@mail/js/m2x_avatar_user';
-import { Many2ManyAvatarUser } from '@mail/js/m2x_avatar_user';
-import { KanbanMany2ManyTagsAvatar, ListMany2ManyTagsAvatar } from 'web.relational_fields';
+import {
+    Many2OneAvatarUser,
+    KanbanMany2OneAvatarUser,
+    KanbanMany2ManyAvatarUser,
+    ListMany2ManyAvatarUser,
+    Many2ManyAvatarUser,
+} from '@mail/js/m2x_avatar_user';
 
 
 // This module defines variants of the Many2OneAvatarUser and Many2ManyAvatarUser

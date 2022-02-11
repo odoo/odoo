@@ -5,8 +5,7 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { FACET_ICONS } from "../utils/misc";
 import { registry } from "@web/core/registry";
-import { useBus } from "@web/core/utils/hooks";
-import { useService } from "@web/core/utils/hooks";
+import { useBus, useService } from "@web/core/utils/hooks";
 
 const { Component } = owl;
 const favoriteMenuRegistry = registry.category("favoriteMenu");

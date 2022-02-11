@@ -1,8 +1,7 @@
 /** @odoo-module **/
 
-import core from "web.core";
+import core, { _t } from "web.core";
 import session from "web.session";
-import { _t } from "web.core";
 import { browser, makeRAMLocalStorage } from "@web/core/browser/browser";
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
 import { legacyProm } from "web.test_legacy";
