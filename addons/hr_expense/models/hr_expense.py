@@ -375,9 +375,29 @@ class HrExpense(models.Model):
             'context': {'search_default_my_expenses': 1, 'search_default_no_report': 1},
         }
 
+    def _delete_sheet_attachments_copied_from_expense(self):
+        """
+        Synchronizing expense and sheet attachments:
+        Here in case there are the sheet attachments that were
+        originally copied from expenses are deleted.
+        """
+        if 'original_id' in self.env['ir.attachment']: # TODO: move the field to base
+            attachment_ids = self.env['ir.attachment'].search([
+                ('res_model', '=', 'hr.expense'),
+                ('res_id', 'in', self.ids)
+            ])
+            self.env['ir.attachment'].search([
+                ('res_model', '=', 'hr.expense.sheet'),
+                ('original_id', 'in', attachment_ids.ids),
+            ]).unlink()
+
     # ----------------------------------------
     # ORM Overrides
     # ----------------------------------------
+
+    def unlink(self):
+        self._delete_sheet_attachments_copied_from_expense()
+        return super().unlink()
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_posted_or_approved(self):
@@ -1052,13 +1072,45 @@ class HrExpenseSheet(models.Model):
         })
         sheets = super(HrExpenseSheet, self.with_context(context)).create(vals_list)
         sheets.activity_update()
+        for sheet in sheets:
+            sheet._copy_attachments_from_expense_ids(sheet.expense_line_ids)
         return sheets
+
+    def write(self, vals):
+        previous_line_ids = self.expense_line_ids
+        res = super().write(vals)
+
+        new_line_ids = self.expense_line_ids - previous_line_ids
+        if new_line_ids:
+            self._copy_attachments_from_expense_ids(new_line_ids)
+
+        removed_line_ids = previous_line_ids - self.expense_line_ids
+        if removed_line_ids:
+            removed_line_ids._delete_sheet_attachments_copied_from_expense()
+        return res
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_posted_or_paid(self):
         for expense in self:
             if expense.state in ['post', 'done']:
                 raise UserError(_('You cannot delete a posted or paid expense.'))
+
+    def _copy_attachments_from_expense_ids(self, expense_ids=None):
+        """
+        The passed Expenses' attachments are copied to the sheet attachments.
+        The method is needed when new sheet is created or when a new expense is added
+        to the sheet.expense_line_ids. In first case the method is called for all
+        the sheet.expense_line_ids, in the latter - for only newly added expense_line_ids.
+        """
+        self.ensure_one()
+        if 'original_id' in self.env['ir.attachment']:
+            if expense_ids:
+                attachment_ids = self.env['ir.attachment'].search([
+                    ('res_model', '=', 'hr.expense'),
+                    ('res_id', 'in', expense_ids.ids)
+                ])
+                for attachment in attachment_ids:
+                    attachment.copy({'res_model': 'hr.expense.sheet', 'res_id': self.id, 'original_id': attachment.id})
 
     # --------------------------------------------
     # Mail Thread
