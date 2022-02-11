@@ -167,7 +167,8 @@ class HrEmployeePrivate(models.Model):
         if self.check_access_rights('read', raise_exception=False):
             return super(HrEmployeePrivate, self)._read(fields)
 
-        res = self.env['hr.employee.public'].browse(self.ids).read(fields)
+        public_fields = set(fields).intersection(self.env['hr.employee.public']._fields.keys())
+        res = self.env['hr.employee.public'].browse(self.ids).read(public_fields)
         for r in res:
             record = self.browse(r['id'])
             record._update_cache({k:v for k,v in r.items() if k in fields}, validate=False)
