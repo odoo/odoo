@@ -423,12 +423,4 @@
         action="action_calendar_alarm"
         groups="base.group_no_one"/>
 
-    <!-- called in js from '/js/base_calendar.js' -->
-    <record id="action_calendar_event_notify" model="ir.actions.act_window">
-        <field name="name">Meetings</field>
-        <field name="res_model">calendar.event</field>
-        <field name="view_mode">form,calendar,tree</field>
-        <field name="view_id" ref="view_calendar_event_form"/>
-    </record>
-
 </odoo>
