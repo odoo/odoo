@@ -1791,7 +1791,7 @@ export class OdooEditor extends EventTarget {
             }
             stepIndex--;
         }
-    };
+    }
 
     // TOOLBAR
     // =======
