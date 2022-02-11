@@ -96,7 +96,7 @@
         <field name="name">hr.leave.view.kanban</field>
         <field name="model">hr.leave</field>
         <field name="arch" type="xml">
-            <kanban class="o_kanban_mobile" create="0" sample="1">
+            <kanban class="o_kanban_mobile" js_class="time_off_kanban" create="0" sample="1">
                 <field name="employee_id"/>
                 <field name="date_from"/>
                 <field name="date_to"/>
@@ -108,15 +108,9 @@
                 <field name="supported_attachment_ids_count"/>
                 <templates>
                     <t t-name="kanban-box">
-                        <div class="oe_kanban_global_click container">
+                        <div class="d-flex flex-column justify-content-between oe_kanban_global_click container">
                             <div class="row no-gutters">
-                                <div class="col-3">
-                                    <img t-att-src="kanban_image('hr.employee', 'avatar_128', record.employee_id.raw_value)"
-                                        t-att-title="record.employee_id.value"
-                                        t-att-alt="record.employee_id.value"
-                                        class="o_image_64_cover float-left mr4"/>
-                                </div>
-                                <div class="col-9">
+                                <div class="o_leave_kanban_info col-12">
                                     <span class="badge badge-pill float-right mt4 mr16"><t t-esc="record.number_of_days.value"/> days</span>
                                     <strong class="o_kanban_record_title"><t t-esc="record.employee_id.value"/></strong>
                                     <div class="text-muted o_kanban_record_subtitle">
@@ -137,17 +131,19 @@
                                         <span class="text-muted">to </span>
                                         <field name="date_to" widget="date"/>
                                     </div>
+                                    <div class="o_leave_kanban_name p-2">
+                                        <field name="name" nolabel="1"/>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="row no-gutters">
-                                <div class="col-3"/>
-                                <div class="col-6" t-if="['validate', 'refuse'].includes(record.state.raw_value)">
-                                    <span t-if="record.state.raw_value === 'validate'" class="fa fa-check text-muted" aria-label="validated"/>
-                                    <span t-else="" class="fa fa-ban text-muted" aria-label="refused"/>
+                            <div class="d-flex justify-content-end">
+                                <div class="mr-2 d-flex align-items-center" t-if="['validate', 'refuse'].includes(record.state.raw_value)">
+                                    <span t-if="record.state.raw_value === 'validate'" class="fa fa-check text-muted mr-1" aria-label="validated"/>
+                                    <span t-else="" class="fa fa-ban text-muted mr-1" aria-label="refused"/>
                                     <t t-set="classname" t-value="{'validate': 'badge-success', 'refuse': 'badge-danger'}[record.state.raw_value] || 'badge-light'"/>
                                     <span t-attf-class="badge badge-pill {{ classname }}"><t t-esc="record.state.value"/></span>
                                 </div>
-                                <div class="col-6" t-if="['confirm', 'validate1'].includes(record.state.raw_value)">
+                                <div class="mr-2 align-items-center" t-if="['confirm', 'validate1'].includes(record.state.raw_value)">
                                     <button t-if="record.state.raw_value === 'confirm'" name="action_approve" type="object" class="btn btn-link btn-sm pl-0">
                                         <i class="fa fa-thumbs-up"/> Approve
                                     </button>
@@ -158,7 +154,7 @@
                                         <i class="fa fa-times"/> Refuse
                                     </button>
                                 </div>
-                                <div class="col-3 text-right">
+                                <div class="text-right">
                                     <button t-if="record.supported_attachment_ids_count.raw_value > 0" name="action_documents" type="object" class="btn btn-link btn-sm pl-0">
                                         <i class="fa fa-paperclip"> <field name="supported_attachment_ids_count" nolabel="1"/></i>
                                     </button>
@@ -169,7 +165,28 @@
                 </templates>
             </kanban>
         </field>
-     </record>
+    </record>
+
+    <record id="hr_leave_view_kanban_approve_department" model="ir.ui.view">
+        <field name="name">hr.leave.view.kanban.approve.department</field>
+        <field name="inherit_id" ref="hr_leave_view_kanban"/>
+        <field name="mode">primary</field>
+        <field name="model">hr.leave</field>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('o_leave_kanban_info')]" position='before'>
+                <div class="col-3">
+                    <img t-att-src="kanban_image('hr.employee', 'avatar_128', record.employee_id.raw_value)"
+                        t-att-title="record.employee_id.value"
+                        t-att-alt="record.employee_id.value"
+                        class="o_image_64_cover float-left mr4"/>
+                </div>
+            </xpath>
+            <xpath expr="//div[hasclass('o_leave_kanban_info')]" position="attributes">
+                <attribute name="class">o_leave_kanban_info col-9</attribute>
+            </xpath>
+            <xpath expr="//div[hasclass('o_leave_kanban_name')]" position="replace"/>
+        </field>
+    </record>
 
     <record id="hr_leave_view_activity" model="ir.ui.view">
         <field name="name">hr.leave.view.activity</field>
@@ -352,6 +369,7 @@
                     </div>
                 </div>
             </sheet>
+            <div class="o_attachment_preview"/>
             <div class="oe_chatter">
                 <field name="message_follower_ids"/>
                 <field name="activity_ids"/>
@@ -391,7 +409,17 @@
         <field name="name">hr.leave.view.dashboard</field>
         <field name="model">hr.leave</field>
         <field name="arch" type="xml">
-            <calendar js_class="time_off_calendar" string="Time Off Request" form_view_id="%(hr_holidays.hr_leave_view_form_dashboard_new_time_off)d" event_open_popup="true" date_start="date_from" date_stop="date_to" mode="year" quick_add="False" show_unusual_days="True" color="color" hide_time="True">
+            <calendar js_class="time_off_calendar"
+                    string="Time Off Request"
+                    form_view_id="%(hr_holidays.hr_leave_view_form_dashboard_new_time_off)d"
+                    event_open_popup="true"
+                    date_start="date_from"
+                    date_stop="date_to"
+                    quick_add="False"
+                    show_unusual_days="True"
+                    color="color"
+                    hide_time="True"
+                    mode="year">
                 <field name="display_name"/>
                 <field name="holiday_status_id" filters="1" invisible="1" color="color"/>
                 <field name="state" invisible="1"/>
@@ -653,6 +681,8 @@
         <field name="view_mode">tree,form,kanban,activity</field>
         <field name="context">{}</field>
         <field name="search_view_id" ref="hr_leave_view_search_my"/>
+        <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'kanban', 'view_id': ref('hr_leave_view_kanban')})]"/>
         <field name="domain">[('user_id', '=', uid)]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
@@ -728,7 +758,7 @@
     <record id="action_view_kanban_manager_approve" model="ir.actions.act_window.view">
         <field name="sequence" eval="2"/>
         <field name="view_mode">kanban</field>
-        <field name="view_id" ref="hr_leave_view_kanban"/>
+        <field name="view_id" ref="hr_leave_view_kanban_approve_department"/>
         <field name="act_window_id" ref="hr_leave_action_action_approve_department"/>
     </record>
     <record id="action_view_form_manager_approve" model="ir.actions.act_window.view">

@@ -87,8 +87,8 @@
 
                         <input type="checkbox" t-att-id="idForLabel" name="selection" class="position-absolute" t-att-checked="filter.active ? true : undefined"/>
 
-                        <label t-att-for="idForLabel" class="d-flex align-items-center m-0">
-                            <span t-attf-class="o_cw_filter_input_bg align-items-center d-flex flex-shrink-0 justify-content-center position-relative mr-1 #{widget.avatar_field ? 'o_beside_avatar' : ''}"
+                        <label t-att-for="idForLabel" class="d-flex align-items-start m-0">
+                            <span t-attf-class="o_cw_filter_input_bg align-items-start d-flex flex-shrink-0 justify-content-center position-relative mr-1 #{widget.avatar_field ? 'o_beside_avatar' : ''}"
                                 t-att-style="color and !isColorNumber ? _.str.sprintf('border-color:%s;background-color:%s', color, color) : ''">
                                 <i class="fa fa-check position-relative"/>
                             </span>
