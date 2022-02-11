@@ -200,7 +200,7 @@ class MassMailing(models.Model):
         for mass_mailing in self:
             total = self.env[mass_mailing.mailing_model_real].search_count(mass_mailing._parse_mailing_domain())
             if mass_mailing.ab_testing_pc < 100:
-                total = int(total / 100.0 * mass_mailing.ab_testing_pc)
+                total = int(total / 100.0 * mass_mailing.ab_testing_pc) or 1 if total else 0
             mass_mailing.total = total
 
     def _compute_clicks_ratio(self):
@@ -799,7 +799,7 @@ class MassMailing(models.Model):
         # randomly choose a fragment
         if self.ab_testing_enabled and self.ab_testing_pc < 100:
             contact_nbr = self.env[self.mailing_model_real].search_count(mailing_domain)
-            topick = int(contact_nbr / 100.0 * self.ab_testing_pc)
+            topick = int(contact_nbr / 100.0 * self.ab_testing_pc) or 1 if contact_nbr else 0
             if self.campaign_id and self.ab_testing_enabled:
                 already_mailed = self.campaign_id._get_mailing_recipients()[self.campaign_id.id]
             else:
