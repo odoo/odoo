@@ -18,6 +18,7 @@ class TestQweb(TransactionCaseWithUserDemo):
                            {}, 'init', False, 'test')
 
     def test_qweb_post_processing_att(self):
+        website = self.env.ref('website.default_website')
         t = self.env['ir.ui.view'].create({
             'name': 'test',
             'type': 'qweb',
@@ -30,7 +31,7 @@ class TestQweb(TransactionCaseWithUserDemo):
                 <img src="http://test.external.img/img.png" loading="lazy"/>
                 <img src="http://test.external.img/img2.png" loading="lazy"/>
             """
-        rendered = self.env['ir.qweb']._render(t.id, {'url': 'http://test.external.img/img2.png'})
+        rendered = self.env['ir.qweb']._render(t.id, {'url': 'http://test.external.img/img2.png'}, website_id=website.id)
         self.assertEqual(rendered.strip(), result.strip())
 
     def test_qweb_cdn(self):
