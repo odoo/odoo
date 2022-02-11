@@ -13,7 +13,10 @@
         const self = this;
         // When clicking on "Add", create a new record in form view
         this.$buttons.on('click', 'button.o-calendar-button-new', () => {
-            return self.do_action('calendar.action_calendar_event_notify', {
+            return self.do_action({
+                type: 'ir.actions.act_window',
+                res_model: 'calendar.event',
+                views: [[false, 'form']],
                 additional_context: self.context,
             });
         });
