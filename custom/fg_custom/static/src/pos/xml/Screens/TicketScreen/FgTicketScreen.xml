@@ -27,10 +27,10 @@
                                         <t t-esc="order.name"></t>
                                     </div>
                                     <div class="col start wide">
-                                        <t t-esc="order.x_ext_order_ref"></t>
+                                        <t t-if="order.x_ext_order_ref" t-esc="order.x_ext_order_ref"></t>
                                     </div>
                                     <div class="col start wide">
-                                        <t t-esc="order.x_ext_source"></t>
+                                        <t t-if="order.x_ext_source" t-esc="order.x_ext_source"></t>
                                     </div>
                                     <div class="col start">
                                         <t t-esc="getCustomer(order)"></t>
