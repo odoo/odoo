@@ -7,9 +7,6 @@ import { DomainSelectorLeafNode } from "./domain_selector_leaf_node";
 const { Component } = owl;
 
 export class DomainSelectorRootNode extends Component {
-    setup() {
-        console.log(this.props);
-    }
     get hasNode() {
         return this.props.node.operands.length > 0;
     }
