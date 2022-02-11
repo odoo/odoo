@@ -7,7 +7,7 @@ import { _lt } from "../../core/l10n/translation";
 import { session } from "@web/session";
 
 function documentationItem(env) {
-    const documentationURL = "https://www.odoo.com/documentation/15.0";
+    const documentationURL = "https://www.odoo.com/documentation/saas-15.2";
     return {
         type: "item",
         id: "documentation",
