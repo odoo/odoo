@@ -34,11 +34,6 @@
     </select>
 </div>
 <div t-name="website.contentMenu.dialog.edit">
-    <select class="form-control mb16" t-if="widget.roots">
-        <t t-foreach="widget.roots" t-as="root">
-            <option t-att-value="root.id"><t t-esc="root.name"/></option>
-        </t>
-    </select>
     <ul class="oe_menu_editor list-unstyled">
         <t t-foreach="widget.menu.children" t-as="submenu">
             <t t-call="website.contentMenu.dialog.submenu"/>

@@ -38,7 +38,7 @@ export const websiteService = {
             get context() {
                 return context;
             },
-            goToWebsite({ websiteId = currentWebsiteId || websites[0].id, path = '/' }) {
+            goToWebsite({ websiteId = currentWebsiteId || websites[0].id, path = '/' } = {}) {
                 action.doAction('website.website_editor', {
                     clearBreadcrumbs: true,
                     additionalContext: {
