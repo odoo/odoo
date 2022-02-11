@@ -4263,6 +4263,30 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('focused date field should cause no error on destroy', async function (assert) {
+        assert.expect(2);
+
+        var originalParameters = _.clone(core._t.database.parameters);
+        _.extend(core._t.database.parameters, {date_format: '%d.%m:%Y'});
+
+        var list = await createView({
+            View: ListView,
+            model: 'partner',
+            data: this.data,
+            arch: '<tree editable="top"><field name="date"/></tree>',
+            domain: [(1, '=', 0)],
+            context: {'default_date': '2020-01-20 00:00:00'},
+        });
+
+        await testUtils.dom.click(list.$('.o_list_button_add'));
+        assert.containsOnce(list, '.o_data_row');
+        await testUtils.fields.triggerKeydown($(document.activeElement), 'escape');
+        assert.containsNone(list, '.o_data_row');
+
+        list.destroy();
+        core._t.database.parameters = originalParameters;
+    });
+
     QUnit.module('FieldDatetime');
 
     QUnit.test('datetime field in form view', async function (assert) {
