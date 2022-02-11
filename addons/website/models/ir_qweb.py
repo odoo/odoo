@@ -56,16 +56,15 @@ class IrQWeb(models.AbstractModel):
 
         atts = super(IrQWeb, self)._post_processing_att(tagName, atts, options)
 
-        if tagName == 'img' and 'loading' not in atts:
+        website = ir_http.get_request_website()
+        if not website and options.get('website_id'):
+            website = self.env['website'].browse(options['website_id'])
+        if website and tagName == 'img' and 'loading' not in atts:
             atts['loading'] = 'lazy'  # default is auto
 
         if options.get('inherit_branding') or options.get('rendering_bundle') or \
            options.get('edit_translations') or options.get('debug') or (request and request.session.debug):
             return atts
-
-        website = ir_http.get_request_website()
-        if not website and options.get('website_id'):
-            website = self.env['website'].browse(options['website_id'])
 
         if not website:
             return atts

@@ -236,9 +236,6 @@ var MassMailingFieldHtml = FieldHtml.extend({
 
             $img.attr("src", src);
         });
-        $container.find('.o_mail_block_cover .oe_img_bg').each(function () {
-            $(this).css('background-image', `url('/mass_mailing_themes/static/src/img/theme_${themeParams.name}/s_default_image_block_banner.jpg')`);
-        });
     },
     /**
      * Switch themes or import first theme.
