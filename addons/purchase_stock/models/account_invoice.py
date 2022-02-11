@@ -125,6 +125,7 @@ class AccountMove(models.Model):
                     vals = {
                         'name': line.name[:64],
                         'move_id': move.id,
+                        'partner_id': move.commercial_partner_id.id,
                         'currency_id': line.currency_id.id,
                         'product_id': line.product_id.id,
                         'product_uom_id': line.product_uom_id.id,
@@ -145,6 +146,7 @@ class AccountMove(models.Model):
                     vals = {
                         'name': line.name[:64],
                         'move_id': move.id,
+                        'partner_id': move.commercial_partner_id.id,
                         'currency_id': line.currency_id.id,
                         'product_id': line.product_id.id,
                         'product_uom_id': line.product_uom_id.id,
