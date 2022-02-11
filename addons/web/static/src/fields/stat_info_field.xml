@@ -2,16 +2,8 @@
 <templates xml:space="preserve">
 
     <t t-name="web.StatInfoField" owl="1">
-        <div class="o_stat_info">
-            <span class="o_stat_value">
-                <t t-esc="value" />
-            </span>
-            <t t-if="!props.noLabel">
-                <span class="o_stat_text">
-                    <t t-esc="text"/>
-                </span>
-            </t>
-        </div>
+        <span class="o_stat_info o_stat_value" t-esc="value"/>
+        <span t-if="!props.noLabel" class="o_stat_text" t-esc="text"/>
     </t>
 
 </templates>

@@ -715,7 +715,7 @@ export class ViewCompiler {
         tComponent.setAttribute("t-component", `getWidget("${widgetName}")`);
         tComponent.setAttribute("record", `record`);
         tComponent.setAttribute("readonly", `props.readonly`);
-        tComponent.setAttribute("t-att-class", `"o_widget"`);
+        tComponent.setAttribute("class", `"o_widget"`);
         return tComponent;
     }
 }
