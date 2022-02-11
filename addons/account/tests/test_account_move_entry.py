@@ -11,6 +11,7 @@ from functools import reduce
 import json
 import psycopg2
 
+from collections import defaultdict
 
 @tagged('post_install', '-at_install')
 class TestAccountMove(AccountTestInvoicingCommon):
@@ -488,3 +489,160 @@ class TestAccountMove(AccountTestInvoicingCommon):
         # You can remove journal items if the related journal entry is draft.
         self.test_move.button_draft()
         self.test_move.line_ids.unlink()
+
+    def test_invoice_like_entry_reverse_caba(self):
+        tax_waiting_account = self.env['account.account'].create({
+            'name': 'TAX_WAIT',
+            'code': 'TWAIT',
+            'user_type_id': self.env.ref('account.data_account_type_current_liabilities').id,
+            'reconcile': True,
+            'company_id': self.company_data['company'].id,
+        })
+        tax_final_account = self.env['account.account'].create({
+            'name': 'TAX_TO_DEDUCT',
+            'code': 'TDEDUCT',
+            'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
+            'company_id': self.company_data['company'].id,
+        })
+        tax_base_amount_account = self.env['account.account'].create({
+            'name': 'TAX_BASE',
+            'code': 'TBASE',
+            'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
+            'company_id': self.company_data['company'].id,
+        })
+        self.env.company.account_cash_basis_base_account_id = tax_base_amount_account
+        tax_tags = defaultdict(dict)
+        for line_type, repartition_type in [(l, r) for l in ('invoice', 'refund') for r in ('base', 'tax')]:
+            tax_tags[line_type][repartition_type] = self.env['account.account.tag'].create({
+                'name': '%s %s tag' % (line_type, repartition_type),
+                'applicability': 'taxes',
+                'country_id': self.env.ref('base.us').id,
+            })
+        tax = self.env['account.tax'].create({
+            'name': 'cash basis 10%',
+            'type_tax_use': 'sale',
+            'amount': 10,
+            'tax_exigibility': 'on_payment',
+            'cash_basis_transition_account_id': tax_waiting_account.id,
+            'invoice_repartition_line_ids': [
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'tag_ids': [(6, 0, tax_tags['invoice']['base'].ids)],
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': tax_final_account.id,
+                    'tag_ids': [(6, 0, tax_tags['invoice']['tax'].ids)],
+                }),
+            ],
+            'refund_repartition_line_ids': [
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'tag_ids': [(6, 0, tax_tags['refund']['base'].ids)],
+                }),
+                (0, 0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': tax_final_account.id,
+                    'tag_ids': [(6, 0, tax_tags['refund']['tax'].ids)],
+                }),
+            ],
+        })
+        move = self.env['account.move'].create({
+            'move_type': 'entry',
+            'date': fields.Date.from_string('2016-01-01'),
+            'line_ids': [
+                (0, None, {
+                    'name': 'revenue line',
+                    'account_id': self.company_data['default_account_revenue'].id,
+                    'debit': 0.0,
+                    'credit': 1000.0,
+                    'tax_ids': [(6, 0, tax.ids)],
+                    'tax_tag_ids': [(6, 0, tax_tags['invoice']['base'].ids)],
+                }),
+                (0, None, {
+                    'name': 'tax line 1',
+                    'account_id': tax_waiting_account.id,
+                    'debit': 0.0,
+                    'credit': 100.0,
+                    'tax_tag_ids': [(6, 0, tax_tags['invoice']['tax'].ids)],
+                    'tax_repartition_line_id': tax.invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax').id,
+                }),
+                (0, None, {
+                    'name': 'counterpart line',
+                    'account_id': self.company_data['default_account_receivable'].id,
+                    'debit': 1100.0,
+                    'credit': 0.0,
+                }),
+            ]
+        })
+        move.action_post()
+        # make payment
+        payment = self.env['account.payment'].create({
+            'payment_type': 'inbound',
+            'payment_method_id': self.env.ref('account.account_payment_method_manual_in').id,
+            'partner_type': 'customer',
+            'partner_id': self.partner_a.id,
+            'amount': 1100,
+            'date': move.date,
+            'journal_id': self.company_data['default_journal_bank'].id,
+        })
+        payment.action_post()
+        (payment.move_id + move).line_ids.filtered(lambda x: x.account_id == self.company_data['default_account_receivable']).reconcile()
+        # check caba move
+        partial_rec = move.mapped('line_ids.matched_credit_ids')
+        caba_move = self.env['account.move'].search([('tax_cash_basis_rec_id', '=', partial_rec.id)])
+        expected_values = [
+            {
+                'tax_line_id': False,
+                'tax_repartition_line_id': False,
+                'tax_ids': [],
+                'tax_tag_ids': [],
+                'account_id': tax_base_amount_account.id,
+                'debit': 1000.0,
+                'credit': 0.0,
+            },
+            {
+                'tax_line_id': False,
+                'tax_repartition_line_id': False,
+                'tax_ids': tax.ids,
+                'tax_tag_ids': tax_tags['invoice']['base'].ids,
+                'account_id': tax_base_amount_account.id,
+                'debit': 0.0,
+                'credit': 1000.0,
+            },
+
+            {
+                'tax_line_id': False,
+                'tax_repartition_line_id': False,
+                'tax_ids': [],
+                'tax_tag_ids': [],
+                'account_id': tax_waiting_account.id,
+                'debit': 100.0,
+                'credit': 0.0,
+            },
+            {
+                'tax_line_id': tax.id,
+                'tax_repartition_line_id': tax.invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax').id,
+                'tax_ids': [],
+                'tax_tag_ids': tax_tags['invoice']['tax'].ids,
+                'account_id': tax_final_account.id,
+                'debit': 0.0,
+                'credit': 100.0,
+            },
+        ]
+        self.assertRecordValues(caba_move.line_ids, expected_values)
+        # unreconcile
+        debit_aml = move.line_ids.filtered('debit')
+        debit_aml.remove_move_reconcile()
+        # check caba move reverse is same as caba move with only debit/credit inverted
+        reversed_caba_move = self.env['account.move'].search([('reversed_entry_id', '=', caba_move.id)])
+        for value in expected_values:
+            value.update({
+                'debit': value['credit'],
+                'credit': value['debit'],
+            })
+        self.assertRecordValues(reversed_caba_move.line_ids, expected_values)
