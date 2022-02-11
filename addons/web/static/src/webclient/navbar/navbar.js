@@ -71,7 +71,7 @@ export class NavBar extends Component {
         return this.menuService.getCurrentApp();
     }
 
-    get currentAppSections() {
+    getCurrentAppSections() {
         return (
             (this.currentApp && this.menuService.getMenuAsTree(this.currentApp.id).childrenTree) ||
             []

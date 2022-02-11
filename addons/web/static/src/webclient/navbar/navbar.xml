@@ -23,8 +23,8 @@
         />
 
         <!-- Current App Sections -->
-        <t t-if="currentAppSections.length" t-call="web.NavBar.SectionsMenu">
-          <t t-set="sections" t-value="currentAppSections" />
+        <t t-if="getCurrentAppSections().length" t-call="web.NavBar.SectionsMenu">
+          <t t-set="sections" t-value="getCurrentAppSections()" />
         </t>
 
         <!-- Systray -->
