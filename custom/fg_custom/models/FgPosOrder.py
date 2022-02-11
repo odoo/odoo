@@ -136,7 +136,8 @@ class PosOrder(models.Model):
         fields = super(PosOrder, self)._export_for_ui(order)
         fields.update({
             'x_receipt_note': order.x_receipt_note,
-            'x_ext_source': order.x_ext_source
+            'x_ext_source': order.x_ext_source,
+            'x_ext_order_ref': order.x_ext_order_ref
         })
         return fields
 
@@ -144,7 +145,8 @@ class PosOrder(models.Model):
     def _order_fields(self, order):
         fields = super(PosOrder, self)._order_fields(order)
         fields.update({
-            'x_ext_source': order.get('x_ext_source', False)
+            'x_ext_source': order.get('x_ext_source', False),
+            'x_ext_order_ref': order.get('x_ext_order_ref', False)
         })
         return fields
 

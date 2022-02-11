@@ -29,7 +29,8 @@ odoo.define('fg_custom.FgPosReceipt', function (require) {
             let json = super_ordermodel.export_as_JSON.apply(this, arguments);
             return Object.assign(json, {
                 x_receipt_note: this.x_receipt_note,
-                x_ext_source: this.x_ext_source
+                x_ext_source: this.x_ext_source,
+                x_ext_order_ref: this.x_ext_order_ref,
             });
             return json;
         },
@@ -37,11 +38,13 @@ odoo.define('fg_custom.FgPosReceipt', function (require) {
              super_ordermodel.init_from_JSON.apply(this, arguments);
              this.x_receipt_note = json.x_receipt_note;
              this.x_ext_source = json.x_ext_source;
+             this.x_ext_order_ref = json.x_ext_order_ref;
         },
         export_for_printing: function(){
             var receipt = super_ordermodel.export_for_printing.apply(this, arguments);
             receipt.x_receipt_note= this.x_receipt_note;
             receipt.x_ext_source= this.x_ext_source;
+            receipt.x_ext_order_ref= this.x_ext_order_ref;
             return receipt;
 
         }
