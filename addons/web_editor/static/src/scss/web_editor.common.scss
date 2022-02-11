@@ -287,7 +287,11 @@ ul.oe_menu_editor {
         list-style: none;
     }
     li div {
-        cursor: move;
+        @include o-grab-cursor;
+
+        :active {
+            cursor: grabbing;
+        }
     }
 }
 
