@@ -2251,7 +2251,7 @@ X[]
                 it('should insert line breaks outside the edges of an anchor', async () => {
                     const pressEnter = editor => {
                         editor.document.execCommand('insertParagraph');
-                    }
+                    };
                     await testEditor(BasicEditor, {
                         contentBefore: '<div>ab<a>[]cd</a></div>',
                         stepFunction: pressEnter,
@@ -2729,7 +2729,7 @@ X[]
                 contentAfter: '<p>a<span><span style="color: tomato;">[b</span><span><span style="color: tomato;">c]</span>d</span>e</span>f</p>',
             });
         });
-    })
+    });
 
     describe('setTagName', () => {
         describe('to paragraph', () => {
