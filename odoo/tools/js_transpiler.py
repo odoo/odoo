@@ -12,8 +12,10 @@ the original source need to be supported by the browsers.
 """
 
 import re
+import logging
 from functools import partial
 
+_logger = logging.getLogger(__name__)
 
 def transpile_javascript(url, content):
     """
@@ -30,6 +32,8 @@ def transpile_javascript(url, content):
     steps = [
         convert_legacy_default_import,
         convert_basic_import,
+        convert_default_and_named_import,
+        convert_default_and_star_import,
         convert_default_import,
         convert_star_import,
         convert_unnamed_relative_import,
@@ -460,6 +464,44 @@ def convert_default_import(content):
     return IMPORT_DEFAULT.sub(repl, content)
 
 
+IS_PATH_LEGACY_RE = re.compile(r"""(?P<quote>["'`])([^@\."'`][^"'`]*)(?P=quote)""")
+
+IMPORT_DEFAULT_AND_NAMED_RE = re.compile(r"""
+    ^
+    (?P<space>\s*)                                  # space and empty line
+    import\s+                                       # import
+    (?P<default_export>\w+)\s*,\s*                  # default variable name,
+    (?P<named_exports>{(\s*\w+\s*,?\s*)+})\s*       # { a, b, c as x, ... }
+    from\s*                                         # from
+    (?P<path>(?P<quote>["'`])([^"'`]+)(?P=quote))   # "file path" ("some/path")
+    """, re.MULTILINE | re.VERBOSE)
+
+
+def convert_default_and_named_import(content):
+    """
+    Transpile default and named import on one line.
+
+    .. code-block:: javascript
+
+        // before
+        import something, { a } from "some/path";
+        import somethingElse, { b } from "legacy.module";
+        // after
+        const { a , [Symbol.for("default")]: something } = require("some/path");
+        const somethingElse = require("legacy.module");
+        const { b } = somethingElse;
+    """
+    def repl(matchobj):
+        is_legacy = IS_PATH_LEGACY_RE.match(matchobj['path'])
+        new_object = matchobj["named_exports"].replace(" as ", ": ")
+        if is_legacy:
+            return f"""{matchobj['space']}const {matchobj['default_export']} = require({matchobj['path']});
+{matchobj['space']}const {new_object} = {matchobj['default_export']}"""
+        new_object = f"""{new_object[:-1]}, [Symbol.for("default")]: {matchobj['default_export']} }}"""
+        return f"{matchobj['space']}const {new_object} = require({matchobj['path']})"
+    return IMPORT_DEFAULT_AND_NAMED_RE.sub(repl, content)
+
+
 RELATIVE_REQUIRE_RE = re.compile(r"""
     require\((?P<quote>["'`])([^@"'`]+)(?P=quote)\)  # require("some/path")
     """, re.VERBOSE)
@@ -514,6 +556,34 @@ def convert_star_import(content):
     """
     repl = r"\g<space>const \g<identifier> = require(\g<path>)"
     return IMPORT_STAR.sub(repl, content)
+
+
+IMPORT_DEFAULT_AND_STAR = re.compile(r"""
+    ^(?P<space>\s*)                 # indentation
+    import\s+                       # import
+    (?P<default_export>\w+)\s*,\s*  # default export name,
+    \*\s+as\s+                      # * as
+    (?P<named_exports_alias>\w+)    # alias
+    \s*from\s*                      # from
+    (?P<path>[^;\n]+)               # path
+""", re.MULTILINE | re.VERBOSE)
+
+
+def convert_default_and_star_import(content):
+    """
+    Transpile import star.
+
+    .. code-block:: javascript
+
+        // before
+        import something, * as name from "some/path";
+        // after
+        const name = require("some/path");
+        const something = name[Symbol.for("default")];
+    """
+    repl = r"""\g<space>const \g<named_exports_alias> = require(\g<path>);
+\g<space>const \g<default_export> = \g<named_exports_alias>[Symbol.for("default")]"""
+    return IMPORT_DEFAULT_AND_STAR.sub(repl, content)
 
 
 IMPORT_UNNAMED_RELATIVE_RE = re.compile(r"""
