@@ -147,3 +147,22 @@ class TestMailingABTesting(MassMailCommon):
         self.ab_testing_mailing_ids.invalidate_cache()
         winner_mailing = self.ab_testing_campaign.mailing_mail_ids.filtered(lambda mailing: mailing.ab_testing_pc == 100)
         self.assertEqual(winner_mailing.subject, 'A/B Testing V2')
+
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    @users('user_marketing')
+    def test_mailing_ab_testing_minimum_participants(self):
+        """ Test that it should send minimum one mail(if possible) when ab_testing_pc is too small compared to the amount of targeted records."""
+        mailing_list = self._create_mailing_list_of_x_contacts(10)
+        ab_testing = self.env['mailing.mailing'].create({
+            'subject': 'A/B Testing SMS V1',
+            'contact_list_ids': mailing_list.ids,
+            'ab_testing_enabled': True,
+            'ab_testing_pc': 2,
+            'ab_testing_schedule_datetime': datetime.now(),
+            'mailing_type': 'mail',
+            'campaign_id': self.ab_testing_campaign.id,
+        })
+        with self.mock_mail_gateway():
+            ab_testing.action_send_mail()
+        self.assertEqual(ab_testing.state, 'done')
+        self.assertEqual(len(self._mails), 1)
