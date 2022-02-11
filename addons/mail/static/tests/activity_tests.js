@@ -5,10 +5,9 @@ import ActivityView from '@mail/js/views/activity/activity_view';
 import testUtils from 'web.test_utils';
 import domUtils from 'web.dom';
 
-import { getFixture, legacyExtraNextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
+import { getFixture, legacyExtraNextTick, patchWithCleanup, click } from "@web/../tests/helpers/utils";
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
 import { session } from '@web/session';
-import { click } from "@web/../tests/helpers/utils";
 
 let serverData;
 let target;

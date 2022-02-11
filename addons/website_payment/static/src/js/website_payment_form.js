@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
-import core from 'web.core';
-import {_t} from 'web.core';
+import core, { _t } from 'web.core';
 import checkoutForm from 'payment.checkout_form';
 
 checkoutForm.include({

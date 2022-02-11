@@ -1,8 +1,7 @@
 /** @odoo-module **/
 
 import { _lt } from "../l10n/translation";
-import { makeErrorFromResponse } from "@web/core/network/rpc_service";
-import { ConnectionLostError } from "@web/core/network/rpc_service";
+import { makeErrorFromResponse, ConnectionLostError } from "@web/core/network/rpc_service";
 import { browser } from "@web/core/browser/browser";
 
 // -----------------------------------------------------------------------------
@@ -490,8 +489,8 @@ download._download = (options) => {
                 const filename = header ? parse(header).parameters.filename : null;
                 _download(xhr.response, filename, mimetype);
                 return resolve(filename);
-
-            } else if (xhr.status === 502) { // If Odoo is behind another server (nginx)
+            } else if (xhr.status === 502) {
+                // If Odoo is behind another server (nginx)
                 reject(new ConnectionLostError());
             } else {
                 const decoder = new FileReader();
@@ -502,18 +501,20 @@ download._download = (options) => {
                         doc.body.children.length === 0 ? doc.body.childNodes : doc.body.children;
 
                     let error;
-                    try { // a Serialized python Error
+                    try {
+                        // a Serialized python Error
                         const node = nodes[1] || nodes[0];
                         error = JSON.parse(node.textContent);
                     } catch (e) {
                         error = {
                             message: "Arbitrary Uncaught Python Exception",
                             data: {
-                                debug: `${xhr.status}` + `\n` +
-                                   `${nodes.length > 0 ? nodes[0].textContent : ""}
-                                    ${nodes.length > 1 ? nodes[1].textContent : ""}`
+                                debug:
+                                    `${xhr.status}` +
+                                    `\n` +
+                                    `${nodes.length > 0 ? nodes[0].textContent : ""}
+                                    ${nodes.length > 1 ? nodes[1].textContent : ""}`,
                             },
-
                         };
                     }
                     error = makeErrorFromResponse(error);

@@ -13,10 +13,8 @@ import { makeFakeRPCService, makeFakeLocalizationService } from "@web/../tests/h
 import { RPCError } from "@web/core/network/rpc_service";
 
 import { BaseAutomationErrorDialog } from "../src/js/base_automation_error_dialog";
-import { patchWithCleanup } from "@web/../tests/helpers/utils";
+import { patchWithCleanup,getFixture, mount, nextTick } from "@web/../tests/helpers/utils";
 import { DialogContainer } from "@web/core/dialog/dialog_container";
-import { getFixture, mount } from "@web/../tests/helpers/utils";
-import { nextTick } from "@web/../tests/helpers/utils";
 
 const { onMounted } = owl;
 

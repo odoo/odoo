@@ -9,9 +9,8 @@ import { uiService } from "@web/core/ui/ui_service";
 
 import { click, getFixture, mount } from "@web/../tests/helpers/utils";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
-import { makeFakeLocalizationService } from "@web/../tests/helpers/mock_services";
+import { makeFakeLocalizationService, fakeCommandService } from "@web/../tests/helpers/mock_services";
 import { DebugMenuParent } from "@web/../tests/core/debug/debug_manager_tests";
-import { fakeCommandService } from "@web/../tests/helpers/mock_services";
 
 const debugRegistry = registry.category("debug");
 let target;

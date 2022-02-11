@@ -1,8 +1,7 @@
 /** @odoo-module **/
 
-import { patchDate } from "@web/../tests/helpers/utils";
+import { patchDate, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { makeWithSearch, setupControlPanelServiceRegistry } from "./helpers";
-import { patchWithCleanup } from "@web/../tests/helpers/utils";
 
 const { Component, xml } = owl;
 

@@ -6,8 +6,7 @@ import { MessagingService } from '@mail/services/messaging/messaging';
 import { SystrayService } from '@mail/services/systray_service/systray_service';
 import { DiscussWidget } from '@mail/widgets/discuss/discuss';
 
-import { action_registry } from 'web.core';
-import { serviceRegistry } from 'web.core';
+import { serviceRegistry, action_registry } from 'web.core';
 
 serviceRegistry.add('chat_window', ChatWindowService);
 serviceRegistry.add('dialog', DialogService);
