@@ -132,6 +132,16 @@ class AccountMove(models.Model):
             if not rec.l10n_ar_afip_service_end:
                 rec.l10n_ar_afip_service_end = rec.invoice_date + relativedelta(day=1, days=-1, months=+1)
 
+    def _set_afip_rate(self):
+        """ We set the l10n_ar_currency_rate value with the accounting date. This should be done
+        after invoice has been posted in order to have the proper accounting date"""
+        for rec in self:
+            if rec.company_id.currency_id == rec.currency_id:
+                rec.l10n_ar_currency_rate = 1.0
+            elif not rec.l10n_ar_currency_rate:
+                rec.l10n_ar_currency_rate = rec.currency_id._convert(
+                    1.0, rec.company_id.currency_id, rec.company_id, rec.date, round=False)
+
     @api.onchange('partner_id')
     def _onchange_afip_responsibility(self):
         if self.company_id.country_id.code == 'AR' and self.l10n_latam_use_documents and self.partner_id \
@@ -168,18 +178,16 @@ class AccountMove(models.Model):
 
     def _post(self, soft=True):
         ar_invoices = self.filtered(lambda x: x.company_id.country_id.code == "AR" and x.l10n_latam_use_documents)
-        for rec in ar_invoices:
-            rec.l10n_ar_afip_responsibility_type_id = rec.commercial_partner_id.l10n_ar_afip_responsibility_type_id.id
-            if rec.company_id.currency_id == rec.currency_id:
-                rec.l10n_ar_currency_rate = 1.0
-            elif not rec.l10n_ar_currency_rate:
-                rec.l10n_ar_currency_rate = rec.currency_id._convert(
-                    1.0, rec.company_id.currency_id, rec.company_id, rec.date, round=False)
-
         # We make validations here and not with a constraint because we want validation before sending electronic
         # data on l10n_ar_edi
         ar_invoices._check_argentinian_invoice_taxes()
-        posted = super()._post(soft)
+        posted = super()._post(soft=soft)
+
+        posted_ar_invoices = posted & ar_invoices
+        for rec in posted_ar_invoices:
+            rec.l10n_ar_afip_responsibility_type_id = rec.commercial_partner_id.l10n_ar_afip_responsibility_type_id.id
+
+        posted_ar_invoices._set_afip_rate()
         posted._set_afip_service_dates()
         return posted
 
