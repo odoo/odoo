@@ -10,8 +10,10 @@ import {
 } from '@mail/utils/test_utils';
 
 import config from 'web.config';
+import fieldRegistry from 'web.field_registry';
 import FormView from 'web.FormView';
-import { dom } from 'web.test_utils';
+import { dom, nextTick } from 'web.test_utils';
+import { registerCleanup } from "@web/../tests/helpers/cleanup";
 
 const { triggerEvent } = dom;
 
@@ -1045,6 +1047,68 @@ QUnit.test('[TECHNICAL] unfolded read more/less links should not fold on message
         document.querySelector('.o_Message_readMoreLess').textContent,
         "Read Less",
         "Read More/Less link on message should still be unfolded after a click on message aside of this button click (Read Less)"
+    );
+});
+
+QUnit.test('chatter does not flicker when the form view is re-rendered', async function (assert) {
+    this.data['res.partner'].records.push(
+        { display_name: "first partner", id: 11 },
+        { display_name: "second partner", id: 12 }
+    );
+
+    // define an asynchronous field and use it in the form to ease testing
+    let def;
+    const FieldChar = fieldRegistry.get("char");
+    const AsyncWidget = FieldChar.extend({
+        willStart() {
+            return Promise.resolve(def);
+        },
+    });
+    fieldRegistry.add("async_widget", AsyncWidget);
+    registerCleanup(() => {
+        delete fieldRegistry.map.async_widget;
+    });
+
+    await this.createView({
+        data: this.data,
+        hasView: true,
+        // View params
+        View: FormView,
+        model: 'res.partner',
+        arch: `
+            <form>
+                <sheet>
+                    <field name="name" widget="async_widget"/>
+                </sheet>
+                <div class="oe_chatter"></div>
+            </form>
+        `,
+        viewOptions: {
+            currentId: 11,
+            ids: [11, 12],
+        },
+    });
+    assert.strictEqual(
+        document.querySelectorAll(`.o_Chatter`).length,
+        1,
+        "there should be a chatter"
+    );
+    def = makeDeferred();
+    document.querySelector('.o_pager_next').click();
+    await nextTick();
+
+    assert.strictEqual(
+        document.querySelectorAll(`.o_Chatter`).length,
+        1,
+        "there should be a chatter"
+    );
+    def.resolve();
+    await nextTick();
+
+    assert.strictEqual(
+        document.querySelectorAll(`.o_Chatter`).length,
+        1,
+        "there should be a chatter"
     );
 });
 
