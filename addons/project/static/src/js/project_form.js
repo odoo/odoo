@@ -125,9 +125,24 @@ export const FormDescriptionExpanderView = FormView.extend({
     }),
 })
 
+export const ProjectFormRenderer = FormDescriptionExpanderRenderer.extend({
+    /**
+     * @private
+     * @override
+     */
+    _renderStatButton: function (node) {
+        const $button = this._super.apply(this, arguments);
+        if ($button.attr('name') == 'action_open_parent_task' && this.state.data.parent_id) {
+            $button.prop('title', this.state.data.parent_id.data.display_name);
+        }
+        return $button;
+    },
+})
+
 export const ProjectFormView = FormDescriptionExpanderView.extend({
     config: Object.assign({}, FormDescriptionExpanderView.prototype.config, {
         Controller: ProjectFormController,
+        Renderer: ProjectFormRenderer,
     }),
 });
 
