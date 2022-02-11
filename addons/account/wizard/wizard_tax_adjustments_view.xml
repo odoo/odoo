@@ -11,7 +11,8 @@
             </h1>
             <group>
                 <field name="report_id" invisible="1"/>
-                <field name="tax_report_line_id" options="{'no_open': True, 'no_create': True}" domain="[('tag_name', '!=', None)]"/>
+                <field name="fiscal_country_ids" invisible="1"/>
+                <field name="tax_report_line_id" options="{'no_open': True, 'no_create': True}"/>
             </group>
             <group>
                 <group>
