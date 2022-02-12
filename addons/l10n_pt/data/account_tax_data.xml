@@ -8,6 +8,7 @@
             <field name="description">IVA23 (taxa normal Portugal Continental)</field>
             <field name="amount">23</field>
             <field name="amount_type">percent</field>
+            <field name="type_tax_use">sale</field>
             <field name="tax_group_id" ref="tax_group_iva_23"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
@@ -18,6 +19,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'account_id': ref('chart_2433'),
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -29,6 +31,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'account_id': ref('chart_2433'),
                 }),
             ]"/>
         </record>
@@ -38,6 +41,7 @@
             <field name="name">IVA22</field>
             <field name="description">IVA22 (taxa normal Madeira)</field>
             <field name="amount">22</field>
+            <field name="type_tax_use">sale</field>
             <field name="amount_type">percent</field>
             <field name="tax_group_id" ref="tax_group_iva_22"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
@@ -49,6 +53,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'account_id': ref('chart_2433'),
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -60,6 +65,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'account_id': ref('chart_2433'),
                 }),
             ]"/>
         </record>
@@ -69,6 +75,7 @@
             <field name="name">IVA16</field>
             <field name="description">IVA16 (taxa normal Açores)</field>
             <field name="amount">16</field>
+            <field name="type_tax_use">sale</field>
             <field name="amount_type">percent</field>
             <field name="tax_group_id" ref="tax_group_iva_16"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
@@ -80,6 +87,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'account_id': ref('chart_2433'),
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -91,6 +99,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'account_id': ref('chart_2433'),
                 }),
             ]"/>
         </record>
@@ -100,6 +109,7 @@
             <field name="name">IVA13</field>
             <field name="description">IVA13 (taxa intermédia Portugal Continental)</field>
             <field name="amount">13</field>
+            <field name="type_tax_use">sale</field>
             <field name="amount_type">percent</field>
             <field name="tax_group_id" ref="tax_group_iva_13"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
@@ -111,6 +121,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'account_id': ref('chart_2433'),
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -122,6 +133,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'account_id': ref('chart_2433'),
                 }),
             ]"/>
         </record>
@@ -131,6 +143,7 @@
             <field name="name">IVA12</field>
             <field name="description">IVA12 (taxa intermédia Madeira)</field>
             <field name="amount">12</field>
+            <field name="type_tax_use">sale</field>
             <field name="amount_type">percent</field>
             <field name="tax_group_id" ref="tax_group_iva_12"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
@@ -142,6 +155,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'account_id': ref('chart_2433'),
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -153,6 +167,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'account_id': ref('chart_2433'),
                 }),
             ]"/>
         </record>
@@ -162,6 +177,7 @@
             <field name="name">IVA9</field>
             <field name="description">IVA9 (taxa intermédia Açores)</field>
             <field name="amount">9</field>
+            <field name="type_tax_use">sale</field>
             <field name="amount_type">percent</field>
             <field name="tax_group_id" ref="tax_group_iva_9"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
@@ -173,6 +189,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'account_id': ref('chart_2433'),
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -184,6 +201,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'account_id': ref('chart_2433'),
                 }),
             ]"/>
         </record>
@@ -193,6 +211,7 @@
             <field name="name">IVA6</field>
             <field name="description">IVA6 (taxa reduzida Portugal Continental)</field>
             <field name="amount">6</field>
+            <field name="type_tax_use">sale</field>
             <field name="amount_type">percent</field>
             <field name="tax_group_id" ref="tax_group_iva_6"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
@@ -204,6 +223,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'account_id': ref('chart_2433'),
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -215,6 +235,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'account_id': ref('chart_2433'),
                 }),
             ]"/>
         </record>
@@ -224,6 +245,7 @@
             <field name="name">IVA5</field>
             <field name="description">IVA5 (taxa reduzida Madeira)</field>
             <field name="amount">5</field>
+            <field name="type_tax_use">sale</field>
             <field name="amount_type">percent</field>
             <field name="tax_group_id" ref="tax_group_iva_5"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
@@ -235,6 +257,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'account_id': ref('chart_2433'),
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -246,6 +269,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'account_id': ref('chart_2433'),
                 }),
             ]"/>
         </record>
@@ -255,6 +279,7 @@
             <field name="name">IVA4</field>
             <field name="description">IVA4 (taxa reduzida Açores)</field>
             <field name="amount">4</field>
+            <field name="type_tax_use">sale</field>
             <field name="amount_type">percent</field>
             <field name="tax_group_id" ref="tax_group_iva_4"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
@@ -266,6 +291,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'account_id': ref('chart_2433'),
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -277,6 +303,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'account_id': ref('chart_2433'),
                 }),
             ]"/>
         </record>
@@ -286,6 +313,7 @@
             <field name="name">IVA0</field>
             <field name="description">IVA0</field>
             <field name="amount">0</field>
+            <field name="type_tax_use">sale</field>
             <field name="amount_type">percent</field>
             <field name="tax_group_id" ref="tax_group_iva_0"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
@@ -297,6 +325,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'account_id': ref('chart_2433'),
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -308,6 +337,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'account_id': ref('chart_2433'),
                 }),
             ]"/>
         </record>
@@ -329,6 +359,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'account_id': ref('chart_2432'),
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -340,10 +371,11 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'account_id': ref('chart_2432'),
                 }),
             ]"/>
         </record>
-        
+
         <record id="compiva22" model="account.tax.template">
             <field name="chart_template_id" ref="pt_chart_template"/>
             <field name="name">IVA22 compra</field>
@@ -361,6 +393,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'account_id': ref('chart_2432'),
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -372,10 +405,11 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'account_id': ref('chart_2432'),
                 }),
             ]"/>
         </record>
-        
+
         <record id="compiva16" model="account.tax.template">
             <field name="chart_template_id" ref="pt_chart_template"/>
             <field name="name">IVA16 compra</field>
@@ -393,6 +427,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'account_id': ref('chart_2432'),
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -404,6 +439,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'account_id': ref('chart_2432'),
                 }),
             ]"/>
         </record>
@@ -425,6 +461,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'account_id': ref('chart_2432'),
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -436,6 +473,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'account_id': ref('chart_2432'),
                 }),
             ]"/>
         </record>
@@ -457,6 +495,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'account_id': ref('chart_2432'),
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -468,6 +507,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'account_id': ref('chart_2432'),
                 }),
             ]"/>
         </record>
@@ -489,6 +529,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'account_id': ref('chart_2432'),
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -500,6 +541,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'account_id': ref('chart_2432'),
                 }),
             ]"/>
         </record>
@@ -521,6 +563,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'account_id': ref('chart_2432'),
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -532,6 +575,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'account_id': ref('chart_2432'),
                 }),
             ]"/>
         </record>
@@ -553,6 +597,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'account_id': ref('chart_2432'),
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -564,6 +609,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'account_id': ref('chart_2432'),
                 }),
             ]"/>
         </record>
@@ -585,6 +631,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'account_id': ref('chart_2432'),
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -596,6 +643,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'account_id': ref('chart_2432'),
                 }),
             ]"/>
         </record>
@@ -617,6 +665,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'account_id': ref('chart_2432'),
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -628,6 +677,7 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'account_id': ref('chart_2432'),
                 }),
             ]"/>
         </record>
