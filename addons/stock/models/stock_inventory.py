@@ -201,7 +201,6 @@ class Inventory(models.Model):
             'name': _('Product Moves'),
             'type': 'ir.actions.act_window',
             'res_model': 'stock.move.line',
-            'view_type': 'list',
             'view_mode': 'list,form',
             'domain': domain,
         }
