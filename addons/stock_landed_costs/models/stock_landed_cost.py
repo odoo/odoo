@@ -98,7 +98,7 @@ class LandedCost(models.Model):
             n = 5000
             cost.allowed_picking_ids = valued_picking_ids_per_company[cost.company_id.id][:n]
             for ids_chunk in tools.split_every(n, valued_picking_ids_per_company[cost.company_id.id][n:]):
-                cost.allowed_picking_ids = tuple((4, id_) for id_ in ids_chunk)
+                cost.allowed_picking_ids = [(4, id_) for id_ in ids_chunk]
 
     @api.model
     def create(self, vals):
