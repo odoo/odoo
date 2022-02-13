@@ -21,7 +21,7 @@
 # EugenBrodskiSAMSAIT <eugen.brodski@samsa-it.de>, 2021
 # Andreas Schmidt <schmigo@gmail.com>, 2021
 # Chris Egal <sodaswed@web.de>, 2021
-# Friederike Fasterling-Nesselbosch, 2021
+# Friederike Fasterling-Nesselbosch, 2022
 # 
 msgid ""
 msgstr ""
@@ -29,7 +29,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:12+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2021\n"
+"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -152,6 +152,8 @@ msgid ""
 "<br/>\n"
 "                                            <span class=\"text-muted\">Air your tracks online through a Youtube integration</span>"
 msgstr ""
+"<br/>\n"
+"                                            <span class=\"text-muted\">Veröffentlichen Sie Ihre Tracks online mithilfe der YouTube Integration</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -953,6 +955,8 @@ msgid ""
 "Autoconfirm Registrations. Registrations will automatically be confirmed "
 "upon creation."
 msgstr ""
+"Automatische Bestätigung von Registrierungen. Die Registrierungen werden bei"
+" der Erstellung automatisch bestätigt."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__auto_confirm
@@ -1290,6 +1294,9 @@ msgid ""
 "you will not be able to sell tickets anymore. Set 0 to ignore this rule set "
 "as unlimited."
 msgstr ""
+"Legen Sie die Anzahl der verfügbaren Tickets fest. Wenn Sie zu viele "
+"Registrierungen haben, können Sie keine Tickets mehr verkaufen. Setzen Sie "
+"0, um diese Regel als unbegrenzt zu ignorieren."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__description
@@ -1442,7 +1449,7 @@ msgstr "Ende der Veranstaltung"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Event Gamification"
-msgstr ""
+msgstr "Event Gamification"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
@@ -1629,7 +1636,7 @@ msgstr "Veranstaltungs-Mailplaner"
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_tree
 msgid "Events Stage"
-msgstr ""
+msgstr "Veranstaltungs-Phase"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
@@ -1760,7 +1767,7 @@ msgstr ""
 #. module: event
 #: model:event.event.ticket,description:event.event_0_ticket_1
 msgid "For only 10, you gain access to catering. Yum yum."
-msgstr ""
+msgstr "Für 10 EUR erhalten Sie Zugang zum Catering. Lecker!"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -1976,7 +1983,7 @@ msgstr "Einführung, CRM, Verkaufsmanagement"
 #: code:addons/event/models/event_registration.py:0
 #, python-format
 msgid "Invalid event / ticket choice"
-msgstr ""
+msgstr "Ungültige Veranstaltung / Ticketauswahl"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__sale_available
@@ -2210,7 +2217,7 @@ msgstr "Einen Zeitplan mit Tracks verwalten und veröffentlichen"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_tree
 msgid "Mark as Attending"
-msgstr ""
+msgstr "Als teilnehmend markieren"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
@@ -2607,7 +2614,7 @@ msgstr "Anmeldedatum"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__end_sale_date
 msgid "Registration End"
-msgstr ""
+msgstr "Anmeldeschluss"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
@@ -2627,7 +2634,7 @@ msgstr "Anmeldungsmails"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__start_sale_date
 msgid "Registration Start"
-msgstr ""
+msgstr "Beginn Registrierungen"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_questions
@@ -2663,6 +2670,10 @@ msgid ""
 "- there are seats available on event\n"
 "- the tickets are sellable (if ticketing is used)"
 msgstr ""
+"Anmeldungen sind offen, wenn:\n"
+"- die Veranstaltung noch nicht beendet ist\n"
+"- es noch freie Plätze für die Veranstaltung gibt\n"
+"- die Eintrittskarten verkauft werden können (falls ein Ticketing genutzt wird)"
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_reporting_events
@@ -2860,7 +2871,7 @@ msgstr "Anfangsdatum Ortszeit"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__start_sale_date
 msgid "Start sale date"
-msgstr ""
+msgstr "Startdatum Verkauf"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__state
@@ -2888,6 +2899,8 @@ msgid ""
 "Tag color. No color means no display in kanban or front-end, to distinguish "
 "internal tags from public categorization tags."
 msgstr ""
+"Tag-Farbe. Keine Farbe bedeutet keine Anzeige im Kanban oder Front-End, um "
+"interne Tags von öffentlichen Kategorisierungs-Tags zu unterscheiden."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__tag_ids
@@ -3059,7 +3072,7 @@ msgstr ""
 #: code:addons/event/models/event_event.py:0
 #, python-format
 msgid "This operator is not supported"
-msgstr ""
+msgstr "Dieser Betreiber wird nicht unterstützt"
 
 #. module: event
 #. openerp-web
@@ -3249,7 +3262,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_used
 msgid "Used Seats"
-msgstr ""
+msgstr "Genutzte Plätze"
 
 #. module: event
 #: model:res.groups,name:event.group_event_user
@@ -3340,7 +3353,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__is_ongoing
 msgid "Whether event has begun"
-msgstr ""
+msgstr "Ob Veranstaltung begonnen hat"
 
 #. module: event
 #: model:event.event.ticket,description:event.event_0_ticket_2
@@ -3362,6 +3375,8 @@ msgid ""
 "You can define here labels that will be displayed for the state instead\n"
 "                            of the default labels in the kanban view."
 msgstr ""
+"Sie können hier Bezeichnungen für Phasen definieren,\n"
+"statt die Standardbeschriftungen in der Kanban-Ansicht zu verwenden."
 
 #. module: event
 #: model:mail.template,subject:event.event_registration_mail_template_badge

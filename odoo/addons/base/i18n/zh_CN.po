@@ -64,6 +64,7 @@
 # liAnGjiA <liangjia@qq.com>, 2021
 # Chris H, 2021
 # Jeffery CHEN <jeffery9@gmail.com>, 2021
+# Benson <Benson.Dr@Gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -71,7 +72,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 13:50+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2021\n"
+"Last-Translator: Benson <Benson.Dr@Gmail.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29095,6 +29096,9 @@ msgid ""
 "present in a separate module as it contains models used only to perform\n"
 "tests independently to functional aspects of other models."
 msgstr ""
+"此模块包含与基本自动化相关的测试. 这些是\n"
+"存在于单独的模块中，因为它包含仅用于执行的模型\n"
+"独立测试其它模型的功能方面."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_mail
@@ -29103,6 +29107,9 @@ msgid ""
 "present in a separate module as it contains models used only to perform\n"
 "tests independently to functional aspects of other models. "
 msgstr ""
+"该模块包含与邮件相关的测试. 这些是\n"
+"存在于单独的模块中，因为它包含仅用于执行的模型\n"
+"独立测试其它模型的功能方面. "
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_mail_enterprise
@@ -29113,6 +29120,11 @@ msgid ""
 "modules build on mail (sms, snailmail, mail_enterprise) are set as dependencies\n"
 "in order to test the whole mail codebase. "
 msgstr ""
+"该模块包含与邮件相关的测试. 这些是\n"
+"存在于单独的模块中，因为它包含仅用于执行的模型\n"
+"独立测试其它模型的功能方面. 此外，大多数\n"
+"基于邮件构建的模块(sms、snailmail、mail_enterprise）被设置为依赖项目\n"
+"为了测试整个邮件代码库. "
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_mass_mailing
@@ -29121,6 +29133,9 @@ msgid ""
 "are present in a separate module to use specific test models defined in\n"
 "test_mail. "
 msgstr ""
+"该模块包含与群发邮件相关的测试. 那些\n"
+"存在于单独的模块中以使用\n"
+"中定义的特定测试模型测试邮件. "
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_web_grid
@@ -29129,6 +29144,9 @@ msgid ""
 "present in a separate module as it contains models used only to perform\n"
 "tests independently to functional aspects of other models. "
 msgstr ""
+"此模块包含与 Web 网格查看相关的测试.  那些是\n"
+"存在于一个单独的模块中，因为它包含仅用于执行的模型\n"
+"独立于其它模型的功能方面进行测试. "
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_timer
@@ -29137,6 +29155,9 @@ msgid ""
 "present in a separate module as it contains models used only to perform\n"
 "tests independently to functional aspects of other models. "
 msgstr ""
+"该模块包含与计时器相关的测试. 那些是\n"
+"存在于一个单独的模块中，因为它包含仅用于执行的模型\n"
+"独立于其它模型的功能方面进行测试. "
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_mail_full
@@ -29146,6 +29167,10 @@ msgid ""
 "contains models used only to perform tests independently to functional aspects of\n"
 "real applications. "
 msgstr ""
+"该模块包含与各种邮件功能相关的测试\n"
+"和邮件相关的子模块. 这些测试存在于一个单独的模块中，因为它\n"
+"包含仅用于独立于功能方面执行测试的模型\n"
+"实际应用. "
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_web_cohort
@@ -29154,6 +29179,9 @@ msgid ""
 "present in a separate module as it contains models used only to perform\n"
 "tests independently to functional aspects of other models. "
 msgstr ""
+"该模块包含与网络队列相关的测试. 那些是\n"
+"存在于一个单独的模块中，因为它包含仅用于执行的模型\n"
+"独立于其它模型的功能方面进行测试. "
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_website
@@ -29164,13 +29192,18 @@ msgid ""
 "dependencies. Neither we want to add in website module some routes, views and\n"
 "models which only purpose is to run tests."
 msgstr ""
+"该模块包含与网站相关的测试. 那些是\n"
+"在我们测试模块安装/卸载/升级时出现在一个单独的模块中\n"
+"而且我们不想每次都重新装入网站模块，包括它是可能的\n"
+"依赖关系。 我们也不想在网站模块中增加一些路线、查看和\n"
+"唯一目的是执行测试的模型."
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_subscription_timesheet
 msgid ""
 "This module ensure that data (such as analytic accounts) defined on the sale"
 " order via timesheet app are correctly set also on subscriptions"
-msgstr ""
+msgstr "此模块确保通过时间表应用程序在销售订单上定义的数据(例如分析帐户)也在订阅上正确设置"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_subscription_taxcloud
@@ -29196,6 +29229,8 @@ msgid ""
 "This module helps analyzing and organizing event tracks.\n"
 "For that purpose it adds a gantt view on event tracks."
 msgstr ""
+"该模块有助于分析和组织事件轨迹.\n"
+"为此，它在事件轨道上增加了甘特图."
 
 #. module: base
 #: model:ir.module.module,description:base.module_event_enterprise

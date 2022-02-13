@@ -11,7 +11,6 @@
 # Petra <bop@odoo.com>, 2020
 # Marius Marolla <mariusmarolla@entersys.it>, 2020
 # David Minneci <david@numeko.it>, 2020
-# Stefano Consolaro <stefano.consolaro@mymage.it>, 2020
 # Giovanni Perteghella <giovanni@perteghella.org>, 2020
 # Cécile Collart <cco@odoo.com>, 2020
 # Luigi Di Naro <gigidn@gmail.com>, 2020
@@ -25,8 +24,10 @@
 # Léonie Bouchat <lbo@odoo.com>, 2020
 # Martin Trigaux, 2020
 # BigBlu <paolo.moroni@air-srl.com>, 2021
-# Sergio Zanchetta <primes2h@gmail.com>, 2021
+# Francesco Foresti <francesco.foresti@ooops404.com>, 2022
 # Friederike Fasterling-Nesselbosch, 2022
+# Stefano Consolaro <stefano.consolaro@mymage.it>, 2022
+# Sergio Zanchetta <primes2h@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -34,7 +35,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 13:50+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2022\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -6811,7 +6812,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Il modulo abilita la funzionalità di acquisizione codice a barre per il sistema di gestione del magazzino.\n"
+"Il modulo abilita la funzionalità di lettura dei codici a barre per il sistema di gestione del magazzino.\n"
 "    "
 
 #. module: base
@@ -6822,7 +6823,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Questo modulo consente la gestione delle consegne tramite l'acquisizione di codici a barre.\n"
+"Il modulo consente la gestione delle consegne tramite la lettura di codici a barre.\n"
 "    "
 
 #. module: base
@@ -6835,10 +6836,10 @@ msgid ""
 "The service is provided by the In App Purchase Odoo platform.\n"
 msgstr ""
 "\n"
-"Questo modulo definisce un quadro per i messaggi SMS.\n"
+"Il modulo fornisce una infrastruttura per la messaggistica SMS.\n"
 "----------------------------------------------------\n"
 "\n"
-"Il servizio è proposto dalla piattaforma di acquisti integrati di Odoo.\n"
+"Il servizio è fornito dalla piattaforma di acquisti integrati di Odoo.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_contacts
@@ -7181,6 +7182,8 @@ msgid ""
 "\n"
 "Time off documents will be automatically integrated to the Document app.\n"
 msgstr ""
+"\n"
+"I documenti delle ferie saranno integrati automaticamente nell'applicazione Documenti.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_product_expiry
@@ -8140,6 +8143,14 @@ msgid ""
 "                                <b attrs=\"{'invisible': ['&amp;', ('parent_id', '!=', False), ('type', '!=', False)]}\">Address</b>\n"
 "                            </span>"
 msgstr ""
+"<span class=\"o_form_label o_td_label\" name=\"address_name\">\n"
+"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'contact')]}\">Indirizzo azienda</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'invoice')]}\">Indirizzo fattura</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'delivery')]}\">Indirizzo di consegna</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'other')]}\">Altro indirizzo</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'private')]}\">Indirizzo privato</b>\n"
+"                                <b attrs=\"{'invisible': ['&amp;', ('parent_id', '!=', False), ('type', '!=', False)]}\">Indirizzo</b>\n"
+"                            </span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_update
@@ -9160,7 +9171,7 @@ msgstr "Aggiunge un modulo nel sito web per proporre lavori"
 #. module: base
 #: model:ir.module.module,summary:base.module_delivery_barcode
 msgid "Add barcode scanning facilities to Delivery."
-msgstr "Aggiunge le funzionalità di lettera del codice a barre alle consegne."
+msgstr "Aggiunge le funzionalità di lettera dei codici a barre alle consegne."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_event_barcode
@@ -9745,6 +9756,8 @@ msgid ""
 "An SMTP exception occurred. Check port number and connection security type.\n"
 " %s"
 msgstr ""
+"Si è verificata una eccezione SMTP. Controllare il numero di porta e il tipo di sicurezza della connessione.\n"
+" %s"
 
 #. module: base
 #: code:addons/base/models/ir_mail_server.py:0
@@ -10120,7 +10133,7 @@ msgstr "Codice a barre presenze su dispositivo mobile"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_attendance_mobile
 msgid "Attendances Barcode scan in Mobile"
-msgstr "Acquisizione codici a barre presenze da dispositivo mobile"
+msgstr "Lettura codici a barre presenze da dispositivo mobile"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_mass_mailing
@@ -10466,7 +10479,7 @@ msgstr "Codice a barre su dispositivo mobile"
 #. module: base
 #: model:ir.module.module,summary:base.module_barcodes_mobile
 msgid "Barcode scan in Mobile"
-msgstr "Acquisizione codici a barre da dispositivo mobile"
+msgstr "Lettura codici a barre da dispositivo mobile"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
@@ -10742,7 +10755,7 @@ msgstr "Binario"
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__binding_model_id
 #: model:ir.model.fields,field_description:base.field_ir_cron__binding_model_id
 msgid "Binding Model"
-msgstr "Modello di vincolo"
+msgstr "Modello di associazione"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_url__binding_type
@@ -10754,7 +10767,7 @@ msgstr "Modello di vincolo"
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__binding_type
 #: model:ir.model.fields,field_description:base.field_ir_cron__binding_type
 msgid "Binding Type"
-msgstr "Tipo di vincolo"
+msgstr "Tipo di associazione"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_url__binding_view_types
@@ -10766,7 +10779,7 @@ msgstr "Tipo di vincolo"
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__binding_view_types
 #: model:ir.model.fields,field_description:base.field_ir_cron__binding_view_types
 msgid "Binding View Types"
-msgstr "Tipo di vista vincolata"
+msgstr "Tipi di vista di associazione"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_blog
@@ -11163,7 +11176,7 @@ msgstr "Impossibile disattivare una lingua attualmente usata dai contatti."
 #: code:addons/base/models/res_lang.py:0
 #, python-format
 msgid "Cannot deactivate a language that is currently used by users."
-msgstr "Impossibile disattivare una lingua attualmente usata da utenti."
+msgstr "Impossibile disattivare una lingua attualmente in uso dagli utenti."
 
 #. module: base
 #: code:addons/base/models/res_config.py:0
@@ -11381,6 +11394,8 @@ msgid ""
 "Child server actions that will be executed. Note that the last return "
 "returned action value will be used as global return value."
 msgstr ""
+"Azioni server secondarie che verranno eseguite. Nota: l'ultimo valore return"
+" dell'azione restituita viene utilizzato come valore return globale."
 
 #. module: base
 #: model:res.country,name:base.cl
@@ -12072,7 +12087,7 @@ msgstr "I contatti richiedono un nome"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
 msgid "Contains In-App Purchases"
-msgstr ""
+msgstr "Contiene acquisti integrati"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_filters__context
@@ -12810,7 +12825,7 @@ msgstr "DLE 26 110 x 220 mm"
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Dash"
-msgstr ""
+msgstr "Trattino"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_fleet_dashboard
@@ -13095,7 +13110,7 @@ msgstr "Indirizzo di consegna"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_barcode
 msgid "Delivery Barcode Scanning"
-msgstr "Acquisizione codice a barre per consegne"
+msgstr "Lettura codice a barre per consegne"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery
@@ -13462,14 +13477,13 @@ msgstr "Visualizzare riga di intestazione"
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Display an option in the 'More' top-menu in order to run this action."
 msgstr ""
-"Mostra la possibilità  di eseguire questa azione nel menu superiore "
-"\"Altro\"."
+"Visualizza un'opzione nel menù principale \"Altro\" per eseguire questa "
+"azione."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_view
 msgid "Display an option on related documents to print this report"
-msgstr ""
-"Mostra la possibilità sui documenti collegati di stampare questo report"
+msgstr "Visualizza un'opzione nei documenti correlati per stampare il report"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_country_group
@@ -14184,7 +14198,7 @@ msgstr ""
 #: code:addons/base/models/ir_ui_menu.py:0
 #, python-format
 msgid "Error! You cannot create recursive menus."
-msgstr "Errore, impossibile creare menù ricorsivi."
+msgstr "Errore! Impossibile creare menù ricorsivi."
 
 #. module: base
 #: model:res.country,name:base.ee
@@ -14219,7 +14233,7 @@ msgstr "Marketing via SMS per partecipanti evento"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_event_barcode
 msgid "Event Barcode Scanning"
-msgstr "Acquisizione codici a barre per eventi"
+msgstr "Lettura codici a barre per eventi"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_event_barcode_mobile
@@ -14229,7 +14243,7 @@ msgstr "Codice a barre per eventi su dispositivo mobile"
 #. module: base
 #: model:ir.module.module,summary:base.module_event_barcode_mobile
 msgid "Event Barcode scan in Mobile"
-msgstr "Acquisizione codici a barre eventi da dispositivo mobile"
+msgstr "Lettura codici a barre eventi da dispositivo mobile"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_event_crm
@@ -14723,7 +14737,7 @@ msgstr "Il campo \"Model\" non può essere modificato nei modelli."
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "Field \"Transient Model\" cannot be modified on models."
-msgstr "Il campo \"Transient Model\" non può essere modificato nei modelli."
+msgstr "Impossibile modificare il campo \"Modello transitorio\" nei modelli."
 
 #. module: base
 #: code:addons/base/models/ir_model.py:0
@@ -15852,7 +15866,7 @@ msgstr "H TRASPORTO E MAGAZZINAGGIO"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_holidays_attendance
 msgid "HR Attendance Holidays"
-msgstr ""
+msgstr "HR Presenza Vacanze"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_gamification
@@ -16156,7 +16170,7 @@ msgstr ""
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Hide badges"
-msgstr "Nascondi badge"
+msgstr "Nascondi simboli"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
@@ -18197,7 +18211,7 @@ msgstr "Riga"
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Linebreak"
-msgstr ""
+msgstr "Interruzione di riga"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__line_ids
@@ -18224,7 +18238,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__link_field_id
 #: model:ir.model.fields,field_description:base.field_ir_cron__link_field_id
 msgid "Link Field"
-msgstr ""
+msgstr "Campo collegamento"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_link_tracker
@@ -19363,8 +19377,8 @@ msgid ""
 "Model for record creation / update. Set this field only to specify a "
 "different model than the base model."
 msgstr ""
-"Modello per creazione/aggiornamento dei record. Impostare il campo solo per "
-"indicare un modello diverso da quello di base."
+"Modello per creazione / aggiornamento dei record. Impostare il campo solo "
+"per indicare un modello diverso da quello di base."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_act_window__res_model
@@ -20066,7 +20080,7 @@ msgstr "Numero di aziende"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users__accesses_count
 msgid "Number of access rights that apply to the current user"
-msgstr "Numero di diritti di accesso che si applicano all'utente attuale"
+msgstr "Numero di diritti di accesso che si applicano all'utente corrente"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users__groups_count
@@ -20086,7 +20100,7 @@ msgstr "Numero di moduli aggiornati"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users__rules_count
 msgid "Number of record rules that apply to the current user"
-msgstr ""
+msgstr "Numero di regole su record che si applicano all'utente corrente"
 
 #. module: base
 #: model:res.country,vat_label:base.pf
@@ -21840,8 +21854,8 @@ msgid ""
 "Optional help text for the users with a description of the target view, such"
 " as its usage and purpose."
 msgstr ""
-"Testo di aiuto opzionale per gli utenti con una descrizione della "
-"visualizzazione, come il suo utilizzo e lo scopo."
+"Testo di aiuto opzionale per gli utenti con descrizione della vista di "
+"destinazione, come ad esempio il suo utilizzo e lo scopo."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_client__res_model
@@ -22239,7 +22253,7 @@ msgstr "Codice a barre POS su dispositivo mobile"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_hr_mobile
 msgid "POS Barcode scan in Mobile"
-msgstr "Acquisizione codici a barre POS da dispositivo mobile"
+msgstr "Lettura codici a barre POS da dispositivo mobile"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_restaurant_adyen
@@ -22726,8 +22740,8 @@ msgid ""
 "Please note that modifications will be applied for all users of the "
 "specified group"
 msgstr ""
-"Da rilevare che le modifiche vengono applicate a tutti gli utenti del gruppo"
-" specificato"
+"Nota: le modifiche vengono applicate a tutti gli utenti del gruppo "
+"specificato"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -23160,8 +23174,8 @@ msgid ""
 "Provide the field used to link the newly created record on the record used "
 "by the server action."
 msgstr ""
-"Fornisci il campo utilizzato per collegare il record appena creato al record"
-" utilizzato dall'azione del server."
+"Fornisce il campo utilizzato per collegare il record appena creato al record"
+" usato dall'azione server."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mail_mobile
@@ -23751,7 +23765,7 @@ msgstr "Nome relazione"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__relation_table
 msgid "Relation Table"
-msgstr "Tabella di relazione"
+msgstr "Tabella relazione"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__relation_field_id
@@ -23761,7 +23775,7 @@ msgstr "Campo relazione"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_report__attachment_use
 msgid "Reload from Attachment"
-msgstr "Ricarica dall'allegato"
+msgstr "Ricaricare da allegato"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
@@ -23772,8 +23786,8 @@ msgstr "Rimuovi"
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Remove 'More' top-menu contextual action related to this action"
 msgstr ""
-"Rimuovere dal menu principale \"Più\" l'azione contestuale relativa a questa"
-" azione"
+"Rimuove dal menu principale \"Altro\" l'azione contestuale correlata a "
+"questa azione"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
@@ -23793,7 +23807,7 @@ msgstr "Rimuovi dal menù \"Stampa\""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_view
 msgid "Remove the contextual action related to this report"
-msgstr "Rimuove l'azione contestuale collegata al documento"
+msgstr "Rimuove l'azione contestuale correlata al report"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_renting
@@ -24425,12 +24439,12 @@ msgstr "Salva"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_report__attachment
 msgid "Save as Attachment Prefix"
-msgstr "Salva come prefisso allegato"
+msgstr "Salvare come prefisso allegato"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_barcodes
 msgid "Scan and Parse Barcodes"
-msgstr "Acquisizione e analisi codici a barre"
+msgstr "Lettura e analisi codici a barre"
 
 #. module: base
 #: model:ir.module.module,description:base.module_event_sms
@@ -24462,7 +24476,7 @@ msgstr "Programma appuntamenti con i clienti"
 #. module: base
 #: model:ir.module.module,summary:base.module_calendar
 msgid "Schedule employees' meetings"
-msgstr "Programma le riunioni dei dipendenti"
+msgstr "Programma gli incontri dei dipendenti"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_social
@@ -24950,8 +24964,8 @@ msgid ""
 "Setting a value makes this action available in the sidebar for the given "
 "model."
 msgstr ""
-"Quando un valore viene definito, questa azione diventa disponibile nella "
-"barra laterale per il modello dato."
+"L'impostazione di un valore rende l'azione disponibile, per il modello dato,"
+" nella barra laterale."
 
 #. module: base
 #: code:addons/base/models/res_users.py:0
@@ -25119,7 +25133,7 @@ msgstr "Salta questi contatti"
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Slash"
-msgstr "Slash"
+msgstr "Barra"
 
 #. module: base
 #: model:res.country,name:base.sk
@@ -25458,7 +25472,7 @@ msgstr "Codice a barre magazzino su dispositivo mobile"
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_barcode_mobile
 msgid "Stock Barcode scan in Mobile"
-msgstr "Acquisizione codici a barre magazzino da dispositivo mobile"
+msgstr "Lettura codici a barre magazzino da dispositivo mobile"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_intrastat
@@ -25493,7 +25507,7 @@ msgstr "Memorizza le buste paga dei dipendenti nell'app Documenti"
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_hr_holidays
 msgid "Store employee's time off documents in the Document app"
-msgstr ""
+msgstr "Salva i documenti delle ferie dei dipendenti nell'app Documenti"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__store
@@ -25570,7 +25584,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_subcontracting_account
 msgid "Subcontracting Management with Stock Valuation"
-msgstr "Gestione esternalizzazione con valutazione magazzino"
+msgstr "Gestione esternalizzazione con valutazione giacenze"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.edit_menu_access
@@ -26126,7 +26140,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_lang_url_code_uniq
 msgid "The URL code of the language must be unique !"
-msgstr "Il codice URL della lingua deve essere unico!"
+msgstr "Il codice URL della lingua deve essere univoco."
 
 #. module: base
 #: code:addons/base/models/ir_module.py:0
@@ -26468,9 +26482,9 @@ msgid ""
 "\n"
 "Can not separate file to save as attachment because the report's template does not contains the attributes 'data-oe-model' and 'data-oe-id' on the div with 'article' classname."
 msgstr ""
-"Il modello del report '%s' è errato, prego contattare l'amministratore.\n"
+"Il modello del documento \"%s\" non è corretto, contattare l'amministratore.\n"
 "\n"
-"Impossibile separare il file da salvare come allegato, poichè il modello del report è privo degli attributi data-oe-model' e 'data-oe-id' sul div con classname 'article'."
+"Impossibile separare come allegato il file da salvare, il modello del documento è privo degli attributi \"data-oe-model\" e \"data-oe-id\" sul div con nome classe \"article\"."
 
 #. module: base
 #: code:addons/models.py:0
@@ -26504,6 +26518,8 @@ msgid ""
 "The server has closed the connection unexpectedly. Check configuration served on this port number.\n"
 " %s"
 msgstr ""
+"Il server ha chiuso la connessione in modo inatteso. Controllare la configurazione fornita a questo numero di porta.\n"
+" %s"
 
 #. module: base
 #: code:addons/base/models/ir_mail_server.py:0
@@ -27046,7 +27062,7 @@ msgstr "Fuso orario"
 #: model:ir.model.fields,field_description:base.field_res_partner__tz_offset
 #: model:ir.model.fields,field_description:base.field_res_users__tz_offset
 msgid "Timezone offset"
-msgstr "Offset fuso orario"
+msgstr "Differenza fuso orario"
 
 #. module: base
 #: model:res.country,name:base.tl
@@ -27457,7 +27473,7 @@ msgstr ""
 "- \"Aggiorna record\": aggiorna i valori di un record\n"
 "- \"Esegui alcune azioni\": definisce un'azione che attiva altre azioni server\n"
 "- \"Invia e-mail\": invia una e-mail in modo automatico (Comunicazioni)\n"
-"- \"Aggiungi follower\": aggiunge follower a un record (Comunicazioni)\n"
+"- \"Invita a seguire\": aggiunge chi segue a un record (Comunicazioni)\n"
 "- \"Crea prossima attività\": crea un'attività (Comunicazioni)"
 
 #. module: base
@@ -28220,7 +28236,7 @@ msgstr "Valore intero"
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__fields_lines
 #: model:ir.model.fields,field_description:base.field_ir_cron__fields_lines
 msgid "Value Mapping"
-msgstr "Corrispondenza di valori"
+msgstr "Mappatura valori"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_property__value_reference
@@ -28245,7 +28261,7 @@ msgstr "Vanuatu"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_be_hr_payroll_variable_revenue
 msgid "Variable Revenue"
-msgstr "Entrata variabile"
+msgstr "Ricavo variabile"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -28290,7 +28306,7 @@ msgstr "Venezuela - Contabilità"
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Vertical bar"
-msgstr ""
+msgstr "Barra verticale"
 
 #. module: base
 #: model:res.country,name:base.vn
@@ -28314,7 +28330,7 @@ msgstr "Vista"
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "View '%(name)s' accessible only to groups %(groups)s "
-msgstr "Vista '%(name)s' accessibile solo a gruppi %(groups)s "
+msgstr "Vista \"%(name)s\" accessibile solo ai gruppi %(groups)s "
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -28515,7 +28531,7 @@ msgstr "Gantt web"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_web_grid
 msgid "Web Grid Tests"
-msgstr ""
+msgstr "Test Web Grid"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_test_web_grid
@@ -28776,6 +28792,12 @@ msgid ""
 "number upon assignment, there can still be gaps in the sequence if records "
 "are deleted. The 'no gap' implementation is slower than the standard one."
 msgstr ""
+"Nell'assegnare un numero di sequenza ad una riga, l'impostazione 'senza "
+"spazi vuoti' assicura che il numero di sequenza precedente sia stato già "
+"assegnato. Mentre questa modalità non salta nessun numero di sequenza "
+"durante l'assegnazione, possono comunque essere presenti dei salti se le "
+"righe vengono eliminate. La modalità 'senza spazi vuoti' è più lenta di "
+"quella normale."
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_G
@@ -28875,9 +28897,9 @@ msgid ""
 "Write Python code that the action will execute. Some variables are available"
 " for use; help about python expression is given in the help tab."
 msgstr ""
-"Scrivi un codice Python che l'azione eseguirà. Alcune variabili sono "
-"disponibili per l'uso. Un aiuto sull'espressione Python è dato nella scheda "
-"Aiuto."
+"Scrivere il codice Python che viene eseguito dall'azione, alcune variabili "
+"sono disponibili all'uso. Nella scheda Aiuto viene fornito supporto riguardo"
+" l'espressione Python."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.form_res_users_key_show
@@ -28993,7 +29015,7 @@ msgstr "Impossibile creare etichette ricorsive."
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_users_login_key
 msgid "You can not have two users with the same login !"
-msgstr "Non puoi avere due utenti con lo stesso login !"
+msgstr "Impossibile avere due utenti con lo stesso nome utente."
 
 #. module: base
 #: code:addons/base/models/res_users.py:0
@@ -29001,6 +29023,8 @@ msgstr "Non puoi avere due utenti con lo stesso login !"
 msgid ""
 "You can not remove API keys unless they're yours or you are a system user"
 msgstr ""
+"Impossibile rimuovere chiavi API a meno di non essere il proprietario o un "
+"utente di sistema"
 
 #. module: base
 #: code:addons/base/models/res_users.py:0
@@ -29019,8 +29043,8 @@ msgid ""
 "You can select either a format or a specific page width/height, but not "
 "both."
 msgstr ""
-"È possibile selezionare o un formato o una specifica larghezza/altezza della"
-" pagina, ma non entrambi."
+"È possibile selezionare un formato oppure una specifica larghezza/altezza "
+"della pagina, ma non entrambi."
 
 #. module: base
 #: code:addons/base/models/res_users.py:0
@@ -29146,7 +29170,7 @@ msgid ""
 "created user under the Settings / Users menu."
 msgstr ""
 "È possibile definire diritti di accesso aggiuntivi modificando l'utente "
-"appena creato nel menu Impostazioni/Utenti"
+"appena creato nel menù Impostazioni / Utenti."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_currency_form
@@ -29154,6 +29178,8 @@ msgid ""
 "You won't be able to reduce the number of decimal places of a currency which"
 " has already been used to make accounting entries."
 msgstr ""
+"Impossibile ridurre il numero di posizioni decimali di una valuta che è già "
+"stata utilizzata per creare registrazioni contabili."
 
 #. module: base
 #: code:addons/base/models/ir_mail_server.py:0
@@ -29237,13 +29263,13 @@ msgstr "account_qr_code_sepa"
 #: code:addons/models.py:0
 #, python-format
 msgid "allowed for groups %s"
-msgstr "permesso per gruppi %s"
+msgstr "consentito per i gruppi %s"
 
 #. module: base
 #: code:addons/models.py:0
 #, python-format
 msgid "always forbidden"
-msgstr ""
+msgstr "sempre vietato"
 
 #. module: base
 #: code:addons/base/models/res_currency.py:0
@@ -29381,7 +29407,7 @@ msgstr "E-learning"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_simple_form
 msgid "email@yourcompany.com"
-msgstr "email@yourcompany.com"
+msgstr "e-mail@azienda.it"
 
 #. module: base
 #: code:addons/base/models/ir_fields.py:0
@@ -29414,7 +29440,7 @@ msgstr ""
 #: code:addons/models.py:0
 #, python-format
 msgid "forbidden for groups %s"
-msgstr "vietato per gruppi %s"
+msgstr "vietato per i gruppi %s"
 
 #. module: base
 #: code:addons/base/models/res_lang.py:0

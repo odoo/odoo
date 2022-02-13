@@ -81,8 +81,8 @@
 # sbr <sbr@odoo.com>, 2021
 # Rémi CAZENAVE, 2021
 # Thomas Deleval <thd@odoo.com>, 2021
-# Cécile Collart <cco@odoo.com>, 2021
 # Camille Dantinne <cmd@odoo.com>, 2021
+# Cécile Collart <cco@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -90,7 +90,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-25 10:15+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Camille Dantinne <cmd@odoo.com>, 2021\n"
+"Last-Translator: Cécile Collart <cco@odoo.com>, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -12970,7 +12970,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "The sequence format has changed."
-msgstr ""
+msgstr "Le format de la séquence a changé."
 
 #. module: account
 #: code:addons/account/models/sequence_mixin.py:0
@@ -13025,12 +13025,12 @@ msgstr ""
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "The statement line has already been reconciled."
-msgstr ""
+msgstr "La ligne de déclaration a déjà été rapprochée."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_line_id
 msgid "The statement line that created this entry"
-msgstr ""
+msgstr "La ligne de relevé qui a créé cette entrée"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_total_amount_param
@@ -13078,6 +13078,8 @@ msgid ""
 "The tax set to apply this distribution on invoices. Mutually exclusive with "
 "refund_tax_id"
 msgstr ""
+"La taxe définie pour appliquer cette distribution sur les factures. "
+"Mutuellement exclusif avec refund_tax_id"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__refund_tax_id
@@ -13086,6 +13088,8 @@ msgid ""
 "The tax set to apply this distribution on refund invoices. Mutually "
 "exclusive with invoice_tax_id"
 msgstr ""
+"La taxe définie pour appliquer cette distribution sur les factures de "
+"remboursement. Mutuellement exclusif avec invoice_tax_id"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_cash_rounding__rounding_method
@@ -13133,6 +13137,9 @@ msgid ""
 "There are still unreconciled bank statement lines in the period you want to "
 "lock.You should either reconcile or delete them."
 msgstr ""
+"Il reste des lignes de relevé bancaire non rapprochées dans la période que "
+"vous souhaitez verrouiller. Vous devez soit les rapprocher, soit les "
+"supprimer."
 
 #. module: account
 #: code:addons/account/models/account_partial_reconcile.py:0
@@ -13314,12 +13321,14 @@ msgstr ""
 msgid ""
 "This move is configured to be posted automatically at the accounting date:"
 msgstr ""
+"Ce mouvement est paramétré pour être comptabilisé automatiquement à la date "
+"comptable :"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "This move will be posted at the accounting date: %(date)s"
-msgstr ""
+msgstr "Ce déménagement sera comptabilisé à la date comptable : %(date)s"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_send__auto_delete
@@ -13412,6 +13421,8 @@ msgstr ""
 #: model_terms:digest.tip,tip_description:account.digest_tip_account_0
 msgid "Tip: No need to print, put in an envelop and post your invoices"
 msgstr ""
+"Astuce : Plus besoin d'imprimer, de mettre sous enveloppe et de poster vos "
+"factures"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__destination_account_id
@@ -13641,6 +13652,9 @@ msgid ""
 "printing it. If left blank, the first available and usable method will be "
 "used."
 msgstr ""
+"Type de QR-code à générer pour le paiement de cette facture, lors de son "
+"impression. Si laissé vide, la première méthode disponible et utilisable "
+"sera utilisée."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__activity_exception_decoration
@@ -13662,6 +13676,8 @@ msgid ""
 "Unable to create an open balance for a statement line because the receivable"
 " / payable accounts are missing on the partner."
 msgstr ""
+"Impossible de créer un solde ouvert pour une ligne de relevé car les comptes"
+" à recevoir/à payer sont manquants sur le partenaire."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -13669,6 +13685,8 @@ msgstr ""
 msgid ""
 "Unable to create an open balance for a statement line without a partner set."
 msgstr ""
+"Impossible de créer un solde ouvert pour une ligne de relevé si aucun "
+"partenaire n'est défini."
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
@@ -14132,6 +14150,9 @@ msgid ""
 "We process bills automatically so that you only have to validate them. "
 "Choose how you want to test our artificial intelligence engine:"
 msgstr ""
+"Nous traitons les factures automatiquement afin que vous n'ayez qu'à les "
+"valider. Choisissez comment vous souhaitez tester notre moteur "
+"d'intelligence artificielle :"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__website_message_ids
@@ -14208,6 +14229,8 @@ msgstr "Avec taxes"
 #, python-format
 msgid "Write a company name to <b>create one</b> or <b>see suggestions</b>."
 msgstr ""
+"Écrivez un nom d'entreprise pour <b>en créer une</b> ou <b>pour voir des "
+"suggestions</b>."
 
 #. module: account
 #. openerp-web
@@ -14273,6 +14296,8 @@ msgstr ""
 msgid ""
 "You can not reorder sequence by date when the journal is locked with a hash."
 msgstr ""
+"Vous ne pouvez pas réorganiser la séquence par date lorsque le journal est "
+"verrouillé avec un hachage."
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -14281,18 +14306,24 @@ msgid ""
 "You can only change the period/account for items that are not yet "
 "reconciled."
 msgstr ""
+"Vous ne pouvez modifier la période/le compte que pour les éléments qui ne "
+"sont pas encore rapprochés."
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "You can only change the period/account for posted journal items."
 msgstr ""
+"Vous ne pouvez modifier la période/le compte que pour les éléments de "
+"journal reportés."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "You can only create statement line in open bank statements."
 msgstr ""
+"Vous ne pouvez créer une ligne de relevé que dans les relevés bancaires "
+"ouverts."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14305,12 +14336,14 @@ msgstr "Vous ne pouvez réconcilier que des Ecritures postées"
 #, python-format
 msgid "You can only register payment for posted journal entries."
 msgstr ""
+"Vous ne pouvez enregistrer le paiement que pour les écritures comptables "
+"reportées."
 
 #. module: account
 #: code:addons/account/wizard/account_resequence.py:0
 #, python-format
 msgid "You can only resequence items from the same journal"
-msgstr ""
+msgstr "Vous ne pouvez reséquencer que les éléments du même journal"
 
 #. module: account
 #: code:addons/account/wizard/account_move_reversal.py:0
@@ -14418,6 +14451,8 @@ msgid ""
 "You can't manually change the state of journal entry %s, as it has been "
 "created by bank statement %s."
 msgstr ""
+"Vous ne pouvez pas modifier manuellement l'état de l'écriture au journal %s "
+", car elle a été créée par le relevé bancaire %s."
 
 #. module: account
 #: code:addons/account/wizard/account_payment_register.py:0
@@ -14426,6 +14461,8 @@ msgid ""
 "You can't open the register payment wizard without at least one "
 "receivable/payable line."
 msgstr ""
+"Vous ne pouvez pas ouvrir l'assistant de paiement sans au moins une ligne "
+"recevable/payable."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -14434,6 +14471,8 @@ msgid ""
 "You can't provide an amount in foreign currency without specifying a foreign"
 " currency."
 msgstr ""
+"Vous ne pouvez pas fournir un montant en devise étrangère sans spécifier une"
+" devise étrangère."
 
 #. module: account
 #: code:addons/account/wizard/account_payment_register.py:0
@@ -14442,6 +14481,8 @@ msgid ""
 "You can't register a payment because there is nothing left to pay on the "
 "selected journal items."
 msgstr ""
+"Vous ne pouvez pas enregistrer un paiement car il n'y a plus rien à payer "
+"sur les éléments de journal sélectionnés."
 
 #. module: account
 #: code:addons/account/wizard/account_payment_register.py:0
@@ -14478,6 +14519,8 @@ msgstr ""
 msgid ""
 "You cannot add/modify entries prior to and inclusive of the lock date %s."
 msgstr ""
+"Vous ne pouvez pas ajouter/modifier des entrées antérieures et incluses à la"
+" date de verrouillage %s."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14548,6 +14591,8 @@ msgid ""
 "You cannot do this modification on a reconciled journal entry. You can just change some non legal fields or you must unreconcile first.\n"
 "Journal Entry (id): %s (%s)"
 msgstr ""
+"Vous ne pouvez pas effectuer cette modification sur une écriture au journal rapprochée. Vous pouvez simplement modifier certains champs non légaux ou vous devez d'abord annuler le rapprochement.\n"
+"Ecriture de journal (id): %s (%s)"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14557,6 +14602,8 @@ msgid ""
 "You cannot edit the following fields due to restrict mode being activated on"
 " the journal: %s."
 msgstr ""
+"Vous ne pouvez pas modifier les champs suivants car le mode restreint est "
+"activé sur le journal : %s."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0

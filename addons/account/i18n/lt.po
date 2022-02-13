@@ -26,12 +26,13 @@
 # Arunas Vaitekunas <vaitekunas@gmail.com>, 2021
 # Paulius Sladkevičius <paulius@versada.eu>, 2021
 # Jonas Zinkevicius <jozi@odoo.com>, 2021
-# Arunas V. <arunas@devoro.com>, 2021
 # grupoda2 <dmitrijus.ivanovas@gmail.com>, 2021
-# Gailius Kazlauskas, 2021
 # Camille Dantinne <cmd@odoo.com>, 2021
 # Donatas <donatasvaliulis16@gmail.com>, 2021
 # Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2021
+# Gailius Kazlauskas, 2022
+# Sigitasvia <sigitas@vialaurea.lt>, 2022
+# Arunas V. <arunas@devoro.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -39,7 +40,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-25 10:15+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2021\n"
+"Last-Translator: Arunas V. <arunas@devoro.com>, 2022\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -91,7 +92,7 @@ msgstr "Monetų/Sąskaitų skaičius"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "#Created by: %s"
-msgstr ""
+msgstr "#Sukurė: %s"
 
 #. module: account
 #: model:mail.template,report_name:account.mail_template_data_payment_receipt
@@ -591,6 +592,9 @@ msgid ""
 "<span class=\"text-muted\">Leave empty to create a new journal for this bank"
 " account, or select a journal to link it with the bank account.</span>"
 msgstr ""
+"<span class=\"text-muted\">Palikite tuščią, kad sukurtumėte naują šios banko"
+" sąskaitos žurnalą, arba pasirinkite žurnalą, kad susietumėte jį su banko "
+"sąskaita.</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -666,7 +670,7 @@ msgstr "<span>Balansas</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Create</span>"
-msgstr ""
+msgstr "<span>Sukurti</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -753,7 +757,7 @@ msgstr "<span>Įkelti sąskaitas</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Upload</span>"
-msgstr ""
+msgstr "<span>Įkelti dokumentą</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -817,7 +821,7 @@ msgstr "<strong>Įrašai surikiuoti pagal:</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Incoterm: </strong>"
-msgstr ""
+msgstr "<strong>Pristatymo sąlygos: </strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1360,7 +1364,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_tour_upload_bill
 msgid "Account tour upload bill"
-msgstr ""
+msgstr "Paskyros turas įkelti sąskaitą"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tour_upload_bill_email_confirm
@@ -1509,7 +1513,7 @@ msgstr "Aktyvuoti kitas valiutas"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Activate to create purchase receipt"
-msgstr ""
+msgstr "Suaktyvinkite, kad sukurtumėte pirkimo kvitą"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__active
@@ -1539,7 +1543,7 @@ msgstr "Aktyvus domenas"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Active to create sale receipt"
-msgstr ""
+msgstr "Aktyvus norint sukurti pardavimo kvitą"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_ids
@@ -3718,7 +3722,7 @@ msgstr "Sukurti"
 #. module: account
 #: model:ir.model,name:account.model_account_automatic_entry_wizard
 msgid "Create Automatic Entries"
-msgstr ""
+msgstr "Sukurti automatinius įrašus"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.account_automatic_entry_wizard_action
@@ -3743,7 +3747,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
 msgid "Create Payment"
-msgstr ""
+msgstr "Sukurti mokėjimą"
 
 #. module: account
 #: code:addons/account/models/company.py:0
@@ -3774,7 +3778,7 @@ msgstr "Sukurkite naują grynųjų pinigų žurnalą"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.res_partner_action_customer
 msgid "Create a new customer in your address book"
-msgstr ""
+msgstr "Sukurti naują klientą savo adresų knygoje"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_fiscal_position_form
@@ -6918,7 +6922,7 @@ msgstr "Žurnalo įrašo etiketė."
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree_grouped
 msgid "Journal Items"
-msgstr "Žurnalo įrašai"
+msgstr "DK įrašai"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__name
@@ -6939,7 +6943,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__line_ids
 msgid "Journal items"
-msgstr ""
+msgstr "DK įrašai"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -13352,7 +13356,7 @@ msgstr "Vieneto kaina:"
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__product_uom_id
 #: model:ir.model.fields,field_description:account.field_account_move_line__product_uom_id
 msgid "Unit of Measure"
-msgstr "Matavimo vienetas"
+msgstr "Mato vienetas"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -13422,7 +13426,7 @@ msgstr "Nesudengta"
 #: model:ir.model.fields,field_description:account.field_account_move__amount_untaxed
 #: model:ir.model.fields,field_description:account.field_account_payment__amount_untaxed
 msgid "Untaxed Amount"
-msgstr "Neapmokestinta suma"
+msgstr "Suma be mokesčių"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount_untaxed_signed
@@ -13457,7 +13461,7 @@ msgstr "Įkelti"
 #: code:addons/account/wizard/account_tour_upload_bill.py:0
 #, python-format
 msgid "Upload your own bill"
-msgstr ""
+msgstr "Įkelti savo sąskaitą"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__use_anglo_saxon
