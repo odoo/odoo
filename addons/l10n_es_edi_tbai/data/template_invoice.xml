@@ -81,10 +81,11 @@
                 <FacturaRectificativa t-if="credit_note_invoices">
                     <Codigo t-out="credit_note_code"/>
                     <Tipo>I</Tipo>
-                    <!-- <ImporteRectificacionSustitutiva>
-                                <BaseRectificada>180.00</BaseRectificada>
-                                <CuotaRectificada>20.21</CuotaRectificada>
-                            </ImporteRectificacionSustitutiva> -->
+                    <!-- TODO also allow credit note Tipo 'S' ? Seems optional.
+                    <ImporteRectificacionSustitutiva>
+                        <BaseRectificada>180.00</BaseRectificada>
+                        <CuotaRectificada>20.21</CuotaRectificada>
+                    </ImporteRectificacionSustitutiva> -->
                 </FacturaRectificativa>
                 <FacturasRectificadasSustituidas t-if="is_refund">
                     <IDFacturaRectificadaSustituida t-foreach="credit_note_invoices" t-as="c_note">

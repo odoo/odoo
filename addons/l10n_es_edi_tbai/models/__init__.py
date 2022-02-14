@@ -8,4 +8,5 @@ from . import ir_attachment
 from . import l10n_es_edi_tbai_certificate
 from . import res_company
 from . import res_config_settings
-from . import utils
+from . import xml_utils
+from . import web_services

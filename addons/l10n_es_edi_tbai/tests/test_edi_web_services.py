@@ -53,7 +53,7 @@ class TestEdiTbaiWebServices(TestEsEdiTbaiCommon):
 
         cls.moves = cls.out_invoice + cls.in_invoice
 
-    # TODO: other agencies (once working)
+    # TODO: test other agencies (once working)
     def test_edi_gipuzkoa(self):
         self.env.company.l10n_es_tbai_tax_agency = 'gipuzkoa'
 

@@ -9,6 +9,8 @@ from functools import partial
 from re import sub as regex_sub
 from uuid import uuid4
 
+from odoo.addons.l10n_es_edi_tbai.models.web_services import TicketBaiWebServices
+from odoo.addons.l10n_es_edi_tbai.models.xml_utils import L10nEsTbaiXmlUtils
 from cryptography.hazmat.primitives import hashes, serialization
 from lxml import etree
 from odoo import _, models
@@ -164,7 +166,7 @@ class AccountEdiFormat(models.Model):
         xsd_attachment = self.env.ref(xsd_id, False)
         if xsd_attachment:
             try:
-                self.env['l10n_es.edi.tbai.util']._validate_format_xsd(xml, xsd_id)
+                L10nEsTbaiXmlUtils._validate_format_xsd(xml, xsd_id)
             except UserError as e:
                 return {
                     'error': str(e).split('\\n'),
@@ -197,7 +199,7 @@ class AccountEdiFormat(models.Model):
         values.update(self._l10n_es_tbai_get_trail_values(invoice, cancel))
         template_name = 'l10n_es_edi_tbai.template_invoice_main' + ('_cancel' if cancel else '_post')
         xml_str = self.env.ref(template_name)._render(values)
-        xml_doc = self.env['l10n_es.edi.tbai.util']._cleanup_xml_content(xml_str, is_string=True)
+        xml_doc = L10nEsTbaiXmlUtils._cleanup_xml_content(xml_str, is_string=True)
         self._l10n_es_tbai_sign_invoice(invoice, xml_doc)
 
         # Store the XML as attachment to ensure it is never lost (even in case of timeout error)
@@ -262,7 +264,8 @@ class AccountEdiFormat(models.Model):
 
         values.update({
             'recipients': xml_recipients,
-            'thirdparty_or_recipient': "D",  # TODO for Bizkaia this can be "T" (if "in" invoice)
+            # TODO for Bizkaia, option below can be "T" (if "in" invoice)
+            'thirdparty_or_recipient': "D",  # thirdparty = Tercero, recipient = Destinatario
         })
         return values
 
@@ -279,7 +282,7 @@ class AccountEdiFormat(models.Model):
         values['is_refund'] = is_refund
         is_simplified = invoice.partner_id == self.env.ref("l10n_es_edi_tbai.partner_simplified")
         if is_refund:
-            # TODO check refund codes are legal before sending ?
+            # TODO check refund codes are legal before sending ? Do not use "defaults" here, show them in wizard
             values['credit_note_code'] = invoice.l10n_es_tbai_refund_reason or ('R5' if is_simplified else 'R1')
             values['credit_note_invoices'] = [  # uses a list because TicketBai supports issuing multiple credit notes
                 invoice.reversed_entry_id
@@ -464,7 +467,6 @@ class AccountEdiFormat(models.Model):
             return {}
 
     def _l10n_es_tbai_sign_invoice(self, invoice, xml_root):
-        util = self.env['l10n_es.edi.tbai.util']
         company = invoice.company_id
         cert_private, cert_public = company.l10n_es_tbai_certificate_id._get_key_pair()
         public_key = cert_public.public_key()
@@ -479,9 +481,9 @@ class AccountEdiFormat(models.Model):
         values = {
             'dsig': {
                 'document_id': doc_id,
-                'x509_certificate': util._base64_print(b64encode(cert_public.public_bytes(encoding=serialization.Encoding.DER))),
-                'public_modulus': util._base64_print(b64encode(util._long_to_bytes(public_key.public_numbers().n))),
-                'public_exponent': util._base64_print(b64encode(util._long_to_bytes(public_key.public_numbers().e))),
+                'x509_certificate': L10nEsTbaiXmlUtils._base64_print(b64encode(cert_public.public_bytes(encoding=serialization.Encoding.DER))),
+                'public_modulus': L10nEsTbaiXmlUtils._base64_print(b64encode(L10nEsTbaiXmlUtils._long_to_bytes(public_key.public_numbers().n))),
+                'public_exponent': L10nEsTbaiXmlUtils._base64_print(b64encode(L10nEsTbaiXmlUtils._long_to_bytes(public_key.public_numbers().e))),
                 'iso_now': datetime.now().isoformat(),
                 'keyinfo_id': kinfo_id,
                 'signature_id': signature_id,
@@ -493,18 +495,18 @@ class AccountEdiFormat(models.Model):
             }
         }
         xml_sig_str = self.env.ref('l10n_es_edi_tbai.template_digital_signature')._render(values)
-        xml_sig = util._cleanup_xml_content(xml_sig_str, is_string=True, indent_level=1)
+        xml_sig = L10nEsTbaiXmlUtils._cleanup_xml_content(xml_sig_str, is_string=True, indent_level=1)
 
         # Complete document with signature template
         xml_root[-1].tail = "\n  "
         xml_root.append(xml_sig)
 
         # Compute digest values for references
-        util._reference_digests(xml_sig.find("ds:SignedInfo", namespaces=util.NS_MAP))
+        L10nEsTbaiXmlUtils._reference_digests(xml_sig.find("ds:SignedInfo", namespaces=L10nEsTbaiXmlUtils.NS_MAP))
 
         # Sign (writes into SignatureValue)
-        util._fill_signature(xml_sig, cert_private)
-        signature_value = xml_sig.find("ds:SignatureValue", namespaces=util.NS_MAP).text
+        L10nEsTbaiXmlUtils._fill_signature(xml_sig, cert_private)
+        signature_value = xml_sig.find("ds:SignatureValue", namespaces=L10nEsTbaiXmlUtils.NS_MAP).text
 
         # RFC2045 - Base64 Content-Transfer-Encoding (page 25)
         # Any characters outside of the base64 alphabet are to be ignored in
@@ -516,7 +518,6 @@ class AccountEdiFormat(models.Model):
     # -------------------------------------------------------------------------
 
     def _l10n_es_tbai_post_to_web_service(self, invoices, invoice_xml, cancel=False):
-        util = self.env['l10n_es.edi.tbai.util']
         company = invoices.company_id
         xml_str = etree.tostring(invoice_xml, encoding='UTF-8')
 
@@ -529,7 +530,7 @@ class AccountEdiFormat(models.Model):
 
         # Post and retrieve response
         try:
-            response = util._post(url=url, data=xml_str, headers=header, pkcs12_data=cert_file, timeout=10)
+            response = TicketBaiWebServices()._post(url=url, data=xml_str, headers=header, pkcs12_data=cert_file, timeout=10)
         except (ValueError, RequestException) as e:
             return {invoices: {
                 'success': False, 'error': str(e), 'blocking_level': 'warning', 'response': None
@@ -539,10 +540,11 @@ class AccountEdiFormat(models.Model):
 
         # Error management
         response_xml = etree.fromstring(bytes(data, 'utf-8'))
-        message, already_received, tbai_id = self.env['l10n_es.edi.tbai.util']._get_response_values(response_xml)
+        message, already_received, tbai_id = TicketBaiWebServices()._get_response_values(response_xml, self.env)
 
         # TODO log warning if tbai_id provided in response does not match our own computed tbai_id ?
         # when already_received is True, tbai_id is '' (the response does not include it)
+        # thus it's kind of pointless but if it did happen, it would definitely mean sth went wrong
 
         state = int(response_xml.find(r'.//Estado').text)
         if state == 0 or already_received:

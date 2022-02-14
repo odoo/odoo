@@ -3,6 +3,7 @@
 
 from freezegun import freeze_time
 from lxml import etree
+from odoo.addons.l10n_es_edi_tbai.models.xml_utils import L10nEsTbaiXmlUtils
 from odoo.exceptions import UserError
 from odoo.tests import tagged
 
@@ -57,7 +58,7 @@ class TestEdiXmls(TestEsEdiTbaiCommon):
     def _validate_format_xsd(self, xml_doc, xsd_name):
         xml_bytes = etree.tostring(xml_doc, encoding="UTF-8")
         try:
-            self.env['l10n_es.edi.tbai.util']._validate_format_xsd(xml_bytes, xsd_name)
+            L10nEsTbaiXmlUtils._validate_format_xsd(xml_bytes, xsd_name, self.env)
         except UserError as e:
             self.fail(str(e))
 

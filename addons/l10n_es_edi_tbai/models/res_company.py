@@ -3,6 +3,7 @@
 
 from odoo import api, fields, models
 
+# TODO move URL-related stuff to WebService class
 L10N_ES_EDI_TBAI_VERSION = 1.2
 L10N_ES_EDI_TBAI_URLS = {
     'sigpolicy': {
