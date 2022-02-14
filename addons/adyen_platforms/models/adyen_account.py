@@ -23,7 +23,7 @@ class AdyenAddressMixin(models.AbstractModel):
 
     country_id = fields.Many2one('res.country', string='Country', domain=[('code', 'in', ADYEN_AVAILABLE_COUNTRIES)], required=True)
     country_code = fields.Char(related='country_id.code')
-    state_id = fields.Many2one('res.country.state', string='State', domain="[('country_id', '=?', country_id)]")
+    state_id = fields.Many2one('res.country.state', string='Fed. State', domain="[('country_id', '=?', country_id)]")
     state_code = fields.Char(related='state_id.code')
     city = fields.Char('City', required=True)
     zip = fields.Char('ZIP', required=True)
