@@ -2,7 +2,7 @@
 
 import { throttleForAnimation } from "../utils/timing";
 
-const { onWillUnmount, useComponent, useEffect, useExternalListener, useRef } = owl;
+const { onWillUnmount, useEffect, useExternalListener, useRef } = owl;
 
 /**
  * @typedef {{
@@ -10,13 +10,17 @@ const { onWillUnmount, useComponent, useEffect, useExternalListener, useRef } = 
  *  container?: HTMLElement;
  *  margin?: number;
  *  position?: Position;
+ *  classes?: Partial<ClassNames>;
  * }} Options
+ *
+ * @typedef {{[position in Position?]: string}} ClassNames
  *
  * @typedef {{
  *  directions: (DirectionsDataKey)[];
  *  variants: (VariantsDataKey)[];
- *  get: (d?: DirectionsDataKey, v?: VariantsDataKey, containerRestricted?: boolean) => PositioningSolution | null;
+ *  get: (d?: DirectionsDataKey, v?: VariantsDataKey, containerRestricted?: boolean) => (()=>void)?;
  * }} Positioning
+ *  `get` may return a function that will apply the style to the popper when called
  *
  * @typedef {keyof DirectionsData} DirectionsDataKey
  * @typedef {{
@@ -50,21 +54,32 @@ const { onWillUnmount, useComponent, useEffect, useExternalListener, useRef } = 
  *  | "left-start" | "left-middle" | "left-end"
  *  | "right-start" | "right-middle" | "right-end"
  *  | "bottom-start" | "bottom-middle" | "bottom-end"} Position
- *
- * @typedef {{ className: string, top: number, left: number }} PositioningSolution
  */
 
-const POPPER_CLASS = "o-popper-position";
 /** @type DirectionFlipOrder */
 const DIRECTION_FLIP_ORDER = { top: "tbrl", right: "rltb", bottom: "btrl", left: "lrbt" };
 /** @type VariantFlipOrder */
 const VARIANT_FLIP_ORDER = { start: "sme", middle: "mse", end: "ems" };
 
-/** @type {Options} */
-export const DEFAULTS = {
+/** @type {Partial<Options>} */
+const DEFAULTS = {
     popper: "popper",
     margin: 0,
     position: "bottom",
+    classes: {
+        "top-start": "o-popper-position--ts",
+        "top-middle": "o-popper-position--tm",
+        "top-end": "o-popper-position--te",
+        "right-start": "o-popper-position--rs",
+        "right-middle": "o-popper-position--rm",
+        "right-end": "o-popper-position--re",
+        "bottom-start": "o-popper-position--bs",
+        "bottom-middle": "o-popper-position--bm",
+        "bottom-end": "o-popper-position--be",
+        "left-start": "o-popper-position--ls",
+        "left-middle": "o-popper-position--lm",
+        "left-end": "o-popper-position--le",
+    },
 };
 
 /**
@@ -75,18 +90,17 @@ export const DEFAULTS = {
  *
  * @param {HTMLElement} reference
  * @param {HTMLElement} popper
- * @param {Options} options
  * @returns {Positioning} a positioning object containing:
  *  - ascendingly sorted directions and variants
  *  - a method returning style to apply to the popper for a given direction and variant
  */
-export function computePositioning(reference, popper, options) {
-    const { container, margin, position } = options;
+function computePositioning(reference, popper, options) {
+    const { container, margin, position, classes } = options;
 
     // Retrieve directions and variants
-    const [directionKey, variantKey = "middle"] = position.split("-");
-    const directions = DIRECTION_FLIP_ORDER[directionKey];
-    const variants = VARIANT_FLIP_ORDER[variantKey];
+    const [direction, variant = "middle"] = position.split("-");
+    const directions = DIRECTION_FLIP_ORDER[direction];
+    const variants = VARIANT_FLIP_ORDER[variant];
 
     // Boxes
     const popBox = popper.getBoundingClientRect();
@@ -152,7 +166,7 @@ export function computePositioning(reference, popper, options) {
             }
         }
 
-        const positioning = vertical
+        const { top, left } = vertical
             ? {
                   top: directionValue,
                   left: variantValue,
@@ -161,7 +175,17 @@ export function computePositioning(reference, popper, options) {
                   top: variantValue,
                   left: directionValue,
               };
-        return { ...positioning, className: `${POPPER_CLASS}--${d}${v}` };
+
+        return () => {
+            popper.style.top = `${top}px`;
+            popper.style.left = `${left}px`;
+            for (const [position, className] of Object.entries(classes)) {
+                const [direction, variant] = position.split("-");
+                if (direction.startsWith(d) && (!variant || variant.startsWith(v))) {
+                    popper.classList.add(className);
+                }
+            }
+        };
     }
 
     return {
@@ -187,42 +211,33 @@ export function computePositioning(reference, popper, options) {
 function reposition(reference, popper, options) {
     options = {
         container: document.documentElement,
-        ...DEFAULTS,
         ...options,
     };
 
-    // Reset all existing popper classes and only leave it as standalone
-    for (const popperClass of popper.classList) {
-        if (popperClass.startsWith(POPPER_CLASS)) {
-            popper.classList.remove(popperClass);
-        }
-    }
-    popper.classList.add(POPPER_CLASS);
+    // Reset popper style
+    const classNames = Object.values(options.classes);
+    popper.classList.remove(...classNames);
+    popper.style.position = "fixed";
+    popper.style.top = "0";
+    popper.style.left = "0";
 
     // Compute positioning and find first match
     const positioning = computePositioning(reference, popper, options);
-    for (const d of positioning.directions) {
-        for (const v of positioning.variants) {
-            const posData = positioning.get(d, v, true);
-            if (!posData) {
-                continue;
-            }
 
-            // From now, a position match have been found.
-            // Apply styles
-            const { className, top, left } = posData;
-            popper.classList.add(className);
-            popper.style.top = `${top}px`;
-            popper.style.left = `${left}px`;
-            return;
+    let position;
+    loops: {
+        for (const d of positioning.directions) {
+            for (const v of positioning.variants) {
+                position = positioning.get(d, v, true);
+                if (position) {
+                    // A position match have been found.
+                    break loops;
+                }
+            }
         }
     }
-
-    // use the given `position` because no position fits
-    const { className, top, left } = positioning.get();
-    popper.classList.add(className);
-    popper.style.top = `${top}px`;
-    popper.style.left = `${left}px`;
+    // fallback to given `position` if nothing matches
+    (position || positioning.get())();
 }
 
 /**

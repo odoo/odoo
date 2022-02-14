@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { browser } from "@web/core/browser/browser";
-import { computePositioning, DEFAULTS, usePosition } from "@web/core/position/position_hook";
+import { usePosition } from "@web/core/position/position_hook";
 import { registerCleanup } from "../helpers/cleanup";
 import {
     destroy,
@@ -18,25 +18,12 @@ let container;
 let reference;
 
 /**
- * @param {HTMLElement} popper
+ * @param {HTMLElement} popEl
  * @param {import("@web/core/position/position_hook").Position} [position="bottom"]
  * @returns {boolean}
  */
-function isWellPositioned(popper, position = "bottom") {
-    /** @type {import("@web/core/position/position_hook").Options} */
-    const options = {
-        ...DEFAULTS,
-        container,
-        position,
-    };
-    const [direction, variant = "middle"] = position.split("-");
-    const d = /** @type {import("@web/core/position/position_hook").DirectionsDataKey} */ (direction[0]);
-    const v = /** @type {import("@web/core/position/position_hook").VariantsDataKey} */ (variant[0]);
-    const posSolution = computePositioning(reference, popper, options).get(d, v);
-    const hasCorrectClass = popper.classList.contains(posSolution.className);
-    const correctLeft = parseFloat(popper.style.left) === posSolution.left;
-    const correctTop = parseFloat(popper.style.top) === posSolution.top;
-    return hasCorrectClass && correctLeft && correctTop;
+function isWellPositioned(popEl, position = "bottom") {
+    return popEl.classList.contains(TestComp.popperOptions.classes[position]);
 }
 
 class TestComp extends Component {
@@ -47,7 +34,26 @@ class TestComp extends Component {
 }
 TestComp.template = xml`<div id="popper" t-ref="popper" />`;
 /** @type {import("@web/core/position/position_hook").Options} */
-TestComp.popperOptions = {};
+TestComp.popperOptions = {
+    classes: {
+        top: "positionedTo-top",
+        "top-start": "positionedTo-top-start",
+        "top-middle": "positionedTo-top-middle",
+        "top-end": "positionedTo-top-end",
+        right: "positionedTo-right",
+        "right-start": "positionedTo-right-start",
+        "right-middle": "positionedTo-right-middle",
+        "right-end": "positionedTo-right-end",
+        bottom: "positionedTo-bottom",
+        "bottom-start": "positionedTo-bottom-start",
+        "bottom-middle": "positionedTo-bottom-middle",
+        "bottom-end": "positionedTo-bottom-end",
+        left: "positionedTo-left",
+        "left-start": "positionedTo-left-start",
+        "left-middle": "positionedTo-left-middle",
+        "left-end": "positionedTo-left-end",
+    },
+};
 
 QUnit.module("usePosition Hook", {
     async beforeEach() {
@@ -71,7 +77,7 @@ QUnit.module("usePosition Hook", {
         registerCleanup(() => {
             getFixture().removeChild(container);
         });
-        TestComp.popperOptions = { container };
+        Object.assign(TestComp.popperOptions, { container });
 
         const sheet = document.createElement("style");
         sheet.textContent = `
