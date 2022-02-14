@@ -135,13 +135,12 @@ export class KanbanArchParser extends XMLParser {
             kanbanBoxTemplate;
 
         // Generates dropdown element
-        const dropdown = document.createElement("t");
+        const dropdown = document.createElement("Dropdown");
         const togglerClass = [];
         const menuClass = [];
         const transfers = [];
         let progressAttributes = false;
         let dropdownInserted = false;
-        dropdown.setAttribute("t-component", "Dropdown");
 
         // Progressbar
         for (const el of xmlDoc.getElementsByTagName("progressbar")) {
