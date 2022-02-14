@@ -94,7 +94,7 @@ class AccountTax(models.Model):
         help="Determines where the tax is selectable. Note : 'None' means a tax can't be used by itself, however it can still be used in a group. 'adjustment' is used to perform tax adjustment.")
     tax_scope = fields.Selection([('service', 'Services'), ('consu', 'Goods')], string="Tax Scope", help="Restrict the use of taxes to a type of product.")
     amount_type = fields.Selection(default='percent', string="Tax Computation", required=True,
-        selection=[('group', 'Group of Taxes'), ('fixed', 'Fixed'), ('percent', 'Percentage of Price'), ('division', 'Percentage of Price Tax Included')],
+        selection=[('group', 'Group of Taxes'), ('fixed', 'Fixed'), ('percent', 'Percentage of Price'), ('division', 'Percentage of Price Tax Included'), ('fixed/percent', 'Fixed/Percentage of Price')],
         help="""
     - Group of Taxes: The tax is a set of sub taxes.
     - Fixed: The tax amount stays the same whatever the price.
@@ -104,6 +104,13 @@ class AccountTax(models.Model):
     - Percentage of Price Tax Included: The tax amount is a division of the price:
         e.g 180 / (1 - 10%) = 200 (not price included)
         e.g 200 * (1 - 10%) = 180 (price included)
+    - Fixed/Percentage of Price: The tax calcalation in fixed/percent and take the one which is higher:
+        e.g.21% of 1000 = 210.0
+            100(10) * 4.17 = 417.0
+            Tax value is 417.0 (based on qty because the value is higher than percentage calculation)
+        e.g.21% of 5000 = 1050.0
+            100(50) * 4.17 = 417.0
+            Tax value is 1050.0 (based on percentage because the value is higher than qty base calculation)
         """)
     active = fields.Boolean(default=True, help="Set active to false to hide the tax without removing it.")
     company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True, default=lambda self: self.env.company)
@@ -114,6 +121,7 @@ class AccountTax(models.Model):
     sequence = fields.Integer(required=True, default=1,
         help="The sequence field is used to define order in which the tax lines are applied.")
     amount = fields.Float(required=True, digits=(16, 4), default=0.0)
+    fixed_amount = fields.Float(digits=(16, 4), default=0.0)
     real_amount = fields.Float(string='Real amount to apply', compute='_compute_real_amount', store=True)
     description = fields.Char(string='Label on Invoices')
     price_include = fields.Boolean(string='Included in Price', default=False,
@@ -332,7 +340,7 @@ class AccountTax(models.Model):
         """
         self.ensure_one()
 
-        if self.amount_type == 'fixed':
+        if self.amount_type in ('fixed', 'fixed/percent'):
             # Use copysign to take into account the sign of the base amount which includes the sign
             # of the quantity and the sign of the price_unit
             # Amount is the fixed price for the tax, it can be negative
@@ -341,25 +349,38 @@ class AccountTax(models.Model):
             # sign of the price unit.
             # When the price unit is equal to 0, the sign of the quantity is absorbed in base_amount then
             # a "else" case is needed.
+            amount = self.amount if self.amount_type == 'fixed' else self.fixed_amount
+
             if base_amount:
-                return math.copysign(quantity, base_amount) * self.amount * abs(fixed_multiplicator)
+                fixed_amount = math.copysign(quantity, base_amount) * amount * abs(fixed_multiplicator)
             else:
-                return quantity * self.amount * abs(fixed_multiplicator)
+                fixed_amount = quantity * amount * abs(fixed_multiplicator)
+
+            if self.amount_type == 'fixed':
+                return fixed_amount
 
         price_include = self._context.get('force_price_include', self.price_include)
 
         # base * (1 + tax_amount) = new_base
-        if self.amount_type == 'percent' and not price_include:
-            return base_amount * self.amount / 100
+        if self.amount_type in ('percent', 'fixed/percent') and not price_include:
+            percent_amount = base_amount * self.amount / 100
+
+            if self.amount_type == 'percent':
+                return percent_amount
         # <=> new_base = base / (1 + tax_amount)
-        if self.amount_type == 'percent' and price_include:
-            return base_amount - (base_amount / (1 + self.amount / 100))
+        if self.amount_type in ('percent', 'fixed/percent') and price_include:
+            percent_amount = base_amount - (base_amount / (1 + self.amount / 100))
+
+            if self.amount_type == 'percent':
+                return percent_amount
         # base / (1 - tax_amount) = new_base
         if self.amount_type == 'division' and not price_include:
             return base_amount / (1 - self.amount / 100) - base_amount if (1 - self.amount / 100) else 0.0
         # <=> new_base * (1 - tax_amount) = base
         if self.amount_type == 'division' and price_include:
             return base_amount - (base_amount * (self.amount / 100))
+        if self.amount_type == 'fixed/percent':
+            return percent_amount > fixed_amount and percent_amount or fixed_amount
         # default value for custom amount_type
         return 0.0
 

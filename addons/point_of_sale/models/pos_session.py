@@ -1700,7 +1700,7 @@ class PosSession(models.Model):
                 'domain': [('company_id', '=', self.company_id.id)],
                 'fields': [
                     'name', 'real_amount', 'price_include', 'include_base_amount', 'is_base_affected',
-                    'amount_type', 'children_tax_ids'
+                    'amount_type', 'children_tax_ids', 'fixed_amount'
                 ],
             },
         }

@@ -46,6 +46,13 @@ class TestTaxCommon(AccountTestInvoicingCommon):
             'amount': 10,
             'sequence': 4,
         })
+        cls.fixed_percent_tax = cls.env['account.tax'].create({
+            'name': "Fixed/Percent Tax",
+            'amount_type': 'fixed/percent',
+            'amount': 10,
+            'fixed_amount': 50,
+            'sequence': 1,
+        })
         cls.group_tax = cls.env['account.tax'].create({
             'name': "Group tax",
             'amount_type': 'group',
@@ -303,6 +310,71 @@ class TestTax(TestTaxCommon):
                 # ---------------------------------------------------
             ],
             res_percent
+        )
+
+    def test_tax_fixed_percent_basic(self):
+        # 10% of 1000 = 100 =>Tax value is 1100.0
+        # based on percentage because the value is higher than qty base calculation
+        # by default, it takes quantity = 1
+        res = self.fixed_percent_tax.compute_all(1000.0)
+        self._check_compute_all_results(
+            1100.0, # 'total_included'
+            1000.0,  # 'total_excluded'
+            [
+                # base , amount    | seq | amount | incl | incl_base
+                # --------------------------------------------------
+                (1000.0, 100),   # |  1  |   10%  |   t  |
+                # --------------------------------------------------
+            ],
+            res
+        )
+
+        # QUNTITY * 50 = 200 =>Tax value is 1200.0
+        # based on qty because the value is higher than percentage calculation
+        res = self.fixed_percent_tax.compute_all(250, quantity=4.0)
+        self._check_compute_all_results(
+            1200.0, # 'total_included'
+            1000.0,  # 'total_excluded'
+            [
+                # base , amount    | seq | amount | incl | incl_base
+                # --------------------------------------------------
+                (1000.0, 200),   # |  1  |   50   |   t  |
+                # --------------------------------------------------
+            ],
+            res
+        )
+
+    def test_tax_fixed_percent_price_include(self):
+        self.fixed_percent_tax.price_include = True
+        # 1000 - 1000/(1 + 0.1) = 90.91 =>Tax value is 909.09
+        # based on percentage because the value is higher than qty base calculation
+        # by default, it takes quantity = 1
+        res = self.fixed_percent_tax.compute_all(1000.0)
+        self._check_compute_all_results(
+            1000.0, # 'total_included'
+            909.09,  # 'total_excluded'
+            [
+                # base , amount      | seq | amount | incl | incl_base
+                # ------------------------------------------------------
+                (909.09, 90.91),   # |  1  |   10%  |   t  |
+                # ------------------------------------------------------
+            ],
+            res
+        )
+
+        # QUNTITY * 50 = 150 =>Tax value is 1350.0
+        # based on qty because the value is higher than percentage calculation
+        res = self.fixed_percent_tax.compute_all(250.0, quantity=4.0)
+        self._check_compute_all_results(
+            1000.0, # 'total_included'
+            800.0,  # 'total_excluded'
+            [
+                # base , amount    | seq | amount | incl | incl_base
+                # --------------------------------------------------
+                (800.0, 200),    # |  1  |   50   |   t  |
+                # --------------------------------------------------
+            ],
+            res
         )
 
     def test_tax_sequence_normalized_set(self):

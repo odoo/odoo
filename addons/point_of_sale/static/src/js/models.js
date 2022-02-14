@@ -924,7 +924,9 @@ class PosGlobalState extends PosModel {
             var price_include = tax.price_include;
         else
             var price_include = !price_exclude;
-        if (tax.amount_type === 'fixed') {
+
+        let fixed_amount, percent_amount;
+        if (tax.amount_type === 'fixed' || tax.amount_type === 'fixed/percent') {
             // Use sign on base_amount and abs on quantity to take into account the sign of the base amount,
             // which includes the sign of the quantity and the sign of the price_unit
             // Amount is the fixed price for the tax, it can be negative
@@ -933,22 +935,37 @@ class PosGlobalState extends PosModel {
             // sign of the price unit.
             // When the price unit is equal to 0, the sign of the quantity is absorbed in base_amount then
             // a "else" case is needed.
+            const amount = tax.amount_type === 'fixed' ? tax.amount : tax.fixed_amount;
+
             if (base_amount)
-                return Math.sign(base_amount) * Math.abs(quantity) * tax.amount;
+                fixed_amount = Math.sign(base_amount) * Math.abs(quantity) * amount;
             else
-                return quantity * tax.amount;
+                fixed_amount = quantity * amount;
+
+            if (tax.amount_type == 'fixed') {
+                return fixed_amount;
+            }
         }
-        if (tax.amount_type === 'percent' && !price_include){
-            return base_amount * tax.amount / 100;
+        if (tax.amount_type === 'percent' || tax.amount_type === 'fixed/percent' && !price_include) {
+            percent_amount = base_amount * tax.amount / 100;
+            if (tax.amount_type == 'percent') {
+                return percent_amount;
+            }
         }
-        if (tax.amount_type === 'percent' && price_include){
-            return base_amount - (base_amount / (1 + tax.amount / 100));
+        if (tax.amount_type === 'percent' || tax.amount_type === 'fixed/percent' && price_include){
+            percent_amount = base_amount - (base_amount / (1 + tax.amount / 100));
+            if (tax.amount_type == 'percent') {
+                return percent_amount;
+            }
         }
         if (tax.amount_type === 'division' && !price_include) {
             return base_amount / (1 - tax.amount / 100) - base_amount;
         }
         if (tax.amount_type === 'division' && price_include) {
             return base_amount - (base_amount * (tax.amount / 100));
+        }
+        if (tax.amount_type == 'fixed/percent') {
+            return percent_amount > fixed_amount && percent_amount || fixed_amount;
         }
         return false;
     }
