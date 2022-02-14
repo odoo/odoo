@@ -12,7 +12,7 @@ class CouponProgram(models.Model):
     # The api.depends is handled in `def modified` of `sale_coupon/models/sale_order.py`
     def _compute_order_count(self):
         for program in self:
-            program.order_count = self.env['sale.order.line'].search_count([('product_id', '=', program.discount_line_product_id.id)])
+            program.order_count = self.env['sale.order.line'].sudo().search_count([('product_id', '=', program.discount_line_product_id.id)])
 
     def action_view_sales_orders(self):
         self.ensure_one()
