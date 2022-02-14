@@ -28,6 +28,8 @@
     </template>
 
     <template id="stock_report_delivery_kit_sections">
+        <!-- get all kits-related SML, including subkits and excluding the packaged SML -->
+        <t t-set="all_kits_move_lines" t-value="o.move_line_ids.filtered(lambda l: l.move_id.bom_line_id.bom_id.type == 'phantom' and not l.result_package_id)"/>
         <!-- do another map to get unique top level kits -->
         <t t-set="boms" t-value="has_kits.mapped('move_id.bom_line_id.bom_id')"/>
         <t t-foreach="boms" t-as="bom">
@@ -43,10 +45,10 @@
                     <span t-esc="kit.display_name"/>
                 </td>
             </tr>
-            <t t-set="kit_move_lines" t-value="has_kits.filtered(lambda l: l.move_id.name == kit.display_name)"/>
+            <t t-set="kit_move_lines" t-value="all_kits_move_lines.filtered(lambda l: l.move_id.name == kit.display_name)"/>
             <t t-if="has_serial_number">
                 <tr t-foreach="kit_move_lines" t-as="move_line">
-                    <t t-set="description" t-as="move_line.move_id.description_picking"/>
+                    <t t-set="description" t-value="move_line.move_id.description_picking"/>
                     <t t-if="description == kit.display_name">
                         <t t-set="description" t-value=""/>
                     </t>
