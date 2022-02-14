@@ -6141,9 +6141,9 @@ Fields:
         """
         def process(field):
             recs = self.env.records_to_compute(field)
-            if not recs:
+            if (not recs) or (records is not None and not (records & recs)):
                 return
-            if field.compute and field.store:
+            if field.store:
                 # do not force recomputation on new records; those will be
                 # recomputed by accessing the field on the records
                 recs = recs.filtered('id')
@@ -6166,18 +6166,11 @@ Fields:
             for field in list(self.env.fields_to_compute()):
                 process(field)
         else:
-            fields = [self._fields[fname] for fname in fnames]
-
-            # check whether any 'records' must be computed
-            if records is not None and not any(
-                records & self.env.records_to_compute(field)
-                for field in fields
-            ):
-                return
-
             # recompute the given fields on self's model
-            for field in fields:
-                process(field)
+            for fname in fnames:
+                field = self._fields[fname]
+                if field.compute:
+                    process(field)
 
     #
     # Generic onchange method
