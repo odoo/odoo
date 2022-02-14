@@ -337,6 +337,8 @@
                     <field name="name" string="Journal Item" filter_domain="[
                         '|', '|', '|',
                         ('name', 'ilike', self), ('ref', 'ilike', self), ('account_id', 'ilike', self), ('partner_id', 'ilike', self)]"/>
+                    <field name="name"/>
+                    <field name="ref"/>
                     <field name="date"/>
                     <field name="account_id"/>
                     <field name="account_root_id"/>
@@ -1283,6 +1285,8 @@
             <field name="arch" type="xml">
                 <search string="Search Move">
                     <field name="name" string="Journal Entry" filter_domain="['|', '|', ('name', 'ilike', self), ('ref', 'ilike', self), ('partner_id', 'ilike', self)]"/>
+                    <field name="name"/>
+                    <field name="ref"/>
                     <field name="date"/>
                     <field name="partner_id"/>
                     <field name="journal_id"/>
