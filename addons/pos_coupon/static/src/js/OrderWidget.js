@@ -3,10 +3,19 @@ odoo.define('pos_coupon.OrderWidget', function (require) {
 
     const OrderWidget = require('point_of_sale.OrderWidget');
     const Registries = require('point_of_sale.Registries');
+    const { onWillRender } = owl;
 
     const PosCouponOrderWidget = (OrderWidget) =>
         class PosCouponOrderWidget extends OrderWidget {
-            getActiveProgramsProps() {
+            setup() {
+                super.setup();
+                this.withRewardsPromoPrograms = null;
+                this.withRewardsBookedCoupons = null;
+                this.onNextOrderPromoPrograms = null;
+                this.show = null; 
+                onWillRender(() => this.updateActivePrograms());
+            }
+            updateActivePrograms() {
                 const order = this.env.pos.get_order();
                 const unRewardedArray = order.rewardsContainer ? order.rewardsContainer.getUnawarded() : [];
                 const nonGeneratingProgramIds = new Set(unRewardedArray.map(({ program }) => program.id));
@@ -41,15 +50,12 @@ odoo.define('pos_coupon.OrderWidget', function (require) {
                             coupon_code: couponCode.code,
                         };
                     });
-                return {
-                    withRewardsPromoPrograms,
-                    withRewardsBookedCoupons,
-                    onNextOrderPromoPrograms,
-                    show:
-                        withRewardsPromoPrograms.length !== 0 ||
-                        withRewardsBookedCoupons.length !== 0 ||
-                        onNextOrderPromoPrograms.length !== 0,
-                };
+                this.withRewardsPromoPrograms = withRewardsPromoPrograms;
+                this.withRewardsBookedCoupons = withRewardsBookedCoupons;
+                this.onNextOrderPromoPrograms = onNextOrderPromoPrograms;
+                this.show = withRewardsPromoPrograms.length !== 0 ||
+                            withRewardsBookedCoupons.length !== 0 ||
+                            onNextOrderPromoPrograms.length !== 0;
             }
         };
 
