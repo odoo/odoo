@@ -85,7 +85,7 @@ class Website(models.Model):
             it might not be website compliant (eg: it is not selectable anymore,
             it is a backend pricelist, it is not active anymore..).
             """
-            return (not show_visible or pl.selectable or pl.id in (current_pl, order_pl))
+            return (not show_visible or pl.selectable or pl.id in (current_pl, order_pl, partner_pl))
 
         # Note: 1. pricelists from all_pl are already website compliant (went through
         #          `_get_website_pricelists_domain`)
