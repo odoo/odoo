@@ -161,15 +161,4 @@
         </field>
     </record>
 
-    <record id="project_sharing_inherit_project_task_view_search" model="ir.ui.view">
-        <field name="name">project.sharing.inherit.project.task.view.search</field>
-        <field name="model">project.task</field>
-        <field name="inherit_id" ref="project.project_sharing_project_task_view_search"/>
-        <field name="arch" type="xml">
-            <xpath expr="//filter[@name='late']" position='after'>
-                <filter string="Tasks in Overtime" name="overtime" domain="[('overtime', '&gt;', 0)]"/>
-            </xpath>
-        </field>
-    </record>
-
 </odoo>

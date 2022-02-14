@@ -39,6 +39,13 @@ class CustomerPortal(portal.CustomerPortal):
     # Quotations and Sales Orders
     #
 
+    def _get_sale_searchbar_sortings(self):
+        return {
+            'date': {'label': _('Order Date'), 'order': 'date_order desc'},
+            'name': {'label': _('Reference'), 'order': 'name'},
+            'stage': {'label': _('Stage'), 'order': 'state'},
+        }
+
     @http.route(['/my/quotes', '/my/quotes/page/<int:page>'], type='http', auth="user", website=True)
     def portal_my_quotes(self, page=1, date_begin=None, date_end=None, sortby=None, **kw):
         values = self._prepare_portal_layout_values()
@@ -50,12 +57,7 @@ class CustomerPortal(portal.CustomerPortal):
             ('state', 'in', ['sent', 'cancel'])
         ]
 
-        searchbar_sortings = {
-            'date': {'label': _('Order Date'), 'order': 'date_order desc'},
-            'name': {'label': _('Reference'), 'order': 'name'},
-            'stage': {'label': _('Stage'), 'order': 'state'},
-        }
-
+        searchbar_sortings = self._get_sale_searchbar_sortings()
         # default sortby order
         if not sortby:
             sortby = 'date'
@@ -100,11 +102,7 @@ class CustomerPortal(portal.CustomerPortal):
             ('state', 'in', ['sale', 'done'])
         ]
 
-        searchbar_sortings = {
-            'date': {'label': _('Order Date'), 'order': 'date_order desc'},
-            'name': {'label': _('Reference'), 'order': 'name'},
-            'stage': {'label': _('Stage'), 'order': 'state'},
-        }
+        searchbar_sortings = self._get_sale_searchbar_sortings()
         # default sortby order
         if not sortby:
             sortby = 'date'
