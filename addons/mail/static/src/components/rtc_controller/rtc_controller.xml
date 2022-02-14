@@ -76,7 +76,7 @@
                                     <i class="oi oi-overflow-menu--horizontal" t-att-class="{ 'oi-2x': !rtcController.isSmall }"/>
                                 </div>
                             </button>
-                            <t t-set="opened">
+                            <t t-set-slot="opened">
                                 <RtcOptionList localId="rtcController.rtcOptionList.localId"/>
                             </t>
                         </Popover>
