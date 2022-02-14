@@ -53,8 +53,12 @@ class DeliveryCarrier(models.Model):
 
     country_ids = fields.Many2many('res.country', 'delivery_carrier_country_rel', 'carrier_id', 'country_id', 'Countries')
     state_ids = fields.Many2many('res.country.state', 'delivery_carrier_state_rel', 'carrier_id', 'state_id', 'States')
-    zip_from = fields.Char('Zip From')
-    zip_to = fields.Char('Zip To')
+    zip_prefix_ids = fields.Many2many(
+        'delivery.zip.prefix', 'delivery_zip_prefix_rel', 'carrier_id', 'zip_prefix_id', 'Zip Prefixes')
+    carrier_description = fields.Text(
+        'Carrier Description', translate=True,
+        help="A description of the delivery method that you want to communicate to your customers on the Sales Order and sales confirmation email."
+             "E.g. instructions for customers to follow.")
 
     margin = fields.Float(help='This percentage will be added to the shipping price.')
     free_over = fields.Boolean('Free if order amount is above', help="If the order total amount (shipping excluded) is above or equal to this value, the customer benefits from a free shipping", default=False)
@@ -115,9 +119,7 @@ class DeliveryCarrier(models.Model):
             return False
         if self.state_ids and partner.state_id not in self.state_ids:
             return False
-        if self.zip_from and (partner.zip or '').upper() < self.zip_from.upper():
-            return False
-        if self.zip_to and (partner.zip or '').upper() > self.zip_to.upper():
+        if self.zip_prefix_ids and not partner.zip.upper().startswith(tuple(self.zip_prefix_ids.mapped('name'))):
             return False
         return True
 

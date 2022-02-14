@@ -166,7 +166,7 @@
             </div>
 
             <div>
-                <p t-field="doc.note" />
+                <p t-field="doc.note" name="order_note"/>
                 <p t-if="not is_html_empty(doc.payment_term_id.note)">
                     <span t-field="doc.payment_term_id.note"/>
                 </p>
