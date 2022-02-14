@@ -249,16 +249,12 @@ class HrEmployee(models.Model):
         return super()._get_user_m2o_to_empty_on_archived_employees() + ['leave_manager_id']
 
     def action_time_off_dashboard(self):
-        domain = []
-        if self.env.context.get('active_ids'):
-            domain = [('employee_id', 'in', self.env.context.get('active_ids', []))]
-
         return {
             'name': _('Time Off Dashboard'),
             'type': 'ir.actions.act_window',
             'res_model': 'hr.leave',
             'views': [[self.env.ref('hr_holidays.hr_leave_employee_view_dashboard').id, 'calendar']],
-            'domain': domain,
+            'domain': [('employee_id', 'in', self.ids)],
             'context': {
                 'employee_id': self.ids,
             },
