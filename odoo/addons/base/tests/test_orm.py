@@ -156,11 +156,6 @@ class TestORM(TransactionCase):
         recs = partner.browse([0])
         self.assertFalse(recs.exists())
 
-        # check that there is no record with string id
-        recs = partner.browse('xxx')
-        with self.assertRaises(psycopg2.DataError):
-            recs.exists()
-
     def test_groupby_date(self):
         partners_data = dict(
             A='2012-11-19',

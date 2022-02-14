@@ -286,7 +286,7 @@ def expand_ids(id0, ids):
             seen.add(id_)
 
 
-IdType = (int, str, NewId)
+IdType = (int, NewId)
 
 
 # maximum number of prefetched records
@@ -5216,7 +5216,7 @@ Fields:
         """
         if not ids:
             ids = ()
-        elif ids.__class__ in IdType:
+        elif ids.__class__ is int:
             ids = (ids,)
         else:
             ids = tuple(ids)
@@ -5749,7 +5749,7 @@ Fields:
             values = {}
         if origin is not None:
             origin = origin.id
-        record = self.browse([NewId(origin, ref)])
+        record = self.browse((NewId(origin, ref),))
         record._update_cache(values, validate=False)
 
         return record
