@@ -31,16 +31,16 @@ const { status, useComponent, useEffect, useRef } = owl;
  */
 export function useAutofocus() {
     const comp = useComponent();
+    let ref = useRef("autofocus");
     // Prevent autofocus in mobile
     if (comp.env.isSmall) {
-        return () => {};
+        return ref;
     }
     // LEGACY
     if (comp.env.device && comp.env.device.isMobileDevice) {
-        return () => {};
+        return ref;
     }
     // LEGACY
-    let ref = useRef("autofocus");
     useEffect(
         (el) => {
             if (el) {
