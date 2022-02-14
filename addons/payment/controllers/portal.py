@@ -100,7 +100,8 @@ class PaymentPortal(portal.CustomerPortal):
         reference = reference or payment_utils.singularize_reference_prefix(prefix='tx')
         amount = amount or 0.0  # If the amount is invalid, set it to 0 to stop the payment flow
         company_id = company_id or partner_sudo.company_id.id or user_sudo.company_id.id
-        currency_id = currency_id or request.env['res.company'].browse(company_id).currency_id.id
+        company = request.env['res.company'].sudo().browse(company_id)
+        currency_id = currency_id or company.currency_id.id
 
         # Make sure that the currency exists and is active
         currency = request.env['res.currency'].browse(currency_id).exists()
@@ -138,6 +139,7 @@ class PaymentPortal(portal.CustomerPortal):
             'access_token': access_token,
             'transaction_route': '/payment/transaction',
             'landing_route': '/payment/confirmation',
+            'res_company': company,  # Display the correct logo in a multi-company environment
             'partner_is_different': partner_is_different,
             'invoice_id': invoice_id,
             **self._get_custom_rendering_context_values(**kwargs),
