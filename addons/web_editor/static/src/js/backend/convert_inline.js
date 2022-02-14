@@ -37,10 +37,9 @@ const TABLE_STYLES = {
 /**
  * Convert snippets and mailing bodies to tables.
  *
- * @param {JQuery} $editable
+ * @param {Element} editable
  */
-function addTables($editable) {
-    const editable = $editable.get(0);
+function addTables(editable) {
     for (const snippet of editable.querySelectorAll('.o_mail_snippet_general, .o_layout')) {
         // Convert all snippets and the mailing itself into table > tr > td
         const table = _createTable(snippet.attributes);
@@ -77,10 +76,9 @@ function addTables($editable) {
  * Without this post process, the display depends on the CSS and the picture
  * does not appear when we use the html without css (to send by email for e.g.)
  *
- * @param {JQuery} $editable
+ * @param {Element} editable
  */
-function attachmentThumbnailToLinkImg($editable) {
-    const editable = $editable.get(0);
+function attachmentThumbnailToLinkImg(editable) {
     const links = [...editable.querySelectorAll(`a[href*="/web/content/"][data-mimetype]:empty`)].filter(link => (
         RE_WHITESPACE.test(link.textContent)
     ));
@@ -100,10 +98,9 @@ function attachmentThumbnailToLinkImg($editable) {
  * support the mixing and matching of column options (e.g., "col-4 col-sm-6" and
  * "col col-4" aren't supported).
  *
- * @param {JQuery} $editable
+ * @param {Element} editable
  */
-function bootstrapToTable($editable) {
-    const editable = $editable.get(0);
+function bootstrapToTable(editable) {
     // First give all rows in columns a separate container parent.
     for (const rowInColumn of [...editable.querySelectorAll('.row')].filter(row => RE_COL_MATCH.test(row.parentElement.className))) {
         _wrap(rowInColumn, 'div', 'o_fake_table');
@@ -255,10 +252,9 @@ function bootstrapToTable($editable) {
 /**
  * Convert Bootstrap cards to table structures.
  *
- * @param {JQuery} $editable
+ * @param {Element} editable
  */
-function cardToTable($editable) {
-    const editable = $editable.get(0);
+function cardToTable(editable) {
     for (const card of editable.querySelectorAll('.card')) {
         const table = _createTable(card.attributes);
         table.style.removeProperty('overflow');
@@ -299,11 +295,10 @@ function cardToTable($editable) {
  * Convert CSS style to inline style (leave the classes on elements but forces
  * the style they give as inline style).
  *
- * @param {JQuery} $editable
+ * @param {Element} editable
  * @param {Object} cssRules
  */
-function classToStyle($editable, cssRules) {
-    const editable = $editable.get(0);
+function classToStyle(editable, cssRules) {
     const writes = [];
     const nodeToRules = new Map();
     const rulesToProcess = [];
@@ -379,17 +374,15 @@ function classToStyle($editable, cssRules) {
     writes.forEach(fn => fn());
 }
 /**
- * Convert the contents of an editable area (as a JQuery element) into content
- * that is widely compatible with email clients. If no CSS Rules are given, they
- * will be computed for the editable element's owner document.
+ * Convert the contents of an editable area into content that is widely
+ * compatible with email clients. If no CSS Rules are given, they will be
+ * computed for the editable element's owner document.
  *
- * @param {JQuery} $editable
- * @param {JQuery} [$iframe] the iframe containing the editable, if any
+ * @param {Element} editable
+ * @param {Element} [iframe] the iframe containing the editable, if any
  */
-function toInline($editable, $iframe) {
-    const editable = $editable.get(0);
-    const iframe = $iframe && $iframe.get(0);
-    const cssRules = getCSSRules($editable[0].ownerDocument);
+function toInline(editable, iframe) {
+    const cssRules = getCSSRules(editable.ownerDocument);
     // If the editable is not visible, we need to make it visible in order to
     // retrieve image/icon dimensions. This iterates over ancestors to make them
     // visible again. We then restore it at the end of this function.
@@ -422,18 +415,18 @@ function toInline($editable, $iframe) {
         };
     };
 
-    attachmentThumbnailToLinkImg($editable);
-    fontToImg($editable);
-    classToStyle($editable, cssRules);
-    bootstrapToTable($editable);
-    cardToTable($editable);
-    listGroupToTable($editable);
-    addTables($editable);
-    formatTables($editable);
-    normalizeColors($editable);
+    attachmentThumbnailToLinkImg(editable);
+    fontToImg(editable);
+    classToStyle(editable, cssRules);
+    bootstrapToTable(editable);
+    cardToTable(editable);
+    listGroupToTable(editable);
+    addTables(editable);
+    formatTables(editable);
+    normalizeColors(editable);
     const rootFontSizeProperty = getComputedStyle(editable.ownerDocument.documentElement).fontSize;
     const rootFontSize = parseFloat(rootFontSizeProperty.replace(/[^\d\.]/g, ''));
-    normalizeRem($editable, rootFontSize);
+    normalizeRem(editable, rootFontSize);
 
     for (const [node, displayValue] of displaysToRestore) {
         node.style.setProperty('display', displayValue);
@@ -442,11 +435,10 @@ function toInline($editable, $iframe) {
 /**
  * Convert font icons to images.
  *
- * @param {JQuery} $editable - the element in which the font icons have to be
+ * @param {Element} editable - the element in which the font icons have to be
  *                           converted to images
  */
-function fontToImg($editable) {
-    const editable = $editable.get(0);
+function fontToImg(editable) {
     const fonts = odoo.__DEBUG__.services["wysiwyg.fonts"];
 
     for (const font of editable.querySelectorAll('.fa')) {
@@ -531,10 +523,9 @@ function fontToImg($editable) {
  * moving table paddings to its cells, adding tbody (with canceled styles) where
  * needed, and adding pixel heights to parents of elements with percent heights.
  *
- * @param {JQuery} $editable
+ * @param {Element} editable
  */
-function formatTables($editable) {
-    const editable = $editable.get(0);
+function formatTables(editable) {
     const writes = [];
     for (const table of editable.querySelectorAll('table.o_mail_snippet_general, .o_mail_snippet_general table')) {
         const tablePaddingTop = parseFloat(_getStylePropertyValue(table, 'padding-top').match(RE_PADDING)[1]);
@@ -688,10 +679,9 @@ function getCSSRules(doc) {
 /**
  * Convert Bootstrap list groups and their items to table structures.
  *
- * @param {JQuery} $editable
+ * @param {Element} editable
  */
-function listGroupToTable($editable) {
-    const editable = $editable.get(0);
+function listGroupToTable(editable) {
     for (const listGroup of editable.querySelectorAll('.list-group')) {
         let table;
         if (listGroup.querySelectorAll('.list-group-item').length) {
@@ -745,10 +735,9 @@ function listGroupToTable($editable) {
  * Convert all styles containing rgb colors to hexadecimal colors.
  * Note: ignores rgba colors, which are not supported in Microsoft Outlook.
  *
- * @param {JQuery} $editable
+ * @param {Element} editable
  */
-function normalizeColors($editable) {
-    const editable = $editable.get(0);
+function normalizeColors(editable) {
     for (const node of editable.querySelectorAll('[style*="rgb"]')) {
         const rgbMatch = node.getAttribute('style').match(/rgb?\(([\d\.]*,?\s?){3,4}\)/g);
         for (const rgb of rgbMatch || []) {
@@ -759,11 +748,10 @@ function normalizeColors($editable) {
 /**
  * Convert all css values that use the rem unit to px.
  *
- * @param {JQuery} $editable
+ * @param {Element} editable
  * @param {Number} rootFontSize=16 The font size of the root element, in pixels
  */
-function normalizeRem($editable, rootFontSize=16) {
-    const editable = $editable.get(0);
+function normalizeRem(editable, rootFontSize=16) {
     for (const node of editable.querySelectorAll('[style*="rem"]')) {
         const remMatch = node.getAttribute('style').match(/[\d\.]+\s*rem/g);
         for (const rem of remMatch || []) {
@@ -1113,14 +1101,14 @@ FieldHtml.include({
      * @private
      */
     _toInline: function () {
-        var $editable = this.wysiwyg.getEditable();
-        var html = this.wysiwyg.getValue();
+        const $editable = this.wysiwyg.getEditable();
+        const html = this.wysiwyg.getValue();
         const $odooEditor = $editable.closest('.odoo-editor');
         // Remove temporarily the class so that css editing will not be converted.
         $odooEditor.removeClass('odoo-editor');
         $editable.html(html);
 
-        toInline($editable, this.wysiwyg.$iframe);
+        toInline($editable.get(0), this.wysiwyg.$iframe && this.wysiwyg.$iframe.get(0));
         $odooEditor.addClass('odoo-editor');
 
         this.wysiwyg.setValue($editable.html(), {

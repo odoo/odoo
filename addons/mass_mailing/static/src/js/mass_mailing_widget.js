@@ -69,7 +69,7 @@ var MassMailingFieldHtml = FieldHtml.extend({
 
             const $editorEnable = $editable.closest('.editor_enable');
             $editorEnable.removeClass('editor_enable');
-            convertInline.toInline($editable, self.wysiwyg.$iframe);
+            convertInline.toInline($editable.get(0), self.wysiwyg.$iframe && self.wysiwyg.$iframe.get(0));
             $editorEnable.addClass('editor_enable');
 
             self.trigger_up('field_changed', {
