@@ -9,11 +9,9 @@
             <field name="company_id" position='after'>
                 <field name="website_id" groups="website.group_multi_website" options="{'no_open': True, 'no_create_edit': True}"/>
             </field>
-            <xpath expr="//page[@name='destination']" position='after'>
-                <page string="Description" name="description">
-                    <field name="website_description"  placeholder="Description displayed on the eCommerce and on online quotations."/>
-                </page>
-            </xpath>
+            <field name="carrier_description" position='before'>
+                <field name="website_description"  placeholder="Description displayed on the eCommerce and on online quotations."/>
+            </field>
             <xpath expr="//button[@name='toggle_prod_environment']" position='before'>
                 <button name="website_publish_button" type="object" class="oe_stat_button" icon="fa-globe">
                     <field name="is_published" widget="website_publish_button"/>

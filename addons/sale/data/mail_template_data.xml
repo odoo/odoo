@@ -222,6 +222,12 @@
                     </t>
                 </td>
             </tr>
+            <tr t-if="object.carrier_id.carrier_description">
+                <td>
+                    <strong>Shipping Description:</strong>
+                    <t t-out="object.carrier_id.carrier_description"/>
+                </td>
+            </tr>
         </table>
     </div>
 </t>
