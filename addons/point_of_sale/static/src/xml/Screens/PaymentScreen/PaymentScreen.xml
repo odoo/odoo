@@ -31,7 +31,12 @@
                             <div class="paymentmethods">
                                 <t t-foreach="payment_methods_from_config" t-as="paymentMethod"
                                    t-key="paymentMethod.id">
-                                    <PaymentMethodButton paymentMethod="paymentMethod" />
+                                    <div class="button paymentmethod"
+                                        t-on-click="() => this.trigger('new-payment-line', paymentMethod)">
+                                        <div class="payment-name">
+                                            <t t-esc="paymentMethod.name" />
+                                        </div>
+                                    </div>
                                 </t>
                             </div>
                         </div>
