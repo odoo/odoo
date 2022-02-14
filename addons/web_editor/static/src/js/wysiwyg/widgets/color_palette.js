@@ -248,7 +248,7 @@ const ColorPaletteWidget = Widget.extend({
         const compatibilityColorNames = ['primary', 'secondary', 'alpha', 'beta', 'gamma', 'delta', 'epsilon', 'success', 'info', 'warning', 'danger'];
         this.colorNames = [...compatibilityColorNames];
         this.colorToColorNames = {};
-        this.el.querySelectorAll('button[data-color]').forEach(elem => {
+        this.el.querySelectorAll('button[data-color]:not(.o_custom_gradient_btn)').forEach(elem => {
             const colorName = elem.dataset.color;
             if (weUtils.isColorGradient(colorName)) {
                 return;
