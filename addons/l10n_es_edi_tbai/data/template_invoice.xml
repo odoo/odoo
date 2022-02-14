@@ -1,11 +1,14 @@
 <?xml version='1.0' encoding='utf-8'?>
 <odoo>
     <data>
-        <template id="template_invoice_main">
-            <T:TicketBai t-if="not cancel" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" xmlns:T="urn:ticketbai:emision">
+        <template id="template_invoice_main_post">
+            <T:TicketBai xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" xmlns:T="urn:ticketbai:emision">
                 <t t-call="l10n_es_edi_tbai.template_invoice_bundle"/>
             </T:TicketBai>
-            <T:AnulaTicketBai t-else="" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" xmlns:T="urn:ticketbai:anulacion">
+        </template>
+
+        <template id="template_invoice_main_cancel">
+            <T:AnulaTicketBai xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" xmlns:T="urn:ticketbai:anulacion">
                 <t t-call="l10n_es_edi_tbai.template_invoice_bundle"/>
             </T:AnulaTicketBai>
         </template>
@@ -14,13 +17,13 @@
             <Cabecera>
                 <IDVersionTBAI t-out="tbai_version"/>
             </Cabecera>
-            <Sujetos t-if="not cancel">
+            <Sujetos t-if="is_emission">
                 <t t-call="l10n_es_edi_tbai.template_invoice_sujetos"/>
             </Sujetos>
-            <Factura t-if="not cancel">
+            <Factura t-if="is_emission">
                 <t t-call="l10n_es_edi_tbai.template_invoice_factura"/>
             </Factura>
-            <IDFactura t-if="cancel">
+            <IDFactura t-if="not is_emission">
                 <t t-call="l10n_es_edi_tbai.template_invoice_sujetos"/>
                 <t t-call="l10n_es_edi_tbai.template_invoice_factura"/>
             </IDFactura>
@@ -45,10 +48,10 @@
 
         <template id="template_invoice_sujetos">
             <Emisor>
-                <NIF t-out="sender.vat[2:] if sender.vat.startswith('ES') else sender.vat"/>
+                <NIF t-out="sender_vat"/>
                 <ApellidosNombreRazonSocial t-out="sender.name"/>
             </Emisor>
-            <Destinatarios t-if="not cancel">
+            <Destinatarios t-if="is_emission">
                 <IDDestinatario t-foreach="recipients" t-as="recipient">
                     <NIF t-if="recipient.get('nif')" t-out="recipient['nif']"/>
                     <IDOtro t-else="">
@@ -59,20 +62,20 @@
                     <t t-set="partner" t-value="recipient['partner']"/>
                     <ApellidosNombreRazonSocial t-out="partner.name"/>
                     <CodigoPostal t-out="partner.zip"/>
-                    <Direccion t-out="', '.join(filter(lambda x: x, [partner.street, partner.street2, partner.city]))"/>
+                    <Direccion t-out="recipient['partner_address']"/>
                 </IDDestinatario>
             </Destinatarios>
-            <VariosDestinatarios t-if="not cancel">N</VariosDestinatarios> <!-- Odoo does not support multi-recipient invoices-->
-            <EmitidaPorTercerosODestinatario t-if="not cancel" t-out="thirdparty_or_recipient"/>
+            <VariosDestinatarios t-if="is_emission">N</VariosDestinatarios> <!-- Odoo does not support multi-recipient invoices-->
+            <EmitidaPorTercerosODestinatario t-if="is_emission" t-out="thirdparty_or_recipient"/>
         </template>
 
         <template id="template_invoice_factura">
             <CabeceraFactura>
                 <SerieFactura t-out="invoice.l10n_es_tbai_sequence"/>
                 <NumFactura t-out="invoice.l10n_es_tbai_number"/>
-                <FechaExpedicionFactura t-if="cancel" t-out="datetime_strftime(invoice.l10n_es_tbai_registration_date, '%d-%m-%Y')"/>
-                <FechaExpedicionFactura t-if="not cancel" t-out="datetime_strftime(datetime_now, '%d-%m-%Y')"/>
-                <HoraExpedicionFactura t-if="not cancel" t-out="datetime_strftime(datetime_now, '%H:%M:%S')"/>
+                <FechaExpedicionFactura t-if="not is_emission" t-out="datetime_strftime(invoice.l10n_es_tbai_registration_date, '%d-%m-%Y')"/>
+                <FechaExpedicionFactura t-if="is_emission" t-out="datetime_strftime(datetime_now, '%d-%m-%Y')"/>
+                <HoraExpedicionFactura t-if="is_emission" t-out="datetime_strftime(datetime_now, '%H:%M:%S')"/>
                 <FacturaSimplificada t-if="is_simplified" t-out="'S' if is_simplified else 'N'"/>
                 <!-- TODO <FacturaEmitidaSustitucionSimplificada/> -->
                 <FacturaRectificativa t-if="credit_note_invoices">
@@ -91,11 +94,12 @@
                     </IDFacturaRectificadaSustituida>
                 </FacturasRectificadasSustituidas>
             </CabeceraFactura>
-            <DatosFactura t-if="not cancel">
+            <DatosFactura t-if="is_emission">
                 <DescripcionFactura t-out="invoice.invoice_origin or 'manual'"/>
                 <DetallesFactura>
-                    <IDDetalleFactura t-foreach="invoice_lines" t-as="line">
-                        <DescripcionDetalle t-esc="regex_sub(r'[^0-9a-zA-Z ]', '', line.name)[:250]"/>
+                    <IDDetalleFactura t-foreach="invoice_lines" t-as="line_value">
+                        <t t-set="line" t-value="line_value['line']"/>
+                        <DescripcionDetalle t-esc="line_value['address']"/>
                         <Cantidad t-out="float_repr(line.quantity)"/>
                         <ImporteUnitario t-out="float_repr(line.price_unit * (-1 if is_refund else 1))"/>
                         <Descuento t-out="float_repr(line.discount or 0)"/>
@@ -110,7 +114,7 @@
                     </IDClave>
                 </Claves>
             </DatosFactura>
-            <TipoDesglose t-if="not cancel">
+            <TipoDesglose t-if="is_emission">
                 <DesgloseFactura t-if="invoice_breakdown">
                     <t t-call="l10n_es_edi_tbai.template_invoice_desglose">
                         <t t-set="breakdown" t-value="invoice_breakdown"/>

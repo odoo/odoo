@@ -185,18 +185,18 @@ class AccountEdiFormat(models.Model):
 
         # Otherwise, generate a new XML
         values = {
-            "cancel": cancel,
-            "datetime_now": datetime.now(tz=timezone('Europe/Madrid')),
-            "datetime_strftime": datetime.strftime,
-            "timezone_eus": timezone,
-            "regex_sub": regex_sub,
-            "float_repr": partial(float_repr, precision_digits=2),
+            'is_emission': not cancel,
+            'datetime_now': datetime.now(tz=timezone('Europe/Madrid')),
+            'datetime_strftime': datetime.strftime,
+            'timezone_eus': timezone,
+            'float_repr': partial(float_repr, precision_digits=2),
         }
         values.update(self._l10n_es_tbai_get_header_values(invoice))
         values.update(self._l10n_es_tbai_get_subject_values(invoice, cancel))
         values.update(self._l10n_es_tbai_get_invoice_values(invoice, cancel))
         values.update(self._l10n_es_tbai_get_trail_values(invoice, cancel))
-        xml_str = self.env.ref('l10n_es_edi_tbai.template_invoice_main')._render(values)
+        template_name = 'l10n_es_edi_tbai.template_invoice_main' + ('_cancel' if cancel else '_post')
+        xml_str = self.env.ref(template_name)._render(values)
         xml_doc = self.env['l10n_es.edi.tbai.util']._cleanup_xml_content(xml_str, is_string=True)
         self._l10n_es_tbai_sign_invoice(invoice, xml_doc)
 
@@ -214,6 +214,7 @@ class AccountEdiFormat(models.Model):
         # === SENDER (EMISOR) ===
         sender = invoice.company_id if invoice.is_sale_document() else invoice.commercial_partner_id
         values = {
+            'sender_vat': sender.vat[2:] if sender.vat.startswith('ES') else sender.vat,
             'sender': sender,
         }
         if cancel:
@@ -255,6 +256,7 @@ class AccountEdiFormat(models.Model):
                 'alt_id_number': alt_id_number,
                 'alt_id_type': alt_id_type,
                 'partner': partner,
+                'partner_address': ', '.join(filter(lambda x: x, [partner.street, partner.street2, partner.city])),
             }
             xml_recipients.append(values_dest)
 
@@ -286,7 +288,10 @@ class AccountEdiFormat(models.Model):
             values['is_simplified'] = is_simplified  # TODO may not apply to in_invoice (for Bizkaia)
 
         # === LINES (DETALLES) ===
-        values['invoice_lines'] = [line for line in invoice.invoice_line_ids.filtered(lambda line: not line.display_type)]
+        values['invoice_lines'] = [{
+            'line': line,
+            'address': regex_sub(r'[^0-9a-zA-Z ]', '', line.name)[:250],
+        } for line in invoice.invoice_line_ids.filtered(lambda line: not line.display_type)]
 
         # CODES (CLAVES): TODO there's 15 more codes to implement, also there can be up to 3 in total
         # See https://www.gipuzkoa.eus/documents/2456431/13761128/Anexo+I.pdf/2ab0116c-25b4-f16a-440e-c299952d683d
