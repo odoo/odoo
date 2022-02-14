@@ -1934,7 +1934,7 @@ class MailThread(models.AbstractModel):
         return new_message
 
     def _message_set_main_attachment_id(self, attachment_ids):  # todo move this out of mail.thread
-        if not self._abstract and attachment_ids and not self.message_main_attachment_id:
+        if not self._abstract and attachment_ids:
             all_attachments = self.env['ir.attachment'].browse([attachment_tuple[1] for attachment_tuple in attachment_ids])
             prioritary_attachments = all_attachments.filtered(lambda x: x.mimetype.endswith('pdf')) \
                                      or all_attachments.filtered(lambda x: x.mimetype.startswith('image')) \
