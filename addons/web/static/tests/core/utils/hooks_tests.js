@@ -6,7 +6,7 @@ import { registry } from "@web/core/registry";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { click, destroy, getFixture, mount, nextTick } from "@web/../tests/helpers/utils";
 
-const { Component, xml } = owl;
+const { Component, onMounted, xml } = owl;
 const serviceRegistry = registry.category("services");
 
 QUnit.module("utils", () => {
@@ -70,6 +70,43 @@ QUnit.module("utils", () => {
             comp.render();
             await nextTick();
             assert.strictEqual(document.activeElement, comp.inputRef.el);
+        });
+
+        QUnit.test("useAutofocus returns also a ref when isSmall is true", async function (assert) {
+            assert.expect(2);
+            class MyComponent extends Component {
+                setup() {
+                    this.inputRef = useAutofocus();
+                    assert.ok(this.env.isSmall);
+                    onMounted(() => {
+                        assert.ok(this.inputRef.el);
+                    });
+                }
+            }
+            MyComponent.template = xml`
+                <span>
+                    <input type="text" t-ref="autofocus" />
+                </span>
+            `;
+
+            const fakeUIService = {
+                start(env) {
+                    let ui = {};
+                    Object.defineProperty(env, "isSmall", {
+                        get() {
+                            return true;
+                        },
+                    });
+
+                    return ui;
+                },
+            };
+
+            registry.category("services").add("ui", fakeUIService);
+
+            const env = await makeTestEnv();
+            const target = getFixture();
+            await mount(MyComponent, target, { env });
         });
 
         QUnit.module("useBus");
