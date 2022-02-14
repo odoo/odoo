@@ -6,6 +6,7 @@ const { onWillUnmount, useEffect, useExternalListener, useRef } = owl;
 
 /**
  * @typedef {{
+ *  popper?: string;
  *  container?: HTMLElement;
  *  margin?: number;
  *  position?: Position;
@@ -61,6 +62,7 @@ const VARIANT_FLIP_ORDER = { start: "sme", middle: "mse", end: "ems" };
 
 /** @type {Options} */
 export const DEFAULTS = {
+    popper: "popper",
     margin: 0,
     position: "bottom",
 };
@@ -231,12 +233,15 @@ function reposition(reference, popper, options) {
  * If all of fallback positions are also clipped off `container`,
  * the original position is used.
  *
+ * Note: The popper element should be indicated in your template with a t-ref reference.
+ *       This could be customized with the `popper` option.
+ *
  * @param {HTMLElement | (()=>HTMLElement)} reference
- * @param {string} popper
  * @param {Options} options
  */
-export function usePosition(reference, popper, options) {
+export function usePosition(reference, options) {
     options = { ...DEFAULTS, ...options };
+    const { popper } = options;
     const popperRef = useRef(popper);
     const getReference = reference instanceof HTMLElement ? () => reference : reference;
     const update = () => {

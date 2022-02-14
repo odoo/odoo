@@ -41,10 +41,10 @@ function isWellPositioned(popper, position = "bottom") {
 
 class TestComp extends Component {
     setup() {
-        usePosition(reference, "popper", this.constructor.popperOptions);
+        usePosition(reference, this.constructor.popperOptions);
     }
 }
-TestComp.template = xml`<div id="popper" t-ref="popper"/>`;
+TestComp.template = xml`<div id="popper" t-ref="popper" />`;
 /** @type {import("@web/core/position/position_hook").Options} */
 TestComp.popperOptions = {};
 
@@ -123,6 +123,20 @@ QUnit.test("popper is an inner element", async (assert) => {
     assert.ok(isWellPositioned(document.getElementById("popper")));
 });
 
+QUnit.test("can change the popper reference name", async (assert) => {
+    patchWithCleanup(TestComp, {
+        popperOptions: { ...TestComp.popperOptions, popper: "myRef" },
+        template: xml`
+            <div id="not-popper">
+                <div id="popper" t-ref="myRef"/>
+            </div>
+        `,
+    });
+    await mount(TestComp, container);
+    assert.notOk(isWellPositioned(document.getElementById("not-popper")));
+    assert.ok(isWellPositioned(document.getElementById("popper")));
+});
+
 QUnit.test("has no effect when component is destroyed", async (assert) => {
     const execRegisteredCallbacks = mockAnimationFrame();
     const originalReference = reference;
@@ -190,7 +204,7 @@ const CONTAINER_STYLE_MAP = {
 };
 const getRepositionTest = (from, to, containerStyleChanges) => {
     return async (assert) => {
-        Object.assign(TestComp.popperOptions, { position: from });
+        patchWithCleanup(TestComp.popperOptions, { position: from });
         await mount(TestComp, container);
         assert.ok(
             isWellPositioned(document.getElementById("popper"), from),
