@@ -11,6 +11,7 @@ class Department(models.Model):
     _inherit = ['mail.thread']
     _order = "name"
     _rec_name = 'complete_name'
+    _parent_store = True
 
     name = fields.Char('Department Name', required=True)
     complete_name = fields.Char('Complete Name', compute='_compute_complete_name', recursive=True, store=True)
@@ -24,6 +25,9 @@ class Department(models.Model):
     jobs_ids = fields.One2many('hr.job', 'department_id', string='Jobs')
     note = fields.Text('Note')
     color = fields.Integer('Color Index')
+    parent_path = fields.Char(index=True, unaccent=False)
+    master_department_id = fields.Many2one(
+        'hr.department', 'Master Department', compute='_compute_master_department_id', store=True)
 
     def name_get(self):
         if not self.env.context.get('hierarchical_naming', True):
@@ -33,7 +37,6 @@ class Department(models.Model):
     @api.model
     def name_create(self, name):
         return self.create({'name': name}).name_get()[0]
-
     @api.depends('name', 'parent_id.complete_name')
     def _compute_complete_name(self):
         for department in self:
@@ -41,6 +44,13 @@ class Department(models.Model):
                 department.complete_name = '%s / %s' % (department.parent_id.complete_name, department.name)
             else:
                 department.complete_name = department.name
+
+    @api.depends('parent_path')
+    def _compute_master_department_id(self):
+        # Don't use the cache as the value is updated in SQL
+        parent_path_values = {e['id']: e['parent_path'] for e in self.read(['parent_path'])}
+        for department in self:
+            department.master_department_id = int(parent_path_values[department.id].split('/')[0])
 
     def _compute_total_employee(self):
         emp_data = self.env['hr.employee'].read_group([('department_id', 'in', self.ids)], ['department_id'], ['department_id'])
