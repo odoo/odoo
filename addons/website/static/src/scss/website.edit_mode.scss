@@ -153,3 +153,19 @@ table.editorbar-panel {
         cursor: pointer;
     }
 }
+
+// Inputs in editable zones should not be possible to interact with.
+// TODO as this was done as a fix in 13.0, this only targets the inputs of
+// specific snippets and even targets snippets of other apps (which do not
+// declare files for edit mode only). In master it should be refactored to
+// target all inputs and/or target specific snippets in their own app.
+.editor_enable {
+    .s_website_form, .s_wsale_products_searchbar_input, .js_subscribe, .js_follow_alias {
+        input {
+            pointer-events: none;
+        }
+    }
+    .s_website_form [data-toggle="datetimepicker"] {
+        pointer-events: none;
+    }
+}
