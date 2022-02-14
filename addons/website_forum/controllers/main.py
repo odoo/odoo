@@ -36,7 +36,7 @@ class WebsiteForum(WebsiteProfile):
         if kwargs.get('forum'):
             values['forum'] = kwargs.get('forum')
         elif kwargs.get('forum_id'):
-            values['forum'] = request.env['forum.forum'].browse(kwargs.pop('forum_id'))
+            values['forum'] = request.env['forum.forum'].browse(int(kwargs.pop('forum_id')))
         return values
 
     def _prepare_mark_as_offensive_values(self, post, **kwargs):
