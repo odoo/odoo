@@ -5,10 +5,12 @@ from odoo import http
 from odoo.exceptions import UserError
 from odoo.http import request
 
+from odoo.addons.web.controllers.main import ensure_db
+
 _logger = logging.getLogger(__name__)
 
 
-CT_JSON = {'Content-Type': 'application/json'}
+CT_JSON = {'Content-Type': 'application/json; charset=utf-8'}
 WSGI_SAFE_KEYS = {'PATH_INFO', 'QUERY_STRING', 'RAW_URI', 'SCRIPT_NAME', 'wsgi.url_scheme'}
 
 
@@ -109,3 +111,12 @@ class TestHttp(http.Controller):
     @http.route('/test_http/cors_json', type='json', auth='none', cors='*')
     def cors_json(self, **kwargs):
         return {}
+
+    # =====================================================
+    # Dual nodb/db
+    # =====================================================
+    @http.route('/test_http/ensure_db', type='http', auth='none')
+    def ensure_db_endpoint(self, db=None):
+        ensure_db()
+        assert request.db, "There should be a database"
+        return request.db

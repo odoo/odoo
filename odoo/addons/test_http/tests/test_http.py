@@ -1,59 +1,18 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
-from html.parser import HTMLParser
 from unittest.mock import patch
 from urllib.parse import urlparse
 from socket import gethostbyname
 
 import odoo
-from odoo.http import Request
+from odoo.http import Request, Session
 from odoo.tests import tagged
 from odoo.tests.common import HOST, HttpCase, new_test_user
 from odoo.tools import config, file_open, mute_logger
 from odoo.tools.func import lazy_property
 from odoo.addons.test_http.controllers import CT_JSON
-
-
-# pylint: disable=W0223(abstract-method)
-class HtmlTokenizer(HTMLParser):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.tokens = []
-
-    @classmethod
-    def _attrs_to_str(cls, attrs):
-        out = []
-        for key, value in attrs:
-            out.append(f"{key}={value!r}" if value else key)
-        return " ".join(out)
-
-    def handle_starttag(self, tag, attrs):
-        self.tokens.append(f"<{tag} {self._attrs_to_str(attrs)}>")
-
-    def handle_endtag(self, tag):
-        self.tokens.append(f"</{tag}>")
-
-    def handle_startendtag(self, tag, attrs):
-        # HTML5 <img> instead of XHTML <img/>
-        self.handle_starttag(tag, attrs)
-
-    def handle_data(self, data):
-        data = data.strip()
-        if data:
-            self.tokens.append(data)
-
-    @classmethod
-    def tokenize(cls, source_str):
-        """
-        Parse the source html into a list of tokens. Only tags and
-        tags data are conserved, other elements such as comments are
-        discarded.
-        """
-        tokenizer = cls()
-        tokenizer.feed(source_str)
-        return tokenizer.tokens
+from odoo.addons.test_http.utils import MemorySessionStore, HtmlTokenizer
 
 
 class TestHttpBase(HttpCase):
@@ -63,6 +22,11 @@ class TestHttpBase(HttpCase):
         cls.addClassCleanup(lazy_property.reset_all, odoo.http.root)
         cls.classPatch(odoo.conf, 'server_wide_modules', ['base', 'web', 'test_http'])
         lazy_property.reset_all(odoo.http.root)
+        cls.classPatch(odoo.http.root, 'session_store', MemorySessionStore(session_class=Session))
+
+    def setUp(self):
+        super().setUp()
+        odoo.http.root.session_store.store.clear()
 
     def db_url_open(self, url, *args, allow_redirects=False, **kwargs):
         return self.url_open(url, *args, allow_redirects=allow_redirects, **kwargs)
@@ -72,6 +36,17 @@ class TestHttpBase(HttpCase):
              patch('odoo.http.db_filter') as db_filter:
             db_list.return_value = []
             db_filter.return_value = []
+            return self.url_open(url, *args, allow_redirects=allow_redirects, **kwargs)
+
+    def multidb_url_open(self, url, *args, allow_redirects=False, dblist=(), **kwargs):
+        dblist = dblist or self.db_list
+        assert len(dblist) >= 2, "There should be at least 2 databases"
+        with patch('odoo.http.db_list') as db_list, \
+             patch('odoo.http.db_filter') as db_filter, \
+             patch('odoo.http.Registry') as Registry:
+            db_list.return_value = dblist
+            db_filter.side_effect = lambda dbs, host=None: [db for db in dbs if db in dblist]
+            Registry.return_value = self.registry
             return self.url_open(url, *args, allow_redirects=allow_redirects, **kwargs)
 
 
@@ -458,3 +433,59 @@ class TestHttpCors(TestHttpBase):
         self.assertEqual(res_post.status_code, 200)
         self.assertEqual(res_post.headers.get('Access-Control-Allow-Origin'), '*')
         self.assertEqual(res_post.headers.get('Access-Control-Allow-Methods'), 'POST')
+
+@tagged('post_install', '-at_install')
+class TestHttpEnsureDb(TestHttpBase):
+    def setUp(self):
+        super().setUp()
+        self.db_list = ['db0', 'db1']
+
+    def test_ensure_db0_db_selector(self):
+        res = self.multidb_url_open('/test_http/ensure_db')
+        res.raise_for_status()
+        self.assertEqual(res.status_code, 303)
+        self.assertEqual(urlparse(res.headers.get('Location', '')).path, '/web/database/selector')
+
+    def test_ensure_db1_grant_db(self):
+        res = self.multidb_url_open('/test_http/ensure_db?db=db0', timeout=10000)
+        res.raise_for_status()
+        self.assertEqual(res.status_code, 302)
+        self.assertEqual(urlparse(res.headers.get('Location', '')).path, '/test_http/ensure_db')
+        self.assertEqual(odoo.http.root.session_store.get(res.cookies['session_id']).db, 'db0')
+
+        # follow the redirection
+        res = self.multidb_url_open('/test_http/ensure_db')
+        res.raise_for_status()
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(res.text, 'db0')
+
+    def test_ensure_db2_use_session_db(self):
+        session = self.authenticate(None, None)
+        session.db = 'db0'
+        odoo.http.root.session_store.save(session)
+
+        res = self.multidb_url_open('/test_http/ensure_db')
+        res.raise_for_status()
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(res.text, 'db0')
+
+    def test_ensure_db3_change_db(self):
+        session = self.authenticate(None, None)
+        session.db = 'db0'
+        odoo.http.root.session_store.save(session)
+
+        res = self.multidb_url_open('/test_http/ensure_db?db=db1')
+        res.raise_for_status()
+        self.assertEqual(res.status_code, 302)
+        self.assertEqual(urlparse(res.headers.get('Location', '')).path, '/test_http/ensure_db')
+
+        new_session = odoo.http.root.session_store.get(res.cookies['session_id'])
+        self.assertNotEqual(session.sid, new_session.sid)
+        self.assertEqual(new_session.db, 'db1')
+        self.assertEqual(new_session.uid, None)
+
+        # follow redirection
+        res = self.multidb_url_open('/test_http/ensure_db')
+        res.raise_for_status()
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(res.text, 'db1')
