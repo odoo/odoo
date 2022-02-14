@@ -126,10 +126,10 @@ class L10nEsTbaiMiscUtils(models.AbstractModel):
     _name = 'l10n_es.edi.tbai.misc_util'
     _description = "Utility Methods for Bask Country's TicketBAI miscellaneous stuff. TODO: (re)move"
 
-    def _random_vat(self, company, force_new=False):
+    def _random_vat(self, force_new=False):
         # Unless force_new is True, only generate new VAT when no chain exists (tests & demo)
         # TODO this condition may be omitted using a noupdate="1" attribute in demo_company.xml
-        if not force_new and company.get_l10n_es_tbai_last_posted_id():
+        if not force_new and self.env['res.company'].get_l10n_es_tbai_last_posted_id():
             return self.company_id.vat
         else:
             vat = randint(0, 99999999)

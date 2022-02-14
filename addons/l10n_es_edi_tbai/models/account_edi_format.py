@@ -305,19 +305,20 @@ class AccountEdiFormat(models.Model):
             values['vat_regime_code'] = '02'
 
         # === BREAKDOWN TYPE (TIPO DESGLOSE) ===
+        edi_format_sii = self.env['account.edi.format']
         if com_partner.country_id.code in ('ES', False) and not (com_partner.vat or '').startswith("ESN"):
-            tax_details_info_vals = self._l10n_es_tbai_get_invoice_tax_details_values(invoice)
+            tax_details_info_vals = edi_format_sii._l10n_es_edi_get_invoices_tax_details_info(invoice)
             values['invoice_breakdown'] = tax_details_info_vals['tax_details_info']
             values['invoice_total'] = round(-1 * (tax_details_info_vals['tax_details']['base_amount']
                                                   + tax_details_info_vals['tax_details']['tax_amount']
                                                   - tax_details_info_vals['tax_amount_retention']), 2)
 
         else:
-            tax_details_info_service_vals = self._l10n_es_tbai_get_invoice_tax_details_values(
+            tax_details_info_service_vals = edi_format_sii._l10n_es_edi_get_invoices_tax_details_info(
                 invoice,
                 filter_invl_to_apply=lambda x: any(t.tax_scope == 'service' for t in x.tax_ids)
             )
-            tax_details_info_consu_vals = self._l10n_es_tbai_get_invoice_tax_details_values(
+            tax_details_info_consu_vals = edi_format_sii._l10n_es_edi_get_invoices_tax_details_info(
                 invoice,
                 filter_invl_to_apply=lambda x: any(t.tax_scope == 'consu' for t in x.tax_ids)
             )
@@ -336,126 +337,6 @@ class AccountEdiFormat(models.Model):
                 - tax_details_info_consu_vals['tax_amount_retention']), 2)
 
         return values
-
-    def _l10n_es_tbai_get_invoice_tax_details_values(self, invoice, filter_invl_to_apply=None):
-        # Copied (and slightly adapted) from l10n_es_edi_sii module
-
-        def grouping_key_generator(tax_values):
-            tax = tax_values['tax_id']
-            return {
-                'applied_tax_amount': tax.amount,
-                'l10n_es_type': tax.l10n_es_type,
-                'l10n_es_exempt_reason': tax.l10n_es_exempt_reason if tax.l10n_es_type == 'exento' else False,
-                'l10n_es_bien_inversion': tax.l10n_es_bien_inversion,
-            }
-
-        def filter_to_apply(tax_values):
-            # For intra-community, we do not take into account the negative repartition line
-            return tax_values['tax_repartition_line_id'].factor_percent > 0.0
-
-        def full_filter_invl_to_apply(invoice_line):
-            if 'ignore' in invoice_line.tax_ids.flatten_taxes_hierarchy().mapped('l10n_es_type'):
-                return False
-            return filter_invl_to_apply(invoice_line) if filter_invl_to_apply else True
-
-        tax_details = invoice._prepare_edi_tax_details(
-            grouping_key_generator=grouping_key_generator,
-            filter_invl_to_apply=full_filter_invl_to_apply,
-            filter_to_apply=filter_to_apply,
-        )
-        sign = -1 if invoice.is_sale_document() else 1
-
-        tax_details_info = defaultdict(dict)
-
-        # Detect for which is the main tax for 'recargo'. Since only a single combination tax + recargo is allowed
-        # on the same invoice, this can be deduced globally.
-
-        recargo_tax_details = {}  # Mapping between main tax and recargo tax details
-        invoice_lines = invoice.invoice_line_ids.filtered(lambda x: not x.display_type)
-        if filter_invl_to_apply:
-            invoice_lines = invoice_lines.filtered(filter_invl_to_apply)
-        for line in invoice_lines:
-            taxes = line.tax_ids.flatten_taxes_hierarchy()
-            recargo_tax = [t for t in taxes if t.l10n_es_type == 'recargo']
-            if recargo_tax and taxes:
-                recargo_main_tax = taxes.filtered(lambda x: x.l10n_es_type in ('sujeto', 'sujeto_isp'))[:1]
-                if not recargo_tax_details.get(recargo_main_tax):
-                    recargo_tax_details[recargo_main_tax] = [
-                        x for x in tax_details['tax_details'].values()
-                        if x['group_tax_details'][0]['tax_id'] == recargo_tax[0]
-                    ][0]
-
-        tax_amount_deductible = 0.0
-        tax_amount_retention = 0.0
-        base_amount_not_subject = 0.0
-        base_amount_not_subject_loc = 0.0
-        tax_subject_info_list = []
-        tax_subject_isp_info_list = []
-        for tax_values in tax_details['tax_details'].values():
-
-            if tax_values['l10n_es_type'] in ('sujeto', 'sujeto_isp'):
-                tax_amount_deductible += tax_values['tax_amount']
-
-                base_amount = sign * tax_values['base_amount']
-                tax_info = {
-                    'TipoImpositivo': tax_values['applied_tax_amount'],
-                    'BaseImponible': round(base_amount, 2),
-                    'CuotaRepercutida': round(math.copysign(tax_values['tax_amount'], base_amount), 2),
-                }
-
-                recargo = recargo_tax_details.get(tax_values['group_tax_details'][0]['tax_id'])
-                if recargo:
-                    tax_info['CuotaRecargoEquivalencia'] = round(sign * recargo['tax_amount'], 2)
-                    tax_info['TipoRecargoEquivalencia'] = recargo['applied_tax_amount']
-
-                if tax_values['l10n_es_type'] == 'sujeto':
-                    tax_subject_info_list.append(tax_info)
-                else:
-                    tax_subject_isp_info_list.append(tax_info)
-
-            elif tax_values['l10n_es_type'] == 'exento':
-                tax_details_info['Sujeta'].setdefault('Exenta', {'DetalleExenta': []})
-                tax_details_info['Sujeta']['Exenta']['DetalleExenta'].append({
-                    'BaseImponible': round(sign * tax_values['base_amount'], 2),
-                    'CausaExencion': tax_values['l10n_es_exempt_reason'],
-                })
-            elif tax_values['l10n_es_type'] == 'retencion':
-                tax_amount_retention += tax_values['tax_amount']
-            elif tax_values['l10n_es_type'] == 'no_sujeto':
-                base_amount_not_subject += tax_values['base_amount']
-            elif tax_values['l10n_es_type'] == 'no_sujeto_loc':
-                base_amount_not_subject_loc += tax_values['base_amount']
-            elif tax_values['l10n_es_type'] == 'ignore':
-                continue
-
-            if tax_subject_isp_info_list and not tax_subject_info_list:
-                tax_details_info['Sujeta']['NoExenta'] = {'TipoNoExenta': 'S2'}
-            elif not tax_subject_isp_info_list and tax_subject_info_list:
-                tax_details_info['Sujeta']['NoExenta'] = {'TipoNoExenta': 'S1'}
-            elif tax_subject_isp_info_list and tax_subject_info_list:
-                tax_details_info['Sujeta']['NoExenta'] = {'TipoNoExenta': 'S3'}
-
-            if tax_subject_info_list:
-                tax_details_info['Sujeta']['NoExenta'].setdefault('DesgloseIVA', {})
-                tax_details_info['Sujeta']['NoExenta']['DesgloseIVA'].setdefault('DetalleIVA', [])
-                tax_details_info['Sujeta']['NoExenta']['DesgloseIVA']['DetalleIVA'] += tax_subject_info_list
-            if tax_subject_isp_info_list:
-                tax_details_info['Sujeta']['NoExenta'].setdefault('DesgloseIVA', {})
-                tax_details_info['Sujeta']['NoExenta']['DesgloseIVA'].setdefault('DetalleIVA', [])
-                tax_details_info['Sujeta']['NoExenta']['DesgloseIVA']['DetalleIVA'] += tax_subject_isp_info_list
-
-        if not invoice.company_id.currency_id.is_zero(base_amount_not_subject) and invoice.is_sale_document():
-            tax_details_info['NoSujeta']['ImportePorArticulos7_14_Otros'] = round(sign * base_amount_not_subject, 2)
-        if not invoice.company_id.currency_id.is_zero(base_amount_not_subject_loc) and invoice.is_sale_document():
-            tax_details_info['NoSujeta']['ImporteTAIReglasLocalizacion'] = round(sign * base_amount_not_subject_loc, 2)
-
-        return {
-            'tax_details_info': tax_details_info,
-            'tax_details': tax_details,
-            'tax_amount_deductible': tax_amount_deductible,
-            'tax_amount_retention': tax_amount_retention,
-            'base_amount_not_subject': base_amount_not_subject,
-        }
 
     def _l10n_es_tbai_get_trail_values(self, invoice, cancel):
         prev_invoice = invoice.company_id.get_l10n_es_tbai_last_posted_id()

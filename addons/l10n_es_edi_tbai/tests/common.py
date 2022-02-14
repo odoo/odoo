@@ -35,7 +35,7 @@ class TestEsEdiTbaiCommon(AccountEdiTestCommon):
             'country_id': cls.env.ref('base.es').id,
             'state_id': cls.env.ref('base.state_es_ss').id,  # TODO test all states (codes in res_company.l10n_es_tbai_tax_agency)
             'l10n_es_tbai_certificate_id': cls.certificate.id,
-            'vat': cls.env['l10n_es.edi.tbai.misc_util']._random_vat(cls.env['res.company'], force_new=True),  # random VAT (so chain is new)
+            'vat': cls.env['l10n_es.edi.tbai.misc_util']._random_vat(force_new=True),  # random VAT (so chain is new)
             'l10n_es_tbai_test_env': True,
             'l10n_es_tbai_tax_agency': 'gipuzkoa',  # TODO test all
         })
