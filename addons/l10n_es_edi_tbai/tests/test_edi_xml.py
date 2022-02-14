@@ -6,11 +6,11 @@ from lxml import etree
 from odoo.exceptions import UserError
 from odoo.tests import tagged
 
-from .common import TestEsEdiCommon
+from .common import TestEsEdiTbaiCommon
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
-class TestEdiXmls(TestEsEdiCommon):
+class TestEdiXmls(TestEsEdiTbaiCommon):
 
     @classmethod
     def setUpClass(cls):

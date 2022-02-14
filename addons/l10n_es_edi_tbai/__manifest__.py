@@ -25,6 +25,7 @@
     'depends': [
         'account_edi',
         'l10n_es',
+        'l10n_es_edi_sii',
     ],
     'data': [
         'data/account_edi_data.xml',

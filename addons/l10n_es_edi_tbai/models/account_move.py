@@ -41,9 +41,9 @@ class AccountMove(models.Model):
     l10n_es_tbai_id = fields.Char(string="TicketBAI ID", compute="_compute_l10n_es_tbai_id")
     l10n_es_tbai_signature = fields.Char(string="Signature value of XML", compute="_compute_l10n_es_tbai_values")
     l10n_es_tbai_registration_date = fields.Date(  # TODO replace with record.invoice_date ?
-        string="Registration Date",
+        string="Registration Date (TicketBai)",
         help="Technical field to keep the date the invoice was sent the first time as the date the invoice was "
-             "registered into the system.",
+             "registered into the TicketBai system.",
         compute="_compute_l10n_es_tbai_values"
     )
     l10n_es_tbai_qr = fields.Char(string="QR code to verify posted invoice", compute="_compute_l10n_es_tbai_qr")

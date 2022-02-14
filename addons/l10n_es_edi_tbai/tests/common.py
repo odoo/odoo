@@ -11,7 +11,7 @@ from pytz import timezone
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
-class TestEsEdiCommon(AccountEdiTestCommon):
+class TestEsEdiTbaiCommon(AccountEdiTestCommon):
 
     @classmethod
     def setUpClass(cls, chart_template_ref='l10n_es.account_chart_template_full', edi_format_ref='l10n_es_edi_tbai.edi_es_tbai'):
@@ -24,7 +24,7 @@ class TestEsEdiCommon(AccountEdiTestCommon):
 
         # ==== Config ====
 
-        cls.certificate = cls.env['l10n_es_edi_tbai.certificate'].create({
+        cls.certificate = cls.env['l10n_es_edi.certificate'].create({
             'content': base64.encodebytes(
                 misc.file_open("l10n_es_edi_tbai/demo/certificates/sello_entidad_act.p12", 'rb').read()),
             'password': 'IZDesa2021',

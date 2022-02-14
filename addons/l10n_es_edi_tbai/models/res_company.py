@@ -70,8 +70,8 @@ class ResCompany(models.Model):
     )
 
     l10n_es_tbai_test_env = fields.Boolean(
-        string="Test Mode",
-        help="Use the test environment",
+        string="Test Mode (TicketBai)",
+        help="Use the test environment (TicketBai)",
         copy=False,
         default=False
     )
@@ -89,11 +89,11 @@ class ResCompany(models.Model):
         string="Certificate (ES-TicketBAI)",
         store=True,
         readonly=False,
-        comodel_name='l10n_es_edi_tbai.certificate',
+        comodel_name='l10n_es_edi.certificate',
         compute="_compute_l10n_es_tbai_certificate",
     )
     l10n_es_tbai_certificate_ids = fields.One2many(
-        comodel_name='l10n_es_edi_tbai.certificate',
+        comodel_name='l10n_es_edi.certificate',
         inverse_name='company_id',
     )
 
@@ -101,7 +101,7 @@ class ResCompany(models.Model):
     def _compute_l10n_es_tbai_certificate(self):
         for company in self:
             if company.country_code == 'ES':
-                company.l10n_es_tbai_certificate_id = self.env['l10n_es_edi_tbai.certificate'].search(
+                company.l10n_es_tbai_certificate_id = self.env['l10n_es_edi.certificate'].search(
                     [('company_id', '=', company.id)],
                     order='date_end desc',
                     limit=1,

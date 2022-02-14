@@ -3,7 +3,7 @@
     <data>
         <record id="l10n_es_tbai_certificate_form" model="ir.ui.view">
             <field name="name">l10n_es_tbai.certificate.form</field>
-            <field name="model">l10n_es_edi_tbai.certificate</field>
+            <field name="model">l10n_es_edi.certificate</field>
             <field name="arch" type="xml">
                 <form>
                     <sheet>
@@ -25,7 +25,7 @@
 
         <record id="l10n_es_tbai_certificate_tree" model="ir.ui.view">
             <field name="name">l10n_es_tbai.certificate.tree</field>
-            <field name="model">l10n_es_edi_tbai.certificate</field>
+            <field name="model">l10n_es_edi.certificate</field>
             <field name="arch" type="xml">
                 <tree>
                     <field name="date_start"/>
@@ -37,7 +37,7 @@
 
         <record id="l10n_es_tbai_certificate_action" model="ir.actions.act_window">
             <field name="name">Certificates for TBAI invoices on Spain</field>
-            <field name="res_model">l10n_es_edi_tbai.certificate</field>
+            <field name="res_model">l10n_es_edi.certificate</field>
             <field name="view_mode">tree,form</field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">Create the first certificate</p>

@@ -6,11 +6,11 @@ from datetime import datetime
 from odoo import fields
 from odoo.tests import tagged
 
-from .common import TestEsEdiCommon
+from .common import TestEsEdiTbaiCommon
 
 
 @tagged('external_l10n', 'post_install', '-at_install', '-standard', 'external')
-class TestEdiWebServices(TestEsEdiCommon):
+class TestEdiTbaiWebServices(TestEsEdiTbaiCommon):
 
     @classmethod
     def setUpClass(cls, chart_template_ref='l10n_es.account_chart_template_full', edi_format_ref='l10n_es_edi_tbai.edi_es_tbai'):
