@@ -17,7 +17,7 @@ QUnit.module("Fields", (hooks) => {
                         { id: 1, bar: true },
                         { id: 2, bar: true },
                         { id: 3, bar: true },
-                        { id: 4, bar: false },
+                        { id: 4, bar: true },
                         { id: 5, bar: false },
                     ],
                 },
@@ -203,7 +203,7 @@ QUnit.module("Fields", (hooks) => {
         await click(cell, ".custom-checkbox input:checked");
 
         // save
-        await click(list, ".o_list_button_save");
+        await click(list.el.querySelector(".o_list_button_save"));
         cell = list.el.querySelector("tr.o_data_row td:not(.o_list_record_selector)");
         assert.ok(
             cell.querySelector(".custom-checkbox input:not(:checked)").disabled,
@@ -228,7 +228,7 @@ QUnit.module("Fields", (hooks) => {
         await click(cell, ".custom-checkbox input");
 
         // Save
-        await click(list, ".o_list_button_save");
+        await click(list.el.querySelector(".o_list_button_save"));
         assert.containsN(
             list.el,
             "tbody td:not(.o_list_record_selector) .custom-checkbox input",

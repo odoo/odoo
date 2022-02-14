@@ -259,19 +259,18 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skip("basic flow in editable list view", async function (assert) {
+    QUnit.test("basic flow in editable list view", async function (assert) {
         assert.expect(4);
 
-        var list = await createView({
-            View: ListView,
-            model: "partner",
-            data: this.data,
+        const list = await makeView({
+            serverData,
+            type: "list",
+            resModel: "partner",
             arch: '<tree editable="bottom">' + '<field name="int_field"/>' + "</tree>",
         });
-
-        var zeroValues = list.$("td").filter(function () {
-            return $(this).text() === "0";
-        });
+        var zeroValues = Array.from(list.el.querySelectorAll("td")).filter(
+            (el) => el.innerText === "0"
+        );
         assert.strictEqual(
             zeroValues.length,
             1,
@@ -279,29 +278,27 @@ QUnit.module("Fields", (hooks) => {
         );
 
         // switch to edit mode
-        var $cell = list.$("tr.o_data_row td:not(.o_list_record_selector)").first();
-        await testUtils.dom.click($cell);
+        var cell = list.el.querySelector("tr.o_data_row td:not(.o_list_record_selector)");
+        await click(cell);
 
         assert.containsOnce(
             list,
-            'input[name="int_field"]',
+            '.o_field_widget[name="int_field"] input',
             "The view should have 1 input for editable integer."
         );
 
-        await testUtils.fields.editInput(list.$('input[name="int_field"]'), "-28");
+        await editInput(list.el, ".o_field_widget[name=int_field] input", "-28");
         assert.strictEqual(
-            list.$('input[name="int_field"]').val(),
+            list.el.querySelector('.o_field_widget[name="int_field"] input').value,
             "-28",
             "The value should be displayed properly in the input."
         );
 
-        await testUtils.dom.click(list.$buttons.find(".o_list_button_save"));
+        await click(list.el.querySelector(".o_list_button_save"));
         assert.strictEqual(
-            list.$("td:not(.o_list_record_selector)").first().text(),
+            list.el.querySelector("td:not(.o_list_record_selector)").innerText,
             "-28",
             "The new value should be saved and displayed properly."
         );
-
-        list.destroy();
     });
 });

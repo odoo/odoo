@@ -496,24 +496,15 @@ QUnit.module("Fields", (hooks) => {
             resModel: "partner",
             serverData,
             arch: '<tree editable="bottom">' + '<field name="date"/>' + "</tree>",
-            translateParameters: {
-                // Avoid issues due to localization formats
-                date_format: "%m/%d/%Y",
-            },
-            session: {
-                getTZOffset: function () {
-                    return 0;
-                },
-            },
         });
 
-        var $cell = list.$("tr.o_data_row td:not(.o_list_record_selector)").first();
+        const cell = list.el.querySelector("tr.o_data_row td:not(.o_list_record_selector)");
         assert.strictEqual(
-            $cell.text(),
+            cell.innerText,
             "02/03/2017",
             "the date should be displayed correctly in readonly"
         );
-        await testUtils.dom.click($cell);
+        await click(cell);
 
         assert.containsOnce(
             list,
@@ -522,41 +513,51 @@ QUnit.module("Fields", (hooks) => {
         );
 
         assert.strictEqual(
-            list.$("input.o_datepicker_input").get(0),
+            list.el.querySelector("input.o_datepicker_input"),
             document.activeElement,
             "date input should have the focus"
         );
 
         assert.strictEqual(
-            list.$("input.o_datepicker_input").val(),
+            list.el.querySelector("input.o_datepicker_input").value,
             "02/03/2017",
             "the date should be correct in edit mode"
         );
 
         // open datepicker and select another value
-        await testUtils.dom.openDatepicker(list.$(".o_datepicker"));
-        assert.ok($(".bootstrap-datetimepicker-widget").length, "datepicker should be open");
-        await testUtils.dom.click($(".bootstrap-datetimepicker-widget .picker-switch").first());
-        await testUtils.dom.click($(".bootstrap-datetimepicker-widget .picker-switch:eq(1)"));
-        await testUtils.dom.click($(".bootstrap-datetimepicker-widget .year:contains(2017)"));
-        await testUtils.dom.click($(".bootstrap-datetimepicker-widget .month").eq(1));
-        await testUtils.dom.click($(".day:contains(22)"));
-        assert.ok(!$(".bootstrap-datetimepicker-widget").length, "datepicker should be closed");
+        await click(list.el, ".o_datepicker_input");
+        assert.containsOnce(
+            document.body,
+            ".bootstrap-datetimepicker-widget",
+            "datepicker should be opened"
+        );
+        await click(
+            document.body.querySelectorAll(".bootstrap-datetimepicker-widget .picker-switch")[0]
+        );
+        await click(
+            document.body.querySelectorAll(".bootstrap-datetimepicker-widget .picker-switch")[1]
+        );
+        await click(document.body.querySelectorAll(".bootstrap-datetimepicker-widget .year")[8]);
+        await click(document.body.querySelectorAll(".bootstrap-datetimepicker-widget .month")[1]);
+        await click(document.body.querySelector(".day[data-day*='/22/']"));
+        assert.containsNone(
+            document.body,
+            ".bootstrap-datetimepicker-widget",
+            "datepicker should be closed"
+        );
         assert.strictEqual(
-            list.$(".o_datepicker_input").val(),
+            list.el.querySelector(".o_datepicker_input").value,
             "02/22/2017",
             "the selected date should be displayed in the input"
         );
 
         // save
-        await testUtils.dom.click(list.$buttons.find(".o_list_button_save"));
+        await click(list.el.querySelector(".o_list_button_save"));
         assert.strictEqual(
-            list.$("tr.o_data_row td:not(.o_list_record_selector)").text(),
+            list.el.querySelector("tr.o_data_row td:not(.o_list_record_selector)").innerText,
             "02/22/2017",
             "the selected date should be displayed after saving"
         );
-
-        list.destroy();
     });
 
     QUnit.test("DateField remove value", async function (assert) {

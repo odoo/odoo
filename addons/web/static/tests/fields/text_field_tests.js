@@ -11,9 +11,6 @@ QUnit.module("Fields", (hooks) => {
             models: {
                 partner: {
                     fields: {
-                        date: { string: "A date", type: "date", searchable: true },
-                        datetime: { string: "A datetime", type: "datetime", searchable: true },
-                        display_name: { string: "Displayed name", type: "char", searchable: true },
                         foo: {
                             string: "Foo",
                             type: "char",
@@ -22,17 +19,9 @@ QUnit.module("Fields", (hooks) => {
                             trim: true,
                         },
                         bar: { string: "Bar", type: "boolean", default: true, searchable: true },
-                        empty_string: {
-                            string: "Empty string",
-                            type: "char",
-                            default: false,
-                            searchable: true,
-                            trim: true,
-                        },
                         txt: {
                             string: "txt",
                             type: "text",
-                            default: "My little txt Value\nHo-ho-hoooo Merry Christmas",
                         },
                         int_field: {
                             string: "int_field",
@@ -41,138 +30,15 @@ QUnit.module("Fields", (hooks) => {
                             searchable: true,
                         },
                         qux: { string: "Qux", type: "float", digits: [16, 1], searchable: true },
-                        p: {
-                            string: "one2many field",
-                            type: "one2many",
-                            relation: "partner",
-                            searchable: true,
-                        },
-                        trululu: {
-                            string: "Trululu",
-                            type: "many2one",
-                            relation: "partner",
-                            searchable: true,
-                        },
-                        timmy: {
-                            string: "pokemon",
-                            type: "many2many",
-                            relation: "partner_type",
-                            searchable: true,
-                        },
-                        product_id: {
-                            string: "Product",
-                            type: "many2one",
-                            relation: "product",
-                            searchable: true,
-                        },
-                        sequence: { type: "integer", string: "Sequence", searchable: true },
-                        currency_id: {
-                            string: "Currency",
-                            type: "many2one",
-                            relation: "currency",
-                            searchable: true,
-                        },
-                        selection: {
-                            string: "Selection",
-                            type: "selection",
-                            searchable: true,
-                            selection: [
-                                ["normal", "Normal"],
-                                ["blocked", "Blocked"],
-                                ["done", "Done"],
-                            ],
-                        },
-                        document: { string: "Binary", type: "binary" },
-                        hex_color: { string: "hexadecimal color", type: "char" },
                     },
                     records: [
                         {
                             id: 1,
-                            date: "2017-02-03",
-                            datetime: "2017-02-08 10:00:00",
-                            display_name: "first record",
                             bar: true,
                             foo: "yop",
                             int_field: 10,
                             qux: 0.44444,
-                            p: [],
-                            timmy: [],
-                            trululu: 4,
-                            selection: "blocked",
-                            document: "coucou==\n",
-                            hex_color: "#ff0000",
-                        },
-                        {
-                            id: 2,
-                            display_name: "second record",
-                            bar: true,
-                            foo: "blip",
-                            int_field: 0,
-                            qux: 0,
-                            p: [],
-                            timmy: [],
-                            trululu: 1,
-                            sequence: 4,
-                            currency_id: 2,
-                            selection: "normal",
-                        },
-                        {
-                            id: 4,
-                            display_name: "aaa",
-                            foo: "abc",
-                            sequence: 9,
-                            int_field: false,
-                            qux: false,
-                            selection: "done",
-                        },
-                        { id: 3, bar: true, foo: "gnap", int_field: 80, qux: -3.89859 },
-                        { id: 5, bar: false, foo: "blop", int_field: -4, qux: 9.1, currency_id: 1 },
-                    ],
-                    onchanges: {},
-                },
-                product: {
-                    fields: {
-                        name: { string: "Product Name", type: "char", searchable: true },
-                    },
-                    records: [
-                        {
-                            id: 37,
-                            display_name: "xphone",
-                        },
-                        {
-                            id: 41,
-                            display_name: "xpad",
-                        },
-                    ],
-                },
-                partner_type: {
-                    fields: {
-                        name: { string: "Partner Type", type: "char", searchable: true },
-                        color: { string: "Color index", type: "integer", searchable: true },
-                    },
-                    records: [
-                        { id: 12, display_name: "gold", color: 2 },
-                        { id: 14, display_name: "silver", color: 5 },
-                    ],
-                },
-                currency: {
-                    fields: {
-                        digits: { string: "Digits" },
-                        symbol: { string: "Currency Sumbol", type: "char", searchable: true },
-                        position: { string: "Currency Position", type: "char", searchable: true },
-                    },
-                    records: [
-                        {
-                            id: 1,
-                            display_name: "$",
-                            symbol: "$",
-                            position: "before",
-                        },
-                        {
-                            id: 2,
-                            display_name: "€",
-                            symbol: "€",
-                            position: "after",
+                            txt: "some text",
                         },
                     ],
                 },
@@ -358,13 +224,13 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(textarea.offsetHeight, initialHeight, "Textarea height should be reset");
     });
 
-    QUnit.skip("text fields in editable list have correct height", async function (assert) {
+    QUnit.test("text fields in editable list have correct height", async function (assert) {
         assert.expect(2);
 
         serverData.models.partner.records[0].txt = "a\nb\nc\nd\ne\nf";
 
-        var list = await makeView({
-            View: ListView,
+        const list = await makeView({
+            type: "list",
             resModel: "partner",
             serverData,
             arch:
@@ -375,20 +241,18 @@ QUnit.module("Fields", (hooks) => {
         // the focus on the textarea by clicking on another column.
         // The main goal is to test the resize is actually triggered in this
         // particular case.
-        await testUtils.dom.click(list.$(".o_data_cell:first"));
-        var $textarea = list.$("textarea:first");
+        await click(list.el.querySelectorAll(".o_data_cell")[1]);
+        const textarea = list.el.querySelector("textarea:first-child");
 
         // make sure the correct data is there
-        assert.strictEqual($textarea.val(), serverData.models.partner.records[0].txt);
+        assert.strictEqual(textarea.value, serverData.models.partner.records[0].txt);
 
         // make sure there is no scroll bar
         assert.strictEqual(
-            $textarea[0].clientHeight,
-            $textarea[0].scrollHeight,
+            textarea.clientHeight,
+            textarea.scrollHeight,
             "textarea should not have a scroll bar"
         );
-
-        list.destroy();
     });
 
     QUnit.test("text fields in edit mode should resize on reset", async function (assert) {
@@ -469,11 +333,10 @@ QUnit.module("Fields", (hooks) => {
             },
         });
         await click(form.el, ".o_form_button_edit");
-        var $button = form.$("textarea + .o_field_translate");
+        var $button = form.el.querySelector("textarea + .o_field_translate");
         assert.strictEqual($button.length, 1, "should have a translate button");
         await testUtils.dom.click($button);
         assert.containsOnce($(document), ".modal", "there should be a translation modal");
-        form.destroy();
         _t.database.multi_lang = multiLang;
     });
 
@@ -497,9 +360,8 @@ QUnit.module("Fields", (hooks) => {
                 "</sheet>" +
                 "</form>",
         });
-        var $button = form.$("textarea + .o_field_translate");
+        var $button = form.el.querySelector("textarea + .o_field_translate");
         assert.strictEqual($button.length, 1, "should have a translate button in create mode");
-        form.destroy();
 
         _t.database.multi_lang = multiLang;
     });
@@ -510,8 +372,8 @@ QUnit.module("Fields", (hooks) => {
             assert.expect(4);
 
             serverData.models.partner.fields.foo.type = "text";
-            var list = await makeView({
-                View: ListView,
+            const list = await makeView({
+                type: "list",
                 resModel: "partner",
                 serverData,
                 arch:
@@ -522,36 +384,33 @@ QUnit.module("Fields", (hooks) => {
                     "</list>",
             });
 
-            await testUtils.dom.click(list.$("tbody tr:first .o_list_text"));
-            var $textarea = list.$("textarea.o_field_text");
-            assert.strictEqual($textarea.length, 1, "should have a text area");
-            assert.strictEqual($textarea.val(), "yop", 'should still be "yop" in edit');
+            await click(list.el.querySelector("tbody tr:first-child .o_list_text"));
+            const textarea = list.el.querySelector("textarea.o_input");
+            assert.containsOnce(list, textarea, "should have a text area");
+            assert.strictEqual(textarea.value, "yop", 'should still be "yop" in edit');
 
             assert.strictEqual(
-                list.$("textarea").get(0),
+                list.el.querySelector("textarea"),
                 document.activeElement,
                 "text area should have the focus"
             );
 
             // click on enter
-            list.$("textarea")
-                .trigger({ type: "keydown", which: $.ui.keyCode.ENTER })
-                .trigger({ type: "keyup", which: $.ui.keyCode.ENTER });
+            await triggerEvent(textarea, null, "keydown", { key: "Enter" });
+            await triggerEvent(textarea, null, "keyup", { key: "Enter" });
 
             assert.strictEqual(
-                list.$("textarea").first().get(0),
+                list.el.querySelector("textarea"),
                 document.activeElement,
                 "text area should still have the focus"
             );
-
-            list.destroy();
         }
     );
 
     // Firefox-specific
     // Copying from <div style="white-space:pre-wrap"> does not keep line breaks
     // See https://bugzilla.mozilla.org/show_bug.cgi?id=1390115
-    QUnit.skip(
+    QUnit.test(
         "copying text fields in RO mode should preserve line breaks",
         async function (assert) {
             assert.expect(1);
@@ -568,42 +427,33 @@ QUnit.module("Fields", (hooks) => {
                     "</group>" +
                     "</sheet>" +
                     "</form>",
-                res_id: 1,
+                resId: 1,
             });
 
             // Copying from a div tag with white-space:pre-wrap doesn't work in Firefox
             assert.strictEqual(
-                form.$('[name="txt"]').prop("tagName").toLowerCase(),
+                form.el.querySelector('[name="txt"]').firstElementChild.tagName.toLowerCase(),
                 "span",
                 "the field contents should be surrounded by a span tag"
             );
-
-            form.destroy();
         }
     );
 
-    QUnit.skip("text field rendering in list view", async function (assert) {
+    QUnit.test("text field rendering in list view", async function (assert) {
         assert.expect(1);
 
-        var data = {
-            foo: {
-                fields: { foo: { string: "F", type: "text" } },
-                records: [{ id: 1, foo: "some text" }],
-            },
-        };
-        var list = await makeView({
-            View: ListView,
-            model: "foo",
-            data: data,
-            arch: '<tree><field name="foo"/></tree>',
+        const list = await makeView({
+            serverData,
+            type: "list",
+            resModel: "partner",
+            arch: '<tree><field name="txt"/></tree>',
         });
 
-        assert.strictEqual(
-            list.$("tbody td.o_list_text:contains(some text)").length,
-            1,
+        assert.containsOnce(
+            list,
+            "tbody td.o_list_text",
             "should have a td with the .o_list_text class"
         );
-        list.destroy();
     });
 
     QUnit.skip(
@@ -626,19 +476,23 @@ QUnit.module("Fields", (hooks) => {
             await click(form.el, ".o_form_button_edit");
 
             // // We need to convert the input type since we can't programmatically set the value of a file input
-            form.$(".o_input_file").attr("type", "text").val("coucou.txt");
+            form.el.querySelector(".o_input_file").attr("type", "text").val("coucou.txt");
 
             assert.strictEqual(
-                form.$(".o_input_file").val(),
+                form.el.querySelector(".o_input_file").val(),
                 "coucou.txt",
                 'input value should be changed to "coucou.txt"'
             );
 
-            await testUtils.dom.click(form.$(".o_field_binary_file > .o_clear_file_button"));
+            await testUtils.dom.click(
+                form.el.querySelector(".o_field_binary_file > .o_clear_file_button")
+            );
 
-            assert.strictEqual(form.$(".o_input_file").val(), "", "input value should be empty");
-
-            form.destroy();
+            assert.strictEqual(
+                form.el.querySelector(".o_input_file").val(),
+                "",
+                "input value should be empty"
+            );
         }
     );
 
@@ -648,19 +502,18 @@ QUnit.module("Fields", (hooks) => {
         serverData.models.partner.fields.foo.type = "text";
 
         var list = await makeView({
-            View: ListView,
+            type: "list",
             resModel: "partner",
             serverData,
             arch: '<tree string="Phonecalls" editable="top">' + '<field name="foo"/>' + "</tree>",
         });
 
-        await testUtils.dom.click(list.$buttons.find(".o_list_button_add"));
+        await click(list.el.querySelector(".o_list_button_add"));
 
         assert.strictEqual(
-            list.$("textarea").first().get(0),
+            list.el.querySelector("textarea"),
             document.activeElement,
             "text area should have the focus"
         );
-        list.destroy();
     });
 });

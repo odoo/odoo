@@ -443,86 +443,92 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skip("DatetimeField in editable list view", async function (assert) {
         assert.expect(9);
 
-        var list = await createView({
-            View: ListView,
-            model: "partner",
-            data: this.data,
+        patchTimeZone(120);
+
+        const list = await makeView({
+            serverData,
+            type: "list",
+            resModel: "partner",
             arch: '<tree editable="bottom">' + '<field name="datetime"/>' + "</tree>",
-            translateParameters: {
-                // Avoid issues due to localization formats
-                date_format: "%m/%d/%Y",
-                time_format: "%H:%M:%S",
-            },
-            session: {
-                getTZOffset: function () {
-                    return 120;
-                },
-            },
         });
 
-        var expectedDateString = "02/08/2017 12:00:00"; // 10:00:00 without timezone
-        var $cell = list.$("tr.o_data_row td:not(.o_list_record_selector)").first();
+        const expectedDateString = "02/08/2017 12:00:00"; // 10:00:00 without timezone
+        const cell = list.el.querySelector("tr.o_data_row td:not(.o_list_record_selector)");
         assert.strictEqual(
-            $cell.text(),
+            cell.innerText,
             expectedDateString,
             "the datetime should be correctly displayed in readonly"
         );
 
         // switch to edit mode
-        await testUtils.dom.click($cell);
+        await click(list.el, ".o_data_row:first-child div[name='datetime']");
         assert.containsOnce(
             list,
             "input.o_datepicker_input",
             "the view should have a date input for editable mode"
         );
-
         assert.strictEqual(
-            list.$("input.o_datepicker_input").get(0),
+            list.el.querySelector("input.o_datepicker_input"),
             document.activeElement,
             "date input should have the focus"
         );
 
         assert.strictEqual(
-            list.$("input.o_datepicker_input").val(),
+            list.el.querySelector("input.o_datepicker_input").value,
             expectedDateString,
             "the date should be correct in edit mode"
         );
 
-        assert.containsNone($("body"), ".bootstrap-datetimepicker-widget");
-        testUtils.dom.openDatepicker(list.$(".o_datepicker"));
-        assert.containsOnce($("body"), ".bootstrap-datetimepicker-widget");
+        assert.containsNone(document.body, ".bootstrap-datetimepicker-widget");
+        await click(list.el, ".o_datepicker_input");
+        assert.containsOnce(document.body, ".bootstrap-datetimepicker-widget");
 
-        // select 22 February at 8:23:33
-        await testUtils.dom.click($(".bootstrap-datetimepicker-widget .picker-switch").first());
-        await testUtils.dom.click($(".bootstrap-datetimepicker-widget .picker-switch:eq(1)"));
-        await testUtils.dom.click($(".bootstrap-datetimepicker-widget .year:contains(2017)"));
-        await testUtils.dom.click($(".bootstrap-datetimepicker-widget .month").eq(3));
-        await testUtils.dom.click($(".bootstrap-datetimepicker-widget .day:contains(22)"));
-        await testUtils.dom.click($(".bootstrap-datetimepicker-widget .fa-clock-o"));
-        await testUtils.dom.click($(".bootstrap-datetimepicker-widget .timepicker-hour"));
-        await testUtils.dom.click($(".bootstrap-datetimepicker-widget .hour:contains(08)"));
-        await testUtils.dom.click($(".bootstrap-datetimepicker-widget .timepicker-minute"));
-        await testUtils.dom.click($(".bootstrap-datetimepicker-widget .minute:contains(25)"));
-        await testUtils.dom.click($(".bootstrap-datetimepicker-widget .timepicker-second"));
-        await testUtils.dom.click($(".bootstrap-datetimepicker-widget .second:contains(35)"));
-        assert.ok(!$(".bootstrap-datetimepicker-widget").length, "datepicker should be closed");
+        // select 22 February at 8:25:35
+        await click(
+            document.body.querySelectorAll(".bootstrap-datetimepicker-widget .picker-switch")[0]
+        );
+        await click(
+            document.body.querySelectorAll(".bootstrap-datetimepicker-widget .picker-switch")[1]
+        );
+        await click(document.body.querySelectorAll(".bootstrap-datetimepicker-widget .year")[8]);
+        await click(document.body.querySelectorAll(".bootstrap-datetimepicker-widget .month")[3]);
+        await click(
+            document.body.querySelector(".bootstrap-datetimepicker-widget .day[data-day*='/22/']")
+        );
+        await click(document.body.querySelector(".bootstrap-datetimepicker-widget .fa-clock-o"));
+        await click(
+            document.body.querySelector(".bootstrap-datetimepicker-widget .timepicker-hour")
+        );
+        await click(document.body.querySelectorAll(".bootstrap-datetimepicker-widget .hour")[8]);
+        await click(
+            document.body.querySelector(".bootstrap-datetimepicker-widget .timepicker-minute")
+        );
+        await click(document.body.querySelectorAll(".bootstrap-datetimepicker-widget .minute")[5]);
+        await click(
+            document.body.querySelector(".bootstrap-datetimepicker-widget .timepicker-second")
+        );
+        await click(document.body.querySelectorAll(".bootstrap-datetimepicker-widget .second")[7]);
 
-        var newExpectedDateString = "04/22/2017 08:25:35";
+        assert.containsNone(
+            document.body,
+            ".bootstrap-datetimepicker-widget",
+            "datepicker should be closed"
+        );
+
+        const newExpectedDateString = "04/22/2017 08:25:35";
         assert.strictEqual(
-            list.$(".o_datepicker_input").val(),
+            list.el.querySelector(".o_datepicker_input").value,
             newExpectedDateString,
             "the selected datetime should be displayed in the input"
         );
 
         // save
-        await testUtils.dom.click(list.$buttons.find(".o_list_button_save"));
+        await click(list.el.querySelector(".o_list_button_save"));
         assert.strictEqual(
-            list.$("tr.o_data_row td:not(.o_list_record_selector)").text(),
+            list.el.querySelector("tr.o_data_row td:not(.o_list_record_selector)").innerText,
             newExpectedDateString,
             "the selected datetime should be displayed after saving"
         );
-
-        list.destroy();
     });
 
     QUnit.skip(
@@ -535,29 +541,19 @@ QUnit.module("Fields", (hooks) => {
                 model: "partner",
                 data: this.data,
                 arch: '<tree multi_edit="1">' + '<field name="datetime"/>' + "</tree>",
-                translateParameters: {
-                    // Avoid issues due to localization formats
-                    date_format: "%m/%d/%Y",
-                    time_format: "%H:%M:%S",
-                },
-                session: {
-                    getTZOffset: function () {
-                        return 120;
-                    },
-                },
             });
 
             // select two records and edit them
-            await testUtils.dom.click(list.$(".o_data_row:eq(0) .o_list_record_selector input"));
-            await testUtils.dom.click(list.$(".o_data_row:eq(1) .o_list_record_selector input"));
+            await click(list.$(".o_data_row:eq(0) .o_list_record_selector input"));
+            await click(list.$(".o_data_row:eq(1) .o_list_record_selector input"));
 
-            await testUtils.dom.click(list.$(".o_data_row:first .o_data_cell"));
+            await click(list.$(".o_data_row:first .o_data_cell"));
             assert.containsOnce(list, "input.o_datepicker_input");
             list.$(".o_datepicker_input").val("10/02/2019 09:00:00");
-            await testUtils.dom.triggerEvents(list.$(".o_datepicker_input"), ["change"]);
+            await triggerEvents(list.$(".o_datepicker_input"), ["change"]);
 
             assert.containsOnce(document.body, ".modal");
-            await testUtils.dom.click($(".modal .modal-footer .btn-primary"));
+            await click($(".modal .modal-footer .btn-primary"));
 
             assert.strictEqual(
                 list.$(".o_data_row:first .o_data_cell").text(),
