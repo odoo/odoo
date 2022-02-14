@@ -55,21 +55,21 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice___candidate_orders
 msgid " Candidate Orders"
-msgstr " Candidate Orders"
+msgstr " Đơn liên quan"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
 #: code:addons/sale_timesheet/wizard/project_task_create_sale_order.py:0
 #, python-format
 msgid "%(amount)s %(label)s will be added to the new Sales Order."
-msgstr "%(amount)s %(label)s will be added to the new Sales Order."
+msgstr "%(amount)s %(label)s sẽ được thêm vào đơn bán mới."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
 #: code:addons/sale_timesheet/wizard/project_task_create_sale_order.py:0
 #, python-format
 msgid "%(amount)s %(label)s will be added to the selected Sales Order."
-msgstr "%(amount)s %(label)s will be added to the selected Sales Order."
+msgstr "%(amount)s %(label)s sẽ được thêm vào đơn bán được chọn."
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -95,6 +95,12 @@ msgid ""
 "recording time on this project are not linked to any Sales Order Item. This "
 "means that their time will be considered as non-billable.\"/>"
 msgstr ""
+"<i class=\"ml-2 fa fa-exclamation-triangle text-danger small\" role=\"img\" "
+"title=\"Một số nhân viên chấm công vào dự án này thì chưa liên kết đến bất cứ"
+" dòng đơn bán nào. Điều này có nghĩa là thời gian chấm công của họ sẽ được coi "
+"là không thể xuất hóa đơn.\" aria-label=\"Một số nhân viên chấm công vào dự án "
+"này thì chưa liên kết đến bất cứ dòng đơn bán nào. Điều này có nghĩa là thời "
+"gian chấm công của họ sẽ được coi là không thể xuất hóa đơn.\"/>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -115,7 +121,7 @@ msgid ""
 "                                                            </span>"
 msgstr ""
 "<span class=\"btn-link\" style=\"font-weight:normal;\">\n"
-"                                                                Non Billable Timesheets\n"
+"                                                                Chấm công Không thể xuất hóa đơn\n"
 "                                                            </span>"
 
 #. module: sale_timesheet
@@ -175,8 +181,8 @@ msgid ""
 "All revenues that are not from timesheets and that are linked to the "
 "analytic account of the project."
 msgstr ""
-"All revenues that are not from timesheets and that are linked to the "
-"analytic account of the project."
+"Tất cả doanh thu mà không thông qua chấm công và có liên kết với tài "
+"khoản quản trị của dự án."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:0
@@ -185,8 +191,8 @@ msgid ""
 "All timesheet hours that are not yet invoiced will be assigned to the "
 "selected Project on save. Discard to avoid the change."
 msgstr ""
-"All timesheet hours that are not yet invoiced will be assigned to the "
-"selected Project on save. Discard to avoid the change."
+"Tổng số giờ chấm công mà chưa xuất hóa đơn sẽ được gán vào Dự án được "
+"chọn khi lưu. Bấm bỏ để tránh sự thay đổi ngoài ý muốn."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:0
@@ -195,8 +201,8 @@ msgid ""
 "All timesheet hours that are not yet invoiced will be assigned to the "
 "selected Sales Order Item on save. Discard to avoid the change."
 msgstr ""
-"All timesheet hours that are not yet invoiced will be assigned to the "
-"selected Sales Order Item on save. Discard to avoid the change."
+"Tổng số giờ chấm công mà chưa xuất hóa đơn sẽ được gán vào dòng đơn bán"
+" được chọn khi lưu. Bấm bỏ để tránh sự thay đổi ngoài ý muốn."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:0
@@ -205,8 +211,8 @@ msgid ""
 "All timesheet hours that are not yet invoiced will be removed from Sales "
 "Order on save. Discard to avoid the change."
 msgstr ""
-"All timesheet hours that are not yet invoiced will be removed from Sales "
-"Order on save. Discard to avoid the change."
+"Tổng số giờ chấm công mà chưa xuất hóa đơn sẽ được gán vào đơn bán "
+"được chọn khi lưu. Bấm bỏ để tránh sự thay đổi ngoài ý muốn."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:0
@@ -215,8 +221,8 @@ msgid ""
 "All timesheet hours that are not yet invoiced will be removed from the "
 "selected Sales Order Item on save. Discard to avoid the change."
 msgstr ""
-"All timesheet hours that are not yet invoiced will be removed from the "
-"selected Sales Order Item on save. Discard to avoid the change."
+"Tổng số giờ chấm công mà chưa xuất hóa đơn sẽ được gỡ khỏi vào dòng "
+"đơn bán được chọn khi lưu. Bấm bỏ để tránh sự thay đổi ngoài ý muốn."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:0
@@ -225,8 +231,8 @@ msgid ""
 "All timesheet hours will be assigned to the selected Sales Order Item on "
 "save. Discard to avoid the change."
 msgstr ""
-"All timesheet hours will be assigned to the selected Sales Order Item on "
-"save. Discard to avoid the change."
+"Tổng số giờ chấm công sẽ được gán vào dòng đơn bán được chọn khi lưu. "
+"Bấm bỏ để tránh sự thay đổi ngoài ý muốn."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__amount_to_invoice
@@ -252,7 +258,7 @@ msgstr "Tài khoản quản trị"
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_account_analytic_line
 msgid "Analytic Line"
-msgstr "Dòng Phân tích"
+msgstr "Phát sinh KT Quản trị"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__analytic_line_ids
@@ -262,7 +268,7 @@ msgstr "Phát sinh KT Quản trị"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Any cost linked to the Analytic Account of the Project."
-msgstr "Any cost linked to the Analytic Account of the Project."
+msgstr "Bất cứ chi phí nào mà được liên kết với Tài khoản quản trị của Dự án."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
@@ -281,7 +287,7 @@ msgstr "Trước"
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__allow_billable
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 msgid "Billable"
-msgstr "Billable"
+msgstr "Có thể xuất hóa đơn"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__timesheet_invoice_type
@@ -328,7 +334,7 @@ msgstr "Buzz hoặc đặt là hoàn tất"
 #. module: sale_timesheet
 #: model:ir.ui.menu,name:sale_timesheet.menu_timesheet_billing_analysis
 msgid "By Billing Type"
-msgstr "By Billing Type"
+msgstr "Theo Kiểu xuất hóa đơn"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_create_invoice_view_form
@@ -351,7 +357,7 @@ msgstr "Chọn Đơn bán để xuất hoá đơn"
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__commercial_partner_id
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task_create_sale_order__commercial_partner_id
 msgid "Commercial Entity"
-msgstr "Commercial Entity"
+msgstr "Thực thế thương mại"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__company_id
@@ -580,7 +586,7 @@ msgstr "Khoảng thời gian (giờ)"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_invoice_page_inherit_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Employee"
-msgstr "Người lao động"
+msgstr "Nhân viên"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__pricing_type__employee_rate
@@ -1111,7 +1117,7 @@ msgstr "Chủ nhiệm Dự án"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_order_form_inherit_sale_timesheet
 msgid "Project Overview"
-msgstr "Project Overview"
+msgstr "Tổng quan Dự án"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_profitability_report
