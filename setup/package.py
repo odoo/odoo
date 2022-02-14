@@ -345,7 +345,17 @@ class DockerRpm(Docker):
 
     def build(self):
         logging.info('Start building fedora rpm package')
-        self.run('python3 setup.py --quiet bdist_rpm', self.args.build_dir, 'odoo-rpm-build-%s' % TSTAMP)
+        rpmbuild_dir = '/var/lib/odoo/rpmbuild'
+        cmds = [
+            'cd /data/src',
+            'mkdir -p dist',
+            'rpmdev-setuptree -d',
+            f'cp -a /data/src/setup/rpm/odoo.spec {rpmbuild_dir}/SPECS/',
+            f'tar --transform "s/^\\./odoo-{VERSION}/" -c -z -f {rpmbuild_dir}/SOURCES/odoo-{VERSION}.tar.gz .',
+            f'rpmbuild -bb --define="%version {VERSION}" /data/src/setup/rpm/odoo.spec',
+            f'mv {rpmbuild_dir}/RPMS/noarch/odoo*.rpm /data/src/dist/'
+        ]
+        self.run(' && '.join(cmds), self.args.build_dir, f'odoo-rpm-build-{TSTAMP}')
         os.rename(glob('%s/dist/odoo-*.noarch.rpm' % self.args.build_dir)[0], '%s/odoo_%s.%s.rpm' % (self.args.build_dir, VERSION, TSTAMP))
         logging.info('Finished building fedora rpm package')
 
