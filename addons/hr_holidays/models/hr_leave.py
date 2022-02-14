@@ -201,8 +201,8 @@ class HolidaysRequest(models.Model):
     # To display in form view
     supported_attachment_ids = fields.Many2many(
         'ir.attachment', string="Attach File", compute='_compute_supported_attachment_ids',
-        inverse='_inverse_supported_attachment_ids', compute_sudo=True)
-    supported_attachment_ids_count = fields.Integer(compute='_compute_supported_attachment_ids', compute_sudo=True)
+        inverse='_inverse_supported_attachment_ids')
+    supported_attachment_ids_count = fields.Integer(compute='_compute_supported_attachment_ids')
     # UX fields
     all_employee_ids = fields.Many2many('hr.employee', compute='_compute_all_employees')
     leave_type_request_unit = fields.Selection(related='holiday_status_id.request_unit', readonly=True)
@@ -641,7 +641,9 @@ class HolidaysRequest(models.Model):
 
     def _inverse_supported_attachment_ids(self):
         for holiday in self:
-            holiday.sudo().attachment_ids = holiday.supported_attachment_ids
+            holiday.supported_attachment_ids.write({
+                'res_id': holiday.id,
+            })
 
     @api.constrains('date_from', 'date_to', 'employee_id')
     def _check_date(self):
@@ -958,7 +960,7 @@ class HolidaysRequest(models.Model):
             raise UserError(_("You can't manually archive a time off."))
 
         is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user') or self.env.is_superuser()
-        if not is_officer:
+        if not is_officer and values.keys() - {'supported_attachment_ids', 'message_main_attachment_id'}:
             if any(hol.date_from.date() < fields.Date.today() and hol.employee_id.leave_manager_id != self.env.user for hol in self):
                 raise UserError(_('You must have manager rights to modify/validate a time off that already begun'))
 
