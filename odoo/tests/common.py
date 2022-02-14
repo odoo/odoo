@@ -1373,6 +1373,8 @@ class ChromeBrowser:
                 registrations => Promise.all(registrations.map(r => r.unregister()))
             )
         """, 'awaitPromise': True})
+        # wait for the screenshot or whatever
+        wait(self._responses.values())
         self._logger.info('Deleting cookies and clearing local storage')
         self._websocket_request('Network.clearBrowserCache')
         self._websocket_request('Network.clearBrowserCookies')
@@ -1380,7 +1382,7 @@ class ChromeBrowser:
         self.navigate_to('about:blank', wait_stop=True)
         # hopefully after navigating to about:blank there's no event left
         self._frames.clear()
-        # wait for the screenshot or whatever
+        # wait for the clearing requests to finish in case the browser is re-used
         wait(self._responses.values())
         self._responses.clear()
         self._result.cancel()
