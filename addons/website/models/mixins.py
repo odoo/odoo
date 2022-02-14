@@ -4,6 +4,8 @@
 import logging
 import re
 
+from werkzeug.urls import url_join
+
 from odoo import api, fields, models, _
 from odoo.addons.website.tools import text_from_html
 from odoo.http import request
@@ -279,6 +281,13 @@ class WebsitePublishedMultiMixin(WebsitePublishedMixin):
             return (['!'] if value is False else []) + expression.AND([is_published, on_current_website])
         else:  # should be in the backend, return things that are published anywhere
             return is_published
+
+    def open_website_url(self):
+        return {
+            'type': 'ir.actions.act_url',
+            'url': url_join(self.website_id._get_http_domain(), self.website_url) if self.website_id else self.website_url,
+            'target': 'self',
+        }
 
 
 class WebsiteSearchableMixin(models.AbstractModel):
