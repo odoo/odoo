@@ -16,13 +16,23 @@
                             </span>
                         </span>
                         <t t-foreach="props.breadcrumbs" t-as="category" t-key="category.id">
-                            <CategoryBreadcrumb category="category" />
+                            <span class="breadcrumb">
+                                <img src="/point_of_sale/static/src/img/bc-arrow-big.png" class="breadcrumb-arrow"
+                                    alt="Slash" />
+                                <span class="breadcrumb-button"
+                                    t-on-click="() => this.trigger('switch-category', category.id)">
+                                    <t t-esc="category.name"></t>
+                                </span>
+                            </span>
                         </t>
                     </div>
                     <!-- Subcategories -->
                     <div t-if="props.subcategories.length > 0 and !displayCategImages"  class="category-list simple">
                         <t t-foreach="props.subcategories" t-as="category" t-key="category.id">
-                            <CategorySimpleButton category="category" />
+                            <span class="category-simple-button"
+                                t-on-click="() => this.trigger('switch-category', category.id)">
+                                <t t-esc="category.name" />
+                            </span>
                         </t>
                     </div>
                 </div>

@@ -4,7 +4,27 @@
     <t t-name="ProductsWidget" owl="1">
       <div class="products-widget">
             <ProductsWidgetControlPanel mobileSearchBarIsShown="props.mobileSearchBarIsShown" breadcrumbs="breadcrumbs" subcategories="subcategories" hasNoCategories="hasNoCategories" />
-            <ProductList products="productsToDisplay" searchWord="searchWord" />
+            <div class="product-list-container">
+                <div t-if="productsToDisplay.length != 0" class="product-list">
+                    <t t-foreach="productsToDisplay" t-as="product" t-key="product.id">
+                        <ProductItem product="product" />
+                    </t>
+                </div>
+                <div t-else="" class="product-list-empty">
+                    <div class="product-list-empty">
+                        <t t-if="searchWord !== ''">
+                            <p>
+                                No results found for "
+                                <b t-esc="searchWord"></b>
+                                ".
+                            </p>
+                        </t>
+                        <t t-else="">
+                            <p>There are no products in this category.</p>
+                        </t>
+                    </div>
+                </div>
+            </div>
         </div>
     </t>
 
