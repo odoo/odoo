@@ -120,10 +120,13 @@ class IrQWeb(models.AbstractModel):
 
     def _directives_eval_order(self):
         directives = super()._directives_eval_order()
-        directives.insert(directives.index('att'), 'placeholder')
-        directives.insert(directives.index('call'), 'snippet')
-        directives.insert(directives.index('call'), 'snippet-call')
-        directives.insert(directives.index('call'), 'install')
+        # Insert before "att" as those may rely on static attributes like
+        # "string" and "att" clears all of those
+        index = directives.index('att') - 1
+        directives.insert(index, 'placeholder')
+        directives.insert(index, 'snippet')
+        directives.insert(index, 'snippet-call')
+        directives.insert(index, 'install')
         return directives
 
 
