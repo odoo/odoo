@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import http, _
+from odoo.osv import expression
 from odoo.addons.portal.controllers.portal import CustomerPortal, pager as portal_pager
 from odoo.exceptions import AccessError, MissingError
 from collections import OrderedDict
@@ -34,10 +35,29 @@ class PortalAccount(CustomerPortal):
 
     @http.route(['/my/invoices', '/my/invoices/page/<int:page>'], type='http', auth="user", website=True)
     def portal_my_invoices(self, page=1, date_begin=None, date_end=None, sortby=None, filterby=None, **kw):
+        values = self._prepare_my_invoices_values(page, date_begin, date_end, sortby, filterby)
+
+        # pager
+        pager = portal_pager(**values['pager'])
+
+        # content according to pager and archive selected
+        invoices = values['invoices'](pager['offset'])
+        request.session['my_invoices_history'] = invoices.ids[:100]
+
+        values.update({
+            'invoices': invoices,
+            'pager': pager,
+        })
+        return request.render("account.portal_my_invoices", values)
+
+    def _prepare_my_invoices_values(self, page, date_begin, date_end, sortby, filterby, domain=None, url="/my/invoices"):
         values = self._prepare_portal_layout_values()
         AccountInvoice = request.env['account.move']
 
-        domain = self._get_invoices_domain()
+        domain = expression.AND([
+            domain or [],
+            self._get_invoices_domain(),
+        ])
 
         searchbar_sortings = {
             'date': {'label': _('Date'), 'order': 'invoice_date desc'},
@@ -63,32 +83,26 @@ class PortalAccount(CustomerPortal):
         if date_begin and date_end:
             domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
 
-        # count for pager
-        invoice_count = AccountInvoice.search_count(domain)
-        # pager
-        pager = portal_pager(
-            url="/my/invoices",
-            url_args={'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby},
-            total=invoice_count,
-            page=page,
-            step=self._items_per_page
-        )
-        # content according to pager and archive selected
-        invoices = AccountInvoice.search(domain, order=order, limit=self._items_per_page, offset=pager['offset'])
-        request.session['my_invoices_history'] = invoices.ids[:100]
-
         values.update({
             'date': date_begin,
-            'invoices': invoices,
+            # content according to pager and archive selected
+            # lambda function to get the invoices recordset when the pager will be defined in the main method of a route
+            'invoices': lambda pager_offset: AccountInvoice.search(domain, order=order, limit=self._items_per_page, offset=pager_offset),
             'page_name': 'invoice',
-            'pager': pager,
-            'default_url': '/my/invoices',
+            'pager': {  # vals to define the pager.
+                "url": url,
+                "url_args": {'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby},
+                "total": AccountInvoice.search_count(domain),
+                "page": page,
+                "step": self._items_per_page,
+            },
+            'default_url': url,
             'searchbar_sortings': searchbar_sortings,
             'sortby': sortby,
             'searchbar_filters': OrderedDict(sorted(searchbar_filters.items())),
-            'filterby':filterby,
+            'filterby': filterby,
         })
-        return request.render("account.portal_my_invoices", values)
+        return values
 
     @http.route(['/my/invoices/<int:invoice_id>'], type='http', auth="public", website=True)
     def portal_my_invoice_detail(self, invoice_id, access_token=None, report_type=None, download=False, **kw):

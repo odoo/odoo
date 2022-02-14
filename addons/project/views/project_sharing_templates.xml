@@ -9,7 +9,7 @@
     </template>
 
     <template id="project_sharing" name="Project Sharing View">
-        <iframe width="100%" height="100%" frameborder="0" t-attf-src="/my/project/{{ project_id }}/project_sharing"/>
+        <iframe width="100%" height="100%" frameborder="0" t-attf-src="/my/projects/{{ project_id }}/project_sharing{{  '?task_id=' + task_id if task_id else '' }}"/>
     </template>
 
     <template id="project_sharing_embed" name="Project Sharing View Embed">
@@ -27,7 +27,7 @@
                 <t t-call="web.conditional_assets_tests"/>
             </t>
             <t t-set="head" t-value="head_project_sharing + (head or '')"/>
-            <t t-set="body_classname" t-value="'o_web_client'"/>
+            <t t-set="body_classname" t-value="'o_web_client o_project_sharing'"/>
         </t>
     </template>
 

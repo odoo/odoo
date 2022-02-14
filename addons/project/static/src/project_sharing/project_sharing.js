@@ -43,7 +43,7 @@ export class ProjectSharingWebClient extends Component {
     }
 
     async _showView() {
-        const { action_name, project_id } = session;
+        const { action_name, project_id, open_task_action } = session;
         await this.actionService.doAction(
             action_name,
             {
@@ -53,6 +53,9 @@ export class ProjectSharingWebClient extends Component {
                 }
             }
         );
+        if (open_task_action) {
+            await this.actionService.doAction(open_task_action);
+        }
     }
 }
 

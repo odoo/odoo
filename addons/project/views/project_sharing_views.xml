@@ -103,7 +103,7 @@
                                     </span>
                                     <field name="kanban_state" widget="state_selection"/>
                                     <!-- TODO: [XBO] remove me in master -->
-                                    <field name="user_ids" string="Assignees" widget="many2many_avatar_user" options="{'no_open_chat': True}" invisible="1"/>
+                                    <field name="user_ids" string="Assignees" widget="many2many_avatar_user" invisible="1"/>
                                 </div>
                             </div>
                         </div>
@@ -159,7 +159,17 @@
                 </header>
                 <sheet string="Task">
                     <div class="oe_button_box" name="button_box">
-                        <button name="action_open_parent_task" type="object" special="cancel" class="oe_stat_button o_debounce_disabled" icon="fa-tasks" string="Parent Task" attrs="{'invisible': [('parent_id', '=', False)]}"/>
+                        <field name="display_parent_task_button" invisible="1"/>
+                        <button name="action_project_sharing_view_parent_task" type="object" class="oe_stat_button" icon="fa-tasks" string="Parent Task" attrs="{'invisible': [('display_parent_task_button', '=', False)]}"/>
+                        <button name="action_project_sharing_open_subtasks" type="object" class="oe_stat_button" icon="fa-tasks"
+                            attrs="{'invisible' : ['|', '|', ('allow_subtasks', '=', False), ('id', '=', False), ('subtask_count', '=', 0)]}" context="{'default_user_ids': [(6, 0, [uid])]}">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <field name="subtask_count" widget="statinfo" nolabel="1"/>
+                                </span>
+                                <span class="o_stat_text">Sub-tasks</span>
+                            </div>
+                        </button>
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <div class="oe_title pr-0">
@@ -301,6 +311,41 @@
     <record id="project_sharing_form_action_view" model="ir.actions.act_window.view">
         <field name="view_mode">form</field>
         <field name="act_window_id" ref="project.project_sharing_project_task_action"/>
+        <field name="view_id" ref="project.project_sharing_project_task_view_form"/>
+    </record>
+
+    <record id="project_sharing_project_task_action_sub_task" model="ir.actions.act_window">
+        <field name="name">Sub-tasks</field>
+        <field name="res_model">project.task</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="search_view_id" ref="project.project_sharing_project_task_view_search"/>
+        <field name="domain">[('id', 'child_of', active_id), ('id', '!=', active_id)]</field>
+        <field name="context">{'default_parent_id': active_id}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No tasks found. Let's create one!
+            </p><p>
+                To get things done, use activities and status on tasks.<br/>
+                Chat in real time or by email to collaborate efficiently.
+            </p>
+        </field>
+    </record>
+
+    <record id="project_sharing_subtasks_tree_action_view" model="ir.actions.act_window.view">
+        <field name="view_mode">tree</field>
+        <field name="act_window_id" ref="project.project_sharing_project_task_action_sub_task"/>
+        <field name="view_id" ref="project.project_sharing_project_task_view_tree"/>
+    </record>
+
+    <record id="project_sharing_subtasks_kanban_action_view" model="ir.actions.act_window.view">
+        <field name="view_mode">kanban</field>
+        <field name="act_window_id" ref="project.project_sharing_project_task_action_sub_task"/>
+        <field name="view_id" ref="project.project_sharing_project_task_view_kanban"/>
+    </record>
+
+    <record id="project_sharing_subtasks_form_action_view" model="ir.actions.act_window.view">
+        <field name="view_mode">form</field>
+        <field name="act_window_id" ref="project.project_sharing_project_task_action_sub_task"/>
         <field name="view_id" ref="project.project_sharing_project_task_view_form"/>
     </record>
 

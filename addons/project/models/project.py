@@ -44,6 +44,7 @@ PROJECT_TASK_READABLE_FIELDS = {
     'legend_blocked',
     'legend_done',
     'user_ids',
+    'display_parent_task_button',
 }
 
 PROJECT_TASK_WRITABLE_FIELDS = {
@@ -363,7 +364,7 @@ class Project(models.Model):
     def _compute_access_url(self):
         super(Project, self)._compute_access_url()
         for project in self:
-            project.access_url = '/my/project/%s' % project.id
+            project.access_url = f'/my/projects/{project.id}'
 
     def _compute_access_warning(self):
         super(Project, self)._compute_access_warning()
@@ -1038,6 +1039,9 @@ class Task(models.Model):
                                      domain="[('allow_task_dependencies', '=', True), ('id', '!=', id)]")
     dependent_tasks_count = fields.Integer(string="Dependent Tasks", compute='_compute_dependent_tasks_count')
 
+    # Project sharing fields
+    display_parent_task_button = fields.Boolean(compute='_compute_display_parent_task_button', compute_sudo=True)
+
     # recurrence fields
     allow_recurring_tasks = fields.Boolean(related='project_id.allow_recurring_tasks')
     recurring_task = fields.Boolean(string="Recurrent")
@@ -1393,7 +1397,7 @@ class Task(models.Model):
     def _compute_access_url(self):
         super(Task, self)._compute_access_url()
         for task in self:
-            task.access_url = '/my/task/%s' % task.id
+            task.access_url = f'/my/tasks/{task.id}'
 
     def _compute_access_warning(self):
         super(Task, self)._compute_access_warning()
@@ -1469,6 +1473,11 @@ class Task(models.Model):
              WHERE partners.name ILIKE %s
         """
         return [('id', 'inselect', (query, [f'%{value}%']))]
+
+    def _compute_display_parent_task_button(self):
+        accessible_parent_tasks = self.parent_id.with_user(self.env.user)._filter_access_rules('read')
+        for task in self:
+            task.display_parent_task_button = task.parent_id in accessible_parent_tasks
 
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
@@ -2113,6 +2122,26 @@ class Task(models.Model):
             'context': self._context
         }
 
+    def action_project_sharing_view_parent_task(self):
+        if self.parent_id.project_id != self.project_id and self.user_has_groups('base.group_portal'):
+            project = self.parent_id.project_id._filter_access_rules_python('read')
+            if project:
+                url = f"/my/projects/{self.parent_id.project_id.id}/task/{self.parent_id.id}"
+                if project._check_project_sharing_access():
+                    url = f"/my/projects/{self.parent_id.project_id.id}?task_id={self.parent_id.id}"
+                return {
+                    "name": "Portal Parent Task",
+                    "type": "ir.actions.act_url",
+                    "url": url,
+                }
+            elif self.display_parent_task_button:
+                return self.parent_id.get_portal_url()
+            # The portal user has no access to the parent task, so normally the button should be invisible.
+            return {}
+        action = self.action_open_parent_task()
+        action['views'] = [(self.env.ref('project.project_sharing_project_task_view_form').id, 'form')]
+        return action
+
     # ------------
     # Actions
     # ------------
@@ -2124,6 +2153,27 @@ class Task(models.Model):
             'res_id': self.id,
             'type': 'ir.actions.act_window',
             'context': self._context
+        }
+
+    def action_project_sharing_open_task(self):
+        action = self.action_open_task()
+        action['views'] = [[self.env.ref('project.project_sharing_project_task_view_form').id, 'form']]
+        return action
+
+    def action_project_sharing_open_subtasks(self):
+        self.ensure_one()
+        subtasks = self.env['project.task'].search([('id', 'child_of', self.id), ('id', '!=', self.id)])
+        if subtasks.project_id == self.project_id:
+            action = self.env['ir.actions.act_window']._for_xml_id('project.project_sharing_project_task_action_sub_task')
+            if len(subtasks) == 1:
+                action['view_mode'] = 'form'
+                action['views'] = [(view_id, view_type) for view_id, view_type in action['views'] if view_type == 'form']
+                action['res_id'] = subtasks.id
+            return action
+        return {
+            'name': 'Portal Sub-tasks',
+            'type': 'ir.actions.act_url',
+            'url': f'/my/projects/{self.project_id.id}/task/{self.id}/subtasks' if len(subtasks) > 1 else subtasks.get_portal_url(query_string='project_sharing=1'),
         }
 
     def action_dependent_tasks(self):

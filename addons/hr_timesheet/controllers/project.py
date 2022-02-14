@@ -10,8 +10,8 @@ from odoo.addons.project.controllers.portal import CustomerPortal
 
 class ProjectCustomerPortal(CustomerPortal):
 
-    def _prepare_project_sharing_session_info(self, project):
-        session_info = super()._prepare_project_sharing_session_info(project)
+    def _prepare_project_sharing_session_info(self, project, task=None):
+        session_info = super()._prepare_project_sharing_session_info(project, task)
 
         company = project.company_id
         timesheet_encode_uom = company.timesheet_encode_uom_id
