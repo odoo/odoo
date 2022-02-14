@@ -1,3 +1,39 @@
+%global name odoo
+%global release 1
+%global unmangled_version %{version}
+
+Summary: Odoo Server
+Name: %{name}
+Version: %{version}
+Release: %{release}
+Source0: %{name}-%{unmangled_version}.tar.gz
+License: LGPL-3
+Group: Development/Libraries
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
+Prefix: %{_prefix}
+BuildArch: noarch
+Vendor: Odoo S.A. <info@odoo.com>
+Requires: sassc
+BuildRequires: python3-devel
+Url: https://www.odoo.com
+
+%description
+Odoo is a complete ERP and CRM. The main features are accounting (analytic
+and financial), stock management, sales and purchases management, tasks
+automation, marketing campaigns, help desk, POS, etc. Technical features include
+a distributed server, an object database, a dynamic GUI,
+customizable reports, and XML-RPC interfaces.
+
+%prep
+%autosetup
+
+%build
+%py3_build
+
+%install
+%py3_install
+
+%post
 #!/bin/sh
 
 set -e
@@ -9,7 +45,6 @@ ODOO_GROUP="odoo"
 ODOO_LOG_DIR=/var/log/odoo
 ODOO_LOG_FILE=$ODOO_LOG_DIR/odoo-server.log
 ODOO_USER="odoo"
-ABI=$(rpm -q --provides python3 | uniq | awk '/abi/ {print $NF}')
 
 if ! getent passwd | grep -q "^odoo:"; then
     groupadd $ODOO_GROUP
@@ -29,7 +64,7 @@ db_host = False
 db_port = False
 db_user = $ODOO_USER
 db_password = False
-addons_path = /usr/lib/python${ABI}/site-packages/odoo/addons
+addons_path = %{python3_sitelib}/odoo/addons
 " > $ODOO_CONFIGURATION_FILE
     chown $ODOO_USER:$ODOO_GROUP $ODOO_CONFIGURATION_FILE
     chmod 0640 $ODOO_CONFIGURATION_FILE
@@ -60,3 +95,9 @@ KillMode=mixed
 [Install]
 WantedBy=multi-user.target
 EOF
+
+
+%files
+%{_bindir}/odoo
+%{python3_sitelib}/%{name}-*.egg-info
+%{python3_sitelib}/%{name}
