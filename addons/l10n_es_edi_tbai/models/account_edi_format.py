@@ -200,7 +200,7 @@ class AccountEdiFormat(models.Model):
         template_name = 'l10n_es_edi_tbai.template_invoice_main' + ('_cancel' if cancel else '_post')
         xml_str = self.env.ref(template_name)._render(values)
         xml_doc = L10nEsTbaiXmlUtils._cleanup_xml_content(xml_str, is_string=True)
-        self._l10n_es_tbai_sign_invoice(invoice, xml_doc)
+        xml_doc = self._l10n_es_tbai_sign_invoice(invoice, xml_doc)
 
         # Store the XML as attachment to ensure it is never lost (even in case of timeout error)
         invoice._update_l10n_es_tbai_submitted_xml(xml_doc=xml_doc, cancel=cancel)
@@ -387,12 +387,8 @@ class AccountEdiFormat(models.Model):
 
         # Sign (writes into SignatureValue)
         L10nEsTbaiXmlUtils._fill_signature(xml_sig, cert_private)
-        signature_value = xml_sig.find("ds:SignatureValue", namespaces=L10nEsTbaiXmlUtils.NS_MAP).text
 
-        # RFC2045 - Base64 Content-Transfer-Encoding (page 25)
-        # Any characters outside of the base64 alphabet are to be ignored in
-        # base64-encoded data.
-        return signature_value.replace("\n", "")
+        return xml_root
 
     # -------------------------------------------------------------------------
     # TBAI SERVER CALLS

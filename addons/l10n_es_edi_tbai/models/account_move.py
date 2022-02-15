@@ -187,7 +187,9 @@ class AccountMove(models.Model):
                 # Documents may exist but have not been validated by govt (eg. timeout)
                 record.l10n_es_tbai_signature = ''
             else:
-                record.l10n_es_tbai_signature = vals['signature']
+                # RFC2045 - Base64 Content-Transfer-Encoding (page 25)
+                # Any characters outside of the base64 alphabet are to be ignored in base64-encoded data.
+                record.l10n_es_tbai_signature = vals['signature'].replace("\n", "")
             if vals['registration_date']:
                 record.l10n_es_tbai_registration_date = datetime.strptime(vals['registration_date'], '%d-%m-%Y').replace(tzinfo=timezone('Europe/Madrid'))
             else:
