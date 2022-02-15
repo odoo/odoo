@@ -38,10 +38,12 @@ let target;
 
 QUnit.module("ActionManager", (hooks) => {
     hooks.beforeEach(() => {
-        registry.category("views").remove("list"); // remove new list from registry
+        registry.category("views").remove("form"); // remove new form from registry
         registry.category("views").remove("kanban"); // remove new kanban from registry
-        legacyViewRegistry.add("list", ListView); // add legacy list -> will be wrapped and added to new registry
+        registry.category("views").remove("list"); // remove new list from registry
+        legacyViewRegistry.add("form", FormView); // add legacy form -> will be wrapped and added to new registry
         legacyViewRegistry.add("kanban", KanbanView); // add legacy kanban -> will be wrapped and added to new registry
+        legacyViewRegistry.add("list", ListView); // add legacy list -> will be wrapped and added to new registry
 
         serverData = getActionManagerServerData();
         target = getFixture();
@@ -627,9 +629,6 @@ QUnit.module("ActionManager", (hooks) => {
         "execute action without modal closes bootstrap tooltips anyway",
         async function (assert) {
             assert.expect(12);
-            registry.category("views").remove("form"); // remove new form from registry
-            legacyViewRegistry.add("form", FormView); // add legacy form -> will be wrapped and added to new registry
-
             Object.assign(serverData.views, {
                 "partner,666,form": `<form>
             <header>
@@ -645,6 +644,7 @@ QUnit.module("ActionManager", (hooks) => {
                     return Promise.resolve(false);
                 }
             };
+
             const webClient = await createWebClient({ serverData, mockRPC });
             await doAction(webClient, 24);
             assert.verifySteps([
@@ -663,7 +663,7 @@ QUnit.module("ActionManager", (hooks) => {
             });
             $(actionButton).mouseenter();
             await tooltipProm;
-            assert.containsN(document.body, ".tooltip", 2);
+            assert.containsOnce(document.body, ".tooltip");
             await click(actionButton);
             await legacyExtraNextTick();
             assert.verifySteps(["/web/dataset/call_button", "/web/dataset/call_kw/partner/read"]);
@@ -675,11 +675,6 @@ QUnit.module("ActionManager", (hooks) => {
     QUnit.test("click multiple times to open a record", async function (assert) {
         assert.expect(5);
 
-        registry.category("views").remove("form"); // remove new form from registry
-        registry.category("views").remove("list"); // remove new list from registry
-        legacyViewRegistry.add("form", FormView); // add legacy form -> will be wrapped and added to new registry
-        legacyViewRegistry.add("list", ListView); // add legacy list -> will be wrapped and added to new registry
-
         const def = testUtils.makeTestPromise();
         const defs = [null, def];
         const mockRPC = async (route, args) => {
@@ -690,25 +685,26 @@ QUnit.module("ActionManager", (hooks) => {
 
         const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 3);
-        assert.containsOnce(webClient, ".o_legacy_list_view");
 
-        await testUtils.dom.click(webClient.el.querySelector(".o_legacy_list_view .o_data_row"));
+        assert.containsOnce(target, ".o_legacy_list_view");
+
+        await testUtils.dom.click(target.querySelector(".o_legacy_list_view .o_data_row"));
         await legacyExtraNextTick();
-        assert.containsOnce(webClient, ".o_legacy_form_view");
+        assert.containsOnce(target, ".o_legacy_form_view");
 
-        await testUtils.dom.click(webClient.el.querySelector(".o_back_button"));
+        await testUtils.dom.click(target.querySelector(".o_back_button"));
         await legacyExtraNextTick();
 
-        assert.containsOnce(webClient, ".o_legacy_list_view");
+        assert.containsOnce(target, ".o_legacy_list_view");
 
-        await testUtils.dom.click(webClient.el.querySelector(".o_legacy_list_view .o_data_row"));
-        await testUtils.dom.click(webClient.el.querySelector(".o_legacy_list_view .o_data_row"));
+        await testUtils.dom.click(target.querySelector(".o_legacy_list_view .o_data_row"));
+        await testUtils.dom.click(target.querySelector(".o_legacy_list_view .o_data_row"));
         await legacyExtraNextTick();
-        assert.containsOnce(webClient, ".o_legacy_list_view");
+        assert.containsOnce(target, ".o_legacy_list_view");
 
         def.resolve();
         await testUtils.nextTick();
         await legacyExtraNextTick();
-        assert.containsOnce(webClient, ".o_legacy_form_view");
+        assert.containsOnce(target, ".o_legacy_form_view");
     });
 });
