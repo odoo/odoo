@@ -41,7 +41,7 @@ export class FormArchParser extends XMLParser {
 
 // -----------------------------------------------------------------------------
 
-class FormView extends Component {
+export class FormView extends Component {
     setup() {
         this.dialogService = useService("dialog");
         this.router = useService("router");
