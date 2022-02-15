@@ -3634,11 +3634,21 @@ var SnippetsMenu = Widget.extend({
      *
      * @private
      * @param {function} action
-     * @param {boolean} [contentLoading=true]
+     * @param {boolean|string} [contentLoading=true]
+     *     - true: puts the load effect on the edited page
+     *     - false: puts the load effect on the editor options
+     *     - "both": puts the load effect on both the page and the options
      * @param {number} [delay=500]
      * @returns {Promise}
      */
     async _execWithLoadingEffect(action, contentLoading = true, delay = 500) {
+        if (contentLoading === "both") {
+            contentLoading = false;
+            const actualAction = action;
+            action = () => {
+                this._execWithLoadingEffect(actualAction, true, delay);
+            };
+        }
         const mutexExecResult = this._mutex.exec(action);
         if (!this.loadingTimers[contentLoading]) {
             const addLoader = () => {
@@ -4241,7 +4251,7 @@ var SnippetsMenu = Widget.extend({
      * @param {function} ev.data.exec
      */
     _onSnippetEditionRequest: function (ev) {
-        this._execWithLoadingEffect(ev.data.exec, true);
+        this._execWithLoadingEffect(ev.data.exec, ev.data.optionsLoader ? "both" : true);
     },
     /**
      * @private
