@@ -39,6 +39,24 @@ msgid "Free Shipping"
 msgstr "Miễn phí giao hàng"
 
 #. module: delivery
+#: code:addons/delivery/models/delivery_grid.py:0
+#, python-format
+msgid "%s %.02f times %s"
+msgstr "%s %.02f lần %s"
+
+#. module: delivery
+#: code:addons/delivery/models/delivery_grid.py:0
+#, python-format
+msgid "%s fixed price %.02f"
+msgstr "%s giá cố định %.02f"
+
+#. module: delivery
+#: code:addons/delivery/models/delivery_grid.py:0
+#, python-format
+msgid "%s fixed price %.02f plus %.02f times %s"
+msgstr "%s giá cố định %.02f cộng %.02f lần %s"
+
+#. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_quant_package_weight_form
 msgid "(computed:"
 msgstr "(được tính toán:"
@@ -378,7 +396,7 @@ msgstr "Tỉ lệ giao thành công"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__delivery_set
 msgid "Delivery Set"
-msgstr "Trạng thái giao hàng" 
+msgstr "Trạng thái giao hàng"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__recompute_delivery_price
@@ -635,7 +653,7 @@ msgstr "Chiều dài phải dương"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging__length_uom_name
 msgid "Length unit of measure label"
-msgstr "Length unit of measure label"
+msgstr "Nhãn đơn vị tính chiều dài"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__debug_logging
@@ -879,7 +897,8 @@ msgstr "Sản phẩm kiểu dịch vụ"
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__prod_environment
 msgid "Set to True if your credentials are certified for production."
 msgstr ""
-"Đặt thành True nếu thông tin xác thực của bạn được chứng nhận để đưa vào môi trường sản xuất."
+"Đặt thành True nếu thông tin xác thực của bạn được chứng nhận để đưa vào môi"
+" trường sản xuất."
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:0
@@ -888,8 +907,8 @@ msgid ""
 "Shipment sent to carrier %(carrier_name)s for shipping with tracking number "
 "%(ref)s<br/>Cost: %(price).2f %(currency)s"
 msgstr ""
-"Lô hàng đã được gửi cho nhà vận chuyển %(carrier_name)s để bàn giao với mã truy vết "
-"%(ref)s<br/>Chi phí: %(price).2f %(currency)s"
+"Lô hàng đã được gửi cho nhà vận chuyển %(carrier_name)s để bàn giao với mã "
+"truy vết %(ref)s<br/>Chi phí: %(price).2f %(currency)s"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__carrier_price
@@ -928,8 +947,6 @@ msgid ""
 "Standardized code for international shipping and goods declaration. At the "
 "moment, only used for the FedEx shipping provider."
 msgstr ""
-"Standardized code for international shipping and goods declaration. At the "
-"moment, only used for the FedEx shipping provider."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__state_ids
@@ -953,7 +970,8 @@ msgstr "Poste"
 msgid ""
 "The return label can be downloaded by the customer from the customer portal."
 msgstr ""
-"Nhãn trả lại hàng có thể được tải về bởi khách hàng từ cổng thông tin khách hàng."
+"Nhãn trả lại hàng có thể được tải về bởi khách hàng từ cổng thông tin khách "
+"hàng."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__return_label_on_delivery
@@ -1016,9 +1034,9 @@ msgid ""
 "shipping weight specified will default to their products' total weight. This"
 " is the weight used to compute the cost of the shipping."
 msgstr ""
-"Tổng khối lượng các gói và hàng hóa chưa đóng gói. Các gói mà không có "
-"khối lượng được thiết lập sẽ mặc định lấy tổng khối lượng hàng hóa mà nó chứa."
-" Các thông tin này được dùng để tính phí vận chuyển."
+"Tổng khối lượng các gói và hàng hóa chưa đóng gói. Các gói mà không có khối "
+"lượng được thiết lập sẽ mặc định lấy tổng khối lượng hàng hóa mà nó chứa. "
+"Các thông tin này được dùng để tính phí vận chuyển."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_picking__weight_bulk
@@ -1038,7 +1056,7 @@ msgstr "Tổng khối lượng hàng hóa trong lô hàng."
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
 msgid "Trackers URL"
-msgstr "Trackers URL"
+msgstr ""
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
@@ -1187,3 +1205,9 @@ msgstr "Đến Zip"
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "e.g. UPS Express"
 msgstr "vd: UPS Express"
+
+#. module: delivery
+#: code:addons/delivery/models/delivery_grid.py:0
+#, python-format
+msgid "if %s %s %.02f then"
+msgstr "nếu %s %s %.02f thì"
