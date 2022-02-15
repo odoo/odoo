@@ -39,6 +39,9 @@ msgid ""
 "                        Open the two-factor authentication app on your\n"
 "                        device to obtain a code and verify your identity"
 msgstr ""
+"<i class=\"fa fa-2x fa-mobile pull-left\"/>\n"
+"                        Mở ứng dụng xác thực 2 yếu tố trên thiết bị của\n"
+"                        bạn để lấy mã và xác thực danh tính của bạn"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
@@ -46,6 +49,8 @@ msgid ""
 "<i class=\"fa fa-check-circle\"/>\n"
 "                                Two-factor authentication enabled"
 msgstr ""
+"<i class=\"fa fa-check-circle\"/>\n"
+"                                Xác thực 2 yếu tố được kích hoạt"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
@@ -53,6 +58,8 @@ msgid ""
 "<i class=\"fa fa-question-circle text-primary\" title=\"If checked, you "
 "won't be asked for two-factor authentication codes with this device.\"/>"
 msgstr ""
+"<i class=\"fa fa-question-circle text-primary\" title=\"Nếu đánh dấu, bạn "
+"sẽ không bị hỏi về mã xác thực 2 yếu tố ở thiết bị này.\"/>"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
@@ -60,6 +67,8 @@ msgid ""
 "<i class=\"fa fa-warning\"/>\n"
 "                                Two-factor authentication not enabled"
 msgstr ""
+"<i class=\"fa fa-warning\"/>\n"
+"                                Xác thực 2 yếu tố chưa được kích hoạt"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
@@ -69,6 +78,10 @@ msgid ""
 "                            Two-factor authentication not enabled\n"
 "                        </span>"
 msgstr ""
+"<span class=\"alert alert-info\" role=\"status\">\n"
+"                            <i class=\"fa fa-warning\"/>\n"
+"                            Xác thực 2 yếu tố chưa được kích hoạt\n"
+"                        </span>"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
@@ -78,11 +91,15 @@ msgid ""
 "                            Two-factor authentication enabled\n"
 "                        </span>"
 msgstr ""
+"<span class=\"text-success\">\n"
+"                            <i class=\"fa fa-check-circle\"/>\n"
+"                            Xác thực 2 yếu tố được kích hoạt\n"
+"                        </span>"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 msgid "Added On"
-msgstr ""
+msgstr "Được thêm vào"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
@@ -91,9 +108,9 @@ msgid ""
 "                                should enter below. Don't worry if the code changes in the app,\n"
 "                                it stays valid a bit longer."
 msgstr ""
-"After scanning the barcode, the app will display a 6-digit code that you\n"
-"                                should enter below. Don't worry if the code changes in the app,\n"
-"                                it stays valid a bit longer."
+"Sau khi quét mã vạch, ứng dụng sẽ hiện thị một mã gồm 6 chữ số để bạn có\n"
+"                                thể nhập vào dưới đây. Đừng lo nếu mã có thay đổi ở app,\n"
+"                                thực tế nó tồn tại lâu hơn một chút."
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
@@ -101,11 +118,13 @@ msgid ""
 "Are you sure? Two-factor authentication will be required again on all your "
 "devices"
 msgstr ""
+"Bạn chắc chắn chứ? Xác thực 2 yếu tố sẽ được yêu cầu một lần nữa đối với tất "
+"cả các thiết bị của bạn."
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
 msgid "Authentication Code (6 digits)"
-msgstr ""
+msgstr "Mã xác thực (6 chữ số)"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
@@ -144,24 +163,24 @@ msgstr "Tên hiển thị"
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
 msgid "Don't ask again for this device"
-msgstr ""
+msgstr "Không hỏi lại đối với thiết bị này"
 
 #. module: auth_totp
 #: code:addons/auth_totp/models/res_users.py:0
 #, python-format
 msgid "Enable Two-Factor Authentication"
-msgstr "Enable Two-Factor Authentication"
+msgstr "Kích hoạt Xác thực 2 yếu tố"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Enable two-factor authentication"
-msgstr "Enable two-factor authentication"
+msgstr "Kích hoạt xác thực 2 yếu tố"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Enter the 6-digit code from your app"
-msgstr "Enter the 6-digit code from your app"
+msgstr "Nhập mã gồm 6 chữ số từ ứng dụng của bạn"
 
 #. module: auth_totp
 #: model:ir.model,name:auth_totp.model_ir_http
@@ -179,7 +198,7 @@ msgstr "ID"
 #: code:addons/auth_totp/controllers/home.py:0
 #, python-format
 msgid "Invalid authentication code format."
-msgstr "Invalid authentication code format."
+msgstr "Định dạng mã xác thực không hợp lệ."
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard____last_update
@@ -201,7 +220,7 @@ msgstr "Cập nhật lần cuối vào"
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Or enter the secret code manually:"
-msgstr "Or enter the secret code manually:"
+msgstr "Hoặc nhập mã bí mật một cách thủ công:"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__qrcode
@@ -216,7 +235,7 @@ msgstr "Thu hồi"
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 msgid "Revoke All"
-msgstr ""
+msgstr "Thu hồi Tất cả"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
@@ -224,79 +243,79 @@ msgid ""
 "Scan the image below with the authenticator app on your phone.<br/>\n"
 "                                If you cannot scan the barcode, here are some alternative options:"
 msgstr ""
-"Scan the image below with the authenticator app on your phone.<br/>\n"
-"                                If you cannot scan the barcode, here are some alternative options:"
+"Quét hình dưới đây bằng ứng dụng quét trên điện thoại của bạn.<br/>\n"
+"                                Nếu bạn không quét được mã vạch, dưới đây là một số tùy chọn thay thế:"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Scan this barcode with your app"
-msgstr "Scan this barcode with your app"
+msgstr "Quét mã vạch này bằng ứng dụng của bạn"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__secret
 msgid "Secret"
-msgstr "Secret"
+msgstr "Bí mật"
 
 #. module: auth_totp
 #: code:addons/auth_totp/models/res_users.py:0
 #, python-format
 msgid "The verification code should only contain numbers"
-msgstr "The verification code should only contain numbers"
+msgstr "Mã xác thực chỉ nên bao gồm các chữ số"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_secret
 msgid "Totp Secret"
-msgstr "Totp Secret"
+msgstr "Mã TOTP bí mật"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 msgid "Trusted Device"
-msgstr ""
+msgstr "Thiết bị được tin cậy"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_trusted_device_ids
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 msgid "Trusted Devices"
-msgstr ""
+msgstr "Thiết bị được tin cậy"
 
 #. module: auth_totp
 #: model:ir.model,name:auth_totp.model_auth_totp_wizard
 msgid "Two-Factor Setup Wizard"
-msgstr "Two-Factor Setup Wizard"
+msgstr "Đồ thuật Cài đặt Xác thực 2 yếu tố"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
 msgid "Two-factor Authentication"
-msgstr "Two-factor Authentication"
+msgstr "Xác thực 2 yếu tố"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_enabled
 msgid "Two-factor authentication"
-msgstr ""
+msgstr "Xác thực 2 yếu tố"
 
 #. module: auth_totp
 #: code:addons/auth_totp/models/res_users.py:0
 #, python-format
 msgid "Two-factor authentication already enabled"
-msgstr "Two-factor authentication already enabled"
+msgstr "Xác thực 2 yếu tố đã được kích hoạt rồi"
 
 #. module: auth_totp
 #: code:addons/auth_totp/models/res_users.py:0
 #, python-format
 msgid "Two-factor authentication can only be enabled for yourself"
-msgstr "Two-factor authentication can only be enabled for yourself"
+msgstr "Xác thực 2 yếu tố chỉ có thể được kích hoạt bởi chính bạn"
 
 #. module: auth_totp
 #: code:addons/auth_totp/models/res_users.py:0
 #, python-format
 msgid "Two-factor authentication disabled for user(s) %s"
-msgstr ""
+msgstr "Xác thực 2 yếu tố bị vô hiệu đối với người dùng %s"
 
 #. module: auth_totp
 #: code:addons/auth_totp/models/res_users.py:0
 #, python-format
 msgid "Two-factor authentication is now enabled."
-msgstr ""
+msgstr "Xác thực 2 yếu tố hiện đã được kích hoạt"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__url
@@ -317,14 +336,14 @@ msgstr "Người dùng"
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__code
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Verification Code"
-msgstr "Verification Code"
+msgstr "Mã xác thực"
 
 #. module: auth_totp
 #: code:addons/auth_totp/controllers/home.py:0
 #: code:addons/auth_totp/models/res_users.py:0
 #, python-format
 msgid "Verification failed, please double-check the 6-digit code"
-msgstr "Verification failed, please double-check the 6-digit code"
+msgstr "Xác minh thất bại. Hãy kiểm tra lại mã 6 chữ số"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
@@ -334,14 +353,14 @@ msgstr "Xác minh"
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 msgid "What is this?"
-msgstr ""
+msgstr "Cái gì đây?"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Your two-factor secret:"
-msgstr "Your two-factor secret:"
+msgstr "Mã bí mật 2 yếu tố của bạn:"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "show the code"
-msgstr "show the code"
+msgstr "hiển thị mã"
