@@ -2,12 +2,13 @@
 <odoo>
     <template id="sale_order_portal_content_inherit_sale_mrp" name="Orders MOs" inherit_id="sale.sale_order_portal_content">
         <xpath expr="//div[@id='informations']" position="inside">
-            <t t-if="mrp_production_ids">
+            <t t-set="mrp_productions" t-value="sale_order.mrp_production_ids"/>
+            <t t-if="mrp_productions">
                 <div>
                     <strong>Manufacturing Orders</strong>
                 </div>
                 <div>
-                    <t t-foreach="mrp_production_ids" t-as="mo">
+                    <t t-foreach="mrp_productions" t-as="mo">
                         <div class="d-flex flex-wrap align-items-center justify-content-between o_sale_stock_picking">
                             <div>
                                 <span t-out="mo.name"/>
@@ -25,5 +26,5 @@
                 </div>
             </t>
         </xpath>
-  </template>
+    </template>
 </odoo>
