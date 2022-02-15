@@ -120,21 +120,13 @@ class WebsiteVisitorTests(MockVisitor, HttpCaseWithUserDemo):
         )
 
     def assertVisitorDeactivated(self, visitor, main_visitor):
-        """ Temporary method to check that a visitor has been de-activated / merged
+        """ Method that checks that a visitor has been de-activated / merged
         with other visitor, notably in case of login (see User.authenticate() as
-        well as Visitor._link_to_visitor() ).
-
-        As final result depends on installed modules (see overrides) due to stable
-        improvements linked to EventOnline, this method contains a hack to avoid
-        doing too much overrides just for that behavior. """
-        if 'parent_id' in self.env['website.visitor']:
-            self.assertTrue(bool(visitor))
-            self.assertFalse(visitor.active)
-            self.assertTrue(main_visitor.active)
-            self.assertEqual(visitor.parent_id, main_visitor)
-        else:
-            self.assertFalse(visitor)
-            self.assertTrue(bool(main_visitor))
+        well as Visitor._link_to_visitor() ). """
+        self.assertTrue(bool(visitor))
+        self.assertFalse(visitor.active)
+        self.assertTrue(main_visitor.active)
+        self.assertEqual(visitor.parent_id, main_visitor)
 
     def test_visitor_creation_on_tracked_page(self):
         """ Test various flows involving visitor creation and update. """
