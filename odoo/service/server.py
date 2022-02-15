@@ -8,7 +8,7 @@ import os
 import os.path
 import platform
 import random
-import select
+import selectors
 import signal
 import socket
 import subprocess
@@ -61,6 +61,8 @@ from odoo.tools import stripped_sys_argv, dumpstacks, log_ormcache_stats
 from ..tests import loader, runner
 
 _logger = logging.getLogger(__name__)
+
+select = selectors.DefaultSelector
 
 SLEEP_INTERVAL = 60     # 1 min
 
@@ -428,13 +430,13 @@ class ThreadedServer(CommonServer):
 
         from odoo.addons.base.models.ir_cron import ir_cron
         conn = odoo.sql_db.db_connect('postgres')
-        with conn.cursor() as cr:
+        with conn.cursor() as cr, select() as sel:
             pg_conn = cr._cnx
             cr.execute("LISTEN cron_trigger")
             cr.commit()
-
+            sel.register(pg_conn, selectors.EVENT_READ)
             while True:
-                select.select([pg_conn], [], [], SLEEP_INTERVAL + number)
+                sel.select(timeout=SLEEP_INTERVAL + number)
                 time.sleep(number / 100)
                 pg_conn.poll()
 
@@ -833,17 +835,19 @@ class PreforkServer(CommonServer):
         try:
             # map of fd -> worker
             fds = {w.watchdog_pipe[0]: w for w in self.workers.values()}
-            fd_in = list(fds) + [self.pipe[0]]
             # check for ping or internal wakeups
-            ready = select.select(fd_in, [], [], self.beat)
-            # update worker watchdogs
-            for fd in ready[0]:
-                if fd in fds:
-                    fds[fd].watchdog_time = time.time()
-                empty_pipe(fd)
-        except select.error as e:
-            if e.args[0] not in [errno.EINTR]:
-                raise
+            with select() as sel:
+                for fd in fds:
+                    sel.register(fd, selectors.EVENT_READ)
+                sel.register(self.pipe[0], selectors.EVENT_READ)
+                events = sel.select(timeout=self.beat)
+                for key, _mask in events:
+                    # update worker watchdogs
+                    if key.fd in fds:
+                        fds[key.fd].watchdog_time = time.time()
+                    empty_pipe(key.fd)
+        except InterruptedError:
+            pass
 
     def start(self):
         # wakeup pipe, python doesn't throw EINTR when a syscall is interrupted
@@ -963,12 +967,15 @@ class Worker(object):
 
     def sleep(self):
         try:
-            select.select([self.multi.socket, self.wakeup_fd_r], [], [], self.multi.beat)
-            # clear wakeup pipe if we were interrupted
-            empty_pipe(self.wakeup_fd_r)
-        except select.error as e:
-            if e.args[0] not in [errno.EINTR]:
-                raise
+            with select() as sel:
+                sel.register(self.multi.socket, selectors.EVENT_READ)
+                sel.register(self.wakeup_fd_r, selectors.EVENT_READ)
+                sel.select(timeout=self.multi.beat)
+
+                # clear wakeup pipe if we were interrupted
+                empty_pipe(self.wakeup_fd_r)
+        except InterruptedError:
+            pass
 
     def check_limits(self):
         # If our parent changed suicide
@@ -1117,14 +1124,16 @@ class WorkerCron(Worker):
 
             # simulate interruptible sleep with select(wakeup_fd, timeout)
             try:
-                select.select([self.wakeup_fd_r, self.dbcursor._cnx], [], [], interval)
-                # clear pg_conn/wakeup pipe if we were interrupted
-                time.sleep(self.pid / 100 % .1)
-                self.dbcursor._cnx.poll()
-                empty_pipe(self.wakeup_fd_r)
-            except select.error as e:
-                if e.args[0] != errno.EINTR:
-                    raise
+                with select() as sel:
+                    sel.register(self.wakeup_fd_r, selectors.EVENT_READ)
+                    sel.register(self.dbcursor._cnx, selectors.EVENT_READ)
+                    sel.select(timeout=interval)
+                    # clear pg_conn/wakeup pipe if we were interrupted
+                    time.sleep(self.pid / 100 % .1)
+                    self.dbcursor._cnx.poll()
+                    empty_pipe(self.wakeup_fd_r)
+            except InterruptedError:
+                pass
 
     def _db_list(self):
         if config['db_name']:
