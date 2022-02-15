@@ -5,7 +5,7 @@ from datetime import timedelta
 from odoo import api, fields, models
 
 
-class PosDetails(models.TransientModel):
+class L10nCoPosDetails(models.TransientModel):
     _name = 'l10n_co_pos.details.wizard'
 
     start_date = fields.Datetime(required=True, default=lambda x: fields.Datetime.now() - timedelta(days=2))
