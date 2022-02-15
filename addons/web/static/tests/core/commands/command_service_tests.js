@@ -938,3 +938,18 @@ QUnit.test("display shortcuts correctly for MacOS with a new overlayModifier", a
         ["ClickCONTROL + COMMAND + A"]
     );
 });
+
+QUnit.test("openMainPalette with onClose", async (assert) => {
+    const command = env.services.command;
+    command.openMainPalette({}, () => {
+        assert.step("onClose");
+    });
+    await mount(TestComponent, target, { env });
+
+    await nextTick();
+    assert.containsOnce(target, ".o_command_palette");
+
+    triggerHotkey("escape");
+    await nextTick();
+    assert.verifySteps(["onClose"]);
+});

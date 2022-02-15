@@ -69,9 +69,10 @@ export const commandService = {
 
         /**
          * @param {CommandPaletteConfig} config command palette config merged with default config
+         * @param {Function} onClose called when the command palette is closed
          * @returns the actual command palette config if the command palette is already open
          */
-        function openMainPalette(config = {}) {
+        function openMainPalette(config = {}, onClose) {
             const configByNamespace = {};
             for (const provider of commandProviderRegistry.getAll()) {
                 const namespace = provider.namespace || "default";
@@ -112,14 +113,15 @@ export const commandService = {
                 },
                 config
             );
-            return openPalette(config);
+            return openPalette(config, onClose);
         }
 
         /**
          * @param {CommandPaletteConfig} config
+         * @param {Function} onClose called when the command palette is closed
          * @returns config if the command palette is already open
          */
-        function openPalette(config) {
+        function openPalette(config, onClose) {
             if (isPaletteOpened) {
                 return config;
             }
@@ -134,6 +136,9 @@ export const commandService = {
                 {
                     onClose: () => {
                         isPaletteOpened = false;
+                        if (onClose) {
+                            onClose();
+                        }
                     },
                 }
             );
