@@ -4405,6 +4405,7 @@ const SnippetOptionWidget = Widget.extend({
         if (shouldRecordUndo) {
             this.options.wysiwyg.odooEditor.unbreakableStepUnactive();
         }
+        const useLoaderOnOptionPanel = ev.target.el.dataset.loaderOnOptionPanel;
         this.trigger_up('snippet_edition_request', {exec: async () => {
             // If some previous snippet edition in the mutex removed the target from
             // the DOM, the widget can be destroyed, in that case the edition request
@@ -4461,7 +4462,7 @@ const SnippetOptionWidget = Widget.extend({
             // Set timeout needed so that the user event which triggered the
             // option can bubble first.
             }));
-        }});
+        }, optionsLoader: useLoaderOnOptionPanel});
 
         if (ev.data.isSimulatedEvent) {
             // If the user value update was simulated through a trigger, we
