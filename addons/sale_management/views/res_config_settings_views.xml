@@ -5,6 +5,7 @@
         <field name="name">res.config.settings.view.form.inherit.sale.management</field>
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="sale.res_config_settings_view_form"/>
+        <field name="groups_id" eval="[(4, ref('sales_team.group_sale_salesman'), 0)]"/>
         <field name="arch" type="xml">
             <xpath expr="//div[@id='confirmation_email_setting']" position="after">
                 <div class="col-12 col-lg-6 o_setting_box">
