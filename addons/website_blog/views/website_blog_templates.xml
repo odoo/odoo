@@ -457,16 +457,6 @@ list of filtered posts (by date or tag).
 
 <!-- ======   Technical Templates   ============================================
 ============================================================================ -->
-<!-- User Navbar -->
-<template id="user_navbar_inherit_website_blog" inherit_id="website.user_navbar">
-    <xpath expr="//div[@id='o_new_content_menu_choices']//div[@name='module_website_blog']" position="attributes">
-        <attribute name="name"/>
-        <attribute name="t-att-data-module-id"/>
-        <attribute name="t-att-data-module-shortdesc"/>
-        <attribute name="t-if">is_designer</attribute>
-        <attribute name="t-cache"/>
-    </xpath>
-</template>
 
 <!-- Atom Feed -->
 <template id="blog_feed">&lt;?xml version="1.0" encoding="utf-8"?&gt;

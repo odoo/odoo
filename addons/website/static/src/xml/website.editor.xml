@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
-    <!-- Custom checkbox (material-design-like toggle) -->
-    <t t-name="website.components.switch">
-        <label class="o_switch dropdown-item m-0" t-att-for="id">
-            <input type="checkbox" t-att-id="id" t-att-checked="checked ? 'checked' : undefined"/>
-            <span/>
-            <div t-if="label"><t t-esc="label"/></div>
-        </label>
-    </t>
 
     <t t-extend="wysiwyg.widgets.link">
         <t t-jquery="#o_link_dialog_url_input" t-operation="after">
