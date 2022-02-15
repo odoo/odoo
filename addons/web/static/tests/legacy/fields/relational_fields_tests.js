@@ -1025,7 +1025,7 @@ QUnit.module('Legacy relational_fields', {
     });
 
     // TODO: Once the code base is converted with wowl, replace webclient by formview.
-    QUnit.test('statusbar edited by the smart action "Move to stage..."', async function (assert) {
+    QUnit.skip('statusbar edited by the smart action "Move to stage..."', async function (assert) {
         assert.expect(3);
 
         const legacyEnv = makeTestEnvironment({ bus: core.bus });
