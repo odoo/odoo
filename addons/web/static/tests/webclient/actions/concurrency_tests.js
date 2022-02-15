@@ -1,6 +1,12 @@
 /** @odoo-module **/
 
-import { click, getFixture, legacyExtraNextTick, makeDeferred, nextTick } from "@web/../tests/helpers/utils";
+import {
+    click,
+    getFixture,
+    legacyExtraNextTick,
+    makeDeferred,
+    nextTick,
+} from "@web/../tests/helpers/utils";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import {
     isItemSelected,
@@ -158,11 +164,7 @@ QUnit.module("ActionManager", (hooks) => {
                 id: 2,
                 view_type: "form",
             });
-            assert.containsOnce(
-                target,
-                ".o_form_view",
-                "should display the form view of action 4"
-            );
+            assert.containsOnce(target, ".o_form_view", "should display the form view of action 4");
             // click to go back to Kanban (this request is blocked)
             def = makeDeferred();
             await click(target.querySelector(".o_control_panel .breadcrumb a"));
@@ -325,16 +327,14 @@ QUnit.module("ActionManager", (hooks) => {
         // execute a first action (its 'get_views' RPC is blocked)
         doAction(webClient, 3);
         await nextTick();
-        assert.containsNone(
-            target,
-            ".o_list_view",
-            "should not display the list view of action 3"
-        );
+        assert.containsNone(target, ".o_list_view", "should not display the list view of action 3");
         // execute another action meanwhile (and unlock the RPC)
         doAction(webClient, 4);
         await nextTick();
         def.resolve();
         await nextTick();
+        assert.containsOnce(target, ".o_kanban_view", "should display the kanban view of action 4");
+        assert.containsNone(target, ".o_list_view", "should not display the list view of action 3");
         assert.containsOnce(
             target,
             ".o_control_panel .breadcrumb-item",
@@ -363,15 +363,13 @@ QUnit.module("ActionManager", (hooks) => {
         // execute a first action (its 'search_read' RPC is blocked)
         doAction(webClient, 3);
         await nextTick();
-        assert.containsNone(
-            target,
-            ".o_list_view",
-            "should not display the list view of action 3"
-        );
+        assert.containsNone(target, ".o_list_view", "should not display the list view of action 3");
         // execute another action meanwhile (and unlock the RPC)
         doAction(webClient, 4);
         def.resolve();
         await nextTick();
+        assert.containsOnce(target, ".o_kanban_view", "should display the kanban view of action 4");
+        assert.containsNone(target, ".o_list_view", "should not display the list view of action 3");
         assert.containsOnce(
             target,
             ".o_control_panel .breadcrumb-item",
