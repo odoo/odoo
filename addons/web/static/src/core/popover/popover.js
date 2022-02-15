@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { usePosition } from "../position/position_hook";
+import { usePosition } from "../position_hook";
 
 const { Component } = owl;
 
