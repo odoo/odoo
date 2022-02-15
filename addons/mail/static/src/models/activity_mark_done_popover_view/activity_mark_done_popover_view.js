@@ -26,21 +26,27 @@ registerModel({
          * Handles click on this "Done" button.
          */
         async onClickDone() {
+            const { chatter } = this.activityViewOwner.activityBoxView;
             await this.activityViewOwner.activity.markAsDone({
                 feedback: this.feedbackTextareaRef.el.value,
             });
-            if (!this.exists() || !this.component) {
+            if (!chatter.exists() || !chatter.component) {
                 return;
             }
-            this.component.trigger('reload', { keepChanges: true });
+            chatter.reloadParentView();
         },
         /**
          * Handles click on this "Done & Schedule Next" button.
          */
-        onClickDoneAndScheduleNext() {
-            this.activityViewOwner.activity.markAsDoneAndScheduleNext({
+        async onClickDoneAndScheduleNext() {
+            const { chatter } = this.activityViewOwner.activityBoxView;
+            await this.activityViewOwner.activity.markAsDoneAndScheduleNext({
                 feedback: this.feedbackTextareaRef.el.value,
             });
+            if (!chatter.exists() || !chatter.component) {
+                return;
+            }
+            chatter.reloadParentView();
         },
         /**
          * Handles keydown on this activity mark done.
