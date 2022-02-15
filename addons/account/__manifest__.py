@@ -109,6 +109,7 @@ You could use this simplified accounting in case you work with an (external) acc
             'account/static/src/js/tours/account.js',
             'account/static/src/js/bills_upload.js',
             'account/static/src/js/account_selection.js',
+            'account/static/src/js/account_payment_form_view.js',
         ],
         'web.assets_frontend': [
             'account/static/src/js/account_portal_sidebar.js',

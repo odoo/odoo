@@ -6,7 +6,6 @@ from odoo.exceptions import UserError, ValidationError
 class AccountPayment(models.Model):
     _name = "account.payment"
     _inherits = {'account.move': 'move_id'}
-    _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = "Payments"
     _order = "date desc, name desc"
     _check_company_auto = True
@@ -37,13 +36,13 @@ class AccountPayment(models.Model):
         compute='_compute_available_partner_bank_ids',
     )
     partner_bank_id = fields.Many2one('res.partner.bank', string="Recipient Bank Account",
-        readonly=False, store=True, tracking=True,
+        readonly=False, store=True, parent_tracked=True,
         compute='_compute_partner_bank_id',
         domain="[('id', 'in', available_partner_bank_ids)]",
         check_company=True)
     is_internal_transfer = fields.Boolean(string="Internal Transfer",
         readonly=False, store=True,
-        tracking=True,
+        parent_tracked=True,
         compute="_compute_is_internal_transfer")
     qr_code = fields.Char(string="QR Code",
         compute="_compute_qr_code",
@@ -68,7 +67,7 @@ class AccountPayment(models.Model):
     payment_method_id = fields.Many2one(
         related='payment_method_line_id.payment_method_id',
         string="Method",
-        tracking=True,
+        parent_tracked=True,
         store=True
     )
     available_journal_ids = fields.Many2many(
@@ -81,12 +80,12 @@ class AccountPayment(models.Model):
     payment_type = fields.Selection([
         ('outbound', 'Send'),
         ('inbound', 'Receive'),
-    ], string='Payment Type', default='inbound', required=True, tracking=True)
+    ], string='Payment Type', default='inbound', required=True, parent_tracked=True)
     partner_type = fields.Selection([
         ('customer', 'Customer'),
         ('supplier', 'Vendor'),
-    ], default='customer', tracking=True, required=True)
-    payment_reference = fields.Char(string="Payment Reference", copy=False, tracking=True,
+    ], default='customer', parent_tracked=True, required=True)
+    payment_reference = fields.Char(string="Payment Reference", copy=False, parent_tracked=True,
         help="Reference of the document used to issue this payment. Eg. check number, file name, etc.")
     currency_id = fields.Many2one('res.currency', string='Currency', store=True, readonly=False,
         compute='_compute_currency_id',
@@ -97,7 +96,7 @@ class AccountPayment(models.Model):
         store=True, readonly=False, ondelete='restrict',
         compute='_compute_partner_id',
         domain="['|', ('parent_id','=', False), ('is_company','=', True)]",
-        tracking=True,
+        parent_tracked=True,
         check_company=True)
     outstanding_account_id = fields.Many2one(
         comodel_name='account.account',
@@ -152,7 +151,7 @@ class AccountPayment(models.Model):
         help="Technical field used to know whether the field `partner_bank_id` needs to be required or not in the payments form views")
     country_code = fields.Char(related='company_id.account_fiscal_country_id.code')
     amount_signed = fields.Monetary(
-        currency_field='currency_id', compute='_compute_amount_signed', tracking=True,
+        currency_field='currency_id', compute='_compute_amount_signed', parent_tracked=True,
         help='Negative value of amount field if payment_type is outbound')
     amount_company_currency_signed = fields.Monetary(
         currency_field='company_currency_id', compute='_compute_amount_company_currency_signed')
@@ -703,6 +702,9 @@ class AccountPayment(models.Model):
 
     def write(self, vals):
         # OVERRIDE
+        # Call the track prepare on the move before writing
+        if not self._context.get('mail_notrack') and self.move_id:
+            self.move_id._track_prepare(self.move_id._fields)
         res = super().write(vals)
         self._synchronize_to_moves(set(vals.keys()))
         return res
@@ -903,6 +905,14 @@ class AccountPayment(models.Model):
             lines.reconcile()
 
     # -------------------------------------------------------------------------
+    # TRACKING METHODS
+    # -------------------------------------------------------------------------
+
+    def _valid_field_parameter(self, field, name):
+        # Mark tracking as valid, while this model does not inherit mail_thread the move behind does
+        return name == 'parent_tracked' or super()._valid_field_parameter(field, name)
+
+    # -------------------------------------------------------------------------
     # BUSINESS METHODS
     # -------------------------------------------------------------------------
 
@@ -911,6 +921,12 @@ class AccountPayment(models.Model):
 
     def unmark_as_sent(self):
         self.write({'is_move_sent': False})
+
+    @api.returns('mail.message', lambda value: value.id)
+    def message_post(self, **kwargs):
+        if self.move_id:
+            return self.move_id.message_post(**kwargs)
+        return False
 
     def action_post(self):
         ''' draft -> posted '''

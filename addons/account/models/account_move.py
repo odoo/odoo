@@ -228,6 +228,7 @@ class AccountMove(models.Model):
     payment_id = fields.Many2one(
         index='btree_not_null',
         comodel_name='account.payment',
+        comodel_tracking=True,
         string="Payment", copy=False, check_company=True)
     statement_line_id = fields.Many2one(
         comodel_name='account.bank.statement.line',
@@ -3532,11 +3533,6 @@ class AccountMove(models.Model):
     def _track_subtype(self, init_values):
         # OVERRIDE to add custom subtype depending of the state.
         self.ensure_one()
-
-        if not self.is_invoice(include_receipts=True):
-            if self.payment_id and 'state' in init_values:
-                self.payment_id._message_track(['state'], {self.payment_id.id: init_values})
-            return super(AccountMove, self)._track_subtype(init_values)
 
         if 'payment_state' in init_values and self.payment_state == 'paid':
             return self.env.ref('account.mt_invoice_paid')

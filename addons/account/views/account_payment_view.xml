@@ -145,7 +145,7 @@
             <field name="name">account.payment.form</field>
             <field name="model">account.payment</field>
             <field name="arch" type="xml">
-                <form string="Register Payment">
+                <form js_class="account_payment_form"  string="Register Payment">
                     <header>
                         <button name="action_post" string="Confirm" type="object" class="oe_highlight"
                                 attrs="{'invisible': [('state', '!=', 'draft')]}" data-hotkey="v"/>
@@ -171,6 +171,7 @@
                     <sheet>
                         <!-- Invisible fields -->
                         <field name="id" invisible="1"/>
+                        <field name="move_id" invisible="1"/>
                         <field name="is_move_sent" invisible="1"/>
                         <field name="is_reconciled" invisible="1"/>
                         <field name="is_matched" invisible="1"/>

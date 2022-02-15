@@ -16,7 +16,7 @@ import re
 import time
 import threading
 
-from collections import namedtuple
+from collections import namedtuple, defaultdict
 from email.message import EmailMessage
 from email import message_from_string, policy
 from lxml import etree
@@ -27,7 +27,7 @@ from markupsafe import Markup
 from odoo import _, api, exceptions, fields, models, tools, registry, SUPERUSER_ID, Command
 from odoo.exceptions import MissingError
 from odoo.osv import expression
-from odoo.tools import is_html_empty
+from odoo.tools import is_html_empty, html_escape
 from odoo.tools.misc import clean_context, split_every
 
 _logger = logging.getLogger(__name__)
@@ -306,7 +306,7 @@ class MailThread(models.AbstractModel):
         # post track template if a tracked field changed
         threads._track_discard()
         if not self._context.get('mail_notrack'):
-            fnames = self._track_get_fields()
+            fnames, _comodels_fnames = self._track_get_fields()
             for thread in threads:
                 create_values = create_values_list[thread.id]
                 changes = [fname for fname in fnames if create_values.get(fname)]
@@ -452,7 +452,7 @@ class MailThread(models.AbstractModel):
 
     def _valid_field_parameter(self, field, name):
         # allow tracking on models inheriting from 'mail.thread'
-        return name == 'tracking' or super()._valid_field_parameter(field, name)
+        return name in ('tracking', 'comodel_tracking') or super()._valid_field_parameter(field, name)
 
     def _fallback_lang(self):
         if not self._context.get("lang"):
@@ -478,7 +478,8 @@ class MailThread(models.AbstractModel):
 
         :param iter fields_iter: iterable of fields names to potentially track
         """
-        fnames = self._track_get_fields().intersection(fields_iter)
+        tracked_fields, tracked_comodel_fields = self._track_get_fields()
+        fnames = tracked_fields.intersection(fields_iter)
         if not fnames:
             return
         self.env.cr.precommit.add(self._track_finalize)
@@ -490,6 +491,10 @@ class MailThread(models.AbstractModel):
             if values is not None:
                 for fname in fnames:
                     values.setdefault(fname, record[fname])
+                for comodel, comodel_fields in tracked_comodel_fields.items():
+                    # We are not tracking the field, but the fields of it.
+                    cfnames = comodel_fields.intersection(record[comodel]._fields)
+                    values.setdefault(comodel, {name: record[comodel][name] for name in cfnames})
 
     def _track_discard(self):
         """ Prevent any tracking of fields on ``self``. """
@@ -510,12 +515,14 @@ class MailThread(models.AbstractModel):
         if not ids:
             return
         records = self.browse(ids).sudo()
-        fnames = self._track_get_fields()
+        fnames, comodels_fnames = self._track_get_fields()
         context = clean_context(self._context)
-        tracking = records.with_context(context)._message_track(fnames, initial_values)
+        tracking = records.with_context(context)._message_track(fnames, initial_values, comodel_fields_iter=comodels_fnames)
         for record in records:
-            changes, _tracking_value_ids = tracking.get(record.id, (None, None))
-            record._message_track_post_template(changes)
+            changed_model = tracking.get(record.id, {})
+            for _field, field_tracking in changed_model.items():
+                changes, _tracking_value_ids = field_tracking
+                record._message_track_post_template(changes)
         # this method is called after the main flush() and just before commit();
         # we have to flush() again in case we triggered some recomputations
         self.flush()
@@ -533,13 +540,20 @@ class MailThread(models.AbstractModel):
     @tools.ormcache('self.env.uid', 'self.env.su')
     def _track_get_fields(self):
         """ Return the set of tracked fields names for the current model. """
-        model_fields = {
-            name
-            for name, field in self._fields.items()
-            if getattr(field, 'tracking', None) or getattr(field, 'track_visibility', None)
-        }
+        model_fields = set()
+        comodel_fields = defaultdict(set)
+        for name, field in self._fields.items():
+            if getattr(field, 'tracking', None) or getattr(field, 'track_visibility', None):
+                model_fields.add(name)
+            elif getattr(field, 'comodel_tracking', None):
+                # When tracking fields from "childrens", we get the children field and get all his tracked fields
+                field_names = []
+                for comodel_name, comodel_field in self.env[field.comodel_name]._fields.items():
+                    if getattr(comodel_field, 'parent_tracked', None):
+                        field_names.append(comodel_name)
+                comodel_fields[name] = set(self.env[field.comodel_name].fields_get(field_names))
 
-        return model_fields and set(self.fields_get(model_fields))
+        return model_fields and set(self.fields_get(model_fields)), comodel_fields
 
     def _track_subtype(self, initial_values):
         """ Give the subtypes triggered by the changes on the record according
@@ -553,7 +567,7 @@ class MailThread(models.AbstractModel):
         self.ensure_one()
         return False
 
-    def _message_track(self, fields_iter, initial_values_dict):
+    def _message_track(self, fields_iter, initial_values_dict, comodel_fields_iter=False):
         """ Track updated values. Comparing the initial and current values of
         the fields given in tracked_fields, it generates a message containing
         the updated values. This message can be linked to a mail.message.subtype
@@ -569,39 +583,57 @@ class MailThread(models.AbstractModel):
             return {}
 
         tracked_fields = self.fields_get(fields_iter)
-        tracking = dict()
+
+        # Find the info about eventual child tracking
+        child_tracked_fields = {}
+        if comodel_fields_iter:
+            comodel_fields_info = self.fields_get(comodel_fields_iter.keys())
+            for comodel, comodel_fields in comodel_fields_iter.items():
+                child_tracked_fields[comodel] = self.env[comodel_fields_info[comodel]['relation']].fields_get(comodel_fields)
+
+        tracking = defaultdict(dict)
         for record in self:
             try:
-                tracking[record.id] = record._mail_track(tracked_fields, initial_values_dict[record.id])
+                tracking[record.id][record] = record._mail_track(tracked_fields, initial_values_dict[record.id])
+                for field, cols in child_tracked_fields.items():
+                    if not record[field]:
+                        continue
+                    tracking[record.id][record[field]] = record[field]._mail_track(cols, initial_values_dict[record.id][field])
             except MissingError:
                 continue
 
         # find content to log as body
         bodies = self.env.cr.precommit.data.pop(f'mail.tracking.message.{self._name}', {})
         for record in self:
-            changes, tracking_value_ids = tracking.get(record.id, (None, None))
-            if not changes:
-                continue
-
-            # find subtypes and post messages or log if no subtype found
-            subtype = record._track_subtype(
-                dict((col_name, initial_values_dict[record.id][col_name])
-                     for col_name in changes)
-            )
-            if subtype:
-                if not subtype.exists():
-                    _logger.debug('subtype "%s" not found' % subtype.name)
+            changed_model = tracking.get(record.id, {})
+            for field, field_tracking in changed_model.items():
+                changes, tracking_value_ids = field_tracking
+                if not changes:
                     continue
-                record.message_post(
-                    body=bodies.get(record.id) or '',
-                    subtype_id=subtype.id,
-                    tracking_value_ids=tracking_value_ids
-                )
-            elif tracking_value_ids:
-                record._message_log(
-                    body=bodies.get(record.id) or '',
-                    tracking_value_ids=tracking_value_ids
-                )
+                child_body = ''
+                subtype = False
+                if field != record:
+                    child_body = f"{html_escape(field._description)} <a href=# data-oe-model={field._name} data-oe-id={field.id}>#{field.id}</a> {html_escape(_('updated'))}"
+                else:
+                    # find subtypes and post messages or log if no subtype found
+                    subtype = record._track_subtype(
+                        dict((col_name, initial_values_dict[record.id][col_name])
+                             for col_name in changes)
+                    )
+                if subtype:
+                    if not subtype.exists():
+                        _logger.debug('subtype "%s" not found', subtype.name)
+                        continue
+                    record.message_post(
+                        body=bodies.get(record.id) or child_body or '',
+                        subtype_id=subtype.id,
+                        tracking_value_ids=tracking_value_ids
+                    )
+                elif tracking_value_ids:
+                    record._message_log(
+                        body=bodies.get(record.id) or child_body or '',
+                        tracking_value_ids=tracking_value_ids
+                    )
 
         return tracking
 
