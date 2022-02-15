@@ -355,9 +355,7 @@
                     <!-- chatter -->
                     <div id="sale_order_communication" class="mt-4">
                         <h2>History</h2>
-                        <t t-call="portal.message_thread">
-                            <t t-set="object" t-value="sale_order"/>
-                        </t>
+                        <t t-call="portal.message_thread"/>
                     </div>
                 </div><!-- // #quote_content -->
             </div>
