@@ -1530,11 +1530,13 @@ describe('List', () => {
                                 '<ul><li class="oe-nested"><ul><li>abc[]</li></ul></li></ul>',
                         });
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore: '<ul class="o_checklist"><li>[]<br></li></ul>',
                             stepFunction: deleteForward,
                             contentAfter: '<ul class="o_checklist"><li>[]<br></li></ul>',
                         });
                         await testEditor(BasicEditor, {
+                            removeCheckIds: true,
                             contentBefore:
                                 '<ul class="o_checklist"><li class="oe-nested"><ul class="o_checklist"><li class="o_checked">abc[]</li></ul></li></ul>',
                             stepFunction: deleteForward,
