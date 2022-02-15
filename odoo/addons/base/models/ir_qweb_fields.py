@@ -577,6 +577,10 @@ class DurationConverter(models.AbstractModel):
         r = round((value * factor) / round_to) * round_to
 
         sections = []
+        sign = ''
+        if value < 0:
+            r = -r
+            sign = '-'
 
         if options.get('digital'):
             for unit, label, secs_per_unit in TIMEDELTA_UNITS:
@@ -585,14 +589,9 @@ class DurationConverter(models.AbstractModel):
                 v, r = divmod(r, secs_per_unit)
                 if not v and (secs_per_unit > factor or secs_per_unit < round_to):
                     continue
-                if len(sections):
-                    sections.append(':')
-                sections.append("%02.0f" % int(round(v)))
-            return ''.join(sections)
+                sections.append(u"%02.0f" % int(round(v)))
+            return sign + u':'.join(sections)
 
-        if value < 0:
-            r = -r
-            sections.append('-')
         for unit, label, secs_per_unit in TIMEDELTA_UNITS:
             v, r = divmod(r, secs_per_unit)
             if not v:
@@ -607,7 +606,9 @@ class DurationConverter(models.AbstractModel):
             if section:
                 sections.append(section)
 
-        return ' '.join(sections)
+        if sign:
+            sections.insert(0, sign)
+        return u' '.join(sections)
 
 
 class RelativeDatetimeConverter(models.AbstractModel):
