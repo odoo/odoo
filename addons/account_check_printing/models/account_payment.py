@@ -20,7 +20,7 @@ class AccountPaymentRegister(models.TransientModel):
                 lambda l: l.payment_method_id == preferred
             )
             if record.payment_type == 'outbound' and method_line:
-                record.payment_method_line_id = method_line
+                record.payment_method_line_id = method_line[0]
 
 
 class AccountPayment(models.Model):
@@ -113,7 +113,7 @@ class AccountPayment(models.Model):
             method_line = record.journal_id.outbound_payment_method_line_ids\
                 .filtered(lambda l: l.payment_method_id == preferred)
             if record.payment_type == 'outbound' and method_line:
-                record.payment_method_line_id = method_line
+                record.payment_method_line_id = method_line[0]
 
     def action_post(self):
         res = super(AccountPayment, self).action_post()
