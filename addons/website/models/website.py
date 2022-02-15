@@ -1597,7 +1597,8 @@ class Website(models.Model):
 
         :return: term on which a search can be performed instead of the initial search
         """
-        if len(search) < 4 or ' ' in search:
+        # No fuzzy search for less that 4 characters, multi-words nor 80%+ numbers.
+        if len(search) < 4 or ' ' in search or len(re.findall(r'\d', search)) / len(search) >= 0.8:
             return search
         search = search.lower()
         words = set()
