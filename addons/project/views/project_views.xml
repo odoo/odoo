@@ -1313,11 +1313,11 @@
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
                 <calendar date_start="date_deadline" string="Tasks" mode="month" 
-                          color="user_ids" event_limit="5" hide_time="true" 
+                          color="color" event_limit="5" hide_time="true" 
                           event_open_popup="true" quick_add="false" show_unusual_days="True"
                           js_class="project_calendar"
                           scales="month,year">
-                    <field name="project_id" widget="project_private_task" filters="1"/>
+                    <field name="project_id" widget="project_private_task" filters="1" color="color"/>
                     <field name="user_ids" widget="many2many_avatar_user"/>
                     <field name="partner_id" attrs="{'invisible': [('partner_id', '=', False)]}"/>
                     <field name="priority" widget="priority"/>
@@ -1326,6 +1326,18 @@
                     <field name="stage_id"/>
                     <field name="kanban_state"/>
                 </calendar>
+            </field>
+        </record>
+
+        <record id="view_task_all_calendar" model="ir.ui.view">
+            <field name="name">project.task.all.calendar</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="view_task_calendar"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//calendar" position="attributes">
+                    <attribute name="color">project_color</attribute>
+                </xpath>
             </field>
         </record>
 
@@ -1412,6 +1424,23 @@
             <field name="sequence" eval="1"/>
             <field name="view_mode">tree</field>
             <field name="act_window_id" ref="action_view_task"/>
+        </record>
+
+        <record id="open_view_all_task_list_kanban" model="ir.actions.act_window.view">
+            <field name="sequence" eval="10"/>
+            <field name="view_mode">kanban</field>
+            <field name="act_window_id" ref="action_view_all_task"/>
+        </record>
+        <record id="open_view_all_task_list_tree" model="ir.actions.act_window.view">
+            <field name="sequence" eval="20"/>
+            <field name="view_mode">tree</field>
+            <field name="act_window_id" ref="action_view_all_task"/>
+        </record>
+        <record id="open_view_all_task_list_calendar" model="ir.actions.act_window.view">
+            <field name="sequence" eval="40"/>
+            <field name="view_mode">calendar</field>
+            <field name="act_window_id" ref="action_view_all_task"/>
+            <field name="view_id" ref="view_task_all_calendar"/>
         </record>
 
         <menuitem name="My Tasks" id="menu_project_management" parent="menu_main_pm"
