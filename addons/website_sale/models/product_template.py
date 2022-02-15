@@ -371,6 +371,9 @@ class ProductTemplate(models.Model):
         if with_image:
             mapping['image_url'] = {'name': 'image_url', 'type': 'html'}
         if with_description:
+            # Internal note is not part of the rendering.
+            search_fields.append('description')
+            fetch_fields.append('description')
             search_fields.append('description_sale')
             fetch_fields.append('description_sale')
             mapping['description'] = {'name': 'description_sale', 'type': 'text', 'match': True}
