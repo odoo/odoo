@@ -11,9 +11,7 @@ import {
     getFixture,
     hushConsole,
     legacyExtraNextTick,
-    makeDeferred,
     patchWithCleanup,
-    triggerEvents,
 } from "../../helpers/utils";
 import {
     createWebClient,
@@ -22,7 +20,7 @@ import {
     setupWebClientRegistries,
 } from "./../helpers";
 import * as cpHelpers from "@web/../tests/search/helpers";
-import ListController from "web.ListController";
+import { ListView } from "@web/views/list/list_view";
 
 let serverData;
 let target;
@@ -458,18 +456,18 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test('handles "history_back" event', async function (assert) {
         assert.expect(3);
-        let controller;
-        patchWithCleanup(ListController.prototype, {
-            init() {
+        let list;
+        patchWithCleanup(ListView.prototype, {
+            setup() {
                 this._super(...arguments);
-                controller = this;
+                list = this;
             },
         });
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 4);
         await doAction(webClient, 3);
         assert.containsN(target, ".o_control_panel .breadcrumb-item", 2);
-        controller.trigger_up("history_back");
+        list.env.config.historyBack();
         await testUtils.nextTick();
         await legacyExtraNextTick();
         assert.containsOnce(target, ".o_control_panel .breadcrumb-item");
