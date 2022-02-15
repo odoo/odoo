@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { browser } from "@web/core/browser/browser";
-import { usePosition } from "@web/core/position/position_hook";
+import { usePosition } from "@web/core/position_hook";
 import { registerCleanup } from "../helpers/cleanup";
 import {
     destroy,
@@ -17,7 +17,7 @@ const { Component, xml } = owl;
 let container;
 
 /**
- * @param {import("@web/core/position/position_hook").Options} popperOptions
+ * @param {import("@web/core/position_hook").Options} popperOptions
  * @returns {Component}
  */
 function getTestComponent(popperOptions = {}) {
