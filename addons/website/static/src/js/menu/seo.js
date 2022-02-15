@@ -1,15 +1,15 @@
-odoo.define('website.seo', function (require) {
-'use strict';
+// odoo.define('website.seo', function (require) {
+// 'use strict';
 
-var Dialog = require('web.Dialog');
-var websiteNavbarData = require('website.navbar');
+// var Dialog = require('web.Dialog');
+// var websiteNavbarData = require('website.navbar');
 
-var SeoConfigurator = Dialog.extend({});
+// var SeoConfigurator = Dialog.extend({});
 
-var SeoMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({});
+// var SeoMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({});
 
-return {
-    SeoConfigurator: SeoConfigurator,
-    SeoMenu: SeoMenu,
-};
-});
+// return {
+//     SeoConfigurator: SeoConfigurator,
+//     SeoMenu: SeoMenu,
+// };
+// });
