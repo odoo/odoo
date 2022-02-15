@@ -3,9 +3,11 @@
 import { browser } from "@web/core/browser/browser";
 import { download } from "@web/core/network/download";
 import { makeMockXHR } from "../helpers/mock_services";
-import { click, makeDeferred, patchWithCleanup } from "../helpers/utils";
+import { click, editInput, makeDeferred, nextTick, patchWithCleanup } from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
 import { registerCleanup } from "../helpers/cleanup";
+import { FileUploader } from "@web/fields/file_handler";
+import { patch, unpatch } from "@web/core/utils/patch";
 
 let serverData;
 
@@ -143,7 +145,7 @@ QUnit.module("Fields", (hooks) => {
         assert.containsOnce(
             form,
             ".o_field_binary_file .o_select_file_button",
-            "there shoud be a button to upload the file"
+            "there should be a button to upload the file"
         );
         assert.strictEqual(
             form.el.querySelector(".o_field_char input").value,
@@ -163,6 +165,60 @@ QUnit.module("Fields", (hooks) => {
             "the binary field should not display a filename in the link since we removed the file"
         );
     });
+
+    QUnit.test(
+        "binary fields input value is empty whean clearing after uploading",
+        async function (assert) {
+            assert.expect(2);
+            patch(FileUploader.prototype, "test.FileUploader", {
+                async onFileChange(ev) {
+                    const file = new File([ev.target.value], ev.target.value + ".txt", {
+                        type: "text/plain",
+                    });
+                    await this._super({
+                        target: { files: [file] },
+                    });
+                },
+            });
+
+            const form = await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch:
+                    '<form string="Partners">' +
+                    '<field name="document" filename="foo"/>' +
+                    '<field name="foo"/>' +
+                    "</form>",
+                resId: 1,
+            });
+
+            await click(form.el, ".o_form_button_edit");
+
+            // We need to convert the input type since we can't programmatically set
+            // the value of a file input. The patch of the onFileChange will create
+            // a file object to be used by the component.
+            form.el.querySelector(".o_field_binary_file input").setAttribute("type", "text");
+            await editInput(form.el, ".o_field_binary_file input", "fake_file");
+            await nextTick();
+
+            assert.strictEqual(
+                form.el.querySelector(".o_field_binary_file span").innerText,
+                "fake_file.txt",
+                'input value should be changed to "fake_file.txt"'
+            );
+
+            await click(form.el.querySelector(".o_clear_file_button"));
+
+            assert.strictEqual(
+                form.el.querySelector(".o_input_file").value,
+                "",
+                "input value should be empty"
+            );
+
+            unpatch(FileUploader.prototype, "test.FileUploader");
+        }
+    );
 
     QUnit.test("BinaryField: option accepted_file_extensions", async function (assert) {
         assert.expect(1);

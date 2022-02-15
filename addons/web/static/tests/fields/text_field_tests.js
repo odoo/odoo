@@ -456,46 +456,6 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skipWOWL(
-        "binary fields input value is empty whean clearing after uploading",
-        async function (assert) {
-            assert.expect(2);
-
-            const form = await makeView({
-                type: "form",
-                resModel: "partner",
-                serverData,
-                arch:
-                    '<form string="Partners">' +
-                    '<field name="document" filename="foo"/>' +
-                    '<field name="foo"/>' +
-                    "</form>",
-                res_id: 1,
-            });
-
-            await click(form.el, ".o_form_button_edit");
-
-            // // We need to convert the input type since we can't programmatically set the value of a file input
-            form.el.querySelector(".o_input_file").attr("type", "text").val("coucou.txt");
-
-            assert.strictEqual(
-                form.el.querySelector(".o_input_file").val(),
-                "coucou.txt",
-                'input value should be changed to "coucou.txt"'
-            );
-
-            await testUtils.dom.click(
-                form.el.querySelector(".o_field_binary_file > .o_clear_file_button")
-            );
-
-            assert.strictEqual(
-                form.el.querySelector(".o_input_file").val(),
-                "",
-                "input value should be empty"
-            );
-        }
-    );
-
     QUnit.skipWOWL("field text in editable list view", async function (assert) {
         assert.expect(1);
 
