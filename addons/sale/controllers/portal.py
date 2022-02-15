@@ -12,7 +12,7 @@ from odoo.addons.payment.controllers import portal as payment_portal
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.portal.controllers.mail import _message_post_helper
 from odoo.addons.portal.controllers import portal
-from odoo.addons.portal.controllers.portal import pager as portal_pager, get_records_pager
+from odoo.addons.portal.controllers.portal import pager as portal_pager
 
 
 class CustomerPortal(portal.CustomerPortal):
@@ -30,6 +30,18 @@ class CustomerPortal(portal.CustomerPortal):
                 if SaleOrder.check_access_rights('read', raise_exception=False) else 0
 
         return values
+
+    def _prepare_quotations_domain(self, partner):
+        return [
+            ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
+            ('state', 'in', ['sent', 'cancel'])
+        ]
+
+    def _prepare_orders_domain(self, partner):
+        return [
+            ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
+            ('state', 'in', ['sale', 'done'])
+        ]
 
     def _get_sale_searchbar_sortings(self):
         return {
@@ -49,16 +61,12 @@ class CustomerPortal(portal.CustomerPortal):
         partner = request.env.user.partner_id
         values = self._prepare_portal_layout_values()
 
-        domain = [
-            ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
-        ]
-
         if quotation_page:
             url = "/my/quotes"
-            domain += [('state', 'in', ['sent', 'cancel'])]
+            domain = self._prepare_quotations_domain(partner)
         else:
             url = "/my/orders"
-            domain += [('state', 'in', ['sale', 'done'])]
+            domain = self._prepare_orders_domain(partner)
 
         searchbar_sortings = self._get_sale_searchbar_sortings()
 
@@ -67,21 +75,21 @@ class CustomerPortal(portal.CustomerPortal):
         if date_begin and date_end:
             domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
 
-        pager = portal_pager(
+        pager_values = portal_pager(
             url=url,
             total=SaleOrder.search_count(domain),
             page=page,
             step=self._items_per_page,
             url_args={'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby},
         )
-        orders = SaleOrder.search(domain, order=sort_order, limit=self._items_per_page, offset=pager['offset'])
+        orders = SaleOrder.search(domain, order=sort_order, limit=self._items_per_page, offset=pager_values['offset'])
 
         values.update({
             'date': date_begin,
             'quotations': orders.sudo() if quotation_page else SaleOrder,
             'orders': orders.sudo() if not quotation_page else SaleOrder,
             'page_name': 'quote' if quotation_page else 'order',
-            'pager': pager,
+            'pager': pager_values,
             'default_url': url,
             'searchbar_sortings': searchbar_sortings,
             'sortby': sortby,
@@ -111,39 +119,35 @@ class CustomerPortal(portal.CustomerPortal):
         if report_type in ('html', 'pdf', 'text'):
             return self._show_report(model=order_sudo, report_type=report_type, report_ref='sale.action_report_saleorder', download=download)
 
-        # use sudo to allow accessing/viewing orders for public user
-        # only if he knows the private token
-        # Log only once a day
-        if order_sudo:
-            # store the date as a string in the session to allow serialization
-            now = fields.Date.today().isoformat()
+        if request.env.user.share and access_token:
+            # If a public/portal user accesses the order with the access token
+            # Log a note on the chatter.
+            today = fields.Date.today().isoformat()
             session_obj_date = request.session.get('view_quote_%s' % order_sudo.id)
-            if session_obj_date != now and request.env.user.share and access_token:
-                request.session['view_quote_%s' % order_sudo.id] = now
-                body = _('Quotation viewed by customer %s', order_sudo.partner_id.name)
+            if session_obj_date != today:
+                # store the date as a string in the session to allow serialization
+                request.session['view_quote_%s' % order_sudo.id] = today
                 _message_post_helper(
                     "sale.order",
                     order_sudo.id,
-                    body,
+                    message=_('Quotation viewed by customer %s', order_sudo.partner_id.name),
                     token=order_sudo.access_token,
                     message_type="notification",
                     subtype_xmlid="mail.mt_note",
                     partner_ids=order_sudo.user_id.sudo().partner_id.ids,
                 )
 
+        backend_url = f'/web#model={order_sudo._name}'\
+                      f'&id={order_sudo.id}'\
+                      f'&action={order_sudo._get_portal_return_action().id}'\
+                      f'&view_type=form'
         values = {
             'sale_order': order_sudo,
             'message': message,
-            'token': access_token,
-            'landing_route': '/shop/payment/validate',
-            'bootstrap_formatting': True,
-            'partner_id': order_sudo.partner_id.id,
             'report_type': 'html',
-            'action': order_sudo._get_portal_return_action(),
-            **order_sudo._get_additional_order_page_values(),
+            'backend_url': backend_url,
+            'res_company': order_sudo.company_id,  # Used to display correct company logo
         }
-        if order_sudo.company_id:
-            values['res_company'] = order_sudo.company_id
 
         # Payment values
         if order_sudo.has_to_be_paid():
@@ -185,10 +189,12 @@ class CustomerPortal(portal.CustomerPortal):
             })
 
         if order_sudo.state in ('draft', 'sent', 'cancel'):
-            history = request.session.get('my_quotations_history', [])
+            history_session_key = 'my_quotations_history'
         else:
-            history = request.session.get('my_orders_history', [])
-        values.update(get_records_pager(history, order_sudo))
+            history_session_key = 'my_orders_history'
+
+        values = self._get_page_view_values(
+            order_sudo, access_token, values, history_session_key, False)
 
         return request.render('sale.sale_order_portal_template', values)
 

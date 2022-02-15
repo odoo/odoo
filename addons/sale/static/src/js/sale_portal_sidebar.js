@@ -24,7 +24,7 @@ publicWidget.registry.SalePortalSidebar = PortalSidebar.extend({
         this._setElementId($spyWatcheElement);
         // Nav Menu ScrollSpy
         this._generateMenu();
-        // After singature, automatically open the popup for payment
+        // After signature, automatically open the popup for payment
         if ($.bbq.getState('allow_payment') === 'yes' && this.$('#o_sale_portal_paynow').length) {
             this.$('#o_sale_portal_paynow').trigger('click');
             $.bbq.removeState('allow_payment');
