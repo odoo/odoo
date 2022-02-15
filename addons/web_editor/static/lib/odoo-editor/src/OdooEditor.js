@@ -224,6 +224,7 @@ export class OdooEditor extends EventTarget {
         if (editable.innerHTML.trim() === '') {
             editable.innerHTML = '<p><br></p>';
         }
+        this.initElementForEdition(editable);
 
         // Convention: root node is ID root.
         editable.oid = 'root';
@@ -1343,11 +1344,7 @@ export class OdooEditor extends EventTarget {
         }
         if (joinWith) {
             const el = closestElement(joinWith);
-            const { zws } = fillEmpty(el);
-            if (zws) {
-                // ZWS selection in OdooEditor is not working in current version of firefox (since v93.0)
-                setSelection(zws, 0, zws, this.isFirefox ? 0 : nodeSize(zws));
-            }
+            fillEmpty(el);
         }
     }
 
@@ -1447,6 +1444,20 @@ export class OdooEditor extends EventTarget {
             return false;
         }
         if (!sel.isCollapsed && BACKSPACE_FIRST_COMMANDS.includes(method)) {
+            let range = getDeepRange(this.editable, {sel, splitText: true, select: true, correctTripleClick: true});
+            if (range &&
+                range.startContainer === range.endContainer &&
+                range.endContainer.nodeType === Node.TEXT_NODE &&
+                range.cloneContents().textContent === '\u200B'
+            ) {
+                // We Collapse the selection and bypass deleteRange
+                // if the range content is only one ZWS.
+                sel.collapseToStart();
+                if (BACKSPACE_ONLY_COMMANDS.includes(method)) {
+                    this._applyRawCommand(method);
+                }
+                return;
+            }
             this.deleteRange(sel);
             if (BACKSPACE_ONLY_COMMANDS.includes(method)) {
                 return true;
@@ -1572,6 +1583,21 @@ export class OdooEditor extends EventTarget {
             serializeSelection(
                 useCache ? this._latestComputedSelection : this._computeHistorySelection(),
             ) || {};
+    }
+    /**
+     * Return true if the latest computed selection was inside an empty inline tag
+     *
+     * @private
+     * @return {boolean}
+     */
+    _isLatestComputedSelectionInsideEmptyInlineTag() {
+        if (!this._latestComputedSelection) {
+            return false;
+        }
+        const anchorNode = this._latestComputedSelection.anchorNode;
+        const focusNode = this._latestComputedSelection.focusNode;
+        const parentTextContent = anchorNode.parentElement? anchorNode.parentElement.textContent : null;
+        return anchorNode === focusNode && (parentTextContent === '' || parentTextContent === '\u200B')
     }
     /**
      * Get the step index in the history to undo.
@@ -2188,12 +2214,28 @@ export class OdooEditor extends EventTarget {
                 const selection = this.document.getSelection();
                 // Detect that text was selected and change behavior only if it is the case,
                 // since it is the only text insertion case that may cause problems.
-                if (anchorNodeOid !== focusNodeOid || anchorOffset !== focusOffset) {
+                const wasTextSelected = anchorNodeOid !== focusNodeOid || anchorOffset !== focusOffset;
+                // Unit tests events are not trusted by the browser,
+                // the insertText has to be done manualy.
+                const isUnitTests = !ev.isTrusted && this.testMode;
+                // we cannot trust the browser to keep the selection inside empty tags.
+                const latestSelectionInsideEmptyTag = this._isLatestComputedSelectionInsideEmptyInlineTag();
+                if (wasTextSelected || isUnitTests || latestSelectionInsideEmptyTag) {
                     ev.preventDefault();
-                    this._applyRawCommand('oDeleteBackward');
+                    if (!isUnitTests) {
+                        // First we need to undo the character inserted by the browser.
+                        // Since the unit test Event is not trusted by the browser, we don't
+                        // need to undo the char during the unit tests.
+                        // @see https://developer.mozilla.org/en-US/docs/Web/API/Event/isTrusted
+                        this._applyRawCommand('oDeleteBackward');
+                    }
+                    if (latestSelectionInsideEmptyTag) {
+                        // Restore the selection inside the empty Element.
+                        const selectionBackup = this._latestComputedSelection;
+                        setSelection(selectionBackup.anchorNode, selectionBackup.anchorOffset);
+                    }
                     insertText(selection, ev.data);
-                    const range = selection.getRangeAt(0);
-                    setSelection(range.endContainer, range.endOffset);
+                    selection.collapseToEnd();
                 }
                 // Check for url after user insert a space so we won't transform an incomplete url.
                 if (
@@ -2316,6 +2358,22 @@ export class OdooEditor extends EventTarget {
             this.editable.contains(selection.anchorNode) &&
             this.editable.contains(selection.focusNode);
     }
+
+    /**
+     * Returns true if the current selection content is only one ZWS
+     *
+     * @private
+     * @param {Object} selection
+     * @returns {boolean}
+     */
+    _isSelectionOnlyZws(selection) {
+        let range = selection.getRangeAt(0);
+        if (selection.isCollapsed || !range) {
+            return false;
+        }
+        return range.cloneContents().textContent === '\u200B';
+    }
+
     getCurrentCollaborativeSelection() {
         const selection = this._latestComputedSelection || this._computeHistorySelection();
         if (!selection) return;
@@ -2335,8 +2393,60 @@ export class OdooEditor extends EventTarget {
         this.cleanForSave();
         this.observerActive();
     }
+
+    /**
+     * initialise the provided element to be ready for edition
+     *
+     */
+    initElementForEdition(element = this.editable) {
+        // Flag elements with forced contenteditable=false.
+        // We need the flag to be able to leave the contentEditable
+        // at the end of the edition (see cleanForSave())
+        for (const el of element.querySelectorAll('[contenteditable="false"]')) {
+            el.setAttribute('data-oe-keep-contenteditable', '');
+        }
+    }
+
     cleanForSave(element = this.editable) {
+        sanitize(element);
+
         this._pluginCall('cleanForSave', [element]);
+        // Clean the remaining ZeroWidthspaces added by the `fillEmpty` function
+        // ( contain "data-oe-zws-empty-inline" attr)
+        // If the element contain more than just a ZWS,
+        // we remove it and clean the attribute.
+        // If the element have a class,
+        // we only remove the attribute to ensure we don't break some style.
+        // Otherwise we remove the entire inline element.
+        for (const emptyElement of element.querySelectorAll('[data-oe-zws-empty-inline]')) {
+            if (emptyElement.textContent.length === 1 && emptyElement.textContent.includes('\u200B')) {
+                if (emptyElement.classList.length > 0) {
+                    emptyElement.removeAttribute('data-oe-zws-empty-inline');
+                } else {
+                    emptyElement.remove();
+                }
+            } else {
+                emptyElement.textContent = emptyElement.textContent.replace('\u200B', '');
+                emptyElement.removeAttribute('data-oe-zws-empty-inline');
+            }
+        }
+        // Remove contenteditable=false on elements
+        for (const el of element.querySelectorAll('[contenteditable="false"]')) {
+            if (!el.hasAttribute('data-oe-keep-contenteditable')) {
+                el.removeAttribute('contenteditable');
+            }
+        }
+        // Remove data-oe-keep-contenteditable on elements
+        for (const el of element.querySelectorAll('[data-oe-keep-contenteditable]')) {
+            el.removeAttribute('data-oe-keep-contenteditable');
+        }
+
+        // Remove Zero Width Spzces on Font awesome elements
+        const faSelector = 'i.fa,span.fa,i.fab,span.fab,i.fad,span.fad,i.far,span.far';
+        for (const el of element.querySelectorAll(faSelector)) {
+            el.textContent = el.textContent.replace('\u200B', '');
+        }
+
     }
     /**
      * Handle the hint preview for the commandbar.
