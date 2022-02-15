@@ -890,3 +890,43 @@ class TestPacking(TestPackingCommon):
         self.assertNotIn(packB, picking.package_level_ids)
         self.assertEqual(packB, bo.package_level_ids)
         self.assertEqual(bo.package_level_ids.state, 'assigned')
+
+    def test_package_and_sub_location(self):
+        """
+        Suppose there are some products P available in shelf1, a child location of the pack location.
+        When moving these P to another child location of pack location, the source location of the
+        related package level should be shelf1
+        """
+        shelf1_location = self.env['stock.location'].create({
+            'name': 'shelf1',
+            'usage': 'internal',
+            'location_id': self.pack_location.id,
+        })
+        shelf2_location = self.env['stock.location'].create({
+            'name': 'shelf2',
+            'usage': 'internal',
+            'location_id': self.pack_location.id,
+        })
+
+        pack = self.env['stock.quant.package'].create({'name': 'Super Package'})
+        self.env['stock.quant']._update_available_quantity(self.productA, shelf1_location, 20.0, package_id=pack)
+
+        picking = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.in_type_id.id,
+            'location_id': self.pack_location.id,
+            'location_dest_id': shelf2_location.id,
+        })
+        package_level = self.env['stock.package_level'].create({
+            'package_id': pack.id,
+            'picking_id': picking.id,
+            'location_dest_id': picking.location_dest_id.id,
+            'company_id': picking.company_id.id,
+        })
+
+        self.assertEqual(package_level.location_id, shelf1_location)
+
+        picking.action_confirm()
+        package_level.is_done = True
+        picking.button_validate()
+
+        self.assertEqual(package_level.location_id, shelf1_location)
