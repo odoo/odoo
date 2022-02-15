@@ -26,7 +26,6 @@
         'views/event_templates_page_registration.xml',
         'views/event_templates_page_misc.xml',
         'views/event_templates_widgets.xml',
-        'views/website_templates.xml',
         'views/event_event_views.xml',
         'views/event_registration_views.xml',
         'views/event_tag_category_views.xml',
