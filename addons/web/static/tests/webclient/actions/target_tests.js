@@ -552,13 +552,14 @@ QUnit.module("ActionManager", (hooks) => {
             await nextTick(); // wait for the load state (default app)
             assert.containsOnce(target, "nav .o_menu_brand");
             assert.strictEqual(target.querySelector("nav .o_menu_brand").innerText, "MAIN APP");
-            assert.doesNotHaveClass(target, "o_fullscreen");
             await click(target.querySelector("button[name='24']"));
-            assert.doesNotHaveClass(target, "o_fullscreen");
+            await nextTick(); // wait for the webclient template to be re-rendered
+            assert.containsOnce(target, "nav .o_menu_brand");
             await click(target.querySelector("button[name='1']"));
-            assert.hasClass(target, "o_fullscreen");
+            await nextTick(); // wait for the webclient template to be re-rendered
+            assert.containsNone(target, "nav.o_main_navbar");
             await click(target.querySelectorAll(".breadcrumb li a")[1]);
-            assert.doesNotHaveClass(target, "o_fullscreen");
+            await nextTick(); // wait for the webclient template to be re-rendered
             assert.containsOnce(target, "nav .o_menu_brand");
             assert.strictEqual(target.querySelector("nav .o_menu_brand").innerText, "MAIN APP");
         }
