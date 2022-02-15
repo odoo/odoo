@@ -97,21 +97,24 @@ QUnit.module("Fields", (hooks) => {
         assert.containsN(list.el, '.o_field_badge[name="selection_field"]:contains(Done)', 2);
     });
 
-    QUnit.skip("BadgeField component on a many2one field in list view", async function (assert) {
-        assert.expect(2);
+    QUnit.skipWOWL(
+        "BadgeField component on a many2one field in list view",
+        async function (assert) {
+            assert.expect(2);
 
-        const list = await makeView({
-            type: "list",
-            serverData,
-            resModel: "partner",
-            arch: `<list><field name="many2one_field" widget="badge"/></list>`,
-        });
+            const list = await makeView({
+                type: "list",
+                serverData,
+                resModel: "partner",
+                arch: `<list><field name="many2one_field" widget="badge"/></list>`,
+            });
 
-        // assert.containsOnce(list.el, '.o_field_badge[name="many2one_field"]:contains(first record)');
-        // assert.containsOnce(list.el, '.o_field_badge[name="many2one_field"]:contains(aaa)');
-    });
+            // assert.containsOnce(list.el, '.o_field_badge[name="many2one_field"]:contains(first record)');
+            // assert.containsOnce(list.el, '.o_field_badge[name="many2one_field"]:contains(aaa)');
+        }
+    );
 
-    QUnit.skip("BadgeField component with decoration-xxx attributes", async function (assert) {
+    QUnit.skipWOWL("BadgeField component with decoration-xxx attributes", async function (assert) {
         assert.expect(3);
 
         const list = await makeView({

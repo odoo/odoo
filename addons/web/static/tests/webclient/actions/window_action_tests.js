@@ -61,7 +61,7 @@ QUnit.module("ActionManager", (hooks) => {
         ]);
     });
 
-    QUnit.skip("sidebar is present in list view", async function (assert) {
+    QUnit.skipWOWL("sidebar is present in list view", async function (assert) {
         assert.expect(4);
         serverData.models.partner.toolbar = {
             print: [{ name: "Print that record" }],
@@ -132,8 +132,10 @@ QUnit.module("ActionManager", (hooks) => {
         ]);
     });
 
-    QUnit.skip("switching into a view with mode=edit lands in edit mode", async function (assert) {
-        serverData.views["partner,1,kanban"] = `
+    QUnit.skipWOWL(
+        "switching into a view with mode=edit lands in edit mode",
+        async function (assert) {
+            serverData.views["partner,1,kanban"] = `
     <kanban on_create="quick_create" default_group_by="m2o">
       <templates>
         <t t-name="kanban-box">
@@ -142,52 +144,53 @@ QUnit.module("ActionManager", (hooks) => {
       </templates>
     </kanban>
     `;
-        serverData.actions[1] = {
-            id: 1,
-            xml_id: "action_1",
-            name: "Partners Action 1 patched",
-            res_model: "partner",
-            type: "ir.actions.act_window",
-            views: [
-                [false, "kanban"],
-                [false, "form"],
-            ],
-        };
-        const mockRPC = async (route, args) => {
-            assert.step((args && args.method) || route);
-        };
-        assert.expect(14);
-        const webClient = await createWebClient({ serverData, mockRPC });
-        await doAction(webClient, 1);
-        assert.containsOnce(target, ".o_kanban_view", "should display the kanban view");
-        // quick create record
-        await testUtils.dom.click(target.querySelector(".o-kanban-button-new"));
-        await testUtils.fields.editInput(
-            target.querySelector(".o_field_widget[name=display_name]"),
-            "New name"
-        );
-        await legacyExtraNextTick();
-        // edit quick-created record
-        await testUtils.dom.click(target.querySelector(".o_kanban_edit"));
-        assert.containsOnce(
-            target,
-            ".o_form_view.o_form_editable",
-            "should display the form view in edit mode"
-        );
-        assert.verifySteps([
-            "/web/webclient/load_menus",
-            "/web/action/load",
-            "get_views",
-            "web_read_group",
-            "web_search_read",
-            "web_search_read",
-            "onchange",
-            "name_create",
-            "read",
-            "onchange",
-            "read",
-        ]);
-    });
+            serverData.actions[1] = {
+                id: 1,
+                xml_id: "action_1",
+                name: "Partners Action 1 patched",
+                res_model: "partner",
+                type: "ir.actions.act_window",
+                views: [
+                    [false, "kanban"],
+                    [false, "form"],
+                ],
+            };
+            const mockRPC = async (route, args) => {
+                assert.step((args && args.method) || route);
+            };
+            assert.expect(14);
+            const webClient = await createWebClient({ serverData, mockRPC });
+            await doAction(webClient, 1);
+            assert.containsOnce(target, ".o_kanban_view", "should display the kanban view");
+            // quick create record
+            await testUtils.dom.click(target.querySelector(".o-kanban-button-new"));
+            await testUtils.fields.editInput(
+                target.querySelector(".o_field_widget[name=display_name]"),
+                "New name"
+            );
+            await legacyExtraNextTick();
+            // edit quick-created record
+            await testUtils.dom.click(target.querySelector(".o_kanban_edit"));
+            assert.containsOnce(
+                target,
+                ".o_form_view.o_form_editable",
+                "should display the form view in edit mode"
+            );
+            assert.verifySteps([
+                "/web/webclient/load_menus",
+                "/web/action/load",
+                "get_views",
+                "web_read_group",
+                "web_search_read",
+                "web_search_read",
+                "onchange",
+                "name_create",
+                "read",
+                "onchange",
+                "read",
+            ]);
+        }
+    );
 
     QUnit.test(
         "orderedBy in context is not propagated when executing another action",
@@ -1152,7 +1155,7 @@ QUnit.module("ActionManager", (hooks) => {
         );
     });
 
-    QUnit.skip("can open a many2one external window", async function (assert) {
+    QUnit.skipWOWL("can open a many2one external window", async function (assert) {
         assert.expect(9);
         serverData.models.partner.records[0].bar = 2;
         serverData.views["partner,false,search"] = `
@@ -1324,7 +1327,7 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "form views are restored with the correct id in its url when coming back in breadcrumbs",
         async function (assert) {
             assert.expect(3);
@@ -1409,7 +1412,7 @@ QUnit.module("ActionManager", (hooks) => {
         ]);
     });
 
-    QUnit.skip("flags field of ir.actions.act_window is used", async function (assert) {
+    QUnit.skipWOWL("flags field of ir.actions.act_window is used", async function (assert) {
         // more info about flags field : https://github.com/odoo/odoo/commit/c9b133813b250e89f1f61816b0eabfb9bee2009d
         assert.expect(7);
         serverData.actions[44] = {
@@ -1491,7 +1494,7 @@ QUnit.module("ActionManager", (hooks) => {
         await cpHelpers.saveFavorite(target);
     });
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "list with default_order and favorite filter with no orderedBy",
         async function (assert) {
             assert.expect(5);
@@ -1641,7 +1644,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsOnce(target, ".o_kanban_view");
     });
 
-    QUnit.skip("execute action from dirty, new record, and come back", async function (assert) {
+    QUnit.skipWOWL("execute action from dirty, new record, and come back", async function (assert) {
         assert.expect(18);
         serverData.models.partner.fields.bar.default = 1;
         serverData.views["partner,false,form"] = `
@@ -1705,7 +1708,7 @@ QUnit.module("ActionManager", (hooks) => {
         ]);
     });
 
-    QUnit.skip("execute a contextual action from a form view", async function (assert) {
+    QUnit.skipWOWL("execute a contextual action from a form view", async function (assert) {
         assert.expect(4);
         const contextualAction = serverData.actions[8];
         contextualAction.context = "{}"; // need a context to evaluate
@@ -1862,7 +1865,7 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "on_close should be called only once with right parameters in js_class form view",
         async function (assert) {
             assert.expect(4);
@@ -1972,7 +1975,7 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "executing a window action with onchange warning does not hide it",
         async function (assert) {
             assert.expect(2);
@@ -2030,48 +2033,51 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
-    QUnit.skip("do not pushState when target=new and dialog is opened", async function (assert) {
-        assert.expect(2);
-        const TestCustoFormController = FormView.prototype.config.Controller.extend({
-            _onButtonClicked() {
-                assert.ok(true, "Button was clicked");
-                this.trigger_up("push_state", { state: { id: 42 } });
-            },
-        });
-        const TestCustoFormView = FormView.extend({
-            config: Object.assign({}, FormView.prototype.config, {
-                Controller: TestCustoFormController,
-            }),
-        });
-        legacyViewRegistry.add("test_view", TestCustoFormView);
-        serverData.views["partner,3,form"] = `
+    QUnit.skipWOWL(
+        "do not pushState when target=new and dialog is opened",
+        async function (assert) {
+            assert.expect(2);
+            const TestCustoFormController = FormView.prototype.config.Controller.extend({
+                _onButtonClicked() {
+                    assert.ok(true, "Button was clicked");
+                    this.trigger_up("push_state", { state: { id: 42 } });
+                },
+            });
+            const TestCustoFormView = FormView.extend({
+                config: Object.assign({}, FormView.prototype.config, {
+                    Controller: TestCustoFormController,
+                }),
+            });
+            legacyViewRegistry.add("test_view", TestCustoFormView);
+            serverData.views["partner,3,form"] = `
         <form js_class="test_view">
             <field name="foo" />
             <footer>
             <button id="o_push_state_btn" special="special" />
             </footer>
         </form>`;
-        const webClient = await createWebClient({ serverData });
-        // Open Partner form in create mode
-        await doAction(webClient, 3, { viewType: "form" });
-        const prevHash = Object.assign({}, webClient.env.services.router.current.hash);
-        // Edit another partner in a dialog
-        await doAction(webClient, {
-            name: "Edit a Partner",
-            res_model: "partner",
-            res_id: 3,
-            type: "ir.actions.act_window",
-            views: [[3, "form"]],
-            target: "new",
-            view_mode: "form",
-        });
-        await click(document.getElementById("o_push_state_btn"));
-        assert.deepEqual(
-            webClient.env.services.router.current.hash,
-            prevHash,
-            "push_state in dialog shouldn't change the hash"
-        );
-    });
+            const webClient = await createWebClient({ serverData });
+            // Open Partner form in create mode
+            await doAction(webClient, 3, { viewType: "form" });
+            const prevHash = Object.assign({}, webClient.env.services.router.current.hash);
+            // Edit another partner in a dialog
+            await doAction(webClient, {
+                name: "Edit a Partner",
+                res_model: "partner",
+                res_id: 3,
+                type: "ir.actions.act_window",
+                views: [[3, "form"]],
+                target: "new",
+                view_mode: "form",
+            });
+            await click(document.getElementById("o_push_state_btn"));
+            assert.deepEqual(
+                webClient.env.services.router.current.hash,
+                prevHash,
+                "push_state in dialog shouldn't change the hash"
+            );
+        }
+    );
 
     QUnit.test("do not restore after action button clicked", async function (assert) {
         assert.expect(5);
@@ -2187,7 +2193,7 @@ QUnit.module("ActionManager", (hooks) => {
         });
     });
 
-    QUnit.skip("window action in target new fails (onchange)", async (assert) => {
+    QUnit.skipWOWL("window action in target new fails (onchange)", async (assert) => {
         assert.expect(3);
 
         /*
@@ -2273,7 +2279,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.verifySteps(["web_search_read"]);
     });
 
-    QUnit.skip("pushState also changes the title of the tab", async (assert) => {
+    QUnit.skipWOWL("pushState also changes the title of the tab", async (assert) => {
         assert.expect(3);
 
         const webClient = await createWebClient({ serverData });
@@ -2316,7 +2322,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsN(target, ".o_pivot_view tbody th", 6);
     });
 
-    QUnit.skip("action help given to View in props if not empty", async function (assert) {
+    QUnit.skipWOWL("action help given to View in props if not empty", async function (assert) {
         // need noContentHelp be used in list view...
         serverData.models.partner.records = [];
         const action = serverData.actions[3];

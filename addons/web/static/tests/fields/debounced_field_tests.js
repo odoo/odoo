@@ -198,7 +198,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("DebouncedField");
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "debounced fields do not trigger call _setValue once destroyed",
         async function (assert) {
             assert.expect(4);

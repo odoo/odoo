@@ -145,7 +145,7 @@ QUnit.module("Form Compiler", (hooks) => {
         assert.areContentEquivalent(compileTemplate(arch), expected);
     });
 
-    QUnit.skip("properly compile invisible", async (assert) => {
+    QUnit.skipWOWL("properly compile invisible", async (assert) => {
         const arch = /*xml*/ `
             <form>
                 <field name="display_name" invisible="1"/>

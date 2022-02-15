@@ -198,7 +198,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("DateRangeField");
 
-    QUnit.skip("Datetime field without quickedit [REQUIRE FOCUS]", async function (assert) {
+    QUnit.skipWOWL("Datetime field without quickedit [REQUIRE FOCUS]", async function (assert) {
         assert.expect(21);
 
         this.data.partner.fields.datetime_end = { string: "Datetime End", type: "datetime" };
@@ -347,7 +347,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("Date field without quickedit [REQUIRE FOCUS]", async function (assert) {
+    QUnit.skipWOWL("Date field without quickedit [REQUIRE FOCUS]", async function (assert) {
         assert.expect(19);
 
         this.data.partner.fields.date_end = { string: "Date End", type: "date" };
@@ -514,7 +514,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("Date field with quickedit [REQUIRE FOCUS]", async function (assert) {
+    QUnit.skipWOWL("Date field with quickedit [REQUIRE FOCUS]", async function (assert) {
         assert.expect(18);
 
         this.data.partner.fields.date_end = { string: "Date End", type: "date" };
@@ -680,7 +680,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "daterangepicker should disappear on scrolling outside of it",
         async function (assert) {
             assert.expect(2);
@@ -712,7 +712,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "Datetime field manually input value should send utc value to server",
         async function (assert) {
             assert.expect(4);
@@ -775,7 +775,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "DateRangeField manually input wrong value should show toaster",
         async function (assert) {
             assert.expect(5);

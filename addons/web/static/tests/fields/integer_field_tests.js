@@ -240,7 +240,7 @@ QUnit.module("Fields", (hooks) => {
     });
 
     // should we keep the next one ? This is bad.
-    QUnit.skip("IntegerField in form view with virtual id", async function (assert) {
+    QUnit.skipWOWL("IntegerField in form view with virtual id", async function (assert) {
         assert.expect(1);
 
         var params = {

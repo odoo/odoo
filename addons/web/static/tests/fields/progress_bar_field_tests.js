@@ -351,7 +351,7 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps(["/web/dataset/call_kw/partner/read"]);
     });
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "ProgressBarField: write float instead of int works, in locale",
         async function (assert) {
             assert.expect(5);

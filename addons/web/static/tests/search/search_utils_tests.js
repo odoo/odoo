@@ -464,7 +464,6 @@ QUnit.module("Search", () => {
     QUnit.skip(
         "Moment.js localization does not affect formatted domain dates",
         async function (assert) {
-            // #long-term-skipped-test
             patchDate(2020, 5, 1, 13, 0, 0);
             const initialLocale = moment.locale();
             moment.defineLocale("addoneForTest", {

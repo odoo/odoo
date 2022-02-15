@@ -2160,14 +2160,8 @@ QUnit.module("Search", (hooks) => {
 
             await doAction(webclient, 1);
 
-            assert.containsOnce(
-                target,
-                ".o_kanban_view .o_content.o_component_with_search_panel"
-            );
-            assert.containsOnce(
-                target,
-                ".o_content.o_component_with_search_panel .o_search_panel"
-            );
+            assert.containsOnce(target, ".o_kanban_view .o_content.o_component_with_search_panel");
+            assert.containsOnce(target, ".o_content.o_component_with_search_panel .o_search_panel");
             assert.containsNone(target, ".o_search_panel_filter_value input:checked");
             assert.containsN(target, ".o_kanban_record:not(.o_kanban_ghost)", 4);
 
@@ -2182,20 +2176,14 @@ QUnit.module("Search", (hooks) => {
 
             assert.containsOnce(target, ".o_pivot_view .o_content");
             assert.containsNone(target, ".o_content .o_search_panel");
-            assert.strictEqual(
-                target.querySelector(".o_pivot_cell_value").innerText.trim(),
-                "15"
-            );
+            assert.strictEqual(target.querySelector(".o_pivot_cell_value").innerText.trim(), "15");
 
             // switch to list
             await switchView(target, "list");
             await legacyExtraNextTick();
 
             assert.containsOnce(target, ".o_list_view .o_content.o_component_with_search_panel");
-            assert.containsOnce(
-                target,
-                ".o_content.o_component_with_search_panel .o_search_panel"
-            );
+            assert.containsOnce(target, ".o_content.o_component_with_search_panel .o_search_panel");
             assert.containsOnce(target, ".o_search_panel_filter_value input:checked");
             assert.containsN(target, ".o_data_row", 1);
         }
@@ -2214,7 +2202,7 @@ QUnit.module("Search", (hooks) => {
         assert.containsOnce(target, ".o_search_panel_category_value:first .active");
     });
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "categories and filters are not reloaded when switching between views",
         async (assert) => {
             assert.expect(3);
@@ -2276,7 +2264,7 @@ QUnit.module("Search", (hooks) => {
         }
     );
 
-    QUnit.skip("scroll position is kept when switching between controllers", async (assert) => {
+    QUnit.skipWOWL("scroll position is kept when switching between controllers", async (assert) => {
         assert.expect(6);
 
         for (let i = 10; i < 20; i++) {
@@ -2313,7 +2301,7 @@ QUnit.module("Search", (hooks) => {
         assert.strictEqual(getSearchPanel().scrollTop, 25);
     });
 
-    QUnit.skip("search panel is not instantiated in dialogs", async (assert) => {
+    QUnit.skipWOWL("search panel is not instantiated in dialogs", async (assert) => {
         assert.expect(2);
 
         serverData.models.company.records = Array.from(Array(8), (_, i) => ({

@@ -198,7 +198,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("FloatTimeField");
 
-    QUnit.skip("FloatTimeField in form view", async function (assert) {
+    QUnit.skipWOWL("FloatTimeField in form view", async function (assert) {
         assert.expect(5);
 
         var form = await createView({
@@ -256,7 +256,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("FloatTimeField value formatted on blur", async function (assert) {
+    QUnit.skipWOWL("FloatTimeField value formatted on blur", async function (assert) {
         assert.expect(4);
 
         const form = await createView({
@@ -303,7 +303,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("FloatTimeField with invalid value", async function (assert) {
+    QUnit.skipWOWL("FloatTimeField with invalid value", async function (assert) {
         assert.expect(5);
 
         const form = await createView({

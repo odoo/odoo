@@ -131,7 +131,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("CharField");
 
-    QUnit.skip("char widget isValid method works", async function (assert) {
+    QUnit.skipWOWL("char widget isValid method works", async function (assert) {
         // assert.expect(1);
         // serverData.models.partner.fields.foo.required = true;
         // const form = await makeView({
@@ -269,7 +269,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skip("char field in editable list view", async function (assert) {
+    QUnit.skipWOWL("char field in editable list view", async function (assert) {
         assert.expect(6);
 
         const list = await makeView({
@@ -324,7 +324,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skip("char field translatable", async function (assert) {
+    QUnit.skipWOWL("char field translatable", async function (assert) {
         // assert.expect(12);
         // serverData.models.partner.fields.foo.translate = true;
         // serviceRegistry.add("localization", makeFakeLocalizationService({ multiLang: true }), { force: true });
@@ -399,7 +399,7 @@ QUnit.module("Fields", (hooks) => {
         //     'French translation should be filled');
     });
 
-    QUnit.skip("html field translatable", async function (assert) {
+    QUnit.skipWOWL("html field translatable", async function (assert) {
         // assert.expect(6);
         // serverData.models.partner.fields.foo.translate = true;
         // serviceRegistry.add("localization", makeFakeLocalizationService({ multiLang: true }), { force: true });
@@ -470,7 +470,7 @@ QUnit.module("Fields", (hooks) => {
         //     "the new partial translation should not be transfered");
     });
 
-    QUnit.skip("char field translatable in create mode", async function (assert) {
+    QUnit.skipWOWL("char field translatable in create mode", async function (assert) {
         // assert.expect(1);
         // serverData.models.partner.fields.foo.translate = true;
         // serviceRegistry.add("localization", makeFakeLocalizationService({ multiLang: true }), { force: true });
@@ -570,7 +570,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "input field: change value before pending onchange returns",
         async function (assert) {
             // assert.expect(3);
@@ -625,7 +625,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "input field: change value before pending onchange returns (with fieldDebounce)",
         async function (assert) {
             // // this test is exactly the same as the previous one, except that we set
@@ -681,7 +681,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "input field: change value before pending onchange renaming",
         async function (assert) {
             // assert.expect(3);
@@ -810,7 +810,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "input field: set and remove value, then wait for onchange",
         async function (assert) {
             // assert.expect(2);

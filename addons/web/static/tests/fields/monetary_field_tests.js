@@ -198,7 +198,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("MonetaryField");
 
-    QUnit.skip("MonetaryField in form view", async function (assert) {
+    QUnit.skipWOWL("MonetaryField in form view", async function (assert) {
         assert.expect(5);
 
         var form = await createView({
@@ -255,7 +255,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("MonetaryField rounding using formula in form view", async function (assert) {
+    QUnit.skipWOWL("MonetaryField rounding using formula in form view", async function (assert) {
         assert.expect(1);
 
         var form = await createView({
@@ -288,7 +288,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("MonetaryField with currency symbol after", async function (assert) {
+    QUnit.skipWOWL("MonetaryField with currency symbol after", async function (assert) {
         assert.expect(5);
 
         var form = await createView({
@@ -348,7 +348,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("MonetaryField with currency digits != 2", async function (assert) {
+    QUnit.skipWOWL("MonetaryField with currency digits != 2", async function (assert) {
         assert.expect(5);
 
         this.data.partner.records = [
@@ -425,7 +425,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("MonetaryField in editable list view", async function (assert) {
+    QUnit.skipWOWL("MonetaryField in editable list view", async function (assert) {
         assert.expect(9);
 
         var list = await createView({
@@ -503,7 +503,7 @@ QUnit.module("Fields", (hooks) => {
         list.destroy();
     });
 
-    QUnit.skip("MonetaryField with real monetary field in model", async function (assert) {
+    QUnit.skipWOWL("MonetaryField with real monetary field in model", async function (assert) {
         assert.expect(7);
 
         this.data.partner.fields.qux.type = "monetary";
@@ -591,7 +591,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("MonetaryField with monetary field given in options", async function (assert) {
+    QUnit.skipWOWL("MonetaryField with monetary field given in options", async function (assert) {
         assert.expect(1);
 
         this.data.partner.fields.qux.type = "monetary";
@@ -628,91 +628,94 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("should keep the focus when being edited in x2many lists", async function (assert) {
-        assert.expect(6);
+    QUnit.skipWOWL(
+        "should keep the focus when being edited in x2many lists",
+        async function (assert) {
+            assert.expect(6);
 
-        this.data.partner.fields.currency_id.default = 1;
-        this.data.partner.fields.m2m = {
-            string: "m2m",
-            type: "many2many",
-            relation: "partner",
-            default: [[6, false, [2]]],
-        };
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                '<form string="Partners">' +
-                "<sheet>" +
-                '<field name="p"/>' +
-                '<field name="m2m"/>' +
-                "</sheet>" +
-                "</form>",
-            archs: {
-                "partner,false,list":
-                    '<tree editable="bottom">' +
-                    '<field name="qux" widget="monetary"/>' +
-                    '<field name="currency_id" invisible="1"/>' +
-                    "</tree>",
-            },
-            session: {
-                currencies: _.indexBy(this.data.currency.records, "id"),
-            },
-        });
+            this.data.partner.fields.currency_id.default = 1;
+            this.data.partner.fields.m2m = {
+                string: "m2m",
+                type: "many2many",
+                relation: "partner",
+                default: [[6, false, [2]]],
+            };
+            var form = await createView({
+                View: FormView,
+                model: "partner",
+                data: this.data,
+                arch:
+                    '<form string="Partners">' +
+                    "<sheet>" +
+                    '<field name="p"/>' +
+                    '<field name="m2m"/>' +
+                    "</sheet>" +
+                    "</form>",
+                archs: {
+                    "partner,false,list":
+                        '<tree editable="bottom">' +
+                        '<field name="qux" widget="monetary"/>' +
+                        '<field name="currency_id" invisible="1"/>' +
+                        "</tree>",
+                },
+                session: {
+                    currencies: _.indexBy(this.data.currency.records, "id"),
+                },
+            });
 
-        // test the monetary field inside the one2many
-        var $o2m = form.$(".o_field_widget[name=p]");
-        await testUtils.dom.click($o2m.find(".o_field_x2many_list_row_add a"));
-        await testUtils.fields.editInput($o2m.find(".o_field_widget input"), "22");
+            // test the monetary field inside the one2many
+            var $o2m = form.$(".o_field_widget[name=p]");
+            await testUtils.dom.click($o2m.find(".o_field_x2many_list_row_add a"));
+            await testUtils.fields.editInput($o2m.find(".o_field_widget input"), "22");
 
-        assert.strictEqual(
-            $o2m.find(".o_field_widget input").get(0),
-            document.activeElement,
-            "the focus should still be on the input"
-        );
-        assert.strictEqual(
-            $o2m.find(".o_field_widget input").val(),
-            "22",
-            "the value should not have been formatted yet"
-        );
+            assert.strictEqual(
+                $o2m.find(".o_field_widget input").get(0),
+                document.activeElement,
+                "the focus should still be on the input"
+            );
+            assert.strictEqual(
+                $o2m.find(".o_field_widget input").val(),
+                "22",
+                "the value should not have been formatted yet"
+            );
 
-        await testUtils.dom.click(form.$el);
+            await testUtils.dom.click(form.$el);
 
-        assert.strictEqual(
-            $o2m.find(".o_field_widget[name=qux]").html(),
-            "$&nbsp;22.00",
-            "the value should have been formatted after losing the focus"
-        );
+            assert.strictEqual(
+                $o2m.find(".o_field_widget[name=qux]").html(),
+                "$&nbsp;22.00",
+                "the value should have been formatted after losing the focus"
+            );
 
-        // test the monetary field inside the many2many
-        var $m2m = form.$(".o_field_widget[name=m2m]");
-        await testUtils.dom.click($m2m.find(".o_data_row td:first"));
-        await testUtils.fields.editInput($m2m.find(".o_field_widget input"), "22");
+            // test the monetary field inside the many2many
+            var $m2m = form.$(".o_field_widget[name=m2m]");
+            await testUtils.dom.click($m2m.find(".o_data_row td:first"));
+            await testUtils.fields.editInput($m2m.find(".o_field_widget input"), "22");
 
-        assert.strictEqual(
-            $m2m.find(".o_field_widget input").get(0),
-            document.activeElement,
-            "the focus should still be on the input"
-        );
-        assert.strictEqual(
-            $m2m.find(".o_field_widget input").val(),
-            "22",
-            "the value should not have been formatted yet"
-        );
+            assert.strictEqual(
+                $m2m.find(".o_field_widget input").get(0),
+                document.activeElement,
+                "the focus should still be on the input"
+            );
+            assert.strictEqual(
+                $m2m.find(".o_field_widget input").val(),
+                "22",
+                "the value should not have been formatted yet"
+            );
 
-        await testUtils.dom.click(form.$el);
+            await testUtils.dom.click(form.$el);
 
-        assert.strictEqual(
-            $m2m.find(".o_field_widget[name=qux]").html(),
-            "22.00&nbsp;€",
-            "the value should have been formatted after losing the focus"
-        );
+            assert.strictEqual(
+                $m2m.find(".o_field_widget[name=qux]").html(),
+                "22.00&nbsp;€",
+                "the value should have been formatted after losing the focus"
+            );
 
-        form.destroy();
-    });
+            form.destroy();
+        }
+    );
 
-    QUnit.skip("MonetaryField with currency set by an onchange", async function (assert) {
+    QUnit.skipWOWL("MonetaryField with currency set by an onchange", async function (assert) {
         // this test ensures that the monetary field can be re-rendered with and
         // without currency (which can happen as the currency can be set by an
         // onchange)

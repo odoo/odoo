@@ -198,27 +198,29 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("NumericField");
 
-    QUnit.skip("NumericField: fields with keydown on numpad decimal key", async function (assert) {
-        assert.expect(5);
+    QUnit.skipWOWL(
+        "NumericField: fields with keydown on numpad decimal key",
+        async function (assert) {
+            assert.expect(5);
 
-        this.data.partner.fields.float_factor_field = {
-            string: "Float Factor",
-            type: "float_factor",
-        };
-        this.data.partner.records[0].float_factor_field = 9.99;
+            this.data.partner.fields.float_factor_field = {
+                string: "Float Factor",
+                type: "float_factor",
+            };
+            this.data.partner.records[0].float_factor_field = 9.99;
 
-        this.data.partner.fields.monetary = { string: "Monetary", type: "monetary" };
-        this.data.partner.records[0].monetary = 9.99;
-        this.data.partner.records[0].currency_id = 1;
+            this.data.partner.fields.monetary = { string: "Monetary", type: "monetary" };
+            this.data.partner.records[0].monetary = 9.99;
+            this.data.partner.records[0].currency_id = 1;
 
-        this.data.partner.fields.percentage = { string: "Percentage", type: "percentage" };
-        this.data.partner.records[0].percentage = 0.99;
+            this.data.partner.fields.percentage = { string: "Percentage", type: "percentage" };
+            this.data.partner.records[0].percentage = 0.99;
 
-        const form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch: `
+            const form = await createView({
+                View: FormView,
+                model: "partner",
+                data: this.data,
+                arch: `
                 <form string="Partners">
                     <field name="float_factor_field" options="{'factor': 0.5}"/>
                     <field name="qux"/>
@@ -228,65 +230,70 @@ QUnit.module("Fields", (hooks) => {
                     <field name="percentage"/>
                 </form>
             `,
-            res_id: 1,
-            translateParameters: {
-                decimal_point: "🇧🇪",
-            },
-        });
+                res_id: 1,
+                translateParameters: {
+                    decimal_point: "🇧🇪",
+                },
+            });
 
-        // Record edit mode
-        await testUtilsDom.click(form.el.querySelector(".o_form_button_edit"));
+            // Record edit mode
+            await testUtilsDom.click(form.el.querySelector(".o_form_button_edit"));
 
-        // Get all inputs
-        const floatFactorField = form.el.querySelector('.o_input[name="float_factor_field"]');
-        const floatInput = form.el.querySelector('.o_input[name="qux"]');
-        const integerInput = form.el.querySelector('.o_input[name="int_field"]');
-        const monetaryInput = form.el.querySelector('.o_input[name="monetary"]');
-        const percentageInput = form.el.querySelector('.o_input[name="percentage"]');
+            // Get all inputs
+            const floatFactorField = form.el.querySelector('.o_input[name="float_factor_field"]');
+            const floatInput = form.el.querySelector('.o_input[name="qux"]');
+            const integerInput = form.el.querySelector('.o_input[name="int_field"]');
+            const monetaryInput = form.el.querySelector('.o_input[name="monetary"]');
+            const percentageInput = form.el.querySelector('.o_input[name="percentage"]');
 
-        // Dispatch numpad "dot" and numpad "comma" keydown events to all inputs and check
-        // Numpad "comma" is specific to some countries (Brazil...)
-        floatFactorField.dispatchEvent(
-            new KeyboardEvent("keydown", { code: "NumpadDecimal", key: "." })
-        );
-        floatFactorField.dispatchEvent(
-            new KeyboardEvent("keydown", { code: "NumpadDecimal", key: "," })
-        );
-        await testUtils.nextTick();
-        assert.ok(floatFactorField.value.endsWith("🇧🇪🇧🇪"));
+            // Dispatch numpad "dot" and numpad "comma" keydown events to all inputs and check
+            // Numpad "comma" is specific to some countries (Brazil...)
+            floatFactorField.dispatchEvent(
+                new KeyboardEvent("keydown", { code: "NumpadDecimal", key: "." })
+            );
+            floatFactorField.dispatchEvent(
+                new KeyboardEvent("keydown", { code: "NumpadDecimal", key: "," })
+            );
+            await testUtils.nextTick();
+            assert.ok(floatFactorField.value.endsWith("🇧🇪🇧🇪"));
 
-        floatInput.dispatchEvent(new KeyboardEvent("keydown", { code: "NumpadDecimal", key: "." }));
-        floatInput.dispatchEvent(new KeyboardEvent("keydown", { code: "NumpadDecimal", key: "," }));
-        await testUtils.nextTick();
-        assert.ok(floatInput.value.endsWith("🇧🇪🇧🇪"));
+            floatInput.dispatchEvent(
+                new KeyboardEvent("keydown", { code: "NumpadDecimal", key: "." })
+            );
+            floatInput.dispatchEvent(
+                new KeyboardEvent("keydown", { code: "NumpadDecimal", key: "," })
+            );
+            await testUtils.nextTick();
+            assert.ok(floatInput.value.endsWith("🇧🇪🇧🇪"));
 
-        integerInput.dispatchEvent(
-            new KeyboardEvent("keydown", { code: "NumpadDecimal", key: "." })
-        );
-        integerInput.dispatchEvent(
-            new KeyboardEvent("keydown", { code: "NumpadDecimal", key: "," })
-        );
-        await testUtils.nextTick();
-        assert.ok(integerInput.value.endsWith("🇧🇪🇧🇪"));
+            integerInput.dispatchEvent(
+                new KeyboardEvent("keydown", { code: "NumpadDecimal", key: "." })
+            );
+            integerInput.dispatchEvent(
+                new KeyboardEvent("keydown", { code: "NumpadDecimal", key: "," })
+            );
+            await testUtils.nextTick();
+            assert.ok(integerInput.value.endsWith("🇧🇪🇧🇪"));
 
-        monetaryInput.dispatchEvent(
-            new KeyboardEvent("keydown", { code: "NumpadDecimal", key: "." })
-        );
-        monetaryInput.dispatchEvent(
-            new KeyboardEvent("keydown", { code: "NumpadDecimal", key: "," })
-        );
-        await testUtils.nextTick();
-        assert.ok(monetaryInput.querySelector("input.o_input").value.endsWith("🇧🇪🇧🇪"));
+            monetaryInput.dispatchEvent(
+                new KeyboardEvent("keydown", { code: "NumpadDecimal", key: "." })
+            );
+            monetaryInput.dispatchEvent(
+                new KeyboardEvent("keydown", { code: "NumpadDecimal", key: "," })
+            );
+            await testUtils.nextTick();
+            assert.ok(monetaryInput.querySelector("input.o_input").value.endsWith("🇧🇪🇧🇪"));
 
-        percentageInput.dispatchEvent(
-            new KeyboardEvent("keydown", { code: "NumpadDecimal", key: "." })
-        );
-        percentageInput.dispatchEvent(
-            new KeyboardEvent("keydown", { code: "NumpadDecimal", key: "," })
-        );
-        await testUtils.nextTick();
-        assert.ok(percentageInput.querySelector("input.o_input").value.endsWith("🇧🇪🇧🇪"));
+            percentageInput.dispatchEvent(
+                new KeyboardEvent("keydown", { code: "NumpadDecimal", key: "." })
+            );
+            percentageInput.dispatchEvent(
+                new KeyboardEvent("keydown", { code: "NumpadDecimal", key: "," })
+            );
+            await testUtils.nextTick();
+            assert.ok(percentageInput.querySelector("input.o_input").value.endsWith("🇧🇪🇧🇪"));
 
-        form.destroy();
-    });
+            form.destroy();
+        }
+    );
 });

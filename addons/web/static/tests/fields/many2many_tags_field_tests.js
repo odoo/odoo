@@ -226,7 +226,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("Many2ManyTagsField");
 
-    QUnit.skip("fieldmany2many tags with and without color", async function (assert) {
+    QUnit.skipWOWL("fieldmany2many tags with and without color", async function (assert) {
         assert.expect(5);
 
         this.data.partner.fields.partner_ids = {
@@ -288,180 +288,188 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("fieldmany2many tags with color: rendering and edition", async function (assert) {
-        assert.expect(28);
+    QUnit.skipWOWL(
+        "fieldmany2many tags with color: rendering and edition",
+        async function (assert) {
+            assert.expect(28);
 
-        this.data.partner.records[0].timmy = [12, 14];
-        this.data.partner_type.records.push({ id: 13, display_name: "red", color: 8 });
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                '<form string="Partners">' +
-                "<field name=\"timmy\" widget=\"many2many_tags\" options=\"{'color_field': 'color', 'no_create_edit': True}\"/>" +
-                "</form>",
-            res_id: 1,
-            mockRPC: function (route, args) {
-                if (route === "/web/dataset/call_kw/partner/write") {
-                    var commands = args.args[1].timmy;
-                    assert.strictEqual(commands.length, 1, "should have generated one command");
-                    assert.strictEqual(
-                        commands[0][0],
-                        6,
-                        "generated command should be REPLACE WITH"
-                    );
-                    assert.ok(
-                        _.isEqual(_.sortBy(commands[0][2], _.identity.bind(_)), [12, 13]),
-                        "new value should be [12, 13]"
-                    );
-                }
-                if (args.method === "read" && args.model === "partner_type") {
-                    assert.deepEqual(
-                        args.args[1],
-                        ["display_name", "color"],
-                        "should read the color field"
-                    );
-                }
-                return this._super.apply(this, arguments);
-            },
-        });
-        assert.containsN(
-            form,
-            ".o_field_many2manytags .badge .dropdown-toggle",
-            2,
-            "should contain 2 tags"
-        );
-        assert.ok(
-            form.$(".badge .dropdown-toggle:contains(gold)").length,
-            "should have fetched and rendered gold partner tag"
-        );
-        assert.ok(
-            form.$(".badge .dropdown-toggle:contains(silver)").length,
-            "should have fetched and rendered silver partner tag"
-        );
-        assert.strictEqual(
-            form.$(".badge:first()").data("color"),
-            2,
-            "should have correctly fetched the color"
-        );
+            this.data.partner.records[0].timmy = [12, 14];
+            this.data.partner_type.records.push({ id: 13, display_name: "red", color: 8 });
+            var form = await createView({
+                View: FormView,
+                model: "partner",
+                data: this.data,
+                arch:
+                    '<form string="Partners">' +
+                    "<field name=\"timmy\" widget=\"many2many_tags\" options=\"{'color_field': 'color', 'no_create_edit': True}\"/>" +
+                    "</form>",
+                res_id: 1,
+                mockRPC: function (route, args) {
+                    if (route === "/web/dataset/call_kw/partner/write") {
+                        var commands = args.args[1].timmy;
+                        assert.strictEqual(commands.length, 1, "should have generated one command");
+                        assert.strictEqual(
+                            commands[0][0],
+                            6,
+                            "generated command should be REPLACE WITH"
+                        );
+                        assert.ok(
+                            _.isEqual(_.sortBy(commands[0][2], _.identity.bind(_)), [12, 13]),
+                            "new value should be [12, 13]"
+                        );
+                    }
+                    if (args.method === "read" && args.model === "partner_type") {
+                        assert.deepEqual(
+                            args.args[1],
+                            ["display_name", "color"],
+                            "should read the color field"
+                        );
+                    }
+                    return this._super.apply(this, arguments);
+                },
+            });
+            assert.containsN(
+                form,
+                ".o_field_many2manytags .badge .dropdown-toggle",
+                2,
+                "should contain 2 tags"
+            );
+            assert.ok(
+                form.$(".badge .dropdown-toggle:contains(gold)").length,
+                "should have fetched and rendered gold partner tag"
+            );
+            assert.ok(
+                form.$(".badge .dropdown-toggle:contains(silver)").length,
+                "should have fetched and rendered silver partner tag"
+            );
+            assert.strictEqual(
+                form.$(".badge:first()").data("color"),
+                2,
+                "should have correctly fetched the color"
+            );
 
-        await testUtils.form.clickEdit(form);
+            await testUtils.form.clickEdit(form);
 
-        assert.containsN(
-            form,
-            ".o_field_many2manytags .badge .dropdown-toggle",
-            2,
-            "should still contain 2 tags in edit mode"
-        );
-        assert.ok(
-            form.$(".o_tag_color_2 .o_badge_text:contains(gold)").length,
-            'first tag should still contain "gold" and be color 2 in edit mode'
-        );
-        assert.containsN(
-            form,
-            ".o_field_many2manytags .o_delete",
-            2,
-            "tags should contain a delete button"
-        );
+            assert.containsN(
+                form,
+                ".o_field_many2manytags .badge .dropdown-toggle",
+                2,
+                "should still contain 2 tags in edit mode"
+            );
+            assert.ok(
+                form.$(".o_tag_color_2 .o_badge_text:contains(gold)").length,
+                'first tag should still contain "gold" and be color 2 in edit mode'
+            );
+            assert.containsN(
+                form,
+                ".o_field_many2manytags .o_delete",
+                2,
+                "tags should contain a delete button"
+            );
 
-        // add an other existing tag
-        var $input = form.$(".o_field_many2manytags input");
-        await testUtils.fields.many2one.clickOpenDropdown("timmy");
-        assert.strictEqual(
-            $input.autocomplete("widget").find("li").length,
-            2,
-            "autocomplete dropdown should have 2 entry"
-        );
-        assert.strictEqual(
-            $input.autocomplete("widget").find('li a:contains("red")').length,
-            1,
-            "autocomplete dropdown should contain 'red'"
-        );
-        await testUtils.fields.many2one.clickHighlightedItem("timmy");
-        assert.containsN(
-            form,
-            ".o_field_many2manytags .badge .dropdown-toggle",
-            3,
-            "should contain 3 tags"
-        );
-        assert.ok(
-            form.$('.o_field_many2manytags .badge .dropdown-toggle:contains("red")').length,
-            "should contain newly added tag 'red'"
-        );
-        assert.ok(
-            form.$('.o_field_many2manytags .badge[data-color=8] .dropdown-toggle:contains("red")')
-                .length,
-            "should have fetched the color of added tag"
-        );
+            // add an other existing tag
+            var $input = form.$(".o_field_many2manytags input");
+            await testUtils.fields.many2one.clickOpenDropdown("timmy");
+            assert.strictEqual(
+                $input.autocomplete("widget").find("li").length,
+                2,
+                "autocomplete dropdown should have 2 entry"
+            );
+            assert.strictEqual(
+                $input.autocomplete("widget").find('li a:contains("red")').length,
+                1,
+                "autocomplete dropdown should contain 'red'"
+            );
+            await testUtils.fields.many2one.clickHighlightedItem("timmy");
+            assert.containsN(
+                form,
+                ".o_field_many2manytags .badge .dropdown-toggle",
+                3,
+                "should contain 3 tags"
+            );
+            assert.ok(
+                form.$('.o_field_many2manytags .badge .dropdown-toggle:contains("red")').length,
+                "should contain newly added tag 'red'"
+            );
+            assert.ok(
+                form.$(
+                    '.o_field_many2manytags .badge[data-color=8] .dropdown-toggle:contains("red")'
+                ).length,
+                "should have fetched the color of added tag"
+            );
 
-        // remove tag with id 14
-        await testUtils.dom.click(form.$(".o_field_many2manytags .badge[data-id=14] .o_delete"));
-        assert.containsN(
-            form,
-            ".o_field_many2manytags .badge .dropdown-toggle",
-            2,
-            "should contain 2 tags"
-        );
-        assert.ok(
-            !form.$('.o_field_many2manytags .badge .dropdown-toggle:contains("silver")').length,
-            "should not contain tag 'silver' anymore"
-        );
+            // remove tag with id 14
+            await testUtils.dom.click(
+                form.$(".o_field_many2manytags .badge[data-id=14] .o_delete")
+            );
+            assert.containsN(
+                form,
+                ".o_field_many2manytags .badge .dropdown-toggle",
+                2,
+                "should contain 2 tags"
+            );
+            assert.ok(
+                !form.$('.o_field_many2manytags .badge .dropdown-toggle:contains("silver")').length,
+                "should not contain tag 'silver' anymore"
+            );
 
-        // save the record (should do the write RPC with the correct commands)
-        await testUtils.form.clickSave(form);
+            // save the record (should do the write RPC with the correct commands)
+            await testUtils.form.clickSave(form);
 
-        // checkbox 'Hide in Kanban'
-        $input = form.$(".o_field_many2manytags .badge[data-id=13] .dropdown-toggle"); // selects 'red' tag
-        await testUtils.dom.click($input);
-        var $checkBox = form.$(".o_field_many2manytags .badge[data-id=13] .custom-checkbox input");
-        assert.strictEqual(
-            $checkBox.length,
-            1,
-            "should have a checkbox in the colorpicker dropdown menu"
-        );
-        assert.notOk(
-            $checkBox.is(":checked"),
-            "should have unticked checkbox in colorpicker dropdown menu"
-        );
+            // checkbox 'Hide in Kanban'
+            $input = form.$(".o_field_many2manytags .badge[data-id=13] .dropdown-toggle"); // selects 'red' tag
+            await testUtils.dom.click($input);
+            var $checkBox = form.$(
+                ".o_field_many2manytags .badge[data-id=13] .custom-checkbox input"
+            );
+            assert.strictEqual(
+                $checkBox.length,
+                1,
+                "should have a checkbox in the colorpicker dropdown menu"
+            );
+            assert.notOk(
+                $checkBox.is(":checked"),
+                "should have unticked checkbox in colorpicker dropdown menu"
+            );
 
-        await testUtils.fields.editAndTrigger($checkBox, null, ["mouseenter", "mousedown"]);
+            await testUtils.fields.editAndTrigger($checkBox, null, ["mouseenter", "mousedown"]);
 
-        $input = form.$(".o_field_many2manytags .badge[data-id=13] .dropdown-toggle"); // refresh
-        await testUtils.dom.click($input);
-        $checkBox = form.$(".o_field_many2manytags .badge[data-id=13] .custom-checkbox input"); // refresh
-        assert.equal(
-            $input.parent().data("color"),
-            "0",
-            "should become transparent when toggling on checkbox"
-        );
-        assert.ok(
-            $checkBox.is(":checked"),
-            "should have a ticked checkbox in colorpicker dropdown menu after mousedown"
-        );
+            $input = form.$(".o_field_many2manytags .badge[data-id=13] .dropdown-toggle"); // refresh
+            await testUtils.dom.click($input);
+            $checkBox = form.$(".o_field_many2manytags .badge[data-id=13] .custom-checkbox input"); // refresh
+            assert.equal(
+                $input.parent().data("color"),
+                "0",
+                "should become transparent when toggling on checkbox"
+            );
+            assert.ok(
+                $checkBox.is(":checked"),
+                "should have a ticked checkbox in colorpicker dropdown menu after mousedown"
+            );
 
-        await testUtils.fields.editAndTrigger($checkBox, null, ["mouseenter", "mousedown"]);
+            await testUtils.fields.editAndTrigger($checkBox, null, ["mouseenter", "mousedown"]);
 
-        $input = form.$(".o_field_many2manytags .badge[data-id=13] .dropdown-toggle"); // refresh
-        await testUtils.dom.click($input);
-        $checkBox = form.$(".o_field_many2manytags .badge[data-id=13] .custom-checkbox input"); // refresh
-        assert.equal(
-            $input.parent().data("color"),
-            "8",
-            "should revert to old color when toggling off checkbox"
-        );
-        assert.notOk(
-            $checkBox.is(":checked"),
-            "should have an unticked checkbox in colorpicker dropdown menu after 2nd click"
-        );
+            $input = form.$(".o_field_many2manytags .badge[data-id=13] .dropdown-toggle"); // refresh
+            await testUtils.dom.click($input);
+            $checkBox = form.$(".o_field_many2manytags .badge[data-id=13] .custom-checkbox input"); // refresh
+            assert.equal(
+                $input.parent().data("color"),
+                "8",
+                "should revert to old color when toggling off checkbox"
+            );
+            assert.notOk(
+                $checkBox.is(":checked"),
+                "should have an unticked checkbox in colorpicker dropdown menu after 2nd click"
+            );
 
-        // TODO: it would be nice to test the behaviors of the autocomplete dropdown
-        // (like refining the research, creating new tags...), but ui-autocomplete
-        // makes it difficult to test
-        form.destroy();
-    });
+            // TODO: it would be nice to test the behaviors of the autocomplete dropdown
+            // (like refining the research, creating new tags...), but ui-autocomplete
+            // makes it difficult to test
+            form.destroy();
+        }
+    );
 
-    QUnit.skip("fieldmany2many tags in tree view", async function (assert) {
+    QUnit.skipWOWL("fieldmany2many tags in tree view", async function (assert) {
         assert.expect(3);
 
         this.data.partner.records[0].timmy = [12, 14];
@@ -486,7 +494,7 @@ QUnit.module("Fields", (hooks) => {
         list.destroy();
     });
 
-    QUnit.skip("fieldmany2many tags view a domain", async function (assert) {
+    QUnit.skipWOWL("fieldmany2many tags view a domain", async function (assert) {
         assert.expect(7);
 
         this.data.partner.fields.timmy.domain = [["id", "<", 50]];
@@ -548,7 +556,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("fieldmany2many tags in a new record", async function (assert) {
+    QUnit.skipWOWL("fieldmany2many tags in a new record", async function (assert) {
         assert.expect(7);
 
         var form = await createView({
@@ -594,7 +602,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("fieldmany2many tags: update color", async function (assert) {
+    QUnit.skipWOWL("fieldmany2many tags: update color", async function (assert) {
         assert.expect(5);
 
         this.data.partner.records[0].timmy = [12, 14];
@@ -654,7 +662,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("fieldmany2many tags with no_edit_color option", async function (assert) {
+    QUnit.skipWOWL("fieldmany2many tags with no_edit_color option", async function (assert) {
         assert.expect(1);
 
         this.data.partner.records[0].timmy = [12];
@@ -677,7 +685,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("fieldmany2many tags in editable list", async function (assert) {
+    QUnit.skipWOWL("fieldmany2many tags in editable list", async function (assert) {
         assert.expect(7);
 
         this.data.partner.records[0].timmy = [12];
@@ -740,7 +748,7 @@ QUnit.module("Fields", (hooks) => {
         list.destroy();
     });
 
-    QUnit.skip("search more in many2one: group and use the pager", async function (assert) {
+    QUnit.skipWOWL("search more in many2one: group and use the pager", async function (assert) {
         assert.expect(2);
 
         this.data.partner.records.push(
@@ -818,7 +826,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("many2many_tags can load more than 40 records", async function (assert) {
+    QUnit.skipWOWL("many2many_tags can load more than 40 records", async function (assert) {
         assert.expect(1);
 
         this.data.partner.fields.partner_ids = {
@@ -850,7 +858,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "many2many_tags loads records according to limit defined on widget prototype",
         async function (assert) {
             assert.expect(1);
@@ -886,7 +894,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip("field many2many_tags keeps focus when being edited", async function (assert) {
+    QUnit.skipWOWL("field many2many_tags keeps focus when being edited", async function (assert) {
         assert.expect(7);
 
         this.data.partner.records[0].timmy = [12];
@@ -943,7 +951,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("widget many2many_tags in one2many with display_name", async function (assert) {
+    QUnit.skipWOWL("widget many2many_tags in one2many with display_name", async function (assert) {
         assert.expect(4);
         this.data.turtle.records[0].partner_ids = [2];
 
@@ -1022,7 +1030,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("widget many2many_tags: tags title attribute", async function (assert) {
+    QUnit.skipWOWL("widget many2many_tags: tags title attribute", async function (assert) {
         assert.expect(1);
         this.data.turtle.records[0].partner_ids = [2];
 
@@ -1049,81 +1057,102 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("widget many2many_tags: toggle colorpicker multiple times", async function (assert) {
-        assert.expect(11);
+    QUnit.skipWOWL(
+        "widget many2many_tags: toggle colorpicker multiple times",
+        async function (assert) {
+            assert.expect(11);
 
-        this.data.partner.records[0].timmy = [12];
-        this.data.partner_type.records[0].color = 0;
+            this.data.partner.records[0].timmy = [12];
+            this.data.partner_type.records[0].color = 0;
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                '<form string="Partners">' +
-                '<field name="timmy" widget="many2many_tags" options="{\'color_field\': \'color\'}"/>' +
-                "</form>",
-            res_id: 1,
-            viewOptions: {
-                mode: "edit",
-            },
-        });
+            var form = await createView({
+                View: FormView,
+                model: "partner",
+                data: this.data,
+                arch:
+                    '<form string="Partners">' +
+                    '<field name="timmy" widget="many2many_tags" options="{\'color_field\': \'color\'}"/>' +
+                    "</form>",
+                res_id: 1,
+                viewOptions: {
+                    mode: "edit",
+                },
+            });
 
-        assert.strictEqual($(".o_field_many2manytags .badge").length, 1, "should have one tag");
-        assert.strictEqual(
-            $(".o_field_many2manytags .badge").data("color"),
-            0,
-            "tag should have color 0"
-        );
-        assert.strictEqual($(".o_colorpicker:visible").length, 0, "colorpicker should be closed");
+            assert.strictEqual($(".o_field_many2manytags .badge").length, 1, "should have one tag");
+            assert.strictEqual(
+                $(".o_field_many2manytags .badge").data("color"),
+                0,
+                "tag should have color 0"
+            );
+            assert.strictEqual(
+                $(".o_colorpicker:visible").length,
+                0,
+                "colorpicker should be closed"
+            );
 
-        // click on the badge to open colorpicker
-        await testUtils.dom.click(form.$(".o_field_many2manytags .badge .dropdown-toggle"));
+            // click on the badge to open colorpicker
+            await testUtils.dom.click(form.$(".o_field_many2manytags .badge .dropdown-toggle"));
 
-        assert.strictEqual($(".o_colorpicker:visible").length, 1, "colorpicker should be open");
+            assert.strictEqual($(".o_colorpicker:visible").length, 1, "colorpicker should be open");
 
-        // click on the badge again to close colorpicker
-        await testUtils.dom.click(form.$(".o_field_many2manytags .badge .dropdown-toggle"));
+            // click on the badge again to close colorpicker
+            await testUtils.dom.click(form.$(".o_field_many2manytags .badge .dropdown-toggle"));
 
-        assert.strictEqual(
-            $(".o_field_many2manytags .badge").data("color"),
-            0,
-            "tag should still have color 0"
-        );
-        assert.strictEqual($(".o_colorpicker:visible").length, 0, "colorpicker should be closed");
+            assert.strictEqual(
+                $(".o_field_many2manytags .badge").data("color"),
+                0,
+                "tag should still have color 0"
+            );
+            assert.strictEqual(
+                $(".o_colorpicker:visible").length,
+                0,
+                "colorpicker should be closed"
+            );
 
-        // click on the badge to open colorpicker
-        await testUtils.dom.click(form.$(".o_field_many2manytags .badge .dropdown-toggle"));
+            // click on the badge to open colorpicker
+            await testUtils.dom.click(form.$(".o_field_many2manytags .badge .dropdown-toggle"));
 
-        assert.strictEqual($(".o_colorpicker:visible").length, 1, "colorpicker should be open");
+            assert.strictEqual($(".o_colorpicker:visible").length, 1, "colorpicker should be open");
 
-        // click on the colorpicker, but not on a color
-        await testUtils.dom.click(form.$(".o_colorpicker"));
+            // click on the colorpicker, but not on a color
+            await testUtils.dom.click(form.$(".o_colorpicker"));
 
-        assert.strictEqual(
-            $(".o_field_many2manytags .badge").data("color"),
-            0,
-            "tag should still have color 0"
-        );
-        assert.strictEqual($(".o_colorpicker:visible").length, 0, "colorpicker should be closed");
+            assert.strictEqual(
+                $(".o_field_many2manytags .badge").data("color"),
+                0,
+                "tag should still have color 0"
+            );
+            assert.strictEqual(
+                $(".o_colorpicker:visible").length,
+                0,
+                "colorpicker should be closed"
+            );
 
-        // click on the badge to open colorpicker
-        await testUtils.dom.click(form.$(".o_field_many2manytags .badge .dropdown-toggle"));
+            // click on the badge to open colorpicker
+            await testUtils.dom.click(form.$(".o_field_many2manytags .badge .dropdown-toggle"));
 
-        // click on a color in the colorpicker
-        await testUtils.dom.triggerEvents(form.$(".o_colorpicker .o_tag_color_2"), ["mousedown"]);
+            // click on a color in the colorpicker
+            await testUtils.dom.triggerEvents(form.$(".o_colorpicker .o_tag_color_2"), [
+                "mousedown",
+            ]);
 
-        assert.strictEqual(
-            $(".o_field_many2manytags .badge").data("color"),
-            2,
-            "tag should have color 2"
-        );
-        assert.strictEqual($(".o_colorpicker:visible").length, 0, "colorpicker should be closed");
+            assert.strictEqual(
+                $(".o_field_many2manytags .badge").data("color"),
+                2,
+                "tag should have color 2"
+            );
+            assert.strictEqual(
+                $(".o_colorpicker:visible").length,
+                0,
+                "colorpicker should be closed"
+            );
 
-        form.destroy();
-    });
+            form.destroy();
+        }
+    );
 
-    QUnit.skip("widget many2many_tags_avatar", async function (assert) {
+    QUnit.skipWOWL("widget many2many_tags_avatar", async function (assert) {
         assert.expect(2);
 
         var form = await createView({
@@ -1154,7 +1183,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("widget many2many_tags_avatar in list view", async function (assert) {
+    QUnit.skipWOWL("widget many2many_tags_avatar in list view", async function (assert) {
         assert.expect(18);
 
         const records = [];
@@ -1295,7 +1324,7 @@ QUnit.module("Fields", (hooks) => {
         list.destroy();
     });
 
-    QUnit.skip("widget many2many_tags_avatar in kanban view", async function (assert) {
+    QUnit.skipWOWL("widget many2many_tags_avatar in kanban view", async function (assert) {
         assert.expect(13);
 
         const records = [];
@@ -1446,7 +1475,7 @@ QUnit.module("Fields", (hooks) => {
         kanban.destroy();
     });
 
-    QUnit.skip("fieldmany2many tags: quick create a new record", async function (assert) {
+    QUnit.skipWOWL("fieldmany2many tags: quick create a new record", async function (assert) {
         assert.expect(3);
 
         const form = await createView({
@@ -1472,7 +1501,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("select a many2many value by focusing out", async function (assert) {
+    QUnit.skipWOWL("select a many2many value by focusing out", async function (assert) {
         assert.expect(4);
 
         const form = await createView({

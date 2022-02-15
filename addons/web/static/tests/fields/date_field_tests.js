@@ -488,7 +488,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip("DateField in editable list view", async function (assert) {
+    QUnit.skipWOWL("DateField in editable list view", async function (assert) {
         assert.expect(8);
 
         const list = await makeView({
@@ -685,7 +685,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip("DateField support internalization", async function (assert) {
+    QUnit.skipWOWL("DateField support internalization", async function (assert) {
         assert.expect(2);
 
         var originalLocale = moment.locale();

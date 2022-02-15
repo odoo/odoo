@@ -226,7 +226,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("SelectionBadgeField");
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "FieldSelectionBadgeField widget on a many2one in a new record",
         async function (assert) {
             assert.expect(6);
@@ -262,7 +262,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "FieldSelectionBadgeField widget on a selection in a new record",
         async function (assert) {
             assert.expect(4);
@@ -296,7 +296,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "FieldSelectionBadgeField widget on a selection in a readonly mode",
         async function (assert) {
             assert.expect(1);

@@ -302,7 +302,7 @@ QUnit.module("Components", (hooks) => {
         await click(domainSelector.el, ".o_domain_add_first_node_button");
     });
 
-    QUnit.skip("inline domain editor in modal", async (assert) => {
+    QUnit.skipWOWL("inline domain editor in modal", async (assert) => {
         registry.category("views").remove("form"); // remove new form from registry
         legacyViewRegistry.add("form", FormView); // add legacy form -> will be wrapped and added to new registry
 

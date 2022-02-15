@@ -550,7 +550,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "show_address works in a view embedded in a view of another type",
         async function (assert) {
             assert.expect(2);
@@ -609,7 +609,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "many2one data is reloaded if there is a context to take into account",
         async function (assert) {
             assert.expect(2);
@@ -669,7 +669,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip("many2ones in form views with search more", async function (assert) {
+    QUnit.skipWOWL("many2ones in form views with search more", async function (assert) {
         assert.expect(3);
 
         for (let i = 5; i < 11; i++) {
@@ -731,7 +731,7 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual($("tr.o_data_row").length, 0, "should display 0 records");
     });
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "onchanges on many2ones trigger when editing record in form view",
         async function (assert) {
             assert.expect(10);
@@ -799,48 +799,57 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip("many2one doesn't trigger field_change when being emptied", async function (assert) {
-        assert.expect(2);
+    QUnit.skipWOWL(
+        "many2one doesn't trigger field_change when being emptied",
+        async function (assert) {
+            assert.expect(2);
 
-        const list = await makeView({
-            type: "list",
-            resModel: "partner",
-            serverData,
-            arch: `
+            const list = await makeView({
+                type: "list",
+                resModel: "partner",
+                serverData,
+                arch: `
                 <tree multi_edit="1">
                     <field name="trululu"/>
                 </tree>
             `,
-        });
+            });
 
-        // Select two records
-        await click(list.el.querySelectorAll(".o_data_row")[0], ".o_list_record_selector input");
-        await click(list.el.querySelectorAll(".o_data_row")[1], ".o_list_record_selector input");
+            // Select two records
+            await click(
+                list.el.querySelectorAll(".o_data_row")[0],
+                ".o_list_record_selector input"
+            );
+            await click(
+                list.el.querySelectorAll(".o_data_row")[1],
+                ".o_list_record_selector input"
+            );
 
-        await click(list.el.querySelector(".o_data_row .o_data_cell"));
+            await click(list.el.querySelector(".o_data_row .o_data_cell"));
 
-        const $input = list.el.querySelector(".o_field_widget[name=trululu] input");
+            const $input = list.el.querySelector(".o_field_widget[name=trululu] input");
 
-        await testUtils.fields.editInput($input, "");
-        await testUtils.dom.triggerEvents($input, ["keyup"]);
+            await testUtils.fields.editInput($input, "");
+            await testUtils.dom.triggerEvents($input, ["keyup"]);
 
-        assert.containsNone(
-            document.body,
-            ".modal",
-            "No save should be triggered when removing value"
-        );
+            assert.containsNone(
+                document.body,
+                ".modal",
+                "No save should be triggered when removing value"
+            );
 
-        await testUtils.fields.many2one.clickHighlightedItem("trululu");
+            await testUtils.fields.many2one.clickHighlightedItem("trululu");
 
-        assert.containsOnce(
-            document.body,
-            ".modal",
-            "Saving should be triggered when selecting a value"
-        );
-        await click(document.body, ".modal .btn-primary");
-    });
+            assert.containsOnce(
+                document.body,
+                ".modal",
+                "Saving should be triggered when selecting a value"
+            );
+            await click(document.body, ".modal .btn-primary");
+        }
+    );
 
-    QUnit.skip("focus tracking on a many2one in a list", async function (assert) {
+    QUnit.skipWOWL("focus tracking on a many2one in a list", async function (assert) {
         assert.expect(4);
 
         serverData.views = {
@@ -1003,7 +1012,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skip("many2one in edit mode", async function (assert) {
+    QUnit.skipWOWL("many2one in edit mode", async function (assert) {
         assert.expect(17);
 
         // create 10 partners to have the 'Search More' option in the autocomplete dropdown
@@ -1183,48 +1192,51 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skip("many2one with co-model whose name field is a many2one", async function (assert) {
-        assert.expect(4);
+    QUnit.skipWOWL(
+        "many2one with co-model whose name field is a many2one",
+        async function (assert) {
+            assert.expect(4);
 
-        serverData.models.product.fields.name = {
-            string: "User Name",
-            type: "many2one",
-            relation: "user",
-        };
+            serverData.models.product.fields.name = {
+                string: "User Name",
+                type: "many2one",
+                relation: "user",
+            };
 
-        serverData.views = {
-            "product,false,form": `
+            serverData.views = {
+                "product,false,form": `
                 <form>
                     <field name="name" />
                 </form>
             `,
-        };
+            };
 
-        const form = await makeView({
-            type: "form",
-            resModel: "partner",
-            serverData,
-            arch: `
+            const form = await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
                 <form>
                     <field name="product_id" />
                 </form>
             `,
-        });
+            });
 
-        await testUtils.fields.many2one.createAndEdit("product_id", "ABC");
-        assert.containsOnce(document.body, ".modal .o_form_view");
+            await testUtils.fields.many2one.createAndEdit("product_id", "ABC");
+            assert.containsOnce(document.body, ".modal .o_form_view");
 
-        // quick create 'new value'
-        await testUtils.fields.many2one.searchAndClickItem("name", { search: "new value" });
-        assert.strictEqual(
-            document.body.querySelector(".modal .o_field_many2one input").value,
-            "new value"
-        );
+            // quick create 'new value'
+            await testUtils.fields.many2one.searchAndClickItem("name", { search: "new value" });
+            assert.strictEqual(
+                document.body.querySelector(".modal .o_field_many2one input").value,
+                "new value"
+            );
 
-        await click(document.body, ".modal .modal-footer .btn-primary"); // save in modal
-        assert.containsNone(document.body, ".modal .o_form_view");
-        assert.strictEqual(form.el.querySelector(".o_field_many2one input").value, "new value");
-    });
+            await click(document.body, ".modal .modal-footer .btn-primary"); // save in modal
+            assert.containsNone(document.body, ".modal .o_form_view");
+            assert.strictEqual(form.el.querySelector(".o_field_many2one input").value, "new value");
+        }
+    );
 
     QUnit.test("many2one searches with correct value", async function (assert) {
         assert.expect(6);
@@ -1375,7 +1387,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skip("many2one field and list navigation", async function (assert) {
+    QUnit.skipWOWL("many2one field and list navigation", async function (assert) {
         assert.expect(3);
 
         const list = await makeView({
@@ -1412,7 +1424,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skip("standalone many2one field", async function (assert) {
+    QUnit.skipWOWL("standalone many2one field", async function (assert) {
         assert.expect(4);
 
         var model = await testUtils.createModel({
@@ -1469,7 +1481,7 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps(["name_search", "name_create"]);
     });
 
-    // QUnit.skip('onchange on a many2one to a different model', async function (assert) {
+    // QUnit.skipWOWL('onchange on a many2one to a different model', async function (assert) {
     // This test is commented because the mock server does not give the correct response.
     // It should return a couple [id, display_name], but I don't know the logic used
     // by the server, so it's hard to emulate it correctly
@@ -1500,7 +1512,7 @@ QUnit.module("Fields", (hooks) => {
     //     assert.strictEqual(form.el.querySelectorAll('input').eq(1).value, 'xphone', "onchange should have been applied");
     // });
 
-    QUnit.skip("form: quick create then save directly", async function (assert) {
+    QUnit.skipWOWL("form: quick create then save directly", async function (assert) {
         assert.expect(5);
 
         const def = makeDeferred();
@@ -1547,7 +1559,7 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps(["create"]);
     });
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "form: quick create for field that returns false after name_create call",
         async function (assert) {
             assert.expect(3);
@@ -1580,7 +1592,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip("list: quick create then save directly", async function (assert) {
+    QUnit.skipWOWL("list: quick create then save directly", async function (assert) {
         assert.expect(8);
 
         const def = makeDeferred();
@@ -1643,7 +1655,7 @@ QUnit.module("Fields", (hooks) => {
         assert.containsN(list, ".o_data_row", 5, "should have added the fifth row");
     });
 
-    QUnit.skip("list in form: quick create then save directly", async function (assert) {
+    QUnit.skipWOWL("list in form: quick create then save directly", async function (assert) {
         assert.expect(6);
 
         const def = makeDeferred();
@@ -1703,26 +1715,28 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skip("list in form: quick create then add a new line directly", async function (assert) {
-        // required many2one inside a one2many list: directly after quick creating
-        // a new many2one value (before the name_create returns), click on add an item:
-        // at this moment, the many2one has still no value, and as it is required,
-        // the row is discarded if a saveLine is requested. However, it should
-        // wait for the name_create to return before trying to save the line.
-        assert.expect(8);
+    QUnit.skipWOWL(
+        "list in form: quick create then add a new line directly",
+        async function (assert) {
+            // required many2one inside a one2many list: directly after quick creating
+            // a new many2one value (before the name_create returns), click on add an item:
+            // at this moment, the many2one has still no value, and as it is required,
+            // the row is discarded if a saveLine is requested. However, it should
+            // wait for the name_create to return before trying to save the line.
+            assert.expect(8);
 
-        serverData.models.partner.onchanges = {
-            trululu: function () {},
-        };
+            serverData.models.partner.onchanges = {
+                trululu: function () {},
+            };
 
-        const def = makeDeferred();
-        let newRecordId;
+            const def = makeDeferred();
+            let newRecordId;
 
-        const form = await makeView({
-            type: "form",
-            resModel: "partner",
-            serverData,
-            arch: `
+            const form = await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
                 <form>
                     <sheet>
                         <field name="p">
@@ -1733,66 +1747,67 @@ QUnit.module("Fields", (hooks) => {
                     </sheet>
                 </form>
             `,
-            mockRPC(route, { args, method }, performRPC) {
-                if (method === "name_create") {
-                    assert.step("name_create");
-                    return def.then(performRPC(...arguments)).then((nameGet) => {
-                        newRecordId = nameGet[0];
-                        return nameGet;
-                    });
-                }
-                if (method === "create") {
-                    assert.deepEqual(args[0].p[0][2].trululu, newRecordId);
-                }
-            },
-        });
+                mockRPC(route, { args, method }, performRPC) {
+                    if (method === "name_create") {
+                        assert.step("name_create");
+                        return def.then(performRPC(...arguments)).then((nameGet) => {
+                            newRecordId = nameGet[0];
+                            return nameGet;
+                        });
+                    }
+                    if (method === "create") {
+                        assert.deepEqual(args[0].p[0][2].trululu, newRecordId);
+                    }
+                },
+            });
 
-        await click(form.el, ".o_field_x2many_list_row_add a");
-        await testUtils.fields.editAndTrigger(
-            form.el.querySelectorAll(".o_field_many2one input"),
-            "b",
-            "keydown"
-        );
-        await testUtils.fields.many2one.clickHighlightedItem("trululu");
-        await click(form.el, ".o_field_x2many_list_row_add a");
+            await click(form.el, ".o_field_x2many_list_row_add a");
+            await testUtils.fields.editAndTrigger(
+                form.el.querySelectorAll(".o_field_many2one input"),
+                "b",
+                "keydown"
+            );
+            await testUtils.fields.many2one.clickHighlightedItem("trululu");
+            await click(form.el, ".o_field_x2many_list_row_add a");
 
-        assert.containsOnce(form, ".o_data_row", "there should still be only one row");
-        assert.hasClass(
-            form.el.querySelectorAll(".o_data_row"),
-            "o_selected_row",
-            "the row should still be in edition"
-        );
+            assert.containsOnce(form, ".o_data_row", "there should still be only one row");
+            assert.hasClass(
+                form.el.querySelectorAll(".o_data_row"),
+                "o_selected_row",
+                "the row should still be in edition"
+            );
 
-        await def.resolve();
-        await nextTick();
+            await def.resolve();
+            await nextTick();
 
-        assert.strictEqual(
-            form.el.querySelector(".o_data_row .o_data_cell").textContent,
-            "b",
-            "first row should have the correct m2o value"
-        );
-        assert.containsN(form, ".o_data_row", 2, "there should now be 2 rows");
-        assert.hasClass(
-            form.el.querySelectorAll(".o_data_row")[1],
-            "o_selected_row",
-            "the second row should be in edition"
-        );
+            assert.strictEqual(
+                form.el.querySelector(".o_data_row .o_data_cell").textContent,
+                "b",
+                "first row should have the correct m2o value"
+            );
+            assert.containsN(form, ".o_data_row", 2, "there should now be 2 rows");
+            assert.hasClass(
+                form.el.querySelectorAll(".o_data_row")[1],
+                "o_selected_row",
+                "the second row should be in edition"
+            );
 
-        await click(form.el, ".o_form_button_save");
+            await click(form.el, ".o_form_button_save");
 
-        assert.containsOnce(
-            form,
-            ".o_data_row",
-            "there should be 1 row saved (the second one was empty and invalid)"
-        );
-        assert.strictEqual(
-            form.el.querySelector(".o_data_row .o_data_cell").textContent,
-            "b",
-            "should have the correct m2o value"
-        );
-    });
+            assert.containsOnce(
+                form,
+                ".o_data_row",
+                "there should be 1 row saved (the second one was empty and invalid)"
+            );
+            assert.strictEqual(
+                form.el.querySelector(".o_data_row .o_data_cell").textContent,
+                "b",
+                "should have the correct m2o value"
+            );
+        }
+    );
 
-    QUnit.skip("list in form: create with one2many with many2one", async function (assert) {
+    QUnit.skipWOWL("list in form: create with one2many with many2one", async function (assert) {
         assert.expect(1);
 
         serverData.models.partner.fields.p.default = [
@@ -1829,7 +1844,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "list in form: create with one2many with many2one (version 2)",
         async function (assert) {
             // This test simulates the exact same scenario as the previous one,
@@ -1872,7 +1887,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "item not dropped on discard with empty required field (default_get)",
         async function (assert) {
             // This test simulates discarding a record that has been created with
@@ -1956,7 +1971,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip("list in form: name_get with unique ids (default_get)", async function (assert) {
+    QUnit.skipWOWL("list in form: name_get with unique ids (default_get)", async function (assert) {
         assert.expect(1);
 
         serverData.models.partner.records[0].display_name = "MyTrululu";
@@ -1994,7 +2009,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "list in form: show name of many2one fields in multi-page (default_get)",
         async function (assert) {
             assert.expect(4);
@@ -2048,7 +2063,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "list in form: item not dropped on discard with empty required field (onchange in default_get)",
         async function (assert) {
             // variant of the test "list in form: discard newly added element with
@@ -2127,7 +2142,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "list in form: item not dropped on discard with empty required field (onchange on list after default_get)",
         async function (assert) {
             // discarding a record from an `onchange` in a `default_get` should not
@@ -2212,7 +2227,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         'item dropped on discard with empty required field with "Add an item" (invalid on "ADD")',
         async function (assert) {
             // when a record in a list is added with "Add an item", it should
@@ -2285,7 +2300,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         'item not dropped on discard with empty required field with "Add an item" (invalid on "UPDATE")',
         async function (assert) {
             // when a record in a list is added with "Add an item", it should
@@ -2368,7 +2383,7 @@ QUnit.module("Fields", (hooks) => {
     );
 
     // WARNING: this does not seem to be a many2one field test
-    QUnit.skip("list in form: default_get with x2many create", async function (assert) {
+    QUnit.skipWOWL("list in form: default_get with x2many create", async function (assert) {
         assert.expect(3);
 
         serverData.models.partner.fields.timmy.default = [
@@ -2440,7 +2455,7 @@ QUnit.module("Fields", (hooks) => {
     });
 
     // WARNING: this does not seem to be a many2one field test
-    QUnit.skip(
+    QUnit.skipWOWL(
         "list in form: default_get with x2many create and onchange",
         async function (assert) {
             assert.expect(1);
@@ -2481,7 +2496,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip("list in form: call button in sub view", async function (assert) {
+    QUnit.skipWOWL("list in form: call button in sub view", async function (assert) {
         assert.expect(11);
 
         serverData.models.partner.records[0].p = [2];
@@ -2554,7 +2569,7 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps(["object"]);
     });
 
-    QUnit.skip("X2Many sequence list in modal", async function (assert) {
+    QUnit.skipWOWL("X2Many sequence list in modal", async function (assert) {
         assert.expect(5);
 
         serverData.models.partner.fields.sequence = { string: "Sequence", type: "integer" };
@@ -2793,7 +2808,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "domain and context are correctly used when doing a name_search in a m2o",
         async function (assert) {
             assert.expect(4);
@@ -2853,7 +2868,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip("quick create on a many2one", async function (assert) {
+    QUnit.skipWOWL("quick create on a many2one", async function (assert) {
         assert.expect(2);
 
         const form = await makeView({
@@ -2890,7 +2905,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skip("failing quick create on a many2one", async function (assert) {
+    QUnit.skipWOWL("failing quick create on a many2one", async function (assert) {
         assert.expect(4);
 
         serverData.views = {
@@ -2941,7 +2956,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skip("failing quick create on a many2one inside a one2many", async function (assert) {
+    QUnit.skipWOWL("failing quick create on a many2one inside a one2many", async function (assert) {
         assert.expect(4);
 
         serverData.views = {
@@ -2999,7 +3014,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skip("slow create on a many2one", async function (assert) {
+    QUnit.skipWOWL("slow create on a many2one", async function (assert) {
         assert.expect(11);
 
         serverData.views = {
@@ -3137,7 +3152,7 @@ QUnit.module("Fields", (hooks) => {
         await click(document.body.querySelector(".modal .o_form_button_cancel"));
     });
 
-    QUnit.skip("select a many2one value by focusing out", async function (assert) {
+    QUnit.skipWOWL("select a many2one value by focusing out", async function (assert) {
         assert.expect(3);
 
         const form = await makeView({
@@ -3160,7 +3175,7 @@ QUnit.module("Fields", (hooks) => {
         assert.containsOnce(form, ".o_external_button");
     });
 
-    QUnit.skip("no_create option on a many2one", async function (assert) {
+    QUnit.skipWOWL("no_create option on a many2one", async function (assert) {
         assert.expect(2);
 
         const form = await makeView({
@@ -3193,7 +3208,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skip("can_create and can_write option on a many2one", async function (assert) {
+    QUnit.skipWOWL("can_create and can_write option on a many2one", async function (assert) {
         assert.expect(5);
 
         serverData.models.product.options = {
@@ -3266,7 +3281,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "many2one with can_create=false shows no result item when searched something that doesn't exist",
         async function (assert) {
             assert.expect(2);
@@ -3304,7 +3319,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip("pressing enter in a m2o in an editable list", async function (assert) {
+    QUnit.skipWOWL("pressing enter in a m2o in an editable list", async function (assert) {
         assert.expect(8);
 
         const list = await makeView({
@@ -3358,7 +3373,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "pressing ENTER on a 'no_quick_create' many2one should open a M2ODialog",
         async function (assert) {
             assert.expect(2);
@@ -3402,7 +3417,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "select a value by pressing TAB on a many2one with onchange",
         async function (assert) {
             assert.expect(3);
@@ -3464,7 +3479,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip("leaving a many2one by pressing tab", async function (assert) {
+    QUnit.skipWOWL("leaving a many2one by pressing tab", async function (assert) {
         assert.expect(3);
 
         const form = await makeView({
@@ -3506,7 +3521,7 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual($input.value, "second record", "first record should have been selected");
     });
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "leaving an empty many2one by pressing tab (after backspace or delete)",
         async function (assert) {
             assert.expect(4);
@@ -3548,7 +3563,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "many2one in editable list + onchange, with enter [REQUIRE FOCUS]",
         async function (assert) {
             assert.expect(6);
@@ -3596,7 +3611,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "many2one in editable list + onchange, with enter, part 2 [REQUIRE FOCUS]",
         async function (assert) {
             // this is the same test as the previous one, but the onchange is just
@@ -3694,7 +3709,7 @@ QUnit.module("Fields", (hooks) => {
         await click(form.el, ".o_field_widget[name='trululu'] input");
     });
 
-    QUnit.skip("many2one in one2many: domain updated by an onchange", async function (assert) {
+    QUnit.skipWOWL("many2one in one2many: domain updated by an onchange", async function (assert) {
         assert.expect(3);
 
         serverData.models.partner.onchanges = {
@@ -3754,7 +3769,7 @@ QUnit.module("Fields", (hooks) => {
         await click(form.el, ".o_field_widget[name=trululu] input");
     });
 
-    QUnit.skip("search more in many2one: no text in input", async function (assert) {
+    QUnit.skipWOWL("search more in many2one: no text in input", async function (assert) {
         // when the user clicks on 'Search More...' in a many2one dropdown, and there is no text
         // in the input (i.e. no value to search on), we bypass the name_search that is meant to
         // return a list of preselected ids to filter on in the list view (opened in a dialog)
@@ -3806,7 +3821,7 @@ QUnit.module("Fields", (hooks) => {
         ]);
     });
 
-    QUnit.skip("search more in many2one: text in input", async function (assert) {
+    QUnit.skipWOWL("search more in many2one: text in input", async function (assert) {
         // when the user clicks on 'Search More...' in a many2one dropdown, and there is some
         // text in the input, we perform a name_search to get a (limited) list of preselected
         // ids and we add a dynamic filter (with those ids) to the search view in the dialog, so
@@ -3871,7 +3886,7 @@ QUnit.module("Fields", (hooks) => {
         ]);
     });
 
-    QUnit.skip("search more in many2one: dropdown click", async function (assert) {
+    QUnit.skipWOWL("search more in many2one: dropdown click", async function (assert) {
         assert.expect(8);
 
         for (let i = 0; i < 8; i++) {
@@ -3939,7 +3954,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skip("updating a many2one from a many2many", async function (assert) {
+    QUnit.skipWOWL("updating a many2one from a many2many", async function (assert) {
         assert.expect(4);
 
         serverData.models.turtle.records[1].turtle_trululu = 1;
@@ -4003,7 +4018,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skip("search more in many2one: resequence inside dialog", async function (assert) {
+    QUnit.skipWOWL("search more in many2one: resequence inside dialog", async function (assert) {
         // when the user clicks on 'Search More...' in a many2one dropdown, resequencing inside
         // the dialog works
         assert.expect(10);
@@ -4100,7 +4115,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skip("x2many list sorted by many2one", async function (assert) {
+    QUnit.skipWOWL("x2many list sorted by many2one", async function (assert) {
         assert.expect(3);
 
         serverData.models.partner.records[0].p = [1, 2, 4];
@@ -4146,7 +4161,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skip("one2many with extra field from server not in form", async function (assert) {
+    QUnit.skipWOWL("one2many with extra field from server not in form", async function (assert) {
         assert.expect(6);
 
         serverData.views = {
@@ -4240,7 +4255,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "one2many with extra field from server not in (inline) form",
         async function (assert) {
             assert.expect(1);
@@ -4288,7 +4303,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "one2many with extra X2many field from server not in inline form",
         async function (assert) {
             assert.expect(1);
@@ -4334,7 +4349,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip("one2many invisible depends on parent field", async function (assert) {
+    QUnit.skipWOWL("one2many invisible depends on parent field", async function (assert) {
         assert.expect(4);
 
         serverData.models.partner.records[0].p = [2];
@@ -4400,7 +4415,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "one2many column visiblity depends on onchange of parent field",
         async function (assert) {
             assert.expect(3);
@@ -4461,7 +4476,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip("one2many column_invisible on view not inline", async function (assert) {
+    QUnit.skipWOWL("one2many column_invisible on view not inline", async function (assert) {
         assert.expect(4);
 
         serverData.models.partner.records[0].p = [2];
@@ -4534,7 +4549,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("Many2OneAvatar");
 
-    QUnit.skip("many2one_avatar widget in form view", async function (assert) {
+    QUnit.skipWOWL("many2one_avatar widget in form view", async function (assert) {
         assert.expect(17);
 
         const form = await createView({
@@ -4583,7 +4598,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("many2one_avatar widget in form view, with onchange", async function (assert) {
+    QUnit.skipWOWL("many2one_avatar widget in form view, with onchange", async function (assert) {
         assert.expect(7);
 
         this.data.partner.onchanges = {
@@ -4625,7 +4640,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("many2one_avatar widget in list view", async function (assert) {
+    QUnit.skipWOWL("many2one_avatar widget in list view", async function (assert) {
         assert.expect(5);
 
         this.data.partner.records = [
@@ -4659,7 +4674,7 @@ QUnit.module("Fields", (hooks) => {
         list.destroy();
     });
 
-    QUnit.skip("many2one_avatar widget in editable list view", async function (assert) {
+    QUnit.skipWOWL("many2one_avatar widget in editable list view", async function (assert) {
         assert.expect(3);
 
         this.data.partner.records = [

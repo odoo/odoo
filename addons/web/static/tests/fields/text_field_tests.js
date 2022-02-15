@@ -293,7 +293,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skip("text field translatable", async function (assert) {
+    QUnit.skipWOWL("text field translatable", async function (assert) {
         assert.expect(3);
 
         serverData.models.partner.fields.txt.translate = true;
@@ -340,7 +340,7 @@ QUnit.module("Fields", (hooks) => {
         _t.database.multi_lang = multiLang;
     });
 
-    QUnit.skip("text field translatable in create mode", async function (assert) {
+    QUnit.skipWOWL("text field translatable in create mode", async function (assert) {
         assert.expect(1);
 
         serverData.models.partner.fields.txt.translate = true;
@@ -366,7 +366,7 @@ QUnit.module("Fields", (hooks) => {
         _t.database.multi_lang = multiLang;
     });
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "go to next line (and not the next row) when pressing enter",
         async function (assert) {
             assert.expect(4);
@@ -456,7 +456,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "binary fields input value is empty whean clearing after uploading",
         async function (assert) {
             assert.expect(2);
@@ -496,7 +496,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip("field text in editable list view", async function (assert) {
+    QUnit.skipWOWL("field text in editable list view", async function (assert) {
         assert.expect(1);
 
         serverData.models.partner.fields.foo.type = "text";

@@ -198,7 +198,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("FloatFactorField");
 
-    QUnit.skip("FloatFactorField in form view", async function (assert) {
+    QUnit.skipWOWL("FloatFactorField in form view", async function (assert) {
         assert.expect(4);
 
         var form = await createView({

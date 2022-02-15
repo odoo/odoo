@@ -266,7 +266,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "RemainingDaysField on a date field in multi edit list view",
         async function (assert) {
             assert.expect(7);
@@ -332,7 +332,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "RemainingDaysField, enter wrong value manually in multi edit list view",
         async function (assert) {
             assert.expect(6);

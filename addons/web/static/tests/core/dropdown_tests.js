@@ -989,26 +989,29 @@ QUnit.module("Components", ({ beforeEach }) => {
         );
     });
 
-    QUnit.skip("click on the label of a CheckBoxDropdownItem selects it once", async (assert) => {
-        // skipWOWL
-        assert.expect(2);
-        class Parent extends owl.Component {
-            onSelected() {
-                assert.step("selected");
+    QUnit.skipWOWL(
+        "click on the label of a CheckBoxDropdownItem selects it once",
+        async (assert) => {
+            // skipWOWL
+            assert.expect(2);
+            class Parent extends owl.Component {
+                onSelected() {
+                    assert.step("selected");
+                }
             }
-        }
-        Parent.components = { CheckBoxDropdownItem, Dropdown };
-        Parent.template = owl.xml`
+            Parent.components = { CheckBoxDropdownItem, Dropdown };
+            Parent.template = owl.xml`
             <Dropdown>
                 <CheckBoxDropdownItem onSelected.bind="onSelected"/>
             </Dropdown>
         `;
-        env = await makeTestEnv();
-        parent = await mount(Parent, target, { env });
-        await click(parent.el, "button.dropdown-toggle");
-        await click(parent.el, ".dropdown-item label");
-        assert.verifySteps(["selected"]);
-    });
+            env = await makeTestEnv();
+            parent = await mount(Parent, target, { env });
+            await click(parent.el, "button.dropdown-toggle");
+            await click(parent.el, ".dropdown-item label");
+            assert.verifySteps(["selected"]);
+        }
+    );
 
     QUnit.test("Dropdown with a tooltip", async (assert) => {
         assert.expect(2);

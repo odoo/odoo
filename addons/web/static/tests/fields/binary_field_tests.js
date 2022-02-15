@@ -182,7 +182,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "BinaryField that is readonly in create mode does not download",
         async function (assert) {
             assert.expect(4);

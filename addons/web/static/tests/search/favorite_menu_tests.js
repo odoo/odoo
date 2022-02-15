@@ -344,7 +344,6 @@ QUnit.module("Search", (hooks) => {
     );
 
     QUnit.skip("modal loads saved search filters", async function (assert) {
-        // #long-term-skipped-test
         /** @todo I don't know yet how to convert this test */
         // assert.expect(1);
         // const data = {

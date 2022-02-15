@@ -198,7 +198,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("LabelSelectionField");
 
-    QUnit.skip("LabelSelectionField in form view", async function (assert) {
+    QUnit.skipWOWL("LabelSelectionField in form view", async function (assert) {
         assert.expect(12);
 
         var form = await createView({
@@ -287,7 +287,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("LabelSelectionField in editable list view", async function (assert) {
+    QUnit.skipWOWL("LabelSelectionField in editable list view", async function (assert) {
         assert.expect(21);
 
         var list = await createView({

@@ -220,7 +220,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skip("use incorrect formula", async function (assert) {
+    QUnit.skipWOWL("use incorrect formula", async function (assert) {
         assert.expect(4);
 
         var form = await makeView({
@@ -261,7 +261,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skip("float field in editable list view", async function (assert) {
+    QUnit.skipWOWL("float field in editable list view", async function (assert) {
         assert.expect(4);
 
         var list = await createView({
@@ -317,38 +317,41 @@ QUnit.module("Fields", (hooks) => {
         list.destroy();
     });
 
-    QUnit.skip("do not trigger a field_changed if they have not changed", async function (assert) {
-        assert.expect(2);
+    QUnit.skipWOWL(
+        "do not trigger a field_changed if they have not changed",
+        async function (assert) {
+            assert.expect(2);
 
-        this.data.partner.records[1].float_field = false;
-        this.data.partner.records[1].int_field = false;
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                '<form string="Partners">' +
-                "<sheet>" +
-                '<field name="float_field" widget="float" digits="[5,3]"/>' +
-                '<field name="int_field"/>' +
-                "</sheet>" +
-                "</form>",
-            res_id: 2,
-            mockRPC: function (route, args) {
-                assert.step(args.method);
-                return this._super.apply(this, arguments);
-            },
-        });
+            this.data.partner.records[1].float_field = false;
+            this.data.partner.records[1].int_field = false;
+            var form = await createView({
+                View: FormView,
+                model: "partner",
+                data: this.data,
+                arch:
+                    '<form string="Partners">' +
+                    "<sheet>" +
+                    '<field name="float_field" widget="float" digits="[5,3]"/>' +
+                    '<field name="int_field"/>' +
+                    "</sheet>" +
+                    "</form>",
+                res_id: 2,
+                mockRPC: function (route, args) {
+                    assert.step(args.method);
+                    return this._super.apply(this, arguments);
+                },
+            });
 
-        await testUtils.form.clickEdit(form);
-        await testUtils.form.clickSave(form);
+            await testUtils.form.clickEdit(form);
+            await testUtils.form.clickSave(form);
 
-        assert.verifySteps(["read"]); // should not have save as nothing changed
+            assert.verifySteps(["read"]); // should not have save as nothing changed
 
-        form.destroy();
-    });
+            form.destroy();
+        }
+    );
 
-    QUnit.skip("float widget on monetary field", async function (assert) {
+    QUnit.skipWOWL("float widget on monetary field", async function (assert) {
         assert.expect(1);
 
         this.data.partner.fields.monetary = { string: "Monetary", type: "monetary" };
@@ -381,75 +384,78 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("float field with monetary widget and decimal precision", async function (assert) {
-        assert.expect(5);
+    QUnit.skipWOWL(
+        "float field with monetary widget and decimal precision",
+        async function (assert) {
+            assert.expect(5);
 
-        this.data.partner.records = [
-            {
-                id: 1,
-                float_field: -8.89859,
-                currency_id: 1,
-            },
-        ];
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                '<form string="Partners">' +
-                "<sheet>" +
-                '<field name="float_field" widget="monetary" options="{\'field_digits\': True}"/>' +
-                '<field name="currency_id" invisible="1"/>' +
-                "</sheet>" +
-                "</form>",
-            res_id: 1,
-            session: {
-                currencies: _.indexBy(this.data.currency.records, "id"),
-            },
-        });
+            this.data.partner.records = [
+                {
+                    id: 1,
+                    float_field: -8.89859,
+                    currency_id: 1,
+                },
+            ];
+            var form = await createView({
+                View: FormView,
+                model: "partner",
+                data: this.data,
+                arch:
+                    '<form string="Partners">' +
+                    "<sheet>" +
+                    '<field name="float_field" widget="monetary" options="{\'field_digits\': True}"/>' +
+                    '<field name="currency_id" invisible="1"/>' +
+                    "</sheet>" +
+                    "</form>",
+                res_id: 1,
+                session: {
+                    currencies: _.indexBy(this.data.currency.records, "id"),
+                },
+            });
 
-        // Non-breaking space between the currency and the amount
-        assert.strictEqual(
-            form.el.querySelector(".o_field_widget").textContent,
-            "$\u00a0-8.9",
-            "The value should be displayed properly."
-        );
+            // Non-breaking space between the currency and the amount
+            assert.strictEqual(
+                form.el.querySelector(".o_field_widget").textContent,
+                "$\u00a0-8.9",
+                "The value should be displayed properly."
+            );
 
-        await testUtils.form.clickEdit(form);
-        assert.strictEqual(
-            form.el.querySelector(".o_field_widget[name=float_field] input").value,
-            "-8.9",
-            "The input should be rendered without the currency symbol."
-        );
-        assert.strictEqual(
-            form.el.querySelector(".o_field_widget[name=float_field] input").parent().children()
-                .textContent,
-            "$",
-            "The input should be preceded by a span containing the currency symbol."
-        );
+            await testUtils.form.clickEdit(form);
+            assert.strictEqual(
+                form.el.querySelector(".o_field_widget[name=float_field] input").value,
+                "-8.9",
+                "The input should be rendered without the currency symbol."
+            );
+            assert.strictEqual(
+                form.el.querySelector(".o_field_widget[name=float_field] input").parent().children()
+                    .textContent,
+                "$",
+                "The input should be preceded by a span containing the currency symbol."
+            );
 
-        await testUtils.fields.editInput(
-            form.el.querySelector(".o_field_monetary input"),
-            "109.2458938598598"
-        );
-        assert.strictEqual(
-            form.el.querySelector(".o_field_widget[name=float_field] input").value,
-            "109.2458938598598",
-            "The value should not be formated yet."
-        );
+            await testUtils.fields.editInput(
+                form.el.querySelector(".o_field_monetary input"),
+                "109.2458938598598"
+            );
+            assert.strictEqual(
+                form.el.querySelector(".o_field_widget[name=float_field] input").value,
+                "109.2458938598598",
+                "The value should not be formated yet."
+            );
 
-        await testUtils.form.clickSave(form);
-        // Non-breaking space between the currency and the amount
-        assert.strictEqual(
-            form.el.querySelector(".o_field_widget").textContent,
-            "$\u00a0109.2",
-            "The new value should be rounded properly."
-        );
+            await testUtils.form.clickSave(form);
+            // Non-breaking space between the currency and the amount
+            assert.strictEqual(
+                form.el.querySelector(".o_field_widget").textContent,
+                "$\u00a0109.2",
+                "The new value should be rounded properly."
+            );
 
-        form.destroy();
-    });
+            form.destroy();
+        }
+    );
 
-    QUnit.skip("float field with type number option", async function (assert) {
+    QUnit.skipWOWL("float field with type number option", async function (assert) {
         assert.expect(4);
 
         var form = await createView({
@@ -499,7 +505,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "float field with type number option and comma decimal separator",
         async function (assert) {
             assert.expect(4);
@@ -553,7 +559,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip("float field without type number option", async function (assert) {
+    QUnit.skipWOWL("float field without type number option", async function (assert) {
         assert.expect(2);
 
         var form = await createView({

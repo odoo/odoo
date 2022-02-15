@@ -481,7 +481,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skip("basic domain field: show the selection", async function (assert) {
+    QUnit.skipWOWL("basic domain field: show the selection", async function (assert) {
         assert.expect(2);
 
         serverData.models.partner.records[0].foo = "[]";
@@ -526,7 +526,7 @@ QUnit.module("Fields", (hooks) => {
         await testUtils.dom.click($(".modal .o_list_view .o_data_row:first .o_data_cell"));
     });
 
-    QUnit.skip("field context is propagated when opening selection", async function (assert) {
+    QUnit.skipWOWL("field context is propagated when opening selection", async function (assert) {
         assert.expect(1);
 
         serverData.models.partner.records[0].foo = "[]";
@@ -556,7 +556,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skip("domain field: manually edit domain with textarea", async function (assert) {
+    QUnit.skipWOWL("domain field: manually edit domain with textarea", async function (assert) {
         assert.expect(9);
 
         patchWithCleanup(odoo, { debug: true });
@@ -604,7 +604,7 @@ QUnit.module("Fields", (hooks) => {
         ]);
     });
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "domain field: manually set an invalid domain with textarea",
         async function (assert) {
             assert.expect(9);
@@ -668,7 +668,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "domain field: reload count by clicking on the refresh button",
         async function (assert) {
             assert.expect(7);
@@ -767,7 +767,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skip("domain field: edit domain with dynamic content", async function (assert) {
+    QUnit.skipWOWL("domain field: edit domain with dynamic content", async function (assert) {
         assert.expect(2);
 
         patchWithCleanup(odoo, { debug: true });

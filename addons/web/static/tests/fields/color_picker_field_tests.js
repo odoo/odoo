@@ -41,7 +41,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("ColorPickerField");
 
-    QUnit.skip("can navigate away with TAB", async function (assert) {
+    QUnit.skipWOWL("can navigate away with TAB", async function (assert) {
         assert.expect(1);
 
         const form = await makeView({

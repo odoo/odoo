@@ -47,7 +47,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("HandleField");
 
-    QUnit.skip("HandleField in x2m", async function (assert) {
+    QUnit.skipWOWL("HandleField in x2m", async function (assert) {
         assert.expect(6);
 
         serverData.models.partner.records[0].p = [2, 4];

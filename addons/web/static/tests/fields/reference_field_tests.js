@@ -226,7 +226,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("ReferenceField");
 
-    QUnit.skip("ReferenceField can quick create models", async function (assert) {
+    QUnit.skipWOWL("ReferenceField can quick create models", async function (assert) {
         assert.expect(8);
 
         const form = await createView({
@@ -260,7 +260,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("ReferenceField in modal readonly mode", async function (assert) {
+    QUnit.skipWOWL("ReferenceField in modal readonly mode", async function (assert) {
         assert.expect(4);
 
         this.data.partner.records[0].p = [2];
@@ -312,7 +312,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("ReferenceField in modal write mode", async function (assert) {
+    QUnit.skipWOWL("ReferenceField in modal write mode", async function (assert) {
         assert.expect(5);
 
         this.data.partner.records[0].p = [2];
@@ -372,7 +372,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("reference in form view", async function (assert) {
+    QUnit.skipWOWL("reference in form view", async function (assert) {
         assert.expect(15);
 
         var form = await createView({
@@ -505,7 +505,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("interact with reference field changed by onchange", async function (assert) {
+    QUnit.skipWOWL("interact with reference field changed by onchange", async function (assert) {
         assert.expect(2);
 
         this.data.partner.onchanges = {
@@ -548,7 +548,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("default_get and onchange with a reference field", async function (assert) {
+    QUnit.skipWOWL("default_get and onchange with a reference field", async function (assert) {
         assert.expect(8);
 
         this.data.partner.fields.reference.default = "product,37";
@@ -613,7 +613,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("default_get a reference field in a x2m", async function (assert) {
+    QUnit.skipWOWL("default_get a reference field in a x2m", async function (assert) {
         assert.expect(1);
 
         this.data.partner.fields.turtles.default = [[0, false, { turtle_ref: "product,37" }]];
@@ -648,7 +648,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("ReferenceField on char field, reset by onchange", async function (assert) {
+    QUnit.skipWOWL("ReferenceField on char field, reset by onchange", async function (assert) {
         assert.expect(4);
 
         this.data.partner.records[0].foo = "product,37";
@@ -703,7 +703,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("reference and list navigation", async function (assert) {
+    QUnit.skipWOWL("reference and list navigation", async function (assert) {
         assert.expect(2);
 
         var list = await createView({
@@ -737,7 +737,7 @@ QUnit.module("Fields", (hooks) => {
         list.destroy();
     });
 
-    QUnit.skip("ReferenceField with model_field option", async function (assert) {
+    QUnit.skipWOWL("ReferenceField with model_field option", async function (assert) {
         assert.expect(5);
         this.data.partner.records[0].reference = false;
         this.data.partner.records[0].model_id = 20;
@@ -802,7 +802,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "ReferenceField with model_field option (model_field not synchronized with reference)",
         async function (assert) {
             // Checks that the data is not modified even though it is not synchronized.
@@ -854,7 +854,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "ReferenceField with model_field option (tree list in form view)",
         async function (assert) {
             assert.expect(2);

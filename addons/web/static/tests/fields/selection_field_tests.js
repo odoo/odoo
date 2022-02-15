@@ -227,7 +227,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("SelectionField");
 
-    QUnit.skip("SelectionField in a list view", async function (assert) {
+    QUnit.skipWOWL("SelectionField in a list view", async function (assert) {
         assert.expect(3);
 
         serverData.models.partner.records.forEach(function (r) {

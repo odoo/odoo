@@ -62,7 +62,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("JournalDashboardGraphField");
 
-    QUnit.skip("JournalDashboardGraphField attach/detach callbacks", async function (assert) {
+    QUnit.skipWOWL("JournalDashboardGraphField attach/detach callbacks", async function (assert) {
         // This widget is rendered with Chart.js.
         assert.expect(6);
 
@@ -162,7 +162,7 @@ QUnit.module("Fields", (hooks) => {
                 });*/
     });
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "rendering of a field with JournalDashboardGraphField in an updated kanban view (ungrouped)",
         async function (assert) {
             assert.expect(2);
@@ -217,7 +217,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "rendering of a field with JournalDashboardGraphField in an updated kanban view (grouped)",
         async function (assert) {
             assert.expect(2);

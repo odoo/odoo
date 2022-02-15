@@ -369,7 +369,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "DatetimeField not visible in form view should not capture the focus on keyboard navigation",
         async function (assert) {
             assert.expect(1);
@@ -440,7 +440,7 @@ QUnit.module("Fields", (hooks) => {
         assert.containsNone(document.body, ".modal", "there should not be a Warning dialog");
     });
 
-    QUnit.skip("DatetimeField in editable list view", async function (assert) {
+    QUnit.skipWOWL("DatetimeField in editable list view", async function (assert) {
         assert.expect(9);
 
         patchTimeZone(120);
@@ -531,7 +531,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "multi edition of DatetimeField in list view: edit date in input",
         async function (assert) {
             assert.expect(4);

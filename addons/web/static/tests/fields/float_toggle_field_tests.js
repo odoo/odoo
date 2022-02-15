@@ -198,7 +198,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("FloatToggleField");
 
-    QUnit.skip("FloatToggleField in form view", async function (assert) {
+    QUnit.skipWOWL("FloatToggleField in form view", async function (assert) {
         assert.expect(5);
 
         var form = await createView({
@@ -257,7 +257,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "FloatToggleField in kanban view(readonly) with option force_button",
         async function (assert) {
             assert.expect(2);

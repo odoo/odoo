@@ -199,7 +199,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("Many2ManyField");
 
-    QUnit.skip("many2many kanban: edition", async function (assert) {
+    QUnit.skipWOWL("many2many kanban: edition", async function (assert) {
         assert.expect(33);
 
         this.data.partner.records[0].timmy = [12, 14];
@@ -427,7 +427,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "many2many kanban(editable): properly handle add-label node attribute",
         async function (assert) {
             assert.expect(1);
@@ -466,7 +466,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip("many2many kanban: create action disabled", async function (assert) {
+    QUnit.skipWOWL("many2many kanban: create action disabled", async function (assert) {
         assert.expect(4);
 
         this.data.partner.records[0].timmy = [12, 14];
@@ -526,7 +526,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("many2many kanban: conditional create/delete actions", async function (assert) {
+    QUnit.skipWOWL("many2many kanban: conditional create/delete actions", async function (assert) {
         assert.expect(6);
 
         this.data.partner.records[0].timmy = [12, 14];
@@ -611,7 +611,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("many2many list (non editable): edition", async function (assert) {
+    QUnit.skipWOWL("many2many list (non editable): edition", async function (assert) {
         assert.expect(29);
 
         this.data.partner.records[0].timmy = [12, 14];
@@ -737,7 +737,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("many2many list (editable): edition", async function (assert) {
+    QUnit.skipWOWL("many2many list (editable): edition", async function (assert) {
         assert.expect(31);
 
         this.data.partner.records[0].timmy = [12, 14];
@@ -875,7 +875,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("many2many: create & delete attributes (both true)", async function (assert) {
+    QUnit.skipWOWL("many2many: create & delete attributes (both true)", async function (assert) {
         assert.expect(2);
 
         this.data.partner.records[0].timmy = [12, 14];
@@ -907,7 +907,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("many2many: create & delete attributes (both false)", async function (assert) {
+    QUnit.skipWOWL("many2many: create & delete attributes (both false)", async function (assert) {
         assert.expect(2);
 
         this.data.partner.records[0].timmy = [12, 14];
@@ -944,7 +944,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("many2many list: create action disabled", async function (assert) {
+    QUnit.skipWOWL("many2many list: create action disabled", async function (assert) {
         assert.expect(2);
         var form = await createView({
             View: FormView,
@@ -978,7 +978,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("fieldmany2many list comodel not writable", async function (assert) {
+    QUnit.skipWOWL("fieldmany2many list comodel not writable", async function (assert) {
         /**
          * Many2Many List should behave as the m2m_tags
          * that is, the relation can be altered even if the comodel itself is not CRUD-able
@@ -1036,7 +1036,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("many2many list: conditional create/delete actions", async function (assert) {
+    QUnit.skipWOWL("many2many list: conditional create/delete actions", async function (assert) {
         assert.expect(6);
 
         this.data.partner.records[0].timmy = [12, 14];
@@ -1111,7 +1111,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("many2many field with link/unlink options (list)", async function (assert) {
+    QUnit.skipWOWL("many2many field with link/unlink options (list)", async function (assert) {
         assert.expect(5);
 
         this.data.partner.records[0].timmy = [12, 14];
@@ -1175,7 +1175,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         'many2many field with link/unlink options (list, create="0")',
         async function (assert) {
             assert.expect(5);
@@ -1242,7 +1242,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip("many2many field with link option (kanban)", async function (assert) {
+    QUnit.skipWOWL("many2many field with link option (kanban)", async function (assert) {
         assert.expect(3);
 
         this.data.partner.records[0].timmy = [12, 14];
@@ -1300,16 +1300,18 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip('many2many field with link option (kanban, create="0")', async function (assert) {
-        assert.expect(3);
+    QUnit.skipWOWL(
+        'many2many field with link option (kanban, create="0")',
+        async function (assert) {
+            assert.expect(3);
 
-        this.data.partner.records[0].timmy = [12, 14];
+            this.data.partner.records[0].timmy = [12, 14];
 
-        const form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch: `
+            const form = await createView({
+                View: FormView,
+                model: "partner",
+                data: this.data,
+                arch: `
                 <form>
                     <field name="color"/>
                     <field name="timmy" options="{'link': [('color', '=', 'red')]}">
@@ -1322,43 +1324,44 @@ QUnit.module("Fields", (hooks) => {
                         </kanban>
                     </field>
                 </form>`,
-            archs: {
-                "partner_type,false,list": '<tree><field name="name"/></tree>',
-                "partner_type,false,search": "<search/>",
-            },
-            res_id: 1,
-            viewOptions: {
-                mode: "edit",
-            },
-        });
+                archs: {
+                    "partner_type,false,list": '<tree><field name="name"/></tree>',
+                    "partner_type,false,search": "<search/>",
+                },
+                res_id: 1,
+                viewOptions: {
+                    mode: "edit",
+                },
+            });
 
-        // color is red -> link and unlink actions are available
-        assert.containsOnce(form, ".o-kanban-button-new", "should have the 'Add' button");
+            // color is red -> link and unlink actions are available
+            assert.containsOnce(form, ".o-kanban-button-new", "should have the 'Add' button");
 
-        await testUtils.dom.click(form.$(".o-kanban-button-new"));
+            await testUtils.dom.click(form.$(".o-kanban-button-new"));
 
-        assert.containsN(
-            document.body,
-            ".modal .modal-footer button",
-            2,
-            "there should be 2 buttons available in the modal (Create action is not available"
-        );
+            assert.containsN(
+                document.body,
+                ".modal .modal-footer button",
+                2,
+                "there should be 2 buttons available in the modal (Create action is not available"
+            );
 
-        await testUtils.dom.click($(".modal .modal-footer .o_form_button_cancel"));
+            await testUtils.dom.click($(".modal .modal-footer .o_form_button_cancel"));
 
-        // set color to black -> link and unlink actions are no longer available
-        await testUtils.fields.editSelect(form.$('select[name="color"]'), '"black"');
+            // set color to black -> link and unlink actions are no longer available
+            await testUtils.fields.editSelect(form.$('select[name="color"]'), '"black"');
 
-        assert.containsNone(
-            form,
-            ".o-kanban-button-new",
-            '"Add" should no longer be available after color field changed'
-        );
+            assert.containsNone(
+                form,
+                ".o-kanban-button-new",
+                '"Add" should no longer be available after color field changed'
+            );
 
-        form.destroy();
-    });
+            form.destroy();
+        }
+    );
 
-    QUnit.skip("many2many list: list of id as default value", async function (assert) {
+    QUnit.skipWOWL("many2many list: list of id as default value", async function (assert) {
         assert.expect(1);
 
         this.data.partner.fields.turtles.default = [2, 3];
@@ -1387,7 +1390,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("many2many checkboxes with default values", async function (assert) {
+    QUnit.skipWOWL("many2many checkboxes with default values", async function (assert) {
         assert.expect(7);
 
         this.data.partner.fields.turtles.default = [3];
@@ -1450,7 +1453,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("many2many list with x2many: add a record", async function (assert) {
+    QUnit.skipWOWL("many2many list with x2many: add a record", async function (assert) {
         assert.expect(18);
 
         this.data.partner_type.fields.m2m = {
@@ -1538,7 +1541,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("many2many with a domain", async function (assert) {
+    QUnit.skipWOWL("many2many with a domain", async function (assert) {
         // The domain specified on the field should not be replaced by the potential
         // domain the user writes in the dialog, they should rather be concatenated
         assert.expect(2);
@@ -1574,7 +1577,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("many2many list with onchange and edition of a record", async function (assert) {
+    QUnit.skipWOWL("many2many list with onchange and edition of a record", async function (assert) {
         assert.expect(8);
 
         this.data.partner.fields.turtles.type = "many2many";
@@ -1624,7 +1627,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("onchange with 40+ commands for a many2many", async function (assert) {
+    QUnit.skipWOWL("onchange with 40+ commands for a many2many", async function (assert) {
         // this test ensures that the basic_model correctly handles more LINK_TO
         // commands than the limit of the dataPoint (40 for x2many kanban)
         assert.expect(24);
@@ -1748,7 +1751,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("default_get, onchange, onchange on m2m", async function (assert) {
+    QUnit.skipWOWL("default_get, onchange, onchange on m2m", async function (assert) {
         assert.expect(1);
 
         this.data.partner.onchanges.int_field = function (obj) {
@@ -1782,7 +1785,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("widget many2many_tags", async function (assert) {
+    QUnit.skipWOWL("widget many2many_tags", async function (assert) {
         assert.expect(1);
         this.data.turtle.records[0].partner_ids = [2];
 
@@ -1809,7 +1812,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("many2many tags widget: select multiple records", async function (assert) {
+    QUnit.skipWOWL("many2many tags widget: select multiple records", async function (assert) {
         assert.expect(5);
         for (var i = 1; i <= 10; i++) {
             this.data.partner_type.records.push({ id: 100 + i, display_name: "Partner" + i });
@@ -1858,7 +1861,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "many2many tags widget: select multiple records doesn't show already added tags",
         async function (assert) {
             assert.expect(5);
@@ -1914,7 +1917,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "many2many tags widget: save&new in edit mode doesn't close edit window",
         async function (assert) {
             assert.expect(5);
@@ -1963,7 +1966,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "many2many tags widget: make tag name input field blank on Save&New",
         async function (assert) {
             assert.expect(4);
@@ -2022,7 +2025,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip("many2many list add *many* records, remove, re-add", async function (assert) {
+    QUnit.skipWOWL("many2many list add *many* records, remove, re-add", async function (assert) {
         assert.expect(5);
 
         this.data.partner.fields.timmy.domain = [["color", "=", 2]];
@@ -2123,135 +2126,138 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("many2many_tags widget: conditional create/delete actions", async function (assert) {
-        assert.expect(10);
+    QUnit.skipWOWL(
+        "many2many_tags widget: conditional create/delete actions",
+        async function (assert) {
+            assert.expect(10);
 
-        this.data.turtle.records[0].partner_ids = [2];
-        for (var i = 1; i <= 10; i++) {
-            this.data.partner.records.push({ id: 100 + i, display_name: "Partner" + i });
-        }
+            this.data.turtle.records[0].partner_ids = [2];
+            for (var i = 1; i <= 10; i++) {
+                this.data.partner.records.push({ id: 100 + i, display_name: "Partner" + i });
+            }
 
-        const form = await createView({
-            View: FormView,
-            model: "turtle",
-            data: this.data,
-            arch: `
+            const form = await createView({
+                View: FormView,
+                model: "turtle",
+                data: this.data,
+                arch: `
                 <form>
                     <field name="display_name"/>
                     <field name="turtle_bar"/>
                     <field name="partner_ids" options="{'create': [('turtle_bar', '=', True)], 'delete': [('turtle_bar', '=', True)]}" widget="many2many_tags"/>
                 </form>`,
-            archs: {
-                "partner,false,list": '<tree><field name="name"/></tree>',
-                "partner,false,search": "<search/>",
-            },
-            res_id: 1,
-            viewOptions: {
-                mode: "edit",
-            },
-        });
+                archs: {
+                    "partner,false,list": '<tree><field name="name"/></tree>',
+                    "partner,false,search": "<search/>",
+                },
+                res_id: 1,
+                viewOptions: {
+                    mode: "edit",
+                },
+            });
 
-        // turtle_bar is true -> create and delete actions are available
-        assert.containsOnce(
-            form,
-            ".o_field_many2manytags.o_field_widget .badge .o_delete",
-            "X icon on badges should not be available"
-        );
+            // turtle_bar is true -> create and delete actions are available
+            assert.containsOnce(
+                form,
+                ".o_field_many2manytags.o_field_widget .badge .o_delete",
+                "X icon on badges should not be available"
+            );
 
-        await testUtils.fields.many2one.clickOpenDropdown("partner_ids");
+            await testUtils.fields.many2one.clickOpenDropdown("partner_ids");
 
-        const $dropdown1 = form.$(".o_field_many2one input").autocomplete("widget");
-        assert.containsOnce(
-            $dropdown1,
-            "li.o_m2o_start_typing:contains(Start typing...)",
-            "autocomplete should contain Start typing..."
-        );
+            const $dropdown1 = form.$(".o_field_many2one input").autocomplete("widget");
+            assert.containsOnce(
+                $dropdown1,
+                "li.o_m2o_start_typing:contains(Start typing...)",
+                "autocomplete should contain Start typing..."
+            );
 
-        await testUtils.fields.many2one.clickItem("partner_ids", "Search More");
+            await testUtils.fields.many2one.clickItem("partner_ids", "Search More");
 
-        assert.containsN(
-            document.body,
-            ".modal .modal-footer button",
-            3,
-            "there should be 3 buttons (Select, Create and Cancel) available in the modal footer"
-        );
+            assert.containsN(
+                document.body,
+                ".modal .modal-footer button",
+                3,
+                "there should be 3 buttons (Select, Create and Cancel) available in the modal footer"
+            );
 
-        await testUtils.dom.click($(".modal .modal-footer .o_form_button_cancel"));
+            await testUtils.dom.click($(".modal .modal-footer .o_form_button_cancel"));
 
-        // type something that doesn't exist
-        await testUtils.fields.editAndTrigger(
-            form.$(".o_field_many2one input"),
-            "Something that does not exist",
-            "keydown"
-        );
-        // await testUtils.nextTick();
-        assert.containsN(
-            form.$(".o_field_many2one input").autocomplete("widget"),
-            "li.o_m2o_dropdown_option",
-            2,
-            "autocomplete should contain Create and Create and Edit... options"
-        );
+            // type something that doesn't exist
+            await testUtils.fields.editAndTrigger(
+                form.$(".o_field_many2one input"),
+                "Something that does not exist",
+                "keydown"
+            );
+            // await testUtils.nextTick();
+            assert.containsN(
+                form.$(".o_field_many2one input").autocomplete("widget"),
+                "li.o_m2o_dropdown_option",
+                2,
+                "autocomplete should contain Create and Create and Edit... options"
+            );
 
-        // set turtle_bar false -> create and delete actions are no longer available
-        await testUtils.dom.click(form.$('.o_field_widget[name="turtle_bar"] input').first());
+            // set turtle_bar false -> create and delete actions are no longer available
+            await testUtils.dom.click(form.$('.o_field_widget[name="turtle_bar"] input').first());
 
-        // remove icon should still be there as it doesn't delete records but rather remove links
-        assert.containsOnce(
-            form,
-            ".o_field_many2manytags.o_field_widget .badge .o_delete",
-            "X icon on badge should still be there even after turtle_bar is not checked"
-        );
+            // remove icon should still be there as it doesn't delete records but rather remove links
+            assert.containsOnce(
+                form,
+                ".o_field_many2manytags.o_field_widget .badge .o_delete",
+                "X icon on badge should still be there even after turtle_bar is not checked"
+            );
 
-        await testUtils.fields.many2one.clickOpenDropdown("partner_ids");
-        const $dropdown2 = form.$(".o_field_many2one input").autocomplete("widget");
+            await testUtils.fields.many2one.clickOpenDropdown("partner_ids");
+            const $dropdown2 = form.$(".o_field_many2one input").autocomplete("widget");
 
-        // only Search More option should be available
-        assert.containsOnce(
-            $dropdown2,
-            "li.o_m2o_dropdown_option",
-            "autocomplete should contain only one option"
-        );
-        assert.containsOnce(
-            $dropdown2,
-            "li.o_m2o_dropdown_option:contains(Search More)",
-            "autocomplete option should be Search More"
-        );
+            // only Search More option should be available
+            assert.containsOnce(
+                $dropdown2,
+                "li.o_m2o_dropdown_option",
+                "autocomplete should contain only one option"
+            );
+            assert.containsOnce(
+                $dropdown2,
+                "li.o_m2o_dropdown_option:contains(Search More)",
+                "autocomplete option should be Search More"
+            );
 
-        await testUtils.fields.many2one.clickItem("partner_ids", "Search More");
+            await testUtils.fields.many2one.clickItem("partner_ids", "Search More");
 
-        assert.containsN(
-            document.body,
-            ".modal .modal-footer button",
-            2,
-            "there should be 2 buttons (Select and Cancel) available in the modal footer"
-        );
+            assert.containsN(
+                document.body,
+                ".modal .modal-footer button",
+                2,
+                "there should be 2 buttons (Select and Cancel) available in the modal footer"
+            );
 
-        await testUtils.dom.click($(".modal .modal-footer .o_form_button_cancel"));
+            await testUtils.dom.click($(".modal .modal-footer .o_form_button_cancel"));
 
-        // type something that doesn't exist
-        await testUtils.fields.editAndTrigger(
-            form.$(".o_field_many2one input"),
-            "Something that does not exist",
-            "keyup"
-        );
-        // await testUtils.nextTick();
+            // type something that doesn't exist
+            await testUtils.fields.editAndTrigger(
+                form.$(".o_field_many2one input"),
+                "Something that does not exist",
+                "keyup"
+            );
+            // await testUtils.nextTick();
 
-        // only Search More option should be available
-        assert.containsOnce(
-            $dropdown2,
-            "li.o_m2o_dropdown_option",
-            "autocomplete should contain only one option"
-        );
-        assert.containsOnce(
-            $dropdown2,
-            "li.o_m2o_dropdown_option:contains(Search More)",
-            "autocomplete option should be Search More"
-        );
+            // only Search More option should be available
+            assert.containsOnce(
+                $dropdown2,
+                "li.o_m2o_dropdown_option",
+                "autocomplete should contain only one option"
+            );
+            assert.containsOnce(
+                $dropdown2,
+                "li.o_m2o_dropdown_option:contains(Search More)",
+                "autocomplete option should be Search More"
+            );
 
-        form.destroy();
-    });
+            form.destroy();
+        }
+    );
 
-    QUnit.skip("failing many2one quick create in a many2many_tags", async function (assert) {
+    QUnit.skipWOWL("failing many2one quick create in a many2many_tags", async function (assert) {
         assert.expect(5);
 
         var form = await createView({

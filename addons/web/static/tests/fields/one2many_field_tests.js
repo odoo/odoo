@@ -199,7 +199,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("One2ManyField");
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "New record with a o2m also with 2 new records, ordered, and resequenced",
         async function (assert) {
             assert.expect(2);
@@ -249,7 +249,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "O2M List with pager, decoration and default_order: add and cancel adding",
         async function (assert) {
             assert.expect(3);
@@ -303,7 +303,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip("O2M with parented m2o and domain on parent.m2o", async function (assert) {
+    QUnit.skipWOWL("O2M with parented m2o and domain on parent.m2o", async function (assert) {
         assert.expect(4);
 
         /* records in an o2m can have a m2o pointing to themselves
@@ -366,7 +366,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("one2many list editable with cell readonly modifier", async function (assert) {
+    QUnit.skipWOWL("one2many list editable with cell readonly modifier", async function (assert) {
         assert.expect(4);
 
         this.data.partner.records[0].p = [2];
@@ -437,7 +437,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("one2many basic properties", async function (assert) {
+    QUnit.skipWOWL("one2many basic properties", async function (assert) {
         assert.expect(6);
 
         this.data.partner.records[0].p = [2];
@@ -502,7 +502,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("transferring class attributes in one2many sub fields", async function (assert) {
+    QUnit.skipWOWL("transferring class attributes in one2many sub fields", async function (assert) {
         assert.expect(3);
 
         var form = await createView({
@@ -537,7 +537,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("one2many with date and datetime", async function (assert) {
+    QUnit.skipWOWL("one2many with date and datetime", async function (assert) {
         assert.expect(2);
 
         this.data.partner.records[0].p = [2];
@@ -580,7 +580,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("rendering with embedded one2many", async function (assert) {
+    QUnit.skipWOWL("rendering with embedded one2many", async function (assert) {
         assert.expect(2);
 
         this.data.partner.records[0].p = [2];
@@ -619,7 +619,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "use the limit attribute in arch (in field o2m inline tree view)",
         async function (assert) {
             assert.expect(2);
@@ -651,7 +651,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "use the limit attribute in arch (in field o2m non inline tree view)",
         async function (assert) {
             assert.expect(2);
@@ -679,7 +679,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip("one2many with default_order on view not inline", async function (assert) {
+    QUnit.skipWOWL("one2many with default_order on view not inline", async function (assert) {
         assert.expect(1);
 
         this.data.partner.records[0].turtles = [1, 2, 3];
@@ -714,7 +714,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("embedded one2many with widget", async function (assert) {
+    QUnit.skipWOWL("embedded one2many with widget", async function (assert) {
         assert.expect(1);
 
         this.data.partner.records[0].p = [2];
@@ -744,7 +744,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("embedded one2many with handle widget", async function (assert) {
+    QUnit.skipWOWL("embedded one2many with handle widget", async function (assert) {
         assert.expect(10);
 
         var nbConfirmChange = 0;
@@ -847,7 +847,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "onchange for embedded one2many in a one2many with a second page",
         async function (assert) {
             assert.expect(1);
@@ -937,7 +937,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "onchange for embedded one2many in a one2many updated by server",
         async function (assert) {
             // here we test that after an onchange, the embedded one2many field has
@@ -1026,7 +1026,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip("onchange for embedded one2many with handle widget", async function (assert) {
+    QUnit.skipWOWL("onchange for embedded one2many with handle widget", async function (assert) {
         assert.expect(2);
 
         this.data.partner.records[0].turtles = [1, 2, 3];
@@ -1080,7 +1080,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "onchange for embedded one2many with handle widget using same sequence",
         async function (assert) {
             assert.expect(4);
@@ -1159,7 +1159,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "onchange (with command 5) for embedded one2many with handle widget",
         async function (assert) {
             assert.expect(3);
@@ -1244,7 +1244,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "onchange with modifiers for embedded one2many on the second page",
         async function (assert) {
             assert.expect(9);
@@ -1388,7 +1388,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip("onchange followed by edition on the second page", async function (assert) {
+    QUnit.skipWOWL("onchange followed by edition on the second page", async function (assert) {
         assert.expect(12);
 
         var ids = [];
@@ -1504,103 +1504,120 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("onchange followed by edition on the second page (part 2)", async function (assert) {
-        assert.expect(8);
+    QUnit.skipWOWL(
+        "onchange followed by edition on the second page (part 2)",
+        async function (assert) {
+            assert.expect(8);
 
-        var ids = [];
-        for (var i = 1; i < 85; i++) {
-            var id = 10 + i;
-            ids.push(id);
-            this.data.turtle.records.push({
-                id: id,
-                turtle_int: (id / 3) | 0,
-                turtle_foo: "#" + i,
+            var ids = [];
+            for (var i = 1; i < 85; i++) {
+                var id = 10 + i;
+                ids.push(id);
+                this.data.turtle.records.push({
+                    id: id,
+                    turtle_int: (id / 3) | 0,
+                    turtle_foo: "#" + i,
+                });
+            }
+            ids.splice(41, 0, 1, 2, 3);
+            this.data.partner.records[0].turtles = ids;
+            this.data.partner.onchanges = {
+                turtles: function (obj) {
+                    obj.turtles = [[5]].concat(obj.turtles);
+                },
+            };
+
+            // bottom order
+
+            var form = await createView({
+                View: FormView,
+                model: "partner",
+                data: this.data,
+                arch:
+                    '<form string="Partners">' +
+                    "<sheet>" +
+                    "<group>" +
+                    '<field name="turtles">' +
+                    '<tree editable="bottom" default_order="turtle_int">' +
+                    '<field name="turtle_int" widget="handle"/>' +
+                    '<field name="turtle_foo"/>' +
+                    "</tree>" +
+                    "</field>" +
+                    "</group>" +
+                    "</sheet>" +
+                    "</form>",
+                res_id: 1,
             });
+
+            await testUtils.form.clickEdit(form);
+            await testUtils.dom.click(form.$(".o_field_widget[name=turtles] .o_pager_next"));
+
+            await testUtils.dom.click(
+                form.$(".o_field_one2many .o_list_view tbody tr:eq(1) td:first")
+            );
+            await testUtils.fields.editInput(
+                form.$(".o_field_one2many .o_list_view tbody tr:eq(1) input:first"),
+                "value 1"
+            );
+            await testUtils.dom.click(
+                form.$(".o_field_one2many .o_list_view tbody tr:eq(2) td:first")
+            );
+            await testUtils.fields.editInput(
+                form.$(".o_field_one2many .o_list_view tbody tr:eq(2) input:first"),
+                "value 2"
+            );
+
+            assert.containsN(form, ".o_data_row", 40, "should display 40 records");
+            assert.strictEqual(
+                form.$(".o_data_row:has(.o_data_cell:contains(#77))").index(),
+                39,
+                "should display '#77' at the last line"
+            );
+
+            await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
+
+            assert.containsN(
+                form,
+                ".o_data_row",
+                41,
+                "should display 41 records and the create line"
+            );
+            assert.strictEqual(
+                form.$(".o_data_row:has(.o_data_cell:contains(#76))").index(),
+                38,
+                "should display '#76' at the penultimate line"
+            );
+            assert.strictEqual(
+                form.$(".o_data_row:has(.o_field_char)").index(),
+                40,
+                "should display the create line at the last position"
+            );
+
+            await testUtils.fields.editInput(form.$(".o_data_row input:first"), "value 3");
+            await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
+
+            assert.containsN(
+                form,
+                ".o_data_row",
+                42,
+                "should display 42 records and the create line"
+            );
+            assert.strictEqual(
+                form.$(".o_data_row:has(.o_data_cell:contains(#76))").index(),
+                38,
+                "should display '#76' at the penultimate line"
+            );
+            assert.strictEqual(
+                form.$(".o_data_row:has(.o_field_char)").index(),
+                41,
+                "should display the create line at the last position"
+            );
+
+            form.destroy();
         }
-        ids.splice(41, 0, 1, 2, 3);
-        this.data.partner.records[0].turtles = ids;
-        this.data.partner.onchanges = {
-            turtles: function (obj) {
-                obj.turtles = [[5]].concat(obj.turtles);
-            },
-        };
+    );
 
-        // bottom order
-
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                '<form string="Partners">' +
-                "<sheet>" +
-                "<group>" +
-                '<field name="turtles">' +
-                '<tree editable="bottom" default_order="turtle_int">' +
-                '<field name="turtle_int" widget="handle"/>' +
-                '<field name="turtle_foo"/>' +
-                "</tree>" +
-                "</field>" +
-                "</group>" +
-                "</sheet>" +
-                "</form>",
-            res_id: 1,
-        });
-
-        await testUtils.form.clickEdit(form);
-        await testUtils.dom.click(form.$(".o_field_widget[name=turtles] .o_pager_next"));
-
-        await testUtils.dom.click(form.$(".o_field_one2many .o_list_view tbody tr:eq(1) td:first"));
-        await testUtils.fields.editInput(
-            form.$(".o_field_one2many .o_list_view tbody tr:eq(1) input:first"),
-            "value 1"
-        );
-        await testUtils.dom.click(form.$(".o_field_one2many .o_list_view tbody tr:eq(2) td:first"));
-        await testUtils.fields.editInput(
-            form.$(".o_field_one2many .o_list_view tbody tr:eq(2) input:first"),
-            "value 2"
-        );
-
-        assert.containsN(form, ".o_data_row", 40, "should display 40 records");
-        assert.strictEqual(
-            form.$(".o_data_row:has(.o_data_cell:contains(#77))").index(),
-            39,
-            "should display '#77' at the last line"
-        );
-
-        await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
-
-        assert.containsN(form, ".o_data_row", 41, "should display 41 records and the create line");
-        assert.strictEqual(
-            form.$(".o_data_row:has(.o_data_cell:contains(#76))").index(),
-            38,
-            "should display '#76' at the penultimate line"
-        );
-        assert.strictEqual(
-            form.$(".o_data_row:has(.o_field_char)").index(),
-            40,
-            "should display the create line at the last position"
-        );
-
-        await testUtils.fields.editInput(form.$(".o_data_row input:first"), "value 3");
-        await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
-
-        assert.containsN(form, ".o_data_row", 42, "should display 42 records and the create line");
-        assert.strictEqual(
-            form.$(".o_data_row:has(.o_data_cell:contains(#76))").index(),
-            38,
-            "should display '#76' at the penultimate line"
-        );
-        assert.strictEqual(
-            form.$(".o_data_row:has(.o_field_char)").index(),
-            41,
-            "should display the create line at the last position"
-        );
-
-        form.destroy();
-    });
-
-    QUnit.skip("onchange returning a command 6 for an x2many", async function (assert) {
+    QUnit.skipWOWL("onchange returning a command 6 for an x2many", async function (assert) {
         assert.expect(2);
 
         this.data.partner.onchanges = {
@@ -1638,7 +1655,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "x2many fields inside x2manys are fetched after an onchange",
         async function (assert) {
             assert.expect(6);
@@ -1717,7 +1734,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "reference fields inside x2manys are fetched after an onchange",
         async function (assert) {
             assert.expect(5);
@@ -1791,7 +1808,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip("onchange on one2many containing x2many in form view", async function (assert) {
+    QUnit.skipWOWL("onchange on one2many containing x2many in form view", async function (assert) {
         assert.expect(16);
 
         this.data.partner.onchanges = {
@@ -1911,7 +1928,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "onchange on one2many with x2many in list (no widget) and form view (list)",
         async function (assert) {
             assert.expect(6);
@@ -1971,7 +1988,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "onchange on one2many with x2many in list (many2many_tags) and form view (list)",
         async function (assert) {
             assert.expect(6);
@@ -2031,7 +2048,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "embedded one2many with handle widget with minimum setValue calls",
         async function (assert) {
             assert.expect(20);
@@ -2125,7 +2142,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip("embedded one2many (editable list) with handle widget", async function (assert) {
+    QUnit.skipWOWL("embedded one2many (editable list) with handle widget", async function (assert) {
         assert.expect(8);
 
         this.data.partner.records[0].p = [1, 2, 4];
@@ -2209,7 +2226,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("one2many field when using the pager", async function (assert) {
+    QUnit.skipWOWL("one2many field when using the pager", async function (assert) {
         assert.expect(13);
 
         var ids = [];
@@ -2317,7 +2334,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("edition of one2many field with pager", async function (assert) {
+    QUnit.skipWOWL("edition of one2many field with pager", async function (assert) {
         assert.expect(31);
 
         var ids = [];
@@ -2570,7 +2587,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "edition of one2many field, with onchange and not inline sub view",
         async function (assert) {
             assert.expect(2);
@@ -2617,7 +2634,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip("sorting one2many fields", async function (assert) {
+    QUnit.skipWOWL("sorting one2many fields", async function (assert) {
         assert.expect(4);
 
         this.data.partner.fields.foo.sortable = true;
@@ -2675,7 +2692,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("one2many list field edition", async function (assert) {
+    QUnit.skipWOWL("one2many list field edition", async function (assert) {
         assert.expect(6);
 
         this.data.partner.records.push({
@@ -2756,7 +2773,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("one2many list: create action disabled", async function (assert) {
+    QUnit.skipWOWL("one2many list: create action disabled", async function (assert) {
         assert.expect(2);
         var form = await createView({
             View: FormView,
@@ -2787,7 +2804,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("one2many list: conditional create/delete actions", async function (assert) {
+    QUnit.skipWOWL("one2many list: conditional create/delete actions", async function (assert) {
         assert.expect(4);
 
         this.data.partner.records[0].p = [2, 4];
@@ -2839,7 +2856,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("one2many list: unlink two records", async function (assert) {
+    QUnit.skipWOWL("one2many list: unlink two records", async function (assert) {
         assert.expect(8);
         this.data.partner.records[0].p = [1, 2, 4];
         var form = await createView({
@@ -2908,7 +2925,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("one2many list: deleting one records", async function (assert) {
+    QUnit.skipWOWL("one2many list: deleting one records", async function (assert) {
         assert.expect(7);
         this.data.partner.records[0].p = [1, 2, 4];
         var form = await createView({
@@ -2970,7 +2987,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("one2many kanban: edition", async function (assert) {
+    QUnit.skipWOWL("one2many kanban: edition", async function (assert) {
         assert.expect(23);
 
         this.data.partner.records[0].p = [2];
@@ -3143,7 +3160,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "one2many kanban (editable): properly handle add-label node attribute",
         async function (assert) {
             assert.expect(1);
@@ -3180,7 +3197,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip("one2many kanban: create action disabled", async function (assert) {
+    QUnit.skipWOWL("one2many kanban: create action disabled", async function (assert) {
         assert.expect(3);
 
         this.data.partner.records[0].p = [4];
@@ -3226,7 +3243,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("one2many kanban: conditional create/delete actions", async function (assert) {
+    QUnit.skipWOWL("one2many kanban: conditional create/delete actions", async function (assert) {
         assert.expect(4);
 
         this.data.partner.records[0].p = [2, 4];
@@ -3294,7 +3311,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("editable one2many list, pager is updated", async function (assert) {
+    QUnit.skipWOWL("editable one2many list, pager is updated", async function (assert) {
         assert.expect(1);
 
         this.data.turtle.records.push({ id: 4, turtle_foo: "stephen hawking" });
@@ -3329,7 +3346,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("one2many list (non editable): edition", async function (assert) {
+    QUnit.skipWOWL("one2many list (non editable): edition", async function (assert) {
         assert.expect(12);
 
         var nbWrite = 0;
@@ -3421,7 +3438,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("one2many list (editable): edition", async function (assert) {
+    QUnit.skipWOWL("one2many list (editable): edition", async function (assert) {
         assert.expect(7);
 
         this.data.partner.records[0].p = [2, 4];
@@ -3487,7 +3504,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("one2many list (editable): edition, part 2", async function (assert) {
+    QUnit.skipWOWL("one2many list (editable): edition, part 2", async function (assert) {
         assert.expect(8);
 
         var form = await createView({
@@ -3553,7 +3570,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("one2many list (editable): edition, part 3", async function (assert) {
+    QUnit.skipWOWL("one2many list (editable): edition, part 3", async function (assert) {
         assert.expect(4);
 
         var form = await createView({
@@ -3589,7 +3606,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("one2many list (editable): edition, part 4", async function (assert) {
+    QUnit.skipWOWL("one2many list (editable): edition, part 4", async function (assert) {
         assert.expect(3);
         var i = 0;
 
@@ -3641,90 +3658,96 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("one2many list (editable): discarding required empty data", async function (assert) {
-        assert.expect(7);
+    QUnit.skipWOWL(
+        "one2many list (editable): discarding required empty data",
+        async function (assert) {
+            assert.expect(7);
 
-        this.data.turtle.fields.turtle_foo.required = true;
-        delete this.data.turtle.fields.turtle_foo.default;
+            this.data.turtle.fields.turtle_foo.required = true;
+            delete this.data.turtle.fields.turtle_foo.default;
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                '<form string="Partners">' +
-                "<group>" +
-                '<field name="turtles">' +
-                '<tree editable="top">' +
-                '<field name="turtle_foo"/>' +
-                "</tree>" +
-                "</field>" +
-                "</group>" +
-                "</form>",
-            res_id: 2,
-            mockRPC: function (route, args) {
-                if (args.method) {
-                    assert.step(args.method);
-                }
-                return this._super.apply(this, arguments);
-            },
-        });
+            var form = await createView({
+                View: FormView,
+                model: "partner",
+                data: this.data,
+                arch:
+                    '<form string="Partners">' +
+                    "<group>" +
+                    '<field name="turtles">' +
+                    '<tree editable="top">' +
+                    '<field name="turtle_foo"/>' +
+                    "</tree>" +
+                    "</field>" +
+                    "</group>" +
+                    "</form>",
+                res_id: 2,
+                mockRPC: function (route, args) {
+                    if (args.method) {
+                        assert.step(args.method);
+                    }
+                    return this._super.apply(this, arguments);
+                },
+            });
 
-        // edit mode, then click on Add an item, then click elsewhere
-        assert.containsNone(form, "tr.o_data_row", "should have 0 data rows");
-        await testUtils.form.clickEdit(form);
-        await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
-        await testUtils.dom.click(form.$("label.o_form_label").first());
-        assert.containsNone(form, "tr.o_data_row", "should still have 0 data rows");
+            // edit mode, then click on Add an item, then click elsewhere
+            assert.containsNone(form, "tr.o_data_row", "should have 0 data rows");
+            await testUtils.form.clickEdit(form);
+            await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
+            await testUtils.dom.click(form.$("label.o_form_label").first());
+            assert.containsNone(form, "tr.o_data_row", "should still have 0 data rows");
 
-        // click on Add an item again, then click on save
-        await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
-        await testUtils.form.clickSave(form);
-        assert.containsNone(form, "tr.o_data_row", "should still have 0 data rows");
+            // click on Add an item again, then click on save
+            await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
+            await testUtils.form.clickSave(form);
+            assert.containsNone(form, "tr.o_data_row", "should still have 0 data rows");
 
-        assert.verifySteps(["read", "onchange", "onchange"]);
-        form.destroy();
-    });
+            assert.verifySteps(["read", "onchange", "onchange"]);
+            form.destroy();
+        }
+    );
 
-    QUnit.skip("editable one2many list, adding line when only one page", async function (assert) {
-        assert.expect(5);
+    QUnit.skipWOWL(
+        "editable one2many list, adding line when only one page",
+        async function (assert) {
+            assert.expect(5);
 
-        this.data.partner.records[0].turtles = [1, 2, 3];
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                '<form string="Partners">' +
-                '<field name="turtles">' +
-                '<tree editable="bottom" limit="3">' +
-                '<field name="turtle_foo"/>' +
-                "</tree>" +
-                "</field>" +
-                "</form>",
-            res_id: 1,
-        });
+            this.data.partner.records[0].turtles = [1, 2, 3];
+            var form = await createView({
+                View: FormView,
+                model: "partner",
+                data: this.data,
+                arch:
+                    '<form string="Partners">' +
+                    '<field name="turtles">' +
+                    '<tree editable="bottom" limit="3">' +
+                    '<field name="turtle_foo"/>' +
+                    "</tree>" +
+                    "</field>" +
+                    "</form>",
+                res_id: 1,
+            });
 
-        // add a record, to reach the page size limit
-        await testUtils.form.clickEdit(form);
-        await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
-        // the record currently being added should not count in the pager
-        assert.containsNone(form, ".o_field_widget[name=turtles] .o_pager");
+            // add a record, to reach the page size limit
+            await testUtils.form.clickEdit(form);
+            await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
+            // the record currently being added should not count in the pager
+            assert.containsNone(form, ".o_field_widget[name=turtles] .o_pager");
 
-        // enter value in turtle_foo field and click outside to unselect the row
-        await testUtils.fields.editInput(form.$('input[name="turtle_foo"]'), "nora");
-        await testUtils.dom.click(form.$el);
-        assert.containsNone(form, ".o_selected_row");
-        assert.containsNone(form, ".o_field_widget[name=turtles] .o_pager");
+            // enter value in turtle_foo field and click outside to unselect the row
+            await testUtils.fields.editInput(form.$('input[name="turtle_foo"]'), "nora");
+            await testUtils.dom.click(form.$el);
+            assert.containsNone(form, ".o_selected_row");
+            assert.containsNone(form, ".o_field_widget[name=turtles] .o_pager");
 
-        await testUtils.form.clickSave(form);
-        assert.containsOnce(form, ".o_field_widget[name=turtles] .o_pager");
-        assert.strictEqual(form.$(".o_field_widget[name=turtles] .o_pager").text(), "1-3 / 4");
+            await testUtils.form.clickSave(form);
+            assert.containsOnce(form, ".o_field_widget[name=turtles] .o_pager");
+            assert.strictEqual(form.$(".o_field_widget[name=turtles] .o_pager").text(), "1-3 / 4");
 
-        form.destroy();
-    });
+            form.destroy();
+        }
+    );
 
-    QUnit.skip("editable one2many list, adding line, then discarding", async function (assert) {
+    QUnit.skipWOWL("editable one2many list, adding line, then discarding", async function (assert) {
         assert.expect(3);
 
         this.data.turtle.records.push({ id: 4, turtle_foo: "stephen hawking" });
@@ -3762,7 +3785,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("editable one2many list, required field and pager", async function (assert) {
+    QUnit.skipWOWL("editable one2many list, required field and pager", async function (assert) {
         assert.expect(1);
 
         this.data.turtle.records.push({ id: 4, turtle_foo: "stephen hawking" });
@@ -3795,7 +3818,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "editable one2many list, required field, pager and confirm discard",
         async function (assert) {
             assert.expect(3);
@@ -3849,50 +3872,53 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip("editable one2many list, adding, discarding, and pager", async function (assert) {
-        assert.expect(5);
+    QUnit.skipWOWL(
+        "editable one2many list, adding, discarding, and pager",
+        async function (assert) {
+            assert.expect(5);
 
-        this.data.partner.records[0].turtles = [1];
+            this.data.partner.records[0].turtles = [1];
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                '<form string="Partners">' +
-                '<field name="turtles">' +
-                '<tree editable="bottom" limit="3">' +
-                '<field name="turtle_foo"/>' +
-                "</tree>" +
-                "</field>" +
-                "</form>",
-            res_id: 1,
-        });
+            var form = await createView({
+                View: FormView,
+                model: "partner",
+                data: this.data,
+                arch:
+                    '<form string="Partners">' +
+                    '<field name="turtles">' +
+                    '<tree editable="bottom" limit="3">' +
+                    '<field name="turtle_foo"/>' +
+                    "</tree>" +
+                    "</field>" +
+                    "</form>",
+                res_id: 1,
+            });
 
-        // add 4 records (to have more records than the limit)
-        await testUtils.form.clickEdit(form);
-        await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
-        await testUtils.fields.editInput(form.$('input[name="turtle_foo"]'), "nora");
-        await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
-        await testUtils.fields.editInput(form.$('input[name="turtle_foo"]'), "nora");
-        await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
-        await testUtils.fields.editInput(form.$('input[name="turtle_foo"]'), "nora");
-        await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
+            // add 4 records (to have more records than the limit)
+            await testUtils.form.clickEdit(form);
+            await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
+            await testUtils.fields.editInput(form.$('input[name="turtle_foo"]'), "nora");
+            await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
+            await testUtils.fields.editInput(form.$('input[name="turtle_foo"]'), "nora");
+            await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
+            await testUtils.fields.editInput(form.$('input[name="turtle_foo"]'), "nora");
+            await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
 
-        assert.containsN(form, "tr.o_data_row", 5);
-        assert.containsNone(form, ".o_field_widget[name=turtles] .o_pager");
+            assert.containsN(form, "tr.o_data_row", 5);
+            assert.containsNone(form, ".o_field_widget[name=turtles] .o_pager");
 
-        // discard
-        await testUtils.form.clickDiscard(form);
-        assert.containsNone(form, ".modal", "should not open modal");
+            // discard
+            await testUtils.form.clickDiscard(form);
+            assert.containsNone(form, ".modal", "should not open modal");
 
-        assert.containsOnce(form, "tr.o_data_row");
-        assert.containsNone(form, ".o_field_widget[name=turtles] .o_pager");
+            assert.containsOnce(form, "tr.o_data_row");
+            assert.containsNone(form, ".o_field_widget[name=turtles] .o_pager");
 
-        form.destroy();
-    });
+            form.destroy();
+        }
+    );
 
-    QUnit.skip("unselecting a line with missing required data", async function (assert) {
+    QUnit.skipWOWL("unselecting a line with missing required data", async function (assert) {
         assert.expect(6);
 
         this.data.turtle.fields.turtle_foo.required = true;
@@ -3949,7 +3975,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("pressing enter in a o2m with a required empty field", async function (assert) {
+    QUnit.skipWOWL("pressing enter in a o2m with a required empty field", async function (assert) {
         assert.expect(4);
 
         this.data.turtle.fields.turtle_foo.required = true;
@@ -3988,7 +4014,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("editing a o2m, with required field and onchange", async function (assert) {
+    QUnit.skipWOWL("editing a o2m, with required field and onchange", async function (assert) {
         assert.expect(11);
 
         this.data.turtle.fields.turtle_foo.required = true;
@@ -4053,7 +4079,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("editable o2m, pressing ESC discard current changes", async function (assert) {
+    QUnit.skipWOWL("editable o2m, pressing ESC discard current changes", async function (assert) {
         assert.expect(5);
 
         var form = await createView({
@@ -4085,7 +4111,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "editable o2m with required field, pressing ESC discard current changes",
         async function (assert) {
             assert.expect(5);
@@ -4122,7 +4148,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip("pressing escape in editable o2m list in dialog", async function (assert) {
+    QUnit.skipWOWL("pressing escape in editable o2m list in dialog", async function (assert) {
         assert.expect(3);
 
         var form = await createView({
@@ -4172,7 +4198,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "editable o2m with onchange and required field: delete an invalid line",
         async function (assert) {
             assert.expect(5);
@@ -4215,7 +4241,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip("onchange in a one2many", async function (assert) {
+    QUnit.skipWOWL("onchange in a one2many", async function (assert) {
         assert.expect(1);
 
         this.data.partner.records.push({
@@ -4269,7 +4295,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("one2many, default_get and onchange (basic)", async function (assert) {
+    QUnit.skipWOWL("one2many, default_get and onchange (basic)", async function (assert) {
         assert.expect(1);
 
         this.data.partner.fields.p.default = [
@@ -4311,7 +4337,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("one2many and default_get (with date)", async function (assert) {
+    QUnit.skipWOWL("one2many and default_get (with date)", async function (assert) {
         assert.expect(1);
 
         this.data.partner.fields.p.default = [[0, false, { date: "2017-10-08", p: [] }]];
@@ -4339,7 +4365,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("one2many and onchange (with integer)", async function (assert) {
+    QUnit.skipWOWL("one2many and onchange (with integer)", async function (assert) {
         assert.expect(4);
 
         this.data.turtle.onchanges = {
@@ -4379,7 +4405,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("one2many and onchange (with date)", async function (assert) {
+    QUnit.skipWOWL("one2many and onchange (with date)", async function (assert) {
         assert.expect(7);
 
         this.data.partner.onchanges = {
@@ -4421,7 +4447,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("one2many and onchange (with command DELETE_ALL)", async function (assert) {
+    QUnit.skipWOWL("one2many and onchange (with command DELETE_ALL)", async function (assert) {
         assert.expect(5);
 
         this.data.partner.onchanges = {
@@ -4494,7 +4520,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("one2many and onchange only write modified field", async function (assert) {
+    QUnit.skipWOWL("one2many and onchange only write modified field", async function (assert) {
         assert.expect(2);
 
         this.data.partner.onchanges = {
@@ -4579,7 +4605,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("one2many with CREATE onchanges correctly refreshed", async function (assert) {
+    QUnit.skipWOWL("one2many with CREATE onchanges correctly refreshed", async function (assert) {
         assert.expect(5);
 
         var delta = 0;
@@ -4713,7 +4739,7 @@ QUnit.module("Fields", (hooks) => {
         testUtils.mock.unpatch(AbstractField);
     });
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "editable one2many with sub widgets are rendered in readonly",
         async function (assert) {
             assert.expect(2);
@@ -4757,7 +4783,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip("one2many editable list with onchange keeps the order", async function (assert) {
+    QUnit.skipWOWL("one2many editable list with onchange keeps the order", async function (assert) {
         assert.expect(2);
 
         this.data.partner.records[0].p = [1, 2, 4];
@@ -4805,46 +4831,49 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("one2many list (editable): readonly domain is evaluated", async function (assert) {
-        assert.expect(2);
+    QUnit.skipWOWL(
+        "one2many list (editable): readonly domain is evaluated",
+        async function (assert) {
+            assert.expect(2);
 
-        this.data.partner.records[0].p = [2, 4];
-        this.data.partner.records[1].product_id = false;
-        this.data.partner.records[2].product_id = 37;
+            this.data.partner.records[0].p = [2, 4];
+            this.data.partner.records[1].product_id = false;
+            this.data.partner.records[2].product_id = 37;
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                '<form string="Partners">' +
-                '<field name="p">' +
-                '<tree editable="top">' +
-                '<field name="display_name" attrs=\'{"readonly": [["product_id", "=", false]]}\'/>' +
-                '<field name="product_id"/>' +
-                "</tree>" +
-                "</field>" +
-                "</form>",
-            res_id: 1,
-        });
+            var form = await createView({
+                View: FormView,
+                model: "partner",
+                data: this.data,
+                arch:
+                    '<form string="Partners">' +
+                    '<field name="p">' +
+                    '<tree editable="top">' +
+                    '<field name="display_name" attrs=\'{"readonly": [["product_id", "=", false]]}\'/>' +
+                    '<field name="product_id"/>' +
+                    "</tree>" +
+                    "</field>" +
+                    "</form>",
+                res_id: 1,
+            });
 
-        await testUtils.form.clickEdit(form);
+            await testUtils.form.clickEdit(form);
 
-        assert.hasClass(
-            form.$(".o_list_view tbody tr:eq(0) td:first"),
-            "o_readonly_modifier",
-            "first record should have display_name in readonly mode"
-        );
+            assert.hasClass(
+                form.$(".o_list_view tbody tr:eq(0) td:first"),
+                "o_readonly_modifier",
+                "first record should have display_name in readonly mode"
+            );
 
-        assert.doesNotHaveClass(
-            form.$(".o_list_view tbody tr:eq(1) td:first"),
-            "o_readonly_modifier",
-            "second record should not have display_name in readonly mode"
-        );
-        form.destroy();
-    });
+            assert.doesNotHaveClass(
+                form.$(".o_list_view tbody tr:eq(1) td:first"),
+                "o_readonly_modifier",
+                "second record should not have display_name in readonly mode"
+            );
+            form.destroy();
+        }
+    );
 
-    QUnit.skip("pager of one2many field in new record", async function (assert) {
+    QUnit.skipWOWL("pager of one2many field in new record", async function (assert) {
         assert.expect(3);
 
         this.data.partner.records[0].p = [];
@@ -4873,7 +4902,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("one2many list with a many2one", async function (assert) {
+    QUnit.skipWOWL("one2many list with a many2one", async function (assert) {
         assert.expect(5);
 
         let checkOnchange = false;
@@ -4953,7 +4982,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("one2many list with inline form view", async function (assert) {
+    QUnit.skipWOWL("one2many list with inline form view", async function (assert) {
         assert.expect(5);
 
         this.data.partner.records[0].p = [];
@@ -5058,7 +5087,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "one2many list with inline form view with context with parent key",
         async function (assert) {
             assert.expect(2);
@@ -5113,7 +5142,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "value of invisible x2many fields is correctly evaluated in context",
         async function (assert) {
             assert.expect(1);
@@ -5157,7 +5186,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "one2many list, editable, with many2one and with context with parent key",
         async function (assert) {
             assert.expect(1);
@@ -5202,7 +5231,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip("one2many list, editable, with a date in the context", async function (assert) {
+    QUnit.skipWOWL("one2many list, editable, with a date in the context", async function (assert) {
         assert.expect(1);
 
         this.data.partner.records[0].p = [2];
@@ -5242,7 +5271,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("one2many field with context", async function (assert) {
+    QUnit.skipWOWL("one2many field with context", async function (assert) {
         assert.expect(2);
 
         var counter = 0;
@@ -5289,7 +5318,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("one2many list edition, some basic functionality", async function (assert) {
+    QUnit.skipWOWL("one2many list edition, some basic functionality", async function (assert) {
         assert.expect(3);
 
         this.data.partner.fields.foo.default = false;
@@ -5337,7 +5366,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "one2many list, the context is properly evaluated and sent",
         async function (assert) {
             assert.expect(2);
@@ -5372,7 +5401,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip("one2many with many2many widget: create", async function (assert) {
+    QUnit.skipWOWL("one2many with many2many widget: create", async function (assert) {
         assert.expect(10);
 
         var form = await createView({
@@ -5468,7 +5497,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("one2many with many2many widget: edition", async function (assert) {
+    QUnit.skipWOWL("one2many with many2many widget: edition", async function (assert) {
         assert.expect(7);
 
         var form = await createView({
@@ -5558,43 +5587,46 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("new record, the context is properly evaluated and sent", async function (assert) {
-        assert.expect(2);
+    QUnit.skipWOWL(
+        "new record, the context is properly evaluated and sent",
+        async function (assert) {
+            assert.expect(2);
 
-        this.data.partner.fields.int_field.default = 17;
-        var n = 0;
+            this.data.partner.fields.int_field.default = 17;
+            var n = 0;
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                '<form string="Partners">' +
-                '<field name="int_field"/>' +
-                "<field name=\"p\" context=\"{'hello': 'world', 'abc': int_field}\">" +
-                '<tree editable="top">' +
-                '<field name="foo"/>' +
-                "</tree>" +
-                "</field>" +
-                "</form>",
-            mockRPC: function (route, args) {
-                if (args.method === "onchange") {
-                    n++;
-                    if (n === 2) {
-                        var context = args.kwargs.context;
-                        assert.strictEqual(context.hello, "world");
-                        assert.strictEqual(context.abc, 17);
+            var form = await createView({
+                View: FormView,
+                model: "partner",
+                data: this.data,
+                arch:
+                    '<form string="Partners">' +
+                    '<field name="int_field"/>' +
+                    "<field name=\"p\" context=\"{'hello': 'world', 'abc': int_field}\">" +
+                    '<tree editable="top">' +
+                    '<field name="foo"/>' +
+                    "</tree>" +
+                    "</field>" +
+                    "</form>",
+                mockRPC: function (route, args) {
+                    if (args.method === "onchange") {
+                        n++;
+                        if (n === 2) {
+                            var context = args.kwargs.context;
+                            assert.strictEqual(context.hello, "world");
+                            assert.strictEqual(context.abc, 17);
+                        }
                     }
-                }
-                return this._super.apply(this, arguments);
-            },
-        });
+                    return this._super.apply(this, arguments);
+                },
+            });
 
-        await testUtils.dom.click(form.$("tbody td.o_field_x2many_list_row_add a"));
-        form.destroy();
-    });
+            await testUtils.dom.click(form.$("tbody td.o_field_x2many_list_row_add a"));
+            form.destroy();
+        }
+    );
 
-    QUnit.skip("parent data is properly sent on an onchange rpc", async function (assert) {
+    QUnit.skipWOWL("parent data is properly sent on an onchange rpc", async function (assert) {
         assert.expect(1);
 
         this.data.partner.onchanges = { bar: function () {} };
@@ -5636,7 +5668,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "parent data is properly sent on an onchange rpc (existing x2many record)",
         async function (assert) {
             assert.expect(4);
@@ -5691,7 +5723,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "parent data is properly sent on an onchange rpc, new record",
         async function (assert) {
             assert.expect(4);
@@ -5735,7 +5767,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip("id in one2many obtained in onchange is properly set", async function (assert) {
+    QUnit.skipWOWL("id in one2many obtained in onchange is properly set", async function (assert) {
         assert.expect(1);
 
         this.data.partner.onchanges.turtles = function (obj) {
@@ -5764,7 +5796,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("id field in one2many in a new record", async function (assert) {
+    QUnit.skipWOWL("id field in one2many in a new record", async function (assert) {
         assert.expect(1);
 
         var form = await createView({
@@ -5799,7 +5831,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("sub form view with a required field", async function (assert) {
+    QUnit.skipWOWL("sub form view with a required field", async function (assert) {
         assert.expect(2);
         this.data.partner.fields.foo.required = true;
         this.data.partner.fields.foo.default = null;
@@ -5835,7 +5867,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("one2many list with action button", async function (assert) {
+    QUnit.skipWOWL("one2many list with action button", async function (assert) {
         assert.expect(4);
 
         this.data.partner.records[0].p = [2];
@@ -5882,7 +5914,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("one2many kanban with action button", async function (assert) {
+    QUnit.skipWOWL("one2many kanban with action button", async function (assert) {
         assert.expect(4);
 
         this.data.partner.records[0].p = [2];
@@ -5935,7 +5967,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "one2many kanban with edit type action and widget with specialData",
         async function (assert) {
             assert.expect(3);
@@ -5989,7 +6021,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "one2many list with onchange and domain widget (widget using SpecialData)",
         async function (assert) {
             // TODO: rename this test: it no longer uses the DomainField
@@ -6079,7 +6111,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip("one2many without inline tree arch", async function (assert) {
+    QUnit.skipWOWL("one2many without inline tree arch", async function (assert) {
         assert.expect(2);
 
         this.data.partner.records[0].turtles = [2, 3];
@@ -6114,7 +6146,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("many2one and many2many in one2many", async function (assert) {
+    QUnit.skipWOWL("many2one and many2many in one2many", async function (assert) {
         assert.expect(11);
 
         this.data.turtle.records[1].product_id = 37;
@@ -6227,7 +6259,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "many2manytag in one2many, onchange, some modifiers, and more than one page",
         async function (assert) {
             assert.expect(9);
@@ -6275,7 +6307,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip("onchange many2many in one2many list editable", async function (assert) {
+    QUnit.skipWOWL("onchange many2many in one2many list editable", async function (assert) {
         assert.expect(14);
 
         this.data.product.records.push({
@@ -6459,7 +6491,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("load view for x2many in one2many", async function (assert) {
+    QUnit.skipWOWL("load view for x2many in one2many", async function (assert) {
         assert.expect(2);
 
         this.data.turtle.records[1].product_id = 37;
@@ -6507,7 +6539,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "one2many (who contains a one2many) with tree view and without form view",
         async function (assert) {
             assert.expect(1);
@@ -6546,71 +6578,74 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip("one2many with x2many in form view (but not in list view)", async function (assert) {
-        assert.expect(1);
+    QUnit.skipWOWL(
+        "one2many with x2many in form view (but not in list view)",
+        async function (assert) {
+            assert.expect(1);
 
-        // avoid error when saving the edited related record (because the
-        // related x2m field is unknown in the inline list view)
-        // also ensure that the changes are correctly saved
+            // avoid error when saving the edited related record (because the
+            // related x2m field is unknown in the inline list view)
+            // also ensure that the changes are correctly saved
 
-        this.data.turtle.fields.o2m = { string: "o2m", type: "one2many", relation: "user" };
+            this.data.turtle.fields.o2m = { string: "o2m", type: "one2many", relation: "user" };
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                '<form string="Partners">' +
-                "<group>" +
-                '<field name="turtles">' +
-                "<tree>" +
-                '<field name="turtle_foo"/>' +
-                "</tree>" +
-                "</field>" +
-                "</group>" +
-                "</form>",
-            res_id: 1,
-            archs: {
-                "turtle,false,form":
-                    '<form string="Turtles">' +
-                    '<field name="partner_ids" widget="many2many_tags"/>' +
+            var form = await createView({
+                View: FormView,
+                model: "partner",
+                data: this.data,
+                arch:
+                    '<form string="Partners">' +
+                    "<group>" +
+                    '<field name="turtles">' +
+                    "<tree>" +
+                    '<field name="turtle_foo"/>' +
+                    "</tree>" +
+                    "</field>" +
+                    "</group>" +
                     "</form>",
-            },
-            viewOptions: {
-                mode: "edit",
-            },
-            mockRPC: function (route, args) {
-                if (args.method === "write") {
-                    assert.deepEqual(args.args[1].turtles, [
-                        [
-                            1,
-                            2,
-                            {
-                                partner_ids: [[6, false, [2, 4, 1]]],
-                            },
-                        ],
-                    ]);
-                }
-                return this._super.apply(this, arguments);
-            },
-        });
+                res_id: 1,
+                archs: {
+                    "turtle,false,form":
+                        '<form string="Turtles">' +
+                        '<field name="partner_ids" widget="many2many_tags"/>' +
+                        "</form>",
+                },
+                viewOptions: {
+                    mode: "edit",
+                },
+                mockRPC: function (route, args) {
+                    if (args.method === "write") {
+                        assert.deepEqual(args.args[1].turtles, [
+                            [
+                                1,
+                                2,
+                                {
+                                    partner_ids: [[6, false, [2, 4, 1]]],
+                                },
+                            ],
+                        ]);
+                    }
+                    return this._super.apply(this, arguments);
+                },
+            });
 
-        await testUtils.dom.click(form.$(".o_data_row:first")); // edit first record
+            await testUtils.dom.click(form.$(".o_data_row:first")); // edit first record
 
-        await testUtils.fields.many2one.clickOpenDropdown("partner_ids");
-        await testUtils.fields.many2one.clickHighlightedItem("partner_ids");
+            await testUtils.fields.many2one.clickOpenDropdown("partner_ids");
+            await testUtils.fields.many2one.clickHighlightedItem("partner_ids");
 
-        // add a many2many tag and save
-        await testUtils.dom.click($(".modal .o_field_many2manytags input"));
-        await testUtils.fields.editInput($(".modal .o_field_many2manytags input"), "test");
-        await testUtils.dom.click($(".modal .modal-footer .btn-primary")); // save
+            // add a many2many tag and save
+            await testUtils.dom.click($(".modal .o_field_many2manytags input"));
+            await testUtils.fields.editInput($(".modal .o_field_many2manytags input"), "test");
+            await testUtils.dom.click($(".modal .modal-footer .btn-primary")); // save
 
-        await testUtils.form.clickSave(form);
+            await testUtils.form.clickSave(form);
 
-        form.destroy();
-    });
+            form.destroy();
+        }
+    );
 
-    QUnit.skip("many2many list in a one2many opened by a many2one", async function (assert) {
+    QUnit.skipWOWL("many2many list in a one2many opened by a many2one", async function (assert) {
         assert.expect(1);
 
         this.data.turtle.records[1].turtle_trululu = 2;
@@ -6669,7 +6704,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("nested x2many default values", async function (assert) {
+    QUnit.skipWOWL("nested x2many default values", async function (assert) {
         assert.expect(3);
 
         this.data.partner.fields.turtles.default = [
@@ -6712,7 +6747,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("nested x2many (inline form view) and onchanges", async function (assert) {
+    QUnit.skipWOWL("nested x2many (inline form view) and onchanges", async function (assert) {
         assert.expect(6);
 
         this.data.partner.onchanges.bar = function (obj) {
@@ -6774,7 +6809,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("nested x2many (non inline form view) and onchanges", async function (assert) {
+    QUnit.skipWOWL("nested x2many (non inline form view) and onchanges", async function (assert) {
         assert.expect(6);
 
         this.data.partner.onchanges.bar = function (obj) {
@@ -6840,7 +6875,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "nested x2many (non inline views and no widget on inner x2many in list)",
         async function (assert) {
             assert.expect(5);
@@ -6872,7 +6907,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "one2many (who contains display_name) with tree view and without form view",
         async function (assert) {
             assert.expect(1);
@@ -6911,7 +6946,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip("one2many field with virtual ids", async function (assert) {
+    QUnit.skipWOWL("one2many field with virtual ids", async function (assert) {
         assert.expect(11);
 
         var form = await createView({
@@ -7038,7 +7073,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("one2many field with virtual ids with kanban button", async function (assert) {
+    QUnit.skipWOWL("one2many field with virtual ids with kanban button", async function (assert) {
         assert.expect(25);
 
         testUtils.mock.patch(KanbanRecord, {
@@ -7218,7 +7253,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("focusing fields in one2many list", async function (assert) {
+    QUnit.skipWOWL("focusing fields in one2many list", async function (assert) {
         assert.expect(2);
 
         var form = await createView({
@@ -7257,7 +7292,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("one2many list editable = top", async function (assert) {
+    QUnit.skipWOWL("one2many list editable = top", async function (assert) {
         assert.expect(6);
 
         this.data.turtle.fields.turtle_foo.default = "default foo turtle";
@@ -7307,7 +7342,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("one2many list editable = bottom", async function (assert) {
+    QUnit.skipWOWL("one2many list editable = bottom", async function (assert) {
         assert.expect(6);
         this.data.turtle.fields.turtle_foo.default = "default foo turtle";
 
@@ -7357,7 +7392,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip('one2many list edition, no "Remove" button in modal', async function (assert) {
+    QUnit.skipWOWL('one2many list edition, no "Remove" button in modal', async function (assert) {
         assert.expect(2);
 
         this.data.partner.fields.foo.default = false;
@@ -7395,7 +7430,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip('x2many fields use their "mode" attribute', async function (assert) {
+    QUnit.skipWOWL('x2many fields use their "mode" attribute', async function (assert) {
         assert.expect(1);
 
         var form = await createView({
@@ -7433,7 +7468,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("one2many list editable, onchange and required field", async function (assert) {
+    QUnit.skipWOWL("one2many list editable, onchange and required field", async function (assert) {
         assert.expect(8);
 
         this.data.turtle.fields.turtle_foo.required = true;
@@ -7492,7 +7527,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "one2many list editable: trigger onchange when row is valid",
         async function (assert) {
             // should omit require fields that aren't in the view as they (obviously)
@@ -7584,7 +7619,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "one2many list editable: 'required' modifiers is properly working",
         async function (assert) {
             assert.expect(3);
@@ -7644,7 +7679,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "one2many list editable: 'required' modifiers is properly working, part 2",
         async function (assert) {
             assert.expect(3);
@@ -7702,7 +7737,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "one2many list editable: add new line before onchange returns",
         async function (assert) {
             // If the user adds a new row (with a required field with onchange), selects
@@ -7782,7 +7817,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "editable list: multiple clicks on Add an item do not create invalid rows",
         async function (assert) {
             assert.expect(3);
@@ -7836,7 +7871,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip("editable list: value reset by an onchange", async function (assert) {
+    QUnit.skipWOWL("editable list: value reset by an onchange", async function (assert) {
         // this test reproduces a subtle behavior that may occur in a form view:
         // the user adds a record in a one2many field, and directly clicks on a
         // datetime field of the form view which has an onchange, which totally
@@ -7897,7 +7932,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("editable list: onchange that returns a warning", async function (assert) {
+    QUnit.skipWOWL("editable list: onchange that returns a warning", async function (assert) {
         assert.expect(5);
 
         this.data.turtle.onchanges = {
@@ -7952,7 +7987,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("editable list: contexts are correctly sent", async function (assert) {
+    QUnit.skipWOWL("editable list: contexts are correctly sent", async function (assert) {
         assert.expect(5);
 
         this.data.partner.records[0].timmy = [12];
@@ -8021,7 +8056,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("resetting invisible one2manys", async function (assert) {
+    QUnit.skipWOWL("resetting invisible one2manys", async function (assert) {
         assert.expect(3);
 
         this.data.partner.records[0].turtles = [];
@@ -8054,7 +8089,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "one2many: onchange that returns unknown field in list, but not in form",
         async function (assert) {
             assert.expect(5);
@@ -8121,19 +8156,21 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip("multi level of nested x2manys, onchange and rawChanges", async function (assert) {
-        assert.expect(8);
+    QUnit.skipWOWL(
+        "multi level of nested x2manys, onchange and rawChanges",
+        async function (assert) {
+            assert.expect(8);
 
-        this.data.partner.records[0].p = [1];
-        this.data.partner.onchanges = {
-            name: function () {},
-        };
+            this.data.partner.records[0].p = [1];
+            this.data.partner.onchanges = {
+                name: function () {},
+            };
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch: `
+            var form = await createView({
+                View: FormView,
+                model: "partner",
+                data: this.data,
+                arch: `
                 <form>
                     <field name="name"/>
                     <field name="p" attrs="{'readonly': [['name', '=', 'readonly']]}">
@@ -8147,65 +8184,66 @@ QUnit.module("Fields", (hooks) => {
                         </form>
                     </field>
                 </form>`,
-            mockRPC(route, args) {
-                if (args.method === "write") {
-                    assert.deepEqual(args.args[1].p[0][2], {
-                        p: [[1, 1, { display_name: "new name" }]],
-                    });
-                }
-                return this._super(...arguments);
-            },
-            res_id: 1,
-        });
+                mockRPC(route, args) {
+                    if (args.method === "write") {
+                        assert.deepEqual(args.args[1].p[0][2], {
+                            p: [[1, 1, { display_name: "new name" }]],
+                        });
+                    }
+                    return this._super(...arguments);
+                },
+                res_id: 1,
+            });
 
-        await testUtils.dom.click(form.$('.o_field_widget[name="name"]'));
-        await testUtils.fields.editInput($('.o_field_widget[name="name"]'), "readonly");
+            await testUtils.dom.click(form.$('.o_field_widget[name="name"]'));
+            await testUtils.fields.editInput($('.o_field_widget[name="name"]'), "readonly");
 
-        assert.containsOnce(form, ".o_data_row", "the one2many should contain one row");
+            assert.containsOnce(form, ".o_data_row", "the one2many should contain one row");
 
-        // open the o2m record in readonly first
-        await testUtils.dom.click(form.$(".o_data_row td:first"));
-        assert.containsOnce(document.body, ".modal .o_form_readonly");
+            // open the o2m record in readonly first
+            await testUtils.dom.click(form.$(".o_data_row td:first"));
+            assert.containsOnce(document.body, ".modal .o_form_readonly");
 
-        await testUtils.dom.click($(".modal .modal-footer .o_form_button_cancel"));
-        await testUtils.form.clickDiscard(form);
+            await testUtils.dom.click($(".modal .modal-footer .o_form_button_cancel"));
+            await testUtils.form.clickDiscard(form);
 
-        // switch to edit mode and open it again
-        await testUtils.dom.click(form.$(".o_data_row td:first"));
-        await testUtils.nextTick(); // wait for quick edit
-        assert.containsOnce(document.body, ".modal .o_form_editable");
-        assert.containsOnce(
-            document.body,
-            ".modal .o_data_row",
-            "the one2many should contain one row"
-        );
+            // switch to edit mode and open it again
+            await testUtils.dom.click(form.$(".o_data_row td:first"));
+            await testUtils.nextTick(); // wait for quick edit
+            assert.containsOnce(document.body, ".modal .o_form_editable");
+            assert.containsOnce(
+                document.body,
+                ".modal .o_data_row",
+                "the one2many should contain one row"
+            );
 
-        // open the o2m again, in the dialog
-        await testUtils.dom.click($(".modal .o_data_row td:first"));
+            // open the o2m again, in the dialog
+            await testUtils.dom.click($(".modal .o_data_row td:first"));
 
-        assert.containsN(document.body, ".modal .o_form_editable", 2);
+            assert.containsN(document.body, ".modal .o_form_editable", 2);
 
-        // edit the name and click save modal that is on top
-        await testUtils.fields.editInput(
-            $(".modal:nth(1) .o_field_widget[name=display_name]"),
-            "new name"
-        );
-        await testUtils.dom.click($(".modal:nth(1) .modal-footer .btn-primary"));
+            // edit the name and click save modal that is on top
+            await testUtils.fields.editInput(
+                $(".modal:nth(1) .o_field_widget[name=display_name]"),
+                "new name"
+            );
+            await testUtils.dom.click($(".modal:nth(1) .modal-footer .btn-primary"));
 
-        assert.containsOnce(document.body, ".modal .o_form_editable");
+            assert.containsOnce(document.body, ".modal .o_form_editable");
 
-        // click save on the other modal
-        await testUtils.dom.click($(".modal .modal-footer .btn-primary"));
+            // click save on the other modal
+            await testUtils.dom.click($(".modal .modal-footer .btn-primary"));
 
-        assert.containsNone(document.body, ".modal");
+            assert.containsNone(document.body, ".modal");
 
-        // save the main record
-        await testUtils.form.clickSave(form);
+            // save the main record
+            await testUtils.form.clickSave(form);
 
-        form.destroy();
-    });
+            form.destroy();
+        }
+    );
 
-    QUnit.skip("onchange and required fields with override in arch", async function (assert) {
+    QUnit.skipWOWL("onchange and required fields with override in arch", async function (assert) {
         assert.expect(4);
 
         this.data.partner.onchanges = {
@@ -8242,7 +8280,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("onchange on a one2many containing a one2many", async function (assert) {
+    QUnit.skipWOWL("onchange on a one2many containing a one2many", async function (assert) {
         // the purpose of this test is to ensure that the onchange specs are
         // correctly and recursively computed
         assert.expect(1);
@@ -8288,7 +8326,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("editing tabbed one2many (editable=bottom)", async function (assert) {
+    QUnit.skipWOWL("editing tabbed one2many (editable=bottom)", async function (assert) {
         assert.expect(12);
 
         this.data.partner.records[0].turtles = [];
@@ -8345,7 +8383,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("editing tabbed one2many (editable=bottom), again...", async function (assert) {
+    QUnit.skipWOWL("editing tabbed one2many (editable=bottom), again...", async function (assert) {
         assert.expect(1);
 
         this.data.partner.records[0].turtles = [];
@@ -8384,7 +8422,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("editing tabbed one2many (editable=top)", async function (assert) {
+    QUnit.skipWOWL("editing tabbed one2many (editable=top)", async function (assert) {
         assert.expect(15);
 
         this.data.partner.records[0].turtles = [];
@@ -8449,7 +8487,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "one2many field: change value before pending onchange returns",
         async function (assert) {
             assert.expect(2);
@@ -8514,65 +8552,68 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip("focus is correctly reset after an onchange in an x2many", async function (assert) {
-        assert.expect(2);
+    QUnit.skipWOWL(
+        "focus is correctly reset after an onchange in an x2many",
+        async function (assert) {
+            assert.expect(2);
 
-        this.data.partner.onchanges = {
-            int_field: function () {},
-        };
-        var prom;
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                '<form string="Partners">' +
-                '<field name="p">' +
-                '<tree editable="bottom">' +
-                '<field name="int_field"/>' +
-                '<button string="hello"/>' +
-                '<field name="qux"/>' +
-                '<field name="trululu"/>' +
-                "</tree>" +
-                "</field>" +
-                "</form>",
-            mockRPC: function (route, args) {
-                var result = this._super.apply(this, arguments);
-                if (args.method === "onchange") {
-                    // delay the onchange RPC
-                    return Promise.resolve(prom).then(_.constant(result));
-                }
-                return result;
-            },
-        });
+            this.data.partner.onchanges = {
+                int_field: function () {},
+            };
+            var prom;
+            var form = await createView({
+                View: FormView,
+                model: "partner",
+                data: this.data,
+                arch:
+                    '<form string="Partners">' +
+                    '<field name="p">' +
+                    '<tree editable="bottom">' +
+                    '<field name="int_field"/>' +
+                    '<button string="hello"/>' +
+                    '<field name="qux"/>' +
+                    '<field name="trululu"/>' +
+                    "</tree>" +
+                    "</field>" +
+                    "</form>",
+                mockRPC: function (route, args) {
+                    var result = this._super.apply(this, arguments);
+                    if (args.method === "onchange") {
+                        // delay the onchange RPC
+                        return Promise.resolve(prom).then(_.constant(result));
+                    }
+                    return result;
+                },
+            });
 
-        await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
-        prom = testUtils.makeTestPromise();
-        await testUtils.fields.editAndTrigger(form.$(".o_field_widget[name=int_field]"), "44", [
-            "input",
-            { type: "keydown", which: $.ui.keyCode.TAB },
-        ]);
-        prom.resolve();
-        await testUtils.nextTick();
+            await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
+            prom = testUtils.makeTestPromise();
+            await testUtils.fields.editAndTrigger(form.$(".o_field_widget[name=int_field]"), "44", [
+                "input",
+                { type: "keydown", which: $.ui.keyCode.TAB },
+            ]);
+            prom.resolve();
+            await testUtils.nextTick();
 
-        assert.strictEqual(
-            document.activeElement,
-            form.$(".o_field_widget[name=qux]")[0],
-            "qux field should have the focus"
-        );
+            assert.strictEqual(
+                document.activeElement,
+                form.$(".o_field_widget[name=qux]")[0],
+                "qux field should have the focus"
+            );
 
-        await testUtils.fields.many2one.clickOpenDropdown("trululu");
-        await testUtils.fields.many2one.clickHighlightedItem("trululu");
-        assert.strictEqual(
-            form.$(".o_field_many2one input").val(),
-            "first record",
-            "the one2many field should have the expected value"
-        );
+            await testUtils.fields.many2one.clickOpenDropdown("trululu");
+            await testUtils.fields.many2one.clickHighlightedItem("trululu");
+            assert.strictEqual(
+                form.$(".o_field_many2one input").val(),
+                "first record",
+                "the one2many field should have the expected value"
+            );
 
-        form.destroy();
-    });
+            form.destroy();
+        }
+    );
 
-    QUnit.skip("checkbox in an x2many that triggers an onchange", async function (assert) {
+    QUnit.skipWOWL("checkbox in an x2many that triggers an onchange", async function (assert) {
         assert.expect(1);
 
         this.data.partner.onchanges = {
@@ -8608,7 +8649,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "one2many with default value: edit line to make it invalid",
         async function (assert) {
             assert.expect(3);
@@ -8657,7 +8698,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "default value for nested one2manys (coming from onchange)",
         async function (assert) {
             assert.expect(3);
@@ -8710,7 +8751,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip("display correct value after validation error", async function (assert) {
+    QUnit.skipWOWL("display correct value after validation error", async function (assert) {
         assert.expect(4);
 
         this.data.partner.onchanges.turtles = function () {};
@@ -8786,60 +8827,63 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("propagate context to sub views without default_* keys", async function (assert) {
-        assert.expect(7);
+    QUnit.skipWOWL(
+        "propagate context to sub views without default_* keys",
+        async function (assert) {
+            assert.expect(7);
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                "<form>" +
-                "<sheet>" +
-                '<field name="turtles">' +
-                '<tree editable="bottom">' +
-                '<field name="turtle_foo"/>' +
-                "</tree>" +
-                "</field>" +
-                "</sheet>" +
-                "</form>",
-            mockRPC: function (route, args) {
-                assert.strictEqual(
-                    args.kwargs.context.flutter,
-                    "shy",
-                    "view context key should be used for every rpcs"
-                );
-                if (args.method === "onchange") {
-                    if (args.model === "partner") {
-                        assert.strictEqual(
-                            args.kwargs.context.default_flutter,
-                            "why",
-                            "should have default_* values in context for form view RPCs"
-                        );
-                    } else if (args.model === "turtle") {
-                        assert.notOk(
-                            args.kwargs.context.default_flutter,
-                            "should not have default_* values in context for subview RPCs"
-                        );
+            var form = await createView({
+                View: FormView,
+                model: "partner",
+                data: this.data,
+                arch:
+                    "<form>" +
+                    "<sheet>" +
+                    '<field name="turtles">' +
+                    '<tree editable="bottom">' +
+                    '<field name="turtle_foo"/>' +
+                    "</tree>" +
+                    "</field>" +
+                    "</sheet>" +
+                    "</form>",
+                mockRPC: function (route, args) {
+                    assert.strictEqual(
+                        args.kwargs.context.flutter,
+                        "shy",
+                        "view context key should be used for every rpcs"
+                    );
+                    if (args.method === "onchange") {
+                        if (args.model === "partner") {
+                            assert.strictEqual(
+                                args.kwargs.context.default_flutter,
+                                "why",
+                                "should have default_* values in context for form view RPCs"
+                            );
+                        } else if (args.model === "turtle") {
+                            assert.notOk(
+                                args.kwargs.context.default_flutter,
+                                "should not have default_* values in context for subview RPCs"
+                            );
+                        }
                     }
-                }
-                return this._super.apply(this, arguments);
-            },
-            viewOptions: {
-                context: {
-                    flutter: "shy",
-                    default_flutter: "why",
+                    return this._super.apply(this, arguments);
                 },
-            },
-        });
-        await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
-        await testUtils.fields.editInput(form.$('input[name="turtle_foo"]'), "pinky pie");
-        await testUtils.form.clickSave(form);
+                viewOptions: {
+                    context: {
+                        flutter: "shy",
+                        default_flutter: "why",
+                    },
+                },
+            });
+            await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
+            await testUtils.fields.editInput(form.$('input[name="turtle_foo"]'), "pinky pie");
+            await testUtils.form.clickSave(form);
 
-        form.destroy();
-    });
+            form.destroy();
+        }
+    );
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "nested one2manys with no widget in list and as invisible list in form",
         async function (assert) {
             assert.expect(6);
@@ -8879,7 +8923,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip("onchange on nested one2manys", async function (assert) {
+    QUnit.skipWOWL("onchange on nested one2manys", async function (assert) {
         assert.expect(6);
 
         this.data.partner.onchanges.display_name = function (obj) {
@@ -8971,7 +9015,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("one2many with multiple pages and sequence field", async function (assert) {
+    QUnit.skipWOWL("one2many with multiple pages and sequence field", async function (assert) {
         assert.expect(1);
 
         this.data.partner.records[0].turtles = [3, 2, 1];
@@ -9018,55 +9062,58 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("one2many with multiple pages and sequence field, part2", async function (assert) {
-        assert.expect(1);
+    QUnit.skipWOWL(
+        "one2many with multiple pages and sequence field, part2",
+        async function (assert) {
+            assert.expect(1);
 
-        this.data.partner.records[0].turtles = [3, 2, 1];
-        this.data.partner.onchanges.turtles = function () {};
+            this.data.partner.records[0].turtles = [3, 2, 1];
+            this.data.partner.onchanges.turtles = function () {};
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                '<form string="Partners">' +
-                '<field name="turtles">' +
-                '<tree limit="2">' +
-                '<field name="turtle_int" widget="handle"/>' +
-                '<field name="turtle_foo"/>' +
-                '<field name="partner_ids" invisible="1"/>' +
-                "</tree>" +
-                "</field>" +
-                "</form>",
-            res_id: 1,
-            mockRPC: function (route, args) {
-                if (args.method === "onchange") {
-                    return Promise.resolve({
-                        value: {
-                            turtles: [
-                                [5],
-                                [1, 1, { turtle_foo: "from onchange id2", partner_ids: [[5]] }],
-                                [1, 3, { turtle_foo: "from onchange id3", partner_ids: [[5]] }],
-                            ],
-                        },
-                    });
-                }
-                return this._super(route, args);
-            },
-            viewOptions: {
-                mode: "edit",
-            },
-        });
-        await testUtils.dom.click(form.$(".o_list_record_remove:first button"));
-        assert.strictEqual(
-            form.$(".o_data_row").text(),
-            "from onchange id2from onchange id3",
-            "onchange has been properly applied"
-        );
-        form.destroy();
-    });
+            var form = await createView({
+                View: FormView,
+                model: "partner",
+                data: this.data,
+                arch:
+                    '<form string="Partners">' +
+                    '<field name="turtles">' +
+                    '<tree limit="2">' +
+                    '<field name="turtle_int" widget="handle"/>' +
+                    '<field name="turtle_foo"/>' +
+                    '<field name="partner_ids" invisible="1"/>' +
+                    "</tree>" +
+                    "</field>" +
+                    "</form>",
+                res_id: 1,
+                mockRPC: function (route, args) {
+                    if (args.method === "onchange") {
+                        return Promise.resolve({
+                            value: {
+                                turtles: [
+                                    [5],
+                                    [1, 1, { turtle_foo: "from onchange id2", partner_ids: [[5]] }],
+                                    [1, 3, { turtle_foo: "from onchange id3", partner_ids: [[5]] }],
+                                ],
+                            },
+                        });
+                    }
+                    return this._super(route, args);
+                },
+                viewOptions: {
+                    mode: "edit",
+                },
+            });
+            await testUtils.dom.click(form.$(".o_list_record_remove:first button"));
+            assert.strictEqual(
+                form.$(".o_data_row").text(),
+                "from onchange id2from onchange id3",
+                "onchange has been properly applied"
+            );
+            form.destroy();
+        }
+    );
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "one2many with sequence field, override default_get, bottom when inline",
         async function (assert) {
             assert.expect(2);
@@ -9111,7 +9158,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "one2many with sequence field, override default_get, top when inline",
         async function (assert) {
             assert.expect(2);
@@ -9156,7 +9203,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "one2many with sequence field, override default_get, bottom when popup",
         async function (assert) {
             assert.expect(3);
@@ -9209,7 +9256,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "one2many with sequence field, override default_get, not last page",
         async function (assert) {
             assert.expect(1);
@@ -9247,7 +9294,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "one2many with sequence field, override default_get, last page",
         async function (assert) {
             assert.expect(1);
@@ -9285,7 +9332,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "one2many with sequence field, fetch name_get from empty list, field text",
         async function (assert) {
             // There was a bug where a RPC would fail because no route was set.
@@ -9360,7 +9407,6 @@ QUnit.module("Fields", (hooks) => {
     );
 
     QUnit.skip("one2many with several pages, onchange and default order", async function (assert) {
-        // #long-term-skipped-test
         // This test reproduces a specific scenario where a one2many is displayed
         // over several pages, and has a default order such that a record that
         // would normally be on page 1 is actually on another page. Moreover,
@@ -9450,7 +9496,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "new record, with one2many with more default values than limit",
         async function (assert) {
             assert.expect(2);
@@ -9488,7 +9534,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "add a new line after limit is reached should behave nicely",
         async function (assert) {
             assert.expect(2);
@@ -9539,7 +9585,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "onchange in a one2many with non inline view on an existing record",
         async function (assert) {
             assert.expect(6);
@@ -9587,7 +9633,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "onchange in a one2many with non inline view on a new record",
         async function (assert) {
             assert.expect(6);
@@ -9642,7 +9688,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip('add a line, edit it and "Save & New"', async function (assert) {
+    QUnit.skipWOWL('add a line, edit it and "Save & New"', async function (assert) {
         assert.expect(5);
 
         var form = await createView({
@@ -9693,7 +9739,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("o2m add a line custom control create editable", async function (assert) {
+    QUnit.skipWOWL("o2m add a line custom control create editable", async function (assert) {
         assert.expect(5);
 
         var form = await createView({
@@ -9747,7 +9793,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("o2m add a line custom control create non-editable", async function (assert) {
+    QUnit.skipWOWL("o2m add a line custom control create non-editable", async function (assert) {
         assert.expect(6);
 
         var form = await createView({
@@ -9803,33 +9849,36 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("o2m add a line custom control create align with handle", async function (assert) {
-        assert.expect(3);
+    QUnit.skipWOWL(
+        "o2m add a line custom control create align with handle",
+        async function (assert) {
+            assert.expect(3);
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                '<form string="Partners">' +
-                '<field name="p">' +
-                "<tree>" +
-                '<field name="int_field" widget="handle"/>' +
-                "</tree>" +
-                "</field>" +
-                "</form>",
-        });
+            var form = await createView({
+                View: FormView,
+                model: "partner",
+                data: this.data,
+                arch:
+                    '<form string="Partners">' +
+                    '<field name="p">' +
+                    "<tree>" +
+                    '<field name="int_field" widget="handle"/>' +
+                    "</tree>" +
+                    "</field>" +
+                    "</form>",
+            });
 
-        // controls correctly added, at one column offset when handle is present
-        var $tr = form.$(".o_field_x2many_list_row_add").closest("tr");
-        assert.strictEqual($tr.find("td").length, 2);
-        assert.strictEqual($tr.find("td:eq(0)").text(), "");
-        assert.strictEqual($tr.find("td:eq(1)").text(), "Add a line");
+            // controls correctly added, at one column offset when handle is present
+            var $tr = form.$(".o_field_x2many_list_row_add").closest("tr");
+            assert.strictEqual($tr.find("td").length, 2);
+            assert.strictEqual($tr.find("td:eq(0)").text(), "");
+            assert.strictEqual($tr.find("td:eq(1)").text(), "Add a line");
 
-        form.destroy();
-    });
+            form.destroy();
+        }
+    );
 
-    QUnit.skip("one2many form view with action button", async function (assert) {
+    QUnit.skipWOWL("one2many form view with action button", async function (assert) {
         // once the action button is clicked, the record is reloaded (via the
         // on_close handler, executed because the python method does not return
         // any action, or an ir.action.act_window_close) ; this test ensures that
@@ -9915,7 +9964,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("onchange affecting inline unopened list view", async function (assert) {
+    QUnit.skipWOWL("onchange affecting inline unopened list view", async function (assert) {
         // when we got onchange result for fields of record that were not
         // already available because they were in a inline view not already
         // opened, in a given configuration the change were applied ignoring
@@ -10014,7 +10063,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("click on URL should not open the record", async function (assert) {
+    QUnit.skipWOWL("click on URL should not open the record", async function (assert) {
         assert.expect(2);
 
         this.data.partner.records[0].turtles = [1];
@@ -10044,7 +10093,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("create and edit on m2o in o2m, and press ESCAPE", async function (assert) {
+    QUnit.skipWOWL("create and edit on m2o in o2m, and press ESCAPE", async function (assert) {
         assert.expect(4);
 
         await makeLegacyDialogMappingTestEnv();
@@ -10089,7 +10138,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "one2many add a line should not crash if orderedResIDs is not set",
         async function (assert) {
             // There is no assertion, the code will just crash before the bugfix.
@@ -10128,7 +10177,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "one2many shortcut tab should not crash when there is no input widget",
         async function (assert) {
             assert.expect(2);
@@ -10168,68 +10217,71 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip("one2many with onchange, required field, shortcut enter", async function (assert) {
-        assert.expect(5);
+    QUnit.skipWOWL(
+        "one2many with onchange, required field, shortcut enter",
+        async function (assert) {
+            assert.expect(5);
 
-        this.data.turtle.onchanges = {
-            turtle_foo: function () {},
-        };
+            this.data.turtle.onchanges = {
+                turtle_foo: function () {},
+            };
 
-        var prom;
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                '<form string="Partners">' +
-                '<field name="turtles">' +
-                '<tree editable="bottom">' +
-                '<field name="turtle_foo" required="1"/>' +
-                "</tree>" +
-                "</field>" +
-                "</form>",
-            mockRPC: function (route, args) {
-                var result = this._super.apply(this, arguments);
-                if (args.method === "onchange") {
-                    return Promise.resolve(prom).then(_.constant(result));
-                }
-                return result;
-            },
-            // simulate what happens in the client:
-            // the new value isn't notified directly to the model
-            fieldDebounce: 5000,
-        });
+            var prom;
+            var form = await createView({
+                View: FormView,
+                model: "partner",
+                data: this.data,
+                arch:
+                    '<form string="Partners">' +
+                    '<field name="turtles">' +
+                    '<tree editable="bottom">' +
+                    '<field name="turtle_foo" required="1"/>' +
+                    "</tree>" +
+                    "</field>" +
+                    "</form>",
+                mockRPC: function (route, args) {
+                    var result = this._super.apply(this, arguments);
+                    if (args.method === "onchange") {
+                        return Promise.resolve(prom).then(_.constant(result));
+                    }
+                    return result;
+                },
+                // simulate what happens in the client:
+                // the new value isn't notified directly to the model
+                fieldDebounce: 5000,
+            });
 
-        var value = "hello";
+            var value = "hello";
 
-        // add a new line
-        await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
+            // add a new line
+            await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
 
-        // we want to add a delay to simulate an onchange
-        prom = testUtils.makeTestPromise();
+            // we want to add a delay to simulate an onchange
+            prom = testUtils.makeTestPromise();
 
-        // write something in the field
-        var $input = form.$('input[name="turtle_foo"]');
-        await testUtils.fields.editInput($input, value);
-        await testUtils.fields.triggerKeydown($input, "enter");
+            // write something in the field
+            var $input = form.$('input[name="turtle_foo"]');
+            await testUtils.fields.editInput($input, value);
+            await testUtils.fields.triggerKeydown($input, "enter");
 
-        // check that nothing changed before the onchange finished
-        assert.strictEqual($input.val(), value, "input content shouldn't change");
-        assert.containsOnce(form, ".o_data_row", "should still contain only one row");
+            // check that nothing changed before the onchange finished
+            assert.strictEqual($input.val(), value, "input content shouldn't change");
+            assert.containsOnce(form, ".o_data_row", "should still contain only one row");
 
-        // unlock onchange
-        prom.resolve();
-        await testUtils.nextTick();
+            // unlock onchange
+            prom.resolve();
+            await testUtils.nextTick();
 
-        // check the current line is added with the correct content and a new line is editable
-        assert.strictEqual(form.$("td.o_data_cell").text(), value);
-        assert.strictEqual(form.$('input[name="turtle_foo"]').val(), "");
-        assert.containsN(form, ".o_data_row", 2, "should now contain two rows");
+            // check the current line is added with the correct content and a new line is editable
+            assert.strictEqual(form.$("td.o_data_cell").text(), value);
+            assert.strictEqual(form.$('input[name="turtle_foo"]').val(), "");
+            assert.containsN(form, ".o_data_row", 2, "should now contain two rows");
 
-        form.destroy();
-    });
+            form.destroy();
+        }
+    );
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "no deadlock when leaving a one2many line with uncommitted changes",
         async function (assert) {
             // Before unselecting a o2m line, field widgets are asked to commit their changes (new values
@@ -10288,7 +10340,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip("one2many with extra field from server not in form", async function (assert) {
+    QUnit.skipWOWL("one2many with extra field from server not in form", async function (assert) {
         assert.expect(6);
 
         var form = await createView({
@@ -10378,7 +10430,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("one2many invisible depends on parent field", async function (assert) {
+    QUnit.skipWOWL("one2many invisible depends on parent field", async function (assert) {
         assert.expect(4);
 
         this.data.partner.records[0].p = [2];
@@ -10444,15 +10496,17 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("column_invisible attrs on a button in a one2many list", async function (assert) {
-        assert.expect(6);
+    QUnit.skipWOWL(
+        "column_invisible attrs on a button in a one2many list",
+        async function (assert) {
+            assert.expect(6);
 
-        this.data.partner.records[0].p = [2];
-        const form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch: `
+            this.data.partner.records[0].p = [2];
+            const form = await createView({
+                View: FormView,
+                model: "partner",
+                data: this.data,
+                arch: `
                 <form>
                     <field name="product_id"/>
                     <field name="p">
@@ -10462,27 +10516,28 @@ QUnit.module("Fields", (hooks) => {
                         </tree>
                     </field>
                 </form>`,
-            res_id: 1,
-            viewOptions: {
-                mode: "edit",
-            },
-        });
+                res_id: 1,
+                viewOptions: {
+                    mode: "edit",
+                },
+            });
 
-        assert.strictEqual(form.$(".o_field_widget[name=product_id] input").val(), "");
-        assert.containsN(form, ".o_list_table th", 2); // foo + trash bin
-        assert.containsNone(form, ".some_button");
+            assert.strictEqual(form.$(".o_field_widget[name=product_id] input").val(), "");
+            assert.containsN(form, ".o_list_table th", 2); // foo + trash bin
+            assert.containsNone(form, ".some_button");
 
-        await testUtils.fields.many2one.clickOpenDropdown("product_id");
-        await testUtils.fields.many2one.clickHighlightedItem("product_id");
+            await testUtils.fields.many2one.clickOpenDropdown("product_id");
+            await testUtils.fields.many2one.clickHighlightedItem("product_id");
 
-        assert.strictEqual(form.$(".o_field_widget[name=product_id] input").val(), "xphone");
-        assert.containsN(form, ".o_list_table th", 3); // foo + button + trash bin
-        assert.containsOnce(form, ".some_button");
+            assert.strictEqual(form.$(".o_field_widget[name=product_id] input").val(), "xphone");
+            assert.containsN(form, ".o_list_table th", 3); // foo + button + trash bin
+            assert.containsOnce(form, ".some_button");
 
-        form.destroy();
-    });
+            form.destroy();
+        }
+    );
 
-    QUnit.skip("column_invisible attrs on adjacent buttons", async function (assert) {
+    QUnit.skipWOWL("column_invisible attrs on adjacent buttons", async function (assert) {
         assert.expect(14);
 
         this.data.partner.records[0].p = [2];
@@ -10532,7 +10587,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "one2many column visiblity depends on onchange of parent field",
         async function (assert) {
             assert.expect(3);
@@ -10591,7 +10646,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip("one2many column_invisible on view not inline", async function (assert) {
+    QUnit.skipWOWL("one2many column_invisible on view not inline", async function (assert) {
         assert.expect(4);
 
         this.data.partner.records[0].p = [2];
@@ -10659,7 +10714,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("field context is correctly passed to x2m subviews", async function (assert) {
+    QUnit.skipWOWL("field context is correctly passed to x2m subviews", async function (assert) {
         assert.expect(2);
 
         var form = await createView({
@@ -10699,7 +10754,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("one2many kanban with widget handle", async function (assert) {
+    QUnit.skipWOWL("one2many kanban with widget handle", async function (assert) {
         assert.expect(5);
 
         this.data.partner.records[0].turtles = [1, 2, 3];
@@ -10757,7 +10812,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("one2many editable list: edit and click on add a line", async function (assert) {
+    QUnit.skipWOWL("one2many editable list: edit and click on add a line", async function (assert) {
         assert.expect(9);
 
         this.data.turtle.onchanges = {
@@ -10817,7 +10872,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "many2manys inside a one2many are fetched in batch after onchange",
         async function (assert) {
             assert.expect(6);
@@ -10888,7 +10943,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip("two one2many fields with same relation and onchanges", async function (assert) {
+    QUnit.skipWOWL("two one2many fields with same relation and onchanges", async function (assert) {
         // this test simulates the presence of two one2many fields with onchanges, such that
         // changes to the first o2m are repercuted on the second one
         assert.expect(6);
@@ -10983,35 +11038,38 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("column widths are kept when adding first record in o2m", async function (assert) {
-        assert.expect(2);
+    QUnit.skipWOWL(
+        "column widths are kept when adding first record in o2m",
+        async function (assert) {
+            assert.expect(2);
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                "<form>" +
-                '<field name="p">' +
-                '<tree editable="top">' +
-                '<field name="date"/>' +
-                '<field name="foo"/>' +
-                "</tree>" +
-                "</field>" +
-                "</form>",
-        });
+            var form = await createView({
+                View: FormView,
+                model: "partner",
+                data: this.data,
+                arch:
+                    "<form>" +
+                    '<field name="p">' +
+                    '<tree editable="top">' +
+                    '<field name="date"/>' +
+                    '<field name="foo"/>' +
+                    "</tree>" +
+                    "</field>" +
+                    "</form>",
+            });
 
-        var width = form.$('th[data-name="date"]')[0].offsetWidth;
+            var width = form.$('th[data-name="date"]')[0].offsetWidth;
 
-        await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
+            await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
 
-        assert.containsOnce(form, ".o_data_row");
-        assert.strictEqual(form.$('th[data-name="date"]')[0].offsetWidth, width);
+            assert.containsOnce(form, ".o_data_row");
+            assert.strictEqual(form.$('th[data-name="date"]')[0].offsetWidth, width);
 
-        form.destroy();
-    });
+            form.destroy();
+        }
+    );
 
-    QUnit.skip("column widths are kept when editing a record in o2m", async function (assert) {
+    QUnit.skipWOWL("column widths are kept when editing a record in o2m", async function (assert) {
         assert.expect(2);
 
         this.data.partner.records[0].p = [2];
@@ -11052,86 +11110,92 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("column widths are kept when remove last record in o2m", async function (assert) {
-        assert.expect(1);
+    QUnit.skipWOWL(
+        "column widths are kept when remove last record in o2m",
+        async function (assert) {
+            assert.expect(1);
 
-        this.data.partner.records[0].p = [2];
+            this.data.partner.records[0].p = [2];
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                "<form>" +
-                '<field name="p">' +
-                '<tree editable="top">' +
-                '<field name="date"/>' +
-                '<field name="foo"/>' +
-                "</tree>" +
-                "</field>" +
-                "</form>",
-            res_id: 1,
-            viewOptions: {
-                mode: "edit",
-            },
-        });
+            var form = await createView({
+                View: FormView,
+                model: "partner",
+                data: this.data,
+                arch:
+                    "<form>" +
+                    '<field name="p">' +
+                    '<tree editable="top">' +
+                    '<field name="date"/>' +
+                    '<field name="foo"/>' +
+                    "</tree>" +
+                    "</field>" +
+                    "</form>",
+                res_id: 1,
+                viewOptions: {
+                    mode: "edit",
+                },
+            });
 
-        var width = form.$('th[data-name="date"]')[0].offsetWidth;
+            var width = form.$('th[data-name="date"]')[0].offsetWidth;
 
-        await testUtils.dom.click(form.$(".o_data_row .o_list_record_remove"));
+            await testUtils.dom.click(form.$(".o_data_row .o_list_record_remove"));
 
-        assert.strictEqual(form.$('th[data-name="date"]')[0].offsetWidth, width);
+            assert.strictEqual(form.$('th[data-name="date"]')[0].offsetWidth, width);
 
-        form.destroy();
-    });
+            form.destroy();
+        }
+    );
 
-    QUnit.skip("column widths are correct after toggling optional fields", async function (assert) {
-        assert.expect(2);
+    QUnit.skipWOWL(
+        "column widths are correct after toggling optional fields",
+        async function (assert) {
+            assert.expect(2);
 
-        var RamStorageService = AbstractStorageService.extend({
-            storage: new RamStorage(),
-        });
+            var RamStorageService = AbstractStorageService.extend({
+                storage: new RamStorage(),
+            });
 
-        this.data.partner.records[0].p = [2];
+            this.data.partner.records[0].p = [2];
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                "<form>" +
-                '<field name="p">' +
-                '<tree editable="top">' +
-                '<field name="date" required="1"/>' + // we want the list to remain empty
-                '<field name="foo"/>' +
-                '<field name="int_field" optional="1"/>' +
-                "</tree>" +
-                "</field>" +
-                "</form>",
-            services: {
-                local_storage: RamStorageService,
-            },
-        });
+            var form = await createView({
+                View: FormView,
+                model: "partner",
+                data: this.data,
+                arch:
+                    "<form>" +
+                    '<field name="p">' +
+                    '<tree editable="top">' +
+                    '<field name="date" required="1"/>' + // we want the list to remain empty
+                    '<field name="foo"/>' +
+                    '<field name="int_field" optional="1"/>' +
+                    "</tree>" +
+                    "</field>" +
+                    "</form>",
+                services: {
+                    local_storage: RamStorageService,
+                },
+            });
 
-        // date fields have an hardcoded width, which apply when there is no
-        // record, and should be kept afterwards
-        let width = form.$('th[data-name="date"]')[0].offsetWidth;
+            // date fields have an hardcoded width, which apply when there is no
+            // record, and should be kept afterwards
+            let width = form.$('th[data-name="date"]')[0].offsetWidth;
 
-        // create a record to store the current widths, but discard it directly to keep
-        // the list empty (otherwise, the browser automatically computes the optimal widths)
-        await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
+            // create a record to store the current widths, but discard it directly to keep
+            // the list empty (otherwise, the browser automatically computes the optimal widths)
+            await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
 
-        assert.strictEqual(form.$('th[data-name="date"]')[0].offsetWidth, width);
+            assert.strictEqual(form.$('th[data-name="date"]')[0].offsetWidth, width);
 
-        await testUtils.dom.click(form.$(".o_optional_columns_dropdown_toggle"));
-        await testUtils.dom.click(form.$("div.o_optional_columns div.dropdown-item input"));
+            await testUtils.dom.click(form.$(".o_optional_columns_dropdown_toggle"));
+            await testUtils.dom.click(form.$("div.o_optional_columns div.dropdown-item input"));
 
-        assert.strictEqual(form.$('th[data-name="date"]')[0].offsetWidth, width);
+            assert.strictEqual(form.$('th[data-name="date"]')[0].offsetWidth, width);
 
-        form.destroy();
-    });
+            form.destroy();
+        }
+    );
 
-    QUnit.skip("editable one2many list with oe_read_only button", async function (assert) {
+    QUnit.skipWOWL("editable one2many list with oe_read_only button", async function (assert) {
         assert.expect(9);
 
         const form = await createView({
@@ -11167,7 +11231,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "one2many reset by onchange (of another field) while being edited",
         async function (assert) {
             // In this test, we have a many2one and a one2many. The many2one has an onchange that
@@ -11230,7 +11294,6 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skip(
         "one2many with many2many_tags in list and list in form with a limit",
         async function (assert) {
-            // #long-term-skipped-test
             // This test is skipped for now, as it doesn't work, and it can't be fixed in the current
             // architecture (without large changes). However, this is unlikely to happen as the default
             // limit is 80, and it would be useless to display so many records with a many2many_tags
@@ -11276,7 +11339,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "one2many with many2many_tags in list and list in form, and onchange",
         async function (assert) {
             assert.expect(8);
@@ -11352,7 +11415,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "one2many with many2many_tags in list and list in form, and onchange (2)",
         async function (assert) {
             assert.expect(7);
@@ -11433,58 +11496,61 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip("one2many value returned by onchange with unknown fields", async function (assert) {
-        assert.expect(3);
+    QUnit.skipWOWL(
+        "one2many value returned by onchange with unknown fields",
+        async function (assert) {
+            assert.expect(3);
 
-        this.data.partner.onchanges = {
-            bar: function (obj) {
-                obj.p = [
-                    [5],
-                    [
-                        0,
-                        0,
-                        {
-                            bar: true,
-                            display_name: "coucou",
-                            trululu: [2, "second record"],
-                            turtles: [[5], [0, 0, { turtle_int: 4 }]],
-                        },
-                    ],
-                ];
-            },
-        };
+            this.data.partner.onchanges = {
+                bar: function (obj) {
+                    obj.p = [
+                        [5],
+                        [
+                            0,
+                            0,
+                            {
+                                bar: true,
+                                display_name: "coucou",
+                                trululu: [2, "second record"],
+                                turtles: [[5], [0, 0, { turtle_int: 4 }]],
+                            },
+                        ],
+                    ];
+                },
+            };
 
-        const form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch: `
+            const form = await createView({
+                View: FormView,
+                model: "partner",
+                data: this.data,
+                arch: `
                 <form>
                     <field name="bar"/>
                     <field name="p" widget="many2many_tags"/>
                 </form>`,
-            mockRPC(route, args) {
-                if (args.method === "create") {
-                    assert.deepEqual(args.args[0].p[0][2], {
-                        bar: true,
-                        display_name: "coucou",
-                        trululu: 2,
-                        turtles: [[5], [0, 0, { turtle_int: 4 }]],
-                    });
-                }
-                return this._super(...arguments);
-            },
-        });
+                mockRPC(route, args) {
+                    if (args.method === "create") {
+                        assert.deepEqual(args.args[0].p[0][2], {
+                            bar: true,
+                            display_name: "coucou",
+                            trululu: 2,
+                            turtles: [[5], [0, 0, { turtle_int: 4 }]],
+                        });
+                    }
+                    return this._super(...arguments);
+                },
+            });
 
-        assert.containsOnce(form, ".o_field_many2manytags .badge");
-        assert.strictEqual(form.$(".o_field_many2manytags .o_badge_text").text(), "coucou");
+            assert.containsOnce(form, ".o_field_many2manytags .badge");
+            assert.strictEqual(form.$(".o_field_many2manytags .o_badge_text").text(), "coucou");
 
-        await testUtils.form.clickSave(form);
+            await testUtils.form.clickSave(form);
 
-        form.destroy();
-    });
+            form.destroy();
+        }
+    );
 
-    QUnit.skip("mounted is called only once for x2many control panel", async function (assert) {
+    QUnit.skipWOWL("mounted is called only once for x2many control panel", async function (assert) {
         // This test could be removed as soon as the field widgets will be converted in owl.
         // It comes with a fix for a bug that occurred because in some circonstances, 'mounted'
         // is called twice for the x2many control panel.
@@ -11551,7 +11617,7 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps(["willUnmount"]);
     });
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "one2many: internal state is updated after another field changes",
         async function (assert) {
             // The FieldOne2Many is configured such that it is reset at any field change.
@@ -11591,7 +11657,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip("nested one2many, onchange, no command value", async function (assert) {
+    QUnit.skipWOWL("nested one2many, onchange, no command value", async function (assert) {
         // This test ensures that we always send all values to onchange rpcs for nested
         // one2manys, even if some field hasn't changed. In this particular test case,
         // a first onchange returns a value for the inner one2many, and a second onchange
@@ -11670,7 +11736,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("update a one2many from a custom field widget", async function (assert) {
+    QUnit.skipWOWL("update a one2many from a custom field widget", async function (assert) {
         // In this test, we define a custom field widget to render/update a one2many
         // field. For the update part, we ensure that updating primitive fields of a sub
         // record works. There is no guarantee that updating a relational field on the sub
@@ -11747,7 +11813,7 @@ QUnit.module("Fields", (hooks) => {
         delete fieldRegistry.map.my_relational_field;
     });
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "Editable list's field widgets call on_attach_callback on row update",
         async function (assert) {
             // We use here a badge widget (owl component, does have a on_attach_callback method) and check its decoration
@@ -11785,7 +11851,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "Editable list renderer confirmUpdate method does not create a memory leak by no deleted currently modified row widgets but recreating them anyway.",
         async function (assert) {
             assert.expect(5);
@@ -11836,7 +11902,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "reordering embedded one2many with handle widget starting with same sequence",
         async function (assert) {
             assert.expect(3);
@@ -11919,7 +11985,7 @@ QUnit.module("Fields", (hooks) => {
 
     // The following tests come from relational_fields_tests.js (so there might be issues with serverData)
 
-    QUnit.skip("search more pager is reset when doing a new search", async function (assert) {
+    QUnit.skipWOWL("search more pager is reset when doing a new search", async function (assert) {
         assert.expect(6);
 
         this.data.partner.records.push(
@@ -11966,7 +12032,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("do not call name_get if display_name already known", async function (assert) {
+    QUnit.skipWOWL("do not call name_get if display_name already known", async function (assert) {
         assert.expect(4);
 
         this.data.partner.fields.product_id.default = 37;
@@ -11994,7 +12060,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("x2many default_order multiple fields", async function (assert) {
+    QUnit.skipWOWL("x2many default_order multiple fields", async function (assert) {
         assert.expect(7);
 
         this.data.partner.records = [
@@ -12040,7 +12106,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("focus when closing many2one modal in many2one modal", async function (assert) {
+    QUnit.skipWOWL("focus when closing many2one modal in many2one modal", async function (assert) {
         assert.expect(12);
 
         var form = await createView({
@@ -12100,7 +12166,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("one2many from a model that has been sorted", async function (assert) {
+    QUnit.skipWOWL("one2many from a model that has been sorted", async function (assert) {
         assert.expect(1);
 
         /* On a standard list view, sort your records by a field
@@ -12141,7 +12207,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("widget many2many_checkboxes in a subview", async function (assert) {
+    QUnit.skipWOWL("widget many2many_checkboxes in a subview", async function (assert) {
         assert.expect(2);
 
         var form = await createView({
@@ -12183,7 +12249,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("embedded readonly one2many with handle widget", async function (assert) {
+    QUnit.skipWOWL("embedded readonly one2many with handle widget", async function (assert) {
         assert.expect(4);
 
         this.data.partner.records[0].turtles = [1, 2, 3];
@@ -12229,7 +12295,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "prevent the dialog in readonly x2many tree view with option no_open True",
         async function (assert) {
             assert.expect(2);
@@ -12264,57 +12330,60 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip("delete a record while adding another one in a multipage", async function (assert) {
-        // in a many2one with at least 2 pages, add a new line. Delete the line above it.
-        // (the onchange makes it so that the virtualID is inserted in the middle of the currentResIDs.)
-        // it should load the next line to display it on the page.
-        assert.expect(2);
+    QUnit.skipWOWL(
+        "delete a record while adding another one in a multipage",
+        async function (assert) {
+            // in a many2one with at least 2 pages, add a new line. Delete the line above it.
+            // (the onchange makes it so that the virtualID is inserted in the middle of the currentResIDs.)
+            // it should load the next line to display it on the page.
+            assert.expect(2);
 
-        this.data.partner.records[0].turtles = [2, 3];
-        this.data.partner.onchanges.turtles = function (obj) {
-            obj.turtles = [[5]].concat(obj.turtles);
-        };
+            this.data.partner.records[0].turtles = [2, 3];
+            this.data.partner.onchanges.turtles = function (obj) {
+                obj.turtles = [[5]].concat(obj.turtles);
+            };
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                '<form string="Partners">' +
-                "<sheet>" +
-                "<group>" +
-                '<field name="turtles">' +
-                '<tree editable="bottom" limit="1" decoration-muted="turtle_bar == False">' +
-                '<field name="turtle_foo"/>' +
-                '<field name="turtle_bar"/>' +
-                "</tree>" +
-                "</field>" +
-                "</group>" +
-                "</sheet>" +
-                "</form>",
-            res_id: 1,
-        });
+            var form = await createView({
+                View: FormView,
+                model: "partner",
+                data: this.data,
+                arch:
+                    '<form string="Partners">' +
+                    "<sheet>" +
+                    "<group>" +
+                    '<field name="turtles">' +
+                    '<tree editable="bottom" limit="1" decoration-muted="turtle_bar == False">' +
+                    '<field name="turtle_foo"/>' +
+                    '<field name="turtle_bar"/>' +
+                    "</tree>" +
+                    "</field>" +
+                    "</group>" +
+                    "</sheet>" +
+                    "</form>",
+                res_id: 1,
+            });
 
-        await testUtils.form.clickEdit(form);
-        // add a line (virtual record)
-        await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
-        await testUtils.owlCompatibilityExtraNextTick();
-        await testUtils.fields.editInput(form.$(".o_input"), "pi");
-        // delete the line above it
-        await testUtils.dom.click(form.$(".o_list_record_remove").first());
-        await testUtils.owlCompatibilityExtraNextTick();
-        // the next line should be displayed below the newly added one
-        assert.strictEqual(form.$(".o_data_row").length, 2, "should have 2 records");
-        assert.strictEqual(
-            form.$(".o_data_row .o_data_cell:first-child").text(),
-            "pikawa",
-            "should display the correct records on page 1"
-        );
+            await testUtils.form.clickEdit(form);
+            // add a line (virtual record)
+            await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
+            await testUtils.owlCompatibilityExtraNextTick();
+            await testUtils.fields.editInput(form.$(".o_input"), "pi");
+            // delete the line above it
+            await testUtils.dom.click(form.$(".o_list_record_remove").first());
+            await testUtils.owlCompatibilityExtraNextTick();
+            // the next line should be displayed below the newly added one
+            assert.strictEqual(form.$(".o_data_row").length, 2, "should have 2 records");
+            assert.strictEqual(
+                form.$(".o_data_row .o_data_cell:first-child").text(),
+                "pikawa",
+                "should display the correct records on page 1"
+            );
 
-        form.destroy();
-    });
+            form.destroy();
+        }
+    );
 
-    QUnit.skip("one2many, onchange, edition and multipage...", async function (assert) {
+    QUnit.skipWOWL("one2many, onchange, edition and multipage...", async function (assert) {
         assert.expect(8);
 
         this.data.partner.onchanges = {
@@ -12362,115 +12431,126 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("onchange on unloaded record clearing posterious change", async function (assert) {
-        // when we got onchange result for fields of record that were not
-        // already available because they were in a inline view not already
-        // opened, in a given configuration the change were applied ignoring
-        // posteriously changed data, thus an added/removed/modified line could
-        // be reset to the original onchange data
-        assert.expect(5);
+    QUnit.skipWOWL(
+        "onchange on unloaded record clearing posterious change",
+        async function (assert) {
+            // when we got onchange result for fields of record that were not
+            // already available because they were in a inline view not already
+            // opened, in a given configuration the change were applied ignoring
+            // posteriously changed data, thus an added/removed/modified line could
+            // be reset to the original onchange data
+            assert.expect(5);
 
-        var numUserOnchange = 0;
+            var numUserOnchange = 0;
 
-        this.data.user.onchanges = {
-            partner_ids: function (obj) {
-                // simulate actual server onchange after save of modal with new record
-                if (numUserOnchange === 0) {
-                    obj.partner_ids = _.clone(obj.partner_ids);
-                    obj.partner_ids.unshift([5]);
-                    obj.partner_ids[1][2].turtles.unshift([5]);
-                    obj.partner_ids[2] = [
-                        1,
-                        2,
-                        {
-                            display_name: "second record",
-                            trululu: 1,
-                            turtles: [[5]],
-                        },
-                    ];
-                } else if (numUserOnchange === 1) {
-                    obj.partner_ids = _.clone(obj.partner_ids);
-                    obj.partner_ids.unshift([5]);
-                    obj.partner_ids[1][2].turtles.unshift([5]);
-                    obj.partner_ids[2][2].turtles.unshift([5]);
-                }
-                numUserOnchange++;
-            },
-        };
+            this.data.user.onchanges = {
+                partner_ids: function (obj) {
+                    // simulate actual server onchange after save of modal with new record
+                    if (numUserOnchange === 0) {
+                        obj.partner_ids = _.clone(obj.partner_ids);
+                        obj.partner_ids.unshift([5]);
+                        obj.partner_ids[1][2].turtles.unshift([5]);
+                        obj.partner_ids[2] = [
+                            1,
+                            2,
+                            {
+                                display_name: "second record",
+                                trululu: 1,
+                                turtles: [[5]],
+                            },
+                        ];
+                    } else if (numUserOnchange === 1) {
+                        obj.partner_ids = _.clone(obj.partner_ids);
+                        obj.partner_ids.unshift([5]);
+                        obj.partner_ids[1][2].turtles.unshift([5]);
+                        obj.partner_ids[2][2].turtles.unshift([5]);
+                    }
+                    numUserOnchange++;
+                },
+            };
 
-        var form = await createView({
-            View: FormView,
-            model: "user",
-            data: this.data,
-            arch:
-                "<form><sheet><group>" +
-                '<field name="partner_ids">' +
-                "<form>" +
-                '<field name="trululu"/>' +
-                '<field name="turtles">' +
-                '<tree editable="bottom">' +
-                '<field name="display_name"/>' +
-                "</tree>" +
-                "</field>" +
-                "</form>" +
-                "<tree>" +
-                '<field name="display_name"/>' +
-                "</tree>" +
-                "</field>" +
-                "</group></sheet></form>",
-            res_id: 17,
-        });
+            var form = await createView({
+                View: FormView,
+                model: "user",
+                data: this.data,
+                arch:
+                    "<form><sheet><group>" +
+                    '<field name="partner_ids">' +
+                    "<form>" +
+                    '<field name="trululu"/>' +
+                    '<field name="turtles">' +
+                    '<tree editable="bottom">' +
+                    '<field name="display_name"/>' +
+                    "</tree>" +
+                    "</field>" +
+                    "</form>" +
+                    "<tree>" +
+                    '<field name="display_name"/>' +
+                    "</tree>" +
+                    "</field>" +
+                    "</group></sheet></form>",
+                res_id: 17,
+            });
 
-        // open first partner and change turtle name
-        await testUtils.form.clickEdit(form);
-        await testUtils.dom.click(form.$(".o_data_row:eq(0)"));
-        await testUtils.dom.click($(".modal .o_data_cell:eq(0)"));
-        await testUtils.fields.editAndTrigger(
-            $('.modal input[name="display_name"]'),
-            "Donatello",
-            "change"
-        );
-        await testUtils.dom.click($(".modal .btn-primary"));
+            // open first partner and change turtle name
+            await testUtils.form.clickEdit(form);
+            await testUtils.dom.click(form.$(".o_data_row:eq(0)"));
+            await testUtils.dom.click($(".modal .o_data_cell:eq(0)"));
+            await testUtils.fields.editAndTrigger(
+                $('.modal input[name="display_name"]'),
+                "Donatello",
+                "change"
+            );
+            await testUtils.dom.click($(".modal .btn-primary"));
 
-        await testUtils.dom.click(form.$(".o_data_row:eq(1)"));
-        await testUtils.dom.click($(".modal .o_field_x2many_list_row_add a"));
-        await testUtils.fields.editAndTrigger(
-            $('.modal input[name="display_name"]'),
-            "Michelangelo",
-            "change"
-        );
-        await testUtils.dom.click($(".modal .btn-primary"));
+            await testUtils.dom.click(form.$(".o_data_row:eq(1)"));
+            await testUtils.dom.click($(".modal .o_field_x2many_list_row_add a"));
+            await testUtils.fields.editAndTrigger(
+                $('.modal input[name="display_name"]'),
+                "Michelangelo",
+                "change"
+            );
+            await testUtils.dom.click($(".modal .btn-primary"));
 
-        assert.strictEqual(
-            numUserOnchange,
-            2,
-            "there should 2 and only 2 onchange from closing the partner modal"
-        );
+            assert.strictEqual(
+                numUserOnchange,
+                2,
+                "there should 2 and only 2 onchange from closing the partner modal"
+            );
 
-        // check first record still has change
-        await testUtils.dom.click(form.$(".o_data_row:eq(0)"));
-        assert.strictEqual($(".modal .o_data_row").length, 1, "only 1 turtle for first partner");
-        assert.strictEqual(
-            $(".modal .o_data_row").text(),
-            "Donatello",
-            "first partner turtle is Donatello"
-        );
-        await testUtils.dom.click($(".modal .o_form_button_cancel"));
+            // check first record still has change
+            await testUtils.dom.click(form.$(".o_data_row:eq(0)"));
+            assert.strictEqual(
+                $(".modal .o_data_row").length,
+                1,
+                "only 1 turtle for first partner"
+            );
+            assert.strictEqual(
+                $(".modal .o_data_row").text(),
+                "Donatello",
+                "first partner turtle is Donatello"
+            );
+            await testUtils.dom.click($(".modal .o_form_button_cancel"));
 
-        // check second record still has changes
-        await testUtils.dom.click(form.$(".o_data_row:eq(1)"));
-        assert.strictEqual($(".modal .o_data_row").length, 1, "only 1 turtle for second partner");
-        assert.strictEqual(
-            $(".modal .o_data_row").text(),
-            "Michelangelo",
-            "second partner turtle is Michelangelo"
-        );
-        await testUtils.dom.click($(".modal .o_form_button_cancel"));
+            // check second record still has changes
+            await testUtils.dom.click(form.$(".o_data_row:eq(1)"));
+            assert.strictEqual(
+                $(".modal .o_data_row").length,
+                1,
+                "only 1 turtle for second partner"
+            );
+            assert.strictEqual(
+                $(".modal .o_data_row").text(),
+                "Michelangelo",
+                "second partner turtle is Michelangelo"
+            );
+            await testUtils.dom.click($(".modal .o_form_button_cancel"));
 
-        form.destroy();
-    });
+            form.destroy();
+        }
+    );
 
-    QUnit.skip("quickly switch between pages in one2many list", async function (assert) {
+    QUnit.skipWOWL("quickly switch between pages in one2many list", async function (assert) {
         assert.expect(2);
 
         this.data.partner.records[0].turtles = [1, 2, 3];
@@ -12521,7 +12601,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("many2many read, field context is properly sent", async function (assert) {
+    QUnit.skipWOWL("many2many read, field context is properly sent", async function (assert) {
         assert.expect(4);
 
         this.data.partner.fields.timmy.context = { hello: "world" };
@@ -12557,7 +12637,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("one2many with extra field from server not in form", async function (assert) {
+    QUnit.skipWOWL("one2many with extra field from server not in form", async function (assert) {
         assert.expect(6);
 
         var form = await createView({
@@ -12647,7 +12727,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("one2many invisible depends on parent field", async function (assert) {
+    QUnit.skipWOWL("one2many invisible depends on parent field", async function (assert) {
         assert.expect(4);
 
         this.data.partner.records[0].p = [2];
@@ -12713,7 +12793,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "one2many column visiblity depends on onchange of parent field",
         async function (assert) {
             assert.expect(3);
@@ -12772,7 +12852,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip("one2many column_invisible on view not inline", async function (assert) {
+    QUnit.skipWOWL("one2many column_invisible on view not inline", async function (assert) {
         assert.expect(4);
 
         this.data.partner.records[0].p = [2];
@@ -12840,7 +12920,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "one2many field in edit mode with optional fields and trash icon",
         async function (assert) {
             assert.expect(13);
@@ -12985,7 +13065,7 @@ QUnit.module("Fields", (hooks) => {
     );
 
     QUnit.module("TabNavigation");
-    QUnit.skip(
+    QUnit.skipWOWL(
         "when Navigating to a many2one with tabs, it receives the focus and adds a new line",
         async function (assert) {
             assert.expect(3);
@@ -13035,7 +13115,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "when Navigating to a many to one with tabs, it places the focus on the first visible field",
         async function (assert) {
             assert.expect(3);
@@ -13093,7 +13173,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "when Navigating to a many2one with tabs, not filling any field and hitting tab," +
             " we should not add a first line but navigate to the next control",
         async function (assert) {
@@ -13155,7 +13235,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "when Navigating to a many to one with tabs, editing in a popup, the popup should receive the focus then give it back",
         async function (assert) {
             assert.expect(3);
@@ -13222,7 +13302,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "when creating a new many2one on a x2many then discarding it immediately with ESCAPE, it should not crash",
         async function (assert) {
             assert.expect(1);
@@ -13280,7 +13360,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "navigating through an editable list with custom controls [REQUIRE FOCUS]",
         async function (assert) {
             assert.expect(5);
@@ -13364,7 +13444,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "add_record in an o2m with an OWL field: wait mounted before success",
         async function (assert) {
             assert.expect(7);

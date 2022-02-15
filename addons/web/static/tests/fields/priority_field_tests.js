@@ -243,7 +243,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skip("PriorityField tooltip", async function (assert) {
+    QUnit.skipWOWL("PriorityField tooltip", async function (assert) {
         assert.expect(2);
 
         const form = await makeView({
@@ -459,7 +459,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skip("PriorityField in editable list view", async function (assert) {
+    QUnit.skipWOWL("PriorityField in editable list view", async function (assert) {
         assert.expect(25);
 
         const list = await makeView({
@@ -671,7 +671,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         'PriorityField edited by the smart action "Set priority..."',
         async function (assert) {
             assert.expect(4);

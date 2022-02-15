@@ -228,7 +228,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("StatusBarField");
 
-    QUnit.skip("static statusbar widget on many2one field", async function (assert) {
+    QUnit.skipWOWL("static statusbar widget on many2one field", async function (assert) {
         assert.expect(5);
 
         serverData.models.partner.fields.trululu.domain = "[('bar', '=', True)]";
@@ -270,33 +270,36 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("static statusbar widget on many2one field with domain", async function (assert) {
-        assert.expect(1);
+    QUnit.skipWOWL(
+        "static statusbar widget on many2one field with domain",
+        async function (assert) {
+            assert.expect(1);
 
-        const form = await makeView({
-            type: "form",
-            resModel: "partner",
-            serverData,
-            arch:
-                '<form string="Partners">' +
-                '<header><field name="trululu" domain="[(\'user_id\',\'=\',uid)]" widget="statusbar"/></header>' +
-                "</form>",
-            mockRPC: function (route, args) {
-                if (args.method === "search_read") {
-                    assert.deepEqual(
-                        args.kwargs.domain,
-                        ["|", ["id", "=", 4], ["user_id", "=", 17]],
-                        "search_read should sent the correct domain"
-                    );
-                }
-                return this._super.apply(this, arguments);
-            },
-            resId: 1,
-            session: { user_context: { uid: 17 } },
-        });
+            const form = await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch:
+                    '<form string="Partners">' +
+                    '<header><field name="trululu" domain="[(\'user_id\',\'=\',uid)]" widget="statusbar"/></header>' +
+                    "</form>",
+                mockRPC: function (route, args) {
+                    if (args.method === "search_read") {
+                        assert.deepEqual(
+                            args.kwargs.domain,
+                            ["|", ["id", "=", 4], ["user_id", "=", 17]],
+                            "search_read should sent the correct domain"
+                        );
+                    }
+                    return this._super.apply(this, arguments);
+                },
+                resId: 1,
+                session: { user_context: { uid: 17 } },
+            });
 
-        form.destroy();
-    });
+            form.destroy();
+        }
+    );
 
     QUnit.test("clickable statusbar widget on many2one field", async function (assert) {
         assert.expect(5);
@@ -369,7 +372,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skip("statusbar with required modifier", async function (assert) {
+    QUnit.skipWOWL("statusbar with required modifier", async function (assert) {
         assert.expect(2);
 
         const form = await makeView({
@@ -423,7 +426,7 @@ QUnit.module("Fields", (hooks) => {
         assert.containsN(form.el, ".o_statusbar_status button:visible", 2);
     });
 
-    QUnit.skip("statusbar with domain but no value (create mode)", async function (assert) {
+    QUnit.skipWOWL("statusbar with domain but no value (create mode)", async function (assert) {
         assert.expect(1);
 
         serverData.models.partner.fields.trululu.domain = "[('bar', '=', True)]";
@@ -443,7 +446,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         "clickable statusbar should change m2o fetching domain in edit mode",
         async function (assert) {
             assert.expect(2);
@@ -509,7 +512,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip("statusbar with dynamic domain", async function (assert) {
+    QUnit.skipWOWL("statusbar with dynamic domain", async function (assert) {
         assert.expect(5);
 
         serverData.models.partner.fields.trululu.domain = "[('int_field', '>', qux)]";

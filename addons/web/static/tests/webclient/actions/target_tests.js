@@ -31,7 +31,7 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.module('Actions in target="new"');
 
-    QUnit.skip('can execute act_window actions in target="new"', async function (assert) {
+    QUnit.skipWOWL('can execute act_window actions in target="new"', async function (assert) {
         assert.expect(8);
         const mockRPC = async (route, args) => {
             assert.step((args && args.method) || route);
@@ -77,7 +77,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.verifySteps(["Close Action"]);
     });
 
-    QUnit.skip("footer buttons are moved to the dialog footer", async function (assert) {
+    QUnit.skipWOWL("footer buttons are moved to the dialog footer", async function (assert) {
         assert.expect(3);
         serverData.views["partner,false,form"] = `
       <form>
@@ -105,7 +105,7 @@ QUnit.module("ActionManager", (hooks) => {
         );
     });
 
-    QUnit.skip("Button with `close` attribute closes dialog", async function (assert) {
+    QUnit.skipWOWL("Button with `close` attribute closes dialog", async function (assert) {
         assert.expect(19);
         serverData.views = {
             "partner,false,form": `
@@ -203,7 +203,7 @@ QUnit.module("ActionManager", (hooks) => {
         delete core.action_registry.map.test;
     });
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         'footer buttons are updated when having another action in target "new"',
         async function (assert) {
             serverData.views["partner,false,form"] =
@@ -228,7 +228,7 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         'buttons of client action in target="new" and transition to MVC action',
         async function (assert) {
             const ClientAction = AbstractAction.extend({
@@ -254,7 +254,7 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         'button with confirm attribute in act_window action in target="new"',
         async function (assert) {
             serverData.actions[999] = {
@@ -455,7 +455,7 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.module('Actions in target="inline"');
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         'form views for actions in target="inline" open in edit mode',
         async function (assert) {
             const mockRPC = async (route, args) => {
@@ -477,7 +477,7 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
-    QUnit.skip("breadcrumbs and actions with target inline", async function (assert) {
+    QUnit.skipWOWL("breadcrumbs and actions with target inline", async function (assert) {
         serverData.actions[4].views = [[false, "form"]];
         serverData.actions[4].target = "inline";
         const webClient = await createWebClient({ serverData });

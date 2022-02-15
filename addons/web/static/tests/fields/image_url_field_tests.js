@@ -260,7 +260,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skip("ImageUrlField in subviews are loaded correctly", async function (assert) {
+    QUnit.skipWOWL("ImageUrlField in subviews are loaded correctly", async function (assert) {
         //assert.expect(6);
         assert.expect(2);
 

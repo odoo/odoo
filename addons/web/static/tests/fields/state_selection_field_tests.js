@@ -200,7 +200,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("StateSelectionField");
 
-    QUnit.skip("StateSelectionField in form view", async function (assert) {
+    QUnit.skipWOWL("StateSelectionField in form view", async function (assert) {
         assert.expect(21);
 
         var form = await createView({
@@ -338,7 +338,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("StateSelectionField with readonly modifier", async function (assert) {
+    QUnit.skipWOWL("StateSelectionField with readonly modifier", async function (assert) {
         assert.expect(4);
 
         var form = await createView({
@@ -359,72 +359,75 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("StateSelectionField for list view with hide_label option", async function (assert) {
-        assert.expect(6);
+    QUnit.skipWOWL(
+        "StateSelectionField for list view with hide_label option",
+        async function (assert) {
+            assert.expect(6);
 
-        Object.assign(this.data.partner.fields, {
-            graph_type: {
-                string: "Graph Type",
-                type: "selection",
-                selection: [
-                    ["line", "Line"],
-                    ["bar", "Bar"],
-                ],
-            },
-        });
-        this.data.partner.records[0].graph_type = "bar";
-        this.data.partner.records[1].graph_type = "line";
+            Object.assign(this.data.partner.fields, {
+                graph_type: {
+                    string: "Graph Type",
+                    type: "selection",
+                    selection: [
+                        ["line", "Line"],
+                        ["bar", "Bar"],
+                    ],
+                },
+            });
+            this.data.partner.records[0].graph_type = "bar";
+            this.data.partner.records[1].graph_type = "line";
 
-        const list = await createView({
-            View: ListView,
-            model: "partner",
-            data: this.data,
-            arch: `
+            const list = await createView({
+                View: ListView,
+                model: "partner",
+                data: this.data,
+                arch: `
                 <tree>
                     <field name="graph_type" widget="state_selection" options="{'hide_label': True}"/>
                     <field name="selection" widget="state_selection"/>
                 </tree>`,
-        });
+            });
 
-        assert.containsN(
-            list,
-            ".o_state_selection_cell .o_selection > a span.o_status",
-            10,
-            "should have ten status selection widgets"
-        );
-        assert.containsN(
-            list,
-            ".o_state_selection_cell .o_selection[name=selection] > span.align-middle",
-            5,
-            "should have five label on selection widgets"
-        );
-        assert.containsOnce(
-            list,
-            ".o_state_selection_cell .o_selection[name=selection] > span.align-middle:contains(Done)",
-            "should have one Done status label"
-        );
-        assert.containsN(
-            list,
-            ".o_state_selection_cell .o_selection[name=selection] > span.align-middle:contains(Normal)",
-            3,
-            "should have three Normal status label"
-        );
-        assert.containsN(
-            list,
-            ".o_state_selection_cell .o_selection[name=graph_type] > a span.o_status",
-            5,
-            "should have five status selection widgets"
-        );
-        assert.containsNone(
-            list,
-            ".o_state_selection_cell .o_selection[name=graph_type] > span.align-middle",
-            "should not have status label in selection widgets"
-        );
+            assert.containsN(
+                list,
+                ".o_state_selection_cell .o_selection > a span.o_status",
+                10,
+                "should have ten status selection widgets"
+            );
+            assert.containsN(
+                list,
+                ".o_state_selection_cell .o_selection[name=selection] > span.align-middle",
+                5,
+                "should have five label on selection widgets"
+            );
+            assert.containsOnce(
+                list,
+                ".o_state_selection_cell .o_selection[name=selection] > span.align-middle:contains(Done)",
+                "should have one Done status label"
+            );
+            assert.containsN(
+                list,
+                ".o_state_selection_cell .o_selection[name=selection] > span.align-middle:contains(Normal)",
+                3,
+                "should have three Normal status label"
+            );
+            assert.containsN(
+                list,
+                ".o_state_selection_cell .o_selection[name=graph_type] > a span.o_status",
+                5,
+                "should have five status selection widgets"
+            );
+            assert.containsNone(
+                list,
+                ".o_state_selection_cell .o_selection[name=graph_type] > span.align-middle",
+                "should not have status label in selection widgets"
+            );
 
-        list.destroy();
-    });
+            list.destroy();
+        }
+    );
 
-    QUnit.skip("StateSelectionField in editable list view", async function (assert) {
+    QUnit.skipWOWL("StateSelectionField in editable list view", async function (assert) {
         assert.expect(33);
 
         var list = await createView({
@@ -607,7 +610,7 @@ QUnit.module("Fields", (hooks) => {
         list.destroy();
     });
 
-    QUnit.skip(
+    QUnit.skipWOWL(
         'StateSelectionField edited by the smart action "Set kanban state..."',
         async function (assert) {
             assert.expect(4);

@@ -222,7 +222,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skip("ImageField in subviews is loaded correctly", async function (assert) {
+    QUnit.skipWOWL("ImageField in subviews is loaded correctly", async function (assert) {
         assert.expect(6);
 
         serverData.models.partner.records[0].__last_update = "2017-02-08 10:00:00";
@@ -284,7 +284,7 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps(["The dialog's image should have been fetched"]);
     });
 
-    QUnit.skip("ImageField in x2many list is loaded correctly", async function (assert) {
+    QUnit.skipWOWL("ImageField in x2many list is loaded correctly", async function (assert) {
         assert.expect(2);
 
         serverData.models.partner_type.fields.image = { name: "image", type: "binary" };
@@ -316,7 +316,7 @@ QUnit.module("Fields", (hooks) => {
         assert.containsOnce(form, "tr.o_data_row", "There should be one record in the many2many");
     });
 
-    QUnit.skip("ImageField with required attribute", async function (assert) {
+    QUnit.skipWOWL("ImageField with required attribute", async function (assert) {
         assert.expect(2);
 
         const form = await makeView({

@@ -226,7 +226,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("Many2ManyBinaryMultiFilesField");
 
-    QUnit.skip("widget many2many_binary", async function (assert) {
+    QUnit.skipWOWL("widget many2many_binary", async function (assert) {
         assert.expect(16);
         this.data["ir.attachment"] = {
             fields: {
@@ -343,7 +343,7 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("name_create in form dialog", async function (assert) {
+    QUnit.skipWOWL("name_create in form dialog", async function (assert) {
         assert.expect(2);
 
         var form = await createView({
