@@ -2670,7 +2670,13 @@ var SnippetsMenu = Widget.extend({
      * @param {function} ev.data.exec
      */
     _onSnippetEditionRequest: function (ev) {
-        this._execWithLoadingEffect(ev.data.exec, true);
+        if (ev.data.optionsLoader) {
+            this._execWithLoadingEffect(() => {
+                this._execWithLoadingEffect(ev.data.exec, true);
+            }, false);
+        } else {
+            this._execWithLoadingEffect(ev.data.exec, true);
+        }
     },
     /**
      * @private
