@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.FormView" owl="1">
-        <Layout viewType="'form'" useSampleModel="model.useSampleModel">
+        <Layout viewType="'form'" useSampleModel="model.useSampleModel" className="props.className">
             <t t-set-slot="control-panel-bottom-left">
                 <t t-call="{{ constructor.buttonTemplate }}" />
                 <t t-if="props.info.actionMenus and model.root.resId">
