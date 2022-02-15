@@ -22,6 +22,9 @@ QUnit.module("Fields", (hooks) => {
                         {
                             foo: "yop",
                         },
+                        {
+                            foo: "blip",
+                        },
                     ],
                 },
             },
@@ -32,7 +35,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("PhoneField");
 
-    QUnit.skip("PhoneField in form view on normal screens", async function (assert) {
+    QUnit.test("PhoneField in form view on normal screens", async function (assert) {
         assert.expect(6);
 
         const form = await makeView({
@@ -55,7 +58,7 @@ QUnit.module("Fields", (hooks) => {
             // },
         });
 
-        var phone = form.el.querySelector("a.o-phone-field");
+        const phone = form.el.querySelector("a.o-phone-field");
         assert.containsOnce(
             form,
             phone,
@@ -68,17 +71,17 @@ QUnit.module("Fields", (hooks) => {
         await click(form.el.querySelector(".o_form_button_edit"));
         assert.containsOnce(
             form,
-            'input[type="phone"].o_field_widget',
+            'input[type="phone"]',
             "should have an input for the phone field"
         );
         assert.strictEqual(
-            form.el.querySelector('input[type="phone"].o_field_widget').value,
+            form.el.querySelector('input[type="phone"]').value,
             "yop",
             "input should contain field value in edit mode"
         );
 
         // change value in edit mode
-        await editInput(form.el, "input[type='phone'].o_field_widget", "new");
+        await editInput(form.el, "input[type='phone']", "new");
 
         // save
         await click(form.el.querySelector(".o_form_button_save"));
@@ -89,10 +92,10 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skip("PhoneField in editable list view on normal screens", async function (assert) {
+    QUnit.test("PhoneField in editable list view on normal screens", async function (assert) {
         assert.expect(8);
 
-        var list = await makeView({
+        const list = await makeView({
             serverData,
             type: "list",
             resModel: "partner",
@@ -104,7 +107,7 @@ QUnit.module("Fields", (hooks) => {
             // },
         });
 
-        assert.containsN(list, "tbody td:not(.o_list_record_selector)", 5);
+        assert.containsN(list, "tbody td:not(.o_list_record_selector).o_data_cell", 2);
         assert.strictEqual(
             list.el.querySelector("tbody td:not(.o_list_record_selector) a").innerText,
             "yop",
@@ -114,23 +117,23 @@ QUnit.module("Fields", (hooks) => {
         assert.containsN(
             list,
             "a.o_field_widget.o_form_uri.o-phone-field",
-            5,
+            2,
             "should have the correct classnames"
         );
 
         // Edit a line and check the result
-        var cell = list.el.querySelector("tbody td:not(.o_list_record_selector)");
+        let cell = list.el.querySelector("tbody td:not(.o_list_record_selector)");
         await click(cell);
-        assert.hasClass(cell.parent(), "o_selected_row", "should be set as edit mode");
+        assert.hasClass(cell.parentElement, "o_selected_row", "should be set as edit mode");
         assert.strictEqual(
-            cell.find("input").value,
+            cell.querySelector("input").value,
             "yop",
             "should have the corect value in internal input"
         );
         await editInput(cell, "input", "new");
 
         // save
-        await click(form.el.querySelector(".o_form_button_save"));
+        await click(list.el.querySelector(".o_list_button_save"));
         cell = list.el.querySelector("tbody td:not(.o_list_record_selector)");
         assert.doesNotHaveClass(
             cell.parentElement,
@@ -145,7 +148,7 @@ QUnit.module("Fields", (hooks) => {
         assert.containsN(
             list,
             "a.o_field_widget.o_form_uri.o-phone-field",
-            5,
+            2,
             "should still have links with correct classes"
         );
     });
@@ -167,13 +170,13 @@ QUnit.module("Fields", (hooks) => {
                 "</sheet>" +
                 "</form>",
         });
-        await click(form.el.querySelector("input[name=display_name]"));
+        await click(form.el.querySelector(".o_field_widget[name=display_name]"));
         assert.strictEqual(
             document.activeElement,
-            form.el.querySelector('input[name="display_name"]'),
+            form.el.querySelector('.o_field_widget[name="display_name"]'),
             "display_name should be focused"
         );
-        await triggerEvent(form.el, 'input[name="display_name"]', "keydown", {
+        await triggerEvent(form.el, '.o_field_widget[name="display_name"]', "keydown", {
             key: "Tab",
         });
         assert.strictEqual(
