@@ -212,6 +212,7 @@
             <field name="project_id" ref="project.project_project_1"/>
             <field name="name">Office planning</field>
             <field name="stage_id" ref="project_stage_2"/>
+            <field name="color">7</field>
             <field name="create_date" eval="DateTime.now() - relativedelta(months=5)"/>
         </record>
 
@@ -369,6 +370,7 @@
             <field name="kanban_state">blocked</field>
             <field name="create_date" eval="DateTime.now() - relativedelta(months=5)"/>
             <field name="date_deadline" eval="DateTime.now() + relativedelta(days=2)"/>
+            <field name="color">1</field>
         </record>
         <record id="project_1_task_5_mail_message_1" model="mail.message">
             <field name="model">project.task</field>
@@ -410,6 +412,7 @@
             <field name="stage_id" ref="project_stage_1"/>
             <field name="tag_ids" eval="[Command.set([ref('project_tags_01')])]"/>
             <field name="create_date" eval="DateTime.now() - relativedelta(months=5)"/>
+            <field name="color">11</field>
         </record>
         <record id="project_1_task_6_mail_message_1" model="mail.message">
             <field name="model">project.task</field>
@@ -448,6 +451,7 @@
             <field name="stage_id" ref="project_stage_1"/>
             <field name="create_date" eval="DateTime.now() - relativedelta(months=5)"/>
             <field name="date_deadline" eval="DateTime.now() + relativedelta(days=6)"/>
+            <field name="color">9</field>
         </record>
         <record id="project_1_task_7_mail_message_1" model="mail.message">
             <field name="model">project.task</field>
@@ -800,6 +804,7 @@ Send it ASAP, its urgent.</field>
             <field name="create_date" eval="DateTime.now() - relativedelta(months=5)"/>
             <field name="depend_on_ids" eval="[Command.link(ref('project.project_2_task_3'))]"/>
             <field name="date_deadline" eval="DateTime.now() + relativedelta(days=1)"/>
+            <field name="color">2</field>
         </record>
         <record id="project_2_task_4_mail_message_1" model="mail.message">
             <field name="model">project.task</field>
@@ -832,6 +837,7 @@ Send it ASAP, its urgent.</field>
             <field name="create_date" eval="DateTime.now() - relativedelta(months=5)"/>
             <field name="depend_on_ids" eval="[Command.link(ref('project.project_2_task_3'))]"/>
             <field name="date_deadline" eval="DateTime.now() + relativedelta(days=5)"/>
+            <field name="color">2</field>
         </record>
         <record id="project_2_task_5_mail_message_1" model="mail.message">
             <field name="model">project.task</field>
@@ -861,6 +867,7 @@ Send it ASAP, its urgent.</field>
             <field name="create_date" eval="DateTime.now() - relativedelta(months=5)"/>
             <field name="depend_on_ids" eval="[Command.link(ref('project.project_2_task_3'))]"/>
             <field name="date_deadline" eval="DateTime.now() + relativedelta(days=4)"/>
+            <field name="color">11</field>
         </record>
         <record id="project_2_task_6_mail_message_1" model="mail.message">
             <field name="model">project.task</field>
@@ -941,6 +948,7 @@ Send it ASAP, its urgent.</field>
             <field name="depend_on_ids"
                    eval="[Command.link(ref('project.project_2_task_7')), Command.link(ref('project.project_2_task_5')), Command.link(ref('project.project_2_task_4')), Command.link(ref('project.project_2_task_6'))]"/>
             <field name="date_deadline" eval="DateTime.now() + relativedelta(days=9)"/>
+            <field name="color">7</field>
         </record>
         <record id="project_2_task_8_mail_message_1" model="mail.message">
             <field name="model">project.task</field>
@@ -972,6 +980,7 @@ Send it ASAP, its urgent.</field>
             <field name="create_date" eval="DateTime.now() - relativedelta(months=5)"/>
             <field name="depend_on_ids" eval="[Command.link(ref('project.project_2_task_8'))]"/>
             <field name="date_deadline" eval="DateTime.now() + relativedelta(days=15)"/>
+            <field name="color">4</field>
         </record>
 
         <record id="project_2_task_10" model="project.task">
@@ -985,6 +994,7 @@ Send it ASAP, its urgent.</field>
             <field name="create_date" eval="DateTime.now() - relativedelta(months=5)"/>
             <field name="depend_on_ids" eval="[Command.link(ref('project.project_2_task_8'))]"/>
             <field name="date_deadline" eval="DateTime.now() + relativedelta(days=15)"/>
+            <field name="color">5</field>
         </record>
 
         <record id="project_2_task_11" model="project.task">
@@ -1058,6 +1068,7 @@ Send it ASAP, its urgent.</field>
             <field name="date_deadline" eval="DateTime.today() - relativedelta(days=5)"/>
             <field name="stage_id" ref="project_stage_2"/>
             <field name="tag_ids" eval="[Command.set([ref('project_tags_01')])]"/>
+            <field name="color">9</field>
         </record>
 
         <record id="project_3_task_4" model="project.task">
