@@ -93,7 +93,7 @@ QUnit.module("Form Compiler", (hooks) => {
         assert.areContentEquivalent(compileTemplate(arch), expected);
     });
 
-    QUnit.test("properly compile notebook", async (assert) => {
+    QUnit.skipWOWL("properly compile notebook", async (assert) => {
         const arch = /*xml*/ `
                 <form>
                     <notebook>
