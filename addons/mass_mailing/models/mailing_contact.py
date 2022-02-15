@@ -192,3 +192,10 @@ class MassMailingContact(models.Model):
         action['context'] = ctx
 
         return action
+
+    @api.model
+    def get_import_templates(self):
+        return [{
+            'label': _('Import Template for Mailing List Contacts'),
+            'template': '/mass_mailing/static/xls/mailing_contact.xls'
+        }]
