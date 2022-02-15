@@ -39,6 +39,24 @@ msgid "Free Shipping"
 msgstr "Miễn phí giao hàng"
 
 #. module: delivery
+#: code:addons/delivery/models/delivery_grid.py:0
+#, python-format
+msgid "%s %.02f times %s"
+msgstr "%s %.02f lần %s"
+
+#. module: delivery
+#: code:addons/delivery/models/delivery_grid.py:0
+#, python-format
+msgid "%s fixed price %.02f"
+msgstr "%s giá cố định %.02f"
+
+#. module: delivery
+#: code:addons/delivery/models/delivery_grid.py:0
+#, python-format
+msgid "%s fixed price %.02f plus %.02f times %s"
+msgstr "%s giá cố định %.02f cộng %.02f lần %s"
+
+#. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_quant_package_weight_form
 msgid "(computed:"
 msgstr "(được tính toán:"
@@ -66,18 +84,18 @@ msgid ""
 "<span class=\"o_warning_text\">Test</span>\n"
 "                                    <span class=\"o_stat_text\">Environment</span>"
 msgstr ""
-"<span class=\"o_warning_text\">Kiểm tra</span>\n"
 "<span class=\"o_stat_text\">Môi trường</span>"
+"<span class=\"o_warning_text\">Kiểm tra</span>\n"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "<span class=\"text-danger\">No debug</span>"
-msgstr "<span class=\"text-danger\">No debug</span>"
+msgstr "<span class=\"text-danger\">Không lỗi</span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "<span class=\"text-success\">Debug requests</span>"
-msgstr "<span class=\"text-success\">Debug requests</span>"
+msgstr "<span class=\"text-success\">Yêu cầu gỡ lỗi</span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -85,24 +103,24 @@ msgid ""
 "<span class=\"text-success\">Production</span>\n"
 "                                    <span class=\"o_stat_text\">Environment</span>"
 msgstr ""
-"<span class=\"text-success\">Sản xuất</span>\n"
 "<span class=\"o_stat_text\">Môi trường</span>"
+"<span class=\"text-success\">Sản xuất</span>\n"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.stock_report_delivery_package_section_line_inherit_delivery
 msgid "<span> - Weight (estimated): </span>"
-msgstr "<span> - Weight (estimated): </span>"
+msgstr "<span> - Khối lượng (dự kiến): </span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_stock_report_delivery_no_package_section_line
 #: model_terms:ir.ui.view,arch_db:delivery.stock_report_delivery_package_section_line_inherit_delivery
 msgid "<span> - Weight: </span>"
-msgstr "<span> - Weight: </span>"
+msgstr "<span> - Khối lượng: </span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_small_delivery
 msgid "<span>Shipping Weight: </span>"
-msgstr "<span>Shipping Weight: </span>"
+msgstr "<span>Khối lượng vận chuyển: </span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_document2
@@ -130,7 +148,7 @@ msgid ""
 "<strong>Total Weight:</strong>\n"
 "                <br/>"
 msgstr ""
-"<strong>Total Weight:</strong>\n"
+"<strong>Tổng khối lượng:</strong>\n"
 "                <br/>"
 
 #. module: delivery
@@ -177,7 +195,7 @@ msgstr "Thêm nhà vận chuyển"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__amount
 msgid "Amount"
-msgstr "Tổng tiền"
+msgstr "Giá trị"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__amount
@@ -185,7 +203,7 @@ msgid ""
 "Amount of the order to benefit from a free shipping, expressed in the "
 "company currency"
 msgstr ""
-"Tổng giá trị của lợi nhuận thu được từ một vận chuyển miễn phí, tính theo "
+"Tổng giá trị của đơn hàng để có vận chuyển miễn phí, tính theo "
 "tiền tệ công ty"
 
 #. module: delivery
@@ -232,7 +250,7 @@ msgstr "Nhà vận chuyển"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_choose_delivery_carrier__carrier_id
 msgid "Choose the method to deliver your goods"
-msgstr "Choose the method to deliver your goods"
+msgstr "Chọn phương thức để giao hàng của bạn"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__company_id
@@ -296,7 +314,7 @@ msgstr "Gỡ lỗi đăng nhập"
 #: model:ir.model.fields,help:delivery.field_res_partner__property_delivery_carrier_id
 #: model:ir.model.fields,help:delivery.field_res_users__property_delivery_carrier_id
 msgid "Default delivery method used in sales orders."
-msgstr "Default delivery method used in sales orders."
+msgstr "Phương thức giao hàng mặc định sử dụng ở đơn bán."
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -316,7 +334,7 @@ msgstr "Dịch vụ giao hàng"
 #. module: delivery
 #: model:ir.model,name:delivery.model_choose_delivery_carrier
 msgid "Delivery Carrier Selection Wizard"
-msgstr "Delivery Carrier Selection Wizard"
+msgstr "Đồ thuật lựa chọn đơn vị vận chuyển"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
@@ -378,7 +396,7 @@ msgstr "Tỉ lệ giao thành công"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__delivery_set
 msgid "Delivery Set"
-msgstr "Delivery Set"
+msgstr "Trạng thái giao hàng"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__recompute_delivery_price
@@ -454,13 +472,13 @@ msgid ""
 "Estimated Cost: the customer will be invoiced the estimated cost of the shipping.\n"
 "Real Cost: the customer will be invoiced the real cost of the shipping, the cost of the shipping will be updated on the SO after the delivery."
 msgstr ""
-"Estimated Cost: the customer will be invoiced the estimated cost of the shipping.\n"
-"Real Cost: the customer will be invoiced the real cost of the shipping, the cost of the shipping will be updated on the SO after the delivery."
+"Phí dự kiến: khách hàng sẽ được xuất hóa đơn phí vận chuyển dự kiến.\n"
+"Phí thực tế: khách sẽ được được xuất hóa đơn phí vận chuyển thực tế. Phí vận chuyển sẽ được cập nhật và đơn bán sau khi giao hàng."
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__invoice_policy__estimated
 msgid "Estimated cost"
-msgstr "Estimated cost"
+msgstr "Phí dự kiến"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_sale_order__carrier_id
@@ -498,17 +516,17 @@ msgstr "Miễn phí nếu giá trị đặt hàng lớn hơn"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__return_label_on_delivery
 msgid "Generate Return Label"
-msgstr "Generate Return Label"
+msgstr "Tạo nhãn trả hàng"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__integration_level__rate
 msgid "Get Rate"
-msgstr "Lấy đánh giá"
+msgstr "Tính phí"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__integration_level__rate_and_ship
 msgid "Get Rate and Create Shipment"
-msgstr "Nhận tỷ lệ và tạo lô hàng"
+msgstr "Tính phí và Tạo lô hàng"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
@@ -571,7 +589,7 @@ msgstr "Cấp độ Tích hợp"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__invoicing_message
 msgid "Invoicing Message"
-msgstr "Invoicing Message"
+msgstr "Thông điệp xuất hóa đơn"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__invoice_policy
@@ -581,12 +599,12 @@ msgstr "Chính sách xuất hoá đơn"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__is_return_picking
 msgid "Is Return Picking"
-msgstr "Is Return Picking"
+msgstr "Là Lô hàng trả lại"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_line__is_delivery
 msgid "Is a Delivery"
-msgstr "Là Kiểu giao hàng"
+msgstr "Là Lô hàng giao"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier____last_update
@@ -635,7 +653,7 @@ msgstr "Chiều dài phải dương"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging__length_uom_name
 msgid "Length unit of measure label"
-msgstr "Length unit of measure label"
+msgstr "Nhãn đơn vị tính chiều dài"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__debug_logging
@@ -650,12 +668,12 @@ msgstr "Biên Lợi nhuận"
 #. module: delivery
 #: model:ir.model.constraint,message:delivery.constraint_delivery_carrier_margin_not_under_100_percent
 msgid "Margin cannot be lower than -100%"
-msgstr "Ký quỹ không thể thấp hơn -100%"
+msgstr "Biên Lợi nhuận không thể thấp hơn -100%"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Margin on Rate"
-msgstr "Biên độ đánh giá"
+msgstr "Tỷ suất biên lợi nhuận"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging__max_weight
@@ -777,12 +795,12 @@ msgstr "Quy tắc Giá"
 #: model_terms:ir.ui.view,arch_db:delivery.sale_order_portal_content_inherit_sale_stock_inherit_website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Print Return Label"
-msgstr "Print Return Label"
+msgstr "In nhãn trả về"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
-msgstr "Chuyển sản phẩm (Chi tiết phiếu kho)"
+msgstr "Luân chuyển sản phẩm (Chi tiết phiếu kho)"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_product_packaging
@@ -816,17 +834,17 @@ msgstr "Số lượng"
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__invoice_policy__real
 msgid "Real cost"
-msgstr "Real cost"
+msgstr "Phí thực tế"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__return_label_ids
 msgid "Return Label"
-msgstr "Return Label"
+msgstr "Nhãn trả hàng"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__get_return_label_from_portal
 msgid "Return Label Accessible from Customer Portal"
-msgstr "Return Label Accessible from Customer Portal"
+msgstr "Nhãn trả hàng có thể truy cập được ở Cổng thông tin khách hàng"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_return_picking
@@ -873,13 +891,14 @@ msgstr "Trình tự"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__is_all_service
 msgid "Service Product"
-msgstr "Service Product"
+msgstr "Sản phẩm kiểu dịch vụ"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__prod_environment
 msgid "Set to True if your credentials are certified for production."
 msgstr ""
-"Đặt thành Đúng nếu thông tin xác thực của bạn được chứng nhận để sản xuất."
+"Đặt thành True nếu thông tin xác thực của bạn được chứng nhận để đưa vào môi"
+" trường sản xuất."
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:0
@@ -888,8 +907,8 @@ msgid ""
 "Shipment sent to carrier %(carrier_name)s for shipping with tracking number "
 "%(ref)s<br/>Cost: %(price).2f %(currency)s"
 msgstr ""
-"Shipment sent to carrier %(carrier_name)s for shipping with tracking number "
-"%(ref)s<br/>Cost: %(price).2f %(currency)s"
+"Lô hàng đã được gửi cho nhà vận chuyển %(carrier_name)s để bàn giao với mã "
+"truy vết %(ref)s<br/>Chi phí: %(price).2f %(currency)s"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__carrier_price
@@ -904,7 +923,7 @@ msgstr "Thông tin Giao hàng"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__carrier_id
 msgid "Shipping Method"
-msgstr "Shipping Method"
+msgstr "Phương thức Giao hàng"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
@@ -913,7 +932,7 @@ msgstr "Shipping Method"
 #: model:ir.ui.menu,name:delivery.sale_menu_action_delivery_carrier_form
 #: model_terms:ir.ui.view,arch_db:delivery.res_config_settings_view_form
 msgid "Shipping Methods"
-msgstr "Phương thức giao hàng"
+msgstr "Phương thức Giao hàng"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__shipping_weight
@@ -928,8 +947,6 @@ msgid ""
 "Standardized code for international shipping and goods declaration. At the "
 "moment, only used for the FedEx shipping provider."
 msgstr ""
-"Standardized code for international shipping and goods declaration. At the "
-"moment, only used for the FedEx shipping provider."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__state_ids
@@ -953,24 +970,25 @@ msgstr "Poste"
 msgid ""
 "The return label can be downloaded by the customer from the customer portal."
 msgstr ""
-"The return label can be downloaded by the customer from the customer portal."
+"Nhãn trả lại hàng có thể được tải về bởi khách hàng từ cổng thông tin khách "
+"hàng."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__return_label_on_delivery
 msgid "The return label is automatically generated at the delivery."
-msgstr "The return label is automatically generated at the delivery."
+msgstr "Nhãn trả lại hàng được tự động sinh ra tại thời điểm giao hàng."
 
 #. module: delivery
 #: code:addons/delivery/models/delivery_carrier.py:0
 #, python-format
 msgid "The shipping is free since the order amount exceeds %.2f."
-msgstr "The shipping is free since the order amount exceeds %.2f."
+msgstr "Miễn phí vận chuyển khi giá trị dơn hàng đạt %.2f."
 
 #. module: delivery
 #: code:addons/delivery/wizard/choose_delivery_carrier.py:0
 #, python-format
 msgid "The shipping price will be set once the delivery is done."
-msgstr "The shipping price will be set once the delivery is done."
+msgstr "Giá vận chuyển sẽ được thiết lập khi hoàn thành viên giao hàng."
 
 #. module: delivery
 #: code:addons/delivery/wizard/choose_delivery_package.py:0
@@ -1007,7 +1025,7 @@ msgstr "Tỷ lệ phần trăm này sẽ được thêm vào giá vận chuyển
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_quant_package__weight
 msgid "Total weight of all the products contained in the package."
-msgstr "Total weight of all the products contained in the package."
+msgstr "Tổng khối lượng tất cả hàng hóa chứa trong gói."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_picking__shipping_weight
@@ -1016,29 +1034,29 @@ msgid ""
 "shipping weight specified will default to their products' total weight. This"
 " is the weight used to compute the cost of the shipping."
 msgstr ""
-"Total weight of packages and products not in a package. Packages with no "
-"shipping weight specified will default to their products' total weight. This"
-" is the weight used to compute the cost of the shipping."
+"Tổng khối lượng các gói và hàng hóa chưa đóng gói. Các gói mà không có khối "
+"lượng được thiết lập sẽ mặc định lấy tổng khối lượng hàng hóa mà nó chứa. "
+"Các thông tin này được dùng để tính phí vận chuyển."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_picking__weight_bulk
 msgid "Total weight of products which are not in a package."
-msgstr "Total weight of products which are not in a package."
+msgstr "Tổng khối lượng hàng hóa chưa đóng gói."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_quant_package__shipping_weight
 msgid "Total weight of the package."
-msgstr "Total weight of the package."
+msgstr "Tổng khối lượng các gói."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_picking__weight
 msgid "Total weight of the products in the picking."
-msgstr "Total weight of the products in the picking."
+msgstr "Tổng khối lượng hàng hóa trong lô hàng."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
 msgid "Trackers URL"
-msgstr "Trackers URL"
+msgstr ""
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
@@ -1085,7 +1103,7 @@ msgstr "Cập nhật"
 #: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
 #, python-format
 msgid "Update shipping cost"
-msgstr "Update shipping cost"
+msgstr "Cập nhật phí vận chuyển"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__variable
@@ -1127,7 +1145,7 @@ msgstr "Khối lượng Vận chuyển"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Weight for shipping"
-msgstr "Weight for shipping"
+msgstr "Khối lượng Vận chuyển"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__weight_uom_name
@@ -1187,3 +1205,9 @@ msgstr "Đến Zip"
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "e.g. UPS Express"
 msgstr "vd: UPS Express"
+
+#. module: delivery
+#: code:addons/delivery/models/delivery_grid.py:0
+#, python-format
+msgid "if %s %s %.02f then"
+msgstr "nếu %s %s %.02f thì"
