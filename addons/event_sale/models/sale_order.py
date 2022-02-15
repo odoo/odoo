@@ -93,10 +93,10 @@ class SaleOrderLine(models.Model):
         super(SaleOrderLine, self).unlink()
 
     def _cancel_associated_registrations(self):
-        self.env['event.registration'].search([('sale_order_line_id', 'in', self.ids)]).button_reg_cancel()
+        self.env['event.registration'].sudo().search([('sale_order_line_id', 'in', self.ids)]).button_reg_cancel()
 
     def _unlink_associated_registrations(self):
-        self.env['event.registration'].search([('sale_order_line_id', 'in', self.ids)]).unlink()
+        self.env['event.registration'].sudo().search([('sale_order_line_id', 'in', self.ids)]).unlink()
 
     def get_sale_order_line_multiline_description_sale(self, product):
         """ We override this method because we decided that:
