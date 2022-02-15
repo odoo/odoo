@@ -2,16 +2,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
-import functools
 import json
-import logging
 import math
 import re
 
 from werkzeug import urls
 
-from odoo import fields as odoo_fields, http, tools, _, SUPERUSER_ID
-from odoo.exceptions import ValidationError, AccessError, MissingError, UserError, AccessDenied
+from odoo import http, tools, _, SUPERUSER_ID
+from odoo.exceptions import AccessDenied, AccessError, MissingError, UserError, ValidationError
 from odoo.http import content_disposition, Controller, request, route
 from odoo.tools import consteq
 
@@ -19,18 +17,18 @@ from odoo.tools import consteq
 # Misc tools
 # --------------------------------------------------
 
-_logger = logging.getLogger(__name__)
 def pager(url, total, page=1, step=30, scope=5, url_args=None):
-    """ Generate a dict with required value to render `website.pager` template. This method compute
-        url, page range to display, ... in the pager.
-        :param url : base url of the page link
-        :param total : number total of item to be splitted into pages
-        :param page : current page
-        :param step : item per page
-        :param scope : number of page to display on pager
-        :param url_args : additionnal parameters to add as query params to page url
-        :type url_args : dict
-        :returns dict
+    """ Generate a dict with required value to render `website.pager` template.
+
+    This method computes url, page range to display, ... in the pager.
+
+    :param str url : base url of the page link
+    :param int total : number total of item to be splitted into pages
+    :param int page : current page
+    :param int step : item per page
+    :param int scope : number of page to display on pager
+    :param dict url_args : additionnal parameters to add as query params to page url
+    :returns dict
     """
     # Compute Pager
     page_count = int(math.ceil(float(total) / step))
@@ -146,13 +144,13 @@ class CustomerPortal(Controller):
         Does not include the record counts.
         """
         # get customer sales rep
-        sales_user = False
-        partner = request.env.user.partner_id
-        if partner.user_id and not partner.user_id._is_public():
-            sales_user = partner.user_id
+        sales_user_sudo = request.env['res.users']
+        partner_sudo = request.env.user.partner_id
+        if partner_sudo.user_id and not partner_sudo.user_id._is_public():
+            sales_user_sudo = partner_sudo.user_id
 
         return {
-            'sales_user': sales_user,
+            'sales_user': sales_user_sudo,
             'page_name': 'home',
         }
 
@@ -160,7 +158,7 @@ class CustomerPortal(Controller):
         """Values for /my & /my/home routes template rendering.
 
         Includes the record count for the displayed badges.
-        where 'coutners' is the list of the displayed badges
+        where 'counters' is the list of the displayed badges
         and so the list to compute.
         """
         return {}
@@ -250,6 +248,8 @@ class CustomerPortal(Controller):
         except UserError as e:
             return {'errors': {'password': e.name}}
         except AccessDenied as e:
+            # FIXME XMO dead code since https://github.com/odoo/odoo/pull/45723
+            # AccessDenied is an UserError now
             msg = e.args[0]
             if msg == AccessDenied().args[0]:
                 msg = _('The old password you provided is incorrect, your password was not changed.')
@@ -385,6 +385,15 @@ class CustomerPortal(Controller):
         return error, error_message
 
     def _document_check_access(self, model_name, document_id, access_token=None):
+        """Check if current user is allowed to access the specified record.
+
+        :param str model_name: model of the requested record
+        :param int document_id: id of the requested record
+        :param str access_token: record token to check if user isn't allowed to read requested record
+        :return: expected record, SUDOED, with SUPERUSER context
+        :raise MissingError: record not found in database, might have been deleted
+        :raise AccessError: current user isn't allowed to read requested document (and no valid token was given)
+        """
         document = request.env[model_name].browse([document_id])
         document_sudo = document.with_user(SUPERUSER_ID).exists()
         if not document_sudo:
