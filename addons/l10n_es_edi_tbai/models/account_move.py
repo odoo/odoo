@@ -20,6 +20,7 @@ class AccountMove(models.Model):
     )
     l10n_es_tbai_chain_index = fields.Integer(
         string="Unique number representing invoice index in chain (TicketBai).",
+        help="This number is set if and only if an in-chain XML was submitted and did not error.",
         store=True, copy=False, readonly=True,
     )
 
@@ -118,9 +119,11 @@ class AccountMove(models.Model):
 
     def _update_l10n_es_tbai_submitted_xml(self, xml_doc, cancel):
         doc = self.l10n_es_tbai_cancel_xml if cancel else self.l10n_es_tbai_post_xml
+        # No existing document: first time posting/cancelling (or first time after error)
+        # bool(doc) == False <==> (doc is None or doc.raw == b'')
         if not doc:
-            # First 'post' XML creation: retrieve unique index from sequence
-            if not cancel:
+            if not cancel and not (xml_doc is None):
+                # 'post' XML creation: retrieve unique index from sequence
                 self.l10n_es_tbai_chain_index = self.company_id._get_l10n_es_tbai_next_chain_index()
             doc = self.env['ir.attachment'].create({
                 'type': 'binary',
@@ -130,12 +133,17 @@ class AccountMove(models.Model):
                 'res_id': self.id,
                 'res_model': 'account.move',
             })
+        # Existing document: update document (for now only used to erase document that yields error)
         else:
+            if not cancel and xml_doc is None:
+                # 'post' XML deletion: delete index (avoids re-trying same XML and chaining off of it)
+                self.l10n_es_tbai_chain_index = False
             doc = self.env['ir.attachment'].update({
                 'name': self.name + ('_cancel' if cancel else '_post') + '.xml',
                 'raw': b'' if xml_doc is None else etree.tostring(xml_doc, encoding='UTF-8'),
                 'res_id': self.id,
             })
+        # Update the corresponding post/cancel document
         if cancel:
             self.l10n_es_tbai_cancel_xml = doc
         else:

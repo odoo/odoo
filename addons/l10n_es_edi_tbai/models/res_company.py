@@ -122,7 +122,7 @@ class ResCompany(models.Model):
 
     def get_l10n_es_tbai_last_posted_id(self):
         return self.env['account.move'].search(
-            [('l10n_es_tbai_chain_index', '!=', False)],
+            [('l10n_es_tbai_chain_index', '!=', 0)],
             limit=1, order='l10n_es_tbai_chain_index desc'
         )
 
