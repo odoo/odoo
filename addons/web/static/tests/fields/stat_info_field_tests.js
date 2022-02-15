@@ -92,16 +92,14 @@ QUnit.module("Fields", (hooks) => {
 
         // formatFloat renders according to this.field.digits
         assert.strictEqual(
-            form.el.querySelectorAll(
-                ".oe_stat_button .o_field_widget .o_stat_info .o_stat_value"
-            )[0].textContent,
+            form.el.querySelectorAll(".oe_stat_button .o_field_widget .o_stat_value")[0]
+                .textContent,
             "0.4",
             "Default precision should be [16,1]"
         );
         assert.strictEqual(
-            form.el.querySelectorAll(
-                ".oe_stat_button .o_field_widget .o_stat_info .o_stat_value"
-            )[1].textContent,
+            form.el.querySelectorAll(".oe_stat_button .o_field_widget .o_stat_value")[1]
+                .textContent,
             "10.00",
             "Currency decimal precision should be 2"
         );
@@ -132,14 +130,12 @@ QUnit.module("Fields", (hooks) => {
             "should have one stat button"
         );
         assert.strictEqual(
-            form.el.querySelector(".oe_stat_button .o_field_widget .o_stat_info .o_stat_value")
-                .textContent,
+            form.el.querySelector(".oe_stat_button .o_field_widget .o_stat_value").textContent,
             "10",
             "should have 10 as value"
         );
         assert.strictEqual(
-            form.el.querySelector(".oe_stat_button .o_field_widget .o_stat_info .o_stat_text")
-                .textContent,
+            form.el.querySelector(".oe_stat_button .o_field_widget .o_stat_text").textContent,
             "int_field",
             "should have 'int_field' as text"
         );
@@ -152,14 +148,12 @@ QUnit.module("Fields", (hooks) => {
             "should still have one stat button"
         );
         assert.strictEqual(
-            form.el.querySelector(".oe_stat_button .o_field_widget .o_stat_info .o_stat_value")
-                .textContent,
+            form.el.querySelector(".oe_stat_button .o_field_widget .o_stat_value").textContent,
             "10",
             "should still have 10 as value"
         );
         assert.strictEqual(
-            form.el.querySelector(".oe_stat_button .o_field_widget .o_stat_info .o_stat_text")
-                .textContent,
+            form.el.querySelector(".oe_stat_button .o_field_widget .o_stat_text").textContent,
             "int_field",
             "should have 'int_field' as text"
         );
@@ -172,14 +166,12 @@ QUnit.module("Fields", (hooks) => {
             "should have one stat button"
         );
         assert.strictEqual(
-            form.el.querySelector(".oe_stat_button .o_field_widget .o_stat_info .o_stat_value")
-                .textContent,
+            form.el.querySelector(".oe_stat_button .o_field_widget .o_stat_value").textContent,
             "10",
             "should have 10 as value"
         );
         assert.strictEqual(
-            form.el.querySelector(".oe_stat_button .o_field_widget .o_stat_info .o_stat_text")
-                .textContent,
+            form.el.querySelector(".oe_stat_button .o_field_widget .o_stat_text").textContent,
             "int_field",
             "should have 'int_field' as text"
         );
@@ -215,14 +207,12 @@ QUnit.module("Fields", (hooks) => {
             "should have one stat button"
         );
         assert.strictEqual(
-            form.el.querySelector(".oe_stat_button .o_field_widget .o_stat_info .o_stat_value")
-                .textContent,
+            form.el.querySelector(".oe_stat_button .o_field_widget .o_stat_value").textContent,
             "10",
             "should have 10 as value"
         );
         assert.strictEqual(
-            form.el.querySelector(".oe_stat_button .o_field_widget .o_stat_info .o_stat_text")
-                .textContent,
+            form.el.querySelector(".oe_stat_button .o_field_widget .o_stat_text").textContent,
             "yop",
             "should have 'yop' as text, since it is the value of field foo"
         );
@@ -235,14 +225,12 @@ QUnit.module("Fields", (hooks) => {
             "should still have one stat button"
         );
         assert.strictEqual(
-            form.el.querySelector(".oe_stat_button .o_field_widget .o_stat_info .o_stat_value")
-                .textContent,
+            form.el.querySelector(".oe_stat_button .o_field_widget .o_stat_value").textContent,
             "10",
             "should still have 10 as value"
         );
         assert.strictEqual(
-            form.el.querySelector(".oe_stat_button .o_field_widget .o_stat_info .o_stat_text")
-                .textContent,
+            form.el.querySelector(".oe_stat_button .o_field_widget .o_stat_text").textContent,
             "yop",
             "should have 'yop' as text, since it is the value of field foo"
         );
@@ -255,14 +243,12 @@ QUnit.module("Fields", (hooks) => {
             "should have one stat button"
         );
         assert.strictEqual(
-            form.el.querySelector(".oe_stat_button .o_field_widget .o_stat_info .o_stat_value")
-                .textContent,
+            form.el.querySelector(".oe_stat_button .o_field_widget .o_stat_value").textContent,
             "10",
             "should have 10 as value"
         );
         assert.strictEqual(
-            form.el.querySelector(".oe_stat_button .o_field_widget .o_stat_info .o_stat_text")
-                .textContent,
+            form.el.querySelector(".oe_stat_button .o_field_widget .o_stat_text").textContent,
             "yop",
             "should have 'yop' as text, since it is the value of field foo"
         );
@@ -294,14 +280,13 @@ QUnit.module("Fields", (hooks) => {
             "should have one stat button"
         );
         assert.strictEqual(
-            form.el.querySelector(".oe_stat_button .o_field_widget .o_stat_info .o_stat_value")
-                .textContent,
+            form.el.querySelector(".oe_stat_button .o_field_widget .o_stat_value").textContent,
             "10",
             "should have 10 as value"
         );
         assert.containsNone(
             form.el,
-            ".oe_stat_button .o_field_widget .o_stat_info .o_stat_text",
+            ".oe_stat_button .o_field_widget .o_stat_text",
             "should not have any label"
         );
 
@@ -313,14 +298,13 @@ QUnit.module("Fields", (hooks) => {
             "should still have one stat button"
         );
         assert.strictEqual(
-            form.el.querySelector(".oe_stat_button .o_field_widget .o_stat_info .o_stat_value")
-                .textContent,
+            form.el.querySelector(".oe_stat_button .o_field_widget .o_stat_value").textContent,
             "10",
             "should still have 10 as value"
         );
         assert.containsNone(
             form.el,
-            ".oe_stat_button .o_field_widget .o_stat_info .o_stat_text",
+            ".oe_stat_button .o_field_widget .o_stat_text",
             "should not have any label"
         );
 
@@ -332,14 +316,13 @@ QUnit.module("Fields", (hooks) => {
             "should have one stat button"
         );
         assert.strictEqual(
-            form.el.querySelector(".oe_stat_button .o_field_widget .o_stat_info .o_stat_value")
-                .textContent,
+            form.el.querySelector(".oe_stat_button .o_field_widget .o_stat_value").textContent,
             "10",
             "should have 10 as value"
         );
         assert.containsNone(
             form.el,
-            ".oe_stat_button .o_field_widget .o_stat_info .o_stat_text",
+            ".oe_stat_button .o_field_widget .o_stat_text",
             "should not have any label"
         );
     });
