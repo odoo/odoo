@@ -398,6 +398,18 @@ class CustomerPortal(Controller):
         return document_sudo
 
     def _get_page_view_values(self, document, access_token, values, session_history, no_breadcrumbs, **kwargs):
+        """Include necessary values for portal chatter & pager setup (see template portal.message_thread).
+
+        :param document: record to display on portal
+        :param str access_token: provided document access token
+        :param dict values: base dict of values where chatter rendering values should be added
+        :param str session_history: key used to store latest records browsed on the portal in the session
+        :param bool no_breadcrumbs:
+        :return: updated values
+        :rtype: dict
+        """
+        values['object'] = document
+
         if access_token:
             # if no_breadcrumbs = False -> force breadcrumbs even if access_token to `invite` users to register if they click on it
             values['no_breadcrumbs'] = no_breadcrumbs
