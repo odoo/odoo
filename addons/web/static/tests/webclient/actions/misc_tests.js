@@ -498,7 +498,6 @@ QUnit.module("ActionManager", (hooks) => {
         assert.strictEqual(target.querySelector(".o_content").scrollTop, 0);
         // go back using the breadcrumbs
         await click(target.querySelector(".o_control_panel .breadcrumb a"));
-        await legacyExtraNextTick();
         assert.strictEqual(target.querySelector(".o_content").scrollTop, 100);
     });
 
