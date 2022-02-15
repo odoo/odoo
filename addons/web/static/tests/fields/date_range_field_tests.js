@@ -829,4 +829,76 @@ QUnit.module("Fields", (hooks) => {
             form.destroy();
         }
     );
+
+    QUnit.skipWOWL("Datetime field with option format type is 'date'", async function (assert) {
+        assert.expect(2);
+
+        this.data.partner.fields.datetime_end = { string: "Datetime End", type: "datetime" };
+        this.data.partner.records[0].datetime_end = "2017-03-13 00:00:00";
+
+        const form = await createView({
+            View: FormView,
+            model: "partner",
+            data: this.data,
+            arch: `<form>
+                    <field name="datetime" widget="daterange" options="{'related_end_date': 'datetime_end', 'format_type': 'date'}"/>'
+                    <field name="datetime_end" widget="daterange" options="{'related_start_date': 'datetime', 'format_type': 'date'}"/>'
+                </form>`,
+            res_id: 1,
+            session: {
+                getTZOffset() {
+                    return 330;
+                },
+            },
+        });
+
+        assert.strictEqual(
+            form.el.querySelector('.o_field_date_range[name="datetime"]').innerText,
+            "02/08/2017",
+            "the start date should only show date when option formatType is Date"
+        );
+        assert.strictEqual(
+            form.el.querySelector('.o_field_date_range[name="datetime_end"]').innerText,
+            "03/13/2017",
+            "the end date should only show date when option formatType is Date"
+        );
+
+        form.destroy();
+    });
+
+    QUnit.skipWOWL("Date field with option format type is 'datetime'", async function (assert) {
+        assert.expect(2);
+
+        this.data.partner.fields.date_end = { string: "Date End", type: "date" };
+        this.data.partner.records[0].date_end = "2017-03-13";
+
+        const form = await createView({
+            View: FormView,
+            model: "partner",
+            data: this.data,
+            arch: `<form>
+                    <field name="date" widget="daterange" options="{'related_end_date': 'date_end', 'format_type': 'datetime'}"/>
+                    <field name="date_end" widget="daterange" options="{'related_start_date': 'date', 'format_type': 'datetime'}"/>
+                </form>`,
+            res_id: 1,
+            session: {
+                getTZOffset() {
+                    return 330;
+                },
+            },
+        });
+
+        assert.strictEqual(
+            form.el.querySelector('.o_field_date_range[name="date"]').innerText,
+            "02/03/2017 05:30:00",
+            "the start date should show date with time when option format_type is datatime"
+        );
+        assert.strictEqual(
+            form.el.querySelector('.o_field_date_range[name="date_end"]').innerText,
+            "03/13/2017 05:30:00",
+            "the end date should show date with time when option format_type is datatime"
+        );
+
+        form.destroy();
+    });
 });

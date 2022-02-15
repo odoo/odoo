@@ -516,7 +516,7 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.test(
+    QUnit.skipWOWL(
         "m2m grouped rendering with active field and archive enabled (archivable true)",
         async (assert) => {
             assert.expect(7);
@@ -558,7 +558,7 @@ QUnit.module("Views", (hooks) => {
                 [...kanban.el.querySelectorAll(".o_kanban_group")].map((el) =>
                     el.innerText.replace(/\s/g, " ")
                 ),
-                ["Undefined blork", "gold yopblip", "silver yopgnap"]
+                ["None blork", "gold yopblip", "silver yopgnap"]
             );
 
             await toggleColumnActions(kanban, 0);
@@ -7058,7 +7058,7 @@ QUnit.module("Views", (hooks) => {
         );
         assert.ok(
             kanban.el.querySelector(
-                ".o_kanban_group:first-child span.o_column_title:contains(Undefined)"
+                ".o_kanban_group:first-child span.o_column_title:contains(None)"
             ).length,
             "first column should have a default title for when no value is provided"
         );
@@ -9509,7 +9509,7 @@ QUnit.module("Views", (hooks) => {
             assert.containsNone(kanban.el, ".o_kanban_group.o_kanban_group_show");
             assert.deepEqual(
                 [...kanban.el.querySelectorAll(".o_column_title")].map((el) => el.innerText),
-                ["false", "true"]
+                ["No", "Yes"]
             );
             assert.deepEqual(
                 [
@@ -9538,7 +9538,7 @@ QUnit.module("Views", (hooks) => {
             assert.strictEqual(
                 kanban.el.querySelector(".o_kanban_group.o_kanban_group_show .o_column_title")
                     .innerText,
-                "true"
+                "Yes"
             );
 
             // Add searchdomain to something restricting progressbars' values (records still in filtered group)
@@ -9547,7 +9547,7 @@ QUnit.module("Views", (hooks) => {
             // Check that we have now 1 column only and check its progressbar's state
             assert.containsOnce(kanban.el, ".o_kanban_group");
             assert.containsOnce(kanban.el, ".o_kanban_group.o_kanban_group_show");
-            assert.strictEqual(kanban.el.querySelector(".o_column_title").innerText, "true");
+            assert.strictEqual(kanban.el.querySelector(".o_column_title").innerText, "Yes");
             assert.deepEqual(
                 [
                     ...kanban.el.querySelectorAll(
@@ -9565,7 +9565,7 @@ QUnit.module("Views", (hooks) => {
             assert.containsOnce(kanban.el, ".o_kanban_group.o_kanban_group_show");
             assert.deepEqual(
                 [...kanban.el.querySelectorAll(".o_column_title")].map((el) => el.innerText),
-                ["false", "true"]
+                ["No", "Yes"]
             );
             assert.deepEqual(
                 [
@@ -9617,7 +9617,7 @@ QUnit.module("Views", (hooks) => {
             assert.containsNone(kanban.el, ".o_kanban_group.o_kanban_group_show");
             assert.deepEqual(
                 [...kanban.el.querySelectorAll(".o_column_title")].map((el) => el.innerText),
-                ["false", "true"]
+                ["No", "Yes"]
             );
             assert.deepEqual(
                 [
@@ -9658,7 +9658,7 @@ QUnit.module("Views", (hooks) => {
             assert.strictEqual(
                 kanban.el.querySelector(".o_kanban_group.o_kanban_group_show .o_column_title")
                     .innerText,
-                "true"
+                "Yes"
             );
             assert.deepEqual(
                 [
@@ -9685,7 +9685,7 @@ QUnit.module("Views", (hooks) => {
             assert.containsNone(kanban.el, ".o_kanban_group.o_kanban_group_show");
             assert.deepEqual(
                 [...kanban.el.querySelectorAll(".o_column_title")].map((el) => el.innerText),
-                ["false", "true"]
+                ["No", "Yes"]
             );
             assert.deepEqual(
                 [
@@ -9724,7 +9724,7 @@ QUnit.module("Views", (hooks) => {
             assert.containsNone(kanban.el, ".o_kanban_group.o_kanban_group_show");
             assert.deepEqual(
                 [...kanban.el.querySelectorAll(".o_column_title")].map((el) => el.innerText),
-                ["false", "true"]
+                ["No", "Yes"]
             );
             assert.deepEqual(
                 [
@@ -9788,7 +9788,7 @@ QUnit.module("Views", (hooks) => {
             assert.containsNone(kanban.el, ".o_kanban_group.o_kanban_group_show");
             assert.deepEqual(
                 [...kanban.el.querySelectorAll(".o_column_title")].map((el) => el.innerText),
-                ["false", "true"]
+                ["No", "Yes"]
             );
             assert.deepEqual(
                 [
@@ -9833,7 +9833,7 @@ QUnit.module("Views", (hooks) => {
             assert.strictEqual(
                 kanban.el.querySelector(".o_kanban_group.o_kanban_group_show .o_column_title")
                     .innerText,
-                "true"
+                "Yes"
             );
             assert.containsOnce(kanban.el, ".o_kanban_group.o_kanban_group_show .o_kanban_record");
             assert.strictEqual(
@@ -9853,7 +9853,7 @@ QUnit.module("Views", (hooks) => {
             assert.containsOnce(kanban.el, ".o_kanban_group.o_kanban_group_show");
             assert.deepEqual(
                 [...kanban.el.querySelectorAll(".o_column_title")].map((el) => el.innerText),
-                ["false", "true"]
+                ["No", "Yes"]
             );
             assert.deepEqual(
                 [
@@ -9921,7 +9921,7 @@ QUnit.module("Views", (hooks) => {
             assert.containsNone(kanban.el, ".o_kanban_group.o_kanban_group_show");
             assert.deepEqual(
                 [...kanban.el.querySelectorAll(".o_column_title")].map((el) => el.innerText),
-                ["false", "true"]
+                ["No", "Yes"]
             );
             assert.deepEqual(
                 [
@@ -9972,7 +9972,7 @@ QUnit.module("Views", (hooks) => {
             assert.strictEqual(
                 kanban.el.querySelector(".o_kanban_group.o_kanban_group_show .o_column_title")
                     .innerText,
-                "true"
+                "Yes"
             );
             assert.containsOnce(kanban.el, ".o_kanban_group.o_kanban_group_show .o_kanban_record");
             assert.strictEqual(
@@ -9993,7 +9993,7 @@ QUnit.module("Views", (hooks) => {
             assert.containsNone(kanban.el, ".o_kanban_group.o_kanban_group_show");
             assert.deepEqual(
                 [...kanban.el.querySelectorAll(".o_column_title")].map((el) => el.innerText),
-                ["false", "true"]
+                ["No", "Yes"]
             );
             assert.deepEqual(
                 [

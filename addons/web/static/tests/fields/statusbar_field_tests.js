@@ -551,4 +551,51 @@ QUnit.module("Fields", (hooks) => {
 
         form.destroy();
     });
+
+    // TODO: Once the code base is converted with wowl, replace webclient by formview.
+    QUnit.skipWOWL(
+        'statusbar edited by the smart action "Move to stage..."',
+        async function (assert) {
+            assert.expect(3);
+
+            const legacyEnv = makeTestEnvironment({ bus: core.bus });
+            const serviceRegistry = registry.category("services");
+            serviceRegistry.add("legacy_command", makeLegacyCommandService(legacyEnv));
+
+            const views = {
+                "partner,false,form":
+                    "<form>" +
+                    '<header><field name="trululu" widget="statusbar" options=\'{"clickable": "1"}\'/></header>' +
+                    "</form>",
+                "partner,false,search": "<search></search>",
+            };
+            const serverData = { models: this.data, views };
+            const webClient = await createWebClient({ serverData });
+            await doAction(webClient, {
+                res_id: 1,
+                type: "ir.actions.act_window",
+                target: "current",
+                res_model: "partner",
+                view_mode: "form",
+                views: [[false, "form"]],
+            });
+            assert.containsOnce(webClient, ".o_field_widget");
+
+            triggerHotkey("control+k");
+            await nextTick();
+            const movestage = webClient.el.querySelectorAll(".o_command");
+            const idx = [...movestage]
+                .map((el) => el.textContent)
+                .indexOf("Move to Trululu...ALT + SHIFT + X");
+            assert.ok(idx >= 0);
+
+            await click(movestage[idx]);
+            await nextTick();
+            assert.deepEqual(
+                [...webClient.el.querySelectorAll(".o_command")].map((el) => el.textContent),
+                ["first record", "second record", "aaa"]
+            );
+            await click(webClient.el, "#o_command_2");
+        }
+    );
 });

@@ -1012,6 +1012,65 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
+    QUnit.skipWOWL(
+        "empty many2one should not be considered modified on onchange if still empty",
+        async function (assert) {
+            assert.expect(6);
+
+            this.data.partner.onchanges = {
+                foo: function () {},
+            };
+
+            assert.strictEqual(
+                this.data.partner.records[2].trululu,
+                undefined,
+                "no value must be provided for trululu to make sure the test works as expected"
+            );
+
+            var form = await createView({
+                View: FormView,
+                model: "partner",
+                data: this.data,
+                arch:
+                    '<form string="Partners">' +
+                    "<sheet>" +
+                    "<group>" +
+                    '<field name="trululu"/>' +
+                    '<field name="foo"/>' + // onchange will be triggered on this field
+                    "</group>" +
+                    "</sheet>" +
+                    "</form>",
+                res_id: 4, // trululu m2o must be empty
+                viewOptions: { mode: "edit" },
+                mockRPC: function (route, args) {
+                    if (args.method === "onchange") {
+                        assert.step("onchange");
+                        return Promise.resolve({
+                            value: {
+                                trululu: false,
+                            },
+                        });
+                    } else if (args.method === "write") {
+                        assert.step("write");
+                        // non modified trululu should not be sent
+                        // as write value
+                        assert.deepEqual(args.args[1], { foo: "3" });
+                    }
+                    return this._super.apply(this, arguments);
+                },
+            });
+
+            // trigger the onchange
+            await testUtils.fields.editInput($('input[name="foo"]'), "3");
+            assert.verifySteps(["onchange"]);
+
+            // save
+            await testUtils.form.clickSave(form);
+            assert.verifySteps(["write"]);
+            form.destroy();
+        }
+    );
+
     QUnit.skipWOWL("many2one in edit mode", async function (assert) {
         assert.expect(17);
 

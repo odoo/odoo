@@ -11983,6 +11983,49 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
+    QUnit.skipWOWL("combine contexts on o2m field and create tags", async function (assert) {
+        assert.expect(1);
+
+        const form = await createView({
+            View: FormView,
+            model: "partner",
+            data: this.data,
+            arch: `
+                <form>
+                    <sheet>
+                        <field name="turtles" context="{'default_turtle_foo': 'hard', 'default_turtle_bar': True}">
+                            <tree editable="bottom">
+                                <control>
+                                    <create name="add_soft_shell_turtle" context="{'default_turtle_foo': 'soft', 'default_turtle_int': 2}"/>
+                                </control>
+                            </tree>
+                        </field>
+                    </sheet>
+                </form>
+            `,
+            mockRPC: function (route, args) {
+                if (args.method === "onchange") {
+                    if (args.model === "turtle") {
+                        assert.deepEqual(
+                            args.kwargs.context,
+                            {
+                                default_turtle_foo: "soft",
+                                default_turtle_bar: true,
+                                default_turtle_int: 2,
+                            },
+                            "combined context should have the default_turtle_foo value from the <create>"
+                        );
+                    }
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a:eq(0)"));
+
+        form.destroy();
+    });
+
     // The following tests come from relational_fields_tests.js (so there might be issues with serverData)
 
     QUnit.skipWOWL("search more pager is reset when doing a new search", async function (assert) {

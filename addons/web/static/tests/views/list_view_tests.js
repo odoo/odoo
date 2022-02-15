@@ -1345,7 +1345,7 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.test("basic grouped list rendering with groupby m2m field", async function (assert) {
+    QUnit.skipWOWL("basic grouped list rendering with groupby m2m field", async function (assert) {
         assert.expect(5);
 
         const list = await makeView({
@@ -1365,7 +1365,7 @@ QUnit.module("Views", (hooks) => {
             [...list.el.querySelectorAll(".o_group_header .o_group_name")].map(
                 (el) => el.innerText
             ),
-            ["Value 1 (3)", "Value 2 (2)", "Value 3 (1)", "Undefined (1)"],
+            ["Value 1 (3)", "Value 2 (2)", "Value 3 (1)", "None (1)"],
             "should have those group headers"
         );
 
@@ -1389,63 +1389,66 @@ QUnit.module("Views", (hooks) => {
                 "blipValue1Value2Value3",
                 "Value3(1)",
                 "blipValue1Value2Value3",
-                "Undefined(1)",
+                "None(1)",
                 "gnap",
             ],
             "should have these row contents"
         );
     });
 
-    QUnit.test("grouped list rendering with groupby m2o and m2m field", async function (assert) {
-        assert.expect(3);
+    QUnit.skipWOWL(
+        "grouped list rendering with groupby m2o and m2m field",
+        async function (assert) {
+            assert.expect(3);
 
-        const list = await makeView({
-            type: "list",
-            resModel: "foo",
-            serverData,
-            arch: `<tree>
+            const list = await makeView({
+                type: "list",
+                resModel: "foo",
+                serverData,
+                arch: `<tree>
                     <field name="foo"/>
                     <field name="m2o"/>
                     <field name="m2m" widget="many2many_tags"/>
                 </tree>`,
-            groupBy: ["m2o", "m2m"],
-        });
+                groupBy: ["m2o", "m2m"],
+            });
 
-        let rows = list.el.querySelectorAll("tbody > tr");
-        assert.deepEqual(
-            [...rows].map((el) => el.innerText.replace(/\s/g, "")),
+            let rows = list.el.querySelectorAll("tbody > tr");
+            assert.deepEqual(
+                [...rows].map((el) => el.innerText.replace(/\s/g, "")),
 
-            ["Value1(3)", "Value2(1)"],
-            "should have these row contents"
-        );
+                ["Value1(3)", "Value2(1)"],
+                "should have these row contents"
+            );
 
-        await click(list.el.querySelector("th.o_group_name"));
+            await click(list.el.querySelector("th.o_group_name"));
 
-        rows = list.el.querySelectorAll("tbody > tr");
-        assert.deepEqual(
-            [...rows].map((el) => el.innerText.replace(/\s/g, "")),
-            ["Value1(3)", "Value1(2)", "Value2(1)", "Undefined(1)", "Value2(1)"],
-            "should have these row contents"
-        );
+            rows = list.el.querySelectorAll("tbody > tr");
+            assert.deepEqual(
+                [...rows].map((el) => el.innerText.replace(/\s/g, "")),
+                ["Value1(3)", "Value1(2)", "Value2(1)", "None(1)", "Value2(1)"],
+                "should have these row contents"
+            );
 
-        await click(list.el.querySelectorAll("tbody th.o_group_name")[4]);
-        rows = list.el.querySelectorAll("tbody > tr");
+            await click(list.el.querySelectorAll("tbody th.o_group_name")[4]);
+            rows = list.el.querySelectorAll("tbody > tr");
 
-        assert.deepEqual(
-            [...rows].map((el) => el.innerText.replace(/\s/g, "")),
-            [
-                "Value1(3)",
-                "Value1(2)",
-                "Value2(1)",
-                "Undefined(1)",
-                "Value2(1)",
-                "Value1(1)",
-                "Value2(1)",
-                "Value3(1)",
-            ],
-            "should have these row contents"
-        );
-    });
+            assert.deepEqual(
+                [...rows].map((el) => el.innerText.replace(/\s/g, "")),
+                [
+                    "Value1(3)",
+                    "Value1(2)",
+                    "Value2(1)",
+                    "None(1)",
+                    "Value2(1)",
+                    "Value1(1)",
+                    "Value2(1)",
+                    "Value3(1)",
+                ],
+                "should have these row contents"
+            );
+        }
+    );
 
     QUnit.test("deletion of record is disabled when groupby m2m field", async function (assert) {
         assert.expect(5);
@@ -2620,7 +2623,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(list.el.querySelector(".o_cp_buttons"), ".o_list_selection_box");
     });
 
-    QUnit.test("aggregates are computed correctly", async function (assert) {
+    QUnit.skipWOWL("aggregates are computed correctly", async function (assert) {
         assert.expect(4);
 
         const list = await makeView({
@@ -2648,7 +2651,11 @@ QUnit.module("Views", (hooks) => {
         // Let's update the view to dislay NO records
         await toggleFilterMenu(list);
         await toggleMenuItem(list, "My Filter");
-        assert.strictEqual(list.el.querySelectorAll("tfoot td")[2].innerText, "0");
+        assert.strictEqual(
+            list.el.querySelectorAll("tfoot td")[2].innerText,
+            "",
+            "No records, so no total."
+        );
     });
 
     QUnit.test("aggregates are computed correctly in grouped lists", async function (assert) {
@@ -2686,6 +2693,42 @@ QUnit.module("Views", (hooks) => {
             "total should be 10 as first record of first group is selected"
         );
     });
+
+    QUnit.skipWOWL(
+        "hide aggregated value in grouped lists when no data provided by RPC call",
+        async function (assert) {
+            assert.expect(1);
+
+            var list = await createView({
+                View: ListView,
+                model: "foo",
+                data: this.data,
+                groupBy: ["bar"],
+                arch:
+                    '<tree editable="bottom"><field name="foo"/><field name="qux" widget="float_time" sum="Sum"/></tree>',
+                mockRPC: function (route, args) {
+                    return this._super.apply(this, arguments).then((result) => {
+                        // On PY-side, a read_group won't provide any aggregate value
+                        // if the field does not have a `group_operator` attribute.
+                        // (see 5691b126f06/odoo/models.py#L2521-L2528)
+                        // Here, since `qux` does not have such an attribute, we
+                        // remove the value provided by `_mockReadGroup`
+                        _.each(result.groups, function (group) {
+                            delete group.qux;
+                        });
+                        return Promise.resolve(result);
+                    });
+                },
+            });
+
+            assert.strictEqual(
+                list.$("tfoot td:nth(2)").text(),
+                "",
+                "There isn't any aggregated value"
+            );
+            list.destroy();
+        }
+    );
 
     QUnit.test("aggregates are updated when a line is edited", async function (assert) {
         const list = await makeView({
@@ -10525,7 +10568,7 @@ QUnit.module("Views", (hooks) => {
 
         assert.strictEqual(
             $(list.el).find("tbody").text(),
-            "January 2017 (1)Undefined (3)",
+            "January 2017 (1)None (3)",
             "the group names should be correct"
         );
     });
@@ -12555,7 +12598,7 @@ QUnit.module("Views", (hooks) => {
 
             assert.strictEqual(
                 document.activeElement.textContent,
-                "false (1)",
+                "No (1)",
                 "focus should be on second group header"
             );
             assert.strictEqual(
@@ -12571,7 +12614,7 @@ QUnit.module("Views", (hooks) => {
             );
             assert.strictEqual(
                 document.activeElement.textContent,
-                "false (1)",
+                "No (1)",
                 "focus should still be on second group header"
             );
 
@@ -12641,7 +12684,7 @@ QUnit.module("Views", (hooks) => {
             await testUtils.fields.triggerKeydown($(document.activeElement), "up");
             assert.strictEqual(
                 document.activeElement.textContent,
-                "true (3)",
+                "Yes (3)",
                 "focus should be on first group header"
             );
             await testUtils.fields.triggerKeydown($(document.activeElement), "enter");
@@ -12652,7 +12695,7 @@ QUnit.module("Views", (hooks) => {
             );
             assert.strictEqual(
                 document.activeElement.textContent,
-                "true (3)",
+                "Yes (3)",
                 "focus should still be on first group header"
             );
 
@@ -12669,7 +12712,7 @@ QUnit.module("Views", (hooks) => {
             );
             assert.strictEqual(
                 document.activeElement.textContent,
-                "true (3)",
+                "Yes (3)",
                 "focus is still in header"
             );
             await testUtils.fields.triggerKeydown($(document.activeElement), "right");
@@ -12680,7 +12723,7 @@ QUnit.module("Views", (hooks) => {
             );
             assert.strictEqual(
                 document.activeElement.textContent,
-                "true (3)",
+                "Yes (3)",
                 "focus is still in header"
             );
 
@@ -12692,7 +12735,7 @@ QUnit.module("Views", (hooks) => {
             );
             assert.strictEqual(
                 document.activeElement.textContent,
-                "true (3)",
+                "Yes (3)",
                 "focus is still in header"
             );
             await testUtils.fields.triggerKeydown($(document.activeElement), "left");
@@ -12703,14 +12746,14 @@ QUnit.module("Views", (hooks) => {
             );
             assert.strictEqual(
                 document.activeElement.textContent,
-                "true (3)",
+                "Yes (3)",
                 "focus is still in header"
             );
 
             await testUtils.fields.triggerKeydown($(document.activeElement), "down");
             assert.strictEqual(
                 document.activeElement.textContent,
-                "false (2)",
+                "No (2)",
                 "focus should now be on second group header"
             );
             await testUtils.fields.triggerKeydown($(document.activeElement), "down");
@@ -12864,7 +12907,7 @@ QUnit.module("Views", (hooks) => {
         await click($(list.el).find(".o_group_field_row_add a:eq(1)")); // create row in second group
         assert.strictEqual(
             $(list.el).find(".o_group_name:eq(1)").text(),
-            "false (2)",
+            "No (2)",
             "group should have correct name and count"
         );
         assert.containsN(list, "tbody:nth(3) .o_data_row", 2);
