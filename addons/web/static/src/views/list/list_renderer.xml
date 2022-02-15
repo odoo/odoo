@@ -34,14 +34,14 @@
                         </t>
                     </tr>
                 </tfoot>
-                <Dropdown class="o_optional_columns_dropdown" position="'bottom-end'">
+                <Dropdown class="'o_optional_columns_dropdown'" position="'bottom-end'">
                     <t t-set-slot="toggler">
                         <i class="fa fa-ellipsis-v"/>
                     </t>
                     <t t-foreach="getOptionalFields" t-as="field" t-key="field_index">
                         <CheckBoxDropdownItem
                             parentClosingMode="'none'"
-                            onSelected="() => toggleOptionalField(field.name)"
+                            onSelected="() => this.toggleOptionalField(field.name)"
                             value="field.value"
                             >
                             <t t-esc="field.string"/> <t t-if="env.debug" t-esc="' (' + field.name + ')'" />
