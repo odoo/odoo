@@ -39,7 +39,7 @@ class StockMove(models.Model):
         precision = self.env['decimal.precision'].precision_get('Product Price')
         # If the move is a return, use the original move's price unit.
         if self.origin_returned_move_id and self.origin_returned_move_id.sudo().stock_valuation_layer_ids:
-            price_unit = self.origin_returned_move_id.sudo().stock_valuation_layer_ids[-1].unit_cost
+            return self.origin_returned_move_id.sudo().stock_valuation_layer_ids[-1].unit_cost
         return price_unit if not float_is_zero(price_unit, precision) or self._should_force_price_unit() else self.product_id.standard_price
 
     @api.model
