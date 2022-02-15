@@ -69,7 +69,7 @@ class WebsiteVisitor(models.Model):
                 track_visitor_wo_partner.partner_id = partner
         super(WebsiteVisitor, self)._link_to_partner(partner, update_values=update_values)
 
-    def _link_to_visitor(self, target, keep_unique=True):
+    def _link_to_visitor(self, target):
         """ Override linking process to link wishlist to the final visitor. """
         self.event_track_visitor_ids.visitor_id = target.id
-        return super(WebsiteVisitor, self)._link_to_visitor(target, keep_unique=keep_unique)
+        return super(WebsiteVisitor, self)._link_to_visitor(target)
