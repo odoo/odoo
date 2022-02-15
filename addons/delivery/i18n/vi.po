@@ -33,6 +33,24 @@ msgid " (Estimated Cost: %s )"
 msgstr " (Chi phí Dự kiến: %s )"
 
 #. module: delivery
+#: code:addons/delivery/models/delivery_grid.py:0
+#, python-format
+msgid "%s %.02f times %s"
+msgstr "%s %.02f lần %s"
+
+#. module: delivery
+#: code:addons/delivery/models/delivery_grid.py:0
+#, python-format
+msgid "%s fixed price %.02f"
+msgstr "%s giá cố định %.02f"
+
+#. module: delivery
+#: code:addons/delivery/models/delivery_grid.py:0
+#, python-format
+msgid "%s fixed price %.02f plus %.02f times %s"
+msgstr "%s giá cố định %.02f cộng %.02f lần %s"
+
+#. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_quant_package_weight_form
 msgid "(computed:"
 msgstr "(được tính toán:"
@@ -1121,3 +1139,9 @@ msgstr "Đến Zip"
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "e.g. UPS Express"
 msgstr "vd: UPS Express"
+
+#. module: delivery
+#: code:addons/delivery/models/delivery_grid.py:0
+#, python-format
+msgid "if %s %s %.02f then"
+msgstr "nếu %s %s %.02f thì"
