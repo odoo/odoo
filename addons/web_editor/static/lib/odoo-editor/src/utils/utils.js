@@ -1,5 +1,4 @@
 /** @odoo-module **/
-const INVISIBLE_REGEX = /\u200c/g;
 
 export const DIRECTIONS = {
     LEFT: false,
@@ -924,6 +923,12 @@ export function isFontAwesome(node) {
         ['fa', 'fab', 'fad', 'far'].some(faClass => node.classList.contains(faClass))
     );
 }
+export function isZWS(node) {
+    return (
+        node &&
+        node.textContent === '\u200B'
+    );
+}
 export function isMediaElement(node) {
     return (
         isFontAwesome(node) ||
@@ -1226,7 +1231,7 @@ export function isFakeLineBreak(brEl) {
  * @returns {boolean}
  */
 export function isEmptyBlock(blockEl) {
-    if (blockEl.nodeType !== Node.ELEMENT_NODE) {
+    if (!blockEl || blockEl.nodeType !== Node.ELEMENT_NODE) {
         return false;
     }
     if (isVisibleStr(blockEl.textContent)) {
@@ -1417,10 +1422,23 @@ export function fillEmpty(el) {
         blockEl.appendChild(br);
         fillers.br = br;
     }
-    if (!el.textContent.length && isUnremovable(el) && !isBlock(el)) {
+    if (
+        !el.textContent.length &&
+        !isBlock(el) &&
+        el.nodeName !== 'BR' &&
+        !el.hasAttribute("oe-zws-empty-inline")
+    ) {
+        // As soon as there is actual content in the node, the zero-width space
+        // is removed by the sanitize function.
         const zws = document.createTextNode('\u200B');
         el.appendChild(zws);
+        el.setAttribute("oe-zws-empty-inline", "");
         fillers.zws = zws;
+        const previousSibling = el.previousSibling;
+        if (previousSibling && previousSibling.nodeName === "BR") {
+            previousSibling.remove();
+        }
+        setSelection(zws, 0, zws, 0);
     }
     return fillers;
 }
@@ -1615,7 +1633,7 @@ export function getState(el, offset, direction, leftCType) {
     let lastSpace = null;
     for (const node of domPath) {
         if (node.nodeType === Node.TEXT_NODE) {
-            const value = node.nodeValue.replace(INVISIBLE_REGEX, '');
+            const value = node.nodeValue;
             // If we hit a text node, the state depends on the path direction:
             // any space encountered backwards is a visible space if we hit
             // visible content afterwards. If going forward, spaces are only
