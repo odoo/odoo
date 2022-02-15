@@ -543,7 +543,7 @@ class expression(object):
             if left_model._parent_store:
                 domain = OR([
                     [('parent_path', '=like', rec.parent_path + '%')]
-                    for rec in left_model.browse(ids)
+                    for rec in left_model.sudo().browse(ids)
                 ])
             else:
                 # recursively retrieve all children nodes with sudo(); the
@@ -569,7 +569,7 @@ class expression(object):
             if left_model._parent_store:
                 parent_ids = [
                     int(label)
-                    for rec in left_model.browse(ids)
+                    for rec in left_model.sudo().browse(ids)
                     for label in rec.parent_path.split('/')[:-1]
                 ]
                 domain = [('id', 'in', parent_ids)]
