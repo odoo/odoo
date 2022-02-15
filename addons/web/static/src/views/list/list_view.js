@@ -444,7 +444,7 @@ export class ListView extends Component {
 
 ListView.type = "list";
 ListView.display_name = "List";
-ListView.icon = "fa-list-ul";
+ListView.icon = "oi-table";
 ListView.multiRecord = true;
 ListView.components = { ActionMenus, ListViewHeaderButton, ListRenderer, Layout, ViewButton };
 ListView.props = {

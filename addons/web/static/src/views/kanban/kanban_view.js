@@ -333,7 +333,7 @@ class KanbanView extends Component {
 
 KanbanView.type = "kanban";
 KanbanView.display_name = "Kanban";
-KanbanView.icon = "fa-th-large";
+KanbanView.icon = "oi-align--vertical-top";
 KanbanView.multiRecord = true;
 KanbanView.template = `web.KanbanView`;
 KanbanView.components = { Layout, KanbanRenderer };
