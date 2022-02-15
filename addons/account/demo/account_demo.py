@@ -15,21 +15,21 @@ class AccountChartTemplate(models.AbstractModel):
     _inherit = "account.chart.template"
 
     @api.model
-    def _get_demo_data(self):
+    def _get_demo_data(self, company=False):
         """Generate the demo data related to accounting."""
         # This is a generator because data created here might be referenced by xml_id to data
         # created later but defined in this same function.
         return {
-            'account.move': self._get_demo_data_move(),
-            'account.bank.statement': self._get_demo_data_statement(),
-            'account.reconcile.model': self._get_demo_data_reconcile_model(),
-            'ir.attachment': self._get_demo_data_attachment(),
-            'mail.message': self._get_demo_data_mail_message(),
-            'mail.activity': self._get_demo_data_mail_activity(),
+            'account.move': self._get_demo_data_move(company),
+            'account.bank.statement': self._get_demo_data_statement(company),
+            'account.reconcile.model': self._get_demo_data_reconcile_model(company),
+            'ir.attachment': self._get_demo_data_attachment(company),
+            'mail.message': self._get_demo_data_mail_message(company),
+            'mail.activity': self._get_demo_data_mail_activity(company),
         }
 
-    def _post_load_demo_data(self):
-        cid = self.env.company.id
+    def _post_load_demo_data(self, company=False):
+        cid = company or self.env.company.id
         invoices = (
             self.env.ref(f'account.{cid}_demo_invoice_1')
             + self.env.ref(f'account.{cid}_demo_invoice_2')
@@ -63,8 +63,8 @@ class AccountChartTemplate(models.AbstractModel):
         self.env.ref(f'account.{cid}_demo_bank_statement_1').button_post()
 
     @api.model
-    def _get_demo_data_move(self):
-        cid = self.env.company.id
+    def _get_demo_data_move(self, company=False):
+        cid = company or self.env.company.id
         return {
             f'{cid}_demo_invoice_1': {
                 'move_type': 'out_invoice',
@@ -136,8 +136,8 @@ class AccountChartTemplate(models.AbstractModel):
         }
 
     @api.model
-    def _get_demo_data_statement(self):
-        cid = self.env.company.id
+    def _get_demo_data_statement(self, company=False):
+        cid = company or self.env.company.id
         return {
             f'{cid}_demo_bank_statement_1': {
                 'journal_id': self.env['account.journal'].search([
@@ -193,8 +193,8 @@ class AccountChartTemplate(models.AbstractModel):
         }
 
     @api.model
-    def _get_demo_data_reconcile_model(self):
-        cid = self.env.company.id
+    def _get_demo_data_reconcile_model(self, company=False):
+        cid = company or self.env.company.id
         return {
             f'{cid}_reconcile_from_label': {
                 'name': 'Line with Bank Fees',
@@ -228,8 +228,8 @@ class AccountChartTemplate(models.AbstractModel):
         }
 
     @api.model
-    def _get_demo_data_attachment(self):
-        cid = self.env.company.id
+    def _get_demo_data_attachment(self, company=False):
+        cid = company or self.env.company.id
         return {
             f'{cid}_ir_attachment_bank_statement_1': {
                 'type': 'binary',
@@ -261,8 +261,8 @@ class AccountChartTemplate(models.AbstractModel):
         }
 
     @api.model
-    def _get_demo_data_mail_message(self):
-        cid = self.env.company.id
+    def _get_demo_data_mail_message(self, company=False):
+        cid = company or self.env.company.id
         return {
             f'{cid}_mail_message_bank_statement_1': {
                 'model': 'account.bank.statement',
@@ -297,8 +297,8 @@ class AccountChartTemplate(models.AbstractModel):
         }
 
     @api.model
-    def _get_demo_data_mail_activity(self):
-        cid = self.env.company.id
+    def _get_demo_data_mail_activity(self, company=False):
+        cid = company or self.env.company.id
         return {
             f'{cid}_invoice_activity_1': {
                 'res_id': f'account.{cid}_demo_invoice_3',

@@ -676,7 +676,7 @@ class AccountJournal(models.Model):
             if journal.code == _('CABA') and not journal.company_id.tax_cash_basis_journal_id:
                 journal.company_id.tax_cash_basis_journal_id = journal
 
-        return journal
+        return journals
 
     def set_bank_account(self, acc_number, bank_id=None):
         """ Create a res.partner.bank (if not exists) and set it as value of the field bank_account_id """

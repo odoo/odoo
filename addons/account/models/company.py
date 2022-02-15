@@ -2,16 +2,13 @@
 
 from datetime import timedelta, datetime, date
 import calendar
-import logging
 
 from odoo import fields, models, api, _
 from odoo.exceptions import ValidationError, UserError, RedirectWarning
 from odoo.tools.mail import is_html_empty
 from odoo.tools.misc import format_date
 from odoo.tools.float_utils import float_round, float_is_zero
-from odoo.addons.account.models import chart_template
 
-_logger = logging.getLogger(__name__)
 
 
 

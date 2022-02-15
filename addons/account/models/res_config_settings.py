@@ -166,7 +166,7 @@ class ResConfigSettings(models.TransientModel):
         # install a chart of accounts for the given company (if required)
         if self.env.company == self.company_id and self.chart_template \
         and self.chart_template != self.company_id.chart_template:
-            self.chart_template.try_loading()
+            self.env['account.chart.template'].try_loading(self.chart_template, company=self.company_id)
 
     @api.depends('company_id')
     def _compute_has_chart_of_accounts(self):

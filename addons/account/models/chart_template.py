@@ -22,26 +22,31 @@ MODULES = {ct: modules for ct, string, country, modules in TEMPLATES}
 COUNTRIES = {country: ct for ct, string, country, modules in TEMPLATES}
 
 
-    name = fields.Char(required=True)
-    parent_id = fields.Many2one('account.chart.template', string='Parent Chart Template')
-    code_digits = fields.Integer(string='# of Digits', required=True, default=6, help="No. of Digits to use for account code")
-    visible = fields.Boolean(string='Can be Visible?', default=True,
-        help="Set this to False if you don't want this template to be used actively in the wizard that generate Chart of Accounts from "
-            "templates, this is useful when you want to generate accounts of this template only when loading its child template.")
-    currency_id = fields.Many2one('res.currency', string='Currency', required=True)
-    use_anglo_saxon = fields.Boolean(string="Use Anglo-Saxon accounting", default=False)
-    use_storno_accounting = fields.Boolean(string="Use Storno accounting", default=False)
-    account_ids = fields.One2many('account.account.template', 'chart_template_id', string='Associated Account Templates')
-    tax_template_ids = fields.One2many('account.tax.template', 'chart_template_id', string='Tax Template List',
-        help='List of all the taxes that have to be installed by the wizard')
-    bank_account_code_prefix = fields.Char(string='Prefix of the bank accounts', required=True)
-    cash_account_code_prefix = fields.Char(string='Prefix of the main cash accounts', required=True)
-    transfer_account_code_prefix = fields.Char(string='Prefix of the main transfer accounts', required=True)
-    income_currency_exchange_account_id = fields.Many2one('account.account.template',
-        string="Gain Exchange Rate Account", domain=[('internal_type', '=', 'other'), ('deprecated', '=', False)])
-    expense_currency_exchange_account_id = fields.Many2one('account.account.template',
-        string="Loss Exchange Rate Account", domain=[('internal_type', '=', 'other'), ('deprecated', '=', False)])
-    country_id = fields.Many2one(string="Country", comodel_name='res.country', help="The country this chart of accounts belongs to. None if it's generic.")
+def delegate_to_super_if_code_doesnt_match(class_code):
+    """
+        This helper decorator helps build localized subclasses which methods
+        are only used if the template_code matches their _code, otherwise it delegates
+        to the next superclass in the chain.
+        If the company argument is empty, it is defaulted with self.env.company
+    """
+    def wrapper(f):
+        def wrapper_inner(*args, **kwargs):
+            self, template_code, company, *rest = args
+            if template_code != class_code:
+                super_method = getattr(super(type(self), self), f.__name__)
+                return super_method(template_code, company, **kwargs)
+            else:
+                if not company:
+                    company = self.env.company
+                return f(self, template_code, company, *rest, **kwargs)
+        return wrapper_inner
+
+    return wrapper
+
+
+class AccountChartTemplate(models.AbstractModel):
+    _name = "account.chart.template"
+    _description = "Account Chart Template"
 
     def _select_chart_template(self, company=False):
         company = company or self.env.company
@@ -61,21 +66,21 @@ COUNTRIES = {country: ct for ct, string, country, modules in TEMPLATES}
         """ Installs this chart of accounts for the current company if not chart
         of accounts had been created for it yet.
 
-        :param module (str): name of the module from which to load the chart template.
+        :param template_code (str): code of the chart template to be loaded.
         :param company (Model<res.company>): the company we try to load the chart template on.
             If not provided, it is retrieved from the context.
         :param install_demo (bool): whether or not we should load demo data right after loading the
             chart template.
         """
         company = company or self.env.company
-        template_code = self.env['account.chart.template']._guess_chart_template(company)
+        template_code = template_code or self._guess_chart_template(company)
 
         module_ids = self.env['ir.module.module'].search([('name', 'in', MODULES.get(template_code)), ('state', '=', 'uninstalled')])
         if module_ids:
             module_ids.sudo().button_immediate_install()
             self.env.reset()
 
-        with_company = self.with_context(default_company_id=company.id, allowed_company_ids=[company.id])
+        with_company = self.sudo().with_context(default_company_id=company.id, allowed_company_ids=[company.id])
         # If we don't have any chart of account on this company, install this chart of account
         if not company.existing_accounting():
             xml_id = company.get_metadata()[0]['xmlid']
@@ -84,15 +89,15 @@ COUNTRIES = {country: ct for ct, string, country, modules in TEMPLATES}
                 with_company.env['ir.model.data']._update_xmlids([{'xml_id': xml_id, 'record': self}])
             data = with_company._get_chart_template_data(template_code, company)
             with_company._load_data(data)
-            with_company._post_load_data(company)
+            with_company._post_load_data(template_code, company)
             company.flush()
             with_company.env.cache.invalidate()
             # Install the demo data when the first localization is instanciated on the company
             if install_demo and with_company.env.ref('base.module_account').demo:
                 try:
                     with with_company.env.cr.savepoint():
-                        with_company._load_data(with_company._get_demo_data())
-                        with_company._post_load_demo_data()
+                        with_company._load_data(with_company._get_demo_data(company))
+                        with_company._post_load_demo_data(company)
                 except Exception:
                     # Do not rollback installation of CoA if demo data failed
                     _logger.exception('Error while loading accounting demo data')
@@ -160,39 +165,45 @@ COUNTRIES = {country: ct for ct, string, country, modules in TEMPLATES}
                     'values': deref(record, self.env[model]),
                     'noupdate': True,
                 })
-            created = self.env[model]._load_records(create_vals)
+            _logger.info('Loading model %s', model)
+            created = self.env[model].sudo()._load_records(create_vals)
+            _logger.info('Loaded model %s', model)
             for vals, record in zip(create_vals, created):
                 for translation in translate_vals[vals['xml_id']]:
                     irt_cursor.push({**translation, 'res_id': record.id})
         irt_cursor.finish()
 
-    def _load_csv(self, module, file_name, company=False):
+    def _load_csv(self, module, company, file_name, post_sanitize=None):
         cid = (company or self.env.company).id
-        def sanitize_csv(model, row):
-            model_fields = model._fields
+        Model = self.env[".".join(file_name.split(".")[:-1])]
+        model_fields = Model._fields
+        path_parts = [x for x in ('account', 'data', 'template', module, file_name) if x]
+        # Should the path be False then open(False, 'r') will open STDIN for reading
+        path = get_resource_path(*path_parts) or ''
+
+        def basic_sanitize_csv(row):
             return {
                 key: (
                     value if '@' in key
                     else ast.literal_eval(value) if model_fields[key].type in ('boolean', 'int', 'float')
-                    else (value and model.env.ref(value).id or False) if model_fields[key].type == 'many2one'
-                    else (value and model.env.ref(value).ids or []) if model_fields[key].type in ('one2many', 'many2many')
+                    else (value and Model.env.ref(value).id or False) if model_fields[key].type == 'many2one'
+                    else (value and Model.env.ref(value).ids or []) if model_fields[key].type in ('one2many', 'many2many')
                     else value
                 )
                 for key, value in ((key.replace('/id', ''), value) for key, value in row.items())
                 if key != 'id'
             }
 
+        if not post_sanitize:
+            sanitize_csv = basic_sanitize_csv
+        else:
+            def sanitize_csv(row):
+                return post_sanitize(basic_sanitize_csv(row))
+
         try:
-            # should the path be False, open(False, 'r')
-            # then open() takes False as file descriptor "0" and opens STDIN
-            path_parts = [x for x in ('account', 'data', 'template', module, file_name) if x]
-            path = get_resource_path(*path_parts) or ''
             with open(path, 'r', encoding="utf-8") as csv_file:
                 _logger.info('loading %s', '/'.join(path_parts))
-                return {
-                    f"{cid}_{data['id']}": sanitize_csv(self.env['.'.join(file_name.split('.')[:-1])], data)
-                    for data in csv.DictReader(csv_file)
-                }
+                return {f"{cid}_{row['id']}": sanitize_csv(row) for row in csv.DictReader(csv_file)}
         except OSError as e:
             if path:
                 _logger.info("Error reading CSV file %s: %s", path, e)
@@ -200,31 +211,36 @@ COUNTRIES = {country: ct for ct, string, country, modules in TEMPLATES}
                 _logger.info("No file %s found for template '%s'", file_name, module)
             return {}
 
-    def _get_chart_template_data(self, template_code, company=False):
+    def _get_chart_template_data(self, template_code, company):
         company = company or self.env.company
         return {
-            'account.account': self._get_account_account(template_code),
-            'account.group': self._get_account_group(template_code),
-            'account.journal': self._get_account_journal(company),
-            'res.company': self._get_res_company(company),
-            'account.tax.group': self._get_tax_group(template_code),
-            'account.tax': self._get_account_tax(company),
+            'account.account': self._get_account_account(template_code, company),
+            'account.group': self._get_account_group(template_code, company),
+            'account.journal': self._get_account_journal(template_code, company),
+            'res.company': self._get_res_company(template_code, company),
+            'account.tax.group': self._get_tax_group(template_code, company),
+            'account.tax': self._get_account_tax(template_code, company),
         }
 
-    def _get_account_account(self, template_code):
-        return self._load_csv(template_code, 'account.account.csv')
+    def _get_account_account(self, template_code, company):
+        return self._load_csv(template_code, company, 'account.account.csv')
 
-    def _get_account_group(self, template_code):
-        return self._load_csv(template_code, 'account.group.csv')
+    def _get_account_group(self, template_code, company):
+        def account_group_sanitize(row):
+            start, end = row['code_prefix_start'], row['code_prefix_end']
+            if not end or end < start:
+                row['code_prefix_end'] = start
+            return row
+        return self._load_csv(template_code, company, 'account.group.csv', post_sanitize=account_group_sanitize)
 
-    def _get_tax_group(self, template_code):
-        return self._load_csv(template_code, 'account.tax.group.csv')
+    def _get_tax_group(self, template_code, company):
+        return self._load_csv(template_code, company, 'account.tax.group.csv')
 
-    def _post_load_data(self, company=False):
+    def _post_load_data(self, template_code, company):
         company = (company or self.env.company)
         cid = company.id
         ref = self.env.ref
-        template_data = self._get_template_data()
+        template_data = self._get_template_data(template_code, company)
         code_digits = template_data.get('code_digits', 6)
         # Set default cash difference account on company
         if not company.account_journal_suspense_account_id:
@@ -310,7 +326,7 @@ COUNTRIES = {country: ct for ct, string, country, modules in TEMPLATES}
     # GENERIC Template                                                                            #
     ###############################################################################################
 
-    def _get_template_data(self):
+    def _get_template_data(self, template_code, company):
         return {
             'bank_account_code_prefix': '1014',
             'cash_account_code_prefix': '1015',
@@ -326,7 +342,7 @@ COUNTRIES = {country: ct for ct, string, country, modules in TEMPLATES}
             'property_advance_tax_payment_account_id': 'cash_diff_income',  # TODO
         }
 
-    def _get_account_journal(self, company=False):
+    def _get_account_journal(self, template_code, company):
         cid = (company or self.env.company).id
         return {
             f"{cid}_sale": {
@@ -380,7 +396,7 @@ COUNTRIES = {country: ct for ct, string, country, modules in TEMPLATES}
             },
         }
 
-    def _get_account_tax(self, company=False):
+    def _get_account_tax(self, template_code, company):
         cid = (company or self.env.company).id
         return {
             f"{cid}_sale_tax_template": {
@@ -445,7 +461,7 @@ COUNTRIES = {country: ct for ct, string, country, modules in TEMPLATES}
             },
         }
 
-    def _get_res_company(self, company=False):
+    def _get_res_company(self, template_code, company):
         cid = (company or self.env.company).id
         return {
             self.env.company.get_metadata()[0]['xmlid']: {
