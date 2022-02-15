@@ -3,37 +3,6 @@
 
 from odoo import api, fields, models
 from odoo.osv import expression
-from odoo.addons.http_routing.models.ir_http import slug
-
-
-class ResPartnerGrade(models.Model):
-    _name = 'res.partner.grade'
-    _order = 'sequence desc'
-    _inherit = ['website.published.mixin']
-    _description = 'Partner Grade'
-
-    sequence = fields.Integer('Sequence')
-    active = fields.Boolean('Active', default=lambda *args: 1)
-    name = fields.Char('Level Name', translate=True)
-    partner_weight = fields.Integer('Level Weight', default=1,
-        help="Gives the probability to assign a lead to this partner. (0 means no assignment.)")
-
-    def _compute_website_url(self):
-        super(ResPartnerGrade, self)._compute_website_url()
-        for grade in self:
-            grade.website_url = "/partners/grade/%s" % (slug(grade))
-
-    def _default_is_published(self):
-        return True
-
-
-class ResPartnerActivation(models.Model):
-    _name = 'res.partner.activation'
-    _order = 'sequence desc'
-    _description = 'Partner Activation'
-
-    sequence = fields.Integer('Sequence')
-    name = fields.Char('Name', required=True)
 
 
 class ResPartner(models.Model):
@@ -69,12 +38,22 @@ class ResPartner(models.Model):
         'res.partner', 'assigned_partner_id',
         string='Implementation References',
     )
-    implemented_count = fields.Integer(compute='_compute_implemented_partner_count', store=True)
+    implemented_partner_count = fields.Integer(compute='_compute_implemented_partner_count', store=True)
 
-    @api.depends('implemented_partner_ids', 'implemented_partner_ids.website_published', 'implemented_partner_ids.active')
+    @api.depends('implemented_partner_ids.is_published', 'implemented_partner_ids.active')
     def _compute_implemented_partner_count(self):
+        if not self.ids:
+            self.implemented_partner_count = 0
+            return
+        rg_result = self.env['res.partner'].read_group(
+            [('assigned_partner_id', 'in', self.ids),
+             ('is_published', '=', True)],
+            ['assigned_partner_id'],
+            ['assigned_partner_id']
+        )
+        rg_data = {rg_item['assigned_partner_id'][0]: rg_item['assigned_partner_id_count'] for rg_item in rg_result}
         for partner in self:
-            partner.implemented_count = len(partner.implemented_partner_ids.filtered('website_published'))
+            partner.implemented_partner_count = rg_data.get(partner.id, 0)
 
     @api.depends('grade_id.partner_weight')
     def _compute_partner_weight(self):
