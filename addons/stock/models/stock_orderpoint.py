@@ -93,8 +93,8 @@ class StockWarehouseOrderpoint(models.Model):
     lead_days_date = fields.Date(compute='_compute_lead_days')
     route_id = fields.Many2one(
         'stock.route', string='Preferred Route', domain="[('product_selectable', '=', True)]")
-    qty_on_hand = fields.Float('On Hand', readonly=True, compute='_compute_qty')
-    qty_forecast = fields.Float('Forecast', readonly=True, compute='_compute_qty')
+    qty_on_hand = fields.Float('On Hand', compute_sudo=True, readonly=True, compute='_compute_qty')
+    qty_forecast = fields.Float('Forecast', readonly=True, compute='_compute_qty', store=True)
     qty_to_order = fields.Float('To Order', compute='_compute_qty_to_order', store=True, readonly=False)
 
     _sql_constraints = [
@@ -376,10 +376,10 @@ class StockWarehouseOrderpoint(models.Model):
         # Group orderpoint by product-warehouse
         orderpoint_by_product_warehouse = self.env['stock.warehouse.orderpoint'].read_group(
             [('id', 'in', orderpoints.ids)],
-            ['product_id', 'warehouse_id', 'qty_to_order:sum'],
+            ['product_id', 'warehouse_id', 'qty_forecast:sum', 'qty_to_order:sum'],
             ['product_id', 'warehouse_id'], lazy=False)
         orderpoint_by_product_warehouse = {
-            (record.get('product_id')[0], record.get('warehouse_id')[0]): record.get('qty_to_order')
+            (record.get('product_id')[0], record.get('warehouse_id')[0]): max(abs(record.get('qty_forecast')), record.get('qty_to_order'))
             for record in orderpoint_by_product_warehouse
         }
         for (product, warehouse), product_qty in to_refill.items():
