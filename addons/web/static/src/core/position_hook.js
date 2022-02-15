@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { throttleForAnimation } from "../utils/timing";
+import { throttleForAnimation } from "./utils/timing";
 
 const { onWillUnmount, useEffect, useExternalListener, useRef } = owl;
 
