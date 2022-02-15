@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* pos_mercury
-# 
+#
 # Translators:
 # Martin Trigaux, 2019
 # Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2019
@@ -9,23 +9,23 @@
 # Dung Nguyen Thi <dungnt@trobz.com>, 2019
 # Dao Nguyen <trucdao.uel@gmail.com>, 2019
 # Chinh Chinh <trinhttp@trobz.com>, 2019
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-13 11:26+0000\n"
+"POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
 "Last-Translator: Chinh Chinh <trinhttp@trobz.com>, 2019\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
+"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: pos_mercury
-#: model_terms:ir.ui.view,arch_db:pos_mercury.res_config_view_form_inherit_pos_mercury
+#: model_terms:ir.ui.view,arch_db:pos_mercury.res_config_settings_view_form_inherit_pos_mercury
 msgid "<i class=\"fa fa-fw fa-arrow-right\"/>Buy a card reader"
 msgstr "<i class=\"fa fa-fw fa-arrow-right\"/>Mua một thiết bị đọc thẻ"
 
@@ -33,30 +33,38 @@ msgstr "<i class=\"fa fa-fw fa-arrow-right\"/>Mua một thiết bị đọc th�
 #: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
 msgid ""
 "<i>Vantiv Configurations</i> define what Vantiv account will be used when\n"
-"                                processing credit card transactions in the Point Of Sale. Setting up a Vantiv\n"
-"                                configuration will enable you to allow payments with various credit cards\n"
-"                                (eg. Visa, MasterCard, Discovery, American Express, ...). After setting up this\n"
-"                                configuration you should associate it with a Point Of Sale payment method."
+"                                processing credit card transactions in the "
+"Point Of Sale. Setting up a Vantiv\n"
+"                                configuration will enable you to allow "
+"payments with various credit cards\n"
+"                                (eg. Visa, MasterCard, Discovery, American "
+"Express, ...). After setting up this\n"
+"                                configuration you should associate it with a "
+"Point Of Sale payment method."
 msgstr ""
+"<i>Cấu hình Vantiv</i> xác định tài khoản Vantiv nào sẽ được sử dụng khi\n"
+"                                xử lý giao dịch thẻ tín dụng trong Điểm bán "
+"hàng POS. Cài đặt cấu hình\n"
+"                                Vantiv sẽ giúp bạn cho phép thanh toán bằng "
+"nhiều loại thẻ tín dụng khác nhau\n"
+"                                (VD. Visa, MasterCard, Discovery, American "
+"Express, ...). Sau khi cài đặt\n"
+"                                cấu hình này, bạn nên liên kết với một "
+"phương thức thanh toán trong điểm bán hàng POS."
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:0
+#: code:addons/pos_mercury/static/src/xml/OrderReceipt.xml:0
 #, python-format
 msgid "ABOVE AMOUNT PURSUANT"
 msgstr "TRÊN SỐ TIỀN MUA"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:0
+#: code:addons/pos_mercury/static/src/xml/OrderReceipt.xml:0
 #, python-format
 msgid "APPROVAL CODE:"
 msgstr "MÃ XÁC NHẬN:"
-
-#. module: pos_mercury
-#: model:ir.model,name:pos_mercury.model_ir_autovacuum
-msgid "Automatic Vacuum"
-msgstr "Automatic vacuum"
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_barcode_rule
@@ -64,16 +72,18 @@ msgid "Barcode Rule"
 msgstr "Quy tắc mã vạch"
 
 #. module: pos_mercury
-#: model_terms:ir.ui.view,arch_db:pos_mercury.pos_config_view_form_inherit_pos_mercury_2
-msgid "Barcode Scanner/Card Reader"
-msgstr "Máy quét mã vạch / Đầu đọc thẻ"
-
-#. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:0
+#: code:addons/pos_mercury/static/src/xml/OrderReceipt.xml:0
 #, python-format
 msgid "CARDHOLDER WILL PAY CARD ISSUER"
 msgstr "CHỦ THẺ SẼ THANH TOÁN CHO BÊN PHÁT HÀNH THẺ"
+
+#. module: pos_mercury
+#. openerp-web
+#: code:addons/pos_mercury/static/src/js/PaymentTransactionPopup.js:0
+#, python-format
+msgid "Cancel"
+msgstr "Hủy"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_payment__mercury_card_brand
@@ -109,7 +119,7 @@ msgstr "Cấu hình máy đọc thẻ"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
+#: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid "Could not read card"
 msgstr "Không đọc được thẻ"
@@ -133,7 +143,7 @@ msgstr "Thẻ tín dụng"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
+#: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid ""
 "Credit card refunds are not supported. Instead select your credit card "
@@ -151,33 +161,30 @@ msgid "Display Name"
 msgstr "Tên hiển thị"
 
 #. module: pos_mercury
-#. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
-#, python-format
-msgid "Error"
-msgstr "Lỗi"
-
-#. module: pos_mercury
 #: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
 msgid ""
-"For quickly handling orders: just swiping a credit card when on the payment screen\n"
-"                                (without having pressed anything else) will charge the full amount of the order to\n"
+"For quickly handling orders: just swiping a credit card when on the payment "
+"screen\n"
+"                                (without having pressed anything else) will "
+"charge the full amount of the order to\n"
 "                                the card."
 msgstr ""
-"Để xử lý nhanh các đơn đặt hàng: chỉ cần quẹt thẻ tín dụng khi trên màn hình thanh toán\n"
-"                             (không cần nhấn bất cứ điều gì khác) sẽ tính toàn bộ số tiền của đơn đặt hàng\n"
+"Để xử lý nhanh các đơn đặt hàng: chỉ cần quẹt thẻ tín dụng khi trên màn hình "
+"thanh toán\n"
+"                             (không cần nhấn bất cứ điều gì khác) sẽ tính "
+"toàn bộ số tiền của đơn đặt hàng\n"
 "                              qua thẻ."
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
+#: code:addons/pos_mercury/static/src/js/ProductScreen.js:0
 #, python-format
 msgid "Go to payment screen to use cards"
 msgstr "Sang màn hình thanh toán để quẹt thẻ"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
+#: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid "Handling transaction..."
 msgstr "Đang xử lý giao dịch"
@@ -197,14 +204,17 @@ msgstr ""
 #. module: pos_mercury
 #: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
 msgid ""
-"If you don't already have a Vantiv account, contact Vantiv at +1 (800) 846-4472\n"
+"If you don't already have a Vantiv account, contact Vantiv at +1 (800) "
+"846-4472\n"
 "                                to create one."
 msgstr ""
+"Nếu bạn chưa có tài khoản Vantiv, hãy liên hệ Vantiv tại +1 (800) 846-4472\n"
+"                                để tạo một tài khoản."
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_payment__mercury_invoice_no
 msgid "Invoice number from Vantiv Pay"
-msgstr ""
+msgstr "Số hóa đơn từ Vantiv Pay"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration____last_update
@@ -242,13 +252,13 @@ msgstr "Tên"
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_mercury_configuration__name
 msgid "Name of this Vantiv configuration"
-msgstr ""
+msgstr "Tên của cấu hình Vantiv này"
 
 #. module: pos_mercury
 #: code:addons/pos_mercury/models/pos_mercury_transaction.py:0
 #, python-format
 msgid "No Vantiv configuration associated with the payment method."
-msgstr ""
+msgstr "Không có cấu hình Vantiv liên kết với phương thức thanh toán này. "
 
 #. module: pos_mercury
 #: code:addons/pos_mercury/models/pos_mercury_transaction.py:0
@@ -258,43 +268,42 @@ msgstr "Không tìm thấy ca bản hàng của người dùng %s đang được
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
+#: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid "No response from Vantiv (Vantiv down?)"
-msgstr ""
+msgstr "Không có phản hồi từ Vantiv (Vantiv gặp sự cố?)"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
+#: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid "No response from server (connected to network?)"
 msgstr "Không có phản hồi từ máy chủ (kiểm tra kết nối internet?)"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
+#: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid "Odoo error while processing transaction."
 msgstr "Lỗi Odoo khi thực hiện giao dịch"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
+#: code:addons/pos_mercury/static/src/js/PaymentTransactionPopup.js:0
 #, python-format
-msgid "One credit card swipe already pending."
-msgstr "Một lần quẹt thẻ tín dụng đã chờ xử lý."
+msgid "Ok"
+msgstr "Ok"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:0
+#: code:addons/pos_mercury/static/src/js/PaymentTransactionPopup.js:0
 #, python-format
 msgid "Online Payment"
 msgstr "Thanh toán Online"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
+#: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid "Partially approved"
 msgstr "Xác nhận một phần"
@@ -304,12 +313,11 @@ msgstr "Xác nhận một phần"
 msgid ""
 "Password of the merchant to authenticate him on the payment provider server"
 msgstr ""
-"Mật khẩu của người bán để xác thực anh ta với bên cung cấp dịch vụ thanh "
-"toán"
+"Mật khẩu của người bán để xác thực anh ta với bên cung cấp dịch vụ thanh toán"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
+#: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid "Pay with: "
 msgstr "Thanh toán với:"
@@ -317,19 +325,19 @@ msgstr "Thanh toán với:"
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_payment__mercury_record_no
 msgid "Payment record number from Vantiv Pay"
-msgstr ""
+msgstr "Số hồ sơ thanh toán từ Vantiv Pay"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_payment__mercury_ref_no
 msgid "Payment reference number from Vantiv Pay"
-msgstr ""
+msgstr "Số tham chiếu thanh toán từ Vantiv Pay"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
+#: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid "Please setup your Vantiv merchant account."
-msgstr ""
+msgstr "Vui lòng thiết lập tài khoản người bán Vantiv của bạn. "
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_order
@@ -339,54 +347,54 @@ msgstr "Đơn bán lẻ"
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_payment_method
 msgid "Point of Sale Payment Methods"
-msgstr ""
+msgstr "Phương thức thanh toán POS"
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_payment
 msgid "Point of Sale Payments"
-msgstr ""
+msgstr "Thanh toán điểm bán hàng"
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_mercury_configuration
 msgid "Point of Sale Vantiv Configuration"
-msgstr ""
+msgstr "Cấu hình Vantiv POS"
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_mercury_mercury_transaction
 msgid "Point of Sale Vantiv Transaction"
-msgstr ""
+msgstr "Giao dịch Vantiv POS"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
+#: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid "Refunds not supported"
 msgstr "Không hỗ trợ hoàn tiền"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
+#: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid "Reversal failed, sending VoidSale..."
 msgstr "Đảo giao dịch thất bại, gửi VoidSale ..."
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
+#: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid "Reversal succeeded"
 msgstr "Đảo giao dịch thành công"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
+#: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid "Sending reversal..."
 msgstr "Gửi yêu cầu đảo giao dịch..."
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:0
+#: code:addons/pos_mercury/static/src/xml/OrderReceipt.xml:0
 #, python-format
 msgid "TO CARDHOLDER AGREEMENT"
 msgstr "THỎA THUẬN CHỦ THẺ"
@@ -404,7 +412,7 @@ msgstr "Số thẻ dùng cho thanh toán."
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_payment_method__pos_mercury_config_id
 msgid "The configuration of Vantiv used for this journal"
-msgstr ""
+msgstr "Cấu hình của Vantiv được dùng cho sổ kế toán này"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_payment__mercury_card_number
@@ -418,19 +426,18 @@ msgstr "Tên chủ thẻ"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
+#: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid ""
 "This can be caused by a badly executed swipe or by not having your keyboard "
 "layout set to US QWERTY (not US International)."
 msgstr ""
-"Điều này có thể được gây ra bởi một thao tác vuốt được thực hiện kém hoặc do"
-" không bố trí bàn phím của bạn thành US QWERTY (không phải US "
-"International)."
+"Điều này có thể được gây ra bởi một thao tác vuốt được thực hiện kém hoặc do "
+"không bố trí bàn phím của bạn thành US QWERTY (không phải US International)."
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
+#: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid "Transaction approved"
 msgstr "Giao dịch đã được xác nhận"
@@ -444,13 +451,21 @@ msgstr "Loại"
 #: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
 msgid ""
 "Using the Vantiv integration in the Point Of Sale is easy: just press the\n"
-"                                associated payment method. After that the amount can be adjusted (eg. for cashback)\n"
-"                                just like on any other payment line. Whenever the payment line is set up, a card\n"
+"                                associated payment method. After that the "
+"amount can be adjusted (eg. for cashback)\n"
+"                                just like on any other payment line. "
+"Whenever the payment line is set up, a card\n"
 "                                can be swiped through the card reader device."
 msgstr ""
+"Sử dụng tích hợp Vantiv trong điểm bán hàng POS rất dễ dàng: chỉ cần bấm \n"
+"                                phương thức thanh toán được liên kết. Sau đó "
+"số tiền có thể được điều chỉnh (VD: cho hoàn tiền)\n"
+"                                giống như mọi dòng thanh toán khác. Mỗi khi "
+"một dòng thanh toán được thiết lập, có thể\n"
+"                                quẹt thẻ trên thiết bị đọc thẻ."
 
 #. module: pos_mercury
-#: model_terms:ir.ui.view,arch_db:pos_mercury.res_config_view_form_inherit_pos_mercury
+#: model_terms:ir.ui.view,arch_db:pos_mercury.res_config_settings_view_form_inherit_pos_mercury
 msgid "Vantiv Accounts"
 msgstr "Tài khoản Vantiv"
 
@@ -458,38 +473,38 @@ msgstr "Tài khoản Vantiv"
 #: model:ir.actions.act_window,name:pos_mercury.action_configuration_form
 #: model:ir.ui.menu,name:pos_mercury.menu_pos_pos_mercury_config
 msgid "Vantiv Configurations"
-msgstr ""
+msgstr "Cấu hình Vantiv"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_payment_method__pos_mercury_config_id
 msgid "Vantiv Credentials"
-msgstr ""
+msgstr "Thông tin đăng nhập Vantiv"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_payment__mercury_invoice_no
 msgid "Vantiv invoice number"
-msgstr ""
+msgstr "Số hóa đơn Vantiv"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_payment__mercury_record_no
 msgid "Vantiv record number"
-msgstr ""
+msgstr "Số hồ sơ Vantiv"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_payment__mercury_ref_no
 msgid "Vantiv reference number"
-msgstr ""
+msgstr "Số tham chiếu Vantiv"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:0
+#: code:addons/pos_mercury/static/src/js/PaymentScreen.js:0
 #, python-format
 msgid "VoidSale succeeded"
 msgstr "VoidSale thành công"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:0
+#: code:addons/pos_mercury/static/src/xml/PaymentScreenPaymentLines.xml:0
 #, python-format
 msgid "WAITING FOR SWIPE"
 msgstr "ĐANG CHỜ QUÉT THẺ"
@@ -497,15 +512,19 @@ msgstr "ĐANG CHỜ QUÉT THẺ"
 #. module: pos_mercury
 #: model_terms:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
 msgid ""
-"We currently support the MagTek Dynamag card reader device. It can be connected\n"
-"                                directly to the Point Of Sale device or it can be connected to the IoTBox."
+"We currently support the MagTek Dynamag card reader device. It can be "
+"connected\n"
+"                                directly to the Point Of Sale device or it "
+"can be connected to the IoTBox."
 msgstr ""
-"Chúng tôi hiện đang hỗ trợ thiết bị đọc thẻ MagTek Dynamag. Nó có thể được kết nối\n"
-"                                  trực tiếp đến thiết bị điểm bán hàng hoặc thiết bị có thể được kết nối với IoTBox."
+"Chúng tôi hiện đang hỗ trợ thiết bị đọc thẻ MagTek Dynamag. Nó có thể được "
+"kết nối\n"
+"                                  trực tiếp đến thiết bị điểm bán hàng hoặc "
+"thiết bị có thể được kết nối với IoTBox."
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:0
+#: code:addons/pos_mercury/static/src/xml/OrderReceipt.xml:0
 #, python-format
 msgid "X______________________________"
 msgstr "X______________________________"

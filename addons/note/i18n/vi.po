@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* note
-# 
+#
 # Translators:
 # Martin Trigaux, 2019
 # fanha99 <fanha99@hotmail.com>, 2019
@@ -13,30 +13,41 @@
 # Dung Nguyen Thi <dungnt@trobz.com>, 2019
 # Dao Nguyen <trucdao.uel@gmail.com>, 2019
 # Chinh Chinh <trinhttp@trobz.com>, 2019
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:16+0000\n"
+"POT-Creation-Date: 2021-07-12 07:49+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
 "Last-Translator: Chinh Chinh <trinhttp@trobz.com>, 2019\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
+"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
-msgid "<i class=\"fa fa-check\" role=\"img\" aria-label=\"Opened\" title=\"Opened\"/>"
-msgstr "<i class=\"fa fa-check\" role=\"img\" aria-label=\"Opened\" title=\"Opened\"/>"
+msgid ""
+"<i class=\"fa fa-check\" role=\"img\" aria-label=\"Opened\" title=\"Opened\"/"
+">"
+msgstr ""
+"<i class=\"fa fa-check\" role=\"img\" aria-label=\"Opened\" title=\"Opened\"/"
+">"
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
-msgid "<i class=\"fa fa-undo\" role=\"img\" aria-label=\"Closed\" title=\"Closed\"/>"
-msgstr "<i class=\"fa fa-undo\" role=\"img\" aria-label=\"Closed\" title=\"Closed\"/>"
+msgid ""
+"<i class=\"fa fa-undo\" role=\"img\" aria-label=\"Closed\" title=\"Closed\"/>"
+msgstr ""
+"<i class=\"fa fa-undo\" role=\"img\" aria-label=\"Closed\" title=\"Closed\"/>"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_mail_activity_type__category
+msgid "Action"
+msgstr "Tác vụ"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_needaction
@@ -44,16 +55,13 @@ msgid "Action Needed"
 msgstr "Hành động cần thiết"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_mail_activity_type__category
-msgid "Action to Perform"
-msgstr ""
-
-#. module: note
 #: model:ir.model.fields,help:note.field_mail_activity_type__category
 msgid ""
 "Actions may trigger specific behavior like opening calendar view or "
 "automatically mark as done when a document is uploaded"
 msgstr ""
+"Hành động có thể kích hoạt hành vi cụ thể như mở chế độ xem lịch hoặc tự "
+"động đánh dấu là xong khi tài liệu được tải lên"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__open
@@ -74,7 +82,7 @@ msgstr "Hoạt động"
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "Thể hiện hoạt động ngoại lệ "
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_state
@@ -85,6 +93,11 @@ msgstr "Trạng thái hoạt động"
 #: model:ir.model,name:note.model_mail_activity_type
 msgid "Activity Type"
 msgstr "Kiểu hoạt động"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Biểu tượng kiểu hoạt động"
 
 #. module: note
 #: model_terms:ir.actions.act_window,help:note.action_note_note
@@ -180,11 +193,6 @@ msgid "Dropdown menu"
 msgstr "Menu"
 
 #. module: note
-#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
-msgid "Exception Activities"
-msgstr ""
-
-#. module: note
 #: model:ir.model.fields,field_description:note.field_note_stage__fold
 msgid "Folded by Default"
 msgstr "Đóng Mặc định"
@@ -200,14 +208,14 @@ msgid "Followers"
 msgstr "Người theo dõi"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note__message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Người theo dõi (Kênh)"
-
-#. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_partner_ids
 msgid "Followers (Partners)"
 msgstr "Người theo dõi (Đối tác)"
+
+#. module: note
+#: model:ir.model.fields,help:note.field_note_note__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Biểu tượng Font awesome v.d: fa-tasks"
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
@@ -218,6 +226,11 @@ msgstr "Hoạt động tương lai"
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Group By"
 msgstr "Nhóm theo"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__has_message
+msgid "Has Message"
+msgstr "Có tin nhắn"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__id
@@ -234,7 +247,7 @@ msgstr "Biểu tượng"
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "Biểu tượng để chỉ ra một hoạt động ngoại lệ."
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__message_needaction
@@ -299,9 +312,19 @@ msgid "Messages"
 msgstr "Thông báo"
 
 #. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Hạn chót hoạt động"
+
+#. module: note
 #: model:note.stage,name:note.note_stage_00
 msgid "New"
 msgstr "Mới"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Sự kiện lịch hoạt động kế tiếp"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_date_deadline
@@ -349,8 +372,8 @@ msgstr "Thẻ Ghi chú"
 #: code:addons/note/models/res_users.py:0
 #: model:ir.actions.act_window,name:note.action_note_note
 #: model:ir.ui.menu,name:note.menu_note_notes
-#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 #: model:note.stage,name:note.note_stage_02
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 #, python-format
 msgid "Notes"
 msgstr "Ghi chú"
@@ -361,7 +384,8 @@ msgid ""
 "Notes are private, unless you share them by inviting follower on a note.\n"
 "            (Useful for meeting minutes)."
 msgstr ""
-"Ghi chú là riêng tư, trừ khi bạn chia sẻ chúng bằng cách mời người theo dõi trên một ghi chú.\n"
+"Ghi chú là riêng tư, trừ khi bạn chia sẻ chúng bằng cách mời người theo dõi "
+"trên một ghi chú.\n"
 "              (Hữu ích cho biên bản cuộc họp)."
 
 #. module: note
@@ -372,7 +396,7 @@ msgstr "Số lượng hành động"
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Số lỗi"
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__message_needaction_counter
@@ -534,7 +558,7 @@ msgstr "Cần làm"
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "Loại hoạt động ngoại lệ trên hồ sơ."
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_unread

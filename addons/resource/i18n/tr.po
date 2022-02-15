@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* resource
-# 
+#
 # Translators:
 # Martin Trigaux, 2019
 # Levent Karakaş <levent@mektup.at>, 2019
@@ -10,19 +10,19 @@
 # Ramiz Deniz Öner <deniz@denizoner.com>, 2019
 # Umur Akın <umura@projetgrup.com>, 2019
 # Ediz Duman <neps1192@gmail.com>, 2019
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
+"POT-Creation-Date: 2021-09-14 10:29+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
 "Last-Translator: Ediz Duman <neps1192@gmail.com>, 2019\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
+"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: resource
@@ -32,6 +32,7 @@ msgid "%s (copy)"
 msgstr "%s (kopya)"
 
 #. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__active
 #: model:ir.model.fields,field_description:resource.field_resource_resource__active
 msgid "Active"
 msgstr "Etkin"
@@ -42,11 +43,20 @@ msgid "Afternoon"
 msgstr "Öğleden Sonra"
 
 #. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_resource_form
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_search
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
+msgid "Archived"
+msgstr "Arşivlendi"
+
+#. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid ""
 "Are you sure you want to switch this calendar to 1 week calendar ? All "
 "entries will be lost"
 msgstr ""
+"Bu takvimi 1 haftalık takvime geçirmek istediğinizden emin misiniz? Tüm "
+"girişler kaybolacak"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
@@ -54,29 +64,31 @@ msgid ""
 "Are you sure you want to switch this calendar to 2 weeks calendar ? All "
 "entries will be lost"
 msgstr ""
+"Bu takvimi 2 haftalık takvime geçirmek istediğinizden emin misiniz? Tüm "
+"girişler kaybolacak"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "Attendances can't overlap."
-msgstr ""
+msgstr "Katılımlar örtüşemez."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__hours_per_day
 msgid "Average Hour per Day"
-msgstr ""
+msgstr "Günlük Ortalama Saat"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar__hours_per_day
 msgid ""
 "Average hours per day a resource is supposed to work with this calendar."
-msgstr ""
+msgstr "Bir kaynağın bu takvimde çalışması için günde ortalama saat."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__two_weeks_calendar
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__two_weeks_calendar
 msgid "Calendar in 2 weeks mode"
-msgstr ""
+msgstr "2 hafta modunda takvim"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.resource_calendar_closing_days
@@ -154,7 +166,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__display_name
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__display_name
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__display_name
-#: model:ir.model.fields,field_description:resource.field_resource_mixin__display_name
 #: model:ir.model.fields,field_description:resource.field_resource_resource__display_name
 #: model:ir.model.fields,field_description:resource.field_resource_test__display_name
 msgid "Display Name"
@@ -177,13 +188,19 @@ msgid "End Date"
 msgstr "Bitiş Tarihi"
 
 #. module: resource
-#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__week_type__0
-msgid "Even week"
-msgstr ""
-
-#. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__two_weeks_explanation
 msgid "Explanation"
+msgstr "Açıklama"
+
+#. module: resource
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__week_type__0
+msgid "First"
+msgstr "İlk"
+
+#. module: resource
+#: code:addons/resource/models/resource.py:0
+#, python-format
+msgid "First week"
 msgstr ""
 
 #. module: resource
@@ -195,7 +212,7 @@ msgstr "Cuma"
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "Friday Afternoon"
-msgstr ""
+msgstr "Cuma Öğleden Sonra"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0
@@ -206,13 +223,12 @@ msgstr "Cuma Sabahı"
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_attendance__sequence
 msgid "Gives the sequence of this line when displaying the resource calendar."
-msgstr ""
+msgstr "Kaynak takvimini görüntülerken bu satırın sırasını verir."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__global_leave_ids
-#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Global Time Off"
-msgstr ""
+msgstr "Genel İzinler"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
@@ -227,6 +243,7 @@ msgstr "Saat"
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_resource__resource_type__user
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Human"
 msgstr "İnsan"
 
@@ -234,7 +251,6 @@ msgstr "İnsan"
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__id
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__id
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__id
-#: model:ir.model.fields,field_description:resource.field_resource_mixin__id
 #: model:ir.model.fields,field_description:resource.field_resource_resource__id
 #: model:ir.model.fields,field_description:resource.field_resource_test__id
 msgid "ID"
@@ -246,6 +262,8 @@ msgid ""
 "If empty, this is a generic time off for the company. If a resource is set, "
 "the time off is only for this resource"
 msgstr ""
+"Boşsa, bu şirket için genel bir izindir. Bir kaynak ayarlanırsa, izin "
+"yalnızca bu kaynak içindir"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource__active
@@ -257,15 +275,26 @@ msgstr ""
 "sağlayacaktır."
 
 #. module: resource
-#: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
-msgid "Inactive"
-msgstr "Pasif"
+#: model:ir.model.fields,help:resource.field_resource_calendar__active
+msgid ""
+"If the active field is set to false, it will allow you to hide the Working "
+"Time without removing it."
+msgstr ""
+"Aktif alan false olarak ayarlanırsa, Çalışma Süresini kaldırmadan "
+"gizlemenize izin verir."
+
+#. module: resource
+#: code:addons/resource/models/resource.py:0
+#, python-format
+msgid ""
+"In a calendar with 2 weeks mode, all periods need to be in the sections."
+msgstr ""
+"2 hafta modu olan bir takvimde tüm dönemlerin bölümlerde olması gerekir."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar____last_update
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance____last_update
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves____last_update
-#: model:ir.model.fields,field_description:resource.field_resource_mixin____last_update
 #: model:ir.model.fields,field_description:resource.field_resource_resource____last_update
 #: model:ir.model.fields,field_description:resource.field_resource_test____last_update
 msgid "Last Modified on"
@@ -302,6 +331,7 @@ msgstr "İzin Ayrıntısı"
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_resource__resource_type__material
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Material"
 msgstr "Malzeme"
 
@@ -314,7 +344,7 @@ msgstr "Pazartesi"
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "Monday Afternoon"
-msgstr ""
+msgstr "Pazartesi Öğleden Sonra"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0
@@ -336,14 +366,14 @@ msgid "Name"
 msgstr "Adı"
 
 #. module: resource
-#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__week_type__1
-msgid "Odd week"
-msgstr ""
-
-#. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_leaves__time_type__other
 msgid "Other"
 msgstr "Diğer"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
+msgid "Period"
+msgstr "Dönem"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__name
@@ -366,7 +396,6 @@ msgstr "Kaynağın erişimini yönetmek için ilişkilendirilmiş kullanıcı"
 #: model_terms:ir.ui.view,arch_db:resource.resource_resource_form
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
-#: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Resource"
 msgstr "Kaynak"
 
@@ -380,17 +409,12 @@ msgstr "Kaynak Karışımı"
 #: model:ir.actions.act_window,name:resource.resource_calendar_leaves_action_from_calendar
 #: model:ir.ui.menu,name:resource.menu_view_resource_calendar_leaves_search
 msgid "Resource Time Off"
-msgstr ""
+msgstr "Kaynak İzinler"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar_leaves
 msgid "Resource Time Off Detail"
-msgstr ""
-
-#. module: resource
-#: model:ir.model.fields,field_description:resource.field_resource_resource__resource_type
-msgid "Resource Type"
-msgstr "Kaynak Tipi"
+msgstr "Kaynak İzin Detayı"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar
@@ -415,7 +439,7 @@ msgstr "Kaynaklar"
 #. module: resource
 #: model:ir.actions.act_window,name:resource.resource_calendar_resources_leaves
 msgid "Resources Time Off"
-msgstr ""
+msgstr "Kaynak İzinler"
 
 #. module: resource
 #: model_terms:ir.actions.act_window,help:resource.action_resource_resource_tree
@@ -425,7 +449,9 @@ msgid ""
 "in a specific project phase. You can also set their efficiency level and "
 "workload based on their weekly working hours."
 msgstr ""
-"Kaynaklar spesifik bir proje aşamasında bulunması kaynak yaratma ve yönetmenize olanak sağlar. Ayrıca etkililik seviyesini ve haftalık çalışma saatine bağlı olarak iş yükünü de\n"
+"Kaynaklar spesifik bir proje aşamasında bulunması kaynak yaratma ve "
+"yönetmenize olanak sağlar. Ayrıca etkililik seviyesini ve haftalık çalışma "
+"saatine bağlı olarak iş yükünü de\n"
 "ayarlayabilirisiniz."
 
 #. module: resource
@@ -441,12 +467,23 @@ msgstr "Arama Kaynağı"
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Search Working Period Time Off"
-msgstr ""
+msgstr "Çalışma Dönemi İzinleri Ara"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_search
 msgid "Search Working Time"
 msgstr "Çalışma Süresi Ara"
+
+#. module: resource
+#: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__week_type__1
+msgid "Second"
+msgstr "Saniye"
+
+#. module: resource
+#: code:addons/resource/models/resource.py:0
+#, python-format
+msgid "Second week"
+msgstr ""
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__display_type__line_section
@@ -496,12 +533,12 @@ msgstr "Pazar"
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Switch to 1 week calendar"
-msgstr ""
+msgstr "1 haftalık takvime geç"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Switch to 2 weeks calendar"
-msgstr ""
+msgstr "2 haftalık takvime geç"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_attendance__display_type
@@ -516,14 +553,14 @@ msgstr "Test Kaynak Modeli"
 #. module: resource
 #: code:addons/resource/models/resource.py:0
 #, python-format
-msgid "The efficiency factor cannot be equal to 0."
-msgstr "Etki faktörü sıfıra eşit olamaz"
+msgid "The current week (from %s to %s) correspond to the  %s one."
+msgstr ""
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0
 #, python-format
-msgid "The start date of the time off must be earlier end date."
-msgstr ""
+msgid "The start date of the time off must be earlier than the end date."
+msgstr "İzin başlangıç tarihi bitiş tarihinden önce olmalıdır."
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar__tz
@@ -540,14 +577,14 @@ msgstr ""
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource__time_efficiency
 msgid ""
-"This field is used to calculate the the expected duration of a work order at"
-" this work center. For example, if a work order takes one hour and the "
+"This field is used to calculate the expected duration of a work order at "
+"this work center. For example, if a work order takes one hour and the "
 "efficiency factor is 100%, then the expected duration will be one hour. If "
 "the efficiency factor is 200%, however the expected duration will be 30 "
 "minutes."
 msgstr ""
-"Bu alan, bu iş merkezindeki bir iş emrinin beklenen süresini hesaplamak için"
-" kullanılır. Örneğin, bir iş emri bir saat sürer ve etkinlik faktörü% 100 "
+"Bu alan, bu iş merkezindeki bir iş emrinin beklenen süresini hesaplamak için "
+"kullanılır. Örneğin, bir iş emri bir saat sürer ve etkinlik faktörü% 100 "
 "ise, beklenen süre bir saat olacaktır. Etkinlik faktörü% 200 ise, beklenen "
 "süre 30 dakika olacaktır."
 
@@ -560,7 +597,7 @@ msgstr "Perşembe"
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "Thursday Afternoon"
-msgstr ""
+msgstr "Perşembe Öğleden Sonra"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0
@@ -578,7 +615,7 @@ msgstr "İzinler"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__time_type
 msgid "Time Type"
-msgstr ""
+msgstr "Zaman Tipi"
 
 #. module: resource
 #: model:ir.model.constraint,message:resource.constraint_resource_resource_check_time_efficiency
@@ -594,6 +631,11 @@ msgid "Timezone"
 msgstr "Saat Dilimi"
 
 #. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar__tz_offset
+msgid "Timezone offset"
+msgstr "Saat dilimi ofseti"
+
+#. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__1
 msgid "Tuesday"
 msgstr "Salı"
@@ -602,7 +644,7 @@ msgstr "Salı"
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "Tuesday Afternoon"
-msgstr ""
+msgstr "Salı Öğleden Sonra"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0
@@ -611,6 +653,7 @@ msgid "Tuesday Morning"
 msgstr "Salı Sabahı"
 
 #. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_resource__resource_type
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Type"
 msgstr "Tür"
@@ -635,7 +678,7 @@ msgstr "Çarşamba"
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "Wednesday Afternoon"
-msgstr ""
+msgstr "Çarşamba Öğleden Sonra"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0
@@ -645,15 +688,16 @@ msgstr "Çarşamba Sabahı"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__week_type
-msgid "Week Even/Odd"
+msgid "Week Number"
 msgstr ""
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_leaves__time_type
 msgid ""
-"Whether this should be computed as a time off or as work time (eg: "
-"formation)"
+"Whether this should be computed as a time off or as work time (eg: formation)"
 msgstr ""
+"Bunun bir izin veya puantaj süresi olarak hesaplanıp hesaplanmayacağı "
+"(örneğin: oluşum)"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar_attendance
@@ -691,11 +735,6 @@ msgid "Working Hours of %s"
 msgstr "Çalışma Saatleri %s"
 
 #. module: resource
-#: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
-msgid "Working Period"
-msgstr "Çalışma Aralığı"
-
-#. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__attendance_ids
 #: model:ir.model.fields,field_description:resource.field_resource_resource__calendar_id
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
@@ -703,6 +742,7 @@ msgstr "Çalışma Aralığı"
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_attendance_tree
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_search
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_tree
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Working Time"
 msgstr "Çalışma Süresi"
 
@@ -716,16 +756,28 @@ msgstr "Çalışma Süresi"
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "You can't delete section between weeks."
+msgstr "Haftalar arasındaki bölümü silemezsiniz."
+
+#. module: resource
+#: code:addons/resource/models/resource.py:0
+#, python-format
+msgid "first"
 msgstr ""
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0
 #, python-format
-msgid "even"
+msgid "other week"
 msgstr ""
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0
 #, python-format
-msgid "odd"
-msgstr ""
+msgid "second"
+msgstr "second"
+
+#. module: resource
+#: code:addons/resource/models/resource.py:0
+#, python-format
+msgid "this week"
+msgstr "bu hafta"

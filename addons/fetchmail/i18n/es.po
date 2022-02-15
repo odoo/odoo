@@ -1,22 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* fetchmail
-# 
+#
 # Translators:
 # Martin Trigaux, 2019
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2019-08-26 09:10+0000\n"
 "Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: fetchmail
@@ -38,6 +38,17 @@ msgstr "Avanzado"
 #: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Advanced Options"
 msgstr "Opciones avanzadas"
+
+#. module: fetchmail
+#: code:addons/fetchmail/models/fetchmail.py:0
+#, python-format
+msgid ""
+"An SSL exception occurred. Check SSL/TLS configuration on server port.\n"
+" %s"
+msgstr ""
+"Ocurrió una excepción SSL. Comprueba la configuración SSL/TLS en el puerto "
+"del servidor.\n"
+" %s"
 
 #. module: fetchmail
 #: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_search
@@ -89,8 +100,8 @@ msgstr "Creado el"
 #: model:ir.model.fields,help:fetchmail.field_fetchmail_server__priority
 msgid "Defines the order of processing, lower values mean higher priority"
 msgstr ""
-"Define el orden de procesamiento. Los valores más bajos significan una mayor"
-" prioridad."
+"Define el orden de procesamiento. Los valores más bajos significan una mayor "
+"prioridad."
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__display_name
@@ -100,7 +111,7 @@ msgstr "Nombre mostrado"
 #. module: fetchmail
 #: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_tree
 msgid "Email Count"
-msgstr ""
+msgstr "N° de correos electrónicos"
 
 #. module: fetchmail
 #: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
@@ -154,6 +165,16 @@ msgstr "Servidor de correo entrante"
 #: model:ir.ui.menu,name:fetchmail.menu_action_fetchmail_server_tree
 msgid "Incoming Mail Servers"
 msgstr "Servidores de correo entrante"
+
+#. module: fetchmail
+#: code:addons/fetchmail/models/fetchmail.py:0
+#, python-format
+msgid ""
+"Invalid server name !\n"
+" %s"
+msgstr ""
+"¡Nombre de usuario inválido!\n"
+" %s"
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__attach
@@ -214,6 +235,16 @@ msgid "Name"
 msgstr "Nombre"
 
 #. module: fetchmail
+#: code:addons/fetchmail/models/fetchmail.py:0
+#, python-format
+msgid ""
+"No response received. Check server information.\n"
+" %s"
+msgstr ""
+"No se recibió respuesta. Comprueba la información del servidor.\n"
+" %s"
+
+#. module: fetchmail
 #: model:ir.model.fields.selection,name:fetchmail.selection__fetchmail_server__state__draft
 msgid "Not Confirmed"
 msgstr "No confirmado"
@@ -261,8 +292,8 @@ msgid ""
 "attach follow-up emails to the existing conversations (documents)."
 msgstr ""
 "Procesa cada correo entrante como parte de una conversación correspondiente "
-"a este tipo de documento. Dependiendo del valor, se crearán nuevos registros"
-" para las nuevas conversaciones, o se adjuntarán los correos de respuesta a "
+"a este tipo de documento. Dependiendo del valor, se crearán nuevos registros "
+"para las nuevas conversaciones, o se adjuntarán los correos de respuesta a "
 "las conversaciones existentes."
 
 #. module: fetchmail
@@ -316,6 +347,16 @@ msgid "Server Type"
 msgstr "Tipo servidor"
 
 #. module: fetchmail
+#: code:addons/fetchmail/models/fetchmail.py:0
+#, python-format
+msgid ""
+"Server replied with following exception:\n"
+" %s"
+msgstr ""
+"El servidor respondió con la siguiente excepción:\n"
+" %s"
+
+#. module: fetchmail
 #: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_search
 msgid "Server type IMAP."
 msgstr "Servidor tipo IMAP"
@@ -348,8 +389,8 @@ msgid ""
 "your message database."
 msgstr ""
 "Debe mantener al Menos una copia original de cada correo electrónico como "
-"referencia, y adjuntada a cada mensaje procesado. Ésto usualmente duplica el"
-" tamaño de su mensaje en la base de datos."
+"referencia, y adjuntada a cada mensaje procesado. Ésto usualmente duplica el "
+"tamaño de su mensaje en la base de datos."
 
 #. module: fetchmail
 #: model:ir.model.fields,help:fetchmail.field_fetchmail_server__attach

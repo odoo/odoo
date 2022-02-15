@@ -1,25 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_sale_delivery
-# 
+#
 # Translators:
 # Martin Trigaux, 2019
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2019
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:33+0000\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2019-08-26 09:16+0000\n"
 "Last-Translator: Gunther Clauwaert <gclauwae@hotmail.com>, 2019\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_sale_delivery
@@ -30,13 +30,18 @@ msgstr "<b>Verzendwijze:</b>"
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier__website_description
 msgid ""
-"A description of the Product that you want to communicate to your customers."
-" This description will be copied to every Sales Order, Delivery Order and "
+"A description of the Product that you want to communicate to your customers. "
+"This description will be copied to every Sales Order, Delivery Order and "
 "Customer Invoice/Credit Note"
 msgstr ""
 "Een omschrijving van het product die u wilt delen met uw klanten. Deze "
 "omschrijving wordt gekopieerd naar elke verkooporder, leveringsbon en "
 "factuur/creditfactuur"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__can_publish
+msgid "Can Publish"
+msgstr "Kan publiceren"
 
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.payment_delivery
@@ -95,18 +100,33 @@ msgstr "FedEx leveringsmethodes"
 
 #. module: website_sale_delivery
 #. openerp-web
-#: code:addons/website_sale_delivery/static/src/js/website_sale_delivery.js:92
+#: code:addons/website_sale_delivery/static/src/js/website_sale_delivery.js:0
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.payment_delivery_methods
 #, python-format
 msgid "Free"
 msgstr "Gratis"
 
 #. module: website_sale_delivery
-#: code:addons/website_sale_delivery/controllers/main.py:72
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__is_published
+msgid "Is Published"
+msgstr "Is gepubliceerd"
+
+#. module: website_sale_delivery
+#: code:addons/website_sale_delivery/controllers/main.py:0
 #, python-format
 msgid ""
-"No shipping method is available for your current order and shipping address."
-" Please contact us for more information."
+"It seems that a delivery method is not compatible with your address. Please "
+"refresh the page and try again."
+msgstr ""
+"Het lijkt erop dat een verzendwijze niet klopt met je adres. Vernieuw de "
+"pagina en probeer het opnieuw."
+
+#. module: website_sale_delivery
+#: code:addons/website_sale_delivery/controllers/main.py:0
+#, python-format
+msgid ""
+"No shipping method is available for your current order and shipping address. "
+"Please contact us for more information."
 msgstr ""
 "Er is geen verzendwijze beschikbaar voor deze order en dit afleveradres. "
 "Neem alstublieft contact met ons op."
@@ -115,6 +135,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_search_inherit_website_sale_delivery
 msgid "Published"
 msgstr "Gepubliceerd"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier__website_id
+msgid "Restrict publishing to this website."
+msgstr "Publiceren op deze website beperken."
 
 #. module: website_sale_delivery
 #: model:ir.model,name:website_sale_delivery.model_sale_order
@@ -134,7 +159,7 @@ msgid "Shipping Methods"
 msgstr "Verzendmethodes"
 
 #. module: website_sale_delivery
-#: code:addons/website_sale_delivery/controllers/main.py:71
+#: code:addons/website_sale_delivery/controllers/main.py:0
 #, python-format
 msgid "Sorry, we are unable to ship your order"
 msgstr "Sorry, het is niet mogelijk om uw order te verzenden."
@@ -145,9 +170,30 @@ msgid "The amount without tax."
 msgstr "Het bedrag excl. BTW."
 
 #. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier__website_url
+msgid "The full URL to access the document through the website."
+msgstr ""
+"De volledige URL om toegang tot het document te krijgen via de website."
+
+#. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
 msgid "USPS Shipping Methods"
 msgstr "USPS verzendmethodes"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__website_published
+msgid "Visible on current website"
+msgstr "Zichtbaar op huidige website"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__website_id
+msgid "Website"
+msgstr "Website"
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__website_url
+msgid "Website URL"
+msgstr "Website URL"
 
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form

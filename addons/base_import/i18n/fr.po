@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* base_import
-# 
+#
 # Translators:
 # Fabien Pinckaers <fp@openerp.com>, 2019
 # Eloïse Stilmant <est@odoo.com>, 2019
@@ -10,52 +10,31 @@
 # Mélanie Botty <bom@odoo.com>, 2019
 # Cécile Collart <cco@odoo.com>, 2019
 # Martin Trigaux, 2019
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-23 11:32+0000\n"
+"POT-Creation-Date: 2021-11-16 13:19+0000\n"
 "PO-Revision-Date: 2019-08-26 09:09+0000\n"
 "Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:0
+#: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
-msgid "%d records successfully imported..."
-msgstr ""
+msgid "%d records successfully imported"
+msgstr "%d d'enregistrements correctement importés"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:0
-#, python-format
-msgid "%d records tested..."
-msgstr ""
-
-#. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:0
-#, python-format
-msgid "%d records were successfully imported"
-msgstr "%d enregistrements ont été importés avec succès"
-
-#. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:0
-#, python-format
-msgid "(%d more)"
-msgstr "(%d en plus)"
-
-#. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:0
+#: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid ""
 "A single column was found in the file, this often means the file separator "
@@ -66,16 +45,37 @@ msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:0
+#: code:addons/base_import/static/src/legacy/js/import_action.js:0
+#, python-format
+msgid "Additional Fields"
+msgstr "Champs supplémentaires"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
+#, python-format
+msgid "Advanced"
+msgstr "Avancé"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
+#, python-format
+msgid "Allow matching with subfields"
+msgstr ""
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid ""
 "An unknown issue occurred during import (possibly lost connection, data "
-"limit exceeded or memory limits exceeded). Please retry in case the issue is"
-" transient. If the issue still occurs, try to split the file rather than "
+"limit exceeded or memory limits exceeded). Please retry in case the issue is "
+"transient. If the issue still occurs, try to split the file rather than "
 "import it at once."
 msgstr ""
-"Une erreur inconnue est survenue pendant l'import (probablement une perte de"
-" connexion, un fichier trop volumineux,...). Veuillez réessayer au cas où "
+"Une erreur inconnue est survenue pendant l'import (probablement une perte de "
+"connexion, un fichier trop volumineux,...). Veuillez réessayer au cas où "
 "cette erreur est temporaire. Si elle persiste, essayez de partager votre "
 "fichier en plusieurs plutôt que de l'importer en une fois."
 
@@ -96,31 +96,33 @@ msgstr "Mapping d'importation de base"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:0
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
-msgid "Batch limit"
+msgid "Batch Import"
 msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:0
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
-msgid "Between rows %d and %d"
-msgstr "Entre les lignes %d et %d"
+msgid "Batch limit"
+msgstr "Limitation des lots"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:0
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Cancel"
 msgstr "Annuler"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:0
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Click 'Resume' to proceed with the import, resuming at line"
 msgstr ""
+"Cliquez sur 'Reprendre' pour poursuivre l'importation, en reprenant à la "
+"ligne "
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -142,28 +144,33 @@ msgstr "Nom de la colonne"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:0
-#: code:addons/base_import/static/src/js/import_action.js:0
+#: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Comma"
 msgstr "Virgule"
 
 #. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
+#, python-format
+msgid "Comments"
+msgstr "Commentaires"
+
+#. module: base_import
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid ""
-"Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: "
-"%(error)s"
+"Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s"
 msgstr ""
 "Impossible de récupérer l'URL: %(url)s [%(field_name)s: L%(line_number)d]: "
 "%(error)s"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:0
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
-msgid "Create if doesn't exist"
-msgstr "Créer si inexistant"
+msgid "Create new values"
+msgstr ""
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__create_uid
@@ -208,20 +215,6 @@ msgid "Created on"
 msgstr "Créé le"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:0
-#, python-format
-msgid ""
-"Creates new records if they can't be found (instead of failing to import). "
-"Note that the value in the column will be used as the new record's 'name', "
-"and assumes this is sufficient to create the record."
-msgstr ""
-"Crée de nouveaux enregistrements s'ils ne peuvent pas être trouvés (au lieu "
-"d'échouer à importer). Notez que la valeur dans la colonne sera utilisée "
-"comme nouvel enregistrement de \"nom\" et sera considérée comme suffisante "
-"pour créer l'enregistrement. "
-
-#. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_complex__currency_id
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_float__currency_id
 msgid "Currency"
@@ -229,28 +222,27 @@ msgstr "Devise"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
-#: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Database ID"
 msgstr "Id. base de données"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:0
+#: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Date Format:"
 msgstr "Format de date :"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:0
+#: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Datetime Format:"
 msgstr "Format de date et heure:"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:0
+#: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Decimal Separator:"
 msgstr "Séparateur de décimales"
@@ -278,24 +270,24 @@ msgstr "Afficher Nom"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:0
-#, python-format
-msgid "Don't import"
-msgstr "Ne pas importer"
-
-#. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:0
+#: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Dot"
 msgstr "Point"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:0
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Download"
 msgstr "Télécharger"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
+#, python-format
+msgid "Download Template"
+msgstr ""
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_complex__dt
@@ -304,14 +296,7 @@ msgstr "Dt"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:0
-#, python-format
-msgid "Due to its large size, the file will be imported by batches."
-msgstr ""
-
-#. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:0
+#: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Encoding:"
 msgstr "Codage des caractères :"
@@ -324,22 +309,26 @@ msgstr "Erreur lors du parsing de la date [%s:L%d]: %s"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:0
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
+#, python-format
+msgid "Estimated time left:"
+msgstr "Temps restant estimé :"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Everything seems valid."
 msgstr "Tout semble correct."
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:0
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
-msgid "Excel files are recommended as fields formatting is automatic."
-msgstr ""
-"Les fichiers Excel sont recommandés comme le formatage des champs est "
-"automatique."
+msgid "Excel files are recommended as formatting is automatic."
+msgstr "Les fichiers Excel sont recommandés car le formatage est automatique."
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:0
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "External ID"
@@ -356,6 +345,13 @@ msgid "File"
 msgstr "Fichier"
 
 #. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
+#, python-format
+msgid "File Column"
+msgstr ""
+
+#. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__file_name
 msgid "File Name"
 msgstr "Nom de Fichier"
@@ -366,7 +362,6 @@ msgid "File Type"
 msgstr "Type de fichier"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:0
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "File size exceeds configured maximum (%s bytes)"
@@ -379,7 +374,14 @@ msgstr "Fichier à tester et/ou importer, binaire brut (pas Base64)"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:0
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
+#, python-format
+msgid "Finalizing current batch before interrupting..."
+msgstr "Finalisation du groupe en cours avant d'interrompre..."
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "For CSV files, you may need to select the correct separator."
 msgstr ""
@@ -387,22 +389,38 @@ msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:0
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
-msgid "Formatting Options…"
-msgstr "Options de Formatage..."
+msgid "Formatting"
+msgstr ""
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid ""
-"Found invalid image data, images should be imported as either URLs or "
-"base64-encoded data."
+"Found invalid image data, images should be imported as either URLs or base64-"
+"encoded data."
 msgstr ""
+"Données d'image non valides trouvées, les images doivent être importées sous "
+"forme d'URL ou de données encodées en base64."
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:0
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
+#, python-format
+msgid "Go to Import FAQ"
+msgstr "Aller à la Foire aux Questions sur l'import"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
+#, python-format
+msgid "Help"
+msgstr "Aide"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Here is the start of the file we could not import:"
 msgstr "Voici le début du fichier qu'il n'a pas été possible d'importer :"
@@ -430,67 +448,80 @@ msgstr "ID"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:0
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid ""
 "If the file contains\n"
-"                the column names, Odoo can try auto-detecting the\n"
-"                field corresponding to the column. This makes imports\n"
-"                simpler especially when the file has many columns."
+"                    the column names, Odoo can try auto-detecting the\n"
+"                    field corresponding to the column. This makes imports\n"
+"                    simpler especially when the file has many columns."
 msgstr ""
-"Si le fichier contient des en-têtes de colonnes, le système peut\n"
-"essayer de détecter automatiquement les champs correspondants.\n"
-"Ceci facilite l'importation, en particulier pour les fichiers contenant beaucoup\n"
-"de colonnes."
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:0
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid ""
 "If the model uses openchatter, history tracking will set up subscriptions "
 "and send notifications during the import, but lead to a slower import."
 msgstr ""
+"Si le modèle utilise une conversation ouverte, le suivi de l'historique "
+"mettra en place des abonnements et enverra des notifications pendant "
+"l'import mais pourra conduire à un import plus lent."
+
+#. module: base_import
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid ""
+"Image size excessive, imported images must be smaller than 42 million pixel"
+msgstr ""
+"Taille d'image excessive, les images importées doivent être inférieures à 42 "
+"millions de pixels"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:0
-#: code:addons/base_import/static/src/xml/base_import.xml:0
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Import"
 msgstr "Importer"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:0
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Import FAQ"
 msgstr "Importer la FAQ"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:0
+#: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Import a File"
 msgstr "Importer un Fichier"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:0
+#: code:addons/base_import/models/base_import.py:0
 #, python-format
-msgid "Import completed"
-msgstr "Import terminé"
+msgid "Import file has no content or is corrupt"
+msgstr "Le fichier d'importation n'a pas de contenu ou est corrompu"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:0
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Import preview failed due to:"
 msgstr "La prévisualisation de l'import à échoué à cause de :"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:0
+#: code:addons/base_import/static/src/import_records/import_records.xml:0
+#, python-format
+msgid "Import records"
+msgstr "Importer les enregistrements"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid ""
 "Import timed out. Please retry. If you still encounter this issue, the file "
@@ -503,12 +534,32 @@ msgstr ""
 "fichier)."
 
 #. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
+#, python-format
+msgid "Imported file"
+msgstr "Fichier importé"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/legacy/js/import_action.js:0
+#, python-format
+msgid "Importing"
+msgstr ""
+
+#. module: base_import
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Invalid cell value at row %(row)s, column %(col)s: %(cell_value)s"
 msgstr ""
-"Valeur de cellule invalide à la ligne %(row)s, colonne "
-"%(col)s:%(cell_value)s"
+"Valeur de cellule invalide à la ligne %(row)s, colonne %(col)s:%(cell_value)s"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/legacy/js/import_action.js:0
+#, python-format
+msgid "Label"
+msgstr "Libellé"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import____last_update
@@ -575,56 +626,76 @@ msgstr "Dernière mise à jour le"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:0
+#: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Load File"
 msgstr "Choisir un fichier"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:0
+#: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
-msgid "Load New File"
-msgstr "Charger un nouveau fichier"
+msgid "Loading file..."
+msgstr "Chargement du fichier..."
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:0
-#, python-format
-msgid "Map your columns to import"
-msgstr "Faire correspondre les colonnes à importer"
-
-#. module: base_import
+#: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__res_model
+#, python-format
 msgid "Model"
 msgstr "Modèle"
 
 #. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
+#, python-format
+msgid "Multiple errors occurred"
+msgstr ""
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m__name
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__name
+#, python-format
 msgid "Name"
 msgstr "Nom"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:0
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Need Help?"
 msgstr "Besoin d'aide?"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:0
+#: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "No Separator"
 msgstr "Pas de Séparateur"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:0
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
-msgid "Normal Fields"
-msgstr "Champs normaux"
+msgid "No matching records found for"
+msgstr "Aucun enregistrement correspondant trouvé pour"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
+#, python-format
+msgid "No matching records found for the following"
+msgstr "Aucun enregistrement correspondant trouvé pour les éléments suivants "
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
+#, python-format
+msgid "Odoo Field"
+msgstr "Champ Odoo"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__othervalue
@@ -638,17 +709,24 @@ msgstr "Parent"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:0
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
-msgid "Relation Fields"
-msgstr "Champs relationnels"
+msgid "Prevent import"
+msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:0
+#: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
-msgid "Reload File"
-msgstr "Recharger"
+msgid "Preview"
+msgstr "Aperçu"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/legacy/js/import_action.js:0
+#, python-format
+msgid "Relation Fields"
+msgstr "Champs relationnels"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__res_model
@@ -657,53 +735,87 @@ msgstr "Res Model"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:0
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Resume"
 msgstr "Reprendre"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:0
+#: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
-msgid "Row %d%s"
-msgstr "Ligne %d%s"
+msgid "Search for a field..."
+msgstr "Rechercher un champ..."
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:0
-#: code:addons/base_import/static/src/js/import_action.js:0
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "See possible values"
 msgstr "Voir valeurs possibles"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:0
+#: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
-msgid "Select a CSV or Excel file to import."
-msgstr "Choisissez un fichier CSV ou Excel à importer."
+msgid "Selected Sheet:"
+msgstr "Feuille sélectionnée :"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:0
+#: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Semicolon"
 msgstr "Point-virgule"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:0
+#: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Separator:"
 msgstr "Séparateur :"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:0
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
-msgid "Show fields of relation fields (advanced)"
-msgstr "Afficher les champs de relation (avancé)"
+msgid "Set to:"
+msgstr ""
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
+#, python-format
+msgid "Set to: False"
+msgstr ""
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
+#, python-format
+msgid "Set to: True"
+msgstr ""
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
+#, python-format
+msgid "Set value as empty"
+msgstr "Définir la valeur comme vide"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
+#, python-format
+msgid "Sheet:"
+msgstr "Feuille :"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
+#, python-format
+msgid "Skip record"
+msgstr "Sauter l'enregistrement"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__somevalue
@@ -712,31 +824,59 @@ msgstr "Une valeur"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:0
+#: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Space"
 msgstr "Espace"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:0
+#: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
-msgid "Start at line"
+msgid "Standard Fields"
 msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:0
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
+#, python-format
+msgid "Start at line"
+msgstr "Démarrer à la ligne"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
+#, python-format
+msgid "Stop Import"
+msgstr "Arrêter l'import"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/legacy/js/import_action.js:0
+#, python-format
+msgid "Suggested Fields"
+msgstr "Champs suggérés"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Tab"
 msgstr "Tabulation"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:0
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Test"
 msgstr "Test"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/legacy/js/import_action.js:0
+#, python-format
+msgid "Testing"
+msgstr "En test"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_preview
@@ -802,59 +942,100 @@ msgstr "Tests: Modèle d'importation de base, Un à plusieurs"
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_o2m_child
 msgid "Tests : Base Import Model, One to Many child"
-msgstr ""
+msgstr "Tests: Modèle d'importation de base, One to Many child"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_complex
 msgid "Tests: Base Import Model Complex"
-msgstr ""
+msgstr "Tests: Complexe du Modèle d'Importation de Base"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_float
 msgid "Tests: Base Import Model Float"
-msgstr ""
+msgstr "Tests: flotteur du modèle d'importation de base"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:0
+#: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Text Delimiter:"
 msgstr "Séparateur de texte:"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:0
+#: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
-msgid ""
-"The first row\n"
-"                         contains the label of the column"
-msgstr ""
+msgid "The file contains blocking errors (see below)"
+msgstr "Le fichier contient des erreurs bloquantes (voir ci-dessous)"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:0
+#: code:addons/base_import/static/src/legacy/js/import_action.js:0
+#, python-format
+msgid "The file contains non-blocking warnings (see below)"
+msgstr "Le fichier contient des avertissements non bloquants (voir ci-dessous)"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
+#, python-format
+msgid "The file will be imported by batches"
+msgstr "Le fichier sera importé par groupes"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
+#, python-format
+msgid "This column will be concatenated in field"
+msgstr "Cette colonne sera concaténée dans le champ"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "This file has been successfully imported up to line %d."
-msgstr ""
+msgstr "Ce fichier a été importé avec succès jusqu'à la ligne %d."
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:0
+#: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Thousands Separator:"
 msgstr "Séparateur des milliers :"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:0
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
+#, python-format
+msgid "To import multiple values, separate them by a comma"
+msgstr "Pour importer plusieurs valeurs, séparez-les par une virgule"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/legacy/js/import_action.js:0
+#, python-format
+msgid "To import, select a field..."
+msgstr "Pour importer, sélectionnez un champ..."
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Track history during import"
 msgstr "Activer l'historique des modifications pendant l'importation"
 
 #. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/legacy/js/import_action.js:0
+#, python-format
+msgid "Type"
+msgstr "Type"
+
+#. module: base_import
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
-msgid "Unable to load \"{extension}\" file: requires Python module \"{modname}\""
+msgid ""
+"Unable to load \"{extension}\" file: requires Python module \"{modname}\""
 msgstr ""
 "Impossible de charger le fichier \"{extension}\" : le module Python "
 "\"{modname}\" est requis"
@@ -867,6 +1048,34 @@ msgid ""
 msgstr ""
 "Format de fichier \"{}\" non pris en charge, l'importation ne prend en "
 "compte que les formats CSV, ODS, XLS et XLSX"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
+#, python-format
+msgid "Untitled"
+msgstr "Sans titre"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
+#, python-format
+msgid "Upload File"
+msgstr "Télécharger le fichier"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
+#, python-format
+msgid "Upload an Excel or CSV file to import"
+msgstr "Télécharger un fichier Excel ou CSV à importer"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
+#, python-format
+msgid "Use first row as header"
+msgstr "Utiliser la première ligne comme en-tête"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_res_users
@@ -897,12 +1106,21 @@ msgstr "Valeur2"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:0
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid ""
-"Warning: ignores the labels line, empty lines and"
-"                             lines composed only of empty cells"
+"Warning: ignores the labels line, empty lines and lines composed only of "
+"empty cells"
 msgstr ""
+"Attention : ignore la ligne d'étiquettes, les lignes vides et les lignes "
+"composées uniquement de cellules vides"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
+#, python-format
+msgid "When a value cannot be matched:"
+msgstr "Lorsqu'une valeur ne peut pas être mise en correspondance :"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -916,10 +1134,12 @@ msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:0
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "You can test or reload your file before resuming the import."
 msgstr ""
+"Vous pouvez tester ou recharger votre fichier avant de reprendre "
+"l'importation."
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -929,24 +1149,52 @@ msgstr "Vous devez paramétrer au moins un champ à importer"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:0
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
-msgid "at %d different rows:"
+msgid "at multiple rows"
 msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:0
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
-msgid "at row %d%s"
-msgstr "à la ligne %d%s"
+msgid "at row"
+msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:0
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
-msgid "between rows %d and %d"
-msgstr "entre les lignes %d et %d"
+msgid "batch"
+msgstr ""
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
+#, python-format
+msgid "in field"
+msgstr ""
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
+#, python-format
+msgid "minutes"
+msgstr "minutes"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
+#, python-format
+msgid "more)"
+msgstr ""
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
+#, python-format
+msgid "out of"
+msgstr ""
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0

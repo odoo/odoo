@@ -1,38 +1,45 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_sale_wishlist
-# 
+#
 # Translators:
 # Martin Trigaux, 2018
 # Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2018
 # gsong <gsong2014@foxmail.com>, 2018
 # Somchart Jabsung <jabsung.s@gmail.com>, 2018
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:18+0000\n"
+"POT-Creation-Date: 2021-12-07 10:47+0000\n"
 "PO-Revision-Date: 2018-08-24 09:35+0000\n"
 "Last-Translator: Somchart Jabsung <jabsung.s@gmail.com>, 2018\n"
 "Language-Team: Thai (https://www.transifex.com/odoo/teams/41243/th/)\n"
+"Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: th\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_sale_wishlist
-#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.header
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_add_to_wishlist
 msgid ""
-"<i class=\"fa fa-heart\"/>\n"
-"                        Wishlist"
+"<i class=\"fa fa-heart-o mr-2\" role=\"img\" aria-label=\"Add to wishlist\"/"
+">Add to wishlist"
 msgstr ""
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
 msgid "<small><i class=\"fa fa-trash-o\"/> Remove</small>"
+msgstr "<small><i class=\"fa fa-trash-o\"/> ลบออก</small>"
+
+#. module: website_sale_wishlist
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.add_to_wishlist
+msgid ""
+"<span class=\"fa fa-heart\" role=\"img\" aria-label=\"Add to wishlist\"/>"
 msgstr ""
+"<span class=\"fa fa-heart\" role=\"img\" aria-label=\"เพิ่มในรายการที่อยากได้\"/>"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__active
@@ -42,23 +49,22 @@ msgstr "เปิดใช้งาน"
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
 msgid "Add <span class=\"d-none d-md-inline\">to Cart</span>"
-msgstr ""
+msgstr "เพิ่ม <span class=\"d-none d-md-inline\">ในรถเข็น</span>"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
 msgid "Add product to my cart but keep it in my wishlist"
-msgstr ""
+msgstr "เพิ่มสินค้าลงในรถเข็นของฉัน แต่เก็บไว้ในรายการที่อยากได้"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.add_to_wishlist
-#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_add_to_wishlist
 msgid "Add to Wishlist"
-msgstr ""
+msgstr "เพิ่มไปยังรายการที่อยากได้"
 
 #. module: website_sale_wishlist
-#: model:ir.model,name:website_sale_wishlist.model_ir_autovacuum
-msgid "Automatic Vacuum"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_add_to_wishlist
+msgid "Add to wishlist"
+msgstr "เพิ่มในรายการที่อยากได้"
 
 #. module: website_sale_wishlist
 #: model:ir.model,name:website_sale_wishlist.model_res_partner
@@ -86,6 +92,11 @@ msgid "Display Name"
 msgstr "ชื่อที่ใช้แสดง"
 
 #. module: website_sale_wishlist
+#: model:ir.model.constraint,message:website_sale_wishlist.constraint_product_wishlist_product_unique_partner_id
+msgid "Duplicated wishlisted product for this partner."
+msgstr "รายการที่อยากได้ซ้ำสำหรับพาร์ทเนอร์รายนี้"
+
+#. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__id
 msgid "ID"
 msgstr "รหัส"
@@ -108,7 +119,7 @@ msgstr "อัพเดทครั้งสุดท้ายเมื่อ"
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
 msgid "My Wishlist"
-msgstr ""
+msgstr "รายการที่อยากได้ของฉัน"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__partner_id
@@ -123,7 +134,7 @@ msgstr "ราคา"
 #. module: website_sale_wishlist
 #: model:ir.model.fields,help:website_sale_wishlist.field_product_wishlist__price
 msgid "Price of the product when it has been added in the wishlist"
-msgstr ""
+msgstr "ราคาของสินค้าเมื่อมีการเพิ่มในรายการที่อยากได้"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__pricelist_id
@@ -133,27 +144,38 @@ msgstr "รายการราคา"
 #. module: website_sale_wishlist
 #: model:ir.model.fields,help:website_sale_wishlist.field_product_wishlist__pricelist_id
 msgid "Pricelist when added"
-msgstr ""
+msgstr "รายการราคาที่เพิ่มแล้ว"
 
 #. module: website_sale_wishlist
+#: model:ir.model,name:website_sale_wishlist.model_product_product
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__product_id
 msgid "Product"
 msgstr "สินค้า"
 
 #. module: website_sale_wishlist
+#: model:ir.model,name:website_sale_wishlist.model_product_template
+msgid "Product Template"
+msgstr "เทมเพลตสินค้า"
+
+#. module: website_sale_wishlist
 #: model:ir.model,name:website_sale_wishlist.model_product_wishlist
 msgid "Product Wishlist"
-msgstr ""
+msgstr "สินค้าที่อยากได้"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
 msgid "Product image"
-msgstr ""
+msgstr "รูปสินค้า"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
 msgid "Shop Wishlist"
-msgstr ""
+msgstr "แสดงรายการที่อยากได้"
+
+#. module: website_sale_wishlist
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.snippet_options
+msgid "Show Empty Wishlist"
+msgstr "แสดงรายการสิ่งที่อยากได้ว่างเปล่า"
 
 #. module: website_sale_wishlist
 #: model:ir.model,name:website_sale_wishlist.model_res_users
@@ -168,5 +190,6 @@ msgstr "เว็บไซต์"
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_res_partner__wishlist_ids
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_res_users__wishlist_ids
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.header_wishlist_link
 msgid "Wishlist"
-msgstr ""
+msgstr "รายการที่อยากได้ "

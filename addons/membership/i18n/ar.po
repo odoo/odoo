@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* membership
-# 
+#
 # Translators:
 # Mustafa Rawi <mustafa@cubexco.com>, 2019
 # Mustafa J. Kadhem <safi2266@gmail.com>, 2019
@@ -17,20 +17,21 @@
 # AMAAL RU <Fabu1410@yahoo.com>, 2019
 # Shaima Safar <shaima.safar@open-inside.com>, 2019
 # Waleed Mohsen <mohsen.waleed@gmail.com>, 2019
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2019-08-26 09:11+0000\n"
 "Last-Translator: Waleed Mohsen <mohsen.waleed@gmail.com>, 2019\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
+"Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ar\n"
-"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership__num_invoiced
@@ -50,16 +51,18 @@ msgstr "عدد الأعضاء المنتظرين"
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_kanban
 msgid ""
-"<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Period\" "
-"title=\"Period\"/><strong> From: </strong>"
+"<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Period\" title=\"Period"
+"\"/><strong> From: </strong>"
 msgstr ""
-"<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"الفترة\" "
-"title=\"الفترة\"/><strong> من: </strong>"
+"<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"الفترة\" title=\"الفترة"
+"\"/><strong> من: </strong>"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_kanban
-msgid "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Price\" title=\"Price\"/>"
-msgstr "<i class=\"fa fa-money\" role=\"img\" aria-label=\"السعر\" title=\"السعر\"/>"
+msgid ""
+"<i class=\"fa fa-money\" role=\"img\" aria-label=\"Price\" title=\"Price\"/>"
+msgstr ""
+"<i class=\"fa fa-money\" role=\"img\" aria-label=\"السعر\" title=\"السعر\"/>"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_kanban
@@ -152,11 +155,6 @@ msgstr "حدد هذا المربع إذا كان المنتج يستأهل ال�
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "Company"
 msgstr "الشركة"
-
-#. module: membership
-#: model:ir.model.fields,help:membership.field_membership_membership_line__company_id
-msgid "Company related to this journal"
-msgstr "المؤسسة المرتبطة بدفتر اليومية هذا"
 
 #. module: membership
 #: model:ir.ui.menu,name:membership.menu_marketing_config_association
@@ -339,7 +337,8 @@ msgid ""
 "-Non Member: A partner who has not applied for any membership.\n"
 "-Cancelled Member: A member who has cancelled his membership.\n"
 "-Old Member: A member whose membership date has expired.\n"
-"-Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n"
+"-Waiting Member: A member who has applied for the membership and whose "
+"invoice is going to be created.\n"
 "-Invoiced Member: A member whose invoice has been created.\n"
 "-Paying member: A member who has paid the membership fee."
 msgstr ""
@@ -358,7 +357,8 @@ msgid ""
 "-Non Member: A member who has not applied for any membership.\n"
 "-Cancelled Member: A member who has cancelled his membership.\n"
 "-Old Member: A member whose membership date has expired.\n"
-"-Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n"
+"-Waiting Member: A member who has applied for the membership and whose "
+"invoice is going to be created.\n"
 "-Invoiced Member: A member whose invoice has been created.\n"
 "-Paid Member: A member who has paid the membership amount."
 msgstr ""
@@ -382,8 +382,8 @@ msgstr ""
 
 #. module: membership
 #: model:ir.model,name:membership.model_account_move
-msgid "Journal Entries"
-msgstr "القيود اليومية"
+msgid "Journal Entry"
+msgstr "قيد اليومية"
 
 #. module: membership
 #: model:ir.model,name:membership.model_account_move_line
@@ -440,6 +440,7 @@ msgstr "تحليل الأعضاء"
 #: model:ir.model.fields,field_description:membership.field_product_template__membership
 #: model:ir.model.fields,field_description:membership.field_res_partner__member_lines
 #: model:ir.model.fields,field_description:membership.field_res_users__member_lines
+#: model_terms:ir.ui.view,arch_db:membership.report_membership_view_tree
 #: model_terms:ir.ui.view,arch_db:membership.view_partner_form
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_graph1
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_pivot
@@ -503,6 +504,7 @@ msgstr "منتج العضوية"
 
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_membership_products
+#: model:ir.ui.menu,name:membership.menu_membership_products
 #: model_terms:ir.ui.view,arch_db:membership.membership_product_search_form_view
 msgid "Membership Products"
 msgstr "منتجات العضوية"
@@ -549,6 +551,11 @@ msgid "Month"
 msgstr "الشهر"
 
 #. module: membership
+#: model_terms:ir.actions.act_window,help:membership.action_report_membership_tree
+msgid "No data yet!"
+msgstr ""
+
+#. module: membership
 #: model:ir.model.fields.selection,name:membership.selection__membership_membership_line__state__none
 #: model:ir.model.fields.selection,name:membership.selection__report_membership__membership_state__none
 #: model:ir.model.fields.selection,name:membership.selection__res_partner__membership_state__none
@@ -559,7 +566,8 @@ msgstr "غير عضو"
 #: model_terms:ir.actions.act_window,help:membership.action_membership_members
 msgid ""
 "Odoo helps you easily track all activities related to a member: \n"
-"                  Current Membership Status, Discussions and History of Membership, etc."
+"                  Current Membership Status, Discussions and History of "
+"Membership, etc."
 msgstr ""
 "تساعدك أودو على تتبع كافة نشاطات الأعضاء بسهولة:\n"
 "                  حالة العضوية الحالية، مناقشات وسجلات العضوية، إلخ."
@@ -599,6 +607,11 @@ msgstr "الشريك عضو مجاني."
 #: model:ir.model.fields,field_description:membership.field_report_membership__tot_pending
 msgid "Pending Amount"
 msgstr "مبلغ معلق"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.membership_products_form
+msgid "Product Name"
+msgstr "اسم المنتج"
 
 #. module: membership
 #: model:ir.model,name:membership.model_product_template
@@ -644,6 +657,26 @@ msgstr "تاريخ البداية"
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Starting Date Of Membership"
 msgstr "تاريخ بدء العضوية"
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.report_membership_view_tree
+msgid "Sum of # Invoiced"
+msgstr ""
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.report_membership_view_tree
+msgid "Sum of # Paid"
+msgstr ""
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.report_membership_view_tree
+msgid "Sum of Earned Amount"
+msgstr ""
+
+#. module: membership
+#: model_terms:ir.ui.view,arch_db:membership.report_membership_view_tree
+msgid "Sum of Quantity"
+msgstr ""
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_form

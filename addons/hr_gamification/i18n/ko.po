@@ -1,24 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * hr_gamification
-# 
+#
 # Translators:
 # Martin Trigaux, 2018
 # 최재호 <hwangtog@gmail.com>, 2018
 # Link Up링크업 <linkup.way@gmail.com>, 2018
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2018-08-24 09:19+0000\n"
 "Last-Translator: Link Up링크업 <linkup.way@gmail.com>, 2018\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
+"Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: hr_gamification
@@ -27,21 +27,32 @@ msgid ""
 "A goal is defined by a user and a goal type.\n"
 "                    Goals can be created automatically by using challenges."
 msgstr ""
+"목표는 사용자와 목표 유형에 의해 정의됩니다.\n"
+"                      도전 과제를 사용하여 목표를 자동으로 생성할 수 있습니"
+"다."
 
 #. module: hr_gamification
 #: model:ir.model.fields,help:hr_gamification.field_hr_employee__badge_ids
+#: model:ir.model.fields,help:hr_gamification.field_hr_employee_base__badge_ids
+#: model:ir.model.fields,help:hr_gamification.field_hr_employee_public__badge_ids
 msgid ""
 "All employee badges, linked to the employee either directly or through the "
 "user"
-msgstr ""
+msgstr "직원에게 직접 또는 사용자를 통해 링크된 모든 직원 배지"
 
 #. module: hr_gamification
 #: model_terms:ir.actions.act_window,help:hr_gamification.challenge_list_action2
 msgid ""
 "Assign a list of goals to chosen users to evaluate them.\n"
-"                    The challenge can use a period (weekly, monthly...) for automatic creation of goals.\n"
-"                    The goals are created for the specified users or member of the group."
+"                    The challenge can use a period (weekly, monthly...) for "
+"automatic creation of goals.\n"
+"                    The goals are created for the specified users or member "
+"of the group."
 msgstr ""
+"선택한 사용자에게 목표 목록을 할당하여 평가합니다.\n"
+"                이 도전 과제는 자동으로 목표를 생성하기 위한 기간(매주, 매"
+"월...)을 사용할 수 있습니다.\n"
+"                지정된 사용자 또는 그룹 구성원에 대해 목표가 생성됩니다."
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_res_users__badge_ids
@@ -50,15 +61,25 @@ msgid "Badges"
 msgstr "뱃지"
 
 #. module: hr_gamification
+#: model_terms:ir.ui.view,arch_db:hr_gamification.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
 msgid ""
 "Badges are rewards of good work. Give them to people you believe deserve it."
-msgstr "뱃지는 열심히 일한 보상입니다. 당신이 그럴만한 자격이 있다고 믿기 때문에 사람들이 보내 준 것입니다."
+msgstr ""
+"뱃지는 열심히 일한 보상입니다. 당신이 그럴만한 자격이 있다고 믿기 때문에 사람"
+"들이 보내 준 것입니다."
 
 #. module: hr_gamification
 #: model:ir.model.fields,help:hr_gamification.field_hr_employee__direct_badge_ids
+#: model:ir.model.fields,help:hr_gamification.field_hr_employee_base__direct_badge_ids
+#: model:ir.model.fields,help:hr_gamification.field_hr_employee_public__direct_badge_ids
 msgid "Badges directly linked to the employee"
-msgstr ""
+msgstr "직원과 직접 연결된 배지"
+
+#. module: hr_gamification
+#: model:ir.model,name:hr_gamification.model_hr_employee_base
+msgid "Basic Employee"
+msgstr "기본 직원"
 
 #. module: hr_gamification
 #: model_terms:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
@@ -75,12 +96,12 @@ msgstr "도전"
 #. module: hr_gamification
 #: model_terms:ir.actions.act_window,help:hr_gamification.challenge_list_action2
 msgid "Create a new challenge"
-msgstr ""
+msgstr "새 도전 과제 만들기"
 
 #. module: hr_gamification
 #: model_terms:ir.actions.act_window,help:hr_gamification.goals_menu_groupby_action2
 msgid "Create a new goal"
-msgstr ""
+msgstr "새 목표 만들기"
 
 #. module: hr_gamification
 #: model_terms:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
@@ -89,11 +110,12 @@ msgstr "그들이 어떤 일을 했고 그것이 왜 중요한지 설명합니�
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee__direct_badge_ids
+#: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_base__direct_badge_ids
+#: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_public__direct_badge_ids
 msgid "Direct Badge"
-msgstr ""
+msgstr "직접 배지"
 
 #. module: hr_gamification
-#: model:ir.model,name:hr_gamification.model_hr_employee
 #: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_user__employee_id
 #: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_user_wizard__employee_id
 msgid "Employee"
@@ -101,28 +123,32 @@ msgstr "임직원"
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee__badge_ids
+#: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_base__badge_ids
+#: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_public__badge_ids
 msgid "Employee Badges"
 msgstr "사원 배지"
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee__goal_ids
+#: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_base__goal_ids
+#: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_public__goal_ids
 msgid "Employee HR Goals"
 msgstr "임직원 인사 목표"
 
 #. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_gamification_badge
 msgid "Gamification Badge"
-msgstr ""
+msgstr "업적 배지"
 
 #. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_gamification_badge_user
 msgid "Gamification User Badge"
-msgstr ""
+msgstr "업적 사용자 배지"
 
 #. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_gamification_badge_user_wizard
 msgid "Gamification User Badge Wizard"
-msgstr ""
+msgstr "업적 사용자 배지 마법사"
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_res_users__goal_ids
@@ -136,31 +162,36 @@ msgid "Goals History"
 msgstr "목표 이력"
 
 #. module: hr_gamification
+#: model_terms:ir.ui.view,arch_db:hr_gamification.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
 msgid "Grant a Badge"
 msgstr "배지 수여"
 
 #. module: hr_gamification
+#: model_terms:ir.ui.view,arch_db:hr_gamification.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
 msgid "Grant this employee his first badge"
-msgstr ""
+msgstr "이 직원에게 첫 번째 배지 부여"
 
 #. module: hr_gamification
 #: model_terms:ir.ui.view,arch_db:hr_gamification.hr_badge_form_view
 msgid "Granted"
-msgstr ""
+msgstr "수여함"
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge__granted_employees_count
 msgid "Granted Employees Count"
-msgstr ""
+msgstr "수여된 직원 수"
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee__has_badges
+#: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_base__has_badges
+#: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_public__has_badges
 msgid "Has Badges"
 msgstr "배지를 보유함"
 
 #. module: hr_gamification
+#: model_terms:ir.ui.view,arch_db:hr_gamification.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
 msgid "Received Badges"
 msgstr "배지를 받음"
@@ -182,7 +213,7 @@ msgid "Reward Employee with"
 msgstr "사원 포상"
 
 #. module: hr_gamification
-#: code:addons/hr_gamification/models/gamification.py:18
+#: code:addons/hr_gamification/models/gamification.py:0
 #, python-format
 msgid "The selected employee does not correspond to the selected user."
 msgstr "선택한 임직원은 선택한 사용자와 일치하지 않습니다."
@@ -200,21 +231,22 @@ msgstr "사용자"
 #. module: hr_gamification
 #: model_terms:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
 msgid "What are you thankful for?"
-msgstr ""
+msgstr "무엇이 감사한가요?"
 
 #. module: hr_gamification
-#: code:addons/hr_gamification/wizard/gamification_badge_user_wizard.py:22
+#: code:addons/hr_gamification/wizard/gamification_badge_user_wizard.py:0
 #, python-format
 msgid "You can not send a badge to yourself."
-msgstr ""
+msgstr "배지는 자신에게 보낼 수 없습니다."
 
 #. module: hr_gamification
-#: code:addons/hr_gamification/wizard/gamification_badge_user_wizard.py:19
+#: code:addons/hr_gamification/wizard/gamification_badge_user_wizard.py:0
 #, python-format
 msgid "You can send badges only to employees linked to a user."
 msgstr "사용자로 연결된 임직원에게만 뱃지를 보낼 수 있습니다."
 
 #. module: hr_gamification
+#: model_terms:ir.ui.view,arch_db:hr_gamification.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
 msgid "to reward this employee for a good action"
 msgstr "좋은 행동에 대해 이 임직원에게 포상"

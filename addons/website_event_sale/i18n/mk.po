@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2016-04-20 13:41+0000\n"
 "Last-Translator: Aleksandar Vangelovski <aleksandarv@hbee.eu>\n"
 "Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -20,34 +20,40 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;\n"
 
 #. module: website_event_sale
-#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
-msgid "<span>Free</span>"
+#: code:addons/website_event_sale/models/product_pricelist.py:0
+#, python-format
+msgid ""
+"A pricelist item with a positive min. quantity cannot be applied to this "
+"event tickets product."
+msgstr ""
+
+#. module: website_event_sale
+#: code:addons/website_event_sale/models/product_pricelist.py:0
+#, python-format
+msgid ""
+"A pricelist item with a positive min. quantity will not be applied to the "
+"event tickets products."
+msgstr ""
+
+#. module: website_event_sale
+#: model:ir.model.fields,field_description:website_event_sale.field_product_product__event_ticket_ids
+msgid "Event Tickets"
 msgstr ""
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
-msgid "<span>Unlimited</span>"
+msgid "Free"
 msgstr ""
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
-msgid "<span>left</span>"
-msgstr "<span>лево</span>"
+msgid "From"
+msgstr ""
 
 #. module: website_event_sale
-#: model:ir.model.fields,field_description:website_event_sale.field_product_product_intrastat_id
-msgid "Intrastat code"
-msgstr "Intrastat код"
-
-#. module: website_event_sale
-#: model_terms:ir.ui.view,arch_db:website_event_sale.index
-msgid "Only"
-msgstr "Само"
-
-#. module: website_event_sale
-#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
-msgid "Order Now"
-msgstr "Нарачај веднаш"
+#: model:ir.model,name:website_event_sale.model_product_pricelist_item
+msgid "Pricelist Rule"
+msgstr ""
 
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_product_product
@@ -55,9 +61,10 @@ msgid "Product"
 msgstr "Производ"
 
 #. module: website_event_sale
-#: model_terms:ir.ui.view,arch_db:website_event_sale.index
-msgid "Remaining"
-msgstr "Преостанато"
+#: code:addons/website_event_sale/controllers/main.py:0
+#, python-format
+msgid "Registration"
+msgstr ""
 
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_sale_order
@@ -65,19 +72,18 @@ msgid "Sales Order"
 msgstr "Налог за продажба"
 
 #. module: website_event_sale
-#: model_terms:ir.ui.view,arch_db:website_event_sale.index
-#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
-msgid "Sold Out"
-msgstr "Распродадено"
+#: model:ir.model,name:website_event_sale.model_sale_order_line
+msgid "Sales Order Line"
+msgstr ""
 
 #. module: website_event_sale
-#: code:addons/website_event_sale/models/sale_order.py:71
+#: code:addons/website_event_sale/models/sale_order.py:0
 #, python-format
 msgid "Sorry, The %(ticket)s tickets for the %(event)s event are sold out."
 msgstr ""
 
 #. module: website_event_sale
-#: code:addons/website_event_sale/models/sale_order.py:77
+#: code:addons/website_event_sale/models/sale_order.py:0
 #, python-format
 msgid ""
 "Sorry, only %(remaining_seats)d seats are still available for the %(ticket)s "
@@ -85,18 +91,23 @@ msgid ""
 msgstr ""
 
 #. module: website_event_sale
-#: code:addons/website_event_sale/controllers/main.py:65
-#, python-format
-msgid "Subscription"
-msgstr "Претплата"
-
-#. module: website_event_sale
-#: code:addons/website_event_sale/models/sale_order.py:36
+#: code:addons/website_event_sale/models/sale_order.py:0
 #, python-format
 msgid "The ticket doesn't match with this product."
 msgstr "Билетот не се совпаѓа со овој производ."
 
 #. module: website_event_sale
+#: code:addons/website_event_sale/models/product_pricelist.py:0
+#, python-format
+msgid "Warning"
+msgstr ""
+
+#. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_website
 msgid "Website"
 msgstr "Вебсајт"
+
+#. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
+msgid "to"
+msgstr ""

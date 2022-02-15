@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* analytic
-# 
+#
 # Translators:
 # Mustafa Rawi <mustafa@cubexco.com>, 2019
 # Sadig Adam <sadig41@gmail.com>, 2019
@@ -16,20 +16,26 @@
 # Shaima Safar <shaima.safar@open-inside.com>, 2019
 # Mostafa Hanafy <mostafa.s.hanafy@gmail.com>, 2019
 # Nisrine Tagri <nta@odoo.com>, 2019
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:17+0000\n"
+"POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2019-08-26 09:08+0000\n"
 "Last-Translator: Nisrine Tagri <nta@odoo.com>, 2019\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
+"Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ar\n"
-"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#. module: analytic
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
+msgid "<span class=\"o_stat_text\">Gross Margin</span>"
+msgstr "<span class=\"o_stat_text\">الهامش الإجمالي</span>"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_needaction
@@ -83,6 +89,7 @@ msgid "Analytic Account Groups"
 msgstr "مجموعات الحسابات التحليلية"
 
 #. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_res_config_settings__group_analytic_accounting
 #: model:res.groups,name:analytic.group_analytic_accounting
 msgid "Analytic Accounting"
 msgstr "الحسابات التحليلية"
@@ -151,7 +158,9 @@ msgid "Analytic Tags"
 msgstr "الوسوم التحليلية"
 
 #. module: analytic
+#: model_terms:ir.ui.view,arch_db:analytic.account_analytic_tag_form_view
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_tag_view_search
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
 msgid "Archived"
 msgstr "مؤرشف"
@@ -178,7 +187,8 @@ msgid "Balance:"
 msgstr "الرصيد:"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__product_uom_category_id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__category
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Category"
 msgstr "فئة"
 
@@ -216,6 +226,11 @@ msgid "Complete Name"
 msgstr "الاسم الكامل"
 
 #. module: analytic
+#: model:ir.model,name:analytic.model_res_config_settings
+msgid "Config Settings"
+msgstr "ضبط الإعدادات "
+
+#. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_line__product_uom_category_id
 msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
@@ -223,16 +238,6 @@ msgid ""
 msgstr ""
 "لا يمكن التحويل بين وحدات القياس إلا إذا كانت تنتمي لنفس الفئة. سيتم إجراء "
 "التحويل بناءً على النسب."
-
-#. module: analytic
-#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
-msgid "Cost/Revenue"
-msgstr "التكلفة/الربح"
-
-#. module: analytic
-#: model:ir.actions.act_window,name:analytic.account_analytic_line_action
-msgid "Costs & Revenues"
-msgstr "التكاليف والأرباح"
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
@@ -312,14 +317,14 @@ msgid "Followers"
 msgstr "المتابعون"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_channel_ids
-msgid "Followers (Channels)"
-msgstr "المتابعون (القنوات)"
-
-#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_partner_ids
 msgid "Followers (Partners)"
 msgstr "المتابعون (الشركاء)"
+
+#. module: analytic
+#: model:ir.actions.act_window,name:analytic.account_analytic_line_action
+msgid "Gross Margin"
+msgstr "الهامش الإجمالي "
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__group_id
@@ -332,6 +337,11 @@ msgstr "المجموعة"
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Group By..."
 msgstr "تجميع حسب.."
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__has_message
+msgid "Has Message"
+msgstr "توجد رسالة "
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__id
@@ -365,7 +375,8 @@ msgstr "إذا تم تحويل قيمة الحقل نشط إلى خطأ، يمك
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid ""
 "In Odoo, sales orders and projects are implemented using\n"
-"                analytic accounts. You can track costs and revenues to analyse\n"
+"                analytic accounts. You can track costs and revenues to "
+"analyse\n"
 "                your margins easily."
 msgstr ""
 "في أودو، يتم تشغيل أوامر البيع والمشاريع من خلال\n"
@@ -462,6 +473,11 @@ msgid "Number of unread messages"
 msgstr "عدد الرسائل الجديدة"
 
 #. module: analytic
+#: model:ir.model.fields.selection,name:analytic.selection__account_analytic_line__category__other
+msgid "Other"
+msgstr "غير ذلك"
+
+#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_group__parent_id
 msgid "Parent"
 msgstr "الأصل"
@@ -502,13 +518,16 @@ msgstr "رقم الإشارة"
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid ""
 "Revenues will be created automatically when you create customer\n"
-"                invoices. Customer invoices can be created based on sales orders\n"
-"                (fixed price invoices), on timesheets (based on the work done) or\n"
+"                invoices. Customer invoices can be created based on sales "
+"orders\n"
+"                (fixed price invoices), on timesheets (based on the work "
+"done) or\n"
 "                on expenses (e.g. reinvoicing of travel costs)."
 msgstr ""
 "سيتم تسجيل الأرباح تلقائيًا عند إنشاء\n"
 "                فواتير للعملاء. يمكن إنشاء فواتير العملاء حسب أوامر البيع\n"
-"                (فواتير بأسعار ثابتة)، أو سجلات الأنشطة (حسب العمل المنتهي) أو\n"
+"                (فواتير بأسعار ثابتة)، أو سجلات الأنشطة (حسب العمل المنتهي) "
+"أو\n"
 "                المصروفات (مثل إعادة إصدار فواتير لتكاليف السفر)."
 
 #. module: analytic
@@ -519,7 +538,7 @@ msgstr "بحث البنود التحليلية"
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_tag_view_search
 msgid "Search Analytic Tags"
-msgstr ""
+msgstr "البحث في علامات التصنيف التحليلية "
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_tag__active
@@ -533,24 +552,23 @@ msgstr "الوسوم"
 
 #. module: analytic
 #: model:ir.model.constraint,message:analytic.constraint_account_analytic_distribution_check_percentage
-msgid ""
-"The percentage of an analytic distribution should be between 0 and 100."
+msgid "The percentage of an analytic distribution should be between 0 and 100."
 msgstr "ينبغي أن تكون نسبة التوزيع التحليلي ما بين 0 و100."
 
 #. module: analytic
 #: code:addons/analytic/models/analytic_account.py:0
 #, python-format
 msgid ""
-"The selected account belongs to another company that the one you're trying "
+"The selected account belongs to another company than the one you're trying "
 "to create an analytic item for"
 msgstr ""
-"الحساب المُختار ينتمي لمؤسسة أخرى مختلفة عن المؤسسة التي تحاول إنشاء عنصر "
-"تحليلي لها"
+"الحساب المحدد ينتمي إلى شركة أخرى تختلف عن الشركة التي تحاول إنشاء عنصر "
+"تحليلي من أجلها "
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_group_action
-msgid "This allows to classify your analytic accounts."
-msgstr "يسمح لك هذا بتصنيف حساباتك التحليلية."
+msgid "This allows you to classify your analytic accounts."
+msgstr "يتيح لك هذا تصنيف حساباتك التحليلية. "
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
@@ -571,6 +589,11 @@ msgstr "الرسائل الجديدة"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_unread_counter
 msgid "Unread Messages Counter"
 msgstr "عدد الرسائل الجديدة"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__product_uom_category_id
+msgid "UoM Category"
+msgstr "فئة وحدة القياس "
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__user_id

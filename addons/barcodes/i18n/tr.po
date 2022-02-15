@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* barcodes
-# 
+#
 # Translators:
 # Ediz Duman <neps1192@gmail.com>, 2019
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2019
@@ -10,64 +10,52 @@
 # Murat Kaplan <muratk@projetgrup.com>, 2019
 # Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2019
 # Umur Akın <umura@projetgrup.com>, 2019
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2019-08-26 09:09+0000\n"
 "Last-Translator: Umur Akın <umura@projetgrup.com>, 2019\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
+"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: barcodes
-#: code:addons/barcodes/models/barcodes.py:0
+#: code:addons/barcodes/models/barcode_rule.py:0
 #, python-format
 msgid " '*' is not a valid Regex Barcode Pattern. Did you mean '.*' ?"
 msgstr ""
-" '*' Geçerli bir Regex Barkod Deseni değildir. Bunu mu demek istediniz '.*' "
-"?"
-
-#. module: barcodes
-#: code:addons/barcodes/models/barcodes.py:0
-#, python-format
-msgid ": a rule can only contain one pair of braces."
-msgstr ": bir kural yalnızca bir çift parantez içerebilir."
-
-#. module: barcodes
-#: code:addons/barcodes/models/barcodes.py:0
-#, python-format
-msgid ": braces can only contain N's followed by D's."
-msgstr ": Süslü parantezler sadece N'leri takip eden D'lerden oluşabilir."
-
-#. module: barcodes
-#: code:addons/barcodes/models/barcodes.py:0
-#, python-format
-msgid ": empty braces."
-msgstr ": boş parantez."
+" '*' Geçerli bir Regex Barkod Deseni değildir. Bunu mu demek istediniz '.*' ?"
 
 #. module: barcodes
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
 msgid ""
-"<i>Barcodes Nomenclatures</i> define how barcodes are recognized and categorized.\n"
-"                                When a barcode is scanned it is associated to the <i>first</i> rule with a matching\n"
-"                                pattern. The pattern syntax is that of regular expression, and a barcode is matched\n"
-"                                if the regular expression matches a prefix of the barcode."
+"<i>Barcodes Nomenclatures</i> define how barcodes are recognized and "
+"categorized.\n"
+"                                When a barcode is scanned it is associated "
+"to the <i>first</i> rule with a matching\n"
+"                                pattern. The pattern syntax is that of "
+"regular expression, and a barcode is matched\n"
+"                                if the regular expression matches a prefix "
+"of the barcode."
 msgstr ""
-"<i>Barkod Kural Setleri</i> Barkodların nasıl tanınacağını ve kategorize edileceğini belirlemeye yarar.\n"
-"                                Bir barkod okutulduğunda  <i>önce</i> kural setinde bir kalıpla eşleştirilir. Barkod kalıbının eşleştirmesinde düzenli ifadeler kullanılır.\n"
+"<i>Barkod Kural Setleri</i> Barkodların nasıl tanınacağını ve kategorize "
+"edileceğini belirlemeye yarar.\n"
+"                                Bir barkod okutulduğunda  <i>önce</i> kural "
+"setinde bir kalıpla eşleştirilir. Barkod kalıbının eşleştirmesinde düzenli "
+"ifadeler kullanılır.\n"
 "                                "
 
 #. module: barcodes
 #: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
 msgid ""
-"A barcode nomenclature defines how the point of sale identify and interprets"
-" barcodes"
+"A barcode nomenclature defines how the point of sale identify and interprets "
+"barcodes"
 msgstr ""
 "Bir barkod kural seti, barkodları nasıl belirlediğini ve yorumladığını "
 "tanımlar."
@@ -106,7 +94,7 @@ msgstr "Hiç"
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_barcodes_barcode_events_mixin
 msgid "Barcode Event Mixin"
-msgstr ""
+msgstr "Barcode Event Mixin"
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_barcode_nomenclature
@@ -165,7 +153,6 @@ msgstr "Vazgeç"
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__display_name
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__display_name
-#: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin__display_name
 msgid "Display Name"
 msgstr "Görünüm Adı"
 
@@ -185,40 +172,16 @@ msgid "EAN-8"
 msgstr "EAN-8"
 
 #. module: barcodes
+#. openerp-web
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:0
+#, python-format
+msgid "Enable edit mode to modify this document"
+msgstr "Enable edit mode to modify this document"
+
+#. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__encoding
 msgid "Encoding"
 msgstr "Kodlama"
-
-#. module: barcodes
-#. openerp-web
-#: code:addons/barcodes/static/src/js/barcode_form_view.js:0
-#, python-format
-msgid "Error: Barcode command is undefined"
-msgstr "Hata: Barkod komutu tanımsız"
-
-#. module: barcodes
-#. openerp-web
-#: code:addons/barcodes/static/src/js/barcode_form_view.js:0
-#, python-format
-msgid "Error: Document not editable"
-msgstr "Hata: Döküman düzenlenebilir değil"
-
-#. module: barcodes
-#. openerp-web
-#: code:addons/barcodes/static/src/js/barcode_form_view.js:0
-#, python-format
-msgid "Error: No last scanned barcode"
-msgstr "Hata: Son okunan barkod yok"
-
-#. module: barcodes
-#. openerp-web
-#: code:addons/barcodes/static/src/js/barcode_form_view.js:0
-#: code:addons/barcodes/static/src/js/barcode_form_view.js:0
-#: code:addons/barcodes/static/src/js/barcode_form_view.js:0
-#: code:addons/barcodes/static/src/js/barcode_form_view.js:0
-#, python-format
-msgid "Error: Pager not available"
-msgstr "Hata: Çağı mevcut değil"
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_ir_http
@@ -228,14 +191,12 @@ msgstr "HTTP Yönlendirme"
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__id
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__id
-#: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin__id
 msgid "ID"
 msgstr "ID"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature____last_update
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule____last_update
-#: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin____last_update
 msgid "Last Modified on"
 msgstr "Son Güncelleme"
 
@@ -262,18 +223,34 @@ msgid "Nomenclature"
 msgstr "Sınıflandırma"
 
 #. module: barcodes
+#. openerp-web
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:0
+#, python-format
+msgid "Pager unavailable"
+msgstr "Pager unavailable"
+
+#. module: barcodes
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
 msgid ""
-"Patterns can also define how numerical values, such as weight or price, can be\n"
-"                                encoded into the barcode. They are indicated by <code>{NNN}</code> where the N's\n"
-"                                define where the number's digits are encoded. Floats are also supported with the \n"
-"                                decimals indicated with D's, such as <code>{NNNDD}</code>. In these cases, \n"
-"                                the barcode field on the associated records <i>must</i> show these digits as \n"
+"Patterns can also define how numerical values, such as weight or price, can "
+"be\n"
+"                                encoded into the barcode. They are indicated "
+"by <code>{NNN}</code> where the N's\n"
+"                                define where the number's digits are "
+"encoded. Floats are also supported with the \n"
+"                                decimals indicated with D's, such as "
+"<code>{NNNDD}</code>. In these cases, \n"
+"                                the barcode field on the associated records "
+"<i>must</i> show these digits as \n"
 "                                zeroes."
 msgstr ""
-"Kurallar fiyat, ağırlık ve miktar gibi sayısal değerlerin barkoda nasıl kaydedileceğinide belirleyebilir.\n"
-" Bu tip kurallar süslü parantez içinde <code>{NNN}</code> N' ler sayısal basamakların nasıl kullanılacağını belirler.\n"
-"Virgülden sonraki ondalıklı sayıları tanımlamak için D'ler kullanılabilir. Mesela <code>{NNNDD}</code>. Bu durumlarda ilgili kayıtlardaki barkodlarda NNNDD olan basamaklar sıfırlar ile doldurulmalıdır."
+"Kurallar fiyat, ağırlık ve miktar gibi sayısal değerlerin barkoda nasıl "
+"kaydedileceğinide belirleyebilir.\n"
+" Bu tip kurallar süslü parantez içinde <code>{NNN}</code> N' ler sayısal "
+"basamakların nasıl kullanılacağını belirler.\n"
+"Virgülden sonraki ondalıklı sayıları tanımlamak için D'ler kullanılabilir. "
+"Mesela <code>{NNNDD}</code>. Bu durumlarda ilgili kayıtlardaki barkodlarda "
+"NNNDD olan basamaklar sıfırlar ile doldurulmalıdır."
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__name
@@ -284,6 +261,13 @@ msgstr "Kural Adı"
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__rule_ids
 msgid "Rules"
 msgstr "Kurallar"
+
+#. module: barcodes
+#. openerp-web
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:0
+#, python-format
+msgid "Scan a barcode to set the quantity"
+msgstr "Scan a barcode to set the quantity"
 
 #. module: barcodes
 #. openerp-web
@@ -325,12 +309,32 @@ msgid "The matched pattern will alias to this barcode"
 msgstr "Eşleşen kalıplar bu barkodun rumuzu olacak."
 
 #. module: barcodes
-#: code:addons/barcodes/models/barcodes.py:0
-#: code:addons/barcodes/models/barcodes.py:0
-#: code:addons/barcodes/models/barcodes.py:0
+#: code:addons/barcodes/models/barcode_rule.py:0
 #, python-format
-msgid "There is a syntax error in the barcode pattern "
-msgstr "Barkod eşleşmesinde bir dizilim hatası var."
+msgid ""
+"There is a syntax error in the barcode pattern %(pattern)s: a rule can only "
+"contain one pair of braces."
+msgstr ""
+"There is a syntax error in the barcode pattern %(pattern)s: a rule can only "
+"contain one pair of braces."
+
+#. module: barcodes
+#: code:addons/barcodes/models/barcode_rule.py:0
+#, python-format
+msgid ""
+"There is a syntax error in the barcode pattern %(pattern)s: braces can only "
+"contain N's followed by D's."
+msgstr ""
+"There is a syntax error in the barcode pattern %(pattern)s: braces can only "
+"contain N's followed by D's."
+
+#. module: barcodes
+#: code:addons/barcodes/models/barcode_rule.py:0
+#, python-format
+msgid ""
+"There is a syntax error in the barcode pattern %(pattern)s: empty braces."
+msgstr ""
+"There is a syntax error in the barcode pattern %(pattern)s: empty braces."
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__encoding
@@ -342,20 +346,6 @@ msgstr ""
 "uygulanacaktır."
 
 #. module: barcodes
-#. openerp-web
-#: code:addons/barcodes/static/src/js/barcode_form_view.js:0
-#, python-format
-msgid "To modify this document, please first start edition."
-msgstr "To modify this document, please first start edition."
-
-#. module: barcodes
-#. openerp-web
-#: code:addons/barcodes/static/src/js/barcode_form_view.js:0
-#, python-format
-msgid "To set the quantity please scan a barcode first."
-msgstr "Miktarı ayarlamak için lütfen önce barkodu tarat."
-
-#. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__type
 msgid "Type"
 msgstr "Tür"
@@ -364,8 +354,8 @@ msgstr "Tür"
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__upc_ean_conv
 msgid ""
 "UPC Codes can be converted to EAN by prefixing them with a zero. This "
-"setting determines if a UPC/EAN barcode should be automatically converted in"
-" one way or another when trying to match a rule with the other encoding."
+"setting determines if a UPC/EAN barcode should be automatically converted in "
+"one way or another when trying to match a rule with the other encoding."
 msgstr ""
 "UPC kodları, sıfır ön eki ile  EAN 'a dönüştürülebilir. Bu ayar, diğer "
 "kodlamayla bir kuralı eşleştirmeye çalışırken bir UPC / EAN barkodunun "
@@ -387,14 +377,20 @@ msgid "UPC/EAN Conversion"
 msgstr "UPC/EAN dönüştürme"
 
 #. module: barcodes
+#. openerp-web
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:0
+#, python-format
+msgid "Undefined barcode command"
+msgstr "Undefined barcode command"
+
+#. module: barcodes
 #: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__type__product
 msgid "Unit Product"
 msgstr "Birim Ürün"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__sequence
-msgid ""
-"Used to order rules such that rules with a smaller sequence match first"
+msgid "Used to order rules such that rules with a smaller sequence match first"
 msgstr ""
 "Barkod kurallarını önceliklendirmek için kullanılır. Küçük değerli kurallar "
 "öncelikle değerlendirilir."
