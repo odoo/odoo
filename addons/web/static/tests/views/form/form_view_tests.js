@@ -3739,8 +3739,12 @@ QUnit.module("Views", (hooks) => {
                 resModel: "partner",
                 serverData,
                 arch: '<form><field name="foo"></field></form>',
+                config: {
+                    historyBack() {
+                        assert.step("history-back");
+                    },
+                },
             });
-            form.el.addEventListener("history-back", () => assert.step("history-back"));
 
             assert.strictEqual(
                 form.el.querySelector(".o_field_widget[name=foo] input").value,
@@ -3763,8 +3767,12 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             serverData,
             arch: '<form><field name="foo"></field></form>',
+            config: {
+                historyBack() {
+                    assert.step("history-back");
+                },
+            },
         });
-        form.el.addEventListener("history-back", () => assert.step("history-back"));
 
         // edit the foo field
         assert.strictEqual(form.el.querySelector("input").value, "ABC", "input should contain ABC");
@@ -4178,8 +4186,12 @@ QUnit.module("Views", (hooks) => {
             mockRPC(route, args) {
                 assert.step(args.method);
             },
+            config: {
+                historyBack() {
+                    assert.step("history-back");
+                },
+            },
         });
-        form.el.addEventListener("history-back", () => assert.step("history_back"));
 
         await toggleActionMenu(form);
         await toggleMenuItem(form, "Delete");
@@ -4188,7 +4200,7 @@ QUnit.module("Views", (hooks) => {
         await click(document.body.querySelector(".modal-footer button.btn-primary"));
         assert.containsNone(document.body, ".modal", "no confirm modal should be displayed");
 
-        assert.verifySteps(["read", "unlink", "history_back"]);
+        assert.verifySteps(["read", "unlink", "history-back"]);
     });
 
     QUnit.skipWOWL("empty required fields cannot be saved", async function (assert) {
